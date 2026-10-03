@@ -17,7 +17,7 @@ whenever their inputs do, even when the inputs and outputs inhabit different
 `Lp` types.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

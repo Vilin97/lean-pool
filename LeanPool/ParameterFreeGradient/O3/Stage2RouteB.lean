@@ -19,7 +19,7 @@ explicit finite-dimensional definitions.  In particular, it does not assume
 strong convexity or the frozen target.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -84,7 +84,7 @@ lemma dualityMap_zero {p : ℝ} (hp : 0 < p) {d : ℕ} : dualityMap p (0 : Point
   simp [dualityMap, lpNorm_zero hp]
 
 /-- The scalar energy written directly in terms of the finite power sum. -/
-noncomputable def squaredLpEnergy (p : ℝ) {d : ℕ} (x : Point d) : ℝ :=
+@[expose] noncomputable def squaredLpEnergy (p : ℝ) {d : ℕ} (x : Point d) : ℝ :=
   (1 / 2 : ℝ) * (lpPower p x) ^ (2 / p)
 
 lemma squaredLpEnergy_eq_quadraticRegularizer {p : ℝ} (_hp : 0 < p)
@@ -461,7 +461,7 @@ lemma fenchelYoung_lower {p : ℝ} (hp : 1 < p) {d : ℕ} (w y : Point d) :
 
 /-- Exact dual-exponent smoothness interface.  This is a reduction interface,
 not an assumed theorem in the target chain. -/
-noncomputable def ConjugateSmoothnessStatement : Prop :=
+@[expose] noncomputable def ConjugateSmoothnessStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p ≤ 2 → ∀ (d : ℕ) (u v : Point d),
     squaredLpEnergy (conjugateExponent p) v ≤
       squaredLpEnergy (conjugateExponent p) u +

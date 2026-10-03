@@ -17,7 +17,7 @@ its centerpoint corollary, and the prime-reduction bound for hollow rational
 polytopes into Theorem 1.12.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

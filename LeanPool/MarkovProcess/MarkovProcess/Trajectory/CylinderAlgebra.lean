@@ -37,7 +37,7 @@ Main results:
 Nothing here mentions a probability law, and no continuity in a starting point is asserted.
 -/
 
-@[expose] public section
+public section
 
 open scoped BoundedContinuousFunction NNReal ZeroAtInfty
 
@@ -51,11 +51,13 @@ variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- A functional of a continuous path that reads finitely many times and applies a bounded
 continuous function to the values read. -/
+@[expose]
 def IsBoundedCylinder (G : ContinuousPath alpha → ℝ) : Prop :=
   ∃ (I : Finset ℝ≥0) (g : (I → alpha) →ᵇ ℝ),
     ∀ omega, G omega = g (finsetEvaluation I omega)
 
 /-- Restriction of a family of states indexed by a finite set of times to a smaller set. -/
+@[expose]
 def finsetRestrict {I J : Finset ℝ≥0} (hIJ : I ⊆ J) : C(J → alpha, I → alpha) :=
   ⟨fun path i ↦ path ⟨(i : ℝ≥0), hIJ i.2⟩,
     continuous_pi fun i ↦ continuous_apply (⟨(i : ℝ≥0), hIJ i.2⟩ : J)⟩

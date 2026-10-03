@@ -15,7 +15,7 @@ Every simple `ℂ[G]`-module is isomorphic (as a module) to a simple
 submodule of the regular module `MonoidAlgebra ℂ G`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

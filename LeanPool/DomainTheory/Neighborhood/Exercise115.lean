@@ -51,7 +51,7 @@ contains some atom); the
 constructions and the non-isomorphism argument are otherwise elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise115
 
@@ -81,7 +81,7 @@ def flat : NeighborhoodSystem ℕ :=
 
 @[simp] theorem flat_mem {X : Set ℕ} : flat.mem X ↔ X = Set.univ ∨ ∃ n, X = {n} := Iff.rfl
 
-@[simp] theorem flat_master : flat.master = Set.univ := rfl
+@[simp] theorem flat_master : flat.master = Set.univ := by rfl
 
 theorem flat_empty_not_mem : ¬ flat.mem (∅ : Set ℕ) := by
   rintro (h | ⟨n, h⟩)

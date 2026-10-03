@@ -28,7 +28,7 @@ Following the plan in `PLAN.md`, `J` is defined directly in terms of Eisenstein 
 lattice-theoretic description `g₂³/Δ` becomes a lemma (proved in `Fourier.lean`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,12 +48,12 @@ def Lτ (τ : ℍ) : PeriodPair where
     simp only [Complex.smul_im, Complex.one_im, smul_zero, coe_im] at h
     exact τ.im_pos.ne' h.symm
 
-@[simp] lemma Lτ_ω₁ (τ : ℍ) : (Lτ τ).ω₁ = 1 := rfl
+@[simp] lemma Lτ_ω₁ (τ : ℍ) : (Lτ τ).ω₁ = 1 := by rfl
 
-@[simp] lemma Lτ_ω₂ (τ : ℍ) : (Lτ τ).ω₂ = τ := rfl
+@[simp] lemma Lτ_ω₂ (τ : ℍ) : (Lτ τ).ω₂ = τ := by rfl
 
 /-- The nome `q = exp (2πiτ)`, as Mathlib's `Periodic.qParam` with period `1`. -/
-def q (τ : ℍ) : ℂ := Function.Periodic.qParam 1 τ
+@[expose] def q (τ : ℍ) : ℂ := Function.Periodic.qParam 1 τ
 
 lemma q_eq (τ : ℍ) : q τ = Complex.exp (2 * π * Complex.I * τ) := by
   simp [q, Function.Periodic.qParam]
@@ -68,6 +68,7 @@ lemma norm_q_lt_one (τ : ℍ) : ‖q τ‖ < 1 := by
 
 /-- Klein's `J`-invariant, defined via Eisenstein series: `J = E₄³ / (E₄³ - E₆²)`.
 The classical lattice description `J = g₂³ / Δ` is proved in `Fourier.lean`. -/
+@[expose]
 def J (τ : ℍ) : ℂ := E₄ τ ^ 3 / (E₄ τ ^ 3 - E₆ τ ^ 2)
 
 /-- The denominator of `J` never vanishes: `E₄³ - E₆² = 1728·Δ` and `Δ ≠ 0`. -/
@@ -92,29 +93,29 @@ lemma mul_J_eq (τ : ℍ) : 1728 * J τ = E₄ τ ^ 3 / discriminant τ := by
 
 /-- The non-holomorphic (quasi-modular) Eisenstein series
 `E₂*(τ) = E₂(τ) - 3 / (π · Im τ)`. -/
-def E₂star (τ : ℍ) : ℂ := E2 τ - 3 / (π * τ.im)
+@[expose] def E₂star (τ : ℍ) : ℂ := E2 τ - 3 / (π * τ.im)
 
 /-- Ramanujan's function `s₂(τ) = (E₄(τ)/E₆(τ)) · E₂*(τ)`. -/
-def s₂ (τ : ℍ) : ℂ := E₄ τ / E₆ τ * E₂star τ
+@[expose] def s₂ (τ : ℍ) : ℂ := E₄ τ / E₆ τ * E₂star τ
 
 /-- The CM point `τ₁₆₃ = (1 + i√163)/2` of discriminant `-163`. -/
 def τ₁₆₃ : ℍ := ⟨⟨1 / 2, Real.sqrt 163 / 2⟩,
   div_pos (Real.sqrt_pos.mpr (by norm_num)) two_pos⟩
 
-lemma τ₁₆₃_re : (τ₁₆₃ : ℂ).re = 1 / 2 := rfl
+lemma τ₁₆₃_re : (τ₁₆₃ : ℂ).re = 1 / 2 := by rfl
 
-@[simp] lemma τ₁₆₃_im : τ₁₆₃.im = Real.sqrt 163 / 2 := rfl
+@[simp] lemma τ₁₆₃_im : τ₁₆₃.im = Real.sqrt 163 / 2 := by rfl
 
 /-- The CM point `τ₈ = i√2` of discriminant `-8`, used for the branch-of-square-root
 argument in the Main Theorem. -/
 def τ₈ : ℍ := ⟨⟨0, Real.sqrt 2⟩, Real.sqrt_pos.mpr (by norm_num)⟩
 
-lemma τ₈_re : (τ₈ : ℂ).re = 0 := rfl
+lemma τ₈_re : (τ₈ : ℂ).re = 0 := by rfl
 
-@[simp] lemma τ₈_im : τ₈.im = Real.sqrt 2 := rfl
+@[simp] lemma τ₈_im : τ₈.im = Real.sqrt 2 := by rfl
 
 /-- All estimates in the paper hold on the region `Im τ > 1.25`. -/
-def Region : Set ℍ := {τ : ℍ | 5 / 4 < τ.im}
+@[expose] def Region : Set ℍ := {τ : ℍ | 5 / 4 < τ.im}
 
 lemma τ₁₆₃_mem_Region : τ₁₆₃ ∈ Region := by
   simp only [Region, Set.mem_ofPred_eq, τ₁₆₃_im]

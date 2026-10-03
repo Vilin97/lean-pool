@@ -23,7 +23,7 @@ scalar comparison of `|f x|` with `l`; the exponents `l ^ (1 - p)` and
 `l ^ (2 - p)` are real powers.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

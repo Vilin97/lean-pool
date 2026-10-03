@@ -32,7 +32,7 @@ section
 
 /-! Genuine pointwise time differentiation of the generically assembled correction. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,6 +48,7 @@ variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
 /-- The canonical pointwise nonlinear raw source of the actual common correction. -/
+@[expose]
 def FiniteFamily.pointRawSource (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
@@ -111,7 +112,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -136,6 +137,7 @@ theorem Budget.solution_compatible (B : Budget period hT A) (q : ℕ) (hq : 6 �
   (B.family period).compatible period (B.comparisonData period) q hq
 
 /-- The common continuous L² correction constructed by the small-drift solver. -/
+@[expose]
 def Budget.commonPath (B : Budget period hT A) : C(Icc (0 : ℝ) T, LiftL2 period) :=
   (B.family period).commonPath period
 
@@ -170,12 +172,13 @@ def Budget.commonJet (B : Budget period hT A) (n : ℕ) (t : Icc (0 : ℝ) T) :
   (B.family period).commonJet period (B.comparisonData period) n t
 
 /-- The common correction, with genuine continuous Sobolev realizations at all orders. -/
+@[expose]
 def Budget.fieldTower (B : Budget period hT A) : FieldTower period T :=
   (B.family period).fieldTower period (B.comparisonData period)
 
 /-- The tower's underlying field is exactly the constructed common correction. -/
 theorem Budget.fieldTower_field (B : Budget period hT A) :
-    (B.fieldTower period).field = B.commonPath period := rfl
+    (B.fieldTower period).field = B.commonPath period := by rfl
 
 /-- Every Sobolev realization of the common correction has zero initial data. -/
 theorem Budget.fieldTower_initial (B : Budget period hT A) (q : ℕ) :

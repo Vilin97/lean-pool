@@ -19,7 +19,7 @@ at any side `s > 2eR` dies at the super level — the unconditional
 half of the sector dichotomy.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

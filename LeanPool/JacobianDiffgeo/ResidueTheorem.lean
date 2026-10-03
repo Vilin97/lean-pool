@@ -96,4 +96,4 @@ Area-Gluing atom of §3–5 was NOT built, as instructed).
   at design time in `docs/design/residue-theorem.md` §11).
 -/
 
-@[expose] public section
+public section

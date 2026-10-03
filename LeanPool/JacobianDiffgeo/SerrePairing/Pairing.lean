@@ -37,7 +37,7 @@ via representatives + residue-calculus's `laurentCoeffAt_fun_add`/`_const_mul`/`
 (coordination note filed to `docs/requests/canonical-forms.md`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 
@@ -143,7 +143,7 @@ def pairL : MForm X →ₗ[ℂ] Tail X →ₗ[ℂ] ℂ where
   map_add' := pairTail_add_left
   map_smul' := pairTail_smul_left
 
-@[simp] theorem pairL_apply (θ : MForm X) (τ : Tail X) : pairL θ τ = pair θ τ := rfl
+@[simp] theorem pairL_apply (θ : MForm X) (τ : Tail X) : pairL θ τ = pair θ τ := by rfl
 
 theorem pair_add_left (θ η : MForm X) (τ : Tail X) : pair (θ + η) τ = pair θ τ + pair η τ := by
   change pairTail (θ + η) τ = pairTail θ τ + pairTail η τ

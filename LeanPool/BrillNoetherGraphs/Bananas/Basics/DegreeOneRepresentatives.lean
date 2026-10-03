@@ -16,7 +16,7 @@ rank-zero, degree-one divisor class is represented by one vertex; on a
 nontrivial banana that vertex is unique.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

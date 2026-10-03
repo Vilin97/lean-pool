@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothPressureRepresentat
 
 /-! A genuine smooth scalar graph pressure obtained from the closed lifted L² gradient space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open scoped ContDiff ENNReal NNReal Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The oscillating physical graph in the actual periodic cylinder. -/
-def cylinderGraph (k : ℝ) (m : Vector3) (x : Vector3) : LiftDomain period :=
+@[expose] def cylinderGraph (k : ℝ) (m : Vector3) (x : Vector3) : LiftDomain period :=
   (x, (k * ⟪m, x⟫_ℝ : ℝ))
 
 omit [Fact (0 < period)] in

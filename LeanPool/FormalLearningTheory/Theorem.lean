@@ -19,4 +19,4 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 Imported Lean Pool material for `LeanPool.FormalLearningTheory.Theorem`.
 -/
 
-@[expose] public section
+public section

@@ -28,7 +28,7 @@ to reduce PV computation to a single crossing-local limit.
   ratio at the crossing tends to L
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Complex Filter
 

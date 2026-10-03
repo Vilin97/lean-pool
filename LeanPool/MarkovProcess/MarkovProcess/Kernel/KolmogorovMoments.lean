@@ -22,7 +22,7 @@ continuity, or stochastic-process claim; the transport of this bound to the cano
 dense-time coordinate process is proved elsewhere.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal NNReal
@@ -40,6 +40,7 @@ Kolmogorov--Chentsov threshold `(q - 1) / p` is a positive Hölder exponent.
 The bound is demanded for every time `h ≥ 0`, not only
 for small `h`; this is stronger than the local criterion the Kolmogorov--Chentsov theorem
 needs, and it is what the bridge to `KolmogorovRegular` consumes. -/
+@[expose]
 def HasKolmogorovMoments (P : SubMarkovKernelSemigroup alpha) (p q : ℝ) (M : ℝ≥0) : Prop :=
   0 < p ∧ 1 < q ∧
     ∀ (h : ℝ≥0) (y : alpha), ∫⁻ z, edist z y ^ p ∂(P h y) ≤ M * (h : ℝ≥0∞) ^ q

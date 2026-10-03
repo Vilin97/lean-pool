@@ -44,7 +44,7 @@ trusts. `RS/DimensionDefinitions.lean` adds the growth, minimum and
 prescribed-dimension surface and imports only that main surface.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

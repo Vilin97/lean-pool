@@ -24,7 +24,7 @@ Only `log (u z / a)` (value near `1`, inside `slitPlane`) needs *analyticity* of
 `exp (log a) = a` holds for every nonzero constant, so no case split on `arg (u z₀)` is needed.
 -/
 
-@[expose] public section
+public section
 
 open Filter Complex
 open scoped Topology

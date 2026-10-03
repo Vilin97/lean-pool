@@ -30,7 +30,7 @@ comultiplication on `ℂ`, and the `Psi`/`Upsilon` equivalences used by
 downstream quantum-graph files.
 -/
 
-@[expose] public section
+public section
 
 /-- A star algebra over `ℂ` equipped with a real-parameter modular automorphism group. -/
 class starAlgebra (A : Type _) extends
@@ -278,7 +278,7 @@ theorem QuantumSet.modAut_isCoalgHom
     and_true, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
 
 /-- A quantum set carries the Frobenius algebra structure induced by its coalgebra. -/
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def QuantumSet.isFrobeniusAlgebra [QuantumSet A] :
     FrobeniusAlgebra ℂ A :=
   FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
@@ -297,13 +297,7 @@ theorem lmul_adjoint [hB : QuantumSet B] (a : B) :
 
 lemma QuantumSet.inner_eq_counit' [QuantumSet B] :
     (⟪(1 : B), ·⟫_ℂ) = Coalgebra.counit := by
-  simp_rw [Coalgebra.counit]
-  ext
-  apply ext_inner_left ℂ
-  intro a
-  simp_rw [LinearMap.adjoint_inner_right, Algebra.linearMap_apply,
-    Algebra.algebraMap_eq_smul_one, inner_smul_left]
-  rw [RCLike.inner_apply']
+  exact Coalgebra.inner_eq_counit'
 
 lemma QuantumSet.inner_eq_counit [QuantumSet B] (x y : B) :
     ⟪x, y⟫_ℂ = Coalgebra.counit (star x * modAut (k B) y) := by
@@ -430,7 +424,6 @@ theorem Psi_right_inv [hA : QuantumSet A] [hB : QuantumSet B]
   simp_all
 
 /-- The linear equivalence between maps and tensors used in the quantum-set formalism. -/
-@[simps]
 noncomputable def Psi [hA : QuantumSet A] [hB : QuantumSet B]
     (t r : ℝ) : (A →ₗ[ℂ] B) ≃ₗ[ℂ] (B ⊗[ℂ] Aᵐᵒᵖ) where
   toFun x := PsiToFun t r x
@@ -444,6 +437,16 @@ noncomputable def Psi [hA : QuantumSet A] [hB : QuantumSet B]
   map_add' x y := by simp_rw [map_add]
   map_smul' r x := by
     simp_all
+
+@[simp]
+theorem Psi_apply [QuantumSet A] [QuantumSet B] (t r : ℝ) (x : A →ₗ[ℂ] B) :
+    Psi t r x = PsiToFun t r x := by
+  rfl
+
+@[simp]
+theorem Psi_symm_apply [QuantumSet A] [QuantumSet B] (t r : ℝ) (x : B ⊗[ℂ] Aᵐᵒᵖ) :
+    (Psi t r).symm x = PsiInvFun (A := B) (B := A) t r x := by
+  rfl
 
 end QuantumSet
 
@@ -793,10 +796,24 @@ theorem QuantumSet.Psi_symm_apply_one [QuantumSet A] [QuantumSet B] (t r : ℝ) 
   rw [← QuantumSet.Psi_apply_one_one t r, LinearEquiv.symm_apply_apply]
 
 /-- The `Psi` equivalence with tensor factors swapped back from the opposite space. -/
-@[simps! -isSimp]
 noncomputable abbrev Upsilon [QuantumSet A] [QuantumSet B] :
     (A →ₗ[ℂ] B) ≃ₗ[ℂ] (A ⊗[ℂ] B) :=
   (Psi 0 (k A + 1)).trans ((tenSwap ℂ).trans (LinearEquiv.lTensor _ (unop ℂ)))
+
+theorem Upsilon_apply [QuantumSet A] [QuantumSet B] (x : A →ₗ[ℂ] B) :
+    Upsilon x =
+      (LinearEquiv.lTensor A (unop ℂ))
+        ((LinearEquiv.TensorProduct.map (unop ℂ) (op ℂ))
+          ((TensorProduct.comm ℂ B Aᵐᵒᵖ) (PsiToFun 0 (k A + 1) x))) := by
+  rfl
+
+theorem Upsilon_symm_apply [QuantumSet A] [QuantumSet B] (x : A ⊗[ℂ] B) :
+    Upsilon.symm x =
+      PsiInvFun (A := B) (B := A) 0 (k A + 1)
+        ((TensorProduct.comm ℂ Aᵐᵒᵖ B)
+          ((LinearEquiv.TensorProduct.map (op ℂ) (unop ℂ))
+            ((LinearEquiv.lTensor A (op ℂ)) x))) := by
+  rfl
 
 theorem Upsilon_apply_one_one [QuantumSet A] [QuantumSet B] :
     Upsilon (rankOne ℂ (1 : B) (1 : A)) = (1 : A ⊗[ℂ] B) := by
@@ -942,7 +959,7 @@ private lemma rmulMapLmul_apply_Upsilon_aux_apply [QuantumSet A] [QuantumSet B]
 lemma Upsilon_rankOne [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
     Upsilon (rankOne ℂ a b).toLinearMap = (modAut (-k B - 1) (star b)) ⊗ₜ[ℂ] a := by
   rw [Upsilon_apply, QuantumSet.PsiToFun_apply, TensorProduct.comm_tmul,
-    TensorProduct.map_tmul, LinearEquiv.lTensor_tmul, starAlgebra.modAut_star,
+    LinearEquiv.TensorProduct.map_tmul, LinearEquiv.lTensor_tmul, starAlgebra.modAut_star,
     starAlgebra.modAut_zero]
   ring_nf
   rfl
@@ -952,7 +969,7 @@ lemma Upsilon_symm_tmul [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
       (rankOne ℂ b (modAut (-k A - 1) (star a))).toLinearMap := by
   rw [Upsilon_symm_apply]
   simp only [LinearEquiv.lTensor_tmul, op_apply,
-    TensorProduct.map_tmul, LinearEquiv.coe_coe, unop_apply, MulOpposite.unop_op,
+    LinearEquiv.TensorProduct.map_tmul, unop_apply, MulOpposite.unop_op,
     TensorProduct.comm_tmul, QuantumSet.PsiInvFun_apply, starAlgebra.modAut_zero, neg_zero]
   ring_nf
   rfl
@@ -993,4 +1010,4 @@ lemma rmulMapLmul_apply_Upsilon_eq [QuantumSet A] [QuantumSet B] (x : A →ₗ[�
   nth_rw 2 [QuantumSet.inner_conj_left]
   simp_rw [starAlgebra.modAut_star, modAut_apply_modAut, star_star,
     add_neg_cancel, starAlgebra.modAut_zero]
-  rfl
+  simp [lmul_apply]

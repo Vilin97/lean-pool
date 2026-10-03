@@ -21,7 +21,7 @@ With the Borel sigma-algebra the path space is therefore a standard Borel space.
 This is ordinary topological infrastructure.  It proves no probabilistic statement.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 namespace ContinuousPath

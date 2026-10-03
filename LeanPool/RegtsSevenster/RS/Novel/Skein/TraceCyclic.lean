@@ -27,7 +27,7 @@ commutativity of the closure and the closure-relabel exchange
 `s = 0`, where the outgoing block is the entire boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

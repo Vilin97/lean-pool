@@ -16,7 +16,7 @@ state, by its rational tangent.  Thus later gates see the old seed state plus
 one explicit first-Hasse-jet direction.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,6 +24,7 @@ namespace N4
 noncomputable section
 
 /-- The normalized seed and fifth-gate target data at a rational first jet. -/
+@[expose]
 def FirstJetState (C : Circuit 8 8) : Prop :=
   ∃ (theta : Fin 3) (eps : F₂)
     (seedLinear seedCompanion : LinearForm) (seedRho : F₂),

@@ -18,7 +18,7 @@ analytic `n ^ n ≤ e ^ n · n !` (one term of the Taylor series of
 displayed `2e` of the paper.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

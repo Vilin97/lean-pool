@@ -40,7 +40,7 @@ embedded object is Schur vanishing downstairs.
   instantiation `RS.schurKilled_indOf_iff_of_hasScalarUnit`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

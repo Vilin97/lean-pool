@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! ## Soundness of GL-proof system. -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 

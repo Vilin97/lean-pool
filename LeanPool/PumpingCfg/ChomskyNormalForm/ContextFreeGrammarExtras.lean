@@ -17,7 +17,7 @@ Mathlib release pinned here: the step-counting derivation relation
 lemmas, plus a few facts about `ContextFreeGrammar.Produces`.
 -/
 
-@[expose] public section
+public section
 
 universe uT
 

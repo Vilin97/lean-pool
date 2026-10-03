@@ -22,7 +22,7 @@ closed-face soundness proof.  The lowerer/checker bridge proves its three
 displayed facts from a concrete RPF block list.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
@@ -51,6 +51,7 @@ variable {L : ℕ} (b : FiniteBlockEnds L)
 /-- A nonempty weakly ordered list whose final endpoint is `L` automatically
 covers every unit step below `L`: the final block is always a possible owner.
 This is the form produced directly by the W1 checks of a rich row leaf. -/
+@[expose]
 def ofOrderedLast (ends : List ℕ) (hNonempty : 0 < ends.length)
     (hLast : ends.getD (ends.length - 1) L = L)
     (hOrdered : ∀ i : ℕ, ends.getD i L ≤ ends.getD (i + 1) L) :
@@ -66,9 +67,11 @@ def ofOrderedLast (ends : List ℕ) (hNonempty : 0 < ends.length)
     exact hk
 
 /-- The endpoint at a block index, defaulting to the total length. -/
+@[expose]
 def endAt (i : ℕ) : ℕ := b.ends.getD i L
 
 /-- The left endpoint of a block. -/
+@[expose]
 def startAt (i : ℕ) : ℕ := if i = 0 then 0 else b.endAt (i - 1)
 
 /-- The first (finite) block ending strictly after `k`; its arbitrary value

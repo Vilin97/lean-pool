@@ -23,7 +23,7 @@ order continuity, σ-conditional completeness, σ-order continuity, and monotone
 norm convergence of bounded sequences.
 -/
 
-@[expose] public section
+public section
 
 namespace BanachLattice
 
@@ -52,7 +52,7 @@ variable {X : Type*} [NormedAddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
 
 /-- A lattice-ordered additive commutative group in which every increasing order-bounded sequence
 converges in norm to a least upper bound is σ-conditionally complete. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def sigmaConditionallyCompleteLatticeOfMonoBddAboveTendsto
     (h : ∀ {u : ℕ → X}, Monotone u → BddAbove (Set.range u) →
       ∃ x, IsLUB (Set.range u) x ∧ Filter.Tendsto u Filter.atTop (nhds x)) :

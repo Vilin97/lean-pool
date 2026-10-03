@@ -34,7 +34,7 @@ that last block, while hollowness identifies it with `h(t)^q`; these two facts
 contradict the choice of `h`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -16,7 +16,7 @@ injective exponents is `1`: distinct permutations contribute
 distinct monomials, and only the identity hits the diagonal.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -13,7 +13,7 @@ public import LeanPool.Zeta32.PrimeEdge.Valuation
 congruence `det G ≡ det Ref (mod p^{Σπ+1})`, and the scaled congruence
 `p^{-Σπ} det(T)^2 · Q_{p-1} ≡ (unit) (mod p)`. No `sorry` in this file. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

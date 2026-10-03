@@ -16,7 +16,7 @@ antidiagonal to guarded pointwise splits over a bounded pi-set —
 the shape produced by the colour-character convolution.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

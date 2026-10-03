@@ -15,7 +15,7 @@ feedback coefficient space.  The independent alternative is confined to the
 four-dimensional first-jet support `K₀` by cubic rows.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -23,7 +23,7 @@ namespace N4
 noncomputable section
 
 /-- A linear form is supported on the first two coefficients of each input polynomial. -/
-def InK0Linear (ell : LinearForm) : Prop :=
+@[expose] def InK0Linear (ell : LinearForm) : Prop :=
   ell 2 = 0 ∧ ell 3 = 0 ∧ ell 6 = 0 ∧ ell 7 = 0
 
 theorem normalizedFirstJetVector_inK0 (pa pb ja jb : F₂) :
@@ -185,6 +185,7 @@ private theorem equal_feedback_factor_product_mem
       · exact feedbackTarget_mem_zeroFeedbackLow q
 
 /-- An input coordinate outside the normalized first-jet support. -/
+@[expose]
 def OutsideK0Index (i : Fin 8) : Prop :=
   i = 2 ∨ i = 3 ∨ i = 6 ∨ i = 7
 

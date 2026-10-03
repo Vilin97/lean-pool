@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualActions
 The crossed action component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCrossedAction
@@ -86,7 +86,7 @@ theorem characterLinearEquiv_characterActionOfLinear
         (M := D) (Additive.toMul χ)) (e.symm d))
   rw [BinaryPontryaginDual.characterLinear_circle,
     BinaryPontryaginDual.characterLinear_circle]
-  rfl
+  exact PaperDualAutomorphism.dualCharacterEquiv_apply e.toAddEquiv χ d
 
 /- The compact dual action is continuous. Paper: §3. -/
 theorem continuous_characterActionOfLinear (e : D ≃ₗ[k] D) :

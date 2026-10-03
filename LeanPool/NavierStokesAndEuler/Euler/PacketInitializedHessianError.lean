@@ -27,7 +27,7 @@ section
 /-! The initialized finite pressure has its actual leading angular force
 and a uniformly small covector remainder. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -200,7 +200,7 @@ section
 /-! The leading pressure tensor of the actual joined primary.  Both angular
 derivatives below are derivatives of its constructed scalar pressure. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -220,7 +220,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 /-- Coefficient, given by `-(2*a*⟪D.normal.field t x, D.M.field t x (canonicalVelocity τ hτ hτT
 B ξ hs t x)⟫_ℝ)/‖D.normal.field t x‖^2`. -/
-def coefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
+@[expose] def coefficient (a : ℝ) (t : Icc (0 : ℝ) D.T) (x : Space) : ℝ :=
   -(2*a*⟪D.normal.field t x,
     D.M.field t x (canonicalVelocity τ hτ hτT B ξ hs t x)⟫_ℝ)/‖D.normal.field t x‖^2
 
@@ -321,7 +321,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,7 +339,7 @@ open scoped ContDiff
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 /-- Initialized pressure hessian cost, constructed using `fastHessianCost`. -/
-def initializedPressureHessianCost {D : Data U} {q : ℕ} {R₀ : ℝ}
+@[expose] def initializedPressureHessianCost {D : Data U} {q : ℕ} {R₀ : ℝ}
     (NB : EulerTransversePacketJoin.NormalBudget D q R₀) (R H0 Rc C : ℝ) : ℝ :=
   fastHessianCost (P := period) NB (4*R) (fixedVelocityGradeCost R H0 1) +
     9*C*physicalFixedCost D Rc C (4*R) 1*sobolevEmbeddingConstant period 3 *

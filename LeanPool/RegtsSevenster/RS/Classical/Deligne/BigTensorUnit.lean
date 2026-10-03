@@ -20,7 +20,7 @@ ambient category can be tested against the filtered colimit one
 stage at a time.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

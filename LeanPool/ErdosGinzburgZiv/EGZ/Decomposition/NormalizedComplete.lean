@@ -16,7 +16,7 @@ retains the explicit complete representative and removes the old upper
 anchor. Minimality, all mass bounds, and the subdivision map survive.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 
@@ -90,6 +90,7 @@ theorem normalized_node_ne_upperAnchor
     (heq ▸ x.property)
 
 /-- The subdivision map from the original decomposition to its normalized completion. -/
+@[expose]
 noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (D.normalized hp hδ hsmall C hmod hcenter) :=
   (D.refinedSubdivisionMap hp hδ hsmall C hmod hcenter).comp

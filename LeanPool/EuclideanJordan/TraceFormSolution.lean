@@ -31,7 +31,7 @@ The one piece of real work is formal reality. The challenge states it as a hypot
 only by reindexing along `Finset.equivFin`, done inline in each of the two positivity proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanTraceForm
 
@@ -44,6 +44,7 @@ theorem mul_smul_comm' (r : ℝ) (a b : J) : a * (r • b) = r • (a * b) := by
 
 /-- **The Jordan multiplication operator** `L_c : y ↦ c * y`, as an `ℝ`-linear map. Its
 `ℝ`-linearity is exactly what the scalar tower buys, and it is what makes `L_c` traceable. -/
+@[expose]
 def mulL (c : J) : J →ₗ[ℝ] J where
   toFun y := c * y
   map_add' := mul_add c
@@ -52,6 +53,7 @@ def mulL (c : J) : J →ₗ[ℝ] J where
 @[simp] theorem mulL_apply (c y : J) : mulL c y = c * y := rfl
 
 /-- `L_·` bundled as a linear map in the multiplier, which is what makes `jtr` linear. -/
+@[expose]
 def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J where
   toFun := mulL
   map_add' a b := by ext y; simp only [mulL_apply, LinearMap.add_apply, add_mul]
@@ -63,6 +65,7 @@ def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J where
 
 /-- **The Jordan trace functional** `x ↦ tr(L_x)`, as an `ℝ`-linear form. Not normalised: see
 the module docstring. -/
+@[expose]
 noncomputable def jtr : J →ₗ[ℝ] ℝ := (LinearMap.trace ℝ J).comp mulLₗ
 
 @[simp] theorem jtr_apply (x : J) : jtr x = LinearMap.trace ℝ J (mulL x) := rfl
@@ -72,6 +75,7 @@ noncomputable def jtr : J →ₗ[ℝ] ℝ := (LinearMap.trace ℝ J).comp mulL�
 Bilinearity is not a theorem below because it is the *type*: the four `mk₂` fields are additivity
 and homogeneity in each argument, and they are immediate from linearity of `jtr` and
 bilinearity of the product. -/
+@[expose]
 noncomputable def traceForm : J →ₗ[ℝ] J →ₗ[ℝ] ℝ :=
   LinearMap.mk₂ ℝ (fun x y => jtr (x * y))
     (fun x x' y => by rw [add_mul, map_add])

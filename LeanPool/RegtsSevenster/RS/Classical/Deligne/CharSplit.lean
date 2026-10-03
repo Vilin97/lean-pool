@@ -22,7 +22,7 @@ specialisation at a pointwise product of scalar sequences over
 pairs of shapes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ universe u
 /-- The completed cycle product of a prospective power-sum
 sequence: the product of `t` over the cycle type, completed by
 `t 1` over the fixed points. -/
+@[expose]
 noncomputable def cycleFun {n : ℕ} (t : ℕ → ℂ)
     (π : Equiv.Perm (Fin n)) : ℂ :=
   (π.cycleType.map t).prod * (t 1) ^ (n - π.cycleType.sum)
@@ -280,6 +281,7 @@ pullback representations, a nonnegative integer. -/
 /-- The Kronecker multiplicity of three shapes of one size: the
 normalized triple class pairing of their recast Jacobi–Trudi
 characters. -/
+@[expose]
 noncomputable def kronMult {n : ℕ} (lam μ ν : Shape n) : ℂ :=
   ((n.factorial : ℂ))⁻¹ * ∑ π : Equiv.Perm (Fin n),
     jtChar lam.val (permCast lam.prop.symm π) *

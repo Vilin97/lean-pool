@@ -18,7 +18,7 @@ velocity amplitude by `amp`. The projected equation then scales by
 the totalized zero-normal case.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.NormalScaling

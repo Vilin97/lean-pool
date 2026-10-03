@@ -19,7 +19,7 @@ attempt the far-mark case split itself: it exposes the rank-zero and
 rank-minus-one three-chip facts that each case consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

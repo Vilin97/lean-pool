@@ -20,7 +20,7 @@ when a crosscap is present, and the resulting ordered word is signed-relabelled 
 project-owned `NormalForm.canonicalPresentation`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -1034,6 +1034,7 @@ theorem map_sequenceWord_signedRelabeling_normalized
 
 /-- An already ordered orientable completed word relabels exactly to the existing canonical
 orientable finite-cyclic presentation. -/
+@[expose]
 noncomputable def orientableOrderedResult
     (terminal : TerminalCompletedWord)
     (hcrosscap :
@@ -1148,6 +1149,7 @@ private theorem orientableOrderedResult_normalForm
 
 /-- An already ordered nonorientable completed word relabels exactly to the existing canonical
 nonorientable finite-cyclic presentation. -/
+@[expose]
 noncomputable def nonOrientableOrderedResult
     (terminal : TerminalCompletedWord)
     (hhandle :

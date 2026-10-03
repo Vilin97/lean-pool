@@ -20,7 +20,7 @@ For `p = 2m + 1` every residue `c` mod `p` is `≡ ±a` for a unique `a ∈ {0, 
 We express the per-class counts `classCount` of the framework in terms of these classes.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -33,7 +33,7 @@ def mu (p : ℕ) (a : ℕ) (c : ZMod p) : ℕ :=
   (if ((a : ℤ) : ZMod p) = c then 1 else 0) + (if ((a : ℤ) : ZMod p) = -c then 1 else 0)
 
 /-- The class of a residue. -/
-def ccls (hm : 2 * m + 1 = p) (c : ZMod p) : Fin (m + 1) :=
+@[expose] def ccls (hm : 2 * m + 1 = p) (c : ZMod p) : Fin (m + 1) :=
   if h : c.val ≤ m then ⟨c.val, by omega⟩ else ⟨p - c.val, by have := c.val_lt; omega⟩
 
 lemma ccls_spec (hm : 2 * m + 1 = p) (c : ZMod p) :
@@ -100,7 +100,7 @@ lemma mu_eq (hm : 2 * m + 1 = p) (a : Fin (m + 1)) (c : ZMod p) :
       ite_eq_right (fun h => ha (ccls_unique hm c a (Or.inr h)))]
 
 /-- `#{j ≤ X : j ≡ c} + #{j ≤ X : j ≡ -c}`. -/
-def SX (p X : ℕ) (c : ZMod p) : ℕ :=
+@[expose] def SX (p X : ℕ) (c : ZMod p) : ℕ :=
   ((Icc 1 X).filter fun j : ℕ => ((j : ℤ) : ZMod p) = c).card +
     ((Icc 1 X).filter fun j : ℕ => ((j : ℤ) : ZMod p) = -c).card
 
@@ -112,10 +112,11 @@ lemma SX_ccls (hm : 2 * m + 1 = p) (X : ℕ) (c : ZMod p) :
   rw [SX_neg]
 
 /-- The class constant `5[a = 0] + 6 S_N(a) - S_K(a)`. -/
-noncomputable def Bse (p K N : ℕ) (a : ℕ) : ℚ :=
+@[expose] noncomputable def Bse (p K N : ℕ) (a : ℕ) : ℚ :=
   (if a = 0 then 5 else 0) + 6 * (SX p N (((a : ℤ) : ZMod p)) : ℚ) - SX p K (((a : ℤ) : ZMod p))
 
 /-- The vanishing order of the row `s = (a, i)` at the class `b`. -/
+@[expose]
 def nu {m : ℕ} (L : Fin (m + 1) → ℕ) (s : Σ a : Fin (m + 1), Fin (L a)) (b : Fin (m + 1)) : ℕ :=
   if b = s.1 then s.2 else L b
 

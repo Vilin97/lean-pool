@@ -25,7 +25,7 @@ and Feller `C₀`-orbit continuity on the other.
 No continuous-time Markov, strong Markov, or Hunt-process assertion is made here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

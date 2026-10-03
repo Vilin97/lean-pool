@@ -55,7 +55,7 @@ spatial test is smooth and compactly supported. Consequently all pairings are
 ordinary Lebesgue integrals even when the pressure grows at spatial infinity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -271,7 +271,7 @@ The differential operators commute with this embedding. The pressure identities
 below continue to pair the physical pressure only with compact spatial tests.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -297,7 +297,7 @@ def realTest (ψ : Space → ℝ) (hψ : ContDiff ℝ ∞ ψ) (hcψ : HasCompact
     (hcψ.comp_left (g := fun r : ℝ => (r : ℂ)) (by simp))
 
 @[simp] theorem realTest_apply (ψ : Space → ℝ) (hψ : ContDiff ℝ ∞ ψ)
-    (hcψ : HasCompactSupport ψ) (x : Space) : realTest ψ hψ hcψ x = (ψ x : ℂ) := rfl
+    (hcψ : HasCompactSupport ψ) (x : Space) : realTest ψ hψ hcψ x = (ψ x : ℂ) := by rfl
 
 theorem realTest_compact (ψ : Space → ℝ) (hψ : ContDiff ℝ ∞ ψ)
     (hcψ : HasCompactSupport ψ) : HasCompactSupport (realTest ψ hψ hcψ : Space → ℂ) :=
@@ -465,7 +465,7 @@ Only the test is approximated by compactly supported functions; no support or
 derivative bound is imposed on the field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -654,7 +654,7 @@ uniform spatial integral bounds; no time derivative or global spatial
 derivative bound is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1188,7 +1188,7 @@ section
 
 /-! # Pointwise recovery from compact temporal tests -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1227,7 +1227,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1672,7 +1672,7 @@ commutator form.  Its estimates use only the unweighted velocity energy and
 the weighted velocity and gradient norms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2046,7 +2046,7 @@ identification of every compact scalar pressure-gradient pairing. It does not
 assume a pressure-flux formula or any bound on the pressure at infinity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2217,7 +2217,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2284,7 +2284,7 @@ cross terms use `L³` of that velocity and `L²` of the difference; the quadrati
 term uses the cutoff interpolation estimate. All norms remain finite explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2506,7 +2506,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2666,11 +2666,11 @@ def fluxTest (R : ℝ) (hR : 0 < R) (w : Space → Space) (hw : ContDiff ℝ ∞
 
 @[simp] theorem rTest_apply (R : ℝ) (hR : 0 < R) (w : Space → Space)
     (hw : ContDiff ℝ ∞ w) (x : Space) :
-    rTest R hR w hw x = (PressureFluxTest.cutoffTest R w x : ℂ) := rfl
+    rTest R hR w hw x = (PressureFluxTest.cutoffTest R w x : ℂ) := by rfl
 
 @[simp] theorem fluxTest_apply (R : ℝ) (hR : 0 < R) (w : Space → Space)
     (hw : ContDiff ℝ ∞ w) (x : Space) :
-    fluxTest R hR w hw x = (fderiv ℝ (ComparisonCutoffs.weight R) x (w x) : ℂ) := rfl
+    fluxTest R hR w hw x = (fderiv ℝ (ComparisonCutoffs.weight R) x (w x) : ℂ) := by rfl
 
 theorem fluxTest_eq_multiplier_rTest (R : ℝ) (hR : 0 < R) (w : Space → Space)
     (hw : ContDiff ℝ ∞ w) (x : Space) :
@@ -2702,7 +2702,7 @@ theorem canonicalCutoffFlux_eq_sum (R : ℝ) (hR : 0 < R) (u v : VelocityField) 
     (hu : ContDiff ℝ ∞ (fun x => u (t, x))) (hv : ContDiff ℝ ∞ (fun x => v (t, x))) :
     canonicalCutoffFlux R hR u v t hu hv =
       ∑ i : Fin 3, ∑ j : Fin 3, pressurePair i j (tensorDiff u v t i j)
-        (fluxTest R hR (fun x => (u - v) (t, x)) (hu.sub hv)) := rfl
+        (fluxTest R hR (fun x => (u - v) (t, x)) (hu.sub hv)) := by rfl
 
 theorem norm_canonicalCutoffFlux_le (R : ℝ) (hR : 0 < R) (u v : VelocityField) (t : ℝ)
     (hu : ContDiff ℝ ∞ (fun x => u (t, x))) (hv : ContDiff ℝ ∞ (fun x => v (t, x)))

@@ -47,7 +47,7 @@ identity uses an invertible linear chart and does not require an additional
 smoothness assumption on the phase.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,6 +117,7 @@ variable {B N0 : ℕ}
 abbrev Label := ActualParticularStageControls.Label
 
 /-- The potential of the actual current common coefficient. -/
+@[expose]
 noncomputable def potential (x : CorrectionStep.CycleState (Label B N0))
     (l : Label B N0) (j : ℤ) (n : ℕ) : WaveSpace → ComplexVector :=
   (ActualReferenceRebase.actualCoefficients x l j).curlPotential
@@ -125,6 +126,7 @@ noncomputable def potential (x : CorrectionStep.CycleState (Label B N0))
 
 /-- The complete harmonic pressure, with the actual current common pressure
 coefficient and the same carrier. -/
+@[expose]
 noncomputable def pressureMode (x : CorrectionStep.CycleState (Label B N0))
     (l : Label B N0) (j : ℤ) (n : ℕ) : WaveSpace → ℂ :=
   mode ((ActualReferenceRebase.actualCoefficients x l j).frequency n)
@@ -337,7 +339,7 @@ their actual physical modes. The angle and Cartesian rotation are the same
 at both bands, so the native scale cancels before applying either map.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -404,7 +406,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -417,22 +419,26 @@ open scoped Topology ContDiff BigOperators
 variable {B N0 : ℕ}
 
 /-- The actual finite current-band potential, in the initializer's label order. -/
+@[expose]
 noncomputable def localPotential
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (n : ℕ) : VelocityField :=
   ActualCurrentParticularPhysical.localPotential (ActualCycleParameters.particularState x) n
 
 /-- Local pressure, given by `ActualCurrentParticularPhysical.localPressure
 (ActualCycleParameters.particularState x) n`. -/
+@[expose]
 noncomputable def localPressure
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (n : ℕ) : PressureField :=
   ActualCurrentParticularPhysical.localPressure (ActualCycleParameters.particularState x) n
 
 /-- One representative of the actual current-band potential formulas. -/
+@[expose]
 noncomputable def potential
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (N : ℕ) : VelocityField :=
   ValidDyadicBandCover.field h N (localPotential x)
 
 /-- Pressure, given by `ValidDyadicBandCover.field h N (localPressure x)`. -/
+@[expose]
 noncomputable def pressure
     (x : CorrectionStep.CycleState (ActualInitialization.Index B N0)) (N : ℕ) : PressureField :=
   ValidDyadicBandCover.field h N (localPressure x)
@@ -785,7 +791,7 @@ The two column choices are retained by the signed-label map and are already
 included in the 2250-color palette.  The finite harmonic sum remains explicit.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1215,7 +1221,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1271,6 +1277,7 @@ noncomputable def signedMeanPressure (j : ℕ) : PressureField := fun w =>
     (ActualStageEstimates.pressureInput R M hN j).family.field w
 
 /-- Direct, given by `(ActualStageEstimates.angularInput R M hN j).family.angularField`. -/
+@[expose]
 noncomputable def direct (j : ℕ) : VelocityField :=
   (ActualStageEstimates.angularInput R M hN j).family.angularField
 
@@ -1422,6 +1429,7 @@ variable {B N0 N : ℕ} {D DA0 DP0 : Type}
 
 /-- The four literal contributions use the same order as the physical
 sequence construction. -/
+@[expose]
 noncomputable def potential (j : ℕ) : VelocityField := fun w =>
   particularA j w + (W.potential j).vector w +
     (ActualStageEstimates.temporalInput R M hN j).family.angularField w +
@@ -1429,6 +1437,7 @@ noncomputable def potential (j : ℕ) : VelocityField := fun w =>
 
 /-- Pressure, defined pointwise by `particularP j w + (W.pressure j).pressure w +
 (ActualStageEstimates.pressureInput R M hN j).family.field w`. -/
+@[expose]
 noncomputable def pressure (j : ℕ) : PressureField := fun w =>
   particularP j w + (W.pressure j).pressure w +
     (ActualStageEstimates.pressureInput R M hN j).family.field w
@@ -1667,11 +1676,13 @@ end MixedSequence
 
 /-- Current potential, given by `ActualValidBandWaves.gluedPotential
 (ActualCyclePreservation.state B N0 j) N`. -/
+@[expose]
 noncomputable def currentPotential (B N0 N : ℕ) (j : ℕ) : VelocityField :=
   ActualValidBandWaves.gluedPotential (ActualCyclePreservation.state B N0 j) N
 
 /-- Current pressure, given by `ActualValidBandWaves.gluedPressure
 (ActualCyclePreservation.state B N0 j) N`. -/
+@[expose]
 noncomputable def currentPressure (B N0 N : ℕ) (j : ℕ) : PressureField :=
   ActualValidBandWaves.gluedPressure (ActualCyclePreservation.state B N0 j) N
 

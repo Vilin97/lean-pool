@@ -21,7 +21,7 @@ whose transition maps are linear isometries, this file equips that algebraic
 direct limit with the unique norm making every canonical map isometric.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -85,6 +85,7 @@ theorem repr_spec (z : Carrier G f) :
   Classical.choose_spec (Classical.choose_spec (Module.DirectLimit.exists_of z))
 
 /-- The norm of a direct-limit element, computed from any representative. -/
+@[expose]
 noncomputable def limitNorm (z : Carrier G f) : ℝ :=
   ‖reprValue G f z‖
 
@@ -94,6 +95,7 @@ theorem limitNorm_of (i : ι) (x : G i) :
   exact norm_eq_of_of_eq G f (repr_spec G f _)
 
 /-- The additive norm induced on the algebraic direct limit. -/
+@[expose]
 noncomputable def addGroupNorm : AddGroupNorm (Carrier G f) where
   toFun := limitNorm G f
   map_zero' := by
@@ -128,6 +130,7 @@ noncomputable instance normedSpace : NormedSpace ℝ (Carrier G f) where
     rw [limitNorm_of, limitNorm_of, norm_smul]
 
 /-- Every canonical component map is a linear isometry. -/
+@[expose]
 noncomputable def of (i : ι) : G i →ₗᵢ[ℝ] Carrier G f where
   toLinearMap := Module.DirectLimit.of ℝ ι G (linearMap G f) i
   norm_map' := limitNorm_of G f i
@@ -143,6 +146,7 @@ abbrev CompletedCarrier := UniformSpace.Completion (Carrier G f)
 
 /-- The canonical isometric embedding of a component into the completed
 direct limit. -/
+@[expose]
 noncomputable def completedOf (i : ι) : G i →ₗᵢ[ℝ] CompletedCarrier G f :=
   UniformSpace.Completion.toComplₗᵢ.comp (of G f i)
 

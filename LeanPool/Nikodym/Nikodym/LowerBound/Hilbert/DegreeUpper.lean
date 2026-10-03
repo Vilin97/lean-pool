@@ -50,7 +50,7 @@ The packaged statement consumed by node A04′ is `exists_hilbert_bounds`.
   `∑ i, (t - e i + k).choose k`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

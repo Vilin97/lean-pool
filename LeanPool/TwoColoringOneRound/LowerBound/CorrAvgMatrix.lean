@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -29,7 +29,7 @@ def corrMatrix {n : Nat} (f : Coloring n) : Matrix (Vertex n) (Vertex n) Correla
   fun u v => corr f u v
 
 /-- The orbit-averaged correlation kernel as a matrix indexed by vertices. -/
-noncomputable def corrAvgMatrix {n : Nat} (f : Coloring n) :
+@[expose] noncomputable def corrAvgMatrix {n : Nat} (f : Coloring n) :
     Matrix (Vertex n) (Vertex n) Correlation.Q :=
   fun u v => corrAvg f u v
 

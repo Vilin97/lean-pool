@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Canonical smooth pressure reconstruction for the generic finite-solution assembly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,6 +34,7 @@ variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
 /-- Bounded evaluation of the actual finite pressure fixes a canonical common pressure
 representative. -/
+@[expose]
 def FiniteFamily.pointPressure (F : FiniteFamily period hT A)
     (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Vector3 :=
   pointEvaluation period x (restrictOperator period (by omega : 3 ≤ 6)
@@ -67,7 +68,7 @@ theorem FiniteFamily.pointPressure_smooth (F : FiniteFamily period hT A) (C : Co
   exact hg x
 
 /-- The genuine signed pressure-gradient vector field on the oscillatory physical graph. -/
-def FiniteFamily.graphPressure (F : FiniteFamily period hT A) (k : ℝ)
+@[expose] def FiniteFamily.graphPressure (F : FiniteFamily period hT A) (k : ℝ)
     (t : Icc (0 : ℝ) T) (x : Vector3) : Vector3 :=
   A.κ • F.pointPressure period t (cylinderGraph period k A.direction x)
 
@@ -90,6 +91,7 @@ theorem FiniteFamily.graphPressure_has_potential (F : FiniteFamily period hT A)
     (F.pointPressure period t) (F.pointPressure_ae period t) (F.pointPressure_smooth period C t)
 
 /-- The actual graph pressure reconstructed by a canonical radial integral based at the origin. -/
+@[expose]
 def FiniteFamily.normalizedGraphPotential (F : FiniteFamily period hT A) (k : ℝ)
     (t : Icc (0 : ℝ) T) (x : Vector3) : ℝ :=
   radialPotential (F.graphPressure period k t) x

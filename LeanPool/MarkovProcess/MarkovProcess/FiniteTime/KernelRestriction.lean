@@ -17,7 +17,7 @@ gives the finite-time kernel at the selected times. This is finite-dimensional k
 infrastructure and does not construct a path-space law or a stochastic process.
 -/
 
-@[expose] public section
+public section
 
 open ProbabilityTheory
 

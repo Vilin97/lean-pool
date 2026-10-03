@@ -21,7 +21,7 @@ an analytic ambient fiber-coordinate map and eventual two-sided inverse laws,
 so the conclusion is stronger than a dimension count.
 -/
 
-@[expose] public section
+public section
 
 
 open Filter

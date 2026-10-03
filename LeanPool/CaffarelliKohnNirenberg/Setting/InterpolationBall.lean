@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology
@@ -31,7 +31,7 @@ def interpolationTheta (q : ℝ) : ℝ :=
   3 * (q - 2) / (2 * q)
 
 /-- Exponent of the gradient contribution in the velocity interpolation estimate. -/
-def interpolationExponent (q : ℝ) : ℝ :=
+@[expose] def interpolationExponent (q : ℝ) : ℝ :=
   3 * (q - 2) / 4
 
 private theorem interpolationTheta_bounds {q : ℝ} (hq2 : 2 < q) (hq6 : q < 6) :

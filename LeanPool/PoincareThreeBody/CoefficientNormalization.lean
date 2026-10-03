@@ -20,7 +20,7 @@ ellipse and instantiates the removable mass quotient.  It is the complete local 
 iteration of Poincaré's subtract-and-divide argument.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

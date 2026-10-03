@@ -10,7 +10,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.StoppedLineages
 
 /-! # Bounds after restarting and stopping a finite interval -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

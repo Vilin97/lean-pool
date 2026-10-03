@@ -14,4 +14,4 @@ public import LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
 Import-only index for basis support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

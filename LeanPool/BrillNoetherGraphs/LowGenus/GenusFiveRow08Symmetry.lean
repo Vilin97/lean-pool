@@ -39,7 +39,7 @@ fixed.  It reverses only the triangle edge `e6` and the four slots it swaps in
 pairs; all six endpoint laws are `decide`d.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow08Symmetry
 

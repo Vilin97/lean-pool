@@ -30,7 +30,7 @@ is *not* burned — pays for all of them at once, giving `|I₀| ≤ D(v₀)`.  
 so the slot has a burned/unburned split and therefore a chip in its interior.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Tricycle
 
@@ -44,9 +44,11 @@ open Utilities.Gonality
 /-! ## Indexing the six spokes -/
 
 /-- The six spoke slots, indexed by `Fin 6`. -/
+@[expose]
 def spokeOf : Fin 6 → Fin 15 := ![0, 1, 2, 3, 4, 5]
 
 /-- The transition vertex at the far end of spoke `i`. -/
+@[expose]
 def transitionOf : Fin 6 → Fin 7 := ![1, 2, 3, 4, 5, 6]
 
 theorem spokeOf_injective : Function.Injective spokeOf := by decide

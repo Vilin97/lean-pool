@@ -21,7 +21,7 @@ the vertex counts defining `hollowPolytopeNumber`.  It also develops the
 Smith-normal-form saturation lemma needed to prove that bridge.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,6 +30,7 @@ namespace EGZ
 /-- The weakest consequence of Proposition `wl` needed for bounding one
 hollow polytope: its vertices have a `p`-hollow reduction for at least one
 prime. -/
+@[expose]
 def RationalPolytope.HasPrimeHollowReduction {d : ℕ}
     (P : RationalPolytope d) : Prop :=
   ∃ p : ℕ, p.Prime ∧
@@ -38,6 +39,7 @@ def RationalPolytope.HasPrimeHollowReduction {d : ℕ}
 /-- Dimensionwise form of the reduction bridge.  Proposition `wl` proves a
 stronger eventual-prime statement, while this existential form is all that
 the polynomial bound needs. -/
+@[expose]
 def HollowReductionBridge (d : ℕ) : Prop :=
   ∀ P : RationalPolytope d,
     P.IsHollow → P.HasPrimeHollowReduction

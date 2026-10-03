@@ -17,7 +17,7 @@ count.  Keeping these definitions in a neutral module separates the stable obstr
 raw-count homotopy interface.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -33,6 +33,7 @@ open EquivariantCoordinateHomotopy
 open RefinedAffineMap
 
 /-- Continuous coordinate map associated with an original affine vertex map. -/
+@[expose]
 noncomputable def affineZeroFreeMap
     (hp : Nat.Prime p) (F : CoordinateAffineVertexMap p)
     (heq : ∀ (g : PrimeSymmetry p) (x : Realization p),
@@ -43,6 +44,7 @@ noncomputable def affineZeroFreeMap
   zeroFree := hzero
 
 /-- The globally positive equivariant S5 reference lift is zero-free. -/
+@[expose]
 noncomputable def positiveReferenceZeroFreeMap
     (hp : Nat.Prime p) : ZeroFreeMap hp :=
   affineZeroFreeMap hp (AAK.positiveEquivariantReferenceCoordinateMap hp)
@@ -53,6 +55,7 @@ noncomputable def positiveReferenceZeroFreeMap
       exact (ne_of_gt (hpos ⟨0, hp.pos⟩)) (by simpa using hi))
 
 /-- The globally negative equivariant S5 reference lift is zero-free. -/
+@[expose]
 noncomputable def negativeReferenceZeroFreeMap
     (hp : Nat.Prime p) : ZeroFreeMap hp :=
   affineZeroFreeMap hp (AAK.negativeEquivariantReferenceCoordinateMap hp)

@@ -72,7 +72,7 @@ clean files are NOT modified.  This formalizes the KNOWN theorem EGRS75
 not attempted here.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.LeafInduction
 
@@ -120,12 +120,12 @@ theorem seed_lt_pow_succ {p : ℕ} (hp : 2 ≤ p) (N : ℕ) : N < p ^ (N + 1) :=
 measure: each repair step strictly decreases it while preserving `LowDigits p`. -/
 
 /-- The oversized base-`q` digits of `n` (those exceeding `(q-1)/2`). -/
-def badDigitsQ (q n : ℕ) : List ℕ :=
+@[expose] def badDigitsQ (q n : ℕ) : List ℕ :=
   (Nat.digits q n).filter (fun d => decide ((q - 1) / 2 < d))
 
 /-- The number of oversized base-`q` digits of `n`.  This is the EGRS termination
 potential: `0` iff `LowDigits q n`, strictly decreased by each repair step. -/
-def badCountQ (q n : ℕ) : ℕ := (badDigitsQ q n).length
+@[expose] def badCountQ (q n : ℕ) : ℕ := (badDigitsQ q n).length
 
 /-- **Base case of the induction (KERNEL-CLEAN).**  The potential vanishes exactly
 when every base-`q` digit is `≤ (q-1)/2`, i.e. when `n` is `LowDigits q`.  So a

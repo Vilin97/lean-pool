@@ -16,7 +16,7 @@ systems induces a nonexpansive map between their completed normed direct
 limits. Linearity of the stage maps is neither assumed nor used.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -150,6 +150,7 @@ theorem algebraicMap_lipschitz
 
 /-- The coherent nonexpansive map extended to the completed normed direct
 limits. -/
+@[expose]
 noncomputable def completedMap :
     CompletedSource M eM → CompletedTarget N eN :=
   UniformSpace.Completion.extension

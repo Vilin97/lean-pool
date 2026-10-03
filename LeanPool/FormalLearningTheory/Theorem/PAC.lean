@@ -46,7 +46,7 @@ construction: if VCDim = ∞, construct a distribution D where any learner
 fails with probability > δ for some ε.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

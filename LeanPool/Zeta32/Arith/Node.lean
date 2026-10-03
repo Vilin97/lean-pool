@@ -21,7 +21,7 @@ is applied to
 `costQ`, which equals `cost` when `Q r n ≠ 0` and is below every hypothesis bound when `Q r n =
 0`. -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology
 open scoped BigOperators

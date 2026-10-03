@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Ring.Star
 
 /-! Passing genuine Banach-valued evolution equations through uniform time-path limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,7 +26,8 @@ open scoped Topology
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Integration of the actual clamped time path is a bounded linear operator. -/
-def pathIntegralOperator (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) : C(Icc (0 : ℝ) T,E) →L[ℝ] E :=
+@[expose] def pathIntegralOperator (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) :
+    C(Icc (0 : ℝ) T,E) →L[ℝ] E :=
   LinearMap.mkContinuous
     { toFun := fun f => ∫ t in a..b, extendPath T hT f t
       map_add' := by
@@ -44,7 +45,7 @@ def pathIntegralOperator (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) : C(Icc (0 : ℝ) 
 
 /-- The time-integral operator is the literal Bochner interval integral. -/
 theorem pathIntegralOperator_apply (T : ℝ) (hT : 0 ≤ T) (a b : ℝ) (f : C(Icc (0 : ℝ) T, E)) :
-    pathIntegralOperator T hT a b f = ∫ t in a..b, extendPath T hT f t := rfl
+    pathIntegralOperator T hT a b f = ∫ t in a..b, extendPath T hT f t := by rfl
 
 variable [CompleteSpace E]
 

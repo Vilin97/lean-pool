@@ -16,7 +16,7 @@ parameter. Each of its two possible ranges puts a labelled vertex in the
 convex hull of four other vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

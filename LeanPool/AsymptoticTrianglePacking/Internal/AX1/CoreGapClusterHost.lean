@@ -36,7 +36,7 @@ public import Mathlib.Algebra.Order.Ring.Star
 
 /-! # CoreGapBlowUp -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -716,7 +716,7 @@ end
 
 /-! # YusterBridgeFrac -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -976,7 +976,7 @@ end
 
 /-! # CoreGapPackingSplit -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -1118,7 +1118,7 @@ end
 
 /-! # CoreGapClusterHost -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -1130,6 +1130,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 
 /-- **The cluster graph** of `G` along `P` at scales `ep`, `de`: the vertices are the parts of `P`
 and two distinct parts are joined when the pair is `ep`-uniform of density at least `de`. -/
+@[expose]
 def hostGraph (G : SimpleGraph V) [DecidableRel G.Adj] (P : Finpartition (univ : Finset V))
     (ep de : ℝ) : SimpleGraph {S : Finset V // S ∈ P.parts} where
   Adj S T := (S : Finset V) ≠ (T : Finset V) ∧ G.IsUniform ep (S : Finset V) (T : Finset V) ∧

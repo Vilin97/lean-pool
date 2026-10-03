@@ -16,7 +16,7 @@ of parametrized triangles in the open subpolyhedron.  This file constructs those
 proving the global face-to-face intersection theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -102,7 +102,7 @@ theorem homeo_symm_mem_levelFaceCarrier {n : ℕ} (t : K.LevelFace n)
   rwa [heq]
 
 /-- The source point of a geometric fan vertex in the refined realization carrying its tile. -/
-noncomputable def adaptiveFanVertexSource (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanVertexSource (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU)
     (p : {p // p ∈ K.adaptiveFanFaceVertices U hU f}) :
     (K.safeSubdivision f.1.1).refined.realization :=
@@ -117,21 +117,21 @@ theorem adaptiveFanVertexSource_mem_carrier (hU : IsOpen U)
   exact K.adaptiveFanVertex_mem_carrier U hU f p.2
 
 /-- The distinguished cone-center vertex of a fan triangle. -/
-noncomputable def adaptiveFanCenterVertex (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanCenterVertex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
   ⟨K.adaptiveFaceCenter U f.1, by
     simp [adaptiveFanFaceVertices]⟩
 
 /-- The first base vertex of a fan triangle. -/
-noncomputable def adaptiveFanFirstVertex (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanFirstVertex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
   ⟨K.adaptiveEdgeIntervalFirst U hU f.1 f.2.1 f.2.2, by
     simp [adaptiveFanFaceVertices]⟩
 
 /-- The second base vertex of a fan triangle. -/
-noncomputable def adaptiveFanSecondVertex (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanSecondVertex (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     {p // p ∈ K.adaptiveFanFaceVertices U hU f} :=
   ⟨K.adaptiveEdgeIntervalSecond U hU f.1 f.2.1 f.2.2, by
@@ -888,7 +888,7 @@ theorem adaptiveFanSourcePoint_val_injective (hU : IsOpen U)
   simpa only [source, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using hxy
 
 /-- One parametrized fan triangle in the open subspace. -/
-noncomputable def adaptiveFanFaceMap (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanFaceMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     K.adaptiveFanSimplex U hU f → U :=
   fun x ↦ ⟨(K.safeSubdivision f.1.1).homeo
@@ -1045,7 +1045,7 @@ theorem continuous_adaptiveFanFaceMap (hU : IsOpen U)
     (K.continuous_adaptiveFanSourcePoint U hU f)
 
 /-- The geometric interval path along a resolved fan base. -/
-noncomputable def adaptiveFanBasePath (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanBasePath (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) : Set.Icc (0 : ℝ) 1 → U :=
   K.adaptiveFanFaceMap U hU f ∘ K.adaptiveFanBaseSimplexPath U hU f
 

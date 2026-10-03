@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual cylinder heat kernel in the singular Volterra existence theorem. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -58,8 +58,8 @@ theorem heatKernel_joint_continuous (q : ℕ) (ν : ℝ) (hν : 0 < ν) :
   rfl
 
 /-- The free viscous heat evolution is an actual continuous path in every Sobolev space. -/
-def freeHeatPath (q : ℕ) (ν T : ℝ) (u₀ : SobolevSpace period q) : C(Icc (0 : ℝ) T, SobolevSpace
-    period q) where
+@[expose] def freeHeatPath (q : ℕ) (ν T : ℝ) (u₀ : SobolevSpace period q) :
+    C(Icc (0 : ℝ) T, SobolevSpace period q) where
   toFun t := heatOperator period q (2 * ν * t.val).toNNReal u₀
   continuous_toFun := (heatOperator_continuous period u₀).comp
     (continuous_real_toNNReal.comp (continuous_const.mul continuous_subtype_val))

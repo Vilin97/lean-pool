@@ -16,7 +16,7 @@ solve, its transported cutoff, its curl correction, and its finite harmonic
 assembly are retained in the realization.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -89,6 +89,7 @@ theorem realizedCoefficient_phase_germ {Φ Ψ : E → ℝ} {x : E} (hΦ : Φ =�
 end Reindex
 
 /-- Raw as an element of `LinearWaveBounds.WaveCoefficients WaveSpace`. -/
+@[expose]
 noncomputable def raw (D : AssemblyData Parameter) (h : ℝ) (gap : ℕ → ℕ) (j : ℤ) :
     LinearWaveBounds.WaveCoefficients WaveSpace :=
   ((CorrectionStep.ParticularParameters.fromReference D h gap).copyData
@@ -96,6 +97,7 @@ noncomputable def raw (D : AssemblyData Parameter) (h : ℝ) (gap : ℕ → ℕ)
 
 /-- Corrected, given by `(CorrectionStep.ParticularParameters.fromReference D h gap).wave s
 D.context D.state D.carrierBlock D.gaussianInput D.aliasInput j`. -/
+@[expose]
 noncomputable def corrected (D : AssemblyData Parameter) (s : WeightedClasses.StripData Associated)
     (h : ℝ) (gap : ℕ → ℕ) (j : ℤ) : LinearWaveBounds.WaveCoefficients WaveSpace :=
   (CorrectionStep.ParticularParameters.fromReference D h gap).wave s
@@ -259,6 +261,7 @@ end Band
 /-! ## The literal finite harmonic block -/
 
 /-- Block as an element of `HarmonicBlock Associated`. -/
+@[expose]
 noncomputable def block (D : AssemblyData Parameter) (s : WeightedClasses.StripData Associated)
     (h : ℝ) (gap : ℕ → ℕ) (N : ℕ) : HarmonicBlock Associated :=
   (CorrectionStep.ParticularParameters.fromReference D h gap).updateBlock s
@@ -266,6 +269,7 @@ noncomputable def block (D : AssemblyData Parameter) (s : WeightedClasses.StripD
 
 /-- Cylindrical coordinates with the cycle's slow-coordinate order and the
 association used by the harmonic coefficient block. -/
+@[expose]
 noncomputable def associatedCylinder : Cylinder ≃ₗᵢ[ℝ] (Associated × ℝ) :=
   StateReindex.cylinder PhysicalResidualNaturality.associatedToLift.symm
 
@@ -518,6 +522,7 @@ end Physical
 /-! ## The cycle's actual coordinate layout -/
 
 /-- Cycle block, given by `StateReindex.block CorrectionStep.cycleAssoc (block D s h gap N)`. -/
+@[expose]
 noncomputable def cycleBlock (D : AssemblyData Parameter) (s : WeightedClasses.StripData Associated)
     (h : ℝ) (gap : ℕ → ℕ) (N : ℕ) : HarmonicBlock CorrectionStep.CyclePoint :=
   StateReindex.block CorrectionStep.cycleAssoc (block D s h gap N)
@@ -816,6 +821,7 @@ theorem liftCoefficient_smooth :
 
 /-- The same reference corrected wave as a function of all free lifted
 variables. No graph evaluation occurs in this definition. -/
+@[expose]
 noncomputable def referenceLiftVelocity (D : AssemblyData Parameter) (h Qr : ℝ) (I : ℕ) (j : ℤ) :
     Cylinder → ComplexVector :=
   vectorMode (referenceFrequency D j) (liftPhase D j)
@@ -895,6 +901,7 @@ theorem bandVelocity_eq_reference {x : Cylinder} (hx : x ∈ bandDomain D h Q Qr
 end FullBand
 
 /-- Reference lift pressure, constructed using `mode`. -/
+@[expose]
 noncomputable def referenceLiftPressure (D : AssemblyData Parameter) (j : ℤ) : Cylinder → ℂ :=
   mode (PhysicalParticularWave.referenceFrequency D j) (PhysicalParticularWave.liftPhase D j)
     (fun x => PhysicalParticularWave.referenceRawPressure D j (PhysicalParticularWave.waveEquiv x))
@@ -1003,7 +1010,8 @@ theorem block_velocity_eq_reference {N : ℕ} {α κ : ℝ} (C : D.controls N α
               (gap n) x)) k := by
   rw [block_velocity_represents D s h gap (fun j hj => hstrip ▸ (C j hj).background) hf]
   rw [(AssemblyData.update_represents C).1]
-  change (∑ j ∈ modes N, _) = _ * (∑ j ∈ modes N, _)
+  change (∑ j ∈ modes N, (_ : ℝ)) =
+    (_ : ℝ) * (∑ j ∈ modes N, (_ : ℝ))
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj
@@ -1025,7 +1033,8 @@ theorem block_pressure_eq_reference {N : ℕ} {α κ : ℝ} (C : D.controls N α
               (gap n) x)) := by
   rw [block_pressure_represents D s h gap (fun j hj => (C j hj).harmonic_ne) hf]
   rw [(AssemblyData.update_represents C).2]
-  change (∑ j ∈ modes N, _) = _ * (∑ j ∈ modes N, _)
+  change (∑ j ∈ modes N, (_ : ℝ)) =
+    (_ : ℝ) * (∑ j ∈ modes N, (_ : ℝ))
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j hj

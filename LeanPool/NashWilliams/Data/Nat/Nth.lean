@@ -29,7 +29,7 @@ what turns the `Set`-valued conclusion of `infinite_ramsey` into the sequence fo
 Upstream target: `Mathlib/Data/Nat/Nth.lean`.
 -/
 
-@[expose] public section
+public section
 
 /-- **Enumeration bridge.** Every infinite set of naturals is the range of its (unique) strictly
 monotone enumeration. This recovers, from a set-valued carrier `X`, the enumeration `N` on which

@@ -47,7 +47,7 @@ and the whole chain to lie in the small-chain submodule.
   `sdᴺ([σ])` lies in `smallChainSubmodule`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Finset
@@ -62,7 +62,7 @@ namespace AffineBarycentricSubdivision
 /-- The affine subdivision map associated to a permutation `π`, packaged as a
 genuine `ℝ`-linear self-map of `Fin (n+1) → ℝ`. On the standard simplex it
 restricts to `affineSubdivMap n π`. -/
-noncomputable def affineSubdivLinear (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
+@[expose] noncomputable def affineSubdivLinear (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
     (Fin (n + 1) → ℝ) →ₗ[ℝ] (Fin (n + 1) → ℝ) where
   toFun x := fun j => ∑ k : Fin (n + 1), x k * (prefixBarycenter n π k).val j
   map_add' := by
@@ -120,7 +120,7 @@ theorem affineSubdivLinear_stdVerts (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
   exact congr_fun ( prefixBarycenter_val_eq_stepVertices n π k ) j
 
 /-- Compose the barycentric subdivision linear maps selected by a permutation word. -/
-noncomputable def affineCompLinear (n : ℕ) :
+@[expose] noncomputable def affineCompLinear (n : ℕ) :
     (N : ℕ) → (Fin N → Equiv.Perm (Fin (n + 1))) →
       ((Fin (n + 1) → ℝ) →ₗ[ℝ] (Fin (n + 1) → ℝ))
   | 0, _ => LinearMap.id
@@ -153,7 +153,7 @@ theorem affineCompLinear_stdVerts (n N : ℕ) (ρs : Fin N → Equiv.Perm (Fin (
     simp_rw [ih]
 
 /-- The continuous simplex self-map associated with an iterated subdivision word. -/
-noncomputable def affineCompMap (n : ℕ) :
+@[expose] noncomputable def affineCompMap (n : ℕ) :
     (N : ℕ) → (Fin N → Equiv.Perm (Fin (n + 1))) → C(Delta n, Delta n)
   | 0, _ => ContinuousMap.id _
   | (N + 1), ρs =>

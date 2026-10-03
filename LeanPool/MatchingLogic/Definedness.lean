@@ -44,7 +44,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Definedness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -73,7 +73,7 @@ def definednessAxiom (x : Var) : Pattern (defSig S) Var := defined (.var x)
 symbols, and definedness interpreted as constantly everything on singletons —
 which the pointwise extension turns into `univ` on nonempty arguments and `∅`
 on empty ones. -/
-def expand (M : Model S) : Model (defSig S) where
+@[expose] def expand (M : Model S) : Model (defSig S) where
   carrier := M.carrier
   nonempty := M.nonempty
   interp := fun s => match s with

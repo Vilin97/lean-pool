@@ -23,7 +23,7 @@ s' divides either the distinguished generator a or the witness
 c. Dividing out p reduces the GCD complexity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

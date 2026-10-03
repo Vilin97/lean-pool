@@ -34,7 +34,7 @@ Applications: the flat torus `Circle × Circle` (so `nashCompact` can be compare
 carry metrics.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric
@@ -58,6 +58,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 def mdiff (f : M → N) (x : M) : E →L[ℝ] F := mfderiv I J f x
 
 /-- The pullback form at `x`, on the model space `E`: `(v, w) ↦ h_{f x}(df_x v, df_x w)`. -/
+@[expose]
 def pullbackForm (f : M → N)
     (h : ContMDiffRiemannianMetric J ∞ F (TangentSpace J : N → Type _)) (x : M) :
     E →L[ℝ] E →L[ℝ] ℝ :=
@@ -226,6 +227,7 @@ theorem pullbackForm_contMDiff {f : M → N}
   rw [tcoord_tcoordInv hfx, tcoord_tcoordInv hfx]
 
 /-- The pullback metric `f^*h` of a smooth immersion `f : M → N`. -/
+@[expose]
 def pullbackMetric {f : M → N}
     (h : ContMDiffRiemannianMetric J ∞ F (TangentSpace J : N → Type _))
     (hf : ContMDiff I J ∞ f) (hinj : ∀ x, Injective (mfderiv I J f x)) :

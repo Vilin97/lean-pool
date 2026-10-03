@@ -23,7 +23,7 @@ concavity can be proved internally without passing abstract topology or semicont
 through the public theorem statement.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -45,7 +45,7 @@ end ProbabilityMeasure
 namespace Kernel
 
 /-- A concrete finite non-degeneracy condition: the row matrix has trivial kernel over `ℝ`. -/
-def RowMatrixFullRank (k : Kernel α β) : Prop :=
+@[expose] def RowMatrixFullRank (k : Kernel α β) : Prop :=
   Function.Injective fun w : α → ℝ =>
     fun b => ∑ a, w a * (k a {b}).toReal
 

@@ -16,7 +16,7 @@ This module contains thin-shell estimates and the resulting absolute continuity
 of scalar ball-integral radius functions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

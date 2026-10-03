@@ -17,22 +17,22 @@ A joint phase/weight Lyapunov function `hebbianL` with a Frobenius weight penalt
 Hebbian weight flow `hebbianWeightF`, and the joint Lyapunov descent property.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 
 /-- Update a single weight entry `W i j` to `x` (used to differentiate in that entry). -/
-noncomputable def hebbianUpdateWeight {N : ℕ} (W : Fin N → Fin N → ℝ)
+@[expose] noncomputable def hebbianUpdateWeight {N : ℕ} (W : Fin N → Fin N → ℝ)
     (i j : Fin N) (x : ℝ) : Fin N → Fin N → ℝ :=
   Function.update W i (Function.update (W i) j x)
 
 /-- Joint phase/weight Lyapunov function with a Frobenius weight penalty. -/
-noncomputable def hebbianL (K lam : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
+@[expose] noncomputable def hebbianL (K lam : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
     (θ : Fin N → ℝ) : ℝ :=
   weightedKuramotoV K N W θ + (lam / 2) * ∑ i : Fin N, ∑ j : Fin N, W i j * W i j
 
 /-- Unprojected Hebbian weight flow, the negative weight-gradient of `hebbianL`. -/
-noncomputable def hebbianWeightF (K lam : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
+@[expose] noncomputable def hebbianWeightF (K lam : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
     (θ : Fin N → ℝ) (i j : Fin N) : ℝ :=
   (K / 2) * Real.cos (θ j - θ i) - lam * W i j
 

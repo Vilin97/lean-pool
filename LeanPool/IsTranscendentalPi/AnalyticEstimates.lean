@@ -17,7 +17,7 @@ Uniform bounds on the Niven auxiliary polynomials, controlling the size of the
 integral appearing in Niven's proof of the transcendence of `π`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Complex

@@ -17,7 +17,7 @@ subspace.  A basis selected from the positive support can therefore be
 used in the initial growth phase.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Module

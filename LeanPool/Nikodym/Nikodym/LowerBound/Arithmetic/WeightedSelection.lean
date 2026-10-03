@@ -17,7 +17,7 @@ Blueprint node C07: from `∑ L i > 0`, `Δ i > 0`, and `∑ Δ i ≤ D`, there 
 `L i > 0` and `(∑ L) * Δ i ≤ L i * D`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

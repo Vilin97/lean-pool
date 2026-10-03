@@ -44,7 +44,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.GridDesign
 
 /-! # GridDesignRect -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -234,7 +234,7 @@ end
 
 /-! # GridScale -/
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1
 
@@ -361,7 +361,7 @@ end
 
 /-! # CoreGapSubblock -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -430,7 +430,7 @@ end
 
 /-! # CoreGapTripleShape -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -443,6 +443,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 each sub-triple are disjoint, pairwise `ε₂`-uniform and of density at least `2ε₂`, the three
 triangle-degree scales of each sub-triple agree with a common `d i` to within `μ₂`, and the
 tripartite graphs of the family are pairwise edge-disjoint. -/
+@[expose]
 def IsSubTripleShape (G : SimpleGraph V) [DecidableRel G.Adj] (ε₂ μ₂ : ℝ) (k : ℕ)
     (A B C : ℕ → Finset V) (d : ℕ → ℝ) : Prop :=
   (∀ i < k, Disjoint (A i) (B i)) ∧

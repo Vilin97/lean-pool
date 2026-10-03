@@ -19,7 +19,7 @@ fact as a polynomial spectral-set theorem, rewrites the norm bound directly
 on the numerical range, and obtains the classical identity `w(A) = ‖A‖`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped InnerProductSpace Polynomial

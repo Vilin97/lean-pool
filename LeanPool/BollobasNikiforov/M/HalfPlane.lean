@@ -25,7 +25,7 @@ MX06 configuration (`k ≥ 1`). Unique and tied open-half-plane configurations
 are completely positive (HP04–HP05), as is the closed half-plane (HP06).
 -/
 
-@[expose] public section
+public section
 
 open Matrix Filter
 open scoped Matrix Topology
@@ -38,7 +38,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n] [LinearOrder n]
 noncomputable section
 
 /-- The Gram matrix of a family of planar vectors. -/
-def gram (z : n → Fin 2 → ℝ) : Matrix n n ℝ :=
+@[expose] def gram (z : n → Fin 2 → ℝ) : Matrix n n ℝ :=
   of fun i j => z i ⬝ᵥ z j
 
 omit [Fintype n] [DecidableEq n] [LinearOrder n] in

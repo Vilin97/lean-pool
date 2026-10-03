@@ -26,7 +26,7 @@ construct an A-extension S with c ∈ (y₁,y₂)S via the intersection
 Rbar = R[x₁, y₂⁻¹] ∩ R[x₂, y₁⁻¹] where c = x₁y₁ + x₂y₂.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

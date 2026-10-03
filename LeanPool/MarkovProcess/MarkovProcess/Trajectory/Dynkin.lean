@@ -29,7 +29,7 @@ integral in `C₀` to a pointwise integral; `evalC0CLM` is the same functional u
 name, kept for consumers.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal ZeroAtInfty
@@ -41,6 +41,7 @@ section Eval
 variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- Evaluation at a point, as a continuous linear functional on `C₀(α, ℝ)`. -/
+@[expose]
 noncomputable def evalC0CLM (x : alpha) : C₀(alpha, ℝ) →L[ℝ] ℝ :=
   LinearMap.mkContinuous
     { toFun := fun f ↦ f x

@@ -16,7 +16,7 @@ section
 
 /-! The literal pressure integral is the genuine jointly continuous scalar path representative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -88,6 +88,7 @@ theorem scalar_eq_pointField (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       D.normalLower_pos D.normal_lower G.mean_zero I.mean_zero t) (x,(θ : AddCircle P))
 
 /-- The next known-force pressure term comes from the constructed scalar pressure itself. -/
+@[expose]
 def scalarGradientField : Field P D.T (pressureGradient (G.scalar I)) :=
   EulerPacketCylinderField.scalarGradientField (G.scalar I) (G.pressurePath I)
     (G.pressurePath_orbit I) (G.scalar_eq_pointField I)
@@ -100,6 +101,7 @@ variable (P : ℝ) [Fact (0 < P)]
   (h : Nonempty (Forcing P D raw))
 
 /-- The total high operator has the required pressure-gradient witness on admissible forcing. -/
+@[expose]
 def highSolvePressureGradientField : Field P D.T (pressureGradient (highSolve P D I raw).2) :=
   ((Classical.choice h).scalarGradientField I).congr (fun _ _ _ => by
     rw [highSolve_of_admissible D I raw h])

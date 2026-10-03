@@ -20,7 +20,7 @@ between the coordinate-function model used by `Feige` and Mathlib's
 `EuclideanSpace` model used by `Grunbaum`.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 

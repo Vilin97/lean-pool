@@ -14,7 +14,7 @@ import Mathlib.Algebra.Algebra.Equiv
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Equiv`.
 -/
 
-@[expose] public section
+public section
 
 /-- Galois-group notation as algebra equivalences. -/
 notation "Gal("K ", "F")" => K ≃ₐ[F] K

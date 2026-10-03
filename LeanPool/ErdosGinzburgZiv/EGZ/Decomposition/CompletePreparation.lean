@@ -19,7 +19,7 @@ actual flag decomposition, with controlled mass loss and a non-reduced old
 upper anchor, before adjoining the new slab coordinates.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -53,6 +53,7 @@ variable {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node} {t : ℕ → ℕ
     (D : CompletePreparation Φ anchor t δ)
 
 /-- Intersection of the slabs selected by the direction chain. -/
+@[expose]
 def selectedSet : Set (FpCoord p d) := slabIntersection D.count D.chain.direction t
 
 theorem selected_nonzero (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1) :
@@ -94,11 +95,11 @@ theorem lowerAnchor_cumulativeWeight :
 
 theorem lowerAnchor_space :
     (D.split hp hδ hsmall).representation.space (D.lowerAnchor hp hδ hsmall) =
-      Φ.representation.space anchor := rfl
+      Φ.representation.space anchor := by rfl
 
 theorem lowerAnchor_map :
     (D.split hp hδ hsmall).representation.map (D.lowerAnchor hp hδ hsmall) =
-      Φ.representation.map anchor := rfl
+      Φ.representation.map anchor := by rfl
 
 theorem upperAnchor_not_isReducedElement :
     ¬ (D.split hp hδ hsmall).IsReducedElement (D.upperAnchor hp hδ hsmall) :=
@@ -128,6 +129,7 @@ theorem card_le :
     (D.selected_nonzero hδ hsmall)).rebuildData hp).card_decomposition_le
 
 /-- Forget the lower-layer labels and recover a proper point of the old flag. -/
+@[expose]
 noncomputable def subdivisionMap : SubdivisionMap Φ (D.split hp hδ hsmall) :=
   ((LocalizedPruning.prunedWeights Φ anchor D.selectedSet
     (D.selected_nonzero hδ hsmall)).rebuiltSubdivisionMap hp).comp

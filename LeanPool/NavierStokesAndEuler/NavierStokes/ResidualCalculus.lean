@@ -19,7 +19,7 @@ spatial derivatives on the time slice and a differentiable time slice at the
 point in question. No abstract differential operators are assumed linear.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

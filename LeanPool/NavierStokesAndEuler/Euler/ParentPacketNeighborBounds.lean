@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryLipschitz
 The stationary history sensitivity is linear in these differences, so
 its computed Lipschitz constant retains that factor as well. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -67,13 +67,14 @@ variable {G : Parent} (L : LabelData G)
   (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] referencePlane m) (S : Set Space) (hS : IsCompact S)
 
 /-- Frame difference cost, given by `frameAmplitude L.K*coefficientRadius L.K`. -/
-def frameDifferenceCost : ℝ := frameAmplitude L.K*coefficientRadius L.K
+@[expose] def frameDifferenceCost : ℝ := frameAmplitude L.K*coefficientRadius L.K
 /-- First difference cost, given by `gradientAmplitude L.K*coefficientRadius L.K`. -/
-def firstDifferenceCost : ℝ := gradientAmplitude L.K*coefficientRadius L.K
+@[expose] def firstDifferenceCost : ℝ := gradientAmplitude L.K*coefficientRadius L.K
 /-- Normal difference cost, given by `9*(frameAmplitude L.K)^2*coefficientRadius L.K`. -/
-def normalDifferenceCost : ℝ := 9*(frameAmplitude L.K)^2*coefficientRadius L.K
+@[expose] def normalDifferenceCost : ℝ := 9*(frameAmplitude L.K)^2*coefficientRadius L.K
 /-- Strain difference cost, given by `27*(frameAmplitude L.K)^2*gradientAmplitude
 L.K*coefficientRadius L.K`. -/
+@[expose]
 def strainDifferenceCost : ℝ := 27*(frameAmplitude L.K)^2*gradientAmplitude L.K*coefficientRadius
     L.K
 

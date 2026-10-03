@@ -18,7 +18,7 @@ forces the remainder to vanish and the quotient to have constant coefficient
 one.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal NNReal Topology

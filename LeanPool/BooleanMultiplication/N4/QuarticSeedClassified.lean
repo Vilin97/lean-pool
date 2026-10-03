@@ -16,7 +16,7 @@ in their plane, excludes the zero feedback, and applies the rational
 annihilator classification.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,6 +24,7 @@ namespace N4
 noncomputable section
 
 /-- A seed-using target witness with its factor in the classified quartic normal form. -/
+@[expose]
 def SeedUsingQuarticClassifiedForm (g : ANF 8) : Prop :=
   ∃ (correction factor target : ANF 8)
     (targetConst factorConst : F₂)

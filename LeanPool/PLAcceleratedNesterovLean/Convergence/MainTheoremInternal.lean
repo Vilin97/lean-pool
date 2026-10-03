@@ -21,7 +21,7 @@ This file contains helper statements used by `PLAcceleratedNesterovLean.MainTheo
 file intentionally exposes only the clean top-level theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

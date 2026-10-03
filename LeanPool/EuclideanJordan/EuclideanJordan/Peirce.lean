@@ -74,7 +74,7 @@ searched them systematically.
 * McCrimmon, *A Taste of Jordan Algebras*, §II.8.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 
@@ -146,6 +146,7 @@ theorem mul_smul_comm' (r : ℝ) (a b : J) : a * (r • b) = r • (a * b) := by
   rw [mul_comm, smul_mul_assoc, mul_comm]
 
 /-- The Jordan multiplication operator `L_c : y ↦ c ∘ y`, as an `ℝ`-linear map. -/
+@[expose]
 def mulL (c : J) : J →ₗ[ℝ] J where
   toFun y := c * y
   map_add' := mul_add c
@@ -155,14 +156,17 @@ def mulL (c : J) : J →ₗ[ℝ] J where
 
 /-- The Peirce projection onto the `1`-eigenspace of `L_c`: the Lagrange interpolant
 `2L² − L`, which is `1` at `1` and `0` at `0` and `1/2`. -/
+@[expose]
 def peirceOne (c : J) : J →ₗ[ℝ] J := (2 : ℝ) • (mulL c ∘ₗ mulL c) - mulL c
 
 /-- The Peirce projection onto the `1/2`-eigenspace of `L_c`: the Lagrange interpolant
 `4L − 4L²`. -/
+@[expose]
 def peirceHalf (c : J) : J →ₗ[ℝ] J := (4 : ℝ) • mulL c - (4 : ℝ) • (mulL c ∘ₗ mulL c)
 
 /-- The Peirce projection onto the `0`-eigenspace of `L_c`: the Lagrange interpolant
 `1 − 3L + 2L²`. -/
+@[expose]
 def peirceZero (c : J) : J →ₗ[ℝ] J :=
   LinearMap.id - (3 : ℝ) • mulL c + (2 : ℝ) • (mulL c ∘ₗ mulL c)
 

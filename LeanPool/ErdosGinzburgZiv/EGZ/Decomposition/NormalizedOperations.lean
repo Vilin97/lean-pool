@@ -18,7 +18,7 @@ monotone prime threshold. A finite radius horizon therefore fixes the prime
 before any choices in the refinement run are made.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -126,6 +126,7 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
   FaceRefinement.normalized_card_le Φ anchor Γ D.odd D.charts D.modInjective D.centered
 
 /-- The subdivision map carried by the normalized face step. -/
+@[expose]
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   FaceRefinement.normalizedSubdivisionMap Φ anchor Γ D.odd D.charts D.modInjective D.centered
 
@@ -135,6 +136,7 @@ noncomputable abbrev targetNode (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement a
   FaceRefinement.normalizedTargetNode Φ anchor Γ D.odd D.charts D.modInjective D.centered hΓ hred
 
 /-- The target face of the normalized face step in its new coordinates. -/
+@[expose]
 noncomputable def targetFace (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     (D.decomposition.flag.polytope (D.targetNode hΓ hred)).Face :=
   FaceRefinement.normalizedTargetFace Φ anchor Γ D.odd D.charts D.modInjective D.centered hΓ hred
@@ -169,6 +171,7 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
   D.weights.normalized_card_le D.odd D.charts D.modInjective D.centered
 
 /-- The subdivision map carried by the normalized gap step. -/
+@[expose]
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   D.weights.normalizedSubdivisionMap D.odd D.charts D.modInjective D.centered
 
@@ -196,6 +199,7 @@ theorem card_le : @Fintype.card D.decomposition.flag.Node D.decomposition.flag.n
   D.preparation.normalized_card_le D.odd hδ hsmall D.charts D.modInjective D.centered
 
 /-- The subdivision map carried by the normalized completion step. -/
+@[expose]
 noncomputable def subdivisionMap : SubdivisionMap Φ D.decomposition :=
   D.preparation.normalizedSubdivisionMap D.odd hδ hsmall D.charts D.modInjective D.centered
 
@@ -310,6 +314,7 @@ theorem exists_normalizedOperationParameters (d : ℕ) (g : ℕ → ℕ) (hg : M
 
 /-- Choose uniform radius and prime bounds together with providers of the normalized
 operations. -/
+@[expose]
 noncomputable def normalizedOperationParameters (d : ℕ) (g : ℕ → ℕ) (hg : Monotone g) :
     NormalizedOperationParameters d g :=
   Classical.choice (exists_normalizedOperationParameters d g hg)
@@ -321,9 +326,11 @@ variable {d : ℕ} {g : ℕ → ℕ} (P : NormalizedOperationParameters d g)
 theorem radiusGrowth_ge (K : ℕ) : K ≤ P.radiusGrowth K := (P.radiusGrowth_growing.2 K).le
 
 /-- The radius bound obtained after `N` successive applications of the growth function. -/
+@[expose]
 def radiusHorizon (K N : ℕ) : ℕ := P.radiusGrowth^[N] K
 
 /-- The prime threshold at the radius bound after `N` normalized operations. -/
+@[expose]
 def primeHorizon (K N : ℕ) : ℕ := P.primeThreshold (P.radiusHorizon K N)
 
 theorem radius_sequence_le (r : ℕ → ℕ) {K : ℕ} (hstart : r 0 ≤ K)

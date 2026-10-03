@@ -18,7 +18,7 @@ This file completes the computation of `ClassicalAlgorithm.p recursive3ParamAlg`
 numerical upper bound `p < 24118/100000`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 
@@ -173,7 +173,7 @@ noncomputable def constT2T2 : ℝ≥0∞ :=
     ENNReal.ofReal (1 - (t2 : ℝ)) * ENNReal.ofReal (1 - (t2 : ℝ))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def gCt2 (c : Rand) : ℝ≥0∞ :=
+@[expose] noncomputable def gCt2 (c : Rand) : ℝ≥0∞ :=
   ENNReal.ofReal (c : ℝ) * ENNReal.ofReal (t2 : ℝ) +
     ENNReal.ofReal (1 - (c : ℝ)) * ENNReal.ofReal (1 - (t2 : ℝ))
 
@@ -183,7 +183,7 @@ noncomputable def gTB (b : Rand) : ℝ≥0∞ :=
     ENNReal.ofReal (1 - (t : ℝ)) * ENNReal.ofReal (1 - (b : ℝ))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def gT2B (b : Rand) : ℝ≥0∞ :=
+@[expose] noncomputable def gT2B (b : Rand) : ℝ≥0∞ :=
   ENNReal.ofReal (t2 : ℝ) * ENNReal.ofReal (b : ℝ) +
     ENNReal.ofReal (1 - (t2 : ℝ)) * ENNReal.ofReal (1 - (b : ℝ))
 

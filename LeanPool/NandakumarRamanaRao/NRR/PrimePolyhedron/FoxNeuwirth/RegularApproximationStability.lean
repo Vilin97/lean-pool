@@ -19,7 +19,7 @@ This module introduces the transversality condition required by the endpoint-com
 Existence and comparison are established by the downstream collar modules.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -33,6 +33,7 @@ variable {p : Nat}
 /-- The sampled affine map has no positive-ray intersection on the boundary of any refined top
 simplex.  Equivalently, every positive deviation-zero barycentric point is in the relative
 interior. -/
+@[expose]
 def PositiveRaySkeletonFree
     (hp : Nat.Prime p) (N : Nat) (F : ContinuousCoordinateMap p) : Prop :=
   ∀ (q : TopCell hp N) (w : StandardSimplex (p - 1)),
@@ -55,7 +56,7 @@ namespace StableRegularApproximation
 
 /-- The stable count is the existing refined count; stability is supplied by the additional
 transversality field, not by changing the numerical definition. -/
-noncomputable def zeroCount
+@[expose] noncomputable def zeroCount
     {hp : Nat.Prime p} {F : ContinuousCoordinateMap p}
     (A : StableRegularApproximation hp F) : ZMod p :=
   A.toRegularApproximation.zeroCount
@@ -83,6 +84,7 @@ end StableRegularApproximation
 
 /-- Finite-PL endpoint comparison proposition.  This proposition requires boundary-transverse
 endpoint approximations. -/
+@[expose]
 def StableHomotopyInvarianceTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : EquivariantCoordinateHomotopy.ZeroFreeMap hp)

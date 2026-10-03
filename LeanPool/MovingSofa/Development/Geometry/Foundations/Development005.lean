@@ -34,7 +34,7 @@ public import Mathlib.Tactic.Positivity
 * `Cap.Foundations.Development003`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,7 +53,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Canonical.GerverDefinitions`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -91,7 +91,7 @@ The definitions of `MovingSofaSubmission/Challenge.lean`, copied from
 certificate in GerverSofaLean, so that Gerver's constants are defined from a proved statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -115,12 +115,15 @@ open Topology
 open scoped Real unitInterval EuclideanGeometry
 
 /-- The **horizontal side** of the hallway is $(-\infty, 1] \times [0, 1]$. -/
+@[expose]
 def horizontalHallway : Set ℝ² := {!₂[x, y] | (x) (y) (_ : x ≤ 1 ∧ 0 ≤ y ∧ y ≤ 1)}
 
 /-- The **vertical side** of the hallway is $[0, 1] \times (-\infty, 1]$. -/
+@[expose]
 def verticalHallway : Set ℝ² := {!₂[x, y] | (x) (y) (_ : 0 ≤ x ∧ x ≤ 1 ∧ y ≤ 1)}
 
 /-- The **hallway** is the union of its horizontal and vertical sides. -/
+@[expose]
 def hallway : Set ℝ² := horizontalHallway ∪ verticalHallway
 
 /-- The affine isometry group of the Euclidean plane. -/
@@ -150,6 +153,7 @@ structure IsMovingSofa (s : Set ℝ²) (m : I → E(2)) : Prop where
 The rigid motion that translates by $p$ and then rotates counterclockwise by $\alpha$.
 Note that [Ge92] used this definition while [Ro18] used rotation first and then translation.
 -/
+@[expose]
 def rotateTranslate (α : Real.Angle) (p : ℝ²) : E(2) :=
   (AffineIsometryEquiv.vaddConst ℝ p).trans
     (EuclideanGeometry.o.rotation α).toAffineIsometryEquiv
@@ -160,6 +164,7 @@ intersection over $\alpha \in [0, \pi/2]$ of hallways each translated by $p(\alp
 rotated by $\alpha$, with the special cases that the hallway at $0$ is the horizontal side
 and the hallway at $\pi/2$ is the vertical side.
 -/
+@[expose]
 def sofaOfRotateTranslatePath (p : ℝ → ℝ²) : Set ℝ² :=
   rotateTranslate 0 (p 0) '' horizontalHallway ∩
   rotateTranslate ↑(π / 2) (p (π / 2)) '' verticalHallway ∩
@@ -176,6 +181,7 @@ This section follows Theorem 2 of Gerver's paper [Ge92].
 /--
 Eq. 1-4 of [Ro18], which specifies the constants $A$, $B$, $\varphi$, and $\theta$ of [Ge92].
 -/
+@[expose]
 def ABφθSpec (A B φ θ : ℝ) : Prop :=
   0 ≤ φ ∧ φ ≤ θ ∧ θ ≤ π / 4 ∧ 0 ≤ A ∧ 0 ≤ B ∧
   A * (θ.cos - φ.cos) - 2 * B * φ.sin
@@ -191,16 +197,21 @@ theorem ABφθSpec.existsUnique : ∃! ABφθ : ℝ × ℝ × ℝ × ℝ,
   GerverSofa.PartF.Parameters.existsUnique
 
 /-- Gerver's constant $A$: the first component of the unique solution of `ABφθSpec`. -/
+@[expose]
 def A : ℝ := ABφθSpec.existsUnique.choose.1
 /-- Gerver's constant $B$: the second component of the unique solution of `ABφθSpec`. -/
+@[expose]
 def B : ℝ := ABφθSpec.existsUnique.choose.2.1
 /-- Gerver's angle $\varphi$: the third component of the unique solution of `ABφθSpec`. -/
+@[expose]
 def φ : ℝ := ABφθSpec.existsUnique.choose.2.2.1
 /-- Gerver's angle $\theta$: the fourth component of the unique solution of `ABφθSpec`. -/
+@[expose]
 def θ : ℝ := ABφθSpec.existsUnique.choose.2.2.2
 
 /-- The integral-path auxiliary function $r$, with break points $\varphi$, $\theta$,
 $\pi/2 - \theta$ and $\pi/2 - \varphi$. The functions `x` and `y` are integrals of it. -/
+@[expose]
 def r (α : ℝ) : ℝ :=
   if α ≤ φ then
     1 / 2
@@ -215,16 +226,19 @@ def r (α : ℝ) : ℝ :=
 
 /-- $y(\alpha) = \int_\alpha^{\pi/2 - \varphi} r(t) \sin t \, dt$, used in the canonical
 integral-path definition. -/
+@[expose]
 def y (α : ℝ) : ℝ :=
   ∫ t in α..π / 2 - φ, r t * t.sin
 
 /-- $x(\alpha) = 1 - \int_\alpha^{\pi/2 - \varphi} r(t) \cos t \, dt$, used in the canonical
 integral-path definition. -/
+@[expose]
 def x (α : ℝ) : ℝ :=
   1 - ∫ t in α..π / 2 - φ, r t * t.cos
 
 /-- The rotation path of Gerver's sofa: `p α` is the translation applied to the hallway before it
 is rotated by the angle $\alpha \in [0, \pi/2]$, in the convention of `rotateTranslate`. -/
+@[expose]
 def p (α : ℝ) : ℝ² :=
   !₂[if α ≤ φ
       then α.cos - 1
@@ -236,6 +250,7 @@ def p (α : ℝ) : ℝ² :=
 end GerversSofa
 
 /-- Gerver's sofa is the sofa according to the rotation path `GerversSofa.p`. -/
+@[expose]
 def gerversSofa : Set ℝ² :=
   sofaOfRotateTranslatePath GerversSofa.p
 
@@ -243,6 +258,7 @@ open MeasureTheory
 open scoped ENNReal
 
 /-- The **sofa constant** is the maximal area of a moving sofa. -/
+@[expose]
 def sofaConstant : ℝ≥0∞ := ⨆ (s : Set ℝ²) (_ : ∃ m, IsMovingSofa s m), volume s
 
 end MovingSofa
@@ -294,7 +310,7 @@ for its own copy of the moving sofa definitions. This file identifies that copy 
 definitions of `MovingSofa.Canonical.Definitions`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open scoped unitInterval
@@ -350,6 +366,7 @@ theorem sofaOfRotateTranslatePath_eq_bodySofa (p : ℝ → Plane) :
 
 /-- The reduced parameter tuple corresponding to the canonical choice of the unique angle
 solution. -/
+@[expose]
 def selected : Reduced.Params :=
   PartE.tupleEquiv MovingSofa.GerversSofa.ABφθSpec.existsUnique.choose
 
@@ -412,7 +429,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Geometry.SupportingHallway`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -428,23 +445,26 @@ Authors: Dean Cureton
 # Geometry / Hallway
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Counterclockwise rotation about the origin. -/
+@[expose]
 def rotationMap (t : Real.Angle) (p : Point) : Point :=
   (EuclideanGeometry.o.rotation t) p
 
 /-- The horizontal, vertical and rotated vertical strips. -/
+@[expose]
 def strips (ω : ℝ) : Set Point × Set Point × Set Point :=
   let H : Set Point := {p | 0 ≤ p 1 ∧ p 1 ≤ 1}
   let V : Set Point := {p | 0 ≤ p 0 ∧ p 0 ≤ 1}
   (H, V, rotationMap (ω : Real.Angle) '' V)
 
 /-- The intersection of strips and its two distinguished points. -/
+@[expose]
 def stripParallelogram (ω : ℝ) : Set Point × Point × Point :=
   ((strips ω).1 ∩ (strips ω).2.2, 0, !₂[Real.tan (Real.pi / 4 - ω / 2), 1])
 
@@ -472,6 +492,7 @@ structure HallwayParts where
   innerQuadrant : Set Point
 
 /-- The named parts of the fixed hallway. -/
+@[expose]
 def hallwayParts : HallwayParts where
   innerCorner := 0
   outerCorner := !₂[1, 1]
@@ -485,15 +506,18 @@ def hallwayParts : HallwayParts where
   innerQuadrant := {p | p 0 < 0 ∧ p 1 < 0}
 
 /-- Rotation followed by the support-determined translation. -/
+@[expose]
 def supportingPlacement (s : Set Point) (t : Real.Angle) (p : Point) : Point :=
   rotationMap t p + (supportValue s t - 1) • normalVector t +
     (supportValue s (t + ((Real.pi / 2 : ℝ) : Real.Angle)) - 1) • tangentVector t
 
 /-- The supporting hallway of a nonempty compact set. -/
+@[expose]
 def supportingHallway (s : Set Point) (t : Real.Angle) : Set Point :=
   supportingPlacement s t '' hallway
 
 /-- The images of all named hallway parts under its supporting placement. -/
+@[expose]
 def rotatingHallwayParts (s : Set Point) (t : Real.Angle) : HallwayParts where
   innerCorner := supportingPlacement s t hallwayParts.innerCorner
   outerCorner := supportingPlacement s t hallwayParts.outerCorner
@@ -525,7 +549,7 @@ Authors: Dean Cureton
 # Geometry / Hallway Parts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -677,7 +701,7 @@ Authors: Dean Cureton
 # Geometry / Hallway Parts Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -804,7 +828,7 @@ Authors: Dean Cureton
 # Geometry / Hallway Ray
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1075,7 +1099,7 @@ Authors: Dean Cureton
 # Geometry / Hallway Support
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1145,7 +1169,7 @@ Authors: Dean Cureton
 # Geometry / Parallelogram
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1245,7 +1269,7 @@ Authors: Dean Cureton
 # Geometry / Parallelogram Gap
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1360,13 +1384,14 @@ Authors: Dean Cureton
 # Geometry / Path Half Plane Cap
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The set satisfying the horizontal base and all upper support constraints of a path. -/
+@[expose]
 def outerPathConstraintSet (x : Set.Icc (0 : ℝ) (Real.pi / 2) → Point) : Set Point :=
   {q | 0 ≤ q 1 ∧ ∀ t,
     inner ℝ q (normalVector (t.val : Real.Angle)) ≤
@@ -1501,13 +1526,14 @@ Authors: Dean Cureton
 # Geometry / Reflection
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Exchange the two coordinates of the Euclidean plane. -/
+@[expose]
 def coordinateSwap : Point ≃ₗᵢ[ℝ] Point :=
   LinearIsometryEquiv.piLpCongrLeft 2 ℝ ℝ (Equiv.swap 0 1)
 
@@ -1531,6 +1557,7 @@ theorem capReflection_apply_one (ω : ℝ) (p : Point) :
   simp [coordinateSwap]
 
 /-- Reflection across the line through the upper vertex of the cap strip. -/
+@[expose]
 def stripTopReflection (ω : ℝ) (p : Point) : Point :=
   (2 * inner ℝ p (stripParallelogram ω).2.2 /
     inner ℝ (stripParallelogram ω).2.2 (stripParallelogram ω).2.2) •
@@ -1640,6 +1667,7 @@ theorem capReflection_involutive (ω : ℝ) (p : Point) :
     linear_combination (p 1) * (Real.sin_sq_add_cos_sq ω)
 
 /-- Reflection of a normal angle across the cap-reflection axis. -/
+@[expose]
 def reflectedAngle (ω : ℝ) (a : Real.Angle) : Real.Angle :=
   ((ω + Real.pi / 2 : ℝ) : Real.Angle) - a
 
@@ -1790,7 +1818,7 @@ Authors: Dean Cureton
 # Geometry / Supporting Hallway
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1889,7 +1917,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Analysis.SurfaceMeasure.WeightedBoundary`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1905,7 +1933,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Upper Graph
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2574,7 +2602,7 @@ value: each exposed face lies on the boundary, and, when the body has interior, 
 point lies on some exposed face.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2644,7 +2672,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Regular Boundary Helpers
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2740,7 +2768,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Graph Integral
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3223,7 +3251,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Construction
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3345,7 +3373,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Graph Convergence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3975,7 +4003,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4141,7 +4169,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Boundary Extension
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4279,7 +4307,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Opposite
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4288,6 +4316,7 @@ open MeasureTheory
 namespace MovingSofa
 
 /-- The opposite-angle surface measure and support function. -/
+@[expose]
 def oppositeSurfaceData (K : ConvexBody Point) :
     Measure Real.Angle × (Real.Angle → ℝ) :=
   (Measure.map (fun t ↦ t - ((Real.pi : ℝ) : Real.Angle)) (surfaceAreaMeasure K),
@@ -4364,7 +4393,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Weak Convergence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4482,7 +4511,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Atom Limits
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4550,7 +4579,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Weighted Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4979,7 +5008,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Vertical`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4995,22 +5024,25 @@ Authors: Dean Cureton
 # Cap / Contacts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Width in a normal direction, for geometric use on nonempty compact sets. -/
+@[expose]
 def directionalWidth (s : Set Point) (t : Real.Angle) : ℝ :=
   supportValue s t + supportValue s (t + ((Real.pi : ℝ) : Real.Angle))
 
 /-- The positive/negative contacts at the two outer supporting walls. -/
+@[expose]
 def capVertices {ω : ℝ} (K : CapSpace ω) (t : ℝ) : (Point × Point) × (Point × Point) :=
   (edgeVertices K.1 (t : Real.Angle),
     edgeVertices K.1 ((t + Real.pi / 2 : ℝ) : Real.Angle))
 
 /-- The positive/negative right and left tangent arm lengths of a right-angle cap. -/
+@[expose]
 def tangentArmLengths (K : RightAngleCapSpace) (t : ℝ) : (ℝ × ℝ) × (ℝ × ℝ) :=
   let y := (rotatingHallwayParts (K.1 : Set Point) (t : Real.Angle)).outerCorner
   let v := capVertices K t
@@ -5020,22 +5052,26 @@ def tangentArmLengths (K : RightAngleCapSpace) (t : ℝ) : (ℝ × ℝ) × (ℝ 
       inner ℝ (y - v.2.2) (normalVector (t : Real.Angle))))
 
 /-- The open inner quadrant clipped by the fan. -/
+@[expose]
 def capWedge {ω : ℝ} (K : CapSpace ω) (t : ℝ) : Set Point :=
   capFan ω ∩ (rotatingHallwayParts (K.1 : Set Point) (t : Real.Angle)).innerQuadrant
 
 /-- The two inner-wall intersections with the lower fan boundary lines. -/
+@[expose]
 def wedgeEndpoints {ω : ℝ} (K : CapSpace ω) (t : ℝ) : Point × Point :=
   (((supportValue K.1 (t : Real.Angle) - 1) / Real.cos t) • normalVector 0,
     ((supportValue K.1 ((t + Real.pi / 2 : ℝ) : Real.Angle) - 1) /
       Real.cos (ω - t)) • tangentVector (ω : Real.Angle))
 
 /-- Signed right and left gaps between the wedge endpoints and bottom cap contacts. -/
+@[expose]
 def wedgeGaps {ω : ℝ} (K : CapSpace ω) (t : ℝ) : ℝ × ℝ :=
   (inner ℝ ((capVertices K 0).1.2 - (wedgeEndpoints K t).1) (normalVector 0),
     inner ℝ ((capVertices K ω).2.1 - (wedgeEndpoints K t).2)
       (tangentVector (ω : Real.Angle)))
 
 /-- The selected short boundary arc, including only the specified endpoints. -/
+@[expose]
 def convexBoundaryArc (K : ConvexBody Point) (a b : ℝ) : Set Point :=
   {(edgeVertices K (a : Real.Angle)).1} ∪
     (⋃ t ∈ Set.Ioo a b, exposedEdge K (t : Real.Angle)) ∪
@@ -5111,7 +5147,7 @@ Authors: Dean Cureton
 # Cap / Arm Coordinates
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5163,7 +5199,7 @@ Authors: Dean Cureton
 # Cap / Contact Identities
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5289,7 +5325,7 @@ Authors: Dean Cureton
 # Cap / Half Planes
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5700,7 +5736,7 @@ Authors: Dean Cureton
 # Cap / Fan Projection
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5959,7 +5995,7 @@ Authors: Dean Cureton
 # Cap / Hallway Quadrant
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6000,7 +6036,7 @@ semicircle only the bottom normal `3π / 2` is left, so an integrand vanishing t
 to zero (`MovingSofa.CapSpace.setIntegral_compl_image_Icc_zero_pi_eq_zero`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6158,13 +6194,14 @@ Authors: Dean Cureton
 # Cap / Reflection Geometry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Image of a convex body under the cap reflection. -/
+@[expose]
 def reflectedBody (ω : ℝ) (K : ConvexBody Point) : ConvexBody Point where
   carrier := capReflection ω '' (K : Set Point)
   convex' := K.convex.linear_image (capReflection ω).toLinearEquiv.toLinearMap
@@ -6439,7 +6476,7 @@ Authors: Dean Cureton
 # Cap / Support Intersections
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6579,7 +6616,7 @@ Authors: Dean Cureton
 # Cap / Top Corner
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6708,7 +6745,7 @@ Authors: Dean Cureton
 # Cap / Vertical
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6756,7 +6793,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Analysis.SurfaceMeasure.ArcConvergence`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6772,7 +6809,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Arc Convergence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6854,7 +6891,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Convex.OuterCornerPath`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6870,7 +6907,7 @@ Authors: Dean Cureton
 # Convex / Curve Cut
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7538,7 +7575,7 @@ Authors: Dean Cureton
 # Convex / Arc Cut Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7623,7 +7660,7 @@ every compact interval of angles; and it is convex-linear in `K` because support
 These are the two hypotheses of Mamikon convexity for the middle summand of the sofa area.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7713,7 +7750,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Geometry.Convex.HorizontalExtrema`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7729,7 +7766,7 @@ Authors: Dean Cureton
 # Geometry / Convex / Horizontal Extrema
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7870,7 +7907,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.Niche.RoofProperties`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7909,7 +7946,7 @@ SOFTWARE.
 
 /-! Adapted from GerverSofaLean v1.1.0, F07UpstreamMotion (MIT). -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory
@@ -7963,7 +8000,7 @@ statements mention `toPlane`, which `Geometry/Basic.lean` does not import; this 
 lowest module that sees both the vendor coordinates and `MovingSofa.frame`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7972,6 +8009,7 @@ open scoped ContDiff
 namespace MovingSofa
 
 /-- The certified direct five-phase Gerver path, taking the earlier branch at each switch. -/
+@[expose]
 def paperGerverPath (t : ℝ) : Point :=
   GerverSofa.PartF.Coordinates.toPlane (GerverSofa.Romik.path GerverSofa.PartB.params t)
 
@@ -8118,13 +8156,14 @@ Authors: Dean Cureton
 # Gerver / Paper Set
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Gerver's paper-frame set, cut out by the explicit path of rotated hallways. -/
+@[expose]
 def paperGerverSofa : Set Point :=
   (strips (Real.pi / 2)).1 ∩ (strips (Real.pi / 2)).2.2 ∩
     ⋂ t ∈ Set.Icc (0 : ℝ) (Real.pi / 2),
@@ -8149,30 +8188,35 @@ Authors: Dean Cureton
 # Gerver / Parameters
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The two Gerver switching angles and the right/left distinguished angles. -/
+@[expose]
 def paperGerverConstants : (ℝ × ℝ) × (ℝ × ℝ) :=
   ((GerversSofa.φ, GerversSofa.θ), (GerversSofa.φ, Real.pi / 2 - GerversSofa.φ))
 
 /-- The six endpoints of the five Gerver stages. -/
+@[expose]
 def gerverStageTimes : Fin 6 → ℝ :=
   ![0, GerversSofa.φ, GerversSofa.θ, Real.pi / 2 - GerversSofa.θ,
     Real.pi / 2 - GerversSofa.φ, Real.pi / 2]
 
 /-- The five closed stage intervals in their source order. -/
+@[expose]
 def gerverStageIntervals (i : Fin 5) : Set ℝ :=
   Set.Icc (gerverStageTimes i.castSucc) (gerverStageTimes i.succ)
 
 /-- The exact direct 22-equation Gerver system, with the certified phase-map convention. -/
+@[expose]
 def gerverDirectEquations (p : GerverSofa.Romik.Params) : Prop :=
   GerverSofa.Romik.Equations p
 
 /-- The exact closed rational box for the direct Gerver parameters. -/
+@[expose]
 def gerverDirectBox : Set GerverSofa.Romik.Params := GerverSofa.Romik.box
 
 /-- The exact box bounds the second-stage linear coefficient `b₁` from below by `-53/100`. -/
@@ -8210,7 +8254,7 @@ Authors: Dean Cureton
 # Gerver / Parameter Dictionary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8241,7 +8285,7 @@ Authors: Dean Cureton
 # Gerver / Partition
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8289,7 +8333,7 @@ Authors: Dean Cureton
 # Gerver / Reverse Physical Domain
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8367,7 +8411,7 @@ there, endpoints included.
 
 /-! ### Differential interface for the five direct branches -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8883,13 +8927,14 @@ Authors: Dean Cureton
 # Gerver / Literal Sets
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The outer cap defined by all upper path support constraints and the horizontal base. -/
+@[expose]
 def gerverOuterCap : Set Point :=
   {q | 0 ≤ q 1 ∧ ∀ t ∈ Set.Icc (0 : ℝ) (Real.pi / 2),
     inner ℝ q (normalVector (t : Real.Angle)) ≤
@@ -8899,12 +8944,14 @@ def gerverOuterCap : Set Point :=
 
 /-- The union of strict forbidden inner corners above the horizontal base along the Gerver
 path. -/
+@[expose]
 def gerverLiteralNiche : Set Point :=
   {q | 0 ≤ q 1 ∧ ∃ t ∈ Set.Ioo (0 : ℝ) (Real.pi / 2),
     inner ℝ (q - paperGerverPath t) (normalVector (t : Real.Angle)) < 0 ∧
     inner ℝ (q - paperGerverPath t) (tangentVector (t : Real.Angle)) < 0}
 
 /-- The literal Gerver sofa obtained by removing its niche from its outer cap. -/
+@[expose]
 def gerverLiteralSofa : Set Point := gerverOuterCap \ gerverLiteralNiche
 
 /-- Bundle the literal niche and sofa sets for comparison with the canonical definitions. -/
@@ -9080,7 +9127,7 @@ Authors: Dean Cureton
 # Gerver / Literal Connected
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9168,7 +9215,7 @@ Authors: Dean Cureton
 # Gerver / Parameter Identification
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9310,7 +9357,7 @@ Authors: Dean Cureton
 # Gerver / Contacts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9319,11 +9366,13 @@ open scoped ContDiff
 namespace MovingSofa
 
 /-- Resolve the Gerver path derivative into its normal and tangent frame components. -/
+@[expose]
 def paperGerverVelocityComponents (t : ℝ) : ℝ × ℝ :=
   (inner ℝ (deriv paperGerverPath t) (normalVector (t : Real.Angle)),
     inner ℝ (deriv paperGerverPath t) (tangentVector (t : Real.Angle)))
 
 /-- The four standard support-contact points determined by the Gerver path and its derivative. -/
+@[expose]
 def paperGerverContacts (t : ℝ) : Fin 4 → Point :=
   ![paperGerverPath t + (paperGerverVelocityComponents t).1 • tangentVector (t : Real.Angle) +
       normalVector (t : Real.Angle),
@@ -9337,6 +9386,7 @@ def paperGerverContactData : (ℝ → ℝ × ℝ) × (ℝ → Fin 4 → Point) :
   (paperGerverVelocityComponents, paperGerverContacts)
 
 /-- The explicit body-frame velocity coefficients on a selected Romik branch. -/
+@[expose]
 def gerverBranchVelocityComponents (i : Fin 5) (t : ℝ) : ℝ × ℝ :=
   ![GerverSofa.Romik.alphaBeta1 GerverSofa.PartB.params t,
     GerverSofa.Romik.alphaBeta2 GerverSofa.PartB.params t,
@@ -9579,7 +9629,7 @@ function of an unrestricted real parameter and `gerverNicheRoof` its restriction
 rotation interval; `gerverRoofCurve_eq` relates the two.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9588,6 +9638,7 @@ namespace MovingSofa
 /-- The affine reversal of the middle roof stage: it maps `gerverStageTimes 2` to
 `gerverStageTimes 4` and `gerverStageTimes 3` to `gerverStageTimes 1`, so it reparametrizes
 the central part of the direct path backwards. -/
+@[expose]
 def gerverRoofReverseTime (s : ℝ) : ℝ :=
   gerverStageTimes 4 - (gerverStageTimes 4 - gerverStageTimes 1) /
     (gerverStageTimes 3 - gerverStageTimes 2) * (s - gerverStageTimes 2)
@@ -9595,12 +9646,14 @@ def gerverRoofReverseTime (s : ℝ) : ℝ :=
 /-- The Gerver niche roof as a curve of an unrestricted real parameter.  On the rotation
 interval it agrees with `gerverNicheRoof` (`gerverRoofCurve_eq`); the unrestricted form is
 what the intermediate value theorem and `continuous_if_le` consume. -/
+@[expose]
 def gerverRoofCurve (s : ℝ) : Point :=
   if s ≤ gerverStageTimes 2 then paperGerverContacts s 3
   else if s ≤ gerverStageTimes 3 then paperGerverPath (gerverRoofReverseTime s)
   else paperGerverContacts s 1
 
 /-- The three-branch roof of the Gerver niche, using two contact arcs and the reversed path. -/
+@[expose]
 def gerverNicheRoof (s : Set.Icc (0 : ℝ) (Real.pi / 2)) : Point :=
   if s.val ≤ gerverStageTimes 2 then paperGerverContacts s.val 3
   else if s.val ≤ gerverStageTimes 3 then paperGerverPath (gerverRoofReverseTime s.val)
@@ -9625,13 +9678,14 @@ Authors: Dean Cureton
 # Gerver / ODEs
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Tangential components of the four contact-curve derivatives on a selected stage. -/
+@[expose]
 def gerverStageContactDerivatives (i : Fin 5) (t : ℝ) : Fin 4 → ℝ :=
   ![inner ℝ (derivWithin (fun s ↦ paperGerverContacts s 0) (gerverStageIntervals i) t)
       (tangentVector (t : Real.Angle)),
@@ -9911,7 +9965,7 @@ Authors: Dean Cureton
 # Gerver / Outer Contacts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9976,7 +10030,7 @@ the stage the two inner contact curves are strictly monotone on each stage
 (`strictAntiOn_inner_paperGerverContacts_three`, `strictMonoOn_inner_paperGerverContacts_one`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10059,6 +10113,7 @@ theorem contDiffOn_paperGerverContact (i : Fin 4) (j : Fin 5) :
 
 /-- The second Gerver contact curve, on the two stages `[t₃, t₅]` where it is an inner contact
 of the cap, as a continuous path of bounded variation. -/
+@[expose]
 def gerverRightContactBV : ContinuousBVPaths (gerverStageTimes 3) (gerverStageTimes 5) :=
   continuousBVOfContDiffOnIccUnionIcc (fun t ↦ paperGerverContacts t 1)
     (gerverStageTimes_strictMono (show (3 : Fin 6) < 4 by decide)).le
@@ -10067,6 +10122,7 @@ def gerverRightContactBV : ContinuousBVPaths (gerverStageTimes 3) (gerverStageTi
 
 /-- The fourth Gerver contact curve, on the two stages `[t₀, t₂]` where it is an inner contact
 of the cap, as a continuous path of bounded variation. -/
+@[expose]
 def gerverLeftContactBV : ContinuousBVPaths (gerverStageTimes 0) (gerverStageTimes 2) :=
   continuousBVOfContDiffOnIccUnionIcc (fun t ↦ paperGerverContacts t 3)
     (gerverStageTimes_strictMono (show (0 : Fin 6) < 1 by decide)).le
@@ -10399,7 +10455,7 @@ branch that the piecewise definitions select at the `m`-th angle.  The soundness
 real quantities; the remaining lemmas are the order facts the evaluator needs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10408,15 +10464,18 @@ namespace MovingSofa
 open GerverAreaCert
 
 /-- The six stage endpoints indexed by a natural number, constant past `5`. -/
+@[expose]
 def gerverStageTime (s : ℕ) : ℝ := gerverStageTimes ⟨min 5 s, by omega⟩
 
 /-- The real grid angle at index `m`, mirroring `GerverAreaCert.ttZ`. -/
+@[expose]
 def gerverGridTime (m : ℕ) : ℝ :=
   (((NN - m % NN : ℕ) : ℝ) * gerverStageTime (m / NN) +
     ((m % NN : ℕ) : ℝ) * gerverStageTime (m / NN + 1)) / (NN : ℝ)
 
 /-- The curve selected by a certificate `kind`: `0` the path, `1` `A`, `2` `B`, `3` `C`,
 `4` `D`. -/
+@[expose]
 def gerverContactPoint : ℕ → ℝ → Point
   | 0 => paperGerverPath
   | 1 => fun t ↦ paperGerverContacts t 0
@@ -10704,7 +10763,7 @@ private, is the roof-specific part of the dictionary: the reverse-time reparamet
 and the identification of `gerverNicheRoof` with the certified upper arc.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10910,6 +10969,7 @@ theorem gerver_niche_roof_membership :
     exact toPlane_mem_gerverOuterCap (hB t ht)
 
 /-- The strict region between the wall and the graph of `f` over the parameter set `I`. -/
+@[expose]
 def strictVerticalFill (f : ℝ → Point) (I : Set ℝ) : Set Point :=
   {q | ∃ t ∈ I, q 0 = f t 0 ∧ 0 ≤ q 1 ∧ q 1 < f t 1}
 
@@ -10998,7 +11058,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Tail.Canonical`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11014,7 +11074,7 @@ Authors: Dean Cureton
 # Cap / Tail / Arcs
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11030,6 +11090,7 @@ structure DirectedArcData where
   endPoint : Point
 
 /-- The directed convex boundary arcs used for the right and left tail bodies. -/
+@[expose]
 def rightLeftTailArcs (B D : ConvexBody Point) : DirectedArcData × DirectedArcData :=
   (⟨convexBoundaryArc B (Real.pi + paperGerverConstants.2.1) (3 * Real.pi / 2),
     (edgeVertices B ((Real.pi + paperGerverConstants.2.1 : ℝ) : Real.Angle)).1,
@@ -11057,7 +11118,7 @@ Authors: Dean Cureton
 # Cap / Tail / Space
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11067,10 +11128,12 @@ open scoped NNReal ENNReal
 namespace MovingSofa
 
 /-- The real-angle inner-corner path of a cap. -/
+@[expose]
 def capInnerCorner (K : RightAngleCapSpace) (t : ℝ) : Point :=
   (rotatingHallwayParts (K.1 : Set Point) (t : Real.Angle)).innerCorner
 
 /-- The two surface densities on the upper half-circle, with the top atom excluded. -/
+@[expose]
 def HasCapDensities (K : RightAngleCapSpace) (r s : ℝ → ℝ≥0) : Prop :=
   Measurable r ∧ Measurable s ∧
     (surfaceAreaMeasure K.1).restrict
@@ -11083,6 +11146,7 @@ def HasCapDensities (K : RightAngleCapSpace) (r s : ℝ → ℝ≥0) : Prop :=
         ((volume.restrict (Set.Ioc 0 (Real.pi / 2))).withDensity (fun t ↦ (s t : ℝ≥0∞)))
 
 /-- The density, corner regularity and strict interior signs of the injectivity condition. -/
+@[expose]
 def SatisfiesInjectivityCondition (K : RightAngleCapSpace) : Prop :=
   (∃ r s : ℝ → ℝ≥0, HasCapDensities K r s ∧
     ∀ r' s', HasCapDensities K r' s' →
@@ -11096,6 +11160,7 @@ def SatisfiesInjectivityCondition (K : RightAngleCapSpace) : Prop :=
         (tangentVector (t : Real.Angle))
 
 /-- Right-angle caps satisfying injectivity and the cap-area threshold. -/
+@[expose]
 def SpecialCapSpace :=
   {K : RightAngleCapSpace // SatisfiesInjectivityCondition K ∧
     (11 : ℝ) / 5 ≤ ClassicalResults.area (K.1 : Set Point)}
@@ -11142,7 +11207,7 @@ Authors: Dean Cureton
 # Cap / Corner Measure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11151,6 +11216,7 @@ open MeasureTheory
 namespace MovingSofa
 
 /-- The normal and tangent components of the inner-corner path derivative. -/
+@[expose]
 def capVelocityCoefficients (K : SpecialCapSpace) (t : ℝ) : ℝ × ℝ :=
   (inner ℝ (derivWithin (capInnerCorner K.val) (Set.Icc 0 (Real.pi / 2)) t)
       (normalVector (t : Real.Angle)),
@@ -11158,6 +11224,7 @@ def capVelocityCoefficients (K : SpecialCapSpace) (t : ℝ) : ℝ × ℝ :=
       (tangentVector (t : Real.Angle)))
 
 /-- The density formed by joining the two signed corner-velocity components over `[0, π]`. -/
+@[expose]
 def capCornerDensity (K : SpecialCapSpace) (s : ℝ) : ℝ :=
   if 0 < s ∧ s ≤ Real.pi / 2 then (capVelocityCoefficients K s).2
   else if Real.pi / 2 < s ∧ s ≤ Real.pi then
@@ -11165,11 +11232,13 @@ def capCornerDensity (K : SpecialCapSpace) (s : ℝ) : ℝ :=
   else 0
 
 /-- The measure on the real angle interval defined by the nonnegative corner density. -/
+@[expose]
 def capCornerMeasure (K : SpecialCapSpace) : Measure ℝ :=
   (volume.restrict (Set.Icc 0 Real.pi)).withDensity
     (fun s ↦ ENNReal.ofReal (capCornerDensity K s))
 
 /-- Push the corner-density measure to angles modulo a full turn. -/
+@[expose]
 def capCornerAngleMeasure (K : SpecialCapSpace) : Measure Real.Angle :=
   Measure.map (fun s : ℝ ↦ (s : Real.Angle)) (capCornerMeasure K)
 
@@ -11281,18 +11350,20 @@ Authors: Dean Cureton
 # Cap / Corner Paths
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The inner-corner path restricted and bundled as a continuous BV path. -/
+@[expose]
 def capCornerBV (K : SpecialCapSpace) {a b : ℝ}
     (h : Set.Icc a b ⊆ Set.Icc 0 (Real.pi / 2)) : ContinuousBVPaths a b :=
   continuousBVOfContDiffOn (capInnerCorner K.val) (K.property.1.2.1.mono h)
 
 /-- The corner BV path between the two reflected Gerver switching angles. -/
+@[expose]
 def capMiddleBV (K : SpecialCapSpace) :
     ContinuousBVPaths paperGerverConstants.2.1 paperGerverConstants.2.2 :=
   capCornerBV K (by
@@ -11320,19 +11391,21 @@ Authors: Dean Cureton
 # Cap / Tail / Canonical
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The closed half-planes above the right and left inner supporting walls. -/
+@[expose]
 def innerWallUpperHalfPlanes (K : RightAngleCapSpace) (t : ℝ) : Set Point × Set Point :=
   (normalHalfPlane (t : Real.Angle) (supportValue K.1 (t : Real.Angle) - 1) true false,
     normalHalfPlane ((t + Real.pi / 2 : ℝ) : Real.Angle)
       (supportValue K.1 ((t + Real.pi / 2 : ℝ) : Real.Angle) - 1) true false)
 
 /-- The right and left canonical tail sets, before bundling their convex-body proofs. -/
+@[expose]
 def canonicalTailSets (K : SpecialCapSpace) : Set Point × Set Point :=
   ((K.1.1 : Set Point) ∩
       ⋂ t ∈ Set.Icc paperGerverConstants.2.1 (Real.pi / 2),

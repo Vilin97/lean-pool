@@ -18,7 +18,7 @@ edge.  The construction below is topological; the finite conforming subdivision 
 that it is PL is kept as a separate obligation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -87,7 +87,7 @@ theorem facePlaneHomeomorph_symm_mem_oneSkeleton (t : K.Face)
 
 /-- The canonical lift of the standard triangular frontier to the global intrinsic
 one-skeleton. -/
-noncomputable def faceBoundaryLift (t : K.Face) :
+@[expose] noncomputable def faceBoundaryLift (t : K.Face) :
     StandardFaceBoundary → K.oneSkeleton :=
   fun p => ⟨((K.facePlaneHomeomorph t).symm
     ⟨p.1, standardFaceBoundary_mem_region p⟩).1,
@@ -242,7 +242,7 @@ theorem faceStandardEdge_card (i : ZMod 3) : (faceStandardEdge i).card = 2 := by
     ((by decide : ∀ j : ZMod 3, j ≠ j + 1) i)
 
 /-- A cyclic side of the standard triangle, regarded as an edge of its one-skeleton. -/
-noncomputable def standardFaceEdgeFace (i : ZMod 3) :
+@[expose] noncomputable def standardFaceEdgeFace (i : ZMod 3) :
     standardTrianglePlaneComplex.oneSkeleton.EdgeFace :=
   ⟨faceStandardEdge i, Finset.mem_filter.mpr ⟨
     standardTrianglePlaneComplex.mem_oneSkeleton_simplexes.mpr
@@ -250,7 +250,7 @@ noncomputable def standardFaceEdgeFace (i : ZMod 3) :
     faceStandardEdge_card i⟩⟩
 
 /-- The finite graph enumeration index of a cyclic standard side. -/
-noncomputable def standardFaceEdgeIndex (i : ZMod 3) :
+@[expose] noncomputable def standardFaceEdgeIndex (i : ZMod 3) :
     Fin (Fintype.card standardTrianglePlaneComplex.oneSkeleton.EdgeFace) :=
   Classical.choose
     (standardTrianglePlaneComplex.oneSkeleton.exists_edgeAt (standardFaceEdgeFace i))
@@ -364,13 +364,13 @@ theorem standardFaceEdgeFace_cellCarrier (i : ZMod 3) :
   rfl
 
 /-- The first oriented standard corner, typed as a vertex of the opaque one-skeleton object. -/
-noncomputable def faceEdgeFirstBoundaryVertex (t : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def faceEdgeFirstBoundaryVertex (t : K.Face) (i : ZMod 3) :
     standardTrianglePlaneComplex.oneSkeleton.Vertex := by
   change Fin 3
   exact K.faceEdgeFirstIndex t i
 
 /-- The second oriented standard corner, typed as a vertex of the opaque one-skeleton object. -/
-noncomputable def faceEdgeSecondBoundaryVertex (t : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def faceEdgeSecondBoundaryVertex (t : K.Face) (i : ZMod 3) :
     standardTrianglePlaneComplex.oneSkeleton.Vertex := by
   change Fin 3
   exact K.faceEdgeSecondIndex t i
@@ -421,7 +421,7 @@ theorem standardFaceEdge_endpoint_order (t : K.Face) (i : ZMod 3) :
 
 /-- The intrinsic edge parameter, pulled back as an ambient affine coordinate on the standard
 face plane. -/
-noncomputable def faceEdgeParameterAffine (t : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def faceEdgeParameterAffine (t : K.Face) (i : ZMod 3) :
     Plane →ᵃ[ℝ] ℝ :=
   (K.edgeCoordinateAffine (K.faceEdge t i)).comp (K.facePlaneInverseAffine t)
 

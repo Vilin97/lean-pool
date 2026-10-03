@@ -17,7 +17,7 @@ extra permutation index beyond the diagram's row count contributes
 zero weight, because the guard forces it to be fixed.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

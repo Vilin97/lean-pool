@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.IntegralPathLimit
 
 /-! Lifting an actual continuous evolution equation through an injective bounded linear map. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -21,7 +21,7 @@ public import LeanPool.LiCriterion.Hadamard.OrderOne.ZeroCountingBounds
 
 /-! ### Dyadic ball finsets under `∑ 1/‖z ρ‖² < ∞` -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

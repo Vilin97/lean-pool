@@ -16,7 +16,7 @@ smooth inverse coordinate chart, a Navier--Stokes solution, or a singularity.
 `q ^ b` below denotes the real power, while `η ^ 2` is a natural power.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CoordinateAlgebra
@@ -24,12 +24,13 @@ namespace NavierStokes.CoordinateAlgebra
 noncomputable section
 
 /-- A, given by `1 / 2 + h`. -/
-def A (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] def A (h : ℝ) : ℝ := 1 / 2 + h
 /-- D, given by `1 / 2 - h`. -/
-def D (h : ℝ) : ℝ := 1 / 2 - h
+@[expose] def D (h : ℝ) : ℝ := 1 / 2 - h
 /-- D, given by `1 - η ^ 2`. -/
-def d (η : ℝ) : ℝ := 1 - η ^ 2
+@[expose] def d (η : ℝ) : ℝ := 1 - η ^ 2
 /-- L, given by `1 - 2 * h * η ^ 2`. -/
+@[expose]
 def L (h η : ℝ) : ℝ := 1 - 2 * h * η ^ 2
 
 theorem A_add_D (h : ℝ) : A h + D h = 1 := by
@@ -148,17 +149,17 @@ theorem rates_unique {q h η q' η' τ' z' : ℝ} (hq : 0 < q)
     exact (inverseEta_recover hq hL q' η').symm
 
 /-- Q time, given by `-1 / L h η`. -/
-def qTime (h η : ℝ) : ℝ := -1 / L h η
+@[expose] def qTime (h η : ℝ) : ℝ := -1 / L h η
 /-- Eta time, given by `D h * η / (q * L h η)`. -/
-def etaTime (q h η : ℝ) : ℝ := D h * η / (q * L h η)
+@[expose] def etaTime (q h η : ℝ) : ℝ := D h * η / (q * L h η)
 /-- X time, given by `X / (q * L h η)`. -/
-def xTime (q h η X : ℝ) : ℝ := X / (q * L h η)
+@[expose] def xTime (q h η X : ℝ) : ℝ := X / (q * L h η)
 /-- Q axial, given by `2 * η * q / (q ^ D h * L h η)`. -/
-def qAxial (q h η : ℝ) : ℝ := 2 * η * q / (q ^ D h * L h η)
+@[expose] def qAxial (q h η : ℝ) : ℝ := 2 * η * q / (q ^ D h * L h η)
 /-- Eta axial, given by `d η / (q ^ D h * L h η)`. -/
-def etaAxial (q h η : ℝ) : ℝ := d η / (q ^ D h * L h η)
+@[expose] def etaAxial (q h η : ℝ) : ℝ := d η / (q ^ D h * L h η)
 /-- X axial, given by `-2 * η * X / (q ^ D h * L h η)`. -/
-def xAxial (q h η X : ℝ) : ℝ := -2 * η * X / (q ^ D h * L h η)
+@[expose] def xAxial (q h η X : ℝ) : ℝ := -2 * η * X / (q ^ D h * L h η)
 
 theorem time_rates (q h η : ℝ) :
     inverseQ q h η (-1) 0 = qTime h η ∧
@@ -195,11 +196,11 @@ theorem xAxial_from_qAxial {q : ℝ} (hq : q ≠ 0) (h η X : ℝ) :
   field_simp [hq, hL, hp]
 
 /-- The `T_b` coefficient in equation (4), at a profile jet `(F,FX,Fη)`. -/
-def timeCoeff (b h η X F FX Fη : ℝ) : ℝ :=
+@[expose] def timeCoeff (b h η X F FX Fη : ℝ) : ℝ :=
   (-b * F + D h * η * Fη + X * FX) / L h η
 
 /-- The `Z_b` coefficient in equation (4), at a profile jet `(F,FX,Fη)`. -/
-def axialCoeff (b h η X F FX Fη : ℝ) : ℝ :=
+@[expose] def axialCoeff (b h η X F FX Fη : ℝ) : ℝ :=
   (2 * η * b * F + d η * Fη - 2 * η * X * FX) / L h η
 
 /-- Product/chain-rule expression for the time derivative of `q^b F(X,η)`.

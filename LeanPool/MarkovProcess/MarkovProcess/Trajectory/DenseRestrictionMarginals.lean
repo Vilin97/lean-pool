@@ -16,7 +16,7 @@ are the existing finite-set kernels, reindexed from physical time back to ration
 file makes no shift, Markov, strong Markov, or Hunt-process assertion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

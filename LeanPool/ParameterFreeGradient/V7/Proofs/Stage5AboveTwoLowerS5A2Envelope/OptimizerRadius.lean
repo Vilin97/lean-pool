@@ -13,7 +13,7 @@ The completed resisting objective has a controlled, symmetry-invariant distance 
 minimizers.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

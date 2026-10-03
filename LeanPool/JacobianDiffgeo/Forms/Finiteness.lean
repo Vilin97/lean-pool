@@ -35,7 +35,7 @@ Main declarations:
 * `instance : FiniteDimensional ℂ (Form1 X)` (compact T2 `X`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle Topology
 open Set Filter IsManifold
@@ -249,7 +249,7 @@ def J : Form1 X →ₗ[ℂ] G.P where
 
 @[simp]
 theorem J_apply (η : Form1 X) (i : Fin G.n) (z : G.K i) :
-    G.J η i z = coeffIn (G.e i) η z := rfl
+    G.J η i z = coeffIn (G.e i) η z := by rfl
 
 theorem norm_coeffIn_le_of_mem_K [CompactSpace X] (η : Form1 X) {i : Fin G.n} {z : ℂ}
     (hz : z ∈ G.K i) : ‖coeffIn (G.e i) η z‖ ≤ ‖G.J η‖ :=

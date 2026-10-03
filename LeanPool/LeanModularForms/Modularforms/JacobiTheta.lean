@@ -23,7 +23,7 @@ import Mathlib.Order.CompletePartialOrder
 /-! # JacobiTheta -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Jacobi theta functions
@@ -272,17 +272,17 @@ lemma H₄_β_action : (H₄ ∣[(2 : ℤ)] β.1) = H₄ := calc
     simp [sq, slash_mul, H₂_T_inv_action, H₂_S_action]
 
 /-- H₂, H₃, H₄ are modular forms of weight 2 and level Γ(2) -/
-noncomputable def H₂SIF : SlashInvariantForm (Γ 2) 2 where
+@[expose] noncomputable def H₂SIF : SlashInvariantForm (Γ 2) 2 where
   toFun := H₂
   slash_action_eq' := slashaction_generators_Γ2 H₂ (2 : ℤ) H₂_α_action H₂_β_action H₂_negI_action
 
 /-- `H₃` as a slash-invariant form of weight 2 and level `Γ(2)`. -/
-noncomputable def H₃SIF : SlashInvariantForm (Γ 2) 2 where
+@[expose] noncomputable def H₃SIF : SlashInvariantForm (Γ 2) 2 where
   toFun := H₃
   slash_action_eq' := slashaction_generators_Γ2 H₃ (2 : ℤ) H₃_α_action H₃_β_action H₃_negI_action
 
 /-- `H₄` as a slash-invariant form of weight 2 and level `Γ(2)`. -/
-noncomputable def H₄SIF : SlashInvariantForm (Γ 2) 2 where
+@[expose] noncomputable def H₄SIF : SlashInvariantForm (Γ 2) 2 where
   toFun := H₄
   slash_action_eq' := slashaction_generators_Γ2 H₄ (2 : ℤ) H₄_α_action H₄_β_action H₄_negI_action
 
@@ -570,21 +570,21 @@ theorem isBoundedAtImInfty_H₄_slash :
 end H_isBoundedAtImInfty
 
 /-- `H₂` as a modular form of weight 2 and level `Γ(2)`. -/
-noncomputable def H₂MF : ModularForm (Γ 2) 2 := {
+@[expose] noncomputable def H₂MF : ModularForm (Γ 2) 2 := {
   H₂SIF with
   holo' := H₂_SIF_MDifferentiable
   bdd_at_cusps' hc := bounded_at_cusps_of_bounded_at_infty hc isBoundedAtImInfty_H₂_slash
 }
 
 /-- `H₃` as a modular form of weight 2 and level `Γ(2)`. -/
-noncomputable def H₃MF : ModularForm (Γ 2) 2 := {
+@[expose] noncomputable def H₃MF : ModularForm (Γ 2) 2 := {
   H₃SIF with
   holo' := H₃_SIF_MDifferentiable
   bdd_at_cusps' hc := bounded_at_cusps_of_bounded_at_infty hc isBoundedAtImInfty_H₃_slash
 }
 
 /-- `H₄` as a modular form of weight 2 and level `Γ(2)`. -/
-noncomputable def H₄MF : ModularForm (Γ 2) 2 := {
+@[expose] noncomputable def H₄MF : ModularForm (Γ 2) 2 := {
   H₄SIF with
   holo' := H₄_SIF_MDifferentiable
   bdd_at_cusps' hc := bounded_at_cusps_of_bounded_at_infty hc isBoundedAtImInfty_H₄_slash
@@ -661,7 +661,7 @@ lemma jacobi_f_SL2Z_invariant : ∀ γ : SL(2, ℤ), jacobiF ∣[(4 : ℤ)] γ =
   slashaction_generators_SL2Z jacobiF 4 jacobi_f_S_action jacobi_f_T_action
 
 /-- jacobiF as a SlashInvariantForm of weight 4 and level Γ(1) -/
-noncomputable def jacobiFSIF : SlashInvariantForm (CongruenceSubgroup.Gamma 1) 4 where
+@[expose] noncomputable def jacobiFSIF : SlashInvariantForm (CongruenceSubgroup.Gamma 1) 4 where
   toFun := jacobiF
   slash_action_eq' := slashaction_generators_GL2R jacobiF 4 jacobi_f_S_action jacobi_f_T_action
 

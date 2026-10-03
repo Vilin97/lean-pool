@@ -18,7 +18,7 @@ deterministic property of continuous paths; it makes no stochastic-process, Mark
 claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

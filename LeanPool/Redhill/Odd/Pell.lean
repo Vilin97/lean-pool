@@ -14,7 +14,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # Pell equation for the odd case
 -/
 
-@[expose] public section
+public section
 
 
 namespace OddCase

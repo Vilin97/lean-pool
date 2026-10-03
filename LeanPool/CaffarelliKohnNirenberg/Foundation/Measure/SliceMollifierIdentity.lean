@@ -18,7 +18,7 @@ result is the integral form of the transport identity, stated on its own so
 that it can be used without unfolding the convolution derivative.
 -/
 
-@[expose] public section
+public section
 
 open scoped Convolution Topology
 open MeasureTheory

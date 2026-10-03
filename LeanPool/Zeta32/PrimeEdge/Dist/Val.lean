@@ -15,7 +15,7 @@ public import LeanPool.Zeta32.PrimeEdge.Dist.Basic
 * `VG_locPoly_tate` : `v_p(locPoly s F) ≥ 0` if `v_p(F_e) ≥ e` and `v_p(s) ≥ 1`;
 * `H_split` : `H_e(j) = p^{-e} H_e(⌊j/p⌋) + ∑_{a ≤ j, p ∤ a} a^{-e}`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

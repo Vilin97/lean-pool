@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -60,7 +60,7 @@ lemma bodySystem_take' (x : BodySystemObj T) (h : m ≤ k) :
   rw [bodySystem_take_val]
   exact congrArg (fun j ↦ (x.res j).val) (inf_of_le_right h)
 /-- an isomorph of `bodyFunctor` that is more convenient to build levelwise -/
-@[simps obj] def bodySystem : Trees ⥤ Type* where
+@[expose, simps obj] def bodySystem : Trees ⥤ Type* where
   obj T := BodySystemObj T
   map {S T} f := TypeCat.ofHom fun x : BodySystemObj S ↦ ({
     res := fun k ↦ (resEq k).map f (x.res k)
@@ -80,7 +80,7 @@ abbrev ofObj (x : bodySystem.obj T) : BodySystemObj T :=
   (Equiv.cast (by dsimp [bodySystem] : bodySystem.obj T = BodySystemObj T)).injective h
 end BodySystemObj
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def bodyEquivSystemApp (T : Trees) : body T.2 ≃ BodySystemObj T where
+@[expose, simps] def bodyEquivSystemApp (T : Trees) : body T.2 ≃ BodySystemObj T where
   toFun x := {
     res := fun k ↦ ⟨x.val.take k, by simp⟩
     con := by simp
@@ -102,7 +102,7 @@ end BodySystemObj
     · exact List.IsPrefix.getElem (xs := (x.res (m + 1)).val) (ys := (x.res n).val)
         ((bodySystem_con' x).mpr (by omega)) (by rw [resEq_len]; omega)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps! -isSimp] def bodyEquivSystem : bodyFunctor ≅ bodySystem := NatIso.ofComponents
+@[expose, simps! -isSimp] def bodyEquivSystem : bodyFunctor ≅ bodySystem := NatIso.ofComponents
   (fun T ↦ eqToIso (by rfl : bodyFunctor.obj T = body T.2) ≪≫
     (bodyEquivSystemApp T).toIso ≪≫
     eqToIso (by dsimp [bodySystem] : BodySystemObj T = bodySystem.obj T)) (by
@@ -159,7 +159,7 @@ end BodySystemObj
   IsPosition (A := no_index _) (Tree.pInv f x h).val p ↔ IsPosition x.val p := by synthIsPosition
 
 /-- a strategy defined only on positions up to length k -/
-def ResStrategy (T : Trees) (p : Player) (k : ℕ) :=
+@[expose] def ResStrategy (T : Trees) (p : Player) (k : ℕ) :=
   ∀ x : T, IsPosition x.val p → x.val.length ≤ k → ExtensionsAt x
 namespace ResStrategy
 @[ext] lemma ext {S S' : ResStrategy T p k} (h : ∀ x hp hl, S x hp hl = S' x hp hl) : S = S' :=
@@ -181,14 +181,14 @@ lemma eval_val_congr' (S S' : ResStrategy T p k) (h : S = S')
   subst h h'
   rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def res (h : m ≤ k) (S : ResStrategy T p k) : ResStrategy T p m :=
+@[expose] def res (h : m ≤ k) (S : ResStrategy T p k) : ResStrategy T p m :=
   fun x hp hl ↦ S x hp (by omega)
 @[simp] lemma res_refl (S : ResStrategy T p k) : S.res le_rfl = S := rfl
 @[simp] lemma res_trans (m n k) (S : ResStrategy T p k) (mn : m ≤ n) (nk : n ≤ k) :
   (S.res nk).res mn = S.res (mn.trans nk) := rfl
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def fromMap (f : S ⟶ T) (h : Tree.Fixing k f := by as_aux_lemma => synthFixing)
+@[expose] def fromMap (f : S ⟶ T) (h : Tree.Fixing k f := by as_aux_lemma => synthFixing)
   (S' : ResStrategy S p k) : ResStrategy T p k := fun x hx hl ↦
     ExtensionsAt.map f (x := pInv f x) (y := x) (by simp_rw [cancel_pInv_right])
       (S' _ (by simpa only [iff_pInv_lenHom]) (by simpa only [h_length_pInv]))
@@ -253,7 +253,7 @@ end ResStrategy
     simp_rw [← ih (by simp), Nat.add_succ, ← (S.str (k + n + 1)).res_trans k
       (k + n) (k + n + 1) (by omega) (by omega), S.con]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def strategyEquivSystem : Strategy T.2 p ≃ StrategySystem T p where
+@[expose, simps] def strategyEquivSystem : Strategy T.2 p ≃ StrategySystem T p where
   toFun S := {
     str := fun _ x h _ ↦ S x h
     con := fun _ ↦ rfl
@@ -288,7 +288,7 @@ lemma strategy_body (f : Strategy T p) : y ∈ body f.pre.subtree ↔ y ∈ body
     exact ⟨hy, fun x hp hx ↦ ExtensionsAt.ext (h x hp hx)⟩
 end «Section2»
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def consistent (x : bodySystem.obj T) (S : StrategySystem T p) :=
+@[expose] def consistent (x : bodySystem.obj T) (S : StrategySystem T p) :=
   ∀ (y : T), (hp : IsPosition y.val p) → (BodySystemObj.ofObj x).contains y.val
   → (BodySystemObj.ofObj x).contains (S.str y.val.length y hp le_rfl).val'
 lemma mem_principalOpen_iff_bodySystem_contains {T : Trees} (x : List T.1) (y : body T.2) :

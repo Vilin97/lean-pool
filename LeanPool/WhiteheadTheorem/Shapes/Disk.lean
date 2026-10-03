@@ -13,13 +13,13 @@ public import Mathlib.Topology.Category.TopCat.Sphere
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Disk`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace TopCat
 
 /-- The inclusion `∂𝔻 n ⟶ 𝔻 n` of the boundary of the `n`-disk. -/
-def diskBoundaryIncl (n : ℕ) : diskBoundary.{u} n ⟶ disk.{u} n :=
+@[expose] def diskBoundaryIncl (n : ℕ) : diskBoundary.{u} n ⟶ disk.{u} n :=
   ofHom
     { toFun := fun ⟨p, hp⟩ ↦ ⟨p, le_of_eq hp⟩
       continuous_toFun := ⟨fun t ⟨s, ⟨r, hro, hrs⟩, hst⟩ ↦ by

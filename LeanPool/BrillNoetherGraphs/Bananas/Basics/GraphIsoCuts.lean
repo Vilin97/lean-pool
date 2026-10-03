@@ -18,7 +18,7 @@ normal forms.  Keeping this at the graph-isomorphism layer avoids rebuilding
 the same finite-cut argument for every presentation theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

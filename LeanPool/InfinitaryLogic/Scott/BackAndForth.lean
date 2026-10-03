@@ -96,7 +96,7 @@ equivalence relations with matching finite-class structure but different arrange
 infinite classes.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 

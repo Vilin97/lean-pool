@@ -10,7 +10,7 @@ public import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! Factorial and double-factorial expressions for Gaussian moments. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory ProbabilityTheory

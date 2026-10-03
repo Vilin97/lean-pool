@@ -73,7 +73,7 @@ The one-edge arithmetic itself is `ConfigurationFive`'s and is reused
 unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationThreeChain
 

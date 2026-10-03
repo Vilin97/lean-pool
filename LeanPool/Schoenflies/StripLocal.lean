@@ -60,7 +60,7 @@ The local two-sidedness assertion *at a vertex* is not proved here; see the modu
 end.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

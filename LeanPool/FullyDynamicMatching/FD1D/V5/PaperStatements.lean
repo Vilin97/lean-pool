@@ -16,7 +16,7 @@ This module instantiates the compact paper-facing stochastic model with the
 hierarchical V5 selector and transfers the proved continuous-process bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Palomar
 
@@ -48,7 +48,10 @@ private theorem trajectoryFromState_hierarchicalPolicy_eq
         (L := FD1D.V5.treeDepth m) s₀
         (FD1D.V5.parameterA m : ℝ)
         (FD1D.SupplyConfiguration.canonicalFallback (by omega)) := by
-  rfl
+  unfold trajectoryFromState ContinuousProcess.trajectoryLawFromState
+  unfold trajectoryFrom ContinuousProcess.trajectoryLawFrom
+    TrajectoryBridge.trajectoryLaw
+  congr 1
 
 private theorem uniformTrajectory_hierarchicalPolicy_eq
     {m : ℕ} (hm : 1 ≤ m) :
@@ -57,7 +60,10 @@ private theorem uniformTrajectory_hierarchicalPolicy_eq
         (L := FD1D.V5.treeDepth m) (m := m)
         (FD1D.V5.parameterA m : ℝ)
         (FD1D.SupplyConfiguration.canonicalFallback (by omega)) := by
-  rfl
+  unfold uniformTrajectory ContinuousProcess.trajectoryLaw
+  unfold trajectoryFrom
+    TrajectoryBridge.trajectoryLaw
+  congr 1
 
 private theorem processCost_hierarchicalPolicy_eq
     {m : ℕ} (hm : 1 ≤ m) (z : ProcessState m) :

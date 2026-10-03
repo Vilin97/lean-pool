@@ -12,7 +12,7 @@ public import Mathlib.Data.List.Infix
 
 /-! # Exhaustive limits of nested finite histories -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
@@ -40,11 +40,13 @@ def listOutput (G : Generator α) (xs : List α) : α := G xs.length xs.get
     simp
 
 /-- Eventual target validity of a list-input function; freshness is separate. -/
+@[expose]
 def EventuallyValid (F : List α → α) (L : Generic.Language α) : Prop :=
   ∀ stream : Stream α, Generic.Presents stream L →
     ∃ t₀, ∀ t, t₀ ≤ t → F (GenLimit.textPrefix stream t) ∈ L
 
 /-- A list-input function always returns an element absent from its input. -/
+@[expose]
 def Fresh (F : List α → α) : Prop := ∀ xs, F xs ∉ xs
 
 /-- Replace a previously observed output by a fresh element of the infinite universe. -/

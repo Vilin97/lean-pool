@@ -42,7 +42,7 @@ arbitrary field `K`. Throughout, `A` is a domain which is a finitely generated `
   `exists_minimalPrimes_le`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

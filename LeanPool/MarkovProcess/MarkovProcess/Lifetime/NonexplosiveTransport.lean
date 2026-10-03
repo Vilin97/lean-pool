@@ -16,7 +16,7 @@ lifetime paths whose lifetime is almost surely infinite therefore gives a canoni
 ordinary continuous paths, independent of the off-support default.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

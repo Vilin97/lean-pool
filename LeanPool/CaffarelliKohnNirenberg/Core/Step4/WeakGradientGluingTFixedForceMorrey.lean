@@ -17,7 +17,7 @@ Morrey class. The cutoff is bounded by one, and no spatial supremum bound
 on the force is used.
 -/
 
-@[expose] public section
+public section
 
 section
 

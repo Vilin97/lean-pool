@@ -21,7 +21,7 @@ sign-changing inversions, and Proposition 6.10 identifies those inversions
 with the size of the Weierstrass partition at the surviving mark.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

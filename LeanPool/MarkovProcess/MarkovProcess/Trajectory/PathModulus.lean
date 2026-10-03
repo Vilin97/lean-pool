@@ -37,7 +37,7 @@ Main results:
 No tightness, weak continuity, or Hölder-path statement is proved here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

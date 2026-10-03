@@ -17,7 +17,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
 -/
 
-@[expose] public section
+public section
 
 variable {num str : Type} [M : V0ExtModel num str]
 open FirstOrder Language

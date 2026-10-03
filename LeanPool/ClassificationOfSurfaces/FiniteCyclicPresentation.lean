@@ -38,7 +38,7 @@ isomorphism class and `IsGallierValid` adds it as an explicit disjunct. The pres
 `twoMonogonSphere` is the nonexceptional two-face model obtained by the book's P2 refinement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -70,11 +70,11 @@ abbrev Face (P : FiniteCyclicPresentation) :=
   Fin P.faces.length
 
 /-- The stored cyclic boundary word of a face. -/
-def boundary (P : FiniteCyclicPresentation) (f : P.Face) : List P.Dart :=
+@[expose] def boundary (P : FiniteCyclicPresentation) (f : P.Face) : List P.Dart :=
   P.faces.get f
 
 /-- Forget the orientation of a signed edge occurrence. -/
-def edgeOfDart {α : Type*} : SignedDart α → α
+@[expose] def edgeOfDart {α : Type*} : SignedDart α → α
   | .pos e => e
   | .neg e => e
 
@@ -84,7 +84,7 @@ theorem edgeOfDart_flip {α : Type*} (d : SignedDart α) :
   cases d <;> rfl
 
 /-- Reverse the traversal direction of a signed boundary word. -/
-def inverseWord {α : Type*} (word : List (SignedDart α)) :
+@[expose] def inverseWord {α : Type*} (word : List (SignedDart α)) :
     List (SignedDart α) :=
   word.reverse.map SignedDart.flip
 
@@ -146,7 +146,7 @@ structure EdgeRelabeling (α β : Type*) where
 namespace EdgeRelabeling
 
 /-- Apply an edge relabeling to a signed dart. -/
-def mapDart {α β : Type*} (e : EdgeRelabeling α β) : SignedDart α → SignedDart β
+@[expose] def mapDart {α β : Type*} (e : EdgeRelabeling α β) : SignedDart α → SignedDart β
   | .pos a =>
       if e.reverse a then
         .neg (e.edgeEquiv a)
@@ -159,6 +159,7 @@ def mapDart {α β : Type*} (e : EdgeRelabeling α β) : SignedDart α → Signe
         .neg (e.edgeEquiv a)
 
 /-- The identity signed-edge relabeling. -/
+@[expose]
 def refl (α : Type*) : EdgeRelabeling α α where
   edgeEquiv := Equiv.refl α
   reverse := fun _ ↦ false
@@ -177,6 +178,7 @@ def trans {α β γ : Type*}
 
 /-- An ordinary edge equivalence, viewed as a relabeling that preserves every chosen
 orientation. -/
+@[expose]
 def ofEquiv {α β : Type*} (e : α ≃ β) : EdgeRelabeling α β where
   edgeEquiv := e
   reverse := fun _ ↦ false
@@ -211,7 +213,7 @@ theorem mapDart_apply_symm {α β : Type*} (e : EdgeRelabeling α β)
         simp [mapDart, symm, h]
 
 /-- A signed-edge relabeling is an equivalence on darts. -/
-def dartEquiv {α β : Type*} (e : EdgeRelabeling α β) :
+@[expose] def dartEquiv {α β : Type*} (e : EdgeRelabeling α β) :
     SignedDart α ≃ SignedDart β where
   toFun := e.mapDart
   invFun := e.symm.mapDart
@@ -380,15 +382,15 @@ deriving DecidableEq, Fintype
 namespace OrientedFace
 
 /-- A face with its stored traversal orientation. -/
-def pos {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
+@[expose] def pos {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
   ⟨f, false⟩
 
 /-- A face with the traversal orientation opposite to the stored one. -/
-def neg {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
+@[expose] def neg {P : FiniteCyclicPresentation} (f : P.Face) : P.OrientedFace :=
   ⟨f, true⟩
 
 /-- Reverse the traversal orientation of a face. -/
-def flip {P : FiniteCyclicPresentation} (f : P.OrientedFace) :
+@[expose] def flip {P : FiniteCyclicPresentation} (f : P.OrientedFace) :
     P.OrientedFace :=
   ⟨f.face, !f.orientation⟩
 
@@ -458,7 +460,7 @@ theorem orientedBoundary_length (P : FiniteCyclicPresentation)
       cases orientation <;> simp [orientedBoundary]
 
 /-- Multiplicity of an edge in one face boundary. -/
-def faceEdgeMultiplicity (P : FiniteCyclicPresentation) (f : P.Face) (e : P.Edge) : ℕ :=
+@[expose] def faceEdgeMultiplicity (P : FiniteCyclicPresentation) (f : P.Face) (e : P.Edge) : ℕ :=
   ((P.boundary f).map edgeOfDart).count e
 
 /-- Reading a face boundary in the opposite direction does not change edge multiplicities. -/
@@ -475,37 +477,37 @@ theorem orientedBoundary_edgeMultiplicity (P : FiniteCyclicPresentation)
         exact (List.reverse_perm _).count_eq e
 
 /-- Total number of boundary occurrences of an unoriented edge. -/
-def edgeMultiplicity (P : FiniteCyclicPresentation) (e : P.Edge) : ℕ :=
+@[expose] def edgeMultiplicity (P : FiniteCyclicPresentation) (e : P.Edge) : ℕ :=
   ∑ f : P.Face, P.faceEdgeMultiplicity f e
 
 /-- An edge is a boundary edge when it occurs in exactly one face boundary position. -/
-def IsBoundaryEdge (P : FiniteCyclicPresentation) (e : P.Edge) : Prop :=
+@[expose] def IsBoundaryEdge (P : FiniteCyclicPresentation) (e : P.Edge) : Prop :=
   P.edgeMultiplicity e = 1
 
 /-- Incidence validity for a finite cyclic presentation.
 
 There is at least one face, every face has a nonempty boundary, different faces have different
 cyclic boundary words, and every edge occurs either once or twice. -/
-def IsSurfaceValid (P : FiniteCyclicPresentation) : Prop :=
+@[expose] def IsSurfaceValid (P : FiniteCyclicPresentation) : Prop :=
   Nonempty P.Face ∧
     (∀ f, P.boundary f ≠ []) ∧
     (∀ f g, (P.boundary f).IsRotated (P.boundary g) → f = g) ∧
     ∀ e, P.edgeMultiplicity e = 1 ∨ P.edgeMultiplicity e = 2
 
 /-- Two faces are adjacent when their boundary words contain a common unoriented edge. -/
-def FaceAdjacent (P : FiniteCyclicPresentation) (f g : P.Face) : Prop :=
+@[expose] def FaceAdjacent (P : FiniteCyclicPresentation) (f g : P.Face) : Prop :=
   ∃ e : P.Edge,
     e ∈ (P.boundary f).map edgeOfDart ∧ e ∈ (P.boundary g).map edgeOfDart
 
 /-- Connectivity of the face-edge incidence graph. -/
-def IsConnected (P : FiniteCyclicPresentation) : Prop :=
+@[expose] def IsConnected (P : FiniteCyclicPresentation) : Prop :=
   Nonempty P.Face ∧ ∀ f g, Relation.ReflTransGen P.FaceAdjacent f g
 
 /-- The exceptional Gallier--Xu presentation with one face, no edges, and an empty boundary.
 
 Definition 6.1 explicitly allows this case. Its geometric realization is assigned to the sphere
 on page 86. -/
-@[reducible]
+@[expose, reducible]
 def emptyWordSphere : FiniteCyclicPresentation where
   edgeCount := 0
   faces := [[]]
@@ -514,7 +516,7 @@ def emptyWordSphere : FiniteCyclicPresentation where
 
 Gallier--Xu page 86 obtains this presentation from `emptyWordSphere` by the P2 face split. Unlike
 the exceptional presentation, it satisfies the ordinary nonempty-boundary validity predicate. -/
-@[reducible]
+@[expose, reducible]
 def twoMonogonSphere : FiniteCyclicPresentation where
   edgeCount := 1
   faces := [[.pos 0], [.neg 0]]
@@ -841,7 +843,7 @@ def trans {P Q R : FiniteCyclicPresentation}
     exact h₁.trans h₂
 
 /-- A signed presentation isomorphism transports the two orientations of every face. -/
-def orientedFaceEquiv {P Q : FiniteCyclicPresentation}
+@[expose] def orientedFaceEquiv {P Q : FiniteCyclicPresentation}
     (e : SignedPresentationIso P Q) :
     P.OrientedFace ≃ Q.OrientedFace where
   toFun f := ⟨e.faceEquiv f.face, f.orientation⟩
@@ -1041,7 +1043,7 @@ def IsEmptyWordSphere (P : FiniteCyclicPresentation) : Prop :=
 
 The first disjunct is the ordinary nonempty-boundary case. The second is precisely the exceptional
 one-face, zero-edge, empty-boundary presentation allowed by Definition 6.1. -/
-def IsGallierValid (P : FiniteCyclicPresentation) : Prop :=
+@[expose] def IsGallierValid (P : FiniteCyclicPresentation) : Prop :=
   (P.IsSurfaceValid ∧ P.IsConnected) ∨ P.IsEmptyWordSphere
 
 theorem IsEmptyWordSphere.edgeCount_eq_zero

@@ -19,7 +19,7 @@ the support polytopes and factoring the old transitions through these charts
 gives a convex flag on the same node poset with standard coordinate lattices.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 
@@ -54,6 +54,7 @@ variable (Φ : FlagDecomposition p d f)
     (C : ∀ x, IntegerLatticeChart (Φ.liftedSupport x))
 
 /-- The coordinate chart at a node, with real and modular realizations. -/
+@[expose]
 noncomputable def chart (x : Φ.flag.Node) : IntegralAffineMap (C x).rank (Φ.flag.rank x) :=
   IntegralAffineMap.ofIntAffineMap (C x).map
 
@@ -61,6 +62,7 @@ theorem chart_real_injective (x : Φ.flag.Node) : Function.Injective (chart Φ C
   IntegralAffineMap.ofIntAffineMap_real_injective _ (C x).injective
 
 /-- The new node polytope is the hull of its support in the new coordinates. -/
+@[expose]
 noncomputable def polytope (x : Φ.flag.Node) : RationalPolytope (C x).rank :=
   RationalPolytope.ofFinsetConvexHull ((C x).coordinateSupport.image IntCoord.real)
     (((C x).coordinateSupport_nonempty (Φ.liftedSupport_nonempty x)).image _)

@@ -35,7 +35,7 @@ utilities, payoff analysis, covering arguments, and MWU potential bounds.
 - Arora, Hazan, Kale, "The Multiplicative Weights Update Method", ToC 8(1), 2012
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -56,7 +56,7 @@ def normalizeToPMF {C : Type*} [Fintype C] [Nonempty C]
 
 lemma normalizeToPMF_prob {C : Type*} [Fintype C] [Nonempty C]
     (w : C → ℝ) (hw : ∀ c, 0 < w c) (c : C) :
-    (normalizeToPMF w hw).prob c = w c / ∑ c' : C, w c' := rfl
+    (normalizeToPMF w hw).prob c = w c / ∑ c' : C, w c' := by rfl
 
 /-- Point mass PMF at a single element. -/
 def pointMassPMF {C : Type*} [Fintype C] [DecidableEq C] (c₀ : C) :
@@ -84,10 +84,15 @@ def empiricalPMF {α : Type*} [Fintype α] [DecidableEq α]
       (fun t _ => mem_univ (rs t))
     simp_all
 
+/-- The probability assigned by an empirical distribution is its sample frequency. -/
+lemma empiricalPMF_prob {α : Type*} [Fintype α] [DecidableEq α]
+    {T : ℕ} (hT : 0 < T) (rs : Fin T → α) (a : α) :
+    (empiricalPMF hT rs).prob a = (univ.filter (fun t => rs t = a)).card / (T : ℝ) := by rfl
+
 /-! ## Boolean Game Payoff -/
 
 /-- Expected payoff of distribution p against column c in a Boolean game. -/
-def boolGamePayoff {R C : Type*} [Fintype R]
+@[expose] def boolGamePayoff {R C : Type*} [Fintype R]
     (M : R → C → Bool) (p : FinitePMF R) (c : C) : ℝ :=
   ∑ r : R, p.prob r * (if M r c then (1 : ℝ) else 0)
 

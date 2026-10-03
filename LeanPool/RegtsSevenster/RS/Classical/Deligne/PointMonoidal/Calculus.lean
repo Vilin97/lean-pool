@@ -43,7 +43,7 @@ proved in [Coherence.lean](Coherence.lean).
   threefold graded tensor product.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

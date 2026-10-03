@@ -34,7 +34,7 @@ The numerical data, strip, gauge, and operators below are the ones used by
 estimates is proved independently of the particular and signed wave choices.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,6 +47,7 @@ abbrev Point := ActualInitialization.Point
 
 /-- Initialization supplies all numerical hypotheses of the similarity
 estimates, including the actual finite-window common index. -/
+@[expose]
 noncomputable def similarityData : ActualCycleExcluded.SimilarityData where
   h := ActualPrimary.h
   h_pos := ActualPrimary.outgoing.data.h_pos
@@ -148,7 +149,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +162,7 @@ open scoped BigOperators
 
 /-- Reindex coefficients, bundling `labels`, `blocks`, `gaussian`, `aliasCoefficients` and the
 required compatibility proofs. -/
-noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
+@[expose] noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
     (v : CycleCoefficients ι) : CycleCoefficients κ where
   labels n := (v.labels n).map e.symm.toEmbedding
   blocks l := v.blocks (e l)
@@ -170,7 +171,7 @@ noncomputable def reindexCoefficients {ι κ : Type} (e : κ ≃ ι)
   residualBand := v.residualBand
 
 /-- Reindex state, bundling `state`, `coefficients`, `axisymmetricAlias`. -/
-noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
+@[expose] noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) : CycleState κ where
   state := x.state
   coefficients := reindexCoefficients e x.coefficients
@@ -178,6 +179,7 @@ noncomputable def reindexState {ι κ : Type} (e : κ ≃ ι)
 
 /-- Reindex parameters, bundling `gauge`, `strip`, `patch`, `coordinate` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def reindexParameters {ι κ : Type} (e : κ ≃ ι)
     (p : CycleParameters ι) : CycleParameters κ where
   gauge := p.gauge
@@ -265,6 +267,7 @@ abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 abbrev ParticularIndex (B N0 : ℕ) := ActualParticularStageControls.Label B N0
 
 /-- Swap, given by `Equiv.prodComm _ _`. -/
+@[expose]
 noncomputable def swap (B N0 : ℕ) : Index B N0 ≃ ParticularIndex B N0 :=
   Equiv.prodComm _ _
 
@@ -274,7 +277,7 @@ noncomputable def swap (B N0 : ℕ) : Index B N0 ≃ ParticularIndex B N0 :=
     (swap B N0).symm l = (l.2, l.1) := rfl
 
 /-- Particular state, given by `reindexState (swap B N0).symm x`. -/
-noncomputable def particularState {B N0 : ℕ} (x : CycleState (Index B N0)) :
+@[expose] noncomputable def particularState {B N0 : ℕ} (x : CycleState (Index B N0)) :
     CycleState (ParticularIndex B N0) := reindexState (swap B N0).symm x
 
 @[simp] theorem particularState_state {B N0 : ℕ} (x : CycleState (Index B N0)) :
@@ -306,6 +309,7 @@ theorem particularState_roundtrip {B N0 : ℕ} (x : CycleState (Index B N0)) :
 /-! ## The actual four-stage parameter constructor -/
 
 /-- Parameters, constructed using `CycleParameters.ofGeometry`. -/
+@[expose]
 noncomputable def parameters {B N0 : ℕ} (x : CycleState (Index B N0)) :
     CycleParameters (Index B N0) :=
   CycleParameters.ofGeometry ActualInitialization.geometry ActualPrimary.h
@@ -315,6 +319,7 @@ noncomputable def parameters {B N0 : ℕ} (x : CycleState (Index B N0)) :
 
 /-- The same literal builder expressed in the particular solver's label
 order.  This has no additional geometric or analytic choices. -/
+@[expose]
 noncomputable def parametersInParticularOrder {B N0 : ℕ}
     (x : CycleState (ParticularIndex B N0)) : CycleParameters (ParticularIndex B N0) :=
   CycleParameters.ofGeometry ActualInitialization.geometry ActualPrimary.h
@@ -379,6 +384,7 @@ choice and does not change with the current correction state. -/
 noncomputable def bandFloor (B N0 : ℕ) : ℕ := (ActualPrimary.choice B N0).prepared.N
 
 /-- Source band, given by `BaseChartJets.cellBand l.1`. -/
+@[expose]
 noncomputable def sourceBand {B N0 : ℕ} (l : Index B N0) : ℕ := BaseChartJets.cellBand l.1
 
 theorem bandFloor_ge (B N0 : ℕ) : N0 ≤ bandFloor B N0 := ActualPrimary.threshold B N0
@@ -559,6 +565,7 @@ theorem initial_signed_carrier (B N0 : ℕ) (l : Index B N0) :
 /-! ## The same fixed primitives at every valid state -/
 
 /-- Fixed parameters, constructed using `CycleParameters.ofGeometry`. -/
+@[expose]
 noncomputable def fixedParameters (B N0 : ℕ) : CycleParameters (Index B N0) :=
   CycleParameters.ofGeometry ActualInitialization.geometry ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) ActualInitialization.axial

@@ -29,7 +29,7 @@ section
 
 /-! Uniform bounds on the actual finite velocity jets, including the terminal corrector. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -99,7 +99,7 @@ section
 /-! The literal advection fields obey the same fixed coefficient costs before the final tail split.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -155,7 +155,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -242,7 +242,7 @@ section
 
 /-! Fixed-radius word bounds for the actual finite grade convolution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -293,7 +293,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -348,7 +348,7 @@ section
 
 /-! The only surviving linear tail grade has the same fixed coefficient budget. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -432,7 +432,7 @@ section
 
 /-! Each surviving grade of the literal packet residual has a fixed-radius estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -475,7 +475,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

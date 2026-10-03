@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Ring.Star
 Polynomial factors include the growing base core constant and inverse
 time; no parameter depending on the base scale is treated as fixed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,11 +25,11 @@ open Real EulerScale EulerPacketSourceScales EulerPacketSourceScaleChoice
   EulerPacketSourceScaleSequence EulerPacketBaseGuardScales
 
 /-- Predecessor exponent, given by `scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3`. -/
-def predecessorExponent (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def predecessorExponent (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   scaleSequence J X n/((J-1+n : ℕ) : ℝ)^3
 
 /-- Polynomial factor, given by `((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^1000`. -/
-def polynomialFactor (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
+@[expose] def polynomialFactor (J : ℕ) (X : ℝ) (n : ℕ) : ℝ :=
   ((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^1000
 
 theorem sequence_one_le (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 ≤ X) (n : ℕ) :

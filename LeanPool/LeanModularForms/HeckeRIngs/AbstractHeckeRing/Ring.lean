@@ -21,7 +21,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 The `Ring (𝕋 P ℤ)` instance and user-facing API lemmas for working with Hecke rings.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable
 

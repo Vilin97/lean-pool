@@ -49,7 +49,7 @@ Next layers (subsequent chunks): the `skolemNeedSymbol` witness-term transport a
 family-membership-carrying restricted truth lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -89,7 +89,7 @@ variable {M : Type} [Λ.Structure M] (a : ℕ → M)
 interpret each `J`-constant `c_j` by the source sequence at position `d + deepRank S j` (so
 support constants map to a strictly-increasing deep tuple of `a`), and evaluate in `M`'s ambient
 `Λ`-structure. -/
-noncomputable def locDeepInterp (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empty) : M :=
+@[expose] noncomputable def locDeepInterp (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empty) : M :=
   letI : (constantsOn J).Structure M := constantsOn.structure (fun j => a (d + deepRank J S j))
   t.realize Empty.elim
 
@@ -100,7 +100,7 @@ theorem locDeepInterp_func (d : ℕ) (S : Finset J) {n : ℕ}
     locDeepInterp Λ J a d S (.func f ts) =
       letI : (constantsOn J).Structure M := constantsOn.structure (fun j => a (d + deepRank J S j))
       Structure.funMap f (fun i => locDeepInterp Λ J a d S (ts i)) :=
-  rfl
+  by exact rfl
 
 /-- **De-substitution bridge**: the deep interpretation of a closed term equals the
 *de-substituted* `Λ`-term `constantsToVars t` (each skeleton constant `c_j` turned into the
@@ -292,7 +292,7 @@ theorem locDeepInterp_snoc (d : ℕ) (S : Finset J) {n : ℕ}
 /-- **Eventual deep equality**: closed terms `t, u` are identified when, for all sufficiently deep
 interpretations of their **combined** skeleton support, they evaluate equally in `M`. (The combined
 support means both terms are read against the same ordered finite skeleton.) -/
-def LocalEMEq (t u : Λ[[J]].Term Empty) : Prop :=
+@[expose] def LocalEMEq (t u : Λ[[J]].Term Empty) : Prop :=
   ∀ᶠ d in Filter.atTop,
     locDeepInterp Λ J a d (locJSupport Λ J t ∪ locJSupport Λ J u) t =
       locDeepInterp Λ J a d (locJSupport Λ J t ∪ locJSupport Λ J u) u
@@ -507,18 +507,18 @@ theorem LocalEMContext.func_congr (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
 
 /-- `LocalEMEq` is an equivalence relation on closed terms (refl/symm need no context; trans is
 `LocalEMContext.trans`). -/
-def LocalEMContext.setoid (ctx : LocalEMContext Λ J (M := M)) :
+@[expose] def LocalEMContext.setoid (ctx : LocalEMContext Λ J (M := M)) :
     Setoid (Λ[[J]].Term Empty) where
   r := LocalEMEq Λ J ctx.a
   iseqv := ⟨fun t => LocalEMEq.refl Λ J ctx.a t, fun h => LocalEMEq.symm Λ J ctx.a h,
     fun h1 h2 => LocalEMContext.trans (Λ := Λ) (J := J) ctx h1 h2⟩
 
 /-- The **local EM term-model carrier** for a context: closed `Λ[[J]]`-terms modulo `LocalEMEq`. -/
-def LocalEMContext.Carrier (ctx : LocalEMContext Λ J (M := M)) : Type :=
+@[expose] def LocalEMContext.Carrier (ctx : LocalEMContext Λ J (M := M)) : Type :=
   Quotient ctx.setoid
 
 /-- A closed term as an element of the carrier. -/
-def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Term Empty) :
+@[expose] def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Term Empty) :
     ctx.Carrier :=
   Quotient.mk ctx.setoid t
 
@@ -535,7 +535,8 @@ it holds
 in `M` on the deep interpretations for all sufficiently deep `d` (read over a common support of the
 arguments). Well-definedness is proved separately via the enlargement-invariance congruence
   engine. -/
-@[reducible] noncomputable def LocalEMContext.structure (ctx : LocalEMContext Λ J (M := M)) :
+@[expose, reducible]
+noncomputable def LocalEMContext.structure (ctx : LocalEMContext Λ J (M := M)) :
     Λ[[J]].Structure ctx.Carrier where
   funMap {_} f xs := Quotient.mk ctx.setoid (Term.func f fun i => Quotient.out (xs i))
   RelMap {n} R xs :=
@@ -637,7 +638,8 @@ theorem LocalEMContext.relMap_mkClass_iff (ctx : LocalEMContext Λ J (M := M)) {
 
 /-- The **base `Λ`-structure** on the carrier: the reduct of the term-model `[[J]]`-structure along
 the skeleton-constant inclusion (a base function/relation symbol acts as its `Sum.inl` image). -/
-@[reducible] noncomputable def LocalEMContext.structureBase (ctx : LocalEMContext Λ J (M := M)) :
+@[expose, reducible]
+noncomputable def LocalEMContext.structureBase (ctx : LocalEMContext Λ J (M := M)) :
     Λ.Structure ctx.Carrier where
   funMap {n} f xs := @Structure.funMap (Λ[[J]]) ctx.Carrier ctx.structure n (Sum.inl f) xs
   RelMap {n} R xs := @Structure.RelMap (Λ[[J]]) ctx.Carrier ctx.structure n (Sum.inl R) xs

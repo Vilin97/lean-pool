@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 equation at every spatial order. This is proved by the bounded Bochner
 integral identity, rather than assumed commutation of derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,6 +36,7 @@ variable {E V : Type*}
   (hf : ContDiff ℝ ∞ f) (hq : ContDiff ℝ ∞ q)
 
 /-- Jet family, given by `tensorPathMap n (iteratedFDeriv ℝ n f x)`. -/
+@[expose]
 def jetFamily (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] V) :=
   tensorPathMap n (iteratedFDeriv ℝ n f x)
 

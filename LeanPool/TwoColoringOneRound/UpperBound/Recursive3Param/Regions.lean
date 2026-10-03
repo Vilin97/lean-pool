@@ -18,7 +18,7 @@ This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg
 `b < t1` and `t1 ≤ b < t2` regions.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 

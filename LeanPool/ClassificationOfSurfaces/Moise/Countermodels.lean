@@ -36,7 +36,7 @@ Contents:
   documentation of why `GeometricTriangulation` replaces it.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

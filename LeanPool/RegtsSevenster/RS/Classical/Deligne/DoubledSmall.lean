@@ -15,7 +15,7 @@ The doubling of a category is its product with itself: an object
 is a pair and a morphism is a pair.  Essential smallness follows.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

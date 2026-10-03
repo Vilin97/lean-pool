@@ -23,7 +23,7 @@ The incidence analysis is organized by positive support:
 Step 5 supplies the bad-set nullity certificates internally.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -89,6 +89,7 @@ def AllCellsFacetRegular
 /-- Support-level endpoint safety.  It is invoked only when every vertex with
 positive barycentric weight is frozen.  Zero-weight nonhorizontal vertices do
 not affect this condition. -/
+@[expose]
 def FrozenPositiveSupportRaySafe
     (a : Assignment hp C) : Prop :=
   ∀ (q : C.Cell) (w : StandardSimplex p)
@@ -199,6 +200,7 @@ def AllRestrictedFacetPolynomialsNonzero
 
 /-- Geometric form of facet-polynomial nontriviality.  Different local facets may use different
 movable assignments. -/
+@[expose]
 def AllFacetRegularityWitnesses
     (base : Assignment hp C) : Prop :=
   ∀ (q : C.Cell) (k : Fin (p + 1)),

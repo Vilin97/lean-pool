@@ -38,7 +38,7 @@ for all but `a` vertices, and a guaranteed coverage fraction.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -242,7 +242,7 @@ cannot do.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -412,7 +412,7 @@ i.e. deviations of relative size `γ²`, whose accumulation over `γ^{-1}log(1/�
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -559,7 +559,7 @@ provide (there `s ≳ γd/θ`, first order in `γ`).
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -740,7 +740,7 @@ coordinate events are independent (product measure) and each has probability `p`
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 
@@ -835,7 +835,7 @@ first order in `γ` and the accumulation does not vanish.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -1146,7 +1146,7 @@ It packages retention, concentration, degree-band, codegree, and cover-rate boun
 can be iterated by the schedule.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -1176,7 +1176,7 @@ admits a retained set `R' ⊆ K` and an exceptional set `B`, `|B| ≤ θ|V|`, su
   `Δ − ((r−1)/r)·γ·(δ − lost(v))·δ·(1−γ)/Δ + εγΔ`, where `lost(v) = lostDegree K Aᶜ v` counts the
   edges at `v` leaving `A`, and
 * the round covers at least a `γ/(8r)` fraction of `A`. -/
-def SharpRoundFor (r : ℕ) (γ ε θ α D₀ c₀ : ℝ) : Prop :=
+@[expose] def SharpRoundFor (r : ℕ) (γ ε θ α D₀ c₀ : ℝ) : Prop :=
   ∀ {V : Type} [Fintype V] [DecidableEq V] (K : Finset (Finset V)) (A : Finset V)
     (δ Δ κ : ℝ),
     IsUniform K r →

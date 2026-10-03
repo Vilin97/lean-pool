@@ -20,14 +20,14 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.Semantics
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
 variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 /-- The free variables of a pattern.  `∃x` binds `x`. -/
-def FV : Pattern S Var → Set Var
+@[expose] def FV : Pattern S Var → Set Var
   | .var x => {x}
   | .bot => ∅
   | .app _ f => ⋃ i, FV (f i)
@@ -37,7 +37,7 @@ def FV : Pattern S Var → Set Var
 /-- A pattern is closed when it has no free variables.  The paper assumes
 throughout Sections 3-5 that `Γ` and `φ` are closed, without loss of
 generality. -/
-def Closed (φ : Pattern S Var) : Prop := FV φ = ∅
+@[expose] def Closed (φ : Pattern S Var) : Prop := FV φ = ∅
 
 omit [DecidableEq Var] in
 @[simp] theorem FV_var (x : Var) : FV (.var x : Pattern S Var) = {x} := rfl
@@ -105,26 +105,26 @@ theorem denote_closed (M : Model S) {φ : Pattern S Var} (hφ : Closed φ)
 /-! ### Definition 1: totality and the three consequence relations -/
 
 /-- `φ` is total in `M` under `ρ` when `ρ(φ) = M`. -/
-def Model.Total (M : Model S) (ρ : Var → M.carrier) (φ : Pattern S Var) : Prop :=
+@[expose] def Model.Total (M : Model S) (ρ : Var → M.carrier) (φ : Pattern S Var) : Prop :=
   M.denote ρ φ = Set.univ
 
 /-- `M ⊨ φ`: `φ` is total in `M` under every valuation. -/
-def Model.Sat (M : Model S) (φ : Pattern S Var) : Prop := ∀ ρ, M.Total ρ φ
+@[expose] def Model.Sat (M : Model S) (φ : Pattern S Var) : Prop := ∀ ρ, M.Total ρ φ
 
 /-- `M ⊨ Γ`. -/
-def Model.SatSet (M : Model S) (Γ : Set (Pattern S Var)) : Prop := ∀ γ ∈ Γ, M.Sat γ
+@[expose] def Model.SatSet (M : Model S) (Γ : Set (Pattern S Var)) : Prop := ∀ γ ∈ Γ, M.Sat γ
 
 /-- `ρ(Δ) = ⋂_{δ ∈ Δ} ρ(δ)`, with value `M` when `Δ = ∅`. -/
-def Model.denoteSet (M : Model S) (ρ : Var → M.carrier)
+@[expose] def Model.denoteSet (M : Model S) (ρ : Var → M.carrier)
     (Δ : Set (Pattern S Var)) : Set M.carrier :=
   ⋂ δ ∈ Δ, M.denote ρ δ
 
 /-- `Δ ⊨loc φ`: local consequence, comparing denotations pointwise. -/
-def LocalCons (Δ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
+@[expose] def LocalCons (Δ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
   ∀ (M : Model S) (ρ : Var → M.carrier), M.denoteSet ρ Δ ⊆ M.denote ρ φ
 
 /-- `Γ ⊨ φ`: global consequence, asking for totality. -/
-def GlobalCons (Γ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
+@[expose] def GlobalCons (Γ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
   ∀ M : Model S, M.SatSet Γ → M.Sat φ
 
 /-- For closed `φ`, `M ⊨ φ` says exactly `⟦φ⟧ = M`, with no valuation

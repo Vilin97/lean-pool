@@ -27,7 +27,7 @@ Namespace `RS` (Compat section, primed names to avoid clashing with Surface's or
 * `isManifold_of_family'`: family version.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set
@@ -38,7 +38,7 @@ variable {Z : Type*} [TopologicalSpace Z] {ι : Type*}
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 /-- Package a covering family of `E`-valued charts as a `ChartedSpace`. -/
-@[reducible] def chartedSpaceOfFamily' (c : ι → OpenPartialHomeomorph Z E) (idx : Z → ι)
+@[expose, reducible] def chartedSpaceOfFamily' (c : ι → OpenPartialHomeomorph Z E) (idx : Z → ι)
     (h : ∀ z, z ∈ (c (idx z)).source) : ChartedSpace E Z where
   atlas := Set.range c
   chartAt z := c (idx z)

@@ -18,7 +18,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.RiemannMappingTheorem.Main
 -/
 
-@[expose] public section
+public section
 
 open UniformConvergence Topology Filter Set Metric Function
 

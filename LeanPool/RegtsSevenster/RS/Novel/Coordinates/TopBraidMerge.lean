@@ -17,7 +17,7 @@ merging equals merging and braiding on top.  Abstract braided
 coherence first, instantiated to the powers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -18,7 +18,7 @@ zero local weight.  The resulting flag has the same proper points, viewed
 through the inclusion of its nodes in the original flag.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -70,12 +70,14 @@ noncomputable abbrev reducedFlag (Φ : FlagDecomposition p d f) : ConvexFlag whe
 
 open Classical in
 /-- The inclusion of points of the restricted flag in the original flag. -/
+@[expose]
 def reducedPointInclusion (Φ : FlagDecomposition p d f)
     (q : Φ.reducedFlag.Point) : Φ.flag.Point :=
   ⟨q.base.1, q.val, q.val_mem⟩
 
 open Classical in
 /-- A point whose base is reduced can be viewed in the restricted flag. -/
+@[expose]
 def toReducedPoint (Φ : FlagDecomposition p d f) (q : Φ.flag.Point)
     (hq : Φ.IsReducedElement q.base) : Φ.reducedFlag.Point :=
   ⟨⟨q.base, hq⟩, q.val, q.val_mem⟩
@@ -150,6 +152,7 @@ theorem convexCombination_reducedPointInclusion (Φ : FlagDecomposition p d f)
 
 open Classical in
 /-- The original representation restricted to the reduced nodes. -/
+@[expose]
 noncomputable def reducedRepresentation (Φ : FlagDecomposition p d f) :
     FpRepresentation p d Φ.reducedFlag where
   space x := Φ.representation.space x.1

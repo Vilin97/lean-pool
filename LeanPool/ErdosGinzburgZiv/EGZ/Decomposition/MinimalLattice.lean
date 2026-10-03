@@ -18,7 +18,7 @@ its own generated lattice. Finiteness of the collection of bounded supports
 then makes coordinate and prime-saturation bounds uniform in the support.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

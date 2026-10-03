@@ -30,7 +30,7 @@ integer, and modulo-`p` realizations.  This is the compatibility needed in the
 proof of Proposition 7.1.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -48,9 +48,10 @@ abbrev FpCoord (p n : ℕ) := Fin n → ZMod p
 namespace IntCoord
 
 /-- Realification of an integer coordinate vector. -/
-def real {n : ℕ} (z : IntCoord n) : RealCoord n := fun i ↦ (z i : ℝ)
+@[expose] def real {n : ℕ} (z : IntCoord n) : RealCoord n := fun i ↦ (z i : ℝ)
 
 /-- Coordinatewise reduction modulo `p`. -/
+@[expose]
 def mod (p : ℕ) {n : ℕ} (z : IntCoord n) : FpCoord p n := fun i ↦ (z i : ZMod p)
 
 @[simp]
@@ -87,9 +88,11 @@ end IntCoord
 
 /-- A real coordinate vector represents a point of the distinguished affine
 integer lattice. -/
+@[expose]
 def IsIntegral {n : ℕ} (q : RealCoord n) : Prop := ∃ z : IntCoord n, z.real = q
 
 /-- A real point has rational coordinate data. -/
+@[expose]
 def IsRational {n : ℕ} (q : RealCoord n) : Prop :=
   ∀ i, ∃ a : ℚ, (a : ℝ) = q i
 
@@ -113,6 +116,7 @@ structure IntegralAffineMap (m n : ℕ) where
 namespace IntegralAffineMap
 
 /-- The identity integral-affine map. -/
+@[expose]
 def id (n : ℕ) : IntegralAffineMap n n where
   real := AffineMap.id ℝ (RealCoord n)
   integer := _root_.id
@@ -121,6 +125,7 @@ def id (n : ℕ) : IntegralAffineMap n n where
   mod_integer _ _ := rfl
 
 /-- Composition of integral-affine maps. -/
+@[expose]
 def comp {l m n : ℕ} (f : IntegralAffineMap m n) (g : IntegralAffineMap l m) :
     IntegralAffineMap l n where
   real := f.real.comp g.real
@@ -276,6 +281,7 @@ theorem finite_integral_convexHull {n : ℕ}
 
 /-- A nonempty finite rational set, presented as a finset, determines a
 `RationalPolytope` with exactly its ordinary real convex hull as carrier. -/
+@[expose]
 def ofFinsetConvexHull {n : ℕ} (generators : Finset (RealCoord n))
     (hnonempty : generators.Nonempty)
     (hrational : ∀ q ∈ generators, IsRational q) : RationalPolytope n where
@@ -294,6 +300,7 @@ theorem ofFinsetConvexHull_carrier {n : ℕ}
       convexHull ℝ (↑generators : Set (RealCoord n)) := rfl
 
 /-- Set-based constructor used for the support hull in Theorem 1.12. -/
+@[expose]
 noncomputable def ofFiniteConvexHull {n : ℕ} (S : Set (RealCoord n))
     (hfinite : S.Finite) (hnonempty : S.Nonempty)
     (hrational : ∀ q ∈ S, IsRational q) : RationalPolytope n :=
@@ -335,7 +342,7 @@ theorem nonempty {n : ℕ} (P : RationalPolytope n) : P.carrier.Nonempty := by
 
 /-- The actual vertices are the extreme points of the carrier.  They are kept
 separate from an arbitrary finite generating set, which may be redundant. -/
-def vertexSet {n : ℕ} (P : RationalPolytope n) : Set (RealCoord n) :=
+@[expose] def vertexSet {n : ℕ} (P : RationalPolytope n) : Set (RealCoord n) :=
   P.carrier.extremePoints ℝ
 
 theorem vertexSet_subset_generators {n : ℕ} (P : RationalPolytope n) :
@@ -378,6 +385,7 @@ theorem ext {n : ℕ} {P : RationalPolytope n} {F G : P.Face}
   simp_all
 
 /-- Relative interior, called simply "interior of a face" in the paper. -/
+@[expose]
 def relInterior {n : ℕ} {P : RationalPolytope n} (F : P.Face) : Set (RealCoord n) :=
   intrinsicInterior ℝ F.carrier
 

@@ -19,7 +19,7 @@ that the completed direct limits contain no points beyond the stage union, and
 the schedule gives surjectivity of the final map.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

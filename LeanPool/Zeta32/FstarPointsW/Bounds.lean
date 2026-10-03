@@ -13,7 +13,7 @@ odd Taylor polynomials bracket `arctan` on `[0, ∞)` (monotonicity of the remai
 `arctan x = π/4 + arctan ((x-1)/(x+1))`, and the Mathlib Taylor remainder bound for `log (1 - u)`.
 `Wt_ge` turns four atom bounds into a lower bound for `Wt x`. Written from scratch. -/
 
-@[expose] public section
+public section
 
 open Real
 

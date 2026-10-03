@@ -18,7 +18,7 @@ The real proof is from mo271/Zeta5 by Moritz Firsching; the scalar generalizatio
 is from Qian Tang's Zeta32 development, with its full attribution in `LeanPool/Zeta32.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Finset Equiv
 

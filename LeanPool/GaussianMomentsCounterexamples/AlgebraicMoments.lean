@@ -14,7 +14,7 @@ public import Mathlib.Algebra.Polynomial.AlgebraMap
 
 /-! Algebraic Gaussian moment functionals and their coefficient identities. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory ProbabilityTheory MvPolynomial Finset
@@ -22,7 +22,7 @@ open scoped BigOperators
 namespace GaussianMomentsCounterexamples
 
 /-- The contraction of a normalized conjugate Gaussian pair. -/
-def pairMoment (a b : ℕ) : ℂ := if a = b then (a.factorial : ℂ) else 0
+@[expose] def pairMoment (a b : ℕ) : ℂ := if a = b then (a.factorial : ℂ) else 0
 
 /-- Linear extension from monomials of the three-coordinate Gaussian moments. -/
 def naturalMoment3 : MvPolynomial (Fin 3) ℂ →ₗ[ℂ] ℂ :=

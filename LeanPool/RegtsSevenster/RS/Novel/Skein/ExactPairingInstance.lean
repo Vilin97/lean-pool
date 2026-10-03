@@ -19,7 +19,7 @@ formulation lives at equal numeral arities and collapses to the
 identity class.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

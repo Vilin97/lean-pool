@@ -15,7 +15,7 @@ Ported from the corresponding upstream modules listed by the source sections bel
 References beginning with `Source` name these retained sections.
 -/
 
-@[expose] public section
+public section
 
 section SourcePolynomialBoolean
 
@@ -44,6 +44,7 @@ open MvPolynomial
 /-! ## Bits and evaluation -/
 
 /-- The real value of a Boolean: `1` for `true`, `0` for `false`. -/
+@[expose]
 def bit (b : Bool) : ℝ := if b then 1 else 0
 
 @[simp] lemma bit_true : bit true = 1 := rfl
@@ -151,6 +152,7 @@ namespace AmpPoly
 variable (P : AmpPoly ι)
 
 /-- The complex value at a Boolean point. -/
+@[expose]
 noncomputable def evalC (P : AmpPoly ι) (a : ι → Bool) : ℂ :=
   ⟨evalBool P.re a, evalBool P.im a⟩
 

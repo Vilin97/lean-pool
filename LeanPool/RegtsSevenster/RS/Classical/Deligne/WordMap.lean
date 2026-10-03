@@ -36,7 +36,7 @@ reused from `BiprodPow` unchanged: they depend only on the two
 source objects, never on the letter maps.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -50,6 +50,7 @@ variable {A : Type u}
 
 /-- The morphism selected by one letter: `f` on a `true` letter and
 `g` on a `false` one. -/
+@[expose]
 def letterMap [Category.{v} A] {U : A} {V : A} {Z : A}
     (f : U ⟶ Z) (g : V ⟶ Z) :
     (b : Bool) → ((bif b then U else V) ⟶ Z)
@@ -58,6 +59,7 @@ def letterMap [Category.{v} A] {U : A} {V : A} {Z : A}
 
 /-- **The word map**: the fold of the letter maps of `f` and `g`
 over a word, by the recursion of `wordPow`. -/
+@[expose]
 noncomputable def wordMap
     [Category.{v} A] [MonoidalCategory A] {U : A} {V : A} {Z : A}
     (f : U ⟶ Z) (g : V ⟶ Z) :

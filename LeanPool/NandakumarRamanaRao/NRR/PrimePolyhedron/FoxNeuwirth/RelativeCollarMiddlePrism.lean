@@ -26,7 +26,7 @@ module identifies its horizontal facet quotient with `RefinedAffineMap.TopCell h
 packages the exact signed incidence formula.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -65,12 +65,14 @@ noncomputable def defaultPrismCell
   ((defaultTopCell hp N, ⟨0, hp.pos⟩), fun _ => Equiv.refl _)
 
 /-- The geometric cylinder vertex of one fully refined middle-prism cell. -/
+@[expose]
 noncomputable def vertex
     (hp : Nat.Prime p) (N L : Nat)
     (q : PrismCell hp N L) (i : Fin (p + 1)) : CylinderPoint p :=
   CylinderPoint.ofProd (SubdivisionPrismCharts.vertex hp N L q i)
 
 /-- The geometric affine chart of one fully refined middle-prism cell. -/
+@[expose]
 noncomputable def chart
     (hp : Nat.Prime p) (N L : Nat)
     (q : PrismCell hp N L) (w : Delta p) : CylinderPoint p :=

@@ -150,4 +150,4 @@ Tags: geometric-topology, low-dimensional-topology, surfaces, manifolds, triangu
 MSC: 57K20, 57N05
 -/
 
-@[expose] public section
+public section

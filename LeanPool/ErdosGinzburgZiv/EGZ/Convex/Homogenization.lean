@@ -18,7 +18,7 @@ vertices on each face.  The final coordinate turns linear combinations in the
 homogenized module into affine combinations in the original polytope.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

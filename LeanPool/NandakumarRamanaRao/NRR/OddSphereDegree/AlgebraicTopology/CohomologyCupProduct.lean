@@ -43,7 +43,7 @@ of the classes of two cocycles is the class of their cochain cup.
 The module exports the cohomology-level product and its functoriality laws.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Limits AlgebraicTopology SphereOddDegree.AlexanderWhitney
 
@@ -71,7 +71,7 @@ theorem cochainCx_next (n : ℕ) : (ComplexShape.up ℕ).next n = n + 1 :=
 
 /-- The cohomology class of a cocycle `φ` (a `p`-cochain with `δφ = 0`):
 `homologyπ` applied to the cycle `cyclesMk φ`. -/
-def cocycleClass (X : TopCat.{0}) (n : ℕ) (φ : singularCochainGroup (ZMod 2) X n)
+@[expose] def cocycleClass (X : TopCat.{0}) (n : ℕ) (φ : singularCochainGroup (ZMod 2) X n)
     (hφ : cochainCoboundary (ZMod 2) X n φ = 0) : cohomologyZMod2 X n :=
   ((cochainCxZMod2 X).homologyπ n).hom
     ((cochainCxZMod2 X).cyclesMk φ (n + 1) (cochainCx_next n) hφ)
@@ -181,7 +181,7 @@ theorem cocycleClass_cast_coboundary_zero (X : TopCat.{0}) (m m' : ℕ) (h : m +
 /-! ## 2. Cup with a fixed cocycle on the left -/
 
 /-- The cochain map `φ ↦ φ ⌣ ψ` as a `ModuleCat` morphism `C^p ⟶ C^{p+q}`. -/
-def cupRightMor (X : TopCat.{0}) (p q : ℕ) (ψ : singularCochainGroup (ZMod 2) X q) :
+@[expose] def cupRightMor (X : TopCat.{0}) (p q : ℕ) (ψ : singularCochainGroup (ZMod 2) X q) :
     (cochainCxZMod2 X).X p ⟶ (cochainCxZMod2 X).X (p + q) :=
   ModuleCat.ofHom
     { toFun := fun φ => cochainCup p q φ ψ
@@ -193,7 +193,7 @@ def cupRightMor (X : TopCat.{0}) (p q : ℕ) (ψ : singularCochainGroup (ZMod 2)
     (cupRightMor X p q ψ).hom φ = cochainCup p q φ ψ := rfl
 
 /-- The cochain map `ψ ↦ φ ⌣ ψ` as a `ModuleCat` morphism `C^q ⟶ C^{p+q}`. -/
-def cupLeftFixedMor (X : TopCat.{0}) (p q : ℕ) (φ : singularCochainGroup (ZMod 2) X p) :
+@[expose] def cupLeftFixedMor (X : TopCat.{0}) (p q : ℕ) (φ : singularCochainGroup (ZMod 2) X p) :
     (cochainCxZMod2 X).X q ⟶ (cochainCxZMod2 X).X (p + q) :=
   ModuleCat.ofHom
     { toFun := fun ψ => cochainCup p q φ ψ
@@ -528,7 +528,7 @@ theorem cupZMod2_mk {X : TopCat.{0}} {p q : ℕ}
 
 /-- The pullback `f^* : H^n(Y; F₂) ⟶ H^n(X; F₂)` of a continuous map `f : X ⟶ Y`,
 as the action of the singular cohomology functor. -/
-def cohPullback {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ) :
+@[expose] def cohPullback {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ) :
     cohomologyZMod2 Y n ⟶ cohomologyZMod2 X n :=
   (singularCohomologyZMod2 n).map f.op
 
@@ -611,7 +611,7 @@ def oneZMod2 (X : TopCat.{0}) : cohomologyZMod2 X 0 :=
   cocycleClass X 0 (cochainOne (R := ZMod 2) (Z := X)) (cochainCoboundary_cochainOne X)
 
 /-- The `n`-th cup power `a^n ∈ H^n(X; F₂)` of a degree-one class `a ∈ H^1(X; F₂)`. -/
-def cupPowZMod2 {X : TopCat.{0}} (a : cohomologyZMod2 X 1) : (n : ℕ) → cohomologyZMod2 X n
+@[expose] def cupPowZMod2 {X : TopCat.{0}} (a : cohomologyZMod2 X 1) : (n : ℕ) → cohomologyZMod2 X n
   | 0 => oneZMod2 X
   | (n + 1) => cupZMod2 (cupPowZMod2 a n) a
 

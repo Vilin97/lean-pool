@@ -21,7 +21,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 /-! # Equivs -/
 
 
-@[expose] public section
+public section
 
 
 
@@ -31,7 +31,7 @@ open TopologicalSpace Set
 
 
 /-- Negation as an equivalence `ℤ ≃ ℤ`. -/
-def negEquiv : ℤ ≃ ℤ where
+@[expose] def negEquiv : ℤ ≃ ℤ where
   toFun n := -n
   invFun n := -n
   left_inv := neg_neg
@@ -50,15 +50,15 @@ def succEquiv : ℤ ≃ ℤ where
 
 
 /-- Swaps the two entries of a length-2 vector. -/
-def swap {α : Type*} : (Fin 2 → α) → (Fin 2 → α) := fun x => ![x 1, x 0]
+@[expose] def swap {α : Type*} : (Fin 2 → α) → (Fin 2 → α) := fun x => ![x 1, x 0]
 
 @[simp]
-lemma swap_apply {α : Type*} (b : Fin 2 → α) : swap b = ![b 1, b 0] := rfl
+lemma swap_apply {α : Type*} (b : Fin 2 → α) : swap b = ![b 1, b 0] := by rfl
 
 lemma swap_involutive {α : Type*} (b : Fin 2 → α) : swap (swap b) = b := by
   ext i
   fin_cases i <;> rfl
 
 /-- Swapping the two entries of a length-2 vector as an equivalence. -/
-def swapEquiv {α : Type*} : Equiv (Fin 2 → α) (Fin 2 → α) := Equiv.mk swap swap
+@[expose] def swapEquiv {α : Type*} : Equiv (Fin 2 → α) (Fin 2 → α) := Equiv.mk swap swap
   swap_involutive swap_involutive

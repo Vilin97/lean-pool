@@ -19,7 +19,7 @@ directions. The differentiated Volterra equation gives a triangular system;
 the energy estimate, rather than an uncontrolled inverse norm, estimates it.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.WeightedODEJets
@@ -42,10 +42,10 @@ from the head of the word to its tail; the empty word means order zero. -/
 noncomputable def jet (f : P → E) (l : List P) : P → E :=
   l.foldl (fun g v => directional g v) f
 
-@[simp] theorem jet_nil (f : P → E) : jet f [] = f := rfl
+@[simp] theorem jet_nil (f : P → E) : jet f [] = f := by rfl
 
 @[simp] theorem jet_cons (f : P → E) (v : P) (l : List P) :
-    jet f (v :: l) = jet (directional f v) l := rfl
+    jet f (v :: l) = jet (directional f v) l := by rfl
 
 /-- Restricting all directions to the unit ball converts the estimates to
 uniform bounds for all mixed parameter derivatives of a given order. -/
@@ -238,6 +238,7 @@ theorem directional_product {U : Set P} (hU : IsOpen U)
     (hlin.clm_apply hdu.hasFDerivAt).fderiv
   simp only [_root_.add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply, add_comm] at h
+  simp only [coefficientAction_apply_curve] at h
   convert! h using 1; apply add_comm
 
 theorem jet_product {U : Set P} (hU : IsOpen U)
@@ -254,9 +255,11 @@ theorem jet_product {U : Set P} (hU : IsOpen U)
         (E := Coefficient a b E) (F := Curve a b E →L[ℝ] Curve a b E)
         (coefficientAction (E := E))
     have hleft : ContDiffOn ℝ ∞ (fun p => applyCoefficient (directional A v p) (u p)) U :=
-      (hcoeff.comp_contDiffOn hdA).clm_apply hu
+      by simpa only [Function.comp_def, coefficientAction_apply_curve] using
+        (hcoeff.comp_contDiffOn hdA).clm_apply hu
     have hright : ContDiffOn ℝ ∞ (fun p => applyCoefficient (A p) (directional u v p)) U :=
-      (hcoeff.comp_contDiffOn hA).clm_apply hdu
+      by simpa only [Function.comp_def, coefficientAction_apply_curve] using
+        (hcoeff.comp_contDiffOn hA).clm_apply hdu
     intro p hp
     calc
       jet (fun p => applyCoefficient (A p) (u p)) (v :: l) p =
@@ -360,7 +363,8 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
       (E := Coefficient a b E) (F := Curve a b E →L[ℝ] Curve a b E)
       (coefficientAction (E := E))
   have hAu : ContDiffOn ℝ ∞ (fun q => applyCoefficient (A q) (u q)) U :=
-    (hcoeff.comp_contDiffOn hA).clm_apply hu
+    by simpa only [Function.comp_def, coefficientAction_apply_curve] using
+      (hcoeff.comp_contDiffOn hA).clm_apply hu
   have hright : EqOn u
       (fun q => constantCurve (x₀ q) + integrator hab (applyCoefficient (A q) (u q) + f q)) U :=
     fun q _ => solution_integralEquation hab (A q) (x₀ q) (f q)
@@ -395,8 +399,7 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
     (constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p))
   symm
   apply (equationOperator_isInvertible hab (A p)).inverse_apply_eq.mpr
-  change constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p) =
-    jet u l p - integrator hab (applyCoefficient (A p) (jet u l p))
+  rw [equationOperator_apply_curve]
   rw [(integrator hab).map_add] at hj
   exact (eq_sub_iff_add_eq.mpr (by simpa only [add_assoc, add_comm, add_left_comm] using hj.symm))
 

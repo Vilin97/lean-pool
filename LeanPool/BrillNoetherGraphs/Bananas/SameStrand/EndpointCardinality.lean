@@ -20,13 +20,14 @@ assembles the resulting quadratic-versus-linear contradiction that rules out
 `k`-general transmission for the endpoint marking.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
 open Utilities
 
 /-- Encode an unordered endpoint pair by its minimum and one more than its maximum. -/
+@[expose]
 noncomputable def endpointPairEmbedding (g : ℕ) : Sym2 (Fin g) → ℤ × ℤ :=
   Sym2.lift ⟨(fun (a b : Fin g) => (((min a.val b.val : ℕ) : ℤ),
     ((max a.val b.val + 1 : ℕ) : ℤ))), by

@@ -52,7 +52,7 @@ The proof follows from the
 harmonic function, Poisson integral, analytic function, unit disc
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanComplexAnalysis
 

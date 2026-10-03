@@ -19,7 +19,7 @@ tableau and point to a specific node inside it. This is the `PathIn` type.
 Its values say "go to this child, then to this child, ... stop here."
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -35,7 +35,7 @@ inductive PathIn : ∀ {Hist X}, Tableau Hist X → Type
 deriving DecidableEq
 
 /-- The tableau reached by a path, together with its history and root sequent. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def tabAt {Hist X} {tab : Tableau Hist X} : PathIn tab → Σ H X, Tableau H X
 | .nil => ⟨_,_,tab⟩
 | .loc _ tail => tabAt tail
@@ -48,13 +48,15 @@ lemma tabAt_cast_gen {Hist X} {tab : Tableau Hist X} (s : PathIn tab) (w : Σ H 
   cases h; rfl
 
 /-- Append a path in the reached tableau to an initial path. -/
-def PathIn.append {Hist X} {tab : Tableau Hist X} (p : PathIn tab) (q : PathIn (tabAt p).2.2) :
+@[expose] def PathIn.append {Hist X} {tab : Tableau Hist X} (p : PathIn tab)
+    (q : PathIn (tabAt p).2.2) :
   PathIn tab := match p with
   | .nil => q
   | .loc Y_in tail => .loc Y_in (PathIn.append tail q)
   | .pdl tail => .pdl (PathIn.append tail q)
 
 /-- Whether the tableau reached by a path is a loaded-path-repeat leaf. -/
+@[expose]
 def PathIn.isLrep {Hist X} {tab : Tableau Hist X} (p : PathIn tab) : Prop := (tabAt p).2.2.isLrep
 
 instance instDecdidablePathInisLrep {Hist X} {tab : Tableau Hist X} (p : PathIn tab) : Decidable
@@ -122,7 +124,7 @@ theorem tabAt_pdl {Hist X Y} {nrep : ¬ flprep Hist X} {bas : X.basic} {r : PdlR
     tabAt (.pdl tail : PathIn (.pdl nrep bas r next)) = tabAt tail := by simp [tabAt]
 
 /-- Given a path to node `t`, this is its label Λ(t). -/
-def nodeAt {H X} {tab : (Tableau H X)} (p : PathIn tab) : Sequent := (tabAt p).2.1
+@[expose] def nodeAt {H X} {tab : (Tableau H X)} (p : PathIn tab) : Sequent := (tabAt p).2.1
 
 @[simp]
 theorem nodeAt_nil {Hist} {tab : Tableau Hist X} : nodeAt (.nil : PathIn tab) = X := by
@@ -154,7 +156,7 @@ def PathIn.head {Hist} {tab : Tableau Hist X} (_ : PathIn tab) : Sequent := X
 def PathIn.last {Hist X} {tab : Tableau Hist X} (t : PathIn tab) : Sequent := (tabAt t).2.1
 
 /-- The length of a path is the number of actual steps. -/
-@[simp, implicit_reducible]
+@[expose, simp, implicit_reducible]
 def PathIn.length {Hist X} {tab : Tableau Hist X} : (t : PathIn tab) → ℕ
 | .nil => 0
 | .pdl tail => tail.length + 1
@@ -174,7 +176,7 @@ theorem append_length {Hist X} {tab : Tableau Hist X} {p : PathIn tab} q : (p.ap
 /-! ## Edge Relation -/
 
 /-- Relation `s ⋖_ t` says `t` is a child of `s`. Two cases, both defined via `append`. -/
-def edge {Hist X} {tab : Tableau Hist X} (s t : PathIn tab) : Prop :=
+@[expose] def edge {Hist X} {tab : Tableau Hist X} (s t : PathIn tab) : Prop :=
   ( ∃ Hist X nrep nbas lt next Y,
     ∃ (Y_in : Y ∈ endNodesOf lt)
       (h : tabAt s = ⟨Hist, X, (Tableau.loc nrep nbas lt next : Tableau _ X)⟩),
@@ -685,7 +687,7 @@ decreasing_by
 /-- Convert a path to a History.
 Does not include the last node.
 The history of `.nil` is `[]` because this will not go into `Hist`. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def PathIn.toHistory {Hist} {tab : Tableau Hist X} : (t : PathIn tab) → History
 | .nil => []
 | .pdl tail => tail.toHistory ++ [X]
@@ -769,6 +771,7 @@ Defined using Fin.lastCases.
 
 Hint: when proving stuff about `rewind k`, avoid induction on k, because rewind does not decrease k.
 -/
+@[expose]
 def PathIn.rewind {Hist : History} {X : Sequent} {tab : Tableau Hist X} : (t : PathIn tab) →
     (k : Fin (t.toHistory.length + 1)) → PathIn tab
 | .nil, _ => .nil

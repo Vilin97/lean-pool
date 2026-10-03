@@ -23,7 +23,7 @@ Shimura Proposition 3.8: if an arithmetic group pair admits an anti-automorphism
 Hecke ring `𝕋 P ℤ` is commutative.
 -/
 
-@[expose] public section
+public section
 
 open MulOpposite Set DoubleCoset Subgroup Subgroup.Commensurable Finsupp
 
@@ -49,7 +49,7 @@ namespace AntiInvolution
 variable (ι : AntiInvolution P)
 
 /-- The underlying function of the anti-involution, mapping `g` to `ι(g)` viewed in `G`. -/
-def bar (g : G) : G := (ι.toFun g).unop
+@[expose] def bar (g : G) : G := (ι.toFun g).unop
 
 /-- The anti-involution is an involution: `bar(bar(g)) = g`. -/
 @[simp] lemma bar_bar (g : G) : ι.bar (ι.bar g) = g := ι.involutive g
@@ -93,6 +93,7 @@ lemma bar_doubleCoset_eq (g₁ g₂ : G)
       ⟨ι.bar h₁, ι.bar_mem_H hh₁⟩ _
 
 /-- The induced action of the anti-involution on double cosets, defined via `Quotient.lift`. -/
+@[expose]
 noncomputable def onHeckeCoset (D : HeckeCoset P) : HeckeCoset P :=
   Quotient.lift (fun (g : P.Δ) =>
     (⟦⟨ι.bar (g : G), ι.bar_mem_Δ g.2⟩⟧ : HeckeCoset P))
@@ -453,7 +454,7 @@ end AntiInvolution
 
 /-- Shimura Proposition 3.8: `CommRing (𝕋 P ℤ)` from an anti-involution
 fixing every double coset. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def instCommRingOfAntiInvolution (ι : AntiInvolution P)
     (h_fix : ∀ D : HeckeCoset P, ι.onHeckeCoset D = D) : CommRing (𝕋 P ℤ) :=
   { HeckeRing.instRing P with mul_comm := ι.mul_comm_of_antiInvolution h_fix }

@@ -24,7 +24,7 @@ extension theorem extends the integer character with prescribed value at one to 
 each rational coordinate.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

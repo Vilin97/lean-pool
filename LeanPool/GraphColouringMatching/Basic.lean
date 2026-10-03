@@ -22,7 +22,7 @@ colour. Empty classes are allowed. These are classical equivalences of
 representations, not new graph-theoretic bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

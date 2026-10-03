@@ -17,7 +17,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 /-! A genuine ordinary-space cutoff-curl dual estimate. All spatial norms and
 integrals in this file use Lebesgue measure on Euclidean three-space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,10 +28,11 @@ open MeasureTheory EulerSmoothLimit EulerVectorCalculus
 open scoped ContDiff ENNReal NNReal
 
 /-- Curl of a vector-valued field, using the existing coordinate curl. -/
-def vectorCurl (f : Space → Space) : Space → Space :=
+@[expose] def vectorCurl (f : Space → Space) : Space → Space :=
   curl (fun i x => f x i)
 
 /-- The fixed homogeneous Sobolev constant for dimension three and exponent two. -/
+@[expose]
 def sobolevConstant : ℝ≥0 :=
   eLpNormLESNormFDerivOfEqInnerConst (volume : Measure Space) 2
 

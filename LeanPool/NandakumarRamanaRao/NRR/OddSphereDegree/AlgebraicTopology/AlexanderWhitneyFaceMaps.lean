@@ -65,7 +65,7 @@ only at the cochain coboundary level. Over `ZMod 2` all signs are
 extra work.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 
@@ -256,7 +256,7 @@ the project by applying `(TopCat.toSSet.obj X).map` to the morphism identities o
 
 /-- The **`k`-th boundary face** of a singular `(n+1)`-simplex `σ`, obtained by
 restricting `σ` along `SimplexCategory.δ k`. -/
-noncomputable def faceSimplex (X : TopCat.{0}) (n : ℕ) (k : Fin (n + 2))
+@[expose] noncomputable def faceSimplex (X : TopCat.{0}) (n : ℕ) (k : Fin (n + 2))
     (σ : (TopCat.toSSet.obj X).obj (Opposite.op (⦋n + 1⦌ : SimplexCategory))) :
     (TopCat.toSSet.obj X).obj (Opposite.op (⦋n⦌ : SimplexCategory)) :=
   (TopCat.toSSet.obj X).map (SimplexCategory.δ k).op σ

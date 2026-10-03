@@ -22,24 +22,24 @@ The relation `boundingRelation` has `f` related to `g` when `f n < g n`
 infinitely often. Its norm is the bounding number in the manuscript.
 -/
 
-@[expose] public section
+public section
 
 open Filter Cardinal Set
 
 namespace NonMRR
 
 /-- Eventual domination of natural-valued sequences. -/
-def EventuallyLE (f g : ℕ → ℕ) : Prop := ∀ᶠ n in atTop, f n ≤ g n
+@[expose] def EventuallyLE (f g : ℕ → ℕ) : Prop := ∀ᶠ n in atTop, f n ≤ g n
 
 /-- The strict comparison holding at arbitrarily large coordinates. -/
-def FrequentlyLT (f g : ℕ → ℕ) : Prop := ∃ᶠ n in atTop, f n < g n
+@[expose] def FrequentlyLT (f g : ℕ → ℕ) : Prop := ∃ᶠ n in atTop, f n < g n
 
 theorem frequentlyLT_iff_not_eventuallyLE (f g : ℕ → ℕ) :
     FrequentlyLT f g ↔ ¬ EventuallyLE g f := by
   simp only [FrequentlyLT, EventuallyLE, Filter.Frequently, not_lt]
 
 /-- The usual relation whose norm is the bounding number. -/
-def boundingRelation : Relation where
+@[expose] def boundingRelation : Relation where
   Challenge := ℕ → ℕ
   Response := ℕ → ℕ
   relates := FrequentlyLT
@@ -48,7 +48,7 @@ def boundingRelation : Relation where
     exact Nat.lt_succ_self _)⟩
 
 /-- The least cardinality of an eventually unbounded family. -/
-noncomputable def boundingNumber : Cardinal := boundingRelation.norm
+@[expose] noncomputable def boundingNumber : Cardinal := boundingRelation.norm
 
 theorem dominating_boundingRelation_iff (s : Set (ℕ → ℕ)) :
     boundingRelation.Dominating s ↔ ¬ ∃ f, ∀ g ∈ s, EventuallyLE g f := by

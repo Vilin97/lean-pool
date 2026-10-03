@@ -21,7 +21,7 @@ sign.  The linear extension evaluates the group algebra's action on
 a single group element accordingly.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

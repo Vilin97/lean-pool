@@ -31,7 +31,7 @@ public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 
 /-! ## Fiber infimum approximation -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 

@@ -31,7 +31,7 @@ These results connect the combinatorial content (proved in `Lemmas.lean`)
 to the algebraic identities involving generating functions.
 -/
 
-@[expose] public section
+public section
 
 open Finset PowerSeries
 open scoped PowerSeries.WithPiTopology

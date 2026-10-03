@@ -20,7 +20,7 @@ equality of raw function germs, so downstream commutative-algebra arguments do
 not depend on a hidden choice of representative.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

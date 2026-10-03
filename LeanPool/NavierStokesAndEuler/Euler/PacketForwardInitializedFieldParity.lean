@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceParity
 /-! The literal zero-history initialized packet and its exact residual tail are odd
 as actual cylinder L² paths, before and after coordinate normalization. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

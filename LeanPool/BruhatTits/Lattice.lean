@@ -15,6 +15,6 @@ public import LeanPool.BruhatTits.Lattice.Transvect
 # Lattices
 -/
 
-@[expose] public section
+public section
 
 open Module

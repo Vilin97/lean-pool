@@ -37,7 +37,7 @@ expressions that agree to second order.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -52,7 +52,7 @@ variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 /-- **The exact one-round covering rate of a vertex.**  `∑_{f ∋ x} p·(1−p)^{c(f)}`, where `c(f)` is
 the number of edges conflicting with `f`.  By `prob_vertex_covered_eq` this is *exactly* the
 probability that `x` is covered by the round matching. -/
-noncomputable def coverRate (H : Finset (Finset V)) (p : ℝ) (x : V) : ℝ :=
+@[expose] noncomputable def coverRate (H : Finset (Finset V)) (p : ℝ) (x : V) : ℝ :=
   ∑ f ∈ H.filter (fun f => x ∈ f), p * (1 - p) ^ (conflicts H f).card
 
 omit [IsProbabilityMeasure (ℙ : Measure Ω)] in

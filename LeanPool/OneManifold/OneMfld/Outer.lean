@@ -29,7 +29,7 @@ argument), contradicting `nonempty_closure_inter_diff`, which forces the compone
 closure to escape into `V.source \ U.source`.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

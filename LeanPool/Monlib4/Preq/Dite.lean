@@ -12,7 +12,7 @@ public import Mathlib.LinearAlgebra.TensorProduct.Defs
  # Some stuff on dites
 -/
 
-@[expose] public section
+public section
 
 theorem ite_eq_ite_iff {α : Type _} (a b c : α) :
     (∀ {p : Prop} [hp : Decidable p], @ite α p hp a c

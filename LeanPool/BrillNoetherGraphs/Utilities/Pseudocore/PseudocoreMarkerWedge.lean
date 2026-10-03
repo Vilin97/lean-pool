@@ -22,7 +22,7 @@ the genus-five loop-aware normal-form interface: the complementary graph is
 the left (base) factor and the marker cycle is the right factor.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Certificate.PseudocoreMarkerWedge
 
 open ExplicitPotential
@@ -79,18 +79,21 @@ noncomputable def cut (marker : Fin core.loopCount)
 
 /-- The base graph remaining on the right side of the cut after separating the selected loop
 marker. -/
+@[expose]
 noncomputable def base (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) : CFGraph :=
   (cut split spec marker hCore hCompatible).rightGraph
 
 /-- The left factor isolated by the selected loop-marker cut. -/
+@[expose]
 noncomputable def factor (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) : CFGraph :=
   (cut split spec marker hCore hCompatible).leftGraph
 
 /-- The glue vertex in the base graph where the separated marker factor is attached. -/
+@[expose]
 noncomputable def attachment (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) :
@@ -98,6 +101,7 @@ noncomputable def attachment (marker : Fin core.loopCount)
   (cut split spec marker hCore hCompatible).rightGlue
 
 /-- The corresponding root vertex in the separated marker factor. -/
+@[expose]
 noncomputable def root (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) :
@@ -105,6 +109,7 @@ noncomputable def root (marker : Fin core.loopCount)
   (cut split spec marker hCore hCompatible).leftGlue
 
 /-- The wedge isomorphism in base-first orientation. -/
+@[expose]
 noncomputable def wedgeIso (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split) :
@@ -151,6 +156,7 @@ theorem base_genus (marker : Fin core.loopCount)
 
 /-- Compose a presentation of `G` by the split subdivision with the
 base-first marker wedge isomorphism. -/
+@[expose]
 noncomputable def wedgeEquiv {G : CFGraph} (marker : Fin core.loopCount)
     (hCore : spec.core = split.splitCore)
     (hCompatible : PseudocoreSplitGlue.Compatible split)
@@ -259,7 +265,7 @@ theorem restricted_second_factor_rigid
     change flatten.vertexEquiv.symm secondCut.leftGlue = restricted.leftGlue
     apply flatten.vertexEquiv.injective
     rw [Equiv.apply_symm_apply]
-    exact firstCut.restrictRightLeftIso_apply_leftGlue secondCut hSubset
+    exact (firstCut.restrictRightLeftIso_apply_leftGlue secondCut hSubset).symm
   rw [hRoot] at hTransported
   exact hTransported
 

@@ -56,7 +56,7 @@ specialization `difference_eq_zero_of_iterate`, and
 the orbit-closure difference in Corollary 3.6 (`cor:periodic-difference`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 

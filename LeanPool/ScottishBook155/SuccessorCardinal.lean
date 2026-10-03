@@ -13,7 +13,7 @@ public import LeanPool.ScottishBook155.StageSystem
 # Cardinal bounds for protected successors
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

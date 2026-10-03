@@ -26,7 +26,7 @@ compact glued configuration model, while the top cycle is defined by the genuine
 incidence sum.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

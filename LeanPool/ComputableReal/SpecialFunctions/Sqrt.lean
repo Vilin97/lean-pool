@@ -22,7 +22,7 @@ functions are executable; the packaged sequence mentions `Real.sqrt` itself as i
 value, so `sqrt` and the instances are `noncomputable` Lean terms.
 -/
 
-@[expose] public section
+public section
 
 namespace ComputableℝSeq
 
@@ -133,7 +133,7 @@ def boundedSqrt (x : ℚInterval) (n : ℕ) (b : ℕ) (hb : 0 < b) : ℚInterval
     ⟩
 
 /-- Definition of `sqrtq`. -/
-def sqrtq (x : ℚInterval) (n : ℕ) : ℚInterval :=
+@[expose] def sqrtq (x : ℚInterval) (n : ℕ) : ℚInterval :=
   --shortcut with an if to slightly speed things up
   if x.snd ≤ 0 then 0 else boundedSqrt x n 4 (by norm_num)
 
@@ -638,7 +638,7 @@ theorem TLUW_upper : TendstoLocallyUniformlyWithout
     linarith
 
 /-- Definition of `sqrt`. -/
-noncomputable def sqrt : ComputableℝSeq → ComputableℝSeq :=
+@[expose] noncomputable def sqrt : ComputableℝSeq → ComputableℝSeq :=
   ofTendstoLocallyUniformlyContinuous
   (f := Real.sqrt)
   (hf := Real.continuous_sqrt)

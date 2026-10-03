@@ -21,7 +21,7 @@ This file contains the elementary algebra over `F₂²` used by the proof. We us
 product so that the three admissible local frames can be given by concrete formulas.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 
@@ -46,10 +46,10 @@ theorem F₂_add_shuffle (a b : F₂) : a + (b + (a + b)) = 0 := by
     _ = 0 := by simp
 
 /-- The alternating form polarizing `quadratic`. -/
-def bracket (x y : Color) : F₂ := x.1 * y.2 + x.2 * y.1
+@[expose] def bracket (x y : Color) : F₂ := x.1 * y.2 + x.2 * y.1
 
 /-- The quadratic form detecting the colour `(1, 1)`. -/
-def quadratic (x : Color) : F₂ := x.1 * x.2
+@[expose] def quadratic (x : Color) : F₂ := x.1 * x.2
 
 @[simp]
 theorem bracket_apply (x y : Color) : bracket x y = x.1 * y.2 + x.2 * y.1 := rfl
@@ -74,7 +74,7 @@ theorem bracket_add_right (x y z : Color) :
   ring
 
 /-- Bracketing with a fixed left argument, as an additive homomorphism. -/
-def bracketRightHom (x : Color) : Color →+ F₂ where
+@[expose] def bracketRightHom (x : Color) : Color →+ F₂ where
   toFun := bracket x
   map_zero' := bracket_zero_right x
   map_add' := bracket_add_right x
@@ -99,7 +99,7 @@ theorem quadratic_add (x y : Color) :
   ring
 
 /-- The three locally admissible difference vectors at a 6-valent vertex. -/
-def tripleDifference (t : Color) : Fin 3 → Color
+@[expose] def tripleDifference (t : Color) : Fin 3 → Color
   | ⟨0, _⟩ => t
   | ⟨1, _⟩ => (t.2, t.1 + t.2)
   | ⟨2, _⟩ => (t.1 + t.2, t.1)
@@ -144,7 +144,7 @@ theorem tripleDifference_ne_zero (t : Color) (ht : t ≠ 0) (i : Fin 3) :
     · simpa [h₁] using hsum
 
 /-- At a 4-valent vertex the two local differences coincide. -/
-def doubleDifference (t : Color) : Fin 2 → Color
+@[expose] def doubleDifference (t : Color) : Fin 2 → Color
   | ⟨0, _⟩ => t
   | ⟨1, _⟩ => t
 

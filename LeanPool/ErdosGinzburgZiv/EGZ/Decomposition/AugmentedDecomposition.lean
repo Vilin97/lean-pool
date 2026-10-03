@@ -22,7 +22,7 @@ nodes and with the same local weights. Forgetting the additional coordinates
 maps its proper points to the original decomposition.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -322,6 +322,7 @@ theorem decomposition_isKBounded {K L B : Φ.flag.Node → ℕ} (hK : Φ.IsKBoun
 
 open Classical in
 /-- Project a new flag point by forgetting the augmented coordinate block. -/
+@[expose]
 noncomputable def forwardPoint
     (q : (decomposition Φ e ξ hp he C hmod hcenter).flag.Point) : Φ.flag.Point :=
   q.map (SupHom.id _) (fun x ↦ (forget Φ e ξ hp he C x).real)
@@ -343,6 +344,7 @@ theorem forwardPoint_mem_omegaZero
 
 open Classical in
 /-- Forgetting the slab block is a subdivision map to the original flag. -/
+@[expose]
 noncomputable def subdivisionMap :
     SubdivisionMap Φ (decomposition Φ e ξ hp he C hmod hcenter) :=
   SubdivisionMap.ofLocalGenerators (SupHom.id _)

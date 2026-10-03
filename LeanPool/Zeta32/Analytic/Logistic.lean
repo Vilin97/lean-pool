@@ -16,7 +16,7 @@ for `G = t f`. Together with the moments of `Contour/Moments.lean` this identifi
     ∫ (t · t^e R_n)(1/2 + iy) w(y) dy = C_r · slope n e + intercept r n e.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology Finset Polynomial
 

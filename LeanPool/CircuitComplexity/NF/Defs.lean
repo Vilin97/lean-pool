@@ -23,7 +23,7 @@ complexity measures, and De Morgan negation duality.
 * `CNF.neg` / `DNF.neg` — De Morgan negation (CNF ↔ DNF)
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -40,7 +40,7 @@ structure Literal (N : Nat) where
   deriving DecidableEq
 
 /-- Evaluate a literal on a bit assignment. -/
-def Literal.eval (l : Literal N) (x : BitString N) : Bool :=
+@[expose] def Literal.eval (l : Literal N) (x : BitString N) : Bool :=
   if l.polarity then x l.var else !x l.var
 
 /-- Negate a literal by flipping its polarity. -/
@@ -69,11 +69,12 @@ namespace CNF
 
 /-- A CNF formula evaluates to `true` iff every clause contains at least one
 satisfied literal. -/
+@[expose]
 def eval (φ : CNF N) (x : BitString N) : Bool :=
   φ.clauses.all fun clause => clause.any fun l => l.eval x
 
 /-- The complexity of a CNF formula is its number of clauses. -/
-def complexity (φ : CNF N) : Nat := φ.clauses.length
+@[expose] def complexity (φ : CNF N) : Nat := φ.clauses.length
 
 end CNF
 
@@ -92,11 +93,11 @@ namespace DNF
 
 /-- A DNF formula evaluates to `true` iff at least one term has all its
 literals satisfied. -/
-def eval (φ : DNF N) (x : BitString N) : Bool :=
+@[expose] def eval (φ : DNF N) (x : BitString N) : Bool :=
   φ.terms.any fun term => term.all fun l => l.eval x
 
 /-- The complexity of a DNF formula is its number of terms. -/
-def complexity (φ : DNF N) : Nat := φ.terms.length
+@[expose] def complexity (φ : DNF N) : Nat := φ.terms.length
 
 end DNF
 

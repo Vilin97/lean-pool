@@ -21,27 +21,27 @@ with `u = λx`, the coefficients `b_{ij}` of the class function `ψ(k, B + 6a' -
 `1, A, E`, and the continuous interval counts `c_{ij}`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
 namespace Zeta5Irrational
 
 /-- The class-function coefficients. -/
-noncomputable def bIn (q q' : ℕ) (k : ℤ) (i j : Fin 3) : ℝ :=
+@[expose] noncomputable def bIn (q q' : ℕ) (k : ℤ) (i j : Fin 3) : ℝ :=
   bcoef
     (fun a => bcoef (fun b => (psiR k (12 * (q' : ℤ) - 2 * (q : ℤ) - 4 + 6 * (b : ℤ) - a) : ℝ)) j)
     i
 
 /-- **The continuous inner function.** -/
-noncomputable def Ein (x : ℝ) (k : ℤ) : ℝ :=
+@[expose] noncomputable def Ein (x : ℝ) (k : ℤ) : ℝ :=
   -2 * (37 / 40 * x) * (⌊x⌋₊ : ℝ) + 12 * (37 / 40 * x) * (⌊3 / 40 * x⌋₊ : ℝ) +
         2 * Jc (37 / 40 * x) -
       37 / 40 * x * k +
     2 * ∑ i, ∑ j, bIn ⌊x⌋₊ ⌊3 / 40 * x⌋₊ k i j * ccount (Int.fract x) (Int.fract (3 / 40 * x)) i j
 
 /-- The additive error of the table bound. -/
-noncomputable def Ctab (n p : ℕ) (k : ℤ) : ℝ :=
+@[expose] noncomputable def Ctab (n p : ℕ) (k : ℤ) : ℝ :=
   5 * ∑ i, ∑ j, |bIn (40 * n / p) (3 * n / p) k i j| +
         ((ktopI n p - kloI n p : ℤ) : ℝ) * (L0I n p : ℝ) +
       2 * Bmax n p +

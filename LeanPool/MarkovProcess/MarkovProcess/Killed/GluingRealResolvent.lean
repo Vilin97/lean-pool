@@ -28,7 +28,7 @@ Additivity, and with it the resolvent equation, is available exactly when the tr
 resolvents are monotone in the index; that monotonicity is a bare hypothesis here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

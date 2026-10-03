@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -33,11 +33,11 @@ abbrev Q := ℚ
 abbrev Block := Fin 7
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def matGet (M : Array (Array Int)) (i j : Nat) : Int :=
+@[expose] def matGet (M : Array (Array Int)) (i j : Nat) : Int :=
   (M.getD i #[]).getD j 0
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def toMat3Scaled (den : Nat) (M : Array (Array Int)) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def toMat3Scaled (den : Nat) (M : Array (Array Int)) : Matrix (Fin 3) (Fin 3) Q :=
   fun i j => (matGet M i.1 j.1 : Q) / (den : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -45,7 +45,7 @@ def toVec3Scaled (den : Nat) (v : Array Int) : Fin 3 → Q :=
   fun i => (v.getD i.1 0 : Q) / (den : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Z (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def Z (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
   toMat3Scaled D (ZBlocks.getD r.1 #[])
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/

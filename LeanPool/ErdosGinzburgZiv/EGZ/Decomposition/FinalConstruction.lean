@@ -11,7 +11,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationTermination
 
 /-! # The positive-dimensional Flag Decomposition Lemma -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

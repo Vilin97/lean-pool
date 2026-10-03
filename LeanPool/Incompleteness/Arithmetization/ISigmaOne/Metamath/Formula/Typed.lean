@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -70,22 +70,26 @@ scoped instance : LogicalConnective (L.Semiformula n) where
   arrow (p q) := ⟨L.imp p.val q.val, by simp⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiformula.cast (p : L.Semiformula n) (eq : n = n' := by simp) :
     L.Semiformula n' :=
   eq ▸ p
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def verums (k : V) : L.Semiformula n := ⟨qqVerums k, by simp⟩
 
 @[simp] lemma _root_.LO.Arith.Language.Semiformula.val_cast (p : L.Semiformula n) (eq : n = n') :
     (p.cast eq).val = p.val := by rcases eq; simp [Language.Semiformula.cast]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiformula.all (p : L.Semiformula (n + 1)) :
     L.Semiformula n :=
   ⟨^∀ p.val, by simp⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiformula.ex (p : L.Semiformula (n + 1)) :
     L.Semiformula n :=
   ⟨^∃ p.val, by simp⟩
@@ -147,10 +151,11 @@ lemma imp_def (p q : L.Semiformula n) : p ==> q = ∼p ⋎ q := by ext; simp [im
 @[simp] lemma neg_neg (p : L.Semiformula n) : ∼∼p = p := by ext; simp [Language.IsUFormula.neg_neg]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def shift (p : L.Semiformula n) : L.Semiformula n := ⟨L.shift p.val, p.prop.shift⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
+@[expose] def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
   ⟨L.substs w.val p.val, p.prop.substs w.prop⟩
 
 @[simp] lemma val_shift (p : L.Semiformula n) : p.shift.val = L.shift p.val := rfl
@@ -227,12 +232,15 @@ namespace Language
 namespace SemiformulaVec
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def conj (ps : L.SemiformulaVec n) : L.Semiformula n := ⟨^⋀ ps.val, by simpa using ps.prop⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def disj (ps : L.SemiformulaVec n) : L.Semiformula n := ⟨^⋁ ps.val, by simpa using ps.prop⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def nth (ps : L.SemiformulaVec n) (i : V) (hi : i < len ps.val) : L.Semiformula n :=
   ⟨ps.val.[i], ps.prop i hi⟩
 
@@ -283,21 +291,25 @@ end «lp_section_1»
 open Formalized
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiterm.equals {n : V} (t u : ⌜ℒₒᵣ⌝.Semiterm n) :
     ⌜ℒₒᵣ⌝.Semiformula n :=
   ⟨t.val ^= u.val, by simp [qqEQ]⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiterm.notEquals {n : V} (t u : ⌜ℒₒᵣ⌝.Semiterm n) :
     ⌜ℒₒᵣ⌝.Semiformula n :=
   ⟨t.val ^≠ u.val, by simp [qqNEQ]⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiterm.lessThan {n : V} (t u : ⌜ℒₒᵣ⌝.Semiterm n) :
     ⌜ℒₒᵣ⌝.Semiformula n :=
   ⟨t.val ^< u.val, by simp [qqLT]⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiterm.notLessThan {n : V} (t u : ⌜ℒₒᵣ⌝.Semiterm n) :
     ⌜ℒₒᵣ⌝.Semiformula n :=
   ⟨t.val ^</ u.val, by simp [qqNLT]⟩
@@ -315,12 +327,14 @@ scoped infix:75 " <' " => Language.Semiterm.lessThan
 scoped infix:75 " </' " => Language.Semiterm.notLessThan
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiformula.ball {n : V} (t : ⌜ℒₒᵣ⌝.Semiterm n) (p :
     ⌜ℒₒᵣ⌝.Semiformula (n + 1)) :
     ⌜ℒₒᵣ⌝.Semiformula n :=
   (⌜ℒₒᵣ⌝.bvar 0 </' t.bShift ⋎ p).all
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Semiformula.bex {n : V} (t : ⌜ℒₒᵣ⌝.Semiterm n) (p :
     ⌜ℒₒᵣ⌝.Semiformula (n + 1)) :
     ⌜ℒₒᵣ⌝.Semiformula n :=

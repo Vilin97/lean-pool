@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
 
 /-! The physical activation data give the scaled initial conditions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

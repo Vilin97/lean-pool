@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DTop
 # LeanPool.DirectedTopologyLean4.FundamentalCategory
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of the fundamental category of a directed space.
@@ -66,7 +66,7 @@ lemma transAssocReparamAux_directed : DirectedMap.Directed
 
 /-- The directed self-map of the unit interval used to associate triple concatenations of
 dipaths. -/
-def transAssocReparamAuxMap : D(I,I) where
+@[expose] def transAssocReparamAuxMap : D(I,I) where
   toFun := fun t => ⟨transAssocReparamAux t, transAssocReparamAux_mem_I t⟩
   continuous_toFun := Continuous.subtype_mk continuous_transAssocReparamAux _
   directed_toFun := transAssocReparamAux_directed
@@ -111,7 +111,7 @@ structure FundamentalCategory (X : Type u) where
 namespace FundamentalCategory
 
 /-- The fundamental-category wrapper is type-equivalent to the underlying type. -/
-@[simps]
+@[expose, simps]
 def equiv (X : Type*) : FundamentalCategory X ≃ X where
   toFun x := x.as
   invFun x := .mk x
@@ -176,7 +176,7 @@ lemma id_eq_path_refl (x : FundamentalCategory X) :
     𝟙 x = ⟦Dipath.refl x.as⟧ := rfl
 
 /-- The functor on fundamental categories induced by a directed map. -/
-@[simps]
+@[expose, simps]
 def mapFunctor {X Y : Type*} [DirectedSpace X] [DirectedSpace Y] (f : D(X,Y)) :
     FundamentalCategory X ⥤ FundamentalCategory Y where
   obj x := ⟨f x.as⟩
@@ -212,7 +212,7 @@ protected theorem mapFunctor_comp {X Y Z : Type*} [DirectedSpace X] [DirectedSpa
 
 /-- The fundamental-category functor `dTopCat ⥤ Cat` sending a directed space to its
 fundamental category. -/
-def fundamentalCategoryFunctor : dTopCat ⥤ CategoryTheory.Cat where
+@[expose] def fundamentalCategoryFunctor : dTopCat ⥤ CategoryTheory.Cat where
   obj X := Cat.of (FundamentalCategory X)
   map f := (mapFunctor f.hom).toCatHom
   map_id X := by
@@ -228,7 +228,7 @@ scoped notation "dπ" => FundamentalCategory.fundamentalCategoryFunctor
 scoped notation "dπₓ" => FundamentalCategory.fundamentalCategoryFunctor.obj
 
 /-- The underlying functor (not just `Cat.Hom`) induced by a `dTopCat` map. -/
-@[reducible]
+@[expose, reducible]
 def fundamentalCategoryMap {X Y : dTopCat} (f : X ⟶ Y) :
     (fundamentalCategoryFunctor.obj X) ⥤ (fundamentalCategoryFunctor.obj Y) :=
   (fundamentalCategoryFunctor.map f).toFunctor

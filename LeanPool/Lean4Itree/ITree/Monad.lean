@@ -18,7 +18,7 @@ This module equips `ITree` with its functor and monad operations (`map`, `bind`,
 `bind_assoc`, using the parameterized-coinduction (Paco) tactics.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4Itree
 

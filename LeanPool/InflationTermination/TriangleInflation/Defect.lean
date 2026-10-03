@@ -19,7 +19,7 @@ independence lemma for functions of disjoint coordinate sets under a product wei
 those proofs use. Proofs are deferred.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 

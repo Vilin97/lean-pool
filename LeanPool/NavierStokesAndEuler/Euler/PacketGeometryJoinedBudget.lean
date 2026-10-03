@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
 packet budget.  Source label bounds and the original curvature hypotheses
 remain inputs; no propagator estimate or chosen growth profile is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

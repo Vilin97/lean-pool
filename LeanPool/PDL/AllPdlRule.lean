@@ -13,7 +13,7 @@ public import LeanPool.PDL.Tableau
 Similar to `LocalTableau.all`, this is needed to define `BuildTree` as a finite tree.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

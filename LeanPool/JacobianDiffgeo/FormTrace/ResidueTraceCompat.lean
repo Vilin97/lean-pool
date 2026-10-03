@@ -48,7 +48,7 @@ EXPLICIT hypothesis `hcal` (satisfied by any stack built via `exists_fiberStack`
   (task item 5, §4.6), NOT gated on the calibration issue at all (pure value/finsum identities).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set
@@ -63,7 +63,7 @@ noncomputable def resAtP1 (R : OnePoint ℂ → ℂ) (y₀ : OnePoint ℂ) : ℂ
   RS.resAt (R ∘ (chartAt ℂ y₀).symm) (chartAt ℂ y₀ y₀)
 
 theorem resAtP1_def (R : OnePoint ℂ → ℂ) (y₀ : OnePoint ℂ) :
-    resAtP1 R y₀ = RS.resAt (R ∘ (chartAt ℂ y₀).symm) (chartAt ℂ y₀ y₀) := rfl
+    resAtP1 R y₀ = RS.resAt (R ∘ (chartAt ℂ y₀).symm) (chartAt ℂ y₀ y₀) := by rfl
 
 theorem resAtP1_eq_resAtX_id (R : OnePoint ℂ → ℂ) (y₀ : OnePoint ℂ) :
     resAtP1 R y₀ = resAtX (id : OnePoint ℂ → OnePoint ℂ) R y₀ := by

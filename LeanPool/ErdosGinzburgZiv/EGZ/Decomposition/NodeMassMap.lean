@@ -18,7 +18,7 @@ the loss at the node by the loss of the entire decomposition. These data
 compose, so the same estimates apply along a surviving lineage.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -46,6 +46,7 @@ variable {Φ Ψ Ω : FlagDecomposition p d f}
 
 open Classical in
 /-- The identity map on a node and its cumulative weight. -/
+@[expose]
 def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : NodeMassMap Φ Φ x x where
   coord := IntegralAffineMap.id _
   polytope_mem := fun _ h ↦ h
@@ -54,6 +55,7 @@ def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : NodeMassMap Φ Φ x
 
 open Classical in
 /-- Compose compatible coordinate and cumulative-weight maps between three nodes. -/
+@[expose]
 def comp (M : NodeMassMap Φ Ψ x y) (N : NodeMassMap Ψ Ω y z) :
     NodeMassMap Φ Ω x z where
   coord := M.coord.comp N.coord
@@ -139,12 +141,14 @@ variable {Φ Ψ Ω : FlagDecomposition p d f}
 
 open Classical in
 /-- The identity stable node map, with zero mass loss. -/
+@[expose]
 def refl (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) : StableNodeMap Φ Φ x x where
   toNodeMassMap := NodeMassMap.refl Φ x
   mass_loss_le := by simp
 
 open Classical in
 /-- Compose stable node maps, adding their bounds on mass loss. -/
+@[expose]
 def comp (M : StableNodeMap Φ Ψ x y) (N : StableNodeMap Ψ Ω y z) :
     StableNodeMap Φ Ω x z where
   toNodeMassMap := M.toNodeMassMap.comp N.toNodeMassMap

@@ -40,7 +40,7 @@ unit-sphere subtype), we parameterize directions by the interval `[0, 2π]` via 
 The width-function continuity API and interval-integrability lemmas are imported directly.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -52,7 +52,7 @@ abbrev Plane := EuclideanSpace ℝ (Fin 2)
 
 /-- The angle parameterization of the unit circle: `circleVec θ = (cos θ, sin θ)` as a point
 of the Euclidean plane. -/
-noncomputable def circleVec (θ : ℝ) : Plane := !₂[Real.cos θ, Real.sin θ]
+@[expose] noncomputable def circleVec (θ : ℝ) : Plane := !₂[Real.cos θ, Real.sin θ]
 
 /-- First coordinate of `circleVec θ` is `cos θ`. -/
 @[simp] theorem circleVec_zero_coord (θ : ℝ) :

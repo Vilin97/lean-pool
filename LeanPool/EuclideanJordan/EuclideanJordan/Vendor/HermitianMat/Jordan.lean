@@ -17,7 +17,7 @@ Hermitian matrices have a Jordan algebra structure given by
 `HermMul`. When `A` and `B` commute, this reduces to standard matrix multiplication.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -14,4 +14,4 @@ public import LeanPool.NandakumarRamanaRao.NRR.AAK.MainTheoremAffinePullback
 Public entry point for the Nandakumar-Ramana Rao formalization.
 -/
 
-@[expose] public section
+public section

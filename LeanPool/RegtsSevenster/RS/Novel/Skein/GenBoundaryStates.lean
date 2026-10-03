@@ -19,13 +19,14 @@ states are indexed by the surviving labels of a `gluePair` rather
 than by an initial segment of ℕ.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- A boundary state over an arbitrary label type: one colour per
 label, even (`Sum.inl`) when the boundary edge is outside the
 Eulerian subset and odd (`Sum.inr`) when it participates. -/
+@[expose]
 def GenBoundaryState (k ℓ : ℕ) (α : Type) : Type :=
   α → (Fin k ⊕ Fin (2 * ℓ))
 
@@ -51,6 +52,7 @@ theorem card_genBoundaryState (k ℓ : ℕ) (α : Type) [Fintype α]
     Fintype.card_fin]
 
 /-- The boundary-membership constraint over a general label type. -/
+@[expose]
 def genBoundarySubsetMatches {k ℓ : ℕ} {α : Type}
     (W : Fragment α) (s : Finset W.Flag)
     (st : GenBoundaryState k ℓ α) : Prop :=
@@ -75,6 +77,7 @@ end GenHelpers
 
 /-- The even-colouring boundary constraint over a general label
 type. -/
+@[expose]
 def genEvenBoundaryMatch {k ℓ : ℕ} {α : Type} {W : Fragment α}
     (F : EdgeSubset W) (st : GenBoundaryState k ℓ α)
     (hbnd : genBoundarySubsetMatches W F.flags st)

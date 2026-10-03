@@ -22,7 +22,7 @@ This file defines probability measures over quasi-borel spaces.
 See [HeunenKSY17], Section V-D.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped unitInterval

@@ -18,7 +18,7 @@ depend on nothing beyond `propext`, `Classical.choice` and
 `Quot.sound` is checked rather than asserted.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

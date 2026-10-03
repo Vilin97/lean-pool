@@ -14,7 +14,7 @@ This file shrinks every radius while retaining the same centers and support. Shr
 strict score gain used when the density parameter is larger than the finite endpoint.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ namespace SixPointPacking
 variable {configuration : SixPointConfiguration}
 
 /-- Shrink every packing radius by a factor in `[0, 1]`. -/
-def scaleRadii (packing : SixPointPacking configuration) (q : ℝ) (hq0 : 0 ≤ q)
+@[expose] def scaleRadii (packing : SixPointPacking configuration) (q : ℝ) (hq0 : 0 ≤ q)
     (hq1 : q ≤ 1) : SixPointPacking configuration where
   support := packing.support
   meets_color := packing.meets_color

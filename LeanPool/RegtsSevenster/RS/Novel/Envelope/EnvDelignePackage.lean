@@ -28,7 +28,7 @@ only transcendental input, applied to the concretely constructed
 envelope.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

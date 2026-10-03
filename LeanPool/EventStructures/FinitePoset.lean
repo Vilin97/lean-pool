@@ -16,7 +16,7 @@ of a partial order with well-founded strict order (or, constructively, of any
 partial order) has a minimal element.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 

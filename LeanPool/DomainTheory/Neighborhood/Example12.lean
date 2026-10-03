@@ -23,7 +23,7 @@ one
 partial element — the bottom filter `{Δ}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example12
 
@@ -31,13 +31,13 @@ namespace Domain.Neighborhood.Example12
 abbrev Token := Fin 2
 
 /-- The master neighbourhood `Δ = {0, 1}`. -/
-def master : Set Token := Set.univ
+@[expose] def master : Set Token := Set.univ
 
 /-- The neighbourhood `{0}`. -/
-def zero : Set Token := {0}
+@[expose] def zero : Set Token := {0}
 
 /-- The neighbourhood `{1}`. -/
-def one : Set Token := {1}
+@[expose] def one : Set Token := {1}
 
 /-- The three neighbourhoods of Example 1.2. -/
 def memSet : Set (Set Token) := {master, zero, one}
@@ -136,6 +136,7 @@ private theorem inter_eq (X Y : Set Token) (h : mem X) (h' : mem Y) :
   · exact Or.inr (Or.inr (Or.inl (Set.inter_self _)))
 
 /-- **Example 1.2.** The neighbourhood system on `Δ = {0, 1}`. -/
+@[expose]
 def neighborhoodSystem : NeighborhoodSystem Token where
   mem := mem
   master := master
@@ -154,6 +155,7 @@ namespace neighborhoodSystem
 open NeighborhoodSystem
 
 /-- The bottom element `⊥ = {Δ}`. -/
+@[expose]
 def bot : neighborhoodSystem.Element where
   mem X := X = master
   sub h := by rw [h]; exact mem_master
@@ -166,6 +168,7 @@ def bot : neighborhoodSystem.Element where
     exact eq_of_master_subset hY hXY
 
 /-- The total element determined by `{0}`. -/
+@[expose]
 def elemZero : neighborhoodSystem.Element where
   mem X := X = master ∨ X = zero
   sub h := by
@@ -190,6 +193,7 @@ def elemZero : neighborhoodSystem.Element where
       · exact absurd hXY zero_not_subset_one
 
 /-- The total element determined by `{1}`. -/
+@[expose]
 def elemOne : neighborhoodSystem.Element where
   mem X := X = master ∨ X = one
   sub h := by

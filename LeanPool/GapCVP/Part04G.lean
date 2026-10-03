@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part04F
 
 /-! # GapCVP proof, part 04, continuation 07 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -198,7 +198,7 @@ def unaryPairSquareTrace
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, htarget] using hbounded
 
 /-- GapCVP reduction support. -/
-def unaryPairComparedConfiguration
+@[expose] def unaryPairComparedConfiguration
     (first second matched : ℕ) :
     actualUnaryPairIndexMachine.Cfg :=
   if first < second then

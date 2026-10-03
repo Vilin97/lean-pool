@@ -28,7 +28,7 @@ the actual equation `DY = A ∘ Y`, determines joint continuity of every
 spatial derivative of `Y`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,7 @@ spatial jets.  Their evaluation, together with the actual inverse identity,
 supplies all inverse-flow continuity hypotheses used by Sobolev transport.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -164,7 +164,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

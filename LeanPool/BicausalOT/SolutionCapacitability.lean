@@ -65,7 +65,7 @@ namespace so that their names match the `ChallengeCapacitability` declarations n
 report only `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

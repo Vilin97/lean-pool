@@ -16,7 +16,7 @@ The crossed `(1,2)` separator removes the second branch of each root--edge minim
 root--edge supports either provide a nonnegative packing or both select their `(1,1)` terms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

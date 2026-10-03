@@ -16,7 +16,7 @@ public import Mathlib.Data.Finset.Sort
 
 /-! Embedding finite vectors into series. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

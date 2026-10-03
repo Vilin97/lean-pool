@@ -28,7 +28,7 @@ property of a WQO does not need the preorder (in particular transitivity) hypoth
 the current Mathlib `WellQuasiOrdered.exists_monotone_subseq`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

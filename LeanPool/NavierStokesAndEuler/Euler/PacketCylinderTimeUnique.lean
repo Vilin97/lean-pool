@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldUnique
 
 /-! Genuine time-derivative witnesses are unique, including at both endpoints. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerPacketCylinderField.TimeDerivative

@@ -15,7 +15,7 @@ This file deliberately stays below the PL and obstruction-theory layers. It reco
 pointwise equations needed by the configuration-model construction.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -23,6 +23,7 @@ variable {p : ℕ} {hp : Nat.Prime p}
 variable {X Y Z P : Type*}
 
 /-- A map commuting with the selected prime-symmetry actions. -/
+@[expose]
 def IsPrimeEquivariant
     [MulAction (PrimeSymmetry p) X]
     [MulAction (PrimeSymmetry p) Y]
@@ -56,6 +57,7 @@ theorem IsPrimeEquivariant.const_zero
   exact (hzero g).symm
 
 /-- Invariance of a subset under the selected action. -/
+@[expose]
 def IsPrimeInvariant
     [MulAction (PrimeSymmetry p) X]
     (S : Set X) : Prop :=
@@ -85,6 +87,7 @@ theorem IsPrimeEquivariant.zeroSet_invariant
   exact hzero g
 
 /-- Trivial action on a parameter and the existing action on the second factor. -/
+@[expose]
 def PrimeSymmetry.smulParamProd
     [MulAction (PrimeSymmetry p) X]
     (g : PrimeSymmetry p) (z : P × X) : P × X :=

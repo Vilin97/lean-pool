@@ -35,7 +35,7 @@ proofs of
 Theorem 1.10 / Theorem 1.1c).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

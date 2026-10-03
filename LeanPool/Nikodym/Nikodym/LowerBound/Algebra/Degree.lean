@@ -36,7 +36,7 @@ Main declarations:
   `hilbert_le_degree_mul_choose_of_bounds`, and their `_of_eventually_bounds` versions.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

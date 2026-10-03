@@ -22,7 +22,7 @@ These results concern the full actual sum, including stage zero. They do
 not assume that its away-from-origin extensions have already been built.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -107,6 +107,7 @@ theorem offplane_extension_local {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- Uniform outer support is needed only where the raw stage is used.
 The constant is shared by all positive stages in the central-plane theorem. -/
+@[expose]
 def SublevelShrinkingSupport (h C qbig : ℝ) (f : SpaceTime → V) : Prop :=
   ∀ w, w.1 < 1 → PhysicalWaveSum.physicalQ h w < qbig → f w ≠ 0 →
     AnnularEndpoint.radius w ≤ AnnularEndpoint.outerRadius h C w

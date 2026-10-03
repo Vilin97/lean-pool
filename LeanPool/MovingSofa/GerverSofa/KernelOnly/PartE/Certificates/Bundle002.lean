@@ -13,7 +13,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch014`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5086,7 +5086,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC5FrontierBatchF24RR00226`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5094,7 +5094,7 @@ section
 
 /-! E24KC4 auto-tuned batched kernel certificates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5900,7 +5900,7 @@ section
 
 /-! E24KC4 auto-tuned batched kernel certificates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6295,7 +6295,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6346,7 +6346,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6397,7 +6397,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6448,7 +6448,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6499,7 +6499,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7166,7 +7166,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7533,7 +7533,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7662,7 +7662,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7921,7 +7921,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7972,7 +7972,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8332,7 +8332,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8692,7 +8692,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9000,7 +9000,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9308,7 +9308,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9616,7 +9616,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9924,7 +9924,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10260,7 +10260,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC5TerminalBatchT563200014`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10268,7 +10268,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

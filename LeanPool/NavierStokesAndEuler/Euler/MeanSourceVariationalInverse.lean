@@ -25,7 +25,7 @@ section
 
 /-! The source localization estimate for the constructed nonlocal boundary operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ section
 
 /-! Integrating the source's different lower bounds inside and outside the core. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -171,7 +171,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -233,7 +233,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -245,7 +245,7 @@ open MeasureTheory Set InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
 open scoped NNReal
 
 /-- Effective negative bound, given by `Be + boundaryLocalizationC2 * Bc * r^3`. -/
-def effectiveNegativeBound (Be Bc r : ℝ) : ℝ :=
+@[expose] def effectiveNegativeBound (Be Bc r : ℝ) : ℝ :=
   Be + boundaryLocalizationC2 * Bc * r^3
 
 theorem effectiveNegativeBound_nonneg (Be Bc r : ℝ)
@@ -277,7 +277,7 @@ variable (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
   (hsmall : K * (T ^ 2 / 2) + Be * T + boundaryLocalizationC2 * Bc * r ^ 3 * T ≤ 1 / 2)
 
 /-- This is the actual Lax–Milgram mean inverse, with spatial coercivity discharged. -/
-def sourceMeanSolver : TimeLp T L2 →L[ℝ] meanDerivatives T hT FInv :=
+@[expose] def sourceMeanSolver : TimeLp T L2 →L[ℝ] meanDerivatives T hT FInv :=
   meanSolver T hT FInv H (coefficientOperator M hM C hC)
     (boundaryOperator (scaledCutoff ℓ hℓ)) L K (effectiveNegativeBound Be Bc r)
     hK (effectiveNegativeBound_nonneg Be Bc r hBe hBc hr) hF0 hH

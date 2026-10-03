@@ -39,7 +39,7 @@ This module uses no compactness of `Config n` and no continuity of the normalize
 input to area continuity, not the reverse.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 open NRR NRR.Geometry NRR.Geometry.ConvexBody

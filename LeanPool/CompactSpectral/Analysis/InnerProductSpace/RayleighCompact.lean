@@ -31,7 +31,7 @@ compact operator the quadratic form is continuous on that weakly compact set.
 - `CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator`
 -/
 
-@[expose] public section
+public section
 namespace CompactSelfAdjoint
 
 open CompactSpectral

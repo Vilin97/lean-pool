@@ -51,7 +51,7 @@ the colimit of `X.presentation.F ⋙ Ind.yoneda` over the filtered
 index category `X.presentation.I`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

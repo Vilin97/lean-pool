@@ -38,7 +38,7 @@ The blueprint also assumes `r ≥ 1` and `T ≤ U`; neither is needed for the st
 omitted.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -54,6 +54,7 @@ variable (I : Ideal (MvPolynomial (Fin d) K)) (r : ℕ) (B₀ : Finset (Fin d �
 omit [Fintype F] in
 /-- Blueprint G04: the `K`-linear map `V_I(T) → ∏_{x ∉ B₀} Q_{I, ι x}(r)` sending the class of a
 polynomial of total degree at most `T` to its jets at the grid points outside `B₀`. -/
+@[expose]
 noncomputable def omittedJetsLinearMap :
     restrictionSpace I T →ₗ[K] ∀ x : {x : Fin d → F // x ∉ B₀}, JetSpace I (liftPt x.1) r :=
   (LinearMap.pi fun x : {x : Fin d → F // x ∉ B₀} ↦ LinearMap.proj x.1) ∘ₗ

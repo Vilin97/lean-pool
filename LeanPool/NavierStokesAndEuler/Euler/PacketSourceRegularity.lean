@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanPacketJets
 
 /-! Literal slice and scalar-pressure regularity of the actually generated source profiles. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

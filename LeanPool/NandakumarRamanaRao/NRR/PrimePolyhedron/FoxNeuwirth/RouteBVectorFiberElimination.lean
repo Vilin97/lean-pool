@@ -32,7 +32,7 @@ vector-block geometry and coordinate transport are provided by the downstream
 construction.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

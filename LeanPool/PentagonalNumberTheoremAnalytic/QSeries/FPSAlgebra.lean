@@ -27,7 +27,7 @@ and Cauchy product, these identities yield the Jacobi triple product.
 * `QSeries.FormalPowerSeries.jacobiTripleProduct` — FPS Jacobi Triple Product Identity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

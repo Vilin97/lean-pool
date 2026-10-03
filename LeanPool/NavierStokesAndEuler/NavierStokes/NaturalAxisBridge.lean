@@ -30,7 +30,7 @@ proves compatibility of the output jets, so its operators act on actual smooth
 coefficient functions in the complete space, not just unrelated arrays.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,7 +117,7 @@ theorem productFamily_eq (I : Window) (ε : ℝ) (A B : AxisSpace I ε)
     productFamily I ε A B n m x =
       ∑ ij ∈ antidiagonal n,
         leibnizSum (fun k => inputJet I ε A ij.1 k x)
-          (fun l => inputJet I ε B ij.2 l x) m := rfl
+          (fun l => inputJet I ε B ij.2 l x) m := by rfl
 
 theorem productFamily_continuous (I : Window) (ε : ℝ) (A B : AxisSpace I ε) (n m : ℕ) :
     ContinuousOn (productFamily I ε A B n m) I.interval := by
@@ -850,7 +850,7 @@ small-operator-norm hypothesis is used. The generic Banach-ring lemmas isolate
 the analytic implication of the factorial estimate from its radial proof.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1239,7 +1239,7 @@ theorem axisLinearOperator_resolvent_equation (I : Window) {ε : ℝ} (hε : 0 <
     (axisLinearOperator_pow_bound I hε χ Q hQ) A
 
 /-- The exact bounded operator in the natural angular equation. -/
-def naturalOperator (I : Window) {ε : ℝ} (hε : 0 < ε) (χ : AxisSpace I ε) :
+@[expose] def naturalOperator (I : Window) {ε : ℝ} (hε : 0 < ε) (χ : AxisSpace I ε) :
     AxisSpace I ε →L[ℝ] AxisSpace I ε :=
   (1 / 2 : ℝ) • ((AxisOperators.regularInverse I hε 2 (by norm_num)).comp
     (AxisOperators.product I hε χ))
@@ -1330,7 +1330,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1973,12 +1973,12 @@ theorem uniform_natural_fixedPoint [CompleteSpace V]
 theorem naturalRemainder_fst_resolvent (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (t : ℝ) (a : V) (x : V × V) :
     (naturalRemainder O d S t a x).1 =
-      S ((naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).1) := rfl
+      S ((naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).1) := by rfl
 
 theorem naturalRemainder_snd_resolvent (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (t : ℝ) (a : V) (x : V × V) :
     (naturalRemainder O d S t a x).2 =
-      (naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).2 := rfl
+      (naturalRemainder O d (ContinuousLinearMap.id ℝ V) t a x).2 := by rfl
 
 /-- Undoing the actual angular resolvent turns the fixed point into the
 two integrated natural equations. The only extra hypothesis is the
@@ -2077,7 +2077,7 @@ theorem evaluated_mixed_error (I : AxisCoefficientSpace.Window)
 
 /-- Concrete instantiation by the genuine coefficient product, radial
 averages/inverses, and derivative composites constructed in AxisOperators. -/
-def coefficientOperators (I : AxisCoefficientSpace.Window) {ε : ℝ} (hε : 0 < ε) :
+@[expose] def coefficientOperators (I : AxisCoefficientSpace.Window) {ε : ℝ} (hε : 0 < ε) :
     NaturalOperators (AxisCoefficientSpace.AxisSpace I ε) where
   product := AxisOperators.product I hε
   average := AxisOperators.average I hε
@@ -2166,7 +2166,7 @@ The identities here combine the convergent, smooth evaluation of `AxisSpace`
 with the exact compatible coefficient operators of `AxisOperators`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2684,7 +2684,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2704,19 +2704,19 @@ open scoped Topology ContDiff
 open AxisCoefficientSpace AxisWeightEstimates
 
 /-- Ordinary radial partial derivative of an actual function. -/
-def partialY (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def partialY (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   deriv (fun Y => F (Y, p.2)) p.1
 
 /-- Ordinary parameter partial derivative of an actual function. -/
-def partialEta (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def partialEta (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   deriv (fun η => F (p.1, η)) p.2
 
 /-- Actual mixed derivative, with the order used by the manuscript's jet bounds. -/
-def mixedDerivative (k m : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def mixedDerivative (k m : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   iteratedDeriv m (fun η => iteratedDeriv k (fun Y => F (Y, η)) p.1) p.2
 
 /-- The singular radial differential expression, evaluated without division by `Y`. -/
-def radialDifferential (r : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def radialDifferential (r : ℕ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   p.1 * iteratedDeriv 2 (fun Y => F (Y, p.2)) p.1 + (r : ℝ) * partialY F p
 
 /-- The same expression in terms of the rigorously differentiated sums. -/
@@ -2795,7 +2795,7 @@ theorem radialEvaluation_smul (I : Window) (ε c : ℝ)
   ring
 
 /-- Fixed axis data have radial degree zero; parameter dependence remains unrestricted. -/
-def RadiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε) : Prop :=
+@[expose] def RadiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε) : Prop :=
   ∀ n : ℕ, n ≠ 0 → ∀ η : ℝ, η ∈ I.interval → coefficient I (weight ε) A n η = 0
 
 theorem profile_radiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε)
@@ -2924,11 +2924,11 @@ structure ParameterData where
   zStar : ℝ → ℝ
 
 /-- The actual parameter function represented by the zeroth radial coefficient. -/
-def inputValue (I : Window) (ε : ℝ) (A : AxisSpace I ε) : ℝ → ℝ :=
+@[expose] def inputValue (I : Window) (ε : ℝ) (A : AxisSpace I ε) : ℝ → ℝ :=
   coefficient I (weight ε) A 0
 
 /-- The fixed fields of the integrated system, interpreted as actual functions. -/
-def parameters (I : Window) (ε : ℝ) (χ : AxisSpace I ε)
+@[expose] def parameters (I : Window) (ε : ℝ) (χ : AxisSpace I ε)
     (d : AxisContraction.AxisData (AxisSpace I ε)) : ParameterData where
   A := d.A
   D := d.D
@@ -2975,20 +2975,20 @@ def pressureCoefficient (I : Window) {ε : ℝ} (hε : 0 < ε)
   AxisOperators.primitive I hε (pressureSource I hε a Φ)
 
 /-- The reconstructed axial profile `U=U*+Λ⁻¹u`. -/
-def reconstructedU (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedU (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.uStar p.2 + t * u p
 
 /-- The actual transport coefficient using the regular radial average. -/
-def reconstructedW (d : ParameterData) (t : ℝ) (B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedW (d : ParameterData) (t : ℝ) (B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.wStar p.2 - t * ((2 * d.D * p.2) * B p + d.d p.2 * partialEta B p)
 
 /-- Reconstructed H, given by `d.hStar p.2 + t * d.d p.2 * u p`. -/
-def reconstructedH (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] def reconstructedH (d : ParameterData) (t : ℝ) (u : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.hStar p.2 + t * d.d p.2 * u p
 
 /-- The first remainder in equation (17), using ordinary derivatives of
 actual functions and `κ=ξ₀/Λ`. -/
-def angularRemainder (d : ParameterData) (t : ℝ)
+@[expose] def angularRemainder (d : ParameterData) (t : ℝ)
     (Φ u B : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.inverseL p.2 *
     ((reconstructedW d t B p + d.h * (1 - 2 * p.2 * reconstructedU d t u p) +
@@ -2998,7 +2998,7 @@ def angularRemainder (d : ParameterData) (t : ℝ)
 
 /-- The expanded second remainder in equation (17), including all pressure
 terms and the actual parameter derivative of the pressure correction. -/
-def axialRemainder (d : ParameterData) (t : ℝ)
+@[expose] def axialRemainder (d : ParameterData) (t : ℝ)
     (u B P : ℝ × ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   d.inverseL p.2 *
     (d.A * (1 - 4 * p.2 * d.uStar p.2) * u p -
@@ -3311,11 +3311,22 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
       _ = _ := by rw [hst]
 
 /-- The leading pair defined using the proved angular resolvent. -/
-def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
+@[expose] def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
     AxisSpace I ε × AxisSpace I ε :=
   AxisContraction.referencePair (AxisContraction.coefficientOperators I hε) d
     (AxisResolvent.naturalResolvent I hε χ)
+
+@[simp] theorem referenceCoefficients_fst (I : Window) {ε : ℝ} (hε : 0 < ε)
+    (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
+    (referenceCoefficients I hε χ d).1 = AxisResolvent.naturalResolvent I hε χ d.one := by
+  rfl
+
+theorem referenceCoefficients_snd (I : Window) {ε : ℝ} (hε : 0 < ε)
+    (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
+    (referenceCoefficients I hε χ d).2 =
+      -(1 / 2 : ℝ) • AxisOperators.regularInverse I hε 1 (by norm_num)
+        (AxisOperators.product I hε d.inverseL d.zStar) := by rfl
 
 /-- The limiting system is stated directly for actual functions. -/
 structure IsLeadingSolution (I : Window) (d : ParameterData)
@@ -3365,7 +3376,7 @@ theorem reference_isLeadingSolution (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- A fixed finite constant computed from the input norms and the genuine
 bounded operators. It is independent of `Λ` and of the amplitude in its norm ball. -/
-def errorConstant (I : Window) {ε : ℝ} (hε : 0 < ε)
+@[expose] def errorConstant (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε))
     (M : ℝ) (hM : 0 ≤ M) : ℝ :=
   AxisContraction.remainderBound (AxisContraction.coefficientOperators I hε) d
@@ -3379,7 +3390,7 @@ theorem errorConstant_nonneg (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- Simultaneous estimates for every ordinary mixed derivative, uniform on
 each smaller radial interval and on the whole open parameter interval. -/
-def UniformMixedError (I : Window) (ε K : ℝ)
+@[expose] def UniformMixedError (I : Window) (ε K : ℝ)
     (Φ u Φ₀ u₀ : ℝ × ℝ → ℝ) : Prop :=
   ∀ R : ℝ, 1 ≤ R → R < 20 → ∀ k m : ℕ, ∀ p : ℝ × ℝ,
     |p.1| ≤ R → p.2 ∈ Ioo I.left I.right →

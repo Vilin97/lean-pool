@@ -18,7 +18,7 @@ theorem; the dimension bound comes from the polynomial commutant
 estimate for the full signed colour action.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

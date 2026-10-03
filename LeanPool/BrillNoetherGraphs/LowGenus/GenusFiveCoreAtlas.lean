@@ -24,7 +24,7 @@ the twelfth and sixteenth scopes; both scopes are already cubic with twelve
 non-loop edges, so those commands are omitted, as the figure caption requires.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveCoreAtlas
 
@@ -36,95 +36,114 @@ open Certificate.ExplicitPotential
 abbrev Core := Certificate.ExplicitPotential.Core 8 12
 
 /-- Number of half-edge incidences at a vertex of a loopless ordered core. -/
+@[expose]
 def incidenceDegree (core : Core) (vertex : Fin 8) : Nat :=
   ∑ edge : Fin 12,
     ((if core.tail edge = vertex then 1 else 0) +
       (if core.head edge = vertex then 1 else 0))
 
 /-- Every vertex has exactly three incident half-edges in the ordered core. -/
+@[expose]
 def Trivalent (core : Core) : Prop :=
   ∀ vertex : Fin 8, incidenceDegree core vertex = 3
 
 /-- Every edge slot has two distinct endpoints. -/
+@[expose]
 def Loopless (core : Core) : Prop :=
   ∀ edge : Fin 12, core.tail edge ≠ core.head edge
 
 /-- Figure scope 1 (`a6,b6,c6,d6,x,y,e6,f6`). -/
+@[expose]
 def row01Core : Core :=
   { tail := ![0, 0, 2, 1, 2, 3, 5, 2, 4, 4, 6, 6]
     head := ![1, 1, 0, 3, 3, 5, 7, 4, 6, 5, 7, 7] }
 
 /-- Figure scope 2 (`a9,b9,c9,b9a,c9a,d9,e9,f9`). -/
+@[expose]
 def row02Core : Core :=
   { tail := ![0, 1, 2, 5, 5, 6, 7, 7, 1, 2, 3, 3]
     head := ![1, 2, 5, 6, 6, 7, 0, 0, 3, 4, 4, 4] }
 
 /-- Figure scope 3 (`41,42,43,45,A3,A5,B3,B5`). -/
+@[expose]
 def row03Core : Core :=
   { tail := ![0, 2, 0, 3, 0, 2, 6, 3, 7, 4, 4, 6]
     head := ![2, 1, 3, 1, 1, 6, 4, 7, 5, 5, 5, 7] }
 
 /-- Figure scope 4 (`A1,A2,A8,A7,A3,A4,A5,A6`). -/
+@[expose]
 def row04Core : Core :=
   { tail := ![0, 0, 1, 4, 4, 5, 6, 6, 7, 3, 3, 2]
     head := ![1, 1, 4, 5, 5, 6, 7, 7, 3, 2, 2, 0] }
 
 /-- Figure scope 5 (`a6,b6,c6,d6,x,y,e6,f6`). -/
+@[expose]
 def row05Core : Core :=
   { tail := ![0, 0, 2, 1, 2, 3, 5, 2, 4, 4, 6, 6]
     head := ![1, 1, 0, 3, 5, 5, 7, 4, 6, 3, 7, 7] }
 
 /-- Figure scope 6 (`a6,b6,c6,d6,e6,f6,q6,p6`). -/
+@[expose]
 def row06Core : Core :=
   { tail := ![0, 0, 2, 1, 2, 7, 7, 6, 3, 2, 4, 4]
     head := ![1, 1, 0, 3, 7, 6, 6, 3, 5, 4, 5, 5] }
 
 /-- Figure scope 7 (`41,42,43,45,B1,B2,B3,B4`). -/
+@[expose]
 def row07Core : Core :=
   { tail := ![0, 2, 0, 3, 2, 0, 1, 6, 4, 4, 5, 5]
     head := ![2, 1, 3, 1, 3, 4, 5, 7, 6, 6, 7, 7] }
 
 /-- Figure scope 8 (`a6,b6,c6,j6,d6,h6,e6,f6`). -/
+@[expose]
 def row08Core : Core :=
   { tail := ![0, 0, 6, 3, 1, 2, 4, 5, 5, 2, 6, 6]
     head := ![1, 1, 3, 0, 4, 4, 5, 7, 2, 3, 7, 7] }
 
 /-- Figure scope 9 (`31,32,33,34,35,36,311,312`). -/
+@[expose]
 def row09Core : Core :=
   { tail := ![0, 2, 1, 2, 1, 3, 4, 5, 0, 3, 6, 6]
     head := ![2, 1, 0, 5, 4, 4, 5, 3, 6, 7, 7, 7] }
 
 /-- Figure scope 10 (`31,32,33,34,35,36,37,38`). -/
+@[expose]
 def row10Core : Core :=
   { tail := ![0, 2, 1, 2, 1, 3, 4, 6, 6, 5, 0, 5]
     head := ![2, 1, 0, 5, 4, 4, 6, 7, 7, 3, 3, 7] }
 
 /-- Figure scope 11 (outer square and inner square). -/
+@[expose]
 def row11Core : Core :=
   { tail := ![0, 1, 3, 2, 4, 5, 7, 6, 4, 5, 7, 6]
     head := ![1, 3, 2, 0, 5, 7, 6, 4, 0, 1, 3, 2] }
 
 /-- Figure scope 12, omitting the anomalous extra self-loop command. -/
+@[expose]
 def row12Core : Core :=
   { tail := ![0, 4, 2, 3, 0, 1, 5, 6, 7, 5, 6, 7]
     head := ![4, 2, 3, 1, 3, 4, 6, 7, 5, 0, 1, 2] }
 
 /-- Figure scope 13 (two `K₄`-minus-edge blocks). -/
+@[expose]
 def row13Core : Core :=
   { tail := ![0, 2, 0, 3, 2, 4, 6, 4, 7, 6, 0, 1]
     head := ![2, 1, 3, 1, 3, 6, 5, 7, 5, 7, 4, 5] }
 
 /-- Figure scope 14 (`a,b,c,d,e,f,g,h`). -/
+@[expose]
 def row14Core : Core :=
   { tail := ![0, 7, 7, 7, 0, 2, 3, 1, 5, 4, 2, 3]
     head := ![6, 1, 6, 6, 2, 3, 1, 5, 4, 0, 5, 4] }
 
 /-- Figure scope 15, with cyclic vertex labels `O1, ..., O8`. -/
+@[expose]
 def row15Core : Core :=
   { tail := ![0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 7]
     head := ![1, 2, 3, 4, 5, 6, 7, 0, 4, 5, 6, 3] }
 
 /-- Figure scope 16, omitting the anomalous extra self-loop command. -/
+@[expose]
 def row16Core : Core :=
   { tail := ![0, 4, 2, 3, 0, 3, 5, 6, 7, 5, 6, 7]
     head := ![4, 2, 3, 1, 1, 4, 6, 7, 5, 0, 1, 2] }

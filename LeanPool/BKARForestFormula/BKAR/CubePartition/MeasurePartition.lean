@@ -19,7 +19,7 @@ integrals of the BKAR forest interpolation formula (see `BKAR.Formula`)
 into one cube integral.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -49,6 +49,7 @@ open MeasureTheory
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- Ordered pairs of distinct forest-edge parameters. -/
+@[expose]
 def collisionPairs (F : Forest V) : Type _ :=
   {p : F.EdgeParam × F.EdgeParam // p.1 ≠ p.2}
 

@@ -8,7 +8,7 @@ public import LeanPool.Zeta32.Final
 
 /-! Zeta32 — Results. -/
 
-@[expose] public section
+public section
 
 namespace Zeta32Acceptance
 

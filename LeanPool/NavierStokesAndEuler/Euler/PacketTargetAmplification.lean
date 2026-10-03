@@ -16,7 +16,7 @@ Actual target amplification and the resulting exponential gain for
 bounded history sizes and the packet amplitude chosen at target.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -12,18 +12,20 @@ public import Mathlib.Tactic.Push
 # Canonical candidate searches and target error sequences
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 variable {α : Type*} [Encodable α] [DecidableEq α]
 
 /-- No word-length cutoff; freshness concerns the entire observed sample. -/
+@[expose]
 def Candidate (M : Checkpoints α) (F : List α → α) (S : Finset α)
     (p : List α) (k : ℕ) (q : List α) : Prop :=
   p <+: q ∧ p.length < q.length ∧ q.toFinset ⊆ S ∧
     M.points (↑S : Set α) (k + 1) ⊆ q.toFinset ∧ F q ∉ S
 
 /-- Iterate least-code candidate extensions relative to a finite observed sample. -/
+@[expose]
 noncomputable def sampleRun (M : Checkpoints α) (F : List α → α) (S : Finset α) :
     ℕ → List α
   | 0 => []
@@ -79,17 +81,20 @@ theorem candidate_exists (M : Checkpoints α) {F : List α → α} (hF : Fresh F
   ⟨_, append_candidate M hF hS (sampleRun_content M F S k) k⟩
 
 /-- Evaluate the canonical history after a number of steps equal to the sample size. -/
+@[expose]
 noncomputable def normalized (M : Checkpoints α) (F : List α → α) (S : Finset α) : α :=
   F (sampleRun M F S S.card)
 
 /-- A strict target-valid extension covering the next checkpoint whose output misses the target.
 -/
+@[expose]
 def BadExtension (M : Checkpoints α) (F : List α → α) (L : Set α)
     (p : List α) (k : ℕ) (q : List α) : Prop :=
   p <+: q ∧ p.length < q.length ∧ (↑q.toFinset : Set α) ⊆ L ∧
     M.points L (k + 1) ⊆ q.toFinset ∧ F q ∉ L
 
 /-- The canonical sequence of least-code target errors using the checkpoint interface. -/
+@[expose]
 noncomputable def trueRun (M : Checkpoints α) (F : List α → α) (L : Set α) : ℕ → List α
   | 0 => []
   | k + 1 => by

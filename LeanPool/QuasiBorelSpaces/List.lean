@@ -32,7 +32,7 @@ on lists are homomorphisms.
 * Set-like operations (`insert`, `union`, `erase`, `diff`) are homomorphisms
 -/
 
-@[expose] public section
+public section
 
 variable {A B C : Type*} [QuasiBorelSpace A] [QuasiBorelSpace B] [QuasiBorelSpace C]
 

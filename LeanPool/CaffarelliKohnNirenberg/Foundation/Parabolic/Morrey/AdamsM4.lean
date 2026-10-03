@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Adams
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -24,6 +24,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Morrey
 
 /-- A concrete constant for the localized maximal-function estimate. -/
+@[expose]
 def parabolicAdamsMaximalConstant (P τ : ℝ) : ℝ≥0∞ :=
   (2 : ℝ≥0∞) ^ (P - 1) *
     (parabolicMaximalStrongConstant P *
@@ -34,6 +35,7 @@ def parabolicAdamsMaximalConstant (P τ : ℝ) : ℝ≥0∞ :=
           (volume (parabolicCylinder 0 0 1)) ^ (1 - 1 / P)) ^ P)
 
 /-- A concrete constant in the parabolic Adams inequality. -/
+@[expose]
 def parabolicAdamsPotentialConstant (β P τ : ℝ) : ℝ≥0∞ :=
   let lam : ℝ := 1 - β * τ / 5
   let theta : ℝ := β * τ / 5

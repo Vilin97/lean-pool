@@ -14,7 +14,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 # LeanPool.SelbergSieve4.Tactic.AesopDiv
 -/
 
-@[expose] public section
+public section
 
 namespace Sieve
 open Finset

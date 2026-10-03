@@ -17,7 +17,7 @@ decomposes as a sum of native characters `nChar S g` for simple
 submodules `S` of the regular module.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

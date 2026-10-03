@@ -30,7 +30,7 @@ agrees with the thesis; the route via `tauConj` is a Lean-idiomatic
 reformulation.
 -/
 
-@[expose] public section
+public section
 
 namespace QuadraticOrder
 
@@ -67,7 +67,7 @@ Vieta relations, and exhibits `normForm` as a multiplicative norm via the
 factorisation `(a + b·τ)(a + b·tauConj) = N(a, b)`. -/
 
 /-- The Galois conjugate of `tau`: the other root of `poly d`. -/
-noncomputable def tauConj : QuadraticOrder d := d • (1 : QuadraticOrder d) - tau
+@[expose] noncomputable def tauConj : QuadraticOrder d := d • (1 : QuadraticOrder d) - tau
 
 /-- Vieta: the sum of the roots of `poly d` equals `d`. -/
 lemma tau_add_tauConj : tau + tauConj = d • (1 : QuadraticOrder d) := by

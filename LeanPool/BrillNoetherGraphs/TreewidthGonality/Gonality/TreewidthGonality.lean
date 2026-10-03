@@ -28,7 +28,7 @@ Both halves are unconditional, so `#print axioms` on the theorems below
 reports exactly `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 

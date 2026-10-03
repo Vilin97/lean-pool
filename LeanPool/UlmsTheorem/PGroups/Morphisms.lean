@@ -19,7 +19,7 @@ Stable entry point for isomorphism lemmas connecting Ulm subgroups, filtered
 p-socle layers, and the classical `P_α / P_{α+1}` Ulm invariants.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

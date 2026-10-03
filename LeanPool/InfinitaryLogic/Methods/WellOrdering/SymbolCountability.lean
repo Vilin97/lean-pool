@@ -26,7 +26,7 @@ relation survives the restriction):
 the separate arbitrary-function-language graph translation, not this wrapper.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -73,9 +73,15 @@ theorem exists_model_relPreserving_isRelational [L.IsRelational]
   have := neN
   let instN : L.Structure N :=
     expandSymbStructureBase φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn)
-  have : (symbSublangIncl φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn)).IsExpansionOn N := by
-    have hred := reduct_expandSymbStructureBase (L := L) φ.functionsIn
-      (insert ⟨2, lt⟩ φ.relationsIn) (M := N)
+  have hExpansion : @LHom.IsExpansionOn
+      (symbSublang φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn)) L
+      (symbSublangIncl φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn))
+      N instN₀ instN := by
+    have hred :
+        (symbSublangIncl φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn)).reduct N =
+          instN₀ :=
+      reduct_expandSymbStructureBase (L := L) φ.functionsIn
+        (insert ⟨2, lt⟩ φ.relationsIn) (M := N)
     rw [← hred]
     exact LHom.isExpansionOn_reduct _ _
   refine ⟨N, instN, neN, f, ?_, fun q r hqr => ?_⟩
@@ -85,9 +91,10 @@ theorem exists_model_relPreserving_isRelational [L.IsRelational]
     -- The relation and carrier are supplied explicitly: with `?R` open, `rw` must assign the
     -- subtype element `⟨lt, _⟩` to `?R : (symbSublang ..).Relations 2`, which fails at `implicit`
     -- transparency.
-    exact Eq.mp (LHom.map_onRelation (M := N) (n := 2)
-      (symbSublangIncl φ.functionsIn
-        (insert (⟨2, lt⟩ : Σ n, L.Relations n) φ.relationsIn))
+    exact Eq.mp (@LHom.map_onRelation
+      (symbSublang φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn)) L
+      (symbSublangIncl φ.functionsIn (insert ⟨2, lt⟩ φ.relationsIn))
+      N instN₀ instN hExpansion 2
       ⟨lt, Set.mem_insert _ _⟩ ![f q, f r]).symm hpres
 
 end FirstOrder.Language

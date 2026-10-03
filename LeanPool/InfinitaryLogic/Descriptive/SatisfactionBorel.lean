@@ -27,7 +27,7 @@ This file specializes the carrier-parametric result to structures on `ℕ`.
 - `modelsOf_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 
@@ -44,14 +44,14 @@ section Measurability
 variable [L.IsRelational] [Countable (Σ l, L.Relations l)]
 
 /-- The set of codes where a bounded formula is realized, given variable assignments. -/
-def ModelsOfBounded
+@[expose] def ModelsOfBounded
     {α : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω α n) (v : α → ℕ) (xs : Fin n → ℕ) :
     Set (StructureSpace L) :=
   {c | @BoundedFormulaω.Realize L ℕ c.toStructure α n φ v xs}
 
 /-- The set of codes where a sentence is realized. -/
-def ModelsOf (φ : L.Sentenceω) : Set (StructureSpace L) :=
+@[expose] def ModelsOf (φ : L.Sentenceω) : Set (StructureSpace L) :=
   ModelsOfBounded φ Empty.elim Fin.elim0
 
 omit [Countable (Σ l, L.Relations l)] in

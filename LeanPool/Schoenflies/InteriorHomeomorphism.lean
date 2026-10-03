@@ -17,7 +17,7 @@ the construction of the nested stage sequence and therefore obtains the limit ho
 between the inside of an arbitrary Jordan curve and the open square.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -50,7 +50,7 @@ theorem prescribedAnchoredInitialData_u (hC : IsJordanCurve C)
     hu.toIsSetHomeoOn).choose_spec.1
 
 /-- The quantitative sequence starting with a prescribed boundary homeomorphism. -/
-noncomputable def prescribedJordanStageSequence (hC : IsJordanCurve C)
+@[expose] noncomputable def prescribedJordanStageSequence (hC : IsJordanCurve C)
     (u v : Plane → Plane) (hu : IsHomeoOn u v C modelCurve) :
     StageSequence InitialCell initialStructure C :=
   denseQuantitativeStageSequence

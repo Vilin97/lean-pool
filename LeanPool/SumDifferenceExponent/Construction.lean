@@ -14,7 +14,7 @@ public import Mathlib.Tactic.Positivity
 
 /-! Explicit row-column sets and their cardinality estimates. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 
@@ -132,10 +132,10 @@ theorem rowLabel_sum_lt_base
     _ < rowBase l := Nat.lt_succ_self _
 
 /-- The number of base-39 digits needed to make the sparse contributions negligible. -/
-def depth (l : ℕ) : ℕ := 28 * l
+@[expose] def depth (l : ℕ) : ℕ := 28 * l
 
 /-- The range length of the full column at the chosen digit depth. -/
-def columnModulus (l : ℕ) : ℕ := 39 ^ depth l
+@[expose] def columnModulus (l : ℕ) : ℕ := 39 ^ depth l
 
 theorem sparse_difference_negligible (l : ℕ) :
     2 * l * 37 ^ depth l ≤ columnModulus l := by

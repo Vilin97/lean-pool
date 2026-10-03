@@ -53,7 +53,7 @@ Main declarations:
   existence/uniqueness API).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace
@@ -69,7 +69,7 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X] [Connecte
 
 /-- The zero/pole locus of `f` as an open pole-free locus (`(divisor f).support` is finite by
 compactness, hence closed by `T2Space`). -/
-noncomputable def poleZeroLocus (f : ℳ X) : Opens X :=
+@[expose] noncomputable def poleZeroLocus (f : ℳ X) : Opens X :=
   openLocusOfFinite (RS.finite_support_divisor f)
 
 theorem mem_poleZeroLocus_iff {f : ℳ X} (hf : f ≠ 0) {x : X} :

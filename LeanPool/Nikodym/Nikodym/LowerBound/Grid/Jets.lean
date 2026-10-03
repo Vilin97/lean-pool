@@ -39,7 +39,7 @@ The blueprint assumes `r ≥ 1`; none of the statements here needs it (for `r = 
 zero), so the hypothesis is omitted.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -54,6 +54,7 @@ variable (I : Ideal (MvPolynomial (Fin d) K)) (r : ℕ)
 
 /-- Blueprint G03: the `K`-linear map `P_d ⧸ I → ∏_{x ∈ F^d} Q_{I, ι x}(r)` collecting all jets
 at the grid points, induced on the quotient by `I ≤ I + 𝔪_{ι x} ^ r`. -/
+@[expose]
 noncomputable def gridJetsLinearMap :
     (MvPolynomial (Fin d) K ⧸ I) →ₗ[K] ∀ x : Fin d → F, JetSpace I (liftPt x) r :=
   LinearMap.pi fun x ↦

@@ -15,7 +15,7 @@ recolour so that `x y` becomes coloured and no edge loses its colour.  This is t
 Vizing's theorem: a maximal fan at `x` is rotated, after a Kempe chain interchange if needed.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph Finset
 

@@ -25,7 +25,7 @@ identify the relabelled fragment's Definition 5 value with the
 constrained value downstairs, with no independence input.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -24,44 +24,41 @@ sum over the whole non-real part equals twice a sum over representatives, with n
 representatives to make.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
 /-- The Fourier transform of a compactly supported real function, at a complex argument. -/
-@[zz_tag "def_f_z"]
-noncomputable def fz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
+@[expose, zz_tag "def_f_z"] noncomputable def fz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
   (eta u : ℂ) * Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * (u : ℂ) * z)
 
 /-- The even part of the twisted pair, `gz = (fz z + fz (conj z)) / 2`. -/
-@[zz_tag "def_g_z"]
-noncomputable def gz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
+@[expose, zz_tag "def_g_z"] noncomputable def gz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
   (fz eta z u + fz eta ((starRingEnd ℂ) z) u) / 2
 
 /-- The odd part of the twisted pair, `hz = (fz z - fz (conj z)) / (2i)`. -/
-@[zz_tag "def_h_z"]
-noncomputable def hz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
+@[expose, zz_tag "def_h_z"] noncomputable def hz (eta : ℝ → ℝ) (z : ℂ) (u : ℝ) : ℂ :=
   (fz eta z u - fz eta ((starRingEnd ℂ) z) u) / (2 * Complex.I)
 
 /-- A function `ℝ → ℂ` is symmetric when conjugation acts as reflection: `conj (Φ u) = Φ (-u)`.
 The property is preserved by Gram–Schmidt and is what makes the Bessel coefficients real. -/
-@[zz_tag "def_symmetric"]
-def IsSymmetric (Φ : ℝ → ℂ) : Prop := ∀ u : ℝ, (starRingEnd ℂ) (Φ u) = Φ (-u)
+@[expose, zz_tag "def_symmetric"]
+def IsSymmetric (Φ : ℝ → ℂ) : Prop :=
+  ∀ u : ℝ, (starRingEnd ℂ) (Φ u) = Φ (-u)
 
 /-- The two-variable kernel `F (u, v) = ∑ z, m z * fz z u * fz z v`, the multiset sum written with
 explicit multiplicities. -/
-@[zz_tag "def_F"]
+@[expose, zz_tag "def_F"]
 noncomputable def bigF (eta : ℝ → ℝ) (Z : Finset ℂ) (m : ℂ → ℕ) (u v : ℝ) : ℂ :=
   ∑ z ∈ Z, (m z : ℂ) * fz eta z u * fz eta z v
 
 /-- The simple real part of the support: real points of multiplicity one. -/
-@[zz_tag "def_R2"]
+@[expose, zz_tag "def_R2"]
 noncomputable def multipleRealPart (Z : Finset ℂ) (m : ℂ → ℕ) : Finset ℂ :=
   Z.filter fun x => x.im = 0 ∧ 2 ≤ m x
 
 /-- The non-real part of the support. -/
-@[zz_tag "def_S"]
-noncomputable def nonRealPart (Z : Finset ℂ) : Finset ℂ :=
+@[expose, zz_tag "def_S"] noncomputable def nonRealPart (Z : Finset ℂ) : Finset ℂ :=
   Z.filter fun z => z.im ≠ 0
 
 /-- The even part is conjugation-invariant. -/

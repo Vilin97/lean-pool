@@ -15,7 +15,7 @@ The cleanup operations delete local atoms. These finite-sum estimates keep
 track of the lost mass and of the resulting deterioration of thickness.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -10,4 +10,4 @@ public import Mathlib.AlgebraicTopology.SimplicialSet.StdSimplexOne
 
 /-! # Std Simplex One -/
 
-@[expose] public section
+public section

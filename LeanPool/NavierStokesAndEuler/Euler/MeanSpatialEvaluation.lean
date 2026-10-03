@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Bounded point evaluation and joint continuity of reconstructed ordinary-space fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,8 +47,7 @@ theorem representative_bound (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) (
       ∑ n ∈ Finset.range 4,
         ‖iteratedFDeriv ℝ n (fun a : Space => EulerMeanSolenoidal.translation a u) 0‖ := by
   have H := EulerSobolevPointEvaluation.representative_bound 1 (ordinarySobolev 3 u hu) (x, 0)
-  change ‖pointEvaluation 1 (x, 0) (ordinarySobolev 3 u hu)‖ ≤
-    sobolevEmbeddingConstant 1 3 * ‖ordinarySobolev 3 u hu‖ at H
+  rw [← EulerSobolevPointEvaluation.pointEvaluation_apply] at H
   rw [pointEvaluation_ordinary] at H
   exact H.trans (mul_le_mul_of_nonneg_left (ordinarySobolev_norm_le 3 u hu)
     (sobolevEmbeddingConstant_nonneg 1 3))

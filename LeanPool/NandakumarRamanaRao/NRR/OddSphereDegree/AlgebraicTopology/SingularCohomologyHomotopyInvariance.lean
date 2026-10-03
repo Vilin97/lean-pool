@@ -53,7 +53,7 @@ topological homotopy ──singularChainHomotopyOfHomotopyModule──▶ chain 
 ```
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology HomologicalComplex Opposite Limits
 

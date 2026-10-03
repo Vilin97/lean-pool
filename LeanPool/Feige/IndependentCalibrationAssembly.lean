@@ -22,7 +22,7 @@ joint law is then the product of their marginal laws, which is represented
 by the augmented latent mixture and averaged using the two-point bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 

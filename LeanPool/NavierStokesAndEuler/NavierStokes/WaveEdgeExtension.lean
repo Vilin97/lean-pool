@@ -18,7 +18,7 @@ its actual full derivative tensors prove that its literal zero extension
 has all derivatives zero on both moving boundary hypersurfaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,15 +32,17 @@ variable {D E : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Window, given by `{x | a < ρ x ∧ ρ x < b}`. -/
+@[expose]
 noncomputable def window (ρ : D → ℝ) (a b : ℝ) : Set D :=
   {x | a < ρ x ∧ ρ x < b}
 
 /-- Window domain, given by `Ω ∩ window ρ a b`. -/
+@[expose]
 noncomputable def windowDomain (Ω : Set D) (ρ : D → ℝ) (a b : ℝ) : Set D :=
   Ω ∩ window ρ a b
 
 /-- Extension as an element of `E`. -/
-noncomputable def extension (ρ : D → ℝ) (a b : ℝ) (f : D → E) (x : D) : E :=
+@[expose] noncomputable def extension (ρ : D → ℝ) (a b : ℝ) (f : D → E) (x : D) : E :=
   by classical exact if x ∈ window ρ a b then f x else 0
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] [NormedSpace ℝ E] in
@@ -126,7 +128,7 @@ theorem hasFDerivAt_extension_boundary {ρ d : D → ℝ} {a b c : ℝ}
     exact mul_nonneg hε.le (norm_nonneg _)
 
 /-- Log coordinate, given by `WeightedRadialPrimitive.logPosition a (ρ x)`. -/
-noncomputable def logCoordinate (ρ : D → ℝ) (a : ℝ) (x : D) : ℝ :=
+@[expose] noncomputable def logCoordinate (ρ : D → ℝ) (a : ℝ) (x : D) : ℝ :=
   WeightedRadialPrimitive.logPosition a (ρ x)
 
 theorem logCoordinate_differentiableAt {ρ : D → ℝ} {a : ℝ} (ha : 0 < a) {x : D}
@@ -146,6 +148,7 @@ def BoundaryControls (Ω : Set D) (ρ : D → ℝ) (a b cL cR : ℝ) (f : D → 
       cR (iteratedFDeriv ℝ n f) x)
 
 /-- Extended jets, defined pointwise by `extension ρ a b (iteratedFDeriv ℝ n f) x`. -/
+@[expose]
 noncomputable def extendedJets (ρ : D → ℝ) (a b : ℝ) (f : D → E) (x : D) :
     FormalMultilinearSeries ℝ D E := fun n => extension ρ a b (iteratedFDeriv ℝ n f) x
 
@@ -293,12 +296,13 @@ theorem half_weight_right {cL cR L t : ℝ} (hcL : 0 ≤ cL) (ht : t < L)
 
 /-- Flat weight, given by `WeightedRadialPrimitive.zeta cL cR (WeightedRadialPrimitive.logLength
 a b) (logCoordinate ρ a x)`. -/
+@[expose]
 noncomputable def flatWeight (ρ : D → ℝ) (a b cL cR : ℝ) (x : D) : ℝ :=
   WeightedRadialPrimitive.zeta cL cR (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a x)
 
 /-- Edge growth, given by `max 1 (WeightedRadialPrimitive.delta
 (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a x))⁻¹`. -/
-noncomputable def edgeGrowth (ρ : D → ℝ) (a b : ℝ) (x : D) : ℝ :=
+@[expose] noncomputable def edgeGrowth (ρ : D → ℝ) (a b : ℝ) (x : D) : ℝ :=
   max 1 (WeightedRadialPrimitive.delta (WeightedRadialPrimitive.logLength a b) (logCoordinate ρ a
       x))⁻¹
 
@@ -465,10 +469,11 @@ end NativeBounds
 abbrev NativePoint := PhaseCalculus.Slow × TorusInverse.Plane
 
 /-- Native slow domain, given by `{x | 0 < x.1.2.2}`. -/
+@[expose]
 noncomputable def nativeSlowDomain : Set NativePoint := {x | 0 < x.1.2.2}
 
 /-- Native radius, given by `PrimaryTargetBounds.profileRadius h x.1`. -/
-noncomputable def nativeRadius (h : ℝ) (x : NativePoint) : ℝ :=
+@[expose] noncomputable def nativeRadius (h : ℝ) (x : NativePoint) : ℝ :=
   PrimaryTargetBounds.profileRadius h x.1
 
 theorem nativeSlowDomain_open : IsOpen nativeSlowDomain :=
@@ -489,6 +494,7 @@ theorem nativeRadius_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
 
 /-- Native extension, given by `extension (nativeRadius F.data.h)
 (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W) f`. -/
+@[expose]
 noncomputable def nativeExtension {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (f : NativePoint → E) : NativePoint → E :=
   extension (nativeRadius F.data.h) (PrimaryTargetBounds.leftRadius W)
@@ -888,6 +894,7 @@ theorem NativeJets.nativeExtension_jets {F : OutgoingProfile.Profile} (W : Nomin
 /-! ## The same extension in the mean-field variable ordering -/
 
 /-- The actual permutation from `(R,((T,Z),Y))` to `((R,(Z,T)),Y)`. -/
+@[expose]
 noncomputable def meanNative : LocalSignedRequest.Point ≃ₗᵢ[ℝ] NativePoint where
   toLinearEquiv := {
     toFun := fun x => ((x.1, (x.2.1.2, x.2.1.1)), x.2.2)

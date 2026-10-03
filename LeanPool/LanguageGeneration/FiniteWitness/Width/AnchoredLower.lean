@@ -18,7 +18,7 @@ public import Mathlib.Tactic.Push
 # Counting lower bounds for anchored witness assignments
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Anchored
 

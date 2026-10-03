@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.Preq.Equiv`.
 -/
 
-@[expose] public section
+public section
 
 theorem Equiv.Perm.ToPequiv.toMatrix_mem_unitaryGroup {n : Type _} [DecidableEq n]
     [Fintype n] {𝕜 : Type _} [CommRing 𝕜] [StarRing 𝕜] (σ : Equiv.Perm n) :

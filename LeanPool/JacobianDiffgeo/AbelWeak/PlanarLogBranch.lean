@@ -28,7 +28,7 @@ imports (matches `Path/Planar.lean`'s hygiene). Two facts:
   machinery needed).
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 

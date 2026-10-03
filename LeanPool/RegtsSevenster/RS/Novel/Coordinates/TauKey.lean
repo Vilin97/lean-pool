@@ -18,7 +18,7 @@ the canonical index permutation's sign is the key-sortSign of the
 pair enumeration alone.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,6 +27,7 @@ open Finset
 variable {k ℓ : ℕ}
 
 /-- The sorted-position key of a flag. -/
+@[expose]
 noncomputable def sortKey (W : ClosedFragment) (f : W.Flag) :
     Fin (ds W).sum :=
   sortEquiv (starAssignEnum W) (starFlagEnum W f)

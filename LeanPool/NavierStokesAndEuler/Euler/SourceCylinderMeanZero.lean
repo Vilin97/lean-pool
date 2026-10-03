@@ -18,7 +18,7 @@ section
 
 /-! The actual supported Duhamel solution preserves zero angular mean. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,16 +79,17 @@ local instance instCylinderAngleAverageEvolution6 : NormedSpace ℝ (C(K,Support
     inferInstance
 
 /-- Supported path average, given by `(supportedAverage P S hS).compLeftContinuous ℝ K`. -/
-def supportedPathAverage : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
+@[expose] def supportedPathAverage : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
   (supportedAverage P S hS).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem supportedPathAverage_apply (p : C(K, Supported P V S hS)) (t : K) :
-    supportedPathAverage P S hS p t = supportedAverage P S hS (p t) := rfl
+    supportedPathAverage P S hS p t = supportedAverage P S hS (p t) := by rfl
 
 omit [CompactSpace K] in
 theorem include_supportedPathAverage (p : C(K, Supported P V S hS)) :
-    includePath P S hS (supportedPathAverage P S hS p) = pathAverage P (includePath P S hS p) := rfl
+    includePath P S hS (supportedPathAverage P S hS p) =
+      pathAverage P (includePath P S hS p) := by rfl
 
 theorem supportedPathAverage_norm : ‖supportedPathAverage (K := K) (V := V) P S hS‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -151,7 +152,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

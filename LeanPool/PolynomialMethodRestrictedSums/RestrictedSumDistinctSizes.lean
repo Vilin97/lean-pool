@@ -24,7 +24,7 @@ set of sums `a 0 + ... + a k` with `a i ∈ A i` pairwise distinct, when the
 sets `A i` have distinct sizes.
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 open AddMonoidAlgebra (coeff)
@@ -40,7 +40,7 @@ variable {R : Type*} [CommRing R]
 variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 
 /-- S = {a + ... + a | a ∈ A, a ≠ a for all i ≠ j} -/
-def restrictedSumSet (k : ℕ) (A : Fin (k + 1) → Finset (ZMod p)) : Finset (ZMod p) :=
+@[expose] def restrictedSumSet (k : ℕ) (A : Fin (k + 1) → Finset (ZMod p)) : Finset (ZMod p) :=
   ((Fintype.piFinset A).filter fun f =>
     ∀ (i j : Fin (k + 1)), i < j → f i ≠ f j)
     |>.image (fun f => ∑ i, f i)
@@ -54,7 +54,7 @@ noncomputable def vandermondePolynomial (k : ℕ) : MvPolynomial (Fin (k + 1)) (
 /-- (Used in CompressedSizesRestrictedSum and DiasDaSilvaHamidoune)
 The compressed sizes b'_i defined recursively:
     b'_0 = b_0, b'_i = min{b'_{i-1} - 1, b_i} for i ≥ 1 -/
-def compressedSizes (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
+@[expose] def compressedSizes (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
   fun i =>
     match i with
     | 0 => b 0

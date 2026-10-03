@@ -12,7 +12,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
 # Finiteness for periodic affine inversion sets
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

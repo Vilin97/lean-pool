@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch040`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4224,7 +4224,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.PhiBelow.Leaf00443`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4234,7 +4234,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c1_c2_5_00388
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4508,7 +4508,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c1_c3_5_00389
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4626,7 +4626,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c0_5_00392
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4848,7 +4848,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c1_c0_4_00394
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4953,7 +4953,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c1_c1_4_00395
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5058,7 +5058,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c1_c2_4_00396
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5163,7 +5163,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c1_c3_4_00397
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5268,7 +5268,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c2_5_00399
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5438,7 +5438,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c2_c3_5_00400
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5751,7 +5751,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c0_c0_4_00404
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5895,7 +5895,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c0_c1_4_00405
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6039,7 +6039,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c0_c2_4_00406
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6222,7 +6222,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c0_c3_4_00407
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6509,7 +6509,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c1_5_00409
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6783,7 +6783,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c2_c0_4_00411
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6993,7 +6993,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c0_3_00413
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7099,7 +7099,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c1_3_00414
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7205,7 +7205,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c0_c0_1_00417
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7239,7 +7239,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c0_c1_1_00418
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7273,7 +7273,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c0_c2_1_00419
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7307,7 +7307,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c0_c3_1_00420
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7341,7 +7341,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c1_2_00422
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7395,7 +7395,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c2_2_00423
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7449,7 +7449,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c2_c3_2_00424
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7503,7 +7503,7 @@ section
 Leaf33233_c2_c2_c3_c2_c1_c3_3_00426
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7608,7 +7608,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c2_c2_4_00428
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7831,7 +7831,7 @@ section
 Leaf33233_c2_c2_c3_c2_c3_c0_3_00430
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7937,7 +7937,7 @@ section
 Leaf33233_c2_c2_c3_c2_c3_c1_3_00431
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8043,7 +8043,7 @@ section
 Leaf33233_c2_c2_c3_c2_c3_c2_3_00432
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8149,7 +8149,7 @@ section
 Leaf33233_c2_c2_c3_c2_c3_c3_3_00433
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8254,7 +8254,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c3_c0_4_00437
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8528,7 +8528,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33233_c2_c2_c3_c3_c1_4_00438
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8647,7 +8647,7 @@ section
 Leaf33233_c2_c2_c3_c3_c2_c0_3_00440
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8792,7 +8792,7 @@ section
 Leaf33233_c2_c2_c3_c3_c2_c1_3_00441
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8937,7 +8937,7 @@ section
 Leaf33233_c2_c2_c3_c3_c2_c2_3_00442
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9095,7 +9095,7 @@ section
 Leaf33233_c2_c2_c3_c3_c2_c3_3_00443
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

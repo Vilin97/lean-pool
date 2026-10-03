@@ -24,7 +24,7 @@ is kept here rather than in either of them.
 Upstream target: `Mathlib/Data/Fintype/Pigeonhole.lean`.
 -/
 
-@[expose] public section
+public section
 
 /-- **Infinite pigeonhole.** A sequence `f : ℕ → κ` with `κ` finite takes some value `k` on an
 infinite set of indices. -/

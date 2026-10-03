@@ -18,7 +18,7 @@ value of the permuted-and-cast vector.  The colour action of the
 permutation is the only remaining ingredient of the closed form.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

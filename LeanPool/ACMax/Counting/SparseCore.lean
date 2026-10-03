@@ -19,7 +19,7 @@ always deleting a vertex with at least three external neighbors.  The surviving
 set has external degree at most two at every vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -45,7 +45,7 @@ theorem neighbor_sdiff_card_add_le_degree {n : ℕ} (G : SimpleGraph (Fin n))
 
 open Classical in
 /-- The number of ordered adjacent pairs contained in `S`. -/
-def internalPairCount {n : ℕ} (G : SimpleGraph (Fin n)) (S : Finset (Fin n)) : ℕ :=
+@[expose] def internalPairCount {n : ℕ} (G : SimpleGraph (Fin n)) (S : Finset (Fin n)) : ℕ :=
   ((S ×ˢ S).filter (fun p => G.Adj p.1 p.2)).card
 
 open Classical in

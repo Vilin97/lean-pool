@@ -44,7 +44,7 @@ via injectivity,
 obtained here as the adjoint of the inclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -73,7 +73,7 @@ theorem projection_galoisConnection (n : ℕ) :
     exact le_trans ((P n).incl.monotone h) ((P n).incl_retr_le y)
 
 /-- Compatibility of a sequence: `jₙ(x_{n+1}) = xₙ` for all `n`. -/
-def Compatible (x : ∀ n, D n) : Prop := ∀ n, (P n).retr (x (n + 1)) = x n
+@[expose] def Compatible (x : ∀ n, D n) : Prop := ∀ n, (P n).retr (x (n + 1)) = x n
 
 /-- **Scott 1972, §4.** The inverse limit `D_∞` as the subspace of compatible
 sequences. -/
@@ -284,7 +284,7 @@ theorem projLE_retr {m : ℕ} : ∀ {n : ℕ} (h : m + 1 ≤ n) (x : D n),
 
 /-- Scott's embedding component `i_{n∞}(x)_m`: climb for `m ≥ n`, descend for `m <
 n`. -/
-def iComp (n : ℕ) (x : D n) (m : ℕ) : D m :=
+@[expose] def iComp (n : ℕ) (x : D n) (m : ℕ) : D m :=
   if h : n ≤ m then embLE D P h x else projLE D P (le_of_lt (not_le.mp h)) x
 
 theorem iComp_of_le {n m : ℕ} (h : n ≤ m) (x : D n) : iComp D P n x m = embLE D P h x :=
@@ -385,9 +385,10 @@ theorem iComp_monotone (n m : ℕ) : Monotone (fun x : D n => iComp D P n x m) :
   preservesDirectedSup_monotone (iComp_preservesDirectedSup D P n m)
 
 /-- The embedding `i_{n∞} : Dₙ → D_∞` as a bare function into the inverse limit. -/
+@[expose]
 def embInfFun (n : ℕ) (x : D n) : InverseLimit D P := ⟨iComp D P n x, iComp_compatible D P n x⟩
 
-@[simp] theorem embInfFun_coe (n : ℕ) (x : D n) : (embInfFun D P n x).1 = iComp D P n x := rfl
+@[simp] theorem embInfFun_coe (n : ℕ) (x : D n) : (embInfFun D P n x).1 = iComp D P n x := by rfl
 
 theorem embInf_monotone (n : ℕ) : Monotone (embInfFun D P n) := by
   intro x x' hxx
@@ -413,7 +414,7 @@ theorem embInf_preservesDirectedSup (n : ℕ) : PreservesDirectedSup (embInfFun 
   exact iComp_preservesDirectedSup D P n m hS hSdir
 
 /-- The projection `j_{∞n} : D_∞ → Dₙ` as a bare function. -/
-def projInfFun (n : ℕ) (y : InverseLimit D P) : D n := y.1 n
+@[expose] def projInfFun (n : ℕ) (y : InverseLimit D P) : D n := y.1 n
 
 theorem eval_preservesDirectedSup (n : ℕ) : PreservesDirectedSup (projInfFun D P n) := by
   intro S hS hSdir
@@ -424,17 +425,17 @@ theorem eval_preservesDirectedSup (n : ℕ) : PreservesDirectedSup (projInfFun D
   exact hL
 
 /-- The embedding `i_{n∞} : Dₙ → D_∞`, Scott-continuous. -/
-noncomputable def embInf (n : ℕ) : ScottMap (D n) (InverseLimit D P) :=
+@[expose] noncomputable def embInf (n : ℕ) : ScottMap (D n) (InverseLimit D P) :=
   ⟨embInfFun D P n, continuous_of_preservesDirectedSup (embInf_preservesDirectedSup D P n)⟩
 
 /-- The projection `j_{∞n} : D_∞ → Dₙ`, Scott-continuous. -/
-noncomputable def projInf (n : ℕ) : ScottMap (InverseLimit D P) (D n) :=
+@[expose] noncomputable def projInf (n : ℕ) : ScottMap (InverseLimit D P) (D n) :=
   ⟨projInfFun D P n, continuous_of_preservesDirectedSup (eval_preservesDirectedSup D P n)⟩
 
 /-- **Scott 1972, Proposition 4.2.** Each `j_{∞n} : D_∞ → Dₙ` is a projection of
 continuous
 lattices, with embedding `i_{n∞} = embInf n`. -/
-noncomputable def proposition_4_2 (n : ℕ) :
+@[expose] noncomputable def proposition_4_2 (n : ℕ) :
     IsContinuousLatticeProjection (D n) (InverseLimit D P) where
   incl := embInf D P n
   retr := projInf D P n
@@ -557,7 +558,7 @@ def coconeInf (f : ∀ n, ScottMap (D n) D') (x : InverseLimit D P) : D' :=
   ⨆ n, f n (x.1 n)
 
 theorem coconeInf_apply (f : ∀ n, ScottMap (D n) D') (x : InverseLimit D P) :
-    coconeInf D P f x = ⨆ n, f n (x.1 n) := rfl
+    coconeInf D P f x = ⨆ n, f n (x.1 n) := by rfl
 
 /-- Climbing then applying `f` is constant: `f_m(i_{m-1}…iₙ x) = fₙ(x)`. -/
 theorem coconeInf_climb (f : ∀ n, ScottMap (D n) D')

@@ -38,7 +38,7 @@ mathlib's standard axioms (`propext`, `Classical.choice`, `Quot.sound`) — i.e.
 genuinely `sorry`-free.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped RealInnerProductSpace

@@ -33,7 +33,7 @@ The proof uses the "constant chain" argument:
 - `countableRefinementHypothesis` : `CountableRefinementHypothesis L`
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 

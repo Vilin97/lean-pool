@@ -26,7 +26,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapDesign
 
 /-! # TripleEdges -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -98,7 +98,7 @@ end
 
 /-! # TripleEdgesThree -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 

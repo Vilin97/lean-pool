@@ -23,7 +23,7 @@ assembled from the cycle and five-path witnesses, transport, exhaustion, and loc
 Everything here is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 

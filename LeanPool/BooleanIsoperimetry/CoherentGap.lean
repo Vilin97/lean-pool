@@ -28,7 +28,7 @@ The open-problem context and the exact boundary of this formalization are
 recorded separately in the Construct research notes.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -38,20 +38,20 @@ namespace BooleanIsoperimetry.CoherentGap
 abbrev Relation (n : ℕ) := Fin n → ℤ
 
 /-- The coordinate sum of an integer relation. -/
-def coordinateSum {n : ℕ} (relation : Relation n) : ℤ :=
+@[expose] def coordinateSum {n : ℕ} (relation : Relation n) : ℤ :=
   ∑ i, relation i
 
 /-- The scalar product of an integer relation with an integer weight row. -/
-def dot {n : ℕ} (relation weights : Relation n) : ℤ :=
+@[expose] def dot {n : ℕ} (relation weights : Relation n) : ℤ :=
   ∑ i, relation i * weights i
 
 /-- The standard coordinate vector. -/
-def basis {n : ℕ} (coordinate : Fin n) : Relation n :=
+@[expose] def basis {n : ℕ} (coordinate : Fin n) : Relation n :=
   fun i => if i = coordinate then 1 else 0
 
 /-- A relation whose entries and coordinate sum lie in `{-1, 0, 1}` and
 whose value on the weight row is one. -/
-def IsLiftableUnit {n : ℕ} (weights relation : Relation n) : Prop :=
+@[expose] def IsLiftableUnit {n : ℕ} (weights relation : Relation n) : Prop :=
   (∀ i, relation i = -1 ∨ relation i = 0 ∨ relation i = 1) ∧
     dot relation weights = 1 ∧
     (coordinateSum relation = -1 ∨
@@ -178,11 +178,11 @@ def Certificate.sum {n : ℕ} {weights : Relation n} :
       simpa using certificate.add (Certificate.sum certificates)
 
 /-- Add one coordinate at the front of a weight row. -/
-def extendWeights {n : ℕ} (head : ℤ) (weights : Relation n) : Relation (n + 1) :=
+@[expose] def extendWeights {n : ℕ} (head : ℤ) (weights : Relation n) : Relation (n + 1) :=
   Fin.cases head fun i => head + weights i
 
 /-- Lift a relation by adding the negative coordinate sum at the front. -/
-def lift {n : ℕ} (relation : Relation n) : Relation (n + 1) :=
+@[expose] def lift {n : ℕ} (relation : Relation n) : Relation (n + 1) :=
   Fin.cases (-coordinateSum relation) relation
 
 @[simp]
@@ -210,13 +210,13 @@ lemma lift_aggregate {n : ℕ} (relations : List (Relation n)) :
       rw [inductionHypothesis, lift_add]
 
 /-- Iterate the dimension lift. -/
-def iteratedLift {n : ℕ} (relation : Relation n) :
+@[expose] def iteratedLift {n : ℕ} (relation : Relation n) :
     (steps : ℕ) → Relation (n + steps)
   | 0 => relation
   | steps + 1 => lift (iteratedLift relation steps)
 
 /-- Transport a relation through an equality of dimensions. -/
-def castRelation {firstDimension secondDimension : ℕ}
+@[expose] def castRelation {firstDimension secondDimension : ℕ}
     (hdimension : firstDimension = secondDimension)
     (relation : Relation firstDimension) : Relation secondDimension := by
   subst secondDimension
@@ -346,7 +346,7 @@ lemma Correction.sourceOffset_lt {offset : ℕ}
   omega
 
 /-- The target contributed by a lifted smaller-dimensional basis certificate. -/
-def Correction.target {dimension : ℕ}
+@[expose] def Correction.target {dimension : ℕ}
     (correction : Correction dimension) : Relation dimension :=
   castRelation correction.dimension_eq
     (iteratedLift (basis correction.sourceCoordinate) correction.steps)
@@ -453,7 +453,7 @@ noncomputable def recurrenceCertificates (tower : WeightTower)
     Classical.choice (recurrenceCertificate_exists tower recurrence n coordinate)
 
 /-- Pair an integer relation with a real candidate row. -/
-def realDot {n : ℕ} (relation : Relation n) (candidate : Fin n → ℝ) : ℝ :=
+@[expose] def realDot {n : ℕ} (relation : Relation n) (candidate : Fin n → ℝ) : ℝ :=
   ∑ i, (relation i : ℝ) * candidate i
 
 lemma realDot_add {n : ℕ} (first second : Relation n)

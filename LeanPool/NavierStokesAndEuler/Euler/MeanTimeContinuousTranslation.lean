@@ -21,7 +21,7 @@ spatial orbit regularity, and evaluation at each time loses no derivative
 or additional constant.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,7 +42,7 @@ local instance instMeanTimeContinuousTranslation2 (T : ℝ) : NormedSpace ℝ C(
     inferInstance
 
 /-- Ordinary spatial translation of every time value of a continuous L² path. -/
-def pathTranslation (T : ℝ) (a : Space) :
+@[expose] def pathTranslation (T : ℝ) (a : Space) :
     C(Icc (0 : ℝ) T, L2) →L[ℝ] C(Icc (0 : ℝ) T, L2) :=
   (translation a).toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
 

@@ -17,7 +17,7 @@ separates the represented elements. Its translates give dual
 functionals, so the group elements are linearly independent.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

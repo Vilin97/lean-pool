@@ -11,7 +11,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.AAK.MainTheoremAffinePullback
 
 /-! # Transfer -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 

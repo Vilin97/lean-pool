@@ -18,7 +18,7 @@ Consequently, both bracketings of a three-factor wedge have the same three
 classes of vertices.  This file records the resulting graph isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -26,6 +26,7 @@ open Utilities
 
 universe u v w
 /-- Rebracket the concrete vertex types underlying a three-factor wedge. -/
+@[expose]
 def vertexWedgeAssocVertexEquiv
     (G : CFGraph.{u}) (H : CFGraph.{v}) (K : CFGraph.{w})
     (x : G.V) (y z : H.V) (t : K.V) :
@@ -66,6 +67,7 @@ def vertexWedgeAssocVertexEquiv
 
 /-- The unglued middle-factor vertex viewed in the right-associated outer
 wedge's unmarked right subtype. -/
+@[expose]
 def vertexWedgeAssocMiddleVertex
     (H : CFGraph.{v}) (K : CFGraph.{w}) (y z : H.V) (t : K.V)
     (b : { b : H.V // b ≠ y }) :
@@ -73,6 +75,7 @@ def vertexWedgeAssocMiddleVertex
   ⟨Sum.inl b.1, fun h => b.2 (Sum.inl.inj h)⟩
 /-- The unglued last-factor vertex viewed in the right-associated outer
 wedge's unmarked right subtype. -/
+@[expose]
 def vertexWedgeAssocLastVertex
     (H : CFGraph.{v}) (K : CFGraph.{w}) (y z : H.V) (t : K.V)
     (c : { c : K.V // c ≠ t }) :
@@ -132,6 +135,7 @@ def vertexWedgeAssocLastVertex
 
 The middle graph is glued to `G` at `y` and to `K` at `z`; no hypothesis
 that these two vertices are distinct is needed. -/
+@[expose]
 def vertexWedgeAssoc
     (G : CFGraph.{u}) (H : CFGraph.{v}) (K : CFGraph.{w})
     (x : G.V) (y z : H.V) (t : K.V) :

@@ -17,7 +17,7 @@ same predicate on ambient points. Compatibility of centered lifts identifies
 the selected cumulative support with the inverse image of the target face.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -28,6 +28,7 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
 open Classical in
 /-- Ambient atoms whose centered coordinate at the anchor lies on its face. -/
+@[expose]
 def faceSelector (x : Φ.flag.Node) (Γ : (Φ.flag.polytope x).Face)
     (v : FpCoord p d) : Prop :=
   (FpCoord.centeredLift (Φ.representation.map x v)).real ∈ Γ.carrier

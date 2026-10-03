@@ -74,7 +74,7 @@ of the small boundary `z`), which is exactly what the project require; we do not
 state the (false) claim that `H^(N)(c)` is small for arbitrary `c`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Limits

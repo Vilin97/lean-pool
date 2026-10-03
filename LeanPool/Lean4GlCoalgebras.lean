@@ -36,4 +36,4 @@ Tags: modal-logic, provability-logic, craig-interpolation, proof-theory
 MSC: 03B45, 03F45
 -/
 
-@[expose] public section
+public section

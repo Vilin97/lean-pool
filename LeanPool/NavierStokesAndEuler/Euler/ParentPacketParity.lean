@@ -19,7 +19,7 @@ section
 /-! Spatial derivatives and genuine within-time derivatives preserve
 the expected parity, including the closed interval's endpoints. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

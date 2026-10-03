@@ -18,7 +18,7 @@ Smooth compact test fields are realized in L², and their translation orbits
 are differentiated in the strong L² topology.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,6 +55,7 @@ section FieldCalculus
 variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- The full derivative of a field in covering coordinates, evaluated at the center. -/
+@[expose]
 def fieldFDeriv (f : LiftDomain period → W) (x : LiftDomain period) : LiftTangent →L[ℝ] W :=
   fderiv ℝ (localFieldLift period f x) 0
 

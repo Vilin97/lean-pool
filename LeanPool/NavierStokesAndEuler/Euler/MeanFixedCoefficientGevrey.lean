@@ -36,7 +36,7 @@ primitive does. The estimates keep the coefficient amplitudes outside the
 factorial radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -254,10 +254,11 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 theorem solenoidalFrame_bound (hF : ContDiff ℝ ∞ F)
     (r C : ℝ) (hr : 0 ≤ r) (hC : 0 ≤ C) (d : ℕ)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ C * majorant r d n) (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun p => solenoidalFrame T (F p)) x‖ ≤ C*majorant r d n :=
-  contraction_bound (P := P) (E := C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
-    (F := C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2))
-    (framePathRestriction T) (framePathRestriction_norm T) F hF r C hr hC d hb n x
+    ‖iteratedFDeriv ℝ n (fun p => solenoidalFrame T (F p)) x‖ ≤ C*majorant r d n := by
+  simpa only [framePathRestriction_apply] using
+    contraction_bound (P := P) (E := C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
+      (F := C(Icc (0 : ℝ) T, solenoidalSpace →L[ℝ] L2))
+      (framePathRestriction T) (framePathRestriction_norm T) F hF r C hr hC d hb n x
 
 /-- The genuine fixed derivative map has only polynomial time cost. -/
 theorem fixedMeanDerivative_bound (hF : ContDiff ℝ ∞ F) (hF₁ : ContDiff ℝ ∞ F₁)

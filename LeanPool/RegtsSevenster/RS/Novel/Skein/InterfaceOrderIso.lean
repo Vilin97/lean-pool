@@ -35,7 +35,7 @@ sum orders explicitly through the reducible aliases
 which are definitionally the projections of `sumLexLinearOrder`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -103,6 +103,7 @@ theorem strictMono_equiv_symm [LinearOrder α] [LinearOrder β]
 /-- A strictly monotone equivalence between linear orders, as an
 order isomorphism (keeping the underlying equivalence on the
 nose). -/
+@[expose]
 def orderIsoOfStrictMonoEquiv [LinearOrder α] [LinearOrder β]
     (e : α ≃ β) (h : StrictMono e) :
     α ≃o β :=
@@ -154,6 +155,7 @@ theorem finSumFinEquiv_strictMono (m n : ℕ) :
 
 /-- `finSumFinEquiv` as an order isomorphism for the lexicographic
 order on `Fin m ⊕ Fin n`. -/
+@[expose]
 def finSumFinOrderIso (m n : ℕ) :
     @OrderIso (Fin m ⊕ Fin n) (Fin (m + n))
       (sumLexLE (Fin m) (Fin n)) _ :=
@@ -248,6 +250,7 @@ theorem interfaceStepEquiv_strictMono (s t u : ℕ) :
 
 /-- The interface-step re-indexing (`interfaceStepEquiv`) as an
 order isomorphism for the lexicographic orders. -/
+@[expose]
 noncomputable def interfaceStepOrderIso (s t u : ℕ) :
     @OrderIso
       {x : Fin (s + t + 1) ⊕ Fin (t + 1 + u) //

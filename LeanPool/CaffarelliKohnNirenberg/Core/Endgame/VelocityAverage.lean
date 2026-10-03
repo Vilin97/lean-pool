@@ -17,7 +17,7 @@ part of the reanchored heat representative without any additional assumption
 on that average.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory Set

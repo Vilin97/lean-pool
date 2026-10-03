@@ -35,7 +35,7 @@ since the `qⱼ` are reciprocals and never vanish.
 * `Sendov.prod_mul_sum_inv`: `(∏ s) ∑ⱼ 1/sⱼ = sumEraseProd s` when no `sⱼ` vanishes.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

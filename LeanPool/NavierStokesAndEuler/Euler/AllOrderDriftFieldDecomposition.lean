@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.AllOrderDriftGraph
 The identities concern the constructed exact packet, not an arbitrary
 pair satisfying an energy bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,10 +27,10 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : Data P T}
   (B : Budget P hT A)
 
 theorem Budget.correctedFieldTower_eq :
-    B.correctedFieldTower P = A.approximation.add (B.fieldTower P) := rfl
+    B.correctedFieldTower P = A.approximation.add (B.fieldTower P) := by rfl
 
 theorem Budget.correctedPressureTower_eq (R : ApproximationResidual P hT A) :
-    B.correctedPressureTower P R = R.pressure.add (B.pressureTower P) := rfl
+    B.correctedPressureTower P R = R.pressure.add (B.pressureTower P) := by rfl
 
 theorem Budget.correctedFieldTower_pointField (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     (B.correctedFieldTower P).pointField t x =

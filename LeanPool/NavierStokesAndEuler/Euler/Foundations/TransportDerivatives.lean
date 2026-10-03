@@ -15,7 +15,7 @@ The commutator is derived by the chain rule and symmetry of second derivatives,
 rather than postulated as a recurrence on a norm sequence.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,10 +30,10 @@ variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- The actual Fréchet directional derivative along a constant vector. -/
-def directionalDerivative (a : V) (f : V → W) (x : V) : W := fderiv ℝ f x a
+@[expose] def directionalDerivative (a : V) (f : V → W) (x : V) : W := fderiv ℝ f x a
 
 /-- Differentiation of a field in the direction of a variable transport field. -/
-def transport (b : V → V) (f : V → W) (x : V) : W := fderiv ℝ f x (b x)
+@[expose] def transport (b : V → V) (f : V → W) (x : V) : W := fderiv ℝ f x (b x)
 
 theorem directionalDerivative_smooth (a : V) (f : V → W) (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (directionalDerivative a f) := by
@@ -85,7 +85,7 @@ section Fields
 variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Directional differentiation in the cylinder covering coordinates. -/
-def fieldDerivative (a : LiftTangent) (f : LiftDomain period → W)
+@[expose] def fieldDerivative (a : LiftTangent) (f : LiftDomain period → W)
     (x : LiftDomain period) : W := fderiv ℝ (localFieldLift period f x) 0 a
 
 /-- The actual directional transport operator on a cylinder field. -/

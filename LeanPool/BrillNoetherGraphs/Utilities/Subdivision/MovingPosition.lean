@@ -19,7 +19,7 @@ vertices of `SubdivisionGraph.Spec`, with the elementary endpoint and
 interiority facts kept independent of any particular configuration.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -29,6 +29,7 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 
 /-- The path position at a natural offset known to be no further than the
 head endpoint. -/
+@[expose]
 def pathPosition (edge : Fin p) (offset : ℕ)
     (hOffset : offset ≤ spec.length edge) : spec.PathPosition edge :=
   ⟨offset, by omega⟩
@@ -94,6 +95,7 @@ theorem isInteriorPosition_pathPosition_iff (edge : Fin p) (offset : ℕ)
 
 /-- The minimum of two core-edge lengths, viewed as a position on an edge
 which is at least that long. -/
+@[expose]
 def minLengthPosition (edge left right : Fin p)
     (hBound : min (spec.length left) (spec.length right) ≤ spec.length edge) :
     spec.PathPosition edge :=
@@ -141,6 +143,7 @@ theorem minLengthPosition_eq_right (edge left right : Fin p)
 
 /-- The truncated difference of two core-edge lengths, viewed as a position
 on an edge which is at least that far from its tail. -/
+@[expose]
 def differencePosition (edge minuend subtrahend : Fin p)
     (hBound : spec.length minuend - spec.length subtrahend ≤ spec.length edge) :
     spec.PathPosition edge :=

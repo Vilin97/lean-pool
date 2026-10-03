@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! The actual forward source coefficients supply both the nonlinear-profile
 budget and the all-order correction coefficient budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,6 +30,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 
 /-- Forward coefficient budget, given by `sourceCoefficientBudget P M D (InitialData.zero P D)
 hTime NB.Rc NB.C NB.Rc_nonneg NB.C_nonneg NB.inverse_bound NB.strain_bound`. -/
+@[expose]
 def forwardCoefficientBudget {R : ℝ} (NB : EulerTransversePacketJoin.NormalBudget D 6 R) :
     CoefficientBudget (sourceCoefficientData P M D (InitialData.zero P D) hTime) :=
   sourceCoefficientBudget P M D (InitialData.zero P D) hTime NB.Rc NB.C
@@ -47,6 +48,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (NB : EulerTransversePacketJoin.NormalBudget D 6 L.R)
 
 /-- Correction coefficients, constructed using `correctionCoefficientBudget`. -/
+@[expose]
 def correctionCoefficients (P : ℝ) [Fact (0 < P)] : CorrectionCoefficientBudget D P :=
   correctionCoefficientBudget D P (max L.Rc NB.Rc) L.C₀ L.C₁ NB.C
     (L.Rc_nonneg.trans (le_max_left _ _)) L.C₀_nonneg L.C₁_nonneg NB.C_nonneg

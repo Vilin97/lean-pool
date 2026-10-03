@@ -37,7 +37,7 @@ with their genuine jets and time derivative. A pointwise bound on F⁻¹ proves
 the uniform frame coercivity used by the constructed Gram inverse.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,13 +63,13 @@ theorem restriction_norm : ‖referenceRestriction m₀ R‖ ≤ 1 := by
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The actual source F R⊥, including all its uniformly continuous spatial jets. -/
-def coefficient (F : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
+@[expose] def coefficient (F : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
     SmoothCoefficientPath K (U →L[ℝ] Space) :=
   SmoothCoefficientPath.map (referenceRestriction m₀ R) F
 
 @[simp] theorem coefficient_apply (F : SmoothCoefficientPath K (Space →L[ℝ] Space))
     (t : K) (x : Space) (v : U) : (coefficient m₀ R F).field t x v = F.field t x (R v : Space) :=
-        rfl
+        by rfl
 
 /-- The original pointwise source coefficient derivative bound survives without loss. -/
 theorem coefficient_derivative_bound (F : SmoothCoefficientPath K (Space →L[ℝ] Space))
@@ -123,7 +123,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -136,12 +136,13 @@ open scoped BoundedContinuousFunction ContDiff
 variable (m₀ : Space)
 
 /-- The fixed linear operation sending F⁻¹ to F⁻ᵀm₀. -/
-def normalMap : (Space →L[ℝ] Space) →L[ℝ] Space :=
+@[expose] def normalMap : (Space →L[ℝ] Space) →L[ℝ] Space :=
   (ContinuousLinearMap.apply ℝ Space m₀).comp
     (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap :
       (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space))
 
-@[simp] theorem normalMap_apply (A : Space →L[ℝ] Space) : normalMap m₀ A = A.adjoint m₀ := rfl
+@[simp] theorem normalMap_apply (A : Space →L[ℝ] Space) :
+    normalMap m₀ A = A.adjoint m₀ := by rfl
 
 theorem normalMap_norm (hm₀ : ‖m₀‖ = 1) : ‖normalMap m₀‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -154,11 +155,12 @@ theorem normalMap_norm (hm₀ : ‖m₀‖ = 1) : ‖normalMap m₀‖ ≤ 1 := 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The normal has the genuine spatial jets inherited from the inverse deformation. -/
-def normalCoefficient (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
+@[expose] def normalCoefficient (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
     SmoothCoefficientPath K Space := SmoothCoefficientPath.map (normalMap m₀) FInv
 
 @[simp] theorem normalCoefficient_apply (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space))
-    (t : K) (x : Space) : (normalCoefficient m₀ FInv).field t x = (FInv.field t x).adjoint m₀ := rfl
+    (t : K) (x : Space) :
+    (normalCoefficient m₀ FInv).field t x = (FInv.field t x).adjoint m₀ := by rfl
 
 theorem normalCoefficient_derivative_bound (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space))
     (hm₀ : ‖m₀‖ = 1) (n : ℕ) (C : ℝ)
@@ -228,7 +230,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -282,13 +284,13 @@ abbrev frameDerivative := coefficient D.m₀ D.R D.F₁
 abbrev normal := normalCoefficient D.m₀ D.FInv
 
 /-- Inverse bound, given by `1+‖D.FInv.field‖`. -/
-def inverseBound : ℝ := 1+‖D.FInv.field‖
+@[expose] def inverseBound : ℝ := 1+‖D.FInv.field‖
 /-- Frame bound, given by `1+‖D.F.field‖`. -/
-def frameBound : ℝ := 1+‖D.F.field‖
+@[expose] def frameBound : ℝ := 1+‖D.F.field‖
 /-- Frame lower, given by `D.inverseBound⁻¹^2`. -/
-def frameLower : ℝ := D.inverseBound⁻¹^2
+@[expose] def frameLower : ℝ := D.inverseBound⁻¹^2
 /-- Normal lower, given by `D.frameBound⁻¹^2`. -/
-def normalLower : ℝ := D.frameBound⁻¹^2
+@[expose] def normalLower : ℝ := D.frameBound⁻¹^2
 
 theorem inverseBound_pos : 0 < D.inverseBound := by
   unfold inverseBound

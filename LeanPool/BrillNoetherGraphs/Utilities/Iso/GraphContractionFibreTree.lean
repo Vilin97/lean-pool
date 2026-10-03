@@ -26,7 +26,7 @@ the fibre edge multisets, equality of source and target genus forces equality
 in this bound fibre by fibre.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Coding -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder
@@ -120,6 +120,7 @@ variable {V : Type*} [ORingStruc V] [V ⊧ₘ* 𝐈Sg1]
 lemma nat_cast_empty : ((∅ : ℕ) : V) = ∅ := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def finArrowToVec : {k : ℕ} → (Fin k → V) → V
   | 0,     _ => 0
   | k + 1, v => v 0 ∷ finArrowToVec (k := k) (v ·.succ)
@@ -672,6 +673,7 @@ variable {n : ℕ}
 namespace Semiterm
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def codeIn' (t : SyntacticSemiterm L n) : (L.codeIn V).Semiterm n := ⟨⌜t⌝, by simp⟩
 
 instance : GoedelQuote (SyntacticSemiterm L n) ((L.codeIn V).Semiterm n) := ⟨Semiterm.codeIn' V⟩
@@ -680,6 +682,7 @@ instance : GoedelQuote (SyntacticSemiterm L n) ((L.codeIn V).Semiterm n) := ⟨S
     (L.codeIn V).Semiterm n).val = ⌜t⌝ := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def vCodeIn' {k n} (v : Fin k → SyntacticSemiterm L n) : (L.codeIn V).SemitermVec k n :=
   ⟨⌜fun i ↦ ⌜v i⌝⌝, by simp⟩
 
@@ -713,6 +716,7 @@ end Semiterm
 namespace Semiformula
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def codeIn' (φ : SyntacticSemiformula L n) : (L.codeIn V).Semiformula n := ⟨⌜φ⌝, by simp⟩
 
 instance goedelQuoteSyntacticSemiformulaToCodedSemiformula :

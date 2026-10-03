@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 /-! The actual zero-history packet has a bounded normalized velocity and a
 small normal drift, at a single radius inherited from the profile construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

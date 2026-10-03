@@ -14,7 +14,7 @@ public import LeanPool.RegtsSevenster.RS.Novel.Skein.DisjUnionFactor.B
 Migrating canonical data between a union and its components.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -17,12 +17,13 @@ enough for `MainUpperBound`, but the ceiling must be absorbed using a smaller
 internal error parameter.  It cannot simply be dropped.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
 /-- The finite multiplicity statement to be supplied by the structural
 argument.  The prime threshold is uniform over the input multiset. -/
+@[expose]
 def EventualCeilZeroSum (d : ℕ) : Prop :=
   ∀ ζ : ℝ, 0 < ζ → ζ < 1 →
     ∃ P : ℕ, ∀ (p : ℕ) (hp : p.Prime), P < p →

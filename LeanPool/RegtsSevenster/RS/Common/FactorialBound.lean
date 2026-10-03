@@ -29,7 +29,7 @@ which the `⌊2eR⌋` threshold does need, is
 `RS/Classical/SchurTheory/SquareGrowthSharp.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ import LeanPool.Monlib4.Preq.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Matrix`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Functional MatrixOrder ComplexOrder TensorProduct Matrix
 
@@ -726,7 +726,8 @@ lemma Pi.eq_sum_single_proj (R : Type*) {ι : Type*} [Semiring R]
   rfl
 
 /-- Swap the two equal blocks of a `Fin 2`-indexed `PiMat` as a star-algebra equivalence. -/
-noncomputable def PiMatFinTwoSameSwapStarAlgEquiv {n : Type*} [Fintype n] [DecidableEq n] :
+@[expose] noncomputable def PiMatFinTwoSameSwapStarAlgEquiv
+    {n : Type*} [Fintype n] [DecidableEq n] :
   PiMat ℂ (Fin 2) (PiFinTwoSame n) ≃⋆ₐ[ℂ] PiMat ℂ (Fin 2) (PiFinTwoSame n) :=
   StarAlgEquiv.ofAlgEquiv (PiMatFinTwoSameSwapAlgEquiv (n := n))
     (fun x => by

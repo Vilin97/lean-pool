@@ -21,4 +21,4 @@ Import index for the Polylean complex and groupoid structures that are
 available without upstream `sorry`s.
 -/
 
-@[expose] public section
+public section

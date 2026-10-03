@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-! Removal of square-root regularization in actual finite metric-energy integral inequalities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffTaylor
 
 /-! Genuine directional derivatives of the localized Newtonian operator family in operator norm. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -29,7 +29,7 @@ The native point below uses the actual common-cover index.  The ambient
 germs retain the current solve, its chosen phase, and its Cartesian rotation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,7 +43,7 @@ open scoped Topology ContDiff
 abbrev Label (B N0 : ℕ) := ActualCurrentParticularPhysical.Label B N0
 
 /-- The cover gap of the actual current-band graph. -/
-noncomputable def commonGap (n : ℕ) : ℕ :=
+@[expose] noncomputable def commonGap (n : ℕ) : ℕ :=
   ChartScales.nativeIndex CorrectionInitialization.ActualPrimary.h n -
     CommonWindow.index CorrectionInitialization.ActualPrimary.h n
 
@@ -248,7 +248,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -320,7 +320,7 @@ theorem scaledRadial_mem_annulus (n : ℕ) {w : SpaceTime}
 
 /-- The literal current common-cover evaluation point used in the
 physical mode estimates. -/
-noncomputable def point (a : ℝ) (i : PolarCharts.Index) (n : ℕ) (w : SpaceTime) :
+@[expose] noncomputable def point (a : ℝ) (i : PolarCharts.Index) (n : ℕ) (w : SpaceTime) :
     PhysicalParticularWave.WaveSpace :=
   CurrentPhysicalChartJets.chartMap a i
     (PhysicalWaveSum.commonLift ActualPrimary.h n (CurrentPhysicalModeGerms.commonGap n) w)

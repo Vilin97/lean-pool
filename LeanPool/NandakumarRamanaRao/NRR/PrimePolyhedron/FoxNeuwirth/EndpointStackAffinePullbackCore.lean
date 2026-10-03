@@ -26,7 +26,7 @@ This file proves the complete simplex-local statement.  Global iteration only ne
 face-gluing theorem saying that the parent PL values agree on shared refined faces.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -42,14 +42,17 @@ open RefinedAffineMap
 variable {p d n : Nat}
 
 /-- The identity correspondence between parent vertex indices. -/
+@[expose]
 def parentIndex (p : Nat) : Fin (p - 1 + 1) → Fin (p - 1 + 1) :=
   id
 
 /-- Cast cylinder vertex indices to the dimension convention for the endpoint stack. -/
+@[expose]
 def cylinderIndex (hp : Nat.Prime p) : Fin (p + 1) → Fin (p - 1 + 2) :=
   Fin.cast (by have := hp.pos; omega)
 
 /-- Evaluate parent-simplex affine vertex data at the spatial point of one local cylinder vertex. -/
+@[expose]
 noncomputable def pullbackVertexValue
     (d : Nat) (q : RelativeSubdivisionCylinderCombinatorics.Cell d)
     (V : Fin (d + 1) → Fin n → Real)

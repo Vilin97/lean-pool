@@ -33,7 +33,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.SobolevPoincareBallFaithf
 These lemmas transfer smooth Euclidean-ball Poincaré estimates to W¹,¹ data.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 open scoped ENNReal

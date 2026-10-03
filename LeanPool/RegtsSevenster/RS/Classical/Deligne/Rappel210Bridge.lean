@@ -20,7 +20,7 @@ nonzero unit no stage unit vanishes.  The class of the object in
 the splitting algebra restricts on the point to the unit.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

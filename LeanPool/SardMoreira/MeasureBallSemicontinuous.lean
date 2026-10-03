@@ -17,7 +17,7 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 # LeanPool.SardMoreira.MeasureBallSemicontinuous
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Topology Filter Set Metric
 open scoped NNReal

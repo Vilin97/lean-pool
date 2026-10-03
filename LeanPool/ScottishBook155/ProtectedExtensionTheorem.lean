@@ -16,7 +16,7 @@ inequalities.  Here the height is chosen and the resulting properties are
 packaged in the hypothesis form of the manuscript's protected-extension lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

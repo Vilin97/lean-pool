@@ -16,7 +16,7 @@ This file provides the polarization identity for self adjoint continuous linear 
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]

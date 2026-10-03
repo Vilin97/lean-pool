@@ -17,7 +17,7 @@ index the regrouping of branch contributions by support and order in the
 BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,6 +126,7 @@ theorem growth_orderTail_mem_edgeSetOrderTails_emptyStart
 The terminal first-edge/tail sector selected by one active-terminal branch
 from the empty forest.
 -/
+@[expose]
 def growthOrderTail
     (data : ActiveTerminalBranchData (Forest.empty V))
     (e : {e // e ∈ (Forest.empty V).activeEdges}) :
@@ -156,6 +157,7 @@ theorem growthOrderTail_order
   rfl
 
 /-- The selected terminal edge order of one active-terminal branch. -/
+@[expose]
 def growthOrder
     (data : ActiveTerminalBranchData (Forest.empty V))
     (e : {e // e ∈ (Forest.empty V).activeEdges}) : List (Edge V) :=

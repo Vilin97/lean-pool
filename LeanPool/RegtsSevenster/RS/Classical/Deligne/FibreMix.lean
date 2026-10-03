@@ -19,7 +19,7 @@ contributes the algebra and the line contributes its parity shift,
 and the fibre functor is additive.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,6 +34,7 @@ variable {D : Type u}
 attribute [local instance] CategoryTheory.ModObj.regular
 
 /-- **The free super module of rank `(p | q)`.** -/
+@[expose]
 noncomputable def superFree
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]

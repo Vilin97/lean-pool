@@ -24,7 +24,7 @@ witness, and right witness symbols; the tagged symbol-image sets; and their pair
 disjointness (the combinatorial half of the Unit-1 occurrence gate).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -43,7 +43,7 @@ inductive WitnessRel : ℕ → Type
   | tree (n : ℕ) : WitnessRel (2 * n)
 
 /-- **The functional witness language** (Marker's `τ*`, audit v2 D4). -/
-def WitnessLang : Language.{0, 0} where
+@[expose] def WitnessLang : Language.{0, 0} where
   Functions := WitnessFun
   Relations := WitnessRel
 
@@ -70,38 +70,38 @@ abbrev KLang (L : Language.{0, 0}) : Language.{0, 0} :=
 variable (L : Language.{0, 0})
 
 /-- The base-symbol embedding. -/
-def baseEmb : L →ᴸ KLang L := LHom.sumInl
+@[expose] def baseEmb : L →ᴸ KLang L := LHom.sumInl
 
 /-- The left-witness embedding. -/
-def leftWitnessEmb : WitnessLang →ᴸ KLang L := LHom.sumInr.comp LHom.sumInl
+@[expose] def leftWitnessEmb : WitnessLang →ᴸ KLang L := LHom.sumInr.comp LHom.sumInl
 
 /-- The right-witness embedding. -/
-def rightWitnessEmb : WitnessLang →ᴸ KLang L := LHom.sumInr.comp LHom.sumInr
+@[expose] def rightWitnessEmb : WitnessLang →ᴸ KLang L := LHom.sumInr.comp LHom.sumInr
 
 /-! ## Tagged symbol-image sets and their disjointness -/
 
 /-- Base function symbols inside `KLang L`. -/
-def baseFuns : Set (Σ n, (KLang L).Functions n) :=
+@[expose] def baseFuns : Set (Σ n, (KLang L).Functions n) :=
   Set.range fun p : Σ n, L.Functions n => ⟨p.1, (baseEmb L).onFunction p.2⟩
 
 /-- Base relation symbols inside `KLang L`. -/
-def baseRels : Set (Σ n, (KLang L).Relations n) :=
+@[expose] def baseRels : Set (Σ n, (KLang L).Relations n) :=
   Set.range fun p : Σ n, L.Relations n => ⟨p.1, (baseEmb L).onRelation p.2⟩
 
 /-- Left-witness function symbols inside `KLang L`. -/
-def leftFuns : Set (Σ n, (KLang L).Functions n) :=
+@[expose] def leftFuns : Set (Σ n, (KLang L).Functions n) :=
   Set.range fun p : Σ n, WitnessLang.Functions n => ⟨p.1, (leftWitnessEmb L).onFunction p.2⟩
 
 /-- Left-witness relation symbols inside `KLang L`. -/
-def leftRels : Set (Σ n, (KLang L).Relations n) :=
+@[expose] def leftRels : Set (Σ n, (KLang L).Relations n) :=
   Set.range fun p : Σ n, WitnessLang.Relations n => ⟨p.1, (leftWitnessEmb L).onRelation p.2⟩
 
 /-- Right-witness function symbols inside `KLang L`. -/
-def rightFuns : Set (Σ n, (KLang L).Functions n) :=
+@[expose] def rightFuns : Set (Σ n, (KLang L).Functions n) :=
   Set.range fun p : Σ n, WitnessLang.Functions n => ⟨p.1, (rightWitnessEmb L).onFunction p.2⟩
 
 /-- Right-witness relation symbols inside `KLang L`. -/
-def rightRels : Set (Σ n, (KLang L).Relations n) :=
+@[expose] def rightRels : Set (Σ n, (KLang L).Relations n) :=
   Set.range fun p : Σ n, WitnessLang.Relations n => ⟨p.1, (rightWitnessEmb L).onRelation p.2⟩
 
 /-- Two tagged sigma-image ranges with pointwise-clashing tags are disjoint. -/

@@ -21,7 +21,7 @@ union-find representatives need not commute definitionally with a vertex
 permutation, but their fibres do.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

@@ -23,7 +23,7 @@ It does not identify the disjoint simplex atlas with the glued Blagojevic--Ziegl
 regular-cell realization and the subsequent separator construction are separate topological steps.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -32,6 +32,7 @@ variable {p : Nat}
 namespace FoxNeuwirth
 
 /-- A proper split of `p` labels into two nonempty consecutive blocks. -/
+@[expose]
 def ProperSplit (p : Nat) := {k : Nat // 0 < k ∧ k < p}
 
 namespace ProperSplit

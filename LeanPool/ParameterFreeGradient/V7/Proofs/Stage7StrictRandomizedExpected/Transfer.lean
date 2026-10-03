@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExp
 The one-dimensional strict-oracle lower bounds transfer to every interior `ℓp` exponent.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage7StrictRandomizedExpected
 

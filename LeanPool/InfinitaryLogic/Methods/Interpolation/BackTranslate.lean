@@ -33,7 +33,7 @@ graph axioms, choice, or reconstruction enters.
   relationalization is semantically the original formula (no syntactic identity claimed).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -45,7 +45,7 @@ variable {L : Language.{0, 0}} {α : Type}
 
 /-- Erase a graph-language term to an `L`-term: the graph language has no function symbols, so
 this is variable-preserving with the function case impossible. -/
-def ungraphTerm {β : Type*} : (graphLanguage L).Term β → L.Term β
+@[expose] def ungraphTerm {β : Type*} : (graphLanguage L).Term β → L.Term β
   | .var z => .var z
   | .func f _ => isEmptyElim f
 
@@ -68,7 +68,7 @@ def ungraphTerm {β : Type*} : (graphLanguage L).Term β → L.Term β
 /-- Back-translate a graph-language formula to `L`: native equality stays equality (after term
 erasure), a base atom recovers the original relation, a graph atom `G_f(xs, y)` becomes
 `f(xs) = y`, and all connectives and quantifiers are structural. -/
-def backTranslateFormula : ∀ {n : ℕ}, (graphLanguage L).BoundedFormulaω α n →
+@[expose] def backTranslateFormula : ∀ {n : ℕ}, (graphLanguage L).BoundedFormulaω α n →
     L.BoundedFormulaω α n
   | _, .falsum => .falsum
   | _, .equal t u => .equal (ungraphTerm t) (ungraphTerm u)

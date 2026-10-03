@@ -78,7 +78,7 @@ subset of the plane supplies a `b` as close to `x` as asked, inside `D`.
 * `Schoenflies.tendsto_two_pow_neg`, `.two_pow_neg_pos` — `ε_n = 2^{-n}`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Metric Set
 
@@ -200,11 +200,11 @@ noncomputable def windowRadius (C : Set Plane) (ε : ℝ) (p : Plane) : ℝ :=
   supRadius C p - min (supRadius C p / 2) ε
 
 /-- **`W_n(p)`**, the closed window. -/
-noncomputable def window (C : Set Plane) (ε : ℝ) (p : Plane) : Set Plane :=
+@[expose] noncomputable def window (C : Set Plane) (ε : ℝ) (p : Plane) : Set Plane :=
   Plane.closedSquare p (windowRadius C ε p)
 
 /-- The interior of the window, which is where `lem:grid-star-estimate` places its point. -/
-noncomputable def openWindow (C : Set Plane) (ε : ℝ) (p : Plane) : Set Plane :=
+@[expose] noncomputable def openWindow (C : Set Plane) (ε : ℝ) (p : Plane) : Set Plane :=
   Plane.openSquare p (windowRadius C ε p)
 
 /-- **`0 < s_n(p)`.** -/
@@ -271,7 +271,7 @@ value of the enumeration recurs at arbitrarily large indices, and the mesh seque
 
 /-- **An enumeration in which every value of `f` occurs infinitely often.** Cantor pairing, read
 off the first component: the value `f k` reappears at `Nat.pair k m` for every `m`. -/
-def recur {α : Type*} (f : ℕ → α) (n : ℕ) : α := f (Nat.unpair n).1
+@[expose] def recur {α : Type*} (f : ℕ → α) (n : ℕ) : α := f (Nat.unpair n).1
 
 /-- **"The point `b` occurs at arbitrarily large indices."** This is the step of
 `prop:shrinking-stars` that lets the mesh parameter be taken as small as the point requires: the

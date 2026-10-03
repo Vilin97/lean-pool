@@ -50,7 +50,7 @@ cochain degree cast `cochainCast` (with `p+(q+1) = (p+q)+1` definitional and
 `(p+1)+q = (p+q)+1` propositional via `aw_degree_left_succ`).
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 open SphereOddDegree.AlexanderWhitney

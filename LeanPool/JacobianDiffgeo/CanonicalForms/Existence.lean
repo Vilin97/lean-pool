@@ -56,7 +56,7 @@ plan flagged as "the ONLY file gated on finiteness-and-chi" can finally be writt
   instantiated at all; D9 supplies it).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology
@@ -120,7 +120,9 @@ theorem MForm.d_ne_zero [T2Space X] [ConnectedSpace X] {f : ℳ X}
       rw [hd0]
       exact MForm.ord_zero x₁
     have h2 : (MForm.d f).ord x₁
-        = meromorphicOrderAt ((MFormData.d f).coeffAt x₁) (chartAt ℂ x₁ x₁) := rfl
+        = meromorphicOrderAt ((MFormData.d f).coeffAt x₁) (chartAt ℂ x₁ x₁) := by
+      rw [MForm.d_eq_mk, MForm.ord_mk]
+      rfl
     rw [h2] at h1
     have h3 : (MFormData.d f).coeffAt x₁ =ᶠ[𝓝[≠] (chartAt ℂ x₁ x₁)]
         deriv (f.holoRepr ∘ ⇑(chartAt ℂ x₁).symm) := by
@@ -128,9 +130,7 @@ theorem MForm.d_ne_zero [T2Space X] [ConnectedSpace X] {f : ℳ X}
         eventually_nhdsWithin_of_eventually_nhds
           ((chartAt ℂ x₁).open_target.mem_nhds (mem_chart_target ℂ x₁))
       filter_upwards [htarget] with z hz
-      change (if z ∈ (chartAt ℂ x₁).target then
-        deriv (f.holoRepr ∘ ⇑(chartAt ℂ x₁).symm) z else 0) = _
-      rw [ite_eq_left hz]
+      exact MFormData.coeffAt_d f x₁ hz
     rw [meromorphicOrderAt_congr h3] at h1
     exact h1
   have hderiv0 : deriv (f.holoRepr ∘ ⇑(chartAt ℂ x₁).symm)

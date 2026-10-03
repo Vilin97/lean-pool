@@ -19,7 +19,7 @@ Gaussian binomial coefficient `qBinom(N, k, X)` converges to `(qPochhammer(X, k)
 as N → ∞.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

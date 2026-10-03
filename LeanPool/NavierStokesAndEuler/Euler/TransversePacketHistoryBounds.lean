@@ -33,7 +33,7 @@ They retain the fixed spatial/angular Sobolev block and use the true
 continuous time derivative, including both endpoints.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -198,7 +198,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

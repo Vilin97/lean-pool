@@ -21,7 +21,7 @@ Centered lifts of cumulative atoms give a finite support diagram, even when
 the augmented finite-field maps are not surjective.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EGZ.FlagDecomposition.Augmented
@@ -52,6 +52,7 @@ theorem lift_last (x : Φ.flag.Node) (v : FpCoord p d) :
 
 open Classical in
 /-- The finite-field affine map augmented by the same sequence of directions. -/
+@[expose]
 def map (x : Φ.flag.Node) : FpCoord p d →ᵃ[ZMod p] FpCoord p (Φ.flag.rank x + e x) :=
   Coord.append (Φ.representation.map x) (AffineMap.pi fun i : Fin (e x) ↦ ξ i)
 
@@ -117,6 +118,7 @@ theorem first_image_support (hp : Odd p) (x : Φ.flag.Node) :
 
 open Classical in
 /-- Along an order relation keep only the upper node's prefix of directions. -/
+@[expose]
 noncomputable def transition (he : Antitone e) {x y : Φ.flag.Node} (h : x ≤ y) :
     IntegralAffineMap (Φ.flag.rank x + e x) (Φ.flag.rank y + e y) :=
   (Φ.flag.transition h).extendPrefix (e x) (e y) (he h)

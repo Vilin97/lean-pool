@@ -29,7 +29,7 @@ free-group Grushko rank calculations, and the factorwise infrastructure for
 the arbitrary-factor theorem.
 -/
 
-@[expose] public section
+public section
 
 
 

@@ -18,7 +18,7 @@ energy/first-action coordinates.  Shrinking the first-action side to an interval
 the whole straight energy-leaf segment back to the anchor remains in the region.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

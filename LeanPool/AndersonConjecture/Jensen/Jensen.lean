@@ -26,7 +26,7 @@ constructs a local UFD A whose adic completion is T and whose
 generic formal fiber is trivial (Jensen, 2006, Corollary 2.4).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

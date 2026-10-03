@@ -15,7 +15,7 @@ import LeanPool.Monlib4.LinearAlgebra.End
  This file just proves that the spectrum of a linear map is commutative.
 -/
 
-@[expose] public section
+public section
 
 
 theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E]

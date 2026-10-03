@@ -42,7 +42,7 @@ monodromy sends the sheet `e` to the other sheet `-e`.
 * `classifyingHom_surjective` — for `n ≥ 1`, `classifyingHom n x` is surjective.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

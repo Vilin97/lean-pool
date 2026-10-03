@@ -35,7 +35,7 @@ The extension is the convergent vertical Taylor series of the genuine compatible
 parameter jets. Its Cauchy--Riemann identity follows by termwise differentiation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -620,7 +620,7 @@ argument and using the fixed-contour holomorphic-family theorem proves joint
 real smoothness of the constructed extension.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -865,7 +865,7 @@ All continuations below are explicit integrals of the actual natural slopes.
 The complex neighborhood is obtained from compactness and real positivity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2207,7 +2207,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2220,6 +2220,7 @@ open SlowRecursion (AxisFunction Coefficient)
 
 /-- A conjugation-invariant open neighborhood whose real points remain in
 the real profile domain. It retains the entire closed physical window. -/
+@[expose]
 noncomputable def parameterDomain (Ω : Set ℂ) : Set ℂ :=
   Ω ∩ (starRingEnd ℂ) ⁻¹' Ω ∩ Complex.re ⁻¹' ReferencePath.parameterInterval
 
@@ -2416,6 +2417,7 @@ theorem element_profile_germ {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
   exact element_profile E hT hδ hδT κ hP0 S i hp.1.le hp.2
 
 /-- Base, constructed using `SlowRecursion.makeBase`. -/
+@[expose]
 noncomputable def base {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
     (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0)
     (C : ℝ) {S : ℝ} (hS : 0 < S) : Coefficient S (parameterDomain Ω) :=
@@ -2478,6 +2480,7 @@ theorem base_beta_value {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
     (real_domain_mem N hX.1.le (parameterDomain_real_interval heta)) hX.1.ne'))
 
 /-- A fixed radial rectangle strictly containing the entire initial collar. -/
+@[expose]
 noncomputable def axisRadius (N : ReferencePath.Input) (δ : ℝ) : ℝ :=
   Real.sqrt (N.endpoint * Real.exp δ) + 1
 
@@ -2494,6 +2497,7 @@ theorem collar_lt_square (N : ReferencePath.Input) (δ : ℝ) :
   nlinarith
 
 /-- Hierarchy used in actual slow axis. -/
+@[expose]
 noncomputable def hierarchy {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
     (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) (hP0 : ContDiff ℝ ∞ P0) (C : ℝ) :=
   let hc := axisRadius_pos N δ
@@ -2574,6 +2578,7 @@ theorem actualPressure_smooth : ContDiff ℝ ∞ P0 := by
 
 /-- From natural, given by `hierarchy (constructedTube hp hP0 F hΛ hsmall hσ) hT hδ hδT κ
 (actualPressure_smooth hp hP0) C`. -/
+@[expose]
 noncomputable def fromNatural {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
     (hδT : 2 * δ < ReferencePath.rampLimit) (κ : ℝ) :=
   hierarchy (constructedTube hp hP0 F hΛ hsmall hσ) hT hδ hδT κ (actualPressure_smooth hp hP0) C

@@ -17,7 +17,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.Appendix`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 

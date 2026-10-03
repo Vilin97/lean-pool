@@ -16,7 +16,7 @@ closed time interval into ordinary derivatives there.  It uses affine tails
 whose slopes are the actual endpoint derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

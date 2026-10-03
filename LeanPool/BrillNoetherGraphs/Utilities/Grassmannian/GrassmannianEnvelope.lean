@@ -22,7 +22,7 @@ corner envelope and once-marked dictionary are unconditional facts about the
 explicitly reconstructed ASP permutation.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

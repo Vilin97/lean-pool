@@ -10,4 +10,4 @@ public import LeanPool.NashWilliams.Combinatorics.Ramsey
 
 /-! Combinatorial results about fronts and infinite Ramsey theory. -/
 
-@[expose] public section
+public section

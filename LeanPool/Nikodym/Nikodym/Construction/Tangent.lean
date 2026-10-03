@@ -40,7 +40,7 @@ Q02 threshold `2 ^ (n 2 ^ k) ≤ q` implies `1 ≤ q`). Declarations involving `
 carry a `[DecidableEq F]` assumption (consumers may use `classical`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

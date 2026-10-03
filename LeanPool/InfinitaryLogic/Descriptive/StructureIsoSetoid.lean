@@ -25,7 +25,7 @@ theorem about it.  The sentence-level predicates below then quantify over perfec
 statements.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Set
 
@@ -38,7 +38,8 @@ variable {L : Language.{u, v}} [L.IsRelational]
 /-- **The ambient isomorphism relation**: two codes are related iff the structures they decode
 on `ℕ` are `L`-isomorphic.  Stated on all of `StructureSpace L`, with no reference to any
 sentence. -/
-def structureIsoSetoid (L : Language.{u, v}) [L.IsRelational] : Setoid (StructureSpace L) where
+@[expose] def structureIsoSetoid (L : Language.{u, v}) [L.IsRelational] :
+    Setoid (StructureSpace L) where
   r c₁ c₂ := Nonempty (@Language.Equiv L ℕ ℕ c₁.toStructure c₂.toStructure)
   iseqv :=
     { refl := fun c => ⟨@Language.Equiv.refl L ℕ c.toStructure⟩
@@ -51,7 +52,7 @@ variable [Countable (Σ l, L.Relations l)]
 /-- The isomorphism equivalence relation on coded ℕ-models of φ: the ambient relation
 restricted to the models of `φ`.  Two codes are related iff the decoded structures on ℕ are
 L-isomorphic. -/
-def isoSetoid (φ : L.Sentenceω) : Setoid ↥(ModelsOf φ) :=
+@[expose] def isoSetoid (φ : L.Sentenceω) : Setoid ↥(ModelsOf φ) :=
   (structureIsoSetoid L).comap Subtype.val
 
 /-! ### Sentence-level predicates

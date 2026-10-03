@@ -37,7 +37,7 @@ public import Mathlib.Tactic
 
 /-! ### Least-index choice over `ℕ`, classical-decidability wrapper -/
 
-@[expose] public section
+public section
 
 open Metric Set Filter Topology TopologicalSpace
 

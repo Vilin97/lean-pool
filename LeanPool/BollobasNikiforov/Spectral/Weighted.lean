@@ -24,7 +24,7 @@ the closed right half-plane. If `B` is zero-diagonal and supported on `E(G)`,
 the Motzkin–Straus bound on `M X` yields `F B ≤ turanFactor G * ⟨B, B⟩`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

@@ -15,7 +15,7 @@ An intertwining relation is preserved by addition and scalar
 multiplication in a linear category.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

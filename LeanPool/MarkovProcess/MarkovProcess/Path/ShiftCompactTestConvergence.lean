@@ -16,7 +16,7 @@ dense times. The measure is any finite measure on continuous-path space; no Mark
 assumption is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

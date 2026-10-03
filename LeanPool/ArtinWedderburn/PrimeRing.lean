@@ -24,7 +24,7 @@ elementwise version `aRb = 0 → a = 0 ∨ b = 0` and to the two-sided ideal ver
 Concludes that simple rings are prime.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -33,7 +33,7 @@ variable {R : Type*} [Ring R]
 -- A ring is prime if from I * J = 0 it follows that I = 0 or J = 0 for any ideals I, J
 /-- A ring is *prime* when the product of two left ideals can be zero only if at least one
 of the factors is zero. -/
-def IsPrimeRing (R : Type*) [Ring R] : Prop :=
+@[expose] def IsPrimeRing (R : Type*) [Ring R] : Prop :=
   ∀ (I J : Ideal R), (I * J) = ⊥ → I = ⊥ ∨ J = ⊥
 
 -- A ring is prime if any of the following equivalent statements hold

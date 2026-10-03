@@ -25,7 +25,7 @@ permutation is traded for a strand re-indexing of the bundle
 equivalence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

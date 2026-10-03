@@ -17,7 +17,7 @@ import Mathlib.Tactic.Finiteness.Attr
 This module provides tactics proving the per-instruction specifications.
 -/
 
-@[expose] public section
+public section
 
 open Lean Elab Tactic
 

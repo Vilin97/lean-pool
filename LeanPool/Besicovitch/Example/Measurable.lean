@@ -17,7 +17,7 @@ Each square wave is a step function, hence measurable, and `g` is a pointwise li
 sums of them.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -44,7 +44,7 @@ Every statement is conditional only on the explicit identification `e` (resp. a
 the honest set of hypotheses. None of them is a disguised unconditional theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -74,7 +74,7 @@ underlying `degreeOfIsoTop`: it sends the identity to `1` and respects the monoi
 product of `End (TopCat.sphere n)` (categorical composition). This is the
 functorial composite of `Functor.mapEnd` for the homology functor with the scalar
 ring homomorphism `degreeRingHomOfIso`. -/
-def degreeMonoidHomTop {n : ℕ} (e : SphereTopHomologyIso n) :
+@[expose] def degreeMonoidHomTop {n : ℕ} (e : SphereTopHomologyIso n) :
     End (TopCat.sphere.{0} n) →* ℤ :=
   (degreeRingHomOfIso _ e).toMonoidHom.comp
     ((singularHomologyℤ n).mapEnd (TopCat.sphere.{0} n))
@@ -127,7 +127,7 @@ variable (o : SphereOrientation)
 
 /-- The oriented `TopCat`-degree of a self-morphism of `TopCat.sphere n`, read off
 the supplied identification `o.iso n`. -/
-def degreeTop {n : ℕ} (g : TopCat.sphere.{0} n ⟶ TopCat.sphere.{0} n) : ℤ :=
+@[expose] def degreeTop {n : ℕ} (g : TopCat.sphere.{0} n ⟶ TopCat.sphere.{0} n) : ℤ :=
   degreeOfIsoTop (o.iso n) g
 
 /-- The oriented `TopCat`-degree of the identity is `1`. -/

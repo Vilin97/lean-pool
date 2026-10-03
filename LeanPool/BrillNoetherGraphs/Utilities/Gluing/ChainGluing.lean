@@ -42,7 +42,7 @@ generality would raise the level at every step.  Everything here therefore
 works with all factors in a single fixed universe, where the wedge is closed.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -63,6 +63,7 @@ namespace MarkedGraph
 /-- Glue the right mark of `M` to the left mark of `N`.  The result keeps the
 left mark of `M` and the right mark of `N`, which is the marking the Demazure
 composition theorem produces. -/
+@[expose]
 def wedge (M N : MarkedGraph.{u}) : MarkedGraph.{u} where
   graph := vertexWedge M.graph N.graph M.right N.left
   left := Sum.inl M.left
@@ -75,6 +76,7 @@ def wedge (M N : MarkedGraph.{u}) : MarkedGraph.{u} where
 /-- The left-associated iterated vertex gluing of a chain, growing to the
 right.  `chain M []` is `M`, and each further factor is glued onto the
 accumulated right mark. -/
+@[expose]
 def chain (M : MarkedGraph.{u}) : List MarkedGraph.{u} → MarkedGraph.{u}
   | [] => M
   | N :: rest => chain (M.wedge N) rest

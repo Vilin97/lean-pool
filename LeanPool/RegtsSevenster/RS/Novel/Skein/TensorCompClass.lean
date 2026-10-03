@@ -18,7 +18,7 @@ to the Hom spaces: the fragment-level interchange at the singles,
 extended by the four-fold bilinear induction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

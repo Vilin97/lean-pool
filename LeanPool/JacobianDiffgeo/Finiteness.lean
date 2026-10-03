@@ -84,4 +84,4 @@ forbidden tactic.
   (monotonicity corollaries).
 -/
 
-@[expose] public section
+public section

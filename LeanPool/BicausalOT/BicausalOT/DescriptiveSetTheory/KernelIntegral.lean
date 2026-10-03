@@ -33,7 +33,7 @@ public import Mathlib.MeasureTheory.Integral.Lebesgue.Sub
 
 /-! ## Binary closure properties of analytic sets -/
 
-@[expose] public section
+public section
 
 open Set Topology MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal

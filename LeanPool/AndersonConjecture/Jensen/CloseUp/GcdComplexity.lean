@@ -25,7 +25,7 @@ construction when n >= 3 generators. Dividing all generators by
 a common prime strictly decreases the complexity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain
 /-- "GCD complexity" of a finite set `s` in a UFD subring `R`: the sum over `x ∈ s`
 of the number of (normalized) irreducible factors of `x`. Used as a termination
 measure in the close-up construction. -/
-noncomputable def gcdComplexity {R : Subring T}
+@[expose] noncomputable def gcdComplexity {R : Subring T}
     [UniqueFactorizationMonoid R] (s : Finset R) : ℕ :=
   @Finset.sum _ _ _ s fun x =>
     @Multiset.card _

@@ -19,7 +19,7 @@ Core definitions for piecewise C¹ curves, Cauchy principal value integrals,
 and generalized winding numbers following Hungerbühler–Wasem.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -49,7 +49,7 @@ instance : CoeFun PiecewiseC1Curve fun _ => ℝ → ℂ where
   coe := PiecewiseC1Curve.toFun
 
 /-- A closed curve has γ(a) = γ(b). -/
-def PiecewiseC1Curve.IsClosed (γ : PiecewiseC1Curve) : Prop :=
+@[expose] def PiecewiseC1Curve.IsClosed (γ : PiecewiseC1Curve) : Prop :=
   γ.toFun γ.a = γ.toFun γ.b
 
 /-- A piecewise C¹ immersion: a piecewise C¹ curve with nonzero derivative. -/
@@ -61,7 +61,7 @@ structure PiecewiseC1Immersion extends PiecewiseC1Curve where
     ∃ L : ℂ, L ≠ 0 ∧ Tendsto (deriv toFun) (𝓝[>] p) (𝓝 L)
 
 /-- The Cauchy principal value integrand at cutoff ε. -/
-def cauchyPrincipalValueIntegrand' (f : ℂ → ℂ) (γ : ℝ → ℂ)
+@[expose] def cauchyPrincipalValueIntegrand' (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (z₀ : ℂ) (ε : ℝ) (t : ℝ) : ℂ :=
   if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0
 
@@ -78,12 +78,12 @@ theorem cauchyPrincipalValueIntegrand'_of_le {f : ℂ → ℂ} {γ : ℝ → ℂ
   simp only [cauchyPrincipalValueIntegrand', show ¬(‖γ t - z₀‖ > ε) from not_lt.mpr h, ite_false]
 
 /-- The Cauchy principal value of ∮_γ f(z) dz, excluding ε-neighborhoods of z₀. -/
-def cauchyPrincipalValue' (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
+@[expose] def cauchyPrincipalValue' (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
   limUnder (𝓝[>] (0 : ℝ)) fun ε =>
     ∫ t in a..b, if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0
 
 /-- The Cauchy principal value exists if the limit exists. -/
-def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
+@[expose] def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
     (a b : ℝ) (z₀ : ℂ) : Prop :=
   ∃ L : ℂ, Tendsto (fun ε =>
     ∫ t in a..b, if ‖γ t - z₀‖ > ε then f (γ t) * deriv γ t else 0)
@@ -91,7 +91,7 @@ def CauchyPrincipalValueExists' (f : ℂ → ℂ) (γ : ℝ → ℂ)
 
 /-- The generalized winding number of γ around z₀, defined via principal value.
 `n_{z₀}(γ) = (1/2πi) · PV ∮_γ dz/(z - z₀)`. -/
-def generalizedWindingNumber' (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
+@[expose] def generalizedWindingNumber' (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℂ :=
   (2 * Real.pi * I)⁻¹ * cauchyPrincipalValue' (·⁻¹) (fun t => γ t - z₀) a b 0
 
 /-- Two curves are homotopic relative to endpoints. -/
@@ -103,7 +103,7 @@ def CurvesHomotopic (Γ γ : ℝ → ℂ) (a b : ℝ) : Prop :=
     (∀ s ∈ Icc (0 : ℝ) 1, H (a, s) = H (a, 0) ∧ H (b, s) = H (b, 0))
 
 /-- Homotopy avoiding a point z₀. -/
-def CurvesHomotopicAvoiding (Γ γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : Prop :=
+@[expose] def CurvesHomotopicAvoiding (Γ γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : Prop :=
   ∃ H : ℝ × ℝ → ℂ,
     Continuous H ∧
     (∀ t ∈ Icc a b, H (t, 0) = Γ t) ∧

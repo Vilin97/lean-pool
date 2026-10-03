@@ -19,7 +19,7 @@ two-by-two argument through continuous functional calculus: the off-diagonal sel
 contraction `(x, y) ↦ (T y, T† x)` gives a unitary after adjoining its defect square root.
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap
 open scoped InnerProductSpace

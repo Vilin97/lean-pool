@@ -27,7 +27,7 @@ that closeness there gives closeness of the reconstructed full assignment while 
 horizontal boundary literally.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -93,6 +93,7 @@ def RequiresMovableGenericityWitness
   | Sum.inr _ => True
 
 /-- Restrict a full assignment to its movable parameter subtype. -/
+@[expose]
 noncomputable def movableRestriction
     (base : Assignment hp C) : MovableParameter hp C → Real :=
   fun q => base q.1
@@ -471,6 +472,7 @@ assignment exactly. -/
   · simp [replaceMovable, movableRestriction, hq]
 
 /-- The full parameter represented by one local vertex coordinate. -/
+@[expose]
 noncomputable def localParameter
     (q : C.Cell) (i : Fin (p + 1)) (j : Fin p) : Parameter hp C :=
   Quotient.mk _ (sampleVertex hp C (q, i), j)
@@ -481,6 +483,7 @@ noncomputable def localParameter
     (localVertexMap hp C a q).value i j = a (localParameter hp C q i j) := rfl
 
 /-- A coordinate witness for a uniform lower bound on every local affine value. -/
+@[expose]
 def LocalAffineCoordinateNormMargin
     (a : Assignment hp C) (m : Real) : Prop :=
   ∀ (q : C.Cell) (w : StandardSimplex p),

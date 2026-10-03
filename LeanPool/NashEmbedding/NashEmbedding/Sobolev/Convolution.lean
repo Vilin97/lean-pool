@@ -39,7 +39,7 @@ mollifier convergence theorem: `φ_ε * u → (∫ φ) · u` in `H^s` as `ε →
 * `mollifier_convergence` — mollifier convergence theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev MeasureTheory
@@ -56,7 +56,7 @@ variable {n : ℕ}
 
 /-- The Fourier transform of `φ : ℝⁿ → ℂ` at `ξ ∈ ℝⁿ`:
 `φ̂(ξ) = ∫ φ(y) e^{-iξ·y} dy` (no `(2π)^{-n}` factor). -/
-def ftRn (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (ξ : Fin n → ℝ) : ℂ :=
+@[expose] def ftRn (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (ξ : Fin n → ℝ) : ℂ :=
   ∫ y, φ y * exp (-(I * ↑(∑ j : Fin n, ξ j * y j)))
 
 /-
@@ -89,7 +89,7 @@ lemma continuous_ftRn (φ : (Fin n → ℝ) → ℂ) (hφ : Integrable φ) :
 
 /-- The convolution `φ * u` of a function `φ` with a distribution `u ∈ X_n^*`,
 defined via Fourier coefficients: `(φ * u)^(m) = φ̂(m) · û(m)`. -/
-def convDistrib (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (u : TrigPolyDual n) : TrigPolyDual n :=
+@[expose] def convDistrib (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (u : TrigPolyDual n) : TrigPolyDual n :=
   seqToDual n (fun m => ftRn n φ (fun j => (m j : ℝ)) * fourierCoeffDistrib u m)
 
 /-- The Fourier coefficient of the convolution. -/
@@ -165,7 +165,7 @@ theorem convDistrib_smul (φ : (Fin n → ℝ) → ℂ) (c : ℂ) (u : TrigPolyD
 /-! ## Rescaling (Definition) -/
 
 /-- The rescaled function `φ_ε(x) = ε^{-n} φ(x/ε)` for `ε > 0`. -/
-def rescale (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (ε : ℝ) (x : Fin n → ℝ) : ℂ :=
+@[expose] def rescale (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (ε : ℝ) (x : Fin n → ℝ) : ℂ :=
   (((ε⁻¹) ^ n : ℝ) : ℂ) * φ (ε⁻¹ • x)
 
 /-

@@ -17,7 +17,7 @@ collapse: contracting the regular factor before or after the
 base change gives the same map.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

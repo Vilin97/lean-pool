@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2En
 Assembly of the selected envelope oracle and its coordinate-gradient and smoothness proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
@@ -23,7 +23,7 @@ open Stage5AboveTwoLower.S5AGlobalC2
 open Stage5AboveTwoLowerResume
 
 /-- The explicit curvature bound for the constructed smoothing kernel. -/
-noncomputable def repairMpd (p : ℝ) (d : ℕ) : ℝ :=
+@[expose] noncomputable def repairMpd (p : ℝ) (d : ℕ) : ℝ :=
   if p ≤ 3 * Real.log d then 5 * p
   else 15 * Real.exp (2 / 3) * Real.log d
 
@@ -33,6 +33,7 @@ noncomputable def dormantOracle (d : ℕ) : PairOracle d :=
 
 /-- Nonrecursive concrete kernel data used to formulate and select minimizers.
 Its dormant `smooth` field is never used in the infimal cost. -/
+@[expose]
 noncomputable def repairKernelBase (p : ℝ) (d : ℕ) :
     SmoothingKernelData p d :=
   { phi := lowerKernelPhi (kernelR0 p d) (repairTheta p d)
@@ -42,14 +43,14 @@ noncomputable def repairKernelBase (p : ℝ) (d : ℕ) :
     smooth := fun _ _ ↦ dormantOracle d }
 
 /-- The infimal smoothing value paired with the selected envelope gradient. -/
-noncomputable def repairSelectedOracle (p : ℝ) (d : ℕ)
+@[expose] noncomputable def repairSelectedOracle (p : ℝ) (d : ℕ)
     (chi : ℝ) (ell : Point d → ℝ) : PairOracle d :=
   { value := localSmoothingValue (repairKernelBase p d) chi ell
     gradient := selectedEnvelopeGradient (repairKernelBase p d) chi ell }
 
 /-- Final kernel data: its smooth oracle is the literal infimal value paired
 with the selected primal-envelope gradient. -/
-noncomputable def repairKernel (p : ℝ) (d : ℕ) :
+@[expose] noncomputable def repairKernel (p : ℝ) (d : ℕ) :
     SmoothingKernelData p d :=
   { phi := lowerKernelPhi (kernelR0 p d) (repairTheta p d)
     gradPhi := kernelGradientVector (kernelR0 p d) (repairTheta p d)

@@ -18,7 +18,7 @@ rank facts used by the far-mark construction in Theorem 3.5 of
 the twice-marked banana paper.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

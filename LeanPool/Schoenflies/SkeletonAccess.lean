@@ -127,7 +127,7 @@ nothing beyond the shared hypothesis.
   point of a target face" of the same lemma.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -597,7 +597,7 @@ cell found is the prescribed one. It is discharged by
 complement of the skeleton, which is what invariant (i) asserts) or, when the cells live inside
 an ambient region whose frontier belongs to the skeleton, by
 `Schoenflies.cellsAbsorb_of_isComponent_in`. -/
-def CellsAbsorb (K : Set Plane) (cells : Set (Set Plane)) : Prop :=
+@[expose] def CellsAbsorb (K : Set Plane) (cells : Set (Set Plane)) : Prop :=
   ∀ N : Set Plane, IsPreconnected N → Disjoint N K → ∀ R ∈ cells, (N ∩ R).Nonempty → N ⊆ R
 
 /-- A connected set that misses the frontier of an open set and meets it lies inside it. -/

@@ -23,7 +23,7 @@ The only input is the closed formula for the volume of a Euclidean ball in
 three dimensions, `volume_vec3Ball_eq`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 

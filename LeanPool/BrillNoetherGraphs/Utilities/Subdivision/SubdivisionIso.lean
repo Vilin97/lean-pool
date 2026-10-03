@@ -26,7 +26,7 @@ presentations.  Thus it applies both to automorphisms of one presentation and
 to comparisons with another presentation having a different slot order.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph
 
@@ -94,12 +94,14 @@ def stepOffsetEquiv (edge : Fin p) :
     (finCongr (relabeling.length_eq edge))
 
 /-- Vertex equivalence induced by a relabeling. -/
+@[expose]
 def vertexEquiv : source.Vertex ≃ target.Vertex :=
   Equiv.sumCongr relabeling.coreEquiv
     (Equiv.sigmaCongr relabeling.slotEquiv
       (fun edge => interiorEquiv source target relabeling edge))
 
 /-- Unit-step occurrence equivalence induced by a relabeling. -/
+@[expose]
 def stepEquiv : source.Step ≃ target.Step :=
   Equiv.sigmaCongr relabeling.slotEquiv
     (fun edge => stepOffsetEquiv source target relabeling edge)
@@ -296,6 +298,7 @@ theorem unitEdge_stepEquiv (step : source.Step) :
 
 /-- The resulting vertex equivalence is a graph isomorphism in the precise
 Laplacian sense used by the certificate checker. -/
+@[expose]
 def laplacianEquiv : LaplacianEquiv source.graph target.graph :=
   OneEdgeSplitRefinement.laplacianEquivOfUnorientedUnitSteps source target
     (vertexEquiv source target relabeling) (stepEquiv source target relabeling)
@@ -304,6 +307,7 @@ def laplacianEquiv : LaplacianEquiv source.graph target.graph :=
 /-- The same relabeling packaged for the older, transmission-facing graph
 isomorphism API.  It has exactly the same finite multiplicity content as
 `laplacianEquiv`. -/
+@[expose]
 def graphIso : CFGraphIso source.graph target.graph where
   vertexEquiv := vertexEquiv source target relabeling
   map_num_edges := (laplacianEquiv source target relabeling).num_edges_eq
@@ -324,6 +328,7 @@ end Spec
 /-! ## Reindexing a specification along index equivalences -/
 
 /-- Rename the vertices and edge slots of an ordered core. -/
+@[expose]
 def coreReindex {n p n' p' : ℕ} (core : Core n p)
     (vertexEquiv : Fin n ≃ Fin n') (slotEquiv : Fin p ≃ Fin p') :
     Core n' p' where
@@ -331,6 +336,7 @@ def coreReindex {n p n' p' : ℕ} (core : Core n p)
   head := fun edge => vertexEquiv (core.head (slotEquiv.symm edge))
 
 /-- Rename the vertices and edge slots of a subdivision specification. -/
+@[expose]
 def specReindex {n p n' p' : ℕ} (spec : Spec n p)
     (vertexEquiv : Fin n ≃ Fin n') (slotEquiv : Fin p ≃ Fin p')
     (hn : 0 < n') : Spec n' p' where
@@ -344,6 +350,7 @@ def specReindex {n p n' p' : ℕ} (spec : Spec n p)
   length_pos := fun edge => spec.length_pos _
 
 /-- Reindexing is a relabeling, hence preserves the subdivided graph. -/
+@[expose]
 def specReindexRelabeling {n p n' p' : ℕ} (spec : Spec n p)
     (vertexEquiv : Fin n ≃ Fin n') (slotEquiv : Fin p ≃ Fin p')
     (hn : 0 < n') :

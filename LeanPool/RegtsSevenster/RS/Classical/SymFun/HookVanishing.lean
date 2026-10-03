@@ -25,7 +25,7 @@ This is the composition of `exists_recurrence_of_schurDet_vanishing`
 of `Common/YoungDiagrams.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

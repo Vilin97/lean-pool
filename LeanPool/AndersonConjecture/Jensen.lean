@@ -29,4 +29,4 @@ a UFD with a prescribed completion (Jensen 2006, building on Loepp 1997 and
 Heitmann 1993).
 -/
 
-@[expose] public section
+public section

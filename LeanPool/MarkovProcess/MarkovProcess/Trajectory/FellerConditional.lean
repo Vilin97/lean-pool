@@ -22,7 +22,7 @@ The time here is deterministic.  The corresponding statement at a finite stoppin
 `Trajectory/StoppingLtTop.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -22,7 +22,7 @@ This file develops quotient-by-kernel descriptions of ranges and proves invarian
 index, and range results for Fredholm operators.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.Fredholm
 

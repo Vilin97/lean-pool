@@ -18,14 +18,14 @@ recursively generated auxiliary `p` sequence and the exact polarization used
 by the finite-data identity.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace O3
 
 /-- The sum of gradients before index `k`, weighted by the certificate increments. -/
-noncomputable def stage9WeightedGradient {d : ℕ}
+@[expose] noncomputable def stage9WeightedGradient {d : ℕ}
     (delta : ℕ → ℝ) (g : ℕ → Vec d) (k : ℕ) : Vec d :=
   ∑ j ∈ Finset.range k, delta j • g j
 
@@ -109,7 +109,7 @@ theorem stage9_pairing_summation_by_parts {d : ℕ}
       ring
 
 /-- The auxiliary sequence from the frozen OGM-G certificate. -/
-noncomputable def stage9P {d : ℕ} (theta : ℕ → ℝ)
+@[expose] noncomputable def stage9P {d : ℕ} (theta : ℕ → ℝ)
     (g : ℕ → Vec d) : ℕ → Vec d
   | 0 => 0
   | k + 1 => (1 - 1 / theta k) • stage9P theta g k +

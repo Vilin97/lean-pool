@@ -33,7 +33,7 @@ guesses the first `k` input bits.
 * `existQuantify_mono` — monotonicity under pointwise implication
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -45,7 +45,7 @@ variable {k m : Nat}
     `g(y) = true` iff `∃ x : BitString k, f(x ++ y) = true`.
 
     This models a nondeterministic circuit that guesses the first `k` inputs. -/
-def existQuantify (f : BitString (k + m) → Bool) : BitString m → Bool :=
+@[expose] def existQuantify (f : BitString (k + m) → Bool) : BitString m → Bool :=
   fun y => decide (∃ x : BitString k, f (Fin.append x y) = true)
 
 /-- Universal quantification over the first `k` inputs of a Boolean function. -/
@@ -121,7 +121,7 @@ theorem forallQuantify_const_false :
 
 /-- Restrict a Boolean function by fixing its first input to a constant.
     Reduces the input size from `(k + 1) + m` to `k + m`. -/
-def restrictFirst (f : BitString ((k + 1) + m) → Bool) (b : Bool) :
+@[expose] def restrictFirst (f : BitString ((k + 1) + m) → Bool) (b : Bool) :
     BitString (k + m) → Bool :=
   fun z => f (fun i => if h : i.val = 0 then b else z ⟨i.val - 1, by omega⟩)
 

@@ -32,7 +32,7 @@ the fossil is canonical and can therefore serve as a common target for
 constructions which differ only by attached trees.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -44,6 +44,7 @@ universe u
 
 /-- Two vertices belong to the same fossil class when their one-chip
 divisors are linearly equivalent. -/
+@[expose]
 def chipEquivalent (G : CFGraph.{u}) (v w : G.V) : Prop :=
   linearEquiv G (oneChip v) (oneChip w)
 
@@ -88,6 +89,7 @@ def fossilEdge (G : CFGraph.{u}) (edge : G.V × G.V) :
 /-- The fossil of `G`: its degree-one Abel--Jacobi image, equivalently (when
 `G` is connected) its 2-edge-connectivization.  It quotients vertices by
 one-chip divisor class and discards edge occurrences that become loops. -/
+@[expose]
 noncomputable def fossil (G : CFGraph.{u}) : CFGraph.{u} where
   V := FossilVertex G
   instDecidableEq := fossilVertexDecidableEq G
@@ -105,6 +107,7 @@ noncomputable def fossil (G : CFGraph.{u}) : CFGraph.{u} where
 /-! ## Canonical contraction and divisor pushforward -/
 
 /-- The quotient map, viewed as a graph-contraction certificate. -/
+@[expose]
 noncomputable def fossilContraction (G : CFGraph.{u}) :
     Certificate.GraphContractionCertificate G (fossil G) where
   vertexMap := fossilVertex G
@@ -301,6 +304,7 @@ theorem fossilContraction_valid (G : CFGraph.{u}) :
 
 /-- Push a divisor to the fossil by summing its coefficients over each
 linear-equivalence class of vertices. -/
+@[expose]
 noncomputable def fossilPushforward (G : CFGraph.{u}) (D : CFDiv G) :
     CFDiv (fossil G) :=
   (fossilContraction G).pushDiv D
@@ -337,6 +341,7 @@ theorem effective_fossilPushforward (G : CFGraph.{u}) {D : CFDiv G}
   (fossilContraction G).deg_pushDiv D
 
 /-- Fibre summation, packaged as an additive homomorphism. -/
+@[expose]
 noncomputable def fossilPushforwardHom (G : CFGraph.{u}) :
     CFDiv G →+ CFDiv (fossil G) where
   toFun := fossilPushforward G
@@ -391,6 +396,7 @@ noncomputable def fossilLift (G : CFGraph.{u})
   exact (divisor_eq_sum_smul_oneChip D).symm
 
 /-- Pull a fossil firing script back to the original graph. -/
+@[expose]
 noncomputable def fossilPullScript (G : CFGraph.{u})
     (tau : firingScript (fossil G)) : firingScript G :=
   (fossilContraction G).pullScript tau

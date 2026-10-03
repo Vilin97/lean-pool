@@ -18,7 +18,7 @@ strand regime the zero-rise exception is impossible.  Since then
 by the corrected finite-row inversion count.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -57,7 +57,7 @@ reverse-transfer stage.
   — the accessible clean overlay performs the complete reverse finite transfer.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -153,7 +153,7 @@ noncomputable def meshPieces (Q : TargetSegmentCover P) (delta : ℝ)
 
 /-- The target skeleton overlaid with the anchored square mesh.  Old vertices and prescribed
 mesh anchors are explicitly included in the cut list. -/
-noncomputable def meshOverlay (Q : TargetSegmentCover P) (delta : ℝ)
+@[expose] noncomputable def meshOverlay (Q : TargetSegmentCover P) (delta : ℝ)
     (fresh anchors : List Plane) : Graph Plane Piece :=
   attachGraph (Q.meshPieces delta fresh anchors)
     (anchors ++ P.tgt.graph.vertexFinset.toList)

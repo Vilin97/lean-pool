@@ -31,7 +31,7 @@ The point is that if `ξ = a / b` then `b ^ (d n) * Q(a / b)` is a positive inte
 least `1`, while it tends to zero.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology
 

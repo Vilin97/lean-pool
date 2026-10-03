@@ -39,7 +39,7 @@ fixed actual cycle parameters. The finite labels, phase carriers, base error,
 and current pressure alias are retained through the literal recurrence.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,15 +60,18 @@ abbrev Point := CorrectionStep.CyclePoint
 abbrev Full := Point × ℝ
 
 /-- Parameters, given by `ActualCycleParameters.fixedParameters B N0`. -/
+@[expose]
 noncomputable def parameters (B N0 : ℕ) : CycleParameters (Index B N0) :=
   ActualCycleParameters.fixedParameters B N0
 
 /-- Parameter sequence, defined pointwise by `parameters B N0`. -/
+@[expose]
 noncomputable def parameterSequence (B N0 : ℕ) : ℕ → CycleParameters (Index B N0) :=
   fun _ => parameters B N0
 
 /-- Cycle, given by `CycleState.iterate (parameterSequence B N0) (commonContext B)
 (ActualInitialization.initialCycleState B N0)`. -/
+@[expose]
 noncomputable def cycle (B N0 : ℕ) : ℕ → CycleState (Index B N0) :=
   CycleState.iterate (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0)
@@ -191,6 +194,7 @@ theorem firstBand_ge (B N0 : ℕ) : N0 ≤ firstBand B N0 :=
   (ActualCycleParameters.bandFloor_ge B N0).trans (firstBand_ge_choice B N0)
 
 /-- Qbig, given by `ChartScales.Q (firstBand B N0)`. -/
+@[expose]
 noncomputable def qbig (B N0 : ℕ) : ℝ := ChartScales.Q (firstBand B N0)
 
 theorem qbig_pos (B N0 : ℕ) : 0 < qbig B N0 := ChartScales.Q_pos _
@@ -226,6 +230,7 @@ theorem nativeScale_lt_qbig (B N0 n : ℕ) (hn : residualBand B N0 ≤ n)
     _ = qbig B N0 := by rw [mul_comm, twice_residual_scale]
 
 /-- Physical domain, given by `CutStageEstimates.physicalSublevel h (qbig B N0)`. -/
+@[expose]
 noncomputable def physicalDomain (B N0 : ℕ) : Set SpaceTime :=
   CutStageEstimates.physicalSublevel h (qbig B N0)
 
@@ -275,6 +280,7 @@ theorem selected_initial_meanHypotheses :
 
 /-- Graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
 (CorrectionInitialization.CommonWindow.index h n)`. -/
+@[expose]
 noncomputable def graph (n : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
       (CorrectionInitialization.CommonWindow.index h n)
@@ -302,18 +308,21 @@ noncomputable def chartVelocityStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.In
     (ActualInitialization.initialCycleState B N0) a i (graph n) n
 
 /-- Chart pressure stages, constructed using `CyclePhysicalPrefixes.pressureStages`. -/
+@[expose]
 noncomputable def chartPressureStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
     PressureField :=
   CyclePhysicalPrefixes.pressureStages (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n (basePressure B n)
 
 /-- Chart potential parts, constructed using `CyclePhysicalPrefixes.potentialParts`. -/
+@[expose]
 noncomputable def chartPotentialParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
     VelocityField :=
   CyclePhysicalPrefixes.potentialParts (parameterSequence B N0) (commonContext B)
     (ActualInitialization.initialCycleState B N0) a i (graph n) n
 
 /-- Chart direct stages, constructed using `CyclePhysicalPrefixes.directStages`. -/
+@[expose]
 noncomputable def chartDirectStages (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : ℕ →
     VelocityField :=
   CyclePhysicalPrefixes.directStages (parameterSequence B N0) (commonContext B)
@@ -415,11 +424,13 @@ Consequently sums and differences retain the original absolute mean and
 pressure; no new integration constant or choice enters a later stage. -/
 
 /-- Mean atlas, given by `ActualMeanPhysicalData.initialAtlas (firstBand B N0)`. -/
+@[expose]
 noncomputable def meanAtlas (B N0 : ℕ) :=
   ActualMeanPhysicalData.initialAtlas (firstBand B N0)
 
 /-- Mean field, given by `(meanAtlas B N0).physical standardRegion.carrier degree f ∘
 PhysicalMeanJetBounds.physicalPoint h`. -/
+@[expose]
 noncomputable def meanField (B N0 : ℕ) (degree : ℝ)
     (f : ActualMeanPhysicalData.Scalar) : PressureField :=
   (meanAtlas B N0).physical standardRegion.carrier degree f ∘
@@ -427,6 +438,7 @@ noncomputable def meanField (B N0 : ℕ) (degree : ℝ)
 
 /-- Mean angular field, defined pointwise by `meanField B N0 degree f w •
 PhysicalMeanJetBounds.angularVector (PhysicalGraphBounds.radialProjection w)`. -/
+@[expose]
 noncomputable def meanAngularField (B N0 : ℕ) (degree : ℝ)
     (f : ActualMeanPhysicalData.Scalar) : VelocityField :=
   fun w => meanField B N0 degree f w •
@@ -457,23 +469,27 @@ theorem meanAngularField_sub (B N0 : ℕ) (degree : ℝ) (f g : ActualMeanPhysic
   simp only [meanAngularField, meanField_sub, Pi.sub_apply, sub_smul]
 
 /-- Angular native stages as an element of `ℕ → ActualMeanPhysicalData.Scalar`. -/
+@[expose]
 noncomputable def angularNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k (cycle B N0 0).state.mean.angular
     (fun j => (cycle B N0 (j + 1)).state.mean.angular - (cycle B N0 j).state.mean.angular)
 
 /-- Pressure native stages, defined pointwise by `Nat.casesOn k (cycle B N0 0).state.pressure
 (fun j => (cycle B N0 (j + 1)).state.pressure - (cycle B N0 j).state.pressure)`. -/
+@[expose]
 noncomputable def pressureNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k (cycle B N0 0).state.pressure
     (fun j => (cycle B N0 (j + 1)).state.pressure - (cycle B N0 j).state.pressure)
 
 /-- Angular mean stages, defined pointwise by `meanAngularField B N0 (CoordinateAlgebra.A h)
 (angularNativeStages B N0 j)`. -/
+@[expose]
 noncomputable def angularMeanStages (B N0 : ℕ) : ℕ → VelocityField :=
   fun j => meanAngularField B N0 (CoordinateAlgebra.A h) (angularNativeStages B N0 j)
 
 /-- Pressure mean stages, defined pointwise by `meanField B N0 (2 * CoordinateAlgebra.A h)
 (pressureNativeStages B N0 j)`. -/
+@[expose]
 noncomputable def pressureMeanStages (B N0 : ℕ) : ℕ → PressureField :=
   fun j => meanField B N0 (2 * CoordinateAlgebra.A h) (pressureNativeStages B N0 j)
 
@@ -525,6 +541,7 @@ theorem pressureMeanStages_prefix (B N0 J : ℕ) :
       abel
 
 /-- Temporal native, constructed using `VariableGaugeMean.temporalPotential`. -/
+@[expose]
 noncomputable def temporalNative (B N0 j : ℕ) : ActualMeanPhysicalData.Scalar :=
   VariableGaugeMean.temporalPotential (parameters B N0).gauge (parameters B N0).timeExponent
     (parameters B N0).commonIndex (commonContext B)
@@ -532,12 +549,14 @@ noncomputable def temporalNative (B N0 j : ℕ) : ActualMeanPhysicalData.Scalar 
       (commonContext B) (cycle B N0 j).state)
 
 /-- Rank native, constructed using `VariableGaugeMean.rankPotential`. -/
+@[expose]
 noncomputable def rankNative (B N0 j : ℕ) : ActualMeanPhysicalData.Scalar :=
   VariableGaugeMean.rankPotential (parameters B N0).gauge (parameters B N0).rank (commonContext B)
     ((parameters B N0).afterTemporal (cycle B N0 j).coefficients
       (commonContext B) (cycle B N0 j).state)
 
 /-- Stream native stages as an element of `ℕ → ActualMeanPhysicalData.Scalar`. -/
+@[expose]
 noncomputable def streamNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalData.Scalar :=
   fun k => Nat.casesOn k
     (ActualMeanPhysicalData.initialTemporalScalar B N0 + ActualMeanPhysicalData.initialRankScalar B
@@ -546,6 +565,7 @@ noncomputable def streamNativeStages (B N0 : ℕ) : ℕ → ActualMeanPhysicalDa
 
 /-- Stream mean stages, defined pointwise by `meanAngularField B N0 (CoordinateAlgebra.A h - 1 /
 2) (streamNativeStages B N0 j)`. -/
+@[expose]
 noncomputable def streamMeanStages (B N0 : ℕ) : ℕ → VelocityField :=
   fun j => meanAngularField B N0 (CoordinateAlgebra.A h - 1 / 2) (streamNativeStages B N0 j)
 
@@ -584,12 +604,14 @@ theorem pressureMeanStages_succ {B N0 : ℕ} (H : MeanCycleInput B N0) (j : ℕ)
       ((ActualMeanPhysicalData.initialCycleData H).pressureIncrementFamily j).field := rfl
 
 /-- Chart mean pressure parts, constructed using `CyclePhysicalPrefixes.polarPressureMap`. -/
+@[expose]
 noncomputable def chartMeanPressureParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n j : ℕ) : PressureField :=
   CyclePhysicalPrefixes.polarPressureMap a i (CyclePhysicalPrefixes.pressureMap (graph n)
     (fun x => pressureNativeStages B N0 j n x.1))
 
 /-- Chart stream parts as an element of `ℕ → VelocityField`. -/
+@[expose]
 noncomputable def chartStreamParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → VelocityField :=
   fun k => Nat.casesOn k
@@ -675,6 +697,7 @@ theorem streamMeanStages_curl_on_chart {B N0 : ℕ} (H : MeanCycleInput B N0) (j
   | succ j => exact ActualMeanPhysicalData.cycleStream_curl H j n hn ha i ht hu hw
 
 /-- Chart base velocity, constructed using `CyclePhysicalPrefixes.polarVelocityMap`. -/
+@[expose]
 noncomputable def chartBaseVelocity (B : ℕ) (a : ℝ) (i : PolarCharts.Index) (n : ℕ) : VelocityField
     :=
   CyclePhysicalPrefixes.polarVelocityMap a i (CyclePhysicalPrefixes.velocityMap (graph n)
@@ -688,6 +711,7 @@ noncomputable def chartBasePressure (B : ℕ) (a : ℝ) (i : PolarCharts.Index) 
     (basePressure B n))
 
 /-- Chart wave parts as an element of `ℕ → VelocityField`. -/
+@[expose]
 noncomputable def chartWaveParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → VelocityField :=
   fun k => Nat.casesOn k
@@ -701,6 +725,7 @@ noncomputable def chartWaveParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
           (commonContext B) (cycle B N0 j).state n)))
 
 /-- Chart wave pressure parts as an element of `ℕ → PressureField`. -/
+@[expose]
 noncomputable def chartWavePressureParts (B N0 : ℕ) (a : ℝ) (i : PolarCharts.Index)
     (n : ℕ) : ℕ → PressureField :=
   fun k => Nat.casesOn k
@@ -1048,6 +1073,7 @@ theorem pressureMeanStages_shrinkingSupport {B N0 : ℕ} (H : MeanCycleInput B N
 supply these records; the mean field is fixed by the same cycle above. -/
 
 /-- Initial potential stage, bundling `waveCount`, `waves`, `streamCount`, `streams`. -/
+@[expose]
 noncomputable def initialPotentialStage (B N0 : ℕ)
     (wave : MixedAxisPreservation.CopyPotential.{u} h) :
     MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h (qbig B N0))
@@ -1058,6 +1084,7 @@ noncomputable def initialPotentialStage (B N0 : ℕ)
   streams _ := ActualMeanStageData.initialStreamSupport B N0 (firstBand B N0) (qbig B N0) le_rfl
 
 /-- Positive potential stage, bundling `waveCount`, `waves`, `streamCount`, `streams`. -/
+@[expose]
 noncomputable def positivePotentialStage {B N0 : ℕ} (H : MeanCycleInput B N0)
     (j : ℕ) (particular signed : MixedAxisPreservation.CopyPotential.{u} h) :
     MixedAxisPreservation.PotentialStage.{u} h (MixedAxisPreservation.localDomain h (qbig B N0))
@@ -1104,7 +1131,7 @@ the actual initial mean families and the existing extensions of the same
 base potential and pressure.  No output extension is an input below.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1132,6 +1159,7 @@ variable {DA DP : Type} [NormedAddCommGroup DA] [NormedSpace ℝ DA]
   [NormedAddCommGroup DP] [NormedSpace ℝ DP] {IA KA IP KP : Type*}
 
 /-- The exact base and bounded finite initial potential correction. -/
+@[expose]
 noncomputable def initialPotentialModel (B N0 N : ℕ) (hN : 4 ≤ N)
     (WA : PhysicalStageBounds.WaveData h DA IA KA (Fin 3)) : VelocityField :=
   ActualPhysicalStageBounds.initialPotential certificate modulation upper B WA
@@ -1145,6 +1173,7 @@ noncomputable def initialDirectModel (B N0 N : ℕ) : VelocityField :=
 
 /-- The pressure of the same summed base and the actual finite initial
 wave and mean-pressure correction. -/
+@[expose]
 noncomputable def initialPressureModel (B N0 N : ℕ) (hN : 4 ≤ N)
     (WP : PhysicalStageBounds.WaveData h DP IP KP Unit) : PressureField :=
   fun w => FinalSlowBase.pressure certificate modulation upper B w +
@@ -1396,7 +1425,7 @@ argument; a representation by a fixed-reference copy family is unnecessary.
 The zeroth potential and pressure retain the separately extended slow base.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1877,7 +1906,7 @@ the curl is therefore the actual particular velocity increment, with its physica
 scale and moving frame.  No output representation is an input to these identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2172,7 +2201,7 @@ nominal active annulus, without enlarging either edge.  This applies to the
 literal initialized fields and to every mean stage of the same coherent cycle.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2381,7 +2410,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2651,11 +2680,13 @@ theorem initialPotential_axisZeroOn (B N0 : ℕ) :
 
 /-- Zeroth potential, given by `TailGaugePotential.finalPotential certificate modulation upper B
 + initialPotential B N0`. -/
+@[expose]
 noncomputable def zerothPotential (B N0 : ℕ) : VelocityField :=
   TailGaugePotential.finalPotential certificate modulation upper B + initialPotential B N0
 
 /-- Zeroth pressure, given by `FinalSlowBase.pressure certificate modulation upper B +
 initialPressure B N0`. -/
+@[expose]
 noncomputable def zerothPressure (B N0 : ℕ) : PressureField :=
   FinalSlowBase.pressure certificate modulation upper B + initialPressure B N0
 
@@ -2691,11 +2722,13 @@ converted by `ActualCycleParameters.particularState` inside the producer.
 
 /-- Particular potential, given by `ActualValidBandWaves.potential
 (ActualCandidateConstruction.cycle B N0 j) (ActualCandidateConstruction.firstBand B N0)`. -/
+@[expose]
 noncomputable def particularPotential (B N0 j : ℕ) : VelocityField :=
   ActualValidBandWaves.potential (ActualCandidateConstruction.cycle B N0 j)
     (ActualCandidateConstruction.firstBand B N0)
 
 /-- Particular pressure, constructed using `ActualValidBandWaves.pressure`. -/
+@[expose]
 noncomputable def particularPressure (B N0 j : ℕ) : PressureField :=
   ActualValidBandWaves.pressure (ActualCandidateConstruction.cycle B N0 j)
     (ActualCandidateConstruction.firstBand B N0)
@@ -2977,6 +3010,7 @@ noncomputable def signedPressure (B N0 : ℕ)
 
 /-- Positive potential, given by `particularPotential B N0 j + signedPotential B N0 hN j +
 ActualCandidateConstruction.streamMeanStages B N0 (j + 1)`. -/
+@[expose]
 noncomputable def positivePotential (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : VelocityField :=
   particularPotential B N0 j + signedPotential B N0 hN j +
@@ -2984,6 +3018,7 @@ noncomputable def positivePotential (B N0 : ℕ)
 
 /-- Positive pressure, given by `particularPressure B N0 j + signedPressure B N0 hN j +
 ActualCandidateConstruction.pressureMeanStages B N0 (j + 1)`. -/
+@[expose]
 noncomputable def positivePressure (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (j : ℕ) : PressureField :=
   particularPressure B N0 j + signedPressure B N0 hN j +
@@ -2998,6 +3033,7 @@ noncomputable def directData (B N0 : ℕ)
 
 /-- Potential stages, given by `GermCandidateAssembly.potentialStages certificate modulation
 upper B (initialPotential B N0) (positivePotential B N0 hN)`. -/
+@[expose]
 noncomputable def potentialStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : ℕ → VelocityField :=
   GermCandidateAssembly.potentialStages certificate modulation upper B
@@ -3010,6 +3046,7 @@ noncomputable def directStages (B N0 : ℕ)
 
 /-- Pressure stages, given by `MixedCandidateAssembly.pressureStages certificate modulation
 upper B (initialPressure B N0) (positivePressure B N0 hN)`. -/
+@[expose]
 noncomputable def pressureStages (B N0 : ℕ)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : ℕ → PressureField :=
   MixedCandidateAssembly.pressureStages certificate modulation upper B
@@ -3612,6 +3649,7 @@ theorem endpoints (B N0 : ℕ)
 
 /-- The output retains the actual three sums, the smooth force, and the
 strong consequences for this same velocity and pressure. -/
+@[expose]
 def Witness (B N0 : ℕ) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) : Prop :=
   ∃ a : ℕ → ℕ,
     MixedCandidateWitness.SelectedSchedule h (ActualCandidateConstruction.qbig B N0)

@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.Zeta3Irrational.LinearForm
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

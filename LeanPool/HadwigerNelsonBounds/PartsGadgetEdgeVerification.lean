@@ -13,7 +13,7 @@ import LeanPool.HadwigerNelsonBounds.PartsGadgetEdgeVerification3
 
 /-! Aggregated edge-geometry checks for the finite gadget. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

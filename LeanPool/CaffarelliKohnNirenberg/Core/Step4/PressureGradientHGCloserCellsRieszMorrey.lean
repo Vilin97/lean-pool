@@ -14,7 +14,7 @@ cell. The normalized bound is uniform in their number. It therefore bounds
 the Morrey seminorm of any measurable representative of the slice operator.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -25,6 +25,7 @@ namespace CKN.Core.Step4
 
 /-- The explicit constant in the parabolic Morrey bound for one spatial
 Riesz component. -/
+@[expose]
 def pressureRieszMorreyConstant (κ : ℝ) : ℝ≥0∞ :=
   ENNReal.ofReal (czGradientComponentConstant rieszSecondWeakTypeConstant 1) *
       (2 : ℝ≥0∞) ^ (25 / 6 - 5 / κ) +

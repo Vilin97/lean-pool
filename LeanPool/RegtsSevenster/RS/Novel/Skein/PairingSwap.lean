@@ -21,7 +21,7 @@ holonomy programme — repair words act on boundary pairings through
 transposition conjugations.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

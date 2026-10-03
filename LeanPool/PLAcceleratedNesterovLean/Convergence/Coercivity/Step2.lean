@@ -33,7 +33,7 @@ Finally:
 Also: Ψ(x_n) ≤ C_Ψ · L_n follows from dist(x_n, M) ≤ √η‖v_n‖ + ‖e_n‖.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

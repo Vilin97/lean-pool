@@ -17,7 +17,7 @@ We define the canonical map `NatOrdinal → Surreal` in terms of the map `NatOrd
 
 open IGame Set Surreal
 
-@[expose] public noncomputable section
+public noncomputable section
 
 /-- Ordinal games are numeric. -/
 instance IGame.Numeric.toIGame (o : NatOrdinal) : Numeric o.toIGame := by
@@ -28,7 +28,7 @@ termination_by o
 namespace NatOrdinal
 
 /-- Converts an ordinal into the corresponding surreal. -/
-def toSurreal : NatOrdinal ↪o Surreal :=
+@[expose] def toSurreal : NatOrdinal ↪o Surreal :=
   .ofStrictMono (fun o ↦ .mk o.toIGame) fun _ _ h ↦ toIGame.strictMono h
 
 instance : Coe NatOrdinal Surreal where
@@ -61,7 +61,7 @@ theorem toSurreal_mul (a b : NatOrdinal) : (a * b).toSurreal = a.toSurreal * b.t
   mk_eq (toIGame_mul a b)
 
 /-- `NatOrdinal.toGame` as an `OrderRingHom`. -/
-@[simps]
+@[expose, simps]
 def toSurrealRingHom : NatOrdinal →+*o Surreal where
   toFun := toSurreal
   map_zero' := toSurreal_zero

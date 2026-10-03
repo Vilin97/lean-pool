@@ -21,4 +21,4 @@ This module re-exports the base state, gate, tensor, measurement, and cost
 interfaces. Named components are re-exported by `LeanPool.LeanQuantumAlg.Core.Components`.
 -/
 
-@[expose] public section
+public section

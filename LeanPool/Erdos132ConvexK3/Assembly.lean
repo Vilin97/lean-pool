@@ -23,7 +23,7 @@ final section separately records the stronger global reduction still needed
 to obtain the source-facing convex theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -91,7 +91,7 @@ def ExceptionalCoverWord.row : ExceptionalCoverWord → ExceptionalRow
   | .row5_BB_DD => .row5
 
 /-- Exact destination column of the draft Section 7 table. -/
-def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
+@[expose] def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
   | .row1_B32 | .row4_D32 => .terminalCage
   | .row1_B31 | .row2_BA | .row4_D31 | .row4_DC => .antiSaturation
   | .row4_DD => .fourEdgeCage
@@ -99,7 +99,7 @@ def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
       .row5_BB_DD => .fullTwoRung
 
 /-- Degree bound supplied by each of the four local closure routes. -/
-def WordClosureRoute.degreeBound : WordClosureRoute → ℕ
+@[expose] def WordClosureRoute.degreeBound : WordClosureRoute → ℕ
   | .antiSaturation => 5
   | .fullTwoRung | .terminalCage | .fourEdgeCage => 6
 
@@ -152,7 +152,7 @@ theorem full_two_rung_shared_tip_degree_le_six
   · exact (hLow hLow').trans (by omega)
 
 /-- The four shared geometric realization predicates, indexed by closure route. -/
-def WordClosureRealization
+@[expose] def WordClosureRealization
     {n : ℕ} (route : WordClosureRoute)
     (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop := match route with
   | .terminalCage => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
@@ -161,7 +161,7 @@ def WordClosureRealization
   | .fourEdgeCage => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
 
 /-- A word is realized when the geometric predicate selected by its route is inhabited. -/
-def WordRealization
+@[expose] def WordRealization
     {n : ℕ} (word : ExceptionalCoverWord)
     (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop :=
   WordClosureRealization word.route P d₁ d₂ d₃
@@ -225,7 +225,7 @@ theorem concrete_word_closures
     simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
 
 /-- Direct short-arc closure or one of the thirteen exceptional words. -/
-def HasThirteenWordReduction
+@[expose] def HasThirteenWordReduction
     {n : ℕ} (degree : Fin n → ℕ) (Realizes : ExceptionalCoverWord → Prop) : Prop :=
   (∃ v, degree v ≤ 6) ∨ ∃ w, Realizes w
 
@@ -249,7 +249,7 @@ theorem thirteen_word_assembly
 
 /-- The proof-producing reduction package still required for an arbitrary
 convex configuration. -/
-def HasConvexK3DraftReduction
+@[expose] def HasConvexK3DraftReduction
     {n : ℕ} [_nonzero : NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop :=
   ∃ Realizes : ExceptionalCoverWord → Prop,
     HasThirteenWordReduction (vertexDegree P d₁ d₂ d₃) Realizes ∧
@@ -273,7 +273,7 @@ def ConvexTopThreeDegreeSixStatement : Prop :=
 
 /-- Bridge from the two public geometric hypotheses to the complete draft
 reduction package. -/
-def ConvexTopThreeDraftReductionComplete : Prop :=
+@[expose] def ConvexTopThreeDraftReductionComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
       HasConvexK3DraftReduction P d₁ d₂ d₃

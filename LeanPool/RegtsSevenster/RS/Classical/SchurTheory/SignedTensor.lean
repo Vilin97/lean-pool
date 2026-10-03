@@ -18,7 +18,7 @@ signed Frobenius sum expressing the twisted trace in terms of
 Schur values at the negated sequence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

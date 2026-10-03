@@ -33,7 +33,7 @@ positive-definite smooth metric is an `H^s`-limit of realizable ones.
 * `realizable_approx_all_s` — Theorem A for every `s` (the form used by `nashTorus`).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open MeasureTheory Real Matrix
@@ -490,6 +490,7 @@ lemma ftRn_cplx_zero {F : (Fin n → ℝ) → ℝ} :
 /-! ## Realization of `f · B` -/
 
 /-- Entrywise Sobolev discrepancy between the Gram of `U` and a target matrix function. -/
+@[expose]
 def gramDefect (n : ℕ) {N : ℕ} (U : (Fin n → ℝ) → (Fin N → ℝ))
     (G : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) :
         NashEmbedding.Sobolev.TrigPolyDual n :=

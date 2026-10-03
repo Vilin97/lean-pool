@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -71,6 +71,7 @@ namespace Construction
 variable {k : ℕ} {p : Blueprint k} (c : Construction V p) (v : Fin k → V)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def CSeq (s : V) :
     Prop :=
   Seq s ∧ ⟪0, c.zero v⟫ ∈ s ∧ ∀ i < lh s - 1, ∀ z, ⟪i, z⟫ ∈ s → ⟪i + 1, c.succ v i z⟫ ∈ s
@@ -194,6 +195,7 @@ lemma cSeq_result_existsUnique (l : V) : ∃! z, ∃ s, c.CSeq v s ∧ l + 1 = l
     exact Eq.symm <| Hs.unique Hs' (by simp [←h, ←h']) (show l < lh s from by simp [←h]) hz hz')
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def result (u : V) : V := Classical.choose! (c.cSeq_result_existsUnique v u)
 
 lemma result_spec (u : V) : ∃ s, c.CSeq v s ∧ u + 1 = lh s ∧ ⟪u, c.result v u⟫ ∈ s :=

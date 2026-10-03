@@ -29,7 +29,7 @@ that identifies `L(W − D)` with `Ω(D)`.
 * `FunctionField.duality`
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -133,10 +133,10 @@ namespace WeilDifferential
 variable {k K}
 
 /-- A Weil differential is nonzero. -/
-def IsNonzero (ω : WeilDifferential k K) : Prop := ω.toFun ≠ 0
+@[expose] def IsNonzero (ω : WeilDifferential k K) : Prop := ω.toFun ≠ 0
 
 /-- The space `Ω(D)` of k-linear functionals vanishing on `A(D)+diag(K)`. -/
-def differentialSpace (D : DivisorA k K) : Submodule k (AdeleSpace k K →ₗ[k] k) where
+@[expose] def differentialSpace (D : DivisorA k K) : Submodule k (AdeleSpace k K →ₗ[k] k) where
   carrier := {φ | ∀ a ∈ adeleFilt k K D + diagonalSubmodule k K, φ a = 0}
   zero_mem' := by simp
   add_mem' {f g} hf hg := by
@@ -436,8 +436,7 @@ omit [IsFullConstantField k K] in
 @[simp]
 theorem smulIntoOmega_coe (ω : WeilDifferential k K) {D₀ : DivisorA k K}
     (h : D₀ ∈ vanishingDivisors ω) (E : DivisorA k K) (f : RRspace k K E) :
-    (smulIntoOmega ω h E f : AdeleSpace k K →ₗ[k] k) = (smulWeil (f : K) ω).toFun :=
-  rfl
+    (smulIntoOmega ω h E f : AdeleSpace k K →ₗ[k] k) = (smulWeil (f : K) ω).toFun := by rfl
 
 omit [IsFullConstantField k K] in
 theorem smulIntoOmega_injective (ω : WeilDifferential k K) {D₀ : DivisorA k K}
@@ -703,7 +702,7 @@ theorem divOmega_smul (x : Kˣ) (ω : WeilDifferential k K) (hω : IsNonzero ω)
 end WeilDifferential
 
 /-- A divisor is canonical when it is the divisor of a nonzero Weil differential. -/
-def IsCanonical (W : DivisorA k K) : Prop :=
+@[expose] def IsCanonical (W : DivisorA k K) : Prop :=
   ∃ (ω : WeilDifferential k K) (hω : WeilDifferential.IsNonzero ω),
     WeilDifferential.divOmega ω hω = W
 

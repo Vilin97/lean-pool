@@ -49,7 +49,7 @@ And its corollary for functions that depend on all inputs:
         N ≤ k * c.size
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

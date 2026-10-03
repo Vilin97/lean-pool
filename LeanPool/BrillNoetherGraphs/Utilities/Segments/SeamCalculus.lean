@@ -98,7 +98,7 @@ What the library **lacks**, and how it is handled here:
 below is proved outright from the library's API.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -289,14 +289,17 @@ lemma winnable_sub_one_chip_iff_of_qReduced {q : H.V} {D : CFDiv H}
 /-! ## Scripts, twists and displacements -/
 
 /-- The `m`-th seam twist `C + m • α` of the base divisor `C`. -/
+@[expose]
 def seamTwist (C : CFDiv H) (x y : H.V) (m : ℤ) : CFDiv H :=
   C + m • seamDivisor x y
 
 /-- The displacement `t(f) = f x - f y` of a firing script. -/
+@[expose]
 def displacement (x y : H.V) (f : firingScript H) : ℤ := f x - f y
 
 /-- `t` is a displacement of the `m`-twist: some script puts the `m`-twist into
 effective position with displacement `t`. -/
+@[expose]
 def IsDisplacement (C : CFDiv H) (x y : H.V) (m t : ℤ) : Prop :=
   ∃ f : firingScript H,
     effective (seamTwist C x y m + prin H f) ∧ displacement x y f = t

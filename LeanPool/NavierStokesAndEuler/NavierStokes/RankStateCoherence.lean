@@ -18,7 +18,7 @@ data and the shared normalized inverse are transported before applying the
 actual variable-gauge stream and pressure constructors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -258,6 +258,7 @@ theorem rankIncrementState_on (axial : S × PressureStream.Plane) (axialr : T ×
 end ActualStep
 
 /-- The actual state before the rank step's pressure is reconstructed. -/
+@[expose]
 noncomputable def rankAddedState (g : VariableGaugeMean.GaugeData S) (r : CorrectionState.RankData
     S)
     (axial : S × PressureStream.Plane) (C : CorrectionState.Context (PressureStream.Lift S))

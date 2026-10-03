@@ -39,7 +39,7 @@ treated in `AddOns.Compact` via the singular value decomposition.
   finite rank.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -57,6 +57,7 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 
 /-- An operator `S : X →L[𝕜] Y` is **approximable** if its approximation
 numbers tend to zero. -/
+@[expose]
 def IsApproximable (S : X →L[𝕜] Y) : Prop :=
   Tendsto (SNumbers.approximationNumber S) atTop (𝓝 0)
 

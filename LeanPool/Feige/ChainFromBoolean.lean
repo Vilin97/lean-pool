@@ -18,13 +18,13 @@ extends the resulting finite sequence by zero.  The extension is a
 immediately.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 
 /-- The two-point statistic along the maximal chain encoded by `σ`, extended
 by zero from the sentinel index `m + 1` onwards. -/
-noncomputable def booleanChainK {m : ℕ} (γ β : Fin m → ℝ)
+@[expose] noncomputable def booleanChainK {m : ℕ} (γ β : Fin m → ℝ)
     (σ : Equiv.Perm (Fin m)) (j : ℕ) : ℝ :=
   if hj : j < m + 1 then
     twoPointKFinset γ β (chainState σ ⟨j, hj⟩)
@@ -83,7 +83,7 @@ theorem booleanChainK_initial {m : ℕ} (γ β : Fin m → ℝ)
   exact twoPointK_empty γ β hγ
 
 /-- The calibrated sequence carried by a maximal Boolean-lattice chain. -/
-noncomputable def booleanCalibratedChain {m : ℕ} (γ β : Fin m → ℝ)
+@[expose] noncomputable def booleanCalibratedChain {m : ℕ} (γ β : Fin m → ℝ)
     (σ : Equiv.Perm (Fin m)) (hγ : ∀ i, 0 ≤ γ i)
     (hβ : ∀ i, 0 ≤ β i) : CalibratedChain m where
   K := booleanChainK γ β σ

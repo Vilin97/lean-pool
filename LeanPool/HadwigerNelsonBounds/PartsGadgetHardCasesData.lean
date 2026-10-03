@@ -21,12 +21,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated aggregation and routing for the hard normalized cases. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- All independently checked hard-case certificates. -/
-def partsGadgetHardCertificates (index : Fin 31) : PartsGadgetCertificate :=
+@[expose] def partsGadgetHardCertificates (index : Fin 31) : PartsGadgetCertificate :=
   match index.val with
   | 0 => partsGadgetHardCertificate0
   | 1 => partsGadgetHardCertificate1
@@ -62,7 +62,7 @@ def partsGadgetHardCertificates (index : Fin 31) : PartsGadgetCertificate :=
   | _ => partsGadgetHardCertificate0
 
 /-- Routing nodes covering every unblocked hard normalized coloring. -/
-def partsGadgetHardCaseNodes : Array (PartsGadgetCaseNode 31) := #[
+@[expose] def partsGadgetHardCaseNodes : Array (PartsGadgetCaseNode 31) := #[
   PartsGadgetCaseNode.branch 19 ![0, 0, 2, 29],
   PartsGadgetCaseNode.branch 12 ![0, 3, 0, 4],
   PartsGadgetCaseNode.leaf 0,
@@ -115,7 +115,7 @@ def partsGadgetHardCaseNodes : Array (PartsGadgetCaseNode 31) := #[
 ]
 
 /-- The complete hard-case routing tree. -/
-def partsGadgetHardCaseTree : PartsGadgetCaseTree 31 := {
+@[expose] def partsGadgetHardCaseTree : PartsGadgetCaseTree 31 := {
   roots := [⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩]
   nodeCount := 49
   nodes := partsGadgetHardCaseNodes

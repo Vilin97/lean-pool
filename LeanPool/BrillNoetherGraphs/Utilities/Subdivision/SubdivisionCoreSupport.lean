@@ -25,7 +25,7 @@ least one.  The subdivision theorems specialize it to the transparent divisor
 which is zero on every edge-interior vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.SubdivisionCoreSupport
 open Utilities.Certificate
@@ -56,6 +56,7 @@ variable {n p : ℕ}
 
 /-- The divisor which places `weight vertex` chips at each embedded core
 vertex and no chips at subdivision-interior vertices. -/
+@[expose]
 def coreDivisor (spec : SubdivisionGraph.Spec n p) (weight : Fin n → ℤ) :
     CFDiv spec.graph
   | Sum.inl vertex => weight vertex

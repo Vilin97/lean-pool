@@ -20,7 +20,7 @@ coordinate conventions: every self-dual object of SuperVect *is*
 a standard orthosymplectic space, form and all.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

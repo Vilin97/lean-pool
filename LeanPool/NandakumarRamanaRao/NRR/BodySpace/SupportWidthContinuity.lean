@@ -47,7 +47,7 @@ follow from the core reusable lemma applied to the continuous bridge
 `BodySpace.continuous_toGeometryConvexBody`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology
 
@@ -132,7 +132,7 @@ variable {K : Geometry.ConvexBody Plane}
 /-- **Support function of a convex subbody.** The supremum of `⟪x, u⟫` over the (compact, nonempty)
 carrier of `C`. This is the same formula as `Geometry.ConvexBody.supportFunction`, valid for a
 possibly-degenerate carrier; it agrees with the geometry support function on solid subbodies. -/
-noncomputable def supportFunction (C : ConvexSubbody K) (u : Plane) : ℝ :=
+@[expose] noncomputable def supportFunction (C : ConvexSubbody K) (u : Plane) : ℝ :=
   sSup ((fun x : Plane => (inner ℝ x u : ℝ)) '' (C.body : Set Plane))
 
 /-- Unfolding lemma for the subbody support function. -/
@@ -173,7 +173,7 @@ theorem supportFunction_eq_geometry (C : ConvexSubbody K) (G : Geometry.ConvexBo
   rw [supportFunction_eq_sSup, Geometry.ConvexBody.supportFunction_eq_sSup, h]
 
 /-- **Width function of a convex subbody**: `w_C(u) = h_C(u) + h_C(-u)`. -/
-noncomputable def widthFunction (C : ConvexSubbody K) (u : Plane) : ℝ :=
+@[expose] noncomputable def widthFunction (C : ConvexSubbody K) (u : Plane) : ℝ :=
   C.supportFunction u + C.supportFunction (-u)
 
 /-- Unfolding lemma for the subbody width function. -/

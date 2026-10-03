@@ -16,7 +16,7 @@ point also lies in a local set `C`, the attachment's three-diameter enlargement 
 holes recorded as touching `C`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

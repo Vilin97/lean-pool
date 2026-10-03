@@ -19,7 +19,7 @@ The five lens separators, together with the direct outside-orbit exclusions, rul
 simultaneous sibling failure except the two matched endpoint coincidences.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

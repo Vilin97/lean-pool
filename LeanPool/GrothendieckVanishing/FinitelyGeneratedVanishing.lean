@@ -36,7 +36,7 @@ The `isFlasque_filtered_colimit` and `sheafHPreservesFilteredColimits` building 
 live in the `PresheafFilteredColimit` modules.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

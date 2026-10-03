@@ -18,7 +18,7 @@ public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 

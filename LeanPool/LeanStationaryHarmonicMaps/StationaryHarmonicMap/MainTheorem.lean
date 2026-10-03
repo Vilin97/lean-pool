@@ -16,7 +16,7 @@ cutoff, and boundary routes are internal scaffolding hidden behind the
 stationary Sobolev map package.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

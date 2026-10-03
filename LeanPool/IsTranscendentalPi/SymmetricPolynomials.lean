@@ -22,7 +22,7 @@ Multisets `{b₀, …, bₙ₋₁}` attached to maps `b : Fin n → α` and symm
 machinery feeding the algebraic estimates of Niven's proof.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Multiset
@@ -31,7 +31,7 @@ open scoped Polynomial
 open scoped BigOperators
 
 /-- The multiset `{b₀, …, bₙ₋₁}` attached to `b : Fin n → α`. -/
-def valuesFin {α : Type*} {n : ℕ} (b : Fin n → α) : Multiset α :=
+@[expose] def valuesFin {α : Type*} {n : ℕ} (b : Fin n → α) : Multiset α :=
   (Finset.univ : Finset (Fin n)).val.map b
 
 /-- Every multiset can be indexed by a map `a : Fin n → α`. -/

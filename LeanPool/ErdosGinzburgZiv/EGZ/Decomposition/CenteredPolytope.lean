@@ -17,7 +17,7 @@ integer transitions of nonzero local lifts are centered without any
 additional coordinate bound or large-modulus hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 

@@ -32,19 +32,19 @@ import Mathlib.Tactic.Ring.Basic
 * the derivative of `V`: `V'(t) = P(√t)/√t` with `P(y) = π + arctan(1/y) - 6 arctan(α/y)`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set Finset
 
 namespace Zeta5Irrational
 
 /-- The closed form (A.1) of the potential of the arcsine measure on `[a, b]`. -/
-noncomputable def Uω (a b t : ℝ) : ℝ :=
+@[expose] noncomputable def Uω (a b t : ℝ) : ℝ :=
   if a ≤ t ∧ t ≤ b then Real.log ((b - a) / 4)
   else Real.log ((|t - (a + b) / 2| + Real.sqrt ((t - a) * (t - b))) / 2)
 
 /-- The potential of `ρ`. -/
-noncomputable def Uρ (t : ℝ) : ℝ :=
+@[expose] noncomputable def Uρ (t : ℝ) : ℝ :=
   ∑ j ∈ Icc 1 16, cρ j * Uω (aρ j) (bρ j) t
 
 lemma Uω_of_mem {a b t : ℝ} (h1 : a ≤ t) (h2 : t ≤ b) : Uω a b t = Real.log ((b - a) / 4) := by
@@ -103,11 +103,11 @@ lemma Uω_antitoneOn_Iic {a b : ℝ} (hab : a < b) : AntitoneOn (Uω a b) (Iic a
 /-! ### The derivative of `V` -/
 
 /-- `P(y) = π + arctan (1/y) - 6 arctan (α/y)`. -/
-noncomputable def Pfun (y : ℝ) : ℝ :=
+@[expose] noncomputable def Pfun (y : ℝ) : ℝ :=
   Real.pi + Real.arctan (1 / y) - 6 * Real.arctan ((3 / 40) / y)
 
 /-- The closed form of `V` as a function of `y = √t`: `Φ(y) = V(y²)`. -/
-noncomputable def Φ (y : ℝ) : ℝ :=
+@[expose] noncomputable def Φ (y : ℝ) : ℝ :=
   Real.log (1 + y ^ 2) - 6 * (3 / 40) * Real.log (y ^ 2 + (3 / 40) ^ 2) - 2 + 12 * (3 / 40) +
     2 * y * Pfun y
 

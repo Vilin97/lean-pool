@@ -16,7 +16,7 @@ This module supplies the product-density normalization needed to turn the
 normalized-exponential integral identity into a probability-law statement.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory
@@ -43,7 +43,7 @@ theorem integrable_pi_unitExponentialDensity :
   exact Integrable.fintype_prod fun _ ↦ integrable_unitExponentialDensity
 
 /-- Real-valued joint density on `ℝ × (Fin n → ℝ)`. -/
-noncomputable def jointUnitExponentialDensity
+@[expose] noncomputable def jointUnitExponentialDensity
     (e : ℝ × (Fin n → ℝ)) : ℝ :=
   unitExponentialDensity e.1 *
     ∏ i, unitExponentialDensity (e.2 i)

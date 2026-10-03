@@ -49,7 +49,7 @@ gives a transverse period. Otherwise the greatest disagreeing row positions
 an agreeing strip immediately above a disagreement.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 

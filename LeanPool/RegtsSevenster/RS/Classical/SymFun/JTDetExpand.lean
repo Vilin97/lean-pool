@@ -16,7 +16,7 @@ permutations of complete homogeneous products, with terms
 containing a negative degree vanishing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

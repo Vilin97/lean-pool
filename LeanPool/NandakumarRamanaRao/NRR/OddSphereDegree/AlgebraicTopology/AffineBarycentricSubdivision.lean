@@ -34,7 +34,7 @@ This deliberately does **not** claim the chain-level boundary identity or the
 subdivision chain homotopy. Those are separate later files.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset
@@ -48,7 +48,7 @@ abbrev Delta (n : ℕ) := ↑(SphereOddDegree.finiteSimplex ℝ (Fin (n + 1)))
 
 /-- The `k`-prefix vertex map associated to a permutation of the vertices of
 `Δ^n`. It sends `0,...,k` into `Fin (n+1)` by the permuted order `π`. -/
-def prefixVertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) (k : Fin (n + 1)) :
+@[expose] def prefixVertex (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) (k : Fin (n + 1)) :
     Fin (k.val + 1) → Fin (n + 1) :=
   fun i => π ⟨i.val, by
     have hi : i.val < k.val + 1 := i.isLt
@@ -60,7 +60,7 @@ viewed as a point of the ambient simplex `Δ^n`. This uses Mathlib's existing
 `SphereOddDegree.FiniteSimplex.barycenter` and `SphereOddDegree.FiniteSimplex.map`, avoiding a hand
 proof that the
 coordinates are nonnegative and have total mass `1`. -/
-noncomputable def prefixBarycenter (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
+@[expose] noncomputable def prefixBarycenter (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (k : Fin (n + 1)) : Delta n :=
   SphereOddDegree.FiniteSimplex.map (S := ℝ) (prefixVertex n π k)
     (SphereOddDegree.FiniteSimplex.barycenter (X := Fin (k.val + 1)) (𝕜 := ℝ))
@@ -78,7 +78,7 @@ theorem prefixBarycenter_def (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
 /-- The coordinate function of the affine map attached to the permutation `π`.
 It is the convex combination of the prefix barycenters with weights given by
 `x`. -/
-noncomputable def affineSubdivMapFun (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
+@[expose] noncomputable def affineSubdivMapFun (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
     (x : Delta n) : Fin (n + 1) → ℝ :=
   fun j => ∑ k : Fin (n + 1), (x k) * (prefixBarycenter n π k j)
 
@@ -106,6 +106,7 @@ theorem affineSubdivMapFun_sum_eq_one (n : ℕ) (π : Equiv.Perm (Fin (n + 1)))
 
 /-- The affine self-map of `Δ^n` associated to a permutation `π`; this is the
 geometric simplex appearing as one signed summand in barycentric subdivision. -/
+@[expose]
 noncomputable def affineSubdivMap (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
     Delta n → Delta n :=
   fun x => ⟨affineSubdivMapFun n π x,

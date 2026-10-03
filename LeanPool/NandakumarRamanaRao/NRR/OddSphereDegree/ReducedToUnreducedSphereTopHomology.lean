@@ -69,7 +69,7 @@ Mathlib. Consequently `SphereSuspensionTower.step` is **not** fillable from this
 choice`, `Quot.sound`).
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Limits AlgebraicTopology
 

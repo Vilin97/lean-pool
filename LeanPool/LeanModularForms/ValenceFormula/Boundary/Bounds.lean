@@ -23,7 +23,7 @@ fundamental domain boundary.
 * `fdBoundary_continuous` — continuity of fixed-height boundary
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

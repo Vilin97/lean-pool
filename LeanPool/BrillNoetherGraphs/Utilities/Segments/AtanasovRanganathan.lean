@@ -20,7 +20,7 @@ vertices outside the support.  Their seven pictured configurations are local
 ways to establish precisely the remaining `Reaches` hypotheses below.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan
 

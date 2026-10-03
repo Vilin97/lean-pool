@@ -16,7 +16,7 @@ The velocity has one component, depending only on the transverse coordinate
 and time. Its spatial gradient has only the entry in row zero, column one.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open CKN.Foundation.Parabolic
@@ -25,18 +25,22 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- A decaying sinusoidal shear velocity. -/
+@[expose]
 noncomputable def shearFlow (z : ParabolicPoint) : Vec3 :=
   fun i => if i = 0 then Real.exp (-z.2) * Real.sin (z.1 1) else 0
 
 /-- The explicit spatial gradient of the shear velocity. -/
+@[expose]
 noncomputable def shearFlowGrad (z : ParabolicPoint) : Fin 3 → Vec3 :=
   fun i j => if i = 0 ∧ j = 1 then Real.exp (-z.2) * Real.cos (z.1 1) else 0
 
 /-- The scalar amplitude of the velocity. -/
+@[expose]
 noncomputable def shearAmplitude (z : Vec3 × ℝ) : ℝ :=
   Real.exp (-z.2) * Real.sin (z.1 1)
 
 /-- The transverse derivative of the amplitude. -/
+@[expose]
 noncomputable def shearSlope (z : Vec3 × ℝ) : ℝ :=
   Real.exp (-z.2) * Real.cos (z.1 1)
 

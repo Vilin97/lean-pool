@@ -23,7 +23,7 @@ The safe average stays finite at the boundary, while the aligned average tends t
 infinity.  Hence the two orientation phases separate at an admissible eccentricity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

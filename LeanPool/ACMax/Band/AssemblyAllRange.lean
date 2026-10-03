@@ -19,7 +19,7 @@ This assembly replaces the split between the finite exact-Moore range and the
 polynomial large-order range by one exact non-backtracking certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

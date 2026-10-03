@@ -41,7 +41,7 @@ one-line consequence is written out above so a reader can check it rather than t
 constraints say what the summands can be, not that every element decomposes into them.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

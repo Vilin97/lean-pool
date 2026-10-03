@@ -18,7 +18,7 @@ is not complete, and therefore `F(A_G) = lambda1 G ^ 2 + lambda2 G ^ 2`. The
 largest eigenvalue is nonnegative for every finite graph, complete or not.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

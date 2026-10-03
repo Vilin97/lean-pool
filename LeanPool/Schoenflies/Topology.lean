@@ -32,7 +32,7 @@ This module collects the few that are not stated in the form the development use
   form the development pastes with.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

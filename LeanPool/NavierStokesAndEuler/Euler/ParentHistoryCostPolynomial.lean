@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryParentCost
 /-! One fixed polynomial controls the complete history sensitivity
 envelope for all parent label constants and reciprocal time bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,6 +25,7 @@ open EulerPacketParentLabelBounds EulerPacketParentMeanCoercivity
   EulerTransverseHistoryBounds EulerTransverseEndpointDifference EulerPolynomialCost
 
 /-- Label history envelope, constructed using `parentDifferenceEnvelope`. -/
+@[expose]
 def labelHistoryEnvelope (K Ti : ℝ) : ℝ :=
   parentDifferenceEnvelope Ti (frameAmplitude K) (gradientAmplitude K)
     (27*(frameAmplitude K)^2*gradientAmplitude K) (coefficientRadius K)

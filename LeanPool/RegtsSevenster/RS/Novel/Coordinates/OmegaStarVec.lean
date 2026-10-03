@@ -19,7 +19,7 @@ times the cap functional evaluated on the sorted assembled
 vector — arc (b) of the extraction, complete.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

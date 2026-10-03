@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Tree
 
 /-! # Initialization -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -34,6 +34,7 @@ abbrev Assignment (ι : Type*) (m : ℕ) := Fin m → ι
 abbrev DyadicAssignment (L m : ℕ) := Assignment (DyadicNode L) m
 
 /-- Number of labels assigned to one location. -/
+@[expose]
 def assignmentCount {ι : Type*} [DecidableEq ι] {m : ℕ}
     (ω : Assignment ι m) (i : ι) : ℕ :=
   (Finset.univ.filter fun j => ω j = i).card
@@ -48,6 +49,7 @@ theorem sum_assignmentCount {ι : Type*} [Fintype ι] [DecidableEq ι]
   simp
 
 /-- The fixed-total inventory state formed from assignment fiber cardinalities. -/
+@[expose]
 def assignmentState {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ}
     (ω : Assignment ι m) : InventoryState ι m :=
   ⟨assignmentCount ω, sum_assignmentCount ω⟩
@@ -59,6 +61,7 @@ theorem assignmentState_count {ι : Type*} [Fintype ι]
   rfl
 
 /-- Postcompose every assignment with a location permutation. -/
+@[expose]
 def assignmentPerm {ι : Type*} {m : ℕ} (e : Equiv.Perm ι) :
     Equiv.Perm (Assignment ι m) :=
   Equiv.arrowCongr (Equiv.refl (Fin m)) e
@@ -70,6 +73,7 @@ theorem assignmentPerm_apply {ι : Type*} {m : ℕ}
   rfl
 
 /-- Push a fixed-total count vector forward along a location permutation. -/
+@[expose]
 def inventoryStatePerm {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) where
   toFun x :=
@@ -144,6 +148,7 @@ theorem uniform_map_lawInvariant
 
 /-- The refreshed inventory law: choose every labeled item's leaf uniformly
 and independently, then forget the labels and retain only fiber counts. -/
+@[expose]
 def refreshedLaw (L m : ℕ) :
     FiniteLaw (InventoryState (DyadicNode L) m) :=
   (FiniteLaw.uniform : FiniteLaw (DyadicAssignment L m)).map assignmentState

@@ -13,7 +13,7 @@ public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 -- dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/PrimeWeightedAbel.lean
 -- (namespace Li2 -> Zeta32.ArithSum, imports renamed; proof and style updated for Lean Pool)
 
-@[expose] public section
+public section
 
 open Finset Filter Topology MeasureTheory Set Real Asymptotics
 namespace Zeta32.ArithSum.PrimeSums

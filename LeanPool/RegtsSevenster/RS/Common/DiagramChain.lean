@@ -17,7 +17,7 @@ cell in `mu.cells \ lam.cells` that is minimal for the sum of
 coordinates, then insert it into `lam`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

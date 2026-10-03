@@ -37,7 +37,7 @@ BHP, Pandey, Mertens, or abc. This is the four-range analogue of
 range and the high range.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

@@ -21,4 +21,4 @@ Tags: number-theory, aperiodic-order, cut-and-project, quasicrystals
 MSC: 52C23, 11K06
 -/
 
-@[expose] public section
+public section

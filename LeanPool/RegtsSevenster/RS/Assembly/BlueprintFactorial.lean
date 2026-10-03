@@ -29,7 +29,7 @@ trace-zeta mechanisms. Schur theory used by Deligne and by the
 colour bounds is audited separately.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

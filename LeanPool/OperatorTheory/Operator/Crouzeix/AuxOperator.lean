@@ -50,7 +50,7 @@ theorem from which those identities follow directly.
   the packaged bounded auxiliary-operator construction.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set spectrum
 open scoped InnerProductSpace Real Interval
@@ -108,6 +108,7 @@ theorem crouzeixAuxiliaryIntegrand_contourIntegrable [CompleteSpace E] (A : E �
 
 /-- The normalized Crouzeix--Palencia auxiliary operator associated to a
 scalar boundary datum `h` on a smooth Jordan domain. -/
+@[expose]
 noncomputable def crouzeixAuxiliaryOperator (A : E →L[ℂ] E)
     (Omega : SmoothJordanDomain) (h : ℂ → ℂ) : E →L[ℂ] E :=
   (2 * (Real.pi : ℂ) * I)⁻¹ •
@@ -162,6 +163,7 @@ theorem exists_bound_crouzeixPolynomialAuxiliaryIntegrand [CompleteSpace E]
 
 /-- The normalized auxiliary operator associated to the conjugate boundary
 values of a polynomial `p`. -/
+@[expose]
 noncomputable def crouzeixPolynomialAuxiliaryOperator (A : E →L[ℂ] E)
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ) : E →L[ℂ] E :=
   crouzeixAuxiliaryOperator A Omega (fun z => star (Polynomial.eval z p))

@@ -24,7 +24,7 @@ The two-adic case is imported from `HilbertSymbol/Two.lean`; for odd `p` the res
 `hilbertSym_padic_odd_mul_left`.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 

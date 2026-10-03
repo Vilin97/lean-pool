@@ -23,7 +23,7 @@ its target. Pick a split value `μ ∈ Ioo q 1`, let `m := b.symm μ` be the spl
 All the frontier conditions come from `IsImage.frontier` and `frontier_Iic`.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

@@ -34,7 +34,7 @@ module's scope, exactly as its symmetric counterpart lives in
 `PowAct.lean` rather than in `SymAlg.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -56,6 +56,7 @@ section Antisymmetriser
 
 /-- **The antisymmetriser** `(1/n!) • ∑ σ, sign σ • σ` of the
 symmetric-group algebra. -/
+@[expose]
 noncomputable def antisymmetriser (n : ℕ) : SymGroupAlgebra n :=
   ((n.factorial : ℂ))⁻¹ •
     ∑ σ : Equiv.Perm (Fin n),
@@ -134,6 +135,7 @@ end Antisymmetriser
 section AltPow
 
 /-- The antisymmetriser acting on the module power. -/
+@[expose]
 noncomputable def altPowIdem
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -159,6 +161,7 @@ the module power, with section `altPowσ`; this presentation is
 chosen because consumers build morphisms out of the alternating
 power by descent along `altPowπ` and morphisms into it through the
 section. -/
+@[expose]
 noncomputable def altPow
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]

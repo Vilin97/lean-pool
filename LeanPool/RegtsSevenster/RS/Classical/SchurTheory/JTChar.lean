@@ -22,7 +22,7 @@ cycle sum.  The two cycle-type transport facts enter as explicit
 hypotheses, discharged in `ColourCycleSum.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ private theorem list_sum_eq_fin_sum (l : List ℕ) :
   rw [List.sum_ofFn]
 
 /-- The signed Jacobi–Trudi degree of row `i` under `σ`. -/
+@[expose]
 def jtSigned (μ : YoungDiagram)
     (σ : Equiv.Perm (Fin μ.rowLens.length))
     (i : Fin μ.rowLens.length) : ℤ :=
@@ -56,6 +57,7 @@ theorem sum_jtSigned (μ : YoungDiagram)
 
 /-- The shifted composition attached to a Leibniz term, when
 nonnegative. -/
+@[expose]
 def jtComp (μ : YoungDiagram)
     (σ : Equiv.Perm (Fin μ.rowLens.length))
     (i : Fin μ.rowLens.length) : ℕ :=
@@ -77,6 +79,7 @@ theorem sum_jtComp (μ : YoungDiagram)
 
 open scoped Classical in
 /-- **The Jacobi–Trudi virtual character** of shape `μ`. -/
+@[expose]
 noncomputable def jtChar (μ : YoungDiagram)
     (π : Equiv.Perm (Fin μ.card)) : ℂ :=
   ∑ σ : Equiv.Perm (Fin μ.rowLens.length),

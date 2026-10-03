@@ -21,7 +21,7 @@ the full overlap to a single component `W`: the extra hypothesis is that the rel
 interior endpoint is not in the image of the *full* overlap.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

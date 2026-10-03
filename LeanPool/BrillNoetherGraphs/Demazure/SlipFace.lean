@@ -18,7 +18,7 @@ Section 3, with some essential-set material from Section 7.1, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 /-- A slipface function of shift `χ`, i.e. a function $s : \mathbb{Z}^2 \to \mathbb{N}$
 satisfying conditions (S1) to (S3) from
@@ -329,6 +329,7 @@ properties. -/
 
 /-- The valley $\ell \mapsto s(a,\ell) + t(\ell,b)$ whose minimum computes the
 slipface product at `(a,b)`. -/
+@[expose]
 noncomputable def SlipValley (s t : SlipFace) (a b : ℤ) : Valley where
   f := fun l => s a l + t l b
   rises := by
@@ -356,6 +357,7 @@ In Lean, `starFunction s t a b` is this integer value, while `s ⋆ t` is the re
 `SlipFace`.
 See *Definition 3.7 (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 noncomputable def starFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
   fun a b => (SlipValley s t a b).min
 
@@ -623,6 +625,7 @@ lemma star_assoc (r s t : SlipFace) : r ⋆ s ⋆ t = r ⋆ (s ⋆ t) := by
     omega
 
 /-- The identity slipface, given by the positive part of `a - b`. -/
+@[expose]
 def id : SlipFace := {
     func := fun a b => max (a - b) 0,
     χ := 0,
@@ -777,6 +780,7 @@ $$
 $$
 See *Definition 3.7* (`defn:sfAlgebra`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+@[expose]
 noncomputable def leftResidualFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
   fun a b => s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b)
 
@@ -1277,6 +1281,7 @@ left/right duality to dual slipfaces.
 /-- A small set on which witnesses to the value $s \star t (a,b)$ always occur.
 *Lemma 3.13 (`lem:setL`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 1/5.* -/
+@[expose]
 def bendSet (t : SlipFace) (b : ℤ) : Set ℤ :=
   {l : ℤ | t (l-1) b = t l b ∧ t l b ≠ t (l+1) b}
 
@@ -1715,6 +1720,7 @@ $$
 $$
 
 In Lean this is written `sf.Δ a b`. -/
+@[expose]
 def Δ (a b : ℤ) : ℤ :=
   sf (a+1) b - sf a b - sf (a+1) (b+1) + sf a (b+1)
 
@@ -1827,11 +1833,13 @@ lemma sum_ab {a₁ a₂ b₁ b₂ : ℤ} (ha : a₁ ≤ a₂) (hb : b₁ ≤ b�
 /-- A slipface is submodular if $\Delta s(a,b) \ge 0$ for all `a, b`.
 *Definition 4.2 (`defn:submodular`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def submodular : Prop := ∀ a b : ℤ, sf.Δ a b ≥ 0
 
 /-- The set of boxes where the mixed difference `Δ` is equal to `1`,
 as defined in the proof of *Proposition 4.3* (`prop:imageASP`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def Γ : Set (ℤ × ℤ) := {(a, b) | sf.Δ a b = 1}
 
 lemma Γ_dual : ∀ (a b : ℤ), (a, b) ∈ sf.Γ ↔ (b, a) ∈ sf.dual.Γ := by
@@ -1849,6 +1857,7 @@ slipface.
   $\operatorname{Ess}(s) = \{ (a,b) \in \mathbb{Z}^2:
 s(a-1,b) < s(a,b) = s(a+1,b) \mbox{ and } s(a,b+1) < s(a,b) = s(a,b-1) \}.$
 -/
+@[expose]
 def ess : Set (ℤ × ℤ) := {(a, b) | sf (a-1) b < sf a b ∧ sf a b = sf (a+1) b
   ∧ sf a (b+1) < sf a b ∧ sf a b = sf a (b-1)}
 
@@ -1948,6 +1957,7 @@ private lemma ess_seeker (s t : SlipFace) (nle : ¬ s ≤ t) (M : ℕ) :
 
 /-- *Definition 7.3 (`defn:cliffordSF`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def isClifford : Prop := ∃ (M : ℕ),
   ∀ a b : ℤ, sf a b + sf.dual b a ≥ M → sf a b = 0 ∨ sf.dual b a = 0
 

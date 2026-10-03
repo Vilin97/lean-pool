@@ -25,7 +25,7 @@ budgets.  The imported Demazure library supplies the min-plus product formula
 but currently no theorem producing this bounded finite factorization.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -77,6 +77,7 @@ theorem transmissionExists_vertexWedge_opposite_star
 /-- A finite Demazure factorization whose two factors fit the two genus
 budgets.  This is the precise combinatorial input needed to glue full
 `TransmissionExistence` statements. -/
+@[expose]
 def BoundedDemazureFactorization (tau : AspPerm) (gG gH : ℤ) : Prop :=
   ∃ alpha beta : AspPerm,
     tau = alpha ⋆ beta ∧
@@ -89,6 +90,7 @@ def BoundedDemazureFactorization (tau : AspPerm) (gG gH : ℤ) : Prop :=
 wedge gluing.  It is isolated here because `Demazure.Submodular` proves the
 min-plus product formula but does not provide this length-budgeted
 factorization theorem. -/
+@[expose]
 def HasBoundedDemazureFactorizations (gG gH : ℤ) : Prop :=
   ∀ tau : AspPerm, FiniteTransmissionPerm tau ->
     ((invSet tau).ncard : ℤ) ≤ gG + gH ->

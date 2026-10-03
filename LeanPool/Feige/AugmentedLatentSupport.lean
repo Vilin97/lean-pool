@@ -12,7 +12,7 @@ public import LeanPool.Feige.AugmentedParameterization
 # Support of the augmented latent parameterization
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory ProbabilityTheory
 

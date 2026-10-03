@@ -21,7 +21,7 @@ uniqueness on the dense product path space and injectivity of dense restriction.
 unconditional law identity; conditional and strong Markov statements require additional work.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

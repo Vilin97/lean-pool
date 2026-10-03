@@ -16,7 +16,7 @@ explicit complementary quadratics; there is no search over circuits or
 Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -40,10 +40,12 @@ theorem eval_linearANF_supportAssignment
   simp [supportAssignment]
 
 /-- The first finite difference at zero in one coordinate direction. -/
+@[expose]
 def singlePolarMap (i : Fin 8) : ANF 8 →ₗ[F₂] F₂ :=
   sparseEvalMap ∅ + sparseEvalMap {i}
 
 /-- Extract the coefficient of one linear monomial. -/
+@[expose]
 def singleCoeffMap (i : Fin 8) : ANF 8 →ₗ[F₂] F₂ where
   toFun p := p.coeff ⟨{i}⟩
   map_add' p q := by simp
@@ -528,7 +530,7 @@ theorem booleanContraction_zero (q : TwoForm) :
   simp [booleanContraction]
 
 /-- The full sliced type-A product, including its affine and rational-target correction. -/
-def sliceTypeAFullModel
+@[expose] def sliceTypeAFullModel
     (leftConst : F₂) (leftLinear : LinearForm)
     (rightConst : F₂) (rightLinear : LinearForm)
     (correctionConst : F₂) (correctionLinear : LinearForm)
@@ -539,7 +541,7 @@ def sliceTypeAFullModel
       correctionCoeff x y
 
 /-- The full sliced type-B product, including its affine and rational-target correction. -/
-def sliceTypeBFullModel
+@[expose] def sliceTypeBFullModel
     (leftConst : F₂) (leftLinear : LinearForm)
     (rightConst : F₂) (rightLinear : LinearForm)
     (correctionConst : F₂) (correctionLinear : LinearForm)
@@ -550,7 +552,7 @@ def sliceTypeBFullModel
       correctionCoeff x y
 
 /-- The full sliced infinity-type product, including its affine and rational-target correction. -/
-def sliceTypeInfinityFullModel
+@[expose] def sliceTypeInfinityFullModel
     (leftConst : F₂) (leftLinear : LinearForm)
     (rightConst : F₂) (rightLinear : LinearForm)
     (correctionConst : F₂) (correctionLinear : LinearForm)

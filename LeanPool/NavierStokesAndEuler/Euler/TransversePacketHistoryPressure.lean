@@ -23,7 +23,7 @@ residual of the constructed history. Its L² realization, zero mean, spatial
 smoothness, support, and pointwise equation (11) are proved here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,13 +47,14 @@ abbrev forceField (t : Icc (0 : ℝ) D.T) := pointField P (forcingPath G) G.path
 
 /-- Normal residual, given by `(⟪D.normal.field t x.1,forceField G t x⟫_ℝ - 2*⟪D.normal.field t
 x.1,D.M.field t x.1 (B.field G t x)⟫_ℝ)/‖D.normal.field t x.1‖^2`. -/
+@[expose]
 def normalResidual (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) : ℝ :=
   (⟪D.normal.field t x.1,forceField G t x⟫_ℝ -
     2*⟪D.normal.field t x.1,D.M.field t x.1 (B.field G t x)⟫_ℝ)/‖D.normal.field t x.1‖^2
 
 /-- Residual path, given by `sourceResidual P D.M D.normal D.normalLower D.normalLower_pos
 D.normal_lower (forcingPath G) (B.velocityPath G)`. -/
-def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
+@[expose] def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourceResidual P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G)
 
@@ -138,6 +139,7 @@ theorem normalResidual_mean_zero (t : Icc (0 : ℝ) D.T) (y : Space) :
     (B.residualPath_average_zero G t) y
 
 /-- The actual mean-zero periodic angular integral. -/
+@[expose]
 def pressureField (t : Icc (0 : ℝ) D.T) : LiftDomain P → ℝ :=
   classicalPrimitive P (B.normalResidual G t) (B.normalResidual_continuous G t)
     (B.normalResidual_mean_zero G t)

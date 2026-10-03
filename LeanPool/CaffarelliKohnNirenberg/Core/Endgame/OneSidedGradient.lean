@@ -16,7 +16,7 @@ the small-cylinder decay constant. The cover is selected before the
 solution, so no solution-dependent large-scale integral enters the bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -28,7 +28,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- Gradient Morrey constant associated with a finite geometric cover. -/
-def oneSidedGradientMorreyBound (M r₀ : ℝ) (N : ℕ) : ℝ≥0∞ :=
+@[expose] def oneSidedGradientMorreyBound (M r₀ : ℝ) (N : ℕ) : ℝ≥0∞ :=
   oneSidedMorreyBound 2 (25 / 8) r₀ (ENNReal.ofReal (M ^ 2))
     ((N : ℝ≥0∞) * (ENNReal.ofReal (M ^ 2) * ENNReal.ofReal ((r₀ / 2) ^ (9 / 5 : ℝ))))
 

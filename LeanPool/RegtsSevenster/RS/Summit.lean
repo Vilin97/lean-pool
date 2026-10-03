@@ -34,7 +34,7 @@ The axiom checks are pinned in
 `RS/Assembly/BlueprintDeligne.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

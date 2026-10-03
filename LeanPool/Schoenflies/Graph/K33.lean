@@ -85,7 +85,7 @@ that `exists_two_chords_same_side` wants. It returns two remaining edges on the 
 and `chords_disjoint` says they do not.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies unitInterval
 open scoped Graph
@@ -158,14 +158,14 @@ through the edge `e 0 0`, with a detour path running the other way round. -/
 /-- The index pairs of the six edges of the six-cycle, in the order the cycle is traversed
 starting from `e 0 0`. Kept as index pairs, not as edges, because every question about which
 edges the cycle uses is then decidable. -/
-def hexPairs : List (Fin 3 × Fin 3) := [(0, 0), (0, 2), (2, 2), (2, 1), (1, 1), (1, 0)]
+@[expose] def hexPairs : List (Fin 3 × Fin 3) := [(0, 0), (0, 2), (2, 2), (2, 1), (1, 1), (1, 0)]
 
 /-- The five edges of the detour of the six-cycle: the path
 `x₀ → y₂ → x₂ → y₁ → x₁ → y₀` that returns to the other end of `e 0 0`. -/
-def hexDetour (e : Fin 3 → Fin 3 → β) : List β := [e 0 2, e 2 2, e 2 1, e 1 1, e 1 0]
+@[expose] def hexDetour (e : Fin 3 → Fin 3 → β) : List β := [e 0 2, e 2 2, e 2 1, e 1 1, e 1 0]
 
 /-- The six edges of the six-cycle. -/
-def hexList (e : Fin 3 → Fin 3 → β) : List β := e 0 0 :: hexDetour e
+@[expose] def hexList (e : Fin 3 → Fin 3 → β) : List β := e 0 0 :: hexDetour e
 
 theorem hexList_eq_map (e : Fin 3 → Fin 3 → β) :
     hexList e = hexPairs.map fun p ↦ e p.1 p.2 := rfl
@@ -254,16 +254,18 @@ to the first and one end interior to the second — this is the blueprint's "the
 alternate on the six-cycle". -/
 
 /-- Index pairs of the first of the two paths the ends of `e s (s+1)` cut the six-cycle into. -/
-def arcAPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s), (s + 1, s), (s + 1, s + 1)]
+@[expose] def arcAPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s), (s + 1, s), (s + 1, s + 1)]
 
 /-- Index pairs of the second of the two paths. -/
+@[expose]
 def arcBPairs (s : Fin 3) : List (Fin 3 × Fin 3) := [(s, s + 2), (s + 2, s + 2), (s + 2, s + 1)]
 
 /-- The edges of the first path. -/
+@[expose]
 def arcA (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β := [e s s, e (s + 1) s, e (s + 1) (s + 1)]
 
 /-- The edges of the second path. -/
-def arcB (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β :=
+@[expose] def arcB (e : Fin 3 → Fin 3 → β) (s : Fin 3) : List β :=
   [e s (s + 2), e (s + 2) (s + 2), e (s + 2) (s + 1)]
 
 theorem arcA_eq_map (e : Fin 3 → Fin 3 → β) (s : Fin 3) :

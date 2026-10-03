@@ -27,7 +27,7 @@ coexisting crossing predicates:
   the total crossing parity (`third_chord_reparity` per element).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

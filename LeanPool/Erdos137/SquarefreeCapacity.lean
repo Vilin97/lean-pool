@@ -75,7 +75,7 @@ powerful.
 * `not_powerful_of_sqfree_count_beats_fourk` : explicit count ⟹ non-powerful obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

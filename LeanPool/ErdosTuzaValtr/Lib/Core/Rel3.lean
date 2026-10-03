@@ -13,22 +13,23 @@ public import Mathlib.Order.OrderDual
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.Core.Rel3`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 open OrderDual
 
 /-- Mirror a binary relation/function to the order dual, swapping argument order. -/
+@[expose]
 def Mirror2 {α : Type u} {β : Sort v} (f : α → α → β) : αᵒᵈ → αᵒᵈ → β := fun a b =>
   f (ofDual b) (ofDual a)
 
 /-- Mirror a ternary relation/function to the order dual, reversing argument order. -/
-def Mirror3 {α : Type u} {β : Sort v} (f : α → α → α → β) : αᵒᵈ → αᵒᵈ → αᵒᵈ → β :=
+@[expose] def Mirror3 {α : Type u} {β : Sort v} (f : α → α → α → β) : αᵒᵈ → αᵒᵈ → αᵒᵈ → β :=
   fun a b c => f (ofDual c) (ofDual b) (ofDual a)
 
 /-- Decidability of a ternary relation: each instance is decidable. -/
-@[reducible]
+@[expose, reducible]
 def DecidableRel3 {α : Sort u} (r : α → α → α → Prop) :=
   ∀ a b c : α, Decidable (r a b c)
 

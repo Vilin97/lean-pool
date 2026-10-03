@@ -18,7 +18,7 @@ As the library grows, compatibility helpers specific to this project can
 be added here.
 -/
 
-@[expose] public section
+public section
 
 namespace OmegaCompletePartialOrder
 
@@ -96,7 +96,15 @@ lemma ωScottContinuous_lintegral
     · apply MeasureTheory.lintegral_congr fun b ↦ ?_
       rw [(by simp : f (ωSup c) b = f (ωSup c) (ωSup (Chain.const b)))]
       apply Eq.trans (hf₁.map_ωSup (Chain.zip c (Chain.const b)))
-      rfl
+      apply le_antisymm
+      · simp only [ωSup_le_iff, Chain.coe_map, OrderHom.coe_mk,
+          Function.comp_apply, Chain.zip_apply, Chain.const_apply]
+        intro n
+        exact le_iSup_of_le n le_rfl
+      · refine iSup_le fun n ↦ ?_
+        apply le_ωSup_of_le n
+        simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply,
+          Chain.zip_apply, Chain.const_apply, le_refl]
     · fun_prop
     · intro i j h a
       apply hf₁.monotone

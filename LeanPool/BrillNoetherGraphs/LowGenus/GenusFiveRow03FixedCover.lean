@@ -17,7 +17,7 @@ an additional exact replay.
 Generated exact replay of the fixed AR row-03 divisor.
 `cells_check` and `tree_check` replay every arithmetic obligation in the kernel. -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow03FixedCover
 

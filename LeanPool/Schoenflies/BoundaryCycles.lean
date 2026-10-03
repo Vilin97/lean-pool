@@ -30,7 +30,7 @@ Stating the carrier clause with
   cycle.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

@@ -17,7 +17,7 @@ again commute with the four actions, because the actions on the
 source are determined by those on the target.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {S : SuperCommAlgebra.{u, u'}}
 
 /-- **A degreewise bijective morphism of super modules is an
 isomorphism.** -/
+@[expose]
 noncomputable def isoOfComponents {M N : S.Mod} (f : M ⟶ N)
     (he : Function.Bijective f.evenMap)
     (ho : Function.Bijective f.oddMap) : M ≅ N where

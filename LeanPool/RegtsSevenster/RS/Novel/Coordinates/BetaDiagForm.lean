@@ -17,7 +17,7 @@ The diagonal cap pairing `betaDiag m c` on a colouring
 pairing `betaColour` applied to the two halves of `c`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

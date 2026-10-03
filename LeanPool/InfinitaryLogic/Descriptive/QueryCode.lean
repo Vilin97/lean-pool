@@ -33,7 +33,7 @@ This is the stop/go gate's first half; the analytic tree normal form (Unit 0b) b
 cylinder tree in `(ℕ → Bool) × (ℕ → ℕ)` on top of it.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -52,7 +52,7 @@ noncomputable def queryEmbedding : RelQuery L ↪ ℕ :=
 open Classical in
 /-- **The query code** of a structure code: the bit at coordinate `n` is the code's value at
 the query encoded by `n`, and `false` when `n` encodes no query. -/
-noncomputable def queryCode (c : StructureSpace L) (n : ℕ) : Bool :=
+@[expose] noncomputable def queryCode (c : StructureSpace L) (n : ℕ) : Bool :=
   if h : ∃ q, queryEmbedding (L := L) q = n then c h.choose else false
 
 /-- The continuous retraction: read the structure code back off the embedded coordinates. -/

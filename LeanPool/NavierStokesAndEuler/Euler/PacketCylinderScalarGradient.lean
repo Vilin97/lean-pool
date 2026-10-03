@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! The literal spatial gradient of an actual scalar cylinder path is an actual vector path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,7 @@ variable {P T : ℝ} [Fact (0 < P)] (raw : ScalarField)
     raw (t, (x, θ)) = scalarPointField P p hp t (x, (θ : AddCircle P)))
 
 /-- A norm-one scalar embedding retains the actual continuous L² path. -/
-def scalarEmbeddingField : Field P T (fun z => scalarEmbed (raw z)) :=
+@[expose] def scalarEmbeddingField : Field P T (fun z => scalarEmbed (raw z)) :=
   Field.ofLifted (pathMap P scalarEmbed p) (pathMap_orbit_contDiff P scalarEmbed p hp)
     (fun t x => scalarEmbed (scalarPointField P p hp t x))
     (fun t => scalarEmbed.continuous.comp (scalarPointField_continuous P p hp t))
@@ -74,7 +74,7 @@ theorem scalarRaw_smooth (t : Icc (0 : ℝ) T) :
   exact coverField_contDiff P _ (scalarPointField_smooth P p hp t)
 
 /-- This witness is the spatial gradient used by `pressureJet`; it needs no time derivative. -/
-def scalarGradientField : Field P T (pressureGradient raw) :=
+@[expose] def scalarGradientField : Field P T (pressureGradient raw) :=
   (Field.finsetSum (univ : Finset (Fin 3))
     (fun i z => gradientComponent i
       (fderiv ℝ (fun y => scalarEmbed (raw (z.1,y))) z.2 (standardDirection i.succ)))

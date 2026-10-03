@@ -17,7 +17,7 @@ canonical contractive operator families on real `Lᵖ`.  It deliberately makes
 no claim here about the operator semigroup laws or strong continuity.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -33,6 +33,7 @@ variable (P : SubMarkovKernelSemigroup α)
 
 /-- The time-space kernel obtained from the jointly measurable transition
 measures of `P`. -/
+@[expose]
 def jointKernel : Kernel (NNReal × α) α where
   toFun p := P p.1 p.2
   measurable' := P.measurable_kernel
@@ -54,6 +55,7 @@ theorem measurable_kernelIntegral {f : α → ℝ} (hf : Measurable f) :
 
 /-- A measure is subinvariant for `P` when it dominates its image under every
 transition kernel. -/
+@[expose]
 def IsSubInvariant (μ : Measure α) : Prop :=
   ∀ t, P t ∘ₘ μ ≤ μ
 
@@ -73,12 +75,14 @@ noncomputable def operatorTop (μ : Measure α) (hμ : P.IsSubInvariant μ) :
 
 /-- A finite-exponent operator family is associated with `P` when each output
 is represented by the corresponding raw kernel integral. -/
+@[expose]
 def IsAssociatedFinite (μ : Measure α) (p : NNReal) [Fact (1 ≤ p)]
     (T : NNReal → Lp ℝ (p : ℝ≥0∞) μ →L[ℝ] Lp ℝ (p : ℝ≥0∞) μ) : Prop :=
   ∀ t f, T t f =ᵐ[μ] kernelIntegral (P t) f
 
 /-- An infinite-exponent operator family is associated with `P` when each
 output is represented by the corresponding raw kernel integral. -/
+@[expose]
 def IsAssociatedTop (μ : Measure α)
     (T : NNReal → Lp ℝ ∞ μ →L[ℝ] Lp ℝ ∞ μ) : Prop :=
   ∀ t f, T t f =ᵐ[μ] kernelIntegral (P t) f

@@ -29,7 +29,7 @@ is Lipschitz in `t` and `t` is Lipschitz in `f₁ t`; and `A` has positive Lebes
 the graph over `A` contains `f '' P`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

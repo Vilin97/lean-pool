@@ -29,7 +29,7 @@ No equal-area assumption, test map, or continuity statement is introduced here: 
 purely the definitional perimeter API.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -41,16 +41,16 @@ variable {K : Body} {n : ℕ}
 
 /-- The **perimeter vector** of a convex partition: the `i`-th entry is the perimeter of the
 `i`-th piece. -/
-noncomputable def perimeterVec (P : ConvexPartition K n) : Fin n → ℝ :=
+@[expose] noncomputable def perimeterVec (P : ConvexPartition K n) : Fin n → ℝ :=
   fun i => perimeter (P.piece i)
 
 /-- The **total perimeter** of a convex partition: the sum of the piece perimeters. -/
-noncomputable def totalPerimeter (P : ConvexPartition K n) : ℝ :=
+@[expose] noncomputable def totalPerimeter (P : ConvexPartition K n) : ℝ :=
   ∑ i, P.perimeterVec i
 
 /-- The **average perimeter** of a convex partition: the total perimeter divided by `(n : ℝ)`.
 The division is explicitly by the real cast `(n : ℝ)`. -/
-noncomputable def averagePerimeter (P : ConvexPartition K n) : ℝ :=
+@[expose] noncomputable def averagePerimeter (P : ConvexPartition K n) : ℝ :=
   P.totalPerimeter / (n : ℝ)
 
 @[simp] theorem perimeterVec_apply (P : ConvexPartition K n) (i : Fin n) :
@@ -64,11 +64,11 @@ theorem averagePerimeter_eq (P : ConvexPartition K n) :
 
 /-- The **perimeter-deviation vector** of a convex partition: the `i`-th entry is the
 deviation of the `i`-th piece perimeter from the average perimeter. -/
-noncomputable def perimeterDeviation (P : ConvexPartition K n) : Fin n → ℝ :=
+@[expose] noncomputable def perimeterDeviation (P : ConvexPartition K n) : Fin n → ℝ :=
   fun i => P.perimeterVec i - P.averagePerimeter
 
 /-- All pieces have equal perimeter. -/
-def HasEqualPerimeter (P : ConvexPartition K n) : Prop :=
+@[expose] def HasEqualPerimeter (P : ConvexPartition K n) : Prop :=
   ∀ i j, perimeter (P.piece i) = perimeter (P.piece j)
 
 @[simp] theorem perimeterDeviation_apply (P : ConvexPartition K n) (i : Fin n) :

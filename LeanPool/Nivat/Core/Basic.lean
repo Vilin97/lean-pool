@@ -48,7 +48,7 @@ The configuration, period and operator notation of Section 1.1 of
 The forward-shift convention is shared by the Laurent action and pattern pairing.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 
@@ -59,23 +59,23 @@ abbrev Lattice := ℤ × ℤ
 abbrev Configuration (A : Type*) := Lattice → A
 
 /-- The forward translation `Tʰc`, with `(Tʰc)(z) = c(z + h)` (Section 1.1). -/
-def shift {A : Type*} (h : Lattice) (c : Configuration A) : Configuration A :=
+@[expose] def shift {A : Type*} (h : Lattice) (c : Configuration A) : Configuration A :=
   fun z => c (z + h)
 
 /-- A configuration takes values in a finite set (Section 1.1). -/
-def FiniteRange {A : Type*} (c : Configuration A) : Prop := (Set.range c).Finite
+@[expose] def FiniteRange {A : Type*} (c : Configuration A) : Prop := (Set.range c).Finite
 
 /-- A vector fixes the configuration at every lattice site (Section 1).
 This predicate allows zero; `Periodic` requires a nonzero witness. -/
-def IsPeriod {A : Type*} (c : Configuration A) (h : Lattice) : Prop :=
+@[expose] def IsPeriod {A : Type*} (c : Configuration A) (h : Lattice) : Prop :=
   ∀ z, c (z + h) = c z
 
 /-- Existence of one nonzero global period, the conclusion of Theorem 1.1 (`thm:main`). -/
-def Periodic {A : Type*} (c : Configuration A) : Prop :=
+@[expose] def Periodic {A : Type*} (c : Configuration A) : Prop :=
   ∃ h : Lattice, h ≠ 0 ∧ IsPeriod c h
 
 /-- The difference operator `Δₕ = Tʰ - I` from Section 1.1. -/
-def difference {A : Type*} [AddCommGroup A] (h : Lattice)
+@[expose] def difference {A : Type*} [AddCommGroup A] (h : Lattice)
     (c : Configuration A) : Configuration A := shift h c - c
 
 /-- Evaluation of the forward shift from Section 1.1. -/

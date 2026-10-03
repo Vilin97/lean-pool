@@ -17,7 +17,7 @@ object in odd degree, so its endomorphisms are those of the unit
 downstairs: the scalar-unit hypothesis passes to the doubling.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

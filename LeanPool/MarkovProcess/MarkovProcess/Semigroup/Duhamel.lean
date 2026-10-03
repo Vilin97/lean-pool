@@ -19,7 +19,7 @@ exponentials of commuting bounded generators.  The identity is oriented as
 estimate is immediately applicable to Yosida approximants.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory NormedSpace Set
 

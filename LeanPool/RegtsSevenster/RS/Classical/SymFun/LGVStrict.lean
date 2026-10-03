@@ -24,7 +24,7 @@ noncrossing tuples all have `σ = 1` and count with sign `+1`, and at
 least one exists.
 -/
 
-@[expose] public section
+public section
 
 
 

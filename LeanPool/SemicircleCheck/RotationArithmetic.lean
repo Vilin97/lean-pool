@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.GCD
   The `finRotate` arithmetic lemmas live in `SemicircleCheck.FinRotateLemmas`.
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm
 

@@ -60,7 +60,7 @@ neighbourhood, condition
   `sSupMaps` with `toElementMap_sSupMaps` (iii).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -85,12 +85,14 @@ theorem ApproximableMap.le_iff {f g : ApproximableMap V₀ V₁} :
 /-! ### Definition 3.8 — step sets and the function space. -/
 
 /-- Scott's step set `[X, Y] = {f ∣ X f Y}`. -/
+@[expose]
 def step (X : Set α) (Y : Set β) : Set (ApproximableMap V₀ V₁) := {f | f.rel X Y}
 
 @[simp] theorem mem_step {X : Set α} {Y : Set β} {f : ApproximableMap V₀ V₁} :
     f ∈ step X Y ↔ f.rel X Y := Iff.rfl
 
 /-- A finite intersection of step sets, indexed by a list of `(X, Y)` pairs. -/
+@[expose]
 def stepFun (L : List (Set α × Set β)) : Set (ApproximableMap V₀ V₁) :=
   {f | ∀ p ∈ L, f.rel p.1 p.2}
 
@@ -144,6 +146,7 @@ theorem step_subset {X X' : Set α} {Y Y' : Set β} (hX' : V₀.mem X') (hY' : V
 /-- **Definition 3.8 (Scott 1981, PRG-19).** The *function space* `(𝒟₀ → 𝒟₁)`:
 tokens are
 approximable maps, neighbourhoods are non-empty finite intersections of step sets. -/
+@[expose]
 def funSpace (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     NeighborhoodSystem (ApproximableMap V₀ V₁) where
   mem W := (∃ L : List (Set α × Set β), (∀ p ∈ L, V₀.mem p.1 ∧ V₁.mem p.2) ∧ W = stepFun L)
@@ -159,7 +162,7 @@ def funSpace (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     · exact hL' p h
   sub_master := fun _ => Set.subset_univ _
 
-@[simp] theorem funSpace_master : (funSpace V₀ V₁).master = Set.univ := rfl
+@[simp] theorem funSpace_master : (funSpace V₀ V₁).master = Set.univ := by rfl
 
 theorem funSpace_mem_iff {W : Set (ApproximableMap V₀ V₁)} :
     (funSpace V₀ V₁).mem W ↔
@@ -210,6 +213,7 @@ theorem mem_stepFun_iff (φ : (funSpace V₀ V₁).Element) {L : List (Set α ×
 filter `φ`.
 Intersectivity is the payoff of positivity (`[X,Y]∩[X,Y'] = [X,Y∩Y']` is
 non-empty, so `Y∩Y' ∈ 𝒟₁`). -/
+@[expose]
 def toApproxMap (φ : (funSpace V₀ V₁).Element) : ApproximableMap V₀ V₁ where
   rel X Y := φ.mem (step X Y)
   rel_dom := by intro X Y h; obtain ⟨f, hf⟩ := (φ.sub h).2; exact f.rel_dom hf
@@ -234,7 +238,7 @@ def toApproxMap (φ : (funSpace V₀ V₁).Element) : ApproximableMap V₀ V₁ 
 
 /-- **Theorem 3.10 (Scott 1981, PRG-19).** The filter `f̂ = {F ∣ f ∈ F}` of an
 approximable map. -/
-def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element where
+@[expose] def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element where
   mem W := (funSpace V₀ V₁).mem W ∧ f ∈ W
   sub h := h.1
   master_mem := ⟨(funSpace V₀ V₁).master_mem, Set.mem_univ f⟩
@@ -256,6 +260,7 @@ def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element wher
 /-- **Theorem 3.10 (Scott 1981, PRG-19).** The function space is *complete*: every
 filter is fixed
 by a unique approximable mapping, inclusion-preservingly. -/
+@[expose]
 def funSpaceEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     (funSpace V₀ V₁).Element ≃o ApproximableMap V₀ V₁ where
   toFun := toApproxMap
@@ -289,10 +294,10 @@ def funSpaceEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) 
       exact h _ hrel
 
 @[simp] theorem funSpaceEquiv_apply (φ : (funSpace V₀ V₁).Element) :
-    funSpaceEquiv V₀ V₁ φ = toApproxMap φ := rfl
+    funSpaceEquiv V₀ V₁ φ = toApproxMap φ := by rfl
 
 @[simp] theorem funSpaceEquiv_symm_apply (f : ApproximableMap V₀ V₁) :
-    (funSpaceEquiv V₀ V₁).symm f = toFilter f := rfl
+    (funSpaceEquiv V₀ V₁).symm f = toFilter f := by rfl
 
 /-- Intersection of two function-space neighbourhoods, when non-empty, is again
 one. -/
@@ -328,14 +333,15 @@ than `X`, taken
 inside the master neighbourhood `Δ₁` (so the empty intersection is `Δ₁`, per the
 convention 1.1a).
 Indexed by the list `L` of `(Xᵢ, Yᵢ)` pairs. -/
+@[expose]
 def interYs (m : Set β) : List (Set α × Set β) → Set α → Set β
   | [], _ => m
   | p :: L, X => {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X
 
-@[simp] theorem interYs_nil (m : Set β) (X : Set α) : interYs m [] X = m := rfl
+@[simp] theorem interYs_nil (m : Set β) (X : Set α) : interYs m [] X = m := by rfl
 
 theorem interYs_cons (m : Set β) (p : Set α × Set β) (L : List (Set α × Set β)) (X : Set α) :
-    interYs m (p :: L) X = {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X := rfl
+    interYs m (p :: L) X = {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X := by rfl
 
 /-- Membership in `interYs`: `z ∈ ⋂{Yᵢ ∣ X ⊆ Xᵢ}` iff `z ∈ Δ₁` and `z ∈ Yᵢ` for
 every `i` with
@@ -379,6 +385,7 @@ Scott's condition (i) in the operational form `hcons`: for every neighbourhood
 `{Yᵢ ∣ X ⊆ Xᵢ}` (consistent in `𝒟₁`, witnessed by `X` being a common lower bound
 of their inputs)
 have their intersection again a neighbourhood. -/
+@[expose]
 def leastMap (L : List (Set α × Set β))
     (hcons : ∀ {X}, V₀.mem X → V₁.mem (interYs V₁.master L X)) : ApproximableMap V₀ V₁ where
   rel X Y := V₀.mem X ∧ V₁.mem Y ∧ interYs V₁.master L X ⊆ Y
@@ -478,6 +485,7 @@ def MapsBounded (F : Set (ApproximableMap V₀ V₁)) : Prop := ∃ h, ∀ f ∈
 
 /-- `F` is *pointwise bounded* when `{f(x) ∣ f ∈ F}` is bounded in `|𝒟₁|` for
 every `x`. -/
+@[expose]
 def PointwiseBounded (F : Set (ApproximableMap V₀ V₁)) : Prop :=
   ∀ x : V₀.Element, V₁.Bounded (Set.image (fun f => f.toElementMap x) F)
 
@@ -597,7 +605,7 @@ variable {V₂ : NeighborhoodSystem γ}
 
 /-- **Theorem 3.11 (Scott 1981, PRG-19).** The two-variable evaluation map
 `eval : (𝒟₁ → 𝒟₂) × 𝒟₁ → 𝒟₂`, `F, X eval Y ↔ X f Y for all f ∈ F`. -/
-def eval (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
+@[expose] def eval (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
     ApproximableMap₂ (funSpace V₁ V₂) V₁ V₂ where
   rel F X Y := (funSpace V₁ V₂).mem F ∧ V₁.mem X ∧ V₂.mem Y ∧ ∀ f ∈ F, f.rel X Y
   rel_dom₀ h := h.1
@@ -634,7 +642,7 @@ theorem toElementMap₂_eval (φ : (funSpace V₁ V₂).Element) (x : V₁.Eleme
 /-- **Theorem 3.11 (Scott 1981, PRG-19).** Evaluation as a single approximable map
 out of the
 product `(𝒟₁ → 𝒟₂) × 𝒟₁ → 𝒟₂`. -/
-def evalMap (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
+@[expose] def evalMap (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
     ApproximableMap (prod (funSpace V₁ V₂) V₁) V₂ := ofMap₂ (eval V₁ V₂)
 
 /-- **Theorem 3.11(i) (Scott 1981, PRG-19).** `eval(⟨f, x⟩) = f(x)`. -/
@@ -838,7 +846,7 @@ theorem curry_eval_comp (h : ApproximableMap V₀ (funSpace V₁ V₂)) :
 
 /-- **Theorem 3.12 (Scott 1981, PRG-19).** `curry` is an order-isomorphism between
 `|𝒟₀ × 𝒟₁ → 𝒟₂|` and `|𝒟₀ → (𝒟₁ → 𝒟₂)|`. -/
-def curryEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
+@[expose] def curryEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
     (V₂ : NeighborhoodSystem γ) :
     ApproximableMap (prod V₀ V₁) V₂ ≃o ApproximableMap V₀ (funSpace V₁ V₂) where
   toFun := curry

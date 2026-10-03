@@ -27,14 +27,14 @@ With `P k l = pairInt (atomγ t ε) (log ‖· - ·‖) k l`:
 * (D) `(2π)² log ((bⱼ' - aⱼ')/4) ≤ P (inr j) (inr j')`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 
 namespace Zeta5Irrational
 
 /-- The pair integrals of the logarithmic kernel for the configuration atoms. -/
-noncomputable def Plog {h : ℕ} (t : Fin h → ℝ) (ε : ℝ) (k l : Idx h) : ℝ :=
+@[expose] noncomputable def Plog {h : ℕ} (t : Fin h → ℝ) (ε : ℝ) (k l : Idx h) : ℝ :=
   pairInt (atomγ t ε) (fun z w => Real.log ‖z - w‖) k l
 
 lemma log_le_log_add_posLog {ε x : ℝ} (hε : 0 < ε) (hx : 0 < x) :
@@ -117,7 +117,7 @@ lemma block_B {h : ℕ} (t : Fin h → ℝ) {ε : ℝ} (hε : 0 < ε) (i i' : Fi
   nlinarith [Real.pi_pos]
 
 /-- The regularisation error of the arcsine potential at a real point `t`. -/
-noncomputable def errj (ε t m r : ℝ) : ℝ :=
+@[expose] noncomputable def errj (ε t m r : ℝ) : ℝ :=
   ε / r + Real.sqrt (ε / r * ((ε + 2 * |t - m|) / r))
 
 lemma errj_nonneg {ε t m r : ℝ} (hε : 0 < ε) (hr : 0 < r) : 0 ≤ errj ε t m r := by

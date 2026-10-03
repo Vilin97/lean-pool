@@ -27,7 +27,7 @@ section
 excludes an ordinary Euler evolution on the base horizon. Each stage is
 compared only on its own genuine horizon. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -104,7 +104,7 @@ section
 /-! Exact reindexing of the prescribed scale sequence after finitely many
 exceptional initial stages. No new choice of asymptotic scales is made. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -145,7 +145,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -193,10 +193,11 @@ theorem initialTail_frequency (i : ℕ) : (A i).frequencyGuard (frequency J X i)
   exact (P (1+i)).joinedInput_frequency (by omega) hq hB
 
 /-- Initial base, given by `(P 1).state.regularity.velocity (P 1).parent.zeroTime`. -/
+@[expose]
 def initialBase : SmoothL2Field Space := (P 1).state.regularity.velocity (P 1).parent.zeroTime
 
 /-- Initial data limit, constructed using `EulerPacketInitial.fullInitialLimit`. -/
-def initialDataLimit : SmoothL2Field Space :=
+@[expose] def initialDataLimit : SmoothL2Field Space :=
   EulerPacketInitial.fullInitialLimit A J (by have h := S.stage_large; omega)
     (sourceConstant 4) 320 (sourceConstant_pos 4) (by norm_num) 20 1000 X (S.sequence_one 1)
     (initialTail_parameter P hq hB) (initialTail_scale P hq hB) (initialTail_sigma P hq hB)

@@ -17,7 +17,7 @@ import Mathlib.Tactic.Positivity.Finset
 Bounding the finite set of primes relevant to square-divisibility violations.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

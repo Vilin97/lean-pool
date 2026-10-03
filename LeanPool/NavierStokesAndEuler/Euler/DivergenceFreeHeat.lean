@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual Gaussian heat and Volterra integrals preserve the lifted divergence constraint. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -54,13 +54,14 @@ theorem gradientProjection_cylinderHeat (κ : ℝ) (m : Vector3) (v : ℝ≥0) (
   gradientProjection_heatList period κ m cylinderDirections v f
 
 /-- The continuous constraint map on an actual complete Sobolev space. -/
-def gradientEvaluation (q : ℕ) (κ : ℝ) (m : Vector3) : SobolevSpace period q →L[ℝ] LiftL2 period :=
+@[expose] def gradientEvaluation (q : ℕ) (κ : ℝ) (m : Vector3) :
+    SobolevSpace period q →L[ℝ] LiftL2 period :=
   (gradientProjection period κ m).comp (valueOperator period q)
 
 /-- The Sobolev constraint is exactly the underlying lifted L² gradient projection. -/
 @[simp]
 theorem gradientEvaluation_apply {q : ℕ} (κ : ℝ) (m : Vector3) (u : SobolevSpace period q) :
-    gradientEvaluation period q κ m u = gradientProjection period κ m (value period u) := rfl
+    gradientEvaluation period q κ m u = gradientProjection period κ m (value period u) := by rfl
 
 /-- Vanishing of the continuous constraint map is exactly membership in the genuine divergence-free
 subspace. -/

@@ -32,7 +32,7 @@ A variant of Proposition 6.3 (`real_bound`) with `27 K log K` in place of the pa
 * `log_S_le` : the Stirling bound (6.15) — proved.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology Finset
 

@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Set
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology
@@ -27,6 +27,7 @@ namespace CKN
 
 /-- The scalar pairing of a parameterized test family with zeroth, first, and
 second order slice data on a fixed compact set. -/
+@[expose]
 def parametricPairing {X : Type} (Ψ : X → Vec3 → ℝ)
     (g₀ : Vec3 → ℝ) (g₁ : Vec3 → Vec3)
     (g₂ : Vec3 → Fin 3 → Fin 3 → ℝ) (x : X) : ℝ :=

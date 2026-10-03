@@ -16,7 +16,7 @@ For an admissible endpoint configuration, either a packing already has nonnegati
 of the two perfect matchings of the four children satisfies the exact matching obstruction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

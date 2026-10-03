@@ -92,7 +92,7 @@ with `section` blocks switching to stronger hypotheses when needed:
   `[DenselyNormedField 𝕜] + [CompleteSpace 𝕜]`).
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -140,6 +140,7 @@ private lemma summable_smul_val [CompleteSpace X] (α : BallLp 𝕜 X) :
   (summable_norm_smul_val α).of_norm
 
 /-- The summation surjection `Q : ℓ¹(B_X) →L[𝕜] X`. Operator norm `≤ 1`. -/
+@[expose]
 noncomputable def Q [CompleteSpace X] : BallLp 𝕜 X →L[𝕜] X :=
   LinearMap.mkContinuous
     { toFun := fun α => ∑' x : Ball X, α x • (x : X)
@@ -361,6 +362,7 @@ private lemma summable_smul_liftBasis {A : W →L[𝕜] X} {c : 𝕜}
     exact mul_le_mul_of_nonneg_left (norm_liftBasis hc hc_ne w).le (norm_nonneg _))
 
 /-- The lift `T_{A,c} : ℓ¹(B_W) →L[𝕜] ℓ¹(B_X)`. -/
+@[expose]
 noncomputable def liftA (A : W →L[𝕜] X) {c : 𝕜} (hc : ‖A‖ ≤ ‖c‖) (hc_ne : c ≠ 0) :
     BallLp 𝕜 W →L[𝕜] BallLp 𝕜 X :=
   LinearMap.mkContinuous

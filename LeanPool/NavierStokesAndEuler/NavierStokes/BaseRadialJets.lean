@@ -18,7 +18,7 @@ factor is `Q^h`.  The exact stream formula includes the factor `1/2` in
 `AxisymmetricFields.velocity_zero`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -88,6 +88,7 @@ theorem bandInput_deriv_Z (h Q : ℝ) (p : Slow) :
 
 /-- Full normalized average stream; no new coefficient sequence or cutoff
 schedule is chosen. -/
+@[expose]
 noncomputable def normalizedStream (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   axialFactor h p * SlowBorelBase.slowSum a h (averageSequence d)
@@ -156,11 +157,13 @@ theorem normalizedStream_deriv_Z {a : ℕ → ℕ} (ha : StrictMono a) {h C Q : 
   ring
 
 /-- Reduced radial, given by `-(p.1 / 2) * PhaseCalculus.slowZ (normalizedStream a h d Q) p`. -/
+@[expose]
 noncomputable def reducedRadial (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   -(p.1 / 2) * PhaseCalculus.slowZ (normalizedStream a h d Q) p
 
 /-- Literal normalized radial component of the constructed curl base. -/
+@[expose]
 noncomputable def radial (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   Q ^ CoordinateAlgebra.A h * SlowBorelBase.baseVelocity a h C d (bandPoint h Q p) 0

@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage2RouteA
 First and second derivatives of the power kernel restricted to affine lines.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

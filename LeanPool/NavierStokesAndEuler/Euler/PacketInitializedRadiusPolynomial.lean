@@ -22,7 +22,7 @@ section
 budgets that retain it. Quantitative bounds must concern this radius,
 rather than an arbitrary witness of a radius-existence theorem. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,6 +55,7 @@ abbrev primaryRadiusNormal := NB.enlargeRadius (primaryRadiusBudget L δ).R
 abbrev primaryRadiusPrimary := EulerTransversePacketPrimary.requiredBudget L (wordRadius (Fin 4) δ)
 
 /-- Initialized radius, constructed using `max`. -/
+@[expose]
 def initializedRadius : ℝ :=
   max (EulerPacketCommonRadius.commonRadius LM (primaryRadiusBudget L δ) (primaryRadiusNormal L NB
       δ) BC)
@@ -74,6 +75,7 @@ theorem mean_le_initializedRadius : Rm ≤ initializedRadius LM L NB BC δ ξ :=
 
 /-- Initialized joined budget, given by `(primaryRadiusBudget L δ).enlargeRadius
 (initializedRadius LM L NB BC δ ξ) (primary_le_initializedRadius LM L NB BC δ ξ)`. -/
+@[expose]
 def initializedJoinedBudget : EulerTransversePacketJoin.Budget D τ hτ hτT B (Fin 4) 6 :=
   (primaryRadiusBudget L δ).enlargeRadius (initializedRadius LM L NB BC δ ξ)
     (primary_le_initializedRadius LM L NB BC δ ξ)
@@ -85,7 +87,7 @@ theorem initializedPrimaryBudget : EulerTransversePacketPrimary.Budget
 
 /-- Initialized normal budget, given by `(primaryRadiusNormal L NB δ).enlargeRadius
 (initializedRadius LM L NB BC δ ξ) (primary_le_initializedRadius LM L NB BC δ ξ)`. -/
-def initializedNormalBudget : EulerTransversePacketJoin.NormalBudget D 6
+@[expose] def initializedNormalBudget : EulerTransversePacketJoin.NormalBudget D 6
     (initializedRadius LM L NB BC δ ξ) :=
   (primaryRadiusNormal L NB δ).enlargeRadius (initializedRadius LM L NB BC δ ξ)
     (primary_le_initializedRadius LM L NB BC δ ξ)
@@ -97,10 +99,10 @@ def initializedMeanBudget : EulerMeanPacketProvider.Budget M 6
   LM.enlargeRadius (initializedRadius LM L NB BC δ ξ) (mean_le_initializedRadius LM L NB BC δ ξ)
 
 @[simp] theorem initializedJoinedBudget_radius :
-    (initializedJoinedBudget LM L NB BC δ ξ).R=initializedRadius LM L NB BC δ ξ := rfl
+    (initializedJoinedBudget LM L NB BC δ ξ).R=initializedRadius LM L NB BC δ ξ := by rfl
 
 @[simp] theorem initializedJoinedBudget_profile :
-    (initializedJoinedBudget LM L NB BC δ ξ).fullProfile=L.fullProfile := rfl
+    (initializedJoinedBudget LM L NB BC δ ξ).fullProfile=L.fullProfile := by rfl
 
 /-- All the actual constructed budgets use the named canonical radius.
 The profile and every coefficient cost are unchanged by enlargement. -/
@@ -131,7 +133,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

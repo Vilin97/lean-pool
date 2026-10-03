@@ -18,7 +18,7 @@ and the coherence diagrams, all collapsing through the bundle-map
 calculus.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

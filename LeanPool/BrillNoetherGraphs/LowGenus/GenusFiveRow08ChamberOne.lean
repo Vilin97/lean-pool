@@ -36,7 +36,7 @@ file is an instantiation of `ConfigurationMarkedRow` plus four coefficient
 tables.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow08ChamberOne
 

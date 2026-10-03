@@ -13,7 +13,7 @@ public import LeanPool.WhiteheadTheorem.Auxiliary
 This file proves that the pair `(∂𝕀 n, ⊔𝕀 n)` has the homotopy extension property for `n ≥ 1`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology Topology.Homotopy unitInterval
 

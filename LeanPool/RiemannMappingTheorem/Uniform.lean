@@ -12,7 +12,7 @@ import Mathlib.Topology.UniformSpace.Compact
 # LeanPool.RiemannMappingTheorem.Uniform
 -/
 
-@[expose] public section
+public section
 
 open Set Filter UniformSpace Function Uniformity Topology SetRel
 

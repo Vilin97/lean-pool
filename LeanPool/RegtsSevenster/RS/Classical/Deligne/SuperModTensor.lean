@@ -70,7 +70,7 @@ the construction needs a *commutative* base.
   packaged as `exists_unique_liftEven` and `exists_unique_liftOdd`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -87,6 +87,7 @@ variable (P Q : Type*)
 /-- A pair of parity blocks acting on the *left* factor of a
 two-summand graded tensor product, in the degree-preserving
 pattern: each summand stays where it is. -/
+@[expose]
 noncomputable def tensorLeftDiag
     [AddCommGroup P] [Module ℂ P] [AddCommGroup Q] [Module ℂ Q] {A : Type*}
     {X₁ : Type*} {X₂ : Type*} {Y₁ : Type*} {Y₂ : Type*} [AddCommGroup A]
@@ -122,6 +123,7 @@ theorem tensorLeftDiag_apply
 /-- A pair of parity blocks acting on the *left* factor of a
 two-summand graded tensor product, in the degree-reversing
 pattern: the two summands are interchanged. -/
+@[expose]
 noncomputable def tensorLeftSwap
     [AddCommGroup P] [Module ℂ P] [AddCommGroup Q] [Module ℂ Q] {A : Type*}
     {X₁ : Type*} {X₂ : Type*} {Y₁ : Type*} {Y₂ : Type*} [AddCommGroup A]
@@ -164,6 +166,7 @@ variable {A T T' : Type*}
 bilinear action of `A` carrying a submodule `R` of its source into
 a submodule `R'` of its target induces an action on the
 quotients. -/
+@[expose]
 noncomputable def descendAct
     [AddCommGroup A] [Module ℂ A] [AddCommGroup T] [Module ℂ T]
     [AddCommGroup T'] [Module ℂ T']
@@ -387,21 +390,25 @@ theorem relOddOOO_neg_mem (c : S.odd) (m : M.odd) (n : N.odd) :
 /-! ### The four action blocks before quotienting -/
 
 /-- An even scalar acting on the left factor of the even part. -/
+@[expose]
 noncomputable def preActEE :
     S.even →ₗ[ℂ] tenEven M N →ₗ[ℂ] tenEven M N :=
   tensorLeftDiag N.even N.odd M.actEE M.actEO
 
 /-- An even scalar acting on the left factor of the odd part. -/
+@[expose]
 noncomputable def preActEO :
     S.even →ₗ[ℂ] tenOdd M N →ₗ[ℂ] tenOdd M N :=
   tensorLeftDiag N.odd N.even M.actEE M.actEO
 
 /-- An odd scalar acting on the left factor of the even part. -/
+@[expose]
 noncomputable def preActOE :
     S.odd →ₗ[ℂ] tenEven M N →ₗ[ℂ] tenOdd M N :=
   tensorLeftSwap N.even N.odd M.actOE M.actOO
 
 /-- An odd scalar acting on the left factor of the odd part. -/
+@[expose]
 noncomputable def preActOO :
     S.odd →ₗ[ℂ] tenOdd M N →ₗ[ℂ] tenEven M N :=
   tensorLeftSwap N.odd N.even M.actOE M.actOO
@@ -673,6 +680,7 @@ super-commutative ℂ-algebra: the graded ℂ-tensor product of the
 underlying super spaces, quotiented in each degree by the
 balancing relators, with the `S`-action induced from the action on
 the left factor. -/
+@[expose]
 noncomputable def tensor : S.Mod where
   even := tenEven M N ⧸ balEven M N
   odd := tenOdd M N ⧸ balOdd M N
@@ -722,24 +730,28 @@ noncomputable def tensor : S.Mod where
 /-! ### The canonical balanced map -/
 
 /-- The canonical map, even times even. -/
+@[expose]
 noncomputable def tmulEE :
     M.even →ₗ[ℂ] N.even →ₗ[ℂ] (tensor M N).even :=
   LinearMap.compr₂ (TensorProduct.mk ℂ M.even N.even)
     ((balEven M N).mkQ ∘ₗ LinearMap.inl ℂ _ _)
 
 /-- The canonical map, odd times odd. -/
+@[expose]
 noncomputable def tmulOO :
     M.odd →ₗ[ℂ] N.odd →ₗ[ℂ] (tensor M N).even :=
   LinearMap.compr₂ (TensorProduct.mk ℂ M.odd N.odd)
     ((balEven M N).mkQ ∘ₗ LinearMap.inr ℂ _ _)
 
 /-- The canonical map, even times odd. -/
+@[expose]
 noncomputable def tmulEO :
     M.even →ₗ[ℂ] N.odd →ₗ[ℂ] (tensor M N).odd :=
   LinearMap.compr₂ (TensorProduct.mk ℂ M.even N.odd)
     ((balOdd M N).mkQ ∘ₗ LinearMap.inl ℂ _ _)
 
 /-- The canonical map, odd times even. -/
+@[expose]
 noncomputable def tmulOE :
     M.odd →ₗ[ℂ] N.even →ₗ[ℂ] (tensor M N).odd :=
   LinearMap.compr₂ (TensorProduct.mk ℂ M.odd N.even)
@@ -916,6 +928,7 @@ variable {P : Type v}
 even-even and odd-odd blocks, balanced against the four
 even-degree relator families, factors through the even part of the
 tensor product. -/
+@[expose]
 noncomputable def liftEven [AddCommGroup P] [Module ℂ P]
     (fee : M.even →ₗ[ℂ] N.even →ₗ[ℂ] P)
     (foo : M.odd →ₗ[ℂ] N.odd →ₗ[ℂ] P)
@@ -952,6 +965,7 @@ noncomputable def liftEven [AddCommGroup P] [Module ℂ P]
 even-odd and odd-even blocks, balanced against the four odd-degree
 relator families, factors through the odd part of the tensor
 product. -/
+@[expose]
 noncomputable def liftOdd [AddCommGroup P] [Module ℂ P]
     (feo : M.even →ₗ[ℂ] N.odd →ₗ[ℂ] P)
     (foe : M.odd →ₗ[ℂ] N.even →ₗ[ℂ] P)

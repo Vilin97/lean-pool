@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 sufficiently large frequencies. All primary, coefficient, radius and frequency
 guards follow from the fixed source data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -16,7 +16,7 @@ intertwiners commute with the whole algebra action, so
 annihilation transports along equivalences of representations.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -33,7 +33,7 @@ the Newtonian potential `N * ∂ᵢ∂ⱼψ ∈ L⁶`.  Density of smooth compac
 supported classes in `L^(6/5)` closes the argument.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

@@ -15,7 +15,7 @@ background used in `lem:separation`. These lemmas use the actual partition and
 rank equations rather than assuming a decomposition theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

@@ -20,7 +20,7 @@ the factor `3ᵈ` of the uncentred argument. Summing over the disjoint selected 
 hint notes that one needs an epsilon of room).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -22,7 +22,7 @@ the measure-preserving coordinate split give nullity of the original complete
 bad set, including its existential simplex witness.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

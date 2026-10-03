@@ -11,7 +11,7 @@ public import LeanPool.BruhatTits.Utils.Matrix
 # LeanPool.BruhatTits.Utils.GLSubmoduleAction
 -/
 
-@[expose] public section
+public section
 
 open Module
 

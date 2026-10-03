@@ -9,7 +9,7 @@ public import LeanPool.HadwigerNelsonBounds.PartsGadgetEmbeddingCore
 
 /-! Generated edge-geometry checks, group 3. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

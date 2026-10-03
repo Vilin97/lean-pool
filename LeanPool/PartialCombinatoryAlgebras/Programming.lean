@@ -33,7 +33,7 @@ import Mathlib.Tactic.Widget.Calc
   combinators themselves.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

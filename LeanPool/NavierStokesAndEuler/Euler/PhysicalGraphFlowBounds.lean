@@ -60,7 +60,7 @@ section
 three-dimensional flow, with inverse and the projected differential
 equation. Graph invariance follows from a conserved linear functional. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -69,19 +69,21 @@ namespace EulerGraphInvariantFlow
 open Set InnerProductSpace ContinuousLinearMap EulerLiftedGradientSpace EulerMetricTransport
 
 /-- Graph linear, given by `(ContinuousLinearMap.id ℝ Vector3).prod (k • toDual ℝ Vector3 m)`. -/
-def graphLinear (k : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
+@[expose] def graphLinear (k : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
   (ContinuousLinearMap.id ℝ Vector3).prod (k • toDual ℝ Vector3 m)
 
 @[simp] theorem graphLinear_apply (k : ℝ) (m x : Vector3) :
-    graphLinear k m x = (x,k*inner ℝ m x) := rfl
+    graphLinear k m x = (x,k*inner ℝ m x) := by
+  rfl
 
 /-- Graph constraint, given by `snd ℝ Vector3 ℝ - k • (toDual ℝ Vector3 m).comp (fst ℝ Vector3
 ℝ)`. -/
-def graphConstraint (k : ℝ) (m : Vector3) : LiftTangent →L[ℝ] ℝ :=
+@[expose] def graphConstraint (k : ℝ) (m : Vector3) : LiftTangent →L[ℝ] ℝ :=
   snd ℝ Vector3 ℝ - k • (toDual ℝ Vector3 m).comp (fst ℝ Vector3 ℝ)
 
 @[simp] theorem graphConstraint_apply (k : ℝ) (m : Vector3) (z : LiftTangent) :
-    graphConstraint k m z = z.2-k*inner ℝ m z.1 := rfl
+    graphConstraint k m z = z.2-k*inner ℝ m z.1 := by
+  rfl
 
 theorem graphConstraint_graph (k : ℝ) (m x : Vector3) :
     graphConstraint k m (graphLinear k m x)=0 := by simp
@@ -161,7 +163,7 @@ section
 as its three-dimensional graph restriction. This identifies the
 volume-preservation hypothesis for the actual physical-label flow. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -213,7 +215,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -226,11 +228,12 @@ variable (k : ℝ) (m : Vector3) (T : ℝ) (hT : 0 ≤ T)
   (A : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
 
 /-- Graph coefficient, given by `(A.precompLinear (graphLinear k m)).map (fst ℝ Vector3 ℝ)`. -/
-def graphCoefficient : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
+@[expose] def graphCoefficient : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   (A.precompLinear (graphLinear k m)).map (fst ℝ Vector3 ℝ)
 
 @[simp] theorem graphCoefficient_apply (t : Icc (0 : ℝ) T) (x : Vector3) :
-    (graphCoefficient k m T A).field t x = (A.field t (graphLinear k m x)).1 := rfl
+    (graphCoefficient k m T A).field t x = (A.field t (graphLinear k m x)).1 := by
+  rfl
 
 theorem graphCoefficient_timeDerivative
     (A₁ : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent LiftTangent)
@@ -325,7 +328,7 @@ section
 actual flow. Displacement, material velocity and material acceleration
 are the literal dilations of the corresponding original fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,11 +342,12 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Scaled coefficient, given by `(A.precompLinear (ell⁻¹ • ContinuousLinearMap.id ℝ E)).map
 (ell • ContinuousLinearMap.id ℝ E)`. -/
-def scaledCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
+@[expose] def scaledCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
   (A.precompLinear (ell⁻¹ • ContinuousLinearMap.id ℝ E)).map (ell • ContinuousLinearMap.id ℝ E)
 
 @[simp] theorem scaledCoefficient_apply (t : Icc (0 : ℝ) T) (x : E) :
-    (scaledCoefficient T A ell).field t x = ell • A.field t (ell⁻¹ • x) := rfl
+    (scaledCoefficient T A ell).field t x = ell • A.field t (ell⁻¹ • x) := by
+  rfl
 
 theorem scaledCoefficient_timeDerivative
     (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
@@ -436,7 +440,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,12 +494,13 @@ theorem graph_materialAcceleration_eq (t : Icc (0 : ℝ) T) (x : Vector3) :
   rfl
 
 /-- Physical coefficient, given by `scaledCoefficient T (graphCoefficient k m T A) ell`. -/
-def physicalCoefficient (ell : ℝ) : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
+@[expose] def physicalCoefficient (ell : ℝ) : SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   scaledCoefficient T (graphCoefficient k m T A) ell
 
 @[simp] theorem physicalCoefficient_apply (ell : ℝ) (t : Icc (0 : ℝ) T) (x : Vector3) :
     (physicalCoefficient k m T A ell).field t x = ell • (A.field t (graphLinear k m (ell⁻¹ • x))).1
-        := rfl
+        := by
+  rfl
 
 theorem physicalCoefficient_timeDerivative (ell : ℝ)
     (htime : SmoothTimeField.TimeDerivative T hT A A₁) :
@@ -579,7 +584,7 @@ section
 /-! Periodicity of the prescribed velocity gives exact translation
 equivariance of the constructed global flow, by ODE uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -602,7 +607,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -691,7 +696,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -782,7 +787,7 @@ section
 /-! Actual L² composition of any smooth periodic field with the
 constructed cylinder flow. The outer amplitude is retained. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -876,7 +881,7 @@ section
 small source amplitudes retained. The product term uses one bounded
 derivative coefficient and one L² velocity factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1038,7 +1043,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1125,7 +1130,7 @@ section
 equation. The real covering displacement is periodic, so its descent is
 a vector-valued field, including its angular displacement component. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1285,7 +1290,7 @@ may be a periodic cylinder.  The output is the actual time integral of
 the finite Taylor composition; identifying it with the displacement jet
 uses the already constructed flow's differentiated integral equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1338,7 +1343,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1467,7 +1472,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1541,11 +1546,11 @@ namespace Data
 variable {P T : ℝ} [Fact (0 < P)] (G : Data P T)
 
 /-- Velocity radius, given by `flowRadius G.B G.R T G.S`. -/
-def velocityRadius : ℝ := flowRadius G.B G.R T G.S
+@[expose] def velocityRadius : ℝ := flowRadius G.B G.R T G.S
 /-- Acceleration radius, given by `flowRadius G.B G.R T (4*G.R+G.S+G.S₁)`. -/
-def accelerationRadius : ℝ := flowRadius G.B G.R T (4*G.R+G.S+G.S₁)
+@[expose] def accelerationRadius : ℝ := flowRadius G.B G.R T (4*G.R+G.S+G.S₁)
 /-- Acceleration amplitude, given by `G.C₁+3*G.B*G.R*G.C`. -/
-def accelerationAmplitude : ℝ := G.C₁+3*G.B*G.R*G.C
+@[expose] def accelerationAmplitude : ℝ := G.C₁+3*G.B*G.R*G.C
 
 theorem velocityRadius_nonneg : 0 ≤ G.velocityRadius := by
   have := G.B_nonneg
@@ -1631,6 +1636,7 @@ theorem acceleration_cylinder_bound (t : Icc (0 : ℝ) T) (n : ℕ) :
     G.small G.sup_bound G.integrable G.lp_bound G.integrable_time G.lp_bound_time n t
 
 /-- Displacement field, constructed using `physicalField`. -/
+@[expose]
 def displacementField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (displacement T G.time_nonneg G.A t)
@@ -1642,6 +1648,7 @@ def displacementField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : 
     ell hell (fst ℝ Vector3 ℝ)
 
 /-- Velocity field, constructed using `physicalField`. -/
+@[expose]
 def velocityField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (materialVelocity T G.time_nonneg G.A t) (G.velocity_periodic t)
@@ -1651,6 +1658,7 @@ def velocityField (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc 
     ell hell (fst ℝ Vector3 ℝ)
 
 /-- Acceleration field L², constructed using `physicalField`. -/
+@[expose]
 def accelerationFieldL2 (k : ℝ) (m : Vector3) (ell : ℝ) (hell : 0 < ell) (t : Icc (0 : ℝ) T) :
     SmoothL2Field Vector3 :=
   physicalField P (materialAcceleration T G.time_nonneg G.A G.A₁ t)

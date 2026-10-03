@@ -88,7 +88,7 @@ skeleton homeomorphism. Both need the stage/anchor machinery of §"Continuity at
 curve"; the extraction between them is what this module supplies.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -102,7 +102,7 @@ variable {Ω C D S : Set Plane} {a b z : Plane}
 point of `Ω`, and has all of its points except `a` inside `Ω`.
 
 Stated for a chain rather than for a simple arc; see the module docstring. -/
-def PolyAccessible (Ω : Set Plane) (a : Plane) : Prop :=
+@[expose] def PolyAccessible (Ω : Set Plane) (a : Plane) : Prop :=
   ∃ (vs : List Plane) (h : vs ≠ []), vs.head h = a ∧ vs.getLast h ∈ Ω ∧ poly vs \ {a} ⊆ Ω
 
 /-- A point of `Ω` is accessible from it, by the constant chain. -/

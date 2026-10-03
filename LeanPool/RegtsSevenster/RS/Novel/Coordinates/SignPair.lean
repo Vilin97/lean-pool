@@ -17,7 +17,7 @@ their mapped sorting signs is the reindexing permutation's sign:
 the transport plus a square.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

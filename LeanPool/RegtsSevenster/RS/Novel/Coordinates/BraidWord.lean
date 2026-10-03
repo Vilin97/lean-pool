@@ -17,7 +17,7 @@ any permutation bundle map conjugates through `stdToOmega` into
 the corresponding word of model braidings.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

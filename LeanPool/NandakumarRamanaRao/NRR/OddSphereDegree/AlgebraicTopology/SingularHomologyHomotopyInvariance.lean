@@ -28,7 +28,7 @@ Integer coefficients (`ModuleCat.{0} ℤ`), the case relevant to the topological
 degree of sphere maps.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

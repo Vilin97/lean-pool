@@ -37,7 +37,7 @@ series crosses from torsion (spectrum on the unit circle) to a Salem element exa
 rank 10, and the crossing value is Lehmer's number.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -151,7 +151,7 @@ theorem coxeterE10_infinite_order {n : ℕ} (hn : 0 < n) : coxeterE10 ^ n ≠ 1 
     have h := Polynomial.map_dvd (algebraMap ℚ ℂ) hdvdQ
     have hmapL : Lq.map (algebraMap ℚ ℂ) = LC := by
       rw [hLq, Polynomial.map_map]
-      exact congrArg lehmerPolynomial.map (Subsingleton.elim _ _)
+      exact congrArg (fun f : ℤ →+* ℂ => lehmerPolynomial.map f) (Subsingleton.elim _ _)
     have hmapX : ((X : Polynomial ℚ) ^ n - 1).map (algebraMap ℚ ℂ)
         = (X : Polynomial ℂ) ^ n - 1 := by
       rw [Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_X, Polynomial.map_one]

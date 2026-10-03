@@ -18,7 +18,7 @@ the `M`-arity and negative degrees the `M'`-arity.  The balanced
 degree is the algebra of the splitting chain, carrying the unit.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {D : Type u}
 /-- **The graded component at an integer degree**: the line
 through `((−a)⁺, a⁺)` — nonnegative degrees raise the `M`-arity,
 negative degrees the `M'`-arity. -/
+@[expose]
 noncomputable def chainBGrComponent
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -59,6 +60,7 @@ noncomputable def chainBGrComponentZeroIso
 
 /-- The iterated line shift: raising both offsets `n` times is
 the identity on the colimit. -/
+@[expose]
 noncomputable def chainBdegShiftIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -154,6 +156,7 @@ noncomputable def chainBGrι
 
 /-- **The unit of the graded splitting algebra**: the unit of the
 balanced algebra, in degree zero. -/
+@[expose]
 noncomputable def chainBGrUnit
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -1562,7 +1565,7 @@ theorem chainBGrMul_unit
 /-- **The graded splitting algebra is a monoid object**: the
 degree-zero unit and the graded multiplication satisfy the
 monoid laws. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def chainBGrMonObj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

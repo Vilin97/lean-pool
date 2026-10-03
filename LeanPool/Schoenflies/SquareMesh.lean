@@ -80,7 +80,7 @@ the rings are disjoint frames.
   belong in `Schoenflies/Subdivide.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -91,12 +91,12 @@ namespace Schoenflies
 
 /-- The frame of the square of radius `r` about the origin. For `r = 1` this is definitionally
 `modelCurve`. -/
-def ringSet (r : ℝ) : Set Plane := {x : Plane | Plane.supNorm x = r}
+@[expose] def ringSet (r : ℝ) : Set Plane := {x : Plane | Plane.supNorm x = r}
 
 theorem ringSet_one : ringSet 1 = modelCurve := rfl
 
 /-- The four sides of the square of radius `r`, as a list of pieces. -/
-def ringPieces (r : ℝ) : List Piece :=
+@[expose] def ringPieces (r : ℝ) : List Piece :=
   [(Plane.mk r r, Plane.mk (-r) r),
    (Plane.mk (-r) r, Plane.mk (-r) (-r)),
    (Plane.mk (-r) (-r), Plane.mk r (-r)),
@@ -201,7 +201,7 @@ theorem smul_segment_eq_image {a b : ℝ} (hab : a ≤ b) (z : Plane) :
 /-! ### Spokes -/
 
 /-- The radial spoke at a boundary point `z`, running from `z` inwards to `N⁻¹ • z`. -/
-noncomputable def spokePiece (N : ℕ) (z : Plane) : Piece := (z, ((N : ℝ)⁻¹) • z)
+@[expose] noncomputable def spokePiece (N : ℕ) (z : Plane) : Piece := (z, ((N : ℝ)⁻¹) • z)
 
 /-- A spoke is the set of multiples `t • z` with `N⁻¹ ≤ t ≤ 1`. -/
 theorem spokePiece_seg {N : ℕ} (hN : 2 ≤ N) (z : Plane) :
@@ -481,7 +481,7 @@ theorem anchors_subset_meshPoints (N : ℕ) (fresh anchors : List Plane) :
     anchors ⊆ meshPoints N fresh anchors := List.subset_append_left _ _
 
 /-- **The mesh graph.** -/
-noncomputable def meshGraph (N : ℕ) (fresh anchors : List Plane) : Graph Plane Piece :=
+@[expose] noncomputable def meshGraph (N : ℕ) (fresh anchors : List Plane) : Graph Plane Piece :=
   overlayGraph (meshSegments N fresh) (meshPoints N fresh anchors)
 
 instance meshGraph_finite (N : ℕ) (fresh anchors : List Plane) :
@@ -549,7 +549,7 @@ is the point-set half: the edges whose arcs lie on `S` occupy exactly `S`. See t
 docstring. -/
 
 /-- The edges of the mesh that lie on the model curve. -/
-def outerEdges (N : ℕ) (fresh anchors : List Plane) : Set Piece :=
+@[expose] def outerEdges (N : ℕ) (fresh anchors : List Plane) : Set Piece :=
   {P | P ∈ E(meshGraph N fresh anchors) ∧ P.seg ⊆ modelCurve}
 
 /-- **The outer edges occupy exactly the model curve.** -/
@@ -762,7 +762,7 @@ This is the hypothesis the blueprint discharges by "parametrize `S` by a circle,
 continuity to cut it into arcs of diameter `< δ/8`, and pick one fresh point in the relative
 interior of each". Stated as a property of a *set* rather than of a cyclic order, it needs no
 ordering of the fresh points along `S` — which is what makes the whole mesh order-free. -/
-def FreshDense (fresh : List Plane) (δ : ℝ) : Prop :=
+@[expose] def FreshDense (fresh : List Plane) (δ : ℝ) : Prop :=
   ∀ A : Set Plane, A ⊆ modelCurve \ {x | x ∈ fresh} → IsPreconnected A →
     ∀ x ∈ A, ∀ y ∈ A, dist x y ≤ δ / 2
 
@@ -1083,7 +1083,7 @@ theorem meshCount_spec {δ : ℝ} (hδ : 0 < δ) : 2 * Real.sqrt 2 < δ * meshCo
 /-- **The anchored square mesh**: `meshCount δ` concentric ring frames inside `Q = [-1,1]²`,
 one radial spoke at each fresh boundary point, and the anchors inserted as extra vertices of
 the outer ring. -/
-noncomputable def squareMesh (δ : ℝ) (fresh anchors : List Plane) : Graph Plane Piece :=
+@[expose] noncomputable def squareMesh (δ : ℝ) (fresh anchors : List Plane) : Graph Plane Piece :=
   meshGraph (meshCount δ) fresh anchors
 
 instance squareMesh_finite (δ : ℝ) (fresh anchors : List Plane) :

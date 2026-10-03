@@ -18,7 +18,7 @@ probabilistic high-demand part of the upper bound.  The probabilistic estimates
 themselves are not asserted here; they will be formalized as separate lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -39,7 +39,7 @@ theorem mem_annulus {n rIn rOut : ℕ} {target center : HypercubeVertex n} :
 
 /-- Contribution of one stack of size `2^rOut` at `center` toward `target`,
 counting only centers in the annulus. -/
-def annulusContribution {n : ℕ} (rIn rOut : ℕ) (target center : HypercubeVertex n) : ℕ :=
+@[expose] def annulusContribution {n : ℕ} (rIn rOut : ℕ) (target center : HypercubeVertex n) : ℕ :=
   if rIn ≤ dist center target ∧ dist center target ≤ rOut then
     2 ^ (rOut - dist center target)
   else
@@ -100,14 +100,14 @@ theorem annulusContribution_sq_le_width_mul {n rIn rOut : ℕ}
 
 /-- The total annulus contribution of a finite list of centers to a fixed
 target. This is the Lean version of `X_t` in the proof. -/
-def annulusTotalContribution {n : ℕ} (rIn rOut : ℕ) (target : HypercubeVertex n)
+@[expose] def annulusTotalContribution {n : ℕ} (rIn rOut : ℕ) (target : HypercubeVertex n)
     (centers : List (HypercubeVertex n)) : ℕ :=
   (centers.map (annulusContribution rIn rOut target)).sum
 
 /-- The high-demand conclusion used as a target for the probabilistic lemma:
 a `T`-solvable distribution whose size is bounded and whose occupied piles are
 large. -/
-def HasHighDemandDistribution (n T : ℕ) (costBound minPile : ℕ) : Prop :=
+@[expose] def HasHighDemandDistribution (n T : ℕ) (costBound minPile : ℕ) : Prop :=
   ∃ D : Pebbling (HypercubeVertex n),
     size D ≤ costBound ∧
       SolvableAtLeast (graph n) D T ∧

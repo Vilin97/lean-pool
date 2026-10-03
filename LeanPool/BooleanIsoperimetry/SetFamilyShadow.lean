@@ -20,7 +20,7 @@ This file exposes thin numeric corollaries of the upstream Kruskal-Katona
 upper-shadow theorem in the notation used by the Harper proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -28,7 +28,7 @@ over the anti-canonical chains re-canonicalizes any orientation
 (`exists_recanonicalize`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ variable {α : Type}
 the orientation value at the flag's entry edge (the internal partner
 of the boundary flag).  `false` means the entry edge is incoming —
 the chain leaves this end. -/
+@[expose]
 def chainDir {W : Fragment α} {F : EdgeSubset W} {κ : F.RelTransitionSystem}
     (o : κ.Orientation) (β : W.Flag) : Bool :=
   o.isOut (W.pairing β)

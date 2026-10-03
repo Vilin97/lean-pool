@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.
 The explicit above-two trial supplied to the known-parameter upper-bound argument.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

@@ -22,7 +22,7 @@ This is a generic functional-analytic API. It makes no representation claim
 about the semigroup.
 -/
 
-@[expose] public section
+public section
 
 open scoped ZeroAtInfty
 

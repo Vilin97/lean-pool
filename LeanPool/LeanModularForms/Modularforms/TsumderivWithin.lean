@@ -20,7 +20,7 @@ import Mathlib.Topology.ContinuousMap.Compact
 /-! # TsumderivWithin -/
 
 
-@[expose] public section
+public section
 
 
 open UpperHalfPlane TopologicalSpace Set

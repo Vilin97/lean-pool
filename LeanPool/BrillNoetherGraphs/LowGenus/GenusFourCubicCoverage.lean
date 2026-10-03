@@ -19,7 +19,7 @@ row proofs into the classifier-facing coverage theorem consumed by the public
 pseudocore reduction.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourCubicCoverage
 
 open Utilities

@@ -26,7 +26,7 @@ divisor has rank zero, so the displayed four-alternative claim fails for
 three suitable points on a cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

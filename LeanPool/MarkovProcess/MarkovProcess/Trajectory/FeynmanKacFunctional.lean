@@ -29,7 +29,7 @@ Main results: `feynmanKacAdditiveFunctional`,
 The resolvent and perturbation identities are developed in `Trajectory/FeynmanKacResolvent.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -43,6 +43,7 @@ section
 variable {alpha : Type*} [MetricSpace alpha] [MeasurableSpace alpha] [BorelSpace alpha]
 
 /-- The accumulated potential along a continuous path up to time `t`. -/
+@[expose]
 def feynmanKacAdditiveFunctional (q : alpha → ℝ) (t : NNReal)
     (omega : ContinuousPath alpha) : ℝ :=
   ∫ s in (0 : ℝ)..t, q (omega (Real.toNNReal s))
@@ -299,6 +300,7 @@ variable [CompleteSpace alpha] [Nonempty alpha] [LocallyCompactSpace alpha]
 variable (P : SubMarkovKernelSemigroup alpha) (hP : P.IsConservative)
 
 /-- The real-valued Feynman--Kac operator associated with a potential. -/
+@[expose]
 def IsConservative.feynmanKac (q : alpha → ℝ) (t : NNReal) (f : alpha → ℝ)
     (x : alpha) : ℝ :=
   ∫ omega, Real.exp (-feynmanKacAdditiveFunctional q t omega) * f (omega t)
@@ -390,6 +392,7 @@ theorem IsConservative.feynmanKac_one_le_one {q : alpha → ℝ} (hq0 : ∀ y, 0
   IsConservative.feynmanKac_le P hP hq0 (fun _ ↦ zero_le_one) (fun _ ↦ le_rfl) x
 
 /-- The nonnegative-extended-real Feynman--Kac operator. -/
+@[expose]
 def IsConservative.feynmanKacENNReal (q : alpha → ℝ) (t : NNReal)
     (f : alpha → ℝ≥0∞) (x : alpha) : ℝ≥0∞ :=
   ∫⁻ omega, ENNReal.ofReal (Real.exp (-feynmanKacAdditiveFunctional q t omega)) *

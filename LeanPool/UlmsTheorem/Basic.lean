@@ -38,7 +38,7 @@ Throughout we work with additive abelian groups.
 - `ulmLength p G` : least α with p^α G = 0  (for reduced groups)
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

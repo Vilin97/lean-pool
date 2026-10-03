@@ -19,7 +19,7 @@ import Mathlib.Topology.Separation.CompletelyRegular
 /-! # Eisensteinqexpansions -/
 
 
-@[expose] public section
+public section
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex
@@ -39,7 +39,7 @@ namespace LevelOneEisenstein
 
 Namespaced to avoid a whole-library name clash with the root-level `E` declared in another
 pooled project (`Rupert`). -/
-def E (k : ℤ) (hk : 3 ≤ k) : ModularForm (CongruenceSubgroup.Gamma ↑1) k :=
+@[expose] def E (k : ℤ) (hk : 3 ≤ k) : ModularForm (CongruenceSubgroup.Gamma ↑1) k :=
   (1/2 : ℂ) • eisensteinSeriesMF hk standardcongruencecondition /-they need 1/2 for the
     normalization to match up (since the sum here is taken over coprime integers).-/
 

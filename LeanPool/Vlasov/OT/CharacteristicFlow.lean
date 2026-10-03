@@ -47,7 +47,7 @@ differentiation-under-integral check that is not in Mathlib.
 See `formalize/DESIGN.md` (in the source repository) for the overall design.
 -/
 
-@[expose] public section
+public section
 
 namespace Vlasov
 
@@ -62,7 +62,7 @@ Note that the first component is the identity in `v` (the position
 ODE `x' = v`) and the second component is the mean-field force
 `−∇W ∗ ρ_t` evaluated at `x` (the velocity ODE `v' = −(∇W ∗ ρ)(x)`).
 -/
-noncomputable def vlasovVectorField
+@[expose] noncomputable def vlasovVectorField
     {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
@@ -1102,7 +1102,7 @@ over a chosen time set `s_t : Set ℝ` and initial-condition set
 The global `IsCharacteristicFlow gradW ρ charX charV` is the
 specialisation `IsCharacteristicFlowOn ... Set.univ Set.univ`
 (modulo the unconditional init clause). -/
-def IsCharacteristicFlowOn
+@[expose] def IsCharacteristicFlowOn
     {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
@@ -1162,7 +1162,7 @@ The Vlasov solution's weak PDE inherits the same regularity: it holds on
 the open interval where the characteristic flow is differentiable, and
 the initial condition at `t = 0` is captured separately by the
 pushforward equation in `IsLagrangianVlasovSolutionOn`. -/
-def WeakEvolutionEqOn {d : ℕ}
+@[expose] def WeakEvolutionEqOn {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (μ : ℝ → Measure (PhaseSpace d))
     (φ : PhaseSpace d → ℝ)
@@ -1179,7 +1179,7 @@ def WeakEvolutionEqOn {d : ℕ}
 
 /-- Localized Vlasov solution on `[0, T]`.  Mirror of `IsVlasovSolution`
 with the weak PDE restricted to `[0, T]` via `WeakEvolutionEqOn`. -/
-def IsVlasovSolutionOn {d : ℕ}
+@[expose] def IsVlasovSolutionOn {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f : ℝ → Measure (PhaseSpace d)) (T : ℝ) : Prop :=
   ∀ (φ : PhaseSpace d → ℝ),
@@ -1204,7 +1204,7 @@ def IsVlasovSolutionOn {d : ℕ}
 Every conjunct is the localized analogue of `IsLagrangianVlasovSolution`'s.
 The forward-iteration continuation bridges to the global predicate by gluing
 local windows. -/
-def IsLagrangianVlasovSolutionOn {d : ℕ}
+@[expose] def IsLagrangianVlasovSolutionOn {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f : ℝ → Measure (PhaseSpace d)) (T : ℝ) : Prop :=
   IsVlasovSolutionOn gradW f T ∧
@@ -3036,7 +3036,7 @@ The dominated-bound clause is the technical heart: deriving it requires
 a uniform-in-`z` bound on the flow speed `(charV s z, V'(s,z))` on the
 support of `φ`, which the eventual `vlasovWellPosedness` caller will
 produce from Picard-Lindelof local-flow boundedness + `HasCompactSupport φ`. -/
-def DiffUnderIntegralData
+@[expose] def DiffUnderIntegralData
     {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
@@ -3839,7 +3839,7 @@ times `S`.  Returns `⨆ t ∈ S, wasserstein1 (ρ t) (σ t)` in `ℝ≥0∞`.
   the same moment bound, via `supW1On_ne_top_of_VlasovMeasureCurve`.
 
 Used as the contraction metric for the Picard iteration. -/
-noncomputable def supW1On {d : ℕ}
+@[expose] noncomputable def supW1On {d : ℕ}
     (S : Set ℝ) (ρ σ : ℝ → Measure (PhysSpace d)) : ℝ≥0∞ :=
   ⨆ (t : ℝ) (_ : t ∈ S), wasserstein1 (ρ t) (σ t)
 
@@ -3942,7 +3942,7 @@ This is kept separate from the supW1On *contraction-ratio* constraint
 `LocalSmallnessContraction` (below): the two are genuinely independent
 mathematical constraints from distinct sub-arguments, so each predicate
 stays matched to its own sub-argument. -/
-def LocalSmallnessPLBuffer (L : NNReal) (T : ℝ) : Prop :=
+@[expose] def LocalSmallnessPLBuffer (L : NNReal) (T : ℝ) : Prop :=
   (L : ℝ) * T ^ 2 < 1
 
 /-- **Smallness predicate for the supW1On contraction-ratio constraint.**
@@ -3955,7 +3955,7 @@ on the W₁-based contraction analysis, inherited off
 `max(1, L)`-Lipschitz constant).
 
 When `max(1, L) = 1` the constraint simplifies to `L · (exp T - 1) < 1`. -/
-def LocalSmallnessContraction (L : NNReal) (T : ℝ) : Prop :=
+@[expose] def LocalSmallnessContraction (L : NNReal) (T : ℝ) : Prop :=
   (L : ℝ) * (Real.exp ((max 1 (L : ℝ)) * T) - 1) / (max 1 (L : ℝ)) < 1
 
 /-- The curve metric used by the `VlasovMeasureCurve` Banach iteration:
@@ -4107,7 +4107,7 @@ continuous clamp via `ContinuousOn.comp_continuous`. -/
 
 /-- Clamp `t : ℝ` to `Icc 0 T`.  Used by `VlasovMeasureCurve.extend` to
 extend a curve from `Icc 0 T` to all of `ℝ`. -/
-def clampToIcc (T t : ℝ) : ℝ := max 0 (min t T)
+@[expose] def clampToIcc (T t : ℝ) : ℝ := max 0 (min t T)
 
 lemma clampToIcc_mem {T : ℝ} (hT : 0 ≤ T) (t : ℝ) :
     clampToIcc T t ∈ Set.Icc (0 : ℝ) T := by
@@ -4130,7 +4130,7 @@ The extension preserves all structural properties (`IsProbabilityMeasure`,
 moment bound, integrability of `‖·‖`) universally in `t`, and extends
 W₁-continuity to convolveFunctionMeasure-continuity universally in `t`
 via `clampToIcc_continuous` + `vlasovMeasureCurve_convCont`. -/
-noncomputable def VlasovMeasureCurve.extend {d : ℕ} [NeZero d] {T : ℝ} {M : ℝ → ℝ}
+@[expose] noncomputable def VlasovMeasureCurve.extend {d : ℕ} [NeZero d] {T : ℝ} {M : ℝ → ℝ}
     (ρ : VlasovMeasureCurve d T M) : ℝ → Measure (PhysSpace d) :=
   fun t => ρ.ρ (clampToIcc T t)
 

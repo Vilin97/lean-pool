@@ -21,7 +21,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.SkolemNoether`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 
@@ -33,7 +33,7 @@ open scoped TensorProduct
 variable (K : Type u) [Field K]
 
 /-- Type synonym for viewing an `A`-module through an embedding of `B` into `A`. -/
-def moduleInst (K A B M : Type u)
+@[expose] def moduleInst (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B] (f : B →ₐ[K] A) :=
   (fun _ : B →ₐ[K] A => M) f
 
@@ -61,7 +61,7 @@ instance (K A B M : Type u)
   IsScalarTower.of_algebraMap_smul fun _ ↦ congrFun rfl
 
 /-- The additive action map before tensor-product descent. -/
-def smul1AddHom' (K A B M : Type u)
+@[expose] def smul1AddHom' (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module A M] (f : B →ₐ[K] A) (m : M) :
     B →+ (Module.End A M) →+ M where
@@ -80,7 +80,7 @@ def smul1AddHom' (K A B M : Type u)
     exact Module.add_smul (f b1) (f b2) (l m)
 
 /-- The tensor-product additive action on the transported module. -/
-def smul1AddHom (K A B M : Type u)
+@[expose] def smul1AddHom (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     M → (B ⊗[K] (Module.End A M)) →+ M := fun m ↦
@@ -89,7 +89,7 @@ def smul1AddHom (K A B M : Type u)
     rw [map_smul, LinearMap.smul_apply, smul_assoc, smul_comm]
 
 /-- The tensor-product linear action on the transported module. -/
-def smul1 (K A B M : Type u)
+@[expose] def smul1 (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     M → (B ⊗[K] (Module.End A M)) →ₗ[K] (moduleInst K A B M f) :=

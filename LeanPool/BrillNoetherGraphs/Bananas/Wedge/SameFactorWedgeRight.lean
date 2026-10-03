@@ -16,7 +16,7 @@ This is the factor-symmetric transport of the left-factor theorems across
 the explicit commutativity isomorphism for vertex wedges.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -97,7 +97,7 @@ sharper exponent only via the unformalized Mertens reading. The crude `g = 3` in
 recorded `not_powerful_of_large` threshold `n > k^6` exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 
@@ -114,12 +114,12 @@ def Bg (g k n : ℕ) : ℕ := ∏ j ∈ Finset.range (k / g), F g (n + g * j)
 
 /-- `overlapg g p = ∑_j [p ∈ (F g (n+g·j)).primeFactors]` is the number of `g`-blocks `p` divides.
 Generic form of `overlap`/`overlap5`. -/
-def overlapg (g k n p : ℕ) : ℕ :=
+@[expose] def overlapg (g k n p : ℕ) : ℕ :=
   ∑ j ∈ Finset.range (k / g), if p ∈ (F g (n + g * j)).primeFactors then 1 else 0
 
 /-- The over-count `Wg g k n := ∏_{p ∈ (Bg g k n).primeFactors} p ^ (overlapg p − 1)`.
 Generic form of `W`/`W5`. -/
-def Wg (g k n : ℕ) : ℕ :=
+@[expose] def Wg (g k n : ℕ) : ℕ :=
   ∏ p ∈ (Bg g k n).primeFactors, p ^ (overlapg g k n p - 1)
 
 /-- The product over the `⌊k/g⌋` blocks, `∏_{j<⌊k/g⌋} F g (n + g·j)`, equals `F (g · ⌊k/g⌋) n`.
@@ -410,7 +410,7 @@ theorem Wg_le_pow (hg : 1 ≤ g) {k n : ℕ} (hn : 1 ≤ n) : Wg g k n ≤ k ^ k
 abc/Langevin statement): packages the abc constant, epsilon loss, and omitted tail. The guard
 `g ≤ k` is essential — for `g > k` there are no `g`-blocks (`⌊k/g⌋ = 0`), the RHS is the empty
 product `1`, and `(F k n)^{(g-1)/g} ≤ 1` would be inconsistent. -/
-def BlockRadLBg (g : ℕ) : Prop :=
+@[expose] def BlockRadLBg (g : ℕ) : Prop :=
   ∀ k n : ℕ, g ≤ k → 1 ≤ n →
     (F k n : ℝ) ^ (((g : ℝ) - 1) / (g : ℝ)) ≤
       ((∏ j ∈ Finset.range (k / g), rad (F g (n + g * j)) : ℕ) : ℝ)

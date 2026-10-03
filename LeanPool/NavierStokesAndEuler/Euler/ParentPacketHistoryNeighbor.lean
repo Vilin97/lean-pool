@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryLipschitz
 parent's label scale.  The constants are computed from the prescribed
 coefficients and the older frame, not from an estimate on the new primary. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -83,6 +83,7 @@ theorem initial_curvature_derivative_norm :
 
 /-- The coefficient of the label scale in the actual history difference
 bound.  All zeroth norms belong to the restricted source coefficients. -/
+@[expose]
 def initialHistoryDifferenceScaleCost : ℝ :=
   let D := (G.transverseData m hm R S hS).initial τ hτ hτT.le
   let B := G.historyOn H m hm R S hS τ hτ hτT
@@ -109,7 +110,7 @@ theorem initial_history_derivative_scale :
 
 /-- The actual neighbor coefficient after extracting the one factor of
 ell supplied by the parent spatial derivative estimates. -/
-def neighborScaleCost
+@[expose] def neighborScaleCost
     (P : ParentFrame (G.transverseData m hm R S hS) τ) (CM CH : ℝ) : ℝ :=
   L.strainDifferenceCost +
     3*L.normalDifferenceCost/(P.rayScale hτ hτT*P.epsilon) +

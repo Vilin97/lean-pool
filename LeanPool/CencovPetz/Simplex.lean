@@ -34,7 +34,7 @@ This is groundwork for the finite/discrete Čencov (Chentsov) uniqueness story.
 - `CencovPetz.fisherBilin_pos`: positive-definiteness on nonzero tangent vectors.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -95,7 +95,8 @@ end tangentSpace
 
 /-- The Fisher bilinear form on the simplex tangent space:
 `⟪u,v⟫_p = ∑ a, u a * v a / p a`. -/
-noncomputable def fisherBilin (p : Simplex α) : LinearMap.BilinForm ℝ (tangentSpace (α := α)) := by
+@[expose] noncomputable def fisherBilin (p : Simplex α) :
+    LinearMap.BilinForm ℝ (tangentSpace (α := α)) := by
   classical
   refine LinearMap.mk₂ ℝ
     (fun u v => ∑ a, ((u : α → ℝ) a) * ((v : α → ℝ) a) / p.p a) ?_ ?_ ?_ ?_

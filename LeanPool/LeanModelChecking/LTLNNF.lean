@@ -19,7 +19,7 @@ We define negation normal form (NNF) formulas, their language, and a translation
 `LTL.exists_equiv_nnf` shows every `LTL` formula has an equivalent NNF formula.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanModelChecking
 
@@ -38,7 +38,7 @@ deriving DecidableEq
 
 /-- The language of an NNF formula: the predicate on infinite words `w` that holds
 exactly when `w` satisfies `f` at position `0`. -/
-def NNF.language {AP} (f : NNF AP) (w : Nat → Letter AP) : Prop :=
+@[expose] def NNF.language {AP} (f : NNF AP) (w : Nat → Letter AP) : Prop :=
   match f with
   | .atom p => p ∈ w 0
   | .not_atom p => p ∉ w 0

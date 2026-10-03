@@ -27,7 +27,7 @@ and vanishes on a pairing-preserving one
 (`statusDiff_of_samePairing`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -95,6 +95,7 @@ theorem symmU_assoc (E₁ E₂ E₃ : Finset α) :
 
 open scoped Classical in
 /-- The two-element label set of a label pair. -/
+@[expose]
 noncomputable def pairSet (p : α × α) : Finset α := {p.1, p.2}
 
 /-- Membership in a pair's label set. -/
@@ -105,6 +106,7 @@ theorem mem_pairSet {p : α × α} {i : α} :
   rw [Finset.mem_insert, Finset.mem_singleton]
 
 /-- The symmetric-difference fold of a list of label pairs. -/
+@[expose]
 noncomputable def pairFold (L : List (α × α)) : Finset α :=
   L.foldr (fun p E => symmU (pairSet p) E) ∅
 
@@ -185,6 +187,7 @@ variable {α : Type}
 
 /-- A chord pair whose low end is anti-canonical for `o`: the label
 pair of a chain flipped by the recanonicalization of `o`. -/
+@[expose]
 def AntiLowPair [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
     {κ : F.RelTransitionSystem} (o : κ.Orientation)
     (p : α × α) : Prop :=
@@ -258,6 +261,7 @@ variable {W : Fragment α} {F : EdgeSubset W}
 /-- The status difference of two systems: the labels whose
 high-status differs — the potential of the canonical route's
 accumulated relabel. -/
+@[expose]
 noncomputable def statusDiff [LinearOrder α]
     (κ κ' : F.RelTransitionSystem) : Finset α :=
   symmU (highSet κ) (highSet κ')

@@ -17,4 +17,4 @@ The section endpoint combines the `EL₃ = SL₃` bridge, finite extensions,
 spectral measures, and the concrete finite detector certificates.
 -/
 
-@[expose] public section
+public section

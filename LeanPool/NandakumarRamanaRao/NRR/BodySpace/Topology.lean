@@ -28,7 +28,7 @@ No new metric, hyperspace topology, or convex-body type is introduced: everythin
 from the root Mathlib body and its Hausdorff metric.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric TopologicalSpace Filter Topology
 
@@ -52,7 +52,7 @@ instance instT2Space : T2Space (ConvexSubbody K) := inferInstance
 
 /-- The forgetful map to the hyperspace of **nonempty compact sets**: a subbody is sent to its
 carrier, together with its compactness and nonemptiness witnesses. -/
-def toNonemptyCompacts (C : ConvexSubbody K) : TopologicalSpace.NonemptyCompacts Plane :=
+@[expose] def toNonemptyCompacts (C : ConvexSubbody K) : TopologicalSpace.NonemptyCompacts Plane :=
   ⟨⟨(C.body : Set Plane), C.isCompact⟩, C.nonempty⟩
 
 @[simp] theorem toNonemptyCompacts_carrier (C : ConvexSubbody K) :

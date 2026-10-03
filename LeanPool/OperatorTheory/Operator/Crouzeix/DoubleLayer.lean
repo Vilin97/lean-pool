@@ -39,7 +39,7 @@ Route: for `y = R_A(σ) x` one has `x = σ • y - A y`, hence
   positive-operator form.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped InnerProductSpace

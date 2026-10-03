@@ -58,7 +58,7 @@ class, so `c` lends it the chip it is sitting on.  That transfer is `lend`, and
 it is the only allocation the picture needs.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationChippedTriangle
 

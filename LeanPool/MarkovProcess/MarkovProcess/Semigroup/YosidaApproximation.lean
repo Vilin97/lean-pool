@@ -18,7 +18,7 @@ For a contractive resolvent `R`, this file defines the bounded generator
 records commutation and the exact formula on the range of a fixed resolvent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -43,6 +43,7 @@ private instance cacheAlgebraCLM : Algebra ℝ (E →L[ℝ] E) := inferInstance
 private instance cacheIsTopologicalRingCLM : IsTopologicalRing (E →L[ℝ] E) := inferInstance
 
 /-- The bounded Yosida generator `G_α = α (α R_α - I)`. -/
+@[expose]
 def yosidaGenerator (R : ContractiveResolvent E) (α : PositiveShift) : E →L[ℝ] E :=
   (α : ℝ) • (R.scaledOperator α - ContinuousLinearMap.id ℝ E)
 
@@ -63,6 +64,7 @@ instance normedAlgebraRatEnd : NormedAlgebra ℚ (E →L[ℝ] E) :=
   NormedAlgebra.restrictScalars ℚ ℝ (E →L[ℝ] E)
 
 /-- The exponential of the bounded Yosida generator at nonnegative time. -/
+@[expose]
 def yosidaOperator (R : ContractiveResolvent E) (α : PositiveShift) (t : NNReal) :
     E →L[ℝ] E :=
   exp ((t : ℝ) • R.yosidaGenerator α)
@@ -100,6 +102,7 @@ theorem continuous_yosidaOperator_apply (R : ContractiveResolvent E)
   fun_prop
 
 /-- The exponential Yosida approximation as a strongly continuous contraction semigroup. -/
+@[expose]
 def yosidaSemigroup (R : ContractiveResolvent E) (α : PositiveShift) :
     StronglyContinuousContractionSemigroup E where
   operator := R.yosidaOperator α

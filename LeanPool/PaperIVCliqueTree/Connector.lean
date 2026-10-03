@@ -17,7 +17,7 @@ Strict rank descent proves connectivity; a maximal-rank vertex on a putative
 cycle would have two different lower neighbours, contradicting unique parenthood.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph.CliqueTree
 

@@ -17,7 +17,7 @@ state, to exactly the two algebraic types excluded in
 `SecondFeedbackUsing` and `SecondFeedbackHigh`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

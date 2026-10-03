@@ -15,7 +15,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
 
 /-! # Small Chains Homology Surjectivity -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -25,7 +25,7 @@ namespace SphereOddDegree
 variable {R : Type} [CommRing R] {X : TopCat.{0}}
 /-- The induced map on degree-`n` homology of a chain map, packaged as a
 function on the underlying homology modules. -/
-noncomputable def homologyMapInDegree {K L : ChainComplex (ModuleCat.{0} R) ℕ}
+@[expose] noncomputable def homologyMapInDegree {K L : ChainComplex (ModuleCat.{0} R) ℕ}
     (f : K ⟶ L) (n : ℕ) : K.homology n → L.homology n :=
   ⇑(HomologicalComplex.homologyMap f n).hom
 

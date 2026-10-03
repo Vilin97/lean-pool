@@ -42,7 +42,7 @@ witnesses) for a genus-five graph is a separate matter, discussed in the
 private research notes; this file proves only the descent.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

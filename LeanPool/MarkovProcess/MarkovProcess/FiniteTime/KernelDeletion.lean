@@ -18,7 +18,7 @@ gives the law on the remaining ordered times.  This is finite-dimensional kernel
 it does not construct a path-space law or a stochastic process.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory

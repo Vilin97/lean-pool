@@ -21,7 +21,7 @@ composition's base and sums the results; `ConverseTrip.lean` carries
 the choice up and down the interface.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -1018,6 +1018,7 @@ theorem cutBalanced_stepData_closed (n : ℕ)
 open Classical in
 /-- **The summand a single datum computes.**  The total form of the
 colouring sum: zero where the subset does not carry the state. -/
+@[expose]
 noncomputable def edgeTermOf {α : Type}
     {V : Fragment α} {k ℓ : ℕ} (h : MixedFunctional k ℓ)
     {s : Finset V.Flag} {hc : ∀ f ∈ s, V.pairing f ∈ s}

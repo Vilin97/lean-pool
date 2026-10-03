@@ -17,7 +17,7 @@ attachment set in `M ⊕₁ ℝ` is parametrized by `M ⊕ Unit`: the left summa
 the base hyperplane and the right summand is the single elevated point.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -29,18 +29,21 @@ universe u v
 abbrev OneSum (M : Type u) := WithLp 1 (M × ℝ)
 
 /-- Parametrization of the base hyperplane together with one elevated point. -/
+@[expose]
 noncomputable def attachmentPoint
     {M : Type u} (a : M) (H : ℝ) : M ⊕ Unit → OneSum M
   | Sum.inl m => toLp 1 (m, 0)
   | Sum.inr _ => toLp 1 (a, H)
 
 /-- The attachment subset of the sum-norm product. -/
+@[expose]
 noncomputable def attachmentSet
     {M : Type u} (a : M) (H : ℝ) : Set (OneSum M) :=
   Set.range (attachmentPoint a H)
 
 /-- The map prescribed on the attachment set before taking the metric
 adjunction. -/
+@[expose]
 def attachmentMap {M : Type u} {N : Type v}
     (V : M → N) (y : N) : M ⊕ Unit → N
   | Sum.inl m => V m

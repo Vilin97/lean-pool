@@ -19,7 +19,7 @@ regularized minimizer from its minimizing property and the actual `sInf`
 definition of the distance to the minimizer set.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 

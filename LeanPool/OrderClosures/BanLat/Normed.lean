@@ -23,7 +23,7 @@ vector lattices, including continuity of lattice operations, closedness of the
 positive cone, boundedness of order intervals, and monotone convergence facts.
 -/
 
-@[expose] public section
+public section
 
 /-- A normed vector lattice is a real vector lattice equipped with a lattice norm:
 a norm satisfying `|x| ≤ |y| → ‖x‖ ≤ ‖y‖`. -/

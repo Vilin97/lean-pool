@@ -42,7 +42,7 @@ bit is `1` [dW19, qcnotes.tex:804], recovering Alice's original qubit
   Alice's circuit yields the four branches, and every branch corrects back.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

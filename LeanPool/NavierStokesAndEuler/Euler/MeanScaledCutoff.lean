@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! The actual source outer cutoff in rescaled particle labels. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -23,7 +23,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerGevrey
 open scoped ContDiff
 
 /-- Scaled cutoff, bundling `field`, `smooth`, `compact`. -/
-def scaledCutoff (ℓ : ℝ) (hℓ : 0 < ℓ) : Cutoff where
+@[expose] def scaledCutoff (ℓ : ℝ) (hℓ : 0 < ℓ) : Cutoff where
   field := fun x => EulerSpatialCutoffs.outerCutoff (ℓ • x)
   smooth := EulerSpatialCutoffs.outerCutoff_contDiff.comp (contDiff_id.const_smul ℓ)
   compact := EulerSpatialCutoffs.outerCutoff_compactSupport.comp_smul hℓ.ne'

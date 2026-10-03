@@ -19,7 +19,7 @@ the remaining four rows are the bridge types and are deliberately left as a
 separate structural branch.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFiveCubicCoverage
 
 open Utilities

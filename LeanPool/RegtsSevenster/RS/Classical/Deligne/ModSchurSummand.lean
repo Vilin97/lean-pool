@@ -17,7 +17,7 @@ on the relative tensor powers: the module-power map of the section
 is a split monomorphism and intertwines the two actions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

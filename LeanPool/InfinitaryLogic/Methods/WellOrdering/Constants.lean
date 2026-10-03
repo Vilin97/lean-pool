@@ -21,7 +21,7 @@ This commit is the coding layer only: the two index functions, their injectivity
 disjointness, and the term/sentence-level wrappers over the kernel's `constTerm`/`constTermS`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -50,6 +50,6 @@ theorem ratConstIdx_ne_henkinConstIdx (q : ℚ) (n : ℕ) :
 variable {L : Language.{0, 0}}
 
 /-- The rational constant `d_q` as a closed `L[[ℕ]]`-term. -/
-def ratConstTerm (q : ℚ) : L[[ℕ]].Term Empty := constTerm (ratConstIdx q)
+@[expose] def ratConstTerm (q : ℚ) : L[[ℕ]].Term Empty := constTerm (ratConstIdx q)
 
 end FirstOrder.Language

@@ -18,7 +18,7 @@ fields. Physical derivative estimates are consequences of their native
 classes, support and chart identities. No `RawStageBounds` is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -110,6 +110,7 @@ structure WaveData where
 variable {h D I K J}
 
 /-- Scalar, given by `(W.copies i).sum W.lowerRadius h W.nativeWidth`. -/
+@[expose]
 noncomputable def WaveData.scalar (W : WaveData h D I K J) (i : J) : SpaceTime → ℂ :=
   (W.copies i).sum W.lowerRadius h W.nativeWidth
 
@@ -133,6 +134,7 @@ theorem WaveData.scalar_bound (W : WaveData h D I K J)
   exact ⟨C, hC, fun w hw hq => hb w hw (abs_time_le_one hh hh1 hw hq)⟩
 
 /-- Vector, given by `PhysicalCopyBounds.vectorSum W.copies W.lowerRadius h W.nativeWidth`. -/
+@[expose]
 noncomputable def WaveData.vector (W : WaveData h D I K (Fin 3)) : VelocityField :=
   PhysicalCopyBounds.vectorSum W.copies W.lowerRadius h W.nativeWidth
 
@@ -154,6 +156,7 @@ theorem WaveData.vector_bound (W : WaveData h D I K (Fin 3))
   exact ⟨C, hC, fun w hw hq => hb w hw (abs_time_le_one hh hh1 hw hq)⟩
 
 /-- Pressure, defined pointwise by `(W.scalar () w).re`. -/
+@[expose]
 noncomputable def WaveData.pressure (W : WaveData h D I K Unit) : PressureField :=
   fun w => (W.scalar () w).re
 
@@ -327,27 +330,29 @@ section Assembly
 variable {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
 /-- Potential increment, defined pointwise by `W.vector w + M.family.angularField w`. -/
-noncomputable def potentialIncrement (W : WaveData h D I K (Fin 3))
+@[expose] noncomputable def potentialIncrement (W : WaveData h D I K (Fin 3))
     (M : MeanData h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => W.vector w + M.family.angularField w
 
 /-- Pressure increment, defined pointwise by `W.pressure w + M.family.field w`. -/
-noncomputable def pressureIncrement (W : WaveData h D I K Unit)
+@[expose] noncomputable def pressureIncrement (W : WaveData h D I K Unit)
     (M : MeanData h (2 * CoordinateAlgebra.A h)) : PressureField :=
   fun w => W.pressure w + M.family.field w
 
 /-- These losses depend only on fixed physical parameters and jet order.
 The five offsets are fixed once for the whole stage sequence. -/
+@[expose]
 noncomputable def potentialLoss (h waveOffset meanOffset : ℝ) (m : ℕ) : ℝ :=
   max (PhysicalGraphBounds.waveLoss h m + waveOffset)
     (PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h - 1 / 2) m + meanOffset)
 
 /-- Direct loss, given by `PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset`. -/
-noncomputable def directLoss (h meanOffset : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def directLoss (h meanOffset : ℝ) (m : ℕ) : ℝ :=
   PhysicalMeanJetBounds.loss (CoordinateAlgebra.A h) m + meanOffset
 
 /-- Pressure loss, given by `max (PhysicalGraphBounds.waveLoss h m + waveOffset)
 (PhysicalMeanJetBounds.loss (2 * CoordinateAlgebra.A h) m + meanOffset)`. -/
+@[expose]
 noncomputable def pressureLoss (h waveOffset meanOffset : ℝ) (m : ℕ) : ℝ :=
   max (PhysicalGraphBounds.waveLoss h m + waveOffset)
     (PhysicalMeanJetBounds.loss (2 * CoordinateAlgebra.A h) m + meanOffset)
@@ -444,16 +449,19 @@ section Sequences
 variable {h qbig : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : Type*}
 
 /-- Potential stages, given by `addBaseAtZero base (fun j => potentialIncrement (W j) (M j))`. -/
+@[expose]
 noncomputable def potentialStages (base : VelocityField)
     (W : ℕ → WaveData h D I K (Fin 3))
     (M : ℕ → MeanData h (CoordinateAlgebra.A h - 1 / 2)) : ℕ → VelocityField :=
   addBaseAtZero base (fun j => potentialIncrement (W j) (M j))
 
 /-- Direct stages, defined pointwise by `(M j).family.angularField`. -/
+@[expose]
 noncomputable def directStages (M : ℕ → MeanData h (CoordinateAlgebra.A h)) : ℕ → VelocityField :=
   fun j => (M j).family.angularField
 
 /-- Pressure stages, given by `addBaseAtZero base (fun j => pressureIncrement (W j) (M j))`. -/
+@[expose]
 noncomputable def pressureStages (base : PressureField)
     (W : ℕ → WaveData h D I K Unit)
     (M : ℕ → MeanData h (2 * CoordinateAlgebra.A h)) : ℕ → PressureField :=

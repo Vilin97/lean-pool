@@ -21,4 +21,4 @@ Tags: number-theory, kronecker-sequences, three-gap
 MSC: 11J71
 -/
 
-@[expose] public section
+public section

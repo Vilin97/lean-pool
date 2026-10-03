@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3Anchor
 The anchor-search theorem transported to the current positive secant interface.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

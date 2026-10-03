@@ -27,7 +27,7 @@ For even `n`, `c_n = (-2)^(n/2)` is the integer with `π^n = [c_n]`, and
 `Geometry/FrobeniusAnnihilator.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.Descent
 
@@ -37,10 +37,10 @@ section EvenN
 variable (n : ℕ)
 
 /-- `c_n = (-2)^(n/2)`, the integer with `π^n = [c_n]` for even `n`. -/
-def cN : ℤ := (-2) ^ (n / 2)
+@[expose] def cN : ℤ := (-2) ^ (n / 2)
 
 /-- `N = c_n - 1`. -/
-def nn : ℤ := cN n - 1
+@[expose] def nn : ℤ := cN n - 1
 
 variable {n}
 

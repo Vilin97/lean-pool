@@ -21,12 +21,13 @@ single-position form entries: `1` on matching even colours, the
 symplectic entry on odd colours, `0` on mixed positions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The single-position form entry: Kronecker on even colours,
 the symplectic matrix on odd colours, zero on mixed. -/
+@[expose]
 def colourFormEntry (k ℓ : ℕ) :
     (Fin k ⊕ Fin (2 * ℓ)) → (Fin k ⊕ Fin (2 * ℓ)) → ℂ
   | Sum.inl i, Sum.inl j => if i = j then 1 else 0
@@ -39,6 +40,7 @@ def colourFormEntry (k ℓ : ℕ) :
 /-- The Koszul crossing count of a colouring pair: pairs of
 positions `i < j` with the second argument odd at `i` and the
 first odd at `j`. -/
+@[expose]
 def koszulCrossings {k ℓ d : ℕ}
     (c c' : MixedColouring k ℓ d) : ℕ :=
   (Finset.univ.filter (fun p : Fin d × Fin d =>
@@ -46,6 +48,7 @@ def koszulCrossings {k ℓ d : ℕ}
 
 /-- **The pinned tensor-power pairing** on colouring basis
 vectors. -/
+@[expose]
 noncomputable def betaColour {k ℓ d : ℕ}
     (c c' : MixedColouring k ℓ d) : ℂ :=
   (-1 : ℂ) ^ koszulCrossings c c' *

@@ -60,7 +60,7 @@ slot.  The multi-block half of §4.3 is unexercised by every accepted proof in
 the catalog; see the note at the end of this file for what it would cost.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -91,6 +91,7 @@ theorem dot_eq_sum_range (l r : List ℤ) :
 
 /-- A `List ℤ` form, read as an `AffineForm m`: the head is the constant and
 entry `i + 1` is the coefficient of coordinate `i`. -/
+@[expose]
 def toAffineForm (m : ℕ) (g : Form) : ExplicitPotential.AffineForm m where
   fixedValue := g.getD 0 0
   coefficient := fun i => g.getD (i.val + 1) 0
@@ -179,6 +180,7 @@ structure Block where
   hi : ℤ
 
 /-- The out-of-range block: every check on it fails. -/
+@[expose]
 def Block.dflt : Block := ⟨[], [], 1, 0⟩
 
 /-- The firing script attached to one anchor: a potential at each core vertex,
@@ -293,6 +295,7 @@ def pot (a v : ℕ) : Form := (w.plan a).potential.getD v []
 def blockList (a e : ℕ) : List Block := (w.plan a).blocks.getD e []
 /-- Read a specified interpolation block, using the default block with inconsistent slope bounds
 for a missing entry. -/
+@[expose]
 def block (a e i : ℕ) : Block := (w.blockList a e).getD i Block.dflt
 /-- Read an anchor’s receipts for a slot and block, falling back to the default rich block
 certificate. -/
@@ -346,6 +349,7 @@ variable {m n p : ℕ}
 
 /-- The row `rise_e − lo_e·σ_e ≥ 0`, written so that it is *definitionally*
 `(leafCertificate …).lowerForm`. -/
+@[expose]
 def leafLowerForm (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness)
     (a : Fin n) (e : Fin p) : ExplicitPotential.AffineForm m :=
   ExplicitPotential.AffineForm.sub
@@ -357,6 +361,7 @@ def leafLowerForm (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness)
 
 /-- The row `hi_e·σ_e − rise_e ≥ 0`, written so that it is *definitionally*
 `(leafCertificate …).upperForm`. -/
+@[expose]
 def leafUpperForm (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness)
     (a : Fin n) (e : Fin p) : ExplicitPotential.AffineForm m :=
   ExplicitPotential.AffineForm.sub
@@ -376,6 +381,7 @@ def leafCone (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness) :
         [leafLowerForm m core w a e, leafUpperForm m core w a e]))
 
 /-- The explicit-potential certificate a single-block leaf denotes. -/
+@[expose]
 def leafCertificate (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness) :
     ExplicitPotential.CertificateData m n p where
   core := core
@@ -446,6 +452,7 @@ This is where the soundness hazard of `RESULTS.md` §9 is discharged: the
 `rep_loopless` field below is supplied by `hNotLoopy` and by nothing else. -/
 
 /-- The vanishing set of a length vector. -/
+@[expose]
 def zeroSet {p : ℕ} (ℓ : Fin p → ℕ) : Finset (Fin p) :=
   Finset.univ.filter (fun e => ℓ e = 0)
 
@@ -455,6 +462,7 @@ def zeroSet {p : ℕ} (ℓ : Fin p → ℕ) : Finset (Fin p) :=
 `hForest` is genus preservation and `hNotLoopy` is looplessness of the
 contracted core — which is exactly what the strong-separator step needs, and
 is why `DegSpec.strongSeparatorCertificate` can be hypothesis-free. -/
+@[expose]
 def censusSpec (core : ExplicitPotential.Core n p) (hn : 0 < n) (ℓ : Fin p → ℕ)
     (hForest : IsForest core (zeroSet ℓ))
     (hNotLoopy : ¬ IsLoopy core (zeroSet ℓ)) :

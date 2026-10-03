@@ -15,7 +15,7 @@ The nonlinear terms use the value and spatial/angular part of each jet.
 These are reconstructed from actual raw-path witnesses and finite sums.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ namespace SpatialJetField
 variable {P T : ℝ} [Fact (0 < P)] {J K J' : Domain → VectorJet}
 
 /-- Of field, bundling `raw`, `field`, `value_eq`, `spatial_eq`. -/
-def ofField {raw : VectorField} (s : Set ℝ) (G : Field P T raw) :
+@[expose] def ofField {raw : VectorField} (s : Set ℝ) (G : Field P T raw) :
     SpatialJetField P T (slicedJet s raw) where
   raw := raw
   field := G

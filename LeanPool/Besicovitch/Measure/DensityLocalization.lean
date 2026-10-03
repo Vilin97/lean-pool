@@ -17,7 +17,7 @@ relative to the restricted measure.  Straightness turns this relative differenti
 into preservation of every strictly smaller lower-density bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

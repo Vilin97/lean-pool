@@ -35,7 +35,7 @@ This forces K > 0 a.e. on A × B for all such A, B.
 - Simon, *Functional Integration and Quantum Physics*, Prop. I.12
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Measure Filter
 

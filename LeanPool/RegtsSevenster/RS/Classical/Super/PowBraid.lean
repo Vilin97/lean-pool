@@ -19,7 +19,7 @@ defined here; the identification is the coordinate workhorse of
 the extraction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -86,12 +86,14 @@ theorem MixedColouring.not_isEven_comp {k ℓ d : ℕ}
 
 /-- The Koszul sign of swapping two positions of a colouring:
 `−1` when both are odd. -/
+@[expose]
 def adjSign {k ℓ d : ℕ} (c : MixedColouring k ℓ d)
     (a b : Fin d) : ℂ :=
   if (c a).isRight ∧ (c b).isRight then -1 else 1
 
 /-- The Koszul-signed adjacent position swap on the colouring
 model. -/
+@[expose]
 noncomputable def colourSwap (k ℓ : ℕ) :
     (n : ℕ) → (i : ℕ) → i + 2 ≤ n →
       (colourPower k ℓ n ⟶ colourPower k ℓ n) :=

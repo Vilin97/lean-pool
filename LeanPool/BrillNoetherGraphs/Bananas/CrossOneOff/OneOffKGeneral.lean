@@ -18,7 +18,7 @@ under which the paper's one-off row block is large enough to obstruct
 generality.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Bounds
 Existence of the certified below-two local trial with its complete operational contract.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

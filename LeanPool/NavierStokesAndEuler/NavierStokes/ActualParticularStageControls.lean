@@ -43,7 +43,7 @@ phase, including the free angular variable.  All primitive bounds are pulled
 from the actual primary inputs on the same closed support cells.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -141,6 +141,7 @@ theorem inputBounds_reindex (e : D ≃ₗᵢ[ℝ] E) {s : StripData E}
 /-- This operation changes only the harmonic frequency and sets the two
 unknown coefficients to zero. In particular its actual normal and defect
 are unchanged. -/
+@[expose]
 noncomputable def zeroRescale (q : ℝ) (a : WaveFamily D I) : WaveFamily D I :=
   { a with
     amplitude := fun _ _ _ => 0
@@ -203,6 +204,7 @@ abbrev Native := (Parameter × ℝ) × TorusInverse.Plane
 
 /-- Native to full, given by `ParticularWaveAssembly.angleShuffle.symm.trans
 (StateReindex.cylinder cycleAssoc.symm)`. -/
+@[expose]
 noncomputable def nativeToFull : Native ≃ₗᵢ[ℝ] ActualPrimary.FullPoint :=
   ParticularWaveAssembly.angleShuffle.symm.trans (StateReindex.cylinder cycleAssoc.symm)
 
@@ -221,6 +223,7 @@ noncomputable def directions (B : ℕ) : GraphDirections Native :=
   ParticularWaveBounds.reindexDirections nativeToFull (ActualPrimaryBounds.directions B)
 
 /-- Primary block as an element of `HarmonicBlock CyclePoint`. -/
+@[expose]
 noncomputable def primaryBlock {B N0 : ℕ} (l : Label B N0) : HarmonicBlock CyclePoint :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).tangentBlock
     (fun n z => (ActualPrimary.chartCoefficients l.1 l.2).phase n (z, 0))
@@ -228,6 +231,7 @@ noncomputable def primaryBlock {B N0 : ℕ} (l : Label B N0) : HarmonicBlock Cyc
       (ActualPrimary.choice B N0).prepared l.1 l.2)
 
 /-- Carrier, constructed using `ParticularWaveAssembly.actualCarrier`. -/
+@[expose]
 noncomputable def carrier {B N0 : ℕ} (b : Label B N0 → HarmonicBlock CyclePoint)
     (j : ℤ) (l : Label B N0) : WaveCoefficients Native :=
   ParticularWaveAssembly.actualCarrier
@@ -237,6 +241,7 @@ noncomputable def carrier {B N0 : ℕ} (b : Label B N0 → HarmonicBlock CyclePo
 
 /-- Background family, given by `WaveFamily.ofCoefficients (fun i =>
 ParticularWaveBounds.zeroAmplitudes (carrier b j i.1))`. -/
+@[expose]
 noncomputable def backgroundFamily {B N0 : ℕ}
     (b : Label B N0 → HarmonicBlock CyclePoint) (j : ℤ) : WaveFamily Native (CopyIndex B N0) :=
   WaveFamily.ofCoefficients (fun i => ParticularWaveBounds.zeroAmplitudes (carrier b j i.1))
@@ -385,7 +390,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -399,6 +404,7 @@ open scoped Topology ContDiff
 variable {B N0 : ℕ}
 
 /-- Padded cell as an element of `Set ActualPrimary.FullPoint`. -/
+@[expose]
 noncomputable def paddedCell (n : ℕ) (i : CopyIndex B N0) : Set ActualPrimary.FullPoint :=
   {x | near i.1 n ∧
     (fullCopy i.1 n i.2 x).1 ∈
@@ -407,6 +413,7 @@ noncomputable def paddedCell (n : ℕ) (i : CopyIndex B N0) : Set ActualPrimary.
     (fullCopy i.1 n i.2 x).2 ∈ (ActualPrimary.clockWindow i.1.2).core}
 
 /-- Cells, given by `ActualParticularBackground.nativeToFull ⁻¹' paddedCell n i`. -/
+@[expose]
 noncomputable def cells (n : ℕ) (i : CopyIndex B N0) : Set ActualParticularBackground.Native :=
   ActualParticularBackground.nativeToFull ⁻¹' paddedCell n i
 
@@ -759,7 +766,7 @@ follow from the selected phase construction and the polynomial coordinate
 cost, without estimates on a solved velocity or pressure as hypotheses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -840,6 +847,7 @@ section NativeCoordinates
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Argument, given by `(χ x.1, (g.coordinates k x.2).2)`. -/
+@[expose]
 noncomputable def argument (χ : P →L[ℝ] Slow) (g : Geometry) (k : Frequency)
     (x : P × Plane) : Slow × ℝ := (χ x.1, (g.coordinates k x.2).2)
 
@@ -896,6 +904,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Tangent, given by `PrimaryCopyBridge.frameTangentData (nativeFrame
 (ScaledActualParticularControl.frame F φ clock normal (l,n)) χ) j (source l n)`. -/
+@[expose]
 noncomputable def tangent (source : Label → ℕ → P × Plane → Space) (j : ℤ)
     (l : Label) (n : ℕ) : TangentData P Space :=
   PrimaryCopyBridge.frameTangentData
@@ -1065,7 +1074,7 @@ Only the selected geometry and its closed source support occur here.  No
 property of a solved particular or signed field is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1088,18 +1097,22 @@ abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 variable {B N0 : ℕ}
 
 /-- Domain, given by `PhysicalMeanDomain.slowDomain standardRegion.carrier`. -/
+@[expose]
 noncomputable def domain : Set Point :=
   PhysicalMeanDomain.slowDomain standardRegion.carrier
 
 /-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2,l.1) n`. -/
+@[expose]
 noncomputable def labelCarrier (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2,l.1) n
 
 /-- Associated point, given by `CorrectionStep.cycleAssoc.symm (p, Y)`. -/
+@[expose]
 noncomputable def associatedPoint (p : Parameter) (Y : Plane) : Point :=
   CorrectionStep.cycleAssoc.symm (p, Y)
 
 /-- Parameter domain, given by `{p | p.2 ∈ standardRegion.carrier}`. -/
+@[expose]
 noncomputable def parameterDomain : Set Parameter :=
   {p | p.2 ∈ standardRegion.carrier}
 
@@ -1112,6 +1125,7 @@ noncomputable def Ordered (l : Index B N0) (n : ℕ) : Prop :=
   CommonWindow.index h n ≤ ChartScales.nativeIndex h (BaseChartJets.cellBand l.1)
 
 /-- Slow map, given by `nativeSlow l.1 (toAbsolute n (associatedPoint p 0))`. -/
+@[expose]
 noncomputable def slowMap (l : Index B N0) (n : ℕ) (p : Parameter) : PhaseCalculus.Slow :=
   nativeSlow l.1 (toAbsolute n (associatedPoint p 0))
 
@@ -1133,7 +1147,7 @@ theorem slowCore_closed (l : Index B N0) (n : ℕ) : IsClosed (slowCore l n) :=
     (choice B N0).prepared l.1).preimage (slowMap_continuous l n)
 
 /-- Reference length, given by `(phases B N0 l.2).L l.1`. -/
-noncomputable def referenceLength (l : Index B N0) : ℝ :=
+@[expose] noncomputable def referenceLength (l : Index B N0) : ℝ :=
   (phases B N0 l.2).L l.1
 
 theorem referenceLength_pos (l : Index B N0) : 0 < referenceLength l :=
@@ -1141,6 +1155,7 @@ theorem referenceLength_pos (l : Index B N0) : 0 < referenceLength l :=
 
 /-- Clock, given by `PhysicalParticularWave.clockWeight h (ChartScales.Q n) (ChartScales.Q
 (BaseChartJets.cellBand l.1))`. -/
+@[expose]
 noncomputable def clock (l : Index B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight h (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1))
@@ -1150,21 +1165,24 @@ theorem clock_pos (l : Index B N0) (n : ℕ) : 0 < clock l n :=
 
 /-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
 nominal l.1) l.2`. -/
+@[expose]
 noncomputable def spatialLabel (l : Index B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
 /-- Reference geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det
 (spatialLabel l) 0`. -/
+@[expose]
 noncomputable def referenceGeometry (l : Index B N0) : Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
 /-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h
 n`. -/
-noncomputable def gap (l : Index B N0) (n : ℕ) : ℕ :=
+@[expose] noncomputable def gap (l : Index B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.1) - CommonWindow.index h n
 
 /-- Geometry, given by `CopySolveCompatibility.transportGeometry (referenceGeometry l) (gap l n)
 0 (clock l n) (clock_pos l n).ne'`. -/
+@[expose]
 noncomputable def geometry (l : Index B N0) (n : ℕ) : Geometry :=
   CopySolveCompatibility.transportGeometry (referenceGeometry l) (gap l n) 0
     (clock l n) (clock_pos l n).ne'
@@ -1304,6 +1322,7 @@ theorem activeSlowCore_closed (l : Index B N0) (n : ℕ) : IsClosed (activeSlowC
 
 /-- Canonical source region, given by `ActualGaussianCoverage.sourceRegion (activeSlowCore l n)
 (geometry l n) slots.radius (referenceLength l) (clock l n)`. -/
+@[expose]
 noncomputable def canonicalSourceRegion (l : Index B N0) (n : ℕ) : Set (Parameter × Plane) :=
   ActualGaussianCoverage.sourceRegion (activeSlowCore l n) (geometry l n)
     slots.radius (referenceLength l) (clock l n)
@@ -1327,6 +1346,7 @@ theorem labelCarrier_iff_canonicalSourceRegion
       activeSlowCore, ite_eq_right hn, mem_inter_iff, mem_preimage, mem_empty_iff_false, false_and]
 
 /-- Cutoff as an element of `Plane → ℝ`. -/
+@[expose]
 noncomputable def cutoff (l : Index B N0) (n : ℕ) : Plane → ℝ :=
   (fun z => (clockWindow l.1).cutoff z *
     GaussianTailFlat.slotCutoff (referenceLength l) z.2) ∘
@@ -1376,7 +1396,7 @@ Gaussian-times-padding cutoff. Clock factors only need to be positive
 at each band; no uniform range for the complete clock family is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1398,7 +1418,7 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- The literal complex Volterra solve and its separately transported
 Gaussian/outer cutoff, without uniform bounds on the clock scalars. -/
-noncomputable def scalarData : CopyData ((P × ℝ) × Plane) Frequency :=
+@[expose] noncomputable def scalarData : CopyData ((P × ℝ) × Plane) Frequency :=
   complexCopyData base t f g (fun _ => 0) (fun n => L n / rate n)
     (fun n => (div_pos (hL n) (hc n)).le)
     (fun n => ActualGaussianCoverage.nativeCutoff (r n) (L n) (hr n) (hL n) (rate n))
@@ -1421,6 +1441,7 @@ variable
         ActualGaussianCoverage.outerCell (r n) (L n) (rate n)))
 
 /-- Scalar cells, constructed using `nativeCells`. -/
+@[expose]
 noncomputable def scalarCells : Cells ((P × ℝ) × Plane) Frequency :=
   nativeCells g (fun n => ActualGaussianCoverage.outerCell (r n) (L n) (rate n))
     (fun _ => ActualGaussianCoverage.outerCell_compact _ _ _) hinj
@@ -1519,7 +1540,7 @@ therefore transfers the Gaussian clock estimates without assumptions about a
 source, correction state, or modal-control output.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1536,6 +1557,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   (r : Label → ℕ → ℝ) (hr : ∀ l n, 0 < r l n)
 
 /-- The literal cutoff, before placing it in any particular-solve record. -/
+@[expose]
 noncomputable def literalCutoff (l : Label) (n : ℕ) (k : Frequency)
     (x : P × Plane) : ℝ :=
   (ActualGaussianCoverage.referenceWindow (r l n) (F.L (l,n))
@@ -1621,7 +1643,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1648,6 +1670,7 @@ abbrev Label (B N0 : ℕ) := Fin 2 × CorrectionInitialization.ActualPrimary.Lab
 /-! Reindexing retains the selected phase, its frame, and all uniform constants. -/
 
 /-- Reindex domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+@[expose]
 noncomputable def reindexDomain {ι κ : Type} (D : Domain ι Slow) (e : κ → ι) : Domain κ Slow where
   scale i := D.scale (e i)
   carrier i := D.carrier (e i)
@@ -1655,6 +1678,7 @@ noncomputable def reindexDomain {ι κ : Type} (D : Domain ι Slow) (e : κ → 
   one_le_scale i := D.one_le_scale (e i)
 
 /-- Reindex phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
+@[expose]
 noncomputable def reindexPhase {ι κ : Type} (F : PhaseFamily ι) (e : κ → ι) : PhaseFamily κ where
   epsilon i := F.epsilon (e i)
   p i := F.p (e i)
@@ -1666,6 +1690,7 @@ noncomputable def reindexPhase {ι κ : Type} (F : PhaseFamily ι) (e : κ → �
 
 /-- Reindex construction, bundling `phase`, `V`, `openV`, `lam` and the required compatibility
 proofs. -/
+@[expose]
 noncomputable def reindexConstruction {ι κ : Type} {D : Domain ι Slow}
     (F : PhaseConstruction D) (e : κ → ι) : PhaseConstruction (reindexDomain D e) where
   phase := reindexPhase F.phase e
@@ -1728,17 +1753,19 @@ variable {B N0 : ℕ}
 
 /-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
 nominal l.2) l.1`. -/
+@[expose]
 noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.2) l.1
 
 /-- Reference geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det
 (spatialLabel l) 0`. -/
+@[expose]
 noncomputable def referenceGeometry (l : Label B N0) : Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
 /-- Gap, given by `ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h
 n`. -/
-noncomputable def gap (l : Label B N0) (n : ℕ) : ℕ :=
+@[expose] noncomputable def gap (l : Label B N0) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h (BaseChartJets.cellBand l.2) - CommonWindow.index h n
 
 theorem reference_refine (l : Label B N0) (n : ℕ) :
@@ -1751,6 +1778,7 @@ theorem reference_refine (l : Label B N0) (n : ℕ) :
 
 /-- Reference cutoff, given by `(clockWindow l.2).cutoff z * GaussianTailFlat.slotCutoff
 ((phases B N0 l.1).L l.2) z.2`. -/
+@[expose]
 noncomputable def referenceCutoff (l : Label B N0) (z : Plane) : ℝ :=
   (clockWindow l.2).cutoff z * GaussianTailFlat.slotCutoff ((phases B N0 l.1).L l.2) z.2
 
@@ -1759,6 +1787,7 @@ theorem referenceCutoff_compact (l : Label B N0) : HasCompactSupport (referenceC
 
 /-- Reference, bundling `band`, `geometry`, `length`, `length_pos` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def reference (l : Label B N0) : ParticularWaveAssembly.Reference Parameter where
   band := BaseChartJets.cellBand l.2
   geometry := referenceGeometry l
@@ -1773,32 +1802,35 @@ noncomputable def reference (l : Label B N0) : ParticularWaveAssembly.Reference 
 
 /-- Native to full, given by `ParticularWaveAssembly.angleShuffle.symm.trans
 (StateReindex.cylinder cycleAssoc.symm)`. -/
+@[expose]
 noncomputable def nativeToFull : Native ≃ₗᵢ[ℝ] AP :=
   ParticularWaveAssembly.angleShuffle.symm.trans (StateReindex.cylinder cycleAssoc.symm)
 
 /-- Background, given by `ParticularWaveBounds.reindexCoefficients nativeToFull
 (chartCoefficients l.1 l.2)`. -/
+@[expose]
 noncomputable def background (l : Label B N0) : LinearWaveBounds.WaveCoefficients Native :=
   ParticularWaveBounds.reindexCoefficients nativeToFull (chartCoefficients l.1 l.2)
 
 /-- Directions, given by `ParticularWaveBounds.reindexDirections nativeToFull
 (PrimaryResidualClass.directions (commonContext B))`. -/
-noncomputable def directions : LinearWaveBounds.GraphDirections Native :=
+@[expose] noncomputable def directions : LinearWaveBounds.GraphDirections Native :=
   ParticularWaveBounds.reindexDirections nativeToFull (PrimaryResidualClass.directions
       (commonContext B))
 
 /-- Associated context, given by `StateReindex.context cycleAssoc.symm (commonContext B)`. -/
-noncomputable def associatedContext : Context (Parameter × Plane) :=
+@[expose] noncomputable def associatedContext : Context (Parameter × Plane) :=
   StateReindex.context cycleAssoc.symm (commonContext B)
 
 /-- Associated strip, given by `ParticularWaveBounds.reindexStrip cycleAssoc.symm
 (BaseContextAssembly.nativeStrip nominal standardRegion)`. -/
-noncomputable def associatedStrip : StripData (Parameter × Plane) :=
+@[expose] noncomputable def associatedStrip : StripData (Parameter × Plane) :=
   ParticularWaveBounds.reindexStrip cycleAssoc.symm (BaseContextAssembly.nativeStrip nominal
       standardRegion)
 
 /-- Assembly, bundling `reference`, `charts`, `parameter`, `gap` and the required compatibility
 proofs. -/
+@[expose]
 noncomputable def assembly (x : CycleState (Label B N0)) (l : Label B N0) :
     ParticularWaveAssembly.AssemblyData Parameter where
   reference := reference l
@@ -1819,6 +1851,7 @@ noncomputable def assembly (x : CycleState (Label B N0)) (l : Label B N0) :
   directions := directions (B := B)
 
 /-- Parameters, given by `ParticularParameters.fromReference (assembly x l) h (gap l)`. -/
+@[expose]
 noncomputable def parameters (x : CycleState (Label B N0)) (l : Label B N0) :
     ParticularParameters Parameter :=
   ParticularParameters.fromReference (assembly x l) h (gap l)
@@ -1835,6 +1868,7 @@ theorem parameters_length (x : CycleState (Label B N0)) (l : Label B N0) (n : �
         (ChartScales.Q (BaseChartJets.cellBand l.2)) := rfl
 
 /-- Fixed primitive data for all iterations of the same labeled construction. -/
+@[expose]
 noncomputable def canonicalParameters (l : Label B N0) : ParticularParameters Parameter where
   tangent j n := ScaledTangentTransport.transportTangent ((reference l).tangent j)
     (PhysicalParticularWave.parameterChange h (ChartScales.Q n) (ChartScales.Q (reference l).band))
@@ -1870,6 +1904,7 @@ theorem parameters_eq_canonical (x : CycleState (Label B N0)) (l : Label B N0)
 /-! The sign combination is proved before specializing the constructed profile. -/
 
 /-- Signed phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
+@[expose]
 noncomputable def signedPhase {ι : Type} {D : Domain ι Slow}
     (F : Fin 2 → PhaseConstruction D) : PhaseFamily (Fin 2 × ι) where
   epsilon l := (F l.1).phase.epsilon l.2
@@ -1882,6 +1917,7 @@ noncomputable def signedPhase {ι : Type} {D : Domain ι Slow}
 
 /-- Signed construction, bundling `phase`, `V`, `openV`, `lam` and the required compatibility
 proofs. -/
+@[expose]
 noncomputable def signedConstruction {ι : Type} {D : Domain ι Slow}
     (F : Fin 2 → PhaseConstruction D)
     (hr : ∀ j, (F j).r = (F 0).r) (hb : ∀ j, (F j).b = (F 0).b)
@@ -1971,6 +2007,7 @@ noncomputable def signedConstruction {ι : Type} {D : Domain ι Slow}
 
 /-- Joint domain, given by `reindexDomain (PrimaryGeometryAssembly.domain nominal (choice B
 N0).prepared.N) Prod.snd`. -/
+@[expose]
 noncomputable def jointDomain : Domain (Label B N0) Slow :=
   reindexDomain (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) Prod.snd
 
@@ -2001,6 +2038,7 @@ theorem phase_axial_eq (j : Fin 2) : (phases B N0 j).phase.G = (phases B N0 0).p
       (choice B N0).prepared slots.radius_pos 0 L).symm
 
 /-- Joint construction, constructed using `signedConstruction`. -/
+@[expose]
 noncomputable def jointConstruction : PhaseConstruction (jointDomain (B := B) (N0 := N0)) :=
   signedConstruction (phases B N0)
     (fun j => (phase_common_bounds j).1)
@@ -2062,6 +2100,7 @@ noncomputable def slowInsert : Parameter →L[ℝ] CyclePoint where
 
 /-- Slow strip, given by `HarmonicWaveInteraction.pullbackStrip (BaseContextAssembly.nativeStrip
 nominal standardRegion) slowInsert`. -/
+@[expose]
 noncomputable def slowStrip : StripData Parameter :=
   HarmonicWaveInteraction.pullbackStrip (BaseContextAssembly.nativeStrip nominal standardRegion)
       slowInsert
@@ -2076,21 +2115,25 @@ theorem nativeStrip_eq :
 
 /-- Pulse envelope, given by `PrimaryPulseBounds.referenceP ((phases B N0 l.1).lam l.2) ((phases
 B N0 l.1).u l.2) ((phases B N0 l.1).L l.2)`. -/
+@[expose]
 noncomputable def pulseEnvelope (l : Label B N0) : ℝ → ℝ :=
   PrimaryPulseBounds.referenceP ((phases B N0 l.1).lam l.2) ((phases B N0 l.1).u l.2)
     ((phases B N0 l.1).L l.2)
 
 /-- Envelope, given by `WaveEnvelopeTransport.copyEnvelope (chartGeometry n l.1 l.2)
 slots.radius ((phases B N0 l.1).L l.2) (pulseEnvelope l) z.2`. -/
+@[expose]
 noncomputable def envelope (l : Label B N0) (n : ℕ) (z : Parameter × Plane) : ℝ :=
   WaveEnvelopeTransport.copyEnvelope (chartGeometry n l.1 l.2) slots.radius
     ((phases B N0 l.1).L l.2) (pulseEnvelope l) z.2
 
 /-- Mean envelope, given by `envelope l n (cycleAssoc z)`. -/
+@[expose]
 noncomputable def meanEnvelope (l : Label B N0) (n : ℕ) (z : CyclePoint) : ℝ :=
   envelope l n (cycleAssoc z)
 
 /-- Native envelope, given by `envelope l n (z.1.1,z.2)`. -/
+@[expose]
 noncomputable def nativeEnvelope (l : Label B N0) (n : ℕ) (z : Native) : ℝ :=
   envelope l n (z.1.1,z.2)
 
@@ -2099,6 +2142,7 @@ theorem envelope_nonneg (l : Label B N0) (n : ℕ) (z : Parameter × Plane) : 0 
     (fun t => (PrimaryPulseBounds.referenceP_pos _ _ _ t).le) _
 
 /-- Active, given by `1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n`. -/
+@[expose]
 noncomputable def Active (l : Label B N0) (n : ℕ) : Prop :=
   1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n
 
@@ -2110,23 +2154,28 @@ section Selected
 variable (e : ℕ → ActivePair B N0)
 
 /-- Selected label, given by `(e n).val.1`. -/
+@[expose]
 noncomputable def selectedLabel (n : ℕ) : Label B N0 := (e n).val.1
 
 /-- Selected band, given by `(e n).val.2`. -/
+@[expose]
 noncomputable def selectedBand (n : ℕ) : ℕ := (e n).val.2
 
 /-- Selected construction, given by `reindexConstruction (jointConstruction (B := B) (N0 := N0))
 (fun i : Unit × ℕ => selectedLabel e i.2)`. -/
+@[expose]
 noncomputable def selectedConstruction :=
   reindexConstruction (jointConstruction (B := B) (N0 := N0))
     (fun i : Unit × ℕ => selectedLabel e i.2)
 
 /-- Selected strip, given by `UniformPrimaryWeights.reindexedStrip slowStrip (fun n =>
 (selectedBand e n, ()))`. -/
+@[expose]
 noncomputable def selectedStrip : StripData Parameter :=
   UniformPrimaryWeights.reindexedStrip slowStrip (fun n => (selectedBand e n, ()))
 
 /-- Selected slot, given by `spatialLabel (selectedLabel e n)`. -/
+@[expose]
 noncomputable def selectedSlot (_ : Unit) (n : ℕ) : SlotColoring.Label :=
   spatialLabel (selectedLabel e n)
 
@@ -2137,6 +2186,7 @@ theorem selected_near (u : Unit) (n : ℕ) :
 
 /-- Selected clock, given by `ActualSignedGeometry.clockScale (selectedBand e) (fun u n =>
 (selectedSlot e u n).1) (selected_near e) h`. -/
+@[expose]
 noncomputable def selectedClock :=
   ActualSignedGeometry.clockScale (selectedBand e) (fun u n => (selectedSlot e u n).1)
     (selected_near e) h
@@ -2148,9 +2198,11 @@ noncomputable def selectedNormal :=
     (selected_near e) outgoing.data.h_pos.le
 
 /-- Selected gap, given by `gap (selectedLabel e n) (selectedBand e n)`. -/
+@[expose]
 noncomputable def selectedGap (_ : Unit) (n : ℕ) : ℕ := gap (selectedLabel e n) (selectedBand e n)
 
 /-- Selected geometry, constructed using `ScaledActualParticularControl.geometry`. -/
+@[expose]
 noncomputable def selectedGeometry :=
   ScaledActualParticularControl.geometry
     (ScaledActualParticularControl.slotReference slots vectors_det (selectedSlot e))
@@ -2158,11 +2210,13 @@ noncomputable def selectedGeometry :=
 
 /-- Selected length, given by `ScaledActualParticularControl.length (selectedConstruction e)
 (selectedClock e)`. -/
+@[expose]
 noncomputable def selectedLength :=
   ScaledActualParticularControl.length (selectedConstruction e) (selectedClock e)
 
 /-- Selected pulse envelope, given by `ScaledActualParticularControl.envelope
 (selectedConstruction e) (selectedClock e)`. -/
+@[expose]
 noncomputable def selectedPulseEnvelope :=
   ScaledActualParticularControl.envelope (selectedConstruction e) (selectedClock e)
 
@@ -2233,6 +2287,7 @@ theorem associated_residual_class (x : CycleState (Label B N0)) {α : ℝ}
     x.coefficients.blocks x.coefficients.gaussian x.coefficients.aliasCoefficients H
 
 /-- Current source, constructed using `ParticularWaveAssembly.sourceFamily`. -/
+@[expose]
 noncomputable def currentSource (x : CycleState (Label B N0)) (j : ℤ)
     (l : Label B N0) : ℕ → Native → HarmonicCalculus.ComplexVector :=
   ParticularWaveAssembly.sourceFamily (assembly x l).context (assembly x l).state
@@ -2411,15 +2466,18 @@ theorem selected_tangent_eq (x : CycleState (Label B N0))
   exact he
 
 /-- Selected source, given by `currentSource x j (selectedLabel e n) (selectedBand e n)`. -/
+@[expose]
 noncomputable def selectedSource (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) (n : ℕ) :=
   currentSource x j (selectedLabel e n) (selectedBand e n)
 
 /-- Selected tangent, given by `(parameters x (selectedLabel e n)).nativeTangent j (selectedBand
 e n)`. -/
+@[expose]
 noncomputable def selectedTangent (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) (n : ℕ) :=
   (parameters x (selectedLabel e n)).nativeTangent j (selectedBand e n)
 
 /-- Selected background, constructed using `ParticularCopyBounds.reindexedBase`. -/
+@[expose]
 noncomputable def selectedBackground (x : CycleState (Label B N0)) (j : ℤ) (_ : Unit) :=
   ParticularCopyBounds.reindexedBase
     (fun l => ((parameters x l).copyData (assembly x l).context (assembly x l).state
@@ -2482,12 +2540,13 @@ theorem uniform_to_local {ι I X E : Type} [NormedAddCommGroup X] [NormedSpace �
   exact ⟨K,hK,p,fun l n _ z hz _ => hp l n z hz⟩
 
 /-- The actual computed copy data, with the current residual as source. -/
-noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
+@[expose] noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).copyData (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
 
 /-- The active phase patch includes the transverse boundary. Its time
 coordinate is the actual transported clock. -/
+@[expose]
 noncomputable def controlPatch (l : Label B N0) (n : ℕ) (k : Frequency) : Set Native :=
   {z | Active l n ∧
     (z.1.1 ∈ slowStrip.domain ∧
@@ -2528,6 +2587,7 @@ section RawSelected
 variable (e : ℕ → ActivePair B N0)
 
 /-- Selected weight, constructed using `ActualParticularControl.groupedEnvelope`. -/
+@[expose]
 noncomputable def selectedWeight : Unit → ℕ → Native → ℝ :=
   ActualParticularControl.groupedEnvelope (selectedGeometry e) (fun _ _ => slots.radius)
     (selectedLength e) (selectedPulseEnvelope e)
@@ -2696,7 +2756,7 @@ theorem raw_jets (x : CycleState (Label B N0))
 /-! The support geometry is the same canonical scalar-clock geometry. -/
 
 /-- Support label, given by `(l.2,l.1)`. -/
-noncomputable def supportLabel (l : Label B N0) : ActualCarrierTransportBase.Index B N0 :=
+@[expose] noncomputable def supportLabel (l : Label B N0) : ActualCarrierTransportBase.Index B N0 :=
   (l.2,l.1)
 
 theorem support_geometry_eq (x : CycleState (Label B N0)) (l : Label B N0) (n : ℕ) :
@@ -2740,6 +2800,7 @@ theorem data_scalar_eq (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) 
   · rfl
 
 /-- Carrier cells, constructed using `ScalarParticularSupport.scalarCells`. -/
+@[expose]
 noncomputable def carrierCells (l : Label B N0) : PeriodizedWaveBounds.Cells Native Frequency :=
   ScalarParticularSupport.scalarCells (P := Parameter)
     (ActualCarrierTransportBase.geometry (supportLabel l)) (fun _ => slots.radius)
@@ -3128,12 +3189,14 @@ abbrev ResidualBounds (x : CycleState (Label B N0)) (α : ℝ) : Prop :=
       (x.coefficients.blocks l) (x.coefficients.gaussian l) (x.coefficients.aliasCoefficients l))
 
 /-- Associated update as an element of `HarmonicBlock (Parameter × Plane)`. -/
+@[expose]
 noncomputable def associatedUpdate (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock (Parameter × Plane) :=
   (parameters x l).updateBlock associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput N
 
 /-- Associated good as an element of `HarmonicBlock (Parameter × Plane)`. -/
+@[expose]
 noncomputable def associatedGood (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock (Parameter × Plane) :=
   (parameters x l).goodBlock associatedStrip (assembly x l).context (assembly x l).state
@@ -3162,10 +3225,11 @@ theorem associated_assembled_bounds (x : CycleState (Label B N0))
     (fun j hj => (hm j hj).2.2.2.2)
 
 /-- Output block, given by `StateReindex.block cycleAssoc (associatedUpdate x N l)`. -/
-noncomputable def outputBlock (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
+@[expose] noncomputable def outputBlock (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock CyclePoint := StateReindex.block cycleAssoc (associatedUpdate x N l)
 
 /-- Output good, given by `StateReindex.block cycleAssoc (associatedGood x N l)`. -/
+@[expose]
 noncomputable def outputGood (x : CycleState (Label B N0)) (N : ℕ) (l : Label B N0) :
     HarmonicBlock CyclePoint := StateReindex.block cycleAssoc (associatedGood x N l)
 

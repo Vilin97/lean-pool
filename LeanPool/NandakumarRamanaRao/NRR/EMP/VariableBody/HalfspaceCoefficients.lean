@@ -31,7 +31,7 @@ intersected with the intersection of these halfspaces, both over all `j` and ove
 later indicator-convergence arguments apply the subbody membership-stability theorem directly.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open scoped RealInnerProductSpace
@@ -42,12 +42,12 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ} (hA : 0 < A)
 
 /-- The **separating normal** of the pair `(i, j)` for a configuration `s`, as the fixed-site
 separating normal `PowerDiagram.sepNormal` evaluated at the sites `s.pts`. -/
-noncomputable def sepNormal (s : Config n) (i j : Fin n) : Plane :=
+@[expose] noncomputable def sepNormal (s : Config n) (i j : Fin n) : Plane :=
   PowerDiagram.sepNormal s.pts i j
 
 /-- The **separating offset** of the pair `(i, j)` for a configuration `s` and weights `w`, as the
 fixed-site separating offset `PowerDiagram.sepOffset` evaluated at the sites `s.pts`. -/
-noncomputable def sepOffset (s : Config n) (w : Fin n → ℝ) (i j : Fin n) : ℝ :=
+@[expose] noncomputable def sepOffset (s : Config n) (w : Fin n → ℝ) (i j : Fin n) : ℝ :=
   PowerDiagram.sepOffset s.pts w i j
 
 /-- The separating normal varies continuously with the configuration. -/

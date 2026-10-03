@@ -38,4 +38,4 @@ Tags: logic, bounded-arithmetic, model-theory, computational-complexity
 MSC: 03F30, 03D15
 -/
 
-@[expose] public section
+public section

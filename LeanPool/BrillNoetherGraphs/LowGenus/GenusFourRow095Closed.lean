@@ -30,7 +30,7 @@ The repetitive contraction witnesses are isolated as passive checked data in
 `LowGenus.Generated.GenusFourRow095FaceData`.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourRow095Closed
 
 open Utilities

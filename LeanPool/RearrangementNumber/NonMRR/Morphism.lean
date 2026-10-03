@@ -22,7 +22,7 @@ from each catalogue indexed by `g`. Its response map records the exceptional
 blocks of a growth function and a permutation.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 
@@ -30,6 +30,7 @@ namespace NonMRR
 
 /-- The rearrangement relation on conditionally convergent real series.
 The rearrangement theorem supplies a response to every challenge. -/
+@[expose]
 def rearrangementRelation : Relation where
   Challenge := ConditionalSeries
   Response := Equiv.Perm ℕ

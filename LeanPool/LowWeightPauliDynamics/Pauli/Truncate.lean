@@ -99,7 +99,7 @@ matrices `toMatrix`; their identification with the matrix exponential and with t
 proved in `RotationExp.lean` and `Pauli/Tensor.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -121,6 +121,7 @@ Defined as the rebuild `∑_{p ∈ S} x_p P_p` from the retained coefficients `x
 `P_p` the self-adjoint representative `herm p`. That this *is* a truncation — that it keeps the
 coefficients in `S` and kills the rest — is `coeff_truncOp`, and it does not depend on the Pauli
 expansion being complete. -/
+@[expose]
 noncomputable def truncOp (S : Finset (PauliIndex n)) (O : Matrix (Bits n) (Bits n) ℂ) :
     Matrix (Bits n) (Bits n) ℂ :=
   ∑ p ∈ S, coeff O p • toMatrix (herm p)
@@ -220,6 +221,7 @@ The retained set is a *family* `S : ℕ → Finset (PauliIndex n)`, one per rota
 algorithm truncates at the end of each Trotter step rather than after each rotation:
 `S g = univ` inside a step and `S g = (highSet n w*)ᶜ` at its boundary is that schedule.
 `trajTrunc_univ` records that the all-`univ` family is `traj` itself. -/
+@[expose]
 noncomputable def trajTrunc (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
     (S : ℕ → Finset (PauliIndex n)) (O : Matrix (Bits n) (Bits n) ℂ) :
     ℕ → Matrix (Bits n) (Bits n) ℂ

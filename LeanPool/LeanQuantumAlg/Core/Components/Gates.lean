@@ -17,7 +17,7 @@ The standard named gates as `Components` (concrete instances built on the
 `HilbertOperator`s, then bundled into `Gate`s with their unitarity proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -30,6 +30,7 @@ namespace Gate
 /-! ## Pauli, Hadamard, and CNOT -/
 
 /-- Raw Hadamard operator `H = (1/sqrt 2) [[1, 1], [1, -1]]`. -/
+@[expose]
 def HOp : HilbertOperator 1 :=
   invSqrt2 • !![(1 : ℂ), 1; 1, -1]
 
@@ -49,9 +50,11 @@ theorem HOp_mem_unitaryGroup :
   simp_all
 
 /-- The Hadamard gate. -/
+@[expose]
 def H : Gate 1 := ofUnitary HOp HOp_mem_unitaryGroup
 
 /-- The Pauli-X (NOT) gate, as the basis permutation `|0> ↔ |1>`. -/
+@[expose]
 def X : Gate 1 := ofPerm (Equiv.swap 0 1)
 
 /-- Raw Pauli-Y operator `[[0, -i], [i, 0]]`. -/
@@ -68,7 +71,7 @@ theorem YOp_mem_unitaryGroup :
 def Y : Gate 1 := ofUnitary YOp YOp_mem_unitaryGroup
 
 /-- Raw Pauli-Z operator `[[1, 0], [0, -1]]`. -/
-def ZOp : HilbertOperator 1 := !![(1 : ℂ), 0; 0, -1]
+@[expose] def ZOp : HilbertOperator 1 := !![(1 : ℂ), 0; 0, -1]
 
 theorem ZOp_mem_unitaryGroup :
     ZOp ∈ Matrix.unitaryGroup (Fin (2 ^ 1)) ℂ := by
@@ -78,9 +81,10 @@ theorem ZOp_mem_unitaryGroup :
     simp [ZOp, Matrix.mul_apply, Matrix.star_apply]
 
 /-- The Pauli-Z gate. -/
-def Z : Gate 1 := ofUnitary ZOp ZOp_mem_unitaryGroup
+@[expose] def Z : Gate 1 := ofUnitary ZOp ZOp_mem_unitaryGroup
 
 /-- The controlled-NOT gate on two qubits, control = qubit 0. -/
+@[expose]
 def CNOT : Gate 2 := ofPerm (Equiv.swap 2 3)
 
 theorem X_mem_unitaryGroup : (X : HilbertOperator 1)
@@ -262,7 +266,7 @@ end Gate
 /-! ## Rotation gates (QSP / QNN conventions) -/
 
 /-- Raw processing rotation `e^{i phi Z}`. -/
-def rotZOp (phi : ℝ) : HilbertOperator 1 :=
+@[expose] def rotZOp (phi : ℝ) : HilbertOperator 1 :=
   !![Complex.exp (phi * Complex.I), 0; 0, Complex.exp (-(phi * Complex.I))]
 
 theorem rotZOp_mem_unitaryGroup (phi : ℝ) :
@@ -274,7 +278,7 @@ theorem rotZOp_mem_unitaryGroup (phi : ℝ) :
       conj_exp_neg_I, exp_I_mul_exp_neg_I, exp_neg_I_mul_exp_I]
 
 /-- The processing rotation `e^{i phi Z}`. -/
-def rotZ (phi : ℝ) : Gate 1 := Gate.ofUnitary (rotZOp phi) (rotZOp_mem_unitaryGroup phi)
+@[expose] def rotZ (phi : ℝ) : Gate 1 := Gate.ofUnitary (rotZOp phi) (rotZOp_mem_unitaryGroup phi)
 
 theorem rotZ_mul_rotZ (a b : ℝ) : rotZ a * rotZ b = rotZ (a + b) := by
   ext i j
@@ -304,7 +308,7 @@ theorem rotZ_mul_rotZ_neg (phi : ℝ) : rotZ phi * rotZ (-phi) = 1 := by
   rw [rotZ_mul_rotZ, add_neg_cancel, rotZ_zero]
 
 /-- Raw standard `R_Y(theta)`. -/
-def rotYOp (theta : ℝ) : HilbertOperator 1 :=
+@[expose] def rotYOp (theta : ℝ) : HilbertOperator 1 :=
   !![(Real.cos (theta / 2) : ℂ), -(Real.sin (theta / 2) : ℂ);
      (Real.sin (theta / 2) : ℂ), (Real.cos (theta / 2) : ℂ)]
 
@@ -324,11 +328,11 @@ theorem rotYOp_mem_unitaryGroup (theta : ℝ) :
       try linear_combination hcs'
 
 /-- The standard `R_Y(theta)` gate. -/
-def rotY (theta : ℝ) : Gate 1 :=
+@[expose] def rotY (theta : ℝ) : Gate 1 :=
   Gate.ofUnitary (rotYOp theta) (rotYOp_mem_unitaryGroup theta)
 
 /-- The standard `R_Z(phi) = e^{-i phi Z/2}`. -/
-def rotZStd (phi : ℝ) : Gate 1 := rotZ (-(phi / 2))
+@[expose] def rotZStd (phi : ℝ) : Gate 1 := rotZ (-(phi / 2))
 
 @[simp]
 theorem rotZStd_zero : rotZStd 0 = 1 := by

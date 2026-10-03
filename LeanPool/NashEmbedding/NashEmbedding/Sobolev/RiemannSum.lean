@@ -37,7 +37,7 @@ its convergence to the convolution `φ * u` in `H^s_{2πℤⁿ}(ℝⁿ)` as `M �
 * `riemannSum_convergence` — `R^φ_M u → φ * u` in `H^s` as `M → ∞`
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev MeasureTheory
@@ -61,7 +61,7 @@ def meshPoint (n : ℕ) (M : ℕ) (k : Fin n → Fin M) : Fin n → ℝ :=
 /-- The discrete Fourier coefficient
     `K_M(m) = (2π/M)ⁿ ∑_k u_check(z_k) e^{-im·z_k}`
     where `u_check = fourierSynthesis n (fourierCoeffDistrib u)`. -/
-def riemannK (n : ℕ) (u : TrigPolyDual n) (M : ℕ) (m : Fin n → ℤ) : ℂ :=
+@[expose] def riemannK (n : ℕ) (u : TrigPolyDual n) (M : ℕ) (m : Fin n → ℤ) : ℂ :=
   (((2 * π / (M : ℝ)) ^ n : ℝ) : ℂ) *
     ∑ k : Fin n → Fin M,
       fourierSynthesis n (fourierCoeffDistrib u) (meshPoint n M k) *
@@ -73,7 +73,7 @@ def riemannK (n : ℕ) (u : TrigPolyDual n) (M : ℕ) (m : Fin n → ℤ) : ℂ 
     `(R^φ_M u)^(m) = (2π)^{-n} · φ̂(m) · K_M(m)`.
     When `supp(φ) ⊂ (-π,π)ⁿ`, this equals `integrationEmbed n (r^φ_δ u)`
     where `r^φ_δ u(x) = δⁿ ∑_z φ^per(x-z) u_check(z)`. -/
-def riemannSumDistrib (n : ℕ) (φ : (Fin n → ℝ) → ℂ)
+@[expose] def riemannSumDistrib (n : ℕ) (φ : (Fin n → ℝ) → ℂ)
     (u : TrigPolyDual n) (M : ℕ) : TrigPolyDual n :=
   seqToDual n (fun m =>
     (((2 * π : ℝ) ^ n : ℝ) : ℂ)⁻¹ *
@@ -93,7 +93,7 @@ lemma fourierCoeffDistrib_riemannSumDistrib (φ : (Fin n → ℝ) → ℂ)
 
 /-- The condition that `φ̂|_{ℤⁿ}` has rapid decay: lies in `ℓ²_{(s)}` for every `s`.
     This holds for `φ ∈ C_c^∞(ℝⁿ; ℂ)` by iterated integration by parts. -/
-def FTRapidDecay (n : ℕ) (φ : (Fin n → ℝ) → ℂ) : Prop :=
+@[expose] def FTRapidDecay (n : ℕ) (φ : (Fin n → ℝ) → ℂ) : Prop :=
   ∀ s : ℝ, Summable (fun m : Fin n → ℤ =>
     weight n s m * ‖ftRn n φ (fun j => (m j : ℝ))‖ ^ 2)
 

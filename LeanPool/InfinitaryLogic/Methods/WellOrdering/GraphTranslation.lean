@@ -31,7 +31,7 @@ The four public **arbitrary-language** endpoints of issue #12 live here:
 `wellOrder_type_boundedness` (Marker Corollary 4.27), and `wellOrdering_undefinable`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

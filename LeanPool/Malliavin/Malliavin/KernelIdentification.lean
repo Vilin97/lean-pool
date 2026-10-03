@@ -43,7 +43,7 @@ the corresponding kernel integral of the Malliavin time derivative
 (`ClarkOconeFamily.predictableDerivative_ae_eq_integral_globalPredictableSectionKernel`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
@@ -381,6 +381,7 @@ theorem predictableSectionKernel_horizon_consistent
 
 /-- The ceiling-selected kernel map, written as an explicit composition through the horizon
 index `⌈t⌉₊`. -/
+@[expose]
 noncomputable def globalPredictableSectionKernelFun (P : Measure W) [IsGaussian P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) : ℝ≥0 × W → Measure W :=
   (fun q : ℕ × (ℝ≥0 × W) ↦
@@ -405,6 +406,7 @@ theorem measurable_globalPredictableSectionKernelFun (P : Measure W) [IsGaussian
 
 /-- **The global predictable-section kernel**: at time `t`, select the finite-horizon kernel
 with horizon `⌈t⌉₊`, giving a single jointly predictable kernel on all of `ℝ≥0 × W`. -/
+@[expose]
 noncomputable def globalPredictableSectionKernel (P : Measure W) [IsGaussian P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     @Kernel (ℝ≥0 × W) W 𝓕.predictable inferInstance :=

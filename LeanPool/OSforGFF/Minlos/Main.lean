@@ -42,7 +42,7 @@ probability measure on the topological dual E' = WeakDual ℝ E.
 - Degenne-Pfaffelhuber, KolmogorovExtension4 (formalized Kolmogorov extension)
 -/
 
-@[expose] public section
+public section
 
 open BigOperators MeasureTheory Complex TopologicalSpace
 

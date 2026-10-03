@@ -42,7 +42,7 @@ Conventions: `fourierSynthesis n a θ = ∑' m, a m * fourierExp n m θ` with
 smoothness is `ContDiff ℝ ∞` (`open scoped ContDiff`), never `⊤`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Complex
@@ -57,7 +57,7 @@ variable {n : ℕ}
 /-- A coefficient sequence is *rapidly decaying* if it lies in every weighted
 `ℓ²_(s)`, `s ∈ ℝ`. This is the momentum-space image of `C^∞(𝕋ⁿ)`
 (cf. `smooth_periodic_memSobolevDistrib`). -/
-def IsRapidDecay (n : ℕ) (a : (Fin n → ℤ) → ℂ) : Prop :=
+@[expose] def IsRapidDecay (n : ℕ) (a : (Fin n → ℤ) → ℂ) : Prop :=
   ∀ s : ℝ, MemSobolev n s a
 
 /-! ## Elementary consequences of rapid decay -/

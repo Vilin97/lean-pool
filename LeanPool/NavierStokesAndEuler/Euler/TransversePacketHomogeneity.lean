@@ -20,7 +20,7 @@ section
 
 /-! Exact scalar homogeneity of the constructed history and forward paths. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -120,7 +120,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,6 +134,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {raw raw' : VectorField}
 
 /-- Scalar multiplication of the literal forcing, with its genuine path witness. -/
+@[expose]
 def smul (G : Forcing P D raw) (a : ℝ) : Forcing P D (a • raw) where
   path := a • G.path
   path_orbit := by simpa only [map_smul] using G.path_orbit.const_smul a
@@ -209,11 +210,17 @@ theorem join_smul {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
       a • join S τ hτ hτS u v hm := by
   apply ContinuousMap.ext
   intro t
-  change (if (t : ℝ) ≤ τ then a • u (projIcc 0 τ hτ t)
-    else a • v (elapsedTime S τ (projIcc τ S hτS t))) =
-      a • (if (t : ℝ) ≤ τ then u (projIcc 0 τ hτ t)
-        else v (elapsedTime S τ (projIcc τ S hτS t)))
-  split <;> rfl
+  by_cases ht : (t : ℝ) ≤ τ
+  · let s : Icc (0 : ℝ) τ := ⟨t, t.property.1, ht⟩
+    have hs : (⟨s, s.property.1, s.property.2.trans hτS⟩ : Icc (0 : ℝ) S) = t :=
+      Subtype.ext rfl
+    rw [← hs]
+    simp only [ContinuousMap.smul_apply, join_left]
+  · let s : Icc τ S := ⟨t, (lt_of_not_ge ht).le, t.property.2⟩
+    have hs : (⟨s, hτ.trans s.property.1, s.property.2⟩ : Icc (0 : ℝ) S) = t :=
+      Subtype.ext rfl
+    rw [← hs]
+    simp only [ContinuousMap.smul_apply, join_right]
 
 end EulerElapsedTimePathGluing
 

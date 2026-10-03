@@ -35,7 +35,7 @@ then proves
 This module proves the permutation-sign identity used by the boundary-chain theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Equiv Equiv.Perm
@@ -44,7 +44,7 @@ namespace SphereOddDegree
 namespace AffineBarycentricSubdivision
 
 /-- The last vertex of `Fin (n+2)`. -/
-def lastVertex (n : ℕ) : Fin (n + 2) :=
+@[expose] def lastVertex (n : ℕ) : Fin (n + 2) :=
   ⟨n + 1, by omega⟩
 
 @[simp] theorem lastVertex_val (n : ℕ) : (lastVertex n).val = n + 1 := rfl
@@ -54,7 +54,7 @@ def lastVertex (n : ℕ) : Fin (n + 2) :=
 
 This uses Mathlib's `viaFintypeEmbedding`, so its sign is exactly the sign of
 `ρ`. -/
-noncomputable def extendLastPerm {n : ℕ}
+@[expose] noncomputable def extendLastPerm {n : ℕ}
     (ρ : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin (n + 2)) :=
   ρ.viaFintypeEmbedding (Fin.castSuccOrderEmb.toEmbedding)
 

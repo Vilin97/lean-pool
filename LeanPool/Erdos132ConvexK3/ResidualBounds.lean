@@ -21,7 +21,7 @@ penultimate anti-saturation step, and the two metric regimes of the
 conditional four-edge cage.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -131,14 +131,14 @@ instance : Fintype CageDistanceBand where
     cases band <;> simp
 
 /-- General row of draft package table (6.5). -/
-def fourEdgeGeneralPackage : CageDistanceBand → ℕ
+@[expose] def fourEdgeGeneralPackage : CageDistanceBand → ℕ
   | .d1 => 4
   | .d2 => 3
   | .d3 => 1
   | .below => 0
 
 /-- Long-metric row of draft package table (6.5). -/
-def fourEdgeLongPackage : CageDistanceBand → ℕ
+@[expose] def fourEdgeLongPackage : CageDistanceBand → ℕ
   | .d1 => 4
   | .d2 => 2
   | .d3 => 1

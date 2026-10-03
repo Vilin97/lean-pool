@@ -15,4 +15,4 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Gonality.ReducedCertificate
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

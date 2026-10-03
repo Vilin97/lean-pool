@@ -15,7 +15,7 @@ A normalized packing is realized by multiplying its radii by the physical length
 relates its virtual diameter and disjointness constraints to the resulting union of open balls.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ namespace SixPointPacking
 variable {normalized physical : SixPointConfiguration}
 
 /-- The physical union of balls obtained from a normalized packing at a given scale. -/
-def ballUnionAt (packing : SixPointPacking normalized) (physical : SixPointConfiguration)
+@[expose] def ballUnionAt (packing : SixPointPacking normalized) (physical : SixPointConfiguration)
     (scale : ℝ) : Set (EuclideanSpace ℝ (Fin 2)) :=
   finiteBallUnion packing.support
     (fun i ↦ physical i.1.1 i.1.2) (fun i ↦ scale * packing.radius i)

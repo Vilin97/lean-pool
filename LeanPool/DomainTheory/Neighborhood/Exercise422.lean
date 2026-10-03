@@ -51,7 +51,7 @@ existence statement live over `Classical.choice` exactly as Theorem 4.6's
 bijection does.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise422
 

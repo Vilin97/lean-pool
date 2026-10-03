@@ -16,4 +16,4 @@ Import-only index for project-local lemmas and constructions that were developed
 as Mathlib-facing support code.
 -/
 
-@[expose] public section
+public section

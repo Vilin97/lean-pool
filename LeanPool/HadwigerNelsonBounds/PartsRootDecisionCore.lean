@@ -15,7 +15,7 @@ root. Its leaves point to the appropriate one of the 432 checked symmetry and
 color variants from `PartsFirstStage`.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -25,25 +25,25 @@ inductive PartsRootNode where
   | leaf (base : Fin 36) (symmetry : Fin 6) (swap : Bool)
 
 /-- Decode a branch's zero-sentinel child table. -/
-def partsRootChild (children : Fin 4 → Nat) (color : Fin 4) : Option Nat :=
+@[expose] def partsRootChild (children : Fin 4 → Nat) (color : Fin 4) : Option Nat :=
   match children color with
   | 0 => none
   | n + 1 => some n
 
 /-- Constant-depth lookup in 64-node root-trie chunks. -/
-def partsRootNodeAt (nodes : Array (Array PartsRootNode)) (index : Nat) :
+@[expose] def partsRootNodeAt (nodes : Array (Array PartsRootNode)) (index : Nat) :
     Option PartsRootNode :=
   match nodes[index / 64]? with
   | none => none
   | some chunk => chunk[index % 64]?
 
 /-- Executable membership of an exact assignment in a current path. -/
-def PartsAssignmentInPathB (path : List PartsAssignment)
+@[expose] def PartsAssignmentInPathB (path : List PartsAssignment)
     (assignment : PartsAssignment) : Bool :=
   path.any fun current => current == assignment
 
 /-- Every selected certificate root already occurs in the root-trie path. -/
-def PartsRootsInPathB (path roots : List PartsAssignment) : Bool :=
+@[expose] def PartsRootsInPathB (path roots : List PartsAssignment) : Bool :=
   roots.all (PartsAssignmentInPathB path)
 
 lemma partsRootsInPathB_sound {coloring : Fin 481 → Fin 4} {path roots}
@@ -59,7 +59,7 @@ lemma partsRootsInPathB_sound {coloring : Fin 481 → Fin 4} {path roots}
   exact hextends assignment hcurrent
 
 /-- Executable checker for the finite root-case trie. -/
-def PartsRootVerifiesNodeB (nodes : Array (Array PartsRootNode)) :
+@[expose] def PartsRootVerifiesNodeB (nodes : Array (Array PartsRootNode)) :
     Nat → List PartsAssignment → Nat → Bool
   | 0, _, _ => false
   | fuel + 1, path, index =>
@@ -115,7 +115,7 @@ lemma partsRootVerifiesNodeB_unsat {nodes : Array (Array PartsRootNode)}
             · exact hextends assignment hin
 
 /-- The four fixed assignments after color normalization. -/
-def partsNormalizedRootPath : List PartsAssignment :=
+@[expose] def partsNormalizedRootPath : List PartsAssignment :=
   [⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩]
 
 /-- A checked root trie eliminates every proper coloring extending the fixed root. -/

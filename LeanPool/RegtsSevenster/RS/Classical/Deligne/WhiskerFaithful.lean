@@ -23,7 +23,7 @@ Simplicity of the unit is carried as a hypothesis and discharged
 where `End 𝟙 = ℂ` is available.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -23,7 +23,7 @@ definition, but omit the repository-specific metadata attribute and `answer(...)
 * `Erdos1196.erdos_1196`
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Asymptotics BigOperators

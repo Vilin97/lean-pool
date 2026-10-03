@@ -35,7 +35,7 @@ The last two replace Rellich compactness in the regularity argument for Theorem 
 iterates are bounded in every `H^k`, hence so is their coefficientwise limit.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Filter Topology

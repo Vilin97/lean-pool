@@ -14,7 +14,7 @@ polynomial division by `(u+1)…(u+4)` resp. `(u+1)(u+2)(u+3)`, Lagrange residue
 B_{e-1}`
 and `V⁰((u+m)^{-1}) = 2 H_m^{(3)}`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

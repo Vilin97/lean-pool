@@ -30,7 +30,7 @@ sibling unit laurent-tails independently discovered that a plain `def` wrapping 
 every `Finsupp` instance transport for free), so no manual instances are needed at all.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 
@@ -86,7 +86,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] [ChartedSpace ℂ X] in
     τ ∈ TailSpace D ↔ τ.BoundedBy D := Iff.rfl
 
 /-- A single-point, single-exponent test tail. -/
-noncomputable def Tail.single (p : X) (n : ℤ) (c : ℂ) : Tail X :=
+@[expose] noncomputable def Tail.single (p : X) (n : ℤ) (c : ℂ) : Tail X :=
   Finsupp.single p (Finsupp.single n c)
 
 open scoped Classical in

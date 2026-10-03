@@ -27,7 +27,7 @@ difference set as the complement of this same `Δ`; the sign convention here is
 therefore opposite to theirs.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -41,7 +41,7 @@ variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
 The substantive imported theorem: it supplies the *phases*, not merely the
 magnitudes, of the Kasami Fourier spectrum.  Dillon--Kashyap Theorems 1--2, in
 the sign convention used here. -/
-def DillonKashyapPhaseFormula (k : ℕ) (ψ : AddChar K ℂ) : Prop :=
+@[expose] def DillonKashyapPhaseFormula (k : ℕ) (ψ : AddChar K ℂ) : Prop :=
   ∀ χ : MulChar K ℂ,
     (∑ x : Kˣ, (if (x : K) ∈ derivativeImage k K then (1 : ℂ) else -1) * χ (x : K))
       = gaussSum χ ψ * gaussSum (χ ^ (2 ^ k + 1)) ψ / gaussSum (χ ^ 3) ψ

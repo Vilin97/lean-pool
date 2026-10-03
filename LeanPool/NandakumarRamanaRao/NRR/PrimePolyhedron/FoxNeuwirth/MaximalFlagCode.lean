@@ -33,7 +33,7 @@ uses the explicit reindexing equivalence `eQ hp : Fin (p - 2 + 1) ≃ Fin (p - 1
 first-cut labels use `ePp hp : Fin (p - 1 + 1) ≃ Fin p`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -56,38 +56,44 @@ structure Code (p : Nat) where
   deriving Fintype, DecidableEq
 
 /-- Integer sign of a finite permutation. -/
-noncomputable def permSignInt {n : Nat} (sigma : Equiv.Perm (Fin n)) : Int :=
+@[expose] noncomputable def permSignInt {n : Nat} (sigma : Equiv.Perm (Fin n)) : Int :=
   ((Equiv.Perm.sign sigma : ℤˣ) : ℤ)
 
 /-- Canonical sign of a maximal-flag code. -/
-noncomputable def coefficient (z : Code p) : Int :=
+@[expose] noncomputable def coefficient (z : Code p) : Int :=
   permSignInt z.bottom * permSignInt z.removal
 
 /-- First bar-removal step; prime cardinality guarantees that `Fin (p - 1)` is nonempty. -/
+@[expose]
 def firstRemovalStep (hp : Nat.Prime p) : Fin (p - 1) :=
   ⟨0, by
     have := hp.two_le
     omega⟩
 
 /-- Bottom vertex index in a maximal flag. -/
+@[expose]
 def bottomDeletionIndex (hp : Nat.Prime p) : Fin p :=
   ⟨0, hp.pos⟩
 
 /-- Reindexing equivalence `Fin (p - 1 + 1) ≃ Fin p`, used to view a bar-adjacent position as a
 bottom label position. -/
+@[expose]
 def ePp (hp : Nat.Prime p) : Fin (p - 1 + 1) ≃ Fin p :=
   finCongr (by have := hp.two_le; omega)
 
 /-- Reindexing equivalence `Fin (p - 2 + 1) ≃ Fin (p - 1)`, used to view an internal removal-step
 index as a bar position. -/
+@[expose]
 def eQ (hp : Nat.Prime p) : Fin (p - 2 + 1) ≃ Fin (p - 1) :=
   finCongr (by have := hp.two_le; omega)
 
 /-- Label occupying the position immediately before the first removed bar. -/
+@[expose]
 def firstCutLeftLabel (hp : Nat.Prime p) (z : Code p) : Fin p :=
   z.bottom.symm (ePp hp (z.removal (firstRemovalStep hp)).castSucc)
 
 /-- Label occupying the position immediately after the first removed bar. -/
+@[expose]
 def firstCutRightLabel (hp : Nat.Prime p) (z : Code p) : Fin p :=
   z.bottom.symm (ePp hp (z.removal (firstRemovalStep hp)).succ)
 
@@ -102,6 +108,7 @@ theorem firstCutLabels_ne
 
 /-- Pairing for deletion of the bottom vertex: swap the two labels which become identified after
 removing the first bar. -/
+@[expose]
 def bottomPartner (hp : Nat.Prime p) (z : Code p) : Code p where
   bottom :=
     (Equiv.swap (firstCutLeftLabel hp z) (firstCutRightLabel hp z)).trans z.bottom
@@ -189,6 +196,7 @@ theorem coefficient_bottomPartner
 
 /-- Pairing for a positive internal deleted position: swap the adjacent bar-removal steps on the
 left and right of that position. -/
+@[expose]
 def removalPartner
     (hp : Nat.Prime p) (i : Fin (p - 2)) (z : Code p) : Code p where
   bottom := z.bottom
@@ -247,6 +255,7 @@ theorem coefficient_removalPartner
 `MaximalFlagSourceCancellation`. -/
 
 /-- The order-preserving face map that deletes a chosen maximal-flag vertex. -/
+@[expose]
 def deleteFace (hp : Nat.Prime p) (k : Fin (p - 1 + 1)) :
     FaceMap (p - 2) (p - 1) where
   toFun i := k.succAbove (Fin.cast (by have := hp.two_le; omega) i)
@@ -256,6 +265,7 @@ def deleteFace (hp : Nat.Prime p) (k : Fin (p - 1 + 1)) :
     simpa using hab
 
 /-- Bottom-partner flag codes represent the same simplex face after the bottom deletion. -/
+@[expose]
 def BottomFaceCompatibility (hp : Nat.Prime p)
     (toSimplex : Code p → Simplex p (p - 1)) : Prop :=
   ∀ z,
@@ -265,6 +275,7 @@ def BottomFaceCompatibility (hp : Nat.Prime p)
       (deleteFace hp (Fin.cast (by have := hp.two_le; omega) (bottomDeletionIndex hp)))
 
 /-- Removal-partner flag codes represent the same simplex face at the chosen internal deletion. -/
+@[expose]
 def RemovalFaceCompatibility (hp : Nat.Prime p)
     (toSimplex : Code p → Simplex p (p - 1)) : Prop :=
   ∀ (i : Fin (p - 2)) (z : Code p),

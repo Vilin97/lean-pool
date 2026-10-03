@@ -17,7 +17,7 @@ the augmented support diagram admits a representation on the old cumulative
 support spans. Its maps are the modular chart inverses of the augmented maps.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Augmented
 
@@ -37,12 +37,12 @@ noncomputable abbrev representation :
 
 @[simp]
 theorem representation_map (x : Φ.flag.Node) :
-    (representation Φ e ξ hp he C hmod).map x = (C x).rechartMap (map Φ e ξ x) := rfl
+    (representation Φ e ξ hp he C hmod).map x = (C x).rechartMap (map Φ e ξ x) := by rfl
 
 @[simp]
 theorem representation_space (x : Φ.flag.Node) :
     (representation Φ e ξ hp he C hmod).space x =
-      affineSpan (ZMod p) {v | Φ.cumulativeWeight x v ≠ 0} := rfl
+      affineSpan (ZMod p) {v | Φ.cumulativeWeight x v ≠ 0} := by rfl
 
 theorem local_supported (x : Φ.flag.Node) (v : FpCoord p d) (hv : Φ.localWeight x v ≠ 0) :
     v ∈ (representation Φ e ξ hp he C hmod).space x :=

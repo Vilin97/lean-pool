@@ -14,7 +14,7 @@ An increasing measurable exhaustion which covers a finite-measure set almost eve
 a compact core with arbitrarily small discarded mass.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

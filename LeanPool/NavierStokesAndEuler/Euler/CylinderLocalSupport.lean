@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderRawSupport
 /-! Spatial support is preserved by the actual angular primitive, mixed derivative, and slow curl
 paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

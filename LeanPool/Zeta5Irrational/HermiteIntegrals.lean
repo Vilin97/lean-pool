@@ -34,14 +34,14 @@ import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 The antiderivatives (a rational function plus arctan terms) are verified by differentiation.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set MeasureTheory
 
 namespace Zeta5Irrational
 
 /-- `g₄(y) / y` as a rational function (continuous at `0`). -/
-noncomputable def h4 (a y : ℝ) : ℝ :=
+@[expose] noncomputable def h4 (a y : ℝ) : ℝ :=
   2 * a ^ 4 * (5 * a ^ 4 - 10 * a ^ 2 * y ^ 2 + y ^ 4) / (y ^ 2 + a ^ 2) ^ 5
 
 lemma g4_div_eq_h4 (a : ℝ) {y : ℝ} (hy : y ≠ 0) : g4 a y / y = h4 a y := by
@@ -181,7 +181,7 @@ lemma integral_h4 {a : ℝ} (ha : 0 < a) : ∫ y in Ioi 0, h4 a y = Real.pi / a 
 /-! ### `∫₀^∞ g₄(y) y/(y² + n²) dy = π a⁴/(a + n)⁵` -/
 
 /-- The integrand `g₄(y) · y/(y² + n²)`. -/
-noncomputable def k4 (a n y : ℝ) : ℝ :=
+@[expose] noncomputable def k4 (a n y : ℝ) : ℝ :=
   g4 a y * (y / (y ^ 2 + n ^ 2))
 
 lemma abs_k4_le {a n : ℝ} (ha : 0 < a) (hn : 0 < n) {y : ℝ} (hy : 0 < y) :

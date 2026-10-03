@@ -22,7 +22,7 @@ the free module on an object to the free module over the new base:
   A V) ≅ freeMod B V` in the category of `B`-modules.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -130,6 +130,7 @@ lemma modTensorπ_baseChangeFreeHom
   modTensorπ_desc A (restrictRegular φ) (freeMod A V) _ _
 
 /-- The inverse comparison map: insert the unit of `A`. -/
+@[expose]
 noncomputable def baseChangeFreeInv
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] (B : D) [MonObj B] (φ : A ⟶ B)
@@ -337,6 +338,7 @@ lemma freeAct_baseChangeFreeInv
 /-- **Base change of a free module**: the base change along `φ` of
 the free `A`-module on `V` is the free `B`-module on `V`, as an
 isomorphism of `B`-modules. -/
+@[expose]
 noncomputable def baseChangeFreeIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] (B : D) [MonObj B]

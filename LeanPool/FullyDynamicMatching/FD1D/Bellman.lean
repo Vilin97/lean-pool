@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.PolynomialCertificate
 
 /-! # Bellman -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -26,14 +26,17 @@ surrounding lemmas connect them to the real-valued Bellman residual.
 -/
 
 /-- The cubic scalar weight in the Bellman function. -/
+@[expose]
 def d (y : ℝ) : ℝ :=
   (1 + 7 * y ^ 3) / 12
 
 /-- The Bellman function from equation (6). -/
+@[expose]
 def B (h t y : ℝ) : ℝ :=
   d y * (t - y * h) * (2 * h - t - (3 / 2 : ℝ) * y * h)
 
 /-- `W = w²` in the normalized local variables. -/
+@[expose]
 def normalizedW (s v : ℝ) : ℝ :=
   s * (1 + v) * v / (s + 2)
 

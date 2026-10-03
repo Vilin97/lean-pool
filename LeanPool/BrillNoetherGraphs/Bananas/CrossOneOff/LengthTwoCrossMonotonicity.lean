@@ -30,7 +30,7 @@ evaluating `DecidableEq` on the subdivision vertex type (a nested `Sum` of
 every use downstream is a syntactic `rw`/`exact`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -15,4 +15,4 @@ public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RiemannRoch
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

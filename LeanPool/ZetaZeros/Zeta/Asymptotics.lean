@@ -14,14 +14,14 @@ This file turns the epsilon-form external input into the filter form used by the
 argument and records the eventual positivity needed to divide by the zero count.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
 open Filter Topology
 
 /-- The main scale in the Riemann--von Mangoldt and pair-correlation formulae. -/
-noncomputable def zeroScale (T : ℝ) : ℝ := T / (2 * Real.pi) * Real.log T
+@[expose] noncomputable def zeroScale (T : ℝ) : ℝ := T / (2 * Real.pi) * Real.log T
 
 /-- The Riemann--von Mangoldt scale is positive at all sufficiently large heights. -/
 theorem zeroScale_pos_eventually : ∀ᶠ T in atTop, 0 < zeroScale T := by

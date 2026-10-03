@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 Invariant dual-measure transport for Zhou's finite chart detector. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperChartMeasure
@@ -42,7 +42,7 @@ abbrev CharacterSpace := PaperDualTopology.CharacterSpace
 /--
 The `dualCharacterEquivOfAction` construction used in the Connes rigidity formalization.
 -/
-def dualCharacterEquivOfAction {H : CountableDiscreteGroup}
+@[expose] def dualCharacterEquivOfAction {H : CountableDiscreteGroup}
     (action : H →* Multiplicative (AddAut D)) (h : H) :
     CharacterSpace ≃+ CharacterSpace :=
   PaperDualAutomorphism.dualCharacterEquiv
@@ -56,7 +56,7 @@ definitionally equal. Paper: §4.
 /--
 The `paperDualCharacterAction` construction used in the Connes rigidity formalization.
 -/
-def paperDualCharacterAction {H : CountableDiscreteGroup}
+@[expose] def paperDualCharacterAction {H : CountableDiscreteGroup}
     (action : H →* Multiplicative (AddAut D)) (h : H) :
     CharacterSpace → CharacterSpace := dualCharacterEquivOfAction action h
 
@@ -76,7 +76,7 @@ theorem measurable_paperDualCharacterAction {H : CountableDiscreteGroup}
 /-- Invariant probability measure for the additive character action, whose
 measurability is recorded above. Paper: §4.
 -/
-def IsInvariantPaperSpectralMeasure {H : CountableDiscreteGroup}
+@[expose] def IsInvariantPaperSpectralMeasure {H : CountableDiscreteGroup}
     (action : H →* Multiplicative (AddAut D))
     (μ : ProbabilityMeasure CharacterSpace) : Prop :=
   ∀ h : H,
@@ -85,7 +85,7 @@ def IsInvariantPaperSpectralMeasure {H : CountableDiscreteGroup}
 /--
 The `linearDetector` construction used in the Connes rigidity formalization.
 -/
-def linearDetector (d : D) : Set CharacterSpace :=
+@[expose] def linearDetector (d : D) : Set CharacterSpace :=
   {χ | BinaryPontryaginDual.characterLinear (M := D)
       (Additive.toMul χ) d = 1}
 

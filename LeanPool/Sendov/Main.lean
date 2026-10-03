@@ -32,7 +32,7 @@ analytic side would start with margin `0.122` instead of `0.048`.
 * `Sendov.stat_contradiction`: equation `stat` of the blog post is therefore unsatisfiable.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

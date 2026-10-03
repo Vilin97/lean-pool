@@ -25,7 +25,7 @@ For `f` Lipschitz on `[a, b]` (`0 < a < b`), `psum f a b K / K² ≤ ∫_a^b f(x
 large `K`; and the piecewise version for `f` given by Lipschitz pieces on `[t_i, t_{i+1})`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology Set intervalIntegral MeasureTheory
 

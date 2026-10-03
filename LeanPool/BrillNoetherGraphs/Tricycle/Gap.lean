@@ -39,7 +39,7 @@ systems from curves to graphs*, Conjecture 3.14(a) at `r = 1` and `k = 2`:
 `regularSubdivisionGonality` rather than `metricGonality`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Tricycle
 

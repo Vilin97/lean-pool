@@ -44,7 +44,7 @@ Main results:
   `0 → ker(η) → F → i_*(i^*F) → 0` associated to a closed immersion.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory TopologicalSpace Opposite Limits
 
@@ -61,6 +61,10 @@ namespace TopCat
 /-- Closed inclusion `s ↪ X` as a morphism in `TopCat`. -/
 def closedIncl {X : TopCat.{u}} {s : Set X} (hs : IsClosed s) : TopCat.of s ⟶ X :=
   TopCat.ofHom ⟨Subtype.val, hs.isClosedEmbedding_subtypeVal.continuous⟩
+
+/-- A closed inclusion sends a subtype point to its underlying point. -/
+lemma closedIncl_apply {X : TopCat.{u}} {s : Set X} (hs : IsClosed s) (x : s) :
+    (ConcreteCategory.hom (closedIncl hs)) x = x.1 := by rfl
 
 lemma set_range_closedIncl {X : TopCat.{u}} {s : Set X} (hs : IsClosed s) :
     Set.range (closedIncl hs : s → X) = s := by
@@ -510,7 +514,7 @@ theorem epi_unit_of_closedImmersion
 /-- The short exact sequence `0 → ker(η) → F → i_*(i^*F) → 0` from a closed immersion,
     where `η` is the pullback-pushforward adjunction unit and `i : Z ↪ X` is the
     inclusion of a closed subset. -/
-noncomputable def closedImmersionSES
+@[expose] noncomputable def closedImmersionSES
     {X : TopCat.{u}} (Z : Set X) (hZ : IsClosed Z)
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=

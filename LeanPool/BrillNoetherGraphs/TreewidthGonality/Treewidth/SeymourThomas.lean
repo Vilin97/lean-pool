@@ -39,7 +39,7 @@ bramble of order `≥ treewidth H + 1` contains a sub-bramble of order exactly
 strictly cheaper than the easy half of duality.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 

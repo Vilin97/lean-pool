@@ -24,7 +24,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -38,6 +38,7 @@ universe u
 
 /-- A possible next vertex after traversing `previous -- current`, excluding
 the immediate reverse step. -/
+@[expose]
 def ForwardNeighbor {V : Type u} (G : SimpleGraph V) (previous current : V) :=
   {next : V // G.Adj current next ∧ next ≠ previous}
 
@@ -47,6 +48,7 @@ instance finite_forwardNeighbor {V : Type u} [Finite V] (G : SimpleGraph V)
 
 /-- An exact-length nonbacktracking continuation, after an initial directed
 edge `previous -- current` has already been traversed. -/
+@[expose]
 def NBContinuation {V : Type u} (G : SimpleGraph V) : V → V → ℕ → Type u
   | _, _, 0 => PUnit
   | previous, current, n + 1 =>
@@ -70,6 +72,7 @@ instance finite_nbContinuation {V : Type u} [Finite V] (G : SimpleGraph V)
       infer_instance
 
 /-- An exact-length nonbacktracking route beginning at `root`. -/
+@[expose]
 def ExactNBRoute {V : Type u} (G : SimpleGraph V) (root : V) : ℕ → Type u
   | 0 => PUnit
   | n + 1 => Σ first : G.neighborSet root, NBContinuation G root first.1 n
@@ -224,6 +227,7 @@ lemma natCard_exactNBRoute_succ_le {V : Type u} [Finite V] {G : SimpleGraph V}
 
 /-- Routes of length at most `k`, presented recursively as the disjoint union
 of the earlier layers and the exact length-`k` layer. -/
+@[expose]
 def BoundedNBRoute {V : Type u} (G : SimpleGraph V) (root : V) : ℕ → Type u
   | 0 => PUnit
   | k + 1 => BoundedNBRoute G root k ⊕ ExactNBRoute G root (k + 1)

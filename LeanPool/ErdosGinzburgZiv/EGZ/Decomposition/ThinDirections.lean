@@ -20,7 +20,7 @@ steps. The selected directions have the prescribed stage-dependent widths,
 and every direction outside the final submodule is thick at the next stage.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -29,6 +29,7 @@ namespace FpRepresentation
 variable {p d : ℕ} [Fact p.Prime] {F : ConvexFlag}
 
 /-- Affine functionals constant on every fibre inside the represented space. -/
+@[expose]
 def fiberConstantSubmodule (R : FpRepresentation p d F) (x : F.Node) :
     Submodule (ZMod p) (FpCoord p d →ᵃ[ZMod p] ZMod p) where
   carrier := {ξ | ∀ v w, v ∈ R.space x → w ∈ R.space x →

@@ -18,7 +18,7 @@ The collision estimate permits restriction to injective samples, which
 are actual exchanges on the unused atom positions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

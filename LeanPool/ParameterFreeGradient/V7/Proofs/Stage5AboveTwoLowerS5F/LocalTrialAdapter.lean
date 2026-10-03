@@ -13,7 +13,7 @@ A causal local trial induces a deterministic exact-pair algorithm with its cache
 charged.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

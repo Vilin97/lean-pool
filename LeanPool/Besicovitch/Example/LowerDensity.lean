@@ -20,7 +20,7 @@ graph over that interval is at least `θ * r`, so the lower density (normalised 
 `2 * r` of the ball) is at least `θ / 2`.  Letting `θ → 1` gives `1/2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

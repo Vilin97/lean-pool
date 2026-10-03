@@ -25,7 +25,7 @@ closed ball to its boundary.  Its restriction to the boundary is both nullhomoto
 strictly outward scalar-product condition), contradicting degree.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

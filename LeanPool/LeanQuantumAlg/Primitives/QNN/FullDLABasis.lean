@@ -27,7 +27,7 @@ family with an **exponentially vanishing** loss variance: a genuine barren plate
 witnessing that the capstone is not vacuous on the canonical physical case.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance 100] LieRing.ofAssociativeRing
 

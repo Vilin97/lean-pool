@@ -22,7 +22,7 @@ natural sum of a series, and inserting zeros preserves failure of absolute
 convergence.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Topology
 

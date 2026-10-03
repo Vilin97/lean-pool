@@ -18,7 +18,7 @@ lemmas record the corresponding ring-theoretic unit fact without introducing a
 separate sheaf or stalk API into the public statement.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

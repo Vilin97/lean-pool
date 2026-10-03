@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.GuardSoundness
 Positivity and geometric-sum estimates for the local complexity exponent.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2

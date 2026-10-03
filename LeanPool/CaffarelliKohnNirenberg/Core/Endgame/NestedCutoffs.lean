@@ -15,7 +15,7 @@ as a germ at every nonpositive time, so all past derivative bounds remain
 independent of the domain and of its future-time collar.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Filter
 open scoped Topology

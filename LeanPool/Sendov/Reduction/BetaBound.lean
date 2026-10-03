@@ -34,7 +34,7 @@ integrand is at most `e^{-α} < 1` throughout, so the integral is below `1`.  He
 * `Sendov.beta_le`: `(lt) ⟹ B ≤ α/(3+α)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

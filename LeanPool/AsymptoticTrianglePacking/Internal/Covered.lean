@@ -31,7 +31,7 @@ This union-bound estimate deliberately sidesteps the delicate correlation struct
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 
@@ -40,6 +40,7 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 
 /-- The set of retained edges at outcome `ω` (classically decidable membership in the events). -/
+@[expose]
 noncomputable def retainedSet (H : Finset (Finset V)) {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (ω : Ω) : Finset (Finset V) := by
   classical

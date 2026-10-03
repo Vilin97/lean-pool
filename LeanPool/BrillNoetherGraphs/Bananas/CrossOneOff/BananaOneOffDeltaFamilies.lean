@@ -15,7 +15,7 @@ This completes part (2) of paper Corollary 2.25 for the marking consisting of
 the common left endpoint and the penultimate point of one strand.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

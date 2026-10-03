@@ -26,7 +26,7 @@ apply to the centered polynomial. The phase-aligned conclusion is then obtained
 by the wrapper in `LocalHelpers.lean`.
 -/
 
-@[expose] public section
+public section
 
 open FockSPR MeasureTheory Complex Real Polynomial
 

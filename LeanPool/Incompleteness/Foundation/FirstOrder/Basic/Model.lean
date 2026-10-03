@@ -11,7 +11,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Model -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -87,7 +87,7 @@ section «lp_section_2»
 variable (F : ℕ → Type*) {M : Type*} (fF : {k : ℕ} → (f : F k) → (Fin k → M) → M)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
+@[expose, reducible]
 def ofFunc : Structure (Language.ofFunc F) M where
   func := fun _ f v => fF f v
   rel  := fun _ r _ => r.elim

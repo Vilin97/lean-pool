@@ -27,7 +27,7 @@ integrals, and the native chart scales produce the determinant and inverse
 weight bounds. Flat target weights are retained as factors.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -657,7 +657,7 @@ structure CoefficientControl (d : PrimaryODE.FrameData Q) (lam u L S C D : ℝ) 
 
 /-- The literal `primaryCovariance` with the native chart prefactor and
 slot length; the integrands still use the actual constructed ODE solution. -/
-noncomputable def nativePrimaryCovariance
+@[expose] noncomputable def nativePrimaryCovariance
     (vr vt : TorusInverse.Plane) (r0 h : ℝ)
     (d : Fin 2 → ℕ → PrimaryODE.FrameData Q) (lam u : Fin 2 → ℕ → ℝ)
     (n : ℕ) (p : Q) : Mat2 :=
@@ -784,7 +784,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1231,7 +1231,7 @@ noncomputable def coordinateConstant (M u : ℝ) : ℝ :=
     (16 * M ^ 2 + 8 * (1 + 3 * M) * phaseConstant M / normalLower M u)
 
 /-- Eigen bound, given by `M * (2 + 3 * M)`. -/
-noncomputable def eigenBound (M : ℝ) : ℝ := M * (2 + 3 * M)
+@[expose] noncomputable def eigenBound (M : ℝ) : ℝ := M * (2 + 3 * M)
 
 /-- Modal constant, given by `(1 + 2 * eigenBound M) * coordinateConstant M u + 3 * M ^ 3`. -/
 noncomputable def modalConstant (M u : ℝ) : ℝ :=
@@ -1367,20 +1367,25 @@ variable {ι : Type*} {D : PhaseJetBounds.Domain ι Slow} {h r0 u M : ℝ}
 variable (a : FamilyData D h r0 u M)
 
 /-- Length, given by `ChartScales.slotLength r0 h (a.band i)`. -/
-noncomputable def length (i : ι) : ℝ := ChartScales.slotLength r0 h (a.band i)
+@[expose] noncomputable def length (i : ι) : ℝ := ChartScales.slotLength r0 h (a.band i)
 /-- Viscosity, given by `ChartScales.epsilon h (a.band i) * (ChartScales.carrier h (a.band i) :
 ℝ) ^ 2`. -/
+@[expose]
 noncomputable def viscosity (i : ι) : ℝ :=
   ChartScales.epsilon h (a.band i) * (ChartScales.carrier h (a.band i) : ℝ) ^ 2
 /-- B, given by `referenceScale (a.lam i) (a.viscosity i) u`. -/
+@[expose]
 noncomputable def B (i : ι) : ℝ := referenceScale (a.lam i) (a.viscosity i) u
 /-- Frequency, constructed using `PhaseEstimates.representativeFrequency`. -/
+@[expose]
 noncomputable def frequency (i : ι) : Plane :=
   PhaseEstimates.representativeFrequency (a.B i) (a.sigma i) u (a.length i) (a.K i)
     (PhaseEstimates.shearVector (a.F0 i) (a.G0 i) (a.q0 i))
 /-- Target, given by `(a.q0 i).1 * a.frequency i 0`. -/
+@[expose]
 noncomputable def target (i : ι) : ℝ := (a.q0 i).1 * a.frequency i 0
 /-- Phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
+@[expose]
 noncomputable def phase : PhaseJetBounds.PhaseFamily ι where
   epsilon i := ChartScales.epsilon h (a.band i)
   p i := PhaseEstimates.roundedFrequency (ChartScales.carrier h (a.band i)) (a.target i)
@@ -1390,16 +1395,17 @@ noncomputable def phase : PhaseJetBounds.PhaseFamily ι where
   F := a.F
   G := a.G
 /-- Frame, given by `a.phase.frameData a.lam a.c0 (fun _ => u) a.length a.viscosity i`. -/
-noncomputable def frame (i : ι) : PrimaryODE.FrameData Slow :=
+@[expose] noncomputable def frame (i : ι) : PrimaryODE.FrameData Slow :=
   a.phase.frameData a.lam a.c0 (fun _ => u) a.length a.viscosity i
 /-- Slot, given by `Ioo (-(a.length i)) (2 * a.length i)`. -/
-noncomputable def slot (i : ι) : Set ℝ := Ioo (-(a.length i)) (2 * a.length i)
+@[expose] noncomputable def slot (i : ι) : Set ℝ := Ioo (-(a.length i)) (2 * a.length i)
 /-- Slope, given by `PhaseEstimates.signedSlot (a.sigma i) u (a.length i) z.2`. -/
-noncomputable def slope (i : ι) (z : Slow × ℝ) : ℝ :=
+@[expose] noncomputable def slope (i : ι) (z : Slow × ℝ) : ℝ :=
   PhaseEstimates.signedSlot (a.sigma i) u (a.length i) z.2
 
 /-- The actual angular carrier is a nonzero integer, including the
 zero-floor case, which is replaced by the integer one. -/
+@[expose]
 noncomputable def angularMode (i : ι) : ℤ :=
   PhaseEstimates.nonzeroRound ((ChartScales.carrier h (a.band i) : ℝ) * a.target i)
 
@@ -1784,6 +1790,7 @@ theorem energy_bound (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
 /-- Output bound, given by `frequencyBound M + 3 * M + M ^ 2 + 4`. -/
 noncomputable def outputBound (M : ℝ) : ℝ := frequencyBound M + 3 * M + M ^ 2 + 4
 /-- Output lower, given by `min (normalLower M u / 2) (1 / M)`. -/
+@[expose]
 noncomputable def outputLower (M u : ℝ) : ℝ := min (normalLower M u / 2) (1 / M)
 
 theorem outputBound_bounds (hM : 1 ≤ M) :
@@ -1801,6 +1808,7 @@ theorem outputLower_pos (hM : 1 ≤ M) : 0 < outputLower M u :=
 /-- The actual phase family satisfies every order-zero input of the
 previous primary-pulse theorem.  Its normal comparison, modal errors,
 and damping comparison are proved here from the base and mesh data. -/
+@[expose]
 noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (hu : 0 < u) (huM : u ≤ M) (hL : 1 / (2 * r0) ≤ M)
     (hslot : 4 * r0 * ChartScales.Tg ≤ M)
@@ -1884,7 +1892,7 @@ noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
 theorem construction_frame (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (hu : 0 < u) (huM : u ≤ M) (hL : 1 / (2 * r0) ≤ M)
     (hslot : 4 * r0 * ChartScales.Tg ≤ M) (hlarge : ∀ i, LargeBand h M u (a.band i)) :
-    (a.construction hh hr hM hu huM hL hslot hlarge).frame = a.frame := rfl
+    (a.construction hh hr hM hu huM hL hslot hlarge).frame = a.frame := by rfl
 
 /-- Every fixed derivative of the actual coefficient is controlled after
 the derived zeroth-order geometry is inserted. -/

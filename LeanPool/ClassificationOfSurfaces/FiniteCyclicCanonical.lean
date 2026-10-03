@@ -25,7 +25,7 @@ and `NormalForm.nonOrientableBoundaryWord`; this file does not introduce another
 the Lean-Eval representatives.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -43,7 +43,7 @@ theorem map_edgeOfDart_eq_map_edgeName {Edge : Type}
       cases d <;> simp [edgeOfDart, SignedDart.edgeName, ih]
 
 /-- Enumerate the edge names of a typed one-face signed boundary word. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def ofOneFaceWord {Edge : Type} [Fintype Edge]
     (word : List (SignedDart Edge)) : FiniteCyclicPresentation where
   edgeCount := Fintype.card Edge
@@ -149,6 +149,7 @@ namespace NormalForm
 
 The admissibility predicate excludes the empty orientable word and the zero-crosscap
 nonorientable word when ordinary surface validity is required. -/
+@[expose]
 noncomputable def canonicalPresentation : NormalForm → FiniteCyclicPresentation
   | .sphere => FiniteCyclicPresentation.twoMonogonSphere
   | .orientable p n =>

@@ -30,7 +30,7 @@ section
 of the actual graph velocity. The normalized packet formula follows
 from the literal lifted coefficient, with the physical scale explicit. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -135,7 +135,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,13 +150,14 @@ variable (A : EulerParentPacketFrames.Parent)
   (B : EulerAllOrderDriftCorrection.Budget P A.T_pos C)
 
 /-- Corrected packet velocity, constructed using `u`. -/
+@[expose]
 def correctedPacketVelocity (k : ℝ) (Y u : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   u t x + A.ell • (C.κ • A.frame.field t (A.ell⁻¹ • Y t x)
     ((B.correctedFieldTower P).pointField t (cylinderGraph P k C.direction (A.ell⁻¹ • Y t x))))
 
 /-- Packet inverse, given by `A.ell⁻¹ • Y (projIcc 0 A.T A.T_pos.le q.1) (A.ell • q.2)`. -/
-def packetInverse (Y : Icc (0 : ℝ) A.T → Space → Space) (q : ℝ × Space) : Space :=
+@[expose] def packetInverse (Y : Icc (0 : ℝ) A.T → Space → Space) (q : ℝ × Space) : Space :=
   A.ell⁻¹ • Y (projIcc 0 A.T A.T_pos.le q.1) (A.ell • q.2)
 
 theorem correctedPacketVelocity_eq_physical (k : ℝ)
@@ -227,7 +228,7 @@ section
 the particle acceleration. Continuity extends the identity to both
 endpoints; no acceleration or pressure-force match is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -325,7 +326,7 @@ section
 /-! Two actual time-derivative pairs give genuine joint C² regularity
 for a smooth spatial coefficient path on interior times. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -374,7 +375,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -543,6 +544,7 @@ def frameEquiv (t : Icc (0 : ℝ) A.T) (x : Space) : Space ≃L[ℝ] Space :=
 /-- Packet lift, given by `(q.1,A.packetPosition q)`. -/
 def packetLift (q : ℝ × Space) : ℝ × Space := (q.1,A.packetPosition q)
 /-- Packet inverse lift, given by `(q.1,A.packetInverse Y q)`. -/
+@[expose]
 def packetInverseLift (Y : Icc (0 : ℝ) A.T → Space → Space) (q : ℝ × Space) : ℝ × Space :=
   (q.1,A.packetInverse Y q)
 

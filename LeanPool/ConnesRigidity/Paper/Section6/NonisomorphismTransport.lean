@@ -15,7 +15,7 @@ the actual Zhou carriers. The proof uses the public characteristic-kernel
 and quotient transport files in this project.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism

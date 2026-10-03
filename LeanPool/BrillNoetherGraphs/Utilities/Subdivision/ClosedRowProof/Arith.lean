@@ -39,7 +39,7 @@ multiplier contributes `0` to the equality part.  So the checker is
 fail-closed on malformed indices without spending a comparison on them.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -48,6 +48,7 @@ namespace Utilities.Subdivision.ClosedRowProof
 abbrev Form := List ℤ
 
 /-- Dot product, truncating at the shorter list. -/
+@[expose]
 def dot : List ℤ → List ℤ → ℤ
   | [], _ => 0
   | _, [] => 0
@@ -55,6 +56,7 @@ def dot : List ℤ → List ℤ → ℤ
 
 /-- Evaluate a form at a point.  The constant term is the coefficient of the
 leading `1`, which makes `eval` a dot product and hence linear in the form. -/
+@[expose]
 def eval (g : Form) (x : List ℤ) : ℤ := dot g (1 :: x)
 
 @[simp] theorem dot_nil_left (y : List ℤ) : dot [] y = 0 := rfl
@@ -151,6 +153,7 @@ structure Context where
   eq : List Form
 
 /-- The point `x` satisfies the context. -/
+@[expose]
 def Context.Holds (Γ : Context) (x : List ℤ) : Prop :=
   (∀ g ∈ Γ.ge, 0 ≤ eval g x) ∧ (∀ g ∈ Γ.eq, eval g x = 0)
 

@@ -30,7 +30,7 @@ This file combines strict singularity, block extraction, and compact-factorizati
 establish the main Fredholm results for canonical operators on the Kalton--Peck space.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

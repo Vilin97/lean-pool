@@ -16,7 +16,7 @@ number.  We use the literal finite-sum formula from the TeX source rather than
 the ambient Euclidean norm on `Fin d → ℝ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,10 +26,10 @@ namespace O3
 abbrev Point (d : ℕ) := Fin d → ℝ
 
 /-- The coordinate pairing used between `ell_p` and `ell_q`. -/
-def pairing {d : ℕ} (x y : Point d) : ℝ := ∑ i, x i * y i
+@[expose] def pairing {d : ℕ} (x y : Point d) : ℝ := ∑ i, x i * y i
 
 /-- The real conjugate exponent `q = p / (p - 1)`. -/
-noncomputable def conjugateExponent (p : ℝ) : ℝ := Real.conjExponent p
+@[expose] noncomputable def conjugateExponent (p : ℝ) : ℝ := Real.conjExponent p
 
 theorem conjugateExponent_eq (p : ℝ) : conjugateExponent p = p / (p - 1) := rfl
 
@@ -42,10 +42,10 @@ theorem one_lt_conjugateExponent {p : ℝ} (hp : 1 < p) :
   exact (holderConjugate_conjugateExponent hp).symm.lt
 
 /-- The `p`-th power sum underlying the finite-dimensional `ell_p` norm. -/
-noncomputable def lpPower (p : ℝ) {d : ℕ} (x : Point d) : ℝ := ∑ i, |x i| ^ p
+@[expose] noncomputable def lpPower (p : ℝ) {d : ℕ} (x : Point d) : ℝ := ∑ i, |x i| ^ p
 
 /-- The literal finite-dimensional `ell_p` norm for a real exponent. -/
-noncomputable def lpNorm (p : ℝ) {d : ℕ} (x : Point d) : ℝ := (lpPower p x) ^ (1 / p)
+@[expose] noncomputable def lpNorm (p : ℝ) {d : ℕ} (x : Point d) : ℝ := (lpPower p x) ^ (1 / p)
 
 theorem lpPower_nonneg (p : ℝ) {d : ℕ} (x : Point d) : 0 ≤ lpPower p x := by
   exact Finset.sum_nonneg fun i _ ↦ Real.rpow_nonneg (abs_nonneg (x i)) p
@@ -129,26 +129,26 @@ theorem abs_pairing_le_lpNorm_mul {p q : ℝ} (hpq : p.HolderConjugate q)
   · exact pairing_le_lpNorm_mul hpq x y
 
 /-- The power-duality map `J_p(u)_i = |u_i|^(p-2) u_i` from the TeX source. -/
-noncomputable def powerDualityMap (p : ℝ) {d : ℕ} (u : Point d) : Point d :=
+@[expose] noncomputable def powerDualityMap (p : ℝ) {d : ℕ} (u : Point d) : Point d :=
   fun i ↦ |u i| ^ (p - 2) * u i
 
 /-- `h_c(x) = (1/p) ||x-c||_p^p`, written using its literal power sum. -/
-noncomputable def uniformRegularizer (p : ℝ) {d : ℕ} (c x : Point d) : ℝ :=
+@[expose] noncomputable def uniformRegularizer (p : ℝ) {d : ℕ} (c x : Point d) : ℝ :=
   (1 / p) * lpPower p (x - c)
 
 /-- The normalized `ell_p` duality map used in the `1 < p ≤ 2` chain. -/
-noncomputable def dualityMap (p : ℝ) {d : ℕ} (u : Point d) : Point d :=
+@[expose] noncomputable def dualityMap (p : ℝ) {d : ℕ} (u : Point d) : Point d :=
   if lpNorm p u = 0 then 0
   else fun i ↦ (lpNorm p u) ^ (2 - p) * (|u i| ^ (p - 2) * u i)
 
 /-- `ψ_c(x) = (1/2) ||x-c||_p^2`. -/
-noncomputable def quadraticRegularizer (p : ℝ) {d : ℕ} (c x : Point d) : ℝ :=
+@[expose] noncomputable def quadraticRegularizer (p : ℝ) {d : ℕ} (c x : Point d) : ℝ :=
   (1 / 2 : ℝ) * (lpNorm p (x - c)) ^ (2 : ℕ)
 
 /-- Exact unproved target of TeX Lemma `lem:puniform`.  Keeping this as a
 transparent proposition records the residual obligation without presenting it
 as a proved theorem. -/
-noncomputable def PUniformConvexityStatement : Prop :=
+@[expose] noncomputable def PUniformConvexityStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d : ℕ) (x y c : Point d),
     uniformRegularizer p c y ≥
       uniformRegularizer p c x + pairing (powerDualityMap p (x - c)) (y - x) +
@@ -156,7 +156,7 @@ noncomputable def PUniformConvexityStatement : Prop :=
 
 /-- Exact unproved target of TeX Lemma `lem:belowgeometry`.  This proposition
 preserves real `p` and arbitrary `d`; it is not a theorem or certificate. -/
-noncomputable def BelowGeometryStatement : Prop :=
+@[expose] noncomputable def BelowGeometryStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p ≤ 2 → ∀ (d : ℕ) (x y : Point d),
     quadraticRegularizer p 0 y ≥
       quadraticRegularizer p 0 x + pairing (dualityMap p x) (y - x) +

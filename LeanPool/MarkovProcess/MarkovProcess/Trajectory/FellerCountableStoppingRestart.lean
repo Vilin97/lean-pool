@@ -23,7 +23,7 @@ The stopping time here has countable range.  An arbitrary finite stopping time i
 `Trajectory/StoppingLtTop.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

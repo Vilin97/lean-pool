@@ -24,7 +24,7 @@ import Mathlib.Tactic.Ring.RingNF
   regularisation error.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 

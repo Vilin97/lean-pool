@@ -26,7 +26,7 @@ at a closed cut, and at an open one the configuration's own kernel,
 which is the same form read in the basis the tensor twists into.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -47,6 +47,7 @@ open Fragment Equiv
 
 /-- The fragment one stage down: glue the top interface pair, then
 relabel. -/
+@[expose]
 noncomputable def stepFragment (n : ℕ)
     (V : Fragment (Fin (0 + (n + 1)) ⊕ Fin ((n + 1) + 0))) :
     Fragment (Fin (0 + n) ⊕ Fin (n + 0)) :=
@@ -93,6 +94,7 @@ open Classical in
 whose drop is closed under the rewire the base's data are the unglue
 of the glued fragment's; elsewhere any choice serves, the summand
 vanishing there. -/
+@[expose]
 noncomputable def unglueDataOpen
     [LinearOrder L] {V : Fragment L} {i : L} {j : L} (hij : i ≠ j)
     (hopen : V.pairing (V.boundaryFlag i) ≠ V.boundaryFlag j)
@@ -197,6 +199,7 @@ open Classical in
 /-- **The glued fragment's data at a closed cut, read on the base.**
 Here no agreement is needed: a closed subset's drop is always closed
 under the glued pairing, the two cut flags being partners. -/
+@[expose]
 noncomputable def unglueDataClosed
     [LinearOrder L] {V : Fragment L} {i : L} {j : L} (hij : i ≠ j)
     (hclosed : V.pairing (V.boundaryFlag i) = V.boundaryFlag j)

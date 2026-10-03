@@ -54,7 +54,7 @@ and its northwest twin) plus a Riemann-Roch telescoping sum;
 and `thm:bngChain` (6.16) is the induction over the chain.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -65,6 +65,7 @@ open Utilities
 A *sign-changing inversion* of `α` is a pair `u < v` with `α u > 0` and
 `α v ≤ 0`.  Unlike an ordinary inversion this compares each value against the
 fixed threshold `0` rather than against the other value. -/
+@[expose]
 def sciSet (α : ℤ → ℤ) : Set (ℤ × ℤ) :=
   { p | p.1 < p.2 ∧ 0 < α p.1 ∧ α p.2 ≤ 0 }
 
@@ -74,6 +75,7 @@ As with `kInversionCount`, `Set.ncard` is `0` on an infinite set, so every
 statement below that bounds `sci` from above must either carry finiteness or be
 read only for `α` where the set is finite.  For an almost-sign-preserving `α`
 it is automatically finite. -/
+@[expose]
 noncomputable def sci (α : ℤ → ℤ) : ℕ := (sciSet α).ncard
 
 theorem mem_sciSet_iff (α : ℤ → ℤ) (p : ℤ × ℤ) :

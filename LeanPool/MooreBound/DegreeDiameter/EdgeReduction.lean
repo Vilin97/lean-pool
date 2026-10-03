@@ -19,7 +19,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -79,7 +79,7 @@ def bipartiteEdge (H : SimpleGraph V) (x y : V) (hxy : Linked H x y) :
 
 @[simp] lemma bipartiteEdge_val (H : SimpleGraph V) (x y : V) (hxy : Linked H x y) :
     (bipartiteEdge H x y hxy : Sym2 (V ⊕ V)) = s(.inl x, .inr y) :=
-  rfl
+  by rfl
 
 lemma setOf_linked_eq_insert_neighborSet (H : SimpleGraph V) (x : V) :
     {y : V | Linked H x y} = insert x (H.neighborSet x) := by

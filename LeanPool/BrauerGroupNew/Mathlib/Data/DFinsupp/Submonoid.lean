@@ -14,7 +14,7 @@ import Mathlib.Tactic.Bound.Init
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.Data.DFinsupp.Submonoid`.
 -/
 
-@[expose] public section
+public section
 
 variable {ι γ β : Type*}
 

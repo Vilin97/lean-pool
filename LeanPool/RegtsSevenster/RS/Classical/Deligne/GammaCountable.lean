@@ -63,7 +63,7 @@ the countable Nullstellensatz, as a ℂ-point of the Γ-algebra
 (`RS.nonempty_superPoint_gammaAlgebra`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -243,6 +243,7 @@ variable {C : Type v}
 variable (C) in
 /-- ℂ-linearity of the embedding `C ⥤ Ind C`, as a hypothesis on the
 ambient linear structure of the ind-completion. -/
+@[expose]
 def IndOfLinear [SmallCategory C] [Abelian C] [CategoryTheory.Linear ℂ C]
     [CategoryTheory.Linear ℂ (Ind C)] : Prop :=
   ∀ (X Y : C) (c : ℂ) (f : X ⟶ Y),
@@ -312,6 +313,7 @@ variable {C : Type v}
 is the colimit of a countable filtered diagram of embedded objects.
 This is the shape in which "built from countably much data" enters
 the dimension count of the Γ-algebra. -/
+@[expose]
 def CountablyPresented [SmallCategory C]
     (Z : Ind C) : Prop :=
   ∃ (I : Type v) (_ : SmallCategory I) (_ : IsFiltered I)

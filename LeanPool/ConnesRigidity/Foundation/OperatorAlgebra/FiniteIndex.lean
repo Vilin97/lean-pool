@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Core
 The finite index component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace OpenAIPort
@@ -28,6 +28,7 @@ universe u v
 open scoped ENNReal
 
 /-- Countable discrete subgroup wrapper. Paper: §4. -/
+@[expose]
 def CountableDiscreteGroup.subgroup
     (G : CountableDiscreteGroup.{u}) (S : Subgroup G) :
     CountableDiscreteGroup.{u} where
@@ -59,7 +60,7 @@ noncomputable def correction (g : G) (q : G ⧸ S) : S :=
 @[simp] theorem correction_coe (g : G) (q : G ⧸ S) :
     (correction S g q : G) =
       (Quotient.out (g • q))⁻¹ * g * Quotient.out q :=
-  rfl
+  by rfl
 
 /-- Multiplicativity of the correction cocycle. Paper: §4. -/
 theorem correction_mul (g h : G) (q : G ⧸ S) :
@@ -170,7 +171,7 @@ noncomputable def inducedRepresentation
       InducedSpace (H := H) S →L[ℂ] InducedSpace (H := H) S) ξ q =
       (π (correction S g (g⁻¹ • q)) : H →L[ℂ] H)
         (ξ (g⁻¹ • q)) :=
-  rfl
+  by rfl
 
 omit [InnerProductSpace ℂ H] [CompleteSpace H] in
 /-- Sum-of-coordinate norm bound for the induced space. Paper: §4. -/

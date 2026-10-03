@@ -23,7 +23,7 @@ public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtensi
 The spectral criterion component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -45,7 +45,7 @@ abbrev DiscreteCharacterSpace (A : Type u)
   PontryaginDual (Multiplicative A)
 
 /-- Inverse-dual action of a group on the character space. Paper: §4. -/
-def dualCharacterAction
+@[expose] def dualCharacterAction
     (action : H →* Multiplicative (AddAut A)) (h : H)
     (χ : DiscreteCharacterSpace A) : DiscreteCharacterSpace A where
   toFun a := χ (Multiplicative.ofAdd
@@ -95,7 +95,7 @@ theorem measurable_dualCharacterAction
 
 /-- Invariant probability measure for the dual action, whose measurability is
 recorded by `measurable_dualCharacterAction`. Paper: §4. -/
-def IsInvariantSpectralMeasure
+@[expose] def IsInvariantSpectralMeasure
     (action : H →* Multiplicative (AddAut A))
     (μ : ProbabilityMeasure (DiscreteCharacterSpace A)) : Prop :=
   ∀ h : H,
@@ -103,7 +103,7 @@ def IsInvariantSpectralMeasure
       (dualCharacterAction action h) = μ
 
 /-- Mass of the trivial character. Paper: §4. -/
-def spectralTrivialAtom
+@[expose] def spectralTrivialAtom
     (μ : ProbabilityMeasure (DiscreteCharacterSpace A)) : ℝ :=
   (μ : Measure (DiscreteCharacterSpace A)).real {1}
 
@@ -122,7 +122,7 @@ theorem continuous_character_evaluation (a : A) :
 omit [MeasurableSpace (DiscreteCharacterSpace A)]
   [BorelSpace (DiscreteCharacterSpace A)] in
 /-- Compactly supported continuous test for spectral displacement. Paper: §4. -/
-def spectralEnergyTest (a : A) :
+@[expose] def spectralEnergyTest (a : A) :
     C_c(DiscreteCharacterSpace A, ℝ) where
   toFun χ := ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2
   continuous_toFun :=
@@ -134,7 +134,7 @@ omit [MeasurableSpace (DiscreteCharacterSpace A)]
 @[simp] theorem spectralEnergyTest_apply
     (a : A) (χ : DiscreteCharacterSpace A) :
     spectralEnergyTest a χ =
-      ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2 := rfl
+      ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2 := by rfl
 
 omit [DiscreteTopology A] in
 /-- The spectral displacement integrand is integrable against every probability measure. -/
@@ -157,7 +157,7 @@ theorem integrable_spectralEnergyTest
 
 /-- Spectral displacement energy of a kernel element. Its integrand is
 integrable by `integrable_spectralEnergyTest`. Paper: §4. -/
-def spectralDetectionEnergy
+@[expose] def spectralDetectionEnergy
     (μ : ProbabilityMeasure (DiscreteCharacterSpace A)) (a : A) : ℝ :=
   ∫ χ : DiscreteCharacterSpace A,
     ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2
@@ -212,7 +212,7 @@ structure SpectralMeasureInterface
           (∀ h : H, (π (E.splitting h) : K →L[ℂ] K) η = η)
 
 /-- Finite spectral detection inequality. Paper: §4. -/
-def HasFiniteSpectralDetection
+@[expose] def HasFiniteSpectralDetection
     (E : SplitAbelianExtension A G H) (J : Finset A) (c : ℝ) : Prop :=
   ∀ μ : ProbabilityMeasure (DiscreteCharacterSpace A),
     IsInvariantSpectralMeasure E.action μ →

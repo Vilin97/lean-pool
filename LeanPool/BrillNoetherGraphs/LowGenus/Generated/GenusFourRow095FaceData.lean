@@ -21,7 +21,7 @@ vertex representatives, surviving slots, and slot reversals.  Every field is
 rechecked by the kernel through `decide`.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.Generated.GenusFourRow095FaceData
 
 open Utilities.Certificate
@@ -32,28 +32,33 @@ open LowGenus.GenusFourRow095
 open LowGenus.GenusFourRow097Contractions
 
 /-- The two-vertex target core with five parallel edges, used by the row 095 face certificates. -/
+@[expose]
 def core002 : ExplicitPotential.Core 2 5 where
   tail := ![0, 0, 0, 0, 0]
   head := ![1, 1, 1, 1, 1]
 
 /-- The three-vertex target core with three edges from each of vertices zero and one to vertex
 two. -/
+@[expose]
 def core009 : ExplicitPotential.Core 3 6 where
   tail := ![0, 0, 0, 1, 1, 1]
   head := ![2, 2, 2, 2, 2, 2]
 
 /-- The three-vertex target core with edge multiplicities one, two, and three between its vertex
 pairs. -/
+@[expose]
 def core010 : ExplicitPotential.Core 3 6 where
   tail := ![0, 0, 0, 1, 1, 1]
   head := ![1, 2, 2, 2, 2, 2]
 
 /-- The four-vertex, seven-slot target core used for the row 095 contraction faces. -/
+@[expose]
 def core029 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 2]
   head := ![3, 3, 3, 2, 2, 3, 3]
 
 /-- The five-vertex, eight-slot target core used for the row 095 contraction faces. -/
+@[expose]
 def core069 : ExplicitPotential.Core 5 8 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 3]
   head := ![3, 4, 4, 2, 2, 3, 3, 4]
@@ -116,6 +121,7 @@ def rev0358 : Fin 5 → Bool := ![false, false, true, false, false]
 
 /-- The checked contraction of row 095 along source slots {0} onto `core068`, oriented by
 `rev0`. -/
+@[expose]
 def data0 : ContractionData core (Core.reorient core068 rev0) where
   F := {0}; vtx := ![2, 1, 5, 4, 3]; slot := ![8, 6, 7, 5, 4, 3, 1, 2]
   isForest := by decide
@@ -131,6 +137,7 @@ def data0 : ContractionData core (Core.reorient core068 rev0) where
 
 /-- The checked contraction of row 095 along source slots {3} onto `core068`, oriented by
 `rev3`. -/
+@[expose]
 def data3 : ContractionData core (Core.reorient core068 rev3) where
   F := {3}; vtx := ![5, 4, 2, 3, 0]; slot := ![5, 1, 2, 8, 4, 0, 6, 7]
   isForest := by decide
@@ -146,6 +153,7 @@ def data3 : ContractionData core (Core.reorient core068 rev3) where
 
 /-- The checked contraction of row 095 along source slots {5} onto `core068`, oriented by
 `rev5`. -/
+@[expose]
 def data5 : ContractionData core (Core.reorient core068 rev5) where
   F := {5}; vtx := ![3, 4, 0, 5, 2]; slot := ![3, 6, 7, 0, 4, 8, 1, 2]
   isForest := by decide
@@ -161,6 +169,7 @@ def data5 : ContractionData core (Core.reorient core068 rev5) where
 
 /-- The checked contraction of row 095 along source slots {8} onto `core068`, oriented by
 `rev8`. -/
+@[expose]
 def data8 : ContractionData core (Core.reorient core068 rev8) where
   F := {8}; vtx := ![0, 1, 3, 4, 5]; slot := ![0, 1, 2, 3, 4, 5, 6, 7]
   isForest := by decide
@@ -176,6 +185,7 @@ def data8 : ContractionData core (Core.reorient core068 rev8) where
 
 /-- The checked contraction of row 095 along source slots {4} onto `core069`, oriented by
 `rev4`. -/
+@[expose]
 def data4 : ContractionData core (Core.reorient core069 rev4) where
   F := {4}; vtx := ![0, 2, 3, 4, 5]; slot := ![0, 1, 2, 6, 7, 8, 3, 5]
   isForest := by decide
@@ -191,6 +201,7 @@ def data4 : ContractionData core (Core.reorient core069 rev4) where
 
 /-- The checked contraction of row 095 along source slots {0, 4} onto `core029`, oriented by
 `rev04`. -/
+@[expose]
 def data04 : ContractionData core (Core.reorient core029 rev04) where
   F := {0, 4}; vtx := ![5, 2, 3, 4]; slot := ![1, 2, 5, 6, 7, 8, 3]
   isForest := by decide
@@ -206,6 +217,7 @@ def data04 : ContractionData core (Core.reorient core029 rev04) where
 
 /-- The checked contraction of row 095 along source slots {3, 4} onto `core029`, oriented by
 `rev34`. -/
+@[expose]
 def data34 : ContractionData core (Core.reorient core029 rev34) where
   F := {3, 4}; vtx := ![2, 0, 5, 4]; slot := ![6, 7, 8, 1, 2, 0, 5]
   isForest := by decide
@@ -221,6 +233,7 @@ def data34 : ContractionData core (Core.reorient core029 rev34) where
 
 /-- The checked contraction of row 095 along source slots {4, 5} onto `core029`, oriented by
 `rev45`. -/
+@[expose]
 def data45 : ContractionData core (Core.reorient core029 rev45) where
   F := {4, 5}; vtx := ![0, 2, 3, 5]; slot := ![0, 1, 2, 6, 7, 8, 3]
   isForest := by decide
@@ -236,6 +249,7 @@ def data45 : ContractionData core (Core.reorient core029 rev45) where
 
 /-- The checked contraction of row 095 along source slots {4, 8} onto `core029`, oriented by
 `rev48`. -/
+@[expose]
 def data48 : ContractionData core (Core.reorient core029 rev48) where
   F := {4, 8}; vtx := ![3, 0, 5, 4]; slot := ![3, 6, 7, 1, 2, 0, 5]
   isForest := by decide
@@ -251,6 +265,7 @@ def data48 : ContractionData core (Core.reorient core029 rev48) where
 
 /-- The checked contraction of row 095 along source slots {0, 8} onto `core031`, oriented by
 `rev08`. -/
+@[expose]
 def data08 : ContractionData core (Core.reorient core031 rev08) where
   F := {0, 8}; vtx := ![3, 5, 1, 4]; slot := ![3, 6, 7, 5, 1, 2, 4]
   isForest := by decide
@@ -266,6 +281,7 @@ def data08 : ContractionData core (Core.reorient core031 rev08) where
 
 /-- The checked contraction of row 095 along source slots {3, 5} onto `core031`, oriented by
 `rev35`. -/
+@[expose]
 def data35 : ContractionData core (Core.reorient core031 rev35) where
   F := {3, 5}; vtx := ![0, 2, 4, 5]; slot := ![0, 1, 2, 8, 6, 7, 4]
   isForest := by decide
@@ -281,6 +297,7 @@ def data35 : ContractionData core (Core.reorient core031 rev35) where
 
 /-- The checked contraction of row 095 along source slots {0, 3} onto `core032`, oriented by
 `rev03`. -/
+@[expose]
 def data03 : ContractionData core (Core.reorient core032 rev03) where
   F := {0, 3}; vtx := ![2, 5, 4, 3]; slot := ![8, 6, 7, 1, 2, 5, 4]
   isForest := by decide
@@ -296,6 +313,7 @@ def data03 : ContractionData core (Core.reorient core032 rev03) where
 
 /-- The checked contraction of row 095 along source slots {5, 8} onto `core032`, oriented by
 `rev58`. -/
+@[expose]
 def data58 : ContractionData core (Core.reorient core032 rev58) where
   F := {5, 8}; vtx := ![0, 3, 4, 5]; slot := ![0, 1, 2, 6, 7, 3, 4]
   isForest := by decide
@@ -311,6 +329,7 @@ def data58 : ContractionData core (Core.reorient core032 rev58) where
 
 /-- The checked contraction of row 095 along source slots {0, 5} onto `core034`, oriented by
 `rev05`. -/
+@[expose]
 def data05 : ContractionData core (Core.reorient core034 rev05) where
   F := {0, 5}; vtx := ![2, 5, 4, 3]; slot := ![8, 6, 7, 1, 2, 4, 3]
   isForest := by decide
@@ -326,6 +345,7 @@ def data05 : ContractionData core (Core.reorient core034 rev05) where
 
 /-- The checked contraction of row 095 along source slots {3, 8} onto `core034`, oriented by
 `rev38`. -/
+@[expose]
 def data38 : ContractionData core (Core.reorient core034 rev38) where
   F := {3, 8}; vtx := ![0, 3, 4, 5]; slot := ![0, 1, 2, 4, 6, 7, 5]
   isForest := by decide
@@ -341,6 +361,7 @@ def data38 : ContractionData core (Core.reorient core034 rev38) where
 
 /-- The checked contraction of row 095 along source slots {0, 3, 4} onto `core009`, oriented by
 `rev034`. -/
+@[expose]
 def data034 : ContractionData core (Core.reorient core009 rev034) where
   F := {0, 3, 4}; vtx := ![2, 5, 4]; slot := ![6, 7, 8, 1, 2, 5]
   isForest := by decide
@@ -356,6 +377,7 @@ def data034 : ContractionData core (Core.reorient core009 rev034) where
 
 /-- The checked contraction of row 095 along source slots {3, 4, 5} onto `core009`, oriented by
 `rev345`. -/
+@[expose]
 def data345 : ContractionData core (Core.reorient core009 rev345) where
   F := {3, 4, 5}; vtx := ![0, 2, 5]; slot := ![0, 1, 2, 6, 7, 8]
   isForest := by decide
@@ -371,6 +393,7 @@ def data345 : ContractionData core (Core.reorient core009 rev345) where
 
 /-- The checked contraction of row 095 along source slots {0, 4, 8} onto `core009`, oriented by
 `rev048`. -/
+@[expose]
 def data048 : ContractionData core (Core.reorient core009 rev048) where
   F := {0, 4, 8}; vtx := ![3, 5, 4]; slot := ![3, 6, 7, 1, 2, 5]
   isForest := by decide
@@ -386,6 +409,7 @@ def data048 : ContractionData core (Core.reorient core009 rev048) where
 
 /-- The checked contraction of row 095 along source slots {4, 5, 8} onto `core009`, oriented by
 `rev458`. -/
+@[expose]
 def data458 : ContractionData core (Core.reorient core009 rev458) where
   F := {4, 5, 8}; vtx := ![0, 3, 5]; slot := ![0, 1, 2, 3, 6, 7]
   isForest := by decide
@@ -401,6 +425,7 @@ def data458 : ContractionData core (Core.reorient core009 rev458) where
 
 /-- The checked contraction of row 095 along source slots {0, 3, 5} onto `core010`, oriented by
 `rev035`. -/
+@[expose]
 def data035 : ContractionData core (Core.reorient core010 rev035) where
   F := {0, 3, 5}; vtx := ![2, 4, 5]; slot := ![8, 6, 7, 1, 2, 4]
   isForest := by decide
@@ -416,6 +441,7 @@ def data035 : ContractionData core (Core.reorient core010 rev035) where
 
 /-- The checked contraction of row 095 along source slots {0, 3, 8} onto `core010`, oriented by
 `rev038`. -/
+@[expose]
 def data038 : ContractionData core (Core.reorient core010 rev038) where
   F := {0, 3, 8}; vtx := ![5, 3, 4]; slot := ![5, 1, 2, 4, 6, 7]
   isForest := by decide
@@ -431,6 +457,7 @@ def data038 : ContractionData core (Core.reorient core010 rev038) where
 
 /-- The checked contraction of row 095 along source slots {0, 5, 8} onto `core010`, oriented by
 `rev058`. -/
+@[expose]
 def data058 : ContractionData core (Core.reorient core010 rev058) where
   F := {0, 5, 8}; vtx := ![3, 5, 4]; slot := ![3, 6, 7, 1, 2, 4]
   isForest := by decide
@@ -446,6 +473,7 @@ def data058 : ContractionData core (Core.reorient core010 rev058) where
 
 /-- The checked contraction of row 095 along source slots {3, 5, 8} onto `core010`, oriented by
 `rev358`. -/
+@[expose]
 def data358 : ContractionData core (Core.reorient core010 rev358) where
   F := {3, 5, 8}; vtx := ![0, 4, 5]; slot := ![0, 1, 2, 4, 6, 7]
   isForest := by decide
@@ -461,6 +489,7 @@ def data358 : ContractionData core (Core.reorient core010 rev358) where
 
 /-- The checked contraction of row 095 along source slots {0, 3, 5, 8} onto `core002`, oriented
 by `rev0358`. -/
+@[expose]
 def data0358 : ContractionData core (Core.reorient core002 rev0358) where
   F := {0, 3, 5, 8}; vtx := ![4, 5]; slot := ![1, 2, 4, 6, 7]
   isForest := by decide

@@ -69,7 +69,7 @@ The **easy/necessity direction** (§2.2, "`∃F` with one simple pole `⟹` `gen
 built, no admitted steps: `genus_eq_zero_of_exists_simple_pole` (`WeakToMero.lean`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 
@@ -109,7 +109,7 @@ hypothesis off `{P, Q}`, plus a short direct `wirtingerDbar f P = 0` computation
 extend holomorphy of the local `ψ`-cofactor across the puncture) similarly at `Q`. Investigated
 and found tractable in outline this pass (recorded above and in the build log) but not completed
 on top of everything else — this is precisely the boundary of what this pass closed. -/
-def WeakSolutionUpgrade (X : Type*) [TopologicalSpace X] [T2Space X]
+@[expose] def WeakSolutionUpgrade (X : Type*) [TopologicalSpace X] [T2Space X]
     [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] : Prop :=
   ∀ {f : X → ℂ} {P Q : X}, Q ≠ P → ∀ δ : Path Q P, RS.AbelWeak.IsWeakSolutionOfPair f P Q →
     (∀ θ : RS.Form1 X, RS.pathIntegral δ θ = 0) →
@@ -158,7 +158,7 @@ multiplicativity (weak solutions of pairwise-disjoint pairs multiply, `IsWeakSol
 and 7 run once for the assembled product weak solution (`η := ∑ i, η i`, the design's own
 account of the `k`-point case, §4.1). Same discharge roadmap as `WeakSolutionUpgrade`'s own
 docstring, mechanically re-run for a `Finset`-indexed family instead of a single pair. -/
-def WeakSolutionUpgradeFinset (X : Type*) [TopologicalSpace X] [T2Space X]
+@[expose] def WeakSolutionUpgradeFinset (X : Type*) [TopologicalSpace X] [T2Space X]
     [ConnectedSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X] (ι : Type*) [Fintype ι] :
     Prop :=
   ∀ {f : X → ℂ} {a x : ι → X},

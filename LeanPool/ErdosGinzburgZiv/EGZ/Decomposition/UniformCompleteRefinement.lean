@@ -18,7 +18,7 @@ Iterating a growth step gives all slab widths and a prime threshold uniform
 over the input decomposition, its local masses, and the selected anchor.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

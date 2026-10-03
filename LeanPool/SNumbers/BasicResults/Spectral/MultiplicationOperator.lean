@@ -46,7 +46,7 @@ Mathlib reuse: Hölder's inequality for `L^∞ · L²`
 `MemLp.coeFn_toLp` interface to `Lp`, and `LinearMap.mkContinuous`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal
 open MeasureTheory

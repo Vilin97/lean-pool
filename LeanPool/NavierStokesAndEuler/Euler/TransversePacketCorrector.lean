@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketProvider
 /-! The potential and slow curl of the actual transverse solution, with their genuine time
 derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -115,11 +115,11 @@ theorem fullVelocityPath_time (t : Icc (0 : ℝ) D.T) :
 
 /-- Potential path, given by `EulerCylinderPotential.potentialPath P D.potentialCoefficientPath
 (G.fullVelocityPath I)`. -/
-def potentialPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+@[expose] def potentialPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialPath P D.potentialCoefficientPath (G.fullVelocityPath I)
 
 /-- Potential time path, constructed using `EulerCylinderPotential.potentialDerivative`. -/
-def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+@[expose] def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (G.fullVelocityPath I) (G.fullDerivativePath I)
 
@@ -145,12 +145,12 @@ theorem potentialPath_time (t : Icc (0 : ℝ) D.T) :
     D.potentialCoefficientPath_time (G.fullVelocityPath_time I) t
 
 /-- Corrector path, given by `EulerCylinderSlowCurl.path P D.FInv.field (G.potentialPath I)`. -/
-def correctorPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+@[expose] def correctorPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.path P D.FInv.field (G.potentialPath I)
 
 /-- Corrector time path, given by `EulerCylinderSlowCurl.derivative P D.T D.FInv.field
 D.inverseDerivative (G.potentialPath I) (G.potentialTimePath I)`. -/
-def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
+@[expose] def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (G.potentialPath I) (G.potentialTimePath I)
 
@@ -176,13 +176,13 @@ theorem correctorPath_time (t : Icc (0 : ℝ) D.T) :
 
 /-- Corrector, defined pointwise by `pointField P (G.correctorPath I) (G.correctorPath_orbit I)
 (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
-def corrector : VectorField := fun z =>
+@[expose] def corrector : VectorField := fun z =>
   pointField P (G.correctorPath I) (G.correctorPath_orbit I)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Corrector derivative, defined pointwise by `pointField P (G.correctorTimePath I)
 (G.correctorTimePath_orbit I) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
-def correctorDerivative : VectorField := fun z =>
+@[expose] def correctorDerivative : VectorField := fun z =>
   pointField P (G.correctorTimePath I) (G.correctorTimePath_orbit I)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 

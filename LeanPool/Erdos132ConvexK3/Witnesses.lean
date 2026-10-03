@@ -21,7 +21,7 @@ Explicit real configurations inhabit each of the thirteen exceptional-word
 realization predicates routed through the four shared closure families.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3.Witnesses
 

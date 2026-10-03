@@ -15,7 +15,7 @@ This completes the rank-difference assertions in part (3) of paper
 Corollary 2.25.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

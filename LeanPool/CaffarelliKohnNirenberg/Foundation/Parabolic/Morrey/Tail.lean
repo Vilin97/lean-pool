@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Kerne
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -380,6 +380,7 @@ private lemma tail_integral_le_shell_sum {β : ℝ} {R : ℝ} (hR : 0 < R)
       rfl
 
 /-- The dyadic constant used by the Morrey tail estimate. -/
+@[expose]
 def parabolicTailKernelConstant (β q : ℝ) : ℝ≥0∞ :=
   ∑' n : ℕ, (ENNReal.ofReal (2 : ℝ)) ^
     ((n : ℝ) * (β - 5 / q) + 2 * (5 * (1 - 1 / q)))

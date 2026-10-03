@@ -32,7 +32,7 @@ vertex blocks) and has been removed; the vertex-block form is
 in `RootSink.lean` from the root-sink lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -124,6 +124,7 @@ theorem sum_dprod (hw : ∀ i, ∑ a, w i a = 1) : ∑ x : (∀ i, A i), dprod w
   exact FiniteWeights.sum_dprod hw
 
 /-- `dmix I x y` takes its `I`-coordinates from `x` and the others from `y`. -/
+@[expose]
 def dmix (I : Finset ι) (x y : ∀ i, A i) : ∀ i, A i := fun i => if i ∈ I then x i else y i
 
 omit [Fintype ι] [∀ i, Fintype (A i)] in
@@ -300,14 +301,14 @@ section Witness
 variable {M : GModel Γ}
 
 /-- Relabelling copy indices, as a bijection of copied latents. -/
-def gLatentPerm (π : Γ.Edge → Equiv.Perm (Fin t)) : GLatent Γ t ≃ GLatent Γ t where
+@[expose] def gLatentPerm (π : Γ.Edge → Equiv.Perm (Fin t)) : GLatent Γ t ≃ GLatent Γ t where
   toFun l := (l.1, π l.1 l.2)
   invFun l := (l.1, (π l.1).symm l.2)
   left_inv _ := by simp
   right_inv _ := by simp
 
 /-- Relabelling copy indices, as a bijection of copied observations. -/
-def gObsPerm (π : Γ.Edge → Equiv.Perm (Fin t)) : GObs Γ t ≃ GObs Γ t where
+@[expose] def gObsPerm (π : Γ.Edge → Equiv.Perm (Fin t)) : GObs Γ t ≃ GObs Γ t where
   toFun := gPerm π
   invFun := gPerm (fun e => (π e).symm)
   left_inv _ := by simp [gPerm]
@@ -408,6 +409,7 @@ theorem inflLaw_injectable (hM : M.Valid) {S : Finset (GObs Γ t)} (hS : GInject
 /-! ## The diagonal law of the witness -/
 
 /-- The copied observation that diagonal row `r` reads at the vertex `v`. -/
+@[expose]
 def diagObs (Γ : PairGraph) (t : ℕ) (p : Fin t × Γ.V) : GObs Γ t := ⟨p.2, fun _ => p.1⟩
 
 /-- The `t · |V|` diagonal observations are distinct. -/
@@ -467,7 +469,7 @@ theorem inflLaw_diag (_hM : M.Valid) :
 /-! ## The ancestral-independence prescriptions -/
 
 /-- Currying a Bool-valued function on a disjoint union of blocks. -/
-def sigCurry {n : ℕ} (S : Fin n → Finset (GObs Γ t)) :
+@[expose] def sigCurry {n : ℕ} (S : Fin n → Finset (GObs Γ t)) :
     ((Σ m : Fin n, ↥(S m)) → Bool) ≃ (∀ m : Fin n, ↥(S m) → Bool) where
   toFun f := fun m o => f ⟨m, o⟩
   invFun g := fun p => g p.1 p.2
@@ -661,6 +663,7 @@ def tailSel {n : ℕ} (S : Fin (n + 1) → Finset (GObs Γ t)) :
     (Finset.subset_biUnion_of_mem (fun m : Fin n => S m.succ) (Finset.mem_univ m)) b
 
 /-- The head block keeps its function, the tail block is split. -/
+@[expose]
 def headTailSel {n : ℕ} (S : Fin (n + 1) → Finset (GObs Γ t)) :
     ((↥(S 0) → Bool) × (↥(univ.biUnion fun m : Fin n => S m.succ) → Bool))
       → ((↥(S 0) → Bool) × (∀ m : Fin n, ↥(S m.succ) → Bool)) :=

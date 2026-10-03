@@ -20,7 +20,7 @@ proving the final estimate for the first-entry contribution to `B_x`.
 * `normalizationFirstEntryPart_estimate`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators Topology
 

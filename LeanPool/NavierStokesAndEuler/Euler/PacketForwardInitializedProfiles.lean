@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTimeChange
 by the literal compact periodic wave.  Every later forcing and solution is
 constructed, and the primary budget is discharged from its actual datum. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,11 +33,12 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized profiles, given by `sourceProfiles period M D (InitialData.zero period
 D) (initialData D δ hδ (α • ξ) hs)`. -/
-def forwardInitializedProfiles : ℕ → Profile :=
+@[expose] def forwardInitializedProfiles : ℕ → Profile :=
   sourceProfiles period M D (InitialData.zero period D) (initialData D δ hδ (α • ξ) hs)
 
 /-- Forward initialized profile witness, given by `sourceProfileWitness period M D hTime
 (InitialData.zero period D) (initialData D δ hδ (α • ξ) hs) p`. -/
+@[expose]
 def forwardInitializedProfileWitness (p : ℕ) :
     ProfileRegularity period M.T M.T_pos.le D.support (forwardInitializedProfiles M D δ hδ ξ hs α
         p) :=

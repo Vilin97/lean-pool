@@ -15,7 +15,7 @@ public import LeanPool.OrderClosures.WeaklyFatou.Reductions
 The finite-height tree, its cylinder sets, and the parent-disjointness lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 
@@ -33,20 +33,24 @@ namespace TreeNode
 abbrev level {n : ℕ} (t : TreeNode n) : ℕ := t.1.length
 
 /-- The root `∅`. -/
+@[expose]
 def root (n : ℕ) : TreeNode n := ⟨[], by simp⟩
 
 /-- The child `t⌢m`. -/
+@[expose]
 def child {n : ℕ} (t : TreeNode n) (h : level t < n) (m : ℕ) : TreeNode n :=
   ⟨t.1 ++ [m], by
     simpa [level] using h⟩
 
 /-- The parent map, fixing the root. -/
+@[expose]
 def parent {n : ℕ} (t : TreeNode n) : TreeNode n :=
   ⟨t.1.dropLast, by
     rw [List.length_dropLast]
     exact (Nat.sub_le _ _).trans t.2⟩
 
 /-- Restriction `t|j`. -/
+@[expose]
 def restrict {n : ℕ} (t : TreeNode n) (j : ℕ) : TreeNode n :=
   ⟨t.1.take j, by
     rw [List.length_take]
@@ -61,6 +65,7 @@ abbrev TreeNonterminal (n : ℕ) := {t : TreeNode n // TreeNode.level t < n}
 abbrev TreeProduct (n : ℕ) := TreeNonterminal n → ℕ
 
 /-- The strict prefix `t|j`, regarded as a non-terminal node. -/
+@[expose]
 def strictPrefix {n : ℕ} (t : TreeNode n) (j : Fin (TreeNode.level t)) :
     TreeNonterminal n :=
   ⟨TreeNode.restrict t j, by
@@ -70,6 +75,7 @@ def strictPrefix {n : ℕ} (t : TreeNode n) (j : Fin (TreeNode.level t)) :
       _ ≤ n := t.2⟩
 
 /-- The cylinder `E_t`. -/
+@[expose]
 def treeCylinder (n : ℕ) (t : TreeNode n) : Set (TreeProduct n) :=
   {α | ∀ j : Fin (TreeNode.level t), α (strictPrefix t j) ≤ t.1.get j}
 
@@ -152,6 +158,7 @@ theorem treeCylinder_isClopen (n : ℕ) (t : TreeNode n) :
     (continuous_apply (strictPrefix t j))
 
 /-- The characteristic function `s_t = χ_{E_t}`. -/
+@[expose]
 noncomputable def treeFunction (n : ℕ) (t : TreeNode n) :
     BoundedContinuousFunction (TreeProduct n) ℝ :=
   BoundedContinuousFunction.indicator (treeCylinder n t) (treeCylinder_isClopen n t)
@@ -264,10 +271,12 @@ theorem treeCylinder_finite_cover
   exact (not_lt_of_ge (hαu j)) (hj.trans_le hle)
 
 /-- Parent-disjointness (`π`-disjointness in the source). -/
+@[expose]
 def ParentDisjoint {n : ℕ} (A B : Set (TreeNode n)) : Prop :=
   TreeNode.parent '' A ∩ TreeNode.parent '' B = ∅
 
 /-- The finite union of the cylinders indexed by `F`. -/
+@[expose]
 def finiteCylinderUnion (n : ℕ) (F : Finset (TreeNode n)) : Set (TreeProduct n) :=
   ⋃ t : F, treeCylinder n t.1
 

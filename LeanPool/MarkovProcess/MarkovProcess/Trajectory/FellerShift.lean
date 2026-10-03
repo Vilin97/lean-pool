@@ -24,7 +24,7 @@ This is an unconditional kernel-law identity. The conditional form is in
 `Trajectory/FellerStoppingRestart.lean`; no Hunt-process property is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

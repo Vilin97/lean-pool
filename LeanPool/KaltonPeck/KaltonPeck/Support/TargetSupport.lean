@@ -19,7 +19,7 @@ This file extends a complex structure from a closed hyperplane to the ambient Ba
 computes the rank of the resulting square defect.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.TargetSupport

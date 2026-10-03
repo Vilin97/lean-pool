@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 This file restores an upstream tensor-product associator over mixed scalar towers.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -33,4 +33,4 @@ lemma Algebra.TensorProduct.assoc'_apply (R S R' A B C : Type*) [CommSemiring R]
     [Algebra R' A] [Algebra R B] [Algebra R' B] [Algebra R C]
     [IsScalarTower R R' A] [IsScalarTower R R' B] [Algebra S A] [Algebra R S] [Algebra R' S]
     [IsScalarTower R' S A] [IsScalarTower R S A] (a : A) (b : B) (c : C) :
-    (Algebra.TensorProduct.assoc' R S R' A B C) ((a ⊗ₜ b) ⊗ₜ c) = a ⊗ₜ (b ⊗ₜ c) := rfl
+    (Algebra.TensorProduct.assoc' R S R' A B C) ((a ⊗ₜ b) ⊗ₜ c) = a ⊗ₜ (b ⊗ₜ c) := by rfl

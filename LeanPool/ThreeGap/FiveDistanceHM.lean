@@ -39,7 +39,7 @@ See the module docstring of `RomanovK4` and `MATHLIB_SUCCESSIVE_MINIMA_SCOPE.md`
 (Romanov / lattice-minima) routes; this file pursues the elementary HM Theorem-8 route.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.FiveDistanceHM
 

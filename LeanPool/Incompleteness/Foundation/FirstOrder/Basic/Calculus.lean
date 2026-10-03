@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # Calculus -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -56,7 +56,7 @@ variable {T U : Theory L} {Δ Δ₁ Δ₂ Γ : Sequent L} {φ ψ r : SyntacticFo
 open Rewriting LawfulSyntacticRewriting
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Derivation.length {Δ : Sequent L} : T ⟹ Δ → ℕ
+@[expose] def _root_.LO.FirstOrder.Derivation.length {Δ : Sequent L} : T ⟹ Δ → ℕ
   | axL _ _ _   => 0
   | verum _     => 0
   | or d        => d.length.succ

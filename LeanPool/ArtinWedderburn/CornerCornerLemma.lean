@@ -20,7 +20,7 @@ corner subring of `f` inside `eRe` agrees (as a ring) with the corner subring of
 `f` viewed in `R`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

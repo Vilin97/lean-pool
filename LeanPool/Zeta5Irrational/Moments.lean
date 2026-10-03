@@ -28,7 +28,7 @@ integral, term-wise integration of the series defining `w`, and Euler's formula
 `ζ(2k) = (-1)^{k+1} 2^{2k-1} π^{2k} B_{2k} / (2k)!` (`hasSum_zeta_nat` in Mathlib).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology Finset
 

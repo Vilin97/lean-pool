@@ -17,7 +17,7 @@ identity is equivalent to the matching recurrence for canonical pure-power multi
 Thus the remaining all-order stochastic input can be stated as the usual Itô product recurrence.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

@@ -16,7 +16,7 @@ This file proves the finite-coordinate density input isolated in
 `Malliavin.NaturalClarkOcone`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

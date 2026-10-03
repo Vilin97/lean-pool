@@ -31,7 +31,7 @@ This is generic `PiLp` material (no s-number content); it is a candidate for
 upstreaming to `Mathlib.Analysis.Normed.Lp.PiLp`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -70,6 +70,7 @@ lemma finrank_piLp (k : ℕ) :
 
 /-- The **coordinate projection** `ℓ^p_m → ℓ^p_n` keeping the first `n`
 coordinates (along `Fin.castLE h`). -/
+@[expose]
 noncomputable def projFin (h : n ≤ m) :
     PiLp p (fun _ : Fin m => 𝕜) →L[𝕜] PiLp p (fun _ : Fin n => 𝕜) :=
   LinearMap.toContinuousLinearMap
@@ -82,6 +83,7 @@ noncomputable def projFin (h : n ≤ m) :
 
 /-- The **coordinate embedding** `ℓ^p_n → ℓ^p_m` extending by zeros past the
 first `n` coordinates. -/
+@[expose]
 noncomputable def padFin :
     PiLp p (fun _ : Fin n => 𝕜) →L[𝕜] PiLp p (fun _ : Fin m => 𝕜) :=
   LinearMap.toContinuousLinearMap

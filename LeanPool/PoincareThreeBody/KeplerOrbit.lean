@@ -21,12 +21,12 @@ This file gives the real elliptic Kepler orbit attached to Delaunay action `I₁
 first Delaunay angle along the unperturbed flow.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 /-- Radius of an elliptic Kepler orbit as a function of eccentric anomaly. -/
-noncomputable def eccentricRadius (firstAction eccentricity anomaly : ℝ) : ℝ :=
+@[expose] noncomputable def eccentricRadius (firstAction eccentricity anomaly : ℝ) : ℝ :=
   firstAction ^ 2 * (1 - eccentricity * Real.cos anomaly)
 
 /-- Radial momentum of an elliptic Kepler orbit as a function of eccentric anomaly. -/
@@ -36,7 +36,7 @@ noncomputable def eccentricRadialMomentum
     (firstAction * (1 - eccentricity * Real.cos anomaly))
 
 /-- Mean anomaly as a function of eccentric anomaly (Kepler's equation). -/
-noncomputable def eccentricMeanAnomaly (eccentricity anomaly : ℝ) : ℝ :=
+@[expose] noncomputable def eccentricMeanAnomaly (eccentricity anomaly : ℝ) : ℝ :=
   anomaly - eccentricity * Real.sin anomaly
 
 /-- Physical Kepler time, normalized to vanish with the mean anomaly. -/

@@ -88,7 +88,7 @@ because of step 3. Multiplicities never enter, and neither does `Mathlib`'s `rad
   polynomial calculus is built on it.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

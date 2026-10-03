@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 factor ell for each normalized spatial derivative. This factor is needed
 in the neighboring-label estimates of the induction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,7 +47,7 @@ open scoped ContDiff BoundedContinuousFunction
 variable {G : Parent} (L : LabelData G)
 
 /-- Scaled radius, given by `G.ell*coefficientRadius L.K`. -/
-def scaledRadius : ℝ := G.ell*coefficientRadius L.K
+@[expose] def scaledRadius : ℝ := G.ell*coefficientRadius L.K
 
 theorem scaledRadius_nonneg : 0 ≤ L.scaledRadius :=
   mul_nonneg G.ell_pos.le (coefficientRadius_nonneg L.K)

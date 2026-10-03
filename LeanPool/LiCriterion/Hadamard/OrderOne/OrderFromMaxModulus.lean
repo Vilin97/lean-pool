@@ -23,7 +23,7 @@ It is used in the order-`≤ 1` Hadamard factorization proof to show the quotien
 `Q := f / P` has `order Q < 2`, hence is an exponential of a linear function.
 -/
 
-@[expose] public section
+public section
 
 namespace Hadamard
 

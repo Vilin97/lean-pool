@@ -38,7 +38,7 @@ the statements here compare them through the inclusion of `U` in `V` rather than
 two killed processes as laws on a common carrier.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

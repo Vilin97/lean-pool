@@ -28,18 +28,20 @@ is a minimum.  The parts are weakly decreasing and vanish from row `genus G`
 onward, hence define an honest finite `YoungDiagram`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
 open Utilities
 
 /-- The integers at which the pointed rank has reached row `i`. -/
+@[expose]
 def poleOrderSet (G : CFGraph) (v : G.V) (D : CFDiv G) (i : ℕ) : Set ℤ :=
   {ell | (i : ℤ) ≤ rank G (D + ell • oneChip v)}
 
 /-- Definition 1.6: the least twist at the marked point having rank at least
 `i`. -/
+@[expose]
 noncomputable def poleOrder (G : CFGraph) (v : G.V) (D : CFDiv G)
     (i : ℕ) : ℤ :=
   sInf (poleOrderSet G v D i)
@@ -214,6 +216,7 @@ theorem poleOrder_succ_le {G : CFGraph} (hG : _root_.graphConnected G)
   omega
 
 /-- The integer underlying the `i`th Weierstrass part. -/
+@[expose]
 noncomputable def weierstrassPartInt (G : CFGraph) (v : G.V) (D : CFDiv G)
     (i : ℕ) : ℤ :=
   (i : ℤ) + CFGraph.genus G - CFDiv.degree D - poleOrder G v D i
@@ -226,6 +229,7 @@ theorem weierstrassPartInt_nonneg {G : CFGraph} (hG : _root_.graphConnected G)
   omega
 
 /-- Definition 1.6: the `i`th part of the Weierstrass partition. -/
+@[expose]
 noncomputable def weierstrassPart (G : CFGraph) (v : G.V) (D : CFDiv G)
     (i : ℕ) : ℕ :=
   (weierstrassPartInt G v D i).toNat
@@ -398,6 +402,7 @@ private theorem card_cellsOfRowLens (rows : List ℕ) :
         omega
 
 /-- Definition 1.6: the finite size `|lambda(D,v)|`. -/
+@[expose]
 noncomputable def weierstrassSize {G : CFGraph}
     (hG : _root_.graphConnected G) (v : G.V) (D : CFDiv G) : ℕ :=
   (weierstrassPartition hG v D).card

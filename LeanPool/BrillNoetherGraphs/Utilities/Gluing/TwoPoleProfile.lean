@@ -23,7 +23,7 @@ intentional: marked residuals such as `4a - 2u`, higher-rank tests, and future
 multi-stage gluings can all use the same interface.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -69,6 +69,7 @@ def IsCreditResponse {G : CFGraph.{u}} (p : TwoPole G) (D : CFDiv G)
 /-- Glue factor scripts, translating the right script by a constant.  The
 translation changes neither its factor principal divisor nor its
 displacement, but it sets the absolute flux through the first cross-edge. -/
+@[expose]
 def glueScript (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B)
     (f : firingScript A) (g : firingScript B) (k : ℤ) :

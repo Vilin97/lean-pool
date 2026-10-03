@@ -27,12 +27,13 @@ collapses through this law into an equality of label
 equivalences.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The outgoing label map of a bundle: fix the inputs, apply `e`
 to the outputs. -/
+@[expose]
 def outMapEquiv {n m : ℕ} (e : Fin n ≃ Fin m) :
     Fin (n + n) ≃ Fin (n + m) :=
   finSumFinEquiv.symm.trans
@@ -41,6 +42,7 @@ def outMapEquiv {n m : ℕ} (e : Fin n ≃ Fin m) :
 
 /-- The bundle map of a label equivalence: strand `k` joins input
 `k` to output `e k`. -/
+@[expose]
 noncomputable def bundleMap {n m : ℕ} (e : Fin n ≃ Fin m) :
     Fragment (Fin (n + m)) :=
   (strandBundle n).relabel (outMapEquiv e)
@@ -133,6 +135,7 @@ theorem outMapEquiv_natAdd {n m : ℕ} (e : Fin n ≃ Fin m)
   exact finSumFinEquiv_apply_right (e k)
 
 /-- The sum of two label equivalences, on concatenated blocks. -/
+@[expose]
 def tensorMapEquiv {n₁ m₁ n₂ m₂ : ℕ}
     (e₁ : Fin n₁ ≃ Fin m₁) (e₂ : Fin n₂ ≃ Fin m₂) :
     Fin (n₁ + n₂) ≃ Fin (m₁ + m₂) :=
@@ -313,6 +316,7 @@ theorem inTransport_finCongr {n m u : ℕ} (h : n = m) :
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The bundle-map class. -/
+@[expose]
 noncomputable def bundleMapClass {n m : ℕ} (e : Fin n ≃ Fin m) :
     HomSpace f.val (n + m) :=
   HomSpace.ofFragment f.val (bundleMap e)

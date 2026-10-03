@@ -25,7 +25,7 @@ Keeping these as standalone, proved lemmas prevents the later flag interface
 from hiding either step in an axiom.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

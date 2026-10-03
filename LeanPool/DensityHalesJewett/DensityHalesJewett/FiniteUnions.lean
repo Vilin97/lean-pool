@@ -20,7 +20,7 @@ canonizes the colour of a union in terms of its least block, and the pigeonhole 
 extracts a monochromatic family.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics

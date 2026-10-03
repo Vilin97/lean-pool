@@ -22,7 +22,7 @@ Linear combinations are formed at the raw `StateVector` layer and then bundled
 as `PureState` values once their unit norm has been proved.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -31,10 +31,10 @@ namespace PureState
 noncomputable section
 
 /-- `|0>`, the first one-qubit basis ket. -/
-def ket0 : PureState 1 := ket 0
+@[expose] def ket0 : PureState 1 := ket 0
 
 /-- `|1>`, the second one-qubit basis ket. -/
-def ket1 : PureState 1 := ket 1
+@[expose] def ket1 : PureState 1 := ket 1
 
 /-- `(sqrt 2)^-1 : ℂ`, the ubiquitous normalization scalar. -/
 def invSqrt2 : ℂ := (Real.sqrt 2 : ℂ)⁻¹
@@ -71,11 +71,11 @@ theorem invSqrt2_ne_zero : invSqrt2 ≠ 0 :=
     Real.sqrt_ne_zero'.mpr (by norm_num)
 
 /-- Raw vector for the Hadamard-basis state `|+⟩`. -/
-def ketPlusVec : StateVector 1 :=
+@[expose] def ketPlusVec : StateVector 1 :=
   invSqrt2 • ((ket0 : StateVector 1) + (ket1 : StateVector 1))
 
 /-- Raw vector for the Hadamard-basis state `|-⟩`. -/
-def ketMinusVec : StateVector 1 :=
+@[expose] def ketMinusVec : StateVector 1 :=
   invSqrt2 • ((ket0 : StateVector 1) - (ket1 : StateVector 1))
 
 @[simp]
@@ -111,10 +111,10 @@ theorem norm_ketMinusVec : ‖ketMinusVec‖ = 1 := by
   norm_num
 
 /-- `|+> = (|0> + |1>)/sqrt 2`. -/
-def ketPlus : PureState 1 := ofVec ketPlusVec norm_ketPlusVec
+@[expose] def ketPlus : PureState 1 := ofVec ketPlusVec norm_ketPlusVec
 
 /-- `|-> = (|0> - |1>)/sqrt 2`. -/
-def ketMinus : PureState 1 := ofVec ketMinusVec norm_ketMinusVec
+@[expose] def ketMinus : PureState 1 := ofVec ketMinusVec norm_ketMinusVec
 
 @[simp]
 theorem ketPlus_apply (i : Fin (2 ^ 1)) : ketPlus i = invSqrt2 := by

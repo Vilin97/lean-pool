@@ -16,7 +16,7 @@ the truncations, layer-cake argument, and numerical constant are unchanged
 from `Foundation.Euclidean.InterpolationRestricted`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Filter

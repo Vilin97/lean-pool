@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Normed.Affine.ContinuousAffineMap
 * `GerverSofa.KernelOnly.PartF.Semantics.Batch002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -40,7 +40,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartF.F06IntegralMotion`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -56,7 +56,7 @@ the existing `ℝ × ℝ` coordinate model, not to an unproved isometry between
 the product norm and the Euclidean norm.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,7 +107,7 @@ certified reduced solution. No identification with the full 22D tuple is
 claimed by this module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -115,6 +115,7 @@ namespace GerverSofa.PartF.Parameters
 
 /-- The nonnegative parameter and ordered-angle equations used by the upstream canonical
 definition. -/
+@[expose]
 def upstreamSpec (A B φ θ : ℝ) : Prop :=
   0 ≤ φ ∧ φ ≤ θ ∧ θ ≤ Real.pi / 4 ∧ 0 ≤ A ∧ 0 ≤ B ∧
   A * (θ.cos - φ.cos) - 2 * B * φ.sin
@@ -133,6 +134,7 @@ theorem upstreamSpec_iff (A B φ θ : ℝ) :
   tauto
 
 /-- Package the upstream four-parameter specification as a predicate on a nested tuple. -/
+@[expose]
 def TupleSpec (q : ℝ × ℝ × ℝ × ℝ) : Prop :=
   upstreamSpec q.1 q.2.1 q.2.2.1 q.2.2.2
 
@@ -140,6 +142,7 @@ theorem existsUnique : ∃! q, TupleSpec q := by
   simpa only [TupleSpec, upstreamSpec_iff] using PartE.deepMindABPhiTheta_existsUnique
 
 /-- The certified reduced solution converted to the upstream four-parameter tuple. -/
+@[expose]
 def certified : ℝ × ℝ × ℝ × ℝ :=
   PartE.tupleEquiv.symm PartALeanCert.reducedCertifiedUniqueSolution.solution
 
@@ -180,7 +183,7 @@ definition. Its rotation matrices are explicit; their comparison with
 `F01.rotation` and the integral representation are separate bridge steps.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open scoped unitInterval
@@ -189,6 +192,7 @@ namespace GerverSofa.PartF.EuclideanMotion
 open Coordinates
 
 /-- The standard rotation matrix associated with an existing `SE2` value. -/
+@[expose]
 def linearPart (g : SE2) : Plane ≃ₗ[ℝ] Plane where
   toFun := fun q => toPlane (g.c * q 0 - g.s * q 1, g.s * q 0 + g.c * q 1)
   invFun := fun q => toPlane (g.c * q 0 + g.s * q 1, -g.s * q 0 + g.c * q 1)
@@ -245,11 +249,13 @@ theorem linearPart_norm (g : SE2) (q : Plane) : ‖linearPart g q‖ = ‖q‖ :
   (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp (linearPart_norm_sq g q)
 
 /-- The linear isometry determined by the rotation coefficients of an SE2 motion. -/
+@[expose]
 def linearIsometry (g : SE2) : Plane ≃ₗᵢ[ℝ] Plane where
   toLinearEquiv := linearPart g
   norm_map' := linearPart_norm g
 
 /-- A genuine Euclidean affine isometry with the original coordinate action. -/
+@[expose]
 def ofSE2 (g : SE2) : Rigid :=
   rotateThenTranslate (linearIsometry g) (toPlane (g.tx, g.ty))
 
@@ -381,7 +387,7 @@ area form, then its right-angle rotation, before comparing rotation matrices.
 No replacement orientation or additional orientation hypothesis is introduced.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.CanonicalRotation
@@ -480,7 +486,7 @@ the outstanding path/dictionary equalities explicitly. They do not prove the
 literal integral representation or identify the certified 22D tuple.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open scoped unitInterval
@@ -568,7 +574,7 @@ as F01. The final identification with PartC.params still requires the 22D
 dictionary theorem; it remains an explicit hypothesis in the two last results.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Integrals
@@ -714,6 +720,7 @@ theorem integral_sofa_eq_worldSofa (d : Reduced.Params) (ho : Ordered d)
   exact (integral_rotation d ho hd t ht).symm
 
 /-- The reduced parameters selected by the concrete uniqueness certificate. -/
+@[expose]
 def certified : Reduced.Params := PartALeanCert.reducedCertifiedUniqueSolution.solution
 
 theorem certified_ordered : Ordered certified := by
@@ -758,7 +765,7 @@ The full algebraic reconstruction closes the 22D identity without a new
 Krawczyk run or a forward enclosure into the narrow full box.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Parameters
@@ -833,7 +840,7 @@ canonical Euclidean orientation. It does not silently replace the current
 upstream rotateTranslate definition discussed in issue #5270.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Integrals

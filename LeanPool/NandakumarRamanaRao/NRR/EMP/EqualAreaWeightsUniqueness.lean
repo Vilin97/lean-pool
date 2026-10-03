@@ -22,7 +22,7 @@ cell area and null pairwise overlap force every index to be maximal.  Normalizat
 the common additive constant.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

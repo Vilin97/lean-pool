@@ -16,7 +16,7 @@ its weak gradient or its distributional harmonicity. In particular these
 identities apply to the spatial mean at each fixed time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

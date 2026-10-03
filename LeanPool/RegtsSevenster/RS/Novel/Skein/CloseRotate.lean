@@ -27,12 +27,13 @@ the ideal lemma and the trace calculus (accompanying paper,
 Lemma 3.3(a) and Lemma 3.5(a)).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The boundary transpose: exchange the two sides of an
 `(n,p)`-boundary. -/
+@[expose]
 noncomputable def transposeEquiv (n p : ℕ) :
     Fin (n + p) ≃ Fin (p + n) :=
   (finSumFinEquiv.symm.trans
@@ -82,6 +83,7 @@ theorem transposeEquiv_symm_high (n p : ℕ) (j : ℕ) (hj : j < n)
 
 /-- The `m`-block: the low labels of `F` against the low labels
 of `K`, top pair first. -/
+@[expose]
 def mBlock (m n p : ℕ) :
     List (((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p)) ×
       ((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p))) :=
@@ -91,6 +93,7 @@ def mBlock (m n p : ℕ) :
 
 /-- The `p`-block: the high labels of `H` against the high labels
 of `K`, top pair first. -/
+@[expose]
 def pBlock (m n p : ℕ) :
     List (((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p)) ×
       ((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p))) :=
@@ -100,6 +103,7 @@ def pBlock (m n p : ℕ) :
 
 /-- The `n`-block: the high labels of `F` against the low labels
 of `H`, top pair first — the embedded composition interface. -/
+@[expose]
 def nBlock (m n p : ℕ) :
     List (((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p)) ×
       ((Fin (m + n) ⊕ Fin (n + p)) ⊕ Fin (m + p))) :=
@@ -296,6 +300,7 @@ theorem liftPairs_append {α : Type} (ps : List (α × α)) :
       (liftPairs_append ps qs₁ qs₂ _)
 
 /-- The high half of a full-closure interface list. -/
+@[expose]
 def ipHigh (m p : ℕ) :
     List ((Fin (0 + (m + p)) ⊕ Fin (m + p + 0)) ×
       (Fin (0 + (m + p)) ⊕ Fin (m + p + 0))) :=
@@ -304,6 +309,7 @@ def ipHigh (m p : ℕ) :
      Sum.inr ⟨m + ℓ.val, by have := ℓ.isLt; omega⟩))
 
 /-- The low half of a full-closure interface list. -/
+@[expose]
 def ipLow (m p : ℕ) :
     List ((Fin (0 + (m + p)) ⊕ Fin (m + p + 0)) ×
       (Fin (0 + (m + p)) ⊕ Fin (m + p + 0))) :=
@@ -678,6 +684,7 @@ noncomputable def rotMR (m n p : ℕ) :
           List.Perm.refl _)).symm)
 
 /-- The transported boundary equivalence of the right side. -/
+@[expose]
 noncomputable def rotSigma (m n p : ℕ) :
     (Fin (m + n) ⊕
       Fragment.FoldSurviving (Fin (m + p) ⊕ Fin (p + n))

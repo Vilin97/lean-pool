@@ -54,7 +54,7 @@ conditional
 independence
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 

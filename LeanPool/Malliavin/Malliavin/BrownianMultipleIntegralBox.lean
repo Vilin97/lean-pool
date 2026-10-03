@@ -15,7 +15,7 @@ simplex only the identity permutation survives, so the factorial normalization i
 multiple-integral operator cancels that average and recovers the Brownian increment chain.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

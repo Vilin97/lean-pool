@@ -15,13 +15,14 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.Delta
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open CKN.Foundation.Parabolic
 
 namespace CKN
 
 /-- The iteration quantity θ from the manuscript, `eq:theta`. -/
+@[expose]
 noncomputable def theta (κ : ℝ) (u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3) (p : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=

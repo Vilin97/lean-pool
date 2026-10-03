@@ -37,7 +37,7 @@ monoidal structure transported along `CategoryTheory.equivSmallModel`
   `RS.DeligneFibreFunctor.precompose`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -302,13 +302,13 @@ variable (A : Type u)
 /-- The small model of an essentially small monoidal category,
 carrying the monoidal structure transported along
 `CategoryTheory.equivSmallModel`. -/
-@[reducible] noncomputable def SmallDeligne
+@[expose, reducible] noncomputable def SmallDeligne
     [Category.{v} A] [EssentiallySmall.{v} A] : Type v :=
   Monoidal.Transported (equivSmallModel.{v} A)
 
 /-- The transporting equivalence onto the small model, monoidal by
 construction. -/
-@[reducible] noncomputable def smallDeligneEquiv
+@[expose, reducible] noncomputable def smallDeligneEquiv
     [Category.{v} A] [EssentiallySmall.{v} A] : A ≌ SmallDeligne A :=
   Monoidal.equivalenceTransported (equivSmallModel.{v} A)
 

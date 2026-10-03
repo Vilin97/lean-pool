@@ -29,4 +29,4 @@ Tags: combinatorics
 MSC: 05C57, 14T20
 -/
 
-@[expose] public section
+public section

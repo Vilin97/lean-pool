@@ -14,7 +14,7 @@ public import Aesop.BuiltinRules
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Option.Instances`.
 -/
 
-@[expose] public section
+public section
 
 
 variable {A : Type*}

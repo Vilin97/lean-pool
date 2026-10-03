@@ -36,7 +36,7 @@ homogeneous on measurable observables (`SubMarkovKernelSemigroup.kernelResolvent
 No resolvent identity and no topology on the state space are used here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

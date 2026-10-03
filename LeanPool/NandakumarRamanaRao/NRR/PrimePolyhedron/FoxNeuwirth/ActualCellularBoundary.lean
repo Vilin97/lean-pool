@@ -22,7 +22,7 @@ prime cycle theorem reduces to the concrete shuffle-cardinality statement for co
 cells.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -47,6 +47,7 @@ noncomputable def topExtensionMultiplicity (a : BarredPermutation p) : Nat :=
   (topExtensions a).card
 
 /-- The actual coefficient of `a` in the boundary of the oriented top-cell sum. -/
+@[expose]
 noncomputable def actualTopBoundaryCoefficient
     (a : BarredPermutation p) : ZMod p :=
   ∑ c : BarredPermutation.TopCell p,
@@ -141,6 +142,7 @@ theorem bars_eq_singleton_facetBar
     (Finset.card_eq_one.mp (bars_card_eq_one_of_codimOne hp a ha))
 
 /-- Size of the first ordered block of a codimension-one cell. -/
+@[expose]
 noncomputable def facetLeftSize
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2) : Nat :=
@@ -161,6 +163,7 @@ noncomputable def facetLeftSize
   omega
 
 /-- Labels in the first ordered block, expressed directly by their rank before the unique bar. -/
+@[expose]
 def FirstBlockLabel
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2) :=
@@ -173,6 +176,7 @@ noncomputable instance (hp : Nat.Prime p) (a : BarredPermutation p)
   exact Fintype.ofFinite _
 
 /-- The first block has the expected finite cardinality. -/
+@[expose]
 noncomputable def firstBlockEquivFin
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2) :
@@ -195,6 +199,7 @@ noncomputable def firstBlockEquivFin
   rw [Fintype.card_congr (firstBlockEquivFin hp a ha), Fintype.card_fin]
 
 /-- Top-cell extensions as a finite subtype. -/
+@[expose]
 def TopExtension (a : BarredPermutation p) :=
   {c : BarredPermutation.TopCell p // a.IsFacet (c : BarredPermutation p)}
 
@@ -216,7 +221,7 @@ noncomputable instance (a : BarredPermutation p) : DecidableEq (TopExtension a) 
   rw [topExtensionMultiplicity, Fintype.card_congr e, Fintype.card_coe]
 
 /-- Positions occupied by the first block inside a candidate top-cell order. -/
-noncomputable def firstBlockPositions
+@[expose] noncomputable def firstBlockPositions
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2)
     (c : BarredPermutation.TopCell p) : Finset (Fin p) :=
@@ -237,6 +242,7 @@ noncomputable def firstBlockPositions
     exact (c : BarredPermutation p).rank.injective hij
 
 /-- Canonical map sending a top-cell extension to the positions occupied by the first block. -/
+@[expose]
 noncomputable def topExtensionToShuffle
     (hp : Nat.Prime p) (a : BarredPermutation p)
     (ha : a.dualDimension = p - 2) :
@@ -253,6 +259,7 @@ def FacetShuffleCardinality (p : Nat) : Prop :=
         topExtensionMultiplicity a = p.choose k
 
 /-- Concrete bijectivity statement for the canonical extension-to-shuffle map. -/
+@[expose]
 def FacetShuffleBijection (hp : Nat.Prime p) : Prop :=
   ∀ (a : BarredPermutation p) (ha : a.dualDimension = p - 2),
     Function.Bijective (topExtensionToShuffle hp a ha)

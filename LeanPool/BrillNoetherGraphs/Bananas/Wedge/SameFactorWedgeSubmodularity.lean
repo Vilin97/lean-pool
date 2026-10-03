@@ -18,7 +18,7 @@ two vertices.  The point is that a third vertex supplies the explicit
 negative rank-difference witness already used for Proposition 3.7.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

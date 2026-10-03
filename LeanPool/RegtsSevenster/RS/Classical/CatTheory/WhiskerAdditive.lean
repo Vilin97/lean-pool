@@ -27,7 +27,7 @@ instance for `tensorLeft`, so the distributors are built here
 directly.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -82,7 +82,7 @@ section Distributors
 
 /-- **Tensoring on the left distributes over a binary
 biproduct.** -/
-noncomputable def tensorBiprodIso
+@[expose] noncomputable def tensorBiprodIso
     [Category.{v} C] [MonoidalCategory C] [Preadditive C]
     [MonoidalPreadditive C] [Limits.HasBinaryBiproducts C]
     (B X Y : C) :
@@ -99,7 +99,7 @@ noncomputable def tensorBiprodIso
 
 /-- **Tensoring on the right distributes over a binary
 biproduct.** -/
-noncomputable def biprodTensorIso
+@[expose] noncomputable def biprodTensorIso
     [Category.{v} C] [MonoidalCategory C] [Preadditive C]
     [MonoidalPreadditive C] [Limits.HasBinaryBiproducts C]
     (X Y B : C) :

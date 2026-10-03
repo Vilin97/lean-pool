@@ -53,7 +53,7 @@ exercise's framing
 ("for set theorists").
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise222
 
@@ -150,7 +150,7 @@ def reprSystem : NeighborhoodSystem (Tok C) where
 @[simp] theorem mem_reprSystem {N : Set (Tok C)} :
     (reprSystem C hInter hne).mem N ↔ ∃ F : Tok C, N = nbhd C F.1 := Iff.rfl
 
-@[simp] theorem reprSystem_master : (reprSystem C hInter hne).master = Set.univ := rfl
+@[simp] theorem reprSystem_master : (reprSystem C hInter hne).master = Set.univ := by rfl
 
 /-! ### From an element to a set of `C`: `x ↦ ⋃ {Fbar ∣ C(F) ∈ x}`. -/
 

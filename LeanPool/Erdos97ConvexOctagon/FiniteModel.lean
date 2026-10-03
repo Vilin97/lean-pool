@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Erdős 97 convex-octagon formalization: Finite Model -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
@@ -27,6 +27,7 @@ namespace RawIncidence
 abbrev SearchRow := Finset Vertex
 
 /-- All four-element rows available at a specified centre. -/
+@[expose]
 def rowOptions (v : Vertex) : List SearchRow :=
   (((List.finRange 8).filter (· ≠ v)).sublistsLen 4).map List.toFinset
 
@@ -57,19 +58,20 @@ theorem target_row_mem_rowOptions (Q : OctagonIncidence) (v : Vertex) :
     Finset.sort_toFinset _ _⟩
 
 /-- The zero-based SAT variable representing one directed incidence. -/
-def varIndex (centre target : Vertex) : ℕ :=
+@[expose] def varIndex (centre target : Vertex) : ℕ :=
   8 * centre.val + target.val
 
 /-- Test one bit of a packed 64-bit incidence table. -/
-def bitSetB (code : UInt64) (index : ℕ) : Bool :=
+@[expose] def bitSetB (code : UInt64) (index : ℕ) : Bool :=
   ((code >>> UInt64.ofNat index) &&& 1) != 0
 
 /-- Decode one three-bit entry of a packed permutation. -/
+@[expose]
 def decodeMap (code : UInt64) (vertex : Vertex) : Vertex :=
   Fin.ofNat 8 (((code >>> UInt64.ofNat (3 * vertex.val)) &&& 7).toNat)
 
 /-- Decode an eight-bit row mask as a set of octagon vertices. -/
-def packedRow (mask : UInt64) : Finset Vertex :=
+@[expose] def packedRow (mask : UInt64) : Finset Vertex :=
   Finset.univ.filter fun target => bitSetB mask target.val
 
 @[simp] theorem mem_packedRow (mask : UInt64) (target : Vertex) :
@@ -77,11 +79,11 @@ def packedRow (mask : UInt64) : Finset Vertex :=
   simp [packedRow]
 
 /-- Vertex pairs in the lexicographic order used by the finite search. -/
-def vertexPairs : List (List Vertex) :=
+@[expose] def vertexPairs : List (List Vertex) :=
   ((List.finRange 8).sublistsLen 2).reverse
 
 /-- Read one directed incidence from a packed table. -/
-def packedSelectsB (code : UInt64) (centre target : Vertex) : Bool :=
+@[expose] def packedSelectsB (code : UInt64) (centre target : Vertex) : Bool :=
   bitSetB code (varIndex centre target)
 
 /-- Decode a packed table to the mathematical finite-set model. -/

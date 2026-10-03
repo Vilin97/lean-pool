@@ -18,7 +18,7 @@ and finite signed harmonic sums preserve constants chosen before labels.
 The endpoints use the actual signed and particular block constructors.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -278,6 +278,7 @@ theorem nativeSlice_uniform {s : StripData ((Q × ℝ) × TorusInverse.Plane)}
   uniform_zeroSection (uniform_reindex (ParticularWaveAssembly.angleShuffle (P := Q)) hf)
 
 /-- The native whole-angle strip used by the literal particular solver. -/
+@[expose]
 noncomputable def nativeStrip (s : StripData (Q × TorusInverse.Plane)) :
     StripData ((Q × ℝ) × TorusInverse.Plane) :=
   ParticularWaveBounds.reindexStrip (ParticularWaveAssembly.angleShuffle (P := Q)).symm

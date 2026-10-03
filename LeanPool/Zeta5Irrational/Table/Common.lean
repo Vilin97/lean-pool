@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! ### The entries of Table 1 as numerals -/
 
-@[expose] public section
+public section
 
 open Finset
 

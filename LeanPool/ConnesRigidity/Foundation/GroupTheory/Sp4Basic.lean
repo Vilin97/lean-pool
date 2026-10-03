@@ -23,7 +23,7 @@ transitively on nonzero vectors. It realizes the action with symplectic
 transvections and keeps the exhaustive normal-subgroup certificate separate.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Sp4

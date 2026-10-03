@@ -15,7 +15,7 @@ The colouring sum and the through-summand of a union split into
 the two components.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -60,6 +60,7 @@ theorem notmem_right' {g : W₂.Flag}
 
 /-- The underlying map of the join of two even colourings: each
 non-participating flag takes its own component's colour. -/
+@[expose]
 noncomputable def joinEvenVal {k : ℕ}
     (ψ₁ : (leftSub F).EvenColouring k)
     (ψ₂ : (rightSub F).EvenColouring k) :
@@ -109,6 +110,7 @@ noncomputable def joinEven {k : ℕ}
 
 /-- Even colourings of a union subset are pairs of even colourings of
 the two restrictions. -/
+@[expose]
 noncomputable def joinEvenEquiv
     (F : EdgeSubset (W₁.disjUnion W₂)) (k : ℕ) :
     ((leftSub F).EvenColouring k × (rightSub F).EvenColouring k) ≃
@@ -134,6 +136,7 @@ noncomputable def joinEvenEquiv
 
 /-- The underlying map of the join of two core odd colourings: each
 core flag takes its own component's colour. -/
+@[expose]
 noncomputable def joinCoreVal {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
@@ -160,6 +163,7 @@ theorem joinCoreVal_inr {ℓ : ℕ}
 
 /-- The join of two component core odd colourings as a core odd
 colouring of the union subset. -/
+@[expose]
 noncomputable def joinCore {ℓ : ℕ}
     (φ₁ : (leftSub F).CoreOddColouring ℓ)
     (φ₂ : (rightSub F).CoreOddColouring ℓ) :
@@ -184,6 +188,7 @@ noncomputable def joinCore {ℓ : ℕ}
 
 /-- Core odd colourings of a union subset are pairs of core odd
 colourings of the two restrictions. -/
+@[expose]
 noncomputable def joinCoreEquiv
     (F : EdgeSubset (W₁.disjUnion W₂)) (ℓ : ℕ) :
     ((leftSub F).CoreOddColouring ℓ ×

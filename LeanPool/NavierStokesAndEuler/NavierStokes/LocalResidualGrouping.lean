@@ -29,7 +29,7 @@ is derived from the represented finite harmonic fields, with no regularity
 or support assumption on the independent alias.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,10 +45,12 @@ noncomputable def axisymmetricLift (a : MeanVector D) : Oscillation D :=
   fun n x => a n x.1
 
 /-- Add an independent alias without changing any velocity or pressure field. -/
+@[expose]
 noncomputable def addAxisymmetricAlias (s : State D) (a : MeanVector D) : State D :=
   { s with errors := { s.errors with aliasError := s.errors.aliasError + axisymmetricLift a } }
 
 /-- Remove precisely the specified independent alias from the stored errors. -/
+@[expose]
 noncomputable def eraseAxisymmetricAlias (s : State D) (a : MeanVector D) : State D :=
   { s with errors := { s.errors with aliasError := s.errors.aliasError - axisymmetricLift a } }
 
@@ -307,7 +309,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

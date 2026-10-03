@@ -35,7 +35,7 @@ and `meyer` below specialise them with `rankFourDiagonalHM` and
 * `meyer_of` (WP6.3): an indefinite form of rank `≥ 5` over `ℚ` is isotropic.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 

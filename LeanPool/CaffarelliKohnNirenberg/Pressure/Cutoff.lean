@@ -23,7 +23,7 @@ its Euclidean support has a strict collar in the native carrier.  This keeps
 the stated Euclidean radii literal while avoiding an implicit change of norm.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Metric
 open scoped Convolution

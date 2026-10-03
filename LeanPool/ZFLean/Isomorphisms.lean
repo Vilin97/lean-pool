@@ -17,10 +17,10 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ZFLean.Isomorphisms`.
 -/
 
-@[expose] public section
+public section
 namespace ZFSet
 /-- Imported ZFLean declaration. -/
-def isIso (A B : ZFSet) : Prop :=
+@[expose] def isIso (A B : ZFSet) : Prop :=
   ∃ (bij : ZFSet) (is_func : A.IsFunc B bij), bij.IsBijective is_func
 /-- Imported ZFLean declaration. -/
 infix:40 " ≅ᶻ " => ZFSet.isIso

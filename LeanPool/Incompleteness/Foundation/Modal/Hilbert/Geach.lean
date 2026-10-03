@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Hilbert.WellKnown
 
 /-! # Geach -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -20,7 +20,7 @@ version, which is the transmission-existence backbone of the Section 6 chain
 arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

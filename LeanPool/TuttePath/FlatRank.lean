@@ -17,7 +17,7 @@ Natural ranks are an internal arithmetic interface to finite `eRk`.
 The structural lemmas do not depend on the path theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 
@@ -28,7 +28,7 @@ theorem contraction_finite (M : Matroid α) [M.Finite] (F : Set α) :
     (M.contract F).Finite := inferInstance
 
 /-- Engineering interface; only used with a finite-ground-set matroid below. -/
-noncomputable def natRank (M : Matroid α) (F : Set α) : ℕ := (M.eRk F).toNat
+@[expose] noncomputable def natRank (M : Matroid α) (F : Set α) : ℕ := (M.eRk F).toNat
 
 theorem cast_natRank (M : Matroid α) [M.Finite] (F : Set α) :
     (natRank M F : ℕ∞) = M.eRk F :=

@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
   This file contains the definition of `pi.star_ordered_ring`.
 -/
 
-@[expose] public section
+public section
 
 /-- Coordinate projection of a set of dependent functions along `Pi.single`. -/
 def Set.ofPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i, Zero (B i)] (s : Set (∀ i, B i)) :

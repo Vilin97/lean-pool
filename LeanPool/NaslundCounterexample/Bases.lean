@@ -23,7 +23,7 @@ the square of a linear polynomial `v + u T`, with constant term `v^2` and `T^2`-
 `u^2`; so `v^2 + u^2 = 0`, which in `F_3` forces `u = v = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

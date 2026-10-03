@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 Here we prove the fixed-point theorem for formulas of form `□φ` and `◇φ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 

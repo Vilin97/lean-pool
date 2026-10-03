@@ -18,7 +18,7 @@ sequence in which every label occurs evenly contributes exactly
 `(−1)^length`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -28,12 +28,14 @@ variable {α : Type} {ℓ : ℕ}
 
 open scoped Classical in
 /-- The colour relabel of one flip. -/
+@[expose]
 noncomputable def flipColours (f : α → Fin (2 * ℓ))
     (p : α × α) : α → Fin (2 * ℓ) :=
   fun a => if a = p.1 ∨ a = p.2 then oddPartner ℓ (f a) else f a
 
 /-- The accumulated port-sign product of a flip sequence, at the
 evolving colours. -/
+@[expose]
 noncomputable def flipSignProd (f : α → Fin (2 * ℓ)) :
     List (α × α) → ℤ
   | [] => 1
@@ -42,6 +44,7 @@ noncomputable def flipSignProd (f : α → Fin (2 * ℓ)) :
         flipSignProd (flipColours f p) L
 
 /-- The label instances of a flip sequence. -/
+@[expose]
 def flipLabels (L : List (α × α)) : List α :=
   L.flatMap (fun p => [p.1, p.2])
 

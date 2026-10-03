@@ -29,7 +29,7 @@ TODO: if those lemmas land in Mathlib, delete this file and switch uses to the u
 
 open MeasureTheory MeasureTheory.Measure
 
-@[expose] public section
+public section
 
 namespace MeasurableEquiv
 
@@ -37,6 +37,7 @@ namespace MeasurableEquiv
 `((i : Fin n) → α i.castSucc) × α (Fin.last n) ≃ᵐ (∀ i, α i)` given by `Fin.snoc`.
 
 Measurable version of `Fin.snocEquiv` with the product factors swapped. -/
+@[expose]
 def piFinSnoc {n : ℕ} (α : Fin (n + 1) → Type*) [∀ i, MeasurableSpace (α i)] :
     ((i : Fin n) → α i.castSucc) × α (Fin.last n) ≃ᵐ (∀ i, α i) where
   toFun p := Fin.snoc p.1 p.2

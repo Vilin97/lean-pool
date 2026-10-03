@@ -15,7 +15,7 @@ Flattening a list of two-element blocks doubles its length and
 places the two components at the even and odd positions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

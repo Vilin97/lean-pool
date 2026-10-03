@@ -17,7 +17,7 @@ injectivity lemmas for the constructors, and the bisimulation equality `IEq`
 that is proven to coincide with propositional equality (`ieq_iff_eq`).
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4Itree
 
@@ -33,14 +33,14 @@ inductive ITree.shape (ε : Type u1 → Type v) (ρ : Type u2)
 /-- The arity (`B`-component) of each interaction-tree node shape: a `ret` node
 has no children, a `tau` node has one, and a `vis α e` node has one child per
 inhabitant of the response type `α`. -/
-def ITree.children {ε : Type u1 → Type v} {ρ : Type u2}
+@[expose] def ITree.children {ε : Type u1 → Type v} {ρ : Type u2}
   : ITree.shape ε ρ → Type u1
   | .ret _   => ULift (Fin2 0)
   | .tau     => ULift (Fin2 1)
   | .vis α _ => α
 
 /-- The interaction-tree polynomial functor, packaging `shape` and `children`. -/
-def ITree.P (ε : Type u1 → Type v) (ρ : Type u2) : PFunctor :=
+@[expose] def ITree.P (ε : Type u1 → Type v) (ρ : Type u2) : PFunctor :=
   ⟨ITree.shape ε ρ, ITree.children⟩
 
 /--
@@ -53,7 +53,7 @@ coinductive ITree (ε : Type → Type) (ρ : Type)
 | vis {α : Type} (e : ε α) (k : α → ITree ε ρ)
 ```
 -/
-def ITree (ε : Type u1 → Type v) (ρ : Type u2) :=
+@[expose] def ITree (ε : Type u1 → Type v) (ρ : Type u2) :=
   (ITree.P ε ρ).M
 
 /-- A continuation tree: a function from `α` into interaction trees, i.e. a
@@ -74,18 +74,18 @@ section
 variable {X : Type u}
 
 /-- One layer of a `ret` node in the polynomial functor: returns the value `v`. -/
-@[simp]
+@[expose, simp]
 def ret' (v : ρ) : P ε ρ X :=
   .mk (.ret v) elim0
 
 /-- One layer of a `tau` node in the polynomial functor: a single silent child `t`. -/
-@[simp]
+@[expose, simp]
 def tau' (t : X) : P ε ρ X :=
   .mk .tau (fin1Const t)
 
 /-- One layer of a `vis` node in the polynomial functor: an effect `e` with
 continuation `k` indexed by the response type. -/
-@[simp]
+@[expose, simp]
 def vis' {α : Type u1} (e : ε α) (k : α → X) : P ε ρ X :=
   .mk (.vis α e) (k ·)
 
@@ -94,12 +94,12 @@ end
 /- Type Constructors -/
 
 /-- The interaction tree that immediately returns the value `v`. -/
-@[match_pattern, simp]
+@[expose, match_pattern, simp]
 def ret (v : ρ) : ITree ε ρ :=
   .mk <| ret' v
 
 /-- The interaction tree that takes one silent `tau` step into `t`. -/
-@[match_pattern, simp]
+@[expose, match_pattern, simp]
 def tau (t : ITree ε ρ) : ITree ε ρ :=
   .mk <| tau' t
 
@@ -110,7 +110,7 @@ def tauN (n : Nat) (t : ITree ε ρ) : ITree ε ρ :=
   | n + 1 => tau (tauN n t)
 
 /-- The interaction tree that performs the effect `e` and continues with `k`. -/
-@[match_pattern, simp]
+@[expose, match_pattern, simp]
 def vis {α : Type u1} (e : ε α) (k : α → ITree ε ρ) : ITree ε ρ :=
   .mk <| vis' e k
 
@@ -283,6 +283,7 @@ theorem IEqF_monotone sim sim' (hsim : ∀ (t1 t2 : ITree ε ρ), sim t1 t2 → 
   rename_i h _; apply h
 
 /-- Custom equality predicate between ITrees -/
+@[expose]
 def IEq (t1 t2 : ITree ε ρ) : Prop :=
   IEqF IEq t1 t2
   coinductive_fixpoint monotonicity fun sim' sim hsim =>

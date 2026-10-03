@@ -18,7 +18,7 @@ conditional product law selected by any admissible augmented latent vector
 inherits the same rejection bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -28,7 +28,7 @@ noncomputable section
 
 /-- The finite two-point rejection estimate needed by the mixture
 argument, including the closed boundary `0 ≤ γᵢ ≤ 1`. -/
-def TwoPointRejectionBound : Prop :=
+@[expose] def TwoPointRejectionBound : Prop :=
   ∀ {m : ℕ} (γ β : Fin m → ℝ),
     (∀ i, 0 ≤ γ i) →
     (∀ i, γ i ≤ 1) →

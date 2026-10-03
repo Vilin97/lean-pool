@@ -18,7 +18,7 @@ reindexing then gives the actual native cross identity.  The mean-gain theorem
 is applied to the original family, with its original uniform constants.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

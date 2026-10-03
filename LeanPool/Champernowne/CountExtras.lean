@@ -21,7 +21,7 @@ These results are exported by the project entry module as reusable infrastructur
 The normality proof itself needs only the lower bounds in `DigitCount`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 

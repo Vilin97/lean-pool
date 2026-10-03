@@ -21,7 +21,7 @@ provides the evaluation projection, its continuity, extensionality reducing equa
 equality, the endpoint sign lemmas, and a constructor from an unbundled continuous function.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -41,6 +41,7 @@ structure NiceMV (X : Type*) [TopologicalSpace X] where
 namespace NiceMV
 
 /-- Evaluate a nice multivalued function at a base point and a signed-interval coordinate. -/
+@[expose]
 def eval (φ : NiceMV X) (x : X) (y : SignedInterval) : ℝ :=
   φ.evalMap (x, y)
 
@@ -91,6 +92,7 @@ theorem eval_right_pos
 
 /-- Build a nice multivalued function from an unbundled continuous function with the required
 strict endpoint signs. -/
+@[expose]
 def ofFunction
     (f : X → SignedInterval → ℝ)
     (hf : Continuous fun z : X × SignedInterval => f z.1 z.2)

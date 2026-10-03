@@ -18,7 +18,7 @@ This file contains two simple results about von Neumann algebras.
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace VonNeumannAlgebra

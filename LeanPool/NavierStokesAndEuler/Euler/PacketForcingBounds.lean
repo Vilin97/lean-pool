@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketKnownTermSums
 
 /-! Actual mean and high forcing estimates at one fixed radius, uniform in the packet grade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

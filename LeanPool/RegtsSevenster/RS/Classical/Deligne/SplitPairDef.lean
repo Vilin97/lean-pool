@@ -21,7 +21,7 @@ equation of the pair product field of the splitting data of the
 Key Lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

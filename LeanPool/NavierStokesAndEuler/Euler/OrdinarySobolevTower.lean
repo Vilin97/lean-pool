@@ -16,7 +16,7 @@ The unit-cylinder lift is only a realization in an already complete
 Sobolev space; the resulting ordinary field equals the prescribed L²
 path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -90,7 +90,7 @@ end SobolevTower
 
 /-- Ordinary tensor operator as an element of `SobolevSpace 1 q →L[ℝ] Lp (Space [×q]→L[ℝ] Space)
 2 (volume : Measure Space)`. -/
-def ordinaryTensorOperator (q : ℕ) :
+@[expose] def ordinaryTensorOperator (q : ℕ) :
     SobolevSpace 1 q →L[ℝ] Lp (Space [×q]→L[ℝ] Space) 2 (volume : Measure Space) :=
   (tensorLpReassembly (V := Space) (volume : Measure Space) q).comp
     (ContinuousLinearMap.pi (fun w : Fin q → Fin 3 => ordinaryWordOperator w))

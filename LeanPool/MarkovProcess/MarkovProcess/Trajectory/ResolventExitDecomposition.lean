@@ -26,7 +26,7 @@ Main definitions and results: `ContinuousPath.pathResolvent`,
 No integrability or almost-sure finiteness of the exit time is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -44,6 +44,7 @@ variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
   [LocallyCompactSpace alpha]
 
 /-- The discounted occupation of a nonnegative extended observable along one continuous path. -/
+@[expose]
 def pathResolvent (lam : ℝ) (f : alpha → ℝ≥0∞)
     (omega : ContinuousPath alpha) : ℝ≥0∞ :=
   ∫⁻ t in Set.Ioi (0 : ℝ), ENNReal.ofReal (Real.exp (-lam * t)) *

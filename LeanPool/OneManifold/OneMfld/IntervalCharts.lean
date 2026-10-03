@@ -14,7 +14,7 @@ public import LeanPool.OneManifold.OneMfld.NiceCharts
 Supporting results for the classification of compact one-dimensional manifolds.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

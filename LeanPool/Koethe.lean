@@ -30,7 +30,7 @@ Tags: ring-theory, nil-ideals, koethe-conjecture, counterexample, matrix-rings
 MSC: 16N40, 16S50
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalTranslation
 
 /-! The actual translation action on homogeneous gradients and localized Newtonian operators. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ def l2TranslationEquiv (a : Space) : L2 ≃ₗᵢ[ℝ] L2 :=
     ⟨translation (-a) u, by rw [translation_add, add_neg_cancel, translation_zero]⟩)
 
 theorem l2TranslationEquiv_apply (a : Space) (u : L2) : l2TranslationEquiv a u = translation a u :=
-    rfl
+    by rfl
 
 /-- Gradient translation, given by `LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 =>
 l2TranslationEquiv a)`. -/
@@ -36,7 +36,7 @@ def gradientTranslation (a : Space) : GradientTensor ≃ₗᵢ[ℝ] GradientTens
   LinearIsometryEquiv.piLpCongrRight 2 (fun _ : Fin 3 => l2TranslationEquiv a)
 
 theorem gradientTranslation_apply (a : Space) (G : GradientTensor) (i : Fin 3) :
-    gradientTranslation a G i = translation a (G i) := rfl
+    gradientTranslation a G i = translation a (G i) := by rfl
 
 theorem gradientTranslation_add (a b : Space) (G : GradientTensor) :
     gradientTranslation a (gradientTranslation b G) = gradientTranslation (a+b) G := by
@@ -56,7 +56,7 @@ theorem testGradient_translated (a : Space) (f : Test) :
     EulerMeanGradientTest.testGradient (translatedTest a f) =
       gradientTranslation a (EulerMeanGradientTest.testGradient f) := by
   ext i : 1
-  change derivativeColumn (translatedTest a f) i = translation a (derivativeColumn f i)
+  simp only [testGradient_apply, gradientTranslation_apply]
   apply Lp.ext
   filter_upwards [derivativeColumn_ae (translatedTest a f) i,
     translation_ae a (derivativeColumn f i),
@@ -86,7 +86,7 @@ def homogeneousTranslation (a : Space) : homogeneousSpace →ₗᵢ[ℝ] homogen
 
 theorem homogeneousTranslation_coe (a : Space) (u : homogeneousSpace) :
     (homogeneousTranslation a u : GradientTensor) = gradientTranslation a (u : GradientTensor) :=
-        rfl
+        by rfl
 
 theorem homogeneousTranslation_add (a b : Space) (u : homogeneousSpace) :
     homogeneousTranslation a (homogeneousTranslation b u) = homogeneousTranslation (a+b) u := by
@@ -126,6 +126,7 @@ theorem testCurl_translated (a : Space) (χ : Cutoff) (f : Test) :
     (measurePreserving_add_right (volume : Measure Space) a).quasiMeasurePreserving.ae
       (testCurl_ae χ f), testCurl_ae (χ.translate a) (translatedTest a f)] with x ha hχ ht
   rw [ha, hχ, ht]
+  simp only [Cutoff.translate, translatedTest]
   exact (vectorCurl_translated a (fun y => χ.field y • (f : Space → Space) y) x).symm
 
 /-- Translating the output translates both the cutoff and the homogeneous potential. -/
@@ -164,7 +165,7 @@ theorem mixedBoundaryOperator_translation (a : Space) (χ ψ : Cutoff) (z : L2) 
   rw [cutoffCurl_translation, weakPotential_translation]
 
 /-- The genuine spatial translation commutator on ordinary L². -/
-def translationCommutator (a : Space) (A : L2 →L[ℝ] L2) : L2 →L[ℝ] L2 :=
+@[expose] def translationCommutator (a : Space) (A : L2 →L[ℝ] L2) : L2 →L[ℝ] L2 :=
   (translation a).toContinuousLinearMap.comp A - A.comp (translation a).toContinuousLinearMap
 
 /-- Both cutoff positions, and only those positions, contribute to the spatial commutator. -/

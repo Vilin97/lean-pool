@@ -22,7 +22,7 @@ from the derivative-image half-size equation plus the MCM/Dickson identities —
 no Dillon--Kashyap or Dillon--Dobbertin Fourier theorem is imported.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

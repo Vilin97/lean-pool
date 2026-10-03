@@ -36,7 +36,7 @@ Acceptance gates (audit v2, Unit 2b):
   `pcSentence_relationsIn_inter` is the two-presentation intersection bound.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -51,25 +51,25 @@ inductive PCSide | left | right
 
 variable (L) in
 /-- The side embedding: base symbols in place, the witness copy tagged left or right. -/
-def sideEmb : PCSide → (MidLang L →ᴸ KLang L)
+@[expose] def sideEmb : PCSide → (MidLang L →ᴸ KLang L)
   | .left => LHom.sumMap (LHom.id L) LHom.sumInl
   | .right => LHom.sumMap (LHom.id L) LHom.sumInr
 
 variable (L) in
 /-- That side's tagged witness function symbols. -/
-def sideWitnessFuns : PCSide → Set (Σ n, (KLang L).Functions n)
+@[expose] def sideWitnessFuns : PCSide → Set (Σ n, (KLang L).Functions n)
   | .left => leftFuns L
   | .right => rightFuns L
 
 variable (L) in
 /-- That side's tagged witness relation symbols. -/
-def sideWitnessRels : PCSide → Set (Σ n, (KLang L).Relations n)
+@[expose] def sideWitnessRels : PCSide → Set (Σ n, (KLang L).Relations n)
   | .left => leftRels L
   | .right => rightRels L
 
 variable (L) in
 /-- The function symbols a side may mention: base plus its witness copy. -/
-def sideFunsSet (side : PCSide) : Set (Σ n, (KLang L).Functions n) :=
+@[expose] def sideFunsSet (side : PCSide) : Set (Σ n, (KLang L).Functions n) :=
   baseFuns L ∪ sideWitnessFuns L side
 
 instance [Countable (Σ n, L.Functions n)] (side : PCSide) :
@@ -100,7 +100,7 @@ private theorem sideEmb_onRelation_mem (side : PCSide) (p : Σ n, (MidLang L).Re
 variable (L) in
 /-- **The side-parametric functional PC sentence**: `functionalTheta` mapped into the
 tagged language along the side's embedding — defined once, instantiated twice. -/
-noncomputable def functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
+@[expose] noncomputable def functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ))) : (KLang L).Sentenceω :=
   (functionalTheta L T).mapLanguage (sideEmb L side)
 

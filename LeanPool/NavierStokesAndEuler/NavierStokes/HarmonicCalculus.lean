@@ -33,7 +33,7 @@ candidate manuscript. The radial formulas below are stated away from `r = 0`.
 All differential operators use Mathlib's actual Fréchet derivatives.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,7 +45,7 @@ abbrev Plane := ℝ × ℝ
 abbrev Lift := Plane × Plane
 
 /-- The radial coefficient in the exact graph derivative. -/
-def radialSpeed (d r : ℝ) : ℝ := d * r ^ (d - 1)
+@[expose] def radialSpeed (d r : ℝ) : ℝ := d * r ^ (d - 1)
 
 /-- Embed physical radial/time coordinates in the auxiliary lift. -/
 def graph (d : ℝ) (vr vt : Plane) (q : Plane) : Lift :=
@@ -279,7 +279,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -292,7 +292,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- The actual derivative in a prescribed, possibly varying direction field. -/
-noncomputable def along (V : E → E) (f : E → F) (x : E) : F :=
+@[expose] noncomputable def along (V : E → E) (f : E → F) (x : E) : F :=
   fderiv ℝ f x (V x)
 
 theorem contDiffOn_along {U : Set E} {V : E → E} {f : E → F}
@@ -333,7 +333,7 @@ theorem along_ofReal (V : E → E) {f : E → ℝ} {x : E}
   rfl
 
 /-- The imaginary frequency `i κ`. -/
-noncomputable def phaseFactor (κ : ℝ) : ℂ := (κ : ℂ) * Complex.I
+@[expose] noncomputable def phaseFactor (κ : ℝ) : ℂ := (κ : ℂ) * Complex.I
 
 theorem phaseFactor_sq (κ : ℝ) : phaseFactor κ ^ 2 = -(κ : ℂ) ^ 2 := by
   simp [phaseFactor, mul_pow, Complex.I_sq]
@@ -342,7 +342,7 @@ theorem phaseFactor_sq (κ : ℝ) : phaseFactor κ ^ 2 = -(κ : ℂ) ^ 2 := by
   simp [phaseFactor, Real.norm_eq_abs]
 
 /-- `κ = k*j` gives the carrier in the manuscript. -/
-noncomputable def carrier (κ : ℝ) (Φ : E → ℝ) (x : E) : ℂ :=
+@[expose] noncomputable def carrier (κ : ℝ) (Φ : E → ℝ) (x : E) : ℂ :=
   Complex.exp (phaseFactor κ * (Φ x : ℂ))
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -381,7 +381,7 @@ theorem along_carrier (V : E → E) (κ : ℝ) {Φ : E → ℝ} {x : E}
   ring
 
 /-- A coefficient multiplied by one actual complex harmonic. -/
-noncomputable def mode (κ : ℝ) (Φ : E → ℝ) (a : E → ℂ) (x : E) : ℂ :=
+@[expose] noncomputable def mode (κ : ℝ) (Φ : E → ℝ) (a : E → ℂ) (x : E) : ℂ :=
   a x * carrier κ Φ x
 
 theorem contDiffOn_mode {U : Set E} (κ : ℝ) {Φ : E → ℝ} {a : E → ℂ}
@@ -448,18 +448,18 @@ theorem along_along_mode {U : Set E} {V : E → E} (κ : ℝ)
 
 /-- The scalar cylindrical Laplacian, also valid on prescribed graph
 directions. `Vθ` is the unscaled angular direction. -/
-noncomputable def cylindricalLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def cylindricalLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
     (f : E → F) (x : E) : F :=
   along Vr (along Vr f) x + (R x)⁻¹ • along Vr f x +
     ((R x) ^ 2)⁻¹ • along Vθ (along Vθ f) x + along Vz (along Vz f) x
 
 /-- The actual phase gradient in the orthonormal cylindrical frame. -/
-noncomputable def phaseNormal (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def phaseNormal (R : E → ℝ) (Vr Vθ Vz : E → E)
     (Φ : E → ℝ) (x : E) : EuclideanSpace ℝ (Fin 3) :=
   !₂[along Vr Φ x, along Vθ Φ x / R x, along Vz Φ x]
 
 /-- The phase-square coefficient before rewriting it as a normal norm. -/
-noncomputable def phaseSquare (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def phaseSquare (R : E → ℝ) (Vr Vθ Vz : E → E)
     (Φ : E → ℝ) (x : E) : ℝ :=
   (along Vr Φ x) ^ 2 + ((R x) ^ 2)⁻¹ * (along Vθ Φ x) ^ 2 +
     (along Vz Φ x) ^ 2
@@ -472,7 +472,7 @@ theorem phaseSquare_eq_norm_sq (R : E → ℝ) (Vr Vθ Vz : E → E)
   ring
 
 /-- The phase/coefficient cross term in the scalar Laplacian. -/
-noncomputable def phaseCross (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def phaseCross (R : E → ℝ) (Vr Vθ Vz : E → E)
     (Φ : E → ℝ) (a : E → ℂ) (x : E) : ℂ :=
   Complex.ofReal (along Vr Φ x) * along Vr a x +
     Complex.ofReal (((R x) ^ 2)⁻¹) * Complex.ofReal (along Vθ Φ x) * along Vθ a x +
@@ -578,15 +578,15 @@ theorem cylindricalLaplacian_mode_angular_independent {U : Set E} (R : E → ℝ
 abbrev ComplexVector := Fin 3 → ℂ
 
 /-- Complex-bilinear contraction with a real normal. -/
-noncomputable def normalDot (n : EuclideanSpace ℝ (Fin 3)) (a : ComplexVector) : ℂ :=
+@[expose] noncomputable def normalDot (n : EuclideanSpace ℝ (Fin 3)) (a : ComplexVector) : ℂ :=
   (n 0 : ℂ) * a 0 + (n 1 : ℂ) * a 1 + (n 2 : ℂ) * a 2
 
 /-- Vector mode, defined pointwise by `mode κ Φ (fun y => a y i) x`. -/
-noncomputable def vectorMode (κ : ℝ) (Φ : E → ℝ) (a : E → ComplexVector)
+@[expose] noncomputable def vectorMode (κ : ℝ) (Φ : E → ℝ) (a : E → ComplexVector)
     (x : E) : ComplexVector := fun i => mode κ Φ (fun y => a y i) x
 
 /-- The derivative of the cylindrical frame with respect to angle. -/
-noncomputable def angularGenerator (a : ComplexVector) : ComplexVector :=
+@[expose] noncomputable def angularGenerator (a : ComplexVector) : ComplexVector :=
   ![-a 1, a 0, 0]
 
 theorem angularGenerator_sq (a : ComplexVector) :
@@ -597,7 +597,7 @@ theorem angularGenerator_sq (a : ComplexVector) :
 /-- The scalar component Laplacians plus the two cylindrical frame
 connections. Its identification with Cartesian vector Laplacian belongs to
 the cylindrical coordinate calculus. -/
-noncomputable def cylindricalVectorLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def cylindricalVectorLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
     (a : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   cylindricalLaplacian R Vr Vθ Vz (fun y => a y i) x + ((R x) ^ 2)⁻¹ •
     (2 * angularGenerator (fun j => along Vθ (fun y => a y j) x) i +
@@ -656,13 +656,13 @@ theorem cylindricalVectorLaplacian_angular_independent {U : Set E} (R : E → �
   simp only [hzero, Pi.zero_apply, mul_zero, zero_add]
 
 /-- Divergence of physical cylindrical components in prescribed directions. -/
-noncomputable def cylindricalDivergence (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def cylindricalDivergence (R : E → ℝ) (Vr Vθ Vz : E → E)
     (a : E → ComplexVector) (x : E) : ℂ :=
   along Vr (fun y => a y 0) x + (R x)⁻¹ • a x 0 +
     (R x)⁻¹ • along Vθ (fun y => a y 1) x + along Vz (fun y => a y 2) x
 
 /-- The divergence of a coefficient with no angular dependence. -/
-noncomputable def strippedDivergence (R : E → ℝ) (Vr Vz : E → E)
+@[expose] noncomputable def strippedDivergence (R : E → ℝ) (Vr Vz : E → E)
     (a : E → ComplexVector) (x : E) : ℂ :=
   along Vr (fun y => a y 0) x + (R x)⁻¹ • a x 0 + along Vz (fun y => a y 2) x
 

@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part10
 
 /-! # Quantum parallel repetition, part 11 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -811,7 +811,7 @@ private def unconditionalActualC485SelectedVerifierBorn
         (1 : Matrix T T ℂ))) z
 
 /-- The quadratic expectation of the physical winning effect in the supplied vector. -/
-def unconditionalActualC485RawPhysicalVerifierBorn
+@[expose] def unconditionalActualC485RawPhysicalVerifierBorn
     {X Y A B ι κ : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
@@ -889,7 +889,7 @@ private theorem unconditionalActualC485CompleteDecodedScalarBorn
     x y z source cleaned source_eq decoded
 
 /-- The Born-rule weight for unconditional actual fair source history stop. -/
-def unconditionalActualFairSourceHistoryStopBorn
+@[expose] def unconditionalActualFairSourceHistoryStopBorn
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -914,7 +914,7 @@ def unconditionalActualFairSourceHistoryStopBorn
       UA UB j)
 
 /-- The Born-rule weight for unconditional actual fair source physical stop. -/
-def unconditionalActualFairSourcePhysicalStopBorn
+@[expose] def unconditionalActualFairSourcePhysicalStopBorn
     {X Y A B : Type}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     [DecidableEq A] [DecidableEq B]

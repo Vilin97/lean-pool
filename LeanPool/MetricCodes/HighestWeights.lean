@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.Interlacing
 Diamond relations, Lie irreducibility, and isotropic highest-weight constructions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -173,7 +173,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondGapShi
 
 /-- The lowering polarization path followed by multiplication by its starting coordinate
 variable. -/
-def diamondPathOperator {r n : ℕ}
+@[expose] def diamondPathOperator {r n : ℕ}
     (target : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1))) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -670,7 +670,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowSameAxisDiamondPathCo
 
 /-- The paired diamond-path commutator residual after subtracting the shifted omitted-path
 terms. -/
-def diamondPairResidual {r n : ℕ}
+@[expose] def diamondPairResidual {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (target raised : Fin (r + 1)) (k : Fin n)
     (S : Finset (Fin (r + 1))) :
@@ -835,7 +835,7 @@ theorem polarization_axialCoordinate_mul_lowerPolarizationPath_sub
 
 /-- A lowering polarization path followed by multiplication by the chosen starting axis
 coordinate. -/
-def axialCoordinateLowerPath
+@[expose] def axialCoordinateLowerPath
     {r n : ℕ} (start : Fin (r + 1)) (k : Fin n)
     (path : List (Fin (r + 1))) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
@@ -3472,7 +3472,7 @@ structure CanonicalBoxForwardPolynomialData {r m n : ℕ}
         (Weyl.flooredWeight b (n + 1)) row
 
 /-- The canonical box adjacent fischer recurrence used in the spherical-code argument. -/
-def CanonicalBoxAdjacentFischerRecurrence {r m n : ℕ}
+@[expose] def CanonicalBoxAdjacentFischerRecurrence {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
       FiniteInterlacing (n + 1)
@@ -3706,12 +3706,12 @@ def sourceColumnRoot {m : ℕ} (i j : Fin m) :
   rfl
 
 /-- The source row degree used in the spherical-code argument. -/
-def sourceRowDegree {m : ℕ}
+@[expose] def sourceRowDegree {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (i : Fin m) : ℕ :=
   ∑ j : Fin m, d (i, j)
 
 /-- The source column degree used in the spherical-code argument. -/
-def sourceColumnDegree {m : ℕ}
+@[expose] def sourceColumnDegree {m : ℕ}
     (d : Fin m × Fin m →₀ ℕ) (j : Fin m) : ℕ :=
   ∑ i : Fin m, d (i, j)
 
@@ -4092,7 +4092,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherYoungMixedGapLieGram
 
 /-- The polynomial complexification used in the spherical-code argument. -/
-def polynomialComplexification {r n : ℕ} :
+@[expose] def polynomialComplexification {r n : ℕ} :
     PolynomialSpace r n →ₗ[ℝ]
       MvPolynomial (Fin ((r + 1) * n)) ℂ where
   toFun := MvPolynomial.map Complex.ofRealHom
@@ -4146,7 +4146,7 @@ theorem polynomialImaginaryPart_complex_smul {r n : ℕ} (c : ℂ)
     AddMonoidAlgebra.coeff_add, Finsupp.add_apply, coeff_polynomialRealPart]
 
 /-- The polynomial complex span used in the spherical-code argument. -/
-def polynomialComplexSpan {r n : ℕ}
+@[expose] def polynomialComplexSpan {r n : ℕ}
     (W : Submodule ℝ (PolynomialSpace r n)) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   Submodule.span ℂ (polynomialComplexification '' (W : Set (PolynomialSpace r n)))
@@ -4308,7 +4308,7 @@ theorem complexAmbientCoordinateDerivation_complexification
   rw [map_mul, MvPolynomial.map_X, MvPolynomial.pderiv_map]
 
 /-- The complex ambient rotation used in the spherical-code argument. -/
-def complexAmbientRotation {r n : ℕ} (a b : Fin n) :
+@[expose] def complexAmbientRotation {r n : ℕ} (a b : Fin n) :
     Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
       (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   complexAmbientCoordinateDerivation (r := r) a b -
@@ -4331,7 +4331,7 @@ theorem complexAmbientRotation_complexification
     complexAmbientCoordinateDerivation_complexification, map_sub]
 
 /-- The young real polynomial image used in the spherical-code argument. -/
-def youngRealPolynomialImage {r n : ℕ}
+@[expose] def youngRealPolynomialImage {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (W : Submodule ℝ (HarmonicYoungSpace (n := n) lam)) :
     Submodule ℝ (PolynomialSpace r n) :=
@@ -4382,14 +4382,14 @@ theorem youngRealPolynomialImage_inf_orthogonal_eq_bot {r n : ℕ}
   simp only [hzzero, zero_mem]
 
 /-- The young complex polynomial span used in the spherical-code argument. -/
-def youngComplexPolynomialSpan {r n : ℕ}
+@[expose] def youngComplexPolynomialSpan {r n : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (W : Submodule ℝ (HarmonicYoungSpace (n := n) lam)) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   polynomialComplexSpan (youngRealPolynomialImage lam W)
 
 /-- The full young complex polynomial span used in the spherical-code argument. -/
-def fullYoungComplexPolynomialSpan {r n : ℕ}
+@[expose] def fullYoungComplexPolynomialSpan {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Submodule ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ) :=
   polynomialComplexSpan (harmonicYoungSubmodule lam)
@@ -4419,7 +4419,7 @@ theorem youngComplexPolynomialSpan_inf_orthogonal_eq_bot {r n : ℕ}
     (youngRealPolynomialImage_inf_orthogonal_eq_bot lam W)
 
 /-- The root operator word used in the spherical-code argument. -/
-def rootOperatorWord {K V I : Type*} [Semiring K]
+@[expose] def rootOperatorWord {K V I : Type*} [Semiring K]
     [AddCommMonoid V] [Module K V]
     (E : I → V →ₗ[K] V) : List I → V →ₗ[K] V
   | [] => LinearMap.id
@@ -4461,14 +4461,14 @@ theorem commute_rootOperatorWord
         hcomm i, ← LinearMap.comp_assoc]
 
 /-- The operator word span used in the spherical-code argument. -/
-def operatorWordSpan
+@[expose] def operatorWordSpan
     {K V I : Type*} [Semiring K]
     [AddCommMonoid V] [Module K V]
     (R : I → V →ₗ[K] V) (v : V) : Submodule K V :=
   Submodule.span K (Set.range (fun w : List I => rootOperatorWord R w v))
 
 /-- The sum of the operator-word cyclic submodules generated by two vectors. -/
-def operatorWordPairSpan
+@[expose] def operatorWordPairSpan
     {K V I : Type*} [Semiring K]
     [AddCommMonoid V] [Module K V]
     (R : I → V →ₗ[K] V) (v w : V) : Submodule K V :=
@@ -4549,7 +4549,7 @@ theorem symmetric_eq_smul_id_of_complex_cyclic_eigenvector
     hcyclic
 
 /-- The dominant highest real vector used in the spherical-code argument. -/
-def dominantHighestRealVector {r n : ℕ}
+@[expose] def dominantHighestRealVector {r n : ℕ}
     (hn : 2 * (r + 1) ≤ n)
     (lam : Fin (r + 1) → ℕ) (hdom : Antitone lam) :
     HarmonicYoungSpace (n := n) lam :=
@@ -4558,7 +4558,7 @@ def dominantHighestRealVector {r n : ℕ}
     (dominantHighestWeightWitness hn lam hdom).realPart_mem⟩
 
 /-- The dominant highest imaginary vector used in the spherical-code argument. -/
-def dominantHighestImaginaryVector {r n : ℕ}
+@[expose] def dominantHighestImaginaryVector {r n : ℕ}
     (hn : 2 * (r + 1) ≤ n)
     (lam : Fin (r + 1) → ℕ) (hdom : Antitone lam) :
     HarmonicYoungSpace (n := n) lam :=
@@ -4583,7 +4583,7 @@ theorem dominantHighestRealVector_ne_zero_or_imaginary_ne_zero
     exact congrArg Subtype.val hzero
 
 /-- The dominant highest rotation word span used in the spherical-code argument. -/
-def dominantHighestRotationWordSpan {r n : ℕ}
+@[expose] def dominantHighestRotationWordSpan {r n : ℕ}
     (hn : 2 * (r + 1) ≤ n)
     (lam : Fin (r + 1) → ℕ) (hdom : Antitone lam) :
     Submodule ℝ (HarmonicYoungSpace (n := n) lam) :=
@@ -4731,7 +4731,7 @@ theorem youngClebschRaise_gram_scalar_of_dominantCyclicHighest
   · exact hcyclic
 
 /-- The arbitrary row raising gram scalar used in the spherical-code argument. -/
-def arbitraryRowRaisingGramScalar {r n : ℕ}
+@[expose] def arbitraryRowRaisingGramScalar {r n : ℕ}
     (high : Fin (r + 1) → ℕ) (row : Fin (r + 1)) : ℝ :=
   internalRowLowerGramScalar high row *
     (Module.finrank ℝ (HarmonicYoungSpace (n := n) high) : ℝ) /
@@ -5851,7 +5851,7 @@ open MetricCodes.Spherical.HigherYoungCyclicHighestSchur
 open MetricCodes.Spherical.HigherYoungTwoRowLieIrreducibility
 
 /-- The young endomorphism highest polynomial used in the spherical-code argument. -/
-def youngEndomorphismHighestPolynomial
+@[expose] def youngEndomorphismHighestPolynomial
     {r n : ℕ} (hn : 2 * (r + 1) ≤ n)
     (mu : Fin (r + 1) → ℕ) (hdom : Antitone mu)
     (A : HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
@@ -5944,7 +5944,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
 /-- The arbitrary row raise tensor gram scalar used in the spherical-code argument. -/
-def arbitraryRowRaiseTensorGramScalar
+@[expose] def arbitraryRowRaiseTensorGramScalar
     {r n : ℕ} (high : Fin (r + 1) → ℕ)
     (row : Fin (r + 1)) : ℝ :=
   internalRowLowerGramScalar high row *
@@ -6635,7 +6635,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.DeterminantVectors
 
 /-- The ambient pair index used in the spherical-code argument. -/
-def ambientPairIndex {r n : ℕ}
+@[expose] def ambientPairIndex {r n : ℕ}
     (a : Fin n) (ha : a.val < 2 * (r + 1)) : Fin (r + 1) :=
   ⟨a.val / 2, by omega⟩
 
@@ -6658,7 +6658,7 @@ def ambientPairIndex {r n : ℕ}
   omega
 
 /-- The isotropic coordinate generator used in the spherical-code argument. -/
-def isotropicCoordinateGenerator {r n : ℕ} (h : 2 * (r + 1) ≤ n)
+@[expose] def isotropicCoordinateGenerator {r n : ℕ} (h : 2 * (r + 1) ≤ n)
     (v : Fin ((r + 1) * n)) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   let a := ((finProdFinEquiv (m := r + 1) (n := n)).symm v).1

@@ -37,7 +37,7 @@ No nonemptiness of restricted cells is assumed, no `ConvexPartition` is bundled,
 equal‑area properties are proved here.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 

@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Entailment.Triv
 
 /-! # S5Grz -/
 
-@[expose] public section
+public section
 
 
 namespace LO

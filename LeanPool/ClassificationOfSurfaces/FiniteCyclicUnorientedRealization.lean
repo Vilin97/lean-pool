@@ -26,7 +26,7 @@ does preserve their faithful polygonal realizations. This is the exact extra com
 the cross-cap pseudo-rewrite, whose common P2 refinement reads one of its two faces backwards.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -36,6 +36,7 @@ open scoped ComplexConjugate
 namespace PolygonCell
 
 /-- Reflection of a polygon cell across the real axis. -/
+@[expose]
 noncomputable def reflectionHomeomorph (n : ℕ) : PolygonCell n ≃ₜ PolygonCell n where
   toFun z := ⟨conj z.val, by
     simpa only [Metric.mem_closedBall, Complex.dist_eq, sub_zero, Complex.norm_conj]
@@ -414,6 +415,7 @@ theorem faceHomeomorph_side
     exact PolygonCell.reflectionHomeomorph_side _ _
 
 /-- A facewise homeomorphism of polygonal pre-realizations. -/
+@[expose]
 noncomputable def preHomeomorph (e : UnorientedPresentationIso P Q) :
     P.PolygonalPreRealization ≃ₜ Q.PolygonalPreRealization :=
   (IsHomeomorph.sigmaMap e.faceEquiv.bijective
@@ -556,6 +558,7 @@ noncomputable def rawOccurrenceEquiv (e : UnorientedPresentationIso P Q) :
     (Fin.castOrderIso (e.boundary_length_eq f)).toEquiv
 
 /-- Boundary-occurrence transport bundled as an equivalence. -/
+@[expose]
 noncomputable def occurrenceEquiv
     (e : UnorientedPresentationIso P Q) (validQ : Q.IsSurfaceValid) :
     P.BoundaryOccurrence ≃ Q.BoundaryOccurrence :=
@@ -602,6 +605,7 @@ theorem transportDirection_parameter
 
 /-- Transport a compatible source pairing, toggling its parameter direction precisely when one
 of the two incident faces is reflected. -/
+@[expose]
 noncomputable def mapPairing
     (e : UnorientedPresentationIso P Q) (validQ : Q.IsSurfaceValid)
     (pairing : P.BoundaryPairing) : Q.BoundaryPairing where
@@ -780,6 +784,7 @@ theorem occurrenceEquiv_symm_edge
   rw [e.mapOccurrence_occurrenceEquiv_symm validQ]
 
 /-- Pull a compatible target pairing back through the occurrence equivalence. -/
+@[expose]
 noncomputable def comapPairing
     (e : UnorientedPresentationIso P Q) (validQ : Q.IsSurfaceValid)
     (pairing : Q.BoundaryPairing) : P.BoundaryPairing where

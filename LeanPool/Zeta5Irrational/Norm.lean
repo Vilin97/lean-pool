@@ -36,44 +36,44 @@ falling back to (3.12) otherwise. The normaliser is `mN n = ∏_{p ≤ 2h} p^{-L
 `integral_mN` proves `mN n · F_K ∈ ℤ[X]` for every `n ≥ 1`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
 namespace Zeta5Irrational
 
 /-- The cutoff `M` separating small primes from the inner range. -/
-def Mcut : ℕ :=
+@[expose] def Mcut : ℕ :=
   400
 
 /-- The small-prime exponent (3.12). -/
-noncomputable def Lsmall (n p : ℕ) : ℤ :=
+@[expose] noncomputable def Lsmall (n p : ℕ) : ℤ :=
   -(6 * (37 * n : ℕ) * (Nat.log p (200 * n) : ℤ) + (37 * n : ℕ) * (padicValNat p 24 : ℤ))
 
 /-- The class offsets `β_c = 6 ℓ_N(c) - ℓ_K(c) - 4`. -/
-noncomputable def betaI (n p : ℕ) {m : ℕ} (c : Fin (m + 1)) : ℤ :=
+@[expose] noncomputable def betaI (n p : ℕ) {m : ℕ} (c : Fin (m + 1)) : ℤ :=
   6 * (SX p (3 * n) (((c : ℕ) : ℤ) : ZMod p) : ℤ) - (SX p (40 * n) (((c : ℕ) : ℤ) : ZMod p) : ℤ) -
     4
 
 /-- The water-filling parameters. -/
-def kloI (n p : ℕ) : ℤ :=
+@[expose] def kloI (n p : ℕ) : ℤ :=
   -2 * ((40 * n / p : ℕ) : ℤ) - 6
 
 /-- Upper admissible allocation level in the inner-prime range. -/
-def ktopI (n p : ℕ) : ℤ :=
+@[expose] def ktopI (n p : ℕ) : ℤ :=
   8 * ((40 * n / p : ℕ) : ℤ) + 20
 
 /-- Rows reserved for the zero residue class in the inner allocation. -/
-def L0I (n p : ℕ) : ℕ :=
+@[expose] def L0I (n p : ℕ) : ℕ :=
   3 * (40 * n / p) + 6
 
 /-- The inner allocation. -/
-noncomputable def allocI (n p m : ℕ) : Fin (m + 1) → ℕ :=
+@[expose] noncomputable def allocI (n p m : ℕ) : Fin (m + 1) → ℕ :=
   allocK (betaI n p (m := m)) (37 * n)
     (kfSel (betaI n p (m := m)) (37 * n) (L0I n p) (kloI n p) (ktopI n p))
 
 /-- The side conditions of the inner bound. -/
-def InnerOK (n p : ℕ) : Prop :=
+@[expose] def InnerOK (n p : ℕ) : Prop :=
   ∃ _hm : 2 * (p / 2) + 1 = p,
     ∃ hm1 : 1 ≤ p / 2,
       5 ≤ p ∧
@@ -85,15 +85,15 @@ def InnerOK (n p : ℕ) : Prop :=
                   2 * (allocI n p (p / 2) 0 : ℚ) + (Bse p (40 * n) (3 * n) 0 - 4) / 2
 
 /-- The inner weight sum (for `m = p / 2`). -/
-noncomputable def WI (n p : ℕ) : ℚ :=
+@[expose] noncomputable def WI (n p : ℕ) : ℚ :=
   if hm1 : 1 ≤ p / 2 then ∑ s, wcap hm1 (allocI n p (p / 2)) (Bse p (40 * n) (3 * n)) s else 0
 
 /-- The side conditions of the outer bound. -/
-def OuterOK (n p : ℕ) : Prop :=
+@[expose] def OuterOK (n p : ℕ) : Prop :=
   2 * (p / 2) + 1 = p ∧ 7 ≤ p ∧ 40 * n < 3 * p ∧ 2 * (40 * n) < p ^ 2 ∧ 3 * n < p
 
 /-- The outer weight sum minus the rank loss (for `m = p / 2`). -/
-noncomputable def WO (n p : ℕ) : ℚ :=
+@[expose] noncomputable def WO (n p : ℕ) : ℚ :=
   if hpp : p.Prime then
     if hm : 2 * (p / 2) + 1 = p then
       haveI : Fact p.Prime := ⟨hpp⟩
@@ -104,14 +104,14 @@ noncomputable def WO (n p : ℕ) : ℚ :=
 
 open Classical in
 /-- **The local exponent.** -/
-noncomputable def Lp (n p : ℕ) : ℤ :=
+@[expose] noncomputable def Lp (n p : ℕ) : ℤ :=
   if p * Mcut ≤ 40 * n then Lsmall n p
   else
     if 3 * p ≤ 40 * n then (if InnerOK n p then vSK n p + ⌊2 * WI n p⌋ else Lsmall n p)
     else (if OuterOK n p then vSK n p + ⌊WO n p⌋ else Lsmall n p)
 
 /-- **The normaliser** `m_K = ∏_{p ≤ 2h} p^{-L_p}`. -/
-noncomputable def mN (n : ℕ) : ℚ :=
+@[expose] noncomputable def mN (n : ℕ) : ℚ :=
   ∏ p ∈ (range (2 * (37 * n) + 1)).filter Nat.Prime, (p : ℚ) ^ (-Lp n p)
 
 lemma mN_pos (n : ℕ) : 0 < mN n := by

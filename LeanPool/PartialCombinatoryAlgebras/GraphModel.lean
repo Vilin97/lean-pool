@@ -13,7 +13,7 @@ import Mathlib.Tactic.SetLike
     combinatory algebra structure on `Set α`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PartialCombinatoryAlgebras
 

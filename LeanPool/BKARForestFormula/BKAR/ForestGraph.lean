@@ -19,7 +19,7 @@ and stability of acyclicity under adding an edge between distinct
 components.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -70,6 +70,7 @@ namespace EdgePath
 variable {V : Type*} [DecidableEq V]
 
 /-- The simple graph whose edge set is the underlying `Sym2` image of `S`. -/
+@[expose]
 def edgeSetGraph (S : Finset (Edge V)) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet {x : Sym2 V | ∃ e : Edge V, e ∈ S ∧ e.val = x}
 
@@ -426,6 +427,7 @@ theorem acyclic_insert_iff
   · exact data.isAcyclicEdgeSet_insert_of_not_inSameComponent
 
 /-- Upgrade any acyclicity certificate to a `Forest` representative certificate. -/
+@[expose]
 def toForest {S : Finset (Edge V)} (data : AcyclicEdgeSetData S) :
     Forest V where
   edges := S

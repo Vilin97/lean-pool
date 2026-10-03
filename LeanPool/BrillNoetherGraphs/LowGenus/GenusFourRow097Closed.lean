@@ -72,7 +72,7 @@ The four per-march divisor identities of the retired open proof — four
 This file needs no heartbeat override.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow097Closed
 

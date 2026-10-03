@@ -15,7 +15,7 @@ import Mathlib.Tactic.NormNum.GCD
   `finRotate` arithmetic lemmas isolated for eventual Mathlib extraction.
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm
 

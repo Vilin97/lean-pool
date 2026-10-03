@@ -26,7 +26,7 @@ field. This is a qualitative finite-dimensional construction; subsequent
 norm estimates can use the actual tensor equality without a coordinate
 reassembly constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ variable {K E V ι : Type u} [TopologicalSpace K] [CompactSpace K] [Fintype ι]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
 /-- Of coordinate jets, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
-def ofCoordinateJets (b : Module.Basis ι ℝ E) (f : C(K, E →ᵇ V))
+@[expose] def ofCoordinateJets (b : Module.Basis ι ℝ E) (f : C(K, E →ᵇ V))
     (hf : ∀ t, ContDiff ℝ ∞ (f t : E → V))
     (u : (n : ℕ) → (Fin n → ι) → C(K, E →ᵇ V))
     (hu : ∀ n w t x, u n w t x = iteratedFDeriv ℝ n (f t : E → V) x (fun i => b (w i))) :
@@ -150,7 +150,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -200,11 +200,11 @@ local instance instFieldTowerSmoothTimeField6 (n : ℕ) : NormedSpace ℝ
     (LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) := inferInstance
 
 /-- Bounded cover, given by `coverPathMap P (A.realization 3)`. -/
-def boundedCover : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
+@[expose] def boundedCover : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
   coverPathMap P (A.realization 3)
 
 @[simp] theorem boundedCover_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
-    A.boundedCover t x = A.pointField t (coveringMap P x) := rfl
+    A.boundedCover t x = A.pointField t (coveringMap P x) := by rfl
 
 /-- Bounded word, given by `coverPathMap P ((wordAtLevel P 3 n w (le_refl
 (n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T) (A.realization (n+3)))`. -/
@@ -229,13 +229,13 @@ theorem boundedWord_tensor (n : ℕ) (w : Fin n → Fin 4)
   rfl
 
 /-- To smooth time field, constructed using `SmoothTimeField.ofCoordinateJets`. -/
-def toSmoothTimeField : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
+@[expose] def toSmoothTimeField : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent Space :=
   SmoothTimeField.ofCoordinateJets coverBasis A.boundedCover
     (fun t => coverField_contDiff P (A.pointField t) (A.pointField_smooth t))
     A.boundedWord A.boundedWord_tensor
 
 @[simp] theorem toSmoothTimeField_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
-    A.toSmoothTimeField.field t x = A.pointField t (coveringMap P x) := rfl
+    A.toSmoothTimeField.field t x = A.pointField t (coveringMap P x) := by rfl
 
 theorem toSmoothTimeField_timeDerivative (B : EulerAllOrderCorrectionData.FieldTower P T)
     (hT : 0 ≤ T)

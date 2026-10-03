@@ -18,7 +18,7 @@ multiplicity equation is important for multigraphs: a bridge in the
 underlying simple graph is not enough when parallel edge occurrences exist.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

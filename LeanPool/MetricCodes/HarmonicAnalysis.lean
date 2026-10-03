@@ -17,7 +17,7 @@ public import Mathlib.Topology.MetricSpace.CoveringNumbers
 Harmonic polynomial, Gegenbauer, Perron, and adjacent-channel constructions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -31,7 +31,7 @@ namespace MetricCodes
 abbrev Sphere (n : ℕ) := {x : Ambient n // ‖x‖ = 1}
 
 /-- The spherical inner used in the metric-code argument. -/
-def sphericalInner {n : ℕ} (x y : Sphere n) : ℝ :=
+@[expose] def sphericalInner {n : ℕ} (x y : Sphere n) : ℝ :=
   ⟪(x : Ambient n), (y : Ambient n)⟫_ℝ
 
 theorem spherical_dist_sq {n : ℕ} (x y : Sphere n) :
@@ -42,7 +42,7 @@ theorem spherical_dist_sq {n : ℕ} (x y : Sphere n) :
   ring
 
 /-- The predicate asserting spherical code. -/
-def IsSphericalCode {n : ℕ} (s : ℝ) (C : Finset (Sphere n)) : Prop :=
+@[expose] def IsSphericalCode {n : ℕ} (s : ℝ) (C : Finset (Sphere n)) : Prop :=
   ∀ ⦃x⦄, x ∈ C → ∀ ⦃y⦄, y ∈ C → x ≠ y → sphericalInner x y ≤ s
 
 /-- Data encoding the spherical code construction. -/
@@ -52,7 +52,7 @@ structure SphericalCode (n : ℕ) (s : ℝ) where
   inner_le : IsSphericalCode s points
 
 /-- The spherical code number used in the metric-code argument. -/
-def sphericalCodeNumber (n : ℕ) (s : ℝ) : ℕ∞ :=
+@[expose] def sphericalCodeNumber (n : ℕ) (s : ℝ) : ℕ∞ :=
   ⨆ C : SphericalCode n s, (C.points.card : ℕ∞)
 
 theorem sphericalCodeNumber_le {n : ℕ} {s : ℝ} {B : ℕ∞}
@@ -151,7 +151,7 @@ theorem Gamma_pos {a b : ℝ} (hb : 0 ≤ b) (hab : b < a) :
       (Real.sqrt_pos.2 (mul_pos ha (by linarith)))
 
 /-- The harmonic dimension used in the metric-code argument. -/
-def harmonicDimension (n : ℕ) : ℕ → ℕ
+@[expose] def harmonicDimension (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | i + 1 =>
       (n + i - 1).choose (i + 1) + (n + i - 2).choose i
@@ -283,7 +283,7 @@ def polynomialLaplacian (n : ℕ) :
     Finset.sum_apply, Function.comp_apply]
 
 /-- The harmonic homogeneous submodule used in the spherical-code argument. -/
-def harmonicHomogeneousSubmodule (n k : ℕ) :
+@[expose] def harmonicHomogeneousSubmodule (n k : ℕ) :
     Submodule ℝ (MvPolynomial (Fin n) ℝ) :=
   MvPolynomial.homogeneousSubmodule (Fin n) ℝ k ⊓
     LinearMap.ker (polynomialLaplacian n)
@@ -446,7 +446,7 @@ def backwardCoefficient (n i : ℕ) : ℝ :=
   (i : ℝ) / recurrenceDenominator n i
 
 /-- The normalized used in the spherical-code argument. -/
-def normalized (n : ℕ) : ℕ → Polynomial ℝ
+@[expose] def normalized (n : ℕ) : ℕ → Polynomial ℝ
   | 0 => 1
   | 1 => Polynomial.X
   | i + 2 =>
@@ -528,7 +528,7 @@ theorem normalized_natDegree {n : ℕ} (hn : 2 ≤ n) (i : ℕ) :
       exact hmain
 
 /-- The harmonic dimension used in the spherical-code argument. -/
-def harmonicDimension (n : ℕ) : ℕ → ℕ
+@[expose] def harmonicDimension (n : ℕ) : ℕ → ℕ
   | 0 => 1
   | i + 1 =>
       (n + i - 1).choose (i + 1) + (n + i - 2).choose i
@@ -753,7 +753,7 @@ theorem directionalDerivative_mul
             ring
 
 /-- The axis polynomial used in the spherical-code argument. -/
-def axisPolynomial (n : ℕ) (x : Euclidean n) :
+@[expose] def axisPolynomial (n : ℕ) (x : Euclidean n) :
     MvPolynomial (Fin n) ℝ :=
   ∑ i : Fin n, MvPolynomial.C (x i) * MvPolynomial.X i
 
@@ -903,7 +903,7 @@ namespace Fischer
 abbrev MultiIndex (n : ℕ) := Fin n →₀ ℕ
 
 /-- The degree indices used in the spherical-code argument. -/
-def degreeIndices (n m : ℕ) : Finset (MultiIndex n) :=
+@[expose] def degreeIndices (n m : ℕ) : Finset (MultiIndex n) :=
   Finset.finsuppAntidiag (Finset.univ : Finset (Fin n)) m
 
 /-- The degree index used in the spherical-code argument. -/
@@ -923,7 +923,7 @@ abbrev CoefficientSpace (n m : ℕ) :=
     Finsupp.degree_eq_sum]
 
 /-- The multi factorial used in the spherical-code argument. -/
-def multiFactorial {n : ℕ} (a : MultiIndex n) : ℝ :=
+@[expose] def multiFactorial {n : ℕ} (a : MultiIndex n) : ℝ :=
   ∏ i : Fin n, (a i).factorial
 
 theorem multiFactorial_pos {n : ℕ} (a : MultiIndex n) :
@@ -1004,7 +1004,7 @@ theorem coeff_pderiv (n : ℕ) (i : Fin n) (a : MultiIndex n)
       ring
 
 /-- The polynomial inner used in the spherical-code argument. -/
-def polynomialInner (n : ℕ)
+@[expose] def polynomialInner (n : ℕ)
     (p q : MvPolynomial (Fin n) ℝ) : ℝ :=
   Finsupp.sum (AddMonoidAlgebra.coeff p) fun a c =>
     multiFactorial a * c * q.coeff a
@@ -1273,7 +1273,7 @@ theorem polynomialInner_axis_directional (n : ℕ)
               MvPolynomial.pderiv i q)).symm
 
 /-- The coefficient embedding used in the spherical-code argument. -/
-def coefficientEmbedding (n m : ℕ) :
+@[expose] def coefficientEmbedding (n m : ℕ) :
     Homogeneous n m →ₗ[ℝ] CoefficientSpace n m where
   toFun p :=
     WithLp.toLp 2 fun a : DegreeIndex n m =>
@@ -1333,7 +1333,7 @@ theorem coefficientEmbedding_injective (n m : ℕ) :
       MvPolynomial.IsHomogeneous.coeff_eq_zero q.property ha]
 
 /-- The coefficient embedding restricted to homogeneous harmonic polynomials. -/
-def harmonicCoefficientEmbedding (n m : ℕ) :
+@[expose] def harmonicCoefficientEmbedding (n m : ℕ) :
     SpherePacking.harmonicHomogeneousSubmodule n m →ₗ[ℝ]
       CoefficientSpace n m :=
   (coefficientEmbedding n m).comp
@@ -1349,7 +1349,7 @@ theorem harmonicCoefficientEmbedding_injective (n m : ℕ) :
         MvPolynomial.homogeneousSubmodule (Fin n) ℝ m from inf_le_left))
 
 /-- The homogeneous inner used in the spherical-code argument. -/
-def homogeneousInner (n m : ℕ)
+@[expose] def homogeneousInner (n m : ℕ)
     (p q : Homogeneous n m) : ℝ :=
   @inner ℝ (CoefficientSpace n m) _
     (coefficientEmbedding n m p) (coefficientEmbedding n m q)
@@ -1416,7 +1416,7 @@ theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
     ring
 
 /-- The homogeneous inner core used in the spherical-code argument. -/
-@[implicit_reducible] def homogeneousInnerCore (n m : ℕ) :
+@[expose, implicit_reducible] def homogeneousInnerCore (n m : ℕ) :
     InnerProductSpace.Core ℝ (Homogeneous n m) where
   inner p q := homogeneousInner n m p q
   conj_inner_symm p q := by
@@ -1461,7 +1461,7 @@ theorem homogeneousInner_eq_polynomialInner (n m : ℕ)
         (p : MvPolynomial (Fin n) ℝ).coeff (a : MultiIndex n) := rfl
 
 /-- The harmonic inner used in the spherical-code argument. -/
-def harmonicInner (n m : ℕ)
+@[expose] def harmonicInner (n m : ℕ)
     (p q : SpherePacking.harmonicHomogeneousSubmodule n m) : ℝ :=
   @inner ℝ (CoefficientSpace n m) _
     (harmonicCoefficientEmbedding n m p)
@@ -1518,7 +1518,7 @@ theorem harmonicInner_eq_polynomialInner (n m : ℕ)
       exact homogeneousInner_eq_polynomialInner n m hp hq
 
 /-- The embedding inner core used in the spherical-code argument. -/
-@[implicit_reducible] def embeddingInnerCore
+@[expose, implicit_reducible] def embeddingInnerCore
     {F E : Type*} [AddCommGroup F] [Module ℝ F]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (f : F →ₗ[ℝ] E) (hf : Function.Injective f) :
@@ -1786,7 +1786,7 @@ theorem finrank_homogeneousSubmodule (n m : ℕ) :
       homogeneousExponentFinset_card n m
 
 /-- Multiplication by the radial polynomial, from homogeneous degree `m` to degree `m + 2`. -/
-def homogeneousRadialMultiplication (n m : ℕ) :
+@[expose] def homogeneousRadialMultiplication (n m : ℕ) :
     MvPolynomial.homogeneousSubmodule (Fin n) ℝ m →ₗ[ℝ]
       MvPolynomial.homogeneousSubmodule (Fin n) ℝ (m + 2) :=
   (LinearMap.mulLeft ℝ (radialPolynomial n)).restrict
@@ -1846,7 +1846,7 @@ theorem surjective_of_injective_inner_adjoint
     LinearMap.finrank_range_of_inj hinj]
 
 /-- The polynomial Laplacian restricted from homogeneous degree `m + 2` to degree `m`. -/
-def homogeneousLaplacian (n m : ℕ) :
+@[expose] def homogeneousLaplacian (n m : ℕ) :
     MvPolynomial.homogeneousSubmodule (Fin n) ℝ (m + 2) →ₗ[ℝ]
       MvPolynomial.homogeneousSubmodule (Fin n) ℝ m :=
   LinearMap.codRestrict
@@ -2220,7 +2220,7 @@ def harmonicAxisParameter (n k : ℕ) : ℝ :=
   (n : ℝ) + 2 * (k : ℝ)
 
 /-- The solid harmonic axis lift used in the spherical-code argument. -/
-def solidHarmonicAxisLift (n k : ℕ) (x : Euclidean n) :
+@[expose] def solidHarmonicAxisLift (n k : ℕ) (x : Euclidean n) :
     ℕ → (MvPolynomial (Fin n) ℝ →ₗ[ℝ]
       MvPolynomial (Fin n) ℝ)
   | 0 => LinearMap.id
@@ -2499,7 +2499,7 @@ theorem harmonicAxisProjectionOperator_mem_harmonic
     rw [hscalar, sub_self]
 
 /-- The harmonic axis lift used in the spherical-code argument. -/
-def harmonicAxisLift
+@[expose] def harmonicAxisLift
     {n : ℕ} (hn : 0 < n) (k : ℕ) (x : Euclidean n) :
     harmonicHomogeneousSubmodule n (k + 1) →ₗ[ℝ]
       harmonicHomogeneousSubmodule n (k + 2) :=
@@ -2966,7 +2966,7 @@ open scoped BigOperators
 namespace NumericalCertificate
 
 /-- The binary entropy used in the spherical-code argument. -/
-def binaryEntropy (u : ℝ) : ℝ :=
+@[expose] def binaryEntropy (u : ℝ) : ℝ :=
   ((1 + u) * Real.log (1 + u) - u * Real.log u) / Real.log 2
 
 /-- The gamma used in the spherical-code argument. -/
@@ -2988,11 +2988,11 @@ namespace Spherical
 section
 
 /-- The boundary quadratic used in the spherical-code argument. -/
-def boundaryQuadratic (s a : ℝ) : ℝ :=
+@[expose] def boundaryQuadratic (s a : ℝ) : ℝ :=
   a * (1 + a) - (s / 2) * (1 + 2 * a) * Real.sqrt (a * (1 + a))
 
 /-- The boundary degree used in the spherical-code argument. -/
-def boundaryDegree (s a : ℝ) : ℝ :=
+@[expose] def boundaryDegree (s a : ℝ) : ℝ :=
   (Real.sqrt (1 + 4 * boundaryQuadratic s a) - 1) / 2
 
 theorem spectral_iff_quadratic {s a b : ℝ} (ha : 0 < a) :
@@ -3459,7 +3459,7 @@ theorem truncatedHarmonicDimension_le_successor
       Gegenbauer.harmonicDimension_branch_sum hn L
 
 /-- The truncated dimension quotient used in the spherical-code argument. -/
-def truncatedDimensionQuotient (a b : ℝ) (n : ℕ) : ℝ :=
+@[expose] def truncatedDimensionQuotient (a b : ℝ) (n : ℕ) : ℝ :=
   (truncatedHarmonicDimension n
     ⌊b * (n : ℝ)⌋₊ ⌊a * (n : ℝ)⌋₊ : ℝ) /
     (Gegenbauer.fibreDimension n ⌊b * (n : ℝ)⌋₊ : ℝ)
@@ -3698,7 +3698,7 @@ theorem tendsto_floored_ratio {a : ℝ} (ha : 0 ≤ a) :
     (tendsto_nat_floor_mul_div_atTop ha).comp (tendsto_natCast_atTop_atTop (R := ℝ))
 
 /-- The normalized coefficient used in the spherical-code argument. -/
-def normalizedCoefficient (x y z : ℝ) : ℝ :=
+@[expose] def normalizedCoefficient (x y z : ℝ) : ℝ :=
   ((x - y + z) * (x + y + 1 - 2 * z)) /
     Real.sqrt
       ((x + z) * (x + 1 - 2 * z) *
@@ -6634,7 +6634,7 @@ theorem sourceAdjacentHarmonicRow_inner_axis_fibre
 
 /-- The linear embedding applying a row isometry to each matrix column, with a zero leading
 channel. -/
-def spectralMatrixEmbeddingLinearMap
+@[expose] def spectralMatrixEmbeddingLinearMap
     (n k L : ℕ)
     (row : CertificateAmbient n k L →ₗᵢ[ℝ]
       HarmonicRowChannelSpace n k L) :
@@ -6841,7 +6841,7 @@ def firstFibreVector (n k : ℕ) (hn : 3 ≤ n) :
 
 /-- The rank-one map extracting the first fibre coordinate and multiplying a prescribed channel
 vector. -/
-def rankOneChannelMap
+@[expose] def rankOneChannelMap
     (n k L : ℕ) (hn : 3 ≤ n)
     (v : ProjectionChannelSpace n k L) :
     CertificateFibre n k →ₗ[ℝ] ProjectionChannelSpace n k L where
@@ -7738,7 +7738,7 @@ theorem adjoint_comp_self_of_inner
   rw [LinearMap.adjoint_inner_right, h, real_inner_smul_right]
 
 /-- The normalized channel isometry used in the spherical-code argument. -/
-def normalizedChannelIsometry
+@[expose] def normalizedChannelIsometry
     {E F : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F]

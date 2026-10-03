@@ -21,4 +21,4 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Jacobian.BananaTorsionSlopes
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

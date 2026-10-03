@@ -25,7 +25,7 @@ remains is the closure of `x` against the survivors — the
 defining gluing of `partialClose`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

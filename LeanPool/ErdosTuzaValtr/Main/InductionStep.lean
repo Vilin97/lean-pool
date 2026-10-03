@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.InductionStep`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

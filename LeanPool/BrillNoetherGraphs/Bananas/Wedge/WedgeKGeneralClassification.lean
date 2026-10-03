@@ -17,7 +17,7 @@ This is the wedge half of Theorem 4.13.  It is deliberately intrinsic: the
 two genus-one factors are not presented as chosen cycles.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -26,7 +26,7 @@ permutation is kept abstract.  This avoids unfolding `oneChip` on a concrete
 wedge vertex type.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -34,4 +34,4 @@ Tags: convex-geometry, polyhedra, rupert-problem
 MSC: 52B10, 52A15
 -/
 
-@[expose] public section
+public section

@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 
 /-! Genuine norm, trace, and divergence constraints persist under actual uniform Sobolev limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

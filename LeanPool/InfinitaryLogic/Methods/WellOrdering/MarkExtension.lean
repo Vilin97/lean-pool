@@ -35,7 +35,7 @@ like Henkin constants, as ordinary auxiliary constants with no rank insertion).
   invariant.  Already-marked rationals need only downward closure.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

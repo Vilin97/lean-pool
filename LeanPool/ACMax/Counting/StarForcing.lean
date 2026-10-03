@@ -18,7 +18,7 @@ forces a degree-four vertex with at least two degree-three neighbors whenever th
 is at most `31`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

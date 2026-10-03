@@ -17,7 +17,7 @@ section
 
 /-! Genuine nonlinear cylinder products preserve support of their multiplying factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,6 +32,7 @@ variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace
   (S : Set Space) (hS : MeasurableSet S)
 
 /-- Retain the actual values of a continuous path that already has the stated support. -/
+@[expose]
 def supportedPath (p : C(K, LiftL2 P)) (h : ∀ t, p t ∈ Supported P Space S hS) :
     C(K,Supported P Space S hS) :=
   ⟨fun t => ⟨p t,h t⟩, p.continuous.subtype_mk h⟩
@@ -105,7 +106,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,6 +120,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 /-- Only actual support and literal mean zero are added to the existing field witness. -/
+@[expose]
 def transverseForcing (D : EulerTransversePacketProvider.Data U) {raw : VectorField}
     (G : Field P D.T raw)
     (hs : ∀ t, G.path t ∈ Supported P Space D.support D.support_measurable)
@@ -131,6 +133,7 @@ def transverseForcing (D : EulerTransversePacketProvider.Data U) {raw : VectorFi
   mean_zero t := G.average_zero_of_raw_integral hm t
 
 /-- A literal compact-support proof may be used directly, without selecting a new representative. -/
+@[expose]
 def transverseForcingOfRaw (D : EulerTransversePacketProvider.Data U) {raw : VectorField}
     (G : Field P D.T raw)
     (hs : ∀ (t : Icc (0 : ℝ) D.T) x, x ∉ D.support → ∀ θ : ℝ, raw (t,(x,θ)) = 0)

@@ -17,7 +17,7 @@ contributions.  This closes the depth induction in the proof of the BKAR
 forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,6 +31,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 The exact recursive boundary remainder left after one arbitrary-node
 support/order regrouping step.
 -/
+@[expose]
 noncomputable def localRecursiveBoundaryRemainder
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -110,6 +111,7 @@ theorem allBranchesAnalytic.child_activeEdges_card
   exact allBranchesAnalytic_of_le choices hchild_le (hchild e t ht)
 
 /-- The local support/order boundary layer at one recursion node. -/
+@[expose]
 noncomputable def localBoundarySupportOrderSum
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)

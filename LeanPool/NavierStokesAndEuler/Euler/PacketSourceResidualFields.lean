@@ -23,7 +23,7 @@ All profile regularity, tangency, and defining equations in the generic
 algebraic expansion are discharged by the actual recursive source solves.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -97,6 +97,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (I Iprimary : EulerTransversePacketProvider.InitialData P D)
 
 /-- Source tail grade field, constructed using `ProfileRegularity.tailGradeField`. -/
+@[expose]
 def sourceTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
     Field P M.T (fun z => recursiveGrade (sourceOperators P M D I) N
       (sourceProfiles P M D I Iprimary) z n) :=
@@ -106,6 +107,7 @@ def sourceTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
 
 /-- Source literal tail grade field, constructed using
 `ProfileRegularity.literalTailGradeField`. -/
+@[expose]
 def sourceLiteralTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
     Field P M.T (fun z => slicedMomentumGrade (Icc (0 : ℝ) M.T) (N+1)
       ((sourceOperators P M D I).inverseFrame z)
@@ -119,9 +121,10 @@ def sourceLiteralTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
 
 theorem sourceLiteralTailGradeField_path (N n : ℕ) (hn : N + 1 ≤ n) :
     (sourceLiteralTailGradeField P M D hT I Iprimary N n hn).path =
-      (sourceTailGradeField P M D hT I Iprimary N n hn).path := rfl
+      (sourceTailGradeField P M D hT I Iprimary N n hn).path := by rfl
 
 /-- Source tail sum field, constructed using `ProfileRegularity.tailSumField`. -/
+@[expose]
 def sourceTailSumField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => ∑ n ∈ Ico (N+1) (2*N+3), κ^n •
       recursiveGrade (sourceOperators P M D I) N (sourceProfiles P M D I Iprimary) z n) :=
@@ -131,6 +134,7 @@ def sourceTailSumField (N : ℕ) (κ : ℝ) :
 
 /-- Source residual field, given by `(sourceTailSumField P M D hT I Iprimary N κ).congr
 (source_residual_tail P M D hT I Iprimary Cagree N hN κ hκ)`. -/
+@[expose]
 def sourceResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) (hκ : κ ≠ 0) :
     Field P M.T (fun z => slicedMomentumResidual (Icc (0 : ℝ) M.T) κ

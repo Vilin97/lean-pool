@@ -21,7 +21,7 @@ mixed translation orbit is smooth because each input has a smooth H6 orbit.
 The output representative is the literal pointwise product at every point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -65,11 +65,11 @@ synthesis. -/
 local instance instCylinderPathProduct10 : NormedSpace ℝ (C(K,F) →L[ℝ] C(K,G)) := inferInstance
 
 /-- A genuine bounded bilinear map acts pointwise on continuous paths. -/
-def pathBilinear (B : E →L[ℝ] F →L[ℝ] G) : C(K,E) →L[ℝ] C(K,F) →L[ℝ] C(K,G) :=
+@[expose] def pathBilinear (B : E →L[ℝ] F →L[ℝ] G) : C(K,E) →L[ℝ] C(K,F) →L[ℝ] C(K,G) :=
   coefficientMap.comp (B.compLeftContinuous ℝ K)
 
 @[simp] theorem pathBilinear_apply (B : E →L[ℝ] F →L[ℝ] G)
-    (p : C(K, E)) (q : C(K, F)) (t : K) : pathBilinear B p q t = B (p t) (q t) := rfl
+    (p : C(K, E)) (q : C(K, F)) (t : K) : pathBilinear B p q t = B (p t) (q t) := by rfl
 
 theorem pathBilinear_norm (B : E →L[ℝ] F →L[ℝ] G) :
     ‖pathBilinear (K := K) B‖ ≤ ‖B‖ :=
@@ -91,7 +91,7 @@ variable (P : ℝ) [Fact (0 < P)] (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
   (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
 
 /-- The actual continuous L² product, constructed in the complete H6 algebra. -/
-def scalarProductPath : C(K,LiftL2 P) :=
+@[expose] def scalarProductPath : C(K,LiftL2 P) :=
   (valueOperator P 6).compLeftContinuous ℝ K
     (pathBilinear (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
       (sobolevPath P 6 p hp) (sobolevPath P 6 q hq))

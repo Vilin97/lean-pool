@@ -54,7 +54,7 @@ circuit-supported differences (or fix path orientations by
 convention).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

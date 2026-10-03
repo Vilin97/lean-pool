@@ -16,7 +16,7 @@ source (23).  Frame motion and primary shear motion are derived from the
 actual homogeneous ray and velocity equations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -136,6 +136,7 @@ theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
   nlinarith only [h1, h2, h3, h4, h5, hB₁j, hBr]
 
 /-- Primary shear, given by `c*(‖m t‖*‖v t‖)`. -/
+@[expose]
 def primaryShear (c : ℝ) (m v : ℝ → Space) (t : ℝ) : ℝ := c*(‖m t‖*‖v t‖)
 
 /-- In particular, the logarithmic shear law in source (23) holds for the

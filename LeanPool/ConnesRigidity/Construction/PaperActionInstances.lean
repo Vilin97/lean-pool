@@ -17,7 +17,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The paper action instances component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -47,11 +47,11 @@ lemma transvection_action_apply_of_ne_target {i j r : Fin 3} (hij : i ≠ j)
   simp [hri]
 
 /-- The linear action on the first summand of the paper kernel. Paper: §2. -/
-def avStarAction (l : SpecialLinear.SL3) (q : Q) : AVStar ≃ₗ[k] AVStar :=
+@[expose] def avStarAction (l : SpecialLinear.SL3) (q : Q) : AVStar ≃ₗ[k] AVStar :=
   TensorProduct.congr (sl3AAction l) (qVStarActionHom q)
 
 /-- The first-summand action is a homomorphism. Paper: §2. -/
-def avStarActionHom : H →* (AVStar ≃ₗ[k] AVStar) where
+@[expose] def avStarActionHom : H →* (AVStar ≃ₗ[k] AVStar) where
   toFun h := avStarAction h.1 h.2
   map_one' := by
     apply LinearEquiv.ext
@@ -128,7 +128,7 @@ theorem sl3CAction_comp_inv (l : SpecialLinear.SL3) :
     (sl3TensorAction_comp_inv l)
 
 /-- The SL₃ action on the fixed tensor module is invertible. Paper: §2. -/
-def sl3CActionEquiv (l : SpecialLinear.SL3) : C ≃ₗ[k] C :=
+@[expose] def sl3CActionEquiv (l : SpecialLinear.SL3) : C ≃ₗ[k] C :=
   { toFun := sl3CAction l
     invFun := sl3CAction l⁻¹
     left_inv := by
@@ -153,7 +153,7 @@ def sl3CActionEquiv (l : SpecialLinear.SL3) : C ≃ₗ[k] C :=
       exact (sl3CAction l).map_smul a c }
 
 /-- The fixed-tensor action is a homomorphism. Paper: §2. -/
-def sl3CActionHom : SpecialLinear.SL3 →* (C ≃ₗ[k] C) where
+@[expose] def sl3CActionHom : SpecialLinear.SL3 →* (C ≃ₗ[k] C) where
   toFun := sl3CActionEquiv
   map_one' := by
     apply LinearEquiv.ext
@@ -174,7 +174,7 @@ def sl3CActionHom : SpecialLinear.SL3 →* (C ≃ₗ[k] C) where
     simpa using h
 
 /-- The first Zhou action as a linear equivalence of the kernel. Paper: §2. -/
-def paperThetaOneLinear (h : H) : D ≃ₗ[k] D :=
+@[expose] def paperThetaOneLinear (h : H) : D ≃ₗ[k] D :=
   (avStarAction h.1 h.2).prodCongr (sl3CActionEquiv h.1)
 
 /-- Pointwise form of the first Zhou action on the kernel splitting. -/
@@ -183,11 +183,11 @@ def paperThetaOneLinear (h : H) : D ≃ₗ[k] D :=
       (avStarAction h.1 h.2 d.1, sl3CAction h.1 d.2) := rfl
 
 /-- Reinterpret a linear kernel equivalence as a multiplicative automorphism. Paper: §2. -/
-def additiveEquivToMulAut (e : D ≃ₗ[k] D) : MulAut (Multiplicative D) :=
+@[expose] def additiveEquivToMulAut (e : D ≃ₗ[k] D) : MulAut (Multiplicative D) :=
   e.toAddEquiv.toMultiplicative
 
 /-- The first Zhou action as a linear homomorphism. Paper: §2. -/
-def paperThetaOneLinearHom : H →* (D ≃ₗ[k] D) where
+@[expose] def paperThetaOneLinearHom : H →* (D ≃ₗ[k] D) where
   toFun := paperThetaOneLinear
   map_one' := by
     apply LinearEquiv.ext
@@ -215,7 +215,7 @@ def paperThetaOneLinearHom : H →* (D ≃ₗ[k] D) where
       exact congrArg (fun e : C ≃ₗ[k] C => e c) hm
 
 /-- The first Zhou action on the multiplicative kernel. Paper: §2. -/
-def paperThetaOneHom : H →* MulAut (Multiplicative D) where
+@[expose] def paperThetaOneHom : H →* MulAut (Multiplicative D) where
   toFun h := additiveEquivToMulAut (paperThetaOneLinearHom h)
   map_one' := by
     apply MulEquiv.ext
@@ -260,7 +260,7 @@ theorem quadraticDefectLinear_cocycle (p q : Q) :
   abel
 
 /-- The correction term in the second Zhou action. Paper: §2. -/
-def thetaTwoTermMap (h : H) : C →ₗ[k] AVStar where
+@[expose] def thetaTwoTermMap (h : H) : C →ₗ[k] AVStar where
   toFun c := delta (sl3CAction h.1 c) ⊗ₜ[k] quadraticDefectLinear h.2
   map_add' c d := by
     simp only [map_add]
@@ -275,7 +275,7 @@ def thetaTwoTermMap (h : H) : C →ₗ[k] AVStar where
   rfl
 
 /-- The second Zhou action as a linear map. Paper: §2. -/
-def thetaTwoLinearMap (h : H) : D →ₗ[k] D where
+@[expose] def thetaTwoLinearMap (h : H) : D →ₗ[k] D where
   toFun d := (avStarAction h.1 h.2 d.1 + thetaTwoTermMap h d.2,
     sl3CAction h.1 d.2)
   map_add' d e := by
@@ -392,7 +392,7 @@ theorem thetaTwoLinearMap_one : thetaTwoLinearMap (1 : H) = LinearMap.id := by
     exact congrArg (fun e : C →ₗ[k] C => e c) hc
 
 /-- The second Zhou action as a linear equivalence. Paper: §2. -/
-def paperThetaTwoLinearEquiv (h : H) : D ≃ₗ[k] D :=
+@[expose] def paperThetaTwoLinearEquiv (h : H) : D ≃ₗ[k] D :=
   { toFun := thetaTwoLinearMap h
     invFun := thetaTwoLinearMap h⁻¹
     left_inv := by
@@ -429,7 +429,7 @@ def paperThetaTwoLinearEquiv (h : H) : D ≃ₗ[k] D :=
       exact (thetaTwoLinearMap h).map_smul a x }
 
 /-- The second Zhou action as a linear homomorphism. Paper: §2. -/
-def paperThetaTwoLinearHom : H →* (D ≃ₗ[k] D) where
+@[expose] def paperThetaTwoLinearHom : H →* (D ≃ₗ[k] D) where
   toFun := paperThetaTwoLinearEquiv
   map_one' := by
     apply LinearEquiv.ext
@@ -443,7 +443,7 @@ def paperThetaTwoLinearHom : H →* (D ≃ₗ[k] D) where
         (thetaTwoLinearMap_mul h h')
 
 /-- The second Zhou action on the multiplicative kernel. Paper: §2. -/
-def paperThetaTwoHom : H →* MulAut (Multiplicative D) where
+@[expose] def paperThetaTwoHom : H →* MulAut (Multiplicative D) where
   toFun h := additiveEquivToMulAut (paperThetaTwoLinearHom h)
   map_one' := by
     apply MulEquiv.ext
@@ -470,7 +470,7 @@ def contractStar (ψ : VStar →ₗ[k] k) : AVStar →ₗ[k] A :=
   rfl
 
 /-- The constant-one polynomial used in the §4 detector and §§5–6 witnesses. -/
-def a0 : A := fun _ => 1
+@[expose] def a0 : A := fun _ => 1
 
 theorem a0_ne_zero : a0 ≠ 0 := by
   intro h

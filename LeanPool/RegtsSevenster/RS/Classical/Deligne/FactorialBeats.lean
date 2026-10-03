@@ -26,7 +26,7 @@ least `1`, and it then suffices to pick `m` beyond both `3 * b ^ 2`
 exceeding the constant (so the spare factor `2 ^ m` swallows it).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

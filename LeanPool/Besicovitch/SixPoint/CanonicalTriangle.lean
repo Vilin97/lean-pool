@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.SixPoint.Configuration
 The three radii are the half-perimeter differences, indexed by the six-point labels.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -22,6 +22,7 @@ namespace LeanPool.Besicovitch
 variable {X : Type*} [PseudoMetricSpace X]
 
 /-- The canonical mutually tangent radii attached to a labelled triangle. -/
+@[expose]
 def canonicalTriangleRadius (root left right : X) : SixPointLabel → ℝ
   | .root => (dist root left + dist root right - dist left right) / 2
   | .left => (dist root left + dist left right - dist root right) / 2

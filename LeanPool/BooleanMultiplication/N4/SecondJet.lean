@@ -17,7 +17,7 @@ matrix on coordinate vectors and target basis elements; no truth table or
 circuit state is enumerated.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

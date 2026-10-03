@@ -47,7 +47,7 @@ public import Mathlib.Topology.Order.IntermediateValue
 * `Motion.Foundations.Development003`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -73,7 +73,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Motion.StandardPosition`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -89,7 +89,7 @@ Authors: Dean Cureton
 # Motion / Basic
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,6 +98,7 @@ open scoped unitInterval
 namespace MovingSofa
 
 /-- A paper motion permits an initial translation and preserves orientation at every time. -/
+@[expose]
 def IsPaperMotion (s : Set Point) (m : I → Point ≃ᵃⁱ[ℝ] Point) : Prop :=
   IsConnected s ∧ IsClosed s ∧ Continuous m ∧
     (∃ q : Point, ∀ p, m 0 p = p + q) ∧
@@ -106,35 +107,42 @@ def IsPaperMotion (s : Set Point) (m : I → Point ≃ᵃⁱ[ℝ] Point) : Prop 
     (∀ t, m t '' s ⊆ hallway) ∧ m 1 '' s ⊆ verticalHallway
 
 /-- Movability in the paper's translation-invariant convention. -/
+@[expose]
 def IsPaperMovingSofa (s : Set Point) : Prop :=
   ∃ m, IsPaperMotion s m
 
 /-- Clockwise rotation angle of a particular admissible lifted motion witness. -/
+@[expose]
 def HasRotationAngle (s : Set Point) (ω : ℝ) : Prop :=
   ∃ (m : I → Point ≃ᵃⁱ[ℝ] Point), IsPaperMotion s m ∧
     ∃ α : I → ℝ, Continuous α ∧ α 0 = 0 ∧ α 1 = -ω ∧
       ∀ t p, m t p = rotationMap (α t : Real.Angle) p + m t 0
 
 /-- Standard position for a compact moving sofa with the specified rotation angle. -/
+@[expose]
 def IsStandardPosition (s : Set Point) (ω : ℝ) : Prop :=
   IsCompact s ∧ HasRotationAngle s ω ∧ 0 < ω ∧ ω ≤ Real.pi / 2 ∧
     supportValue s (ω : Real.Angle) = 1 ∧
     supportValue s ((Real.pi / 2 : ℝ) : Real.Angle) = 1
 
 /-- The cap set constructed from all supporting outer quadrants. -/
+@[expose]
 def capOfSofa (s : Set Point) (ω : ℝ) : Set Point :=
   (stripParallelogram ω).1 ∩
     ⋂ t ∈ Set.Icc 0 ω, (rotatingHallwayParts s (t : Real.Angle)).outerQuadrant
 
 /-- The intersection of supporting hallways used for monotonization. -/
+@[expose]
 def monotonization (s : Set Point) (ω : ℝ) : Set Point :=
   (stripParallelogram ω).1 ∩ ⋂ t ∈ Set.Icc 0 ω, supportingHallway s (t : Real.Angle)
 
 /-- A monotone sofa is the monotonization of a sofa in standard position. -/
+@[expose]
 def IsMonotoneSofa (s : Set Point) : Prop :=
   ∃ (s₀ : Set Point) (ω : ℝ), IsStandardPosition s₀ ω ∧ s = monotonization s₀ ω
 
 /-- The finite-angle outer approximation to a cap. -/
+@[expose]
 def angleCap (Θ : AngleSet) (K : CapSpace Θ.angle) : Set Point :=
   (stripParallelogram Θ.angle).1 ∩
     ⋂ t ∈ Θ.directions, (rotatingHallwayParts (K.1 : Set Point) (t : Real.Angle)).outerQuadrant
@@ -158,7 +166,7 @@ Authors: Dean Cureton
 # Motion / Common Subset
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -397,7 +405,7 @@ Authors: Dean Cureton
 # Motion / Compactness
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -541,7 +549,7 @@ Authors: Dean Cureton
 # Motion / Rotation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -701,7 +709,7 @@ Authors: Dean Cureton
 # Motion / Angle Lift
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -776,7 +784,7 @@ Authors: Dean Cureton
 # Motion / Rotation Angle Calculation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -790,6 +798,7 @@ def rotationCalculationMinimum (ω : RotationCalculationAngle) : ℝ :=
   if ω.val < Real.arctan (11 / 5 : ℝ) then 5 / 4 else 11 / 10
 
 /-- Auxiliary radii and points determined by an admissible rotation angle and distance. -/
+@[expose]
 def rotationCalculationValues (ω : RotationCalculationAngle)
     (d : Set.Icc (rotationCalculationMinimum ω) (Real.tan ω.val)) :
     ℝ × ℝ × Point × Point :=
@@ -1083,7 +1092,7 @@ Authors: Dean Cureton
 # Motion / Supporting Hallways
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open Set
@@ -1240,7 +1249,7 @@ Authors: Dean Cureton
 # Motion / Translation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1329,7 +1338,7 @@ Authors: Dean Cureton
 # Motion / Standard Position
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1453,7 +1462,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.WedgeContainment`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1469,7 +1478,7 @@ Authors: Dean Cureton
 # Bounds / Wedge Containment
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1860,7 +1869,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.UpperBoundary`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1876,7 +1885,7 @@ Authors: Dean Cureton
 # Cap / Balanced
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1886,15 +1895,18 @@ open scoped Topology
 namespace MovingSofa
 
 /-- The polygonal cap area minus the area of its polygonal niche. -/
+@[expose]
 def polygonAreaFunctional (Θ : AngleSet) (K : CapSpace Θ.angle) : ℝ :=
   ClassicalResults.area (angleCap Θ K) - ClassicalResults.area (polygonNiche Θ K)
 
 /-- A cap containing the distinguished fan point maximizes the polygonal area functional. -/
+@[expose]
 def IsMaximumPolygonCap (Θ : AngleSet) (K : PolygonCapSpace Θ) : Prop :=
   (stripParallelogram Θ.angle).2.2 ∈ (K.val.val : Set Point) ∧
     ∀ L : PolygonCapSpace Θ, polygonAreaFunctional Θ L.val ≤ polygonAreaFunctional Θ K.val
 
 /-- The cap is a Hausdorff limit of polygonal maxima on increasingly fine dyadic meshes. -/
+@[expose]
 def IsBalancedMaximumCap {ω : ℝ} (K : CapSpace ω) : Prop :=
   ∃ (n : ℕ → ℕ) (hn : ∀ i, 2 ≤ n i), StrictMono n ∧
     (∀ i, ∃ k : ℕ, n i = 2 ^ k) ∧
@@ -1922,7 +1934,7 @@ Authors: Dean Cureton
 # Cap / Clipped / Estimates
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2043,7 +2055,7 @@ Authors: Dean Cureton
 # Cap / Clipped
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2052,6 +2064,7 @@ namespace MovingSofa
 open MeasureTheory Set
 
 /-- Clip the strip parallelogram by the two additional symmetric wall constraints. -/
+@[expose]
 def clippedCap (ω d : ℝ) : Set Point :=
   (stripParallelogram ω).1 ∩
     normalHalfPlane 0 (d + Real.tan ((Real.pi / 2 - ω) / 2)) false false ∩
@@ -2460,7 +2473,7 @@ Authors: Dean Cureton
 # Cap / Densities
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2559,6 +2572,7 @@ theorem capDensities_edgeVertices_eq (K : RightAngleCapSpace)
     rwa [show t - Real.pi / 2 + Real.pi / 2 = t from by ring] at h'
 
 /-- The two cap contact paths and their scalar density functions on the quarter-turn interval. -/
+@[expose]
 def nondegenerateCapData (K : RightAngleCapSpace)
     (_hK : ∃ r s, HasCapDensities K r s) :
     ((Set.Icc (0 : ℝ) (Real.pi / 2) → Point) ×
@@ -2592,13 +2606,14 @@ Authors: Dean Cureton
 # Cap / Upper Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The union of exposed cap edges over the upper range of normal directions. -/
+@[expose]
 def capUpperBoundary {ω : ℝ} (K : CapSpace ω) : Set Point :=
   ⋃ t ∈ Set.Icc 0 (ω + Real.pi / 2), exposedEdge K.val (t : Real.Angle)
 
@@ -2829,7 +2844,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.Niche`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2845,7 +2860,7 @@ Authors: Dean Cureton
 # Bounds / Niche
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2855,13 +2870,16 @@ open scoped Topology
 namespace MovingSofa
 
 /-- The infimum of the set’s horizontal coordinates. -/
+@[expose]
 def horizontalMin (S : Set Point) : ℝ := sInf ((fun p ↦ p 0) '' S)
 
 /-- The supremum of the set’s horizontal coordinates. -/
+@[expose]
 def horizontalMax (S : Set Point) : ℝ := sSup ((fun p ↦ p 0) '' S)
 
 /-- The niche is measurable, finite-area and enclosed by the specified horizontal-span
 rectangle. -/
+@[expose]
 def HasNicheRectangleBounds (S N : Set Point) : Prop :=
   MeasurableSet N ∧
   N ⊆ {p | horizontalMin S < p 0 ∧ p 0 < horizontalMax S ∧
@@ -3207,7 +3225,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Geometry.ContactGeometry`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3223,7 +3241,7 @@ Authors: Dean Cureton
 # Geometry / Contact Geometry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3545,7 +3563,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Analysis.SurfaceMeasure.OppositeDensity`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3561,7 +3579,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Convex Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3717,7 +3735,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Polygon
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4380,7 +4398,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Boundary Limit
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4458,7 +4476,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Discrete Bounds
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4633,7 +4651,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Integrals
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4741,7 +4759,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Vertex Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4804,7 +4822,7 @@ since they only use additivity and the injectivity of the angular projection on 
 most one turn.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5078,7 +5096,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Frame Products
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5276,7 +5294,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5430,7 +5448,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Linearity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5595,7 +5613,7 @@ The two variants `oppositeSurfaceData_angleImage_eq_withDensity_of_openLeft` and
 window from the other side with `measure_angleImage_eq_of_iUnion`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5808,7 +5826,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Convex.TangentLinePath`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5830,7 +5848,7 @@ arbitrary body by polygon approximation and weak convergence of surface measures
 integral, taken with the two bodies decoupled, is convex-bilinear.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6870,7 +6888,7 @@ Authors: Dean Cureton
 # Convex / Linearity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6941,7 +6959,7 @@ Minkowski segment `λ ↦ |(1 - λ) K + λ L|` is therefore the quadratic
 The symmetry itself is `MovingSofa.supportIntegral_symm` in `MovingSofa.Convex.SupportArea`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7021,7 +7039,7 @@ Authors: Dean Cureton
 # Convex / Tangent Line Path
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7031,11 +7049,13 @@ open scoped Topology
 namespace MovingSofa
 
 /-- Trace intersections with a fixed supporting line, ending at its exposed-edge endpoint. -/
+@[expose]
 def tangentLinePath (K : ConvexBody Point) (t : ℝ) (s : Set.Ioc (t - Real.pi) t) : Point :=
   if s.val < t then supportingIntersection K (s.val : Real.Angle) (t : Real.Angle)
   else (edgeVertices K (t : Real.Angle)).2
 
 /-- Restrict the tangent-line path to a closed interval of supporting directions. -/
+@[expose]
 def tangentLineRestriction (K : ConvexBody Point) (t a b : ℝ)
     (ha : a ∈ Set.Ioc (t - Real.pi) t) (hb : b ∈ Set.Ioc (t - Real.pi) t)
     (s : Set.Icc a b) : Point :=
@@ -7406,7 +7426,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Convex.ArcRegionArea`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7422,7 +7442,7 @@ Authors: Dean Cureton
 # Convex / Arc Cut Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7879,7 +7899,7 @@ Authors: Dean Cureton
 # Convex / Arc Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8631,7 +8651,7 @@ Authors: Dean Cureton
 # Convex / Arc Bilinear
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8811,7 +8831,7 @@ Authors: Dean Cureton
 # Convex / Arc Jordan
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9575,7 +9595,7 @@ private theorem arcUnitPath_range {A : OrientedJordanArc}
 
 private theorem isJordanCurve_of_tau {Γ : Set Point} (hΓ : TauCeti.IsJordanCurve Γ) :
     IsJordanCurve Γ := by
-  obtain ⟨e⟩ := hΓ
+  obtain ⟨e⟩ := TauCeti.isJordanCurve_iff.mp hΓ
   refine ⟨fun z ↦ (e.symm z : Point), continuous_subtype_val.comp e.symm.continuous,
     fun z w h ↦ e.symm.injective (Subtype.ext h), ?_⟩
   apply Set.Subset.antisymm
@@ -9615,7 +9635,7 @@ private theorem convexArc_broken_isJordanCurve
 private theorem jordanInterior_subset_closedConvexHull {Γ : Set Point}
     (hΓ : Γ.Nonempty) : jordanInterior Γ ⊆ closedConvexHull ℝ Γ := by
   intro p hp
-  exact TauCeti.filledHull_subset_closedConvexHull hΓ hp.2
+  exact TauCeti.filledHull_subset_closedConvexHull hΓ (TauCeti.mem_filledHull_iff.mpr hp.2)
 
 /-- The region enclosed by a loop inside a closed convex set stays inside that set. -/
 theorem jordanInterior_subset_of_subset_closed_convex
@@ -10238,7 +10258,7 @@ those tangents.  The single result here bounds that region's signed area by the 
 set that receives it.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10375,7 +10395,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Variation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10391,13 +10411,14 @@ Authors: Dean Cureton
 # Area / Mamikon / Basic
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The signed area between the convex boundary arc and a path on its supporting lines. -/
+@[expose]
 def mamikonFunctional (K : ConvexBody Point) (a b : ℝ)
     (hab : a < b) (_hba : b < a + Real.pi) (z : ContinuousBVPaths a b)
     (_hz : ∀ t : Set.Icc a b,
@@ -10428,7 +10449,7 @@ Authors: Dean Cureton
 # Area / Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10438,6 +10459,7 @@ open scoped unitInterval
 namespace MovingSofa
 
 /-- Coordinatewise convex combination of two pairs of planar points. -/
+@[expose]
 def pointPairCombination (t : I) (x y : Point × Point) : Point × Point :=
   ((1 - (t : ℝ)) • x.1 + (t : ℝ) • y.1,
     (1 - (t : ℝ)) • x.2 + (t : ℝ) • y.2)
@@ -10464,6 +10486,7 @@ theorem segmentArea_variation :
   ring
 
 /-- The pointwise convex combination of two continuous BV paths. -/
+@[expose]
 def bvPathCombination {a b : ℝ} (t : I) (x y : ContinuousBVPaths a b) :
     ContinuousBVPaths a b :=
   (1 - (t : ℝ)) • x + (t : ℝ) • y
@@ -10696,7 +10719,7 @@ Authors: Dean Cureton
 is itself a moving sofa, the bound gives `sofaConstant = volume gerversSofa`.
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
@@ -10705,6 +10728,7 @@ open scoped EuclideanGeometry unitInterval
 
 /-- Every moving sofa has area at most that of Gerver's sofa. This is the upper bound proved in
 Baek's paper; together with the fact that Gerver's sofa is a moving sofa it gives optimality. -/
+@[expose]
 def AreaUpperBound : Prop :=
   ∀ (s : Set ℝ²) (m : I → E(2)), IsMovingSofa s m → volume s ≤ volume gerversSofa
 
@@ -10736,7 +10760,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Motion.CanonicalBridge`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10752,7 +10776,7 @@ Authors: Dean Cureton
 # Motion / Canonical Bridge
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

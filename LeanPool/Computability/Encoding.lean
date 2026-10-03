@@ -20,7 +20,7 @@ This file provides an encoding for oracle partial recursive functions and a defi
 universal partial recursive function relative to an oracle, along with a proof that it is universal.
 -/
 
-@[expose] public section
+public section
 
 open Denumerable Encodable
 
@@ -175,7 +175,7 @@ inductive codeo : Type
 | rfind' : codeo → codeo
 
 /-- Semantics of `codeo`, relative to an indexed oracle family. -/
-def evalo {α : Type} [Primcodable α] (f : α → ℕ →. ℕ) : codeo → ℕ →. ℕ
+@[expose] def evalo {α : Type} [Primcodable α] (f : α → ℕ →. ℕ) : codeo → ℕ →. ℕ
 | codeo.zero => pure 0
 | codeo.succ => fun n => some (n + 1)
 | codeo.left => fun n => some (Nat.unpair n).1
@@ -313,7 +313,7 @@ theorem decodeCodeo_encodeCodeo (c : codeo) : decodeCodeo (encodeCodeo c) = c :=
   exact h_inj _ _ (encodeCodeo_decodeCodeo' (encodeCodeo c))
 
 /-- Returns a code for the constant function outputting a particular natural. -/
-def const : ℕ → codeo
+@[expose] def const : ℕ → codeo
   | 0 => codeo.zero
   | n + 1 => codeo.comp codeo.succ (const n)
 
@@ -367,7 +367,7 @@ theorem encode_const_step_primrec : Nat.Primrec encodeConstStepFun := by
     omega
 
 theorem encode_const_succ (n : ℕ) :
-    encodeConst (n + 1) = 4 + (5 * Nat.pair 1 (encodeConst n) + 2) := rfl
+    encodeConst (n + 1) = 4 + (5 * Nat.pair 1 (encodeConst n) + 2) := by rfl
 
 theorem encode_const_primrec : Nat.Primrec encodeConst := by
   have ih_step : Nat.Primrec (Nat.unpaired fun a n => Nat.rec (encodeCodeo codeo.zero) (fun y IH =>
@@ -386,7 +386,7 @@ theorem encode_const_primrec : Nat.Primrec encodeConst := by
 def sInner (n : ℕ) : ℕ := encodeCodeo (codeo.pair (const n) idCode)
 
 @[simp] lemma s_inner_eq (n : ℕ) :
-    sInner n = 4 + (5 * Nat.pair (encodeConst n) (encodeCodeo idCode) + 1) := rfl
+    sInner n = 4 + (5 * Nat.pair (encodeConst n) (encodeCodeo idCode) + 1) := by rfl
 
 theorem s_inner_primrec : Nat.Primrec sInner := by
   have h_pair : Nat.Primrec (fun n => Nat.pair (encodeCodeo (const n)) (encodeCodeo idCode)) :=
@@ -396,9 +396,9 @@ theorem s_inner_primrec : Nat.Primrec sInner := by
     omega
 
 /-- The encoding of the code applying oracle `0` to the constant `n` (an `s`-`m`-`n` index). -/
-def s (n : ℕ) : ℕ := encodeCodeo (codeo.comp (codeo.oracle 0) (const n))
+@[expose] def s (n : ℕ) : ℕ := encodeCodeo (codeo.comp (codeo.oracle 0) (const n))
 
-theorem s_eq (n : ℕ) : s n = 4 + (5 * Nat.pair 4 (encodeConst n) + 2) := rfl
+theorem s_eq (n : ℕ) : s n = 4 + (5 * Nat.pair 4 (encodeConst n) + 2) := by rfl
 
 theorem s_primrec : Nat.Primrec s := by
   have h_pair : Nat.Primrec (fun n => Nat.pair (encodeCodeo (codeo.oracle 0)) (encodeConst n)) :=

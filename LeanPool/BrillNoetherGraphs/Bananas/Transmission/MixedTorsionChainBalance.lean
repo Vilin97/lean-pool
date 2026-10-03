@@ -26,7 +26,7 @@ parenthesization avoids identifying the different nested `Sum` vertex types
 of left- and right-associated `MarkedGraph.chain` constructions.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -35,6 +35,7 @@ open Utilities
 /-! ## Reversing a chain factor -/
 
 /-- Reverse the orientation of a twice-marked chain factor. -/
+@[expose]
 def KGeneralChainFactor.swapMarks (F : KGeneralChainFactor) :
     KGeneralChainFactor where
   marked := {
@@ -64,6 +65,7 @@ def KGeneralChainFactor.swapMarks (F : KGeneralChainFactor) :
 /-! ## Genus budgets from the right -/
 
 /-- The sum of the genera of a list of chain factors. -/
+@[expose]
 def chainFactorGenus (L : List KGeneralChainFactor) : ℤ :=
   (L.map fun F => CFGraph.genus F.marked.graph).sum
 
@@ -147,6 +149,7 @@ theorem chainSuffixBudget_iff_indexed (L : List KGeneralChainFactor) :
           simpa using h (i + 1) (by simp; omega)
 
 /-- The literal minimum hypothesis in Corollary 6.16(2), indexed from zero. -/
+@[expose]
 def ChainMinBudget (L : List KGeneralChainFactor) : Prop :=
   ∀ (i : ℕ) (hi : i < L.length),
     min (chainFactorGenus (L.take (i + 1)))
@@ -158,6 +161,7 @@ def ChainMinBudget (L : List KGeneralChainFactor) : Prop :=
 Before the cut, each prefix is no larger than the corresponding suffix;
 after the cut, each suffix is no larger than the corresponding prefix.  The
 maximal index used in the paper's proof has exactly this property. -/
+@[expose]
 def ChainDominatesAtSplit
   (left right : List KGeneralChainFactor) : Prop :=
   (∀ (i : ℕ) (_hi : i < left.length),
@@ -221,6 +225,7 @@ For the original order `F :: next :: rest`, this is the chain whose factor
 order is `reverse (F :: next :: rest)` and whose factor marks are all swapped.
 Its right mark is therefore the original left mark of `F`, namely the vertex
 at which this suffix is attached to the left half of the chain. -/
+@[expose]
 def reversedMarkedChain
     (F : KGeneralChainFactor) : List KGeneralChainFactor → MarkedGraph
   | [] => F.swapMarks.marked
@@ -334,6 +339,7 @@ theorem graph_connected_factorChain
 
 /-- The graph obtained by gluing the two nonempty halves at their central
 marks.  The right half is presented from the outside inward. -/
+@[expose]
 def balancedChainGraph
     (leftHead : KGeneralChainFactor)
     (leftTail : List KGeneralChainFactor)

@@ -19,7 +19,7 @@ the contraction identities `L_C = id` distributed over the graded
 blocks.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,11 +27,13 @@ open CategoryTheory
 open scoped TensorProduct
 
 /-- The even copairing element `Σ e_i ⊗ e_i`. -/
+@[expose]
 noncomputable def stdCopairEvenElem (k : ℕ) :
     (Fin k → ℂ) ⊗[ℂ] (Fin k → ℂ) :=
   ∑ i, stdE k i ⊗ₜ[ℂ] stdE k i
 
 /-- The odd copairing element `Σ f_i ⊗ g_i`. -/
+@[expose]
 noncomputable def stdCopairOddElem (ℓ : ℕ) :
     (Fin (2 * ℓ) → ℂ) ⊗[ℂ] (Fin (2 * ℓ) → ℂ) :=
   ∑ i, stdF ℓ i ⊗ₜ[ℂ] stdG ℓ i
@@ -53,6 +55,7 @@ private lemma equiv_zero {M N : Type*} [AddCommMonoid M] [Module ℂ M]
 
 /-- The standard copairing as an even morphism
 `𝟙 ⟶ stdSuperPair ⊗ stdSuperPair`. -/
+@[expose]
 noncomputable def stdCopair (k ℓ : ℕ) :
     SuperVect.Hom SuperVect.tensorUnit
       (SuperVect.tensorObj (stdSuperPair k ℓ) (stdSuperPair k ℓ)) := by

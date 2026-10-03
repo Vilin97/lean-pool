@@ -38,7 +38,7 @@ of a filtered colimit of types (`Types.jointly_surjective'`,
 `Types.FilteredColimit.colimit_eq_iff`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

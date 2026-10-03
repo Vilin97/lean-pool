@@ -28,4 +28,4 @@ public import LeanPool.NandakumarRamanaRao.NRR.EMP.WeightSpace
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
 
-@[expose] public section
+public section

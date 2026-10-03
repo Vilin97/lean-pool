@@ -16,7 +16,7 @@ unrelated connected components impose no hypotheses. This extension was added
 during the AI-assisted Lean Pool port of Arthur Freitas Ramos' development.
 -/
 
-@[expose] public section
+public section
 
 namespace Stallings
 namespace InverseMultigraph

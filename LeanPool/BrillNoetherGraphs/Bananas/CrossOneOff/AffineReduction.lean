@@ -18,13 +18,14 @@ descent of the inverse permutation.  Simultaneously swapping that adjacent
 pair in every residue-period removes exactly one normalized inversion class.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
 open Utilities
 
 /-- The support of the affine simple reflection indexed by `i` modulo `k`. -/
+@[expose]
 def affineReflectionSupport (k : ℕ) (i : ℤ) : Set ℤ :=
   {n | (k : ℤ) ∣ n - i}
 
@@ -50,6 +51,7 @@ theorem affineReflectionSupport_congr
   simpa only [sub_sub_sub_cancel_right] using (dvd_sub h₂ h₁)
 
 /-- The ASP permutation implementing one affine simple reflection. -/
+@[expose]
 noncomputable def affineReflection (k : ℕ) (i : ℤ) (hk : 2 ≤ k) : AspPerm :=
   Transpositions.sigma (affineReflectionSupport k i)
     (affineReflectionSupport_noConsecutive k hk i)

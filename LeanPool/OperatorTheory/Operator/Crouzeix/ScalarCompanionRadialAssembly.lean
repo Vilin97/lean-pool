@@ -23,7 +23,7 @@ The remaining inputs are the genuinely sharp phase contraction, polynomial
 approximation, and reproduction of the polynomial auxiliary contour.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Set
 open scoped InnerProductSpace Interval Real

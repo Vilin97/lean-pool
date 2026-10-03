@@ -15,7 +15,7 @@ A fixed polynomial factor cannot compensate for a larger exponential
 base. This form applies directly to tensor-dimension estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

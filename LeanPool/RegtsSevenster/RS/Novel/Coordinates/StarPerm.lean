@@ -16,7 +16,7 @@ intertwines permutations, and hence the star coordinate at a
 permuted colouring is the odd-inversion sign times the original.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

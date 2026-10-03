@@ -20,7 +20,7 @@ keeps the completion estimates independent of the internal representation of
 Mathlib's completion.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

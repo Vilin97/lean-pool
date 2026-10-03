@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.MainStatement
 The completed runtime satisfies the parameter-free main rate in all exponent regimes.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 

@@ -22,7 +22,7 @@ and weight one everywhere else.  `WeightedCircle` turns those weights into the e
 homeomorphism required by P1, and radial extension gives the corresponding disk homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -122,6 +122,7 @@ theorem faceWeights_sum
       exact congrArg List.length (expand_boundary P a f).symm
 
 /-- The first target side replacing source side `i`. -/
+@[expose]
 def expandedStartIndex
     (P : FiniteCyclicPresentation) (a : P.Edge) (f : P.Face)
     (i : Fin (P.boundary f).length) :
@@ -327,6 +328,7 @@ theorem faceWeights_get
   simp
 
 /-- A target-side index inside the expanded block of source side `i`. -/
+@[expose]
 def expandedOffsetIndex
     (P : FiniteCyclicPresentation) (a : P.Edge) (f : P.Face)
     (i : Fin (P.boundary f).length)
@@ -617,6 +619,7 @@ theorem expandedOccurrenceAt_dart_eq_expandedSubdart
   exact expandedOccurrenceAt_dart P a p
 
 /-- Transport a block-local offset across an equal-dart pairing. -/
+@[expose]
 def samePairedOffset
     {P : FiniteCyclicPresentation} (a : P.Edge)
     (pairing : P.BoundaryPairing)
@@ -733,6 +736,7 @@ noncomputable def expandedPairingOpposite
     exact expandedSubdart_oppositePairedOffset a pairing hcompatible k
 
 /-- The second target side replacing a selected source occurrence. -/
+@[expose]
 def secondExpandedIndex
     (P : FiniteCyclicPresentation) (a : P.Edge) (f : P.Face)
     (i : Fin (P.boundary f).length)
@@ -817,6 +821,7 @@ noncomputable def faceHomeomorph
   PolygonCell.radialHomeomorph (faceCircleHomeomorph P a validP f)
 
 /-- P1 acts facewise on the polygonal pre-realization. -/
+@[expose]
 noncomputable def preHomeomorph
     (P : FiniteCyclicPresentation) (a : P.Edge)
     (validP : P.IsSurfaceValid) :
@@ -909,11 +914,13 @@ theorem faceHomeomorph_side_of_not_selected
   ring
 
 /-- Rescale the first half of a source side to a complete target side. -/
+@[expose]
 def firstHalfParameter (t : unitInterval) (h : (t : ℝ) ≤ 1 / 2) :
     unitInterval :=
   ⟨2 * (t : ℝ), mul_nonneg (by norm_num) t.property.1, by linarith⟩
 
 /-- Rescale the second half of a source side to a complete target side. -/
+@[expose]
 def secondHalfParameter (t : unitInterval) (h : 1 / 2 ≤ (t : ℝ)) :
     unitInterval :=
   ⟨2 * (t : ℝ) - 1, by linarith, by linarith [t.property.2]⟩
@@ -1325,6 +1332,7 @@ theorem card_expandedSourcePosition
       exact faceWeights_sum P a f
 
 /-- Expanded source blocks enumerate all target boundary occurrences. -/
+@[expose]
 noncomputable def expandedOccurrenceEquiv
     (P : FiniteCyclicPresentation) (a : P.Edge) :
     ExpandedSourcePosition P a ≃ (expand P a).BoundaryOccurrence :=
@@ -1670,6 +1678,7 @@ theorem dartWeight_pos {n : ℕ} (a : Fin n)
   split <;> omega
 
 /-- Convert a target subedge-local parameter back to the original source-side parameter. -/
+@[expose]
 noncomputable def unexpandParameter {n : ℕ} (a : Fin n) (d : SignedDart (Fin n))
     (k : Fin (dartWeight a d)) (u : unitInterval) : unitInterval :=
   ⟨((k : ℝ) + (u : ℝ)) / dartWeight a d,

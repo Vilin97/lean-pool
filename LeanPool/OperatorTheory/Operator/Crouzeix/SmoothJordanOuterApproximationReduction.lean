@@ -18,7 +18,7 @@ This thickening is still compact and convex, has nonempty interior, and a
 second half-scale thickening fits inside the requested original scale.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

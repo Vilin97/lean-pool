@@ -58,7 +58,7 @@ import Mathlib.Data.ZMod.Basic
   over GF(2).  The connection lemma makes the odd-cover ⇔ syndrome=allOnes equivalence explicit.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset
 
@@ -70,14 +70,14 @@ variable {s : ℕ} (c : Fin s → Finset X) (q : ℕ)
 /-! ### The reduction's definitions. -/
 
 /-- `coverCount c T x` — how many SELECTED 3-sets (indices in `T`) contain the point `x`. -/
-def coverCount (T : Finset (Fin s)) (x : X) : ℕ :=
+@[expose] def coverCount (T : Finset (Fin s)) (x : X) : ℕ :=
   (T.filter (fun i => x ∈ c i)).card
 
 /-- `T` is an **exact cover**: every point is covered by exactly one selected set. -/
-def IsExactCover (T : Finset (Fin s)) : Prop := ∀ x : X, coverCount c T x = 1
+@[expose] def IsExactCover (T : Finset (Fin s)) : Prop := ∀ x : X, coverCount c T x = 1
 
 /-- **EC3S / X3C**: an exact cover exists.  (The source NP-hard problem; Karp 1972.) -/
-def X3C : Prop := ∃ T : Finset (Fin s), IsExactCover c T
+@[expose] def X3C : Prop := ∃ T : Finset (Fin s), IsExactCover c T
 
 /-- The parity-check matrix of the reduction: column `i` is the GF(2) indicator of the 3-set
     `c i`.  Rows are points of `X`, columns are the `s` sets. -/

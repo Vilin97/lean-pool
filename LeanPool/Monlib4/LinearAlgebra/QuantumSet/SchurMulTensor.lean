@@ -17,7 +17,7 @@ This file relates Schur multiplication on tensor-product coalgebras to the
 fourfold tensor shuffle used by the Monlib4 quantum-set tensor product.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

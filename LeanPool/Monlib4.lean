@@ -31,7 +31,7 @@ Tags: linear-algebra, operator-algebras, quantum-sets, quantum-graphs, represent
 MSC: 15A69, 16W20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

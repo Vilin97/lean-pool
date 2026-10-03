@@ -27,7 +27,7 @@ All auxiliary infrastructure is in `Problem6Aux.lean`.
   with `|S| >= epsilon/256 * |V|`
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Actual continuous L² paths for every ordered cylinder derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The actual uniform-time derivative word, evaluated at the untranslated path. -/
-def wordPath (p : C(K, LiftL2 P)) {n : ℕ} (w : Fin n → Fin 4) : C(K,LiftL2 P) :=
+@[expose] def wordPath (p : C(K, LiftL2 P)) {n : ℕ} (w : Fin n → Fin 4) : C(K,LiftL2 P) :=
   wordDerivative standardDirection (fun a : LiftTangent => pathTranslate P a p) w 0
 
 variable (p : C(K, LiftL2 P))
@@ -86,7 +86,7 @@ theorem wordPath_eq_sobolev (q : ℕ) {n : ℕ} (w : Fin n → Fin 4) (t : K) :
     ⟨⟨n,by omega⟩,w⟩
 
 /-- A single spatial or angular derivative retains an actual continuous-time L² path. -/
-def derivativePath (i : Fin 4) : C(K,LiftL2 P) := wordPath P p (fun _ : Fin 1 => i)
+@[expose] def derivativePath (i : Fin 4) : C(K,LiftL2 P) := wordPath P p (fun _ : Fin 1 => i)
 
 include hp in
 theorem derivativePath_translation (i : Fin 4) (a : LiftTangent) :
@@ -105,8 +105,10 @@ theorem derivativePath_orbit (i : Fin 4) :
 
 theorem pointField_derivativePath (i : Fin 4) (t : K) (x : LiftDomain P) :
     pointField P (derivativePath P p i) (derivativePath_orbit P p hp i) t x =
-      fieldFDeriv P (pointField P p hp t) x (standardDirection i) :=
-  congrFun (pointField_wordPath P p hp (fun _ : Fin 1 => i) t) x
+      fieldFDeriv P (pointField P p hp t) x (standardDirection i) := by
+  simpa only [derivativePath, iteratedFieldDerivative_succ, Fin.cons_zero,
+    Fin.tail_cons, iteratedFieldDerivative_zero, fieldDerivative, fieldFDeriv] using
+    congrFun (pointField_wordPath P p hp (fun _ : Fin 1 => i) t) x
 
 include hp in
 /-- Differentiation uses one external word, with no dimension-dependent radius loss. -/

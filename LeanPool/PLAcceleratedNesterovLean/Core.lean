@@ -14,4 +14,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Core.NesterovSeqGen
 # Core definitions for PL-accelerated Nesterov convergence
 -/
 
-@[expose] public section
+public section

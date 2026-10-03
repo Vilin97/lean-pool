@@ -22,4 +22,4 @@ import Mathlib.Data.Nat.Choose.Multinomial
 Import aggregator for the `GaussianField/SchwartzNuclear` directory.
 -/
 
-@[expose] public section
+public section

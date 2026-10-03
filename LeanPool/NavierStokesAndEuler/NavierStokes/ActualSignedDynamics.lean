@@ -18,7 +18,7 @@ base action, and tangency germ therefore apply to either signed column before
 the separate scalar multiplication and compact cutoff.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,25 +39,27 @@ abbrev Space := ProblemStatement.Space
 variable {B N0 : ℕ}
 
 /-- The actual unweighted unit, before choosing a periodic copy. -/
+@[expose]
 noncomputable def nativeUnit (j : Fin 2) (L : Label B N0) (x : Native) : Space :=
   PrimaryPulseBounds.normalizedPulse ((phases B N0 j).frame L)
     ((phases B N0 j).lam L) ((phases B N0 j).u L) ((phases B N0 j).L L)
     (pulseCoordinates L x)
 
 /-- The selected native unit transported to the full free lift. -/
+@[expose]
 noncomputable def unitPulse (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space :=
   nativeUnit j L (copyPoint j L n k x)
 
 /-- Unit motion, given by `(normalScale L n * clockScale L n) • (phases B N0 j).phase.velocity L
 (phasePoint L (copyPoint j L n k x))`. -/
-noncomputable def unitMotion (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def unitMotion (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space :=
   (normalScale L n * clockScale L n) •
     (phases B N0 j).phase.velocity L (phasePoint L (copyPoint j L n k x))
 
 /-- Unit action, constructed using `clockScale`. -/
-noncomputable def unitAction (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def unitAction (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Space →L[ℝ] Space :=
   clockScale L n • PrimaryCopyBridge.baseOperator
     ((phases B N0 j).phase.F L (copyPoint j L n k x).1)

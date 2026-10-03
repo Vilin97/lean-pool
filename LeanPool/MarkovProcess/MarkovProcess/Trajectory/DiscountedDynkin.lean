@@ -33,7 +33,7 @@ Main results: `IsFellerKernelSemigroup.discountedDynkinProcess`,
 No assertion is made at an unbounded stopping time or about passage to an infinite horizon.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -52,6 +52,7 @@ variable {P : SubMarkovKernelSemigroup alpha}
 section ProcessDefinition
 
 /-- The discounted Dynkin process associated with a generator-domain function. -/
+@[expose]
 def IsFellerKernelSemigroup.discountedDynkinProcess
     (hFeller : P.IsFellerKernelSemigroup) (f : hFeller.c0Semigroup.generatorDomain)
     (lam : ℝ) (t : NNReal) (omega : ContinuousPath alpha) : ℝ :=

@@ -44,7 +44,7 @@ Proof shape:
 * `gunther_perturbation` — Günther's perturbation theorem (Wassermann's Theorem B).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Filter Topology NashEmbedding.Sobolev Matrix
@@ -62,12 +62,12 @@ variable {n N : ℕ}
 abbrev FrameIdx (n : ℕ) := Fin n ⊕ {pq : Fin n × Fin n // pq.1 ≤ pq.2}
 
 /-- The frame `{∂ᵢu} ∪ {∂ₚ∂_q u}_{p ≤ q}` of a map `u`. -/
-def frame (u : (Fin n → ℝ) → (Fin N → ℝ)) : FrameIdx n → (Fin n → ℝ) → (Fin N → ℝ)
+@[expose] def frame (u : (Fin n → ℝ) → (Fin N → ℝ)) : FrameIdx n → (Fin n → ℝ) → (Fin N → ℝ)
   | Sum.inl i => pderiv i u
   | Sum.inr pq => pderiv pq.1.1 (pderiv pq.1.2 u)
 
 /-- A map is *free* if its frame is linearly independent at every point. -/
-def IsFree (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop := IsPointwiseLinIndep (frame u)
+@[expose] def IsFree (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop := IsPointwiseLinIndep (frame u)
 
 lemma frame_smoothPeriodic {u : (Fin n → ℝ) → (Fin N → ℝ)} (hu : SmoothPeriodic u) :
     ∀ k, SmoothPeriodic (frame u k)
@@ -103,13 +103,13 @@ attribute [irreducible] bLevel
 
 /-- The `H^r` size of a matrix-valued perturbation: the sum over entries of the squared
 `H^r` norms of the coefficient sequences. -/
-def hSize (n : ℕ) (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+@[expose] def hSize (n : ℕ) (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   ∑ i, ∑ j, sobolevNormSq n (bLevel n) (stdFourierCoeff n (fun x => ((h x i j : ℝ) : ℂ)))
 
 /-! ## The momentum-side data -/
 
 /-- The Günther data of `u₀` and `h`: coefficients of the dual frame and of `h`. -/
-def bData (n : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ))
+@[expose] def bData (n : ℕ) (u₀ : (Fin n → ℝ) → (Fin N → ℝ))
     (h : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : GuntherData n N where
   a i := vcoeff n (dualA u₀ i)
   b p q := vcoeff n (dualB u₀ p q)

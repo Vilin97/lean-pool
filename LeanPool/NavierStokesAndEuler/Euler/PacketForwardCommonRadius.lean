@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
 forced direct-forward grade, the mean solve and the nonlinear coefficients.
 Neither the positive packet amplitude nor the recursive grade enters it. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ variable {P : ℝ}
   (N : EulerTransversePacketJoin.NormalBudget D 6 L.R) (C : ℝ)
 
 /-- Grade radius, constructed using `max`. -/
-def gradeRadius : ℝ :=
+@[expose] def gradeRadius : ℝ :=
   max L.R (max (L.commonCost*C) (max (L.correctorAmplitude (P := P) N*C)
     (max (L.correctorTimeAmplitude (P := P) N*C) (3*L.pressureAmplitude (P := P) N*C))))
 
@@ -74,7 +74,7 @@ variable {P Tc : ℝ} [Fact (0 < P)] {O : Operators} {C : CoefficientData P Tc O
   (terminalCost extra : ℝ)
 
 /-- Common radius as an element of `ℝ`. -/
-def commonRadius : ℝ :=
+@[expose] def commonRadius : ℝ :=
   Rm+L.R+CB.termCost+sobolevCoefficientRadius (Fin 4) CB.Rc +
     M.velocityCost+M.derivativeCost+M.pressureGradientCost +
       L.gradeRadius (P := P) N 1+L.gradeRadius (P := P) N terminalCost+max 0 extra

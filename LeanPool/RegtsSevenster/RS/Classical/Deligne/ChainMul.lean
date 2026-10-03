@@ -17,7 +17,7 @@ bundles; through the interchange, the tensor product of two chain
 stages multiplies into the chain stage of summed arity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -115,6 +115,7 @@ theorem symMulDesc_act
 
 /-- The descended symmetric multiplication as a map of
 modules. -/
+@[expose]
 noncomputable def symMulMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -128,6 +129,7 @@ noncomputable def symMulMod
 
 /-- One stage of the splitting chain: the module tensor product
 of matching symmetric powers of the dual pair. -/
+@[expose]
 noncomputable def chainStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -139,6 +141,7 @@ noncomputable def chainStage
 
 /-- **The chain multiplication**: two stages interchange and
 multiply into the stage of summed arity. -/
+@[expose]
 noncomputable def chainMul
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

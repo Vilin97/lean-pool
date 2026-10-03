@@ -18,7 +18,7 @@ discharges the parameter arithmetic, and records stationary, transient, and
 ordinary-convergence bounds for the count-state cost envelope.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5
 
@@ -110,6 +110,7 @@ end Transport
 /-! ## Parameterized count chain -/
 
 /-- Inventory transition kernel at the manuscript parameters determined by `m`. -/
+@[expose]
 def parameterizedKernel (m : ℕ) (hm : 1 ≤ m) :
     FiniteKernel
       (InventoryState (DyadicNode (treeDepth m)) m) :=
@@ -123,11 +124,13 @@ def parameterizedTransportEnergy (m : ℕ)
   Dynamics.stateTransportEnergy (parameterA m : ℝ) x
 
 /-- Squared transport-cost envelope at the manuscript parameters. -/
+@[expose]
 def parameterizedSquaredCostEnvelope (m : ℕ)
     (x : InventoryState (DyadicNode (treeDepth m)) m) : ℝ :=
   Transport.stateSquaredCostEnvelope (parameterA m : ℝ) x
 
 /-- Inventory law after `t` steps starting from independently refreshed supply. -/
+@[expose]
 def refreshedIterate (m : ℕ) (hm : 1 ≤ m) (t : ℕ) :
     FiniteLaw
       (InventoryState (DyadicNode (treeDepth m)) m) :=
@@ -339,6 +342,7 @@ theorem refreshed_average_rms_squaredCostEnvelope_le
 /-! ## Ordinary convergence from arbitrary count laws -/
 
 /-- Expected squared-cost envelope at time `t` from the chosen initial inventory law. -/
+@[expose]
 def rmsSquaredCostExpectation
     (m : ℕ) (hm : 1 ≤ m)
     (mu0 : FiniteLaw

@@ -20,7 +20,7 @@ explicit mapped divisors needed when wedge decompositions are used
 recursively.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

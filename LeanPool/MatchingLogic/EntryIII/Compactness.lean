@@ -12,7 +12,7 @@ public import Mathlib.ModelTheory.Satisfiability
 # MatchingLogic.EntryIII.Compactness
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic.EntryIII
 
@@ -25,7 +25,7 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 /-- The relational first-order signature associated to a matching-logic signature.
 `sigma` of matching arity `k` becomes a relation of arity `k + 1`; coordinate zero
 is the output/current point. -/
-def relLanguage (S : Signature) : FirstOrder.Language where
+@[expose] def relLanguage (S : Signature) : FirstOrder.Language where
   Functions := fun _ => Empty
   Relations := fun n => { sigma : S.Sym // S.arity sigma + 1 = n }
 

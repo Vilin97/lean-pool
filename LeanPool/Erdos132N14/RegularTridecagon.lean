@@ -20,7 +20,7 @@ and centered regular hexagram are also given by explicit complex coordinates;
 their high-multiplicity classes are checked inside Lean.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -51,7 +51,7 @@ theorem regularTridecagonPoint_injective :
   exact regularThirteenRoot_isPrimitive.pow_inj i.isLt j.isLt hij
 
 /-- The regular tridecagon as a labelled planar configuration. -/
-def regularTridecagon : Configuration (Fin 13) where
+@[expose] def regularTridecagon : Configuration (Fin 13) where
   point := regularTridecagonPoint
   injective := regularTridecagonPoint_injective
 
@@ -90,7 +90,7 @@ theorem sum_regularTridecagonPoint_sq :
   exact hprimitiveSquare.geom_sum_eq_zero (by norm_num)
 
 /-- The real Euclidean scalar product on complex coordinates. -/
-def planeDot (x y : ℂ) : ℝ :=
+@[expose] def planeDot (x y : ℂ) : ℝ :=
   x.re * y.re + x.im * y.im
 
 theorem normSq_sub (x y : ℂ) :

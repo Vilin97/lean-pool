@@ -19,7 +19,7 @@ off as the power of the circle value.  This is the accompanying paper's
 class level.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -28,6 +28,7 @@ noncomputable def circleVal {R : ℕ} (f : EdgeRankParameter R) : ℂ :=
   f.val (circlesClosed 1)
 
 /-- Adding free circles to a fragment. -/
+@[expose]
 def addCircles {α : Type} (X : Fragment α) (c : ℕ) :
     Fragment α :=
   { X with circles := X.circles + c }

@@ -16,7 +16,7 @@ submeshes of one ambient triangle mesh.  This file records that harmless extra-l
 generalization of `PolygonalFamily.synchronizedArrangement`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,7 +29,7 @@ variable {ι : Type*} [Fintype ι] (J : ι → PolygonalCircle)
 
 /-- Cut the polygon-family arrangement simultaneously by a target mesh and by an additional
 finite list of affine lines. -/
-noncomputable def relativeSynchronizedArrangement (N : TriangleMesh)
+@[expose] noncomputable def relativeSynchronizedArrangement (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) : TriangleMesh :=
   (arrangementMesh J).refineByLines (N.coordinateLines ++ lines)
 
@@ -40,7 +40,7 @@ theorem relativeSynchronizedArrangement_support (N : TriangleMesh)
   (arrangementMesh J).refineByLines_support _
 
 /-- A relative synchronized chamber belongs to the selected polygonal side. -/
-def IsSelectedRelativeSynchronizedTriangle (N : TriangleMesh)
+@[expose] def IsSelectedRelativeSynchronizedTriangle (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) (p : ι → Prop)
     (t : Finset (relativeSynchronizedArrangement J N lines).Vertex) : Prop :=
   ∃ i, p i ∧
@@ -48,7 +48,7 @@ def IsSelectedRelativeSynchronizedTriangle (N : TriangleMesh)
       (J i).interiorRegion
 
 /-- The selected polygonal member after all additional cuts. -/
-noncomputable def selectedRelativeSynchronizedMesh (N : TriangleMesh)
+@[expose] noncomputable def selectedRelativeSynchronizedMesh (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) (p : ι → Prop) : TriangleMesh := by
   classical
   exact (relativeSynchronizedArrangement J N lines).restrictTriangles
@@ -63,7 +63,7 @@ def IsTargetRelativeSynchronizedTriangle (N : TriangleMesh)
     N.toPlaneComplex.support).Nonempty
 
 /-- The target member after all additional cuts. -/
-noncomputable def targetRelativeSynchronizedMesh (N : TriangleMesh)
+@[expose] noncomputable def targetRelativeSynchronizedMesh (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) : TriangleMesh := by
   classical
   exact (relativeSynchronizedArrangement J N lines).restrictTriangles

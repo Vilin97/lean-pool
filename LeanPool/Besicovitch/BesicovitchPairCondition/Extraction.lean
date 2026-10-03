@@ -14,7 +14,7 @@ This file isolates the measure estimate that turns a dense root ball into two we
 points of the same set. The missing mass is charged to one common leakage set.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

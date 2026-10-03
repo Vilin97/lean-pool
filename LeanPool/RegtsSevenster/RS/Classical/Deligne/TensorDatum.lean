@@ -19,7 +19,7 @@ descended interchange exists because the interchange is linear in
 both factors.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -107,6 +107,7 @@ end InterchangeDesc
 section Datum
 
 /-- The fold of the doubled regular module onto the base. -/
+@[expose]
 noncomputable def regPairFold
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A] :
@@ -115,6 +116,7 @@ noncomputable def regPairFold
 
 /-- **The tensor pairing**: cross through the descended
 interchange, pair coordinatewise, and fold. -/
+@[expose]
 noncomputable def tensorPair
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -130,6 +132,7 @@ noncomputable def tensorPair
     modTensorMap A d₁.pairMod d₂.pairMod ≫ regPairFold A
 
 /-- The unfolding of the base into the doubled regular module. -/
+@[expose]
 noncomputable def regPairUnfold
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A] :
@@ -138,6 +141,7 @@ noncomputable def regPairUnfold
 
 /-- **The tensor copairing**: unfold the unit, insert both
 copairings, and regroup through the descended interchange. -/
+@[expose]
 noncomputable def tensorCopair
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -216,6 +220,7 @@ theorem tensorCopair_linear
 /-- **The tensor product of duality data** (Deligne 1.15, tensor
 part): dual pairs tensor, with the crossed coordinatewise pairing
 and copairing. -/
+@[expose]
 noncomputable def tensorDatum
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

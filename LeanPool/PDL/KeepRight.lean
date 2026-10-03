@@ -15,7 +15,7 @@ on the right, can only lead to a node that is loaded on the right or free, and t
 rule adds formulas to an empty left component.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

@@ -30,7 +30,7 @@ on `M`:
 Pure realization surgery: no `InsepAt`, no interpolation-specific commitments.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -96,7 +96,7 @@ private theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
 /-! ## The controlled single-layer structure `wc base h` -/
 
 /-- The `L[[ℕ]]`-structure on `M` with base reduct `base` and constants interpreted by `h`. -/
-@[reducible] def wc (base : L.Structure M) (h : ℕ → M) : L[[ℕ]].Structure M :=
+@[expose, reducible] def wc (base : L.Structure M) (h : ℕ → M) : L[[ℕ]].Structure M :=
   @Language.withConstantsStructure L M base ℕ (constantsOn.structure h)
 
 @[simp] theorem wc_funMap_inl (base : L.Structure M) (h : ℕ → M) {l : ℕ}
@@ -228,7 +228,7 @@ noncomputable def Term.abstractConst (j : ℕ) {n : ℕ} :
   | @Term.func _ _ (_ + 1) (Sum.inr k) _ => nomatch k
 
 /-- Withdraw the constant `c_j` from a formula into the fresh free variable `0 : Fin 1`. -/
-noncomputable def BoundedFormulaω.abstractConst (j : ℕ) :
+@[expose] noncomputable def BoundedFormulaω.abstractConst (j : ℕ) :
     ∀ {n : ℕ}, L[[ℕ]].BoundedFormulaω Empty n → L[[ℕ]].BoundedFormulaω (Fin 1) n
   | _, .falsum => .falsum
   | _, .equal t u => .equal (t.abstractConst j) (u.abstractConst j)

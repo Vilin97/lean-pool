@@ -135,7 +135,7 @@ challenge file states.  The contract here is that the two files' declaration typ
 nose, so the extra instance is kept out of every statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -225,7 +225,7 @@ structure JordanFrame (J : Type*) [NormedAddCommGroup J] [InnerProductSpace ℝ 
 /-! ## The blocks -/
 
 /-- The `r`-eigenspace of `L_a : x ↦ a ∘ x`, as a submodule. -/
-def eigSub (a : J) (r : ℝ) : Submodule ℝ J where
+@[expose] def eigSub (a : J) (r : ℝ) : Submodule ℝ J where
   carrier := {x : J | a * x = r • x}
   add_mem' := fun {u v} hu hv => by
     change a * (u + v) = r • (u + v)
@@ -253,7 +253,7 @@ theorem blockCoef_comm (i j : Fin n) : blockCoef i j = blockCoef j i := by
 /-- `V_{ij}` before it is pushed through `Sym2`: the joint `blockCoef i j`-eigenspace of `L_{pᵢ}`
 and `L_{pⱼ}`.  On the diagonal this is `J₂(pᵢ) = {x | pᵢ ∘ x = x}`; off it, the joint
 `½`-eigenspace. -/
-def frameBlockRaw (F : JordanFrame J n) (i j : Fin n) : Submodule ℝ J :=
+@[expose] def frameBlockRaw (F : JordanFrame J n) (i j : Fin n) : Submodule ℝ J :=
   eigSub (F.p i) (blockCoef i j) ⊓ eigSub (F.p j) (blockCoef i j)
 
 theorem frameBlockRaw_comm (F : JordanFrame J n) (i j : Fin n) :
@@ -263,11 +263,11 @@ theorem frameBlockRaw_comm (F : JordanFrame J n) (i j : Fin n) :
 
 /-- **`V_{ij}`**, indexed by unordered pairs.  For `i ≠ j` the joint `½`-eigenspace of `L_{pᵢ}`
 and `L_{pⱼ}`; on the diagonal, `J₂(pᵢ)`. -/
-def frameBlock (F : JordanFrame J n) : Sym2 (Fin n) → Submodule ℝ J :=
+@[expose] def frameBlock (F : JordanFrame J n) : Sym2 (Fin n) → Submodule ℝ J :=
   Sym2.lift ⟨frameBlockRaw F, frameBlockRaw_comm F⟩
 
 @[simp] theorem frameBlock_mk (F : JordanFrame J n) (i j : Fin n) :
-    frameBlock F s(i, j) = frameBlockRaw F i j := rfl
+    frameBlock F s(i, j) = frameBlockRaw F i j := by rfl
 
 theorem mem_frameBlock_diag {F : JordanFrame J n} {i : Fin n} {x : J} :
     x ∈ frameBlock F s(i, i) ↔ F.p i * x = x := by

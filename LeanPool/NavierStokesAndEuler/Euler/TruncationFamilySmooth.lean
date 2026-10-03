@@ -21,7 +21,7 @@ root recovers the original truncation, which is sufficient for the
 continuous-in-time spatial-jet interface of `SmoothTimeField`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -106,7 +106,7 @@ theorem potentialTruncation_square_family_smooth (v : Space × ℝ → Space)
   potentialTruncation_family_smooth _ (nonnegative_time_square_smooth v hv) χ hχ
 
 /-- The continuous time map used to recover the original compact time interval. -/
-def sqrtTimeMap (T : ℝ) : C(Icc (0 : ℝ) T, Icc (0 : ℝ) (Real.sqrt T)) where
+@[expose] def sqrtTimeMap (T : ℝ) : C(Icc (0 : ℝ) T, Icc (0 : ℝ) (Real.sqrt T)) where
   toFun t := ⟨Real.sqrt t, Real.sqrt_nonneg _, Real.sqrt_le_sqrt t.property.2⟩
   continuous_toFun := (Real.continuous_sqrt.comp continuous_subtype_val).subtype_mk _
 

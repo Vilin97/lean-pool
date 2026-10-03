@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketUniformFrequencyMargin
 /-! The same normal-stage frequency comparison also supplies the
 parent-label and physical support-scale inequalities for the child flow. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

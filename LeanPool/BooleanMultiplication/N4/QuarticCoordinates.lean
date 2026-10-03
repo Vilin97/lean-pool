@@ -21,7 +21,7 @@ Thus the certificate is a small algebraic matrix check, not an enumeration
 of circuits or Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -30,6 +30,7 @@ noncomputable section
 
 /-- The 28 upper-triangular coordinate pairs of an alternating `8 × 8`
 matrix. -/
+@[expose]
 def upperPair : Fin 28 → Fin 8 × Fin 8 :=
   ![(0,1),(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),
     (1,2),(1,3),(1,4),(1,5),(1,6),(1,7),
@@ -40,6 +41,7 @@ def upperPair : Fin 28 → Fin 8 × Fin 8 :=
 /-- Packed separating covectors.  The flat index order is
 `(P₁-A coefficient, P₁-B coefficient, P₀-A coefficient,
 P₀-B coefficient, outside-word index)`. -/
+@[expose]
 def quarticLowLowSeparatorTable (i : Fin 144) : Nat :=
   #[0x0000010,0x0000008,0x0000010,0x0000008,0x0020000,0x0020000,
     0x0000010,0x0000008,0x0000008,
@@ -75,41 +77,47 @@ def quarticLowLowSeparatorTable (i : Fin 144) : Nat :=
     0x0008480,0x0004203,0x0004203][i.val]'i.isLt
 
 /-- Encode a field element as the natural number zero or one. -/
+@[expose]
 def f2IndexBit (a : F₂) : Nat := if a = 0 then 0 else 1
 
 /-- Pack four Boolean parameters and an outside-target index into a table row. -/
+@[expose]
 def quarticSeparatorIndex (a b c d : F₂) (i : Fin 9) : Fin 144 :=
   let n := ((((f2IndexBit a * 2 + f2IndexBit b) * 2 + f2IndexBit c) * 2 +
     f2IndexBit d) * 9 + i.val)
   ⟨n % 144, Nat.mod_lt _ (by decide)⟩
 
 /-- Extract one coefficient of the packed quartic separating covector. -/
+@[expose]
 def quarticSeparatorBit (a b c d : F₂) (i : Fin 9) (k : Fin 28) : F₂ :=
   if Nat.testBit
       (quarticLowLowSeparatorTable (quarticSeparatorIndex a b c d i)) k.val
     then 1 else 0
 
 /-- Extract one coordinate from a two-form coordinate array. -/
+@[expose]
 def twoFormCoordinate (i j : Fin 8) : TwoForm →ₗ[F₂] F₂ where
   toFun := fun q => q i j
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
 /-- The linear functional encoded by a quartic separating table row. -/
+@[expose]
 def quarticSeparatorLinear (a b c d : F₂) (i : Fin 9) : TwoForm →ₗ[F₂] F₂ :=
   ∑ k : Fin 28, quarticSeparatorBit a b c d i k •
     twoFormCoordinate (upperPair k).1 (upperPair k).2
 
 /-- Evaluate a quartic separating covector on a two-form. -/
+@[expose]
 def quarticSeparatorEval (a b c d : F₂) (i : Fin 9) (q : TwoForm) : F₂ :=
   quarticSeparatorLinear a b c d i q
 
 /-- A vector in the two-dimensional input support at the place one. -/
-def quarticPoneVector (a b : F₂) : LinearForm :=
+@[expose] def quarticPoneVector (a b : F₂) : LinearForm :=
   a • placeA 1 + b • placeB 1
 
 /-- A vector in the two-dimensional input support at the place zero. -/
-def quarticPzeroVector (c d : F₂) : LinearForm :=
+@[expose] def quarticPzeroVector (c d : F₂) : LinearForm :=
   c • placeA 0 + d • placeB 0
 
 theorem quarticSeparator_target_check :
@@ -121,13 +129,23 @@ theorem quarticSeparator_pone_basis_check :
     ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
       quarticSeparatorLinear a b c d i
         (vectorWedge (quarticPoneVector a b) (coordinateLinear j)) = 0 := by
-  decide +kernel
+  intro a b c d
+  rcases f2_eq_zero_or_one a with rfl | rfl <;>
+    rcases f2_eq_zero_or_one b with rfl | rfl <;>
+      rcases f2_eq_zero_or_one c with rfl | rfl <;>
+        rcases f2_eq_zero_or_one d with rfl | rfl <;>
+          decide +kernel
 
 theorem quarticSeparator_pzero_basis_check :
     ∀ (a b c d : F₂) (i : Fin 9) (j : Fin 8),
       quarticSeparatorLinear a b c d i
         (vectorWedge (quarticPzeroVector c d) (coordinateLinear j)) = 0 := by
-  decide +kernel
+  intro a b c d
+  rcases f2_eq_zero_or_one a with rfl | rfl <;>
+    rcases f2_eq_zero_or_one b with rfl | rfl <;>
+      rcases f2_eq_zero_or_one c with rfl | rfl <;>
+        rcases f2_eq_zero_or_one d with rfl | rfl <;>
+          decide +kernel
 
 theorem quarticSeparator_pone (a b c d : F₂) (i : Fin 9)
     (z : LinearForm) :
@@ -333,9 +351,9 @@ theorem quartic_cubic_kernel_zero_one (x y : LinearForm)
   exact ⟨a, b, c, d, hx, by simpa [quarticPzeroVector] using hy⟩
 
 /-- Select evaluation at zero among the three rational-place coordinates. -/
-def zeroPlaceCoeff3 : Fin 3 → F₂ := ![1, 0, 0]
+@[expose] def zeroPlaceCoeff3 : Fin 3 → F₂ := ![1, 0, 0]
 /-- Select evaluation at one among the three rational-place coordinates. -/
-def onePlaceCoeff3 : Fin 3 → F₂ := ![0, 1, 0]
+@[expose] def onePlaceCoeff3 : Fin 3 → F₂ := ![0, 1, 0]
 
 @[simp] theorem rationalTwo_zeroPlaceCoeff3 :
     rationalTwo zeroPlaceCoeff3 = rationalPlaceTwo 0 := by

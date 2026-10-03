@@ -16,7 +16,7 @@ obligations on compactly interior source balls. A finite spatial estimate
 then transfers them to the entire carrier in `prop:bootstrap`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -27,7 +27,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- The explicit slice majorant in coordinates translated to a source centre. -/
-def theoremATranslatedSliceMajorant
+@[expose] def theoremATranslatedSliceMajorant
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3)
     (x : Vec3) {ρ : ℝ} (hρ : 0 < ρ) (s : ℝ) : ℝ≥0∞ :=

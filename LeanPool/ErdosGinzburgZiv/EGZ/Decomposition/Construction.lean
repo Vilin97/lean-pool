@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationColorCapacity
 
 /-! # Extracting the decomposition from the bounded iteration -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration.boundedRun
 

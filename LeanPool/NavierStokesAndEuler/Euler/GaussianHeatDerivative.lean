@@ -21,7 +21,7 @@ section
 
 /-! Gaussian heat averaging in the genuine cylinder L² translation representation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ private theorem gaussianMeasure_eq_real (μ : ℝ) (v : ℝ≥0) :
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual one-parameter cylinder translation orbit. -/
-def lineOrbit (a : LiftTangent) (f : LiftL2 period) (x : ℝ) : LiftL2 period :=
+@[expose] def lineOrbit (a : LiftTangent) (f : LiftL2 period) (x : ℝ) : LiftL2 period :=
   translation period (translationPath period a x) f
 
 theorem lineOrbit_continuous (a : LiftTangent) (f : LiftL2 period) :
@@ -58,7 +58,7 @@ theorem lineOrbit_integrable (a : LiftTangent) (f : LiftL2 period) (μ : Measure
     (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f x).le))
 
 /-- Gaussian averaging with variance v along a cylinder direction. -/
-def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
+@[expose] def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
   ∫ x, lineOrbit period a f x ∂gaussianMeasure 0 v
 
 @[simp] theorem lineHeat_zero (a : LiftTangent) (f : LiftL2 period) : lineHeat period a 0 f = f :=
@@ -92,7 +92,7 @@ def lineHeatOperator (a : LiftTangent) (v : ℝ≥0) : LiftL2 period →L[ℝ] L
     1 (fun f => by simpa using lineHeat_norm_le period a v f)
 
 @[simp] theorem lineHeatOperator_apply (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
-    lineHeatOperator period a v f = lineHeat period a v f := rfl
+    lineHeatOperator period a v f = lineHeat period a v f := by rfl
 
 theorem lineHeatOperator_norm_le (a : LiftTangent) (v : ℝ≥0) : ‖lineHeatOperator period a v‖ ≤ 1 :=
   ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
@@ -202,7 +202,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -290,7 +290,7 @@ theorem gaussianMomentOrbit_integrable (a : LiftTangent) (v : ℝ≥0) (f : Lift
   rw [norm_smul, lineOrbit_norm]
 
 /-- The bounded candidate generator after Gaussian smoothing. -/
-def lineHeatDerivative (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
+@[expose] def lineHeatDerivative (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
   (v : ℝ)⁻¹ • ∫ x : ℝ, x • lineOrbit period a f x ∂gaussianMeasure 0 v
 
 theorem lineHeatDerivative_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :

@@ -18,7 +18,7 @@ repairs the crossing count returns — the parity backbone of the
 holonomy bookkeeping.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

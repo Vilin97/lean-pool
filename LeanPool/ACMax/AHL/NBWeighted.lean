@@ -18,7 +18,7 @@ Alon–Hoory–Linial irregular Moore bound chain; the walk-count and average-de
 it live downstream (`AHL.AHLAmGm`, `Band.Sum`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -28,7 +28,7 @@ variable {V : Type*} [Fintype V] {G : SimpleGraph V} [DecidableEq V] [DecidableR
 
 /-- `mₖ`: the total number of length-`k` non-backtracking walks, summed over all ordered
 start/end pairs.  By definition this is `∑ x, ∑ v, ((G.finsetWalkLength k x v).filter …).card`. -/
-def nbTotalWalks (G : SimpleGraph V) [DecidableRel G.Adj] (k : ℕ) : ℕ :=
+@[expose] def nbTotalWalks (G : SimpleGraph V) [DecidableRel G.Adj] (k : ℕ) : ℕ :=
   ∑ x : V, ∑ v : V, ((G.finsetWalkLength k x v).filter IsNonBacktracking).card
 
 end ACMax

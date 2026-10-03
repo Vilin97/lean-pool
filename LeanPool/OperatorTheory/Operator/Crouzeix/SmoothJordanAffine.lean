@@ -23,7 +23,7 @@ Its role is the reusable affine geometry needed by such approximation
 arguments.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff
@@ -41,6 +41,7 @@ theorem deriv_continuousLinearEquiv_comp (Omega : SmoothJordanDomain)
     t hdiff.hasDerivAt).deriv
 
 /-- Transport a smooth Jordan domain by an invertible real-linear map. -/
+@[expose]
 noncomputable def linearImage (Omega : SmoothJordanDomain)
     (e : ℂ ≃L[ℝ] ℂ) : SmoothJordanDomain where
   carrier := e '' Omega.carrier
@@ -89,6 +90,7 @@ theorem deriv_const_add_boundaryParam (Omega : SmoothJordanDomain)
   exact (hdiff.hasDerivAt.const_add c).deriv
 
 /-- Translate a smooth Jordan domain by a complex vector. -/
+@[expose]
 noncomputable def translate (Omega : SmoothJordanDomain)
     (c : ℂ) : SmoothJordanDomain where
   carrier := (fun z => c + z) '' Omega.carrier
@@ -128,6 +130,7 @@ theorem translate_boundaryParam_deriv (Omega : SmoothJordanDomain)
 
 /-- An affine image of a positive-radius disk.  In the real plane this is an
 ellipse, represented with its exact smooth regular boundary parametrization. -/
+@[expose]
 noncomputable def ellipse (c : ℂ) (e : ℂ ≃L[ℝ] ℂ)
     (R : ℝ) (hR : 0 < R) : SmoothJordanDomain :=
   ((SmoothJordanDomain.ball 0 R hR).linearImage e).translate c

@@ -22,7 +22,7 @@ For a polynomial `P` and `t ≥ 0`, `P(t) / D_K(t) = (P /ₘ D_K)(t) + ∑_j res
 `res_j = P(-j²) / D_K'(-j²)`, the residues used in the definition of `μ_X` (`Zeta5Irrational.res`).
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Finset
 

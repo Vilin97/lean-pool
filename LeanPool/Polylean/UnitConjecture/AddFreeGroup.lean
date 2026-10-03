@@ -26,7 +26,7 @@ homomorphisms on finitely generated free groups.
 - `prodFree` - a proof that the product of free groups is free.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -63,7 +63,7 @@ instance ℤFree : AddFreeGroup ℤ Unit where
 
 open EnumDecide in
 /-- Equality of homomorphisms from a free group on an exhaustively searchable basis is decidable. -/
-def decideHomsEqual {F : Type _} [AddCommGroup F] {X : Type _} [DecideForall X]
+@[expose] def decideHomsEqual {F : Type _} [AddCommGroup F] {X : Type _} [DecideForall X]
     [fgp : AddFreeGroup F X]
     {A : Type _} [AddCommGroup A] [DecidableEq A] : DecidableEq (F →+ A) := fun f g =>
   if c : ∀ x : X, f (fgp.ι x) = g (fgp.ι x) then
@@ -78,7 +78,7 @@ variable {X_A X_B : Type _}
 variable [FAb_A : AddFreeGroup A X_A] [FAb_B : AddFreeGroup B X_B]
 
 /-- The inclusion map from the direct sum of the bases of two free groups into their product. -/
-def ι : (X_A ⊕ X_B) → A × B
+@[expose] def ι : (X_A ⊕ X_B) → A × B
   | Sum.inl x_a => (FAb_A.ι x_a, 0)
   | Sum.inr x_b => (0, FAb_B.ι x_b)
 

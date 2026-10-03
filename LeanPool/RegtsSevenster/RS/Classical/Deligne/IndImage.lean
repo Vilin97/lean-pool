@@ -40,7 +40,7 @@ epi–mono factorisation through `indOf.obj (image g₀)`; uniqueness of
 such factorisations identifies the image of `f` with it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -34,7 +34,7 @@ is built. Everything here is **choice-free** (`#print axioms ⊆ {propext,
 Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -46,7 +46,7 @@ variable {V₀' : NeighborhoodSystem α'} {V₁' : NeighborhoodSystem β'}
 
 /-- **Exercise 3.19(ii) (Scott 1981, PRG-19).** The product mapping `f × g = ⟨f ∘
 p₀, g ∘ p₁⟩`. -/
-def prodMap (f : ApproximableMap V₀ V₀') (g : ApproximableMap V₁ V₁') :
+@[expose] def prodMap (f : ApproximableMap V₀ V₀') (g : ApproximableMap V₁ V₁') :
     ApproximableMap (prod V₀ V₁) (prod V₀' V₁') :=
   paired (f.comp (proj₀ V₀ V₁)) (g.comp (proj₁ V₀ V₁))
 

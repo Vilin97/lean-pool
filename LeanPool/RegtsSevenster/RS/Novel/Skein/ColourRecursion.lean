@@ -21,7 +21,7 @@ stage and at the base, and the dispatch on whether the stage's cut
 closes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -109,6 +109,7 @@ variable (n : ℕ)
   (V : Fragment (Fin (0 + (n + 1)) ⊕ Fin ((n + 1) + 0)))
 
 /-- The stage's family, pulled back along the relabel. -/
+@[expose]
 noncomputable def stepDataGlued (𝒟 : DataFamily (stepFragment n V)) :
     DataFamily (V.gluePair (cutL n) (cutR n) (cutL_ne_cutR n)) :=
   relabelDataDown (stepIso n) 𝒟
@@ -132,6 +133,7 @@ theorem gluePair_eq_open (hop : V.pairing (V.boundaryFlag (cutL n))
 /-- **One stage of the composition, on the data.**  The family is
 chosen at the composition and pushed back: along the relabel, then
 across the glue. -/
+@[expose]
 noncomputable def stepDataDown (𝒟 : DataFamily (stepFragment n V)) :
     DataFamily V :=
   if hcl : V.pairing (V.boundaryFlag (cutL n))
@@ -329,6 +331,7 @@ section Iterate
 
 /-- **The family, pushed back to the base.**  A choice at the
 composition determines one at every stage, by ungluing. -/
+@[expose]
 noncomputable def pushData : (n : ℕ) →
     (V : Fragment (Fin (0 + n) ⊕ Fin (n + 0))) →
     DataFamily (glueInterface 0 n 0 V) → DataFamily V
@@ -340,6 +343,7 @@ open Classical in
 /-- **The closing cuts a subset carries.**  This is the ledger's
 `glueCount`, read on the colouring side: the count the base's summand
 is taken at rises by one at each of them. -/
+@[expose]
 noncomputable def carried : (n : ℕ) →
     (V : Fragment (Fin (0 + n) ⊕ Fin (n + 0))) →
     Finset V.Flag → ℕ

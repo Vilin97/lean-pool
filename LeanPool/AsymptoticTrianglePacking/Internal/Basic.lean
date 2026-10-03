@@ -22,7 +22,7 @@ Goals of this module:
 Everything here must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -31,14 +31,15 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V] [Fintype V]
 
 /-- The degree of a vertex `v` in a hypergraph `H`: the number of edges containing `v`. -/
-def degree (H : Finset (Finset V)) (v : V) : ℕ := (H.filter (fun e => v ∈ e)).card
+@[expose] def degree (H : Finset (Finset V)) (v : V) : ℕ := (H.filter (fun e => v ∈ e)).card
 
 /-- The codegree of a pair `x y`: the number of edges containing both. -/
+@[expose]
 def codegree (H : Finset (Finset V)) (x y : V) : ℕ :=
   (H.filter (fun e => x ∈ e ∧ y ∈ e)).card
 
 /-- `H` is `r`-uniform: every edge has exactly `r` vertices. -/
-def IsUniform (H : Finset (Finset V)) (r : ℕ) : Prop := ∀ e ∈ H, e.card = r
+@[expose] def IsUniform (H : Finset (Finset V)) (r : ℕ) : Prop := ∀ e ∈ H, e.card = r
 
 /-- A matching `M` in `H`: a subfamily of pairwise-disjoint edges. -/
 structure IsMatching (H M : Finset (Finset V)) : Prop where

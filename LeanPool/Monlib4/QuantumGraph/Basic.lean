@@ -26,7 +26,7 @@ import LeanPool.Monlib4.Preq.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Basic`.
 -/
 
-@[expose] public section
+public section
 
 local notation x " ⊗ₘ " y => TensorProduct.map x y
 
@@ -37,8 +37,7 @@ instance FiniteDimensional.innerProductSpace.complete {E : Type*} [NormedAddComm
 theorem symmMap_apply_schurMul {A B : Type*} [starAlgebra A] [starAlgebra B]
     [hA : QuantumSet A] [QuantumSet B] (f g : A →ₗ[ℂ] B) :
   symmMap ℂ _ _ (f •ₛ g) = (symmMap _ _ _ g) •ₛ (symmMap _ _ _ f) := by
-  rw [symmMap_apply, schurMul_real, schurMul_adjoint]
-  rfl
+  simp only [symmMap_apply, schurMul_real, schurMul_adjoint]
 
 alias QuantumSet.modAut_star := starAlgebra.modAut_star
 alias QuantumSet.modAut_zero := starAlgebra.modAut_zero
@@ -358,7 +357,7 @@ theorem QuantumSet.innerOne_map_one_isReal_ofReal
   rw [hf, QuantumSet.counit_isReal]
   simp
 /-- The star-algebra structure transported to the opposite algebra. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def starAlgebra.mulOpposite {A : Type*} [starAlgebra A] :
     starAlgebra Aᵐᵒᵖ where
   modAut r := (modAut (-r)).op
@@ -366,8 +365,7 @@ noncomputable def starAlgebra.mulOpposite {A : Type*} [starAlgebra A] :
   modAut_star _ x := by simp [← MulOpposite.op_star]
 attribute [local instance] starAlgebra.mulOpposite
 /-- The inner-product algebra structure transported to the opposite algebra. -/
-@[reducible]
-noncomputable def InnerProductAlgebra.mulOpposite {A :
+@[reducible, expose] noncomputable def InnerProductAlgebra.mulOpposite {A :
     Type*} [starAlgebra A] [InnerProductAlgebra A] :
     InnerProductAlgebra (Aᵐᵒᵖ) where
   norm_smul_le c x := by
@@ -430,7 +428,7 @@ theorem QuantumSet.counit_isFaithful {A : Type*} [starAlgebra A] [QuantumSet A] 
     map_eq_zero_iff _ (AlgEquiv.injective _)]
 
 /-- Opposite-algebra version of a module dual functional. -/
-def Module.Dual.op {R A : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A]
+@[expose] def Module.Dual.op {R A : Type*} [CommSemiring R] [AddCommMonoid A] [Module R A]
   (f : Module.Dual R A) :
   Module.Dual R Aᵐᵒᵖ :=
 (unop R).toLinearMap ∘ₗ LinearMap.op f
@@ -858,7 +856,7 @@ theorem
   rfl
 
 /-- Linear map sending a tensor to its first-coordinate orthonormal-basis expansion data. -/
-noncomputable def TensorProduct.ofOrthonormalBasisProd₁Lm
+@[expose] noncomputable def TensorProduct.ofOrthonormalBasisProd₁Lm
   {𝕜 E F : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
   [NormedAddCommGroup F] [InnerProductSpace 𝕜 F]
   {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] (b₁ : OrthonormalBasis ι₁ 𝕜 E)
@@ -930,7 +928,7 @@ theorem StarAlgEquiv.tensorProduct_map_isometry_of
 LinearMap.tensorProduct_map_isometry_of hf hg
 
 /-- Tensor product of two linear isometry equivalences. -/
-@[simps!]
+@[simps!, expose]
 noncomputable def LinearIsometryEquiv.TensorProduct.map {𝕜 A B C D : Type*} [RCLike 𝕜]
   [NormedAddCommGroup A] [NormedAddCommGroup B] [NormedAddCommGroup C] [NormedAddCommGroup D]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [InnerProductSpace 𝕜 D]
@@ -1108,6 +1106,7 @@ theorem lTensor_counit_PhiMap_rTensor_algebraLinearMap (x : B →ₗ[ℂ] B) :
   simp only [LinearMap.comp_assoc, LinearMap.rTensor_comp, LinearMap.lTensor_comp]
 
 /-- Linear functional computing the weighted number of edges of a quantum graph. -/
+@[expose]
 noncomputable def QuantumGraph.NumOfEdges {A : Type*} [starAlgebra A] [QuantumSet A] :
     (A →ₗ[ℂ] A) →ₗ[ℂ] ℂ where
   toFun f := ⟪1, f 1⟫_ℂ

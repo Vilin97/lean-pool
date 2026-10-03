@@ -47,7 +47,7 @@ the latter case, and Lemma 5.8 extends a multiple of the horizontal direction
 to a global period. The conclusion retains which input direction supplies it.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 

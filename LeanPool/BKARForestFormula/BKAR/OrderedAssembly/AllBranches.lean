@@ -19,7 +19,7 @@ family equals the expansion at every depth — the engine driving the proof
 of the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,6 +53,7 @@ At level zero it is the current fill-parameter remainder.  At level `n + 1` it
 exposes the current ordered-sector boundary term and recursively expands every
 active-edge remainder one level deeper.
 -/
+@[expose]
 noncomputable def allBranchesExpansion
     (choices : ActiveExtensionChoice V) :
     Nat → (F : Forest V) → List (Edge V) → List ℝ → ℝ →
@@ -94,6 +95,7 @@ theorem allBranchesExpansion_succ
 The pure boundary-sector tree with the same branching shape as
 `allBranchesExpansion`, but with no fill-parameter remainder at the leaves.
 -/
+@[expose]
 noncomputable def allBranchesBoundaryExpansion
     (choices : ActiveExtensionChoice V) :
     Nat → (F : Forest V) → List (Edge V) → List ℝ → ℝ →
@@ -139,6 +141,7 @@ This is a precise recursion-tree version of the usual smoothness and
 integrability requirements; the final smoothness API will discharge it in one
 place rather than weakening the induction theorem.
 -/
+@[expose]
 def allBranchesAnalytic
     (choices : ActiveExtensionChoice V) :
     Nat → (F : Forest V) → List (Edge V) → List ℝ → ℝ →

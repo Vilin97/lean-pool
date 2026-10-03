@@ -47,13 +47,13 @@ Plemelj boundary-value argument.
   `analyticOn_crouzeixPolynomialScalarCompanion` -- their interior forms.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set spectrum
 open scoped Interval Real
 
 /-- The scalar Cauchy companion of `p` on a smooth Jordan domain. -/
-noncomputable def crouzeixPolynomialScalarCompanion
+@[expose] noncomputable def crouzeixPolynomialScalarCompanion
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ) (z : ℂ) : ℂ :=
   (2 * (Real.pi : ℂ) * I)⁻¹ *
     contourIntegral
@@ -62,6 +62,7 @@ noncomputable def crouzeixPolynomialScalarCompanion
 
 /-- The scalar integral obtained by differentiating the Cauchy companion
 kernel with respect to its interior argument. -/
+@[expose]
 noncomputable def crouzeixPolynomialScalarCompanionDeriv
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ) (z : ℂ) : ℂ :=
   (2 * (Real.pi : ℂ) * I)⁻¹ *

@@ -20,7 +20,7 @@ representative to vanish.  The first isomorphism theorem then identifies the
 displayed quotient with the range of the graph-level divisor-class map.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -62,6 +62,7 @@ abbrev bananaCoordinateClassRange {g : ℕ} (B : Banana g) :=
   AddMonoidHom.mrange (bananaCoordinateClassHom B)
 
 /-- The displayed-quotient map to the coordinate class range. -/
+@[expose]
 def bananaDisplayedClassRangeHom {g : ℕ} (B : Banana g) :
     ((Fin (g + 1) → ℤ) ⧸ bananaDisplayedRelations B) →+
       bananaCoordinateClassRange B :=
@@ -98,6 +99,7 @@ theorem bananaDisplayedClassRangeHom_bijective
 /-- **Proposition 2.14, quotient form.**  Coordinates modulo the paper's
 displayed lattice are additively isomorphic to the degree-zero divisor-class
 range of the banana graph. -/
+@[expose]
 noncomputable def bananaDisplayedQuotientEquivClassRange
     {g : ℕ} (B : Banana g) :
     ((Fin (g + 1) → ℤ) ⧸ bananaDisplayedRelations B) ≃+

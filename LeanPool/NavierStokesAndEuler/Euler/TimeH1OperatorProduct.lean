@@ -18,7 +18,7 @@ coefficient multiplier and terminal primitive. Its integral is identified with
 the literal pointwise product by absolute continuity and uniqueness of primitives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -98,7 +98,7 @@ theorem operatorPath_absolutelyContinuous
   exact hl'.absolutelyContinuousOnInterval
 
 /-- The derivative of `A(t) Ju(t)`, constructed as an actual bounded L² operator. -/
-def productDerivative : TimeLp T E →L[ℝ] TimeLp T F :=
+@[expose] def productDerivative : TimeLp T E →L[ℝ] TimeLp T F :=
   (timeMultiplier T hT A').comp (primitiveTimeLp T hT) + timeMultiplier T hT A
 
 /-- The product derivative has its literal Leibniz-rule representative. -/
@@ -115,7 +115,7 @@ theorem productDerivative_ae (u : TimeLp T E) :
   rw [hadd, ha', ha, hu]
 
 /-- The actual pointwise coefficient-times-primitive path. -/
-def productPrimitive (u : TimeLp T E) : ℝ → F :=
+@[expose] def productPrimitive (u : TimeLp T E) : ℝ → F :=
   fun t => extendPath T hT A t (realPrimitive T u t)
 
 /-- Every such product has zero terminal trace. -/
@@ -200,8 +200,22 @@ theorem initialTrace_productDerivative [CompleteSpace E] [CompleteSpace F]
       HasDerivWithinAt (extendPath T hT A) (A' t) (Icc (0 : ℝ) T) t)
     (u : TimeLp T E) :
     initialTrace T hT (productDerivative T hT A A' u) =
-      A ⟨0, le_rfl, hT⟩ (initialTrace T hT u) :=
-  terminalPrimitive_productDerivative T hT A A' hA u ⟨0, le_rfl, hT⟩
+      A ⟨0, le_rfl, hT⟩ (initialTrace T hT u) := by
+  rw [initialTrace_apply, initialTrace_apply]
+  exact terminalPrimitive_productDerivative T hT A A' hA u ⟨0, le_rfl, hT⟩
+
+private theorem productDerivative_norm_basic (u : TimeLp T E) :
+    ‖productDerivative T hT A A' u‖ ≤
+      ‖A'‖ * ‖primitiveTimeLp T hT u‖ + ‖A‖ * ‖u‖ := by
+  simp only [productDerivative, add_apply, ContinuousLinearMap.comp_apply]
+  have hm (B : C(Icc (0 : ℝ) T, E →L[ℝ] F)) (v : TimeLp T E) :
+      ‖timeMultiplier T hT B v‖ ≤ ‖B‖ * ‖v‖ := by
+    calc
+      _ ≤ ‖timeMultiplier T hT B‖ * ‖v‖ := (timeMultiplier T hT B).le_opNorm v
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (timeMultiplier_norm_le T hT B) (norm_nonneg v)
+  exact (norm_add_le _ _).trans
+    (add_le_add (hm A' _) (hm A u))
 
 /-- A uniform bound on the actual derivative in terms of the coefficient and
 its derivative; the time primitive retains its sharp square-root bound. -/
@@ -209,15 +223,14 @@ theorem productDerivative_norm_le (u : TimeLp T E) :
     ‖productDerivative T hT A A' u‖ ≤
       (‖A'‖ * Real.sqrt (T^2/2) + ‖A‖) * ‖u‖ := by
   have hp : ‖primitiveTimeLp T hT u‖ ≤ Real.sqrt (T^2/2) * ‖u‖ := by
-    apply (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (Real.sqrt_nonneg _) (norm_nonneg _))).1
-    rw [mul_pow, Real.sq_sqrt (by positivity)]
-    exact primitiveTimeLp_norm_sq_le T hT u
-  change ‖timeMultiplier T hT A' (primitiveTimeLp T hT u) + timeMultiplier T hT A u‖ ≤ _
+    calc
+      _ ≤ ‖primitiveTimeLp (E := E) T hT‖ * ‖u‖ :=
+        (primitiveTimeLp (E := E) T hT).le_opNorm u
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        (primitiveTimeLp_norm_le (E := E) T hT) (norm_nonneg u)
   calc
-    _ ≤ ‖timeMultiplier T hT A' (primitiveTimeLp T hT u)‖ + ‖timeMultiplier T hT A u‖ :=
-      norm_add_le _ _
     _ ≤ ‖A'‖ * ‖primitiveTimeLp T hT u‖ + ‖A‖ * ‖u‖ :=
-      add_le_add (timeApply_bound T hT A' _) (timeApply_bound T hT A u)
+      productDerivative_norm_basic T hT A A' u
     _ ≤ ‖A'‖ * (Real.sqrt (T^2/2) * ‖u‖) + ‖A‖ * ‖u‖ := by
       apply add_le_add _ le_rfl
       apply mul_le_mul_of_nonneg_left _ (norm_nonneg A')

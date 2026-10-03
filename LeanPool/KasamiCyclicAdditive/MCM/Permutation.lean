@@ -28,7 +28,7 @@ that the MCM map has zero as its unique zero, this makes all multiplicative
 character sums preserved, hence the MCM map a permutation.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

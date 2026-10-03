@@ -15,7 +15,7 @@ of at least `maxDegree + 1` colours. Unused colours are included in the
 balancing, and every class has at most the ceiling of the average size.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Vizing
 

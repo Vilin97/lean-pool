@@ -23,14 +23,14 @@ belong to the topological-degree support layer, not the point-set foundation)
 live in `Degree.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace SphereOddDegree
 
 /-- The antipodal map on `S^n`, bundled as a continuous self-map. -/
-def antipodal (n : ℕ) : C(Sphere n, Sphere n) where
+@[expose] def antipodal (n : ℕ) : C(Sphere n, Sphere n) where
   toFun := fun x => -x
   continuous_toFun := continuous_neg
 
@@ -70,7 +70,7 @@ theorem antipodal_comp_antipodal (n : ℕ) :
 
 /-- The antipodal map as a self-homeomorphism of the sphere. It is its own
 inverse, since the antipodal map is an involution. -/
-def antipodalHomeomorph (n : ℕ) : Sphere n ≃ₜ Sphere n where
+@[expose] def antipodalHomeomorph (n : ℕ) : Sphere n ≃ₜ Sphere n where
   toFun := antipodal n
   invFun := antipodal n
   left_inv := antipodal_involutive n

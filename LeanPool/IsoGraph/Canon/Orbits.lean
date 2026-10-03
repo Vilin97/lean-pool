@@ -34,7 +34,7 @@ Instantiated with `P w := "the subtree below the child w is dominated"` and comb
 `Autos.reach_child_auto`, this says that skipping a marked child loses no leaf key.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -44,9 +44,10 @@ namespace Canon
 variable {P : Nat → Prop}
 
 /-- `mark` only ever flags points satisfying `P`. -/
-def MarkP (P : Nat → Prop) (mark : Array Bool) : Prop := ∀ w, mark[w]! = true → P w
+@[expose] def MarkP (P : Nat → Prop) (mark : Array Bool) : Prop := ∀ w, mark[w]! = true → P w
 
 /-- Every entry of the frontier satisfies `P`. -/
+@[expose]
 def StackP (P : Nat → Prop) (stack : Array Nat) : Prop := ∀ i, i < stack.size → P stack[i]!
 
 theorem markP_set {mark : Array Bool} {w : Nat} (hm : MarkP P mark) (hw : P w) :

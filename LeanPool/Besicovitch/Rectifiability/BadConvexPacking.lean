@@ -14,7 +14,7 @@ For a disjoint countable family of bad convex sets, the sum of their diameters i
 the mass outside the compact core.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

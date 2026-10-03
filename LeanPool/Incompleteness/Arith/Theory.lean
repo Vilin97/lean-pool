@@ -16,7 +16,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Completeness
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder
@@ -118,7 +118,7 @@ variable {L : Language} [(k : ℕ) → Encodable (L.Func k)] [(k : ℕ) →
   Encodable (L.Rel k)] [DefinableLanguage L]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
+@[expose, reducible]
 def singleton (φ : SyntacticFormula L) : Theory.Delta1Definable {φ} where
   ch := .ofZero (.mkSigma “x. x = ↑⌜φ⌝” (by simp)) _
   mem_iff {ψ} := by simp
@@ -723,6 +723,7 @@ section «lp_section_4»
 variable (T : Theory ℒₒᵣ) [T.Delta1Definable]
 
 /-- Provability predicate for arithmetic stronger than $\mathbf{R_0}$. -/
+@[expose]
 def _root_.LO.FirstOrder.Theory.Provableₐ (φ : V) : Prop := ((T + 𝐑₀').codeIn V).Provable φ
 
 variable {T}
@@ -735,6 +736,7 @@ section «lp_section_5»
 variable (T)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.FirstOrder.Theory.provableₐ : Sg1.Semisentence 1 := .mkSigma
   “p. !(T + 𝐑₀').tDef.prv p” (by simp)
 

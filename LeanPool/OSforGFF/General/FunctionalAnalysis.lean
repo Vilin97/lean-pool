@@ -67,7 +67,7 @@ focusing on integrability, Schwartz function properties, and L² embeddings.
 - `sub_const_hasTemperateGrowth`: Translation has temperate growth
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory NNReal ENNReal Complex
 open TopologicalSpace Measure
@@ -748,7 +748,7 @@ theorem SchwartzMap.translate_apply {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : SchwartzMap E F) (a x : E) :
-    f.translate a x = f (x - a) := rfl
+    f.translate a x = f (x - a) := by rfl
 
 /-! ### Schwartz Integrable Decay
 

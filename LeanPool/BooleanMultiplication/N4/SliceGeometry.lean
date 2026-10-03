@@ -18,7 +18,7 @@ proved from fixed exterior coordinates; no circuits or truth tables are
 enumerated.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -26,32 +26,33 @@ namespace N4
 noncomputable section
 
 /-- The two anchor variables used to slice the Boolean identities. -/
-def sliceX : LinearForm := aLinear 0
+@[expose] def sliceX : LinearForm := aLinear 0
 /-- The second polynomial constant coefficient, used as a slice anchor. -/
-def sliceY : LinearForm := bLinear 0
+@[expose] def sliceY : LinearForm := bLinear 0
 
 /-- The first complementary target directions. -/
-def sliceU : LinearForm := aLinear 1
+@[expose] def sliceU : LinearForm := aLinear 1
 /-- The second polynomial linear coefficient, complementary to its slice anchor. -/
-def sliceV : LinearForm := bLinear 1
+@[expose] def sliceV : LinearForm := bLinear 1
 
 /-- Sums of the three variables complementary to the zero place. -/
-def sliceABar : LinearForm := placeA 1 + placeA 0
+@[expose] def sliceABar : LinearForm := placeA 1 + placeA 0
 /-- The sum of the three second-polynomial input variables away from the zero-place anchor. -/
-def sliceBBar : LinearForm := placeB 1 + placeB 0
+@[expose] def sliceBBar : LinearForm := placeB 1 + placeB 0
 
 /-- Type A complementary quadratic part. -/
-def sliceQuadraticA : TwoForm := vectorWedge sliceABar sliceBBar
+@[expose] def sliceQuadraticA : TwoForm := vectorWedge sliceABar sliceBBar
 
 /-- The extra infinity-place term producing type B. -/
-def sliceInfinityQuadratic : TwoForm :=
+@[expose] def sliceInfinityQuadratic : TwoForm :=
   vectorWedge (placeA 2) (placeB 2)
 
 /-- Type B complementary quadratic part. -/
-def sliceQuadraticB : TwoForm :=
+@[expose] def sliceQuadraticB : TwoForm :=
   sliceQuadraticA + sliceInfinityQuadratic
 
 /-- The plane spanned by the complementary evaluation-at-one input directions. -/
+@[expose]
 def InSliceComplementPlane (ell : LinearForm) : Prop :=
   ∃ a b : F₂, ell = a • sliceABar + b • sliceBBar
 

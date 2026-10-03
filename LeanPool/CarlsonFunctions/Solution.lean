@@ -28,7 +28,7 @@ source revision; this import does not maintain that upstream comparison.
 [carlsonAudit]: https://github.com/bjbraams/lean-codes/blob/fcc2be9a086c1bdd572db91f005e868b80a8d644/PALOMAR.md
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped Topology Matrix

@@ -26,7 +26,7 @@ factorization these feed is `BlockFactor.lean`, and the Frobenius
 identity itself `BlockAssembly.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -23,7 +23,7 @@ Its raw PDE, tangent constraint, parity, actual Field witnesses, true time
 derivative, pressure gradient and literal curl corrector are all exported.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

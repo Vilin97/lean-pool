@@ -27,7 +27,7 @@ section
 /-! Source budgets and the actual zero-history initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,6 +45,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized exact packet, given by `exactPacketOfResidual period Q
 (forwardInitializedApproximationResidual M D hTime δ hδ ξ hs α Cagree N hN k hk)`. -/
+@[expose]
 def forwardInitializedExactPacket (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Q : Budget period D.T_pos
@@ -106,7 +107,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,6 +131,7 @@ variable (M : EulerMeanPacketProvider.Data)
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk))
 
 /-- Forward initialized exact physical velocity as an element of `Space`. -/
+@[expose]
 def forwardInitializedExactPhysicalVelocity (t : Icc (0 : ℝ) D.T) (Y : Space → Space) (x : Space) :
     Space :=
   k⁻¹ • D.F.field t (Y x)
@@ -190,6 +192,7 @@ theorem forwardInitializedExactPhysicalVelocity_fderiv (t : Icc (0 : ℝ) D.T)
 
 /-- Forward initialized exact physical pressure, given by `(forwardInitializedExactPacket M D
 hTime δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y`. -/
+@[expose]
 def forwardInitializedExactPhysicalPressure (t : Icc (0 : ℝ) D.T) (Y : Space → Space) : Space → ℝ :=
   (forwardInitializedExactPacket M D hTime δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y
 

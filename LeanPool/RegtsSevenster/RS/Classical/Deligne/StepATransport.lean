@@ -18,7 +18,7 @@ recombined with the splitting of the remainder: one further unit
 summand joins the mixed free part.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ attribute [local instance]
   hasBinaryBiproducts_of_finite_biproducts
 
 /-- **Base change on morphisms of modules.** -/
+@[expose]
 noncomputable def baseChangeMapMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -56,6 +57,7 @@ noncomputable def baseChangeMapMod
       modTensorMap A (𝟙 (restrictRegular φ)) g := rfl
 
 /-- **Base change is functorial on isomorphisms.** -/
+@[expose]
 noncomputable def baseChangeMapIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

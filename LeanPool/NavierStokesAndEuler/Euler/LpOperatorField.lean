@@ -20,7 +20,7 @@ to the closed supported spaces, where its norm needs a bound only on the
 support region. This supplies the physical frame and projected forcing maps.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -69,14 +69,14 @@ theorem apply_memLp (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
       (mul_le_mul_of_nonneg_right (A.norm_coe_le_norm x) (norm_nonneg _)))
 
 /-- Actual application to a Bochner L² class. -/
-def applyField (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) : Lp F 2 μ :=
+@[expose] def applyField (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) : Lp F 2 μ :=
   (apply_memLp μ A u).toLp (fun x => A x (u x))
 
 theorem applyField_ae (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
     applyField μ A u =ᵐ[μ] fun x => A x (u x) := (apply_memLp μ A u).coeFn_toLp
 
 /-- Full linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def fullLinear (A : α →ᵇ (E →L[ℝ] F)) : Lp E 2 μ →ₗ[ℝ] Lp F 2 μ where
+@[expose] def fullLinear (A : α →ᵇ (E →L[ℝ] F)) : Lp E 2 μ →ₗ[ℝ] Lp F 2 μ where
   toFun := applyField μ A
   map_add' u v := by
     apply Lp.ext
@@ -102,7 +102,7 @@ theorem applyField_norm (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
     (mul_le_mul_of_nonneg_right (A.norm_coe_le_norm x) (norm_nonneg _))
 
 /-- The actual bounded rectangular multiplier on full spatial L². -/
-def full (A : α →ᵇ (E →L[ℝ] F)) : Lp E 2 μ →L[ℝ] Lp F 2 μ :=
+@[expose] def full (A : α →ᵇ (E →L[ℝ] F)) : Lp E 2 μ →L[ℝ] Lp F 2 μ :=
   (fullLinear μ A).mkContinuous ‖A‖ (applyField_norm μ A)
 
 theorem full_ae (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
@@ -134,7 +134,7 @@ theorem full_smul (r : ℝ) (A : α →ᵇ (E →L[ℝ] F)) : full μ (r • A) 
   rfl
 
 /-- Rectangular multiplier formation is itself a linear contraction. -/
-def fullMap : (α →ᵇ (E →L[ℝ] F)) →L[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 μ) where
+@[expose] def fullMap : (α →ᵇ (E →L[ℝ] F)) →L[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 μ) where
   toLinearMap := { toFun := full μ, map_add' := full_add μ, map_smul' := full_smul μ }
   cont := AddMonoidHomClass.continuous_of_bound
     ({ toFun := full μ, map_add' := full_add μ, map_smul' := full_smul μ } :
@@ -142,6 +142,10 @@ def fullMap : (α →ᵇ (E →L[ℝ] F)) →L[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 
     (fun A => by
       change ‖full μ A‖ ≤ (1 : ℝ)*‖A‖
       simpa only [one_mul] using full_norm μ A)
+
+@[simp] theorem fullMap_apply (A : α →ᵇ (E →L[ℝ] F)) :
+    fullMap μ A = full μ A := by
+  rfl
 
 theorem fullMap_norm : ‖fullMap (E := E) (F := F) μ‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -169,7 +173,7 @@ theorem full_mem (A : α →ᵇ (E →L[ℝ] F)) (u : supportedSpace (V := E) μ
   rw [ha,hu hx,map_zero]
 
 /-- The genuine rectangular multiplier between the supported Hilbert spaces. -/
-def supported (A : α →ᵇ (E →L[ℝ] F)) :
+@[expose] def supported (A : α →ᵇ (E →L[ℝ] F)) :
     supportedSpace (V := E) μ S hS →L[ℝ] supportedSpace (V := F) μ S hS :=
   ((full μ A).comp (supportedSpace μ S hS).subtypeL).codRestrict
     (supportedSpace μ S hS) (full_mem μ S hS A)

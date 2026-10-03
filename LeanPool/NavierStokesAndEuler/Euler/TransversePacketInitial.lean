@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-! The constructed raw forward field has the prescribed actual initial data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

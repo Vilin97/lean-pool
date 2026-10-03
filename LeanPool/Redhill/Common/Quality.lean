@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.PrincipalIdealDomain
 # Qualities of tuples and sets of tuples
 -/
 
-@[expose] public section
+public section
 
 
 open Finset Real ENNReal
@@ -25,7 +25,7 @@ variable {n : ℕ}
 open UniqueFactorizationMonoid in
 /-- The quality of a single tuple.
 This depends on Lean defining `log -x = log x` for all real `x`. -/
-noncomputable def tupleQuality (a : Fin n → ℤ) : ℝ≥0∞ :=
+@[expose] noncomputable def tupleQuality (a : Fin n → ℤ) : ℝ≥0∞ :=
   .ofReal (log (maxAbs a) / log (radical (∏ i, a i) : ℤ))
 
 /-- The quality of a set of tuples, defined as the infimum of those numbers where

@@ -19,7 +19,7 @@ resulting strict nested exhaustion, including the canonical specialization to
 the closed numerical range of an operator.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

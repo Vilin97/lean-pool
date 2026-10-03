@@ -20,7 +20,7 @@ The actual source history with prescribed compact terminal displacement.
 the constructed affine-endpoint inverse, not imposed as a solution law.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,6 +42,7 @@ def displacementPath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointDisplacement P (Y.value : CylinderL2 P U)
 
 /-- Coordinate path, given by `B.coefficients.endpointCoordinate P (Y.value : CylinderL2 P U)`. -/
+@[expose]
 def coordinatePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointCoordinate P (Y.value : CylinderL2 P U)
 
@@ -51,10 +52,12 @@ def coordinateDerivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.endpointAcceleration P (Y.value : CylinderL2 P U)
 
 /-- Velocity path, given by `B.coefficients.endpointVelocity P (Y.value : CylinderL2 P U)`. -/
+@[expose]
 def velocityPath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.endpointVelocity P (Y.value : CylinderL2 P U)
 
 /-- Derivative path, given by `B.coefficients.endpointDerivative P (Y.value : CylinderL2 P U)`. -/
+@[expose]
 def derivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.endpointDerivative P (Y.value : CylinderL2 P U)
 
@@ -127,7 +130,7 @@ theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) :
   B.coefficients.endpointDerivative_mean_zero P Y.value Y.mean_zero t
 
 /-- Terminal initial, bundling `value`, `orbit`, `mean_zero`. -/
-def terminalInitial : InitialData P D where
+@[expose] def terminalInitial : InitialData P D where
   value := ⟨coordinatePath B Y ⟨D.T,D.T_pos.le,le_rfl⟩,
     coordinatePath_supported B Y _⟩
   orbit := (ContinuousMap.evalCLM ℝ ⟨D.T,D.T_pos.le,le_rfl⟩ :

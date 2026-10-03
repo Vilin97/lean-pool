@@ -17,14 +17,14 @@ file supplies the canonical rotating-frame momentum and embeds the resonant elli
 four-dimensional phase space.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Inertial Cartesian velocity of the eccentric-anomaly ellipse when the mean anomaly advances
 at rate `meanMotion`. -/
-noncomputable def inertialEllipseVelocity
+@[expose] noncomputable def inertialEllipseVelocity
     (firstAction eccentricity meanMotion anomaly : ℝ) : ActionSpace :=
   ![-firstAction ^ 2 * meanMotion * Real.sin anomaly /
       (1 - eccentricity * Real.cos anomaly),
@@ -32,7 +32,7 @@ noncomputable def inertialEllipseVelocity
       (1 - eccentricity * Real.cos anomaly)]
 
 /-- Canonical momentum of an oriented resonant ellipse in rotating coordinates. -/
-noncomputable def orientedResonantEllipseMomentum
+@[expose] noncomputable def orientedResonantEllipseMomentum
     (p q : ℕ) (eccentricity orientation time : ℝ) : ActionSpace :=
   positionInRotatingFrame (time - orientation)
     (inertialEllipseVelocity (resonantFirstAction p q) eccentricity
@@ -40,11 +40,11 @@ noncomputable def orientedResonantEllipseMomentum
       (resonantEccentricAnomaly p q eccentricity time))
 
 /-- Embed planar position and canonical momentum into `(x,y,pₓ,pᵧ)` phase space. -/
-def positionMomentumPhasePoint (position momentum : ActionSpace) : PhaseSpace :=
+@[expose] def positionMomentumPhasePoint (position momentum : ActionSpace) : PhaseSpace :=
   ![position 0, position 1, momentum 0, momentum 1]
 
 /-- The genuine full phase-space orbit underlying the oriented resonant disturbing function. -/
-noncomputable def orientedResonantKeplerPhasePoint
+@[expose] noncomputable def orientedResonantKeplerPhasePoint
     (p q : ℕ) (eccentricity orientation time : ℝ) : PhaseSpace :=
   positionMomentumPhasePoint
     (orientedResonantEllipsePosition p q eccentricity orientation time)

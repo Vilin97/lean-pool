@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 The word fields retain all genuine L² derivatives; no Sobolev regularity
 or distributional derivative is postulated. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLpTranslation
 open scoped ContDiff ENNReal
 
 /-- Axis, given by `EuclideanSpace.single i 1`. -/
-def axis (i : Fin 3) : Space := EuclideanSpace.single i 1
+@[expose] def axis (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 @[simp] theorem axis_norm (i : Fin 3) : ‖axis i‖ = 1 := by
   simp [axis]
@@ -43,12 +43,12 @@ theorem field_ext {A B : SmoothL2Field V} (h : A.field = B.field) : A = B := by
 
 /-- Word field as an element of `{n : ℕ} → (Fin n → Fin 3) → SmoothL2Field V | 0, _ => A | _+1,
 w => (wordField A (Fin.tail w)).directionalField (axis (w 0))`. -/
-def wordField (A : SmoothL2Field V) : {n : ℕ} → (Fin n → Fin 3) → SmoothL2Field V
+@[expose] def wordField (A : SmoothL2Field V) : {n : ℕ} → (Fin n → Fin 3) → SmoothL2Field V
   | 0, _ => A
   | _+1, w => (wordField A (Fin.tail w)).directionalField (axis (w 0))
 
 @[simp] theorem wordField_zero (A : SmoothL2Field V) (w : Fin 0 → Fin 3) :
-    wordField A w = A := rfl
+    wordField A w = A := by rfl
 
 @[simp] theorem wordField_cons (A : SmoothL2Field V) {n : ℕ}
     (w : Fin n → Fin 3) (i : Fin 3) :
@@ -109,11 +109,11 @@ def wordSize (s : ℕ) (A : SmoothL2Field V) : ℝ :=
   ∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖
 
 /-- Word energy, given by `∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖^2`. -/
-def wordEnergy (s : ℕ) (A : SmoothL2Field V) : ℝ :=
+@[expose] def wordEnergy (s : ℕ) (A : SmoothL2Field V) : ℝ :=
   ∑ n ∈ range (s+1), ∑ w : Fin n → Fin 3, ‖(wordField A w).toLp‖^2
 
 /-- Word bound, given by `∀ n ≤ s, ∀ w : Fin n → Fin 3, ‖(wordField A w).toLp‖ ≤ M`. -/
-def WordBound (s : ℕ) (M : ℝ) (A : SmoothL2Field V) : Prop :=
+@[expose] def WordBound (s : ℕ) (M : ℝ) (A : SmoothL2Field V) : Prop :=
   ∀ n ≤ s, ∀ w : Fin n → Fin 3, ‖(wordField A w).toLp‖ ≤ M
 
 theorem wordEnergy_nonneg (s : ℕ) (A : SmoothL2Field V) : 0 ≤ wordEnergy s A :=

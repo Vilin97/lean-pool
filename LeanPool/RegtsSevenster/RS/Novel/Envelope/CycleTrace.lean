@@ -26,7 +26,7 @@ arbitrary endomorphism on the top factor through the induction is
 what makes the accumulated copies of `g` bookkeepable.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

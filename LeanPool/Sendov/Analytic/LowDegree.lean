@@ -37,7 +37,7 @@ equality examples.
 * `Sendov.lowJ_lt_one`: `J_m(a) < 1` for `0 < a < 1` and `1 ≤ m ≤ 4`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

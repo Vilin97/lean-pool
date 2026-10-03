@@ -22,7 +22,7 @@ the spatial curl, and requires neither a lower support radius nor estimates
 on the individual summands.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ abbrev Space := ProblemStatement.Space
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- The actual Cartesian distance to the symmetry axis. -/
-noncomputable def radius (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def radius (w : SpaceTime) : ℝ :=
   PolarCharts.radius (PhysicalGraphBounds.radialProjection w)
 
 theorem radius_continuous : Continuous radius :=
@@ -57,6 +57,7 @@ theorem radius_pos_at_terminal {x : Space} (hx : x ≠ 0) (hz : x 2 = 0) :
 
 /-- The support radius uses the same physical similarity coordinate as the
 wave construction, rather than a separately postulated scale. -/
+@[expose]
 noncomputable def outerRadius (h C : ℝ) (w : SpaceTime) : ℝ :=
   C * Real.sqrt (PhysicalWaveSum.physicalQ h w)
 
@@ -112,6 +113,7 @@ variable {V : Type*} [Zero V]
 
 /-- A pointwise physical support invariant.  It contains no endpoint or
 derivative assertion. -/
+@[expose]
 def ShrinkingSupport (h C : ℝ) (f : SpaceTime → V) : Prop :=
   ∀ w, w.1 < 1 → f w ≠ 0 → radius w ≤ outerRadius h C w
 

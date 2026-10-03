@@ -28,7 +28,7 @@ ripple outward.
   converted locally — the interpolation consumer holds the former.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

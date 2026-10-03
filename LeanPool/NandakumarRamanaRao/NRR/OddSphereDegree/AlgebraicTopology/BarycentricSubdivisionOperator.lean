@@ -45,7 +45,7 @@ boundary. The required boundary theorem is the face/sign calculation
 Only after that theorem is proved should one package `sd` as a genuine chain map.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -72,7 +72,7 @@ theorem continuous_affineSubdivMap (n : ℕ) (π : Equiv.Perm (Fin (n + 1))) :
   exact continuous_pi fun j => continuous_affineSubdivMapFun_coord n π j
 
 /-- The affine subdivision simplex as a bundled continuous self-map of `Δⁿ`. -/
-noncomputable def affineSubdivContinuousMap (n : ℕ)
+@[expose] noncomputable def affineSubdivContinuousMap (n : ℕ)
     (π : Equiv.Perm (Fin (n + 1))) : C(Delta n, Delta n) :=
   ⟨affineSubdivMap n π, continuous_affineSubdivMap n π⟩
 
@@ -83,7 +83,7 @@ noncomputable def affineSubdivContinuousMap (n : ℕ)
 /-! ## 2. Singular-simplex summands -/
 
 /-- Coordinate realization of Mathlib's intrinsic simplex. -/
-noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
+@[expose] noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
     Convexity.StdSimplex ℝ (Fin (n + 1)) ≃ₜ Delta n where
   toFun x := ⟨x.weights, x.nonneg, by simp⟩
   invFun x :=
@@ -102,14 +102,14 @@ noncomputable def intrinsicSimplexCoordinates (n : ℕ) :
 /-- Convert a singular simplex, represented as a simplex of `TopCat.toSSet.obj X`,
 to the corresponding bundled continuous map out of the topological standard
 simplex. -/
-noncomputable def singularSimplexAsContinuousMap (X : TopCat.{0}) (n : ℕ)
+@[expose] noncomputable def singularSimplexAsContinuousMap (X : TopCat.{0}) (n : ℕ)
     (σ : singularSimplices X n) : C(Delta n, X) :=
   ((X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))) σ).comp
     ⟨(intrinsicSimplexCoordinates n).symm, (intrinsicSimplexCoordinates n).symm.continuous⟩
 
 /-- Convert a bundled continuous map out of the standard simplex into the
 corresponding simplex of the singular simplicial set. -/
-noncomputable def continuousMapAsSingularSimplex (X : TopCat.{0}) (n : ℕ)
+@[expose] noncomputable def continuousMapAsSingularSimplex (X : TopCat.{0}) (n : ℕ)
     (σ : C(Delta n, X)) : singularSimplices X n :=
   (X.toSSetObjEquiv (Opposite.op (⦋n⦌ : SimplexCategory))).symm
     (σ.comp ⟨intrinsicSimplexCoordinates n, (intrinsicSimplexCoordinates n).continuous⟩)
@@ -129,7 +129,7 @@ noncomputable def continuousMapAsSingularSimplex (X : TopCat.{0}) (n : ℕ)
 
 /-- The `π`-summand of barycentric subdivision of a singular simplex: precompose
 `σ : Δⁿ → X` with the affine subdivision simplex `a_π : Δⁿ → Δⁿ`. -/
-noncomputable def barycentricSubdivSimplex (X : TopCat.{0}) (n : ℕ)
+@[expose] noncomputable def barycentricSubdivSimplex (X : TopCat.{0}) (n : ℕ)
     (π : Equiv.Perm (Fin (n + 1))) (σ : singularSimplices X n) :
     singularSimplices X n :=
   continuousMapAsSingularSimplex X n
@@ -153,19 +153,19 @@ noncomputable abbrev singularChainGroup (R : Type) [CommRing R] (X : TopCat.{0})
   (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X n
 
 /-- The basis chain associated to a singular simplex. -/
-noncomputable def chainGenerator (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ)
+@[expose] noncomputable def chainGenerator (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ)
     (σ : singularSimplices X n) : singularChainGroup R X n :=
   ((Sigma.ι (fun (_ : singularSimplices X n) => ModuleCat.of R R) σ).hom (1 : R))
 
 /-- The sign of a finite permutation, interpreted in a coefficient ring. For
 `R = ℤ` this is `±1`; for `R = ZMod 2` both signs become `1`. -/
-noncomputable def permSignCoeff (R : Type) [CommRing R] {n : ℕ}
+@[expose] noncomputable def permSignCoeff (R : Type) [CommRing R] {n : ℕ}
     (π : Equiv.Perm (Fin (n + 1))) : R :=
   ((Equiv.Perm.sign π : ℤ) : R)
 
 /-- The barycentric subdivision of a basis singular simplex as a chain in the
 same degree. -/
-noncomputable def barycentricSubdivisionGenerator (R : Type) [CommRing R]
+@[expose] noncomputable def barycentricSubdivisionGenerator (R : Type) [CommRing R]
     (X : TopCat.{0}) (n : ℕ) (σ : singularSimplices X n) : singularChainGroup R X n :=
   ∑ π : Equiv.Perm (Fin (n + 1)),
     permSignCoeff R π • chainGenerator R X n (barycentricSubdivSimplex X n π σ)
@@ -243,7 +243,7 @@ theorem barycentricSubdivisionLinearMap_smul (R : Type) [CommRing R]
 
 /-- The singular boundary map `∂ : C_{n+1}(X; R) → C_n(X; R)`, i.e. the
 differential of the singular chain complex with coefficients in `R`. -/
-noncomputable def singularBoundary (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ) :
+@[expose] noncomputable def singularBoundary (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ) :
     singularChainGroup R X (n + 1) ⟶ singularChainGroup R X n :=
   (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).d (n + 1) n
 

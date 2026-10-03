@@ -32,7 +32,7 @@ This file implements blueprint nodes S01, S02 and S03 of
 Throughout, `n` denotes `Fintype.card ι`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 
@@ -64,10 +64,12 @@ section Box
 variable {R ι : Type*} [CommRing R]
 
 /-- Blueprint S01: the sup-box of radius `T`, `{x | ∀ i, |σ i x| ≤ T}`. -/
+@[expose]
 def box (σ : ι → R →+* ℝ) (T : ℝ) : Set R := {x | ∀ i, |σ i x| ≤ T}
 
 /-- Blueprint S01: the Euclidean embedding `x ↦ (σ i x)_i`, as an additive group homomorphism
 into `EuclideanSpace ℝ ι`. -/
+@[expose]
 def emb (σ : ι → R →+* ℝ) : R →+ EuclideanSpace ℝ ι where
   toFun x := WithLp.toLp 2 fun i ↦ σ i x
   map_zero' := by ext i; simp
@@ -175,6 +177,7 @@ section Trace
 variable {R ι : Type*} [CommRing R] [Fintype ι]
 
 /-- Blueprint S01: the trace `∑ i, σ i x`. -/
+@[expose]
 def trace (σ : ι → R →+* ℝ) (x : R) : ℝ := ∑ i, σ i x
 
 variable (σ : ι → R →+* ℝ)

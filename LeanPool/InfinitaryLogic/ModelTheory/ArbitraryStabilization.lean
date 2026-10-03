@@ -29,7 +29,7 @@ of the audited thin bridge) then upgrades stabilized `BFEquiv α` to EVERY ordin
 (`bfEquiv_all_of_stabilizesCompletely_arbitrary`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

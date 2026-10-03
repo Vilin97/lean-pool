@@ -17,7 +17,7 @@ all-branches expansion behind the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,6 +38,7 @@ At a general recursion node, the selected terminal tail integral can be
 compared to the one-step active-extension integral. The difference is the
 piece that remains to be expanded by the all-branches induction.
 -/
+@[expose]
 noncomputable def localFirstTailRemainder
     (data : ActiveTerminalBranchData F)
     (e : {e // e ∈ F.activeEdges})

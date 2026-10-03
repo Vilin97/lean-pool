@@ -20,16 +20,18 @@ established by `decide` over the two surviving flags, with the
 inverse flag map given canonically by the boundary-flag function.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The left snake fragment `(coev ⊗ id) ∘ (id ⊗ ev)`. -/
+@[expose]
 noncomputable def snakeFragL : Fragment (Fin (1 + 1)) :=
   (tensorFragment coevFrag (strandBundle 1)).compose
     (tensorFragment (strandBundle 1) evFrag)
 
 /-- The right snake fragment `(id ⊗ coev) ∘ (ev ⊗ id)`. -/
+@[expose]
 noncomputable def snakeFragR : Fragment (Fin (1 + 1)) :=
   (tensorFragment (strandBundle 1) coevFrag).compose
     (tensorFragment evFrag (strandBundle 1))
@@ -156,6 +158,7 @@ noncomputable def snakeFragREquiv :
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The identity class on one strand. -/
+@[expose]
 noncomputable def idClass : HomSpace f.val (1 + 1) :=
   HomSpace.ofFragment f.val (strandBundle 1)
 

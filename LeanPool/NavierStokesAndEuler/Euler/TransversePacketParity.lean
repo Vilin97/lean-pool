@@ -34,7 +34,7 @@ representation. Consequently coefficient symmetries pass to the solution
 without assuming any corresponding symmetry of that representation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,7 +111,7 @@ section
 
 /-! Actual supported forward evolution preserves joint odd parity for even coefficients. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -170,7 +170,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -281,7 +281,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -331,7 +331,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
 /-- Forcing field, bundling `path`, `orbit`, `raw_eq`. -/
-def forcingField : Field P D.T raw where
+@[expose] def forcingField : Field P D.T raw where
   path := includePath P D.support D.support_measurable G.path
   orbit := G.path_orbit
   raw_eq := G.raw_eq

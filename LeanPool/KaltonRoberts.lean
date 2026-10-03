@@ -30,4 +30,4 @@ Tags: functional-analysis, finitely-additive-measures, kalton-roberts
 MSC: 46B20, 28A12, 05C35
 -/
 
-@[expose] public section
+public section

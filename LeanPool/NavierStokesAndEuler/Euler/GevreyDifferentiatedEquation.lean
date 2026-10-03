@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyCorrectionForcing
 
 /-! Exact spatial differentiation of the actual nonlinear correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,6 +33,7 @@ synthesis. -/
 local instance diffEqSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual continuous linear map taking one external and one base derivative word. -/
+@[expose]
 def energyWordOperator {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (I : ExternalWord N) (a : BaseWord q) :
     SobolevSpace period s →L[ℝ] LiftL2 period :=
   ((valueOperator period 0).comp
@@ -69,7 +70,7 @@ theorem energyValues_sub {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (u v : Sobolev
   simp only [← energyWordOperator_apply, map_sub, Pi.sub_apply]
 
 /-- The literal undifferentiated transport acting on the final external/base derivative. -/
-def topTransport {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
+@[expose] def topTransport {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (u v : SobolevSpace period (s + 1)) :
     ExternalWord N → BaseWord 6 → LiftL2 period := fun I a =>
   transportL2Bilinear period (by norm_num : 3 ≤ 7) L

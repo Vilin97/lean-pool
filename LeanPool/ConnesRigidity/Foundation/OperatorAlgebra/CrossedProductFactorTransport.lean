@@ -27,7 +27,7 @@ measure-preserving homeomorphism transports that closure. The homeomorphism is
 not required to preserve the addition on either compact group.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace CrossedProduct
@@ -182,7 +182,7 @@ local instance haarProbabilityTarget
   Y.probability
 
 /-- Apply a bounded operator to each fibre of a square-summable family. -/
-def crossedFiberwiseOperatorContinuousLinearMap
+@[expose] def crossedFiberwiseOperatorContinuousLinearMap
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] :
     (E →L[ℂ] E) →L[ℂ]
       (lp (fun _ : K ↦ E) 2 →L[ℂ] lp (fun _ : K ↦ E) 2) := by
@@ -222,7 +222,7 @@ def crossedFiberwiseOperatorContinuousLinearMap
 
 /-- Continuous coefficients act as a continuous family of fiberwise
 multipliers on the regular crossed-product Hilbert space. -/
-def continuousCrossedMultiplier
+@[expose] def continuousCrossedMultiplier
     (X : HaarProbabilityAction K Ω) :
     C(Ω, ℂ) →L[ℂ] (crossedHilbert X →L[ℂ] crossedHilbert X) :=
   (crossedFiberwiseOperatorContinuousLinearMap (K := K)
@@ -248,7 +248,7 @@ def continuousCrossedGeneratorSet
 
 /-- The regular crossed-product generators cut down to a specified family of
 continuous coefficients, together with all action unitaries. -/
-def crossedGeneratorSetOfContinuousCoefficients
+@[expose] def crossedGeneratorSetOfContinuousCoefficients
     (X : HaarProbabilityAction K Ω) {I : Type*} (v : I → C(Ω, ℂ)) :
     Set (crossedHilbert X →L[ℂ] crossedHilbert X) :=
   Set.range (fun i ↦ continuousCrossedMultiplier X (v i)) ∪

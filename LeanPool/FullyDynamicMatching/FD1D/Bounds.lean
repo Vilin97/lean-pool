@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Expectations
 
 /-! # Bounds -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 

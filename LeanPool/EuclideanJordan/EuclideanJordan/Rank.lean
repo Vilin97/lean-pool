@@ -55,7 +55,7 @@ without restating it.
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -72,6 +72,7 @@ The third clause is stated in the ambient algebra — `d` idempotent with `c ∘
 membership in `peirceOneSub` — rather than over the subtype, so that it can be checked without
 first producing the subalgebra.  `isPrimitive_iff_of_idem` below is the two readings'
 equivalence. -/
+@[expose]
 def IsPrimitive (c : J) : Prop :=
   c * c = c ∧ c ≠ 0 ∧ ∀ d : J, d * d = d → c * d = d → d = 0 ∨ d = c
 

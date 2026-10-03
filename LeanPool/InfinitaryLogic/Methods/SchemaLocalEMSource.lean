@@ -30,7 +30,7 @@ a contradiction. The universal sentence is therefore positive, and the truth lem
 into the quotient.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -67,9 +67,18 @@ theorem schemaTerm_localSkolemUniversalForColim
     schemaTermStructure hM
   let : (localColim s₀).Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
     (lhomWithConstants (localColim s₀) ℕ).reduct _
-  have : (lhomWithConstants (localColim s₀) ℕ).IsExpansionOn
-      (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
-    LHom.isExpansionOn_reduct _ _
+  let expandedStructure :
+      (localColim s₀)[[ℕ]].Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
+    schemaTermStructure hM
+  let reductStructure :
+      (localColim s₀).Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
+    (lhomWithConstants (localColim s₀) ℕ).reduct _
+  have hExpansion : @LHom.IsExpansionOn (localColim s₀) ((localColim s₀)[[ℕ]])
+      (lhomWithConstants (localColim s₀) ℕ)
+      (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+      reductStructure expandedStructure :=
+    LHom.isExpansionOn_reduct (lhomWithConstants (localColim s₀) ℕ)
+      (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
   refine ⟨?_⟩
   intro k n ψ h xs hψw
   classical
@@ -118,7 +127,10 @@ theorem schemaTerm_localSkolemUniversalForColim
     have hnegBase : (negBody.mapLanguage (LlocalInclusion s₀ (k + 1))).Realize
         (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
         (fun i => SchemaTermCarrier.mk hM (args i)) :=
-      (BoundedFormulaω.realize_mapLanguage (lhomWithConstants (localColim s₀) ℕ)
+      (@BoundedFormulaω.realize_mapLanguage (localColim s₀) Empty _
+        ((localColim s₀)[[ℕ]]) (lhomWithConstants (localColim s₀) ℕ)
+        (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+        reductStructure expandedStructure hExpansion
         (negBody.mapLanguage (LlocalInclusion s₀ (k + 1)))
         (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
         (fun i => SchemaTermCarrier.mk hM (args i))).mp hnegReal
@@ -176,7 +188,10 @@ theorem schemaTerm_localSkolemUniversalForColim
   have hallBase : ((BoundedFormulaω.all ψ).mapLanguage (LlocalInclusion s₀ k)).Realize
       (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
       (fun i => SchemaTermCarrier.mk hM (ts i)) :=
-    (BoundedFormulaω.realize_mapLanguage (lhomWithConstants (localColim s₀) ℕ)
+    (@BoundedFormulaω.realize_mapLanguage (localColim s₀) Empty _
+        ((localColim s₀)[[ℕ]]) (lhomWithConstants (localColim s₀) ℕ)
+        (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+        reductStructure expandedStructure hExpansion
       ((BoundedFormulaω.all ψ).mapLanguage (LlocalInclusion s₀ k))
       (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
       (fun i => SchemaTermCarrier.mk hM (ts i))).mp hall
@@ -198,7 +213,7 @@ realization the Morley-seed agreement consumes. -/
 /-- **The schema local-EM context** over an arbitrary target order `J`: sequence `schemaSeq`,
 family `ΓEMlocal`, tail indiscernibility from the full (cutoff-`0`) indiscernibility, atoms by
 the `ΓEMlocal` dischargers. -/
-noncomputable def schemaTermLocalEMContext
+@[expose] noncomputable def schemaTermLocalEMContext
     (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M) (J : Type) [LinearOrder J] :
     letI : (localColim s₀).Structure M := localColimStructure s₀
     letI : (localColim s₀)[[ℕ]].Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=

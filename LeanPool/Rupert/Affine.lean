@@ -13,7 +13,7 @@ public import Mathlib.Geometry.Euclidean.Projection
 Imported Lean Pool material for `LeanPool.Rupert.Affine`.
 -/
 
-@[expose] public section
+public section
 
 /-- The Rupert Property for a pair of subsets X, Y of an arbitrary
     finite-dimensional real affine space P. X has the Rupert property

@@ -11,7 +11,7 @@ import Mathlib.Combinatorics.Matroid.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -20,7 +20,7 @@ open Complex
 namespace NumberField.Odlyzko
 
 /-- A complex place gamma factor used in the Odlyzko-bound argument. -/
-def CompletedZeta.complexPlaceGammaFactor (s : ℂ) : ℂ :=
+@[expose] def CompletedZeta.complexPlaceGammaFactor (s : ℂ) : ℂ :=
   Complex.Gammaℂ s / 2
 
 theorem complexPlaceGammaFactor_eq (s : ℂ) :

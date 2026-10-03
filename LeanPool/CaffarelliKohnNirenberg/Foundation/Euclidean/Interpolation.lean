@@ -21,7 +21,7 @@ truncating at level `t/2`, and its layer-cake integral against the weight
 `p t^{p-1}` — are in `InterpolationBasic.lean`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

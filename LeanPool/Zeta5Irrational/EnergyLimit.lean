@@ -21,7 +21,7 @@ The hypotheses are integrability of `log ‖γ k θ - γ l φ‖` on the torus a
 distinctness `γ k θ ≠ γ l φ`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 

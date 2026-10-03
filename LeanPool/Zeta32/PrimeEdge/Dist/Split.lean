@@ -10,7 +10,7 @@ public import LeanPool.Zeta32.PrimeEdge.Dist.Mult
 local functional `dl` on a general numerator `F` (`discLocal r n p b A = dl r n p b (X A)`),
 the error functional `Err`, and the exactness of the distribution formula on `Q · D_{5n}`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

@@ -20,7 +20,7 @@ the square root of their locally finite sum of squares. Every object below is
 constructed; no partition-of-unity or derivative-bound hypothesis is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -377,7 +377,7 @@ theorem productMask_all_jet_bounds (d m : ℕ) :
     rescale_jet_bound (productMask_smooth 1 0) hbound δ⁻¹ (fun j => (k j : ℝ)) x
 
 /-- Log coordinate, given by `-Real.log q / Real.log 2`. -/
-def logCoordinate (q : ℝ) : ℝ := -Real.log q / Real.log 2
+@[expose] def logCoordinate (q : ℝ) : ℝ := -Real.log q / Real.log 2
 
 theorem logCoordinate_window {q : ℝ} (hq : 0 < q) :
     logCoordinate q ∈ Ioo (-1 : ℝ) 1 ↔ q ∈ Ioo (1 / 2 : ℝ) 2 := by
@@ -447,6 +447,7 @@ theorem dyadicProfile_compactSupport : HasCompactSupport dyadicProfile := by
   exact isCompact_Icc
 
 /-- Integer Q, given by `(2 : ℝ) ^ (-(n : ℝ))`. -/
+@[expose]
 def integerQ (n : ℤ) : ℝ := (2 : ℝ) ^ (-(n : ℝ))
 
 theorem integerQ_pos (n : ℤ) : 0 < integerQ n := Real.rpow_pos_of_pos (by norm_num) _
@@ -458,7 +459,7 @@ theorem integerQ_nat (n : ℕ) : integerQ (n : ℤ) = ChartScales.Q n := by
   simp [integerQ, ChartScales.Q, SlotColoring.dyadicQ]
 
 /-- Dyadic mask, given by `dyadicProfile (q / integerQ n)`. -/
-def dyadicMask (n : ℤ) (q : ℝ) : ℝ := dyadicProfile (q / integerQ n)
+@[expose] def dyadicMask (n : ℤ) (q : ℝ) : ℝ := dyadicProfile (q / integerQ n)
 
 theorem dyadicMask_nonneg (n : ℤ) (q : ℝ) : 0 ≤ dyadicMask n q := dyadicProfile_nonneg _
 
@@ -581,7 +582,7 @@ theorem dyadicMask_tail_sum_sq (N : ℕ) {q : ℝ} (hq : 0 < q) (hqN : q ≤ Cha
   exact dyadicMask_nat_sum_sq hq' hq1'
 
 /-- Native spacing, given by `(ChartScales.S n ^ 3)⁻¹`. -/
-def nativeSpacing (n : ℕ) : ℝ := (ChartScales.S n ^ 3)⁻¹
+@[expose] def nativeSpacing (n : ℕ) : ℝ := (ChartScales.S n ^ 3)⁻¹
 
 theorem nativeSpacing_pos {n : ℕ} (hn : 1 ≤ n) : 0 < nativeSpacing n :=
   inv_pos.mpr (pow_pos (ChartScales.S_pos hn) _)
@@ -627,7 +628,7 @@ theorem slowMask_all_jet_bounds (m : ℕ) :
   simpa [nativeSpacing, div_eq_mul_inv, ← pow_mul] using h
 
 /-- The manuscript's three physical-to-slow coordinate rescalings. -/
-def slowCoordinates (D : ℝ) (n : ℕ) (x : SlotColoring.Position) : SlotColoring.Position :=
+@[expose] def slowCoordinates (D : ℝ) (n : ℕ) (x : SlotColoring.Position) : SlotColoring.Position :=
   fun j => x j / ChartScales.Q n ^ SlotColoring.axisExponent D j
 
 theorem slowCoordinates_smooth (D : ℝ) (n : ℕ) : ContDiff ℝ ∞ (slowCoordinates D n) := by
@@ -636,6 +637,7 @@ theorem slowCoordinates_smooth (D : ℝ) (n : ℕ) : ContDiff ℝ ∞ (slowCoord
   exact (contDiff_apply ℝ ℝ j).div_const _
 
 /-- Physical slow mask, given by `slowMask n k (slowCoordinates D n x)`. -/
+@[expose]
 def physicalSlowMask (D : ℝ) (n : ℕ) (k : SlotColoring.Grid) (x : SlotColoring.Position) : ℝ :=
   slowMask n k (slowCoordinates D n x)
 

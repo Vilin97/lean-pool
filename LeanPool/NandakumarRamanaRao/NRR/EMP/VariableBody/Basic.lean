@@ -24,7 +24,7 @@ normalized-weight APIs to the solid body `C.toGeometryConvexBody hA`. No new pow
 configuration space, weight selection, or convex-body topology is introduced.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -32,14 +32,14 @@ namespace NRR.EMP.VariableBody
 
 /-- The **solid body** of a positive-area subbody parameter: the fixed-body geometry body obtained
 from `C : BodySpace K A` via the positive-area body bridge. -/
-noncomputable def solidBody
+@[expose] noncomputable def solidBody
     {K : Geometry.ConvexBody Plane} {A : ℝ}
     (hA : 0 < A) (C : BodySpace K A) :
     Geometry.ConvexBody Plane :=
   C.toGeometryConvexBody hA
 
 /-- The **restricted power cell** of site `i` inside the variable body `C`, as a set. -/
-def cellSet
+@[expose] def cellSet
     {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
     (hA : 0 < A) (C : BodySpace K A)
     (s : Config n) (w : Fin n → ℝ) (i : Fin n) :
@@ -47,7 +47,7 @@ def cellSet
   PowerDiagram.bodyCellSet (solidBody hA C) s.pts w i
 
 /-- The **area** of the restricted power cell of site `i` inside the variable body `C`. -/
-noncomputable def cellArea
+@[expose] noncomputable def cellArea
     {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
     (hA : 0 < A) (C : BodySpace K A)
     (s : Config n) (w : Fin n → ℝ) (i : Fin n) :
@@ -56,7 +56,7 @@ noncomputable def cellArea
 
 /-- `w` is an **equal-area weight** for the sites `s` inside the variable body `C`: every restricted
 power cell has the average area `C.area / n`. -/
-def IsEqualAreaWeight
+@[expose] def IsEqualAreaWeight
     {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
     (hA : 0 < A) (C : BodySpace K A)
     (s : Config n) (w : Fin n → ℝ) : Prop :=
@@ -64,7 +64,7 @@ def IsEqualAreaWeight
 
 /-- `w` is a **normalized equal-area weight**: equal-area for `s` in `C` and normalized
 (`∑ i, w i = 0`). -/
-def IsNormalizedEqualAreaWeight
+@[expose] def IsNormalizedEqualAreaWeight
     {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
     (hA : 0 < A) (C : BodySpace K A)
     (s : Config n) (w : Fin n → ℝ) : Prop :=
@@ -72,7 +72,7 @@ def IsNormalizedEqualAreaWeight
 
 /-- The **canonical normalized equal-area weight** for the sites `s` inside the variable body `C`,
 selected by the fixed-body existence/uniqueness core applied to `solidBody hA C`. -/
-noncomputable def normalizedWeight
+@[expose] noncomputable def normalizedWeight
     {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
     (hA : 0 < A) (hn : 0 < n)
     (C : BodySpace K A) (s : Config n) :

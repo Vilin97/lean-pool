@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyRestriction
 /-! Continuous scalar majorants derived from actual coefficient budgets and actual nonlinear time
 fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -83,6 +83,7 @@ theorem velocity_divergenceFree {q : ℕ} {T : ℝ}
   (divergenceFreeSpace period D.κ D.direction).add_mem (hz t) (he t)
 
 /-- The fixed affine continuous majorant of actual metric growth. -/
+@[expose]
 def growthPath {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)} {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
     (S : SpatialBudget period hq D N R) (hN : N + 6 ≤ q + 1) {hT : 0 ≤ T} (K : MetricBudget period
@@ -95,11 +96,13 @@ def growthPath {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
         e).continuous)⟩
 
 /-- The signed radius derivative divided by the actual positive radius. -/
+@[expose]
 def radiusLossPath {T : ℝ} (R Rdot : C(Icc (0 : ℝ) T, ℝ)) (hR : ∀ t, 0 < R t) : C(Icc (0 : ℝ) T, ℝ)
     :=
   ⟨fun t => Rdot t/R t, Rdot.continuous.div R.continuous (fun t => (hR t).ne')⟩
 
 /-- The literal continuous nonlinear forcing majorant. -/
+@[expose]
 def forcingMajorant {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)} {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
     (S : SpatialBudget period hq D N R) (hN : N + 6 ≤ q + 1) {hT : 0 ≤ T} (K : MetricBudget period
@@ -149,6 +152,7 @@ theorem forcingMajorant_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     (K.operator_coercive period)
 
 /-- The explicit cutoff-independent constant in the scalar shrinking-radius estimate. -/
+@[expose]
 def combinedConstant {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     {D : CorrectionData period (q + 1) (Icc (0 : ℝ) T)} {N : ℕ} {R : C(Icc (0 : ℝ) T, ℝ)}
     (S : SpatialBudget period hq D N R) {hT : 0 ≤ T} (K : MetricBudget period T hT D) : ℝ :=

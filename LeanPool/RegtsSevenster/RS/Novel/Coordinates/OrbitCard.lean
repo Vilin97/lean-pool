@@ -25,7 +25,7 @@ rotation on labels, say — since a bijection of quotients is then
 enough.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

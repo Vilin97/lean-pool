@@ -24,7 +24,7 @@ their strictly ordered time coordinates.  No continuous-time Markov or Hunt prop
 or asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -88,6 +88,7 @@ theorem exists_denseTime_finset_seq_tendsto (I : Finset NNReal) :
 namespace ContinuousPath
 
 /-- Evaluate a continuous path at a finite family of times. -/
+@[expose]
 def finiteEvaluation {ι α : Type*} [TopologicalSpace α]
     (τ : ι → NNReal) : ContinuousPath α → (ι → α) :=
   fun path i ↦ path (τ i)
@@ -221,11 +222,13 @@ theorem Kernel.map_finiteEvaluation_eq_of_integral_tendsto
 namespace SubMarkovKernelSemigroup
 
 /-- The rational index set used by one finite ordered rational approximation. -/
+@[expose]
 def finiteDenseApproximationIndexSet {I : Finset NNReal} (q : I ↪o DenseTime) :
     Finset DenseTime :=
   Finset.univ.map q.toEmbedding
 
 /-- The corresponding finite set of physical nonnegative-real times. -/
+@[expose]
 def finiteDenseApproximationPhysicalSet {I : Finset NNReal} (q : I ↪o DenseTime) :
     Finset NNReal :=
   denseTimePhysicalSet (finiteDenseApproximationIndexSet q)
@@ -239,6 +242,7 @@ private theorem finiteDenseApproximation_mem {I : Finset NNReal} (q : I ↪o Den
   exact ⟨t, Finset.mem_univ t, rfl⟩
 
 /-- Reindex a path on an approximating physical-time set by the original finite set. -/
+@[expose]
 def finiteDenseApproximationReindex {γ : Type*} {I : Finset NNReal}
     (q : I ↪o DenseTime) :
     (finiteDenseApproximationPhysicalSet q → γ) → I → γ :=
@@ -257,6 +261,7 @@ theorem measurable_finiteDenseApproximationReindex
 
 /-- The candidate finite law at one rational approximation, transported back to the fixed
 coordinate type indexed by the original time set. -/
+@[expose]
 noncomputable def finiteDenseApproximationKernel
     (P : SubMarkovKernelSemigroup α) {I : Finset NNReal} (q : I ↪o DenseTime) :
     Kernel α (I → α) :=

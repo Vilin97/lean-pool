@@ -19,7 +19,7 @@ sum yields `jtChar μ` as a signed combination of native characters
 with signs in `{±1}`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

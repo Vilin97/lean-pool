@@ -24,13 +24,14 @@ global mollification then supplies smooth functions, and Fatou's lemma passes th
 representative.  This preserves the absolute constant from the smooth estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Convolution
 namespace CKN
 noncomputable section
 /-- The extended `Lᵖ` seminorm of a chosen weak gradient on a set. -/
+@[expose]
 def weakGradientLpNormOn (p : ℝ≥0∞) (s : Set (Vec 3)) (Du : Vec 3 → Vec 3) : ℝ≥0∞ :=
   eLpNorm Du p (volume.restrict s)
 private theorem fderiv_norm_le_three_classicalGradient_h1

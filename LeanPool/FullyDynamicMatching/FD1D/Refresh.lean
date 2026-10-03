@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.FinalArithmetic
 
 /-! # Refresh -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -100,6 +100,7 @@ theorem refreshAssignment_preserves_later {ι : Type*} {m k : ℕ}
   exact (refreshAssignment_apply_of_le initial replenishment j hj.le).symm
 
 /-- The leaf-count state after the first `k` labeled replacements. -/
+@[expose]
 def refreshState {L m : ℕ}
     (initial replenishment : DyadicAssignment L m) (k : ℕ) :
     InventoryState (DyadicNode L) m :=
@@ -144,6 +145,7 @@ structure ReplenishmentCoordinates (L m : ℕ) where
 namespace ReplenishmentCoordinates
 
 /-- The realized labeled replenishment configuration for outcome `ω`. -/
+@[expose]
 def supply {L m : ℕ} (R : ReplenishmentCoordinates L m)
     (ω : DyadicAssignment L m) : RefreshSupply L m where
   location := R.location ω
@@ -167,11 +169,13 @@ end ReplenishmentCoordinates
 namespace RefreshSupply
 
 /-- Count projection of a labeled supply configuration. -/
+@[expose]
 def countState {L m : ℕ} (C : RefreshSupply L m) :
     InventoryState (DyadicNode L) m :=
   assignmentState C.leaf
 
 /-- The labeled configuration after the first `k` replacements. -/
+@[expose]
 def refresh {L m : ℕ} (initial replenishment : RefreshSupply L m)
     (k : ℕ) : RefreshSupply L m where
   location :=
@@ -285,6 +289,7 @@ theorem scheduledInitializationStepCost_eq {L m : ℕ}
     refreshAssignment]
 
 /-- The total cost of matching each initialization request to its old label. -/
+@[expose]
 def initializationMatchingCost {L m : ℕ}
     (initial : RefreshSupply L m) (demand : Fin m → ℝ) : ℝ :=
   ∑ j, |demand j - initial.location j|

@@ -17,7 +17,7 @@ change-of-origin expansion converges.  A second theorem identifies the result
 with any function represented by that series on a ball.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped ENNReal NNReal Topology

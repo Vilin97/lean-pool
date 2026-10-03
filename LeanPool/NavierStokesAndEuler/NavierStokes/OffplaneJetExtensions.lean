@@ -34,7 +34,7 @@ normal-jet gluing argument is generalized from `SpacetimeGluing`; no existing
 project source is altered and no extension or closed-side regularity is assumed.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -916,7 +916,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 

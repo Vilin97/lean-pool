@@ -51,7 +51,7 @@ import Mathlib.Tactic.NormNum.GCD
   4. Total pairings = (2n-1)!! = 1·3·5···(2n-1).
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm
 

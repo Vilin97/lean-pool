@@ -35,7 +35,7 @@ stated):
 * `IsRapidDecay` is closed under all the momentum-side operations of the Günther operator.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate ContDiff
 open Complex

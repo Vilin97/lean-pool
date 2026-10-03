@@ -25,7 +25,7 @@ segment itself, and the distinctness of its ends is already part of well-formedn
 * `isArcBetween_segment` — a nondegenerate segment is an arc between its endpoints.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -33,7 +33,7 @@ namespace Schoenflies
 
 /-- A set is polygonal when it is the carrier of a finite vertex list, that is, a finite union
 of line segments. -/
-def IsPolygonal (A : Set Plane) : Prop := ∃ vs : List Plane, A = poly vs
+@[expose] def IsPolygonal (A : Set Plane) : Prop := ∃ vs : List Plane, A = poly vs
 
 theorem IsPolygonal.isCompact {A : Set Plane} (h : IsPolygonal A) : IsCompact A := by
   obtain ⟨vs, rfl⟩ := h

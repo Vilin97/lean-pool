@@ -30,7 +30,7 @@ public import Mathlib.MeasureTheory.Measure.Prod
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 

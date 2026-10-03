@@ -15,7 +15,7 @@ Combining the local Gram certificates with the finite cover of second-child radi
 weighted geometric bound for every pair of separated sibling pairs in the unit ball.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! The scalar polynomial majorant derived from the actual nonlinear Euler correction forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -25,7 +25,7 @@ positive homology vanishes, and the Mayer–Vietoris connecting isomorphism
 `Hₙ(Sⁿ)`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits Metric
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -63,10 +63,10 @@ theorem northPole_ne_southPole : northPole n ≠ southPole n := by
   norm_num at hnorm
 
 /-- The upper punctured sphere `Sⁿ⁺¹ \ {north}`. -/
-def upperPunctured : Set (Sphere (n + 1)) := {northPole n}ᶜ
+@[expose] def upperPunctured : Set (Sphere (n + 1)) := {northPole n}ᶜ
 
 /-- The lower punctured sphere `Sⁿ⁺¹ \ {south}`. -/
-def lowerPunctured : Set (Sphere (n + 1)) := {southPole n}ᶜ
+@[expose] def lowerPunctured : Set (Sphere (n + 1)) := {southPole n}ᶜ
 
 theorem isOpen_upperPunctured : IsOpen (upperPunctured n) :=
   isOpen_compl_singleton
@@ -82,7 +82,7 @@ theorem upper_union_lower : upperPunctured n ∪ lowerPunctured n = Set.univ := 
   exact northPole_ne_southPole n (hx1 ▸ hx2)
 
 /-- The equatorial band `Sⁿ⁺¹ \ {north, south}`. -/
-def sphereBand : Set (Sphere (n + 1)) := upperPunctured n ∩ lowerPunctured n
+@[expose] def sphereBand : Set (Sphere (n + 1)) := upperPunctured n ∩ lowerPunctured n
 
 /-! ## Contractibility of the punctured spheres -/
 
@@ -381,11 +381,11 @@ def sphereBandHomotopyEquiv : ContinuousMap.HomotopyEquiv (sphereBand n) (Sphere
 abbrev sphereSpace : TopCat.{0} := TopCat.of (Sphere (n + 1))
 
 /-- The upper punctured sphere as an open set of `Sⁿ⁺¹`. -/
-def upperOpens : TopologicalSpace.Opens (sphereSpace n) :=
+@[expose] def upperOpens : TopologicalSpace.Opens (sphereSpace n) :=
   ⟨upperPunctured n, isOpen_upperPunctured n⟩
 
 /-- The lower punctured sphere as an open set of `Sⁿ⁺¹`. -/
-def lowerOpens : TopologicalSpace.Opens (sphereSpace n) :=
+@[expose] def lowerOpens : TopologicalSpace.Opens (sphereSpace n) :=
   ⟨lowerPunctured n, isOpen_lowerPunctured n⟩
 
 instance contractible_upperOpens :

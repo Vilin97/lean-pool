@@ -24,7 +24,7 @@ proof is the same contrapositive Hilbert-choice argument — `localSkolem_funMap
 tuple-shape hypothesis, so nothing about `σ` is used beyond interpreting the argument terms.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -902,14 +902,27 @@ theorem schemaSeq_realize_iff_schemaLift_mem :
     schemaTermStructure hM
   let : (localColim s₀).Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
     (lhomWithConstants (localColim s₀) ℕ).reduct _
-  have : (lhomWithConstants (localColim s₀) ℕ).IsExpansionOn
-      (SchemaTermCarrier (s₀ := s₀) (M := M) hM) := LHom.isExpansionOn_reduct _ _
+  let expandedStructure :
+      (localColim s₀)[[ℕ]].Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
+    schemaTermStructure hM
+  let reductStructure :
+      (localColim s₀).Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
+    (lhomWithConstants (localColim s₀) ℕ).reduct _
+  have hExpansion : @LHom.IsExpansionOn (localColim s₀) ((localColim s₀)[[ℕ]])
+      (lhomWithConstants (localColim s₀) ℕ)
+      (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+      reductStructure expandedStructure :=
+    LHom.isExpansionOn_reduct (lhomWithConstants (localColim s₀) ℕ)
+      (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
   change ψ.Realize (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
       (fun i => schemaSeq hM (t i)) ↔
     schemaLift ψ t ∈ schemaCompletionTheory (schemaEnumeration s₀) hM
   rcases hψ with ((hcolim | heqm) | hrelm) | hdem
   · -- colimit members
-    exact (BoundedFormulaω.realize_mapLanguage (lhomWithConstants (localColim s₀) ℕ) ψ
+    exact (@BoundedFormulaω.realize_mapLanguage (localColim s₀) Empty _
+        ((localColim s₀)[[ℕ]]) (lhomWithConstants (localColim s₀) ℕ)
+        (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+        reductStructure expandedStructure hExpansion ψ
         (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
         (fun i => schemaSeq hM (t i))).symm.trans
       ((schemaTruthLemma_colim hM hcolim (fun i => henkinConst (t i))).trans
@@ -954,7 +967,10 @@ theorem schemaSeq_realize_iff_schemaLift_mem :
       show (fun j => (g j).realize (fun i => schemaSeq (s₀ := s₀) (M := M) hM (t i)))
         = fun j => SchemaTermCarrier.mk hM (schemaCloseTerm (g j) t) from
       funext fun j => schemaCloseTerm_reduct_realize hM (g j) t]
-    exact (BoundedFormulaω.realize_mapLanguage (lhomWithConstants (localColim s₀) ℕ) φ
+    exact (@BoundedFormulaω.realize_mapLanguage (localColim s₀) Empty _
+        ((localColim s₀)[[ℕ]]) (lhomWithConstants (localColim s₀) ℕ)
+        (SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+        reductStructure expandedStructure hExpansion φ
         (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
         (fun j => SchemaTermCarrier.mk hM (schemaCloseTerm (g j) t))).symm.trans
       (schemaTruthLemma_colim hM hqΓ fun j => schemaCloseTerm (g j) t)

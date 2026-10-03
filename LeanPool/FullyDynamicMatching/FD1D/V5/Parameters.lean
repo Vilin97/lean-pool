@@ -17,7 +17,7 @@ This module records the exact choices
 `n = 2^L = 2^floor(log₂(max(1, floor(m/a))))`.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5
 
@@ -38,6 +38,7 @@ def treeDepth (m : ℕ) : ℕ :=
   Nat.log 2 (depthTarget m)
 
 /-- The number of leaves in the complete dyadic partition. -/
+@[expose]
 def leafCount (m : ℕ) : ℕ :=
   2 ^ treeDepth m
 

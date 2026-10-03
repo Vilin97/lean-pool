@@ -31,7 +31,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 * `tendsto_Ltr` : `L_{1/(n+1), n+1}(r) → log r`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 

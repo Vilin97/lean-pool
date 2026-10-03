@@ -19,7 +19,7 @@ below deliberately name the small target cores directly, so this public proof
 is self-contained.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow097Contractions
 
@@ -31,24 +31,28 @@ open Utilities.Certificate.ReorientContraction
 
 /-- The explicit contraction target core 031 for row 097, with oriented slots `0→2, 0→3, 0→3,
 1→2, 1→3, 1→3, 2→3` in index order. -/
+@[expose]
 def core031 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 2]
   head := ![2, 3, 3, 2, 3, 3, 3]
 
 /-- The explicit contraction target core 032 for row 097, with oriented slots `0→2, 0→3, 0→3,
 1→2, 1→2, 1→3, 2→3` in index order. -/
+@[expose]
 def core032 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 2]
   head := ![2, 3, 3, 2, 2, 3, 3]
 
 /-- The explicit contraction target core 034 for row 097, with oriented slots `0→2, 0→3, 0→3,
 1→2, 1→2, 1→2, 1→3` in index order. -/
+@[expose]
 def core034 : ExplicitPotential.Core 4 7 where
   tail := ![0, 0, 0, 1, 1, 1, 1]
   head := ![2, 3, 3, 2, 2, 2, 3]
 
 /-- The explicit contraction target core 068 for row 097, with oriented slots `0→3, 0→4, 0→4,
 1→2, 1→3, 1→4, 2→3, 2→3` in index order. -/
+@[expose]
 def core068 : ExplicitPotential.Core 5 8 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2]
   head := ![3, 4, 4, 2, 3, 4, 3, 3]

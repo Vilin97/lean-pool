@@ -16,7 +16,7 @@ of exponential coordinates in `dirichletK` to the finite convolution law
 used by the TP2 proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped ENNReal
@@ -136,6 +136,7 @@ theorem SignedExpFactor.map_expMeasure_one (F : SignedExpFactor) :
       map_neg_mul_expMeasure_one F.scale_pos
 
 /-- The pushforward law of one signed factor. -/
+@[expose]
 def SignedExpFactor.sourceLaw (F : SignedExpFactor) : Measure ℝ :=
   Measure.map
     (fun x : ℝ ↦
@@ -155,7 +156,7 @@ and every signed factor.  Convolution is the pushforward of the product law
 under addition, so this is an actual random-sum law rather than merely a
 density recursion.
 -/
-def finiteSignedExpSumSourceMeasure :
+@[expose] def finiteSignedExpSumSourceMeasure :
     List SignedExpFactor → Measure ℝ
   | [] => Measure.map (fun x : ℝ ↦ x) (expMeasure 1)
   | F :: Fs =>

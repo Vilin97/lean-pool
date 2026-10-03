@@ -23,7 +23,7 @@ import LeanPool.MatchingLogic.Locality
 # MatchingLogic.Composite
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

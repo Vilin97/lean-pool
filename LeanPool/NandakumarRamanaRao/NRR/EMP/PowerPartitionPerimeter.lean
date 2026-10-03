@@ -33,7 +33,7 @@ The power-partition parameter profile is the one fixed in the project:
 No continuity, equivariance, or test-map material is introduced here.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -42,7 +42,7 @@ namespace NRR
 variable {n : ℕ}
 
 /-- The **perimeter vector** of the canonical equal-area power partition. -/
-noncomputable def EMP.powerPartitionPerimeterVec
+@[expose] noncomputable def EMP.powerPartitionPerimeterVec
     (K : Geometry.ConvexBody Plane) (s : Config n) (hn : 0 < n) (hK : 0 < K.area) :
     Fin n → ℝ :=
   (EMP.powerPartition K s hn hK).perimeterVec

@@ -27,7 +27,7 @@ Also here: the passage from the rescaled zeros as a `Set` to the `Finset` that
 `IsConjInvariant` requires.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 
@@ -108,7 +108,7 @@ theorem memLp_hz (h : IsAdmissible lam eta) (z : ℂ) :
 /-- The rescaled zeros as a `Finset`, which is what `IsConjInvariant` and the key
 proposition take. The rescaled zeros are defined as a `Set`; finiteness of the zero set is what
 bridges the two. -/
-noncomputable def rescaledZerosFinset (T : ℝ) : Finset ℂ :=
+@[expose] noncomputable def rescaledZerosFinset (T : ℝ) : Finset ℂ :=
   (nontrivialZeros_finite T).toFinset.image (rescale T)
 
 @[simp]

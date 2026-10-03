@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlo
 Dimension-dependent norm comparisons yield the kernel Hessian and cocoercivity bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

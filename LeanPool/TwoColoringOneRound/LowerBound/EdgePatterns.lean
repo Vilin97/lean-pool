@@ -30,7 +30,7 @@ These are used in auxiliary “sanity check” and “upper bound” files to av
 case-bashy equivalence proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -45,19 +45,19 @@ abbrev Small : Type := Set.Iio two
 abbrev Big : Type := Set.Ici two
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Pat0000 (e : Edge n) : Prop :=
+@[expose] def Pat0000 (e : Edge n) : Prop :=
   e.1 0 < two ∧ e.1 1 < two ∧ e.1 2 < two ∧ e.1 3 < two
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Pat1111 (e : Edge n) : Prop :=
+@[expose] def Pat1111 (e : Edge n) : Prop :=
   two ≤ e.1 0 ∧ two ≤ e.1 1 ∧ two ≤ e.1 2 ∧ two ≤ e.1 3
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Pat1001 (e : Edge n) : Prop :=
+@[expose] def Pat1001 (e : Edge n) : Prop :=
   two ≤ e.1 0 ∧ e.1 1 < two ∧ e.1 2 < two ∧ two ≤ e.1 3
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Pat0110 (e : Edge n) : Prop :=
+@[expose] def Pat0110 (e : Edge n) : Prop :=
   e.1 0 < two ∧ two ≤ e.1 1 ∧ two ≤ e.1 2 ∧ e.1 3 < two
 
 instance : DecidablePred (Pat0000 (two := two)) := by

@@ -19,7 +19,7 @@ checks that closing the strand onto itself yields one free circle
 and no flags.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {α β : Type}
 
 /-- The strand: a single edge with two boundary flags and no internal
 vertices.  The identity 2-fragment. -/
+@[expose]
 def strand : Fragment (Fin 2) where
   Flag := Fin 2
   Vertex := Empty

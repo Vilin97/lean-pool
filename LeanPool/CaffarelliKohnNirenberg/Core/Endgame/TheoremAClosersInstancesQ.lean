@@ -29,7 +29,7 @@ written, with an unrestricted pressure-gradient hypothesis, in
 `CKN.Core.Endgame.epsilonRegularityL3_closer_of_pending_inputs`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

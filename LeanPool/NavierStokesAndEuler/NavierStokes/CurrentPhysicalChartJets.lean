@@ -17,7 +17,7 @@ positive jets of the chart map.  Native coefficients need smoothness only
 on a neighborhood of the evaluation point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,6 +37,7 @@ abbrev Native := PhysicalParticularWave.WaveSpace
 abbrev ComplexVector := HarmonicCalculus.ComplexVector
 
 /-- The actual polar lift followed by the solver's fixed coordinate order. -/
+@[expose]
 noncomputable def chartMap (a : ℝ) (j : PolarCharts.Index) : LiftPoint → Native :=
   fun x => PhysicalParticularWave.waveEquiv (ActualSignedPhysicalData.cylinderAt a j x)
 
@@ -200,6 +201,7 @@ theorem chart_smul_germ {a c : ℝ} (ha : 0 < a) (hc : 0 < c) (j : PolarCharts.I
 /-! ## The actual Cartesian rotation -/
 
 /-- Rotation, given by `CartesianCopySource.rotationMap (PhysicalGraphBounds.liftXY x)`. -/
+@[expose]
 noncomputable def rotation (x : LiftPoint) : ComplexVector →L[ℝ] ComplexVector :=
   CartesianCopySource.rotationMap (PhysicalGraphBounds.liftXY x)
 
@@ -231,6 +233,7 @@ theorem rotationMap_smul {c : ℝ} (hc : 0 < c) (p : Plane) :
 
 /-- Rotate a native vector coefficient after pulling it into the actual
 normalized Cartesian lift. -/
+@[expose]
 noncomputable def rotated (a : ℝ) (j : PolarCharts.Index) (f : Native → ComplexVector)
     (x : LiftPoint) : ComplexVector := rotation x (f (chartMap a j x))
 
@@ -286,6 +289,7 @@ theorem realVector_norm_le (z : ComplexVector) :
 
 /-- The literal real-vector constructor is a fixed bounded linear map.
 This provides the final codomain conversion for physical vector modes. -/
+@[expose]
 noncomputable def realVectorCLM : ComplexVector →L[ℝ] ProblemStatement.Space :=
   ({ toFun := PhysicalCurlCovariance.realVector
      map_add' := by

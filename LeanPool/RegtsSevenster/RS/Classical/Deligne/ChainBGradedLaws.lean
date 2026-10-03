@@ -20,7 +20,7 @@ Each law descends from the corresponding two-index stage law of
 chain colimits, mirroring the homogeneous laws of `ChainAlgebra`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

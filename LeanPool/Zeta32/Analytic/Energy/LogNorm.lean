@@ -18,7 +18,7 @@ public import Mathlib.Tactic.Ring
 -- LogNormScaling.lean,
 --   LogNormSumComparison.lean, LogNormSumError.lean (namespace changed only). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped BigOperators

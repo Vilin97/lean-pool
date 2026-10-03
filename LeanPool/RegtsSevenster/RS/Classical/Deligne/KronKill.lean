@@ -22,7 +22,7 @@ the multiplicity is.  This mirrors the induction kill of
 by the two external embeddings and the diagonal.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,6 +37,7 @@ private theorem ma_smul_apply {G : Type*} (r : ℂ)
 universe u
 
 /-- The first-factor embedding of `S_n` into `S_n × S_n`. -/
+@[expose]
 noncomputable def extFstHom (n : ℕ) :
     Equiv.Perm (Fin n) →*
       Equiv.Perm (Fin n) × Equiv.Perm (Fin n) where
@@ -45,6 +46,7 @@ noncomputable def extFstHom (n : ℕ) :
   map_mul' σ σ' := by rw [Prod.mk_mul_mk, one_mul]
 
 /-- The second-factor embedding of `S_n` into `S_n × S_n`. -/
+@[expose]
 noncomputable def extSndHom (n : ℕ) :
     Equiv.Perm (Fin n) →*
       Equiv.Perm (Fin n) × Equiv.Perm (Fin n) where
@@ -53,6 +55,7 @@ noncomputable def extSndHom (n : ℕ) :
   map_mul' τ τ' := by rw [Prod.mk_mul_mk, one_mul]
 
 /-- The diagonal embedding of `S_n` into `S_n × S_n`. -/
+@[expose]
 noncomputable def diagHom (n : ℕ) :
     Equiv.Perm (Fin n) →*
       Equiv.Perm (Fin n) × Equiv.Perm (Fin n) where
@@ -63,6 +66,7 @@ noncomputable def diagHom (n : ℕ) :
 /-- **The external product**: the product of the two one-sided
 images of a pair of group-algebra elements in the group algebra of
 `S_n × S_n`. -/
+@[expose]
 noncomputable def extProd {n : ℕ} (x y : SymGroupAlgebra n) :
     MonoidAlgebra ℂ (Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) :=
   MonoidAlgebra.mapDomainAlgHom ℂ ℂ (extFstHom n) x *
@@ -70,6 +74,7 @@ noncomputable def extProd {n : ℕ} (x y : SymGroupAlgebra n) :
 
 /-- **The diagonal embedding of group algebras**: extension of the
 diagonal along `mapDomain`, an algebra homomorphism. -/
+@[expose]
 noncomputable def diagEmbed {n : ℕ} :
     SymGroupAlgebra n →ₐ[ℂ]
       MonoidAlgebra ℂ (Equiv.Perm (Fin n) × Equiv.Perm (Fin n)) :=

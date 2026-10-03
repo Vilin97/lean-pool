@@ -25,7 +25,7 @@ bound to the one field.  Its conclusion is exactly the slice hypothesis of the
 time integration that turns slice bounds into the cell power integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

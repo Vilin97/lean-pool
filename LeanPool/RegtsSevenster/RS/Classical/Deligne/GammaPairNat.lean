@@ -50,7 +50,7 @@ reduces the naturality square to exactly those four instances.
   the two module objects.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -164,6 +164,7 @@ theorem SuperCommAlgebra.Mod.comp_oddMap_apply (a : P ⟶ Q)
     (a ≫ b).oddMap t = b.oddMap (a.oddMap t) := rfl
 
 /-- The tensor product of two isomorphisms of super modules. -/
+@[expose]
 noncomputable def SuperCommAlgebra.Mod.tensorIso (a : P ≅ P')
     (b : Q ≅ Q') : P.tensor Q ≅ P'.tensor Q' where
   hom := SuperCommAlgebra.Mod.tensorHom a.hom b.hom

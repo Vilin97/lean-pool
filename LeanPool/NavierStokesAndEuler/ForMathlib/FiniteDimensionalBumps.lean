@@ -11,7 +11,7 @@ import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 
 /-! The existence of smooth bumps, separated from their construction. -/
 
-@[expose] public section
+public section
 
 /-- A finite-dimensional real normed space admits smooth bump functions.
 This proof can be activated as an instance locally when defining cutoff data. -/

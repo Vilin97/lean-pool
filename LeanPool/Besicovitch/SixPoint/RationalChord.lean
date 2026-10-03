@@ -21,17 +21,18 @@ The routing and exclusion modules use a chord only through the two facts below: 
 between one and two, and that it lies in an explicit rational box.  Both are immediate here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace LeanPool.Besicovitch
 
 /-- Twice the rational threshold: the chord length of the retargeted argument. -/
+@[expose]
 def barC : ℝ := 3467 / 2500
 
 /-- The rational density threshold certified by the retargeted argument. -/
-def barS : ℝ := barC / 2
+@[expose] def barS : ℝ := barC / 2
 
 /-- The rational threshold is `0.6934`. -/
 theorem barS_eq : barS = 6934 / 10000 := by

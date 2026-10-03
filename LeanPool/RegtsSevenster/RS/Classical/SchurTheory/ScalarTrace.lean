@@ -16,7 +16,7 @@ irreducible representation is determined by the character pairing:
 `z · dim V = ∑ g, c g · χ_ρ(g)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

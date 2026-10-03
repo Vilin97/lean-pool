@@ -30,7 +30,7 @@ The local boundary theorem is rank-two internal cancellation.  It is isolated be
 explicit finite statement about the actual chain, rather than hidden in a geometric certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -42,6 +42,7 @@ namespace FoxNeuwirthOrderComplex
 namespace TopFlagSubdivision
 
 /-- Integer indicator of a bar position. -/
+@[expose]
 def barIndicator (c : BarredPermutation p) (r : Fin (p - 1)) : Int :=
   if r ∈ c.bars then 1 else 0
 
@@ -56,12 +57,13 @@ def barIndicator (c : BarredPermutation p) (r : Fin (p - 1)) : Int :=
   simp [barIndicator, hr]
 
 /-- Matrix of successive bar-removal vectors along a maximal strict flag. -/
+@[expose]
 def barDifferenceMatrix (s : Simplex p (p - 1)) :
     Matrix (Fin (p - 1)) (Fin (p - 1)) Int :=
   fun r k => barIndicator (s k.castSucc) r - barIndicator (s k.succ) r
 
 /-- Orientation of the order in which bars disappear along a maximal flag. -/
-def barRemovalDeterminant (s : Simplex p (p - 1)) : Int :=
+@[expose] def barRemovalDeterminant (s : Simplex p (p - 1)) : Int :=
   Matrix.det (barDifferenceMatrix s)
 
 /-- Canonical permutation orientation of a Fox--Neuwirth cell.
@@ -69,15 +71,15 @@ def barRemovalDeterminant (s : Simplex p (p - 1)) : Int :=
 This is the Mathlib permutation sign of the displayed rank.  It is the same parity orientation
 used by `BarredPermutation.orientationSign`, but using the library sign directly avoids carrying
 a second inversion-parity implementation into the subdivision determinant calculation. -/
-def permutationOrientationSign (c : BarredPermutation p) : Int :=
+@[expose] def permutationOrientationSign (c : BarredPermutation p) : Int :=
   ((Equiv.Perm.sign c.rank : ℤˣ) : ℤ)
 
 /-- Integral coefficient of a maximal flag in the subdivision chain. -/
-def integralCoefficient (s : Simplex p (p - 1)) : Int :=
+@[expose] def integralCoefficient (s : Simplex p (p - 1)) : Int :=
   permutationOrientationSign (s 0) * barRemovalDeterminant s
 
 /-- The concrete top-flag subdivision chain over `ZMod p`. -/
-def chain : SimplicialChain (ZMod p) p (p - 1) :=
+@[expose] def chain : SimplicialChain (ZMod p) p (p - 1) :=
   fun s => (integralCoefficient s : ZMod p)
 
 @[simp] theorem chain_apply (s : Simplex p (p - 1)) :
@@ -85,6 +87,7 @@ def chain : SimplicialChain (ZMod p) p (p - 1) :=
   rfl
 
 /-- The actual simplicial boundary of the top-flag subdivision chain. -/
+@[expose]
 noncomputable def boundary (hp : Nat.Prime p) :
     SimplicialChain (ZMod p) p (p - 2) := by
   have hdim : p - 1 = (p - 2) + 1 := by
@@ -93,7 +96,7 @@ noncomputable def boundary (hp : Nat.Prime p) :
   exact SimplicialChain.boundary (d := p - 2) (hdim ▸ chain)
 
 /-- Contribution obtained by deleting one fixed position from a maximal flag. -/
-noncomputable def deletionCoefficient
+@[expose] noncomputable def deletionCoefficient
     (hp : Nat.Prime p)
     (target : Simplex p (p - 2))
     (k : Fin ((p - 2) + 2)) : ZMod p := by
@@ -113,11 +116,13 @@ theorem boundary_apply_eq_sum_deletionCoefficient
   rw [Finset.sum_comm]
 
 /-- Internal deletion positions, including deletion of the bottom vertex, cancel locally. -/
+@[expose]
 def InternalCancellation (hp : Nat.Prime p) : Prop :=
   ∀ (target : Simplex p (p - 2)) (k : Fin ((p - 2) + 2)),
     k.1 < p - 1 → deletionCoefficient hp target k = 0
 
 /-- The terminal deletion removes the final top-dimensional cell. -/
+@[expose]
 def TerminalCancellation (hp : Nat.Prime p) : Prop :=
   ∀ (target : Simplex p (p - 2)) (k : Fin ((p - 2) + 2)),
     k.1 = p - 1 → deletionCoefficient hp target k = 0
@@ -178,11 +183,13 @@ theorem integralCoefficient_eq_of_init_eq_of_final_top
 
 /-- The exact internal combinatorics: every nonterminal deleted face has total signed
 extension coefficient zero.  This is a finite rank-two interval statement for ordered partitions. -/
+@[expose]
 def RankTwoCancellationTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p), InternalCancellation hp
 
 /-- The exact terminal reindexing statement.  The coefficient independence theorem above
 reduces this to the already proved facet--shuffle multiplicity. -/
+@[expose]
 def TerminalMultiplicityTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p), TerminalCancellation hp
 

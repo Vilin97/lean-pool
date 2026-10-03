@@ -24,7 +24,7 @@ Cauchy--Schwarz and exactly cancels the Jacobian of dilation. Only continuity
 and finite energy are needed; no derivative integrability is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

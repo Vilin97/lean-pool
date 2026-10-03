@@ -19,7 +19,7 @@ structure maps of the fibre functor, `stdFromOmega` disassembles,
 and the two are mutually inverse whenever the strand maps are.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

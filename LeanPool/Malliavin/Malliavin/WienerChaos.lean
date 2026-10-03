@@ -32,7 +32,7 @@ global simplex tower use its onto branch.  Order zero supplies constants, and
 `IsHilbertSum.mkInternal` packages the resulting total orthogonal family.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace Topology symmDiff
@@ -216,6 +216,7 @@ theorem homogeneousChaos_orthogonalFamily (hB : IsPreBrownianReal B P) :
   exact homogeneousChaos_isOrtho hB hmn
 
 /-- The closed subspace of (almost-everywhere) constant random variables. -/
+@[expose]
 def constantRandomVariables (P : Measure Ω) [IsFiniteMeasure P] :
     Submodule ℝ (RandomL2 P) :=
   (MeasureTheory.Lp.constL 2 P ℝ : ℝ →L[ℝ] RandomL2 P).range.topologicalClosure

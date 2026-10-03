@@ -18,7 +18,7 @@ constant is chosen before that label, its band, and the lattice copy.  The
 square-root estimates retain the vanishing flat weight.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -369,7 +369,7 @@ variable {V : JetDomain ι D} {U : Domain ι PhaseCalculus.Slow}
 
 /-- Pulse matrix, defined pointwise by `primaryCovariance pref (fun j => (F j).frame) (fun j =>
 (F j).lam) (fun j => (F j).u) (fun j => (F j).L) i (χ i x).1`. -/
-noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
+@[expose] noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) :
     ι → D → SmoothCovariance.Mat2 := fun i x =>
   primaryCovariance pref (fun j => (F j).frame) (fun j => (F j).lam)
@@ -377,19 +377,21 @@ noncomputable def pulseMatrix (F : Fin 2 → PhaseConstruction U)
 
 /-- Pulse vector, defined pointwise by `normalizedPulse ((F j).frame i) ((F j).lam i) ((F j).u
 i) ((F j).L i) (χ i x)`. -/
+@[expose]
 noncomputable def pulseVector (F : Fin 2 → PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → D → ProblemStatement.Space :=
   fun i x => normalizedPulse ((F j).frame i) ((F j).lam i) ((F j).u i) ((F j).L i) (χ i x)
 
 /-- Pulse envelope, defined pointwise by `referenceP ((F j).lam i) ((F j).u i) ((F j).L i) ((F
 j).L i * (χ i x).2)`. -/
+@[expose]
 noncomputable def pulseEnvelope (F : Fin 2 → PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (j : Fin 2) : ι → D → ℝ := fun i x =>
   referenceP ((F j).lam i) ((F j).u i) ((F j).L i) ((F j).L i * (χ i x).2)
 
 /-- Primary velocity, defined pointwise by `PartitionedCovariance.amplitude (ε i) (mask i x)
 (pulseMatrix F pref χ i x) (T i x) j • pulseVector F χ j i x`. -/
-noncomputable def primaryVelocity (F : Fin 2 → PhaseConstruction U)
+@[expose] noncomputable def primaryVelocity (F : Fin 2 → PhaseConstruction U)
     (pref : Fin 2 → ι → ℝ) (χ : ι → D → PhaseCalculus.Slow × ℝ) (ε : ι → ℝ)
     (T : ι → D → SmoothCovariance.Vec2) (mask : ι → D → ℝ) (j : Fin 2) :
     ι → D → ProblemStatement.Space := fun i x =>
@@ -584,12 +586,12 @@ section NativePressure
 variable {V : JetDomain ι D} {U : Domain ι PhaseCalculus.Slow}
 
 /-- The actual phase is evaluated at the physical native time `L*tau`. -/
-noncomputable def phasePoint (p : PhaseConstruction U)
+@[expose] noncomputable def phasePoint (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) : ι → D → PhaseCalculus.Slow × ℝ :=
   fun i x => ((χ i x).1, p.L i * (χ i x).2)
 
 /-- Phase pressure as an element of `ι → D → ℂ`. -/
-noncomputable def phasePressure (p : PhaseConstruction U)
+@[expose] noncomputable def phasePressure (p : PhaseConstruction U)
     (χ : ι → D → PhaseCalculus.Slow × ℝ) (frequency : ι → ℝ)
     (u : ι → D → ProblemStatement.Space) : ι → D → ℂ := fun i =>
   ParticularWaveBounds.projectedPressure (frequency i)
@@ -801,6 +803,7 @@ variable {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
   {Λ I : Type*} {V : JetDomain ι D} {w : ι → D → ℝ} {f : ι → D → E}
 
 /-- Affine copy, defined pointwise by `f (index l n) (L l n i x + c l n i)`. -/
+@[expose]
 noncomputable def affineCopy (f : ι → D → E) (index : Λ → ℕ → ι)
     (L : Λ → ℕ → I → X →L[ℝ] D) (c : Λ → ℕ → I → D) : Λ → ℕ → I → X → E :=
   fun l n i x => f (index l n) (L l n i x + c l n i)
@@ -1129,6 +1132,7 @@ theorem actualTarget_jets (hcone : LeadingStressWeights.FullTrueCone v₀)
   exact hb i p hp j hj
 
 /-- Prepared prefactor, constructed using `PartitionedCovariance.nativePrefactor`. -/
+@[expose]
 noncomputable def preparedPrefactor (r0 : ℝ) (vr vt : TorusInverse.Plane) {N : ℕ}
     (_j : Fin 2) (L : PrimaryGeometryAssembly.Index W₀ N) : ℝ :=
   PartitionedCovariance.nativePrefactor vr vt r0 *
@@ -1280,6 +1284,7 @@ end Prepared
 /-! ### Actual slow-mask jets and zero germs -/
 
 /-- Position continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
+@[expose]
 noncomputable def positionCLM : PhaseCalculus.Slow →L[ℝ] SlotColoring.Position :=
   LinearMap.toContinuousLinearMap {
     toFun := PrimaryRepresentatives.position
@@ -1400,6 +1405,7 @@ theorem NativeJets.prepared_mask_outer_localize
 
 /-- Sign domain, bundling `carrier`, `isOpen`, `scale`, `one_le_scale` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def signDomain (V : JetDomain ι D) : JetDomain (Fin 2 × ι) D where
   carrier i := V.carrier i.2
   isOpen i := V.isOpen i.2

@@ -23,7 +23,7 @@ continuity and matching at breakpoints, and establishes the main results:
 * `circleAround` and `polygonToCircleHomotopy`
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter
 

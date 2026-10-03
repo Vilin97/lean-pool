@@ -30,7 +30,7 @@ Instead of the paper's ball analysis we evaluate the polynomial part on the wind
 window lemma.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

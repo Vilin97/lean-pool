@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # LeanPool.RlTheoryInLean.Probability.Kernel.Basic
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure ProbabilityTheory.Kernel ProbabilityTheory
 open Finset Bornology NNReal ENNReal Preorder Filter
@@ -23,7 +23,7 @@ variable {α β γ : Type*}
 variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 /-- Iterates of a homogeneous transition kernel. -/
-noncomputable def iter (κ : Kernel α α) : ℕ → Kernel α α
+@[expose] noncomputable def iter (κ : Kernel α α) : ℕ → Kernel α α
 | 0       => Kernel.id
 | (n + 1) => ((iter κ) n).comp κ
 

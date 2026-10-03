@@ -19,7 +19,7 @@ short-distance preservation passes to the completion, and a jointly separating
 family of recovered coordinates forces injectivity.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

@@ -19,7 +19,7 @@ permutation action through the identification to the committed
 plain equivariance.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

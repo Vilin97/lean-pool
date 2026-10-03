@@ -16,7 +16,7 @@ functional composed with the structure map is the standard form:
 the pointwise consequence of the model transport equation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

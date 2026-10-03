@@ -16,7 +16,7 @@ In a nontrivial finite-dimensional Hilbert space the numerical range is a
 nonempty compact set, so its norm achieves the numerical radius.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

@@ -10,12 +10,12 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
 
 /-! # Lightweight coverage-summary data validation -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- Check a pattern summary against one eight-bucket data shard. -/
-def PatternSummary.validAgainstB
+@[expose] def PatternSummary.validAgainstB
     (buckets : Array (List PatternEntry)) (summary : PatternSummary) : Bool :=
   match (buckets.getD (summary.origin % 8) []).find?
       (fun entry => entry.origin == summary.origin) with
@@ -23,7 +23,7 @@ def PatternSummary.validAgainstB
   | none => false
 
 /-- Check an exact-table summary against one eight-bucket data shard. -/
-def HardSummary.validAgainstB
+@[expose] def HardSummary.validAgainstB
     (buckets : Array (List HardEntry)) (summary : HardSummary) : Bool :=
   match (buckets.getD (summary.origin % 8) []).find?
       (fun entry => entry.origin == summary.origin) with

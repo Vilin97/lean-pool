@@ -19,7 +19,7 @@ hulls. Restricting that flag to reduced nodes finishes the geometric cleanup.
 The construction retains exactly the mass supplied by numerical pruning.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -120,6 +120,7 @@ theorem cleaned_isKBounded {K : Φ.flag.Node → ℕ} (hK : Φ.IsKBounded K) :
   fun x z hz ↦ hK x.1.1 z (D.cleaned_polytope_subset hp x hz)
 
 /-- Subdivision map from the rebuilt decomposition to the original one. -/
+@[expose]
 noncomputable def rebuiltSubdivisionMap : SubdivisionMap Φ (D.rebuilt hp) :=
   SubdivisionMap.ofLocalGenerators
     { toFun := Subtype.val, map_sup' := fun _ _ ↦ rfl }
@@ -133,6 +134,7 @@ noncomputable def rebuiltSubdivisionMap : SubdivisionMap Φ (D.rebuilt hp) :=
       exact ne_of_gt ((Nat.pos_of_ne_zero hmass).trans_le (D.localLift_le_old _ _)))
 
 /-- Subdivision map from the cleaned decomposition to the original one. -/
+@[expose]
 noncomputable def cleanedSubdivisionMap : SubdivisionMap Φ (D.cleaned hp) :=
   (D.rebuiltSubdivisionMap hp).comp ((D.rebuilt hp).reducedSubdivisionMap hp)
 

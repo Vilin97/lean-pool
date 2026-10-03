@@ -35,7 +35,7 @@ a dimension count in the centre of the group algebra against the
 class sums, which are no more numerous than the shapes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -326,6 +326,7 @@ sizes; on coefficients this is relabelling of permutations along
 section Transport
 
 /-- Relabelling of permutations along an equality of sizes. -/
+@[expose]
 def permCast {m n : ℕ} (h : m = n) :
     Equiv.Perm (Fin m) ≃ Equiv.Perm (Fin n) :=
   Equiv.permCongr (finCongr h)
@@ -701,6 +702,7 @@ specialisations, hence the shapes — by the separation theorem. -/
 section Orthogonality
 
 /-- Relabelling as a homomorphism of permutation groups. -/
+@[expose]
 def permCastHom {m n : ℕ} (h : m = n) :
     Equiv.Perm (Fin m) →* Equiv.Perm (Fin n) where
   toFun := permCast h

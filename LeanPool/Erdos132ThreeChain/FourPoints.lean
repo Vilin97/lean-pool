@@ -35,7 +35,7 @@ distances lie in the single adjacent pair `{c, 3 * c}`: no planar chain quadrupl
 steps of the chain.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

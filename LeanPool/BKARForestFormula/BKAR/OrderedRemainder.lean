@@ -17,7 +17,7 @@ the telescoping argument behind the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,17 +50,20 @@ namespace ActiveBranchData
 variable {F : Forest V}
 
 /-- The full ordered branch obtained by prepending the selected active edge. -/
+@[expose]
 def growth (data : ActiveBranchData F) (e : {e // e ∈ F.activeEdges}) :
     OrderedGrowth F (e.val :: data.order e) (data.terminal e) :=
   (data.extension e).consGrowth (data.tail e)
 
 /-- The finite active-edge sum of branch integrals with an explicit top bound. -/
+@[expose]
 def branchIntegralAux (data : ActiveBranchData F) (top : ℝ)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   Finset.sum F.activeEdges.attach
     fun e => (data.growth e).branchIntegralAux top u ρ
 
 /-- The finite active-edge sum of branch integrals over the unit simplex. -/
+@[expose]
 def branchIntegral (data : ActiveBranchData F)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   data.branchIntegralAux 1 u ρ
@@ -69,6 +72,7 @@ def branchIntegral (data : ActiveBranchData F)
 The active-branch data whose selected branch over each active edge stops after
 the first extension.
 -/
+@[expose]
 def singleton
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val) :

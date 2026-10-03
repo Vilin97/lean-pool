@@ -21,7 +21,7 @@ strictness of the skein associator enters only through a small
 concrete collapse.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

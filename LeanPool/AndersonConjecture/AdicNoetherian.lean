@@ -23,7 +23,7 @@ M-adically complete, so the Noetherian property lifts by
 successive approximation (Atiyah--Macdonald, Prop. 10.11).
 -/
 
-@[expose] public section
+public section
 
 open AdicCompletion
 

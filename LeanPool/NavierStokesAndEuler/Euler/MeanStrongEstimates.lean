@@ -30,7 +30,7 @@ identifies it with `F z_t`. Composing with the variational solver gives the
 actual linear velocity inverse with an explicit finite-time bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -162,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

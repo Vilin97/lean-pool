@@ -32,7 +32,7 @@ It packages the facts that the recursion needs about a node it is sitting at:
   `usableAutos` filters for.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

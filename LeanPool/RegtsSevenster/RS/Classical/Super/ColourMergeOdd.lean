@@ -21,7 +21,7 @@ pure tensor, and the two parts of `colourMerge_pair_odd` are
 proved by one mutual induction on the second arity.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

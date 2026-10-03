@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Basic
 
 /-! # Classical -/
 
-@[expose] public section
+public section
 
 
 namespace LO

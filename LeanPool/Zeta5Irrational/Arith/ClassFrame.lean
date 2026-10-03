@@ -26,14 +26,14 @@ Classes `a = 0, …, m` (with `p = 2m + 1`), dimensions `L a` with `∑ L = h`, 
 entry inequalities, then `v_p^G(Δ) ≥ 2 ∑ w`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
 namespace Zeta5Irrational
 
 /-- The `t`-roots of the basis polynomial `E_{a,i}`. -/
-def classRoots {m : ℕ} (L : Fin (m + 1) → ℕ) (a : Fin (m + 1)) (i : ℕ) : Multiset ℤ :=
+@[expose] def classRoots {m : ℕ} (L : Fin (m + 1) → ℕ) (a : Fin (m + 1)) (i : ℕ) : Multiset ℤ :=
   (∑ c ∈ Finset.univ.erase a, Multiset.replicate (L c) ((c : ℕ) : ℤ)) +
     Multiset.replicate i ((a : ℕ) : ℤ)
 
@@ -42,7 +42,7 @@ lemma card_classRoots {m : ℕ} (L : Fin (m + 1) → ℕ) (a : Fin (m + 1)) (i :
   simp [classRoots, Multiset.card_sum]
 
 /-- `∏_{γ ∈ M} (t + γ²)` over `ℤ`. -/
-noncomputable def tpolZ (M : Multiset ℤ) : ℤ[X] :=
+@[expose] noncomputable def tpolZ (M : Multiset ℤ) : ℤ[X] :=
   (M.map fun γ : ℤ => X + C (γ ^ 2)).prod
 
 lemma tpolZ_map_Q (M : Multiset ℤ) : (tpolZ M).map (Int.castRingHom ℚ) = tpol M := by
@@ -102,12 +102,13 @@ lemma sq_injective {p m : ℕ} [hp : Fact p.Prime] (hm : 2 * m + 1 = p) :
     exact Fin.ext (by omega)
 
 /-- The `t`-roots of the numerator `D_N⁶ E_s E_t`. -/
+@[expose]
 def entryRoots {m : ℕ} (N : ℕ) (L : Fin (m + 1) → ℕ) (s t : Σ a : Fin (m + 1), Fin (L a)) :
     Multiset ℤ :=
   6 • ((Icc 1 N).val.map fun j : ℕ => (j : ℤ)) + classRoots L s.1 s.2 + classRoots L t.1 t.2
 
 /-- The per-class count appearing in the entry bound. -/
-noncomputable def classCount (p : ℕ) (K : ℕ) (M : Multiset ℤ) (c : ZMod p) : ℚ :=
+@[expose] noncomputable def classCount (p : ℕ) (K : ℕ) (M : Multiset ℤ) (c : ZMod p) : ℚ :=
   (((if c = 0 then 5 else 0) + (M.filter fun γ : ℤ => (γ : ZMod p) = c).card +
           (M.filter fun γ : ℤ => (γ : ZMod p) = -c).card :
         ℕ) :

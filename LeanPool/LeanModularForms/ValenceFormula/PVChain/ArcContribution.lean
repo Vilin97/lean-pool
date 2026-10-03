@@ -32,7 +32,7 @@ where `m(ε) → 2`.
 * `tendsto_pvIntegral_arc_bridge` — final bridge for Assembly.lean
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

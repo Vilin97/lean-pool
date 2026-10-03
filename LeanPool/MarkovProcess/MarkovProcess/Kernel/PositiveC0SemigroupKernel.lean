@@ -19,7 +19,7 @@ A strongly continuous semigroup of positive contractions on real continuous func
 at infinity determines a jointly measurable sub-Markov kernel semigroup.
 -/
 
-@[expose] public section
+public section
 
 open CompactlySupported MeasureTheory ProbabilityTheory
 open scoped ENNReal ZeroAtInfty
@@ -105,6 +105,7 @@ theorem kernel_add (s t : NNReal) :
     _ = ∫ z, f₀ z ∂(Kt.comp Ks) x := (Kernel.integral_comp hf_comp).symm
 
 /-- The sub-Markov kernel semigroup represented by a positive contraction semigroup on `C₀`. -/
+@[expose]
 noncomputable def kernelSemigroup : SubMarkovKernelSemigroup α where
   kernel t := PositiveC0OperatorKernel.kernel (S t) (hS t) (S.norm_operator_le_one t)
   measurable_kernel := measurable_kernel S hS

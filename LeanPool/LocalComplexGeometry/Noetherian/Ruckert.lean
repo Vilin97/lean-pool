@@ -23,7 +23,7 @@ an associated distinguished polynomial, and Weierstrass division maps the
 ideal into a finite lower-dimensional remainder module.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry

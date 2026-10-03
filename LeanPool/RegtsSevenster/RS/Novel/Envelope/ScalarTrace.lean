@@ -21,7 +21,7 @@ trace fields ask for.
 Cyclicity carries across the identification unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,6 +34,7 @@ variable {C : Type u}
 /-- **The unit's endomorphisms are the scalars**, as an algebra
 isomorphism.  This is `HasScalarUnit` read as bijectivity of the
 structure map. -/
+@[expose]
 noncomputable def unitScalarEquiv
     [Category.{v} C] [Preadditive C] [Linear ℂ C] [MonoidalCategory C]
     (h : HasScalarUnit C) :
@@ -41,6 +42,7 @@ noncomputable def unitScalarEquiv
   AlgEquiv.ofBijective (Algebra.ofId ℂ (End (𝟙_ C))) h
 
 /-- **The scalar named by an endomorphism of the unit.** -/
+@[expose]
 noncomputable def unitScalar
     [Category.{v} C] [Preadditive C] [Linear ℂ C] [MonoidalCategory C]
     (h : HasScalarUnit C) :
@@ -50,6 +52,7 @@ noncomputable def unitScalar
 /-! ## The complex-valued trace -/
 
 /-- **The complex-valued categorical trace.** -/
+@[expose]
 noncomputable def scalarTrace
     [Category.{v} C] [Preadditive C] [Linear ℂ C] [MonoidalCategory C]
     [SymmetricCategory C] [MonoidalPreadditive C] [MonoidalLinear ℂ C]

@@ -17,7 +17,7 @@ reindexes each horizontal contribution as the positive-ray count on the correspo
 triangulation.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -41,6 +41,7 @@ open RefinedAffineMap
 variable {p : Nat}
 
 /-- Interpret a spatial refinement word on the definitionally different simplex-index type. -/
+@[expose]
 noncomputable def endpointRefinementWord
     (hp : Nat.Prime p) (L : Nat) (eta : RefinementWord p L) :
     Fin L → Equiv.Perm (Fin (p - 1 + 1)) := by
@@ -112,6 +113,7 @@ theorem endpoint_iterated_weighted_boundary
 
 /-- The spatial simplex obtained by applying the final `L` barycentric refinements to an already
 level-`N` refined top cell. -/
+@[expose]
 noncomputable def endpointSpatialMap
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N)
@@ -132,7 +134,7 @@ theorem endpointSpatialMap_succ
 
 /-- Positive-ray count represented by the lower horizontal boundary of a compatible prism
 assignment. -/
-noncomputable def lowerEndpointRefinedCount
+@[expose] noncomputable def lowerEndpointRefinedCount
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ q : TopCell hp N,
@@ -144,7 +146,7 @@ noncomputable def lowerEndpointRefinedCount
 
 /-- Positive-ray count represented by the upper horizontal boundary of a compatible prism
 assignment. -/
-noncomputable def upperEndpointRefinedCount
+@[expose] noncomputable def upperEndpointRefinedCount
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ q : TopCell hp N,
@@ -533,6 +535,7 @@ theorem refinedSidePrismMap_not_upperHorizontal
 /-! ## Endpoint pairing for an arbitrary affine-facet weight -/
 
 /-- Restrict an arbitrary facet-map weight to the lower horizontal faces. -/
+@[expose]
 noncomputable def weightedLowerMapWeight
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) : ZMod p := by
@@ -540,6 +543,7 @@ noncomputable def weightedLowerMapWeight
   exact if MapIsLowerHorizontal tau then W tau else 0
 
 /-- Restrict an arbitrary facet-map weight to the upper horizontal faces. -/
+@[expose]
 noncomputable def weightedUpperMapWeight
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) : ZMod p := by
@@ -547,14 +551,14 @@ noncomputable def weightedUpperMapWeight
   exact if MapIsUpperHorizontal tau then W tau else 0
 
 /-- The occurrence sum of an arbitrary facet-map weight. -/
-noncomputable def weightedOccurrencePairing
+@[expose] noncomputable def weightedOccurrencePairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   ∑ o : FacetOccurrence hp N L,
     occurrenceCoefficient hp N L o * W (occurrenceFacetMap hp N L o)
 
 /-- The lower endpoint pairing of an arbitrary facet-map weight. -/
-noncomputable def weightedLowerEndpointPairing
+@[expose] noncomputable def weightedLowerEndpointPairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   ∑ q : TopCell hp N,
@@ -564,7 +568,7 @@ noncomputable def weightedLowerEndpointPairing
           W (lowerEndpointMap (endpointSpatialMap hp N L q eta))
 
 /-- The upper endpoint pairing of an arbitrary facet-map weight. -/
-noncomputable def weightedUpperEndpointPairing
+@[expose] noncomputable def weightedUpperEndpointPairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   ∑ q : TopCell hp N,

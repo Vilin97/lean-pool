@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Derivation -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -33,6 +33,7 @@ section «lp_section_1»
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.IsFormulaSet (s : V) : Prop := ∀ p ∈ s, L.IsFormula p
 
 variable {L}
@@ -518,8 +519,7 @@ private lemma phi_iff (C d : V) :
       (∃ s < d, ∃ p < d,
         d = root s p ∧ p ∈ s ∧ p ∈ T) ) := by
   constructor
-  · rintro ⟨hs, H⟩
-    refine ⟨hs, ?_⟩
+  · rintro ⟨hs, H⟩; refine ⟨hs, ?_⟩
     rcases H with (⟨s, p, rfl, h⟩ | ⟨s, rfl, h⟩ | ⟨s, p, q, dp, dq, rfl, h⟩ | ⟨s, p, q, dpq,
       rfl, h⟩ |
       ⟨s, p, dp, rfl, h⟩ | ⟨s, p, t, dp, rfl, h⟩ | ⟨s, d', rfl, h⟩ | ⟨s, d', rfl, h⟩ | ⟨s, p,
@@ -538,8 +538,7 @@ private lemma phi_iff (C d : V) :
       by simp, d₁, by simp, d₂, by simp, rfl, h⟩
     · right; right; right; right; right; right; right; right; right; exact ⟨s, by simp, p,
       by simp, rfl, h⟩
-  · rintro ⟨hs, H⟩
-    refine ⟨hs, ?_⟩
+  · rintro ⟨hs, H⟩; refine ⟨hs, ?_⟩
     rcases H with (⟨s, _, p, _, rfl, h⟩ | ⟨s, _, rfl, h⟩ | ⟨s, _, p, _, q, _, dp, _, dq, _, rfl,
       h⟩ | ⟨s, _, p, _, q, _, dpq, _, rfl, h⟩ |
       ⟨s, _, p, _, dp, _, rfl, h⟩ | ⟨s, _, p, _, t, _, dp, _, rfl, h⟩ | ⟨s, _, d', _, rfl, h⟩ |
@@ -743,12 +742,15 @@ variable (T)
 def _root_.LO.Arith.Language.Theory.Derivation : V → Prop := (construction T).fixedPoint ![]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Theory.DerivationOf (d s : V) : Prop := fstIdx d = s ∧ T.Derivation d
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Theory.Derivable (s : V) : Prop := ∃ d, T.DerivationOf d s
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Theory.Provable (p : V) : Prop := T.Derivable {p}
 
 section «lp_section_6»

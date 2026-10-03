@@ -9,7 +9,7 @@ public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-! # Erdős 97 convex-octagon formalization: Basic -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

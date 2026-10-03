@@ -27,7 +27,7 @@ consecutive segment defined by the partition.
   each consecutive interval [pᵢ, pᵢ₊₁]
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Complex
 

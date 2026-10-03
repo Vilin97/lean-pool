@@ -20,7 +20,7 @@ This file defines continuous alternating and strong symplectic forms, together w
 Fredholm, finite-rank, complex-structure, and hyperplane notions used throughout the project.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support
 
@@ -39,6 +39,7 @@ structure ContinuousAlternatingForm (X : Type*) [NormedAddCommGroup X] [NormedSp
 /-- The symplectic orthogonal of a subspace for a continuous alternating form.
 
 Blueprint: `def:weak-form`; audit: `DEF-SYMPLECTIC-ORTHOGONAL`. -/
+@[expose]
 def ContinuousAlternatingForm.orthogonal {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] (b : ContinuousAlternatingForm X) (E : Submodule ℝ X) :
     Submodule ℝ X := by
@@ -48,6 +49,7 @@ def ContinuousAlternatingForm.orthogonal {X : Type*} [NormedAddCommGroup X]
 /-- The radical, equivalently the kernel of the operator induced by the form.
 
 Blueprint: `def:weak-form`; audit: `DEF-RADICAL`. -/
+@[expose]
 def ContinuousAlternatingForm.radical {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] (b : ContinuousAlternatingForm X) : Submodule ℝ X := by
   exact b.toDual.toLinearMap.ker
@@ -73,6 +75,7 @@ theorem ContinuousAlternatingForm.radical_isClosed {X : Type*} [NormedAddCommGro
 /-- The restriction of a continuous alternating form to a linear subspace.
 
 Blueprint: `def:weak-form`; audit: `DEF-RESTRICTED-RADICAL`. -/
+@[expose]
 def ContinuousAlternatingForm.restrict {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] (b : ContinuousAlternatingForm X) (E : Submodule ℝ X) :
     ContinuousAlternatingForm E := by
@@ -85,6 +88,7 @@ def ContinuousAlternatingForm.restrict {X : Type*} [NormedAddCommGroup X]
 /-- The radical of the restriction of a continuous alternating form to a subspace.
 
 Blueprint: `def:weak-form`; audit: `DEF-RESTRICTED-RADICAL`. -/
+@[expose]
 def ContinuousAlternatingForm.restrictedRadical {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] (b : ContinuousAlternatingForm X) (E : Submodule ℝ X) :
     Submodule ℝ X := by
@@ -100,18 +104,21 @@ structure StrongSymplecticForm (X : Type*) [NormedAddCommGroup X] [NormedSpace �
 
 This is the implementation bridge into the weak-form API.
 Blueprint: `def:weak-form`; audit: `DEF-WEAK-ALT-FORM`, `DEF-STRONG-SYMPLECTIC`. -/
+@[expose]
 def StrongSymplecticForm.toContinuousAlternatingForm {X : Type*}
     [NormedAddCommGroup X] [NormedSpace ℝ X] (b : StrongSymplecticForm X) :
     ContinuousAlternatingForm X := by
   exact { toDual := b.toDual.toContinuousLinearMap, alternating := b.alternating }
 
 /-- The transpose of a bounded linear map between real normed spaces. -/
+@[expose]
 def transpose {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) :
     StrongDual ℝ Y →L[ℝ] StrongDual ℝ X :=
   (ContinuousLinearMap.flip (ContinuousLinearMap.compL ℝ X Y ℝ)) T
 
 /-- The adjoint of a bounded operator with respect to a strong symplectic form. -/
+@[expose]
 def StrongSymplecticForm.adjoint {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (ω : StrongSymplecticForm X) (T : X →L[ℝ] X) : X →L[ℝ] X :=
   ω.toDual.symm.toContinuousLinearMap.comp
@@ -119,6 +126,7 @@ def StrongSymplecticForm.adjoint {X : Type*} [NormedAddCommGroup X] [NormedSpace
 
 /-- A bounded linear map is Fredholm when it has finite-dimensional kernel, closed range,
 and finite-dimensional cokernel. -/
+@[expose]
 def IsFredholm {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : Prop :=
   FiniteDimensional ℝ T.toLinearMap.ker ∧
@@ -126,17 +134,20 @@ def IsFredholm {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
       FiniteDimensional ℝ (Y ⧸ T.toLinearMap.range)
 
 /-- A bounded linear map has finite rank when its algebraic range is finite-dimensional. -/
+@[expose]
 def HasFiniteRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : Prop :=
   FiniteDimensional ℝ T.toLinearMap.range
 
 /-- The rank of a bounded linear map, used when its range is finite-dimensional. -/
+@[expose]
 def operatorRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : ℕ :=
   Module.finrank ℝ T.toLinearMap.range
 
 /-- The dimension of the kernel of a bounded linear map, used when the kernel is
 finite-dimensional. -/
+@[expose]
 def nullity {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : ℕ :=
   Module.finrank ℝ T.toLinearMap.ker
@@ -146,16 +157,19 @@ natural dimensions coerced to integers. It is interpreted as a dimension differe
 finite-dimensional hypotheses in `IsFredholm`.
 
 Blueprint: `def:fredholm-rank`; audit: `DEF-FREDHOLM-INDEX`. -/
+@[expose]
 def fredholmIndex {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : ℤ := by
   exact (nullity T : ℤ) - (Module.finrank ℝ (Y ⧸ T.toLinearMap.range) : ℤ)
 
 /-- A complex structure on a real normed space is a bounded operator squaring to `-I`. -/
+@[expose]
 def IsComplexStructure {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (J : X →L[ℝ] X) : Prop :=
   J ^ 2 = -1
 
 /-- A closed codimension-one linear subspace. -/
+@[expose]
 def IsHyperplane {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (H : Submodule ℝ X) : Prop :=
   IsClosed (H : Set X) ∧ Module.finrank ℝ (X ⧸ H) = 1

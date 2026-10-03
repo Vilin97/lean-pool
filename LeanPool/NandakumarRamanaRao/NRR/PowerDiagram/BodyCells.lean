@@ -30,7 +30,7 @@ restricted cell can be empty or lower‑dimensional, so it need not be a solid c
 Partition properties of the family `i ↦ bodyCellSet K s w i` are out of scope here.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 
@@ -40,12 +40,14 @@ variable {n : ℕ}
 
 /-- **Restricted power cell** as a set: the intersection of the body `K` with the power cell of
 site `i`. Kept at the set level (no bundling, no nondegeneracy hypothesis). -/
+@[expose]
 def bodyCellSet (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ) (i : Fin n) :
     Set Plane :=
   (K : Set Plane) ∩ cell s w i
 
 /-- **Area** of a restricted power cell: the real‑valued Lebesgue measure of `bodyCellSet`.
 Defined unconditionally (no nonempty‑interior hypothesis). -/
+@[expose]
 noncomputable def bodyCellArea (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ)
     (i : Fin n) : ℝ :=
   (volume (bodyCellSet K s w i)).toReal
@@ -76,6 +78,7 @@ theorem bodyCellSet_isCompact (K : Geometry.ConvexBody Plane) (s : Fin n → Pla
 /-- **Bundled** restricted power cell, requiring explicit nonempty‑interior evidence `hInt`.
 The carrier is `bodyCellSet K s w i`; convexity and compactness are automatic, and solidity is
 exactly the supplied hypothesis. -/
+@[expose]
 noncomputable def bodyCellBody (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ)
     (i : Fin n) (hInt : (interior (bodyCellSet K s w i)).Nonempty) :
     Geometry.ConvexBody Plane where

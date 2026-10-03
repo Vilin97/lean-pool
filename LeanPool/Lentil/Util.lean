@@ -10,7 +10,7 @@ public meta import Lean.Meta.Tactic.Simp.Simproc
 meta import Lean.Meta.Tactic.Simp.Attr
 import Lean.Meta.Tactic.Simp.RegisterCommand
 
-@[expose] public section
+public section
 
 open Lean
 

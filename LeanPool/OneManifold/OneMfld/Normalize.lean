@@ -18,7 +18,7 @@ is `Ioo 0 1`, and an `OChart` with target `Ioo 0 1` can be orientation-reversed
 (`x ↦ 1 - x`). H-charts cannot be flipped: the closed end at `0` is a boundary point.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 
@@ -27,6 +27,7 @@ open Set
 noncomputable section
 
 /-- Multiplication by a positive constant, as a self-homeomorphism of `ℝ≥0`. -/
+@[expose]
 def NNReal.mulHomeomorph (c : NNReal) (hc : 0 < c) : NNReal ≃ₜ NNReal where
   toFun x := c * x
   invFun y := c⁻¹ * y

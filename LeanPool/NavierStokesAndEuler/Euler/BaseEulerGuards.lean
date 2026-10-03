@@ -21,7 +21,7 @@ section
 base interval. The normal and uncut velocity are the constructed source
 trajectories; their equations and the parent Riccati equation give the bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,7 +32,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketForwardFactorization
 
 /-- First sign rate, given by `4*(3*CM^2+CH)`. -/
-def firstSignRate (CM CH : ℝ) : ℝ := 4*(3*CM^2+CH)
+@[expose] def firstSignRate (CM CH : ℝ) : ℝ := 4*(3*CM^2+CH)
 
 private theorem numerator_derivative_bound (CM CH : ℝ) (hCM : 0 ≤ CM) (hCH : 0 ≤ CH)
     (m m₁ v v₁ : Space) (A A₁ : Space →L[ℝ] Space)
@@ -166,7 +166,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -177,6 +177,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerPacketFirstPressureSign EulerTimeIntervalRestriction
 
 /-- Coefficient cost, given by `27*(frameAmplitude K)^2*gradientAmplitude K`. -/
+@[expose]
 def coefficientCost (K : ℝ) : ℝ := 27*(frameAmplitude K)^2*gradientAmplitude K
 
 theorem coefficientCost_nonneg (K : ℝ) : 0 ≤ coefficientCost K := by
@@ -185,6 +186,7 @@ theorem coefficientCost_nonneg (K : ℝ) : 0 ≤ coefficientCost K := by
 
 /-- Guard time, given by `min T (min 1 (1/(4*(1+coefficientCost K + firstSignRate
 (coefficientCost K) (coefficientCost K)))))`. -/
+@[expose]
 def guardTime (T K : ℝ) : ℝ :=
   min T (min 1 (1/(4*(1+coefficientCost K +
     firstSignRate (coefficientCost K) (coefficientCost K)))))
@@ -294,9 +296,18 @@ def lowBoundsOn (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
 /-- Low bounds, given by `lowBoundsOn L _ _ _ (guardTime_le_one G.T L.K) (guardTime_small G.T
 L.K).1`. -/
+@[expose]
 def lowBounds : LowBounds
     (G.restrictTime (guardTime G.T L.K) (guardTime_pos G.T L.K G.T_pos)
       (guardTime_le G.T L.K)) :=
   lowBoundsOn L _ _ _ (guardTime_le_one G.T L.K) (guardTime_small G.T L.K).1
+
+theorem lowBounds_scalar_values :
+    (lowBounds L).Be = coefficientCost L.K ∧
+    (lowBounds L).Bc = 0 ∧
+    (lowBounds L).L = 0 ∧
+    (lowBounds L).r = 0 ∧
+    (lowBounds L).K = coefficientCost L.K := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl⟩
 
 end EulerBaseEulerGuards

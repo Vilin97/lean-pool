@@ -16,7 +16,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.FairPartition.Predicates
 
 /-! # Internal Model -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 
@@ -50,7 +50,7 @@ namespace ConvexFigureModel
 variable {α : Type} [ConvexFigureModel α]
 
 /-- Convert any model value into the convex-body type used by NRR. -/
-def toBody (F : α) : NRR.Geometry.ConvexBody Plane where
+@[expose] def toBody (F : α) : NRR.Geometry.ConvexBody Plane where
   carrier := ConvexFigureModel.carrier F
   convex' := ConvexFigureModel.isConvex F
   isCompact' := ConvexFigureModel.isCompact F

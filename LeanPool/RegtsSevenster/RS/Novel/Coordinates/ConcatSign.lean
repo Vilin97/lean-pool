@@ -16,7 +16,7 @@ the product of the per-block key-sortSigns: key ranges of distinct
 blocks are disjoint and ordered, so concatenation adds no inversions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

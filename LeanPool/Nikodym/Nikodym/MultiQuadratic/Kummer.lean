@@ -36,7 +36,7 @@ statements `linearIndependent_sqrt_prod`, `linearIndependent_sqrt_prod_int` and
 * `Nikodym.MultiQuad.sum_intCast_mul_sqrt_prod_eq_zero`: the coefficient form over `ℤ`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

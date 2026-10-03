@@ -37,7 +37,7 @@ Constructive (`[propext, Quot.sound]`) except the counterexample's finite
 case-analysis.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -105,7 +105,7 @@ theorem interUpTo_appendSeq (X1 : ℕ → Set α) (n1 : ℕ) (X2 : ℕ → Set �
 /-- **Exercise 1.18 — consistent subset.** `C ⊆ 𝒟` is *finitely consistent* iff
 every finite
 sequence drawn from `C` is `Consistent` in `𝒟`. -/
-def FinitelyConsistent (C : Set (Set α)) : Prop :=
+@[expose] def FinitelyConsistent (C : Set (Set α)) : Prop :=
   ∀ (n : ℕ) (X : ℕ → Set α), (∀ i, i < n → X i ∈ C) → V.Consistent X n
 
 /-! ### Intersection of a non-empty family of filters (Scott's last claim). -/
@@ -184,7 +184,7 @@ def triSys : NeighborhoodSystem (Fin 3) :=
   NeighborhoodSystem.ofPositive (fun X => X.Nonempty) Set.univ
     (⟨0, Set.mem_univ 0⟩) (fun {_} _ => Set.subset_univ _) (fun _ _ _ _ => Iff.rfl)
 
-theorem triSys_master : triSys.master = (Set.univ : Set (Fin 3)) := rfl
+theorem triSys_master : triSys.master = (Set.univ : Set (Fin 3)) := by rfl
 
 namespace triSys
 

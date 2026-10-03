@@ -43,7 +43,7 @@ Apply this pattern three times:
 - Reed-Simon Vol. II, Ch. X (decay of correlations)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology Pointwise
@@ -70,11 +70,11 @@ lemma schwartz_tendsto_zero (f : SchwartzMap E ℂ) :
 /-! ## Kernel decomposition -/
 
 /-- The singular (compactly supported) part of the kernel. -/
-def kernelSingular (K : E → ℝ) (R₀ : ℝ) : E → ℝ :=
+@[expose] def kernelSingular (K : E → ℝ) (R₀ : ℝ) : E → ℝ :=
   fun x => K x * (closedBall (0 : E) R₀).indicator (fun _ => (1 : ℝ)) x
 
 /-- The tail (decaying) part of the kernel. -/
-def kernelTail (K : E → ℝ) (R₀ : ℝ) : E → ℝ :=
+@[expose] def kernelTail (K : E → ℝ) (R₀ : ℝ) : E → ℝ :=
   fun x => K x * (closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ)) x
 
 omit [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] in
@@ -518,7 +518,7 @@ theorem schwartz_bilinear_prod_integrable
 /-! ## Main theorem -/
 
 /-- The bilinear integral of Schwartz functions against a decaying kernel -/
-def schwartzBilinearIntegral (f g : SchwartzMap E ℂ) (K : E → ℝ) (a : E) : ℂ :=
+@[expose] def schwartzBilinearIntegral (f g : SchwartzMap E ℂ) (K : E → ℝ) (a : E) : ℂ :=
   ∫ x : E, ∫ y : E, f x * (K (x - y) : ℂ) * g (y - a)
 
 private lemma schwartz_bilinear_kernelSingular_vanish

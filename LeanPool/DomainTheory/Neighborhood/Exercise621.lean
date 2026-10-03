@@ -47,7 +47,7 @@ category.
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -79,7 +79,7 @@ theorem inter_ne_of_ne_right {X X' Δ : Set Str} (hX' : X' ⊆ Δ) (hne : X' ≠
 `sumTok`, but the
 improper copies `0Δ₀`, `1Δ₁` are removed (`X ≠ Δ₀`, `Y ≠ Δ₁`), so the two bottoms
 are identified. -/
-def oplusTok (D₀ D₁ : NeighborhoodSystem Str)
+@[expose] def oplusTok (D₀ D₁ : NeighborhoodSystem Str)
     (h₀ : ∀ X, D₀.mem X → X.Nonempty) (h₁ : ∀ Y, D₁.mem Y → Y.Nonempty) :
     NeighborhoodSystem Str where
   mem W := W = sumTokMaster D₀ D₁ ∨ (∃ X, D₀.mem X ∧ X ≠ D₀.master ∧ W = embBit false X) ∨
@@ -151,7 +151,7 @@ than the full top `M`) are removed. -/
 rectangles must avoid both top coordinates (`X ≠ Δ₀`, `Y ≠ Δ₁`); the full top `M =
 prodTokNbhd Δ₀ Δ₁`
 is kept as the master. -/
-def otimesTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
+@[expose] def otimesTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
   mem W := W = prodTokNbhd D₀.master D₁.master ∨
     (∃ X Y, D₀.mem X ∧ D₁.mem Y ∧ X ≠ D₀.master ∧ Y ≠ D₁.master ∧ W = prodTokNbhd X Y)
   master := prodTokNbhd D₀.master D₁.master
@@ -188,11 +188,11 @@ theorem otimesTok_nonempty : ∀ W, (otimesTok D₀ D₁).mem W → W.Nonempty :
 /-! ## Repackaged as objects of Scott's category -/
 
 /-- The **coalesced sum object** `𝒟₀ ⊕ 𝒟₁`. -/
-def ScottSys.oplus (A₀ A₁ : ScottSys) : ScottSys :=
+@[expose] def ScottSys.oplus (A₀ A₁ : ScottSys) : ScottSys :=
   ⟨oplusTok A₀.sys A₁.sys A₀.ne A₁.ne, oplusTok_nonempty⟩
 
 /-- The **smash product object** `𝒟₀ ⊗ 𝒟₁`. -/
-def ScottSys.otimes (A₀ A₁ : ScottSys) : ScottSys :=
+@[expose] def ScottSys.otimes (A₀ A₁ : ScottSys) : ScottSys :=
   ⟨otimesTok A₀.sys A₁.sys, otimesTok_nonempty⟩
 
 /-! ## Membership inversions -/
@@ -306,6 +306,7 @@ the shared bottom). -/
 variable {C₀ C₁ : ScottSys}
 
 /-- **`f₀ ⊕ f₁`, the action of the coalesced sum on maps.** -/
+@[expose]
 def oplusMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
     ApproximableMap (A₀.oplus A₁).sys (B₀.oplus B₁).sys where
   rel W W' :=
@@ -474,6 +475,7 @@ As `prodMapTok`, but proper rectangles require both components proper, and a
 absorbs a boundary hit `f₀(X) = Δ₀'` (or `f₁(Y) = Δ₁'`) into the top `M`. -/
 
 /-- **`f₀ ⊗ f₁`, the action of the smash product on maps.** -/
+@[expose]
 def otimesMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
     ApproximableMap (A₀.otimes A₁).sys (B₀.otimes B₁).sys where
   rel W W' :=
@@ -624,7 +626,7 @@ inductive GExpr where
   | otimes : GExpr → GExpr → GExpr
 
 /-- **The action of `T` on objects.** -/
-def GExpr.obj : GExpr → ScottSys → ScottSys
+@[expose] def GExpr.obj : GExpr → ScottSys → ScottSys
   | .const D, _ => D
   | .var, X => X
   | .sum a b, X => (a.obj X).sum (b.obj X)
@@ -633,7 +635,7 @@ def GExpr.obj : GExpr → ScottSys → ScottSys
   | .otimes a b, X => (a.obj X).otimes (b.obj X)
 
 /-- **The action of `T` on maps.** -/
-def GExpr.map : (T : GExpr) → {X Y : ScottSys} → ApproximableMap X.sys Y.sys →
+@[expose] def GExpr.map : (T : GExpr) → {X Y : ScottSys} → ApproximableMap X.sys Y.sys →
     ApproximableMap (T.obj X).sys (T.obj Y).sys
   | .const D, _, _, _ => idMap D.sys
   | .var, _, _, f => f
@@ -849,7 +851,7 @@ generic helpers
 /-- **The token-level master recursion for `GExpr`.** All four binary operations
 share the same body
 (`sumTokMaster = prodTokNbhd` on masters). -/
-def gFun : GExpr → Set Str → Set Str
+@[expose] def gFun : GExpr → Set Str → Set Str
   | .const C, _ => C.sys.master
   | .var, Γ => Γ
   | .sum a b, Γ => insert ([] : Str) (embBit false (gFun a Γ) ∪ embBit true (gFun b Γ))
@@ -909,7 +911,7 @@ theorem gFun_continuous (T : GExpr) {ℱ : Set (Set Str)} {U : Set Str}
   | otimes a b ih₀ ih₁ => intro w; exact insertTag_continuous hne ih₀ ih₁ w
 
 /-- **`Λ ∈ tok(C)` for every constant `C` occurring in `T`.** -/
-def GExpr.RootedConst : GExpr → Prop
+@[expose] def GExpr.RootedConst : GExpr → Prop
   | .const C => ([] : Str) ∈ C.sys.master
   | .var => True
   | .sum a b => a.RootedConst ∧ b.RootedConst
@@ -927,7 +929,7 @@ theorem gFun_nil_mem : ∀ (T : GExpr), T.RootedConst → {Γ : Set Str} →
   | .otimes _ _, _, _, _ => Set.mem_insert _ _
 
 /-- The **Kleene iteration** `gFunⁿ({Λ})`. -/
-def gIter (T : GExpr) : ℕ → Set Str
+@[expose] def gIter (T : GExpr) : ℕ → Set Str
   | 0 => {([] : Str)}
   | n + 1 => gFun T (gIter T n)
 

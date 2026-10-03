@@ -19,7 +19,7 @@ finite two-point calibration result can be stated directly as a probability
 bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators ENNReal
@@ -62,7 +62,7 @@ theorem highSetPMF_apply {m : ℕ} (p : Fin m → ℝ)
     (hp0 : ∀ i, 0 ≤ p i) (hp1 : ∀ i, p i ≤ 1)
     (S : Finset (Fin m)) :
     highSetPMF p hp0 hp1 S = ENNReal.ofReal (highSetMass p S) :=
-  rfl
+  by rfl
 
 /-- Probability of a finite collection of high sets. -/
 theorem highSetMeasure_apply_finset {m : ℕ} (p : Fin m → ℝ)
@@ -87,7 +87,7 @@ theorem highSetMeasure_real_apply_finset {m : ℕ} (p : Fin m → ℝ)
   simp [ENNReal.toReal_ofReal (highSetMass_nonneg hp0 hp1 S)]
 
 /-- The rejection event in the high-set sample space. -/
-noncomputable def twoPointRejectionEvent {m : ℕ} (γ β : Fin m → ℝ) (α : ℝ) :
+@[expose] noncomputable def twoPointRejectionEvent {m : ℕ} (γ β : Fin m → ℝ) (α : ℝ) :
     Finset (Finset (Fin m)) :=
   Finset.univ.filter fun S ↦ twoPointKFinset γ β S ≤ α
 
@@ -122,7 +122,7 @@ theorem canonicalTwoPoint_coordinate_mean_one {m : ℕ}
 /-- Equivalent product-`Bool` realization of the canonical two-point
 vector.  This model makes coordinate independence available directly from
 the product-measure API. -/
-def canonicalTwoPointPiVector {m : ℕ}
+@[expose] def canonicalTwoPointPiVector {m : ℕ}
     (γ β : Fin m → ℝ) (ω : Fin m → Bool) (i : Fin m) : ℝ :=
   if ω i then highValue (β i) else lowValue (γ i)
 

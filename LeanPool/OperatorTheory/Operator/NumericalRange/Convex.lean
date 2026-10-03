@@ -18,7 +18,7 @@ This file proves the Toeplitz--Hausdorff theorem: the numerical range of a
 bounded linear operator on a complex inner product space is convex over `ℝ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

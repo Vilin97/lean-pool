@@ -13,7 +13,7 @@ public import Mathlib.Data.Matrix.Mul
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Matrix.Cast`.
 -/
 
-@[expose] public section
+public section
 
 variable {R k : Type*} {s : k → Type _}
 

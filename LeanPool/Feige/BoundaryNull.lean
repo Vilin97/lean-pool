@@ -18,7 +18,7 @@ nonnegative exponential law and then applies the product decomposition of a
 finite `Option`-indexed product.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open MeasureTheory ProbabilityTheory Set

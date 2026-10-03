@@ -15,7 +15,7 @@ This file provides a small reusable interface for strongly continuous contractio
 semigroups on real normed spaces, parametrized by nonnegative real time.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

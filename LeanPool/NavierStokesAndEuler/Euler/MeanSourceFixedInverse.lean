@@ -22,7 +22,7 @@ coordinate solver is identified with the original source mean solver, and its
 spatial translation regularity follows from the constructed coefficient families.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -76,12 +76,12 @@ variable (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
   (hsmall : K * (T ^ 2 / 2) + Be * T + boundaryLocalizationC2 * Bc * r ^ 3 * T ≤ 1 / 2)
 
 /-- The actual full source form on fixed solenoidal derivative coordinates. -/
-def sourceFixedForm : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def sourceFixedForm : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
   fixedMeanOperator T hT (operatorPath T F.field) (operatorPath T F₁.field)
     (operatorPath T H.field) (multiplier M0.field) (boundaryOperator (scaledCutoff ℓ hℓ)) L
 
 /-- The positive source coercivity constant uses the actual inverse-frame bound. -/
-def sourceFixedCoercivity : ℝ :=
+@[expose] def sourceFixedCoercivity : ℝ :=
   fixedMeanCoercivity T (operatorPath T F.field) (operatorPath T F₁.field) FInv
 
 include hT in
@@ -102,7 +102,7 @@ theorem sourceFixedForm_coercive (v : TimeLp T solenoidalSpace) :
     (source_smallness T K Be Bc r hsmall) v
 
 /-- The fixed coordinate source solver is constructed from the proved coercive form. -/
-def sourceCoordinateSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def sourceCoordinateSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
   (coerciveInverse (sourceFixedForm T hT ℓ hℓ F F₁ H M0 L) (sourceFixedCoercivity T F F₁ FInv)
     (sourceFixedCoercivity_pos T hT F F₁ FInv)
     (sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter

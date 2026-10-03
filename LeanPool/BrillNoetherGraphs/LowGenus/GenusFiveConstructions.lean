@@ -34,7 +34,7 @@ rows and the named length-dependent families are kept separate so that filling
 one theorem is a genuine, reportable unit of progress.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveConstructions
 

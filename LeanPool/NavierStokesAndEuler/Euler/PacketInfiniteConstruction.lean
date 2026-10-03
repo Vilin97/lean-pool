@@ -132,23 +132,44 @@ theorem joinedPhysicalBounds (t : Icc (0 : ℝ) (F).parent.T) (x : Space) :
 
 /-- The joined choice's parent, state, low bounds, physical bounds and renewed
 frame, with the guards' shear, spike and `badRatio`. -/
-@[expose] def joinedStep : P.Step where
+@[expose] def joinedStep (hn : n ≠ 0) (hq : requiredExponent ≤ q)
+    (hB : commonThreshold gradientConstant hessianConstant ≤ B) : P.Step where
   parent := P.joinedParent hn hq hB
   state := P.joinedState hn hq hB
-  targetShear := (G).hchild
-  spikeAmplitude := (G).δ
-  errorRatio := (G).badRatio
-  errorRatio_nonneg := (G).badRatio_nonneg
+  targetShear := (P.joinedGuards hn hq hB).hchild
+  spikeAmplitude := (P.joinedGuards hn hq hB).δ
+  errorRatio := (P.joinedGuards hn hq hB).badRatio
+  errorRatio_nonneg := (P.joinedGuards hn hq hB).badRatio_nonneg
   targetShear_eq := P.joinedGuards_shear hn hq hB
   parent_horizon := rfl
   parent_scale := rfl
-  label_eq := (F).label_constant
+  label_eq := (P.chooseJoined hn hq hB).label_constant
   low := P.joinedLow hn hq hB
-  low_exterior := rfl
-  low_core := rfl
-  low_pressure := rfl
-  low_boundary := rfl
-  low_radius := rfl
+  low_exterior := by
+    have h := (P.chooseJoined hn hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.joined_smallness hn hq hB)
+    exact h.1
+  low_core := by
+    have h := (P.chooseJoined hn hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.joined_smallness hn hq hB)
+    exact h.2.1
+  low_pressure := by
+    have h := (P.chooseJoined hn hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.joined_smallness hn hq hB)
+    exact h.2.2.1
+  low_boundary := by
+    have h := (P.chooseJoined hn hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.joined_smallness hn hq hB)
+    exact h.2.2.2.2
+  low_radius := by
+    have h := (P.chooseJoined hn hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.joined_smallness hn hq hB)
+    exact h.2.2.2.1.trans P.restrictedLow_radius
   physical_bounds := P.joinedPhysicalBounds hn hq hB
   bad_cost := P.joined_bad_cost hn hq hB
   pressure_cost := P.joined_pressure_cost hn hq hB
@@ -156,7 +177,7 @@ frame, with the guards' shear, spike and `badRatio`. -/
   geometry_targetTime := P.joinedGeometry_targetTime hn hq hB
   geometry_coupling := P.joinedFrame_a hn
   geometry_y := rfl
-  geometry_delta_pos := (I).delta_pos
+  geometry_delta_pos := (P.joinedInput hn hq hB).delta_pos
   geometry_shear := rfl
   renewal_errors := P.joined_renewal_errors hn hq hB
   renewal := P.joinedRenewal hn hq hB
@@ -165,7 +186,9 @@ frame, with the guards' shear, spike and `badRatio`. -/
   renewal_error := rfl
 
 /-- Assemble the joined packet using the shared successor invariant. -/
-@[expose] def joinedNext : Stage S (n+1) := P.next (P.joinedStep hn hq hB)
+@[expose] def joinedNext (hn : n ≠ 0) (hq : requiredExponent ≤ q)
+    (hB : commonThreshold gradientConstant hessianConstant ≤ B) : Stage S (n+1) :=
+  P.next (P.joinedStep hn hq hB)
 
 theorem joinedNext_time : (P.joinedNext hn hq hB).time=P.nextTime := rfl
 

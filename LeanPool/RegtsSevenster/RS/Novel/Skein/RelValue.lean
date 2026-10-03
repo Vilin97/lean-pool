@@ -21,7 +21,7 @@ that lands.  For subsets arising from a standard transition
 system, the relative data agrees with the original.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {α : Type} {W : Fragment α}
 /-- In-flags at a vertex for a boundary-relative orientation: the
 participating flags attached to the vertex and marked incoming, in
 the fixed enumeration order. -/
+@[expose]
 noncomputable def EdgeSubset.relInFlagsAt (F : EdgeSubset W)
     {κ : F.RelTransitionSystem} (o : κ.Orientation)
     (v : W.Vertex) : List W.Flag :=
@@ -56,6 +57,7 @@ theorem EdgeSubset.mem_internal_of_mem_relInFlagsAt
 /-! ## Agreement with the standard data -/
 
 /-- Transport of an orientation to the relative system. -/
+@[expose]
 def EdgeSubset.TransitionSystem.Orientation.toRel
     {F : EdgeSubset W} {κ : F.TransitionSystem}
     (o : κ.Orientation) : κ.toRelTransitionSystem.Orientation where

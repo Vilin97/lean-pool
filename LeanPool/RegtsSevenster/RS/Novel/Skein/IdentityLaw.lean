@@ -26,7 +26,7 @@ interface labels `C`, and the outer labels `D`; the shuffle
 constructor permutation with definitional inverses.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

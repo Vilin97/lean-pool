@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTranslation
 
 /-! Bounded spatial maps and mixed derivative words commute with the actual elapsed-time join. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,11 +36,35 @@ theorem join_map (L : E →L[ℝ] F) :
         (L.compLeftContinuous ℝ (Icc (0 : ℝ) (S-τ)) v) (congrArg L hm) := by
   apply ContinuousMap.ext
   intro t
-  change L (if (t : ℝ) ≤ τ then u (projIcc 0 τ hτ0 t)
-    else v (elapsedTime S τ (projIcc τ S hτS t))) =
-      if (t : ℝ) ≤ τ then L (u (projIcc 0 τ hτ0 t))
-        else L (v (elapsedTime S τ (projIcc τ S hτS t)))
-  split <;> rfl
+  change L (join S τ hτ0 hτS u v hm t) =
+    join S τ hτ0 hτS
+      (L.compLeftContinuous ℝ (Icc (0 : ℝ) τ) u)
+      (L.compLeftContinuous ℝ (Icc (0 : ℝ) (S-τ)) v) (congrArg L hm) t
+  by_cases ht : (t : ℝ) ≤ τ
+  · let s : Icc (0 : ℝ) τ := ⟨t, t.property.1, ht⟩
+    rw [show join S τ hτ0 hτS u v hm t = u s from
+      join_left S τ hτ0 hτS u v hm s,
+      show join S τ hτ0 hτS
+        (L.compLeftContinuous ℝ (Icc (0 : ℝ) τ) u)
+        (L.compLeftContinuous ℝ (Icc (0 : ℝ) (S-τ)) v)
+        (congrArg L hm) t =
+          (L.compLeftContinuous ℝ (Icc (0 : ℝ) τ) u) s from
+        join_left S τ hτ0 hτS _ _ _ s]
+    rfl
+  · let s : Icc τ S := ⟨t, le_of_lt (lt_of_not_ge ht), t.property.2⟩
+    rw [show join S τ hτ0 hτS u v hm t =
+        v ⟨(s : ℝ)-τ, sub_nonneg.mpr s.property.1,
+          sub_le_sub_right s.property.2 τ⟩ from
+      join_right S τ hτ0 hτS u v hm s,
+      show join S τ hτ0 hτS
+        (L.compLeftContinuous ℝ (Icc (0 : ℝ) τ) u)
+        (L.compLeftContinuous ℝ (Icc (0 : ℝ) (S-τ)) v)
+        (congrArg L hm) t =
+          (L.compLeftContinuous ℝ (Icc (0 : ℝ) (S-τ)) v)
+            ⟨(s : ℝ)-τ, sub_nonneg.mpr s.property.1,
+              sub_le_sub_right s.property.2 τ⟩ from
+        join_right S τ hτ0 hτS _ _ _ s]
+    rfl
 
 end EulerElapsedTimePathGluing
 

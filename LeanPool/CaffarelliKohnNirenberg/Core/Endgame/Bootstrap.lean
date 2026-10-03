@@ -17,7 +17,7 @@ of the potential and finiteness of the explicit Adams constants are derived,
 rather than supplied as extra inputs.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

@@ -16,7 +16,7 @@ monoidal comparison of the fibre functor inherits that naturality
 directly on the generators of the tensor product of super modules.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

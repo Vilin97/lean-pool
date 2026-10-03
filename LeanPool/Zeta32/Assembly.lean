@@ -9,7 +9,7 @@ public import Mathlib.Analysis.PSeries
 
 /-! Zeta32 — Assembly. -/
 
-@[expose] public section
+public section
 open Polynomial Filter Topology
 namespace Zeta32
 

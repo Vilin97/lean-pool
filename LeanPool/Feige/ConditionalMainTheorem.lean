@@ -17,7 +17,7 @@ are fully discharged: Theorem 2.1, the simplex/exponential identification
 of (2.1), and the `α = 0` centroid-halfspace inequality are the only inputs.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

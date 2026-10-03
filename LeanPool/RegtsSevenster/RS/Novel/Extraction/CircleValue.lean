@@ -16,7 +16,7 @@ the superdimension `k − 2ℓ`, which is the value Definition 5 gives
 a free circle.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -17,7 +17,7 @@ prevents those arguments from silently treating Boolean multiplication as
 ordinary polynomial multiplication.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

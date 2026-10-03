@@ -13,21 +13,25 @@ The above-two trial parameters, explicit primal trajectory, and mutually recursi
 trajectory.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 
 /-- The accuracy normalized by the trial's smoothness and distance estimates. -/
-noncomputable def delta (eps M D : ℝ) : ℝ := eps / (M * D)
+@[expose] noncomputable def delta (eps M D : ℝ) : ℝ := eps / (M * D)
 /-- The primal phase error budget `1 / p`. -/
+@[expose]
 noncomputable def etaF (p : ℝ) : ℝ := 1 / p
 /-- The dual phase error budget determined by the normalized accuracy. -/
+@[expose]
 noncomputable def etaD (p eps M D : ℝ) : ℝ :=
   delta eps M D ^ conjugateExponent p / conjugateExponent p
 /-- The ceiling of the primal horizon required by the above-two gap bound. -/
+@[expose]
 noncomputable def nF (p eps M D : ℝ) : ℕ :=
   Nat.ceil ((aboveHp p / delta eps M D) ^ (p / (p + 2)))
 /-- The ceiling of the dual horizon required by the above-two gradient bound. -/
+@[expose]
 noncomputable def nD (p eps M D : ℝ) : ℕ :=
   Nat.ceil ((aboveJp p / delta eps M D) ^ (p / (p + 2)))
 
@@ -65,6 +69,7 @@ structure PrimalState (d : ℕ) where
   x : Point d
 
 /-- The literal above-two primal trajectory starting at the zero normalized state. -/
+@[expose]
 noncomputable def primalState (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
     ℕ → PrimalState d
   | 0 => ⟨0, 0, 0⟩
@@ -98,6 +103,7 @@ noncomputable def primalTrace (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
   (List.range (n + 1)).map fun k => oracle.observe (primalState p eta n oracle k).x
 
 /-- The concrete above-two primal trajectory packaged with its minimum objective value. -/
+@[expose]
 noncomputable def primalData (p eta : ℝ) (n : ℕ) (oracle : PairOracle d)
     (fstar : ℝ) : AbovePrimalPhaseData p d n where
   oracle := oracle
@@ -152,6 +158,7 @@ theorem primal_queried_at (p eta : ℝ) (n : ℕ) (oracle : PairOracle d)
 
 mutual
   /-- The recursively generated normalized query points of the above-two dual phase. -/
+  @[expose]
   noncomputable def dualQ (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => 0
@@ -160,6 +167,7 @@ mutual
     termination_by k => k
 
   /-- The recursively accumulated vectors of the above-two dual phase. -/
+  @[expose]
   noncomputable def dualR (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => -(coeffB p eta n n n) • oracle.gradient 0

@@ -39,7 +39,7 @@ The exact minimal-polynomial degree, optimality, and an exact level-set area are
 of the formal results.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

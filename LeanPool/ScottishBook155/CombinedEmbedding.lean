@@ -18,7 +18,7 @@ in the max product preserves its metric estimates and supplies global
 injectivity once the first coordinate separates the collapsed subset.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -28,6 +28,7 @@ universe u v
 
 /-- Pair an arbitrary relative coordinate with the quotient Kuratowski
 coordinate used to recover injectivity. -/
+@[expose]
 noncomputable def combinedEmbedding
     {P : Type u} [MetricSpace P] {E : Type v} (relative : P → E) (S : Set P) (base : P) (x : P) :
       E × lp (fun _ : CollapsedQuotient P S ↦ ℝ) ∞ :=

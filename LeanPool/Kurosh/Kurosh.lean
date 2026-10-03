@@ -36,7 +36,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -60,7 +60,7 @@ open Monoid.CoprodI
 abbrev FreeProduct (G : ι → Type u) [∀ i, Group (G i)] := Monoid.CoprodI G
 
 /-- The canonical inclusion of a factor into its free product. -/
-def factorInclusion (G : ι → Type u) [∀ i, Group (G i)] (i : ι) :
+@[expose] def factorInclusion (G : ι → Type u) [∀ i, Group (G i)] (i : ι) :
     G i →* FreeProduct G := Monoid.CoprodI.of
 
 @[simp]
@@ -80,7 +80,7 @@ appear literally in the Kurosh decomposition.
 -/
 
 /-- Conjugation of a subgroup by an ambient-group element. -/
-def conjugateSubgroup {P : Type u} [Group P] (K : Subgroup P) (g : P) : Subgroup P :=
+@[expose] def conjugateSubgroup {P : Type u} [Group P] (K : Subgroup P) (g : P) : Subgroup P :=
   K.map (MulAut.conj g)
 
 @[simp]
@@ -94,12 +94,12 @@ theorem mem_conjugateSubgroup_iff {P : Type u} [Group P] (K : Subgroup P) (g x :
     simp [MulAut.conj_apply, mul_assoc]
 
 /-- The ambient subgroup obtained from a Kurosh factor. -/
-def intersectionFactor {G : ι → Type u} [∀ i, Group (G i)]
+@[expose] def intersectionFactor {G : ι → Type u} [∀ i, Group (G i)]
     (H : Subgroup (FreeProduct G)) (i : ι) (g : FreeProduct G) : Subgroup (FreeProduct G) :=
   H ⊓ conjugateSubgroup (MonoidHom.range (factorInclusion G i)) g
 
 /-- The same factor regarded as a subgroup of `H`, so its inclusion into `H` is canonical. -/
-def intersectionFactorInH {G : ι → Type u} [∀ i, Group (G i)]
+@[expose] def intersectionFactorInH {G : ι → Type u} [∀ i, Group (G i)]
     (H : Subgroup (FreeProduct G)) (i : ι) (g : FreeProduct G) : Subgroup H :=
   (intersectionFactor H i g).comap H.subtype
 
@@ -156,6 +156,7 @@ construction.
 -/
 
 /-- Invert a reduced word by reversing its letters and inverting each letter. -/
+@[expose]
 def wordInv {G : ι → Type u} [∀ i, Group (G i)]
     (w : Word G) : Word G :=
   { toList := w.toList.reverse.map (fun x : Σ i, G i => ⟨x.1, x.2⁻¹⟩)
@@ -172,7 +173,7 @@ def wordInv {G : ι → Type u} [∀ i, Group (G i)]
 @[simp]
 theorem wordInv_toList {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) :
     (wordInv w).toList = w.toList.reverse.map (fun x : Σ i, G i => ⟨x.1, x.2⁻¹⟩) :=
-  rfl
+  by rfl
 
 theorem wordInv_prod {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) :
     (wordInv w).prod = w.prod⁻¹ := by
@@ -186,7 +187,7 @@ theorem wordInv_wordInv {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) :
   simp [wordInv, Function.comp_def, List.map_map]
 
 /-- The factor index of the last letter, or `none` for the empty word. -/
-def wordLastIdx {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) : Option ι :=
+@[expose] def wordLastIdx {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) : Option ι :=
   (wordInv w).fstIdx
 
 private lemma head_reverse_map {α β : Type*} (f : α → β) (l : List α) :
@@ -232,7 +233,7 @@ abbrev RightFactorWord {G : ι → Type u} [∀ i, Group (G i)] (i : ι) :=
   {w : Word G // wordLastIdx w ≠ some i}
 
 /-- The right tail bundled with the fact that its last index differs from `i`. -/
-noncomputable def rightTailCanonical {G : ι → Type u} [∀ i, Group (G i)]
+@[expose] noncomputable def rightTailCanonical {G : ι → Type u} [∀ i, Group (G i)]
     (i : ι) (w : Word G) : RightFactorWord (G := G) i :=
   ⟨rightTail i w, rightTail_lastIdx_ne i w⟩
 
@@ -278,7 +279,7 @@ theorem right_syllable_decomposition {G : ι → Type u} [∀ i, Group (G i)]
   simp
 
 /-- Append a nonidentity factor-`i` letter to a word ending in a different factor. -/
-noncomputable def rightAppend {G : ι → Type u} [∀ i, Group (G i)]
+@[expose] noncomputable def rightAppend {G : ι → Type u} [∀ i, Group (G i)]
     (i : ι) (w : Word G) (a : G i) (ha : a ≠ 1)
     (hw : wordLastIdx w ≠ some i) : Word G :=
   wordInv (Word.cons a⁻¹ (wordInv w)
@@ -365,7 +366,7 @@ theorem rightTail_eq_of_prod_eq_mul_factor {G : ι → Type u} [∀ i, Group (G 
   simpa [rightTail_equiv_mul_factor] using htail
 
 /-- Append a nonidentity letter to a canonical representative for its factor coset. -/
-noncomputable def rightAppendCanonical {G : ι → Type u} [∀ i, Group (G i)]
+@[expose] noncomputable def rightAppendCanonical {G : ι → Type u} [∀ i, Group (G i)]
     (i : ι) (w : RightFactorWord (G := G) i) (a : G i) (ha : a ≠ 1) : Word G :=
   rightAppend i w.1 a ha w.2
 
@@ -468,7 +469,7 @@ theorem bassSerre_rootedConnected {ι : Type v} (G : ι → Type u)
   | factor i w => exact bassSerreFactor_path G i w
 
 /-- A geodesic spanning tree of the symmetrified word model. -/
-noncomputable def bassSerreTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def bassSerreTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] :
     WideSubquiver (Quiver.Symmetrify (BassSerreVertex G)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (BassSerreVertex G))
@@ -494,7 +495,7 @@ the stabilizer calculation does not depend on a choice of representatives.
 -/
 
 /-- Equivalence under multiplication on the right by an element of `K`. -/
-def rightCosetSetoid {P : Type w} [Group P] (K : Subgroup P) : Setoid P where
+@[expose] def rightCosetSetoid {P : Type w} [Group P] (K : Subgroup P) : Setoid P where
   r a b := ∃ k : K, a * k = b
   iseqv := by
     refine ⟨?_, ?_, ?_⟩
@@ -517,7 +518,7 @@ abbrev RightCoset {P : Type w} [Group P] (K : Subgroup P) :=
   Quotient (rightCosetSetoid K)
 
 /-- The coset represented by a group element. -/
-def rightCosetMk {P : Type w} [Group P] (K : Subgroup P) (a : P) : RightCoset K :=
+@[expose] def rightCosetMk {P : Type w} [Group P] (K : Subgroup P) (a : P) : RightCoset K :=
   Quotient.mk (rightCosetSetoid K) a
 
 theorem rightCosetMk_eq_iff {P : Type w} [Group P] (K : Subgroup P) (a b : P) :
@@ -576,7 +577,7 @@ abbrev FactorCoset {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)] (i : �
   RightCoset (MonoidHom.range (factorInclusion G i))
 
 /-- The factor coset represented by an element of the free product. -/
-def factorCosetMk {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)]
+@[expose] def factorCosetMk {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)]
     (i : ι) (g : FreeProduct G) : FactorCoset G i :=
   rightCosetMk (MonoidHom.range (factorInclusion G i)) g
 
@@ -678,7 +679,7 @@ theorem rawBassSerre_rootedConnected {ι : Type v} (G : ι → Type u)
   | factor i c => exact rawBassSerreFactor_path G i c
 
 /-- A geodesic spanning tree of the symmetrified group-and-coset model. -/
-noncomputable def rawBassSerreTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawBassSerreTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] :
     WideSubquiver (Quiver.Symmetrify (RawBassSerreVertex G)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -826,7 +827,7 @@ abbrev ActionOrbit (A : Type w) (X : Type w) [Group A] [MulAction A X] :=
   MulAction.orbitRel.Quotient A X
 
 /-- Send a point to its group-action orbit. -/
-def actionOrbitMk (A : Type w) (X : Type w) [Group A] [MulAction A X]
+@[expose] def actionOrbitMk (A : Type w) (X : Type w) [Group A] [MulAction A X]
     (x : X) : ActionOrbit A X := Quotient.mk (MulAction.orbitRel A X) x
 
 /-- Orbit equality expressed by an element carrying the first point to the second.
@@ -847,21 +848,21 @@ theorem actionOrbitMk_smul (A : Type w) (X : Type w) [Group A] [MulAction A X]
   exact ⟨a⁻¹, by simp⟩
 
 /-- An unbundled Bass-Serre edge is a group element paired with a factor index. -/
-def rawBassSerreEdgeData {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)] :=
+@[expose] def rawBassSerreEdgeData {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)] :=
   FreeProduct G × ι
 
 /-- The central vertex at the source of an unbundled edge. -/
-def rawBassSerreEdgeDataSource {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreEdgeDataSource {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (e : rawBassSerreEdgeData G) : RawBassSerreVertex G :=
   RawBassSerreVertex.central e.1
 
 /-- The factor coset at the target of an unbundled edge. -/
-def rawBassSerreEdgeDataTarget {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreEdgeDataTarget {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (e : rawBassSerreEdgeData G) : RawBassSerreVertex G :=
   RawBassSerreVertex.factor e.2 (factorCosetMk G e.2 e.1)
 
 /-- Translate an unbundled edge by left multiplication on its group coordinate. -/
-def rawBassSerreEdgeDataAction {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreEdgeDataAction {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (a : FreeProduct G) (e : rawBassSerreEdgeData G) :
     rawBassSerreEdgeData G :=
   (a * e.1, e.2)
@@ -909,6 +910,7 @@ instance rawBassSerreEdgeDataSubgroupMulAction {ι : Type v} (G : ι → Type u)
   mul_smul a b e := by simp [mul_smul]
 
 /-- Forget the endpoints of a bundled Bass-Serre edge. -/
+@[expose]
 def rawBassSerreEdgeDataOf {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] {a b : RawBassSerreVertex G} (e : a ⟶ b) :
     rawBassSerreEdgeData G := by
@@ -926,7 +928,7 @@ theorem rawBassSerreEdgeDataOf_target {ι : Type v} (G : ι → Type u)
   cases e using RawBassSerreEdge.casesOn; rfl
 
 /-- Translate a Bass-Serre edge and both endpoints by a group element. -/
-def rawBassSerreEdgeAction {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreEdgeAction {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (g : FreeProduct G) {a b : RawBassSerreVertex G}
     (e : a ⟶ b) : g • a ⟶ g • b := by
   cases e using RawBassSerreEdge.casesOn with
@@ -1030,7 +1032,7 @@ theorem kuroshFactorOrbitVertex_eq_iff {ι : Type v} (G : ι → Type u)
     rfl
 
 /-- The source vertex orbit of an edge orbit. -/
-def rawBassSerreOrbitEdgeSource {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitEdgeSource {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (e : RawBassSerreOrbitEdge G H) : RawBassSerreOrbitVertex G H :=
   Quotient.lift (fun x => actionOrbitMk H (RawBassSerreVertex G)
@@ -1044,7 +1046,7 @@ def rawBassSerreOrbitEdgeSource {ι : Type v} (G : ι → Type u)
         (rawBassSerreEdgeDataSource G y)) e
 
 /-- The target vertex orbit of an edge orbit. -/
-def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (e : RawBassSerreOrbitEdge G H) : RawBassSerreOrbitVertex G H :=
   Quotient.lift (fun x => actionOrbitMk H (RawBassSerreVertex G)
@@ -1058,7 +1060,7 @@ def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
         (rawBassSerreEdgeDataTarget G y)) e
 
 /-- The quotient quiver whose edges are subgroup orbits with prescribed endpoints. -/
-@[reducible]
+@[expose, reducible]
 def rawBassSerreOrbitQuiver {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Quiver (RawBassSerreOrbitVertex G H) where
@@ -1071,13 +1073,13 @@ instance rawBassSerreOrbitQuiver.inst {ι : Type v} (G : ι → Type u)
     Quiver (RawBassSerreOrbitVertex G H) := rawBassSerreOrbitQuiver G H
 
 /-- The subgroup orbit of an unbundled Bass-Serre edge. -/
-def rawBassSerreOrbitEdgeMk {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitEdgeMk {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (e : rawBassSerreEdgeData G) : RawBassSerreOrbitEdge G H :=
   actionOrbitMk H (rawBassSerreEdgeData G) e
 
 /-- Bundle an edge orbit with its source and target vertex orbits. -/
-def rawBassSerreOrbitQuiverEdge {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitQuiverEdge {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (e : rawBassSerreEdgeData G) :
     rawBassSerreOrbitEdgeSource G H (rawBassSerreOrbitEdgeMk G H e) ⟶
@@ -1101,6 +1103,7 @@ theorem rawBassSerreOrbitEdgeTarget_mk {ι : Type v} (G : ι → Type u)
     actionOrbitMk]
 
 /-- Project a Bass-Serre edge to the quotient quiver. -/
+@[expose]
 def rawBassSerreOrbitEdgeMap {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : RawBassSerreVertex G} (e : a ⟶ b) :
@@ -1153,7 +1156,7 @@ theorem rawBassSerreOrbitQuiver_rootedConnected {ι : Type v} (G : ι → Type u
             ⟨(rawBassSerreOrbitSymmPrefunctor G H).mapPath p⟩
 
 /-- A geodesic spanning tree of the symmetrified quotient graph. -/
-noncomputable def rawBassSerreOrbitTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawBassSerreOrbitTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     WideSubquiver (Quiver.Symmetrify (RawBassSerreOrbitVertex G H)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (RawBassSerreOrbitVertex G H))
@@ -1182,7 +1185,7 @@ noncomputable instance rawBassSerreOrbitTreeArborescence {ι : Type v}
 
 /- The distinguished quotient vertex corresponding to the identity of the subgroup. -/
 /-- The subgroup orbit of the central vertex represented by the identity. -/
-def rawBassSerreOrbitRoot {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitRoot {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     RawBassSerreOrbitVertex G H :=
   actionOrbitMk H (RawBassSerreVertex G) (RawBassSerreVertex.central 1)
@@ -1204,13 +1207,13 @@ theorem rawOrbitAlign_spec {ι : Type v} (G : ι → Type u)
   Classical.choose_spec ((actionOrbitMk_eq_iff H (RawBassSerreVertex G) x y).1 h)
 
 /-- The prefunctor forgetting membership in a wide subquiver. -/
-def wideSubquiverInclusion {V : Type u} [Quiver.{v} V]
+@[expose] def wideSubquiverInclusion {V : Type u} [Quiver.{v} V]
     (W : WideSubquiver V) : W ⥤q V where
   obj := id
   map e := e.1
 
 /-- Include the quotient spanning tree into the symmetrified quotient graph. -/
-def rawTreeInclusion {ι : Type v} (G : ι → Type u)
+@[expose] def rawTreeInclusion {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     rawBassSerreOrbitTree G H ⥤q
       Quiver.Symmetrify (RawBassSerreOrbitVertex G H) where
@@ -1235,7 +1238,7 @@ def rawTreeEdgeMap {ι : Type v} (G : ι → Type u)
   (rawTreeInclusion G H).map e
 
 /-- The quotient spanning tree expressed as a quiver on the ambient vertex type. -/
-@[reducible] def rawTreeQuiver {ι : Type v} (G : ι → Type u)
+@[expose, reducible] def rawTreeQuiver {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Quiver (RawBassSerreOrbitVertex G H) :=
   { Hom := fun a b =>
@@ -1252,7 +1255,7 @@ noncomputable instance rawTreeQuiverArborescence {ι : Type v}
   exact rawBassSerreOrbitTreeArborescence G H
 
 /-- Forget tree-membership proofs along a path in the quotient spanning tree. -/
-def rawTreePathMap {ι : Type v} (G : ι → Type u)
+@[expose] def rawTreePathMap {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     ∀ {a b : RawBassSerreOrbitVertex G H},
       @Quiver.Path (RawBassSerreOrbitVertex G H) (rawTreeQuiver G H) a b →
@@ -1269,7 +1272,7 @@ def rawTreePathMap {ι : Type v} (G : ι → Type u)
       Quiver.Path.cons (rawTreePathMap G H p) e.1
 
 /-- The root of the quotient spanning tree on the ambient vertex type. -/
-def rawTreeQuiverRoot {ι : Type v} (G : ι → Type u)
+@[expose] def rawTreeQuiverRoot {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     RawBassSerreOrbitVertex G H :=
   @Quiver.Arborescence.root (RawBassSerreOrbitVertex G H)
@@ -1315,7 +1318,7 @@ theorem rawTreePathMap_cons_raw {ι : Type v} (G : ι → Type u)
   simp [rawTreePathMap]
 
 /-- Choose a representative of a path endpoint by successively lifting quotient edges. -/
-noncomputable def rawTreeLiftPath {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawTreeLiftPath {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {b : RawBassSerreOrbitVertex G H} :
     ∀ _p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreOrbitVertex G H)) _
@@ -1401,7 +1404,7 @@ noncomputable def rawTreeLiftPath {ι : Type v} (G : ι → Type u)
           exact hsource
 
 /-- The orbit representative obtained by lifting the chosen rooted tree path. -/
-noncomputable def rawTreeRepresentative {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawTreeRepresentative {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (b : RawBassSerreOrbitVertex G H) : RawBassSerreVertex G :=
   (rawTreeLiftPath G H
@@ -1417,7 +1420,7 @@ theorem rawTreeRepresentative_orbit {ι : Type v} (G : ι → Type u)
       ((rawTreeUniquePath G H b).default))).property
 
 /-- Choose an unbundled representative of an edge in the quotient graph. -/
-noncomputable def quotientEdgeRawData {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def quotientEdgeRawData {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : RawBassSerreOrbitVertex G H}
     (e : a ⟶ b) : rawBassSerreEdgeData G :=
@@ -1718,25 +1721,25 @@ private theorem freeGroupoid_isConnected_of_rootedConnected
   exact Zigzag.of_inv_hom (freeGroupoidPathHom pa) (freeGroupoidPathHom pb)
 
 /-- Recover the original vertex from an object of the free groupoid. -/
-def freeGroupoidBaseObj {V : Type u} [q : Quiver.{v} V]
+@[expose] def freeGroupoidBaseObj {V : Type u} [q : Quiver.{v} V]
     (a : Quiver.FreeGroupoid V) : V := by
   exact a.as
 
 /-- The quiver underlying the category structure of the free groupoid. -/
-@[instance_reducible] def freeGroupoidCategoryQuiver {V : Type u} [q : Quiver.{v} V] :
+@[expose, instance_reducible] def freeGroupoidCategoryQuiver {V : Type u} [q : Quiver.{v} V] :
     Quiver (Quiver.FreeGroupoid V) := by
   letI : CategoryTheory.Category (Quiver.FreeGroupoid V) :=
     Quiver.FreeGroupoid.instCategory
   infer_instance
 
 /-- Original quiver arrows, lifted to the universe of free groupoid morphisms. -/
-@[instance_reducible] def freeGroupoidGeneratorQuiver {V : Type u} [q : Quiver.{v} V] :
+@[expose, instance_reducible] def freeGroupoidGeneratorQuiver {V : Type u} [q : Quiver.{v} V] :
     Quiver.{max u v} (Quiver.FreeGroupoid V) :=
   { Hom := fun a b => ULift.{u}
       (@Quiver.Hom V q (freeGroupoidBaseObj a) (freeGroupoidBaseObj b)) }
 
 /-- Include a lifted generating arrow into the free groupoid. -/
-def freeGroupoidGeneratorArrow {V : Type u} [q : Quiver.{v} V]
+@[expose] def freeGroupoidGeneratorArrow {V : Type u} [q : Quiver.{v} V]
     {a b : Quiver.FreeGroupoid V}
     (e : ULift.{u}
       (@Quiver.Hom V q (freeGroupoidBaseObj a) (freeGroupoidBaseObj b))) :
@@ -1819,7 +1822,7 @@ noncomputable def quotientTreePathHom {ι : Type v} (G : ι → Type u)
       (rawTreePathMap G H (rawTreePath G H a))
 
 /-- Close a quotient edge to a based loop using the chosen tree paths. -/
-noncomputable def quotientEdgeLoop {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def quotientEdgeLoop {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : RawBassSerreOrbitVertex G H} (e : a ⟶ b) :
     KuroshFreePart G H :=
@@ -1946,7 +1949,7 @@ def rawBassSerreOrbitTreeRootVertex {ι : Type v} (G : ι → Type u)
   Quiver.root (rawBassSerreOrbitTree G H)
 
 /-- Map a tree path to the symmetrified quotient graph without bundled tree vertices. -/
-def rawTreeInclusionMapPathAsRaw {ι : Type v} (G : ι → Type u)
+@[expose] def rawTreeInclusionMapPathAsRaw {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {a b : WideSubquiver.toType
       (Quiver.Symmetrify (RawBassSerreOrbitVertex G H))
@@ -2249,7 +2252,7 @@ abbrev KuroshComponentIndex {ι : Type v} (G : ι → Type u)
   KuroshFactorIndex G H ⊕ PUnit
 
 /-- The component group at a Kurosh factor or at the free quotient graph. -/
-def KuroshComponent {ι : Type v} (G : ι → Type u)
+@[expose] def KuroshComponent {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     KuroshComponentIndex G H → Type (max (u + 1) (v + 1)) :=
   Sum.elim
@@ -2285,7 +2288,7 @@ abbrev TreeKuroshComponentIndex {ι : Type v} (G : ι → Type u)
   RawBassSerreOrbitVertex G H ⊕ PUnit
 
 /-- The family of vertex stabilizers together with the quotient graph's loop group. -/
-def TreeKuroshComponent {ι : Type v} (G : ι → Type u)
+@[expose] def TreeKuroshComponent {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     TreeKuroshComponentIndex G H → Type (max (u + 1) (v + 1)) :=
   Sum.elim
@@ -2311,7 +2314,7 @@ abbrev TreeKuroshProduct {ι : Type v} (G : ι → Type u)
   FreeProduct (TreeKuroshComponent G H)
 
 /-- Map each stabilizer by inclusion and the free part by evaluation in `H`. -/
-noncomputable def treeKuroshComponentHom {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def treeKuroshComponentHom {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (q : TreeKuroshComponentIndex G H) :
     TreeKuroshComponent G H q →* H := by
@@ -2333,13 +2336,13 @@ noncomputable def treeKuroshComponentHom {ι : Type v} (G : ι → Type u)
             exact (kuroshFreePartHom G H).map_mul x.down y.down }
 
 /-- The homomorphism induced by the stabilizer inclusions and free-part evaluation. -/
-noncomputable def treeKuroshProductToH {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def treeKuroshProductToH {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     TreeKuroshProduct G H →* H :=
   Monoid.CoprodI.lift (treeKuroshComponentHom G H)
 
 /-- Include a vertex stabilizer as a factor in the tree Kurosh product. -/
-noncomputable def treeKuroshVertexInclusion {ι : Type v}
+@[expose] noncomputable def treeKuroshVertexInclusion {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (a : RawBassSerreOrbitVertex G H) :
     treeVertexStabilizer G H a →* TreeKuroshProduct G H :=
@@ -2362,7 +2365,7 @@ noncomputable def treeKuroshVertexInclusion {ι : Type v}
       rfl }
 
 /-- Include the quotient graph's loop group as the free factor in the tree product. -/
-noncomputable def treeKuroshFreeInclusion {ι : Type v}
+@[expose] noncomputable def treeKuroshFreeInclusion {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     KuroshFreePart G H →* TreeKuroshProduct G H :=
   { toFun := fun x => Monoid.CoprodI.of

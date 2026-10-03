@@ -17,7 +17,7 @@ formula.  This file packages that scalar endpoint and relates it to both the hig
 identity and the pure-power Itô recurrence.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

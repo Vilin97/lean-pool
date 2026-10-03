@@ -26,7 +26,7 @@ it gives an additional formal correspondence between fixed-shift set-valued tabl
 Hecke factorizations for the 321-avoiding case.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -471,6 +471,7 @@ open AspPerm
 
 /-- A Hecke factorization of `τ`, represented as a list of ASP permutations
 whose Demazure product is `τ`. -/
+@[expose]
 def HeckeFactorization (τ : AspPerm) : Type :=
   {P : List AspPerm //
     DProd P = τ}
@@ -494,6 +495,7 @@ def isChain : List (Set (ℤ × ℤ) × ℤ) → Prop
 
 /-- A chain of box sets with shifts whose union is `invSet τ`, whose total
 shift is `τ.χ`, and whose pieces are linked in order. -/
+@[expose]
 def PChain (τ : AspPerm) : Type :=
   {C : List (Set (ℤ × ℤ) × ℤ) // isChain C ∧ boxUnion C = invSet τ ∧ chiSum C = τ.χ}
 
@@ -794,6 +796,7 @@ structure SetValuedTableau_prop {τ : AspPerm} {n : ℕ}
       i ∈ T p → j ∈ T q → p.val ≼ q.val → p ≠ q → j ≤ i
 
 /-- A set-valued tableau on `invSet τ` with symbols `1, ..., n`. -/
+@[expose]
 def SetValuedTableau (τ : AspPerm) (n : ℕ) : Type :=
   {T : ↥(invSet τ) → Finset (Fin n) // SetValuedTableau_prop (τ := τ) T}
 
@@ -807,6 +810,7 @@ structure LabelChain_prop {τ : AspPerm} {n : ℕ}
 
 /-- A fixed-length chain of subsets of `invSet τ`, indexed by the symbols
 `1, ..., n`. -/
+@[expose]
 def LabelChain (τ : AspPerm) (n : ℕ) : Type :=
   {C : Fin n → Set (ℤ × ℤ) // LabelChain_prop (τ := τ) C}
 

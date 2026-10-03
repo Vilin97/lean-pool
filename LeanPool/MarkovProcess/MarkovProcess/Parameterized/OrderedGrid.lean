@@ -21,7 +21,7 @@ The result is a path-law kernel on `Theta × alpha` with values in measures on `
 It is not a continuous-time path law and does not assert measurability in the grid.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -40,6 +40,7 @@ def lastIndex (n : ℕ) : Finset.Iic n :=
   ⟨n, Finset.mem_Iic.mpr le_rfl⟩
 
 /-- The jointly measurable transition kernel at one fixed time increment. -/
+@[expose]
 def parameterStateKernel (t : NNReal) : Kernel (Theta × alpha) alpha :=
   P.jointKernel.comap (fun q : Theta × alpha ↦ (q.1, (t, q.2)))
     (measurable_fst.prodMk (measurable_const.prodMk measurable_snd))
@@ -50,6 +51,7 @@ theorem parameterStateKernel_apply (t : NNReal) (theta : Theta) (x : alpha) :
   rfl
 
 /-- The augmented transition preserves the parameter deterministically and samples the state. -/
+@[expose]
 noncomputable def augmentedKernel (t : NNReal) : Kernel (Theta × alpha) (Theta × alpha) :=
   Kernel.deterministic Prod.fst measurable_fst ×ₖ P.parameterStateKernel t
 

@@ -23,7 +23,7 @@ Every unit sphere `Sⁿ ⊂ ℝⁿ⁺¹` with its round metric, and every produc
 `nashCompact`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff EuclideanSpace
 open Bundle Function Metric

@@ -33,7 +33,7 @@ ratio lies in `(1/2,2)`.  An explicit change of the chart radius identifies
 the scaled Cartesian lift with the full native cylindrical graph.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -233,7 +233,7 @@ copy family and to every current-band representation of the same label.
 The current state and the native reference requests are arbitrary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -562,7 +562,7 @@ They let a physical wave assembly retain an unrestricted label `finsum` while
 identifying its value with the finite active-label sum.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -626,7 +626,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1426,6 +1426,7 @@ end CurrentRepresentation
 
 /-- Cycle input, given by `(ActualCycleParameters.fixedParameters B N0).afterParticular
 x.coefficients (commonContext B) x.state`. -/
+@[expose]
 noncomputable def cycleInput (x : CorrectionStep.CycleState (Label B N0)) :
     CorrectionState.State Point :=
   (ActualCycleParameters.fixedParameters B N0).afterParticular

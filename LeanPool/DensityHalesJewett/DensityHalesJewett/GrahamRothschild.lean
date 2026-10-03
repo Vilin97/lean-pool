@@ -32,7 +32,7 @@ write-up, and with it the finite Ramsey theorem used to arrange the blocks in in
 is not needed here: pairwise disjoint blocks already describe a subspace.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics

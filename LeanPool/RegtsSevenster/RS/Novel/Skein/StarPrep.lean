@@ -20,7 +20,7 @@ blocks; and the interface pairs of a full closure split into the
 high-block pairs followed by the low-block pairs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -139,6 +139,7 @@ noncomputable def strandBundleTranspose (m : ℕ) :
 /-! ### The interface split of a full closure -/
 
 /-- The high-block interface pairs of a full `(m + m)`-closure. -/
+@[expose]
 def highCross (m : ℕ) :
     List ((Fin (0 + (m + m)) ⊕ Fin ((m + m) + 0)) ×
       (Fin (0 + (m + m)) ⊕ Fin ((m + m) + 0))) :=
@@ -147,6 +148,7 @@ def highCross (m : ℕ) :
      Sum.inr ⟨m + k.val, by have := k.isLt; omega⟩))
 
 /-- The low-block interface pairs of a full `(m + m)`-closure. -/
+@[expose]
 def lowCross (m : ℕ) :
     List ((Fin (0 + (m + m)) ⊕ Fin ((m + m) + 0)) ×
       (Fin (0 + (m + m)) ⊕ Fin ((m + m) + 0))) :=

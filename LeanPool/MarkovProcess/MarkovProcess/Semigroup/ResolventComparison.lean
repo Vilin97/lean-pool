@@ -36,7 +36,7 @@ Both semigroups are read at the same shift `μ`; nothing is asserted when the tw
 taken at different shifts, and no relation between the two generators is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

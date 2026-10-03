@@ -19,7 +19,7 @@ This is the topological coding ingredient of the Bartoszyński–Miller
 characterisation. It does not identify any cardinal invariant by definition.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 

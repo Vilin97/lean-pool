@@ -19,7 +19,7 @@ infrastructure: the deterministic-time restart identity is a hypothesis here, pr
 continuous-path process in `Trajectory/FellerRestrictedRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -17,7 +17,7 @@ Multidimensional density Hales--Jewett, uniform fibers, and the restricted-alpha
 lemma.  All subspaces below are mathlib's `Combinatorics.Subspace`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -26,14 +26,14 @@ open scoped BigOperators
 namespace DensityHalesJewett
 
 /-- The density Hales--Jewett assertion for the alphabet `Fin k`. -/
-def HasDensityHJ (k : ℕ) : Prop :=
+@[expose] def HasDensityHJ (k : ℕ) : Prop :=
   ∀ δ : ℝ, 0 < δ → ∃ N, ∀ n, N ≤ n → ∀ A : Finset (Fin n → Fin k),
     δ * (k : ℝ) ^ n ≤ #A → ∃ l : Combinatorics.Line (Fin k) (Fin n), ∀ a, l a ∈ A
 
 namespace Subspace
 
 /-- A one-dimensional density Hales--Jewett threshold selected from `HasDensityHJ`. -/
-noncomputable def densityOneBound (k : ℕ) (δ : ℝ) : ℕ := by
+@[expose] noncomputable def densityOneBound (k : ℕ) (δ : ℝ) : ℕ := by
   classical
   exact if h : 0 < δ ∧ HasDensityHJ k then
     Nat.find (h.2 δ h.1)
@@ -341,7 +341,7 @@ lemma exists_of_density {k : ℕ} (hDHJ : HasDensityHJ k)
   densityBound_spec hDHJ m hm δ hδ n hn A hA
 
 /-- Split the coordinates of a word family into a prefix and a suffix along a cut equivalence. -/
-def splitWords {alphabet p q n : ℕ} (e : Fin p ⊕ Fin q ≃ Fin n)
+@[expose] def splitWords {alphabet p q n : ℕ} (e : Fin p ⊕ Fin q ≃ Fin n)
     (A : Finset (Fin n → Fin alphabet)) : Finset (Fin p ⊕ Fin q → Fin alphabet) :=
   A.map (e.arrowCongr (Equiv.refl (Fin alphabet))).symm.toEmbedding
 
@@ -460,7 +460,7 @@ lemma exists_denser_fiber {alphabet m q : ℕ} (halphabet : 0 < alphabet) {ε : 
 
 /-- Every ambient dimension admits a cut into a prefix carrying a subspace and a nonempty suffix
 above which all fibers are almost as dense as the whole family. -/
-def VariableCutFibersSufficient (alphabet dimension : ℕ) (ε : ℝ) (n : ℕ) : Prop :=
+@[expose] def VariableCutFibersSufficient (alphabet dimension : ℕ) (ε : ℝ) (n : ℕ) : Prop :=
   ∀ A : Finset (Fin n → Fin alphabet),
     ∃ p q : ℕ, ∃ e : Fin p ⊕ Fin q ≃ Fin n, 0 < q ∧
       ∃ V : Combinatorics.Subspace (Fin dimension) (Fin alphabet) (Fin p),

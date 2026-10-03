@@ -21,7 +21,7 @@ multiset of roots into zero- and nonzero-sum subset contributions, the analytic
 heart of Niven's proof of the transcendence of `π`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -107,11 +107,11 @@ lemma prod_one_add_cexp_split (s : Multiset ℂ) :
   simp [Complex.exp_multiset_sum]
 
 /-- The multiset of all subset sums of `s`, i.e. `{ ∑_{x ∈ t} x | t ⊆ s }`. -/
-def subsetSums {α : Type*} [AddCommMonoid α] (s : Multiset α) : Multiset α :=
+@[expose] def subsetSums {α : Type*} [AddCommMonoid α] (s : Multiset α) : Multiset α :=
   (s.powerset).map sum
 
 /-- The multiset of all nonzero subset sums of `s`, i.e. `{ ∑_{x ∈ t} x ≠ 0 | t ⊆ s }`. -/
-def nonzeroSubsetSums {α : Type*} [AddCommMonoid α] [DecidableEq α] (s : Multiset α) :
+@[expose] def nonzeroSubsetSums {α : Type*} [AddCommMonoid α] [DecidableEq α] (s : Multiset α) :
     Multiset α := (subsetSums s).filter (· ≠ 0)
 
 /-- Every element of `{ ∑_{x ∈ t} x ≠ 0 | t ⊆ s }` is nonzero. -/

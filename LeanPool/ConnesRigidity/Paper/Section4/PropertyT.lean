@@ -16,7 +16,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 Property-(T) transfer for Zhou §4 on the concrete tensor-kernel groups.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperPropertyT
@@ -52,7 +52,7 @@ theorem sl3_propertyT_from_EJZK (input : EJZKInput.{v}) :
     elementaryGroup SpecialLinear.sl3Group elementaryEquivSL3).mp input.propertyT
 
 /-- Inclusion of the SL₃ factor into the actual acting group. Paper: §4. -/
-def sl3ToActingGroup : SpecialLinear.SL3 →* H where
+@[expose] def sl3ToActingGroup : SpecialLinear.SL3 →* H where
   toFun l := (l, 1)
   map_one' := by rfl
   map_mul' l m := by simp
@@ -63,7 +63,7 @@ def sl3ToActingGroup : SpecialLinear.SL3 →* H where
   rfl
 
 /-- The finite quotient in Zhou Proposition 4.8. Paper: §4. -/
-noncomputable def finiteSymplecticGroup : CountableDiscreteGroup where
+@[expose] noncomputable def finiteSymplecticGroup : CountableDiscreteGroup where
   Carrier := Q
   group := inferInstance
   countable := by infer_instance

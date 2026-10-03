@@ -32,7 +32,7 @@ Axiom guards for the top-level results live in `scripts/axioms.lean`; this
 file has no `#print axioms` blocks.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff
 

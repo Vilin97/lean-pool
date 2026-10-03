@@ -19,7 +19,7 @@ contains an element `p` and reduction modulo `p` lands in a Noetherian module,
 then finitely many lifted remainders together with `p` generate the ideal.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

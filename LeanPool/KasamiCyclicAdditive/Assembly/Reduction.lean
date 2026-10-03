@@ -28,7 +28,7 @@ form, with convenience wrappers taking only the half-size equation (and, in
 one case, also `DillonKashyapPhaseFormula`) supplied afterwards.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

@@ -14,7 +14,7 @@ Two spatial integrations by parts and one time integration by parts give
 the energy identity, hence the local energy inequality for nonnegative tests.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic CKN.ShearCalculus

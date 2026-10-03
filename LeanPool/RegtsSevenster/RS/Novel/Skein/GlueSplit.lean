@@ -22,12 +22,13 @@ the signed path-canonical value of `PathCanon.lean`, whose
 within-pairing independence is `PropThreeOpen.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- Extension of a boundary state on the surviving labels to the
 full label type, prescribing the two glued ends. -/
+@[expose]
 noncomputable def GenBoundaryState.extendPair {k ℓ : ℕ} {α : Type}
     (i j : α)
     (st : GenBoundaryState k ℓ (Fragment.SurvivingLabel α i j))

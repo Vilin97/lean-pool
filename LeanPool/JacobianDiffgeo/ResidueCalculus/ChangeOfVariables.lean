@@ -24,7 +24,7 @@ Main export: `RS.resAt_comp_mul_deriv`, and the `=ᶠ`-robust corollary
 `RS.resAt_comp_mul_deriv_of_eventuallyEq`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 

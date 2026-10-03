@@ -38,7 +38,7 @@ infrastructure in Mathlib, where the mixed-left-measure and additive chain-rule 
 already available.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal

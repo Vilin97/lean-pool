@@ -30,7 +30,7 @@ Only the finite-dimensional image is ever given a `finrank`; the full coordinate
 need not be finite-dimensional.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -40,11 +40,13 @@ variable {K : Type*} [Field K] {d : ℕ}
 
 /-- Blueprint F02: the restriction space `V_I(t) = im (P_{d,≤t} → P_d ⧸ I)`, the image of the
 polynomials of total degree at most `t` in the quotient algebra `P_d ⧸ I`. -/
+@[expose]
 noncomputable def restrictionSpace (I : Ideal (MvPolynomial (Fin d) K)) (t : ℕ) :
     Submodule K (MvPolynomial (Fin d) K ⧸ I) :=
   (restrictTotalDegree (Fin d) K t).map (Ideal.Quotient.mkₐ K I).toLinearMap
 
 /-- Blueprint F02: the affine Hilbert function `H_I(t) = dim_K V_I(t)`. -/
+@[expose]
 noncomputable def hilbert (I : Ideal (MvPolynomial (Fin d) K)) (t : ℕ) : ℕ :=
   Module.finrank K (restrictionSpace I t)
 

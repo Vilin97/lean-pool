@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryEquation
 /-! The primary pressure is the actual mean-zero angular primitive of the
 normal residual.  Its field satisfies the homogeneous packet equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,6 +41,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
 /-- Normal residual as an element of `ℝ`. -/
+@[expose]
 def normalResidual (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) : ℝ :=
   -(2*⟪D.normal.field t x.1,D.M.field t x.1
     (pointField P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t x)⟫_ℝ)/

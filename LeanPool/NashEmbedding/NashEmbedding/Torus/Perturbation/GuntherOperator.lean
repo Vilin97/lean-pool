@@ -49,7 +49,7 @@ iteration (`GuntherIteration.lean`):
 All constants are explicit `def`s; no attempt is made to optimize them.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev
@@ -67,19 +67,21 @@ abbrev Seq (n : ℕ) := (Fin n → ℤ) → ℂ
 /-! ## Operations on vector sequences -/
 
 /-- Componentwise `∂ᵢ`. -/
-def vpartial (i : Fin n) (v : VecSeq n N) : VecSeq n N := fun α => partialCoeff i (v α)
+@[expose] def vpartial (i : Fin n) (v : VecSeq n N) : VecSeq n N := fun α => partialCoeff i (v α)
 
 /-- Componentwise `L = ∑ₖ ∂ₖ² = -Δ`, i.e. the multiplier `-|m|²`. -/
-def vlap (v : VecSeq n N) : VecSeq n N := fun α m => -(laplacianCoeff (v α) m)
+@[expose] def vlap (v : VecSeq n N) : VecSeq n N :=
+  fun α m => -(laplacianCoeff (v α) m)
 
 /-- Componentwise `R = (I - L)⁻¹ = (I + Δ)⁻¹`. -/
 def vresolvent (v : VecSeq n N) : VecSeq n N := fun α => resolventCoeff (v α)
 
 /-- The dot product of two vector sequences: `∑ α, (v α) ⊛ (w α)`. -/
-def dotConv (v w : VecSeq n N) : Seq n := fun m => ∑ α, seqConv (v α) (w α) m
+@[expose] def dotConv (v w : VecSeq n N) : Seq n :=
+  fun m => ∑ α, seqConv (v α) (w α) m
 
 /-- Multiplication of a vector sequence by a scalar sequence: `(f ⊛ a α)_α`. -/
-def smulSeq (f : Seq n) (a : VecSeq n N) : VecSeq n N := fun α => seqConv f (a α)
+@[expose] def smulSeq (f : Seq n) (a : VecSeq n N) : VecSeq n N := fun α => seqConv f (a α)
 
 /-- The lower-order bucket of the tame estimate at level `k`:
 `‖v‖²_(k-1)‖w‖²_(r) + ‖v‖²_(r)‖w‖²_(k-1) + ‖v‖²_(r)‖w‖²_(r)`. -/
@@ -923,19 +925,20 @@ theorem scalarTame_resolvent_dotConv (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) 
 /-! ## The Günther operator -/
 
 /-- Polarized `Fᵢ`: `Fb i v w = -R(Lv · ∂ᵢw)`. -/
-def Fb (i : Fin n) (v w : VecSeq n N) : Seq n :=
+@[expose] def Fb (i : Fin n) (v w : VecSeq n N) : Seq n :=
   fun m => -(resolventCoeff (dotConv (vlap v) (vpartial i w)) m)
 
 /-- Polarized `Uᵢⱼ`:
 `Ub i j v w = R(∂ᵢv · ∂ⱼw) + 2 R(Lv · ∂ᵢ∂ⱼw) - 2 R(∑ₖ ∂ᵢ∂ₖv · ∂ⱼ∂ₖw)`. -/
-def Ub (i j : Fin n) (v w : VecSeq n N) : Seq n :=
+@[expose] def Ub (i j : Fin n) (v w : VecSeq n N) : Seq n :=
   fun m => resolventCoeff (dotConv (vpartial i v) (vpartial j w)) m
     + (2 : ℂ) * resolventCoeff (dotConv (vlap v) (vpartial i (vpartial j w))) m
     - (2 : ℂ) * ∑ k, resolventCoeff (dotConv (vpartial i (vpartial k v)) (vpartial j (vpartial k
         w))) m
 
 /-- The index set of the second-derivative frame: pairs `p ≤ q`. -/
-def pairs (n : ℕ) : Finset (Fin n × Fin n) := Finset.univ.filter fun pq => pq.1 ≤ pq.2
+@[expose] def pairs (n : ℕ) : Finset (Fin n × Fin n) :=
+  Finset.univ.filter fun pq => pq.1 ≤ pq.2
 
 /-- The data of the Günther operator on the momentum side: the dual frame `a i`, `b p q`
 (only `p ≤ q` is used) and the metric perturbation `h p q`, all as coefficient sequences. -/
@@ -948,12 +951,12 @@ structure GuntherData (n N : ℕ) where
   h : Fin n → Fin n → Seq n
 
 /-- The bilinear part: `B v w = -∑ᵢ Fb i v w · aᵢ + ∑_{p≤q} ½ Ub p q v w · b_{pq}`. -/
-def gB (d : GuntherData n N) (v w : VecSeq n N) : VecSeq n N :=
+@[expose] def gB (d : GuntherData n N) (v w : VecSeq n N) : VecSeq n N :=
   -(∑ i, smulSeq (Fb i v w) (d.a i))
     + ∑ pq ∈ pairs n, smulSeq (fun m => (1 / 2 : ℂ) * Ub pq.1 pq.2 v w m) (d.b pq.1 pq.2)
 
 /-- The constant part: `c = -∑_{p≤q} ½ h_{pq} · b_{pq}`. -/
-def gC (d : GuntherData n N) : VecSeq n N :=
+@[expose] def gC (d : GuntherData n N) : VecSeq n N :=
   -(∑ pq ∈ pairs n, smulSeq (fun m => (1 / 2 : ℂ) * d.h pq.1 pq.2 m) (d.b pq.1 pq.2))
 
 /-- `T v = c + B v v`. -/
@@ -1022,12 +1025,12 @@ theorem scalarTame_Ub (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ)
   exact h
 
 /-- Tame constants of `gB` (generous). -/
-def gBTop (n N r : ℕ) (d : GuntherData n N) : ℝ :=
+@[expose] def gBTop (n N r : ℕ) (d : GuntherData n N) : ℝ :=
   2 * (n * ∑ i, smulTopConst n N r (d.a i) (FbTop n N r)
     + (pairs n).card * ∑ pq ∈ pairs n, smulTopConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n
         N r))
 /-- Lower-order tame constant for the complete bilinear Günther operator. -/
-def gBLow (n N r : ℕ) (d : GuntherData n N) (k : ℕ) : ℝ :=
+@[expose] def gBLow (n N r : ℕ) (d : GuntherData n N) (k : ℕ) : ℝ :=
   2 * (n * ∑ i, smulLowConst n N r (d.a i) (FbTop n N r) (FbLow n N r) k
     + (pairs n).card * ∑ pq ∈ pairs n,
         smulLowConst n N r (d.b pq.1 pq.2) ((1 / 2) ^ 2 * UbTop n N r) (fun k => (1 / 2) ^ 2 *
@@ -1090,7 +1093,8 @@ lemma gC_mem (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < r) (d : GuntherDat
 
 /-- The `E1` constant derived from the tame estimate at level `r`:
 `‖B v w‖²_(r) ≤ (2 A' + 3 Bᵣ) ‖v‖²_(r) ‖w‖²_(r)`. -/
-def gA (n N r : ℕ) (d : GuntherData n N) : ℝ := 2 * gBTop n N r d + 3 * gBLow n N r d r
+@[expose] def gA (n N r : ℕ) (d : GuntherData n N) : ℝ :=
+  2 * gBTop n N r d + 3 * gBLow n N r d r
 
 /-- **The Günther operator satisfies the hypotheses of the abstract iteration.** -/
 theorem gunther_iterHyp (hn : 0 < n) {r : ℕ} (hr : 1 + (n : ℝ) / 2 < (r : ℝ) - 2)

@@ -19,7 +19,7 @@ layer-cake formula and proves that every universal project-level lower bound
 is at most `grunbaumConstant`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,7 +42,7 @@ theorem coordinateSum_apply (n : ℕ) (x : SimplexE n) :
   simp [coordinateSum]
 
 /-- The full-dimensional standard simplex `xᵢ ≥ 0`, `∑ xᵢ ≤ 1`. -/
-def simplexSet (n : ℕ) : Set (SimplexE n) :=
+@[expose] def simplexSet (n : ℕ) : Set (SimplexE n) :=
   {x | (∀ i, 0 ≤ x i) ∧ coordinateSum n x ≤ 1}
 
 @[simp]
@@ -250,7 +250,7 @@ theorem integral_coordinateSum (n : ℕ) :
       (fun _ hx ↦ ht1.trans hx) obs
 
 /-- The volume centroid of the standard simplex. -/
-def simplexCentroid (n : ℕ) : SimplexE n :=
+@[expose] def simplexCentroid (n : ℕ) : SimplexE n :=
   ⨍ x in simplexSet n, x ∂volume
 
 /-- The scalar coordinate needed to locate the sharp supporting hyperplane. -/
@@ -298,6 +298,7 @@ theorem sharpHalfspaceSet_volume_ratio {n : ℕ} (hn : 0 < n) :
 
 /-- The standard simplex, regarded as a full-dimensional body in project
 dimension `d + 1`. -/
+@[expose]
 def simplexFullBody (d : ℕ) : FullDimensionalConvexBody d where
   carrier := simplexSet (d + 1)
   convex' := convex_simplexSet (d + 1)
@@ -306,7 +307,7 @@ def simplexFullBody (d : ℕ) : FullDimensionalConvexBody d where
 
 theorem simplexFullBody_centroid (d : ℕ) :
     (simplexFullBody d).centroid = simplexCentroid (d + 1) :=
-  rfl
+  by rfl
 
 /-- The sharp halfspace for the standard simplex. -/
 def sharpClosedHalfspace (d : ℕ) : ClosedHalfspace d where

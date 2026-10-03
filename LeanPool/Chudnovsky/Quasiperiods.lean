@@ -27,7 +27,7 @@ Statements from chapter 2 of Milla (arXiv:1809.00533v6, file `070_Quasiperiods.t
 All statements in this file are fully proved.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,10 +39,12 @@ variable (L : PeriodPair)
 
 /-- The first basic quasiperiod `η₁(L) = 2ζ(ω₁/2)` (paper Def. `defetak`; this equals
 `ζ(z+ω₁) - ζ(z)` for every `z ∉ L`, see `weierstrassZeta_add_ω₁`). -/
+@[expose]
 def eta₁ : ℂ := 2 * L.weierstrassZeta (L.ω₁ / 2)
 
 /-- The second basic quasiperiod `η₂(L) = 2ζ(ω₂/2)` (paper Def. `defetak`; this equals
 `ζ(z+ω₂) - ζ(z)` for every `z ∉ L`, see `weierstrassZeta_add_ω₂`). -/
+@[expose]
 def eta₂ : ℂ := 2 * L.weierstrassZeta (L.ω₂ / 2)
 
 /-- The lattice is a countable subset of `ℂ`. -/

@@ -20,7 +20,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
 /-! The literal initialized finite packet is its actual primary plus a
 remainder with a proved physical C1 bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,7 +57,7 @@ theorem initializedProfiles_one_mean :
 
 /-- Initialized primary remainder, given by `initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ
 - κ • vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs)`. -/
-def initializedPrimaryRemainder (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def initializedPrimaryRemainder (N : ℕ) (κ : ℝ) : VectorField :=
   initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ -
     κ • vector τ hτ hτT B (initialData D δ hδ (α • ξ) hs)
 
@@ -161,7 +161,7 @@ theorem initializedPrimaryRemainder_physical_fderiv (N : ℕ) (hN : 1 ≤ N) (k 
 
 omit H NB W LM WM BC hRc hcost hδ1 hα hR WP hgrowth in
 /-- The constant contains no packet frequency or derivative of the inverse flow. -/
-def initializedRemainderDerivativeCost (R H0 : ℝ) : ℝ :=
+@[expose] def initializedRemainderDerivativeCost (R H0 : ℝ) : ℝ :=
   8*‖coordinateEquiv.symm.toContinuousLinearMap‖*sobolevEmbeddingConstant period 3 *
     R*(fixedVelocityGradeCost R H0 2+2)
 

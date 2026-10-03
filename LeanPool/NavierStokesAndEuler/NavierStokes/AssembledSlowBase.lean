@@ -22,7 +22,7 @@ All coefficient extensions in this module are constructed from the coherent
 coefficient or derivative order is selected.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ noncomputable def commonWindow {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
 
 /-- Extend even, given by `ParametricRadialExtension.extension w f f.smooth (fun _ heta R =>
 f.even heta R)`. -/
-noncomputable def extendEven {S : Set ℝ} (w : ParametricRadialExtension.ParameterWindow S)
+@[expose] noncomputable def extendEven {S : Set ℝ} (w : ParametricRadialExtension.ParameterWindow S)
     (f : EvenProfile S) : Field :=
   ParametricRadialExtension.extension w f f.smooth (fun _ heta R => f.even heta R)
 
@@ -85,7 +85,7 @@ theorem extendEven_support {S : Set ℝ} (w : ParametricRadialExtension.Paramete
 
 /-- For a profile already zero on a fixed axis neighborhood, remove the
 unused negative-X extension without changing any physical value. -/
-noncomputable def extendCoreZero {S : Set ℝ}
+@[expose] noncomputable def extendCoreZero {S : Set ℝ}
     (w : ParametricRadialExtension.ParameterWindow S) (r : ℝ) (f : EvenProfile S) (p : ℝ × ℝ) : ℝ :=
   TransportPrimitive.cutoff (r / 8) (r / 4) p.1 * extendEven w f p
 
@@ -130,6 +130,7 @@ theorem extendCoreZero_zero_parameter {S : Set ℝ}
       (fun _ he R => f.even he R) hp, mul_zero]
 
 /-- Each entry is an extension of the actual recursively repaired field. -/
+@[expose]
 noncomputable def extendedCoefficient {S : Set ℝ} {h C : ℝ} (s : Scheme S h C)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) (n : ℕ) (i : Fin 4) : Field :=
   extendEven (commonWindow s hI) (component (profiles s n) i)
@@ -211,6 +212,7 @@ theorem extendedCoefficient_axis_jets {S : Set ℝ} {h C rho inner : ℝ} {U : S
 
 /-- A profile smooth on a neighborhood of the nonnegative X half-plane
 gives a genuine globally signed-radius even field by polynomial pullback. -/
+@[expose]
 noncomputable def radialPullback {S : Set ℝ} {D : Set (ℝ × ℝ)} (F : Field)
     (hF : ContDiffOn ℝ ∞ F D) (hD : ∀ X, 0 ≤ X → ∀ eta ∈ S, (X, eta) ∈ D) : EvenProfile S :=
   ⟨fun w => F (w.1 ^ 2 / 2, w.2), ⟨hF.comp
@@ -374,6 +376,7 @@ theorem zEven_zero (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
 
 /-- Coefficients, bundling `axial`, `phi`, `pressure`, `stressTheta` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def coefficients (Z0 : ZeroOrderSolved s inner)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) : SlowBorelBase.Coefficients where
   axial := fun n => extendedCoefficient s hI n 1
@@ -661,6 +664,7 @@ variable {S : Set ℝ} {h : ℝ} {D : ProfileHistories.RadialDomain}
 
 /-- The four order-zero fields are computed from one actual profile.
 In particular beta is reconstructed from U; it is not independent data. -/
+@[expose]
 noncomputable def baseFields : Coefficient S where
   phi := boundConstant S C * radialPullback P.f P.f_smooth hD
   axial := radialPullback P.U P.U_smooth hD
@@ -764,6 +768,7 @@ theorem baseFields_beta_exterior {B : ℝ} (hB : 0 < B)
 
 /-- Finite exterior and pure-power facts suffice to construct the input
 record for the actual infinite repair recursion. -/
+@[expose]
 noncomputable def baseDataOfProfile {lam a b B : ℝ} (hC : C ≠ 0) (ha : 0 ≤ a) (hB : 0 < B)
     (hu : ∀ eta ∈ S, ∀ X, B ^ 2 / 2 ≤ X → P.U (X, eta) = 0)
     (hm : ∀ eta ∈ S, P.M (B ^ 2 / 2, eta) = 0)
@@ -878,6 +883,7 @@ noncomputable def nominalOuterX : ℝ :=
     (ReservedPatches.right F W.controls.radius .positive)) + 1
 
 /-- Nominal outer radius, given by `Real.sqrt (2 * nominalOuterX W)`. -/
+@[expose]
 noncomputable def nominalOuterRadius : ℝ := Real.sqrt (2 * nominalOuterX W)
 
 theorem nominalOuterX_gt_radius : W.controls.radius < nominalOuterX W := by
@@ -1039,6 +1045,7 @@ theorem nominal_mass_exterior :
 
 /-- A finite base input constructed from the same nominal witness,
 with the manuscript's reserved positive-order patch. -/
+@[expose]
 noncomputable def nominalBaseData :
     BaseData S W.axis.normalization F.data.core.lam
       (ReservedPatches.radialLeft F W.controls.radius .positive)
@@ -1059,7 +1066,7 @@ noncomputable def nominalBaseData :
       exact (nominal_positive_patch W hR).2)
 
 theorem nominalBaseData_beta : (nominalBaseData W d hD).fields.beta =
-    betaFromU d 0 (nominalBaseData W d hD).fields.axial := rfl
+    betaFromU d 0 (nominalBaseData W d hD).fields.axial := by rfl
 
 end NominalBase
 
@@ -1072,11 +1079,13 @@ theorem nominalPressure_eq : F.axisDatum = PressureDatum.pressure
   F.axisDatum_eq.trans (SchedulePressure.axisPressure_eq F.data)
 
 /-- Nominal tube, constructed using `ActualSlowAxis.constructedTube`. -/
+@[expose]
 noncomputable def nominalTube :=
   ActualSlowAxis.constructedTube (SchedulePressure.admissible F.data) (nominalPressure_eq (F := F))
     W.axis.natural.profile W.axis.scale_pos W.axis.small W.axis.preparation.sigma_pos
 
 /-- Nominal complex domain, constructed using `ActualSlowAxis.parameterDomain`. -/
+@[expose]
 noncomputable def nominalComplexDomain : Set ℂ :=
   ActualSlowAxis.parameterDomain (AxisHolomorphic.parameterTube
       ActivationHolomorphic.parameterWindow
@@ -1087,6 +1096,7 @@ theorem nominalComplexDomain_open : IsOpen (nominalComplexDomain W) :=
   ActualSlowAxis.parameterDomain_open (nominalTube W).isOpen
 
 /-- Nominal hierarchy, constructed using `ActualSlowAxis.hierarchy`. -/
+@[expose]
 noncomputable def nominalHierarchy :=
   ActualSlowAxis.hierarchy (nominalTube W) W.controls.activationTime_pos
       W.controls.referenceWidth_pos
@@ -1094,11 +1104,13 @@ noncomputable def nominalHierarchy :=
 
 /-- Nominal radius, given by `ActualSlowAxis.axisRadius W.axis.referenceInput
 W.controls.referenceWidth`. -/
+@[expose]
 noncomputable def nominalRadius : ℝ :=
   ActualSlowAxis.axisRadius W.axis.referenceInput W.controls.referenceWidth
 
 /-- One open parameter set serves the nominal fields and every order of
 the same analytic local hierarchy. -/
+@[expose]
 noncomputable def nominalParameters : Set ℝ :=
   {eta | (0, eta) ∈ W.domain.carrier} ∩ Complex.ofReal ⁻¹' nominalComplexDomain W
 
@@ -1125,6 +1137,7 @@ theorem nominalDomain : Domain (nominalParameters W) F.data.h where
     SlowRecursion.domain_real_denominator (ActualSlowAxis.domain (nominalTube W) zero_lt_one) heta.2
 
 /-- Nominal inner, given by `(4 / W.axis.scale) / 4`. -/
+@[expose]
 noncomputable def nominalInner : ℝ := (4 / W.axis.scale) / 4
 /-- Nominal stop, given by `(4 / W.axis.scale) / 2`. -/
 noncomputable def nominalStop : ℝ := (4 / W.axis.scale) / 2
@@ -1170,6 +1183,7 @@ theorem nominalStop_lt_patch :
 
 /-- The global recursive sequence uses the same nominal profile and the
 same constructed natural/ACT local hierarchy, with one common cutoff. -/
+@[expose]
 noncomputable def nominalScheme : Scheme (nominalParameters W) F.data.h W.axis.normalization :=
   schemeFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (nominalDomain W) (fun _ heta => heta.2)
@@ -1192,6 +1206,7 @@ theorem nominalLocalization : Localization (nominalScheme W) (nominalHierarchy W
         (nominalParameters_domain W))
 
 /-- Nominal ACT, constructed using `StressActivation.FromReference.histories`. -/
+@[expose]
 noncomputable def nominalACT : ProfileHistories.Profiles W.axis.referenceInput.radialDomain :=
   StressActivation.FromReference.histories W.axis.referenceInput W.controls.activationTime_pos
     W.controls.referenceWidth_pos W.controls.referenceWidth_small W.controls.kappa
@@ -1375,6 +1390,7 @@ theorem nominalZeroOrder : ZeroOrderSolved (nominalScheme W) (nominalInner W) :=
 
 /-- The complete smooth input family is constructed from the single
 nominal witness; there are no freely supplied repaired coefficient fields. -/
+@[expose]
 noncomputable def nominalCoefficients : SlowBorelBase.Coefficients :=
   coefficients (nominalLocalization W) (nominalBaseAgreement W) (nominalZeroOrder W)
     (nominalParameters_contains W)
@@ -1659,6 +1675,7 @@ theorem modified_positive_patch {R eta : ℝ} (heta : eta ∈ S)
   exact (nominal_positive_patch W hR).2
 
 /-- Modified base data, constructed using `baseDataOfProfile`. -/
+@[expose]
 noncomputable def modifiedBaseData :
     BaseData S W.axis.normalization F.data.core.lam
       (ReservedPatches.radialLeft F W.controls.radius .positive)
@@ -1674,6 +1691,7 @@ noncomputable def modifiedBaseData :
     (fun _ he _ hR => (modified_positive_patch W Q M he hR).2)
 
 /-- Modified scheme, constructed using `schemeFromHierarchy`. -/
+@[expose]
 noncomputable def modifiedScheme : Scheme S F.data.h W.axis.normalization :=
   schemeFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (modifiedDomain W Q M) (fun _ heta => (M.subset heta).2)
@@ -1756,6 +1774,7 @@ theorem modifiedZeroOrder : ZeroOrderSolved (modifiedScheme W Q M) (nominalInner
 
 /-- All positive profiles, canonical stress primitives, and global smooth
 extensions are rebuilt from the actual finite modified profile. -/
+@[expose]
 noncomputable def modifiedCoefficients : SlowBorelBase.Coefficients :=
   coefficients (modifiedLocalization W Q M) (modifiedBaseAgreement W Q M) (modifiedZeroOrder W Q M)
       M.contains

@@ -21,7 +21,7 @@ of a piece of the graph is at least the Lebesgue measure of its base), and the g
 level-`n` cell has diameter at most twice the cell length.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ abbrev Plane := EuclideanSpace ℝ (Fin 2)
 def graphMap (x : ℝ) : Plane := !₂[x, besicovitchFun x]
 
 /-- Besicovitch's set: the graph of `g` over `[0, 1]`. -/
-def besicovitchSet : Set Plane := graphMap '' Icc 0 1
+@[expose] def besicovitchSet : Set Plane := graphMap '' Icc 0 1
 
 @[simp] theorem graphMap_apply_zero (x : ℝ) : graphMap x 0 = x := by simp [graphMap]
 
@@ -79,7 +79,7 @@ theorem volume_le_hausdorffMeasure_graphMap_image (A : Set ℝ) :
 /-! ### Cells -/
 
 /-- The level-`n` cell with index `i`. -/
-def cell (n : ℕ) (i : ℤ) : Set ℝ := Ico (i * cellLength n) ((i + 1) * cellLength n)
+@[expose] def cell (n : ℕ) (i : ℤ) : Set ℝ := Ico (i * cellLength n) ((i + 1) * cellLength n)
 
 theorem mem_cell_iff {n : ℕ} {i : ℤ} {x : ℝ} : x ∈ cell n i ↔ cellIndex n x = i := by
   have hpos := cellLength_pos n

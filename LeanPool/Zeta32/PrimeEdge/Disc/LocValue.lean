@@ -12,7 +12,7 @@ public import LeanPool.Zeta32.Arith.Local.PoleFun
 `M ⊆ {0,…,4}` (`≥ -1` always, `≥ 0` if `e ≤ |M| + 2p - 2`), the `s`-dependence
 (`≥ 1` if `e ≤ |M| + p - 2`), and removal of a near pole at `0` against a factor `u`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

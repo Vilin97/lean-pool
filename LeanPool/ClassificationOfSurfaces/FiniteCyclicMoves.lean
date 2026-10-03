@@ -30,7 +30,7 @@ move chain, which may pass through the exceptional empty-word sphere where
 subdivision implies move equivalence, but no converse or confluence theorem is asserted here.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -156,6 +156,7 @@ theorem isGallierValid {P Q : FiniteCyclicPresentation}
 end Subdivides
 
 /-- Two presentations have a common directed subdivision. -/
+@[expose]
 def HasCommonSubdivision (P Q : FiniteCyclicPresentation) : Prop :=
   ∃ R : FiniteCyclicPresentation, Subdivides P R ∧ Subdivides Q R
 
@@ -248,12 +249,14 @@ def SubdivisionStep.PreservesPolygonalRealization : Prop :=
       P.PolygonallyEquivalent Q validP validQ
 
 /-- The realization-invariance obligation isolated to P1 subdivisions. -/
+@[expose]
 def P1Subdivision.PreservesPolygonalRealization : Prop :=
   ∀ {P Q : FiniteCyclicPresentation}, P1Subdivision P Q →
     ∀ (validP : P.IsSurfaceValid) (validQ : Q.IsSurfaceValid),
       P.PolygonallyEquivalent Q validP validQ
 
 /-- The realization-invariance obligation isolated to P2 subdivisions. -/
+@[expose]
 def P2Subdivision.PreservesPolygonalRealization : Prop :=
   ∀ {P Q : FiniteCyclicPresentation}, P2Subdivision P Q →
     ∀ (validP : P.IsSurfaceValid) (validQ : Q.IsSurfaceValid),

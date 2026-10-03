@@ -25,7 +25,7 @@ applies uniformly to all four cross-color pairs.  The two boundary radicals
 are retained as exact kernel inequalities.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

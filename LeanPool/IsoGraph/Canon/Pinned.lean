@@ -32,7 +32,7 @@ two equal-certificate leaves visibly map one branch onto the other.
 Along the way `nodePath` makes a node an honest function of its path (`Node.det`).
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -253,7 +253,7 @@ theorem child_pinned_new {n : Nat} {f : Nat → Nat → Bool} {p : Part} {v : Na
 /-- The node reached by individualising `path`, in order, from the root.  `Node` is the graph of
 this function (`Node.nodePath_eq`); having it as an actual function is what lets two branches of
 the search that share a path prefix be identified. -/
-def nodePath (n : Nat) (f : Nat → Nat → Bool) (path : List Nat) : Array UInt64 × Part :=
+@[expose] def nodePath (n : Nat) (f : Nat → Nat → Bool) (path : List Nat) : Array UInt64 × Part :=
   path.foldl (fun s v =>
     (childInv (Graph.ofOracle n f) s.1 s.2 v, (child (Graph.ofOracle n f) s.2 v).1))
     (rootInv n f, rootPart n f)

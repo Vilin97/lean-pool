@@ -22,7 +22,7 @@ providing graph-valued triangles, their union, and a complete-graph corollary st
 disjointness and degree.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -31,11 +31,11 @@ namespace SumZeroTriangles
 variable {V : Type*} [DecidableEq V]
 
 /-- The simple graph consisting of the edges spanned by the vertices in `t`. -/
-def triangleGraph (t : Finset V) : SimpleGraph V :=
+@[expose] def triangleGraph (t : Finset V) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet t.innerEdges
 
 /-- The simple graph consisting of all edges covered by the triples in `P`. -/
-def packingGraph (P : Finset (Finset V)) : SimpleGraph V :=
+@[expose] def packingGraph (P : Finset (Finset V)) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet (familyEdges P)
 
 instance instDecidableAdjTriangleGraph (t : Finset V) : DecidableRel (triangleGraph t).Adj := by

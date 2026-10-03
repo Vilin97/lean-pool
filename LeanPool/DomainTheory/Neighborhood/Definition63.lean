@@ -101,7 +101,7 @@ counterproductive* for
 this development, and is deliberately not used.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -203,22 +203,22 @@ structure AlgHom (A B : TAlgebra T) where
 namespace AlgHom
 
 /-- The identity is a homomorphism: `I ∘ k = k ∘ T(I)`. -/
-def id (A : TAlgebra T) : AlgHom A A where
+@[expose] def id (A : TAlgebra T) : AlgHom A A where
   hom := Category.id A.carrier
   comm := by rw [Category.id_comp, T.map_id, Category.comp_id]
 
 /-- Composition of `T`-algebra homomorphisms (the `T`-algebras and homomorphisms
 form a category —
 the remark after Definition 6.4). -/
-def comp {A B C : TAlgebra T} (β : AlgHom B C) (α : AlgHom A B) : AlgHom A C where
+@[expose] def comp {A B C : TAlgebra T} (β : AlgHom B C) (α : AlgHom A B) : AlgHom A C where
   hom := β.hom ⊚ α.hom
   comm := by
     rw [Category.assoc, α.comm, ← Category.assoc, β.comm, Category.assoc, ← T.map_comp]
 
-@[simp] theorem id_hom (A : TAlgebra T) : (AlgHom.id A).hom = Category.id A.carrier := rfl
+@[simp] theorem id_hom (A : TAlgebra T) : (AlgHom.id A).hom = Category.id A.carrier := by rfl
 
 @[simp] theorem comp_hom {A B C : TAlgebra T} (β : AlgHom B C) (α : AlgHom A B) :
-    (β.comp α).hom = β.hom ⊚ α.hom := rfl
+    (β.comp α).hom = β.hom ⊚ α.hom := by rfl
 
 end AlgHom
 

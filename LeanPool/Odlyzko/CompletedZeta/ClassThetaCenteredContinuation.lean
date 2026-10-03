@@ -13,7 +13,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -287,20 +287,20 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A centered positive class theta integral used in the Odlyzko-bound argument. -/
-noncomputable def centeredPositiveClassThetaIntegral
+@[expose] noncomputable def centeredPositiveClassThetaIntegral
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ) : ℂ :=
   ∫ y in positiveUnitFundamentalParamSet (K := K),
     centeredNonzeroFractionalShapeThetaMellinKernel K I s y
 
 open Classical in
 /-- A centered class theta pole term used in the Odlyzko-bound argument. -/
-noncomputable def centeredClassThetaPoleTerm (s : ℂ) : ℂ :=
+@[expose] noncomputable def centeredClassThetaPoleTerm (s : ℂ) : ℂ :=
   -1 / ((Module.finrank ℚ K : ℂ) * (1 - s)) -
     1 / ((Module.finrank ℚ K : ℂ) * s)
 
 open Classical in
 /-- A centered radially continued class theta integral used in the Odlyzko-bound argument. -/
-noncomputable def centeredRadiallyContinuedClassThetaIntegral
+@[expose] noncomputable def centeredRadiallyContinuedClassThetaIntegral
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ) : ℂ :=
   centeredPositiveClassThetaIntegral K I s +
     centeredPositiveClassThetaIntegral K
@@ -398,7 +398,7 @@ theorem setIntegral_centered_eq_radiallyContinued_mk0
 
 open Classical in
 /-- A centered continued class theta integral used in the Odlyzko-bound argument. -/
-noncomputable def centeredContinuedClassThetaIntegral
+@[expose] noncomputable def centeredContinuedClassThetaIntegral
     (C : ClassGroup (𝓞 K)) (s : ℂ) : ℂ :=
   (torsionOrder K : ℂ)⁻¹ *
     (2 : ℂ) ^ nrComplexPlaces K *

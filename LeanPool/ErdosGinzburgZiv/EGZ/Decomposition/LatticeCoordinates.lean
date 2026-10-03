@@ -17,7 +17,7 @@ generation statement uses the finitely supported integer weights required by
 `FlagDecomposition.IsMinimal`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

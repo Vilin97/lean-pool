@@ -20,7 +20,7 @@ time; the omitted time origin is null.
 trimmed-measure `L²` model used by completion constructions of the Itô integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology Function
 open scoped ENNReal NNReal InnerProductSpace
@@ -169,6 +169,7 @@ theorem predictableTrimEquiv_ae_eq
   lpMeasToLpTrim_ae_eq (predictable_le_prod 𝓕) u
 
 /-- Basic rectangles generating the predictable sigma-algebra. -/
+@[expose]
 def predictableRectangle (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     Set (Set (ℝ≥0 × W)) :=
   {S | ∃ F₀ : Set W, MeasurableSet[𝓕 0] F₀ ∧ S = ({(0 : ℝ≥0)} ×ˢ F₀)} ∪
@@ -245,6 +246,7 @@ theorem generateFrom_predictableRectangle
           (MeasurableSpace.generateFrom (predictableRectangle 𝓕))
 
 /-- An adapted indicator coefficient. -/
+@[expose]
 noncomputable def adaptedIndicator
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a : ℝ≥0)
     {F : Set W} (hF : MeasurableSet[𝓕 a] F) :
@@ -347,6 +349,7 @@ lemma elementaryPredictable_mem_span
 end LegacyTensor
 
 /-- The algebraic span of all one-step adapted predictable processes. -/
+@[expose]
 def elementaryPredictableSpan [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     Submodule ℝ (PredictableProcessL2 𝓕 P) :=

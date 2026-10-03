@@ -18,23 +18,26 @@ boundary word.  This is the recursion that computes the cap
 functional in coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The peel rotation, on values. -/
+@[expose]
 def capPeelFun (m j : ℕ) : ℕ :=
   if j < m then j
   else if j = m then m + m
   else if j ≤ m + m then j - 1 else j
 
 /-- The inverse peel rotation, on values. -/
+@[expose]
 def capPeelInv (m j : ℕ) : ℕ :=
   if j < m then j
   else if j = m + m then m
   else if j < m + m then j + 1 else j
 
 /-- The peel rotation: move the last strand's ends to the end. -/
+@[expose]
 def capPeelRotation (m : ℕ) :
     Fin ((m + 1) + (m + 1)) ≃ Fin ((m + m) + 2) where
   toFun i := ⟨capPeelFun m i.val, by

@@ -39,7 +39,7 @@ reaches `1.817`, and the extra room is what pays for the crude constants below.
 * `Sendov.alpha_le_seventeen`: `(beta-bound) + (origin-exact) ⟹ α ≤ 17`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

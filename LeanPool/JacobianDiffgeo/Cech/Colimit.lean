@@ -29,7 +29,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.5, §5).
 cofinality) does not need 12.4 and is proved here.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module
@@ -76,7 +76,7 @@ noncomputable abbrev H1 (D : RS.Divisor X) : Type _ :=
   Module.DirectLimit (fun 𝒰 : FinCover (⊤ : Opens X) => H1Cover D 𝒰) (fun _ _ h => resH1' D h)
 
 /-- The canonical map from a cover-level `H¹` to the colimit. -/
-noncomputable def toH1 (𝒰 : FinCover (⊤ : Opens X)) : H1Cover D 𝒰 →ₗ[ℂ] H1 D :=
+@[expose] noncomputable def toH1 (𝒰 : FinCover (⊤ : Opens X)) : H1Cover D 𝒰 →ₗ[ℂ] H1 D :=
   Module.DirectLimit.of ℂ (FinCover (⊤ : Opens X)) (fun 𝒰 => H1Cover D 𝒰)
       (fun _ _ h => resH1' D h) 𝒰
 
@@ -197,21 +197,23 @@ theorem inclusion_restrictL_comm {V U : Opens X} (h' : V ≤ U) (hD : D ≤ D')
   Subtype.ext rfl
 
 /-- `D`-inclusion of `1`-cochains (`Submodule.inclusion`, componentwise). -/
+@[expose]
 noncomputable def inclC1 {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') : C1 D 𝒰 →ₗ[ℂ] C1 D' 𝒰 :=
   LinearMap.pi fun p => (Submodule.inclusion (RS.Cech.linSysOn_mono h)).comp (LinearMap.proj p)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem inclC1_apply {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') (f : C1 D 𝒰)
     (p : Fin 𝒰.n × Fin 𝒰.n) :
-    inclC1 D 𝒰 h f p = Submodule.inclusion (RS.Cech.linSysOn_mono h) (f p) := rfl
+    inclC1 D 𝒰 h f p = Submodule.inclusion (RS.Cech.linSysOn_mono h) (f p) := by rfl
 
 /-- `D`-inclusion of `0`-cochains. -/
+@[expose]
 noncomputable def inclC0 {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') : C0 D 𝒰 →ₗ[ℂ] C0 D' 𝒰 :=
   LinearMap.pi fun i => (Submodule.inclusion (RS.Cech.linSysOn_mono h)).comp (LinearMap.proj i)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem inclC0_apply {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') (f : C0 D 𝒰) (i : Fin 𝒰.n) :
-    inclC0 D 𝒰 h f i = Submodule.inclusion (RS.Cech.linSysOn_mono h) (f i) := rfl
+    inclC0 D 𝒰 h f i = Submodule.inclusion (RS.Cech.linSysOn_mono h) (f i) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem inclC1_mem_Z1 {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') {f : C1 D 𝒰}
@@ -224,7 +226,7 @@ theorem inclC1_mem_Z1 {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') {f : C1
     ← map_sub, ← map_add, ← d1_apply, (mem_Z1_iff D 𝒰 f).1 hf (i, j, k), map_zero]
 
 /-- `D`-inclusion on cover-level `H¹`. -/
-noncomputable def h1CoverIncl {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') :
+@[expose] noncomputable def h1CoverIncl {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') :
     H1Cover D 𝒰 →ₗ[ℂ] H1Cover D' 𝒰 :=
   Submodule.mapQ _ _ (LinearMap.restrict (inclC1 D 𝒰 h) (fun _ hf => inclC1_mem_Z1 D h hf))
     (fun z hz => by

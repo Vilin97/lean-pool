@@ -37,7 +37,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda.Numerics
 
@@ -45,6 +45,7 @@ namespace BSLambda.Numerics
 
 /-- The number of type-1 dependency neighbours of a type-1 event, `D₁₁ = 10 N₁`
 (Section 10.1 of `bs_lambda.txt`). -/
+@[expose]
 def D11 : ℕ := 2146200875100
 
 /-- The number of type-2 dependency neighbours of a type-1 event,
@@ -61,11 +62,13 @@ def D21 : ℕ := 7726323150360
 def D22 : ℕ := 753455972623601870517771054
 
 /-- The type-1 event probability `p₁ = r⁻⁶` at `r = 144` (Section 10 of `bs_lambda.txt`). -/
+@[expose]
 noncomputable def p1 : ℝ := 1 / 144 ^ 6
 
 /-- The type-2 event probability bound `p₂ = K / r²⁰` at `r = 144` and
 `K = 1300311466573824` (`BSLambda.LLL.radiusTwoConst`; Sections 9 and 10 of
 `bs_lambda.txt`). -/
+@[expose]
 noncomputable def p2 : ℝ := 1300311466573824 / 144 ^ 20
 
 /-- The local-lemma parameter `x₁ = (29/16) p₁` (Section 10.2 of `bs_lambda.txt`). -/

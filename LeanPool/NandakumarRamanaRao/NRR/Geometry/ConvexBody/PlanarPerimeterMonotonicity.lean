@@ -34,7 +34,7 @@ Only `PlanarPerimeter.lean` and `Width.lean` are imported; they transitively pro
 Mathlib together with the perimeter and width APIs. No extra imports are required.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

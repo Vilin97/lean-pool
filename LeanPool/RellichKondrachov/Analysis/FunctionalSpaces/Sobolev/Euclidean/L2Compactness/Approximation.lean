@@ -22,7 +22,7 @@ The principal statement will control `‖smoothL2 ψ u - extendByZeroL2 u‖₂`
 `‖translateL2 t (extendByZeroL2 u) - extendByZeroL2 u‖₂` over `t` in the support of `ψ`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -55,7 +55,7 @@ variable (ψ : E → ℝ)
 
 /-- The measure with density `ψ` with respect to Lebesgue measure. This will be a probability
 measure once `ψ ≥ 0` and `∫ ψ = 1`. -/
-noncomputable def kernelMeasure : Measure E :=
+@[expose] noncomputable def kernelMeasure : Measure E :=
   (volume : Measure E).withDensity fun x => ENNReal.ofReal (ψ x)
 
 lemma kernelMeasure_univ (hψc : Continuous ψ) (hψcs : HasCompactSupport ψ) (hψ0 : ∀ x, 0 ≤ ψ x)

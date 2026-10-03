@@ -28,7 +28,7 @@ gives it positive area (indeed nonempty interior). The cell area equals the targ
 `z.1.body.area / n`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -53,6 +53,7 @@ theorem canonicalCell_interior_nonempty
 
 /-- The **canonical variable-body power cell** of site `i`: the restricted power cell computed with
 the canonical normalized equal-area weight, bundled as a convex subbody of the fixed parent `K`. -/
+@[expose]
 noncomputable def canonicalCell
     (sites : SiteFamily X n) (hA : 0 < A) (hn : 0 < n)
     (z : BodySpace K A × X) (i : Fin n) :

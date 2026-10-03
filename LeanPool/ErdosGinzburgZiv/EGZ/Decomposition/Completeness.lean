@@ -15,7 +15,7 @@ These monotonicity and mass identities are used when normalizing epsilon,
 choosing the final uniform delta, and transferring thickness through cleanup.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

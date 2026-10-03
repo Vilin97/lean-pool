@@ -19,7 +19,7 @@ left-coset action.  The resulting graph is the finite core used in the
 completion argument.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
@@ -33,12 +33,14 @@ variable {α : Type u} [DecidableEq α]
 
 
 /-- The group element underlying a morphism in the action groupoid. -/
+@[expose]
 def actionScalar {O : Type u} [MulAction (FreeGroup α) O]
     {a b : ActionCategory (FreeGroup α) O}
     (f : Functor.Elements.Hom (F := actionAsFunctor (FreeGroup α) O) a b) : FreeGroup α :=
   f.hom
 
 /-- A generator edge whose scalar action agrees with the prescribed map to left cosets. -/
+@[expose]
 def goodGeneratorEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
@@ -49,6 +51,7 @@ def goodGeneratorEdge (H : Subgroup (FreeGroup α)) {O : Type u}
       a.back) = q b.back
 
 /-- The coset-compatibility condition for a generator edge or its formal reverse. -/
+@[expose]
 def goodSymmetricEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
@@ -60,6 +63,7 @@ def goodSymmetricEdge (H : Subgroup (FreeGroup α)) {O : Type u}
     (fun f => goodGeneratorEdge H q f)
 
 /-- The wide subquiver consisting of coset-compatible edges and their formal reverses. -/
+@[expose]
 def goodSymmetricSubquiver (H : Subgroup (FreeGroup α)) {O : Type u}
     [MulAction (FreeGroup α) O]
     [IsFreeGroupoid (ActionCategory (FreeGroup α) O)]
@@ -72,6 +76,7 @@ def goodSymmetricSubquiver (H : Subgroup (FreeGroup α)) {O : Type u}
 to the full edge type so that it can be used by the explicit Schreier basis. -/
 
 /-- The shortest-path tree of a rooted subquiver, viewed as edges of the ambient quiver. -/
+@[expose]
 def flatGeodesicSubtree {V : Type u} [Quiver V]
     (P : WideSubquiver V) (r : P)
     [RootedConnected r] : WideSubquiver V :=
@@ -101,6 +106,7 @@ instance flatGeodesicArborescence {V : Type u} [Quiver V]
     · exact Or.inr ⟨_, ⟨e.1, ⟨e.2, p, hp⟩⟩⟩
 
 /-- Every action state of every tail of the word maps to a coset in the chosen core. -/
+@[expose]
 def coreCondition {H : Subgroup (FreeGroup α)}
     (A : Set (LeftCosetQuotient H)) (u : List (α × Bool)) : Prop :=
   ∀ v ∈ List.tails u, ∀ x ∈ actionStates v,

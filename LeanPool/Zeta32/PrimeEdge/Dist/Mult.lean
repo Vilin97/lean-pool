@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.PrimeEdge.Dist.Basic
 (a shift-invariant linear functional on `ℚ[X]` vanishes). Consequence for `locPoly`:
 `∑_{b<p} locPoly (r p) (Q(p X - b)) = p² · locPoly r Q`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

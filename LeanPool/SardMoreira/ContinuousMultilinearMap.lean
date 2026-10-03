@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.ContinuousMultilinearMap
 -/
 
-@[expose] public section
+public section
 
 open scoped Asymptotics BigOperators
 

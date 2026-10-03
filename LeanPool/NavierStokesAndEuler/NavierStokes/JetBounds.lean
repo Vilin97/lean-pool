@@ -18,7 +18,7 @@ estimates follow from Mathlib's higher-order Leibniz inequality.  No PDE,
 construction, or prescribed derivative values are assumed here.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.JetBounds
@@ -35,7 +35,7 @@ variable {D E F G : Type*}
 
 /-- A common bound for the actual derivatives of orders `0, ..., m` on `s`.
 Smoothness is a separate hypothesis of the closure theorems. -/
-def FiniteJetBound (m : ℕ) (f : D → E) (s : Set D) (C : ℝ) : Prop :=
+@[expose] def FiniteJetBound (m : ℕ) (f : D → E) (s : Set D) (C : ℝ) : Prop :=
   ∀ n : ℕ, n ≤ m → ∀ x ∈ s, ‖iteratedFDeriv ℝ n f x‖ ≤ C
 
 /-- An order-dependent bound for all actual derivatives on `s`. -/

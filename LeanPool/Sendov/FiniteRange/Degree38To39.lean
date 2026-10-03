@@ -25,7 +25,7 @@ The moment numerator `Nmomc` is checked against the packed recurrence
 (`Sendov.pev_pos_of_bern`).  Every closed computation is evaluated by the kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

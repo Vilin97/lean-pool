@@ -17,7 +17,7 @@ is the tensor unit, no factors are split off, and the remainder
 is the object itself with its ambient duality.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

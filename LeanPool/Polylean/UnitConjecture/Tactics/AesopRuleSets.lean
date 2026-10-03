@@ -13,7 +13,7 @@ import Aesop.Frontend.Command
 Imported Lean Pool material for `LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

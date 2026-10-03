@@ -51,13 +51,14 @@ having negative discriminant.
 * `Sendov.U_le_Ut`: `U n α ≤ Ut α` for `n ≥ 101`, where `Ut` involves no `n` and no `rpow`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 variable {n : ℕ} {α : ℝ}
 
 /-- The first tail term of `Sendov.U`, in closed form. -/
+@[expose]
 noncomputable def T1 (n : ℕ) (α : ℝ) : ℝ :=
   24 * ((n : ℝ) - 1 - 2 * α) ^ 2 /
     ((3 + α) * c n α ^ 4 * ((n : ℝ) - 1) * ((n : ℝ) + 2) * ((n : ℝ) + 4))
@@ -312,6 +313,7 @@ lemma T2_le (hn : 101 ≤ n) (hα : 0 ≤ α) (hα' : α ≤ 17) : T2 n α ≤ T
 /-! ### The bound with no degree left in it -/
 
 /-- The elementary bound at `n = 101`, with `√B` removed and `α` the only variable. -/
+@[expose]
 noncomputable def Ut (α : ℝ) : ℝ :=
   1 / 6 + 1 / (4 * (3 + α)) + 1 / 200 + 1 / (400 * (3 + α)) + 101 / 100 * T1 101 α
     + (100 - 2 * α) ^ 2 / 100 * 101 * 99 / (16 * (3 + α)) * (α / (3 + α)) ^ 48

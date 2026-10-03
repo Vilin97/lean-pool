@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudgetTimeChange
 
 /-! The literal compact terminal wave initializes the mean-time packet budget. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

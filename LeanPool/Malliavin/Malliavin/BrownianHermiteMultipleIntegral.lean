@@ -17,7 +17,7 @@ only concerns orders at least two.  Under that hypothesis, homogeneous-chaos mem
 ordered-chain compatibility and hence natural martingale representation.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -35,6 +35,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- The genuinely higher-order Hermite/multiple-integral identity for finite Brownian step
 kernels. -/
+@[expose]
 def BrownianHigherHermiteMultipleIntegralIdentity
     (hB : IsPreBrownianReal B P) : Prop :=
   ∀ v n, 2 ≤ n →

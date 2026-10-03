@@ -17,7 +17,7 @@ This file contains the analytic bridge from the finite six-point property to the
 the planar rectifiability threshold.  The finite property itself remains the sole geometric input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

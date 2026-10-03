@@ -21,7 +21,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 # Transport of bounded independence through injective homomorphisms
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

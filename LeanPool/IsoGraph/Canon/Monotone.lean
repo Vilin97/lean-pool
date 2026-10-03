@@ -31,7 +31,7 @@ The comparison used throughout is `compare k k' ≠ .gt` on `leafKey`s, the same
 is stated with.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -59,7 +59,7 @@ theorem lexCmpU64_gt_symm {a b : Array UInt64} (h : lexCmpU64 a b = .gt) :
 /-! ## Domination -/
 
 /-- `k` is no better than the leaf the state holds. -/
-def Dom (st : St) (k : List (List UInt64)) : Prop :=
+@[expose] def Dom (st : St) (k : List (List UInt64)) : Prop :=
   ∃ l, st.best = some l ∧ compare k (leafKey l.invPath l.cert) ≠ .gt
 
 /-- The incumbent never gets worse. -/

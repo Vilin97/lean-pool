@@ -35,7 +35,7 @@ exponential functions eₘ.
 * `NashEmbedding.Sobolev.fourierExp n m θ` — the exponential `eₘ(θ)`
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate ContDiff
 open Complex Real
@@ -51,7 +51,7 @@ variable {n : ℕ}
 
 /-- The weight function `(1 + |m|²)^s` for `m : Fin n → ℤ`. Here `|m|²` is the
 sum of squares of coordinates, viewed as real numbers. -/
-def weight (n : ℕ) (s : ℝ) (m : Fin n → ℤ) : ℝ :=
+@[expose] def weight (n : ℕ) (s : ℝ) (m : Fin n → ℤ) : ℝ :=
   (1 + ∑ i : Fin n, ((m i : ℝ) ^ 2)) ^ s
 
 lemma weight_pos (s : ℝ) (m : Fin n → ℤ) : 0 < weight n s m := by
@@ -101,11 +101,11 @@ lemma weight_le_one_of_nonpos {s : ℝ} (hs : s ≤ 0) (m : Fin n → ℤ) :
 
 /-- A sequence `a : (Fin n → ℤ) → ℂ` belongs to `ℓ²_(s)(ℤⁿ)` iff
 `∑ₘ (1 + |m|²)^s |aₘ|² < ∞`. -/
-def MemSobolev (n : ℕ) (s : ℝ) (a : (Fin n → ℤ) → ℂ) : Prop :=
+@[expose] def MemSobolev (n : ℕ) (s : ℝ) (a : (Fin n → ℤ) → ℂ) : Prop :=
   Summable (fun m => weight n s m * ‖a m‖ ^ 2)
 
 /-- The squared Sobolev norm `‖a‖²_(s) = ∑ₘ (1 + |m|²)^s |aₘ|²`. -/
-def sobolevNormSq (n : ℕ) (s : ℝ) (a : (Fin n → ℤ) → ℂ) : ℝ :=
+@[expose] def sobolevNormSq (n : ℕ) (s : ℝ) (a : (Fin n → ℤ) → ℂ) : ℝ :=
   ∑' m, weight n s m * ‖a m‖ ^ 2
 
 /-- The Sobolev inner product `⟨a, b⟩_(s) = ∑ₘ (1 + |m|²)^s conj(aₘ) bₘ`. -/
@@ -151,7 +151,7 @@ lemma hasDerivAt_update_of_hasFDerivAt
 
 /-- The Fourier exponential `eₘ(θ) = exp(i ∑ⱼ mⱼ θⱼ)` for `m : Fin n → ℤ`
 and `θ : Fin n → ℝ`. -/
-def fourierExp (n : ℕ) (m : Fin n → ℤ) (θ : Fin n → ℝ) : ℂ :=
+@[expose] def fourierExp (n : ℕ) (m : Fin n → ℤ) (θ : Fin n → ℝ) : ℂ :=
   Complex.exp (Complex.I * ↑(∑ j : Fin n, (m j : ℝ) * θ j))
 
 /-

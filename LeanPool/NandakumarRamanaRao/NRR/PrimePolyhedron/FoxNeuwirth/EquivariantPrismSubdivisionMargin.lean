@@ -30,7 +30,7 @@ refinement level `L` must subsequently be increased.  This permits later argumen
 common spatial subdivision for endpoint data first and then refine the entire homotopy prism.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -51,6 +51,7 @@ open SubdivisionPrismCharts
 variable {p : Nat}
 
 /-- The unrefined staircase chart over one fixed spatially refined top simplex. -/
+@[expose]
 noncomputable def basePrismChart
     (hp : Nat.Prime p) (N : Nat) (q : BasePrismCell hp N) :
     C(Delta p, Realization p × Set.Icc (0 : Real) 1) where

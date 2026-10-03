@@ -37,7 +37,7 @@ vertices.
   set and the twin incidence total is `3·|Iso|`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

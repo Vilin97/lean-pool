@@ -13,7 +13,7 @@ public import LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Sigma`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace OmegaCompletePartialOrder.Sigma

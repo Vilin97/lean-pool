@@ -17,7 +17,7 @@ then supplies the differentiated heat-source norm, including after truncation
 to nonpositive times.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

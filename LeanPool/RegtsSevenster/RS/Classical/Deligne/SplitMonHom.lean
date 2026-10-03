@@ -19,7 +19,7 @@ monoid-morphism property of the base entry of the splitting
 data.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

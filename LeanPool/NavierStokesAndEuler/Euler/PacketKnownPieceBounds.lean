@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 
 /-! Quantitative bounds on the actual masked fields used in the known forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -82,7 +82,7 @@ theorem piece (hR : 0 ≤ R) (k : KnownPiece) (i : ℕ) :
 
 theorem pieceJet (hR : 0 ≤ R) (O : Operators) (k : KnownPiece) (i : ℕ) :
     ((F.pieceJet O k i).field.normalized hT (k.profile S i) (k.profile_pos S i)).WordBound 6 R 1
-      (k.shift i) := B.piece hR k i
+      (k.shift i) := by exact B.piece hR k i
 
 end PrefixBound
 end EulerPacketCylinderField

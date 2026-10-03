@@ -22,7 +22,7 @@ their closed carriers can meet only at triangulation vertices.  Deleting that fi
 locus would therefore disconnect the surface, contradicting finite-puncture connectivity.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

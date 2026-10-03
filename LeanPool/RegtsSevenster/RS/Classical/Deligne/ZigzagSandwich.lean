@@ -24,7 +24,7 @@ That form is what a strong monoidal functor transports, so it is
 the shape in which base change consumes the zigzag laws.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

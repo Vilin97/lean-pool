@@ -14,7 +14,7 @@ public import LeanPool.WhiteheadTheorem.Auxiliary
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.CubeBoundaryMap`.
 -/
 
-@[expose] public section
+public section
 
 
 open scoped Topology Topology.Homotopy CategoryTheory
@@ -91,7 +91,7 @@ variable (f01 : zeroOne → (cube.{u} n ⟶ Z))  -- bottom or top face of `∂�
 variable (fs : TopCat.of (I × cubeBoundary.{u} n) ⟶ Z)  -- sides of `∂𝕀 (n + 1)`
 
 /-- `mapVecOfBotTopSides` -/
-def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
+@[expose] def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
   let g0 : C(botOrTop.{u} n 0, Z) :=
     ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 0 ⟨(Cube.splitAtLast y).snd⟩, by
       apply (f01 0).hom.continuous.comp
@@ -141,7 +141,7 @@ theorem mapVecOfBotTopSides_compatible
   · exact mapVecOfBotTopSides_compatible_botOrTop _ _ h |>.right _ hyk hyj |>.symm
 
 /-- `mapOfBotTopSides` -/
-noncomputable def mapOfBotTopSides
+@[expose] noncomputable def mapOfBotTopSides
   (h : ∀ t y, f01 t (cubeBoundaryIncl _ y) = fs ⟨zeroOneIncl t, y⟩) :
   ∂𝕀 (n + 1) ⟶ Z := ofHom <|
     ContinuousMap.liftCoverClosed (botTopSidesCover n)

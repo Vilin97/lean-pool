@@ -23,7 +23,7 @@ side, so its displayed parent edge crosses the cut.  The external program
 which chooses this data is not trusted.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate.SpanningTreeConnectivity
 open Utilities.Certificate

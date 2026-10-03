@@ -25,7 +25,7 @@ section
 /-! A fixed polynomial in the genuine parent label bound controls the
 coefficient leaves of the normal, joined and mean packet budgets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,9 +37,11 @@ open EulerPacketParentLabelBounds EulerPacketParentMeanCoercivity
 /-- Radius ceiling, given by `1024+4*K`. -/
 def radiusCeiling (K : ℝ) : ℝ := 1024+4*K
 /-- Curvature ceiling, given by `27*(frameAmplitude K)^2*gradientAmplitude K`. -/
+@[expose]
 def curvatureCeiling (K : ℝ) : ℝ := 27*(frameAmplitude K)^2*gradientAmplitude K
 /-- Normal amplitude, given by `EulerPacketParentNormalBudget.amplitude (frameAmplitude K)
 (gradientAmplitude K)`. -/
+@[expose]
 def normalAmplitude (K : ℝ) : ℝ :=
   EulerPacketParentNormalBudget.amplitude (frameAmplitude K) (gradientAmplitude K)
 /-- Normal inverse, given by `EulerPacketParentNormalBudget.inverseRadius (radiusCeiling K)
@@ -167,7 +169,7 @@ section
 /-! Composing the actual coefficient envelope with the parent label
 polynomial gives a single fixed polynomial in the parent size K. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -232,7 +234,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -292,6 +294,7 @@ theorem inputEnvelope_bounds (K X : ℝ) (hK : 1 ≤ K) (hKX : K ≤ X) :
     linarith only [hX0,ha0]
 
 /-- Source envelope, given by `sourceRadiusEnvelope (inputEnvelope X)`. -/
+@[expose]
 def sourceEnvelope (X : ℝ) : ℝ := sourceRadiusEnvelope (inputEnvelope X)
 
 /-- Source polynomial, given by `sourceRadiusPolynomial.comp inputPolynomial`. -/
@@ -314,7 +317,7 @@ theorem sourceEnvelope_power (X : ℝ) (hX : 1 ≤ X) :
   exact (le_abs_self _).trans (eval_bound sourcePolynomial X hX)
 
 /-- Parameter size, given by `1+K+Ti+TiTotal+Cp+B+δ⁻¹+N`. -/
-def parameterSize (K Ti TiTotal Cp B δ N : ℝ) : ℝ := 1+K+Ti+TiTotal+Cp+B+δ⁻¹+N
+@[expose] def parameterSize (K Ti TiTotal Cp B δ N : ℝ) : ℝ := 1+K+Ti+TiTotal+Cp+B+δ⁻¹+N
 
 theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
     (hK : 0 ≤ K) (hTi : 0 ≤ Ti) (hTiTotal : 0 ≤ TiTotal) (hCp : 0 ≤ Cp)
@@ -329,6 +332,7 @@ theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
       linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith⟩
 
 /-- Full envelope, given by `radiusEnvelope (sourceEnvelope X)`. -/
+@[expose]
 def fullEnvelope (X : ℝ) : ℝ := radiusEnvelope (sourceEnvelope X)
 
 /-- Full polynomial, given by `radiusPolynomial.comp (sourceRadiusPolynomial.comp

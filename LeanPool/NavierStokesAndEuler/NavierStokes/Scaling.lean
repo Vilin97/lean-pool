@@ -17,7 +17,7 @@ scaling facts; they do not supply a Navier--Stokes solution or analytic estimate
 for its profiles. The arbitrary envelope is kept in the carrier Reynolds product.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ namespace NavierStokes.Scaling
 def coreVelocity (q h : ℝ) : ℝ := q ^ (-(1 / 2 + h))
 
 /-- The radial length scale. -/
-def radialLength (q : ℝ) : ℝ := q ^ (1 / 2 : ℝ)
+@[expose] def radialLength (q : ℝ) : ℝ := q ^ (1 / 2 : ℝ)
 
 /-- The axial length scale. -/
 def axialLength (q h : ℝ) : ℝ := q ^ (1 / 2 - h)
@@ -87,6 +87,7 @@ theorem wave_power_cancellation {Q : ℝ} (hQ : 0 < Q) (h : ℝ) :
   rw [he, Real.rpow_zero]
 
 /-- The integer carrier frequency is the natural ceiling of `ε ^ (-1/2)`. -/
+@[expose]
 def carrierFrequency (ε : ℝ) : ℕ := ⌈ε ^ (-(1 / 2 : ℝ))⌉₊
 
 theorem inverse_sqrt_power {ε : ℝ} (hε : 0 < ε) :

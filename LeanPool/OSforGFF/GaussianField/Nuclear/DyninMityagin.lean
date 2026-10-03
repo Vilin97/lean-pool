@@ -30,7 +30,7 @@ not just Schwartz spaces.
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. 3-4
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

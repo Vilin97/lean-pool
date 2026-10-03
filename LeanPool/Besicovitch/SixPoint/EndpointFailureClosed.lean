@@ -18,7 +18,7 @@ strictly incompatible with the weighted geometric bound.  The other matched endp
 simultaneously swapping both pairs of children.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

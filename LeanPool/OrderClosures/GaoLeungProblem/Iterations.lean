@@ -14,7 +14,7 @@ public import Mathlib.SetTheory.Cardinal.Ordinal
 # Arbitrarily long order-adherence iterations
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

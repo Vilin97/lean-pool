@@ -39,7 +39,7 @@ represented by the entrywise model `toMatrix`.
   norm `highNorm w O`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

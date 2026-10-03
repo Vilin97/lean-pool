@@ -36,7 +36,7 @@ lemma with the Huang hypercube lemma imported from `Mathlib`'s
    `f` itself.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 

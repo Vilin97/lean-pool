@@ -37,7 +37,7 @@ generator, and that double twist is not the identity.  Accordingly
 is the interchange identity `RS.tensorμ_braiding` behind it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

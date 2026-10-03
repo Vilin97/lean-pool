@@ -28,7 +28,7 @@ infinite is covered, on the event where it is finite, in `Trajectory/StoppingLtT
 Hunt-process property is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

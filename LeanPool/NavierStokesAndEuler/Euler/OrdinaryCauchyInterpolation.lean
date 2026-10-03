@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevCauchyInterpolation
 /-! Actual ordinary L² convergence upgrades to convergence in every
 fixed Sobolev norm under uniform higher-order bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,6 +61,7 @@ theorem ordinarySobolev_norm_le_tensor (A : SmoothL2Field Space) (q : ℕ) :
 variable {T : ℝ}
 
 /-- Field path, given by `⟨fun t => (A t).toLp,continuous_toLp A (hA 0)⟩`. -/
+@[expose]
 def fieldPath (A : Icc (0 : ℝ) T → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) : C(Icc (0 : ℝ) T,EulerMeanSolenoidal.L2) :=
   ⟨fun t => (A t).toLp,continuous_toLp A (hA 0)⟩

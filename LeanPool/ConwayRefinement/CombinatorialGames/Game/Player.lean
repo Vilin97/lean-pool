@@ -21,7 +21,7 @@ This file implements the two-element type of players (`Left`, `Right`), alongsid
 notational machinery to be used within game theory.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

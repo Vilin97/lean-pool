@@ -35,7 +35,7 @@ side conditions consumed by the positive-kernel contractivity bound (`PositiveKe
 Requires `[CompleteSpace E]` (spectrum, adjoints).
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

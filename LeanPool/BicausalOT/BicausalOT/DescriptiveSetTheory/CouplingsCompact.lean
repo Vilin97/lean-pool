@@ -40,7 +40,7 @@ public import Mathlib.Tactic
 
 /-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Topology
 

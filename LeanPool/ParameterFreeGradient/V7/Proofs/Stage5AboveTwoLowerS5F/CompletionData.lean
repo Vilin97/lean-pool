@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Pr
 The recursive resisting prefixes assemble into valid completed lower-bound data.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 
@@ -99,6 +99,7 @@ lemma xi_step_spec (P : PrefixParameters p d T) (t : ℕ) :
     resistingSign_spec (query P t (sigma P t))
 
 /-- The final scaled smooth oracle obtained from the last partial resisting objective. -/
+@[expose]
 noncomputable def completedOracle (P : PrefixParameters p d T) : PairOracle d :=
   { value := fun x => P.beta *
       (P.kernel.smooth P.chi (partialH P (T - 1))).value x
@@ -106,7 +107,7 @@ noncomputable def completedOracle (P : PrefixParameters p d T) : PairOracle d :=
       (P.kernel.smooth P.chi (partialH P (T - 1))).gradient x }
 
 /-- The recursively constructed prefixes packaged as completed lower-bound data. -/
-noncomputable def completionData (P : PrefixParameters p d T) (Delta : ℝ) :
+@[expose] noncomputable def completionData (P : PrefixParameters p d T) (Delta : ℝ) :
     LowerCompletionData p d T :=
   { algorithm := P.algorithm
     x0 := 0

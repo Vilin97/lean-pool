@@ -28,7 +28,7 @@ import Mathlib.Tactic.Ring.RingNF
 i.e. the pole moments (2.3) of the paper (Proposition 2.2).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set MeasureTheory Finset
 

@@ -22,7 +22,7 @@ This file develops continuous annihilators, quotient-dual equivalences, reflexiv
 strong symplectic forms, and the basic algebraic API for symplectic adjoints.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.Forms
 
@@ -33,6 +33,7 @@ section
 
 Blueprint support for `lem:double-annihilator` and `lem:quotient-dual`; audit:
 `DEF-ANNIHILATOR`. -/
+@[expose]
 def continuousAnnihilator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (W : Submodule ℝ X) : Submodule ℝ (StrongDual ℝ X) := by
   exact ((ContinuousLinearMap.compL ℝ W X ℝ).flip W.subtypeL).ker
@@ -76,7 +77,7 @@ theorem continuousDoubleAnnihilator {X : Type*} [NormedAddCommGroup X]
 /-- Pullback along the quotient map as a continuous equivalence with the annihilator.
 
 Blueprint: `lem:quotient-dual`; audit: `AUX-CONT-QUOTIENT-DUAL-ANNIHILATOR`. -/
-def quotientDualEquivAnnihilator {X : Type*} [NormedAddCommGroup X]
+@[expose] def quotientDualEquivAnnihilator {X : Type*} [NormedAddCommGroup X]
     [NormedSpace ℝ X] [CompleteSpace X] (W : Submodule ℝ X)
     [hW : IsClosed (W : Set X)] :
     StrongDual ℝ (X ⧸ W) ≃L[ℝ] continuousAnnihilator W := by

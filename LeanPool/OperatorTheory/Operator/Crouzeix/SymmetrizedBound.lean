@@ -30,7 +30,7 @@ itself.
   representation.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval Real

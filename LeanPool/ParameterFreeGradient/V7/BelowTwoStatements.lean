@@ -13,35 +13,35 @@ The squared-norm geometry, residual identities, and two-phase trial contracts fo
 below two.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace V7
 
 /-- The scaled squared norm mirror potential for exponents between one and two. -/
-noncomputable def belowH (p : ℝ) (x : Point d) : ℝ :=
+@[expose] noncomputable def belowH (p : ℝ) (x : Point d) : ℝ :=
   (1 / (2 * (p - 1))) * (lpNorm p x) ^ (2 : ℕ)
 
 /-- The conjugate scaled squared norm potential for the below-two geometry. -/
-noncomputable def belowHstar (p : ℝ) (s : Point d) : ℝ :=
+@[expose] noncomputable def belowHstar (p : ℝ) (s : Point d) : ℝ :=
   ((p - 1) / 2) * (lpNorm (conjugateExponent p) s) ^ (2 : ℕ)
 
 /-- The scaled duality map giving the gradient of the below-two conjugate potential. -/
-noncomputable def belowMirrorMap (p : ℝ) (s : Point d) : Point d :=
+@[expose] noncomputable def belowMirrorMap (p : ℝ) (s : Point d) : Point d :=
   (p - 1) • O3.dualityMap (conjugateExponent p) s
 
 /-- The Bregman difference of a function and its specified gradient, based at `y`. -/
-noncomputable def FunctionBregman (F : Point d → ℝ) (grad : Point d → Point d)
+@[expose] noncomputable def FunctionBregman (F : Point d → ℝ) (grad : Point d → Point d)
     (x y : Point d) : ℝ :=
   F x - F y - pairing (grad y) (x - y)
 
 /-- The real supremum of the affine dual pairings minus the objective. -/
-noncomputable def FenchelConjugate (F : Point d → ℝ) (s : Point d) : ℝ :=
+@[expose] noncomputable def FenchelConjugate (F : Point d → ℝ) (s : Point d) : ℝ :=
   sSup {r : ℝ | ∃ x : Point d, r = pairing s x - F x}
 
 /-- Source carrier for `lem:belowgeometry` (B02). -/
-noncomputable def BelowGeometryStatement : Prop :=
+@[expose] noncomputable def BelowGeometryStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p < 2 → ∀ (d : ℕ),
     (∀ x y : Point d,
       belowH p y ≥ belowH p x +
@@ -85,7 +85,7 @@ structure BelowPrimalData (p : ℝ) (d n : ℕ) where
   trace : List (Observation d)
 
 /-- The prescribed below-two weights, initial state, and primal update recurrences. -/
-def BelowPrimalDynamics (data : BelowPrimalData p d n) : Prop :=
+@[expose] def BelowPrimalDynamics (data : BelowPrimalData p d n) : Prop :=
   1 ≤ n ∧ data.u 0 = 1 / 4 ∧ data.u n = data.u (n - 1) ∧
   data.dw n = 0 ∧
   (∀ k < n, data.u k = (((k : ℝ) + 1) ^ (2 : ℕ)) / 4 ∧
@@ -102,7 +102,7 @@ def BelowPrimalDynamics (data : BelowPrimalData p d n) : Prop :=
       (data.dw k / data.u (k + 1)) • (data.v (k + 1) - data.v k)
 
 /-- The below-two primal dynamics, convex gradient oracle, minimizer, guards, and exact trace. -/
-def BelowPrimalAssumptions (data : BelowPrimalData p d n) : Prop :=
+@[expose] def BelowPrimalAssumptions (data : BelowPrimalData p d n) : Prop :=
   BelowPrimalDynamics data ∧
   O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -130,7 +130,7 @@ def BelowPrimalAssumptions (data : BelowPrimalData p d n) : Prop :=
   ∀ k ≤ n, QueriedAt data.trace k (data.x k)
 
 /-- Source carrier for `lem:below-primal` (B04--B05). -/
-noncomputable def BelowPrimalStatement : Prop :=
+@[expose] noncomputable def BelowPrimalStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p < 2 → ∀ (d n : ℕ) (data : BelowPrimalData p d n),
     BelowPrimalAssumptions data →
     data.oracle.value (data.x n) - data.fstar ≤ belowH p data.z / data.u n
@@ -143,12 +143,12 @@ abbrev ScalarSeq := ℕ → ℝ
 abbrev ScalarMatrix := ℕ → ℕ → ℝ
 
 /-- The coordinatewise weighted sum of the first `n` vectors. -/
-noncomputable def weightedSum (n : ℕ) (a : ScalarSeq) (X : VectorSeq d) : Point d :=
+@[expose] noncomputable def weightedSum (n : ℕ) (a : ScalarSeq) (X : VectorSeq d) : Point d :=
   fun j => ∑ i ∈ Finset.range n, a i * X i j
 
 /-- The primal energy residual combining gradient differences, mirror increments, and mixed
 pairings. -/
-noncomputable def BelowPrimalResidual (p : ℝ) (n : ℕ)
+@[expose] noncomputable def BelowPrimalResidual (p : ℝ) (n : ℕ)
     (u _dw : ScalarSeq) (alpha : ScalarMatrix) (A B X : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   (∑ k ∈ Finset.range n,
@@ -160,7 +160,7 @@ noncomputable def BelowPrimalResidual (p : ℝ) (n : ℕ)
       u k * pairing (A k - A (k + 1)) (X k))
 
 /-- The reversed dual energy residual with reciprocal weights and mixed pairings. -/
-noncomputable def BelowDualResidual (p : ℝ) (n : ℕ)
+@[expose] noncomputable def BelowDualResidual (p : ℝ) (n : ℕ)
     (u : ScalarSeq) (alpha b : ScalarMatrix) (C D : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   let w : ScalarSeq := fun i => 1 / u (n - i)
@@ -177,23 +177,24 @@ noncomputable def BelowDualResidual (p : ℝ) (n : ℕ)
         (weightedSum (k + 1) (fun i => alpha (n - i) (n - 1 - k)) D))
 
 /-- The increment potential is unchanged when its argument is negated. -/
-def EvenIncrement (Omega : Point d → ℝ) : Prop := ∀ x, Omega (-x) = Omega x
+@[expose] def EvenIncrement (Omega : Point d → ℝ) : Prop :=
+  ∀ x, Omega (-x) = Omega x
 
 /-- The reverse-indexed gradient and mirror correspondence used in the residual identity. -/
-def BelowResidualMap (n : ℕ) (u : ScalarSeq) (A B C D : VectorSeq d) : Prop :=
+@[expose] def BelowResidualMap (n : ℕ) (u : ScalarSeq) (A B C D : VectorSeq d) : Prop :=
   C 0 = u n • A n ∧
   (∀ i < n, C (n - i) - C (n - i - 1) = u i • (A i - A (i + 1))) ∧
   ∀ i ≤ n, D i = B (n - i)
 
 /-- The primal iterate recurrence driven by coefficient-row differences. -/
-def BelowXRecurrence (n : ℕ) (b : ScalarMatrix)
+@[expose] def BelowXRecurrence (n : ℕ) (b : ScalarMatrix)
     (B X : VectorSeq d) : Prop :=
   X 0 = B 0 ∧ ∀ k < n,
     X (k + 1) = X k - weightedSum (k + 2) (b (k + 1)) B
 
 /-- The explicit quadratic weights and coefficient recurrences for the below-two residual
 identity. -/
-def BelowCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
+@[expose] def BelowCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
     (alpha c b : ScalarMatrix) : Prop :=
   u 0 = 1 / 4 ∧ u n = u (n - 1) ∧ dw n = 0 ∧ c 0 0 = 1 ∧ b 0 0 = -1 ∧
   (∀ k < n, u k = (((k : ℝ) + 1) ^ (2 : ℕ)) / 4 ∧
@@ -210,10 +211,11 @@ def BelowCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
   ∀ k < n, (∑ i ∈ Finset.range (k + 2), b (k + 1) i) = 0
 
 /-- Two vector sequences agree through the inclusive horizon `n`. -/
-def SameOnHorizon (n : ℕ) (A B : VectorSeq d) : Prop :=
+@[expose] def SameOnHorizon (n : ℕ) (A B : VectorSeq d) : Prop :=
   ∀ k ≤ n, A k = B k
 
 /-- Source carrier for `lem:below-identity` (B06--B07). -/
+@[expose]
 noncomputable def BelowPointwiseResidualIdentityStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p < 2 → ∀ (d n : ℕ), 1 ≤ n →
     ∀ (u dw : ScalarSeq) (alpha c b : ScalarMatrix)
@@ -256,6 +258,7 @@ structure BelowDualData (p : ℝ) (d n : ℕ) where
   trace : List (Observation d)
 
 /-- The below-two coefficient conditions and reversed dual query and gradient recurrences. -/
+@[expose]
 def BelowDualDynamics (data : BelowDualData p d n) : Prop :=
   1 ≤ n ∧
   BelowCoefficientAssumptions n data.u data.dw data.alpha data.c data.b ∧
@@ -268,6 +271,7 @@ def BelowDualDynamics (data : BelowDualData p d n) : Prop :=
       weightedSum (k + 2) (fun i => data.b (n - i) (n - 1 - k)) data.G
 
 /-- The below-two dual dynamics, convex gradient oracle, lower bound, guards, and exact trace. -/
+@[expose]
 def BelowDualAssumptions (data : BelowDualData p d n) : Prop :=
   BelowDualDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -291,6 +295,7 @@ def BelowDualAssumptions (data : BelowDualData p d n) : Prop :=
           (data.oracle.gradient (data.q k) - data.oracle.gradient (data.q (k + 1)))) ^ (2 : ℕ)
 
 /-- Source carrier for `lem:below-dual` (B07--B08). -/
+@[expose]
 noncomputable def BelowTerminalGradientStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p < 2 → ∀ (d n : ℕ) (data : BelowDualData p d n),
     BelowDualAssumptions data →
@@ -301,6 +306,7 @@ noncomputable def BelowTerminalGradientStatement : Prop :=
 
 /-- Source carrier for `lem:below-guard-scaling` (B12), including the exact
 argument orientation in both normalized and physical Bregman remainders. -/
+@[expose]
 noncomputable def BelowGuardScalingStatement : Prop :=
   ∀ (p M D : ℝ), 1 < p → 0 < M → 0 < D → ∀ (d : ℕ)
     (oracle : PairOracle d) (c x y : Point d),
@@ -318,7 +324,7 @@ noncomputable def BelowGuardScalingStatement : Prop :=
       CocoercivityGuard p M oracle X Y)
 
 /-- The oracle translated by `c` and rescaled by the distance and smoothness estimates. -/
-noncomputable def normalizedPairOracle (c : Point d) (M D : ℝ)
+@[expose] noncomputable def normalizedPairOracle (c : Point d) (M D : ℝ)
     (oracle : PairOracle d) : PairOracle d :=
   { value := fun y =>
       (oracle.value (c + D • y) - oracle.value c) / (M * D ^ (2 : ℕ))
@@ -341,6 +347,7 @@ structure BelowTrialWitness (p : ℝ) (d : ℕ) where
   phaseTwoCenter : Point d
 
 /-- The horizon, normalization, phase execution, and report requirements of a below-two trial. -/
+@[expose]
 def BelowTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
     (cached : CachedPair d) (oracle : PairOracle d)
     (report : TrialReport d) (w : BelowTrialWitness p d) : Prop :=
@@ -375,6 +382,7 @@ def BelowTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
 
 /-- Source carrier for `prop:belowtrial` (B01--B13), with the current no-log
 local count. -/
+@[expose]
 noncomputable def BelowTrialStatement : Prop :=
   ∀ (p : ℝ), 1 < p → p < 2 → ∀ (d : ℕ) (eps M D : ℝ),
     0 < eps → 0 < M → 0 < D → ∀ (x0 : Point d)

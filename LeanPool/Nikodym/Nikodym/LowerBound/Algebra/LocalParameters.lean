@@ -34,7 +34,7 @@ and prove
   theorem in `P ⧸ I` and the closed-point height formula of A01.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

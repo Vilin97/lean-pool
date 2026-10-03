@@ -877,7 +877,7 @@ public
 lemma multiDist_indep {m : ℕ} {Ω : Type*} (hΩ : MeasureSpace Ω) [IsProbabilityMeasure hΩ.volume]
     {X : Fin m → Ω → G} (hX : ∀ i, Measurable (X i)) (h_indep : iIndepFun X) :
     D[X; fun _ ↦ hΩ] = H[∑ i, X i] - (∑ i, H[X i]) / m := by
-  simp only [multiDist, entropy, inv_mul_eq_div, sub_left_inj]
+  simp only [multiDist, entropy_def, inv_mul_eq_div, sub_left_inj]
   congr
   rw [iIndepFun_iff_map_fun_eq_pi_map (by fun_prop)] at h_indep
   rw [← h_indep, Measure.map_map] <;> try fun_prop
@@ -2103,7 +2103,7 @@ theorem multiDist_of_hom' {G G' : Type*} [MeasurableSpace G] [MeasurableSingleto
     (a : Fin m → G') : D[fun i ω ↦ ι (X i ω) + a i; hΩ] = D[X; hΩ] := by
   unfold multiDist
   congr 1
-  · unfold entropy
+  · simp only [entropy_def]
     set sum_G : (Fin m → G) → G := fun x ↦ ∑ i, x i
     set sum_G' : (Fin m → G') → G' := fun x ↦ ∑ i, x i
     let ι' : G → G' := fun x ↦ ι x + ∑ i, a i

@@ -25,7 +25,7 @@ The main results are:
   `a`-successor of a free basic sequent.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

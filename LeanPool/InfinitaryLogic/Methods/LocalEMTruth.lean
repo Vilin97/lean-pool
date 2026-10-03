@@ -47,7 +47,7 @@ This is the local analogue of `EMTermModel.lean:114–180`. It is a pure file (i
 stays off the EM stack.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -68,7 +68,7 @@ support `S`: `φ` holds in `M` on the deep interpretations of the terms, for all
 deep `d`.
 The right-hand side of the restricted truth lemma. Local analogue of
   `EMContext.eventualDeepTruth`. -/
-def LocalEMContext.eventualDeepTruth (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+@[expose] def LocalEMContext.eventualDeepTruth (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (φ : Λ.BoundedFormulaω Empty n) (ts : Fin n → Λ[[J]].Term Empty) (S : Finset J) : Prop :=
   ∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)
 
@@ -284,7 +284,7 @@ the local Skolem symbol `skolemNeedSymbol h` (witnessing `∃ xₙ, ¬ψ`), in t
 summand of
 `Llocal s₀ (k+1)`, included through `LlocalInclusion s₀ (k+1)` and then `lhomWithConstants`, applied
 to the closed argument terms `ts`. Local analogue of `skWitnessTerm`. -/
-def locSkWitnessTerm {k n : ℕ} {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
+@[expose] def locSkWitnessTerm {k n : ℕ} {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
     (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k)
     (ts : Fin n → (localColim s₀)[[J]].Term Empty) : (localColim s₀)[[J]].Term Empty :=
   Term.func ((lhomWithConstants (localColim s₀) J).onFunction

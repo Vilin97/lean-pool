@@ -16,7 +16,7 @@ The symmetric polynomial `∑ᵢ T(Xᵢ)` and its evaluation, providing the alge
 input to the auxiliary integer in Niven's proof.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open Multiset

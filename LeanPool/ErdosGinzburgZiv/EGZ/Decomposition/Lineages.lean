@@ -20,7 +20,7 @@ one. Event counts therefore reduce to counts for initial ancestor labels.
 A killed lineage cannot label any later event.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -52,6 +52,7 @@ variable (S : System)
 abbrev LowNode (L i : ℕ) := {x : S.Node i // S.level i x ≤ L}
 
 /-- Later low-level nodes have distinct old parents. -/
+@[expose]
 def InjectiveBelow (L : ℕ) : Prop :=
   ∀ i, Set.InjOn (S.parent i) {x | S.level (i + 1) x ≤ L}
 
@@ -60,6 +61,7 @@ variable {L : ℕ} (hinj : S.InjectiveBelow L)
 include hinj
 
 /-- The restricted parent map is an embedding. -/
+@[expose]
 def parentEmbedding (i : ℕ) : S.LowNode L (i + 1) ↪ S.LowNode L i where
   toFun x := ⟨S.parent i x, (S.level_parent i x).trans x.property⟩
   inj' x y h := Subtype.ext (hinj i x.property y.property (congrArg Subtype.val h))
@@ -119,6 +121,7 @@ theorem card_lowNode_le_initial (i : ℕ) :
 
 /-- A selected node is killed when it has no child below the cutoff in
 the next stage. Higher-level replacements are permitted. -/
+@[expose]
 def IsKilled (i : ℕ) (x : S.LowNode L i) : Prop :=
   ∀ y : S.LowNode L (i + 1), S.parent i y ≠ x.val
 

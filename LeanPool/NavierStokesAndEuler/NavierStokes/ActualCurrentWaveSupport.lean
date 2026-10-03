@@ -24,7 +24,7 @@ does not differentiate a polar chart at the axis or use an excluded dyadic
 face of a fixed reference formula.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,6 +42,7 @@ abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
 /-- The profile radius in physical coordinates, independent of the valid
 dyadic chart used to evaluate a wave. -/
+@[expose]
 noncomputable def profileRadius (h : ℝ) (w : SpaceTime) : ℝ :=
   AnnularEndpoint.radius w / Real.sqrt (PhysicalWaveSum.physicalQ h w)
 

@@ -27,7 +27,7 @@ stated for an arbitrary measurable set `s` and an arbitrary function
 measure to `s`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

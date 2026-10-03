@@ -19,7 +19,7 @@ Prop-level disjunction. The Challenge's `{x : ℝ // 0 ≤ x ∧ x ≤ 1}` is
 definitionally `↥OneMfld.UnitInterval` (and Mathlib's `↥unitInterval`).
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

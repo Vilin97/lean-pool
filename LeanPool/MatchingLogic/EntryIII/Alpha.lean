@@ -21,7 +21,7 @@ public import LeanPool.MatchingLogic.ProofSystem
 # MatchingLogic.EntryIII.Alpha
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

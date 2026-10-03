@@ -19,7 +19,7 @@ Tags: number-theory, combinatorics
 MSC: 11H06, 11B30
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

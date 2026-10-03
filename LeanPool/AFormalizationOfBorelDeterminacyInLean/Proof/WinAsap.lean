@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 lemma choose_eq {α : Type*} {p q : α → Prop} (hpq : ∀ a, p a ↔ q a) (h : ∃ a, p a) :
@@ -39,7 +39,7 @@ open Stream'.Discrete Tree Game
 noncomputable section «Section1»
 variable {A : Type*} (G : Game A) (p : Player)
 /-- whether there exists a prefix of `x` that is a winning position for `p` -/
-def WinningPrefix (x : List A) := ∃ (n : ℕ),
+@[expose] def WinningPrefix (x : List A) := ∃ (n : ℕ),
   (G.residual (x.take n)).ExistsWinning (p.residual (x.take n))
 lemma winningPrefix_of_notMem {x} (h : x ∉ G.tree) : WinningPrefix G p x := by
   use x.length; simpa [residual_notMem G x h] using existsWinning_empty
@@ -72,7 +72,7 @@ section «Section2»
 variable {x : List A} (h : WinningPrefix G p x)
 
 /-- the length of the shortest prefix of `x` that is winning for `p` -/
-noncomputable def num : ℕ := by
+@[expose] noncomputable def num : ℕ := by
   classical
   exact Nat.find h
 lemma num_spec : (G.residual (x.take h.num)).ExistsWinning (p.residual (x.take h.num)) := by
@@ -317,13 +317,30 @@ lemma winAsap_body (x : body (winAsap G p).subtree)
   ⟨x.val, body_mono (subtree_sub _) x.prop⟩ ∈ p.payoff G := by
   obtain ⟨N, h⟩ := h; have hN : h.num ≤ N := by simpa using h.num_le_length
   suffices x.val.drop h.num ∈ body h.strat.pre.subtree by
-    have hW := h.strat_winning this
-    conv at hW => simp [hN]
-    obtain ⟨w, hpay, hw⟩ := hW
-    refine Set.mem_of_eq_of_mem (y := body.append (Stream'.take h.num x.val) w) ?_ hpay
-    apply Subtype.ext
-    change x.val = Stream'.take h.num x.val ++ₛ w.val
-    rw [hw, Stream'.append_take_drop]
+    obtain ⟨w, hW, hw⟩ := h.strat_winning this
+    have htake : (x.val.take N).take h.num = x.val.take h.num := by
+      simp [hN]
+    let w' : body (subAt G.tree (x.val.take h.num)) :=
+      ⟨w.val, by rw [← htake]; exact w.prop⟩
+    have hW' : body.append (x.val.take h.num) w' ∈ p.payoff G := by
+      have hpay : (p.residual ((x.val.take N).take h.num)).payoff
+          (G.residual ((x.val.take N).take h.num)) =
+            (body.append ((x.val.take N).take h.num))⁻¹' p.payoff G := by simp_all
+      have hWold : body.append ((x.val.take N).take h.num) w ∈ p.payoff G := by
+        rw [hpay] at hW
+        exact hW
+      have happend : body.append ((x.val.take N).take h.num) w =
+          body.append (x.val.take h.num) w' := by
+        apply Subtype.ext
+        change (x.val.take N).take h.num ++ₛ w.val = x.val.take h.num ++ₛ w.val
+        exact congrArg (fun l : List A => l ++ₛ w.val) htake
+      exact happend ▸ hWold
+    have heq : body.append (x.val.take h.num) w' =
+        ⟨x.val, body_mono (subtree_sub _) x.prop⟩ := by
+      apply Subtype.ext
+      change x.val.take h.num ++ₛ (w : Stream' A) = x.val
+      rw [hw, Stream'.append_take_drop]
+    exact heq ▸ hW'
   apply mem_body_of_take 0; intro n _
   rw [← winAsap_subtree]; simp [hN]
 lemma winAsap_body' (x : body (winAsap G p).followUntilWon.subtree)

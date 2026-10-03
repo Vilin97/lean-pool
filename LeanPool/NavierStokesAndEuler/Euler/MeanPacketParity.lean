@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanPacketProvider
 
 /-! Odd velocity and even normalized pressure for the actual mean provider. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

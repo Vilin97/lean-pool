@@ -13,7 +13,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Lightweight legal-row search data -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
@@ -25,6 +25,7 @@ structure SearchRowChoice where
   pairMask : UInt64
 
 /-- Packed search-row choices for vertex 0. -/
+@[expose]
 def searchRowChoices0 : Array SearchRowChoice :=
   #[⟨30, 270015488⟩, ⟨46, 539503616⟩, ⟨78, 1078479872⟩, ⟨142, 2156432384⟩, ⟨54, 137442112512⟩,
   ⟨86, 274883171328⟩, ⟨150, 549765288960⟩, ⟨102, 70368750494720⟩, ⟨166, 140737498883072⟩,
@@ -38,6 +39,7 @@ def searchRowChoices0 : Array SearchRowChoice :=
   ⟨240, 36240865324171264⟩]
 
 /-- Packed search-row choices for vertex 1. -/
+@[expose]
 def searchRowChoices1 : Array SearchRowChoice :=
   #[⟨29, 270008348⟩, ⟨45, 539492396⟩, ⟨77, 1078460492⟩, ⟨141, 2156396684⟩, ⟨53, 137442099252⟩,
   ⟨85, 274883149908⟩, ⟨149, 549765251220⟩, ⟨101, 70368750469220⟩, ⟨165, 140737498841252⟩,
@@ -51,6 +53,7 @@ def searchRowChoices1 : Array SearchRowChoice :=
   ⟨240, 36240865324171264⟩]
 
 /-- Packed search-row choices for vertex 2. -/
+@[expose]
 def searchRowChoices2 : Array SearchRowChoice :=
   #[⟨27, 268441626⟩, ⟨43, 536881194⟩, ⟨75, 1073760330⟩, ⟨139, 2147518602⟩, ⟨51, 137438965810⟩,
   ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩,
@@ -64,6 +67,7 @@ def searchRowChoices2 : Array SearchRowChoice :=
   ⟨240, 36240865324171264⟩]
 
 /-- Packed search-row choices for vertex 3. -/
+@[expose]
 def searchRowChoices3 : Array SearchRowChoice :=
   #[⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨51, 137438965810⟩,
   ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩,
@@ -77,6 +81,7 @@ def searchRowChoices3 : Array SearchRowChoice :=
   ⟨240, 36240865324171264⟩]
 
 /-- Packed search-row choices for vertex 4. -/
+@[expose]
 def searchRowChoices4 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨43, 536881194⟩, ⟨75, 1073760330⟩,
   ⟨139, 2147518602⟩, ⟨99, 70368744202338⟩, ⟨163, 140737488396450⟩, ⟨195, 36028797019013314⟩,
@@ -89,6 +94,7 @@ def searchRowChoices4 : Array SearchRowChoice :=
   ⟨204, 36028800253296640⟩, ⟨228, 36239903266177024⟩, ⟨232, 36239907009593344⟩]
 
 /-- Packed search-row choices for vertex 5. -/
+@[expose]
 def searchRowChoices5 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨71, 4211782⟩, ⟨135, 8422534⟩, ⟨27, 268441626⟩, ⟨75, 1073760330⟩,
   ⟨139, 2147518602⟩, ⟨83, 274877927506⟩, ⟨147, 549755850898⟩, ⟨195, 36028797019013314⟩,
@@ -101,6 +107,7 @@ def searchRowChoices5 : Array SearchRowChoice :=
   ⟨216, 36029625142345728⟩]
 
 /-- Packed search-row choices for vertex 6. -/
+@[expose]
 def searchRowChoices6 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨135, 8422534⟩, ⟨27, 268441626⟩, ⟨43, 536881194⟩,
   ⟨139, 2147518602⟩, ⟨51, 137438965810⟩, ⟨147, 549755850898⟩, ⟨163, 140737488396450⟩,
@@ -112,6 +119,7 @@ def searchRowChoices6 : Array SearchRowChoice :=
   ⟨172, 140740183719936⟩, ⟨180, 141424694657024⟩, ⟨184, 141427635912704⟩]
 
 /-- Packed search-row choices for vertex 7. -/
+@[expose]
 def searchRowChoices7 : Array SearchRowChoice :=
   #[⟨15, 527374⟩, ⟨23, 1053718⟩, ⟨39, 2106406⟩, ⟨71, 4211782⟩, ⟨27, 268441626⟩, ⟨43, 536881194⟩,
   ⟨75, 1073760330⟩, ⟨51, 137438965810⟩, ⟨83, 274877927506⟩, ⟨99, 70368744202338⟩, ⟨29, 270008348⟩,
@@ -123,12 +131,14 @@ def searchRowChoices7 : Array SearchRowChoice :=
   ⟨108, 70370361606144⟩, ⟨116, 70781068378112⟩, ⟨120, 70782940086272⟩]
 
 /-- All lightweight choices, in the same order as the generated pattern choices. -/
+@[expose]
 def searchRowChoices : Array (Array SearchRowChoice) := #[
   searchRowChoices0, searchRowChoices1, searchRowChoices2, searchRowChoices3,
   searchRowChoices4, searchRowChoices5, searchRowChoices6, searchRowChoices7
 ]
 
 /-- Retrieve one lightweight choice by its row mask. -/
+@[expose]
 def searchChoiceForRow (centre : Vertex) (row : UInt64) : SearchRowChoice :=
   ((searchRowChoices.getD centre.val #[]).find?
     (fun choice => choice.rowMask == row)).getD ⟨0, 0⟩

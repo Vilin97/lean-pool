@@ -19,7 +19,7 @@ Fiberwise density in eccentricity propagates each collision-band resonant obstru
 nondegenerate eccentricities to every admissible eccentricity at that resonance.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

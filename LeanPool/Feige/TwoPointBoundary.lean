@@ -13,7 +13,7 @@ import LeanPool.Feige.StrictLocalInsertion
 # Removing strict positivity from the finite two-point bound
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

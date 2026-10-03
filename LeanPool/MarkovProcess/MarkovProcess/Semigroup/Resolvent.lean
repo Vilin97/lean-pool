@@ -44,7 +44,7 @@ The shift `μ` is a positive real; nothing is asserted for complex shifts or for
 generator beyond the half-line `(0, ∞)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -62,6 +62,7 @@ section Integrand
 
 /-- The integrand of the Laplace transform of the orbit of `x` at the shift `μ`, read in the real
 time variable. -/
+@[expose]
 def laplaceIntegrand (μ : ℝ) (x : E) (t : ℝ) : E := Real.exp (-μ * t) • S (Real.toNNReal t) x
 
 omit [CompleteSpace E] in
@@ -147,6 +148,7 @@ section Resolvent
 
 /-- **The resolvent of the semigroup** at the positive shift `μ`: the Laplace transform of the
 orbits, `R_μ x = ∫₀^∞ e^{-μ t} S t x dt`, as a bounded operator. -/
+@[expose]
 def resolvent (μ : PositiveShift) : E →L[ℝ] E :=
   LinearMap.mkContinuous
     { toFun := fun x ↦ ∫ t in Ioi (0 : ℝ), S.laplaceIntegrand μ x t
@@ -303,6 +305,7 @@ theorem denseRange_resolvent (μ : PositiveShift) : DenseRange (S.resolvent μ) 
 
 /-- **The resolvent family of a strongly continuous contraction semigroup is a contractive
 resolvent.** -/
+@[expose]
 def toContractiveResolvent : ContractiveResolvent E where
   operator := S.resolvent
   resolvent_identity := S.resolvent_sub_resolvent

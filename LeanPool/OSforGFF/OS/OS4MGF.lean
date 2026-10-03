@@ -24,7 +24,7 @@ Shared lemmas for os4Clustering and OS4Ergodicity:
 - Exponential bound: |e^z − 1| ≤ |z| · e^{|z|}
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real
 open TopologicalSpace

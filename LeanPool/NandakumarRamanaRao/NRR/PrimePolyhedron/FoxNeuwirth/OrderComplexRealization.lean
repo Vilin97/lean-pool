@@ -28,7 +28,7 @@ strict at the chosen cell.  If they are in the same block, their common block pe
 rank order persists strictly.  The barycentric average therefore cannot identify the labels.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -39,6 +39,7 @@ variable {p : Nat}
 namespace FoxNeuwirthOrderComplex
 
 /-- Relabelling is an equivalence of the finite barred-permutation vertex set. -/
+@[expose]
 def relabelEquiv (sigma : Equiv.Perm (Fin p)) :
     BarredPermutation p ≃ BarredPermutation p where
   toFun c := c.relabel sigma
@@ -187,6 +188,7 @@ noncomputable instance instCompactSpace : CompactSpace (Realization p) :=
   isCompact_iff_compactSpace.mp isCompact_realizationCarrier
 
 /-- The coordinate permutation induced by relabelling. -/
+@[expose]
 def relabel (sigma : Equiv.Perm (Fin p)) (x : Realization p) : Realization p :=
   ⟨fun c => x (c.relabel sigma.symm), by
     refine ⟨?_, ?_, ?_⟩
@@ -408,6 +410,7 @@ theorem site_injective (x : Realization p) :
     exact (ne_of_lt hs) he
 
 /-- The order-complex realization maps to the labelled configuration space. -/
+@[expose]
 noncomputable def toConfig (x : Realization p) : Config p :=
   ⟨x.site, x.site_injective⟩
 
@@ -530,6 +533,7 @@ theorem reference_smul
 end Realization
 
 /-- The compact equivariant prime configuration model carried by the glued order complex. -/
+@[expose]
 noncomputable def orderComplexModel (hp : Nat.Prime p) :
     PrimeConfigurationModel hp := by
   letI : NeZero p := ⟨hp.ne_zero⟩

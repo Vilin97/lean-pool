@@ -36,7 +36,7 @@ The output is a *topological contraction certificate*
 fibre is connected.  Nothing here is specific to genus four.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Subdivision.CoreExpansion
 open Utilities.Certificate
 
@@ -111,6 +111,7 @@ theorem kindLength_pos (small : Spec n p) (k : SlotKind p) :
 /-- The vertex of the small subdivision sitting at path position `q` of a big
 slot with the given role.  Positions beyond the slot are clamped, which keeps
 the definition total and free of transported bound proofs. -/
+@[expose]
 def kindVertex (small : Spec n p) (fallback : Fin n) :
     SlotKind p → ℕ → small.Vertex
   | .contracted, _ => small.coreVertex fallback
@@ -157,6 +158,7 @@ namespace ExpansionData
 variable (D : ExpansionData n p N Q) (C : Core n p)
 
 /-- Endpoint compatibility of one big slot with its role. -/
+@[expose]
 def SlotCompatible (e : Fin Q) : Prop :=
   (D.kind e = .contracted → D.fib (D.bigCore.tail e) = D.fib (D.bigCore.head e)) ∧
   (∀ j : Fin p, D.kind e = .single j →
@@ -166,12 +168,14 @@ def SlotCompatible (e : Fin Q) : Prop :=
       D.fib (D.bigCore.head e) = C.head j₂)
 
 /-- `owner`/`side` really invert `kind`. -/
+@[expose]
 def SlotIndexed (e : Fin Q) : Prop :=
   (∀ j : Fin p, D.kind e = .single j → D.owner j = e ∧ D.side j = false) ∧
   (∀ j₁ j₂ : Fin p, D.kind e = .double j₁ j₂ →
     D.owner j₁ = e ∧ D.side j₁ = false ∧ D.owner j₂ = e ∧ D.side j₂ = true)
 
 /-- Every small slot really is claimed by its recorded owner. -/
+@[expose]
 def SlotClaimed (j : Fin p) : Prop :=
   D.kind (D.owner j) ≠ .contracted ∧
   (∀ j' : Fin p, D.kind (D.owner j) = .single j' → D.side j = false ∧ j' = j) ∧
@@ -180,6 +184,7 @@ def SlotClaimed (j : Fin p) : Prop :=
 
 /-- The middle vertex of a double is a genuine bivalent marker: it is outside
 the image of the fibre map, and no other small slot ends there. -/
+@[expose]
 def MarkerIsolated (e : Fin Q) : Prop :=
   ∀ j₁ j₂ : Fin p, D.kind e = .double j₁ j₂ →
     (∀ v : Fin N, D.fib v ≠ C.head j₁) ∧
@@ -187,6 +192,7 @@ def MarkerIsolated (e : Fin Q) : Prop :=
 
 /-- All conditions a usable expansion datum has to satisfy.  Every clause
 ranges over finite types, so the whole conjunction is decidable. -/
+@[expose]
 def Conditions : Prop :=
   (∀ e : Fin Q, D.bigCore.tail e ≠ D.bigCore.head e) ∧
   (∀ e : Fin Q, D.SlotCompatible C e) ∧
@@ -301,6 +307,7 @@ variable (small : Spec n p)
 
 /-- The two ordered-endpoint indicators of one unit step of a small slot,
 written through clamped path positions. -/
+@[expose]
 def smallStepTerm (j : Fin p) (a b : small.Vertex) (i : ℕ) : ℕ :=
   (if small.pathVertex j ⟨min i (small.length j), by omega⟩ = a ∧
       small.pathVertex j ⟨min (i + 1) (small.length j), by omega⟩ = b then 1
@@ -310,6 +317,7 @@ def smallStepTerm (j : Fin p) (a b : small.Vertex) (i : ℕ) : ℕ :=
 
 /-- The two ordered-endpoint indicators of one unit step of a big slot, after
 applying the contraction. -/
+@[expose]
 def kindStepTerm (fallback : Fin n) (k : SlotKind p) (a b : small.Vertex)
     (i : ℕ) : ℕ :=
   (if kindVertex small fallback k i = a ∧
@@ -570,6 +578,7 @@ variable (D : ExpansionData n p N Q) (small : Spec n p) (hN : 0 < N)
     (hL : ∀ e : Fin Q, D.bigCore.tail e ≠ D.bigCore.head e)
 
 /-- The contraction on subdivision vertices. -/
+@[expose]
 def vertexMap : (D.bigSpec small hN hL).Vertex → small.Vertex :=
   fun x => match x with
     | Sum.inl v => small.coreVertex (D.fib v)
@@ -1147,6 +1156,7 @@ variable (D : ExpansionData n p N Q) (small : Spec n p) (hN : 0 < N)
     (hL : ∀ e : Fin Q, D.bigCore.tail e ≠ D.bigCore.head e)
 
 /-- The contraction certificate attached to an expansion datum. -/
+@[expose]
 def certificate :
     GraphContractionCertificate (D.bigSpec small hN hL).graph small.graph where
   vertexMap := vertexMap D small hN hL

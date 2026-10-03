@@ -36,7 +36,7 @@ stored base error is the actual base residual, whose angular continuity is
 used only on the positive-time domain.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -52,10 +52,12 @@ abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 
 /-- Strip, given by `BaseContextAssembly.nativeStrip ActualPrimary.nominal
 ActualPrimary.standardRegion`. -/
+@[expose]
 noncomputable def strip : StripData Point :=
   BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion
 
 /-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
+@[expose]
 noncomputable def slowStrip : StripData TorusInverse.Plane :=
   PhysicalMeanDomain.localSlowStripData ActualPrimary.standardRegion.carrier
     ActualPrimary.standardRegion.isOpen (ChartScales.epsilon ActualPrimary.h)
@@ -64,46 +66,55 @@ noncomputable def slowStrip : StripData TorusInverse.Plane :=
     BaseContextAssembly.one_le_slowScale
 
 /-- Primary piece, given by `ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1`. -/
+@[expose]
 noncomputable def primaryPiece {B N0 : ℕ} (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
   ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1
 
 /-- Base error, given by `ActualBaseResidual.baseError ActualPrimary.certificate
 ActualPrimary.modulation ActualPrimary.upper B`. -/
+@[expose]
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B
 
 /-- Seed, given by `bandSeed (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0)
 primaryPiece (baseError B)`. -/
+@[expose]
 noncomputable def seed (B N0 : ℕ) : State Point :=
   bandSeed (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0) primaryPiece (baseError B)
 
 /-- Axial, given by `((0, 1), 0)`. -/
+@[expose]
 noncomputable def axial : TorusInverse.Plane × TorusInverse.Plane := ((0, 1), 0)
 
 /-- Primary, given by `VariableGaugeMean.reconstructState ActualPrimary.commonGauge
 (ActualPrimary.commonContext B) (seed B N0)`. -/
+@[expose]
 noncomputable def primary (B N0 : ℕ) : State Point :=
   VariableGaugeMean.reconstructState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
       (seed B N0)
 
 /-- Temporal, constructed using `VariableGaugeMean.temporalStageState`. -/
+@[expose]
 noncomputable def temporal (B N0 : ℕ) : State Point :=
   VariableGaugeMean.temporalStageState ActualPrimary.commonGauge ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B) (primary B N0)
 
 /-- Ranked, constructed using `VariableGaugeMean.rankStageState`. -/
+@[expose]
 noncomputable def ranked (B N0 : ℕ) : State Point :=
   VariableGaugeMean.rankStageState ActualPrimary.commonGauge ActualPrimary.rankData axial
     (ActualPrimary.commonContext B) (temporal B N0)
 
 /-- Initialized, constructed using `GaugeInitialization.initializedBands`. -/
+@[expose]
 noncomputable def initialized (B N0 : ℕ) : State Point :=
   GaugeInitialization.initializedBands ActualPrimary.commonGauge ActualPrimary.rankData
     ActualPrimary.h (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
     (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0) primaryPiece (baseError B)
 
 /-- Initial alias, constructed using `VariableGaugeMean.temporalAliasState`. -/
+@[expose]
 noncomputable def initialAlias (B N0 : ℕ) (n : ℕ) (x : Point) : Fin 3 → ℝ :=
   VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
       (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B) (primary B N0) n (x, 0) +
@@ -247,7 +258,9 @@ theorem tangent_amplitude_uniform :
   have hh := ActualPrimaryBounds.chart_cut_amplitude_uniform (B := B) (N0 := N0)
   change LabelSumBounds.UniformClass (HarmonicWaveInteraction.productStrip strip)
     (fun l n x => Real.sqrt (strip.zeta x.1) * ActualPrimaryBounds.meanEnvelope l n x.1)
-    (1 / 2) _ at hh
+    (1 / 2) (fun l : ActualPrimaryBounds.SignedLabel B N0 => fun n x =>
+      ((ActualPrimary.chartCoefficients l.1 l.2).withCutoff
+        (ActualPrimary.chartCutoff l.1 l.2)).amplitude n x) at hh
   have hr : LabelSumBounds.UniformWaveClass strip ActualPrimaryBounds.meanEnvelope (1 / 2)
       (fun l : ActualPrimaryBounds.SignedLabel B N0 => fun n x =>
         ((ActualPrimary.chartCoefficients l.1 l.2).withCutoff
@@ -465,6 +478,7 @@ end CovarianceInputs
 fields of the initialization estimates. -/
 
 /-- Primary data, constructed using `MovingInitialization.PrimaryMeanData`. -/
+@[expose]
 noncomputable def PrimaryData (B N0 : ℕ) : Prop :=
   MovingInitialization.PrimaryMeanData
     (cL := FinalSlowBase.edgeExponent ActualPrimary.nominal / 4) (cR := 1)
@@ -603,7 +617,12 @@ theorem curl_amplitude_uniform {B N0 : ℕ} :
   have hh := ActualPrimaryBounds.chart_curl_uniform (B := B) (N0 := N0)
   change LabelSumBounds.UniformClass (HarmonicWaveInteraction.productStrip strip)
     (fun l n x => Real.sqrt (strip.zeta x.1) * ActualPrimaryBounds.meanEnvelope l n x.1)
-    (1 - ChartScales.kappa) _ at hh
+    (1 - ChartScales.kappa)
+    (fun l : ActualPrimaryBounds.SignedLabel B N0 => fun n x =>
+      ((ActualPrimary.chartCoefficients l.1 l.2).withCutoff
+        (ActualPrimary.chartCutoff l.1 l.2)).curlCorrection
+        (HarmonicWaveInteraction.productStrip strip)
+        (PrimaryResidualClass.directions (ActualPrimary.commonContext B)) n x) at hh
   have hr : LabelSumBounds.UniformWaveClass strip ActualPrimaryBounds.meanEnvelope
       (1 - ChartScales.kappa)
       (fun l : ActualPrimaryBounds.SignedLabel B N0 => fun n x =>
@@ -745,7 +764,9 @@ theorem initialized_formula (B N0 : ℕ) :
       (ActualPrimary.activeLabels ActualPrimary.standardRegion B N0)
       (fun l => ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1)
       (ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
-          ActualPrimary.upper B) := rfl
+          ActualPrimary.upper B) := by
+  simp only [initialized, axial, baseError]
+  congr 1
 
 end NavierStokes.ActualInitialMean
 
@@ -754,7 +775,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1375,6 +1396,7 @@ theorem gaussianLength_near (l : SignedLabel B N0) (n : ℕ) (hn : near l n) :
 
 /-- Outside the active finite band window the copied field is identically
 zero. The auxiliary length merely makes the global index bookkeeping total. -/
+@[expose]
 noncomputable def gaussianLength (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   max ((ActualPrimary.phases B N0 0).L l.2) (gaussianLengthLower * ChartScales.S n)
 
@@ -1488,6 +1510,7 @@ variable {B N0 : ℕ}
 
 /-- The original label's actual slow mask and Gaussian source rectangle,
 on the common torus lift. The harmonic index does not change this set. -/
+@[expose]
 noncomputable def labelCarrier (l : SignedLabel B N0) (n : ℕ) : Set Point :=
   {x | ∃ k : TorusInverse.Frequency,
     (ActualPrimary.nativeSlow l.2 (ActualPrimary.toAbsolute n x),
@@ -1576,6 +1599,7 @@ open CorrectionInitialization ActualPrimaryBounds
 variable {B N0 : ℕ}
 
 /-- Chart gaussian, constructed using `LinearWaveBounds.excludedSlotError`. -/
+@[expose]
 noncomputable def chartGaussian (l : SignedLabel B N0) :
     ℕ → ActualPrimary.FullPoint → HarmonicCalculus.ComplexVector :=
   LinearWaveBounds.excludedSlotError (PrimaryResidualClass.directions (ActualPrimary.commonContext
@@ -1847,6 +1871,7 @@ theorem chartCarrier_smooth (l : SignedLabel B N0) (n : ℕ) :
 
 /-- Gaussian field, given by `(ActualPrimary.piece ActualPrimary.standardRegion l.1
 l.2).excluded`. -/
+@[expose]
 noncomputable def gaussianField (l : SignedLabel B N0) :
     ℕ → ActualPrimary.FullPoint → Fin 3 → ℝ :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).excluded

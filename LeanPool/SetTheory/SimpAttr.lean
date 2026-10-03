@@ -16,7 +16,7 @@ This module registers the custom `simp` attributes used to drive the formula-rea
 and elementary-embedding automation in the rest of the development.
 -/
 
-@[expose] public section
+public section
 
 /-- Simp set for unfolding `Formula.Realize` of the generated ZF formulas. -/
 register_simp_attr realize_simps

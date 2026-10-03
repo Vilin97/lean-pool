@@ -39,7 +39,7 @@ degree-`n` universal coefficient theorem over `F₂` for the library's own singu
 * `kroneckerEquiv X n` — the universal coefficient isomorphism over `F₂`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits
 
@@ -61,7 +61,7 @@ noncomputable def homologyPushZMod2 (f : X ⟶ Y) (n : ℕ) :
 
 /-- The dual / precomposition map
 `Hom(Hₙ(Y; F₂), F₂) ⟶ Hom(Hₙ(X; F₂), F₂)` of the homology pushforward. -/
-noncomputable def homologyDualMap (f : X ⟶ Y) (n : ℕ) :
+@[expose] noncomputable def homologyDualMap (f : X ⟶ Y) (n : ℕ) :
     homologyDualZMod2 Y n ⟶ homologyDualZMod2 X n :=
   ModuleCat.ofHom (LinearMap.lcomp (ZMod 2) (ZMod 2) (homologyPushZMod2 f n).hom)
 

@@ -18,7 +18,7 @@ attained at an integer phase and equals the wedge rank.  This formulation is
 suited to recursive attachments and avoids any `min` or `sInf` interface.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -127,6 +127,7 @@ theorem vertexWedge_rank_eq_iff_pointedRankProfile_convolution_attained
 
 /-- Same-left transmission data after replacing the unmarked right pendant
 factor by its realized pointed rank profile. -/
+@[expose]
 def WedgeSameLeftTransmissionProfileWithRightProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (_y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : G.V)
@@ -163,6 +164,7 @@ theorem wedgeSameLeftTransmissionProfile_iff_withRightProfile
 
 /-- Same-right transmission data after replacing the unmarked left pendant
 factor by its realized pointed rank profile. -/
+@[expose]
 def WedgeSameRightTransmissionProfileWithLeftProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (_x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : H.V)

@@ -30,7 +30,7 @@ Volterra solves, and a bijective copy reindexing gives the same symmetry of
 the periodized velocity and pressure.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -424,6 +424,7 @@ noncomputable def pullState (e : D ≃L[ℝ] E) (u : State E) : State D where
 
 /-- Pull coefficients, given by `AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ =>
 fun x => f (e x)) rfl a.coeff)`. -/
+@[expose]
 noncomputable def pullCoefficients (e : D ≃L[ℝ] E) (a : Coefficients E) : Coefficients D :=
   AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x => f (e x)) rfl a.coeff)
 
@@ -452,6 +453,7 @@ theorem pullCoefficients_field (e : D ≃L[ℝ] E) (a : Coefficients E)
 
 /-- Pull block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def pullBlock (e : D ≃L[ℝ] E) (b : HarmonicBlock E) : HarmonicBlock D where
   velocity n i := pullCoefficients e (b.velocity n i)
   pressure n := pullCoefficients e (b.pressure n)
@@ -557,6 +559,7 @@ noncomputable def pullStrip (e : D ≃L[ℝ] E) (s : StripData E) : StripData D 
 
 /-- Pull wave, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def pullWave (e : D ≃L[ℝ] E) (a : LinearWaveBounds.WaveCoefficients E) :
     LinearWaveBounds.WaveCoefficients D where
   radius n x := a.radius n (e x)
@@ -570,6 +573,7 @@ noncomputable def pullWave (e : D ≃L[ℝ] E) (a : LinearWaveBounds.WaveCoeffic
 
 /-- Pull directions, bundling `radial`, `auxiliary`, `axial`, `angular` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def pullDirections (e : D ≃L[ℝ] E) (d : LinearWaveBounds.GraphDirections E) :
     LinearWaveBounds.GraphDirections D where
   radial := e.symm d.radial
@@ -599,7 +603,7 @@ end Pullback
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Inverse cover, given by `(ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm`. -/
-noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :=
+@[expose] noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :=
   (ContinuousLinearEquiv.refl ℝ P).prodCongr (coverPower k).symm
 
 @[simp] theorem inverseCover_apply (k : ℕ) (x : P × Plane) :
@@ -611,6 +615,7 @@ noncomputable def inverseCover (k : ℕ) : (P × Plane) ≃L[ℝ] (P × Plane) :
 /-- All fields, all directions and the complete source are expressed in the
 native fast coordinate.  This assembly is only a reference view; the target
 solver keeps its original common-cover data. -/
+@[expose]
 noncomputable def rebaseAssembly (D : ParticularWaveAssembly.AssemblyData P) (k : ℕ) :
     ParticularWaveAssembly.AssemblyData P where
   reference := D.reference
@@ -653,6 +658,7 @@ variable {B N0 : ℕ}
 
 /-- Reference residual source as an element of `PhysicalResidualNaturality.Associated →
 ComplexVector`. -/
+@[expose]
 noncomputable def referenceResidualSource
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) :
@@ -668,6 +674,7 @@ noncomputable def referenceResidualSource
 
 /-- Native assembly, given by `rebaseAssembly (ActualParticularStageControls.assembly x l)
 (ActualParticularStageControls.gap l (BaseChartJets.cellBand l.2))`. -/
+@[expose]
 noncomputable def nativeAssembly
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) : ParticularWaveAssembly.AssemblyData Parameter
@@ -929,6 +936,7 @@ end FiberLocality
 
 /-- Common reference chart as an element of `PhysicalResidualNaturality.Associated ≃L[ℝ]
 PhysicalResidualNaturality.Associated`. -/
+@[expose]
 noncomputable def commonReferenceChart (l : ActualParticularStageControls.Label B N0) (n : ℕ) :
     PhysicalResidualNaturality.Associated ≃L[ℝ] PhysicalResidualNaturality.Associated :=
   (PhysicalResidualNaturality.associatedChart h (ChartScales.Q_pos n)
@@ -1051,6 +1059,7 @@ theorem source_forward
 /-! The reference operator identities hold on the entire free lift. -/
 
 /-- Angle embed, given by `((v.1, 0), v.2)`. -/
+@[expose]
 noncomputable def angleEmbed (v : PhysicalResidualNaturality.Associated) : WaveSpace :=
   ((v.1, 0), v.2)
 
@@ -1289,7 +1298,7 @@ theorem residualBandPressure_rebase_at (D : ParticularWaveAssembly.AssemblyData 
   exact hf
 
 /-- The literal current-source common coefficient in the actual stage. -/
-noncomputable def actualCoefficients
+@[expose] noncomputable def actualCoefficients
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))
     (l : ActualParticularStageControls.Label B N0) (j : ℤ) : LinearWaveBounds.WaveCoefficients
         WaveSpace :=

@@ -20,7 +20,7 @@ flow is therefore differentiable and smooth; its derivative is the actual
 inverse fundamental operator, without an independent inverse assumption.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Jacobian evolution, given by `constructedEvolution T hT (A.derivative.superposition
 (pathFamily T hT A x))`. -/
-def jacobianEvolution (x : E) :
+@[expose] def jacobianEvolution (x : E) :
     Evolution T hT (A.derivative.superposition (pathFamily T hT A x)) :=
   constructedEvolution T hT (A.derivative.superposition (pathFamily T hT A x))
 
@@ -95,7 +95,7 @@ theorem forward_fderiv (t : Icc (0 : ℝ) T) (x : E) :
   (forward_hasFDerivAt_label T hT A t x).fderiv
 
 /-- Jacobian equiv, constructed using `ContinuousLinearEquiv.equivOfInverse`. -/
-def jacobianEquiv (t : Icc (0 : ℝ) T) (x : E) : E ≃L[ℝ] E :=
+@[expose] def jacobianEquiv (t : Icc (0 : ℝ) T) (x : E) : E ≃L[ℝ] E :=
   ContinuousLinearEquiv.equivOfInverse ((jacobianEvolution T hT A x).forward t)
     ((jacobianEvolution T hT A x).backward t)
     (fun v => congrArg (fun L : E →L[ℝ] E => L v)

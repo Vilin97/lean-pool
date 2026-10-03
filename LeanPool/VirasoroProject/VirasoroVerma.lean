@@ -55,7 +55,7 @@ Virasoro algebra, Verma module
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace VirasoroProject
@@ -84,7 +84,7 @@ open VirasoroAlgebra in
 /-- The triangular decomposition of the Virasoro algebra with upper and lower (essentially
 nilpotent) parts spanned by the `Lₙ` with positive and negative `n`, respectively, and the
 Cartan subalgebra spanned by `L₀` and the central element `C`. -/
-noncomputable def _root_.VirasoroProject.virasoroTri :
+@[expose] noncomputable def _root_.VirasoroProject.virasoroTri :
     TriangularDecomposition 𝕜 (VirasoroAlgebra 𝕜) :=
   TriangularDecomposition.ofBasis (basisLC 𝕜) indexTri pairwise_disjoint_indexTri iUnion_indexTri
 
@@ -123,11 +123,11 @@ noncomputable def _root_.VirasoroProject.VirasoroAlgebra.hw (c h : 𝕜) :
   (virasoroTriCartanBasis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then c else h)
 
 /-- The Virasoro generator `C` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.virasoroTriCgen : (virasoroTri 𝕜).part 0 :=
+@[expose] noncomputable def _root_.VirasoroProject.virasoroTriCgen : (virasoroTri 𝕜).part 0 :=
   ⟨.cgen 𝕜, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 /-- The Virasoro generator `L₀` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.virasoroTriLzero : (virasoroTri 𝕜).part 0 :=
+@[expose] noncomputable def _root_.VirasoroProject.virasoroTriLzero : (virasoroTri 𝕜).part 0 :=
   ⟨.lgen 𝕜 0, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 @[simp] lemma _root_.VirasoroProject.virasoroTri_cgen_val :

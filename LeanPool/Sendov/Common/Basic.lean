@@ -22,7 +22,7 @@ degree-specific argument.  The two facts that matter are:
   `A - 2 * c = B - 1 < 0`, which is what gives `Sendov.Q_le_one`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

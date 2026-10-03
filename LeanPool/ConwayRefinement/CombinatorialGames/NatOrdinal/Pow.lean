@@ -28,7 +28,7 @@ notation `ω^ x` for `of (ω ^ x.val)`. This typeclass will get reused for `IGam
 `CombinatorialGames.Surreal.Pow`.
 -/
 
-@[expose] public section
+public section
 
 open Ordinal
 

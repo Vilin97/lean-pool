@@ -18,7 +18,7 @@ isomorphisms: the two transport devices consumed by the k-fold
 twisted power identification.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {D : Type u}
 
 /-- The double twist transport: object and module isomorphisms
 together. -/
+@[expose]
 noncomputable def tensorLeftModMapIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -43,6 +44,7 @@ noncomputable def tensorLeftModMapIso
 section Powers
 
 /-- The bottom power module is the module. -/
+@[expose]
 noncomputable def modPowModZeroIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -58,6 +60,7 @@ noncomputable def modPowModZeroIso
 
 /-- The merge of adjacent power modules, as a module
 isomorphism. -/
+@[expose]
 noncomputable def powMergeModIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -75,6 +78,7 @@ noncomputable def powMergeModIso
 /-- **The twisted power identification**: the relative powers of
 a twisted module are the twist of the powers by the tensor powers
 of the twisting object. -/
+@[expose]
 noncomputable def twistPowModIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

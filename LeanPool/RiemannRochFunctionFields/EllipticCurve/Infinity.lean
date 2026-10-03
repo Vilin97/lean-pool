@@ -22,7 +22,7 @@ ramification index two.  The fundamental ramification–inertia identity for the
 extension then proves that the prime is unique and has inertia degree one.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart
@@ -360,7 +360,7 @@ noncomputable def infinityHeightOne : IsDedekindDomain.HeightOneSpectrum S∞ :=
   exact ⟨P, hP.1.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot hp0 P⟩
 
 /-- The unique place of the elliptic function field above the point at infinity. -/
-noncomputable def infinityPlace : PlaceA k K := Sum.inr (infinityHeightOne (k := k) K)
+@[expose] noncomputable def infinityPlace : PlaceA k K := Sum.inr (infinityHeightOne (k := k) K)
 
 include W in
 omit [WeierstrassCurve.IsElliptic W] in

@@ -26,7 +26,7 @@ Tags: concurrency, order-theory, reversible-computation, event-structures
 MSC: 68Q85, 06A06
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

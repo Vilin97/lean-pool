@@ -17,7 +17,7 @@ oriented degree API. Native coefficient-reduction and sphere top-class construct
 by the dedicated coefficient-reduction modules.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

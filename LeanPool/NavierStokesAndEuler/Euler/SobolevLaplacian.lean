@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 /-! The genuine commuting coordinate derivatives and bounded Laplacian on the complete Sobolev
 scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -101,6 +101,9 @@ theorem laplacianOperator_value {q : ℕ} (u : SobolevSpace period (q + 2)) :
   rw [map_sum]
   apply Finset.sum_congr rfl
   intro i _
+  change (derivativeOperator period q i (derivativeOperator period (q+1) i u)).val
+      (emptyWord q) = u.val ⟨⟨2, by omega⟩, fun _ => i⟩
+  rw [derivativeOperator_apply, derivativeOperator_apply]
   change u.val ⟨⟨2, _⟩, Fin.snoc (Fin.snoc Fin.elim0 i) i⟩ = u.val ⟨⟨2, _⟩, fun _ => i⟩
   have hw : Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → Fin 4) i) i = (fun _ : Fin 2 => i) := by
     funext j

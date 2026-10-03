@@ -13,7 +13,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # K -/
 
-@[expose] public section
+public section
 
 
 namespace LO

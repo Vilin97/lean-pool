@@ -50,7 +50,7 @@ Injectivity of T follows from:
 - Reed–Simon, *Methods of Modern Mathematical Physics* II, §IX.8
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex QFT
 open scoped Real BigOperators SchwartzMap

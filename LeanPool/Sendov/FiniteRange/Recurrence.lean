@@ -45,7 +45,7 @@ kernel computation on integer data.
 * `Sendov.integral_moment_rec`: the moment, via the recurrence.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
@@ -54,17 +54,20 @@ open MeasureTheory
 /-! ### Integer polynomials in `α`, densely represented, lowest degree first -/
 
 /-- Evaluation of a dense integer polynomial at a real point, by Horner's rule. -/
+@[expose]
 def pev : List ℤ → ℝ → ℝ
   | [], _ => 0
   | a :: p, x => (a : ℝ) + x * pev p x
 
 /-- Addition of dense integer polynomials. -/
+@[expose]
 def padd : List ℤ → List ℤ → List ℤ
   | [], q => q
   | a :: p, [] => a :: p
   | a :: p, b :: q => (a + b) :: padd p q
 
 /-- Multiplication of dense integer polynomials. -/
+@[expose]
 def pmul : List ℤ → List ℤ → List ℤ
   | [], _ => []
   | a :: p, q => padd (q.map (fun b => a * b)) (0 :: pmul p q)
@@ -105,17 +108,20 @@ lemma pev_pmul (p q : List ℤ) (x : ℝ) : pev (pmul p q) x = pev p x * pev q x
 /-! ### Rows: polynomials in `t` whose coefficients are polynomials in `α` -/
 
 /-- Evaluation of a row at `α` (coefficientwise) and `t` (by Horner's rule). -/
+@[expose]
 def rev : List (List ℤ) → ℝ → ℝ → ℝ
   | [], _, _ => 0
   | p :: r, α, t => pev p α + t * rev r α t
 
 /-- Addition of rows. -/
+@[expose]
 def radd : List (List ℤ) → List (List ℤ) → List (List ℤ)
   | [], s => s
   | p :: r, [] => p :: r
   | p :: r, q :: s => padd p q :: radd r s
 
 /-- Multiply every coefficient of a row by a fixed polynomial in `α`. -/
+@[expose]
 def rscale (g : List ℤ) (r : List (List ℤ)) : List (List ℤ) := r.map (pmul g)
 
 @[simp] lemma rev_nil (α t : ℝ) : rev [] α t = 0 := rfl
@@ -150,11 +156,13 @@ lemma rev_shift (r : List (List ℤ)) (α t : ℝ) :
 /-! ### The recurrence -/
 
 /-- One step of the recurrence: multiply a row by `g₀ + g₁ t + g₂ t²`. -/
+@[expose]
 def qstep (g₀ g₁ g₂ : List ℤ) (r : List (List ℤ)) : List (List ℤ) :=
   radd (rscale g₀ r) (radd ([] :: rscale g₁ r) ([] :: [] :: rscale g₂ r))
 
 /-- The coefficients of `(g₀ + g₁ t + g₂ t²) ^ k`, as a polynomial in `t` whose
 coefficients are integer polynomials in `α`. -/
+@[expose]
 def qrow (g₀ g₁ g₂ : List ℤ) : ℕ → List (List ℤ)
   | 0 => [[1]]
   | k + 1 => qstep g₀ g₁ g₂ (qrow g₀ g₁ g₂ k)
@@ -171,6 +179,7 @@ lemma rev_qrow (g₀ g₁ g₂ : List ℤ) (k : ℕ) (α t : ℝ) :
 
 /-- `irow r i α = ∑ⱼ (coefficient j of r, at α) / (i + j + 4)`, the value of
 `∫ t in 0..1, t ^ (i+3) * rev r α t`. -/
+@[expose]
 noncomputable def irow : List (List ℤ) → ℕ → ℝ → ℝ
   | [], _, _ => 0
   | p :: r, i, α => pev p α / (i + 4) + irow r (i + 1) α
@@ -227,12 +236,15 @@ with integer coefficients,
   `g₂ = 6(n-1) + (2(n-1) - 12) α - 4 α²`. -/
 
 /-- `D` itself, as an integer polynomial in `α`. -/
+@[expose]
 def gg0 (n : ℕ) : List ℤ := [6 * ((n : ℤ) - 1), 2 * ((n : ℤ) - 1)]
 
 /-- `-2 D c`, as an integer polynomial in `α`. -/
+@[expose]
 def gg1 (n : ℕ) : List ℤ := [-12 * ((n : ℤ) - 1), 12 - 2 * ((n : ℤ) - 1), 4]
 
 /-- `D A`, as an integer polynomial in `α`. -/
+@[expose]
 def gg2 (n : ℕ) : List ℤ := [6 * ((n : ℤ) - 1), 2 * ((n : ℤ) - 1) - 12, -4]
 
 @[simp] lemma gg0_length (n : ℕ) : (gg0 n).length = 2 := rfl

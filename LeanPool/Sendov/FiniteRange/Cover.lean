@@ -52,7 +52,7 @@ Degrees `5` and `7` are handled one at a time (`Sendov.finite_range_five`,
 is a single Bernstein certificate valid simultaneously for all `n₀ ≤ n ≤ n₁`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

@@ -35,6 +35,6 @@ public import LeanPool.RearrangementNumber.NonMRR.Morphism
 
 /-! Formalization accompanying the rearrangement-number manuscript. -/
 
-@[expose] public section
+public section
 
 /- Adapted for Lean Pool: module imports and compatibility with its pinned toolchain. -/

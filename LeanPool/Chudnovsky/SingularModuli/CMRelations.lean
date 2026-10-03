@@ -30,7 +30,7 @@ Only elementary Möbius algebra is used; nothing here touches the modular polyno
 itself (that is `ModularPolynomialQ`, another track).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

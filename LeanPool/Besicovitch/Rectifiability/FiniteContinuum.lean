@@ -20,7 +20,7 @@ Compact connected subsets of the Euclidean plane with finite Hausdorff one-measu
 Lipschitz parametrization.  This is the Eilenberg--Harrold finite-length continuum theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

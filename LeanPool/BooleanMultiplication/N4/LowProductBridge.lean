@@ -17,7 +17,7 @@ input coordinate and one of the three rational places; no circuit states are
 enumerated.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -308,6 +308,7 @@ theorem lowProduct_cubicProjection_of_quartic_zero
   rw [add_comm]
 
 /-- The exterior product of two linear forms as a bilinear map. -/
+@[expose]
 def vectorWedgeBilinear :
     LinearForm →ₗ[F₂] LinearForm →ₗ[F₂] TwoForm where
   toFun ell :=
@@ -378,7 +379,7 @@ theorem anfTwoProjection_affine_mul_affine
     anfTwoProjection_linear_mul_linear, smul_zero, zero_add, add_zero]
 
 /-- The quadratic coordinate array of a squarefree monomial. -/
-def monomialTwo (s : Finset (Fin 8)) : TwoForm := fun i j =>
+@[expose] def monomialTwo (s : Finset (Fin 8)) : TwoForm := fun i j =>
   if i = j then 0 else if s = {i, j} then 1 else 0
 
 theorem anfTwoProjection_monomial (s : Finset (Fin 8)) :

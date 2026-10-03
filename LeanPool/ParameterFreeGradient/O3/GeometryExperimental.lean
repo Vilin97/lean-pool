@@ -15,12 +15,12 @@ public import LeanPool.ParameterFreeGradient.O3.Geometry
 Scalar and vector uniform convexity for the power mirror geometry.
 -/
 
-@[expose] public section
+public section
 
 namespace O3.Experimental
 
 /-- The scalar power-duality map `u ↦ |u|^(p - 2) u`. -/
-noncomputable def scalarJ (p u : ℝ) : ℝ := |u| ^ (p - 2) * u
+@[expose] noncomputable def scalarJ (p u : ℝ) : ℝ := |u| ^ (p - 2) * u
 
 lemma scalarJ_nonneg {p u : ℝ} (hp : 2 < p) (hu : 0 ≤ u) :
     scalarJ p u = u ^ (p - 1) := by

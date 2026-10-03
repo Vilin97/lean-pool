@@ -13,7 +13,7 @@ public import LeanPool.OrderClosures.WeaklyFatou.TreeNorm
 # Bands, upshift, trimming, and the weak Fatou estimate
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 
@@ -48,6 +48,7 @@ noncomputable def finiteBandProjection (n : ℕ) (Λ : Finset (TreeBandIndex n))
 
 /-- Assigns a node to the root band or the sibling band indexed by its parent;
 used to define the finite band partition pointwise. -/
+@[expose]
 noncomputable def treeBandOfNode (n : ℕ) (t : TreeNode n) : TreeBandIndex n :=
   by
     classical
@@ -225,6 +226,7 @@ theorem parent_eq_treeBandParent (n : ℕ) (t : TreeNode n) :
   · simp [treeBandOfNode, treeBandParent, ht]
 
 /-- The upshift `S_n`, merging coefficients at their parents. -/
+@[expose]
 noncomputable def treeUpshift (n : ℕ) (w : TreeCoefficients n) : TreeCoefficients n :=
   w.mapDomain TreeNode.parent
 
@@ -424,6 +426,7 @@ theorem tree_sharp_subsequence
   simpa [y, Function.comp_def] using tendsto_subtype_rng.mp hcoord
 
 /-- The bands occurring in infinitely many supports of a sequence. -/
+@[expose]
 def recurrentBands (n : ℕ) (w : ℕ → TreeCoefficients n) : Set (TreeBandIndex n) :=
   {B | Set.Infinite {m | (treeBandProjection n B (w m)).support.Nonempty}}
 

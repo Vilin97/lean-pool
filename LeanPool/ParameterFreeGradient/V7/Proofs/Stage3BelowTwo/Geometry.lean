@@ -18,7 +18,7 @@ public import Mathlib.Analysis.Normed.Operator.Asymptotics
 Conjugacy, gradients, and Bregman geometry of the scaled squared norms below exponent two.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

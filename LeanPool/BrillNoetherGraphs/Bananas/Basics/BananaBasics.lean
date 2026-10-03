@@ -17,7 +17,7 @@ arbitrary orientation.  These lemmas certify that `strandVertex` repairs that
 choice and agrees with the paper's common two-endpoint coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -84,6 +84,7 @@ theorem strandVertex_length {g : ℕ} (B : Banana g) (α : Fin (g + 1)) :
 `SubdivisionGraph.Spec` allows a slot to be stored in either orientation;
 this picks out whichever raw path position `strandVertex` actually reads
 from. -/
+@[expose]
 def normalizedPathPosition {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.PathPosition α :=
   if B.core.tail α = 0 then i else

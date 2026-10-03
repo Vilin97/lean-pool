@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.GCD
   This is the small combinatorial lemma later used in the Catalan recurrence.
 -/
 
-@[expose] public section
+public section
 
 open Equiv Equiv.Perm
 

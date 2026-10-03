@@ -17,7 +17,7 @@ the concrete restricted weak endpoint is instantiated. The first-potential
 pairing supplies the weak-gradient identity without an analytic input.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 open scoped ENNReal BigOperators

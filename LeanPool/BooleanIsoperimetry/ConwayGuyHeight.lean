@@ -21,7 +21,7 @@ This file derives the height identity used by every Conway--Guy principal
 relation directly from the published difference recurrence.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

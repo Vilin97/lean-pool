@@ -20,7 +20,7 @@ The definitions remain the ordinary Mathlib set averages, so existing `average`,
 `eLpNorm`, and restriction lemmas apply without a second normalization convention.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal
@@ -30,6 +30,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Integration
 
 /-- The spatial average of a scalar function at a fixed time. -/
+@[expose]
 def spatialAverage (x : Vec3) (r s : ℝ) (g : ParabolicPoint → ℝ) : ℝ :=
   ⨍ y in vec3Ball x r, g (y, s)
 

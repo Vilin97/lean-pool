@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 
 /-! Every actual classical spatial/angular word differentiates in time on the closed interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

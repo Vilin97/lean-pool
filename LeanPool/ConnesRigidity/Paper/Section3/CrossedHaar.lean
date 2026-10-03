@@ -20,7 +20,7 @@ import LeanPool.ConnesRigidity.Paper.Section3.DualActionConjugacy
 The crossed haar component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperCrossedHaar
@@ -92,7 +92,7 @@ theorem paperCoordinateActionTwo_measurePreserving (h : H) :
 /--
 The `paperHaarActionOne` construction used in the Connes rigidity formalization.
 -/
-def paperHaarActionOne : HaarProbabilityAction H Coordinates where
+@[expose] def paperHaarActionOne : HaarProbabilityAction H Coordinates where
   measure := coordinatesHaar
   haar := by
     unfold coordinatesHaar
@@ -110,7 +110,7 @@ def paperHaarActionOne : HaarProbabilityAction H Coordinates where
 
 /-- The second Zhou action packaged as a probability Haar action. Paper: §3.
 -/
-def paperHaarActionTwo : HaarProbabilityAction H Coordinates where
+@[expose] def paperHaarActionTwo : HaarProbabilityAction H Coordinates where
   measure := coordinatesHaar
   haar := by
     unfold coordinatesHaar
@@ -129,7 +129,7 @@ def paperHaarActionTwo : HaarProbabilityAction H Coordinates where
 /-- The quadratic fiber shear as a homeomorphism. Its inverse is the same
 quadratic shear, but it need not preserve the compact-group law. Paper: §3.
 -/
-def paperFiberShearHomeomorph : Coordinates ≃ₜ Coordinates where
+@[expose] def paperFiberShearHomeomorph : Coordinates ≃ₜ Coordinates where
   toEquiv :=
     { toFun := fiberShear
       invFun := fiberShear
@@ -161,7 +161,7 @@ def paperHaarHomeomorph :
 /-- Zhou's fiber shear is an equivariant Haar equivalence between the two
 crossed-product bases. Paper: §3.
 -/
-def paperHaarEquiv :
+@[expose] def paperHaarEquiv :
     EquivariantHaarEquiv paperHaarActionOne paperHaarActionTwo :=
   paperHaarHomeomorph.toEquivariantHaarEquiv
 

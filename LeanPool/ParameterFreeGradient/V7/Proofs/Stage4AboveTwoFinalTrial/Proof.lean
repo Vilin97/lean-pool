@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.
 Existence of the certified above-two two-phase trial and its query complexity bound.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

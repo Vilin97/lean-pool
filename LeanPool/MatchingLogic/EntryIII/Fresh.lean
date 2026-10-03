@@ -22,7 +22,7 @@ public import Mathlib.Data.Fintype.Basic
 # MatchingLogic.EntryIII.Fresh
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -31,7 +31,7 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 namespace Pattern
 
 /-- The finite set of every free or bound variable name occurring in a pattern. -/
-def allVars : Pattern S Var → Finset Var
+@[expose] def allVars : Pattern S Var → Finset Var
   | .var x => {x}
   | .bot => ∅
   | .app _ args => Finset.univ.biUnion (fun i => (args i).allVars)

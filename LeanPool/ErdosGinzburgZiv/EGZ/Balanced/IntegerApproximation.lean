@@ -18,7 +18,7 @@ integer correction depends only on the remainder modulo one common
 denominator, and therefore has uniformly bounded error.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

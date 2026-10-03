@@ -14,14 +14,14 @@ This file states the compactified finite property and removes zero-radius labels
 witnesses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace LeanPool.Besicovitch
 
 /-- Every admissible configuration at `s` has a compactified packing of nonnegative score. -/
-def SixPointFiniteProperty (s : ℝ) : Prop :=
+@[expose] def SixPointFiniteProperty (s : ℝ) : Prop :=
   ∀ configuration : SixPointConfiguration, configuration.IsAdmissibleAt s →
     ∃ packing : SixPointPacking configuration, 0 ≤ packing.score s
 
@@ -30,7 +30,7 @@ namespace SixPointPacking
 variable {configuration : SixPointConfiguration} (packing : SixPointPacking configuration)
 
 /-- A packing is genuine when every radius on its support is positive. -/
-def HasPositiveRadii : Prop :=
+@[expose] def HasPositiveRadii : Prop :=
   ∀ i : packing.support, 0 < (packing.radius i : ℝ)
 
 /-- The labels carrying positive radius in a compactified packing. -/

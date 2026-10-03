@@ -43,7 +43,7 @@ second countable (as a subspace). Then:
    second-countable open sets cover `Z`.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology TopologicalSpace
 

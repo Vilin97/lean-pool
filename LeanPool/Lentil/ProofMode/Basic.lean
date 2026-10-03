@@ -14,7 +14,7 @@ import LeanPool.Lentil.Rules.BigOp
 import LeanPool.Lentil.Util
 import Std.Tactic.BVDecide.Normalize.Prop
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 
@@ -29,9 +29,10 @@ structure NamedPred (σ : Type u) where
 
 -- FIXME: How to unify this with `tlaBigwedge`?
 /-- Right-fold a list of predicates into a single conjunction. -/
-def repeatedAnd (ps : List (pred σ)) : pred σ := (List.foldrD tlaAnd tlaTrue ps)
+@[expose] def repeatedAnd (ps : List (pred σ)) : pred σ := (List.foldrD tlaAnd tlaTrue ps)
 
 /-- Right-fold a list of predicates into a chain of implications to `q`. -/
+@[expose]
 def repeatedImplies (ps : List (pred σ)) (q : pred σ) : pred σ := ps.foldr tlaImplies q
 
 -- FIXME: This is not satisfactory ...
@@ -74,7 +75,7 @@ theorem repeatedImplies_apply {σ : Type u} {hs : List (pred σ)} {goal : pred �
   | cons p ps ih => rw [repeatedAnd_cons, repeatedImplies, List.foldr_cons]; tlaUnfoldSimp; aesop
 
 /-- The proof-mode entailment: the conjunction of hypotheses entails the goal. -/
-def Entails (hyps : List (NamedPred σ)) (goal : pred σ) : Prop :=
+@[expose] def Entails (hyps : List (NamedPred σ)) (goal : pred σ) : Prop :=
   TLA.predImplies (repeatedAnd (hyps.map NamedPred.pred)) goal
 
 theorem repeatedAnd_modifyHyp_reorder {σ : Type u} (hyps : List (NamedPred σ))
@@ -97,6 +98,7 @@ theorem repeatedAnd_map_comm {σ : Type u} (hyps : List (pred σ)) (f : pred σ 
   | cons p hyps ih => simp [bigwedge_list_cons, ih]; rw [h]
 
 /-- Specification relating a hypothesis list to its modification at a given index. -/
+@[expose]
 def ModifyHypSpecWithIndex (hyps hyps' : List (NamedPred σ)) (f : NamedPred σ → NamedPred σ) (idx : Nat) :=
   hyps = hyps' ∨ (idx < hyps.length ∧ hyps' = hyps.modify idx f)
 
@@ -122,7 +124,7 @@ theorem ModifyHypSpec_implies_ModifyHypSpecWithIndex {hyps hyps' : List (NamedPr
   unfold ModifyHypSpecWithIndex ModifyHypSpec; aesop
 
 /-- Modify the hypothesis with the given name by applying `f`. -/
-def modifyHypByName {σ : Type u} (hyps : List (NamedPred σ)) (name : String)
+@[expose] def modifyHypByName {σ : Type u} (hyps : List (NamedPred σ)) (name : String)
   (f : NamedPred σ → NamedPred σ) : List (NamedPred σ) :=
   letI idx? := hyps.findIdx? fun h => h.name == name
   idx?.elim hyps fun idx => hyps.modify idx f

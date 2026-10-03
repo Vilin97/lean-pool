@@ -28,7 +28,7 @@ RS21's sum is the flag model's, cut down to the agreeing states —
 which is what the pairing of two tensors computes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -41,6 +41,7 @@ variable {α : Type}
 open scoped Classical in
 /-- **RS21's colouring sum** over the colourings of the whole
 subset. -/
+@[expose]
 noncomputable def edgeSum {W : Fragment α}
     (F : EdgeSubset W) {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)

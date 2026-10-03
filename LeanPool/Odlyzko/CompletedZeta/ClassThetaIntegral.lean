@@ -13,7 +13,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,13 +28,13 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A shape theta integral constant used in the Odlyzko-bound argument. -/
-noncomputable def shapeThetaIntegralConstant : ℝ :=
+@[expose] noncomputable def shapeThetaIntegralConstant : ℝ :=
   2⁻¹ ^ nrComplexPlaces K * Module.finrank ℚ K *
     NumberField.Units.regulator K
 
 open Classical in
 /-- A class completed theta integral used in the Odlyzko-bound argument. -/
-noncomputable def classCompletedThetaIntegral
+@[expose] noncomputable def classCompletedThetaIntegral
     (C : ClassGroup (𝓞 K)) (s : ℂ) : ℂ :=
   CompletedZeta.discriminantFactor K s *
     (torsionOrder K : ℂ)⁻¹ *

@@ -103,7 +103,7 @@ zero.
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -120,6 +120,7 @@ variable {J : Type*} [NormedAddCommGroup J] [InnerProductSpace ℝ J] [Euclidean
 The idempotency hypothesis is carried but unused: the eigenspace of any element is a submodule.
 It is present so that the *type* `↥(peirceOneSub hc)` records it, which is what lets the
 `Mul`, `One` and `EuclideanJordanAlgebra` instances below be found by synthesis. -/
+@[expose]
 def peirceOneSub {c : J} (_hc : c * c = c) : Submodule ℝ J where
   carrier := {x : J | c * x = x}
   add_mem' := fun {a b} ha hb => by
@@ -134,6 +135,7 @@ def peirceOneSub {c : J} (_hc : c * c = c) : Submodule ℝ J where
     x ∈ peirceOneSub hc ↔ c * x = x := Iff.rfl
 
 /-- **`J₀(c)`**, the eigenvalue-`0` Peirce space `{x | c ∘ x = 0}`, as a submodule. -/
+@[expose]
 def peirceZeroSub {c : J} (_hc : c * c = c) : Submodule ℝ J where
   carrier := {x : J | c * x = 0}
   add_mem' := fun {a b} ha hb => by

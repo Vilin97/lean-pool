@@ -18,7 +18,7 @@ of an ultrafilter-generic position tends to infinity.  This turns the vanishing 
 on a retained member of the ultrafilter into convergence to zero in the circle.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

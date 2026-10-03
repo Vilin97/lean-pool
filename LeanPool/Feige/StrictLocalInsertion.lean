@@ -19,7 +19,7 @@ then feeds the resulting local insertion principle into the permutation
 reduction for an arbitrary (not initially ordered) strict system.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

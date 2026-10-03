@@ -14,7 +14,7 @@ public import LeanPool.Zeta32.Arith.Local.Entry
 * `pf_nat` : partial fractions over the nodes `-m`, `m ∈ M`;
 * `locValue_pf` : value of `locValue` on a partial-fraction form. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

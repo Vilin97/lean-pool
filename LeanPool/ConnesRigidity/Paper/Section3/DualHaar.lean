@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualCoordinates
 The dual haar component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualHaar
@@ -59,7 +59,7 @@ noncomputable instance paperCharacterMeasurableSpace :
 instance paperCharacterBorelSpace : BorelSpace PaperCharacterSpace := ⟨rfl⟩
 
 /-- The normalized Haar probability on the actual character space. Paper: §3. -/
-noncomputable def paperCharacterHaar : Measure PaperCharacterSpace :=
+@[expose] noncomputable def paperCharacterHaar : Measure PaperCharacterSpace :=
   NormalizedHaar.normalizedAddHaar PaperCharacterSpace
 
 /-- The normalized dual Haar measure is a probability measure. Paper: §3. -/
@@ -75,6 +75,7 @@ instance paperCharacterHaar_isAddHaar :
   infer_instance
 
 /-- A binary linear form gives its continuous circle character. Paper: §3. -/
+@[expose]
 def linearCharacter (ℓ : PaperKernel.D →ₗ[ZMod 2] ZMod 2) :
     PontryaginDual (Multiplicative PaperKernel.D) :=
   { toMonoidHom :=
@@ -85,7 +86,7 @@ def linearCharacter (ℓ : PaperKernel.D →ₗ[ZMod 2] ZMod 2) :
 
 @[simp] theorem linearCharacter_apply
     (ℓ : PaperKernel.D →ₗ[ZMod 2] ZMod 2) (x : PaperKernel.D) :
-    linearCharacter ℓ (Multiplicative.ofAdd x) = ZMod.toCircle (ℓ x) := rfl
+    linearCharacter ℓ (Multiplicative.ofAdd x) = ZMod.toCircle (ℓ x) := by rfl
 
 /-- Character extraction recovers every binary linear form. Paper: §3. -/
 theorem characterLinear_linearCharacter
@@ -113,6 +114,7 @@ theorem linearCharacter_characterLinear
     (Multiplicative.toAdd x)) using 1; rfl
 
 /-- Character extraction is additive in the binary character group. Paper: §3. -/
+@[expose]
 def characterToLinear :
     PaperCharacterSpace →+ Module.Dual (ZMod 2) PaperKernel.D where
   toFun χ := BinaryPontryaginDual.characterLinear
@@ -165,6 +167,7 @@ def linearToCharacter :
     rw [AddChar.map_add_eq_mul]
 
 /-- The actual compact dual is algebraically the full binary linear dual. Paper: §3. -/
+@[expose]
 def characterLinearEquiv :
     PaperCharacterSpace ≃+ Module.Dual (ZMod 2) PaperKernel.D :=
   AddEquiv.ofBijective characterToLinear ⟨by
@@ -196,7 +199,7 @@ def characterLinearEquiv :
       exact congrArg (fun f => f x) (characterLinear_linearCharacter ℓ)⟩
 
 /-- The actual Zhou dual coordinates. Paper: §3. -/
-def characterCoordinatesEquiv :
+@[expose] def characterCoordinatesEquiv :
     PaperCharacterSpace ≃+ PaperFactorIsomorphism.DualCoordinates :=
   characterLinearEquiv.trans PaperDualCoordinates.dualEquiv.toAddEquiv
 

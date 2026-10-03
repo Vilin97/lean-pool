@@ -39,7 +39,7 @@ with
 Everything is `[propext, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise119
 

@@ -19,7 +19,7 @@ All identities are algebraic identities of genuine continuous L² paths.
 They use no derivative, extremum, or reciprocal bound for the time profile.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -82,7 +82,7 @@ variable (P : ℝ) [Fact (0 < P)]
 theorem pressurePath_eq_sourcePressure :
     pressurePath P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm =
       sourcePressure P M m cm hcm hm (includePath P S hS f)
-        (includePath P S hS (velocity P S hS T hT Q Q₁ c hc hQ f a₀)) := rfl
+        (includePath P S hS (velocity P S hS T hT Q Q₁ c hc hQ f a₀)) := by rfl
 
 variable (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 

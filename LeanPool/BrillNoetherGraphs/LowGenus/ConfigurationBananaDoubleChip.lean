@@ -53,7 +53,7 @@ programme where a canonical ramp runs at **slope two** -- `headContribution q 0
 (2 * q) = 2`.  The four one-edge facts that needs are proved first.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationBananaDoubleChip
 

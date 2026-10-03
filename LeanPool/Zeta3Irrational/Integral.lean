@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 # LeanPool.Zeta3Irrational.Integral
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

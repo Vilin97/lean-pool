@@ -34,7 +34,7 @@ The two moving parts are:
   `GeneratedUniverse` reachability lemmas) and finiteness (via `Set.Finite.insert`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -25,7 +25,7 @@ import Mathlib.Topology.Metrizable.Urysohn
 The fourier component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFourier
@@ -56,6 +56,7 @@ abbrev CharacterSpace := PaperDualHaar.PaperCharacterSpace
 /--
 The `complexCharacter` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def complexCharacter (d : D) : C(CharacterSpace, ℂ) where
   toFun χ := (Additive.toMul χ (Multiplicative.ofAdd d) : ℂ)
   continuous_toFun := by
@@ -93,6 +94,7 @@ theorem complexCharacter_separates
 /--
 The `evaluationCharacter` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def evaluationCharacter (d : D) :
     PontryaginDual (Multiplicative CharacterSpace) where
   toMonoidHom :=
@@ -181,7 +183,7 @@ theorem integral_character_eq_zero
 /--
 The `characterL2` construction used in the Connes rigidity formalization.
 -/
-def characterL2 (d : D) : Lp ℂ 2 paperCharacterHaar :=
+@[expose] def characterL2 (d : D) : Lp ℂ 2 paperCharacterHaar :=
   ContinuousMap.toLp 2 paperCharacterHaar ℂ (complexCharacter d)
 
 /- The compact-dual characters form an orthonormal family. Paper: §3. -/
@@ -301,7 +303,7 @@ theorem characterL2_span_closure_eq_top :
 /--
 The `FourierBasis` construction used in the Connes rigidity formalization.
 -/
-def FourierBasis : HilbertBasis D ℂ (Lp ℂ 2 paperCharacterHaar) :=
+@[expose] def FourierBasis : HilbertBasis D ℂ (Lp ℂ 2 paperCharacterHaar) :=
   HilbertBasis.mk characterL2_orthonormal
     characterL2_span_closure_eq_top.ge
 
@@ -312,7 +314,7 @@ def FourierBasis : HilbertBasis D ℂ (Lp ℂ 2 paperCharacterHaar) :=
 /--
 The `FourierTransform` construction used in the Connes rigidity formalization.
 -/
-def FourierTransform :
+@[expose] def FourierTransform :
     lp (fun _ : D => ℂ) 2 ≃ₗᵢ[ℂ] Lp ℂ 2 paperCharacterHaar :=
   FourierBasis.repr.symm
 

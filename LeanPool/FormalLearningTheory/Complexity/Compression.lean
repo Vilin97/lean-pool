@@ -38,7 +38,7 @@ and finite games — no MeasureTheory.Measure, IsProbabilityMeasure, Measure.dir
 or MeasurableSpace hypotheses.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 noncomputable section

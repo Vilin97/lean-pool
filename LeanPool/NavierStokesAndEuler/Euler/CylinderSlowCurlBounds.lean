@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangularRegularity
 
 /-! The literal slow curl as a continuous cylinder L² path with same-radius bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

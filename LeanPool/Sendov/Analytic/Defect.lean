@@ -42,7 +42,7 @@ is therefore avoided.
 * `Sendov.defect`: the lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

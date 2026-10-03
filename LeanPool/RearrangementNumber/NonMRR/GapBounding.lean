@@ -20,7 +20,7 @@ family of increasing sequences whose successive gaps escape any prescribed
 function. This is the bounding-number ingredient in the category reduction.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Cardinal
 

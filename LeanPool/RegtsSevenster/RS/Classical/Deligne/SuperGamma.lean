@@ -53,7 +53,7 @@ an `RS.SuperCommAlgebra`, feeding the odd-nil quotient theory of
 `RS.SuperRealize`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -226,6 +226,7 @@ theorem convAlong_smul_right
 
 /-- Prefixed convolution packaged as a ℂ-bilinear map on hom
 ℂ-modules. -/
+@[expose]
 def convAlongHom [Category.{u'} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] (R : D) [MonObj R] [CategoryTheory.Linear ℂ D]
     [MonoidalLinear ℂ D]
@@ -292,6 +293,7 @@ The hypothesis `hα` is not a formal consequence of `(ho, hβ)`: it
 pins down the compatibility of the chosen trivialization with the
 associator, and holds for the standard odd line of super vector
 spaces (hence in `Ind SmallSuperVect`). -/
+@[expose]
 def superGammaAlgebra [Category.{u'} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]
     [MonoidalLinear ℂ D] (R : D) [MonObj R] [IsCommMonObj R]

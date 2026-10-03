@@ -29,7 +29,7 @@ two-point pairs — the degenerate, already-disjoint case `abel-theorem`'s own 2
 construction sets up (no general chain/homology bookkeeping needed).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Filter Topology Set
@@ -43,6 +43,7 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [ChartedSpace ℂ X] [IsMa
 /-- Forster 20.1's local model at a single point `a`: `f` agrees, in some maximal-atlas chart
 `e` at `a`, with `ψ (e ·) * (e · - e a) ^ k` near `a`, for `ψ` smooth and non-vanishing near
 `e a`. `k : ℤ` ranges over all integers (a genuine `zpow`, allowing a pole `k < 0`). -/
+@[expose]
 def IsWeakSolutionAt (f : X → ℂ) (a : X) (k : ℤ) : Prop :=
   ∃ e : OpenPartialHomeomorph X ℂ, e ∈ IsManifold.maximalAtlas 𝓘(ℂ) ω X ∧ a ∈ e.source ∧
     ∃ ψ : ℂ → ℂ, (∀ᶠ z in 𝓝 (e a), ψ z ≠ 0) ∧ ContDiffAt ℝ ∞ ψ (e a) ∧

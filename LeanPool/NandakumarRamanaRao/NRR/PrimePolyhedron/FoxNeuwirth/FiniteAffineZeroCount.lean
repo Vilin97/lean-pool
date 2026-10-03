@@ -30,7 +30,7 @@ that an ordinary simplicial cycle produces a finite incidence cycle.  The later 
 instantiate the same interface with orbit representatives and quotient incidences.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -66,11 +66,11 @@ namespace FiniteIncidenceCycle
 variable (C : FiniteIncidenceCycle R)
 
 /-- Incidence coboundary of a facet function. -/
-def coboundary (h : C.Facet → R) : C.TopCell → R :=
+@[expose] def coboundary (h : C.Facet → R) : C.TopCell → R :=
   fun c => ∑ f : C.Facet, C.incidence f c * h f
 
 /-- Pairing of the cycle coefficient vector with a local-index function. -/
-def zeroCount (index : C.TopCell → R) : R :=
+@[expose] def zeroCount (index : C.TopCell → R) : R :=
   ∑ c : C.TopCell, C.coefficient c * index c
 
 @[simp] theorem zeroCount_zero : C.zeroCount 0 = 0 := by
@@ -159,7 +159,7 @@ variable {p d : Nat}
 namespace SimplicialIncidence
 
 /-- Alternating incidence coefficient between a simplex and one of its codimension-one faces. -/
-noncomputable def incidence
+@[expose] noncomputable def incidence
     (target : Simplex p d) (source : Simplex p (d + 1)) : R :=
   ∑ k : Fin (d + 2),
     if source.restrict (FaceMap.delete k) = target then
@@ -210,6 +210,7 @@ structure AffineVertexMap (p d : Nat) where
 namespace AffineVertexMap
 
 /-- Affine extension of vertex values over one order-complex simplex. -/
+@[expose]
 noncomputable def value
     (f : AffineVertexMap p d)
     (s : Simplex p d)
@@ -218,37 +219,41 @@ noncomputable def value
 
 /-- Augmented affine matrix.  Its columns are the target values of the simplex vertices and its
 last row consists of ones. -/
+@[expose]
 def augmentedMatrix
     (f : AffineVertexMap p d) (s : Simplex p d) :
     Matrix (Fin (d + 1)) (Fin (d + 1)) ℝ :=
   fun r i => Fin.lastCases (1 : ℝ) (fun q => f.vertexValue (s i) q) r
 
 /-- Determinant controlling regularity and the local orientation of the affine map. -/
-noncomputable def determinant
+@[expose] noncomputable def determinant
     (f : AffineVertexMap p d) (s : Simplex p d) : ℝ :=
   Matrix.det (f.augmentedMatrix s)
 
 /-- The affine restriction has a zero in the relative interior of the simplex. -/
+@[expose]
 def HasInteriorZero
     (f : AffineVertexMap p d) (s : Simplex p d) : Prop :=
   ∃ w : StandardSimplex d,
     StandardSimplex.IsInterior w ∧ ∀ r, f.value s w r = 0
 
 /-- The restriction is regular when its augmented affine matrix is nonsingular. -/
+@[expose]
 def IsRegularOn
     (f : AffineVertexMap p d) (s : Simplex p d) : Prop :=
   f.determinant s ≠ 0
 
 /-- Global finite regularity on all top-dimensional simplices. -/
+@[expose]
 def IsRegular (f : AffineVertexMap p d) : Prop :=
   ∀ s : Simplex p d, f.IsRegularOn s
 
 /-- Sign of a real determinant, reduced to the coefficient field `ZMod p`. -/
-noncomputable def determinantIndex (x : ℝ) : ZMod p :=
+@[expose] noncomputable def determinantIndex (x : ℝ) : ZMod p :=
   if 0 < x then 1 else if x < 0 then -1 else 0
 
 /-- Local signed zero index of one affine simplex. -/
-noncomputable def localZeroIndex
+@[expose] noncomputable def localZeroIndex
     (f : AffineVertexMap p d) (s : Simplex p d) : ZMod p := by
   classical
   exact if f.HasInteriorZero s then determinantIndex (p := p) (f.determinant s) else 0

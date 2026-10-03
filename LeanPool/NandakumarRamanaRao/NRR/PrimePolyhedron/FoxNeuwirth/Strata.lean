@@ -16,7 +16,7 @@ Labels in one block have equal first coordinate and occur in the recorded vertic
 in different blocks occur in the recorded left-to-right order.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

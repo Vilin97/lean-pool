@@ -16,7 +16,7 @@ arithmetic cast, on either side.  These power the unitors of the
 monoidal skein category.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

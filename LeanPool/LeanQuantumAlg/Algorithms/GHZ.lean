@@ -42,7 +42,7 @@ locally-equivalent three-qubit state powers Mermin's game
 - `LeanPool.LeanQuantumAlg.norm_ghz` — the GHZ state is normalized.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

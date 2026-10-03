@@ -35,7 +35,7 @@ functions, with their requisite radial derivative identities stated explicitly.
 No existence of the candidate profiles or estimates for them is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,21 +44,21 @@ namespace NavierStokes.StressAlgebra
 open MeasureTheory Set
 
 /-- The axial scaling exponent from the manuscript. -/
-def axialExponent (h : ℝ) : ℝ := 1 / 2 - h
+@[expose] def axialExponent (h : ℝ) : ℝ := 1 / 2 - h
 
 /-- The velocity scaling exponent from the manuscript. -/
-def velocityExponent (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] def velocityExponent (h : ℝ) : ℝ := 1 / 2 + h
 
 /-- The coordinate factor `d = 1 - η²`. -/
-def coordinateFactor (η : ℝ) : ℝ := 1 - η ^ 2
+@[expose] def coordinateFactor (η : ℝ) : ℝ := 1 - η ^ 2
 
 /-- `H S_q`, with radial derivatives written explicitly instead of logarithms. -/
-def angularSource (h η x W U H Hx Hη : ℝ) : ℝ :=
+@[expose] def angularSource (h η x W U H Hx Hη : ℝ) : ℝ :=
   -W * x * Hx - h * (1 - 2 * η * U) * H -
     (axialExponent h * η + coordinateFactor η * U) * Hη
 
 /-- `S_n`, with `dot U = x U_x` and `dot P = x P_x`. -/
-def axialSource (h η x W U Ux Uη P Px Pη : ℝ) : ℝ :=
+@[expose] def axialSource (h η x W U Ux Uη P Px Pη : ℝ) : ℝ :=
   -W * x * Ux - velocityExponent h * (1 - 2 * η * U) * U -
     (axialExponent h * η + coordinateFactor η * U) * Uη -
     coordinateFactor η * Pη + 4 * velocityExponent h * η * P + 2 * η * x * Px
@@ -398,7 +398,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -435,9 +435,9 @@ def RadialDomain.rectangle (R a b : ℝ) : RadialDomain where
     exact abs_lt.mp (hmul.trans_lt hX)
 
 /-- Radial partial, given by `fderiv ℝ F p (1, 0)`. -/
-def radialPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (1, 0)
+@[expose] def radialPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (1, 0)
 /-- Parameter partial, given by `fderiv ℝ F p (0, 1)`. -/
-def parameterPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (0, 1)
+@[expose] def parameterPartial (F : Field) (p : Point) : ℝ := fderiv ℝ F p (0, 1)
 
 theorem radialPartial_hasDerivAt (D : RadialDomain) {F : Field}
     (hF : ContDiffOn ℝ ∞ F D.carrier) {p : Point} (hp : p ∈ D.carrier) :
@@ -544,10 +544,10 @@ theorem compact_parameter_integral_hasFDerivAt (hs : IsOpen s)
 end CompactParameterIntegral
 
 /-- Regular radial average, including its value at the axis. -/
-def average (F : Field) (p : Point) : ℝ := ∫ t in (0 : ℝ)..1, F (t * p.1, p.2)
+@[expose] def average (F : Field) (p : Point) : ℝ := ∫ t in (0 : ℝ)..1, F (t * p.1, p.2)
 
 /-- Actual radial history from the axis. -/
-def primitive (F : Field) (p : Point) : ℝ := ∫ x in (0 : ℝ)..p.1, F (x, p.2)
+@[expose] def primitive (F : Field) (p : Point) : ℝ := ∫ x in (0 : ℝ)..p.1, F (x, p.2)
 
 theorem primitive_eq_mul_average (F : Field) (p : Point) :
     primitive F p = p.1 * average F p := by
@@ -708,30 +708,30 @@ open StressAlgebra
 variable {D : RadialDomain} (P : Profiles D)
 
 /-- H, defined pointwise by `2 * p.1 * P.f p`. -/
-def H : Field := fun p => 2 * p.1 * P.f p
+@[expose] def H : Field := fun p => 2 * p.1 * P.f p
 /-- E, defined pointwise by `Real.sqrt (2 * p.1) * P.f p`. -/
-def E : Field := fun p => Real.sqrt (2 * p.1) * P.f p
+@[expose] def E : Field := fun p => Real.sqrt (2 * p.1) * P.f p
 /-- Eη, defined pointwise by `Real.sqrt (2 * p.1) * parameterPartial P.f p`. -/
 def Eη : Field := fun p => Real.sqrt (2 * p.1) * parameterPartial P.f p
 /-- Transport density, defined pointwise by `P.U p * P.H p`. -/
-def transportDensity : Field := fun p => P.U p * P.H p
+@[expose] def transportDensity : Field := fun p => P.U p * P.H p
 /-- Energy density, defined pointwise by `P.U p ^ 2 - p.1 * P.f p ^ 2`. -/
-def energyDensity : Field := fun p => P.U p ^ 2 - p.1 * P.f p ^ 2
+@[expose] def energyDensity : Field := fun p => P.U p ^ 2 - p.1 * P.f p ^ 2
 /-- M, given by `primitive P.U`. -/
-def M : Field := primitive P.U
+@[expose] def M : Field := primitive P.U
 /-- I, given by `primitive P.H`. -/
-def I : Field := primitive P.H
+@[expose] def I : Field := primitive P.H
 /-- J, given by `primitive P.transportDensity`. -/
-def J : Field := primitive P.transportDensity
+@[expose] def J : Field := primitive P.transportDensity
 /-- S, given by `primitive P.energyDensity`. -/
-def S : Field := primitive P.energyDensity
+@[expose] def S : Field := primitive P.energyDensity
 /-- Ubar, given by `average P.U`. -/
-def Ubar : Field := average P.U
+@[expose] def Ubar : Field := average P.U
 /-- Pressure, defined pointwise by `P.pressure0 p.2 + primitive (fun q => P.f q ^ 2) p`. -/
-def pressure : Field := fun p => P.pressure0 p.2 + primitive (fun q => P.f q ^ 2) p
+@[expose] def pressure : Field := fun p => P.pressure0 p.2 + primitive (fun q => P.f q ^ 2) p
 /-- W, defined pointwise by `1 - 2 * axialExponent h * p.2 * P.Ubar p - coordinateFactor p.2 *
 average (parameterPartial P.U) p`. -/
-def W (h : ℝ) : Field := fun p =>
+@[expose] def W (h : ℝ) : Field := fun p =>
   1 - 2 * axialExponent h * p.2 * P.Ubar p -
     coordinateFactor p.2 * average (parameterPartial P.U) p
 
@@ -959,12 +959,12 @@ noncomputable def axialData (h : ℝ) (p : Point) (hp : p ∈ D.carrier) (hX : 0
 
 /-- Angular source, defined pointwise by `StressAlgebra.angularSource h p.2 p.1 (P.W h p) (P.U
 p) (P.H p) (radialPartial P.H p) (parameterPartial P.H p)`. -/
-def angularSource (h : ℝ) : Field := fun p =>
+@[expose] def angularSource (h : ℝ) : Field := fun p =>
   StressAlgebra.angularSource h p.2 p.1 (P.W h p) (P.U p) (P.H p)
     (radialPartial P.H p) (parameterPartial P.H p)
 
 /-- Axial source as an element of `Field`. -/
-def axialSource (h : ℝ) : Field := fun p =>
+@[expose] def axialSource (h : ℝ) : Field := fun p =>
   StressAlgebra.axialSource h p.2 p.1 (P.W h p) (P.U p)
     (radialPartial P.U p) (parameterPartial P.U p) (P.pressure p)
       (P.f p ^ 2) (parameterPartial P.pressure p)
@@ -991,10 +991,10 @@ theorem axialSource_smooth (h : ℝ) : ContDiffOn ℝ ∞ (P.axialSource h) D.ca
       (((contDiffOn_const.mul contDiffOn_snd).mul contDiffOn_fst).mul (P.f_smooth.pow 2))
 
 /-- The printed Q_s is the regular primitive divided by its integrating factor. -/
-def angularLag (h : ℝ) : Field := fun p => primitive (P.angularSource h) p / (p.1 * P.H p)
+@[expose] def angularLag (h : ℝ) : Field := fun p => primitive (P.angularSource h) p / (p.1 * P.H p)
 
 /-- The printed N_s is the regular primitive divided by X. -/
-def axialLag (h : ℝ) : Field := fun p => primitive (P.axialSource h) p / p.1
+@[expose] def axialLag (h : ℝ) : Field := fun p => primitive (P.axialSource h) p / p.1
 
 /-- Equation (9), angular row, for actual smooth profile histories. -/
 theorem angularLag_integrated (h : ℝ) {p : Point} (hp : p ∈ D.carrier)

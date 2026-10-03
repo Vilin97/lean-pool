@@ -16,7 +16,7 @@ The norm of a normalized path is bounded directly by its profile estimate;
 no quotient of the maximum and minimum profile enters that estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ variable {K E : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Multiplication by the literal scalar profile. -/
-def weight (g : C(K, ℝ)) : C(K,E) →L[ℝ] C(K,E) :=
+@[expose] def weight (g : C(K, ℝ)) : C(K,E) →L[ℝ] C(K,E) :=
   multiplier ⟨fun t => g t • ContinuousLinearMap.id ℝ E,
     g.continuous.smul continuous_const⟩
 
@@ -38,11 +38,11 @@ def weight (g : C(K, ℝ)) : C(K,E) →L[ℝ] C(K,E) :=
     weight g f t = g t • f t := rfl
 
 /-- The reciprocal of a positive continuous profile is an actual continuous path. -/
-def reciprocal (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,ℝ) :=
+@[expose] def reciprocal (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,ℝ) :=
   ⟨fun t => (g t)⁻¹, g.continuous.inv₀ (fun t => (hg t).ne')⟩
 
 /-- Profile division as a genuine bounded linear map. -/
-def normalize (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,E) →L[ℝ] C(K,E) :=
+@[expose] def normalize (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,E) →L[ℝ] C(K,E) :=
   weight (reciprocal g hg)
 
 @[simp] theorem normalize_apply (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) (f : C(K, E)) (t : K) :

@@ -16,7 +16,7 @@ the node. Every nonzero local summand has such a base, so passing to this
 reduced node preserves the entire cumulative function.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

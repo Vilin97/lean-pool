@@ -19,7 +19,7 @@ zero both are the tensor unit, so the exchange holds there
 too.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

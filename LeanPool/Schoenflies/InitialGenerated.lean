@@ -83,7 +83,7 @@ holding the anchored form.
   (`rem:intermediate-disconnection` waives it only at intermediate stages).
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology unitInterval
 open scoped Graph
@@ -419,14 +419,14 @@ theorem biUnion_faceCells (H : HexData) (k : Bool) :
     refine H.biUnion_of_three_edges _ (i := 1) (j := 2) (l := 3) (by decide) (by decide)
       (fun c hc => ?_) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
     · simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff] at hc
-      rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
-    all_goals (simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff]; decide)
+      rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> simp
+    all_goals (simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff]; simp)
   · rw [HexData.arcOf_true]
     refine H.biUnion_of_three_edges _ (i := 4) (j := 5) (l := 0) (by decide) (by decide)
       (fun c hc => ?_) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
     · simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff] at hc
-      rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
-    all_goals (simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff]; decide)
+      rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> simp
+    all_goals (simp only [faceCells, Set.mem_insert_iff, Set.mem_singleton_iff]; simp)
 
 /-! ### Assertion (i) and `def:admissible-graph`, for either realization
 
@@ -786,6 +786,7 @@ realizations of `prop:initial-pair`, and the two cell decompositions are
 
 This is the base case of the whole construction: `thm:finite-transfer` consumes a `GeneratedPair`
 and produces one, and this is the first. -/
+@[expose]
 noncomputable def generatedPair :
     GeneratedPair initialStructure C (C ∪ inside C) modelCurve (Plane.closedSquare 0 1) where
   str := initialStructure
@@ -848,7 +849,7 @@ end InitialData
 crosscut into `a` or `b` (`AnchoredInitialData.stronglyAccessible_a`). So the pair is built from
 the underlying `InitialData`, and this is the specialisation for a consumer holding the anchored
 form. -/
-noncomputable def AnchoredInitialData.generatedPair {C : Set Plane} {A : AnchorSet C}
+@[expose] noncomputable def AnchoredInitialData.generatedPair {C : Set Plane} {A : AnchorSet C}
     (D : AnchoredInitialData C A) :
     GeneratedPair initialStructure C (C ∪ inside C) modelCurve (Plane.closedSquare 0 1) :=
   D.toInitialData.generatedPair

@@ -16,7 +16,7 @@ The coefficient of a monomial `w` in the product
 symmetric-function indices whose combined weight equals `w`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -36,7 +36,7 @@ state is ever chosen — every state used is manufactured from an
 existing even colouring — so no `(k, ℓ) = (0, 0)` edge case arises.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

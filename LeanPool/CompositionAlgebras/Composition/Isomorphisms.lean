@@ -69,7 +69,7 @@ Substrate for the classification: it supplies the three base identifications the
 doubling chain is renamed along.
 -/
 
-@[expose] public section
+public section
 
 open CompositionAlgebra
 open scoped Quaternion
@@ -107,7 +107,10 @@ end CompositionAlgebra
   rw [cstar_apply, h]; simp; ring
 
 @[simp] theorem Complex.cstar_eq (z : ℂ) : cstar z = ⟨z.re, -z.im⟩ := by
-  have h : ip z (1 : ℂ) = z.re := by change z.re * 1 + z.im * 0 = z.re; ring
+  have h : ip z (1 : ℂ) = z.re := by
+    change Complex.ipBilin z 1 = z.re
+    simp only [Complex.ipBilin_apply, Complex.one_re, Complex.one_im, mul_one, mul_zero,
+      add_zero]
   rw [cstar_apply, h]
   apply Complex.ext <;> simp
   ring
@@ -115,8 +118,9 @@ end CompositionAlgebra
 theorem Quaternion.cstar_eq (q : ℍ[ℝ]) :
     cstar q = ⟨q.re, -q.imI, -q.imJ, -q.imK⟩ := by
   have h : ip q (1 : ℍ[ℝ]) = q.re := by
-    change q.re * 1 + q.imI * 0 + q.imJ * 0 + q.imK * 0 = q.re
-    ring
+    change Quaternion.ipBilin q 1 = q.re
+    simp only [Quaternion.ipBilin_apply, Quaternion.re_one, Quaternion.imI_one,
+      Quaternion.imJ_one, Quaternion.imK_one, mul_one, mul_zero, add_zero]
   rw [cstar_apply, h]
   ext <;> simp
   ring
@@ -158,13 +162,16 @@ coordinates. -/
 missing companions. -/
 
 theorem Quaternion.nf_eq (q : ℍ[ℝ]) :
-    nf q = q.re * q.re + q.imI * q.imI + q.imJ * q.imJ + q.imK * q.imK := rfl
+    nf q = q.re * q.re + q.imI * q.imI + q.imJ * q.imJ + q.imK * q.imK := by
+  change Quaternion.ipBilin q q = _
+  exact Quaternion.ipBilin_apply q q
 
 theorem Octonion.nf_eq (o : Octonion) :
     nf o = o.coords 0 * o.coords 0 + o.coords 1 * o.coords 1 + o.coords 2 * o.coords 2 +
       o.coords 3 * o.coords 3 + o.coords 4 * o.coords 4 + o.coords 5 * o.coords 5 +
       o.coords 6 * o.coords 6 + o.coords 7 * o.coords 7 := by
-  change Octonion.octIp o o = _
+  change Octonion.ipBilin o o = _
+  rw [Octonion.ipBilin_apply]
   simp [Octonion.octIp, Fin.sum_univ_eight]
 
 namespace CompositionAlgebra
@@ -180,14 +187,16 @@ def cdRealEquiv : CD ℝ ≃ₗ[ℝ] ℂ where
   left_inv x := by apply CD.ext <;> rfl
   right_inv z := by apply Complex.ext <;> rfl
 
-@[simp] theorem cdRealEquiv_re (x : CD ℝ) : (cdRealEquiv x).re = x.fst := rfl
-@[simp] theorem cdRealEquiv_im (x : CD ℝ) : (cdRealEquiv x).im = x.snd := rfl
+@[simp] theorem cdRealEquiv_re (x : CD ℝ) : (cdRealEquiv x).re = x.fst := by rfl
+@[simp] theorem cdRealEquiv_im (x : CD ℝ) : (cdRealEquiv x).im = x.snd := by rfl
 
 theorem cdRealEquiv_isCompIso : IsCompIso cdRealEquiv where
   map_one := by apply Complex.ext <;> simp
   map_mul x y := by
     apply Complex.ext <;> simp [Complex.mul_re, Complex.mul_im] <;> ring
-  map_nf x := rfl
+  map_nf x := by
+    rw [Complex.nf_eq, CD.nf_eq, Real.nf_eq, Real.nf_eq,
+      cdRealEquiv_re, cdRealEquiv_im]
 
 /-! ### `CD ℂ ≃ ℍ` -/
 
@@ -206,10 +215,10 @@ def cdComplexEquiv : CD ℂ ≃ₗ[ℝ] ℍ[ℝ] where
   left_inv x := by apply CD.ext <;> apply Complex.ext <;> rfl
   right_inv q := by ext <;> rfl
 
-@[simp] theorem cdComplexEquiv_re (x : CD ℂ) : (cdComplexEquiv x).re = x.fst.re := rfl
-@[simp] theorem cdComplexEquiv_imI (x : CD ℂ) : (cdComplexEquiv x).imI = x.fst.im := rfl
-@[simp] theorem cdComplexEquiv_imJ (x : CD ℂ) : (cdComplexEquiv x).imJ = x.snd.re := rfl
-@[simp] theorem cdComplexEquiv_imK (x : CD ℂ) : (cdComplexEquiv x).imK = x.snd.im := rfl
+@[simp] theorem cdComplexEquiv_re (x : CD ℂ) : (cdComplexEquiv x).re = x.fst.re := by rfl
+@[simp] theorem cdComplexEquiv_imI (x : CD ℂ) : (cdComplexEquiv x).imI = x.fst.im := by rfl
+@[simp] theorem cdComplexEquiv_imJ (x : CD ℂ) : (cdComplexEquiv x).imJ = x.snd.re := by rfl
+@[simp] theorem cdComplexEquiv_imK (x : CD ℂ) : (cdComplexEquiv x).imK = x.snd.im := by rfl
 
 theorem cdComplexEquiv_isCompIso : IsCompIso cdComplexEquiv where
   map_one := by ext <;> simp
@@ -241,7 +250,7 @@ def cdQuaternionEquiv : CD ℍ[ℝ] ≃ₗ[ℝ] Octonion where
 
 @[simp] theorem cdQuaternionEquiv_coords (x : CD ℍ[ℝ]) :
     (cdQuaternionEquiv x).coords = ![x.fst.re, x.fst.imI, x.fst.imJ, x.snd.re,
-      x.fst.imK, x.snd.imJ, -x.snd.imK, x.snd.imI] := rfl
+      x.fst.imK, x.snd.imJ, -x.snd.imK, x.snd.imI] := by rfl
 
 theorem cdQuaternionEquiv_isCompIso : IsCompIso cdQuaternionEquiv where
   map_one := by ext i; fin_cases i <;> simp [Octonion.one_def, Octonion.one]

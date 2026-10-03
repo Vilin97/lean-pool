@@ -29,7 +29,7 @@ measure on the fixed compact supports used by the manifold Rellich glue.
 - `RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData`
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -126,7 +126,7 @@ compactness arguments.
 -/
 
 /-- The chart ball in model-space coordinates associated to chart index `i`. -/
-def chartBall (dR : RiemannianFiniteChartData (H := H) (M := M) I) (i : dR.d.ι) : Set E :=
+@[expose] def chartBall (dR : RiemannianFiniteChartData (H := H) (M := M) I) (i : dR.d.ι) : Set E :=
   Metric.ball (extChartAt I (dR.d.center i) (dR.d.center i)) (dR.r i) ∩
     (extChartAt I (dR.d.center i)).target
 

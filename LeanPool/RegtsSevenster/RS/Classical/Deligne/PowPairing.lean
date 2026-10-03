@@ -23,7 +23,7 @@ coequalizers reduce, by the same recursion, to the datum's
 linearity and the commutativity of the monoid.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -41,6 +41,7 @@ section Braided
 section PairRaw
 
 /-- The datum's pairing evaluated on the raw tensor product. -/
+@[expose]
 noncomputable def pairRaw
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [HasCoequalizers D]
@@ -127,6 +128,7 @@ recursion on the arity: at `n + 1`, peel the first factor of the
 `M`-power, pair it with the exposed last factor of the `M'`-power,
 braid the resulting scalar past the remaining `M`-power, and
 multiply it onto the pairing of the remaining powers. -/
+@[expose]
 noncomputable def rawPair
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [HasCoequalizers D]
@@ -191,6 +193,7 @@ the step.
 section PairStep
 
 /-- The generic recursion step of the power pairing. -/
+@[expose]
 noncomputable def pairStep
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [HasCoequalizers D]
@@ -1877,6 +1880,7 @@ section SymDescent
 
 /-- The section of the symmetric power, as a morphism of
 modules. -/
+@[expose]
 noncomputable def symPowσMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

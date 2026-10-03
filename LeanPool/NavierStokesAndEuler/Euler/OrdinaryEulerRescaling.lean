@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 /-! The genuine time/amplitude symmetry of ordinary Euler, including
 restriction to a shorter closed time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ def scaleTimeMap (S T c : ℝ) (hc : 0 ≤ c) (hct : c * T ≤ S) :
   continuous_toFun := (continuous_subtype_val.const_mul c).subtype_mk _
 
 @[simp] theorem scaleTimeMap_val (S T c : ℝ) (hc : 0 ≤ c) (hct : c * T ≤ S)
-    (t : Icc (0 : ℝ) T) : ((scaleTimeMap S T c hc hct t) : ℝ)=c*t := rfl
+    (t : Icc (0 : ℝ) T) : ((scaleTimeMap S T c hc hct t) : ℝ)=c*t := by rfl
 
 namespace Evolution
 
@@ -89,7 +89,7 @@ def rescale (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
 @[simp] theorem rescale_velocity (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
     (c : ℝ) (hc : 0 < c) (hct : c * T ≤ S) (t : Icc (0 : ℝ) T) :
     (U.rescale T hT c hc hct).velocity t =
-      scaleField c (U.velocity (scaleTimeMap S T c hc.le hct t)) := rfl
+      scaleField c (U.velocity (scaleTimeMap S T c hc.le hct t)) := by rfl
 
 theorem rescale_initial (U : Evolution S hS) (T : ℝ) (hT : 0 ≤ T)
     (c : ℝ) (hc : 0 < c) (hct : c * T ≤ S) :

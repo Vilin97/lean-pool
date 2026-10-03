@@ -15,7 +15,7 @@ This module converts the unit-square quadratic estimate into a covering-radius
 theorem for the triangular lattice and defines the chosen nearest lattice cell.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -151,13 +151,13 @@ lemma nearestLatticeIdx_spec (p : R2) :
   (exists_lattice_point_within_circumradius p).choose_spec
 
 /-- Cast an integer residue modulo seven to the corresponding finite color. -/
-noncomputable def toFin7 (n : ℤ) : Fin 7 :=
+@[expose] noncomputable def toFin7 (n : ℤ) : Fin 7 :=
   (ZMod.finEquiv 7).symm (n : ZMod 7)
 
 /-- The Isbell 7-coloring assigns to each point `p ∈ R²` the color
     `(i + 3·j) mod 7`, where `(i, j) = nearestLatticeIdx p` are the
     integer coordinates of a nearest lattice point. -/
-noncomputable def isbellColor : R2 → Fin 7 :=
+@[expose] noncomputable def isbellColor : R2 → Fin 7 :=
   fun p => toFin7 ((nearestLatticeIdx p).1 + 3 * (nearestLatticeIdx p).2)
 
 /-! ### The remaining geometric fact -/

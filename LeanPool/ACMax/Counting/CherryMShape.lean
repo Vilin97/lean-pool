@@ -44,7 +44,7 @@ with every other degree-3 vertex an iso twin.
   `Δ ≥ 5` ("fat") side of `ResidualCore` remains open.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

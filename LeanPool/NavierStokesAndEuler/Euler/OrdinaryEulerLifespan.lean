@@ -22,7 +22,7 @@ Euler solutions are rescaled to a common interval; the already proved
 smooth limit supplies the endpoint, and uniqueness identifies it with
 every original partial solution. No analytic radius is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -73,6 +73,7 @@ theorem exists_smooth_endpoint (T : ℝ) (hT : 0 < T) (A : SmoothL2Field Space) 
       (congrArg (scaleField (endpointScale n)) (hinit n))
   let M := gradientTensorBound (tensorNorm 3 A) G
   have hb (n : ℕ) (t : Icc (0 : ℝ) T) : tensorNorm 3 ((V n).velocity t) ≤ M := by
+    simp only [V, Evolution.rescale_velocity]
     apply (tensorNorm_scaleField_le (endpointScale n) (endpointScale_pos n).le
       (endpointScale_lt_one n).le _ 3).trans
     apply (U n).h3_tensorNorm_gradient_uniform (tensorNorm 3 A) G _ (hgrad n)
@@ -124,7 +125,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,6 +135,7 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 
 /-- Has euler evolution, given by `∃ hT : 0 < T, ∃ U : Evolution T hT.le, U.velocity
 ⟨0,le_rfl,hT.le⟩=A`. -/
+@[expose]
 def HasEulerEvolution (A : SmoothL2Field Space) (T : ℝ) : Prop :=
   ∃ hT : 0 < T, ∃ U : Evolution T hT.le, U.velocity ⟨0,le_rfl,hT.le⟩=A
 

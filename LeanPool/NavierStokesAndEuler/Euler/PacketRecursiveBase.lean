@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketRecursionAlgebra
 
 /-! The initial profile and the zero/first grades of the actual recursive packet. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -23,7 +23,7 @@ open EulerSmoothLimit EulerPacketPointJets EulerFiniteGrades EulerPacketResidual
     Finset
 
 /-- Primary profile, given by `⟨A,0,O.curlCorrector A,π,0⟩`. -/
-def primaryProfile (O : Operators) (A : VectorField) (π : ScalarField) : Profile :=
+@[expose] def primaryProfile (O : Operators) (A : VectorField) (π : ScalarField) : Profile :=
   ⟨A,0,O.curlCorrector A,π,0⟩
 
 theorem assembledJets_zero (O : Operators) (N : ℕ) (a : ℕ → Profile) (ha : a 0 = 0) (z : Domain) :

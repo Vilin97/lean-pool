@@ -20,7 +20,7 @@ Tags: hopf-algebras, rooted-trees, renormalization, combinatorics
 MSC: 16T05, 05C05, 81T15
 -/
 
-@[expose] public section
+public section
 
 /-!
 Top-level import for the Connes-Kreimer / Foissy Hopf algebra development.

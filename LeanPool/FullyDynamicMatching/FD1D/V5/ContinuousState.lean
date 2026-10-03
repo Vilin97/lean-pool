@@ -11,7 +11,7 @@ public import Mathlib.MeasureTheory.Constructions.UnitInterval
 
 /-! # Continuous State -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -33,10 +33,12 @@ spatial configuration and its finite count projection pathwise.
 abbrev SpatialState (m : ℕ) := Fin m → unitInterval
 
 /-- The dyadic leaf assigned to each coordinate of a spatial state. -/
+@[expose]
 def spatialLeaves (L : ℕ) (s : SpatialState m) : Fin m → DyadicNode L :=
   fun j => DyadicMass.uniformArrivalLeaf L (s j : ℝ)
 
 /-- Convert a coordinate state to its certified spatial configuration. -/
+@[expose]
 def toConfiguration (L : ℕ) (s : SpatialState m) :
     SupplyConfiguration L m where
   location j := s j
@@ -56,6 +58,7 @@ theorem toConfiguration_leaf (L : ℕ) (s : SpatialState m) (j : Fin m) :
   rfl
 
 /-- The finite inventory-count projection of a coordinate state. -/
+@[expose]
 def spatialCount (L : ℕ) (s : SpatialState m) :
     InventoryState (DyadicNode L) m :=
   (toConfiguration L s).countState
@@ -133,6 +136,7 @@ theorem spatialCount_measurable (L : ℕ) :
 /-! ## Selected labels and coordinate update -/
 
 /-- The concrete supply label selected from a coordinate state. -/
+@[expose]
 def spatialSelectedLabel (L : ℕ) (a : ℝ) (fallback : Fin m)
     (s : SpatialState m) (u : unitInterval) : Fin m :=
   Dynamics.selectedSupplyLabel
@@ -226,6 +230,7 @@ theorem spatialSelectedLabel_demand_measurable
 Replace the selected supply coordinate by a replenishment coordinate. The
 noise pair consists of demand first and replenishment second.
 -/
+@[expose]
 def spatialStep (L : ℕ) (a : ℝ) (fallback : Fin m)
     (s : SpatialState m) (z : unitInterval × unitInterval) :
     SpatialState m :=

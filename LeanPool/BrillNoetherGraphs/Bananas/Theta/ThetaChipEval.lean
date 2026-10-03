@@ -20,7 +20,7 @@ needs a length split: on a strand of length one it is the head core vertex,
 whereas on a longer strand it is the first interior vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

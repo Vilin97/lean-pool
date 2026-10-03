@@ -18,7 +18,7 @@ summand at the open circuit count is independent of all choices —
 Proposition 3 for the boundary-free sector, as a theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

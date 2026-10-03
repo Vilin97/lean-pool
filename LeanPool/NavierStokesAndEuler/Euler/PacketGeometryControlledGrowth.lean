@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceGeometryGrowth
 bound. Keeping both properties in the choice specification is necessary
 for a uniform source-frequency estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -15,13 +15,14 @@ The underlying-morphism map transports the linear structure of the
 base category to its Karoubi completion.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 open CategoryTheory CategoryTheory.Idempotents
 
 /-- The underlying-morphism map is additive. -/
+@[expose]
 def karoubiHomAddHom {C : Type*} [Category C] [Preadditive C]
     (P Q : Karoubi C) : (P ⟶ Q) →+ (P.X ⟶ Q.X) where
   toFun g := g.f
@@ -55,6 +56,7 @@ noncomputable instance karoubiLinear {C : Type*} [Category C]
     rw [Linear.comp_smul]
 
 /-- The underlying-morphism map is complex linear. -/
+@[expose]
 noncomputable def karoubiHomLinearMap {C : Type*} [Category C]
     [Preadditive C] [Linear ℂ C] (P Q : Karoubi C) :
     (P ⟶ Q) →ₗ[ℂ] (P.X ⟶ Q.X) where

@@ -23,7 +23,7 @@ transition.
   raising the merged arities by one on each side.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

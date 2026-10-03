@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeUnique
 
 /-! The actual field estimates needed to close the recursive packet construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

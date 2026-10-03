@@ -21,7 +21,7 @@ rearrangement itself is the retraction `tensorMu_braid_retract`, a
 pure braid coherence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

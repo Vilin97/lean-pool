@@ -41,7 +41,7 @@ The key tools are:
 - Folland "Real Analysis", Thm. 2.37 (Fubini-Tonelli)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

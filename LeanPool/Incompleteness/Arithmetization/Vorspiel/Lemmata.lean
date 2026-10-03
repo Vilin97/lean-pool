@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Lemmata -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -37,7 +37,7 @@ first triangle identity of the self-duality of the odd line,
 `RS.OddLine.evaluation_coevaluation`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -113,6 +113,7 @@ variable {D : Type u}
 /-- The *convolution action* of a morphism into a monoid object on
 a morphism into a module object, taken at arbitrary sources:
 tensor the two morphisms and act. -/
+@[expose]
 noncomputable def gact
     [Category.{v} D] [MonoidalCategory D] {R : D} [MonObj R] {M : D}
     [ModObj R M]
@@ -238,6 +239,7 @@ transported along a chosen morphism `s` from the intended source
 into the tensor product of the two given sources.  The four graded
 action blocks of `RS.gammaModule` are the four instances of this
 construction. -/
+@[expose]
 noncomputable def gactLin
     [Category.{v} D] [MonoidalCategory D] {R : D} [MonObj R] {M : D}
     [ModObj R M] [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]
@@ -292,6 +294,7 @@ coherence isomorphisms that identify the sources in
 `RS.gammaAlgebra`: the left unitor for even-even and even-odd, the
 right unitor for odd-even, and the square trivialisation `L.sq` of
 the odd line for odd-odd. -/
+@[expose]
 noncomputable def gammaModule (D : Type u) [Category.{v} D]
     [MonoidalCategory D] [SymmetricCategory D] [Preadditive D]
     [MonoidalPreadditive D] [Linear ℂ D] [MonoidalLinear ℂ D]

@@ -22,7 +22,7 @@ symmetrization needed for the H-theorem entropy dissipation identity.
 Depends on continuity and pointwise bounds from CoulombPSDHelpers.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

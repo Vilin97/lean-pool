@@ -23,7 +23,7 @@ This file constructs finite-dimensional kernels only.  It makes no path-space, p
 conservativity, or stochastic-process existence claim beyond the explicitly stated results.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory
@@ -46,6 +46,7 @@ namespace SubMarkovKernelSemigroup
 variable {α : Type*} [MeasurableSpace α]
 
 /-- The finite-time kernel obtained by recursively sampling a strictly ordered family of times. -/
+@[expose]
 noncomputable def finiteTimeKernel (P : SubMarkovKernelSemigroup α) :
     {n : ℕ} → FiniteOrderedTimes n → Kernel α (Fin n → α)
   | 0, _ => Kernel.const α (Measure.dirac (FiniteOrderedTimes.emptyPath α))
@@ -90,6 +91,7 @@ theorem IsConservative.isMarkovKernel_finiteTimeKernel
       exact Kernel.IsMarkovKernel.map _ measurable_finCons
 
 /-- The finite-time law at a starting state. -/
+@[expose]
 noncomputable def finiteTimeLaw (P : SubMarkovKernelSemigroup α) {n : ℕ}
     (times : FiniteOrderedTimes n) (x : α) : Measure (Fin n → α) :=
   finiteTimeKernel P times x

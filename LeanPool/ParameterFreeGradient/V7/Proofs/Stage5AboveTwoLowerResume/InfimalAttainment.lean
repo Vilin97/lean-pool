@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlo
 Attainment and interior-radius bounds for the kernel's infimal-convolution minimizers.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

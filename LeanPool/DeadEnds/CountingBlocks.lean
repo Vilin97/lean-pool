@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 Complete and partial residue blocks used to count finite prime-square conditions.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

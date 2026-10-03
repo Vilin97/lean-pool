@@ -19,7 +19,7 @@ the star union restores the fragment (`starUnion_reglue`).  On Hom
 classes: the descended trace of the star-union class is the value.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

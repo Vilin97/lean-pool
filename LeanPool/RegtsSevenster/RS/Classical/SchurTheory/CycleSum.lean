@@ -19,7 +19,7 @@ cycle-type product in the power sums of the colours; summed over
 the symmetric group this yields `n! · h_n`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

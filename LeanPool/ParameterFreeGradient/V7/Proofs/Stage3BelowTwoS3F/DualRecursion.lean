@@ -13,12 +13,13 @@ The mutually recursive normalized query and gradient-accumulator trajectories of
 dual phase.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage3BelowTwoS3F
 
 mutual
   /-- The recursively generated normalized query points of the below-two dual phase. -/
+  @[expose]
   noncomputable def dualQ (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => 0
@@ -28,6 +29,7 @@ mutual
     termination_by k => k
 
   /-- The recursively accumulated dual vectors in the below-two dual phase. -/
+  @[expose]
   noncomputable def dualR (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
       ℕ → Point d
     | 0 => -(coeffB n n n) • oracle.gradient 0

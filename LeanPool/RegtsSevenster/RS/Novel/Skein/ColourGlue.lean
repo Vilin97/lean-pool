@@ -26,7 +26,7 @@ when it carries an odd one; the sum over the state's colour at the
 cut runs over the corresponding block.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

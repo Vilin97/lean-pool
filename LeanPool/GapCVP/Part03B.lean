@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03A
 
 /-! # GapCVP proof, part 03, continuation 02 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -237,7 +237,7 @@ def payloadTruncatedTrace
   }
 
 /-- GapCVP reduction support. -/
-def payloadDecodeOutput (input : List Bool) : List Bool :=
+@[expose] def payloadDecodeOutput (input : List Bool) : List Bool :=
   match BinaryEncoding.readLengthPrefixedWord input with
   | some (payload, _) => true :: payload
   | none => [false]
@@ -453,7 +453,7 @@ noncomputable def dropHeadComputable :
   }
 
 /-- GapCVP reduction support. -/
-def firstFieldContents (input : List Bool) : List Bool :=
+@[expose] def firstFieldContents (input : List Bool) : List Bool :=
   (payloadDecodeOutput input).tail
 
 /-- GapCVP reduction support. -/
@@ -534,7 +534,7 @@ abbrev suffixDecoderMachine : Turing.FinTM2 where
                   .halt)))))
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def suffixConfiguration
+@[expose] def suffixConfiguration
     (phase : Fin 6)
     (input counter reversed output : List Bool) :
     suffixDecoderMachine.Cfg where

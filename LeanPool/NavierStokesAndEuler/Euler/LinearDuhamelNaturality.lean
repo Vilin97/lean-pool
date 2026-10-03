@@ -20,7 +20,7 @@ is assumed. In particular it applies to inclusions and support-changing
 spatial translations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

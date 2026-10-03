@@ -38,7 +38,7 @@ development:
 See `formalize/DESIGN.md` (in the source repository) for the overall design.
 -/
 
-@[expose] public section
+public section
 
 namespace Vlasov
 

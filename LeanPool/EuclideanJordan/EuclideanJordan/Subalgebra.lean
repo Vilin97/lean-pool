@@ -52,7 +52,7 @@ development deliberately does not assume. The two theorems below say exactly wha
 version would, without the bundling.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

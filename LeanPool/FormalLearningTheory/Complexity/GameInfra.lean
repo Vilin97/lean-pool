@@ -29,7 +29,7 @@ Definitions and interface lemmas for the online learning game:
 Characterization theorems live in `FLT_Proofs.Theorem.Online`.
 -/
 
-@[expose] public section
+public section
 
 -- ============================================================
 -- CORRECTED DEFINITIONS: Depth-indexed complete Littlestone trees
@@ -42,7 +42,7 @@ inductive LTree (X : Type) : ℕ → Type where
 
 /-- Path-wise shattering for complete trees.
     Path B: leaf case requires C.Nonempty (NA₁₀). -/
-def LTree.isShattered {X : Type} {n : ℕ} (C : ConceptClass X Bool) : LTree X n → Prop
+@[expose] def LTree.isShattered {X : Type} {n : ℕ} (C : ConceptClass X Bool) : LTree X n → Prop
   | .leaf => C.Nonempty  -- Path B: was True, now C.Nonempty (Γ₂₁ fix)
   | .branch x l r =>
       (∃ c ∈ C, c x = true) ∧ (∃ c ∈ C, c x = false) ∧
@@ -74,7 +74,7 @@ theorem LTree.isShattered_mono {X : Type} {n : ℕ} (T : LTree X n)
 
 /-- Littlestone dimension: the maximum depth of a complete shattered tree.
     Path B: returns WithBot (WithTop ℕ) so Ldim(∅) = ⊥ (NA₁₀). -/
-noncomputable def LittlestoneDim (X : Type) (C : ConceptClass X Bool) :
+@[expose] noncomputable def LittlestoneDim (X : Type) (C : ConceptClass X Bool) :
     WithBot (WithTop ℕ) :=
   ⨆ (n : ℕ) (_ : ∃ T : LTree X n, T.isShattered C),
     (↑(↑n : WithTop ℕ) : WithBot (WithTop ℕ))
@@ -124,12 +124,12 @@ theorem mistakesFrom_init_eq {X : Type}
 -- ============================================================
 
 /-- Version space after observing a history. -/
-def versionSpace {X : Type} (C : ConceptClass X Bool) (history : List (X × Bool)) :
+@[expose] def versionSpace {X : Type} (C : ConceptClass X Bool) (history : List (X × Bool)) :
     ConceptClass X Bool :=
   {c ∈ C | ∀ p ∈ history, c p.1 = p.2}
 
 /-- The Standard Optimal Algorithm (SOA). -/
-noncomputable def SOA (X : Type) (C : ConceptClass X Bool) : OnlineLearner X Bool where
+@[expose] noncomputable def SOA (X : Type) (C : ConceptClass X Bool) : OnlineLearner X Bool where
   State := List (X × Bool)
   init := []
   predict := fun history x =>

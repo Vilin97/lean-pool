@@ -79,7 +79,7 @@ operators. On Hilbert spaces the Schmidt representation repairs this, and then
   12.3.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

@@ -22,7 +22,7 @@ import Mathlib.Tactic.Positivity.Finset
 # Subsum condition for the general case
 -/
 
-@[expose] public section
+public section
 
 namespace GeneralCase
 
@@ -31,6 +31,7 @@ open Fin Finset Nat
 variable {n : ℕ} {F : Finset ℕ} {h : ℕ}
 
 /-- The embedding for the first subsum block reduction. -/
+@[expose]
 def redEmb1 : Fin 4 ↪ Fin (n + 6) :=
   ⟨fun i ↦ (i.natAdd 2).natAdd n, fun i j h ↦ by simpa [natAdd_inj 2] using h⟩
 

@@ -53,7 +53,7 @@ The product side of the Crouzeix–Palencia argument is *not* upgraded here: the
 of `CircleProduct.lean` uses von Neumann's inequality, which needs `‖A‖ ≤ r`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

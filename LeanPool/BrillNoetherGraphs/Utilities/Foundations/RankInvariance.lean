@@ -16,7 +16,7 @@ equivalence.  This module lifts that statement through the universal tests in
 the definition of divisor rank.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

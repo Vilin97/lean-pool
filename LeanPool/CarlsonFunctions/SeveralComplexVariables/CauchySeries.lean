@@ -25,7 +25,7 @@ and radius independence are developed in `CauchyCoefficients`; the separate-radi
 expansion, its uniform convergence and remainder estimates are in `PolydiscTaylor`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
@@ -142,6 +142,7 @@ private lemma hasSum_antidiagonalTuple_geometric {K : Type*} [NormedField K] [Co
   exact he.sigma hfin
 
 /-- The multi-index Cauchy coefficient of a vector-valued function on a polydisc. -/
+@[expose]
 noncomputable def polydiscCauchyCoeff {d : ℕ} (f : (Fin d → ℂ) → E)
     (c : Fin d → ℂ) (R : ℝ) (m : Fin d → ℕ) : E :=
   ((2 * π * I : ℂ) ^ d)⁻¹ • torusIntegral

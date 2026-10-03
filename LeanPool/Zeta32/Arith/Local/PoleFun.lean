@@ -19,7 +19,7 @@ For a numerator `A ∈ ℚ[x]` and a finite set `Pl ⊆ ℤ` of simple poles:
 * `VG_polyPart_eval` : a class-wise lower bound for the values of the polynomial part at integers.
 -/
 
-@[expose] public section
+public section
 
 -- adapted from mo271/Zeta5@f19a196:Apery/Arith/PoleFun.lean,
 -- .../Apery/Arith/DirectBound.lean and .../Apery/Arith/DirectPoly.lean
@@ -143,6 +143,7 @@ end Adm
 def plc (p : ℕ) (Pl : Finset ℤ) (c : ZMod p) : Finset ℤ := Pl.filter fun r : ℤ => (r : ZMod p) = c
 
 /-- Poles in the same class differ by exactly one power of `p`. -/
+@[expose]
 def Sep (p : ℕ) (Pl : Finset ℤ) : Prop :=
   ∀ r ∈ Pl, ∀ s ∈ Pl, r ≠ s → (r : ZMod p) = s → ¬ (p : ℤ) ^ 2 ∣ r - s
 

@@ -16,7 +16,7 @@ triangle whose whole carrier is contained in `U`.  These finite stages are neste
 subdivisions are reconciled by coning.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -32,7 +32,7 @@ noncomputable abbrev safeSubdivision (n : ℕ) : K.Subdivision :=
   K.iteratedMidpointSubdivision n
 
 /-- Refined triangles whose complete transported carriers lie in the prescribed open set. -/
-noncomputable def safeFaces (n : ℕ) :
+@[expose] noncomputable def safeFaces (n : ℕ) :
     Finset (Finset (K.safeSubdivision n).refined.Vertex) := by
   classical
   exact (K.safeSubdivision n).refined.faces.filter fun t ↦
@@ -49,7 +49,7 @@ noncomputable abbrev safeStage (n : ℕ) : IntrinsicTwoComplex :=
     (fun t ↦ t ∈ K.safeFaces U n)
 
 /-- Include a safe stage into the original finite realization. -/
-noncomputable def safeStageInclusion (n : ℕ) :
+@[expose] noncomputable def safeStageInclusion (n : ℕ) :
     (K.safeStage U n).realization → K.realization :=
   (K.safeSubdivision n).homeo ∘
     (K.safeSubdivision n).refined.restrictFacesInclusion
@@ -62,7 +62,7 @@ theorem isEmbedding_safeStageInclusion (n : ℕ) :
       (fun t ↦ t ∈ K.safeFaces U n))
 
 /-- Carrier of one finite safe stage in the original realization. -/
-noncomputable def safeStageSupport (n : ℕ) : Set K.realization :=
+@[expose] noncomputable def safeStageSupport (n : ℕ) : Set K.realization :=
   Set.range (K.safeStageInclusion U n)
 
 theorem isCompact_safeStageSupport (n : ℕ) :
@@ -105,7 +105,8 @@ theorem safeStageSupport_mono (n : ℕ) :
       R.homeo (R.refined.midpointHomeomorph w) ∈ U := by
     intro w hw
     apply htSafe
-    exact R.refined.midpointEval_mem_parentFace T hsOver w hw
+    simpa only [R.refined.midpointHomeomorph_apply] using
+      R.refined.midpointEval_mem_parentFace T hsOver w hw
   have hsMem : s ∈ K.safeFaces U (n + 1) := by
     change s ∈ R.refined.midpointComplex.faces.filter fun t ↦
       ∀ x ∈ R.refined.midpointComplex.faceCarrier t,
@@ -248,11 +249,11 @@ noncomputable def safeExhaustionIndex : ℕ → ℕ
   | 0 => 0
   | n + 1 => K.nextSafeStage U hU (safeExhaustionIndex n)
 
-@[simp] theorem safeExhaustionIndex_zero : K.safeExhaustionIndex U hU 0 = 0 := rfl
+@[simp] theorem safeExhaustionIndex_zero : K.safeExhaustionIndex U hU 0 = 0 := by rfl
 
 @[simp] theorem safeExhaustionIndex_succ (n : ℕ) :
     K.safeExhaustionIndex U hU (n + 1) =
-      K.nextSafeStage U hU (K.safeExhaustionIndex U hU n) := rfl
+      K.nextSafeStage U hU (K.safeExhaustionIndex U hU n) := by rfl
 
 theorem safeExhaustionIndex_lt_succ (n : ℕ) :
     K.safeExhaustionIndex U hU n < K.safeExhaustionIndex U hU (n + 1) := by

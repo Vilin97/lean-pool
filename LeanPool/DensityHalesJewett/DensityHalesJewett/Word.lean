@@ -22,7 +22,7 @@ coordinate types, and `Equiv.sumArrowEquivProdArrow` for the underlying decompos
 a sum of coordinate types.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped BigOperators
@@ -31,7 +31,7 @@ namespace DensityHalesJewett
 
 /-- The fiber of a word family above a fixed prefix.  Words on a sum of coordinate types are
 concatenations `Sum.elim x y` of their two parts. -/
-def fiber {α ι κ : Type*} [Fintype (κ → α)] [DecidableEq (ι ⊕ κ → α)]
+@[expose] def fiber {α ι κ : Type*} [Fintype (κ → α)] [DecidableEq (ι ⊕ κ → α)]
     (A : Finset (ι ⊕ κ → α)) (x : ι → α) : Finset (κ → α) :=
   Finset.univ.filter fun y ↦ Sum.elim x y ∈ A
 

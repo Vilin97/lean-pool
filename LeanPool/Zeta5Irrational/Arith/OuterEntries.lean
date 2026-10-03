@@ -28,7 +28,7 @@ import Mathlib.Tactic.Ring.Basic
 Helper lemmas (memberships, root counts, zero-class valuations).
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -37,6 +37,7 @@ namespace Zeta5Irrational
 variable {p : ℕ} [hp : Fact p.Prime] {m : ℕ}
 
 /-- The entry roots `6·[1..N] + rows`. -/
+@[expose]
 def entryO (hm : 2 * m + 1 = p) (n : ℕ) (cs : Fin (m + 1)) (is : ℕ) (ct : Fin (m + 1)) (it : ℕ) :
     Multiset ℤ :=
   6 • ((Icc 1 (3 * n)).val.map fun j : ℕ => (j : ℤ)) + rootsO hm n cs is + rootsO hm n ct it

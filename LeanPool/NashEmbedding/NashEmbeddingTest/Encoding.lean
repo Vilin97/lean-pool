@@ -36,7 +36,7 @@ witnesses (zero, `flatTorusEmb`, `flatMetric`) all of which happen to
 be analytic.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff
 open NashEmbedding NashEmbedding.Sobolev

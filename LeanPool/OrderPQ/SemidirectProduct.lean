@@ -12,7 +12,7 @@ public import Mathlib.Tactic.Group
 # LeanPool.OrderPQ.SemidirectProduct
 -/
 
-@[expose] public section
+public section
 
 variable {N₁ N₂ H₁ H₂ : Type*} [Group N₁] [Group N₂] [Group H₁] [Group H₂]
 
@@ -61,7 +61,7 @@ noncomputable def mulEquivSemidirectProduct
     group
 
 /-- If `H ≤ K` are subgroups of `G`, then `H.subgroupOf K` is canonically isomorphic to `H`. -/
-@[simps]
+@[expose, simps]
 def Subgroup.subgroupOfMulEquiv {G : Type*} [Group G] (H K : Subgroup G) (h : H ≤ K) :
     H.subgroupOf K ≃* H where
   toFun x := ⟨x.1.1, mem_subgroupOf.mp x.2⟩

@@ -29,7 +29,7 @@ This file is independent of learning theory and is a candidate for contribution 
 - Kechris, "Classical Descriptive Set Theory", Theorem 30.13
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -40,6 +40,7 @@ open MeasureTheory Set Filter Topology
 /-- Compact capacity of a set `s` relative to a measure `μ`: the supremum of `μ K` over
 compact subsets `K ⊆ s`. The inner-regularity functional whose equality with `μ s`
 characterises measurability for analytic sets. -/
+@[expose]
 noncomputable def MeasureTheory.compactCap
     {α : Type*} [TopologicalSpace α] [MeasurableSpace α]
     (μ : MeasureTheory.Measure α) (s : Set α) : ENNReal :=

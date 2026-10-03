@@ -23,18 +23,20 @@ prove that one finite set of lattice points is complete without changing the
 basic definition of transmission.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The rank inequality attached to one lattice point `(a,b)` for a divisor
 representative and an ASP permutation. -/
+@[expose]
 def TransmissionInequality
     (G : CFGraph) (u v : G.V) (τ : AspPerm) (D : CFDiv G)
     (a b : ℤ) : Prop :=
   rank G (D + a • oneChip u - b • oneChip v) ≥ τ.s (a + 1) b - 1
 
 /-- The transmission inequalities restricted to a set of lattice points. -/
+@[expose]
 def SatisfiesTransmissionOn
     (G : CFGraph) (u v : G.V) (τ : AspPerm) (D : CFDiv G)
     (S : Set (ℤ × ℤ)) : Prop :=
@@ -43,6 +45,7 @@ def SatisfiesTransmissionOn
 /-- A divisor representative satisfies the transmission condition for `τ` if
 it has the prescribed degree `g + χτ` and every twice-marked twist satisfies
 the corresponding slipface rank inequality. -/
+@[expose]
 def SatisfiesTransmission
     (G : CFGraph) (u v : G.V) (τ : AspPerm) (D : CFDiv G) : Prop :=
   CFDiv.degree D = (CFGraph.genus G : ℤ) + τ.χ ∧
@@ -150,6 +153,7 @@ theorem satisfiesTransmission_linear_equiv_iff
   · exact satisfiesTransmission_of_linear_equiv hDE.symm u v τ
 
 /-- Existence of a divisor class satisfying the graph transmission condition. -/
+@[expose]
 def TransmissionExists
     (G : CFGraph) (u v : G.V) (τ : AspPerm) : Prop :=
   ∃ D : CFDiv G, SatisfiesTransmission G u v τ D

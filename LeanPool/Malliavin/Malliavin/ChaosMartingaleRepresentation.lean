@@ -15,7 +15,7 @@ This file connects the selected homogeneous Wiener chaos tower to the closed ran
 natural Brownian Itô integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

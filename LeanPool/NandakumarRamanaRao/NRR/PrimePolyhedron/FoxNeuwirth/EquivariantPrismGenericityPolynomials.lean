@@ -30,7 +30,7 @@ assignment.  A final sum type packages the two finite families for direct use wi
 `FiniteMultivariateGenericPerturbation.exists_small_positive_generic`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -80,6 +80,7 @@ noncomputable def deviationPolynomial
     y (ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- The real vertex map reconstructed on one refined prism simplex. -/
+@[expose]
 noncomputable def localVertexMap
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (q : PrismCell hp N L) :
@@ -87,6 +88,7 @@ noncomputable def localVertexMap
   value i := localVertexValue hp N L a q i
 
 /-- Evaluation at a parameter assignment, bundled as a ring homomorphism. -/
+@[expose]
 noncomputable def assignmentEvalHom
     (hp : Nat.Prime p) (N L : Nat) (a : Assignment hp N L) :
     PolynomialRing hp N L →+* Real :=
@@ -191,11 +193,13 @@ instance codimTwoFaceFintype (p : Nat) : Fintype (CodimTwoFace p) := inferInstan
 instance codimTwoFaceDecidableEq (p : Nat) : DecidableEq (CodimTwoFace p) := inferInstance
 
 /-- The second omission index, cast to the syntactic successor form needed by `Fin.succAbove`. -/
+@[expose]
 def secondOmissionIndex
     (hp : Nat.Prime p) (f : CodimTwoFace p) : Fin ((p - 1) + 1) :=
   Fin.cast (by have := hp.pos; omega) f.2
 
 /-- The vertex retained in an ordered codimension-two face after the two omissions. -/
+@[expose]
 def codimTwoVertex
     (hp : Nat.Prime p) (f : CodimTwoFace p) (i : Fin (p - 1)) : Fin (p + 1) :=
   f.1.succAbove
@@ -223,6 +227,7 @@ noncomputable def codimTwoMinorPolynomial
   Matrix.det (codimTwoDeviationMatrixPolynomial hp N L q f)
 
 /-- The corresponding real deviation matrix reconstructed from an assignment. -/
+@[expose]
 noncomputable def codimTwoDeviationMatrix
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (q : PrismCell hp N L) (f : CodimTwoFace p) :
@@ -263,6 +268,7 @@ noncomputable instance genericityIndexDecidableEq
     (hp : Nat.Prime p) (N L : Nat) : DecidableEq (GenericityIndex hp N L) := inferInstance
 
 /-- The combined finite polynomial family used by the generic perturbation theorem. -/
+@[expose]
 noncomputable def genericityPolynomial
     (hp : Nat.Prime p) (N L : Nat) :
     GenericityIndex hp N L → PolynomialRing hp N L

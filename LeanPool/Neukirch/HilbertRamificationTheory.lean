@@ -19,7 +19,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Neukirch.HilbertRamificationTheory`.
 -/
 
-@[expose] public section
+public section
 
 open Algebra
 
@@ -528,7 +528,7 @@ def GalRingHom (σ : L ≃ₐ[K] L) : RingHom (𝓞 L) (𝓞 L) :=
   (GalAlgEquiv σ).toAlgHom.toRingHom
 
 theorem GalAlgEquiv_toAlgHom_toRingHom_eq_GalRingHom (σ : L ≃ₐ[K] L) :
-    (GalAlgEquiv σ).toAlgHom.toRingHom = GalRingHom σ := rfl
+    (GalAlgEquiv σ).toAlgHom.toRingHom = GalRingHom σ := by rfl
 
 theorem GalRingHom_mul (σ τ : L ≃ₐ[K] L) :
   (GalRingHom σ).comp (GalRingHom τ) = GalRingHom (σ * τ) := by
@@ -799,7 +799,7 @@ theorem DecompositionGroup_mem (σ : L ≃ₐ[K] L) :
 open IntermediateField Module FiniteDimensional
 
 /-- The decomposition field of `P` over `K` is the fixed field of `DecompositionGroup p P`. -/
-def DecompositionField : IntermediateField K L := fixedField (DecompositionGroup p P)
+@[expose] def DecompositionField : IntermediateField K L := fixedField (DecompositionGroup p P)
 
 /-- DecompositionField is a Number Field. -/
 instance DecompositionField_NumberField : NumberField (DecompositionField p P) :=

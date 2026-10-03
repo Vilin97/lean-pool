@@ -20,7 +20,7 @@ forward along `Sum.inl`. This forces the growth-function path in the symmetrizat
 proof, giving a sample bound depending only on d and ε, not on |H| or |A|.
 -/
 
-@[expose] public section
+public section
 
 open Finset MeasureTheory
 noncomputable section

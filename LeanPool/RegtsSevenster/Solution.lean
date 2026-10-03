@@ -19,7 +19,7 @@ that the kernel accepts them; see `comparator-config.json` and the
 CI workflow.
 -/
 
-@[expose] public section
+public section
 
 namespace Certified
 

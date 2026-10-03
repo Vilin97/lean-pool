@@ -29,7 +29,7 @@ as wrappers supplying the canonical proof) and discharges it for `schemaTermStru
 restricted schema truth lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

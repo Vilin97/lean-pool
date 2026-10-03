@@ -24,7 +24,7 @@ strict inward homothetic copies of the boundary.  Compact-uniform convergence
 of their integrands then transports the zero value to the original contour.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Topology

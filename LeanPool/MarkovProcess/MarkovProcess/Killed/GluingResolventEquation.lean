@@ -36,7 +36,7 @@ Main results: `expWeight_convolution`,
 `SubMarkovKernelSemigroup.kernelResolvent_resolventEquation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

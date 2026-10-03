@@ -36,7 +36,7 @@ theorems that consume them — `effective_degenerateDivisor_sub_smul_one_chip`,
 only consumers are.
 -/
 
-@[expose] public section
+public section
 
 -- The established name of the certificate namespace repeats `Certificate`,
 -- which is what `ExplicitPotential.CertificateData` means.  Lean v4.33 added
@@ -76,6 +76,7 @@ def dominatesMarkCheck (certificate : CertificateData m n p) (mark : Fin n)
 
 /-- The target coefficient at a core vertex after removing `mult` chips at the
 anchor.  At `mult = 1` this is `targetCoefficient`, syntactically. -/
+@[expose]
 def multTargetCoefficient (certificate : CertificateData m n p) (mult : ℤ)
     (anchor vertex : Fin n) : ℤ :=
   certificate.divisor vertex - if vertex = anchor then mult else 0

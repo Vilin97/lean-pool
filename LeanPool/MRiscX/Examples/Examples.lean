@@ -21,7 +21,7 @@ import Mathlib.Tactic.Finiteness.Attr
 New Code Proofs
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible] Registers Memory
 

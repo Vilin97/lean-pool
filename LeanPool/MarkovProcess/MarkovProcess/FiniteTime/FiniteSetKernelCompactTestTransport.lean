@@ -24,7 +24,7 @@ product. These declarations are finite-dimensional infrastructure; no statement 
 is proved here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal CompactlySupported

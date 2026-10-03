@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.StrictStatements
 The deterministic strict method's exact transcript against the affine oracle.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage6StrictDeterministic
 
@@ -23,7 +23,7 @@ def causalQuery (method : StrictLocalMethod) (t : ℕ)
   if t = 0 then method.x0 else method.nextQuery trace
 
 /-- Chronological exact transcript generated against the affine oracle. -/
-noncomputable def affineTrace (method : StrictLocalMethod) (eps : ℝ) :
+@[expose] noncomputable def affineTrace (method : StrictLocalMethod) (eps : ℝ) :
     ℕ → StrictTranscript
   | 0 => []
   | n + 1 =>

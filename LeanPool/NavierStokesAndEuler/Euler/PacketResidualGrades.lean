@@ -21,7 +21,7 @@ may be instantiated by the actual value/derivative jets at each space-time
 point; this file proves the finite algebra and does not assume an Euler solve.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,13 +34,13 @@ variable {V Q W : Type*} [AddCommGroup V] [Module ℝ V]
   [AddCommGroup Q] [Module ℝ Q] [AddCommGroup W] [Module ℝ W]
 
 /-- Residual, constructed using `L`. -/
-def residual (M : ℕ) (κ : ℝ) (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W)
+@[expose] def residual (M : ℕ) (κ : ℝ) (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W)
     (B C : V →ₗ[ℝ] V →ₗ[ℝ] W) (u : ℕ → V) (p : ℕ → Q) : W :=
   L (evaluate M κ u) + G (evaluate M κ p) + κ⁻¹ • H (evaluate M κ p) +
     B (evaluate M κ u) (evaluate M κ u) + κ⁻¹ • C (evaluate M κ u) (evaluate M κ u)
 
 /-- Coefficient, constructed using `truncate`. -/
-def coefficient (M : ℕ) (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W)
+@[expose] def coefficient (M : ℕ) (L : V →ₗ[ℝ] W) (G H : Q →ₗ[ℝ] W)
     (B C : V →ₗ[ℝ] V →ₗ[ℝ] W) (u : ℕ → V) (p : ℕ → Q) (n : ℕ) : W :=
   truncate M (fun j => L (u j)) n + truncate M (fun j => G (p j)) n +
     shiftDown M (fun j => H (p j)) n + convolution M B u u n +

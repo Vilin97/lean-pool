@@ -18,7 +18,7 @@ normal form.  At the divisor `g • rightEndpoint`, the resulting four ranks
 give `rankDelta = 1`, hence the base transmission row `tau 0 = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

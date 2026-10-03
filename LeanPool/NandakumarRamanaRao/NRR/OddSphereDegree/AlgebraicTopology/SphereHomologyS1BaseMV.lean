@@ -41,7 +41,7 @@ The result `sphereTopHomologyIsoOne : SphereTopHomologyIso 1` supplies the
 `base` field of `SphereSuspensionTower`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits TopologicalSpace
 open SphereOddDegree.AffineBarycentricSubdivision

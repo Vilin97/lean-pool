@@ -24,7 +24,7 @@ endpoint pencil.  The marked graph therefore has exact torsion order two and
 has `2`-general transmission.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -33,6 +33,7 @@ open Utilities
 /-- The corrected exceptional family in Proposition 4.19 and Corollary 6.4:
 the marks lie at midpoints of distinct strands, and at least one of the two
 strands has length two. -/
+@[expose]
 def CorrectedMidpointException {g : ℕ} (B : Banana g)
     (α β : Fin (g + 1)) (i : B.PathPosition α) (j : B.PathPosition β) : Prop :=
   α ≠ β ∧ 2 * i.val = B.length α ∧ 2 * j.val = B.length β ∧

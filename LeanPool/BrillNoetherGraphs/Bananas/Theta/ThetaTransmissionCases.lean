@@ -19,7 +19,7 @@ exceptional rows below are graph-independent once their stated divisor-class
 conditions hold.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

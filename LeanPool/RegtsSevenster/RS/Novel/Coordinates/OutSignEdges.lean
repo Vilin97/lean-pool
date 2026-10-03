@@ -17,7 +17,7 @@ contributes the sign of its (pairing-constant) colour exactly once,
 and non-participating edges contribute 1 on both sides.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

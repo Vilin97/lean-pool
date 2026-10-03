@@ -24,7 +24,7 @@ contraction.  The main certified fact here is that the old copy is
 monochromatic, exactly the invariant needed by that contraction.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -53,9 +53,11 @@ noncomputable instance unfoldVertexFintype (a : V) : Fintype (UnfoldVertex a) :=
   infer_instance
 
 /-- The original copy of the vertex split by unfolding. -/
+@[expose]
 def unfoldOld (a : V) : UnfoldVertex a := Sum.inr false
 
 /-- The new copy of the vertex created by unfolding. -/
+@[expose]
 def unfoldNew (a : V) : UnfoldVertex a := Sum.inr true
 
 omit [Fintype V] [Quiver.HasInvolutiveReverse V] [(a b : V) → Fintype (a ⟶ b)] in
@@ -70,6 +72,7 @@ theorem unfoldNew_ne_old (a : V) : unfoldNew a ≠ unfoldOld a := by
   exact (unfoldOld_ne_new a).symm
 
 /-- The factor containing an edge's label. -/
+@[expose]
 def unfoldEdgeColor (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e : AllArrow (V := V)) : Bool :=
   binarySumIndex (G := G) (H := H) (allArrowLabel L e)
@@ -206,7 +209,7 @@ theorem unfoldEdgeTarget_reverse
   | inr b => cases b <;> rfl
 
 /-- The quiver obtained by splitting a vertex and duplicating the selected edge. -/
-@[reducible]
+@[reducible, expose]
 def unfoldQuiver
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V)) :
@@ -270,6 +273,7 @@ def unfoldHasReverse
       exact unfoldEdgeReverse_reverse e.1)
 
 /-- The label of an unfolded edge, using the selected edge's label for its duplicate. -/
+@[expose]
 def unfoldEdgeLabel
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V)) : UnfoldEdge (V := V) → Sum G H
@@ -293,6 +297,7 @@ theorem unfoldEdgeLabel_reverse
           factorWordInv_factorWordInv]
 
 /-- The factor labelling on the unfolded graph. -/
+@[expose]
 def unfoldLabelling
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V)) :
@@ -308,6 +313,7 @@ def unfoldLabelling
 /-! ### The old copy is monochromatic -/
 
 /-- An unfolded arrow is incident to the original copy of the split vertex. -/
+@[expose]
 def unfoldOldIncident
     (L : BinaryLabelling (G := G) (H := H) (V := V))
     (e₀ : AllArrow (V := V))
@@ -1589,6 +1595,7 @@ theorem unfoldDuplicateFoldPath_target_eq_old
     (allArrowSource e₀) (unfoldEdgeColor L e₀)).mpr ⟨rfl, rfl⟩
 
 /-- The unfolded marked graph based at the original copy of its split base vertex. -/
+@[expose]
 def unfoldedMarkedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     (e₀ : AllArrow (V := V))
@@ -1752,6 +1759,7 @@ theorem unfoldedMarkedGraph_weaklyConnected {n : ℕ}
 /-! ### Rerooting the unfolded marking at the new source -/
 
 /-- The unfolded marked graph rerooted at the new copy of its split base vertex. -/
+@[expose]
 def unfoldedMarkedGraphNew {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     (e₀ : AllArrow (V := V))

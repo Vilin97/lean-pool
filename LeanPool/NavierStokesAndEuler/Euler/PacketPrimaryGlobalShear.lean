@@ -18,7 +18,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 fast derivative is the source shear, and the slow derivative has an
 explicit inverse-frequency factor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

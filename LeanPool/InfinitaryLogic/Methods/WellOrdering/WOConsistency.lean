@@ -32,7 +32,7 @@ Step 5 consumes the returned `S` opaquely: the quotient term model realizes the 
 `RelPreserving`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

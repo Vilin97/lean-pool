@@ -44,7 +44,7 @@ is never attained.
 This product is licensed under the Apache License, Version 2.0; see the LICENSE file.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 
@@ -53,11 +53,11 @@ namespace SumDifferenceExponent
 /-! ## 1. The optimization problem -/
 
 /-- The sum doubling constant `|A + A| / |A|`, regarded as a real number. -/
-noncomputable def sigma (A : Finset ℤ) : ℝ :=
+@[expose] noncomputable def sigma (A : Finset ℤ) : ℝ :=
   ((A + A).card : ℝ) / (A.card : ℝ)
 
 /-- The difference doubling constant `|A - A| / |A|`, regarded as a real number. -/
-noncomputable def delta (A : Finset ℤ) : ℝ :=
+@[expose] noncomputable def delta (A : Finset ℤ) : ℝ :=
   ((A - A).card : ℝ) / (A.card : ℝ)
 
 /--
@@ -65,7 +65,7 @@ The sum/difference growth exponent.  As in the paper, this definition is only
 used under the hypothesis `2 ≤ A.card`; without that hypothesis the quotient
 is still a Lean term, but is not the quantity in the optimization problem.
 -/
-noncomputable def growthExponent (A : Finset ℤ) : ℝ :=
+@[expose] noncomputable def growthExponent (A : Finset ℤ) : ℝ :=
   Real.log (sigma A) / Real.log (delta A)
 
 /--

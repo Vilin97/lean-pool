@@ -22,7 +22,7 @@ measurably on the evaluation point, have bounded total mass, form a kernel, or s
 semigroup or stochastic-process law.
 -/
 
-@[expose] public section
+public section
 
 open CompactlySupported MeasureTheory
 open scoped ZeroAtInfty
@@ -32,6 +32,7 @@ namespace MarkovProcess
 variable {α : Type*} [TopologicalSpace α]
 
 /-- Evaluation at a point, as a bounded linear functional on `C₀(α, ℝ)`. -/
+@[expose]
 noncomputable def c0EvalCLM (x : α) : C₀(α, ℝ) →L[ℝ] ℝ :=
   LinearMap.mkContinuous
     { toFun := fun f ↦ f x
@@ -48,6 +49,7 @@ theorem c0EvalCLM_apply (x : α) (f : C₀(α, ℝ)) : c0EvalCLM x f = f x :=
 namespace PositiveC0OperatorMeasure
 
 /-- Pointwise preservation of nonnegative functions by an operator on `C₀(α, ℝ)`. -/
+@[expose]
 def IsPositive (T : C₀(α, ℝ) →L[ℝ] C₀(α, ℝ)) : Prop :=
   ∀ f : C₀(α, ℝ), (∀ x, 0 ≤ f x) → ∀ x, 0 ≤ T f x
 
@@ -62,6 +64,7 @@ theorem apply_le_apply_of_isPositive
   exact sub_nonneg.mp h
 
 /-- The canonical real-linear inclusion of compactly supported continuous functions into `C₀`. -/
+@[expose]
 noncomputable def compactlySupportedToC0LinearMap : C_c(α, ℝ) →ₗ[ℝ] C₀(α, ℝ) where
   toFun f := f
   map_add' f g := by
@@ -80,6 +83,7 @@ variable (T : C₀(α, ℝ) →L[ℝ] C₀(α, ℝ)) (hT : IsPositive T)
 
 /-- Evaluation at `x` after applying `T`, restricted from `C₀(α, ℝ)` to compactly supported
 continuous functions, as a positive linear functional. -/
+@[expose]
 noncomputable def functional (x : α) : C_c(α, ℝ) →ₚ[ℝ] ℝ :=
   PositiveLinearMap.mk₀
     { toFun := fun f ↦ T (compactlySupportedToC0LinearMap f) x
@@ -101,6 +105,7 @@ theorem functional_apply (x : α) (f : C_c(α, ℝ)) :
 variable [T2Space α] [LocallyCompactSpace α] [MeasurableSpace α] [BorelSpace α]
 
 /-- The regular Riesz measure representing point evaluation after applying `T`. -/
+@[expose]
 noncomputable def measure (x : α) : Measure α :=
   RealRMK.rieszMeasure (functional T hT x)
 

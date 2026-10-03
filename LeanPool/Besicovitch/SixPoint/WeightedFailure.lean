@@ -17,7 +17,7 @@ names those natural slacks and identifies their positive weighted sum with the c
 weighted pair score.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

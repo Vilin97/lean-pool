@@ -17,7 +17,7 @@ on the `8 * 3 * 2` input/place/tangent basis rows and extended by linearity.
 This is a fixed algebraic matrix certificate, not circuit enumeration.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

@@ -20,7 +20,7 @@ nonzero because its closure row at the empty fragment is
 `f(∅) = 1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

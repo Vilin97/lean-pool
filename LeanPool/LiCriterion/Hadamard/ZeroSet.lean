@@ -22,7 +22,7 @@ The `ZeroSet` structure packaging the zeros of an entire function together with 
 Hadamard factorization needs, and the associated canonical product.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

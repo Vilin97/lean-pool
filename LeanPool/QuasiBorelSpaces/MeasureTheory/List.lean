@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Sigma
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.List`.
 -/
 
-@[expose] public section
+public section
 
 
 variable

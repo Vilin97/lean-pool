@@ -11,7 +11,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -254,7 +254,7 @@ theorem differentiable_centeredPositiveClassThetaIntegral
 
 open Classical in
 /-- A pole cleared centered class theta integral used in the Odlyzko-bound argument. -/
-noncomputable def poleClearedCenteredClassThetaIntegral
+@[expose] noncomputable def poleClearedCenteredClassThetaIntegral
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ) : ℂ :=
   (Module.finrank ℚ K : ℂ) * s * (1 - s) *
       (centeredPositiveClassThetaIntegral K I s +

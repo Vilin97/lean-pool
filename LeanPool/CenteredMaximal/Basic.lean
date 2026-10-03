@@ -17,7 +17,7 @@ public import LeanPool.CenteredMaximal.Statement
 * `weakTypeConstant_le`, `le_weakTypeConstant`: the constant is the least weak type bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -30,7 +30,7 @@ summable `toReal`s (`ENNReal.summable_toReal`); identifying the terms is `toReal
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel
 open scoped ENNReal

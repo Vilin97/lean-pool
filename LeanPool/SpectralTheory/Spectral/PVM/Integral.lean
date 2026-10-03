@@ -19,7 +19,7 @@ This file constructs the spectral integral first for complex-valued simple funct
 bounded measurable functions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -27,7 +27,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The spectral sum of a complex-valued simple function against a PVM. -/
-noncomputable def PVM.simpleIntegral (E_pvm : PVM E)
+@[expose] noncomputable def PVM.simpleIntegral (E_pvm : PVM E)
     (f : SimpleFunc ℝ ℂ) : E →L[ℂ] E :=
   ∑ z ∈ f.range, z • E_pvm.proj (f ⁻¹' {z})
 
@@ -526,7 +526,7 @@ theorem PVM.simpleIntegral_piecewise_const (E_pvm : PVM E)
         rw [hpre, zero_smul, add_zero]
 
 /-- The bounded spectral integral of a measurable, uniformly bounded complex function. -/
-noncomputable def PVM.integral (E_pvm : PVM E)
+@[expose] noncomputable def PVM.integral (E_pvm : PVM E)
     (f : ℝ → ℂ) (hf : Measurable f) (hbdd : ∃ C, ∀ t, ‖f t‖ ≤ C) :
     E →L[ℂ] E :=
   Filter.limUnder Filter.atTop (fun n => E_pvm.simpleIntegral

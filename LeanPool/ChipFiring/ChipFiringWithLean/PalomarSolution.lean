@@ -14,7 +14,7 @@ public import LeanPool.ChipFiring.ChipFiringWithLean.RiemannRoch
 Chip firing, graph divisors, and their combinatorial properties.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 

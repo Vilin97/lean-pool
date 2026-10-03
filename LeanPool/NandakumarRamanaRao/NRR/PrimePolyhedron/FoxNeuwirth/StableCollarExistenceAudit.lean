@@ -29,7 +29,7 @@ prism complex with independent lower and upper triangulations, and a boundary ve
 affine theorem requiring only positive-ray skeleton transversality.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

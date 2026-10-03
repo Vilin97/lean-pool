@@ -23,4 +23,4 @@ Barrel file re-exporting the three submodules:
 * `Meromorphic` — meromorphic contour integral vanishing, higher-order cancellation
 -/
 
-@[expose] public section
+public section

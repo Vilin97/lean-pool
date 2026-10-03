@@ -29,7 +29,7 @@ No lattice, no covering family and no discrete geometry appears here: the sampli
 metric.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped ENNReal NNReal

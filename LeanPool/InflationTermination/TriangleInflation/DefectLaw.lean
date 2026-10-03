@@ -26,7 +26,7 @@ splits the root bits read by `Δ_{ijk}` into four disjoint blocks — the shared
 remaining cells of its line — and assembles the four marginals into `Q(ε,r)`.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 

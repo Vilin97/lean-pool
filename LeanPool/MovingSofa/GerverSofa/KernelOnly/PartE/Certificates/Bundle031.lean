@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.PartE.Certificates.Bundl
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch045`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2865,7 +2865,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.ThetaAbove.ReconstructionBase`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2875,7 +2875,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC6Theta Above Reconstruct
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -22,7 +22,7 @@ live here rather than beside their first user because two files
 need them.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

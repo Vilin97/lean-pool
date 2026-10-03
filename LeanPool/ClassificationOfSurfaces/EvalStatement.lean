@@ -20,7 +20,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 This file contains the public theorem matching the Lean Eval problem statement.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PolynomialCostMajorant
 the actual all-order packet correction. This is a uniform estimate on
 primitive source bounds, not a per-parent eventual-frequency assertion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,7 +47,7 @@ local instance instPacketFiveCostPolynomial4 : NormedSpace ℝ (Space →ᵇ (Sp
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- The growth constant written in inverse-coercivity variables. -/
-def rawGrowth (i m f t B M A0 A2 B0 B1 : ℝ) : ℝ :=
+@[expose] def rawGrowth (i m f t B M A0 A2 B0 B1 : ℝ) : ℝ :=
   let μ := 1+Real.sqrt 5461*i
   let s := sourceConstant B M
   let tr := transportConstant P B M
@@ -60,14 +60,14 @@ def rawGrowth (i m f t B M A0 A2 B0 B1 : ℝ) : ℝ :=
 
 /-- Growth envelope, given by `rawGrowth P X X X X X X X X (2*velocity X X X) (48*velocity X X
 X*X)`. -/
-def growthEnvelope (X : ℝ) : ℝ :=
+@[expose] def growthEnvelope (X : ℝ) : ℝ :=
   rawGrowth P X X X X X X X X (2*velocity X X X) (48*velocity X X X*X)
 
 /-- Inverse radius envelope, given by `1+8*X+4*X^2+X`. -/
-def inverseRadiusEnvelope (X : ℝ) : ℝ := 1+8*X+4*X^2+X
+@[expose] def inverseRadiusEnvelope (X : ℝ) : ℝ := 1+8*X+4*X^2+X
 
 /-- Five envelope as an element of `ℝ`. -/
-def fiveEnvelope (X : ℝ) : ℝ :=
+@[expose] def fiveEnvelope (X : ℝ) : ℝ :=
   1+tailPolynomialConstant X X X+X+12*growthEnvelope P X*X +
     8*growthEnvelope P X*X*drift X X X*inverseRadiusEnvelope X +
     8*growthEnvelope P X*X*inverseRadiusEnvelope X

@@ -68,7 +68,7 @@ Declarations:
   matching endpoints.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

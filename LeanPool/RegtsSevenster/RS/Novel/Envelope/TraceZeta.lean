@@ -30,7 +30,7 @@ hook-vanishing half of the proof uses only the Frobenius identity and
 hook confinement, both of which hold for every element.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

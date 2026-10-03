@@ -23,7 +23,7 @@ endpoint is transferred to the exponent-dependent one for free on a carrier
 of radius at most one.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators

@@ -15,7 +15,7 @@ Smaller carriers retain the same numerical Morrey bound. Joint measurability
 on a spatial-time strip gives globally measurable past-cylinder indications.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

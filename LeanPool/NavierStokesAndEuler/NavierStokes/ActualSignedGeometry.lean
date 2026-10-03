@@ -29,7 +29,7 @@ are computed from the same prepared primary family. Their native-copy
 estimates have constants before all labels, bands and copies.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -214,6 +214,7 @@ variable {s : StripData X} {V : JetDomain ι D} {ζ : ι → D → ℝ}
   {K : Λ → ℕ → I → Set X} (c : CopyChart s V ζ K)
 
 /-- Pull, given by `affineCopy f c.index c.linear c.shift`. -/
+@[expose]
 noncomputable def pull (f : ι → D → E) : Λ → ℕ → I → X → E :=
   affineCopy f c.index c.linear c.shift
 
@@ -297,14 +298,17 @@ variable {H₀ v₀}
   (c : PreparedChart H₀ v₀ a D)
 
 /-- Target, defined pointwise by `PrimaryTargetBounds.actualTarget v₀ (c.coordinate L x).1 k`. -/
+@[expose]
 noncomputable def target : PrimaryGeometryAssembly.Index W₀ a.N → D → Vec2 :=
   fun L x k => PrimaryTargetBounds.actualTarget v₀ (c.coordinate L x).1 k
 
 /-- Weight, defined pointwise by `PrimaryTargetBounds.movingWeight W₀ (c.coordinate L x).1`. -/
+@[expose]
 noncomputable def weight : PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ :=
   fun L x => PrimaryTargetBounds.movingWeight W₀ (c.coordinate L x).1
 
 /-- Mask as an element of `PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ`. -/
+@[expose]
 noncomputable def mask : PrimaryGeometryAssembly.Index W₀ a.N → D → ℝ :=
   fun L x => PrimaryRepresentatives.nativeMask (PrimaryGeometryAssembly.label W₀ L).1
     (PrimaryGeometryAssembly.label W₀ L).2 (c.coordinate L x).1
@@ -427,6 +431,7 @@ theorem square_bandBound (s : StripData X) :
     pow_zero, mul_one] using pow_le_pow_left₀ (a.value_pos l n).le (a.bounds l n).2 2
 
 /-- Mul, bundling `value`, `lower`, `upper`, `lower_pos` and the required compatibility proofs. -/
+@[expose]
 noncomputable def mul : PositiveScale Λ where
   value l n := a.value l n * b.value l n
   lower := a.lower * b.lower
@@ -848,7 +853,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -871,6 +876,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 
 /-- Standard slow region, bundling `carrier`, `isOpen`, `have`, `coord_pos` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def standardSlowRegion {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
     LocalSignedRequest.SlowRegion (2 * h) where
   carrier := {z | 0 < z.1 ∧ SimilarityCoordinates.coordinateQ (2 * h) z ∈ Ioo (1 / 2 : ℝ) 2}
@@ -902,6 +908,7 @@ abbrev Label := PrimaryGeometryAssembly.Index W a.N
 
 /-- Native slow, bundling `scale`, `carrier`, `isOpen`, `one_le_scale` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def nativeSlow : PrimaryCopyBounds.JetDomain (Label H v a) Slow where
   scale L := ChartScales.S (BaseChartJets.cellBand L)
   carrier L := (PrimaryGeometryAssembly.domain W a.N).carrier L ∩
@@ -918,6 +925,7 @@ noncomputable def nativeSlow : PrimaryCopyBounds.JetDomain (Label H v a) Slow wh
 
 /-- Native domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def nativeDomain : PrimaryCopyBounds.JetDomain (Label H v a) Native where
   scale L := ChartScales.S (BaseChartJets.cellBand L)
   carrier L := (nativeSlow H v a).carrier L ×ˢ
@@ -929,7 +937,7 @@ noncomputable def nativeDomain : PrimaryCopyBounds.JetDomain (Label H v a) Nativ
 
 /-- Pulse coordinates, given by `(x.1, x.2.2 / ChartScales.slotLength r0 F.data.h
 (BaseChartJets.cellBand L))`. -/
-noncomputable def pulseCoordinates (L : Label H v a) (x : Native) : Slow × ℝ :=
+@[expose] noncomputable def pulseCoordinates (L : Label H v a) (x : Native) : Slow × ℝ :=
   (x.1, x.2.2 / ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L))
 
 theorem nativeSlow_positive (L : Label H v a) {p : Slow}
@@ -1064,6 +1072,7 @@ theorem nativeSlow_inverse_edge (L : Label H v a) {p : Slow}
 
 /-- This is the native chart of the supplied prepared family. All its
 coordinate, growth, annular and positive-reference fields are proved. -/
+@[expose]
 noncomputable def preparedChart (hr0 : 0 < r0) :
     ActualSignedControl.PreparedChart H v a Native where
   native := nativeDomain H v a
@@ -1191,6 +1200,7 @@ variable {Λ : Type} (chart : ℕ → ℕ) (reference : Λ → ℕ → ℕ)
 
 /-- Band power scale, bundling `value`, `lower`, `upper`, `lower_pos` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def bandPowerScale (exponent : ℝ) : ActualSignedControl.PositiveScale Λ where
   value l n := PhysicalParticularWave.ratioPower (ChartScales.Q (chart n))
     (ChartScales.Q (reference l n)) exponent
@@ -1202,11 +1212,13 @@ noncomputable def bandPowerScale (exponent : ℝ) : ActualSignedControl.Positive
     dyadic_ratioPower_le (hnear l n).1 (hnear l n).2 _⟩
 
 /-- Velocity scale, given by `bandPowerScale chart reference hnear (CoordinateAlgebra.A h)`. -/
+@[expose]
 noncomputable def velocityScale (h : ℝ) : ActualSignedControl.PositiveScale Λ :=
   bandPowerScale chart reference hnear (CoordinateAlgebra.A h)
 
 /-- Clock scale, given by `bandPowerScale chart reference hnear (CoordinateAlgebra.A h + 1 /
 2)`. -/
+@[expose]
 noncomputable def clockScale (h : ℝ) : ActualSignedControl.PositiveScale Λ :=
   bandPowerScale chart reference hnear (CoordinateAlgebra.A h + 1 / 2)
 
@@ -1231,11 +1243,13 @@ variable {D h : ℝ} {vr vt : Plane}
   (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Slot geometry, constructed using `CommonCoverClass.bandGeometry`. -/
+@[expose]
 noncomputable def slotGeometry (l : SlotColoring.Label) (gap : ℕ) : CommonCoverSolve.Geometry :=
   CommonCoverClass.bandGeometry (TorusAverages.slotChart vr vt hdet) h l.1 gap
     (PartitionedCovariance.slotCenter h l - sys.radius • vt)
 
 /-- Clock window, bundling `lower`, `upper`, `padding`, `padding_pos`. -/
+@[expose]
 noncomputable def clockWindow (m : ℕ) : PeriodicPhaseAssembly.ClockWindow where
   lower := (-sys.radius, 0)
   upper := (sys.radius, ChartScales.slotLength sys.radius h m)
@@ -1329,6 +1343,7 @@ end Slots
 /-! ## The exact physical change of slow variables and the copy affine map -/
 
 /-- Slow change as an element of `Slow →L[ℝ] Slow`. -/
+@[expose]
 noncomputable def slowChange (h Q Qr : ℝ) : Slow →L[ℝ] Slow :=
   (PhysicalParticularWave.ratioPower Q Qr (1 / 2) • ContinuousLinearMap.fst ℝ ℝ Plane).prod
     (((PhysicalParticularWave.ratioPower Q Qr (CoordinateAlgebra.D h) •
@@ -1422,6 +1437,7 @@ theorem norm_slowChange_le (h : ℝ) {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m �
 
 /-- Mean equiv, given by `(ParticularWaveBounds.liftAssoc Plane).symm.trans
 PhysicalResidualTZ.swapSlow`. -/
+@[expose]
 noncomputable def meanEquiv : Native ≃ₗᵢ[ℝ] LocalSignedRequest.Point :=
   (ParticularWaveBounds.liftAssoc Plane).symm.trans PhysicalResidualTZ.swapSlow
 
@@ -1429,6 +1445,7 @@ noncomputable def meanEquiv : Native ≃ₗᵢ[ℝ] LocalSignedRequest.Point :=
     rfl
 
 /-- View strip, constructed using `ParticularWaveBounds.reindexStrip`. -/
+@[expose]
 noncomputable def viewStrip {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (chart : ℕ → ℕ) : StripData Native :=
   ParticularWaveBounds.reindexStrip meanEquiv
@@ -1467,12 +1484,13 @@ variable {D h : ℝ} {vr vt : Plane}
   (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Copy point as an element of `Native`. -/
-noncomputable def copyPoint (l : SlotColoring.Label) (chart common : ℕ)
+@[expose] noncomputable def copyPoint (l : SlotColoring.Label) (chart common : ℕ)
     (k : TorusInverse.Frequency) (x : Native) : Native :=
   (slowChange h (ChartScales.Q chart) (ChartScales.Q l.1) x.1,
     (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinates k x.2)
 
 /-- Copy linear as an element of `Native →L[ℝ] Native`. -/
+@[expose]
 noncomputable def copyLinear (l : SlotColoring.Label) (chart common : ℕ) : Native →L[ℝ] Native :=
   (slowChange h (ChartScales.Q chart) (ChartScales.Q l.1)).prodMap
     (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinateLinear
@@ -1566,6 +1584,7 @@ variable {Λ : Type} (chart : ℕ → ℕ) (reference : Λ → ℕ → ℕ)
 
 /-- Coefficient scale, given by `(velocityScale chart reference hnear h).mul (bandPowerScale
 chart reference hnear (-(h / 2)))`. -/
+@[expose]
 noncomputable def coefficientScale (h : ℝ) : ActualSignedControl.PositiveScale Λ :=
   (velocityScale chart reference hnear h).mul (bandPowerScale chart reference hnear (-(h / 2)))
 
@@ -1583,6 +1602,7 @@ theorem coefficientScale_value (h : ℝ) (l : Λ) (n : ℕ) :
 
 /-- Carrier ratio scale, bundling `value`, `lower`, `upper`, `lower_pos` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def carrierRatioScale {h : ℝ} (hh : 0 ≤ h) : ActualSignedControl.PositiveScale Λ where
   value l n := roundedCarrier h (reference l n) / roundedCarrier h (chart n)
   lower := 1 / 2
@@ -1597,6 +1617,7 @@ noncomputable def carrierRatioScale {h : ℝ} (hh : 0 ≤ h) : ActualSignedContr
 
 /-- Normal scale, given by `(carrierRatioScale chart reference hh).mul (bandPowerScale chart
 reference hnear (h / 2 + 1 / 2))`. -/
+@[expose]
 noncomputable def normalScale {h : ℝ} (hh : 0 ≤ h) : ActualSignedControl.PositiveScale Λ :=
   (carrierRatioScale chart reference hh).mul (bandPowerScale chart reference hnear (h / 2 + 1 / 2))
 
@@ -1705,6 +1726,7 @@ theorem copy_growth_le
 /-- The copy chart is assembled from the actual dyadic and slot maps.
 The only indexing restrictions are the active four-level window and
 the chosen common-cover budget; all analytic comparisons are derived. -/
+@[expose]
 noncomputable def copyChart (hr0 : 0 < r0)
     (hchart : ∀ n, 1 ≤ chart n)
     (hnear : ∀ l n, chart n ≤ BaseChartJets.cellBand (reference l n) + 4 ∧
@@ -1777,8 +1799,10 @@ end PreparedCopies
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
 
 /-- Radial vector, given by `TorusInverse.vector .radial`. -/
+@[expose]
 noncomputable def radialVector : Plane := TorusInverse.vector .radial
 /-- Temporal vector, given by `TorusInverse.vector .temporal`. -/
+@[expose]
 noncomputable def temporalVector : Plane := TorusInverse.vector .temporal
 
 theorem vectors_det : radialVector.1 * temporalVector.2 - radialVector.2 * temporalVector.1 ≠ 0 :=
@@ -1787,6 +1811,7 @@ theorem vectors_det : radialVector.1 * temporalVector.2 - radialVector.2 * tempo
   nlinarith [sq_nonneg (Real.sqrt 2 - 1)]
 
 /-- Slot linear, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
+@[expose]
 noncomputable def slotLinear (g : CommonCoverSolve.Geometry) : Cylinder →L[ℝ] PhaseCalculus.Slot
     where
   toFun x := ((x.1.1, x.1.2.1), (x.2, (g.coordinateLinear x.1.2.2).2))
@@ -1796,6 +1821,7 @@ noncomputable def slotLinear (g : CommonCoverSolve.Geometry) : Cylinder →L[ℝ
     (continuous_snd.prodMk ((g.coordinateLinear.continuous.comp continuous_fst.snd.snd).snd))
 
 /-- Slot coordinates, given by `((x.1.1, x.1.2.1), (x.2, (g.coordinates k x.1.2.2).2))`. -/
+@[expose]
 noncomputable def slotCoordinates (g : CommonCoverSolve.Geometry) (k : TorusInverse.Frequency)
     (x : Cylinder) : PhaseCalculus.Slot :=
   ((x.1.1, x.1.2.1), (x.2, (g.coordinates k x.1.2.2).2))
@@ -1857,7 +1883,7 @@ theorem slot_coordinates_axial (g : CommonCoverSolve.Geometry) (Q h : ℝ) (i : 
   simp [PhaseCalculus.eZ]
 
 /-- Periodic phase, constructed using `PhaseCalculus.phase`. -/
-noncomputable def periodicPhase (l : SlotColoring.Label) (gap : ℕ)
+@[expose] noncomputable def periodicPhase (l : SlotColoring.Label) (gap : ℕ)
     (epsilon p pz x0 : ℝ) (F G : Slow → ℝ) (x : Cylinder) : ℝ :=
   PhaseCalculus.phase epsilon p pz x0 F G
     ((x.1.1, x.1.2.1), (x.2,
@@ -2029,6 +2055,7 @@ theorem slot_coordinates_from_zero (l : SlotColoring.Label) (gap : ℕ)
   exact (CopySolveCompatibility.coordinates_refine _ _ _ _).symm
 
 /-- Cylinder native, given by `((x.1.1, x.1.2.1), x.1.2.2)`. -/
+@[expose]
 noncomputable def cylinderNative (x : Cylinder) : Native := ((x.1.1, x.1.2.1), x.1.2.2)
 
 theorem copyPoint_eq_reference_view (l : SlotColoring.Label) (n common : ℕ)
@@ -2065,13 +2092,14 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (a : PrimaryGeometryAssembly.Prepared H v upper B sys.radius N0)
 
 /-- Prepared phase as an element of `Cylinder → ℝ`. -/
-noncomputable def preparedPhase (j : Fin 2) (L : Label H v a) : Cylinder → ℝ :=
+@[expose] noncomputable def preparedPhase (j : Fin 2) (L : Label H v a) : Cylinder → ℝ :=
   let P := PrimaryGeometryAssembly.construction H v a sys.radius_pos j
   periodicPhase sys (PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label W L) j) 0
     (ChartScales.epsilon F.data.h (BaseChartJets.cellBand L))
     (P.phase.p L) (P.phase.pz L) (P.phase.x0 L) (P.phase.F L) (P.phase.G L)
 
 /-- Prepared view phase as an element of `Cylinder → ℝ`. -/
+@[expose]
 noncomputable def preparedViewPhase (j : Fin 2) (L : Label H v a) (n common : ℕ) : Cylinder → ℝ :=
   fun x => ((ChartScales.carrier F.data.h (BaseChartJets.cellBand L) : ℝ) /
     (ChartScales.carrier F.data.h n : ℝ)) * preparedPhase H v sys a j L
@@ -2225,6 +2253,7 @@ noncomputable def activeReference (_ : Unit) (q : ℕ) : Label H v a :=
     (activeEnumeration H v a reference chart q).val.2
 
 /-- Active chart, given by `chart (activeEnumeration H v a reference chart q).val.2`. -/
+@[expose]
 noncomputable def activeChart (q : ℕ) : ℕ :=
   chart (activeEnumeration H v a reference chart q).val.2
 
@@ -2260,6 +2289,7 @@ end ActiveCopies
 /-! ## The angle coordinate is retained when making harmonic blocks -/
 
 /-- Cylinder native linear as an element of `Cylinder →L[ℝ] Native`. -/
+@[expose]
 noncomputable def cylinderNativeLinear : Cylinder →L[ℝ] Native :=
   (ParticularWaveBounds.liftAssoc Plane).toContinuousLinearEquiv.toContinuousLinearMap.comp
     (ContinuousLinearMap.fst ℝ PhysicalResidualBridge.Lift ℝ)
@@ -2275,12 +2305,14 @@ theorem norm_cylinderNativeLinear : ‖cylinderNativeLinear‖ ≤ 1 := by
   exact norm_fst_le x
 
 /-- Cylinder strip, constructed using `ParticularWaveBounds.reindexStrip`. -/
+@[expose]
 noncomputable def cylinderStrip (s : StripData Native) : StripData Cylinder :=
   ParticularWaveBounds.reindexStrip (StateReindex.cylinder (ParticularWaveBounds.liftAssoc Plane))
     (HarmonicWaveInteraction.productStrip s)
 
 /-- Cylinder copy chart, bundling `index`, `linear`, `shift`, `maps` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def cylinderCopyChart {Λ I i : Type} {s : StripData Native}
     {V : JetDomain i Native} {weight : i → Native → ℝ} {K : Λ → ℕ → I → Set Native}
     (c : ActualSignedControl.CopyChart s V weight K) :
@@ -2325,7 +2357,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (a : PrimaryGeometryAssembly.Prepared H v upper B r0 N0)
 
 /-- Native cutoff, constructed using `SquaredPartition.dyadicProfile`. -/
-noncomputable def nativeCutoff (L : Label H v a) (x : Native) : ℝ :=
+@[expose] noncomputable def nativeCutoff (L : Label H v a) (x : Native) : ℝ :=
   SquaredPartition.dyadicProfile (SimilarityHomogeneity.chartQ F.data.h x.1) *
     PrimaryRepresentatives.nativeMask (BaseChartJets.cellBand L) (PrimaryGeometryAssembly.label W
         L).2 x.1 *
@@ -2416,7 +2448,7 @@ end CutoffSupport
 
 /-- Swap parameter, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
 compatibility proofs. -/
-noncomputable def swapParameter : Slow ≃ₗᵢ[ℝ] Slow where
+@[expose] noncomputable def swapParameter : Slow ≃ₗᵢ[ℝ] Slow where
   toFun x := (x.1, (x.2.2, x.2.1))
   invFun x := (x.1, (x.2.2, x.2.1))
   left_inv _ := rfl
@@ -2429,6 +2461,7 @@ noncomputable def swapParameter : Slow ≃ₗᵢ[ℝ] Slow where
 
 /-- Parameter linear, constructed using
 `swapParameter.toContinuousLinearEquiv.toContinuousLinearMap.comp`. -/
+@[expose]
 noncomputable def parameterLinear (h Q Qr : ℝ) : Slow →L[ℝ] Slow :=
   swapParameter.toContinuousLinearEquiv.toContinuousLinearMap.comp
     ((slowChange h Q Qr).comp swapParameter.toContinuousLinearEquiv.toContinuousLinearMap)

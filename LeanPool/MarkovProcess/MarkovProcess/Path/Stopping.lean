@@ -16,7 +16,7 @@ topological and Borel-measurability properties of this operation; it introduces 
 times or stochastic laws.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 
@@ -25,6 +25,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- Clamp nonnegative time at the fixed deterministic time `T`. -/
+@[expose]
 def clampTime (T : NNReal) : C(NNReal, NNReal) where
   toFun t := min t T
   continuous_toFun := continuous_id.min continuous_const
@@ -33,6 +34,7 @@ def clampTime (T : NNReal) : C(NNReal, NNReal) where
 theorem clampTime_apply (T t : NNReal) : clampTime T t = min t T := rfl
 
 /-- A continuous path stopped at the fixed deterministic time `T`. -/
+@[expose]
 def stoppedPath (T : NNReal) (omega : ContinuousPath alpha) : ContinuousPath alpha :=
   omega.comp (clampTime T)
 

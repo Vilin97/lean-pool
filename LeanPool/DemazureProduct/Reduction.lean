@@ -22,7 +22,7 @@ This file formalizes the main theorems from the introduction of
 (`thm:reduce`) reduces inequalities `α ⋆ β ≥ γ` to equalities of reduced products.
 It corresponds roughly to Section 6 of the paper. -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 

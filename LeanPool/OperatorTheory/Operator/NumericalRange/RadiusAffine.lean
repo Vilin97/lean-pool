@@ -22,7 +22,7 @@ by at most the modulus of the scalar, and centered numerical radii are
 Lipschitz in the center.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open ContinuousLinearMap

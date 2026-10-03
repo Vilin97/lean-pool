@@ -18,7 +18,7 @@ This file proves the scalar subprobability estimate behind contraction of a
 sub-Markov kernel on finite `Lᵖ` spaces, and its fibrewise integrated form.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

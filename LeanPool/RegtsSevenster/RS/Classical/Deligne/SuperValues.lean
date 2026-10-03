@@ -20,7 +20,7 @@ number — the full nonnegativity input for the hook arguments of
 Deligne 1.10/1.12.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ import Mathlib.GroupTheory.FreeGroup.Reduce
 This module exposes the free basis, rank identities, basepoint independence, and abelianization.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver FreeGroup

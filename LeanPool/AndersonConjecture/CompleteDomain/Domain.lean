@@ -19,13 +19,13 @@ Construction of T = C[[x,y,z]]/(x^2 - yz) and the proof that
 T is an integral domain.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 open MvPowerSeries in
 /-- The ideal (x² - yz) in ℂ[[x,y,z]] where x = X 0, y = X 1, z = X 2. -/
-def conjI : Ideal (MvPowerSeries (Fin 3) ℂ) :=
+@[expose] def conjI : Ideal (MvPowerSeries (Fin 3) ℂ) :=
   Ideal.span {(X 0) ^ 2 - (X 1) * (X 2)}
 
 /-- T = ℂ[[x,y,z]]/(x²-yz), the main complete local domain. -/
@@ -43,7 +43,7 @@ open MvPowerSeries
 
 /-- The substitution map ψ : ℂ[[x,y,z]] → ℂ[[u,v]] defined by
   x ↦ u·v, y ↦ u², z ↦ v². -/
-noncomputable def ψMap : Fin 3 → MvPowerSeries (Fin 2) ℂ :=
+@[expose] noncomputable def ψMap : Fin 3 → MvPowerSeries (Fin 2) ℂ :=
   fun i => match i with
   | 0 => X 0 * X 1
   | 1 => (X 0) ^ 2
@@ -56,7 +56,7 @@ lemma ψ_hasSubst : HasSubst (a := ψMap) := by
 
 /-- The algebra hom `ℂ[[x,y,z]] → ℂ[[u,v]]` induced by the substitution
 `ψMap` (`x ↦ uv`, `y ↦ u²`, `z ↦ v²`). -/
-noncomputable def ψHom :
+@[expose] noncomputable def ψHom :
     MvPowerSeries (Fin 3) ℂ →ₐ[ℂ] MvPowerSeries (Fin 2) ℂ :=
   MvPowerSeries.substAlgHom ψ_hasSubst
 
@@ -91,7 +91,7 @@ lemma anderson_gen_ne_zero : (X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
     sub_zero, one_ne_zero] at hcoeff
 
 /-- The factored map ψbar : T → ℂ[[u,v]]. -/
-noncomputable def ψBar : T →+* MvPowerSeries (Fin 2) ℂ :=
+@[expose] noncomputable def ψBar : T →+* MvPowerSeries (Fin 2) ℂ :=
   Ideal.Quotient.lift conjI ψHom.toRingHom (fun x hx =>
     (conjI_le_ker_ψ hx : x ∈ RingHom.ker ψHom.toRingHom))
 

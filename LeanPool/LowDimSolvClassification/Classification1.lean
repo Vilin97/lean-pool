@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.GCD
 # LeanPool.LowDimSolvClassification.Classification1
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule

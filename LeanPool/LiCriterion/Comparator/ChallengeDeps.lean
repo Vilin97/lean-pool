@@ -30,7 +30,7 @@ and [audit guide](https://github.com/nicholasbulka/li-criterion-rh-equivalence-l
 Those upstream audit assets are separate from this Lean Pool import.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,6 +42,7 @@ namespace LiChallenge
 `Λ₀ = completedRiemannZeta₀` is Mathlib's entire completed zeta. This is an entire function whose
 zeros in the critical strip are exactly the nontrivial zeros of ζ. (Character-for-character
 `LiCriterion.riemannXi`.) -/
+@[expose]
 def riemannXi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta₀ s + (1 / 2 : ℂ)
 
@@ -49,20 +50,24 @@ def riemannXi (s : ℂ) : ℂ :=
 half-plane `Re s > 1/2`. Precomposing with it turns "all zeros on the critical line" into a
 statement about the unit disk, which is what makes the Li coefficients a positivity condition.
 (Character-for-character `LiCriterion.phi`.) -/
+@[expose]
 def phi (f : ℂ → ℂ) (z : ℂ) : ℂ := f (1 / (1 - z))
 
 /-- The logarithmic derivative `f' / f`. (Character-for-character `LiCriterion.logDeriv`.) -/
+@[expose]
 def logDeriv (φ : ℂ → ℂ) (z : ℂ) : ℂ := deriv φ z / φ z
 
 /-- The zero-indexed analytic coefficient corresponding, for `f = riemannXi`, to Li's classical
 `λ_{n+1}`: the `n`-th Taylor coefficient at `0` of the logarithmic derivative of `f` precomposed
 with the Cayley map. These are the coefficients whose nonnegativity is Li's criterion for RH.
 (Character-for-character `LiCriterion.taylorCoeff`.) -/
+@[expose]
 def taylorCoeff (f : ℂ → ℂ) (n : ℕ) : ℂ :=
   (deriv^[n] (logDeriv (phi f))) 0 / n.factorial
 
 /-- The nontrivial zeros of `ζ`: the zeros in the open critical strip `0 < re s < 1`.
 (Character-for-character `LiCriterion.NontrivialZero`.) -/
+@[expose]
 def NontrivialZero : Type := {ρ : ℂ // riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1}
 
 end LiChallenge

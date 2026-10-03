@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanScaledCutoff
 
 /-! Actual initial support in physical-label coordinates for the mean boundary operator. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.PrimeSymmetry
 All actions use the established relabelling convention `v i = old (σ.symm i)`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

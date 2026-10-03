@@ -18,7 +18,7 @@ antipodal map with ambient negation. The exact integer formula
 determinant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

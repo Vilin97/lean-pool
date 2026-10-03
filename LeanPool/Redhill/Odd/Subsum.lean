@@ -23,7 +23,7 @@ import Mathlib.Tactic.Zify
 # Subsum condition for the odd case
 -/
 
-@[expose] public section
+public section
 
 namespace OddCase
 
@@ -32,6 +32,7 @@ open Fin Finset
 variable {n : ℕ} {F : Finset ℕ} {x : ℤ}
 
 /-- The embedding for the first subsum block reduction. -/
+@[expose]
 def redEmb1 : Fin 3 ↪ Fin (n + 5) :=
   ⟨fun i ↦ (i.natAdd 2).natAdd n, fun i j h ↦ by simpa [natAdd_inj 2] using h⟩
 

@@ -15,7 +15,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.Semibreak
   midpoint, rank-difference, and dual-degree steps.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -191,6 +191,7 @@ theorem rank_bananaNormalForm_remove_midpoint_chip
   rw [max_eq_left htop, max_eq_left htop']
 
 /-- The drop in divisor rank when one chip is removed from the first mark. -/
+@[expose]
 noncomputable def basePointDrop (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
   rank M.graph D - rank M.graph (D - oneChip M.u)
 

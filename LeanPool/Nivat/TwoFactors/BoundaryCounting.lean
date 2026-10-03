@@ -47,7 +47,7 @@ at one boundary site, and the total excess of fiber sizes bounds the number of
 interior patterns with more than one boundary extension.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 
@@ -74,7 +74,7 @@ theorem rowPrefix_mono : Monotone rowPrefix := by
 
 /-- The interior together with the first `k` boundary sites, the finite window denoted `D_k` in
 the paper. Lemma 5.5 (`lem:boundary-window`), equation `eq:boundary-rule-domain`. -/
-def prefixWindow (C : Finset Lattice) (k : ℕ) : Finset Lattice := C ∪ rowPrefix k
+@[expose] def prefixWindow (C : Finset Lattice) (k : ℕ) : Finset Lattice := C ∪ rowPrefix k
 
 /-- Before any boundary sites are adjoined, the prefix window is exactly the interior. Lemma 5.5
 (`lem:boundary-window`). -/

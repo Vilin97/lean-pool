@@ -14,7 +14,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.GapCleanup
 
 /-! # Coordinate and mass maps for the elementary constructions -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 
@@ -22,6 +22,7 @@ variable {p d : ℕ} [NeZero p] {f : FpCoord p d → ℕ}
 
 /-- The stable node map identifying a node of the reduced decomposition with its original
 node. -/
+@[expose]
 noncomputable def reducedStableNodeMap (Φ : FlagDecomposition p d f) (hp : Odd p)
     (x : (Φ.reduced hp).flag.Node) : StableNodeMap Φ (Φ.reduced hp) x.val x where
   coord := IntegralAffineMap.id _
@@ -37,6 +38,7 @@ namespace PrunedWeights
 variable {Φ : FlagDecomposition p d f} (D : Φ.PrunedWeights) (hp : Odd p)
 
 /-- The stable node map from an original node to its rebuilt pruned counterpart. -/
+@[expose]
 noncomputable def rebuiltStableNodeMap (x : (D.rebuilt hp).flag.Node) :
     StableNodeMap Φ (D.rebuilt hp) x.val x where
   coord := IntegralAffineMap.id _
@@ -56,6 +58,7 @@ noncomputable def rebuiltStableNodeMap (x : (D.rebuilt hp).flag.Node) :
     exact FlagDecompositionRaw.cumulativeWeight_mass_loss_le_real D.weight_le x.val
 
 /-- The stable node map obtained by rebuilding pruned weights and then reducing the result. -/
+@[expose]
 noncomputable def cleanedStableNodeMap (x : (D.cleaned hp).flag.Node) :
     StableNodeMap Φ (D.cleaned hp) x.val.val x :=
   (D.rebuiltStableNodeMap hp x.val).comp ((D.rebuilt hp).reducedStableNodeMap hp x)
@@ -71,6 +74,7 @@ variable (Φ : FlagDecomposition p d f)
     (hcenter : ∀ x q, q ∈ (C x).coordinateSupport → IsCenteredLift p q)
 
 /-- The stable node map induced by the chosen change of integral affine coordinates. -/
+@[expose]
 noncomputable def stableNodeMap (x : Φ.flag.Node) :
     StableNodeMap Φ (decomposition Φ C hp hinj hcenter) x x where
   coord := chart Φ C x
@@ -109,6 +113,7 @@ namespace LowerTransfer
 variable (Φ : FlagDecomposition p d f) (anchor : Φ.flag.Node) (hp : Odd p)
 
 /-- The stable node map from the original node underlying a node of the lower transfer. -/
+@[expose]
 noncomputable def stableNodeMap (x : (decomposition Φ anchor hp).flag.Node) :
     StableNodeMap Φ (decomposition Φ anchor hp) x.val.val.1 x where
   coord := IntegralAffineMap.id _
@@ -131,6 +136,7 @@ variable (Φ : FlagDecomposition p d f) (e : Φ.flag.Node → ℕ)
 
 /-- The stable node map for augmentation, using the coordinate map that forgets the added
 directions. -/
+@[expose]
 noncomputable def stableNodeMap (x : Φ.flag.Node) :
     StableNodeMap Φ (decomposition Φ e ξ hp he C hmod hcenter) x x where
   coord := forget Φ e ξ hp he C x

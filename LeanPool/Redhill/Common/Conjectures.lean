@@ -13,7 +13,7 @@ public import LeanPool.Redhill.Common.SubsumCondition
 # Definitions of the tuple sets and conjectures considered in the paper
 -/
 
-@[expose] public section
+public section
 
 
 open Finset
@@ -23,7 +23,7 @@ def ABCConjecture : Prop :=
   quality {a : Fin 3 → ℤ | ∑ i, a i = 0 ∧ univ.gcd a = 1} = 1
 
 /-- The tuples in Browkin and Brzeziński's `n`-conjecture. `A(n)` in the paper. -/
-def nConjectureTuples (n : ℕ) : Set (Fin n → ℤ) :=
+@[expose] def nConjectureTuples (n : ℕ) : Set (Fin n → ℤ) :=
   {a | ∑ i, a i = 0 ∧ SSC a ∧ univ.gcd a = 1}
 
 /-- Browkin and Brzeziński's **`n`-conjecture** for a fixed `n`.
@@ -46,11 +46,11 @@ def ramaekersTuples (n : ℕ) : Set (Fin n → ℤ) :=
 
 /-- **Ramaekers's conjecture** for a fixed `n`.
 The conjecture itself is `∀ n ≥ 3, RamaekersConjecture n`. -/
-def RamaekersConjecture (n : ℕ) : Prop :=
+@[expose] def RamaekersConjecture (n : ℕ) : Prop :=
   quality (ramaekersTuples n) = 1
 
 /-- `U(F,n)` in the paper. -/
-def factorFreeTuples (F : Finset ℕ) (n : ℕ) : Set (Fin n → ℤ) :=
+@[expose] def factorFreeTuples (F : Finset ℕ) (n : ℕ) : Set (Fin n → ℤ) :=
   {a | ∑ i, a i = 0 ∧ StrongSSC a ∧ PairwiseCoprime a ∧ ∀ f ∈ F, ∀ i, ¬↑f ∣ a i}
 
 lemma nConjecture_3_iff_ABC : NConjecture 3 ↔ ABCConjecture := by

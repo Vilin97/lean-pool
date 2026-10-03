@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.ZeroSum.Basic
 # Constants
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

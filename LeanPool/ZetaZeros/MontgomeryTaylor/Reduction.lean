@@ -17,7 +17,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 `|u - v| f_0 u f_0 v`; added, they are the integral of `f_0` against `G`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

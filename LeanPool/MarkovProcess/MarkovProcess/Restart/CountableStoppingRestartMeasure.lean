@@ -22,7 +22,7 @@ This is ordinary conditional infrastructure.  The restart hypothesis is an assum
 is proved for the continuous-path process in `Trajectory/FellerRestrictedRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

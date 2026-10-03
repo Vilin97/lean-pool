@@ -14,7 +14,7 @@ public import LeanPool.FiniteGraphFundamentalGroup.Realization
 This module constructs cellwise contraction data from the unique paths in an arborescence.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver

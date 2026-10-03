@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Elementary -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -244,7 +244,7 @@ namespace Structure
 variable (L M₁ M₂)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ElementaryEquiv : Prop := ∀ φ : SyntacticFormula L, M₁ ⊧ₘ φ ↔ M₂ ⊧ₘ φ
+@[expose] def ElementaryEquiv : Prop := ∀ φ : SyntacticFormula L, M₁ ⊧ₘ φ ↔ M₂ ⊧ₘ φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 notation:50 M₁ " ≡ₑ[" L "] " M₂ => ElementaryEquiv L M₁ M₂

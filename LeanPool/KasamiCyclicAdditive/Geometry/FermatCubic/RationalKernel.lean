@@ -64,7 +64,7 @@ in `rational_kernel_odd`, combined with the standard fact that a group homomorph
 kernel is injective; the group law on `E` itself is not developed here.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open scoped Real
@@ -79,13 +79,13 @@ variable {K : Type*} [Field K]
 
 /-- `IsPoint X Y Z` says that `[X : Y : Z]` is a point of the projective Fermat cubic
 `X³ + Y³ = Z³`: the coordinates are not all zero and they satisfy the equation. -/
-def IsPoint (X Y Z : K) : Prop :=
+@[expose] def IsPoint (X Y Z : K) : Prop :=
   ¬ (X = 0 ∧ Y = 0 ∧ Z = 0) ∧ X ^ 3 + Y ^ 3 = Z ^ 3
 
 /-- `IsKernelPoint k X Y Z` says that `(1 + π^k) [X : Y : Z] = O`, equivalently
 `π^k [X : Y : Z] = -[X : Y : Z]`, i.e. that the triples `(X^(2^k), Y^(2^k), Z^(2^k))` and
 `(Y, X, Z)` define the same projective point. -/
-def IsKernelPoint (k : ℕ) (X Y Z : K) : Prop :=
+@[expose] def IsKernelPoint (k : ℕ) (X Y Z : K) : Prop :=
   ∃ c : K, c ≠ 0 ∧ X ^ 2 ^ k = c * Y ∧ Y ^ 2 ^ k = c * X ∧ Z ^ 2 ^ k = c * Z
 
 /-! ### Basic facts about the origin and the points at infinity -/

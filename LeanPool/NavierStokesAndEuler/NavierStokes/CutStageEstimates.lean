@@ -20,7 +20,7 @@ ordinary Fréchet derivatives on an open smooth domain; the estimate carrier
 itself need not be open.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -208,6 +208,7 @@ noncomputable def cutLog (p : ℕ → ℕ → ℝ) (j m : ℕ) : ℝ := finiteBo
 
 /-- Actual uncut jets, only on the portion `q ≤ 1` of the estimate carrier.
 No condition is imposed on order zero of the stage sequence. -/
+@[expose]
 def RawStageBounds (q : E → ℝ) (A : ℕ → E → V) (g L : ℕ → ℝ)
     (C p : ℕ → ℕ → ℝ) (S : Set E) : Prop :=
   ∀ j, 1 ≤ j → ∀ m x, x ∈ S → q x ≤ 1 →
@@ -536,11 +537,11 @@ noncomputable def physicalProjection : SpaceTime →L[ℝ] PhysicalCoordinateBou
         (ContinuousLinearMap.snd ℝ ℝ Space)))
 
 @[simp] theorem physicalProjection_apply (w : SpaceTime) :
-    physicalProjection w = (w.1, (0, w.2 2)) := rfl
+    physicalProjection w = (w.1, (0, w.2 2)) := by rfl
 
 theorem physicalQ_linear_composition (h : ℝ) :
     PhysicalWaveSum.physicalQ h =
-      PhysicalCoordinateBounds.physicalQ (2 * h) ∘ physicalProjection := rfl
+      PhysicalCoordinateBounds.physicalQ (2 * h) ∘ physicalProjection := by rfl
 
 /-- The actual Cartesian implicit similarity coordinate has one power of
 loss per derivative.  No bound on the physical radius is required. -/
@@ -690,6 +691,7 @@ theorem exists_physical_positive_sums_of_power [Finite ι] {h : ℝ} (hh : 0 < h
       (fun w hw => PhysicalWaveSum.physicalQ_pos hh hh1 hw) (hA i) hamono⟩
 
 /-- The genuine open validity region for locally constructed raw stages. -/
+@[expose]
 noncomputable def physicalSublevel (h qbig : ℝ) : Set SpaceTime :=
   PhysicalWaveSum.preterminal ∩ {w | PhysicalWaveSum.physicalQ h w < qbig}
 

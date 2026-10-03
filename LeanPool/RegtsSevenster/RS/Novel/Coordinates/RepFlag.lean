@@ -18,7 +18,7 @@ the pairing — it is the flip set aligning the data colouring with
 the Definition 5 odd lists.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

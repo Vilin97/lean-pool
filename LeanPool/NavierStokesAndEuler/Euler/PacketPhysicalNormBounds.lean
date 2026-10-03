@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketScaledVelocity
 
 /-! Actual Euclidean norm estimates for the scaled moving coordinates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

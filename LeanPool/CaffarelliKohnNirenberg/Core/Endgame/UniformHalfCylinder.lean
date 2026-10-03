@@ -19,7 +19,7 @@ Together they give a quantitative representative with constants chosen
 before the solution. Construction of the heat sources is a separate step.
 -/
 
-@[expose] public section
+public section
 
 section
 

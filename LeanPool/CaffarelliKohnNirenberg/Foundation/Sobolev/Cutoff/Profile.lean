@@ -32,7 +32,7 @@ permission. The namespace and imports are independent.
   bounded by `8`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,6 +41,7 @@ open Polynomial
 namespace CKN
 
 /-- The canonical smooth transition from `0` to `1`. -/
+@[expose]
 def smoothTransitionProfile : ℝ → ℝ :=
   Real.smoothTransition
 
@@ -71,6 +72,7 @@ theorem le_one (t : ℝ) :
   Real.smoothTransition.le_one t
 
 /-- The explicit first-derivative constant for the canonical transition. -/
+@[expose]
 def derivBound : ℝ :=
   8
 

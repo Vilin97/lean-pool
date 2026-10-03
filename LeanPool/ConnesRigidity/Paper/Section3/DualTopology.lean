@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualHaar
 The dual topology component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualTopology
@@ -245,6 +245,7 @@ Paper: §3.
 /--
 The `characterFiberShearMul` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def characterFiberShearMul (χ : CharacterSpace) :
     PontryaginDual (Multiplicative D) :=
   PaperDualHaar.linearCharacter (shearedLinear χ)
@@ -273,6 +274,7 @@ theorem continuous_characterFiberShearMul :
 /--
 The `characterFiberShear` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def characterFiberShear (χ : CharacterSpace) : CharacterSpace :=
   Additive.ofMul (characterFiberShearMul χ)
 
@@ -328,7 +330,7 @@ noncomputable instance paperCoordinatesTopology : TopologicalSpace Coordinates :
 
 /-- The character/coordinate equivalence is a homeomorphism for the
 transported topology. Paper: §3. -/
-def characterCoordinatesHomeomorph : CharacterSpace ≃ₜ Coordinates :=
+@[expose] def characterCoordinatesHomeomorph : CharacterSpace ≃ₜ Coordinates :=
   Homeomorph.mk PaperDualHaar.characterCoordinatesEquiv.toEquiv
     (by
       apply continuous_induced_rng.mpr
@@ -406,7 +408,7 @@ theorem measurable_fiberShear :
   continuous_fiberShear.measurable
 
 /-- The normalized Haar probability in raw Zhou coordinates. Paper: §3. -/
-noncomputable def coordinatesHaar : Measure Coordinates :=
+@[expose] noncomputable def coordinatesHaar : Measure Coordinates :=
   NormalizedHaar.normalizedAddHaar Coordinates
 
 instance coordinatesHaar_isProbability : IsProbabilityMeasure coordinatesHaar := by

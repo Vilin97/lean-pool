@@ -61,12 +61,15 @@ lemma continuous_measureEntropy_probabilityMeasure {Ω : Type*} [Finite Ω]
     [TopologicalSpace Ω] [DiscreteTopology Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω] :
     Continuous (fun (μ : ProbabilityMeasure Ω) ↦ measureEntropy (S := Ω) μ) := by
   cases nonempty_fintype Ω
-  unfold measureEntropy
+  have entropy_eq (μ : ProbabilityMeasure Ω) :
+      measureEntropy (S := Ω) μ =
+        ∑' ω, Real.negMulLog ((μ : Measure Ω).real {ω}) :=
+    measureEntropy_of_isProbabilityMeasure (μ : Measure Ω)
+  simp_rw [entropy_eq]
   simp_rw [tsum_fintype]
   apply continuous_finsetSum
   intro ω _
   apply Real.continuous_negMulLog.comp
-  simp only [measure_univ, inv_one, one_smul]
   exact continuous_probabilityMeasure_apply_of_isClopen (s := {ω}) <| isClopen_discrete _
 
 public
@@ -102,7 +105,8 @@ lemma rdist_def (X : Ω → G) (Y : Ω' → G) (μ : Measure Ω) (μ' : Measure 
 
 /-- Ruzsa distance of random variables equals Ruzsa distance of the kernels. -/
 public
-lemma rdist_eq_rdistm : d[X; μ # Y; μ'] = Kernel.rdistm (μ.map X) (μ'.map Y) := rfl
+lemma rdist_eq_rdistm : d[X; μ # Y; μ'] = Kernel.rdistm (μ.map X) (μ'.map Y) := by
+  simp only [rdist_def, Kernel.rdistm, entropy_def]
 
 /-- Ruzsa distance depends continuously on the measure. -/
 public
@@ -213,7 +217,11 @@ lemma ProbabilityTheory.IndepFun.rdist_eq [IsFiniteMeasure μ]
   have h_prod : (μ.map X).prod (μ.map Y) = μ.map (⟨X, Y⟩) :=
     ((indepFun_iff_map_prod_eq_prod_map_map hX.aemeasurable hY.aemeasurable).mp h).symm
   rw [h_prod, entropy_def, map_map (by fun_prop) (by fun_prop)]
-  rfl
+  simp only [entropy_def]
+  have hfun : (fun p : G × G => p.1 - p.2) ∘ ⟨X, Y⟩ = X - Y := by
+    funext ω
+    rfl
+  rw [hfun]
 
 /-- `d[X; Y] ≤ H[X]/2 + H[Y]/2`. -/
 public
@@ -277,7 +285,7 @@ lemma rdist_symm [IsFiniteMeasure μ] [IsFiniteMeasure μ'] :
   rw [← entropy_neg (by fun_prop)]
   have : (-fun x : G × G ↦ x.1 - x.2) = (fun x ↦ x.1 - x.2) ∘ Prod.swap := by ext; simp
   rw [this, entropy_def, ← map_map (by fun_prop) measurable_swap, prod_swap]
-  rfl
+  simp only [entropy_def]
 
 omit [Countable G] in
 /-- Ruzsa distance depends continuously on the first measure. -/
@@ -448,7 +456,8 @@ lemma ent_of_diff_le (X : Ω → G) (Y : Ω → G) (Z : Ω → G)
           apply entropy_comp_le μ (by fun_prop)
     _ ≤ H[X - Z; μ] + H[Y - Z; μ] := by
           have h : 0 ≤ H[X - Z; μ] + H[Y - Z; μ] - H[⟨X - Z, Y - Z⟩; μ] := by
-            apply mutualInfo_nonneg (by fun_prop) (by fun_prop) μ
+            simpa only [mutualInfo_def] using
+              (mutualInfo_nonneg (hX.sub hZ) (hY.sub hZ) μ)
           linarith
   have h3 : H[⟨Y, X - Y⟩; μ] ≤ H[⟨X, Y⟩; μ] := by
     have : ⟨Y, X - Y⟩ = (fun p ↦ (p.2, p.1 - p.2)) ∘ ⟨X, Y⟩ := by ext1; simp
@@ -1270,12 +1279,12 @@ lemma ent_bsg [IsProbabilityMeasure μ] {A B : Ω → G} (hA : Measurable A) (hB
     _ = (ν.map Z')[fun z ↦
           H[A₁ - B₂; ν[|Z' ← z]] - H[A₁; ν[|Z' ← z]]/2 - H[B₂; ν[|Z' ← z]]/2] := by
         apply integral_congr_ae
-        apply hABZ.mono
+        apply (condIndepFun_iff.mp hABZ).mono
         intro z hz
         exact (hz.comp measurable_fst measurable_snd).rdist_eq hA₁ hB₂
     _ = H[A₁ - B₂ | Z'; ν] - H[A₁ | Z'; ν] / 2 - H[B₂ | Z'; ν] / 2 := by
         rw [integral_sub, integral_sub, integral_div, integral_div]
-        · rfl
+        · simp only [condEntropy_def]
         all_goals exact .of_finite
     _ ≤ 2 * I[A : B; μ] + H[Z; μ] - H[A₁ | Z'; ν] / 2 - H[B₂ | Z'; ν] / 2 :=
         sub_le_sub_right (sub_le_sub_right ‹_› _) _

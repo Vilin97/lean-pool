@@ -16,7 +16,7 @@ This file extends a jointly measurable family of sub-Markov semigroups by one ab
 cemetery state.  The construction is jointly measurable in the parameter, time, and state.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -32,6 +32,7 @@ variable {Theta alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 
 /-- The jointly measurable conservative cemetery extension of a parameterized sub-Markov
 kernel semigroup. -/
+@[expose]
 def cemeterySemigroup (P : ParameterizedSubMarkovKernelSemigroup Theta alpha) :
     ParameterizedSubMarkovKernelSemigroup Theta (Cemetery alpha) where
   kernel theta t := Kernel.cemeteryExtension (P theta t)

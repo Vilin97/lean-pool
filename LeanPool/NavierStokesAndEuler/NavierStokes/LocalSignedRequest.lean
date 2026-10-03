@@ -39,7 +39,7 @@ to prove local smoothness and equality of germs; none of their derivatives
 enters the uniform estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,7 +53,7 @@ variable {S V : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- All radii and torus variables, with only the slow parameter restricted. -/
-noncomputable def slowDomain (U : Set S) : Set (PressureStream.Lift S) :=
+@[expose] noncomputable def slowDomain (U : Set S) : Set (PressureStream.Lift S) :=
   {p | p.2.1 ∈ U}
 
 omit [NormedSpace ℝ S] in
@@ -61,6 +61,7 @@ theorem slowDomain_open {U : Set S} (hU : IsOpen U) : IsOpen (slowDomain U) :=
   hU.preimage (continuous_fst.comp continuous_snd)
 
 /-- Strip domain, given by `{p | p.1 ∈ Ioo a b ∧ p.2.1 ∈ U}`. -/
+@[expose]
 noncomputable def stripDomain (a b : ℝ) (U : Set S) : Set (PressureStream.Lift S) :=
   {p | p.1 ∈ Ioo a b ∧ p.2.1 ∈ U}
 
@@ -70,6 +71,7 @@ theorem stripDomain_open (a b : ℝ) {U : Set S} (hU : IsOpen U) :
   (isOpen_Ioo.preimage continuous_fst).inter (slowDomain_open hU)
 
 /-- Restriction changes only the domain, leaving all weights and band scales. -/
+@[expose]
 noncomputable def localStripData (a b cL cR : ℝ) (ha : 0 < a)
     (hcL : 0 < cL) (hcR : 0 < cR) (ε L : ℕ → ℝ)
     (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n)
@@ -93,14 +95,17 @@ theorem localStrip_majorant_eq
   logStrip_majorant_eq ha hcL hcR ε L hε hεone hL α C k n p hp
 
 /-- Radial support is required only at slow parameters where the source is used. -/
+@[expose]
 noncomputable def SupportedOn (a b : ℝ) (U : Set S) (f : PressureStream.Lift S → V) : Prop :=
   ∀ p, p.2.1 ∈ U → f p ≠ 0 → p.1 ∈ Icc a b
 
 /-- Periodic on, given by `∀ r s, s ∈ U → FourierAlias.TorusPeriodic (fun Y => f (r, (s, Y)))`. -/
+@[expose]
 noncomputable def PeriodicOn (U : Set S) (f : PressureStream.Lift S → ℝ) : Prop :=
   ∀ r s, s ∈ U → FourierAlias.TorusPeriodic (fun Y => f (r, (s, Y)))
 
 /-- The germ of a source on one entire slow fiber, including a slow neighborhood. -/
+@[expose]
 noncomputable def FiberGerm (s : S) (f g : PressureStream.Lift S → V) : Prop :=
   ∀ᶠ t in 𝓝 s, ∀ r Y, f (r, (t, Y)) = g (r, (t, Y))
 
@@ -122,6 +127,7 @@ theorem FiberGerm.jet_eq {s : S} {f g : PressureStream.Lift S → V}
     simpa only [iteratedFDerivWithin_univ] using hw.iteratedFDerivWithin_eq he.self_of_nhds j
 
 /-- An auxiliary localization, used only for germs. -/
+@[expose]
 noncomputable def localize (c : S → ℝ) (f : PressureStream.Lift S → V) (p : PressureStream.Lift S)
     : V :=
   c p.2.1 • f p
@@ -180,6 +186,7 @@ theorem exists_fiber_localization [FiniteDimensional ℝ S]
 
 /-- Freezing the slow parameter never changes a radial transport integral on
 that fiber.  It does not freeze any jet appearing in the integrand. -/
+@[expose]
 noncomputable def freezeSlow (s : S) (f : PressureStream.Lift S → V) (p : PressureStream.Lift S) :
     V :=
   f (p.1, (s, p.2.2))
@@ -529,6 +536,7 @@ variable {W : Type} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Fiber local, given by `∀ (f g : PressureStream.Lift S → V) (s : S), (∀ r Y, f (r, (s, Y)) =
 g (r, (s, Y))) → ∀ r Y, T f (r, (s, Y)) = T g (r, (s, Y))`. -/
+@[expose]
 noncomputable def FiberLocal
     (T : (PressureStream.Lift S → V) → PressureStream.Lift S → W) : Prop :=
   ∀ (f g : PressureStream.Lift S → V) (s : S),
@@ -896,6 +904,7 @@ theorem jet_zero_outside {a b : ℝ} {U : Set S} (hU : IsOpen U)
     (TransportPrimitive.iteratedFDeriv_supported (localize_supported hcs hs) j) hr
 
 /-- Uniform band jets on the valid slow domain, including all radial edges. -/
+@[expose]
 noncomputable def LocalBandJets (U : Set S) (ε L : ℕ → ℝ) (α : ℝ)
     (f : ℕ → PressureStream.Lift S → V) : Prop :=
   ∀ m : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∃ k : ℕ, ∀ n p, p.2.1 ∈ U → ∀ j ≤ m,
@@ -1090,7 +1099,7 @@ section MomentsAndChanges
 variable [FiniteDimensional ℝ S]
 
 /-- Local slow strip data as an element of `StripData S`. -/
-noncomputable def localSlowStripData (U : Set S) (hU : IsOpen U)
+@[expose] noncomputable def localSlowStripData (U : Set S) (hU : IsOpen U)
     (ε L : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n) :
     StripData S :=
   { MeanMomentBounds.slowStripData ε L hε hεone hL with
@@ -1228,7 +1237,7 @@ end MomentsAndChanges
 
 /-- Normalized slow domain, given by `{s | 0 < s.1 ∧ SimilarityCoordinates.coordinateQ coord
 (s.1, s.2) ∈ Ioo qlo qhi}`. -/
-noncomputable def normalizedSlowDomain (coord qlo qhi : ℝ) : Set PressureStream.Plane :=
+@[expose] noncomputable def normalizedSlowDomain (coord qlo qhi : ℝ) : Set PressureStream.Plane :=
   {s | 0 < s.1 ∧ SimilarityCoordinates.coordinateQ coord (s.1, s.2) ∈ Ioo qlo qhi}
 
 theorem chartQ_eq_slow (coord : ℝ) (p : MeanRankUpdate.ChartPoint) :
@@ -1842,7 +1851,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1867,6 +1876,7 @@ variable {D E F : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- The exact pullback of the weights, with a local domain for the map. -/
+@[expose]
 noncomputable def localPullbackStrip (s : StripData D) (Φ : E → D)
     (U : Set E) (hU : IsOpen U) (hΦ : ContDiffOn ℝ ∞ Φ U) : StripData E where
   domain := U ∩ Φ ⁻¹' s.domain
@@ -1957,10 +1967,12 @@ structure SlowRegion (coord : ℝ) where
   q_mem : ∀ s ∈ carrier, SimilarityCoordinates.coordinateQ coord s ∈ Icc qlo qhi
 
 /-- Profile map, given by `(x.1 / Real.sqrt (MeanRankUpdate.chartQ coord x), x.2)`. -/
+@[expose]
 noncomputable def profileMap (coord : ℝ) (x : Point) : Point :=
   (x.1 / Real.sqrt (MeanRankUpdate.chartQ coord x), x.2)
 
 /-- Inverse profile map, given by `(Real.sqrt (MeanRankUpdate.chartQ coord x) * x.1, x.2)`. -/
+@[expose]
 noncomputable def inverseProfileMap (coord : ℝ) (x : Point) : Point :=
   (Real.sqrt (MeanRankUpdate.chartQ coord x) * x.1, x.2)
 
@@ -2019,6 +2031,7 @@ theorem SlowRegion.chartQ_pos {coord : ℝ} (U : SlowRegion coord) {x : Point}
   U.qlo_pos.trans_le (U.q_mem x.2.1 hx).1
 
 /-- Moving strip data, constructed using `localPullbackStrip`. -/
+@[expose]
 noncomputable def movingStripData {coord : ℝ} (U : SlowRegion coord)
     (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
     (ε L : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n) :
@@ -2310,6 +2323,7 @@ end LocalPrimitive
 section PhysicalRequest
 
 /-- Support on the same moving shell used in the weight. -/
+@[expose]
 noncomputable def MovingSupport (a b coord : ℝ) (U : Set Plane) (f : Point → ℝ) : Prop :=
   ∀ x, x.2.1 ∈ U → f x ≠ 0 → (profileMap coord x).1 ∈ Icc a b
 
@@ -2433,7 +2447,7 @@ theorem meanClass_physicalBarSigma {coord : ℝ} (U : SlowRegion coord)
   exact hmul
 
 /-- Both components are computed from the same actual state. -/
-noncomputable def requestedStress (P : SignedStressPrimitive.Patch) (coord : ℝ)
+@[expose] noncomputable def requestedStress (P : SignedStressPrimitive.Patch) (coord : ℝ)
     (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Point → SignedWaveUpdate.Vec2 :=
   fun n x => ![SignedStressPrimitive.physicalBarSigma P 2 (SimilarityCoordinates.coordinateQ coord)
@@ -2443,6 +2457,7 @@ noncomputable def requestedStress (P : SignedStressPrimitive.Patch) (coord : ℝ
 
 /-- Normalized request, defined pointwise by `(s.epsilon n)⁻¹ • requestedStress P coord c u n
 x`. -/
+@[expose]
 noncomputable def normalizedRequest (s : StripData Point) (P : SignedStressPrimitive.Patch)
     (coord : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Point → SignedWaveUpdate.Vec2 :=
@@ -2485,7 +2500,7 @@ theorem normalizedRequest_frozen (s : StripData Point) (P : SignedStressPrimitiv
   simp only [normalizedRequest, requestedStress, Prod.smul_mk, smul_zero, Prod.mk_add_mk, add_zero]
 
 /-- Genuine pullback to the full coefficient domain, including the angle. -/
-noncomputable def fullRequest (s : StripData Point) (P : SignedStressPrimitive.Patch)
+@[expose] noncomputable def fullRequest (s : StripData Point) (P : SignedStressPrimitive.Patch)
     (coord : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Point × ℝ → SignedWaveUpdate.Vec2 :=
   fun n x => normalizedRequest s P coord c u n x.1

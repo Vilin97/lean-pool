@@ -33,7 +33,7 @@ is deliberately left as future graph-plumbing work; the soundness theorem
 below is complete and uses only the public `qReduced` API.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.StrongSeparator
 
@@ -42,15 +42,18 @@ open Finset
 variable {G : CFGraph}
 
 /-- The divisor class of `D` reaches `v` after one chip is removed. -/
+@[expose]
 def Reaches (G : CFGraph) (D : CFDiv G) (v : G.V) : Prop :=
   winnable G (D - oneChip v)
 
 /-- Total edge multiplicity from `v` into `C`, as an integer. -/
+@[expose]
 def intoMultiplicity (G : CFGraph) (C : Finset G.V) (v : G.V) : ℤ :=
   ∑ x ∈ C, (numEdges G v x : ℤ)
 
 /-- A vertex outside `C` is on its boundary when it has a positive-multiplicity
 edge into `C`. -/
+@[expose]
 def IsBoundary (G : CFGraph) (C : Finset G.V) (v : G.V) : Prop :=
   ∃ x ∈ C, 0 < numEdges G v x
 
@@ -210,6 +213,7 @@ structure ExpansionCell (G : CFGraph) (R : Finset G.V) where
 
 /-- A transparent strong-separator certificate: every proper enlargement of
 `S` has a complementary cell with the exact tree/path cut data above. -/
+@[expose]
 def StrongSeparatorCertificate (G : CFGraph) (S : Finset G.V) : Prop :=
   ∀ R : Finset G.V, S ⊆ R → R.Nonempty → R ≠ Finset.univ →
     Nonempty (ExpansionCell G R)

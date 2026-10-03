@@ -18,6 +18,6 @@ import Lean.Meta.Tactic.Simp.RegisterCommand
 Imported Lean Pool material for `LeanPool.FormalizationOfBoundedArithmetic.Register`.
 -/
 
-@[expose] public section
+public section
 /-- Simp set used by the bounded-arithmetic import for formula normalization. -/
 register_simp_attr delta0_simps

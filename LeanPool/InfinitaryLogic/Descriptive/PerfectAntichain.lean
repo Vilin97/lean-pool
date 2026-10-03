@@ -45,7 +45,7 @@ through `mk_eq_continuum`, which is what lets it drop second countability — it
 the lower bound.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Set
 

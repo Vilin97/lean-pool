@@ -104,7 +104,7 @@ genuine cycle rather than a point set — `Schoenflies.squareMesh_isLongCycle_ou
   clause 5.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -262,16 +262,16 @@ runs on. Every inner ring needs the same facts, so they are restated here with t
 parameter; `rsideT 1 = sideT` and so on, definitionally. -/
 
 /-- The top side of the ring of radius `r`, from the north-east corner to the north-west one. -/
-def rsideT (r : ℝ) : Piece := (Plane.mk r r, Plane.mk (-r) r)
+@[expose] def rsideT (r : ℝ) : Piece := (Plane.mk r r, Plane.mk (-r) r)
 
 /-- The left side of the ring of radius `r`, from north-west to south-west. -/
-def rsideL (r : ℝ) : Piece := (Plane.mk (-r) r, Plane.mk (-r) (-r))
+@[expose] def rsideL (r : ℝ) : Piece := (Plane.mk (-r) r, Plane.mk (-r) (-r))
 
 /-- The bottom side of the ring of radius `r`, from south-west to south-east. -/
-def rsideB (r : ℝ) : Piece := (Plane.mk (-r) (-r), Plane.mk r (-r))
+@[expose] def rsideB (r : ℝ) : Piece := (Plane.mk (-r) (-r), Plane.mk r (-r))
 
 /-- The right side of the ring of radius `r`, from south-east back to north-east. -/
-def rsideR (r : ℝ) : Piece := (Plane.mk r (-r), Plane.mk r r)
+@[expose] def rsideR (r : ℝ) : Piece := (Plane.mk r (-r), Plane.mk r r)
 
 theorem rsideT_one : rsideT 1 = sideT := rfl
 theorem rsideL_one : rsideL 1 = sideL := rfl

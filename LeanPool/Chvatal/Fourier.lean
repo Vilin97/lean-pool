@@ -52,7 +52,7 @@ This file develops the normalized Fourier–Walsh conventions used in Section 2 
 arXiv:2609.19123. A point of the cube is its set of coordinates equal to one.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 
@@ -63,22 +63,22 @@ namespace Chvatal
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- Uniform expectation on the Boolean cube, as in the preliminaries of the paper. -/
-def cubeMean (f : Finset ι → ℝ) : ℝ :=
+@[expose] def cubeMean (f : Finset ι → ℝ) : ℝ :=
   (∑ x, f x) / Fintype.card (Finset ι)
 
 /-- The Walsh character indexed by `S`, denoted `χ_S` in the paper. -/
 def walsh (S x : Finset ι) : ℝ := (-1 : ℝ) ^ (S ∩ x).card
 
 /-- The normalized Fourier coefficient `f̂(S)` of Section 2. -/
-def fourier (f : Finset ι → ℝ) (S : Finset ι) : ℝ :=
+@[expose] def fourier (f : Finset ι → ℝ) (S : Finset ι) : ℝ :=
   cubeMean (fun x => f x * walsh S x)
 
 /-- Covariance with respect to uniform measure, as used in the main theorem. -/
-def covariance (f g : Finset ι → ℝ) : ℝ :=
+@[expose] def covariance (f g : Finset ι → ℝ) : ℝ :=
   cubeMean (fun x => f x * g x) - cubeMean f * cubeMean g
 
 /-- The dual Boolean function `f*(x) = 1 - f(1-x)` in the paper. -/
-def dual (f : Finset ι → ℝ) (x : Finset ι) : ℝ := 1 - f xᶜ
+@[expose] def dual (f : Finset ι → ℝ) (x : Finset ι) : ℝ := 1 - f xᶜ
 
 omit [DecidableEq ι] in
 /-- The cube has positive cardinality, including when its coordinate set is empty. -/

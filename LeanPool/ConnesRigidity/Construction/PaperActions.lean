@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Foundation.LinearAlgebra.QuadraticCocycle
 The paper actions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -35,7 +35,7 @@ The `SymplecticIndex` construction used in the Connes rigidity formalization.
 abbrev SymplecticIndex := OpenAIPort.SymplecticIndex
 
 /-- The SL₃ action on the polynomial module. Paper: §2. -/
-def sl3AAction : SpecialLinear.SL3 →* (A ≃ₗ[k] A) where
+@[expose] def sl3AAction : SpecialLinear.SL3 →* (A ≃ₗ[k] A) where
   toFun l := (Matrix.SpecialLinearGroup.toLin' l).restrictScalars k
   map_one' := by
     ext a
@@ -45,11 +45,12 @@ def sl3AAction : SpecialLinear.SL3 →* (A ≃ₗ[k] A) where
     simp
 
 /-- The diagonal SL₃ action on the tensor square. Paper: §2. -/
-def sl3TensorAction (l : SpecialLinear.SL3) :
+@[expose] def sl3TensorAction (l : SpecialLinear.SL3) :
     TensorAA →ₗ[k] TensorAA :=
   TensorProduct.map (sl3AAction l).toLinearMap (sl3AAction l).toLinearMap
 
 /-- The diagonal SL₃ action restricted to the fixed tensor module. Paper: §2. -/
+@[expose]
 def sl3CAction (l : SpecialLinear.SL3) : C →ₗ[k] C where
   toFun c :=
     ⟨sl3TensorAction l c, by
@@ -75,7 +76,7 @@ def sl3CAction (l : SpecialLinear.SL3) : C →ₗ[k] C where
     simp only [map_smul]
 
 /-- The natural linear action of Q on the finite module. Paper: §2. -/
-def qVAction (q : Q) : PaperV ≃ₗ[k] PaperV :=
+@[expose] def qVAction (q : Q) : PaperV ≃ₗ[k] PaperV :=
   { toFun := fun v => q • v
     invFun := fun v => q⁻¹ • v
     left_inv := by intro v; simp [smul_smul]
@@ -88,7 +89,7 @@ def qVAction (q : Q) : PaperV ≃ₗ[k] PaperV :=
       exact Matrix.mulVec_smul _ _ _ }
 
 /-- The Q action homomorphism on the finite module. Paper: §2. -/
-def qVActionHom : Q →* (PaperV ≃ₗ[k] PaperV) where
+@[expose] def qVActionHom : Q →* (PaperV ≃ₗ[k] PaperV) where
   toFun := qVAction
   map_one' := by
     apply LinearEquiv.ext
@@ -101,7 +102,7 @@ def qVActionHom : Q →* (PaperV ≃ₗ[k] PaperV) where
     rw [mul_smul]
 
 /-- The contragredient Q action on the finite dual. Paper: §2. -/
-def qVStarActionHom : Q →* (VStar ≃ₗ[k] VStar) where
+@[expose] def qVStarActionHom : Q →* (VStar ≃ₗ[k] VStar) where
   toFun q := LinearEquiv.dualMap (qVActionHom q⁻¹)
   map_one' := by
     ext f v
@@ -118,7 +119,7 @@ def qVStarActionHom : Q →* (VStar ≃ₗ[k] VStar) where
   rfl
 
 /-- Span of square tensors in the tensor square. Paper: §2. -/
-def squareSpan : Submodule k TensorAA :=
+@[expose] def squareSpan : Submodule k TensorAA :=
   Submodule.span k (Set.range fun a : A => a ⊗ₜ[k] a)
 
 /-- The paper's missing spanning statement for the fixed tensor module. Paper: §2. -/

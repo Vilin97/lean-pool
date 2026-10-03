@@ -23,7 +23,7 @@ avoiding zero only in the deviation representation.  The projected simultaneous-
 exactly the locus where the full coordinate map meets the origin.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -155,6 +155,7 @@ end ZeroFreeHomotopy
 
 /-- A coordinate map obtained by freezing the parent-body/interval parameter in the child test
 map. -/
+@[expose]
 noncomputable def childMap
     {K : Geometry.ConvexBody Plane} {A : Real}
     (hp : Nat.Prime p) (hA : 0 < A)
@@ -190,6 +191,7 @@ theorem childMap_zeroFree
   exact ⟨x, hx⟩
 
 /-- The child map as a bundled zero-free equivariant map. -/
+@[expose]
 noncomputable def childZeroFreeMap
     {K : Geometry.ConvexBody Plane} {A : Real}
     (hp : Nat.Prime p) (hA : 0 < A)

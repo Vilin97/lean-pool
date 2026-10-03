@@ -17,7 +17,7 @@ This file augments finite prefix laws by their starting point and disintegrates 
 a prefix and its next observation. It makes no infinite-process or path-regularity claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -31,6 +31,7 @@ section
 variable {D α : Type*} [MeasurableSpace α]
 
 /-- The law of a finite history, including the deterministic starting point. -/
+@[expose]
 def augmentedPrefixKernel (P : SubMarkovKernelSemigroup α) (e : ℕ ≃ D)
     (ι : D ↪ NNReal) (n : ℕ) : Kernel α (DenseTimeHistory α n) :=
   Kernel.mapOfMeasurable
@@ -55,6 +56,7 @@ theorem augmentedPrefixKernel_map_historyEquiv (P : SubMarkovKernelSemigroup α)
   · exact (DenseTimeHistory.historyEquiv n).measurable
 
 /-- The joint law of an `n`-prefix and the next enumerated observation. -/
+@[expose]
 def nextObservationJoint (P : SubMarkovKernelSemigroup α) (e : ℕ ≃ D)
     (ι : D ↪ NNReal) (n : ℕ) : Kernel α ((Fin n → α) × α) :=
   Kernel.mapOfMeasurable (denseTimePrefixKernel P e ι (n + 1))
@@ -126,6 +128,7 @@ theorem compProd_observationCondKernel (P : SubMarkovKernelSemigroup α)
   exact Kernel.disintegrate _ _
 
 /-- The conditional next-observation law, viewed as a kernel on finite histories. -/
+@[expose]
 def denseStep (P : SubMarkovKernelSemigroup α) (hP : P.IsConservative)
     (e : ℕ ≃ D) (ι : D ↪ NNReal) (n : ℕ) : Kernel (DenseTimeHistory α n) α :=
   Kernel.comap (observationCondKernel P hP e ι n)

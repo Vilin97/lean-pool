@@ -20,7 +20,7 @@ The constant `√2 sin(1/√2)` in the denominator of `f₀` is exactly what the
 `x ↦ √2 x` produces, which is why the mass comes out at one on the nose.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

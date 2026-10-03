@@ -79,7 +79,7 @@ public import Mathlib.Topology.Order.Basic
 * `LeanCert.Engine.AD.DomainChecked`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -115,7 +115,7 @@ The derivative of sinc at 0 can be computed using Taylor expansion:
 - `sinc'(0) = 0`
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped Topology
@@ -564,7 +564,7 @@ They're designed to be composable with the chain rule for AD correctness proofs.
 
 /-! ### Exp derivative intervals -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core.DerivativeIntervals
 
@@ -878,7 +878,7 @@ For interval arithmetic, we use directed rounding:
 This ensures mathematical soundness even when truncating precision.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -917,6 +917,7 @@ def hasLowBits (m : Int) (n : Nat) : Bool :=
 
 For non-negative exponents: `mantissa * 2^exponent`
 For negative exponents: `mantissa / 2^(-exponent)` -/
+@[expose]
 def toRat (d : Dyadic) : ℚ :=
   if d.exponent ≥ 0 then
     d.mantissa * (pow2Nat d.exponent.toNat : ℤ)
@@ -926,6 +927,7 @@ def toRat (d : Dyadic) : ℚ :=
 instance : Coe Dyadic ℚ where coe := toRat
 
 /-- Equality of represented values, ignoring noncanonical mantissa/exponent pairs. -/
+@[expose]
 def ValueEq (d₁ d₂ : Dyadic) : Prop := d₁.toRat = d₂.toRat
 
 instance (d₁ d₂ : Dyadic) : Decidable (d₁.ValueEq d₂) :=
@@ -953,6 +955,7 @@ structure CanonicalKey where
   deriving Repr, DecidableEq, BEq, Hashable
 
 /-- Convert a dyadic value to its canonical identity key. -/
+@[expose]
 def canonicalKey (d : Dyadic) : CanonicalKey := ⟨d.toRat⟩
 
 @[simp] theorem canonicalKey_value (d : Dyadic) : d.canonicalKey.value = d.toRat := rfl
@@ -980,6 +983,7 @@ def ofInt (i : Int) : Dyadic := ⟨i, 0⟩
 def pow2 (n : Int) : Dyadic := ⟨1, n⟩
 
 /-- Zero as a Dyadic -/
+@[expose]
 def zero : Dyadic := ⟨0, 0⟩
 
 /-- One as a Dyadic -/
@@ -1954,7 +1958,7 @@ Since Mathlib doesn't provide `Real.atanh`, we define it here using the
 standard formula: `atanh x = (1/2) * log((1+x)/(1-x))` for `|x| < 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -2019,6 +2023,7 @@ theorem Real.atanh_mono {x y : ℝ} (hx : |x| < 1) (hy : |y| < 1) (hxy : x ≤ y
 /-- The error function: erf(x) = (2/√π) ∫₀ˣ exp(-t²) dt.
     Essential for statistical and financial modeling (normal distribution CDF).
     Uses interval integral notation (∫ t in 0..x) which handles negative x correctly. -/
+@[expose]
 noncomputable def Real.erf (x : ℝ) : ℝ :=
   (2 / Real.sqrt Real.pi) * ∫ t in (0:ℝ)..x, Real.exp (-(t^2))
 
@@ -2165,6 +2170,7 @@ inductive MathConst where
   deriving Repr, DecidableEq, Inhabited
 
 /-- The real value of a named mathematical constant. -/
+@[expose]
 noncomputable def MathConst.toReal : MathConst → ℝ
   | .pi => Real.pi
   | .eulerMascheroni => Real.eulerMascheroniConstant
@@ -2241,6 +2247,7 @@ def pow (e : Expr) : Nat → Expr
 def abs (e : Expr) : Expr := sqrt (mul e e)
 
 /-- Evaluate an expression given a variable assignment ρ : Nat → ℝ -/
+@[expose]
 noncomputable def eval (ρ : Nat → ℝ) : Expr → ℝ
   | const q => (q : ℝ)
   | var idx => ρ idx
@@ -2264,6 +2271,7 @@ noncomputable def eval (ρ : Nat → ℝ) : Expr → ℝ
   | namedConst c => c.toReal
 
 /-- Update variable assignment at a specific index -/
+@[expose]
 def updateVar (ρ : Nat → ℝ) (idx : Nat) (x : ℝ) : Nat → ℝ :=
   fun i => if i = idx then x else ρ i
 
@@ -2670,7 +2678,7 @@ This file collects lemmas and abstractions useful for verified numerics.
 
 /-! ### Interval membership and operations -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -2768,7 +2776,7 @@ All operations maintain the invariant `lo ≤ hi`. Domain restrictions for parti
 operations (like `inv`) are encoded via separate types or explicit hypotheses.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -2779,7 +2787,17 @@ structure IntervalRat where
   /-- Upper endpoint of the interval. -/
   hi : ℚ
   le : lo ≤ hi
-  deriving Repr, DecidableEq
+  deriving Repr
+
+@[expose, instance_reducible, instance]
+def instDecidableEqIntervalRat : DecidableEq IntervalRat := fun a b =>
+  if hlo : a.lo = b.lo then
+    if hhi : a.hi = b.hi then
+      isTrue (by cases a; cases b; cases hlo; cases hhi; rfl)
+    else
+      isFalse (by intro hab; exact hhi (congrArg IntervalRat.hi hab))
+  else
+    isFalse (by intro hab; exact hlo (congrArg IntervalRat.lo hab))
 
 /-- Default interval [0, 0] for unsupported expression branches -/
 instance : Inhabited IntervalRat where
@@ -2814,6 +2832,7 @@ theorem exists_mem_iff_exists_Icc {P : ℝ → Prop} (I : IntervalRat) :
     hx, hp⟩
 
 /-- Create an interval from a single rational -/
+@[expose]
 def singleton (q : ℚ) : IntervalRat := ⟨q, q, le_refl q⟩
 
 theorem mem_singleton (q : ℚ) : (q : ℝ) ∈ singleton q := by
@@ -2848,6 +2867,7 @@ theorem midpoint_mem (I : IntervalRat) : (I.midpoint : ℝ) ∈ I := by
 /-! ### Interval addition -/
 
 /-- Add two intervals -/
+@[expose]
 def add (I J : IntervalRat) : IntervalRat where
   lo := I.lo + J.lo
   hi := I.hi + J.hi
@@ -2863,6 +2883,7 @@ theorem mem_add {x y : ℝ} {I J : IntervalRat} (hx : x ∈ I) (hy : y ∈ J) :
 /-! ### Interval negation -/
 
 /-- Negate an interval -/
+@[expose]
 def neg (I : IntervalRat) : IntervalRat where
   lo := -I.hi
   hi := -I.lo
@@ -2877,6 +2898,7 @@ theorem mem_neg {x : ℝ} {I : IntervalRat} (hx : x ∈ I) : -x ∈ neg I := by
 /-! ### Interval subtraction -/
 
 /-- Subtract two intervals -/
+@[expose]
 def sub (I J : IntervalRat) : IntervalRat := add I (neg J)
 
 /-- FTIA for subtraction -/
@@ -2888,9 +2910,11 @@ theorem mem_sub {x y : ℝ} {I J : IntervalRat} (hx : x ∈ I) (hy : y ∈ J) :
 /-! ### Interval multiplication -/
 
 /-- Helper: minimum of four rationals -/
+@[expose]
 def min4 (a b c d : ℚ) : ℚ := min (min a b) (min c d)
 
 /-- Helper: maximum of four rationals -/
+@[expose]
 def max4 (a b c d : ℚ) : ℚ := max (max a b) (max c d)
 
 theorem min4_le_all (a b c d : ℚ) :
@@ -2920,6 +2944,7 @@ theorem max4_le_iff (x a b c d : ℚ) :
   simp only [max4, max_le_iff, and_assoc]
 
 /-- Multiply two intervals -/
+@[expose]
 def mul (I J : IntervalRat) : IntervalRat where
   lo := min4 (I.lo * J.lo) (I.lo * J.hi) (I.hi * J.lo) (I.hi * J.hi)
   hi := max4 (I.lo * J.lo) (I.lo * J.hi) (I.hi * J.lo) (I.hi * J.hi)
@@ -3169,6 +3194,7 @@ theorem mem_mulFast {x y : ℝ} {I J : IntervalRat} (hx : x ∈ I) (hy : y ∈ J
 /-! ### Interval containing zero check -/
 
 /-- Check if an interval contains zero -/
+@[expose]
 def containsZero (I : IntervalRat) : Prop := I.lo ≤ 0 ∧ 0 ≤ I.hi
 
 /-- Decidable containsZero -/
@@ -3237,6 +3263,7 @@ theorem mem_invNonzero {x : ℝ} {I : IntervalRatNonzero} (hx : x ∈ I.toInterv
 /-! ### Scalar operations -/
 
 /-- Scale an interval by a rational -/
+@[expose]
 def scale (q : ℚ) (I : IntervalRat) : IntervalRat :=
   if hq : 0 ≤ q then
     { lo := q * I.lo
@@ -3347,6 +3374,7 @@ theorem mem_default (x : ℝ) : x ∈ (default : IntervalRat) ↔ x = 0 := by
 /-! ### Interval intersection -/
 
 /-- Intersect two intervals. Returns none if they don't intersect. -/
+@[expose]
 def intersect (I J : IntervalRat) : Option IntervalRat :=
   let lo := max I.lo J.lo
   let hi := min I.hi J.hi
@@ -3445,7 +3473,7 @@ For m ∈ [1/2, 2], we have (m-1)/(m+1) ∈ [-1/3, 1/3], where atanh converges v
 
 /-! ### Argument Reduction -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core.LogReduction
 
@@ -3711,7 +3739,7 @@ etc. For computable versions, see `IntervalRat.Taylor`.
 
 /-! ### Rational enclosure of real intervals -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -3744,6 +3772,7 @@ theorem mem_ofRealEndpoints {x lo hi : ℝ} (hle : lo ≤ hi) (hx : lo ≤ x ∧
 /-- Interval bound for exp on rational intervals.
     Since exp is strictly increasing, exp([a,b]) ⊆ [⌊exp(a)⌋, ⌈exp(b)⌉].
     This uses Real.exp and floor/ceil to get rational bounds. -/
+@[expose]
 noncomputable def expInterval (I : IntervalRat) : IntervalRat :=
   ofRealEndpoints (Real.exp I.lo) (Real.exp I.hi)
     (Real.exp_le_exp.mpr (by exact_mod_cast I.le))
@@ -3761,6 +3790,7 @@ theorem mem_expInterval {x : ℝ} {I : IntervalRat} (hx : x ∈ I) :
 /-! ### Positive interval check -/
 
 /-- Check if an interval is strictly positive (lo > 0) -/
+@[expose]
 def isPositive (I : IntervalRat) : Prop := 0 < I.lo
 
 /-- Decidable isPositive -/
@@ -4427,7 +4457,7 @@ floor/ceil bounds, which requires noncomputability.
 
 /-! ### Core supported expression subset (computable) -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -4622,7 +4652,7 @@ with Mathlib's calculus lemmas.
 
 /-! ### Taylor approximation structure -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -5566,13 +5596,14 @@ The proofs connect these to the real-valued functions via Taylor's theorem.
 
 /-! ### Computable Taylor series helpers -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
 namespace IntervalRat
 
 /-- Compute n! as a Rational -/
+@[expose]
 def ratFactorial (n : ℕ) : ℚ := (Nat.factorial n : ℚ)
 
 /-- Compute the integer power of an interval using exponentiation by squaring.
@@ -5599,12 +5630,14 @@ def absInterval (I : IntervalRat) : IntervalRat :=
       linarith⟩
 
 /-- Maximum absolute value of an interval -/
+@[expose]
 def maxAbs (I : IntervalRat) : ℚ := max (|I.lo|) (|I.hi|)
 
 /-- Evaluate Taylor series ∑_{i=0}^{n} c_i * x^i at interval I using Horner's method.
     Computes c₀ + I * (c₁ + I * (c₂ + ... + I * cₙ)), which is mathematically
     equivalent to the direct sum but uses fewer operations and often gives tighter
     bounds by reducing the dependency problem in interval arithmetic. -/
+@[expose]
 def evalTaylorSeries (coeffs : List ℚ) (I : IntervalRat) : IntervalRat :=
   coeffs.foldr (fun c acc => add (singleton c) (mul acc I)) (singleton 0)
 
@@ -5765,6 +5798,7 @@ theorem mem_hull_right {x : ℝ} {I J : IntervalRat} (hx : x ∈ J) : x ∈ hull
     which is tighter than direct Taylor evaluation due to interval widening.
 
     This is fully computable using only rational arithmetic. -/
+@[expose]
 def expComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
   if I.hi ≤ 0 ∨ 0 ≤ I.lo then
     -- Interval doesn't cross 0: use endpoint evaluation for tighter bounds
@@ -5796,6 +5830,7 @@ theorem expComputableWithCoeffs_eq (I : IntervalRat) (n : ℕ) :
 /-! ### Computable sin via Taylor series -/
 
 /-- Taylor coefficients for sin: 0, 1, 0, -1/6, 0, 1/120, ... -/
+@[expose]
 def sinTaylorCoeffs (n : ℕ) : List ℚ :=
   (List.range (n + 1)).map (fun i =>
     if i % 2 = 1 then  -- odd terms only
@@ -5804,6 +5839,7 @@ def sinTaylorCoeffs (n : ℕ) : List ℚ :=
 
 /-- Computable sin remainder bound.
     Since |sin^{(k)}(x)| ≤ 1 for all k, x, the remainder is bounded by |x|^{n+1}/(n+1)! -/
+@[expose]
 def sinRemainderBoundComputable (I : IntervalRat) (n : ℕ) : IntervalRat :=
   let r := maxAbs I
   let R := r ^ (n + 1) / ratFactorial (n + 1)
@@ -5821,6 +5857,7 @@ def sinRemainderBoundComputable (I : IntervalRat) (n : ℕ) : IntervalRat :=
     where |R| ≤ |x|^{n+1}/(n+1)! since all derivatives of sin are bounded by 1.
 
     We intersect with [-1, 1] for tighter bounds on small intervals. -/
+@[expose]
 def sinComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
   let coeffs := sinTaylorCoeffs n
   let polyVal := evalTaylorSeries coeffs I
@@ -5849,6 +5886,7 @@ theorem sinComputableWithCoeffs_eq (I : IntervalRat) (n : ℕ) :
 /-! ### Computable cos via Taylor series -/
 
 /-- Taylor coefficients for cos: 1, 0, -1/2, 0, 1/24, 0, ... -/
+@[expose]
 def cosTaylorCoeffs (n : ℕ) : List ℚ :=
   (List.range (n + 1)).map (fun i =>
     if i % 2 = 0 then  -- even terms only
@@ -5857,6 +5895,7 @@ def cosTaylorCoeffs (n : ℕ) : List ℚ :=
 
 /-- Computable cos remainder bound.
     Since |cos^{(k)}(x)| ≤ 1 for all k, x, the remainder is bounded by |x|^{n+1}/(n+1)! -/
+@[expose]
 def cosRemainderBoundComputable (I : IntervalRat) (n : ℕ) : IntervalRat :=
   let r := maxAbs I
   let R := r ^ (n + 1) / ratFactorial (n + 1)
@@ -5874,6 +5913,7 @@ def cosRemainderBoundComputable (I : IntervalRat) (n : ℕ) : IntervalRat :=
     where |R| ≤ |x|^{n+1}/(n+1)! since all derivatives of cos are bounded by 1.
 
     We intersect with [-1, 1] for tighter bounds on small intervals. -/
+@[expose]
 def cosComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
   let coeffs := cosTaylorCoeffs n
   let polyVal := evalTaylorSeries coeffs I
@@ -5947,6 +5987,7 @@ theorem coshPointComputable_lo_ge_one (q : ℚ) (n : ℕ) : 1 ≤ (coshPointComp
     sinh(x) = (exp(x) - exp(-x)) / 2
     Since sinh is strictly monotone increasing, sinh([a,b]) = [sinh(a), sinh(b)].
     We use endpoint evaluation for tight bounds. -/
+@[expose]
 def sinhComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
   -- sinh is strictly monotone increasing, so evaluate at endpoints
   let sinhLo := sinhPointComputable I.lo n
@@ -5961,6 +6002,7 @@ def sinhComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
     - cosh is increasing on [0, ∞)
 
     We use endpoint evaluation with monotonicity for tight bounds. -/
+@[expose]
 def coshComputable (I : IntervalRat) (n : ℕ := 10) : IntervalRat :=
   let coshLo := coshPointComputable I.lo n
   let coshHi := coshPointComputable I.hi n
@@ -7794,7 +7836,7 @@ All operations maintain the invariant `lo ≤ hi`. Domain restrictions for parti
 operations (like `inv`) are encoded via separate types or explicit hypotheses.
 -/
 
-@[expose] public section
+public section
 
 end
 
@@ -7839,7 +7881,7 @@ In v1.1, with `precision = -10`, the denominator stays fixed at 2^10 = 1024.
 The result is slightly less tight but computed significantly faster.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -7873,6 +7915,7 @@ theorem mem_def (x : ℝ) (I : IntervalDyadic) :
 /-! ### Conversion to IntervalRat -/
 
 /-- Convert to IntervalRat for verification with existing theorems -/
+@[expose]
 def toIntervalRat (I : IntervalDyadic) : IntervalRat :=
   ⟨I.lo.toRat, I.hi.toRat, I.le⟩
 
@@ -7884,6 +7927,7 @@ theorem mem_toIntervalRat {x : ℝ} {I : IntervalDyadic} :
 /-! ### Construction -/
 
 /-- Create a singleton interval from a Dyadic -/
+@[expose]
 def singleton (d : Dyadic) : IntervalDyadic := ⟨d, d, le_refl _⟩
 
 /-- A Dyadic value is in its singleton interval -/
@@ -8071,6 +8115,7 @@ theorem mem_add {x y : ℝ} {I J : IntervalDyadic} (hx : x ∈ I) (hy : y ∈ J)
   constructor <;> linarith
 
 /-- Add with precision control -/
+@[expose]
 def addRounded (I J : IntervalDyadic) (prec : Int := -53) : IntervalDyadic :=
   (add I J).roundOut prec
 
@@ -8369,6 +8414,7 @@ theorem mem_mulFast {x y : ℝ} {I J : IntervalDyadic} (hx : x ∈ I) (hy : y �
   · rw [mulFast_hi]; exact (mem_mul hx hy).2
 
 /-- Multiply with precision control (outward rounding) -/
+@[expose]
 def mulRounded (I J : IntervalDyadic) (prec : Int := -53) : IntervalDyadic :=
   (mul I J).roundOut prec
 
@@ -8643,7 +8689,7 @@ Typical workflow:
 3. Use mathlib's analysis lemmas directly on real intervals
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core
 
@@ -9075,7 +9121,7 @@ Taylor-model trigonometric evaluators.
 
 /-! ### Rational approximations of π and 2π -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core.TrigReduction
 
@@ -9242,7 +9288,7 @@ faster since |x - 2πk| ≤ π ≈ 3.14.
 
 /-! ### Shared range-reduction API -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Core.IntervalRat
 
@@ -9380,7 +9426,7 @@ For inv: computes bounds using `invInterval`, but correctness is not covered by
 `evalIntervalCore_correct`. Use `evalIntervalOption` for inv.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -9396,6 +9442,7 @@ export LeanCert.Core (ExprSupportedCore ADSupported)
 /-- Simple interval bound for sin.
     Since |sin x| ≤ 1 for all x, we use the global bound [-1, 1].
     This is sound but not tight. -/
+@[expose]
 def sinInterval (_I : IntervalRat) : IntervalRat :=
   ⟨-1, 1, by norm_num⟩
 
@@ -9411,6 +9458,7 @@ theorem mem_sinInterval {x : ℝ} {I : IntervalRat} (_hx : x ∈ I) :
 /-- Simple interval bound for cos.
     Since |cos x| ≤ 1 for all x, we use the global bound [-1, 1].
     This is sound but not tight. -/
+@[expose]
 def cosInterval (_I : IntervalRat) : IntervalRat :=
   ⟨-1, 1, by norm_num⟩
 
@@ -9426,6 +9474,7 @@ theorem mem_cosInterval {x : ℝ} {I : IntervalRat} (_hx : x ∈ I) :
 /-- Simple interval bound for atan.
     Since atan x ∈ (-π/2, π/2) for all x, we use the global bound [-2, 2].
     This is sound but not tight (π/2 ≈ 1.57). -/
+@[expose]
 def atanInterval (_I : IntervalRat) : IntervalRat :=
   ⟨-2, 2, by norm_num⟩
 
@@ -9623,6 +9672,7 @@ theorem mem_erfInterval {x : ℝ} {I : IntervalRat} (hx : x ∈ I) (n : ℕ := 1
 /-- Simple interval bound for arsinh.
     arsinh is unbounded, so we use a very rough linear bound.
     We use max(|lo|, |hi|) + 1 as a safe bound that always works. -/
+@[expose]
 def arsinhInterval (I : IntervalRat) : IntervalRat :=
   let bound := max (abs I.lo) (abs I.hi) + 1
   ⟨-bound, bound, by
@@ -9737,6 +9787,7 @@ theorem mem_tanhInterval {x : ℝ} {I : IntervalRat} (_hx : x ∈ I) :
 /-- Interval enclosure for π.
     Uses tight bounds from Mathlib's pi_gt_d20 and pi_lt_d20 which give 20 decimal digits.
     3.14159265358979323846 < π < 3.14159265358979323847 -/
+@[expose]
 def piInterval : IntervalRat :=
   -- Use rational approximation: 31415926535897932/10000000000000000 ≤ pi ≤
   -- 31415926535897933/10000000000000000
@@ -9861,6 +9912,7 @@ open LeanCert.Engine
 
 /-- Centralized interval lookup for named mathematical constants.
     Extending this table is the ONLY change needed to add a new constant. -/
+@[expose]
 def interval : MathConst → IntervalRat
   | .pi => piInterval
   | .eulerMascheroni => eulerMascheroniInterval
@@ -9879,12 +9931,14 @@ open LeanCert.Core
 /-- Interval bound for sinh using computable Taylor series for exp.
     sinh(x) = (exp(x) - exp(-x)) / 2, and sinh is strictly monotonic.
     This computes tight bounds using the verified exp implementation. -/
+@[expose]
 def sinhInterval (I : IntervalRat) (taylorDepth : ℕ := 10) : IntervalRat :=
   IntervalRat.sinhComputable I taylorDepth
 
 /-- Interval bound for cosh using computable Taylor series for exp.
     cosh(x) = (exp(x) + exp(-x)) / 2, with minimum 1 at x = 0.
     This computes tight bounds using the verified exp implementation. -/
+@[expose]
 def coshInterval (I : IntervalRat) (taylorDepth : ℕ := 10) : IntervalRat :=
   IntervalRat.coshComputable I taylorDepth
 
@@ -10110,6 +10164,7 @@ namespace LeanCert.Engine
 open LeanCert.Core
 
 /-- A real environment is contained in an interval environment -/
+@[expose]
 def envMem (ρ_real : Nat → ℝ) (ρ_int : IntervalEnv) : Prop :=
   ∀ i, ρ_real i ∈ ρ_int i
 
@@ -10144,6 +10199,7 @@ def evalDomainValid (e : Expr) (ρ : IntervalEnv) (cfg : EvalConfig := {}) : Pro
   | Expr.namedConst _ => True
 
 /-- Single-variable domain validity -/
+@[expose]
 def evalDomainValid1 (e : Expr) (I : IntervalRat) (cfg : EvalConfig := {}) : Prop :=
   evalDomainValid e (fun _ => I) cfg
 
@@ -10519,7 +10575,7 @@ instead of substituting a finite sentinel that could be mistaken for an
 enclosure.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -10580,7 +10636,7 @@ When it returns `some I`, correctness is guaranteed.
 
 /-! ### Extended interval evaluation (noncomputable, supports exp) -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11144,7 +11200,7 @@ The extended lemmas use the noncomputable evaluator with floor/ceil bounds.
 
 /-! ### Tactic-facing lemmas for interval bounds (core, computable) -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11353,7 +11409,7 @@ The evaluators are split by computability:
 - Both are fully verified (no sorry, no axioms)
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11391,7 +11447,7 @@ automatic differentiation using interval arithmetic.
 * `DualInterval.neg` - Negation
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11412,6 +11468,7 @@ instance : Inhabited DualInterval where
 namespace DualInterval
 
 /-- Dual interval for a constant (derivative is zero) -/
+@[expose]
 def const (q : ℚ) : DualInterval :=
   { val := IntervalRat.singleton q
     der := IntervalRat.singleton 0 }
@@ -11427,26 +11484,31 @@ def eulerMascheroniConst : DualInterval :=
     der := IntervalRat.singleton 0 }
 
 /-- Dual interval for a named mathematical constant (derivative is zero) -/
+@[expose]
 def ofMathConst (c : MathConst) : DualInterval :=
   { val := c.interval
     der := IntervalRat.singleton 0 }
 
 /-- Dual interval for the variable we're differentiating with respect to -/
+@[expose]
 def varActive (I : IntervalRat) : DualInterval :=
   { val := I
     der := IntervalRat.singleton 1 }
 
 /-- Dual interval for a passive variable -/
+@[expose]
 def varPassive (I : IntervalRat) : DualInterval :=
   { val := I
     der := IntervalRat.singleton 0 }
 
 /-- Add two dual intervals -/
+@[expose]
 def add (d₁ d₂ : DualInterval) : DualInterval :=
   { val := IntervalRat.add d₁.val d₂.val
     der := IntervalRat.add d₁.der d₂.der }
 
 /-- Multiply two dual intervals (product rule) -/
+@[expose]
 def mul (d₁ d₂ : DualInterval) : DualInterval :=
   { val := IntervalRat.mul d₁.val d₂.val
     -- d(f*g) = f'*g + f*g'
@@ -11455,6 +11517,7 @@ def mul (d₁ d₂ : DualInterval) : DualInterval :=
              (IntervalRat.mul d₁.val d₂.der) }
 
 /-- Negate a dual interval -/
+@[expose]
 def neg (d : DualInterval) : DualInterval :=
   { val := IntervalRat.neg d.val
     der := IntervalRat.neg d.der }
@@ -11510,7 +11573,7 @@ implementing the chain rule for each.
 * `DualInterval.sqrt?` - Square root with tight bounds (requires positive)
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11519,16 +11582,19 @@ open LeanCert.Core
 namespace DualInterval
 
 /-- Dual for sin (chain rule: d(sin f) = cos(f) * f') -/
+@[expose]
 def sin (d : DualInterval) : DualInterval :=
   { val := sinInterval d.val
     der := IntervalRat.mul (cosInterval d.val) d.der }
 
 /-- Dual for cos (chain rule: d(cos f) = -sin(f) * f') -/
+@[expose]
 def cos (d : DualInterval) : DualInterval :=
   { val := cosInterval d.val
     der := IntervalRat.mul (IntervalRat.neg (sinInterval d.val)) d.der }
 
 /-- Dual for exp (chain rule: d(exp f) = exp(f) * f') -/
+@[expose]
 noncomputable def exp (d : DualInterval) : DualInterval :=
   { val := IntervalRat.expInterval d.val
     der := IntervalRat.mul (IntervalRat.expInterval d.val) d.der }
@@ -11562,6 +11628,7 @@ theorem arsinh_deriv_factor_mem_unitInterval (y : ℝ) :
   · exact inv_le_one_of_one_le₀ hsqrt_ge_one
 
 /-- Dual for atan (chain rule: d(atan f) = f' / (1 + f²)) -/
+@[expose]
 def atan (d : DualInterval) : DualInterval :=
   { val := atanInterval d.val
     -- d(atan f) = f' / (1 + f²)
@@ -11569,6 +11636,7 @@ def atan (d : DualInterval) : DualInterval :=
     der := IntervalRat.mul d.der unitInterval }
 
 /-- Dual for arsinh (chain rule: d(arsinh f) = f' / √(1 + f²)) -/
+@[expose]
 def arsinh (d : DualInterval) : DualInterval :=
   { val := arsinhInterval d.val
     -- d(arsinh f) = f' / √(1 + f²)
@@ -11576,12 +11644,14 @@ def arsinh (d : DualInterval) : DualInterval :=
     der := IntervalRat.mul d.der unitInterval }
 
 /-- Dual for sinh (chain rule: d(sinh f) = cosh(f) * f') -/
+@[expose]
 def sinh (d : DualInterval) : DualInterval :=
   { val := sinhInterval d.val
     -- sinh'(x) = cosh(x), so d(sinh f) = cosh(f) * f'
     der := IntervalRat.mul (coshInterval d.val) d.der }
 
 /-- Dual for cosh (chain rule: d(cosh f) = sinh(f) * f') -/
+@[expose]
 def cosh (d : DualInterval) : DualInterval :=
   { val := coshInterval d.val
     -- cosh'(x) = sinh(x), so d(cosh f) = sinh(f) * f'
@@ -11595,11 +11665,13 @@ def tanh (d : DualInterval) : DualInterval :=
     der := IntervalRat.mul d.der unitInterval }
 
 /-- Interval containing 2/√π ≈ 1.128379... -/
+@[expose]
 def twoDivSqrtPi : IntervalRat :=
   ⟨1128/1000, 1129/1000, by norm_num⟩
 
 /-- Dual for erf (chain rule: d(erf f) = (2/√π) * exp(-f²) * f')
     erf'(x) = (2/√π) * exp(-x²), which is always positive and bounded by 2/√π ≈ 1.13 -/
+@[expose]
 noncomputable def erf (d : DualInterval) : DualInterval :=
   { val := ⟨-1, 1, by norm_num⟩  -- erf is bounded in [-1, 1]
     der :=
@@ -11630,11 +11702,13 @@ def sqrt (d : DualInterval) : DualInterval :=
     der := IntervalRat.mul d.der ⟨-100, 100, by norm_num⟩ }
 
 /-- Conservative derivative bound [-1, 1] for sinc derivative -/
+@[expose]
 def sincDerivBound : IntervalRat := ⟨-1, 1, by norm_num⟩
 
 /-- Dual for sinc (chain rule: d(sinc f) = sinc'(f) * f')
     sinc'(x) = (x cos x - sin x) / x² for x ≠ 0, limit 0 at x = 0.
     We use conservative bound: |sinc'(x)| ≤ 1 for all x. -/
+@[expose]
 def sinc (d : DualInterval) : DualInterval :=
   { val := ⟨-1, 1, by norm_num⟩  -- sinc is bounded in [-1, 1]
     -- sinc'(x) ∈ [-1, 1] (conservative bound), so d(sinc f) = sinc'(f) * f'
@@ -11665,6 +11739,7 @@ noncomputable def atanhOption (d : DualInterval) : Option DualInterval :=
 
 /-- Partial dual for inv (chain rule: d(1/f) = -f'/f²)
     Returns None if the value interval contains zero. -/
+@[expose]
 def inv? (d : DualInterval) : Option DualInterval :=
   if h : IntervalRat.containsZero d.val then
     none
@@ -11677,6 +11752,7 @@ def inv? (d : DualInterval) : Option DualInterval :=
 
 /-- Partial dual for log (chain rule: d(log f) = f'/f)
     Returns None if the value interval is not strictly positive. -/
+@[expose]
 noncomputable def logOption (d : DualInterval) : Option DualInterval :=
   if h : IntervalRat.isPositive d.val then
     let log_val := IntervalRat.logInterval ⟨d.val, h⟩
@@ -11695,6 +11771,7 @@ noncomputable def logOption (d : DualInterval) : Option DualInterval :=
     Uses the fact that:
     - For 0 < lo ≤ 1: sqrt(lo) ≥ lo, so 1/(2*sqrt(lo)) ≤ 1/(2*lo)
     - For lo > 1: sqrt(lo) > 1, so 1/(2*sqrt(lo)) < 1/2 -/
+@[expose]
 def sqrtDerivCoefBound (lo : ℚ) (hpos : 0 < lo) : IntervalRat :=
   if lo ≤ 1 then
     ⟨0, 1 / (2 * lo), by
@@ -11756,6 +11833,7 @@ theorem sqrtDerivCoef_bound {x lo : ℝ} (hlo_pos : 0 < lo) (hx_ge : lo ≤ x) :
 
 /-- Partial dual for sqrt (chain rule: d(sqrt f) = f' / (2 * sqrt(f)))
     Returns None if the value interval is not strictly positive. -/
+@[expose]
 noncomputable def sqrt? (d : DualInterval) : Option DualInterval :=
   if h : IntervalRat.isPositive d.val then
     let sqrt_val := IntervalRat.sqrtInterval d.val
@@ -11801,7 +11879,7 @@ mapping expressions to dual intervals.
 
 /-! ### Dual evaluation -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -11867,6 +11945,7 @@ open LeanCert.Core
     Option-returning evaluator deliberately keeps `tanh` disabled until the
     `evalDualOption`-specific value/differentiability/derivative correctness path
     is wired for that constructor. -/
+@[expose]
 noncomputable def evalDualOption (e : Expr) (ρ : DualEnv) : Option DualInterval :=
   match e with
   | Expr.const q => some (DualInterval.const q)
@@ -11944,12 +12023,14 @@ noncomputable def evalDualOption (e : Expr) (ρ : DualEnv) : Option DualInterval
   | Expr.namedConst c => some (DualInterval.ofMathConst c)
 
 /-- Single-variable version of evalDualOption -/
+@[expose]
 noncomputable def evalDualOption1 (e : Expr) (I : IntervalRat) : Option DualInterval :=
   evalDualOption e (fun _ => DualInterval.varActive I)
 
 /-! ### Single variable differentiation -/
 
 /-- Create dual environment for differentiating with respect to variable `idx` -/
+@[expose]
 def mkDualEnv (ρ : IntervalEnv) (idx : Nat) : DualEnv :=
   fun i => if i = idx then DualInterval.varActive (ρ i) else DualInterval.varPassive (ρ i)
 
@@ -11962,6 +12043,7 @@ noncomputable def derivInterval (e : Expr) (ρ : IntervalEnv) (idx : Nat) : Inte
   (evalWithDeriv e ρ idx).der
 
 /-- Evaluate and differentiate a single-variable expression -/
+@[expose]
 noncomputable def evalWithDeriv1 (e : Expr) (I : IntervalRat) : DualInterval :=
   LeanCert.Internal.AD.evalUnchecked e (fun _ => DualInterval.varActive I)
 
@@ -12001,7 +12083,7 @@ The correctness relies on the chain rule for each supported operation.
 
 /-! ### Correctness -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -12617,7 +12699,7 @@ approximations for transcendental functions. This enables `native_decide` for
 derivative-based bound checking.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -12627,17 +12709,20 @@ open scoped Topology
 namespace DualInterval
 
 /-- Computable dual for exp using Taylor series (chain rule: d(exp f) = exp(f) * f') -/
+@[expose]
 def expCore (d : DualInterval) (n : ℕ := 10) : DualInterval :=
   let expVal := IntervalRat.expComputable d.val n
   { val := expVal
     der := IntervalRat.mul expVal d.der }
 
 /-- Computable dual for sin using Taylor series -/
+@[expose]
 def sinCore (d : DualInterval) (n : ℕ := 10) : DualInterval :=
   { val := IntervalRat.sinComputable d.val n
     der := IntervalRat.mul (IntervalRat.cosComputable d.val n) d.der }
 
 /-- Computable dual for cos using Taylor series -/
+@[expose]
 def cosCore (d : DualInterval) (n : ℕ := 10) : DualInterval :=
   { val := IntervalRat.cosComputable d.val n
     der := IntervalRat.mul (IntervalRat.neg (IntervalRat.sinComputable d.val n)) d.der }
@@ -12683,6 +12768,7 @@ open LeanCert.Core LeanCert.Engine
     `evalDualDyadicChecked`; they validate the actual input box before exposing
     this total kernel's result. Correctness is not claimed for unchecked
     partial-operation branches here. -/
+@[expose]
 def evalTotalCore (e : Expr) (ρ : DualEnv) (cfg : EvalConfig := {}) : DualInterval :=
   match e with
   | Expr.const q => DualInterval.const q
@@ -12725,6 +12811,7 @@ def derivIntervalCore (e : Expr) (I : IntervalRat) (cfg : EvalConfig := {}) : In
 /-- Domain validity for dual evaluation.
     This is defined directly in terms of LeanCert.Internal.AD.evalTotalCore to ensure compatibility.
     For log, we require the argument interval to have positive lower bound. -/
+@[expose]
 def evalDomainValidDual (e : Expr) (ρ : DualEnv) (cfg : EvalConfig := {}) : Prop :=
   match e with
   | Expr.const _ => True
@@ -12996,7 +13083,7 @@ the domain-free fast path.  Here, successful evaluation itself certifies both
 syntactic support and every partial-domain side condition.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 

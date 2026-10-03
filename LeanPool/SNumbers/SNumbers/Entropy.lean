@@ -106,7 +106,7 @@ where one is needed; the topological work is done by
 `Metric.totallyBounded_iff`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -125,6 +125,7 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 /-- The set of admissible radii at stage `n`: those `ε > 0` for which the
 image of the closed unit ball of `X` under `S` can be covered by at most
 `2 ^ n` closed balls of radius `ε`, with arbitrary centres in `Y`. -/
+@[expose]
 def entropySet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
   {ε | 0 < ε ∧ ∃ N : Finset Y, N.card ≤ 2 ^ n ∧
     ⇑S '' Metric.closedBall 0 1 ⊆ ⋃ y ∈ (N : Set Y), Metric.closedBall y ε}
@@ -132,6 +133,7 @@ def entropySet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
 /-- The `n`-th **entropy number** of a continuous linear map: the infimum of
 the radii `ε > 0` for which `S(B_X)` is covered by at most `2 ^ n` closed
 `ε`-balls. -/
+@[expose]
 noncomputable def entropyNumber (S : X →L[𝕜] Y) (n : ℕ) : ℝ :=
   sInf (entropySet S n)
 

@@ -19,7 +19,7 @@ Tags: probability, concentration-inequalities, convex-geometry, sharp-constants
 MSC: 60E15, 52A20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

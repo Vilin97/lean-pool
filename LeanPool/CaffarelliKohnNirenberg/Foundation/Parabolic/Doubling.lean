@@ -19,7 +19,7 @@ use the cylinder/metric-ball comparison from `Basic` to provide the doubling
 instance required by metric covering arguments.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

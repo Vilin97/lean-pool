@@ -45,7 +45,7 @@ an inner-product-preserving `V : E →L[ℂ] H` and a unitary `U` on `H` with
 Requires `[CompleteSpace E]` (adjoints, the C*-algebra structure on `E →L[ℂ] E`).
 -/
 
-@[expose] public section
+public section
 
 open Polynomial ContinuousLinearMap
 open scoped InnerProductSpace

@@ -8,7 +8,7 @@ module
 public import Lean.Meta.Basic
 import LeanPool.Lentil.Basic
 
-@[expose] public section
+public section
 
 namespace TLA.Expr
 

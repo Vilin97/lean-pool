@@ -23,7 +23,7 @@ on orbits and establish finite support for the orbit sum.
 * `finite_support_ordOrbit` — finitely many orbits have nonzero `ordOrbit`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -58,10 +58,10 @@ theorem ord_smul_eq (g : SL(2, ℤ)) (p : ℍ) :
 abbrev Orbit := MulAction.orbitRel.Quotient SL(2, ℤ) ℍ
 
 /-- The canonical map from `ℍ` to its orbit. -/
-def orb (p : ℍ) : Orbit := Quotient.mk'' p
+@[expose] def orb (p : ℍ) : Orbit := Quotient.mk'' p
 
 /-- The order of vanishing lifted to orbits. Well-defined by `ord_smul_eq`. -/
-def ordOrbit (q : Orbit) : ℤ :=
+@[expose] def ordOrbit (q : Orbit) : ℤ :=
   Quotient.liftOn' q (fun p => orderOfVanishingAt' (⇑f) p) (fun a b hab => by
       rw [MulAction.orbitRel_apply] at hab
       obtain ⟨g, hg⟩ := hab
@@ -71,13 +71,14 @@ def ordOrbit (q : Orbit) : ℤ :=
 theorem ordOrbit_mk (p : ℍ) : ordOrbit f (orb p) = orderOfVanishingAt' (⇑f) p := rfl
 
 /-- The orbit of `i`. -/
-def oi : Orbit := orb ellipticPointI'
+@[expose] def oi : Orbit := orb ellipticPointI'
 
 /-- The orbit of `ρ`. -/
+@[expose]
 def orho : Orbit := orb ellipticPointRho'
 
 /-- A non-elliptic orbit is one distinct from both `oi` and `orho`. -/
-def NonEllOrbit := {q : Orbit // q ≠ oi ∧ q ≠ orho}
+@[expose] def NonEllOrbit := {q : Orbit // q ≠ oi ∧ q ≠ orho}
 
 /-- Every orbit has a representative in the fundamental domain `𝒟`. -/
 theorem orbit_has_fd_rep (q : Orbit) : ∃ p : ℍ, orb p = q ∧ p ∈ 𝒟 := by
@@ -229,7 +230,7 @@ theorem finite_support_ordOrbit_nonEll (hf : f ≠ 0) :
   exact hq
 
 /-- The canonical finite set of zeros (with nonzero order) in `𝒟`. -/
-noncomputable def s₀ (hf : f ≠ 0) : Finset ℍ := (finite_zeros_in_fd f hf).toFinset
+@[expose] noncomputable def s₀ (hf : f ≠ 0) : Finset ℍ := (finite_zeros_in_fd f hf).toFinset
 
 /-- Every point in `s₀` lies in the fundamental domain `𝒟`. -/
 theorem s₀_mem_fd (hf : f ≠ 0) : ∀ p ∈ s₀ f hf, p ∈ 𝒟 := by

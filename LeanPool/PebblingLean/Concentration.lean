@@ -21,7 +21,7 @@ real-valued expectations so that exponential moment bounds can be stated
 directly.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -36,7 +36,7 @@ noncomputable def uniformProbabilityReal [Fintype Ω]
 
 /-- Uniform expectation of a real-valued random variable on a finite sample
 space. -/
-noncomputable def uniformExpectationReal [Fintype Ω] (X : Ω → ℝ) : ℝ :=
+@[expose] noncomputable def uniformExpectationReal [Fintype Ω] (X : Ω → ℝ) : ℝ :=
   (∑ ω : Ω, X ω) / (Fintype.card Ω : ℝ)
 
 theorem uniformProbabilityReal_eq_coe_uniformProbability [Fintype Ω]

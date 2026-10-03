@@ -16,7 +16,7 @@ public import Mathlib.Order.Monotone.Defs
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 

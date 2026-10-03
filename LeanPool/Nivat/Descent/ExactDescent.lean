@@ -55,7 +55,7 @@ The geometry of supported multiples is in `Nivat.Algebra.RectangleSupport`;
 the finite fiber-counting argument is in `Nivat.Descent.FiberBudget`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Descent
 
@@ -107,20 +107,23 @@ theorem dotProduct_mem_dualAnnihilator_iff (d : Configuration ℚ) (R : Finset L
 
 /-- Restrict Laurent coefficients to a finite window.
 This implements the identification with `ℚ^R` at the start of Section 2. -/
-def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
+@[expose] def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
   toFun f z := f.coeff z.1
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
 /-- Multiplication by `Φ` on polynomials supported in `S`, with coefficients read on `R`.
 This is the map `Φ : ℚ^S → ℚ^R` in Lemma 2.1 (`lem:supported`). -/
-noncomputable def multiplierMap (Φ : Laurent) (R S : Finset Lattice) :
+@[expose] noncomputable def multiplierMap (Φ : Laurent) (R S : Finset Lattice) :
     (S → ℚ) →ₗ[ℚ] (R → ℚ) :=
   (coefficientRestriction R).comp ((LinearMap.mulLeft ℚ Φ).comp (windowPolynomialLinear S))
 
 /-- The coefficient formula for multiplication in Lemma 2.1 (`lem:supported`). -/
 theorem multiplierMap_apply (Φ : Laurent) (R S : Finset Lattice) (b : S → ℚ) (z : R) :
-    multiplierMap Φ R S b z = (Φ * windowPolynomial S b).coeff z.1 := rfl
+    multiplierMap Φ R S b z = (Φ * windowPolynomial S b).coeff z.1 := by
+  simp only [multiplierMap, LinearMap.comp_apply, LinearMap.mulLeft_apply,
+    coefficientRestriction, windowPolynomialLinear, LinearMap.coe_mk, AddHom.coe_mk]
+  rfl
 
 /-- Support containment makes coefficient restriction lossless.
 This is the identification of supported multiples in Lemma 2.1 (`lem:supported`). -/

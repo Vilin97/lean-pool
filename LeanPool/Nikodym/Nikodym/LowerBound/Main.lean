@@ -31,7 +31,7 @@ The unconditional statements `Nikodym.card_compl_pow_mul_card_le` and `Nikodym.c
 in `Nikodym.Main` follow from these once an `AlgebraInterface F d` is constructed.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

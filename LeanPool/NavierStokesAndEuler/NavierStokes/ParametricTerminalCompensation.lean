@@ -17,7 +17,7 @@ to the debt derivative. Smoothness at the ends of a compact parameter range
 is relative smoothness; all endpoint derivatives are actual `derivWithin`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open NavierStokes.TerminalCompensation
 namespace NavierStokes.ParametricTerminalCompensation
 
 /-- First jet within bound as an element of `Prop`. -/
-noncomputable def FirstJetWithinBound (P : Patch) (a : ℝ → ℝ) (c : ℝ → Coeff)
+@[expose] noncomputable def FirstJetWithinBound (P : Patch) (a : ℝ → ℝ) (c : ℝ → Coeff)
     (S : Set ℝ) (η L : ℝ) : Prop :=
   ∀ x : ℝ, |a η * correction P (c η) x| ≤ L ∧
     |a η * deriv (correction P (c η)) x| ≤ L ∧
@@ -132,8 +132,9 @@ theorem composed_solver_derivWithin_bound {g : Coeff → Coeff} {ε C : ℝ}
 
 theorem correction_parameter_derivWithin (P : Patch) {S : Set ℝ} {c : ℝ → Coeff} {η : ℝ}
     (huniq : UniqueDiffWithinAt ℝ S η) (hc : DifferentiableWithinAt ℝ c S η) (x : ℝ) :
-    derivWithin (fun θ => correction P (c θ) x) S η = correction P (derivWithin c S η) x :=
-  ((correctionCLM P x).hasFDerivAt.comp_hasDerivWithinAt η hc.hasDerivWithinAt).derivWithin huniq
+    derivWithin (fun θ => correction P (c θ) x) S η = correction P (derivWithin c S η) x := by
+  simpa only [Function.comp_def, correctionCLM_apply] using
+    ((correctionCLM P x).hasFDerivAt.comp_hasDerivWithinAt η hc.hasDerivWithinAt).derivWithin huniq
 
 /-- The constructed three-row inverse applies to a genuinely varying debt.
 The derivative estimate includes its actual first parameter derivative. -/
@@ -221,8 +222,9 @@ theorem exists_variable_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam)
     refine ⟨hmul₀.trans hsize, hmul₁.trans hsize, ?_⟩
     have hadif : DifferentiableWithinAt ℝ a S η := (ha η hη).differentiableWithinAt (by simp)
     have hfd : HasDerivWithinAt (fun θ => correction P (c θ) x)
-        (correction P (derivWithin c S η) x) S η :=
-      (correctionCLM P x).hasFDerivAt.comp_hasDerivWithinAt η hcdif.hasDerivWithinAt
+        (correction P (derivWithin c S η) x) S η := by
+      simpa only [Function.comp_def, correctionCLM_apply] using
+        (correctionCLM P x).hasFDerivAt.comp_hasDerivWithinAt η hcdif.hasDerivWithinAt
     rw [(hadif.hasDerivWithinAt.fun_mul hfd).derivWithin (huniq η hη)]
     calc
       _ ≤ |derivWithin a S η * correction P (c η) x| +
@@ -449,7 +451,7 @@ theorem scaled_triple_first_jet_bound {S : Set ℝ} {K B : ℝ} {p e i : ℝ →
   exact scaled_triple_norm_bound hK hB hpb.2 heb.2 hib.2
 
 /-- The actual three physical debts use the diffusion parameter `1-η²`. -/
-noncomputable def physicalDebt (T : OutgoingTail.TailData) (K η : ℝ) : Coeff :=
+@[expose] noncomputable def physicalDebt (T : OutgoingTail.TailData) (K η : ℝ) : Coeff :=
   ![ParametricHeatTail.physicalPressure T K η,
     ParametricHeatTail.physicalEnergy T K η,
     ParametricHeatTail.physicalAngular T K η]

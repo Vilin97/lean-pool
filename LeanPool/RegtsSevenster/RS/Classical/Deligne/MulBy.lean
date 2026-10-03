@@ -23,7 +23,7 @@ its kernel and an ideal for its image, so simplicity makes it
 invertible, and the preimage of the unit is then an inverse for `g`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,6 +37,7 @@ section Basic
 variable {D : Type u}
 
 /-- **Multiplication by an even scalar.** -/
+@[expose]
 noncomputable def mulBy [Category.{v} D] [MonoidalCategory D] (R : D) [MonObj R]
     (g : 𝟙_ D ⟶ R) : R ⟶ R :=
   (λ_ R).inv ≫ gmul g (𝟙 R)

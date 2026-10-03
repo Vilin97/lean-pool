@@ -28,7 +28,7 @@ In this file we equip the Bruhat-Tits graph with group actions of `GL₂(K)` and
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -77,8 +77,7 @@ def smulGL (g : GL (Fin 2) K) : Vertices R → Vertices R :=
     exact isSimilar_smul_of_isSimilar g L M h
 
 lemma smulGL_mk (g : GL (Fin 2) K) (L : Lattice R) :
-    smulGL g ⟦L⟧ = ⟦g • L⟧ :=
-  rfl
+    smulGL g ⟦L⟧ = ⟦g • L⟧ := by rfl
 
 instance : SMul (GL (Fin 2) K) (Vertices R) where
   smul := smulGL
@@ -118,11 +117,11 @@ lemma inv_smul_smul_eq_inv (g : GL (Fin 2) K) (x y : Vertices R) :
 
 lemma adj_smul_smul_iff_adj (g : GL (Fin 2) K) (x y : Vertices R) :
     BTgraph.Adj (g • x) (g • y) ↔ BTgraph.Adj x y := by
-  change inv (g • x) (g • y) = 1 ↔ inv x y = 1
+  simp only [BTgraph_adj, IsNeighbour]
   simp
 
 /-- `GL₂(K)` acts by graph isomorphisms on the Bruhat-Tits tree. -/
-def _root_.Matrix.GeneralLinearGroup.toGraphIso (g : GL (Fin 2) K) :
+@[expose] def _root_.Matrix.GeneralLinearGroup.toGraphIso (g : GL (Fin 2) K) :
     BTgraph (R := R) ≃g BTgraph (R := R) where
   toEquiv := MulAction.toPerm g
   map_rel_iff' {x y} := adj_smul_smul_iff_adj g x y

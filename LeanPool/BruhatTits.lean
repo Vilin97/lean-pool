@@ -22,7 +22,7 @@ Tags: algebraic-geometry, graph-theory, discrete-valuation-rings
 MSC: 20E42, 05C25, 13H05
 -/
 
-@[expose] public section
+public section
 
 open Module
 

@@ -17,7 +17,7 @@ The integer coefficients give a natural multiplicity on the quotient.
 For a zero-dimensional fibre, this already proves relative expansion.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

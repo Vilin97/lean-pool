@@ -17,14 +17,14 @@ public import Mathlib.Tactic
 These lemmas keep the sampling estimates for exchanges finite and explicit.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace EGZ.Expansion
 
 /-- The probability of a predicate under the uniform distribution on a finite type. -/
-noncomputable def finiteProb {A : Type*} [Fintype A] (P : A → Prop) : ℝ := by
+@[expose] noncomputable def finiteProb {A : Type*} [Fintype A] (P : A → Prop) : ℝ := by
   classical
   exact 𝔼 a, if P a then 1 else 0
 

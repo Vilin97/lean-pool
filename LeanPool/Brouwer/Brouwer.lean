@@ -26,7 +26,7 @@ finer and finer subdivisions and passing to a convergent subsequence of the
 resulting colorful points produces a fixed point.
 -/
 
-@[expose] public section
+public section
 
 open Brouwer (standardSimplex)
 

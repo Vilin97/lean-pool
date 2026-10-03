@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlockCoordinates
 /-! Exact concatenated coordinates connecting energy regularization to the actual external/base
 Gevrey forcing. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ theorem wordAtLevel_word {s : ℕ} (q n : ℕ) (w : Fin n → Fin 4) (h : n + q 
 
 /-- Bounded word blocks and the spatial-estimate word-at-level operator are the same genuine map. -/
 theorem boundedWordBlock_eq_wordAtLevel {s : ℕ} (q n : ℕ) (h : q + n ≤ s) (w : Fin n → Fin 4) :
-    boundedWordBlock period q n h w = wordAtLevel period q n w (by omega : n+q ≤ s) := rfl
+    boundedWordBlock period q n h w = wordAtLevel period q n w (by omega : n+q ≤ s) := by rfl
 
 /-- Two actual Sobolev word blocks compose by literal word concatenation. -/
 theorem wordAtLevel_comp {s p q n m : ℕ} (w : Fin n → Fin 4) (v : Fin m → Fin 4)
@@ -52,10 +52,11 @@ theorem wordAtLevel_comp {s p q n m : ℕ} (w : Fin n → Fin 4) (v : Fin m → 
     wordAtLevel_value, toJet_word period _ (by omega : m+n ≤ s)]
 
 /-- The total derivative length in one external/base energy component. -/
-def energyLength {N q : ℕ} (I : ExternalWord N) (a : BaseWord q) : ℕ := a.1.val+I.1.val
+@[expose] def energyLength {N q : ℕ} (I : ExternalWord N) (a : BaseWord q) : ℕ := a.1.val+I.1.val
 
 /-- The literal base-then-external concatenated derivative word of an energy component. -/
-def energyWord {N q : ℕ} (I : ExternalWord N) (a : BaseWord q) : Fin (energyLength I a) → Fin 4 :=
+@[expose] def energyWord {N q : ℕ} (I : ExternalWord N) (a : BaseWord q) :
+    Fin (energyLength I a) → Fin 4 :=
   Fin.append a.2 I.2
 
 /-- Every total energy word stays below the advertised external-plus-base cutoff. -/

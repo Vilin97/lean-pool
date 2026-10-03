@@ -34,7 +34,7 @@ No new partition structure is introduced and `ConvexPartition` is not redefined.
 * `ConvexPartition.IsFair.mk'` — build `IsFair` from the two components.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

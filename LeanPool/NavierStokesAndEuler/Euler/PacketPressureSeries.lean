@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 with any finite collection of the other source costs. Their finite partial
 sums control the actual low-bound increments. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

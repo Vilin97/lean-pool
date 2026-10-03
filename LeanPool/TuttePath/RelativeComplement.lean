@@ -15,7 +15,7 @@ The recursion is the paper's simultaneous adjoining of an element to S and T;
 it terminates because the corank of S decreases strictly at each step.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

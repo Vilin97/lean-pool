@@ -36,7 +36,7 @@ language of `A ⊗ X` and a bare action morphism, and are transported
 into the category of module objects by definitional unfolding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -112,6 +112,7 @@ theorem freeModHom_lin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 /-- **The free–forgetful adjunction bijection for module
 objects**: module maps out of the free module on `X` are maps out
 of `X`, by restriction along the unit. -/
+@[expose]
 noncomputable def freeModHomEquiv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) (M : Mod D A) :

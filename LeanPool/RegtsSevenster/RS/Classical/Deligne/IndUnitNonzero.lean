@@ -18,7 +18,7 @@ Ind-completion is not a zero object.  This is the side condition of
 both Proposition 2.9 and Rappel 2.10 over the Ind-completion.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

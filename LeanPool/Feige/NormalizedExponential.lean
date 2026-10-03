@@ -26,7 +26,7 @@ The forward map is
 and its inverse divides all nonzero-total vectors by their total mass.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set
@@ -37,7 +37,7 @@ namespace Feige
 variable {n : ℕ}
 
 /-- Total mass of an `E₀,E₁,...,Eₙ` vector in product coordinates. -/
-def exponentialTotal (e : ℝ × (Fin n → ℝ)) : ℝ :=
+@[expose] def exponentialTotal (e : ℝ × (Fin n → ℝ)) : ℝ :=
   e.1 + ∑ i, e.2 i
 
 /-- Polar/simplex coordinate map used for normalized exponentials. -/
@@ -47,6 +47,7 @@ def exponentialSimplexForward
 
 /-- Inverse normalized-coordinate map.  It is used only on the domain where
 the total is positive. -/
+@[expose]
 noncomputable def exponentialSimplexInverse
     (e : ℝ × (Fin n → ℝ)) : ℝ × (Fin n → ℝ) :=
   (exponentialTotal e, fun i ↦ e.2 i / exponentialTotal e)
@@ -56,6 +57,7 @@ def exponentialSimplexSource : Set (ℝ × (Fin n → ℝ)) :=
   {z | 0 < z.1 ∧ z.2 ∈ fullSimplex (Fin n)}
 
 /-- Nonnegative exponential vectors with nonzero total mass. -/
+@[expose]
 def positiveExponentialOrthant : Set (ℝ × (Fin n → ℝ)) :=
   {e | 0 ≤ e.1 ∧ (∀ i, 0 ≤ e.2 i) ∧ 0 < exponentialTotal e}
 
@@ -239,6 +241,7 @@ theorem fderiv_exponentialSimplexForward
 
 /-- Identify an `Option (Fin n)` coordinate vector with radial/product
 coordinates. -/
+@[expose]
 def optionVectorToProduct (v : Option (Fin n) → ℝ) :
     ℝ × (Fin n → ℝ) :=
   (v none, fun i ↦ v (some i))
@@ -283,26 +286,26 @@ theorem exponentialSimplexJacobianMatrix_none_none
     (z : ℝ × (Fin n → ℝ)) :
     exponentialSimplexJacobianMatrix z none none =
       1 - ∑ i, z.2 i :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_none_some
     (z : ℝ × (Fin n → ℝ)) (j : Fin n) :
     exponentialSimplexJacobianMatrix z none (some j) = -z.1 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_some_none
     (z : ℝ × (Fin n → ℝ)) (i : Fin n) :
     exponentialSimplexJacobianMatrix z (some i) none = z.2 i :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_some_some
     (z : ℝ × (Fin n → ℝ)) (i j : Fin n) :
     exponentialSimplexJacobianMatrix z (some i) (some j) =
       if i = j then z.1 else 0 :=
-  rfl
+  by rfl
 
 theorem exponentialSimplexJacobianMatrix_mulVec_none
     (z : ℝ × (Fin n → ℝ)) (v : Option (Fin n) → ℝ) :
@@ -577,7 +580,7 @@ theorem lintegral_exponentialRadial_mul_test
 /-- The measure on simplex coordinates obtained from independent unit-rate
 exponentials: factorial times Lebesgue measure restricted to the full
 simplex. -/
-noncomputable def normalizedExponentialSimplexMeasure :
+@[expose] noncomputable def normalizedExponentialSimplexMeasure :
     Measure (Fin n → ℝ) :=
   (n.factorial : ℝ≥0∞) •
     (volume.restrict (fullSimplex (Fin n)))
@@ -611,7 +614,7 @@ theorem lintegral_normalizedExponential_eq_simplex
 
 /-- The unit-rate exponential density, extended by zero to the negative
 half-line. -/
-noncomputable def unitExponentialDensity (t : ℝ) : ℝ :=
+@[expose] noncomputable def unitExponentialDensity (t : ℝ) : ℝ :=
   (Ici (0 : ℝ)).indicator (fun t ↦ Real.exp (-t)) t
 
 theorem integral_unitExponentialDensity :

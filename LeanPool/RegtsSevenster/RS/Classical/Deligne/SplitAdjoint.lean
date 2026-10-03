@@ -21,7 +21,7 @@ Passing to the complementary idempotents gives the adjointness
 in the form the dévissage step consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

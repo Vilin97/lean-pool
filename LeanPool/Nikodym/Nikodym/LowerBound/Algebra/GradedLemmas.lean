@@ -35,7 +35,7 @@ the standard grading `MvPolynomial.homogeneousSubmodule σ K` (made a local inst
   and a homogeneous ideal containing `X i - c` (`c ≠ 0`) is the unit ideal.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -94,6 +94,7 @@ instance instModuleFiniteHomogeneousSubmodule [Finite σ] (t : ℕ) :
 
 /-- Blueprint A05/B01/B02: the homogeneous Hilbert function `t ↦ dim_K (P_t ⧸ J_t)`, realized as
 the dimension of the image of the degree-`t` forms in `P ⧸ J`. -/
+@[expose]
 noncomputable def homHilbert (J : Ideal (MvPolynomial σ K)) (t : ℕ) : ℕ :=
   finrank K ((homogeneousSubmodule σ K t).map (Ideal.Quotient.mkₐ K J).toLinearMap)
 

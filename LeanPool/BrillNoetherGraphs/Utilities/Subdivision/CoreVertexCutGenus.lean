@@ -22,7 +22,7 @@ cancel in Euler characteristic, leaving one edge-slot contribution.  Hence
 the answer is independent of every subdivision length.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -34,6 +34,7 @@ namespace CoreVertexCut.Data
 variable {n p : ℕ} {core : ExplicitPotential.Core n p}
 
 /-- A core edge occurrence lies wholly in the named side. -/
+@[expose]
 def LeftSlot (c : CoreVertexCut.Data core) (edge : Fin p) : Prop :=
   core.tail edge ∈ c.left ∧ core.head edge ∈ c.left
 
@@ -43,6 +44,7 @@ instance leftSlotDecidable (c : CoreVertexCut.Data core) (edge : Fin p) :
   infer_instance
 
 /-- A core edge occurrence lies wholly in the derived complementary side. -/
+@[expose]
 def RightSlot (c : CoreVertexCut.Data core) (edge : Fin p) : Prop :=
   core.tail edge ∈ c.right ∧ core.head edge ∈ c.right
 
@@ -52,26 +54,32 @@ instance rightSlotDecidable (c : CoreVertexCut.Data core) (edge : Fin p) :
   infer_instance
 
 /-- Ordered core slots wholly contained in the named side. -/
+@[expose]
 def leftSlots (c : CoreVertexCut.Data core) : Finset (Fin p) :=
   Finset.univ.filter c.LeftSlot
 
 /-- Ordered core slots wholly contained in the complementary side. -/
+@[expose]
 def rightSlots (c : CoreVertexCut.Data core) : Finset (Fin p) :=
   Finset.univ.filter c.RightSlot
 
 /-- Executable number of ordered core slots in the named side. -/
+@[expose]
 def leftSlotCount (c : CoreVertexCut.Data core) : ℕ :=
   c.leftSlots.card
 
 /-- Executable number of ordered core slots in the complementary side. -/
+@[expose]
 def rightSlotCount (c : CoreVertexCut.Data core) : ℕ :=
   c.rightSlots.card
 
 /-- Cyclomatic genus predicted from the named core side. -/
+@[expose]
 def leftGenus (c : CoreVertexCut.Data core) : ℤ :=
   (c.leftSlotCount : ℤ) - (c.left.card : ℤ) + 1
 
 /-- Cyclomatic genus predicted from the complementary core side. -/
+@[expose]
 def rightGenus (c : CoreVertexCut.Data core) : ℤ :=
   (c.rightSlotCount : ℤ) - (c.right.card : ℤ) + 1
 

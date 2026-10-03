@@ -15,7 +15,7 @@ The body and signed-interval coordinates are fixed; only the model point is move
 symmetry group. Named maps are used instead of global product-action instances.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -28,6 +28,7 @@ namespace PrimeConfigurationModel
 
 /-- The model configuration map as the compact site family used by the variable-body partition
 construction. -/
+@[expose]
 def sites (M : PrimeConfigurationModel hp) :
     EMP.VariableBody.SiteFamily M.Point p := M.toConfig
 
@@ -46,6 +47,7 @@ def smulBodyPoint
   (z.1, g • z.2)
 
 /-- Action on a body/model-point/interval parameter, fixing body and interval. -/
+@[expose]
 def smulBodyPointInterval
     (M : PrimeConfigurationModel hp)
     (g : PrimeSymmetry p)

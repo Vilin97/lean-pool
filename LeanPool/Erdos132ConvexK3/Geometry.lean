@@ -17,7 +17,7 @@ red--blue consequences, chord half-plane separation, and same-half-plane
 uniqueness for two-circle intersections.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -25,7 +25,7 @@ namespace LeanPool.Erdos132ConvexK3
 def toComplex (p : Point ℝ) : ℂ := ⟨p.1, p.2⟩
 
 /-- Ordinary Euclidean distance between real Cartesian points. -/
-noncomputable def euclideanDist (a b : Point ℝ) : ℝ :=
+@[expose] noncomputable def euclideanDist (a b : Point ℝ) : ℝ :=
   dist (toComplex a) (toComplex b)
 
 /-- The ordinary distance squares to the polynomial Cartesian squared

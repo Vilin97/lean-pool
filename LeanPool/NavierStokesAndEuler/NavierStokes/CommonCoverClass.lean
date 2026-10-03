@@ -21,7 +21,7 @@ whose constants precede the band, copy, and source.  No native periodicity of
 the source is used.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CommonCoverClass
@@ -121,11 +121,11 @@ variable {P V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 abbrev Joint (P : Type) := (P × Plane) × ℝ
 
 /-- Native argument, given by `(w.1.1, ((g.coordinates k w.1.2).1, w.2))`. -/
-noncomputable def nativeArgument (g : CCS) (k : Frequency) (w : Joint P) : P × Plane :=
+@[expose] noncomputable def nativeArgument (g : CCS) (k : Frequency) (w : Joint P) : P × Plane :=
   (w.1.1, ((g.coordinates k w.1.2).1, w.2))
 
 /-- Source argument, given by `(w.1.1, g.path k w.1.2 w.2)`. -/
-noncomputable def sourceArgument (g : CCS) (k : Frequency) (w : Joint P) : P × Plane :=
+@[expose] noncomputable def sourceArgument (g : CCS) (k : Frequency) (w : Joint P) : P × Plane :=
   (w.1.1, g.path k w.1.2 w.2)
 
 /-- Native linear as an element of `Joint P →L[ℝ] P × Plane`. -/
@@ -144,11 +144,11 @@ noncomputable def sourceLinear (P : Type) [NormedAddCommGroup P] [NormedSpace �
     (g.pointLinear.comp ((ContinuousLinearMap.snd ℝ P Plane).comp (nativeLinear P g)))
 
 @[simp] theorem nativeLinear_apply (g : CCS) (w : Joint P) :
-    nativeLinear P g w = (w.1.1, ((g.coordinateLinear w.1.2).1, w.2)) := rfl
+    nativeLinear P g w = (w.1.1, ((g.coordinateLinear w.1.2).1, w.2)) := by rfl
 
 @[simp] theorem sourceLinear_apply (g : CCS) (w : Joint P) :
     sourceLinear P g w =
-      (w.1.1, g.pointLinear ((g.coordinateLinear w.1.2).1, w.2)) := rfl
+      (w.1.1, g.pointLinear ((g.coordinateLinear w.1.2).1, w.2)) := by rfl
 
 theorem nativeArgument_affine (g : CCS) (k : Frequency) (w : Joint P) :
     nativeArgument g k w = nativeArgument g k 0 + nativeLinear P g w := by
@@ -184,7 +184,7 @@ theorem sourceArgument_smooth (g : CCS) (k : Frequency) :
 
 /-- One common affine cost for both maps. Its value is independent of the
 copy index and of the slow parameter space. -/
-noncomputable def argumentCost (g : CCS) : ℝ :=
+@[expose] noncomputable def argumentCost (g : CCS) : ℝ :=
   1 + ‖g.coordinateLinear‖ + ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖)
 
 theorem one_le_argumentCost (g : CCS) : 1 ≤ argumentCost g := by
@@ -263,11 +263,11 @@ theorem sourceArgument_jet_bound (g : CCS) (k : Frequency) {f : P × Plane → V
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 @[simp] theorem sourceArgument_slow (g : CCS) (k : Frequency) (w : Joint P) :
-    (sourceArgument g k w).1 = w.1.1 := rfl
+    (sourceArgument g k w).1 = w.1.1 := by rfl
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 @[simp] theorem nativeArgument_slow (g : CCS) (k : Frequency) (w : Joint P) :
-    (nativeArgument g k w).1 = w.1.1 := rfl
+    (nativeArgument g k w).1 = w.1.1 := by rfl
 
 end Arguments
 
@@ -275,6 +275,7 @@ section BandGeometry
 
 /-- The fixed native basis has columns `v_r,v_t`; only the second column is
 multiplied by the actual time coefficient. -/
+@[expose]
 noncomputable def scaledBasis (B : Plane ≃L[ℝ] Plane) (ci : ℝ) (hci : ci ≠ 0) :
     Plane ≃L[ℝ] Plane := (TorusAverages.transverseChart ci hci).trans B
 
@@ -328,7 +329,7 @@ theorem norm_inverse_scaledBasis_le (B : Plane ≃L[ℝ] Plane) (ci : ℝ) (hci 
     (mul_le_mul_of_nonneg_right (norm_inverse_transverseChart_le ci hci) (norm_nonneg _))
 
 /-- Band geometry, bundling `gap`, `basis`, `center`. -/
-noncomputable def bandGeometry (B : Plane ≃L[ℝ] Plane) (h : ℝ) (n gap : ℕ)
+@[expose] noncomputable def bandGeometry (B : Plane ≃L[ℝ] Plane) (h : ℝ) (n gap : ℕ)
     (center : Plane) : CCS where
   gap := gap
   basis := scaledBasis B (ChartScales.timeCoefficient h n) (ChartScales.timeCoefficient_pos h n).ne'
@@ -431,7 +432,7 @@ variable {P V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Reinsert the actual current slot time after solving the joint equation. -/
-noncomputable def currentArgument (g : CCS) (k : Frequency) (p : P × Plane) : Joint P :=
+@[expose] noncomputable def currentArgument (g : CCS) (k : Frequency) (p : P × Plane) : Joint P :=
   (p, (g.coordinates k p.2).2)
 
 /-- Current linear as an element of `P × Plane →L[ℝ] Joint P`. -/
@@ -442,7 +443,7 @@ noncomputable def currentLinear (P : Type) [NormedAddCommGroup P] [NormedSpace �
       (g.coordinateLinear.comp (ContinuousLinearMap.snd ℝ P Plane)))
 
 @[simp] theorem currentLinear_apply (g : CCS) (p : P × Plane) :
-    currentLinear P g p = (p, (g.coordinateLinear p.2).2) := rfl
+    currentLinear P g p = (p, (g.coordinateLinear p.2).2) := by rfl
 
 theorem currentArgument_affine (g : CCS) (k : Frequency) (p : P × Plane) :
     currentArgument g k p = currentArgument g k 0 + currentLinear P g p := by
@@ -690,7 +691,7 @@ noncomputable def bandChart (D : ℝ) (n m : ℕ) : SlowPoint →L[ℝ] SlowPoin
 
 @[simp] theorem bandChart_apply (D : ℝ) (n m : ℕ) (x : SlowPoint) :
     bandChart D n m x = (bandRatio (1 / 2) n m * x.1,
-      (bandRatio D n m * x.2.1, bandRatio 1 n m * x.2.2)) := rfl
+      (bandRatio D n m * x.2.1, bandRatio 1 n m * x.2.2)) := by rfl
 
 theorem bandChart_formula (D : ℝ) (n m : ℕ) (x : SlowPoint) :
     bandChart D n m x = ((ChartScales.Q n / ChartScales.Q m) ^ (1 / 2 : ℝ) * x.1,
@@ -855,7 +856,7 @@ theorem memClass_affine_transport
 
 /-- A strip over a linear parameter projection. Its weights are the actual
 base weights, so retaining the parameter preserves them exactly. -/
-noncomputable def parameterStrip (s : WeightedClasses.StripData Y) (L : X →L[ℝ] Y) :
+@[expose] noncomputable def parameterStrip (s : WeightedClasses.StripData Y) (L : X →L[ℝ] Y) :
     WeightedClasses.StripData X where
   domain := L ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage L.continuous
@@ -881,6 +882,7 @@ variable {P V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Source strip, given by `parameterStrip s (ContinuousLinearMap.fst ℝ P Plane)`. -/
+@[expose]
 noncomputable def sourceStrip (s : WeightedClasses.StripData P) : WeightedClasses.StripData (P ×
     Plane) :=
   parameterStrip s (ContinuousLinearMap.fst ℝ P Plane)
@@ -944,7 +946,7 @@ section CommonBandChanges
 
 /-- Either direction of a bounded covering change. The inverse is a map on
 the universal cover; no extra periodicity is imposed on its input. -/
-noncomputable def coverChange (forward : Bool) (d : ℕ) : Plane →L[ℝ] Plane :=
+@[expose] noncomputable def coverChange (forward : Bool) (d : ℕ) : Plane →L[ℝ] Plane :=
   if forward then (CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)
   else ((CommonCoverSolve.coverPower d).symm : Plane →L[ℝ] Plane)
 
@@ -961,7 +963,8 @@ noncomputable def bandCommonChart (D : ℝ) (n m : ℕ) (forward : Bool) (gap : 
 
 @[simp] theorem bandCommonChart_apply (D : ℝ) (n m : ℕ) (forward : Bool) (gap : ℕ)
     (x : SlowPoint × Plane) :
-    bandCommonChart D n m forward gap x = (bandChart D n m x.1, coverChange forward gap x.2) := rfl
+    bandCommonChart D n m forward gap x = (bandChart D n m x.1, coverChange forward gap x.2) := by
+  rfl
 
 /-- Common chart cost, given by `chartCost D + CommonCoverSolve.coveringBound gapBound`. -/
 noncomputable def commonChartCost (D : ℝ) (gapBound : ℕ) : ℝ :=
@@ -1241,7 +1244,7 @@ noncomputable def meshTransition (D : ℝ) (L M : SlotColoring.Label)
 
 @[simp] theorem meshLinear_apply (D : ℝ) (L M : SlotColoring.Label)
     (x : SlotColoring.Position) (j : Fin 3) :
-    meshLinear D L M x j = (SlotColoring.width D j L.1 / SlotColoring.width D j M.1) * x j := rfl
+    meshLinear D L M x j = (SlotColoring.width D j L.1 / SlotColoring.width D j M.1) * x j := by rfl
 
 theorem meshTransition_eq_coordinate (D : ℝ) (L M : SlotColoring.Label)
     (x : SlotColoring.Position) : meshTransition D L M x = meshCoordinate D M (meshPoint D L x) :=

@@ -18,7 +18,7 @@ On a piece where `⌊x⌋`, `⌊αx⌋`, `⌊2λx⌋` are constant, `Ê_in(x, k)
 combinations of the interval counts `c_{ij}({x}, {αx})`; the counts have closed forms.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

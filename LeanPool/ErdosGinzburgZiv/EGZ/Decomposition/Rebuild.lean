@@ -17,7 +17,7 @@ nodes and replacing their polytopes by these support hulls reconstructs a
 flag decomposition, including visibility of every face.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -50,6 +50,7 @@ include D
 
 open Classical in
 /-- A node is active when it has a nonzero local contribution below it. -/
+@[expose]
 def Active (_D : RebuildData R pieces f) (x : F.Node) : Prop :=
   ∃ y, y ≤ x ∧ ∃ v, pieces y v ≠ 0
 
@@ -195,6 +196,7 @@ noncomputable abbrev flag : ConvexFlag where
 
 open Classical in
 /-- The finite-field representation restricted to the active nodes of the rebuilt flag. -/
+@[expose]
 noncomputable def representation : FpRepresentation p d D.flag where
   space x := R.space x.1
   map x := R.map x.1

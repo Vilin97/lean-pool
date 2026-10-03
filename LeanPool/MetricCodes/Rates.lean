@@ -18,7 +18,7 @@ public import Mathlib.Probability.Distributions.Beta
 The MRRW comparison and the first spherical hierarchy and numerical bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -1324,6 +1324,7 @@ theorem johnsonWindowBasis_dot_coupled
       (h.complementResidual_bound source) a) b
 
 /-- The adjacent Johnson channel matrix indexed by shell-window harmonic coordinates. -/
+@[expose]
 def johnsonWindowChannelMatrix {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (hstrict : 2 * w < n)
@@ -1515,6 +1516,7 @@ theorem johnsonWindowChannelMatrix_transpose_mul
     ring
 
 /-- The shell-window channel matrix reindexed by the total Johnson ambient dimension. -/
+@[expose]
 def johnsonChannelMatrix {n w p q L : ℕ}
     (h : AdmissibleDegrees n w p q L)
     (hstrict : 2 * w < n)
@@ -3699,11 +3701,11 @@ def kissingA : ℝ := 0.08570143806746
 def kissingB : ℝ := 0.00370282933568
 
 /-- The log series lower used in the metric-code argument. -/
-def logSeriesLower (x : ℝ) (m : ℕ) : ℝ :=
+@[expose] def logSeriesLower (x : ℝ) (m : ℕ) : ℝ :=
   2 * ∑ i ∈ Finset.range m, x ^ (2 * i + 1) / (2 * (i : ℝ) + 1)
 
 /-- The log series upper used in the metric-code argument. -/
-def logSeriesUpper (x : ℝ) (m : ℕ) : ℝ :=
+@[expose] def logSeriesUpper (x : ℝ) (m : ℕ) : ℝ :=
   logSeriesLower x m + 2 * (x ^ (2 * m + 1) / (1 - x ^ 2))
 
 theorem log_ratio_lower {x : ℝ} (hx : 0 ≤ x) (hx' : x < 1) (m : ℕ) :
@@ -3939,16 +3941,16 @@ theorem sphericalEntropy_sub_nonneg {a b : ℝ}
     (sphericalEntropy_strictMono.monotoneOn hb ha hba)
 
 /-- The feasible used in the spherical-code argument. -/
-def Feasible (s a b : ℝ) : Prop :=
+@[expose] def Feasible (s a b : ℝ) : Prop :=
   0 < b ∧ b < a ∧ s < 2 * MetricCodes.Gamma a b
 
 /-- The rate set used in the spherical-code argument. -/
-def rateSet (s : ℝ) : Set ℝ :=
+@[expose] def rateSet (s : ℝ) : Set ℝ :=
   {r | ∃ a b : ℝ, Feasible s a b ∧
     r = MetricCodes.sphericalEntropy a - MetricCodes.sphericalEntropy b}
 
 /-- The variational rate used in the spherical-code argument. -/
-def variationalRate (s : ℝ) : ℝ := sInf (rateSet s)
+@[expose] def variationalRate (s : ℝ) : ℝ := sInf (rateSet s)
 
 theorem rateSet_bddBelow (s : ℝ) : BddBelow (rateSet s) := by
   refine ⟨0, ?_⟩
@@ -4024,7 +4026,7 @@ theorem classicalThreshold_spectral
   exact (div_eq_iff hlin.ne').2 htarget
 
 /-- The spherical improvement path used in the spherical-code argument. -/
-def sphericalImprovementPath (a b : ℝ) : ℝ :=
+@[expose] def sphericalImprovementPath (a b : ℝ) : ℝ :=
   a + (4 * a + 3) * b
 
 theorem sphericalImprovementSlope_gt_one {a : ℝ} (ha : 0 < a) :
@@ -4310,40 +4312,40 @@ open scoped BigOperators
 namespace HigherHierarchy
 
 /-- The spectral atom used in the spherical-code argument. -/
-def spectralAtom (u : ℝ) : ℝ :=
+@[expose] def spectralAtom (u : ℝ) : ℝ :=
   Real.sqrt (u * (1 + u)) / (1 + 2 * u)
 
 /-- The interlacing used in the spherical-code argument. -/
-def Interlacing {r : ℕ}
+@[expose] def Interlacing {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : Prop :=
   0 ≤ a (Fin.last r) ∧
     ∀ i : Fin r, a i.castSucc > b i ∧ b i > a i.succ
 
 /-- The lagrange numerator used in the spherical-code argument. -/
-def lagrangeNumerator {r : ℕ}
+@[expose] def lagrangeNumerator {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ)
     (ℓ : Fin (r + 1)) : ℝ :=
   ∏ m : Fin r, (((a ℓ) * (1 + (a ℓ))) - ((b m) * (1 + (b m))))
 
 /-- The lagrange denominator used in the spherical-code argument. -/
-def lagrangeDenominator {r : ℕ}
+@[expose] def lagrangeDenominator {r : ℕ}
     (a : Fin (r + 1) → ℝ) (ℓ : Fin (r + 1)) : ℝ :=
   ∏ m : Fin r,
     (((a ℓ) * (1 + (a ℓ))) - ((a (ℓ.succAbove m)) * (1 + (a (ℓ.succAbove m)))))
 
 /-- The lagrange weight used in the spherical-code argument. -/
-def lagrangeWeight {r : ℕ}
+@[expose] def lagrangeWeight {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ)
     (ℓ : Fin (r + 1)) : ℝ :=
   lagrangeNumerator a b ℓ / lagrangeDenominator a ℓ
 
 /-- The gamma used in the spherical-code argument. -/
-def Gamma {r : ℕ}
+@[expose] def Gamma {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   ∑ ℓ : Fin (r + 1), lagrangeWeight a b ℓ * spectralAtom (a ℓ)
 
 /-- The phi used in the spherical-code argument. -/
-def Phi {r : ℕ}
+@[expose] def Phi {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) : ℝ :=
   (∑ ℓ : Fin (r + 1), MetricCodes.sphericalEntropy (a ℓ)) -
     ∑ m : Fin r, MetricCodes.sphericalEntropy (b m)
@@ -5198,12 +5200,12 @@ theorem Interlacing.Phi_nonneg {r : ℕ}
       ring
 
 /-- The hierarchy rate set used in the spherical-code argument. -/
-def hierarchyRateSet (s : ℝ) : Set ℝ :=
+@[expose] def hierarchyRateSet (s : ℝ) : Set ℝ :=
   {z | ∃ (r : ℕ) (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ),
     Interlacing a b ∧ s < 2 * Gamma a b ∧ z = Phi a b}
 
 /-- The hierarchy variational rate used in the spherical-code argument. -/
-def hierarchyVariationalRate (s : ℝ) : ℝ := sInf (hierarchyRateSet s)
+@[expose] def hierarchyVariationalRate (s : ℝ) : ℝ := sInf (hierarchyRateSet s)
 
 theorem hierarchyRateSet_bddBelow (s : ℝ) :
     BddBelow (hierarchyRateSet s) := by
@@ -5234,7 +5236,7 @@ def stieltjesPhase {r : ℕ}
         (t + u)⁻¹
 
 /-- The stieltjes phase product used in the spherical-code argument. -/
-def stieltjesPhaseProduct {r : ℕ}
+@[expose] def stieltjesPhaseProduct {r : ℕ}
     (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ) (t : ℝ) : ℝ :=
   t * (∏ i : Fin r, (t + ((b i) * (1 + (b i))))) /
     (∏ i : Fin (r + 1), (t + ((a i) * (1 + (a i)))))

@@ -17,7 +17,7 @@ public import LeanPool.PDL.StayingInFL
 
 /-! # The Tableau Game (Section 6.2) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -55,7 +55,7 @@ inductive BuilderPos (H : History) (X : Sequent) : Type where
   deriving DecidableEq
 
 /-- Game position where either Prover (`isLeft`) or Builder (`isRight`) should make a move. -/
-@[implicit_reducible]
+@[implicit_reducible, expose]
 def GamePos := Σ H X, (ProverPos H X ⊕ BuilderPos H X)
   deriving DecidableEq
 
@@ -104,7 +104,7 @@ def Move.isModal {pos newPos : GamePos} : Move pos newPos → Prop
 | .buEnd _ => False
 
 /-- Existence of a legal move between two game positions. -/
-def move (old : GamePos) (new : GamePos) : Prop := Nonempty (Move old new)
+@[expose] def move (old : GamePos) (new : GamePos) : Prop := Nonempty (Move old new)
 
 lemma move_then_no_frep {H X next} {p : (ProverPos H X ⊕ BuilderPos H X)} :
     move ⟨H, X, p⟩ next → ¬ (rep H X ∧ X.isFree) := by
@@ -114,8 +114,7 @@ lemma move_then_no_frep {H X next} {p : (ProverPos H X ⊕ BuilderPos H X)} :
 
 /-- The finite set of moves, given as a function instead of a relation.
 With `move_of_mem_theMoves` and `mem_theMoves_of_move` this agrees with `move`. -/
-@[simp]
-def theMoves : GamePos → Finset GamePos
+@[expose, simp] def theMoves : GamePos → Finset GamePos
   -- ProverPos:
   | ⟨H, X, .inl (.frep _)⟩ => ∅ -- no moves ⇒ Builder wins
   | ⟨H, X, .inl (.bas _ Xbasic)⟩ =>
@@ -1172,7 +1171,7 @@ lemma matchesFinite : WellFounded (Function.swap move) := by
 /-! ## Actual Game Definition -/
 
 /-- The game defined in Section 6.2. -/
-@[instance_reducible]
+@[instance_reducible, expose]
 def tableauGame : Game where
   Pos := GamePos
   turn | ⟨_, _, .inl _⟩ => Prover
@@ -1435,7 +1434,7 @@ decreasing_by
 
 /-- The starting position for the given sequent.
 With an empty history and using `posOf` to determine the first `GamePos`. -/
-def startPos (X : Sequent) : GamePos := ⟨[], X, posOf [] X⟩
+@[expose] def startPos (X : Sequent) : GamePos := ⟨[], X, posOf [] X⟩
 
 /-- We start with a prover position, because when the history is empty we can't have any repeat. -/
 lemma posOf_for_startPos (X : Sequent) : ∃ proPos, posOf [] X = Sum.inl proPos := by

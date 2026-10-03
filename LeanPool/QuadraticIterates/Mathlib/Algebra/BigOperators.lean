@@ -15,7 +15,7 @@ Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
 
-@[expose] public section
+public section
 
 /-- Factor a constant out of an indicator-weighted sum: `∑ g x · [p x]·c = c · ∑_{p x} g x`. -/
 theorem Finset.sum_mul_ite_const {ι R : Type*} [CommSemiring R] (s : Finset ι) (p : ι → Prop)

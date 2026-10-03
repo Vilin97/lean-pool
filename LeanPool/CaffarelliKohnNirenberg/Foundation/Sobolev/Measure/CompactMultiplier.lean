@@ -16,7 +16,7 @@ public import Mathlib.Topology.Algebra.Support
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

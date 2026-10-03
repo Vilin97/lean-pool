@@ -19,7 +19,7 @@ transition mass and positivity of the reference measure on nonempty open sets
 upgrade it to pointwise conservativity.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

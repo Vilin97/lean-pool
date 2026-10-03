@@ -11,4 +11,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction.Au
 # State contraction estimates
 -/
 
-@[expose] public section
+public section

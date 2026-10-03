@@ -22,7 +22,7 @@ indexed by a universe-lifted copy of `ℕ`, the shape at which the
 ind-category is known to have filtered colimits.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,6 +34,7 @@ universe v
 abbrev SmallNat : Type v := ULiftHom.{v} (ULift.{v} ℕ)
 
 /-- The equivalence between `ℕ` and its `v`-small copy. -/
+@[expose]
 noncomputable def smallNatEquiv : ℕ ≌ SmallNat.{v} :=
   ULiftHomULiftCategory.equiv ℕ
 
@@ -54,6 +55,7 @@ theorem unit_chainMap [SmallCategory C] [MonoidalCategory C]
     rw [chainMap_succ_of_le B δ hmn, ← Category.assoc, ih, hu]
 
 /-- The chain functor over the `v`-small copy of `ℕ`. -/
+@[expose]
 noncomputable def chainFunctorSmall [SmallCategory C]
     (B : ℕ → Ind C)
     (δ : ∀ n, B n ⟶ B (n + 1)) : SmallNat.{v} ⥤ Ind C :=

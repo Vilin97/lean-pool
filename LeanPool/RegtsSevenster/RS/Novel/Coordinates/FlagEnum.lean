@@ -17,7 +17,7 @@ are duplicate-free lists of the participating flags at a vertex:
 the raw material for the canonical index permutation between them.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -175,6 +175,7 @@ variable {k ℓ : ℕ}
 open Classical in
 /-- The block-slot enumeration: the participating slots of a
 block in slot order, as flags. -/
+@[expose]
 noncomputable def blockOddFlagList (W : ClosedFragment)
     (F : EdgeSubset W) (v : Fin (ds W).length) :
     List {f : W.Flag // f ∈ F.flags} :=

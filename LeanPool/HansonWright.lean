@@ -18,4 +18,4 @@ Tags: probability-theory, concentration-inequalities, high-dimensional-probabili
 MSC: 60E15, 60B20, 62H12
 -/
 
-@[expose] public section
+public section

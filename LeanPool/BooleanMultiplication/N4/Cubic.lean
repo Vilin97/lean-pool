@@ -17,7 +17,7 @@ quadratic direction, and the remaining cubic is a single vector wedged with
 that direction.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -64,16 +64,16 @@ theorem vectorWedge_add_right (x y z : LinearForm) :
 
 /-- Cubic high part of a product whose linear factors are `ell,m` and whose
 quadratic factors have rational-place coefficient words `α,β`. -/
-def rationalProductCubic (ell m : LinearForm) (α β : Fin 3 → F₂) : ThreeForm :=
+@[expose] def rationalProductCubic (ell m : LinearForm) (α β : Fin 3 → F₂) : ThreeForm :=
   vectorWedgeTwo ell (rationalTwo β) + vectorWedgeTwo m (rationalTwo α)
 
 /-- Boolean degree-lowering contraction: the quadratic part created when a
 linear form multiplies a quadratic form and repeats one of its variables. -/
-def booleanContraction (ell : LinearForm) (q : TwoForm) : TwoForm :=
+@[expose] def booleanContraction (ell : LinearForm) (q : TwoForm) : TwoForm :=
   fun i j => (ell i + ell j) * q i j
 
 /-- Quadratic terms created by multiplying identical quadratic monomials. -/
-def twoHadamard (q c : TwoForm) : TwoForm := fun i j => q i j * c i j
+@[expose] def twoHadamard (q c : TwoForm) : TwoForm := fun i j => q i j * c i j
 
 /-- Boolean contraction along a rational-place support only rescales that
 place.  The two support vectors use disjoint `A` and `B` coordinates. -/
@@ -87,7 +87,7 @@ theorem booleanContraction_rationalPlace (a b : F₂) (θ : Fin 3) :
 
 /-- Complete quadratic shadow of a product
 `(a + ell + Q) * (b + m + C)`. -/
-def rationalProductQuadratic (a b : F₂) (ell m : LinearForm)
+@[expose] def rationalProductQuadratic (a b : F₂) (ell m : LinearForm)
     (α β : Fin 3 → F₂) : TwoForm :=
   a • rationalTwo β + b • rationalTwo α + vectorWedge ell m +
     booleanContraction ell (rationalTwo β) +

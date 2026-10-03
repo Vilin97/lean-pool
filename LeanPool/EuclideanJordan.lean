@@ -71,4 +71,4 @@ Tags: nonassociative-algebra
 MSC: 17C20, 17C27, 17C37, 17C65, 17A15, 46L70
 -/
 
-@[expose] public section
+public section

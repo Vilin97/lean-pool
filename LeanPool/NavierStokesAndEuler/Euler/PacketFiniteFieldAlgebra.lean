@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTimeAlgebra
 
 /-! Actual path and time-derivative witnesses for finite coefficient assembly. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,21 +27,21 @@ variable {P T : ℝ} [Fact (0 < P)]
 namespace Field
 
 /-- Truncate family as an element of `Field P T (truncate M f n)`. -/
-def truncateFamily (M : ℕ) (f : ℕ → VectorField)
+@[expose] def truncateFamily (M : ℕ) (f : ℕ → VectorField)
     (G : ∀ i, i ≤ M → Field P T (f i)) (n : ℕ) : Field P T (truncate M f n) := by
   by_cases hn : n ≤ M
   · exact (G n hn).congr (fun _ _ _ => by rw [truncate_of_le M n f hn])
   · exact (Field.zero P T).congr (fun _ _ _ => by rw [truncate_of_gt M n f (by omega)])
 
 /-- Assemble family used in packet finite field algebra. -/
-def assembleFamily (M : ℕ) (f c : ℕ → VectorField)
+@[expose] def assembleFamily (M : ℕ) (f c : ℕ → VectorField)
     (G : ∀ i, i ≤ M → Field P T (f i)) (H : ∀ i, i ≤ M → Field P T (c i)) :
     (n : ℕ) → Field P T (assemble M f c n)
   | 0 => (truncateFamily M f G 0).congr (fun _ _ _ => by simp only [assemble,shiftUp,add_zero])
   | n+1 => (truncateFamily M f G (n+1)).add (truncateFamily M c H n)
 
 /-- Evaluate family as an element of `Field P T (fieldSum M κ f)`. -/
-def evaluateFamily (M : ℕ) (κ : ℝ) (f : ℕ → VectorField) (G : ∀ i, Field P T (f i)) :
+@[expose] def evaluateFamily (M : ℕ) (κ : ℝ) (f : ℕ → VectorField) (G : ∀ i, Field P T (f i)) :
     Field P T (fieldSum M κ f) :=
   (Field.finsetSum (range (M+1)) (fun i => κ^i • f i) (fun i => (G i).smul (κ^i))).congr
     (fun _ _ _ => by simp only [fieldSum,evaluate,Finset.sum_apply,Pi.smul_apply])

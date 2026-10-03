@@ -22,7 +22,7 @@ and two orbits for odd primes, because the chosen group is respectively `S_2` an
 each orbit local coefficient `1` produces the nonzero reference count used in the prime argument.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -33,6 +33,7 @@ variable {p : Nat}
 namespace FoxNeuwirth
 
 /-- Uniform barycentric weights on the `p` labels. -/
+@[expose]
 noncomputable def uniformWeights (hp : Nat.Prime p) : FoxNeuwirthWeights p where
   val := fun _ => 1 / (p : Real)
   property := by
@@ -132,6 +133,7 @@ theorem reference_zero_in_full_permutation_orbit
       uniformWeights_relabel hp sigma] using hw
 
 /-- Number of prime-symmetry orbits obtained by restricting a full permutation torsor. -/
+@[expose]
 noncomputable def referenceOrbitMultiplicity (p : Nat) : Nat :=
   (primeSymmetrySubgroup p).index
 
@@ -162,6 +164,7 @@ theorem referenceOrbitMultiplicity_eq_two
   exact alternatingGroup.index_eq_two
 
 /-- Signed reference orbit count with local coefficient `1` on each restricted orbit. -/
+@[expose]
 noncomputable def referenceSignedOrbitCount
     (p : Nat) : ZMod p :=
   (referenceOrbitMultiplicity p : ZMod p)

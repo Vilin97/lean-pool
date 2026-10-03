@@ -19,7 +19,7 @@ rank-theoretic core needed to identify genus-one transmission permutations as
 an affine translation with at most one adjacent interchange.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -177,6 +177,7 @@ theorem rankDelta_genusOne_of_degree_gt_two
   ring
 
 /-- The degree-zero member of the marked twist orbit at index `b`. -/
+@[expose]
 def genusOneZeroTwist (D : CFDiv G) (b : ℤ) : CFDiv G :=
   D + (b - CFDiv.degree D) • oneChip u - b • oneChip v
 

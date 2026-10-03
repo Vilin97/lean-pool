@@ -40,7 +40,7 @@ Measurability follows from `measurable_to_countable'` (Mathlib).
   the countable restriction)
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -49,6 +49,7 @@ open MeasureTheory Set
 /-! ## Definitions -/
 
 /-- Consistency: hypothesis h predicts correctly on every example in sample S. -/
+@[expose]
 def IsSampleConsistent {X : Type u} (h : Concept X Bool) {m : ℕ} (S : Fin m → X × Bool) : Prop :=
   ∀ i, h (S i).1 = (S i).2
 

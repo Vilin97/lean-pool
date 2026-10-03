@@ -25,7 +25,7 @@ in `ClosedImmersion.lean`. LES-facing `Sheaf.H` wrappers come from `CohomologyAP
 and the flasque infrastructure from `FlasqueVanishing.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

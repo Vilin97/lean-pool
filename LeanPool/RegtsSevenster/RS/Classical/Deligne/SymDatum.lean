@@ -20,7 +20,7 @@ transferred datum are where retraction and self-adjointness
 enter, and they live with the pairing calculus.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -38,6 +38,7 @@ modules induces one on any pair connected to it by module maps —
 the pairing pulls back along maps into the pair, the copairing
 pushes forward along maps out of it.  Linearity is inherited
 compositionally. -/
+@[expose]
 noncomputable def ModDualityDatum.transfer
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -74,6 +75,7 @@ section SymBundles
 
 /-- The symmetriser projection, as a morphism of bundled
 modules; the mirror of `symPowσMod`. -/
+@[expose]
 noncomputable def symPowπMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -96,6 +98,7 @@ section SymDatum
 /-- **The symmetric power duality datum**: the symmetric powers
 of a dual pair form a dual pair, by transferring the power datum
 along the symmetriser section and projection. -/
+@[expose]
 noncomputable def symDualityDatum
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

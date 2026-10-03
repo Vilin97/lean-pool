@@ -22,7 +22,7 @@ section
 
 /-! Strong-derivative interpolation on the actual cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -123,7 +123,7 @@ def wordPathOperator {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ) :
 /-- The derivative path is its literal derivative coordinate at each time. -/
 theorem wordPathOperator_apply {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period s)) (t : Icc (0 : ℝ) T) :
-    wordPathOperator period h w T u t = word period (u t) h w := rfl
+    wordPathOperator period h w T u t = word period (u t) h w := by rfl
 
 /-- The exact strong-derivative interpolation inequality also controls the uniform time-path norm.
 -/
@@ -149,9 +149,8 @@ theorem wordPath_square_bound {s n : ℕ} (h : n + 2 ≤ s) (w : Fin n → Fin 4
 theorem wordPath_sub {s n : ℕ} (h : n ≤ s) (w : Fin n → Fin 4) (T : ℝ)
     (u v : C(Icc (0 : ℝ) T, SobolevSpace period s)) :
     wordPathOperator period h w T (u-v) = wordPathOperator period h w T u-wordPathOperator period h
-        w T v := by
-  ext t
-  rfl
+        w T v :=
+  (wordPathOperator period h w T).map_sub u v
 
 /-- The actual difference interpolation estimate depends only on the two given uniform state bounds.
 -/
@@ -185,7 +184,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -273,8 +272,21 @@ theorem cauchy_restrict_of_value {s q : ℕ} (hq : q < s) (T M : ℝ) (hM : 0 �
         := by
   apply path_cauchy_of_coordinates period q T
   intro w
-  exact wordPath_cauchy_of_value period T M hM u hu h0 w.1.val
-    ((Nat.le_of_lt_succ w.1.isLt).trans_lt hq) w.2
+  have hcoordinate (k : ℕ) :
+      pathCoordinates period q T
+          ((restrictOperator period hq.le).compLeftContinuous ℝ (Icc (0 : ℝ) T) (u k)) w =
+        wordPathOperator period ((Nat.le_of_lt_succ w.1.isLt).trans hq.le) w.2 T
+          (u k) := by
+    apply ContinuousMap.ext
+    intro t
+    change word period (restrictOperator period hq.le (u k t))
+        (Nat.le_of_lt_succ w.1.isLt) w.2 =
+      word period (u k t) ((Nat.le_of_lt_succ w.1.isLt).trans hq.le) w.2
+    exact word_restrictOperator period hq.le (Nat.le_of_lt_succ w.1.isLt)
+      (u k t) w.2
+  simpa only [hcoordinate] using
+    (wordPath_cauchy_of_value period T M hM u hu h0 w.1.val
+      ((Nat.le_of_lt_succ w.1.isLt).trans_lt hq) w.2)
 
 /-- Completeness produces the actual strong lower-order Sobolev limit from those concrete bounds. -/
 theorem exists_limit_restrict_of_value {s q : ℕ} (hq : q < s) (T M : ℝ) (hM : 0 ≤ M)

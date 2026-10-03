@@ -12,7 +12,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Operator -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -44,6 +44,7 @@ def equiv : Operator L n ≃ Semiterm L Empty n where
   right_inv := by intro _; simp
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) : Semiterm L ξ n :=
   Rew.substs v (Rew.emb o.term)
 
@@ -88,6 +89,7 @@ lemma positive_operator_iff {k} {o : Operator L k} {v : Fin k → Semiterm L ξ 
 
 -- f.operator ![ ... f.operator ![f.operator ![z, t 0], t 1], ... ,t (n-1)]
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def foldr (f : Operator L 2) (z : Operator L k) : List (Operator L k) → Operator L k
   | []      => z
   | o :: os => f.comp ![foldr f z os, o]
@@ -101,6 +103,7 @@ def foldr (f : Operator L 2) (z : Operator L k) : List (Operator L k) → Operat
   simp [foldr, operator_comp, Matrix.fun_eq_vec₂]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def iterr (f : Operator L 2) (z : Const L) : (n : ℕ) → Operator L n
   | 0     => z
   | _ + 1 => f.foldr (bvar 0) (List.ofFn fun x => bvar x.succ)
@@ -199,6 +202,7 @@ lemma _root_.LO.FirstOrder.Semiterm.Operator.Star.term_eq [L.Star] :
 open Language Semiterm
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def numeral (L : Language) [Operator.Zero L] [Operator.One L] [Operator.Add L] : ℕ → Const L
   | 0     => Zero.zero
   | n + 1 => Add.add.foldr One.one (List.replicate n One.one)
@@ -243,6 +247,7 @@ end «lp_section_1»
 section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def npow (L : Language) [Operator.One L] [Operator.Mul L] (n : ℕ) : Operator L 1 :=
   Operator.Mul.mul.foldr (One.one.comp ![]) (List.replicate n (bvar 0))
 
@@ -280,7 +285,7 @@ abbrev goedelNumber' (a : α) : Semiterm L ξ n := const (goedelNumber a)
 instance : GoedelQuote α (Semiterm L ξ n) := ⟨goedelNumber'⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
+@[expose, reducible]
 def ofEncodable [Operator.Zero L] [Operator.One L] [Operator.Add L] {α : Type*} [Encodable α] :
     GoedelNumber L α :=
   ⟨Operator.encode L⟩
@@ -318,7 +323,7 @@ end «lp_section_3»
 section «lp_section_4»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Semiterm.Operator.val
+@[expose] def _root_.LO.FirstOrder.Semiterm.Operator.val
     {M : Type w} [s : Structure L M] (o : Operator L k) (v :
     Fin k → M) :
     M := Semiterm.val s v Empty.elim o.term
@@ -383,7 +388,7 @@ abbrev Const (L : Language.{u}) := Operator L 0
 namespace Operator
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) :
+@[expose] def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) :
     Semiformula L ξ n := Rewriting.embedding o.sentence <~ v
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -409,7 +414,7 @@ lemma operator_comp (o : Operator L k) (w : Fin k → Semiterm.Operator L l) (v 
 def and {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋏ o₂.sentence⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def or {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋎ o₂.sentence⟩
+@[expose] def or {k} (o₁ o₂ : Operator L k) : Operator L k := ⟨o₁.sentence ⋎ o₂.sentence⟩
 
 @[simp] lemma operator_and (o₁ o₂ : Operator L k) (v : Fin k → Semiterm L ξ n) :
   (o₁.and o₂).operator v = o₁.operator v ⋏ o₂.operator v := by simp [operator, and]
@@ -514,6 +519,7 @@ variable {L : Language}
 end Operator
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.FirstOrder.Semiformula.Operator.val
     {M : Type w} [s : Structure L M] {k} (o : Operator L k) (v :
     Fin k → M) :
@@ -554,11 +560,11 @@ lemma eval_operator {k} {o : Operator L k} {v : Fin k → Semiterm L ξ n} :
 end «lp_section_5»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ballLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def ballLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := ∀[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bexLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def bexLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := ∃[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/

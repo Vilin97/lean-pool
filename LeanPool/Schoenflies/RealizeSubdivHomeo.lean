@@ -66,7 +66,7 @@ Declarations:
   with `realizeHomeo_toFun` / `realizeHomeo_invFun` / `realizeHomeo_eqOn`.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 open scoped Graph
@@ -167,6 +167,7 @@ The point map is untouched: a subdivision does not move the realized 1-skeleton
 (`skeletonSet_realize`), so six of the eight fields are the old ones read through that equality.
 The two that are not — `pos_apply` at the new 0-cell and `edgeArc_image` at the two new 1-cells
 — are `drawing_targetParam` and `image_edge_uIcc`. -/
+@[expose]
 noncomputable def realizeHomeo (d : S.SubdivData) (g : SkeletonHomeo R₁ R₂) {t : ℝ}
     (ht : t ∈ Ioo (0 : ℝ) 1) :
     SkeletonHomeo (d.realize R₁ t ht)
@@ -211,10 +212,10 @@ noncomputable def realizeHomeo (d : S.SubdivData) (g : SkeletonHomeo R₁ R₂) 
       exact g.edgeArc_image heS
 
 @[simp] theorem realizeHomeo_toFun (ht : t ∈ Ioo (0 : ℝ) 1) :
-    (d.realizeHomeo g ht).toFun = g.toFun := rfl
+    (d.realizeHomeo g ht).toFun = g.toFun := by exact rfl
 
 @[simp] theorem realizeHomeo_invFun (ht : t ∈ Ioo (0 : ℝ) 1) :
-    (d.realizeHomeo g ht).invFun = g.invFun := rfl
+    (d.realizeHomeo g ht).invFun = g.invFun := by exact rfl
 
 /-- **The transported map is the old one as a point map** — the form
 `CellStructure.LimitTower.skelHomeo_succ` consumes. -/

@@ -17,7 +17,7 @@ import Mathlib.Tactic.Ring.Basic
 composition and evaluation, and division by `X - a` (for `p`-integral roots `a`).
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

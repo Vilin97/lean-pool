@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketBudgetTimeChange
 
 /-! One positive growth profile and one scalar amplitude determine all grade profiles. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ theorem high_timeProfile_eq {T T' : ℝ} (S : Scales (Icc (0 : ℝ) T))
 
 /-- Of time profile, given by `ofGrowth (α • timeProfileChange g h) (fun t => mul_pos hα
 (timeProfileChange_pos g hg h t))`. -/
-def ofTimeProfile {T T' : ℝ} (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+@[expose] def ofTimeProfile {T T' : ℝ} (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (h : T = T') (α : ℝ) (hα : 0 < α) : Scales (Icc (0 : ℝ) T') :=
   ofGrowth (α • timeProfileChange g h)
     (fun t => mul_pos hα (timeProfileChange_pos g hg h t))

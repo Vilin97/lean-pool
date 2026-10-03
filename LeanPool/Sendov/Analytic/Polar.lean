@@ -40,7 +40,7 @@ and `p'(a) ≠ 0` is never needed.
 * `Sendov.one_le_integral_prod_norm`: the branch point `(⋆)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

@@ -32,7 +32,7 @@ its scalars a field of countable dimension over the complex numbers,
 hence the complex numbers themselves.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

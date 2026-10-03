@@ -25,7 +25,7 @@ operators and their interaction with the `C¹_c` graph embedding used to define 
 - `grad_translate`: the Euclidean gradient commutes with translation.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

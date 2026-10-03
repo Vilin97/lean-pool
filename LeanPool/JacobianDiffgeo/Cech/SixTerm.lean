@@ -45,7 +45,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.7, §6.9).
   `0 → L(D) → L(D') → Window D D' → H¹(D) → H¹(D') → 0`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter TopologicalSpace RS.Cech

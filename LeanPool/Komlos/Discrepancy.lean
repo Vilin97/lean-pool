@@ -23,7 +23,7 @@ A colouring is a function with values in `{-1, 1}`. For a matrix `A` and a colou
 satisfying that bound. The minimum is attained because there are finitely many colourings.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -32,6 +32,7 @@ open Finset Matrix
 variable {m n : Type*}
 
 /-- A colouring of `n` is a `±1`-valued function on `n`. -/
+@[expose]
 def IsColouring (χ : n → ℝ) : Prop := ∀ j, χ j = 1 ∨ χ j = -1
 
 /-- The colouring attached to a Boolean assignment. -/
@@ -52,6 +53,7 @@ lemma exists_ofBool_eq {χ : n → ℝ} (hχ : IsColouring χ) : ∃ b, ofBool b
 
 /-- The discrepancy of the colouring `χ` with respect to `A`: the supremum norm of the signed
 sum `A *ᵥ χ` of the columns of `A`. -/
+@[expose]
 noncomputable def colouringDiscrepancy [Fintype m] [Fintype n] (A : Matrix m n ℝ)
     (χ : n → ℝ) : ℝ := ‖A *ᵥ χ‖
 

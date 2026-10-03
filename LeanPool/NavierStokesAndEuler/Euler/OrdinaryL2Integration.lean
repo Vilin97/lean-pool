@@ -18,7 +18,7 @@ import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 identity needs no compact-support premise because all three pairings
 in the Haar-measure integration theorem are integrable. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

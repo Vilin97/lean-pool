@@ -39,7 +39,7 @@ The coefficient projections are shared with the Hilbert base-change proofs throu
 `Algebra/CoefficientProjection.lean` (TR0/TR1).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

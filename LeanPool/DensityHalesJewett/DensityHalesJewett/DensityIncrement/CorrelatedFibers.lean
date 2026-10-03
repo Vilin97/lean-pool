@@ -17,7 +17,7 @@ common fibers; averaging over fixed suffixes then yields either an immediate den
 suffix carrying many complete restricted-alphabet lines.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -26,11 +26,11 @@ open scoped BigOperators
 namespace DensityHalesJewett
 
 /-- A finite word family contains no complete combinatorial line. -/
-def IsLineFree {α ι : Type*} (A : Finset (ι → α)) : Prop :=
+@[expose] def IsLineFree {α ι : Type*} (A : Finset (ι → α)) : Prop :=
   ∀ l : Combinatorics.Line α ι, ∃ a, l a ∉ A
 
 /-- Pull a word family back to the parameter cube of a subspace. -/
-noncomputable def pullback {η α ι : Type*} [Fintype (η → α)]
+@[expose] noncomputable def pullback {η α ι : Type*} [Fintype (η → α)]
     (V : Combinatorics.Subspace η α ι)
     (A : Finset (ι → α)) : Finset (η → α) :=
   parameterPreimage V A

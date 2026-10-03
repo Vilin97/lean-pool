@@ -15,7 +15,7 @@ The coefficient of a monomial `w` in `(∑ l, X l) ^ |T|` counts the
 number of functions `T → Fin k` whose fibre sizes match `w`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

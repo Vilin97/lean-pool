@@ -28,7 +28,7 @@ every other arity as empty — this avoids deciding equality against the disting
 `lt`, which a general language does not support.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -36,7 +36,7 @@ open FirstOrder
 
 /-- The all-arities relation family on an ordinal's type: binary positions get the ordinal
 order, every other arity is empty. -/
-def ordRel (α : Ordinal.{0}) : ∀ n, (Fin n → α.ToType) → Prop
+@[expose] def ordRel (α : Ordinal.{0}) : ∀ n, (Fin n → α.ToType) → Prop
   | 2, v => v 0 < v 1
   | _, _ => False
 

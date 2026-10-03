@@ -19,7 +19,7 @@ pairing-preserving ledger — the well-definedness of the value as a
 function of the pairing, riding on the proved block connectivity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -47,7 +47,7 @@ in the doubling: the presentations produced here use mixed powers
 with no dual factors at all.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -336,6 +336,7 @@ variable {A : Type u}
 
 /-- The diagonal embedding `M ↦ (M, M)`: the ambient object placed
 in both degrees at once. -/
+@[expose]
 def dbl [Category.{v} A] : A ⥤ Doubled A where
   obj M := ⟨M, M⟩
   map f := homMk f f

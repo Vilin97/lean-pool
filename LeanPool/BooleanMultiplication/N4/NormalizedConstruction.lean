@@ -15,7 +15,7 @@ commutation.  No circuits are enumerated.  The only finite calculation below
 is the three-coordinate proof that the rational place words are independent.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

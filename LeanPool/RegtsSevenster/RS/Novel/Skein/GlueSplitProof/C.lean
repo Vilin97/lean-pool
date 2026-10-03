@@ -15,7 +15,7 @@ The per-subset ledgers and the open-cut engine, assembled into the
 master splitting identities.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

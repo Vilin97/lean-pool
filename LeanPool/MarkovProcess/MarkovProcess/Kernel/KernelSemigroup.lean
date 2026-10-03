@@ -19,7 +19,7 @@ Conservativity is deliberately a separate predicate.  A killed transition
 family has mass at most one, while a conservative family has mass exactly one.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -117,6 +117,7 @@ theorem measure_le_one (t : NNReal) (x : α) (s : Set α) : P t x s ≤ 1 :=
   (P.isSubMarkovKernel t).measure_le_one x s
 
 /-- A transition-kernel semigroup is conservative when no mass is lost. -/
+@[expose]
 def IsConservative : Prop :=
   ∀ t x, P t x univ = 1
 

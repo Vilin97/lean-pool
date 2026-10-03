@@ -34,7 +34,7 @@ downstream of the Gamma bound stays valid.
 * `Sendov.integral_le_tail_lin`, `Sendov.integral_le_tail_cube`: the two instances used.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

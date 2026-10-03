@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedLinear
 
 /-! Bounds for literal high projection and for the zero fields in masked grade families. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -17,23 +17,24 @@ choices in the paper.  The geometric estimates include arbitrary tails,
 so they also control every finite execution of the refinement procedure.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.DecompositionParameters
 
 open scoped BigOperators
 
 /-- The constant in the mass loss of a complete-element refinement. -/
-def refinementConstant (d : ℕ) : ℝ := (3 : ℝ) ^ (d + 1)
+@[expose] def refinementConstant (d : ℕ) : ℝ := (3 : ℝ) ^ (d + 1)
 
 /-- The ratio between two consecutive scales. -/
 noncomputable def decayRatio (d : ℕ) : ℝ := (3 : ℝ)⁻¹ ^ (2 * d)
 
 /-- The scale `δ_i = δ₀ 3^(-2di)`. -/
+@[expose]
 noncomputable def scale (d : ℕ) (δ₀ : ℝ) (i : ℕ) : ℝ := δ₀ * decayRatio d ^ i
 
 /-- A bound for the mass lost at one stage, divided by the input mass. -/
-noncomputable def lossBudget (d : ℕ) (ε δ₀ : ℝ) (i : ℕ) : ℝ :=
+@[expose] noncomputable def lossBudget (d : ℕ) (ε δ₀ : ℝ) (i : ℕ) : ℝ :=
   ε * scale d δ₀ i ^ 2 + refinementConstant d * scale d δ₀ i
 
 /-- A choice depending only on the dimension and retained-mass tolerance. -/

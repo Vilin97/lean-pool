@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # ProductBasisAndAnnuli -/
 
-@[expose] public section
+public section
 
 
 

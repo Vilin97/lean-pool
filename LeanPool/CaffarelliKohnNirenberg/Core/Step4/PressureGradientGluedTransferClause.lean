@@ -33,7 +33,7 @@ cylinder inside `Metric.ball z₀ (2 * R)`, which is the region the hypotheses
 control.
 -/
 
-@[expose] public section
+public section
 
 section
 

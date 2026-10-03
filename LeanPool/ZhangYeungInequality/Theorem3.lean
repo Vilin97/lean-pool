@@ -87,7 +87,7 @@ data
 processing
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 

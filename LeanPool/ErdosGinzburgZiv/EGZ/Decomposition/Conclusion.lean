@@ -24,7 +24,7 @@ The zero-dimensional case is proved by the initial one-node decomposition.
 The positive-dimensional existence proof is assembled in `Existence.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -36,6 +36,7 @@ and one nonzero input function.
 The primality proof installs the `NeZero p` instance required by finite sums
 over `ZMod p`.  Keeping that implementation detail inside this predicate
 makes the public theorem quantify naturally over primes. -/
+@[expose]
 def HasFlagDecompositionConclusion {p d : ℕ} (hp : p.Prime)
     (f : FpCoord p d → ℕ) (ε δ : ℝ) (g : ℕ → ℕ)
     (Bcard BK : ℕ) : Prop := by

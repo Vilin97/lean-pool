@@ -19,7 +19,7 @@ adapter supplies the pressure input shared by the two regularity criteria.
 No pressure estimate or source certificate is assumed here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal Topology

@@ -29,7 +29,7 @@ Frobenius formula then yields `dim λ · s_λ(superPS p q)`, positive by
 hook positivity — so the idempotent's action cannot vanish.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -42,6 +42,7 @@ noncomputable section
 
 /-- **The standard super vector space of dimension `(p, q)`**:
 `ℂ^p` in even degree and `ℂ^q` in odd degree. -/
+@[expose]
 def stdSuper (p q : ℕ) : SuperVect where
   even := Fin p → ℂ
   odd := Fin q → ℂ
@@ -65,11 +66,13 @@ braiding enter through the action itself.) -/
 
 /-- The trace of an endomorphism in `SuperVect`: the sum of the
 traces of its even and odd components. -/
+@[expose]
 def sTr {V : SuperVect} (f : V ⟶ V) : ℂ :=
   LinearMap.trace ℂ V.even (SuperVect.Hom.evenMap f) +
     LinearMap.trace ℂ V.odd (SuperVect.Hom.oddMap f)
 
 /-- The super trace as a linear functional on endomorphisms. -/
+@[expose]
 def sTrL (V : SuperVect) : (V ⟶ V) →ₗ[ℂ] ℂ where
   toFun := sTr
   map_add' f g := by
@@ -139,6 +142,7 @@ theorem sTr_tensorHom {V W : SuperVect} (f : V ⟶ V) (g : W ⟶ W) :
 
 /-- The parity involution of a super vector space: the identity on
 the even component and minus the identity on the odd component. -/
+@[expose]
 def parHom (V : SuperVect) : V ⟶ V where
   evenMap := LinearMap.id
   oddMap := -LinearMap.id
@@ -211,6 +215,7 @@ theorem sTr_eq_trace_tot {V : SuperVect} (f : V ⟶ V) :
 
 /-- The middle shuffle of four product components:
 `((A × B) × (C × D)) ≃ₗ ((A × D) × (B × C))`. -/
+@[expose]
 def prodShuffle (A B C D : Type*)
     [AddCommGroup A] [Module ℂ A] [AddCommGroup B] [Module ℂ B]
     [AddCommGroup C] [Module ℂ C] [AddCommGroup D] [Module ℂ D] :
@@ -233,6 +238,7 @@ theorem prodShuffle_apply (A B C D : Type*)
 /-- **The total tensor identification**: the total space of a graded
 tensor product is the tensor product of the total spaces, by the
 four-block shuffle. -/
+@[expose]
 def totTensor (V W : SuperVect) :
     (Tot V ⊗[ℂ] Tot W) ≃ₗ[ℂ] Tot (SuperVect.tensorObj V W) :=
   (TensorProduct.prodLeft ℂ ℂ V.even V.odd (Tot W)).trans
@@ -1229,6 +1235,7 @@ presentation. -/
 /-- **The graded signed permutation representation**: the symmetric
 group acting on the total space of the tensor power of the standard
 super object, by the categorical action with its Koszul signs. -/
+@[expose]
 def gradedSignRep (p q n : ℕ) :
     Representation ℂ (Equiv.Perm (Fin n))
       (Tot (tensorPow SuperVect (stdSuper p q) n)) where

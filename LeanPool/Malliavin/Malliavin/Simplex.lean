@@ -40,7 +40,7 @@ which is what turns `E[Jₙ(f_sym)²] = ‖f_sym‖²_{L²(Δₙ)}` into `E[Iₙ
   `Malliavin.integral_sq_norm_eq_factorial_smul` — its `L²` form `∫ ‖g‖² = n! • ∫_{Δₙ} ‖g‖²`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Finset Set
 open scoped ENNReal
@@ -86,6 +86,7 @@ section Order
 variable [LinearOrder T]
 
 /-- The (open) simplex `Δₙ = {t : Fin n → T | t 0 < t 1 < ⋯ < t (n-1)}`. -/
+@[expose]
 def simplex (T : Type*) [LinearOrder T] (n : ℕ) : Set (Fin n → T) :=
   {t | StrictMono t}
 

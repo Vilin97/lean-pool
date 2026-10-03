@@ -18,7 +18,7 @@ conclusions of the numerical cutoff selection. The prefix must depend on the
 requested derivative order and decay power; no fixed tail is declared flat.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -203,7 +203,7 @@ theorem norm_tsum_sub_prefix_jet_le_of_locallyFinite {F : ℕ → E → V} {x : 
 /-- The stage estimates needed by the diagonal argument, stated on actual
 cut potentials and their actual derivatives. Stage zero is exempt; stage `j`
 controls the finite list of derivatives through `j+2`. -/
-def CutStageBounds (a : ℕ → ℝ) (q : E → ℝ) (A : ℕ → E → V)
+@[expose] def CutStageBounds (a : ℕ → ℝ) (q : E → ℝ) (A : ℕ → E → V)
     (g L : ℕ → ℝ) (U : Set E) : Prop :=
   ∀ j, 1 ≤ j → ∀ m, m ≤ j + 2 → ∀ x ∈ U,
     ‖iteratedFDeriv ℝ m (SolenoidalDiagonal.cutStage a q A j) x‖ ≤
@@ -258,7 +258,7 @@ variable {E V : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- The original finite stage, before multiplying its potentials by cutoffs. -/
-def uncutPrefix (A : ℕ → E → V) (N : ℕ) (x : E) : V :=
+@[expose] def uncutPrefix (A : ℕ → E → V) (N : ℕ) (x : E) : V :=
   ∑ j ∈ Finset.range N, A j x
 
 omit [NormedSpace ℝ E] in

@@ -19,7 +19,7 @@ This file sets up the automorphism group of the Turing degrees as the group of o
 isomorphisms of `TuringDegree`.
 -/
 
-@[expose] public section
+public section
 
 namespace Computability
 
@@ -39,7 +39,7 @@ instance OrderAutGroup (α : Type) [LE α] : Group (OrderAut α) where
 namespace TuringDegree
 
 /-- The automorphism group of the Turing degrees. -/
-def automorphismGroup : Type := OrderAut TuringDegree
+@[expose] def automorphismGroup : Type := OrderAut TuringDegree
 
 instance automorphismGroup.isGroup : Group automorphismGroup :=
   OrderAutGroup TuringDegree

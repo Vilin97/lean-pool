@@ -21,7 +21,7 @@ canonical ones gives `starDecomposition`, the accompanying paper's
 union glued along the edge matching.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable (W : ClosedFragment)
 
 /-- The matching pairs of a representative list, as labels of the
 explosion at `C`. -/
+@[expose]
 def repPairs (C : Finset W.Flag) (hC : CutClosed W C) :
     (l : List W.Flag) → (∀ x ∈ l, x ∈ C) →
       List ({f : W.Flag // f ∈ C} × {f : W.Flag // f ∈ C})
@@ -369,6 +370,7 @@ theorem repPairs_wf_of (C : Finset W.Flag) (hC : CutClosed W C) :
 
 /-- The canonical orbit representatives: flags enumerated below
 their partners. -/
+@[expose]
 noncomputable def canonicalReps : List W.Flag :=
   (Finset.univ.filter (fun f =>
     (Fintype.equivFin W.Flag f : ℕ) <

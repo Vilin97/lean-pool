@@ -20,4 +20,4 @@ import Mathlib.Tactic.SetLike
 # MatchingLogic.EntryIII.Injection
 -/
 
-@[expose] public section
+public section

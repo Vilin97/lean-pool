@@ -43,7 +43,7 @@ constructible morphism connects them.  The degree-zero object
 `modTensor A M' M ⊗ B` is where the splitting genuinely lives.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -91,6 +91,7 @@ section Bundles
 
 /-- The pairing of a duality datum, as a module map into the
 regular module. -/
+@[expose]
 noncomputable def ModDualityDatum.pairMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Limits.HasCoequalizers D]
@@ -103,6 +104,7 @@ noncomputable def ModDualityDatum.pairMod
 
 /-- The copairing of a duality datum, as a module map from the
 regular module. -/
+@[expose]
 noncomputable def ModDualityDatum.copairMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Limits.HasCoequalizers D]

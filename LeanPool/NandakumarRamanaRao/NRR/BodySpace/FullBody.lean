@@ -12,7 +12,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.BodySpace.PositiveArea
 # The full parent body as a hyperspace point
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -22,7 +22,7 @@ namespace BodySpace
 
 /-- The parent body itself, regarded as an element of `BodySpace K A` whenever the threshold is at
 most the parent's area. -/
-noncomputable def parentAt
+@[expose] noncomputable def parentAt
     (K : Geometry.ConvexBody Plane) {A : ℝ} (hAK : A ≤ K.area) :
     BodySpace K A :=
   ⟨⟨K.toMathlib, subset_rfl⟩, hAK⟩
@@ -38,7 +38,7 @@ theorem parentAt_body_carrier
   rfl
 
 /-- The parent body itself, regarded as an element of `BodySpace K K.area`. -/
-noncomputable def full (K : Geometry.ConvexBody Plane) : BodySpace K K.area :=
+@[expose] noncomputable def full (K : Geometry.ConvexBody Plane) : BodySpace K K.area :=
   parentAt K le_rfl
 
 theorem full_body_carrier (K : Geometry.ConvexBody Plane) :

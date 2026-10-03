@@ -22,7 +22,7 @@ The final interface uses the actual one-sided `iteratedDerivWithin` of time
 slices. Equality of full mixed derivative tensors is not an input assumption.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

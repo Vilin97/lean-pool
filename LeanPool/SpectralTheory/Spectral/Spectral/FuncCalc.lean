@@ -18,13 +18,13 @@ a measurable function `f`, and shows it recovers `A` on the coordinate
 function.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The measurable spectral functional calculus obtained from a spectral PVM representing `A`. -/
-noncomputable def spectralFuncCalc
+@[expose] noncomputable def spectralFuncCalc
     (A : E →ₗ.[ℂ] E) (hA : IsSelfAdjoint A)
     (f : ℝ → ℂ) (hf : Measurable f) : E →ₗ.[ℂ] E :=
   (Classical.choose (spectral_theorem_existence A hA)).unboundedIntegral f hf

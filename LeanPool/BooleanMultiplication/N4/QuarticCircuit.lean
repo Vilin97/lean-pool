@@ -16,7 +16,7 @@ from its interface and applies the result to the first useful child of the
 normalized seed.  No circuit enumeration is involved.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

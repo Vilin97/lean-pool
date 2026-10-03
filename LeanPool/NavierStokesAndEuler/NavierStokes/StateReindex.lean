@@ -18,7 +18,7 @@ Vector directions are transported by `e.symm`.  The final specialization is
 the existing associator from `PressureStream.Lift S` to `((ℝ × S) × Plane)`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ variable {D E F : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Cylinder, bundling `toLinearEquiv`, `norm_map`. -/
-noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] (E × ℝ) where
+@[expose] noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] (E × ℝ) where
   toLinearEquiv := e.toLinearEquiv.prodCongr (LinearEquiv.refl ℝ ℝ)
   norm_map' x := by
     change max ‖e x.1‖ ‖x.2‖ = max ‖x.1‖ ‖x.2‖
@@ -45,7 +45,7 @@ noncomputable def cylinder (e : D ≃ₗᵢ[ℝ] E) : (D × ℝ) ≃ₗᵢ[ℝ] 
     (cylinder e).symm x = (e.symm x.1, x.2) := rfl
 
 /-- Vector, given by `ParticularWaveBounds.reindexVector e V`. -/
-noncomputable def vector (e : D ≃ₗᵢ[ℝ] E) (V : E → E) : D → D :=
+@[expose] noncomputable def vector (e : D ≃ₗᵢ[ℝ] E) (V : E → E) : D → D :=
   ParticularWaveBounds.reindexVector e V
 
 theorem fderiv_pull (e : D ≃ₗᵢ[ℝ] E) (f : E → F) (x v : D) :
@@ -79,15 +79,18 @@ theorem norm_iteratedFDeriv_pull (e : D ≃ₗᵢ[ℝ] E) (f : E → F) (m : ℕ
   e.norm_iteratedFDeriv_comp_right f x m
 
 /-- Field, defined pointwise by `f n (e x)`. -/
+@[expose]
 noncomputable def field (e : D ≃ₗᵢ[ℝ] E) (f : MeanIncrementBounds.Field E) :
     MeanIncrementBounds.Field D := fun n x => f n (e x)
 
 /-- Triple, given by `⟨field e b.radial, field e b.angular, field e b.axial⟩`. -/
+@[expose]
 noncomputable def triple (e : D ≃ₗᵢ[ℝ] E) (b : MeanIncrementBounds.Triple E) :
     MeanIncrementBounds.Triple D := ⟨field e b.radial, field e b.angular, field e b.axial⟩
 
 /-- Operators, bundling `epsilon`, `radialFrequency`, `fastCoefficient`, `radius` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def operators (e : D ≃ₗᵢ[ℝ] E) (o : MeanIncrementBounds.Operators E) :
     MeanIncrementBounds.Operators D where
   epsilon := o.epsilon
@@ -102,6 +105,7 @@ noncomputable def operators (e : D ≃ₗᵢ[ℝ] E) (o : MeanIncrementBounds.Op
   vT := e.symm o.vT
 
 /-- Context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
+@[expose]
 noncomputable def context (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context E) :
     CorrectionState.Context D where
   operators := operators e c.operators
@@ -110,17 +114,19 @@ noncomputable def context (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
   virtualAxial := field e c.virtualAxial
 
 /-- Oscillation, defined pointwise by `u n (cylinder e x)`. -/
-noncomputable def oscillation (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.Oscillation E) :
+@[expose] noncomputable def oscillation (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.Oscillation E) :
     CorrectionState.Oscillation D := fun n x => u n (cylinder e x)
 
 /-- Errors, given by `⟨oscillation e a.base, oscillation e a.gaussian, oscillation e
 a.aliasError⟩`. -/
+@[expose]
 noncomputable def errors (e : D ≃ₗᵢ[ℝ] E) (a : CorrectionState.ExcludedErrors E) :
     CorrectionState.ExcludedErrors D :=
   ⟨oscillation e a.base, oscillation e a.gaussian, oscillation e a.aliasError⟩
 
 /-- State, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def state (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.State E) : CorrectionState.State D
     where
   mean := triple e u.mean
@@ -188,6 +194,7 @@ theorem totalPressure_pull (e : D ≃ₗᵢ[ℝ] E) (u : CorrectionState.State E
 
 /-- Coefficients, given by `AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x
 => f (e x)) rfl a.coeff)`. -/
+@[expose]
 noncomputable def coefficients (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficients E) :
     HarmonicFields.Coefficients D :=
   AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (fun f : E → ℂ => fun x => f (e x)) rfl a.coeff)
@@ -297,7 +304,7 @@ theorem nonconstant_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficien
 
 /-- Block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required compatibility
 proofs. -/
-noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlock E) :
+@[expose] noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlock E) :
     CorrectionState.HarmonicBlock D where
   velocity n i := coefficients e (b.velocity n i)
   pressure n := coefficients e (b.pressure n)
@@ -306,6 +313,7 @@ noncomputable def block (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBl
   angularFrequency := b.angularFrequency
 
 /-- Block coefficients, defined pointwise by `coefficients e (a n i)`. -/
+@[expose]
 noncomputable def blockCoefficients (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicResidual.BlockCoefficients E) :
     HarmonicResidual.BlockCoefficients D := fun n i => coefficients e (a n i)
 
@@ -324,6 +332,7 @@ theorem block_pressure (e : D ≃ₗᵢ[ℝ] E) (b : CorrectionState.HarmonicBlo
 /-! ## The actual coefficient residual -/
 
 /-- Frame, bundling `radius`, `radial`, `axial`, `time` and the required compatibility proofs. -/
+@[expose]
 noncomputable def frame (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Frame E) : HarmonicResidual.Frame D
     where
   radius := fun x => g.radius (e x)
@@ -647,7 +656,7 @@ theorem context_roundtrip (e : D ≃ₗᵢ[ℝ] E) (c : CorrectionState.Context 
 /-! ## The same weighted classes, without loss of exponents -/
 
 /-- Strip, given by `ParticularWaveBounds.reindexStrip e s`. -/
-noncomputable def strip (e : D ≃ₗᵢ[ℝ] E) (s : WeightedClasses.StripData E) :
+@[expose] noncomputable def strip (e : D ≃ₗᵢ[ℝ] E) (s : WeightedClasses.StripData E) :
     WeightedClasses.StripData D := ParticularWaveBounds.reindexStrip e s
 
 theorem memClass_pull (e : D ≃ₗᵢ[ℝ] E) {s : WeightedClasses.StripData E}
@@ -783,10 +792,12 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 abbrev Associated (S : Type) := (ℝ × S) × TorusInverse.Plane
 
 /-- The actual auxiliary torus integral in the associated layout. -/
+@[expose]
 noncomputable def associatedTorusAverage (f : Associated S → ℝ) (p : ℝ × S) : ℝ :=
   ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (p, (x, y))
 
 /-- The actual radial integral of that torus average. -/
+@[expose]
 noncomputable def associatedMass (f : Associated S → ℝ) (s : S) : ℝ :=
   ∫ r, associatedTorusAverage f (r, s)
 

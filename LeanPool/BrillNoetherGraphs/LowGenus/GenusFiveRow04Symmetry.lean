@@ -23,7 +23,7 @@ Every permutation is supplied with an explicit inverse, which keeps
 `reindexLength` definitionally transparent; all endpoint laws are
 `decide`d. -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow04Symmetry
 

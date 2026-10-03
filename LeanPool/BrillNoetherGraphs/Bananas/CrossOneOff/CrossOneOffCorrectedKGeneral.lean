@@ -18,7 +18,7 @@ as the second marked strand has length at least `g+1`.  This includes the
 boundary length `g+1` omitted by the earlier extended-simple-block argument.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

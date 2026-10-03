@@ -23,7 +23,7 @@ and `I`, and the interior and closure of a parabolic cylinder are computed from 
 Euclidean ball and the intervals `Ioo` and `Icc`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 open Set Metric
@@ -91,6 +91,7 @@ theorem continuous_prod_to_parabolicPoint :
 /-- The identity, viewed as a homeomorphism from the parabolic space-time to `Vec3 × ℝ`
 with the product topology.  This is the topology bridge: set-theoretic operations on
 space-time sets may be performed on the product instead. -/
+@[expose]
 def parabolicHomeomorph : ParabolicPoint ≃ₜ Vec3 × ℝ where
   toFun := fun p => (p.1, p.2)
   invFun := fun q => ((q.1, q.2) : ParabolicPoint)
@@ -124,6 +125,7 @@ theorem topologicalSpace_eq_induced_prod :
 
 /-- The identification of `Vec3` (with its product-of-coordinates topology) with
 `L²(ℝ³)`, under which `vec3EuclideanNorm` is the `L²` norm. -/
+@[expose]
 def vec3Homeomorph : Vec3 ≃ₜ L2Vec3 :=
   (PiLp.homeomorph 2 (fun _ : Fin 3 => ℝ)).symm
 

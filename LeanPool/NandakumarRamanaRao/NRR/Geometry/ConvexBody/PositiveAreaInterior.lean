@@ -27,7 +27,7 @@ is not actually needed for the proof (only convexity and
 finite-dimensionality of the plane are used).
 -/
 
-@[expose] public section
+public section
 
 open scoped RealInnerProductSpace
 open MeasureTheory

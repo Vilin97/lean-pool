@@ -27,7 +27,7 @@ The tail bounds and their scalar integral budget remain hypotheses for the consu
 estimate for a particular semigroup is asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -42,6 +42,7 @@ variable {X : Type*} [MetricSpace X]
 
 /-- The explicit distance on the one-point compactification associated with a positive
 exhaustion function. -/
+@[expose]
 def exhaustionDist (rho : X → ℝ) : OnePoint X → OnePoint X → ℝ
   | ∞, ∞ => 0
   | ∞, (y : X) => rho y
@@ -227,7 +228,7 @@ private theorem isOpen_iff_exhaustionDist {rho : X → ℝ} (hrho_cont : Continu
 
 /-- The explicit metric on the one-point compactification determined by a positive Lipschitz
 exhaustion function with compact positive superlevel sets. -/
-@[implicit_reducible]
+@[implicit_reducible, expose]
 noncomputable def exhaustionMetricSpace (rho : X → ℝ) (hrho_cont : Continuous rho)
     (hrho_pos : ∀ x, 0 < rho x) (hrho_lipschitz : LipschitzWith 1 rho)
     (hrho_compact : ∀ epsilon > 0, IsCompact {x | epsilon ≤ rho x}) :
@@ -295,6 +296,7 @@ variable {alpha : Type*} [PseudoEMetricSpace alpha] [MeasurableSpace alpha]
 
 /-- A Kolmogorov moment estimate required only for time increments at most one, together with a
 uniform bound for all displacements. On a compact metric space the latter bound is automatic. -/
+@[expose]
 def HasLocalKolmogorovMoments (P : SubMarkovKernelSemigroup alpha)
     (p q : ℝ) (M B : ℝ≥0) : Prop :=
   0 < p ∧ 1 < q ∧

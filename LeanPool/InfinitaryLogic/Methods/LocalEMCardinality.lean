@@ -29,7 +29,7 @@ embedding travels WITH the code, expansion is a total function (`LocatedTermCode
   countable base language, injective deep sequence.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -39,6 +39,7 @@ variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J]
 
 /-- The located term code: compression arity, the support's increasing enumeration, and the
 compressed term. Unlike the orbit code, it remembers WHERE the support sits in `J`. -/
+@[expose]
 def LocatedTermCode : Type :=
   Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty
 

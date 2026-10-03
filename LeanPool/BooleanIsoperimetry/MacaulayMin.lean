@@ -22,7 +22,7 @@ This file packages the set-family compression and shadow estimates into scalar
 Macaulay minimization lemmas consumed by the final Harper theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

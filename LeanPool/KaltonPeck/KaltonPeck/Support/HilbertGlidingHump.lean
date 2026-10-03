@@ -20,7 +20,7 @@ infinite-dimensional Hilbert subspaces and coordinatewise-null sequences, togeth
 signed-average estimates.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.HilbertGlidingHump

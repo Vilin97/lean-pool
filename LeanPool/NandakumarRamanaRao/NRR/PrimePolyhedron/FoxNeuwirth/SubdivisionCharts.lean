@@ -23,7 +23,7 @@ global barycentric carrier.  Precomposing this chart with an iterated affine sub
 the refined simplex charts used in the S6 approximation theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -39,11 +39,12 @@ namespace StandardSimplex
 
 /-- The project standard simplex and Mathlib's topological standard simplex have the same
 coordinate predicate. -/
+@[expose]
 def toDelta (w : StandardSimplex d) : Delta d :=
   ⟨w.1, w.2⟩
 
 /-- Conversion back from the topological standard simplex. -/
-def ofDelta (w : Delta d) : StandardSimplex d :=
+@[expose] def ofDelta (w : Delta d) : StandardSimplex d :=
   ⟨w.1, w.2⟩
 
 @[simp] theorem ofDelta_toDelta (w : StandardSimplex d) : ofDelta (toDelta w) = w := rfl
@@ -61,7 +62,7 @@ end StandardSimplex
 namespace Simplex
 
 /-- Coordinate weight of a point in the affine chart of a strict chain. -/
-noncomputable def chartWeight
+@[expose] noncomputable def chartWeight
     (s : Simplex p d) (w : StandardSimplex d) (c : BarredPermutation p) : Real :=
   ∑ i : Fin (d + 1), if s i = c then w i else 0
 
@@ -77,6 +78,7 @@ theorem exists_vertex_of_chartWeight_ne_zero
   simp [chartWeight, hnone]
 
 /-- Affine chart of an order-complex simplex into the global barycentric realization. -/
+@[expose]
 noncomputable def realizationPoint
     (s : Simplex p d) (w : StandardSimplex d) : Realization p :=
   ⟨s.chartWeight w, by
@@ -158,6 +160,7 @@ theorem continuous_realizationPoint (s : Simplex p d) :
           Continuous (fun _ : StandardSimplex d => (0 : Real)))
 
 /-- Bundled continuous simplex chart. -/
+@[expose]
 noncomputable def realizationContinuousMap (s : Simplex p d) :
     C(Delta d, Realization p) where
   toFun w := s.realizationPoint (StandardSimplex.ofDelta w)
@@ -176,6 +179,7 @@ variable (s : Simplex p (p - 1))
 
 /-- Convert a label permutation to the simplex-index permutation. For `p = 0`, the source
 permutation is vacuous and the target is the identity. -/
+@[expose]
 noncomputable def refinementIndexPerm (sigma : Equiv.Perm (Fin p)) :
     Equiv.Perm (Fin (p - 1 + 1)) := by
   by_cases hp0 : 0 < p
@@ -186,6 +190,7 @@ noncomputable def refinementIndexPerm (sigma : Equiv.Perm (Fin p)) :
 
 /-- Refined chart obtained by precomposing a maximal-chain chart with an iterated affine
 barycentric subdivision map. -/
+@[expose]
 noncomputable def refinedContinuousMap
     (N : Nat) (rho : RefinementWord p N) : C(Delta (p - 1), Realization p) :=
   s.realizationContinuousMap.comp
@@ -193,12 +198,14 @@ noncomputable def refinedContinuousMap
       (fun k => refinementIndexPerm (rho k)))
 
 /-- Pointwise form of a refined chart. -/
+@[expose]
 noncomputable def refinedPoint
     (N : Nat) (rho : RefinementWord p N) (w : StandardSimplex (p - 1)) :
     Realization p :=
   s.refinedContinuousMap N rho (StandardSimplex.toDelta w)
 
 /-- Vertices of a refined simplex. -/
+@[expose]
 noncomputable def refinedVertex
     (N : Nat) (rho : RefinementWord p N) (i : Fin p) : Realization p := by
   have hp0 : 0 < p := Nat.pos_of_ne_zero (by intro h; subst p; exact Fin.elim0 i)

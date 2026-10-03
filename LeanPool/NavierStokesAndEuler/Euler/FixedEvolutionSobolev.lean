@@ -28,7 +28,7 @@ continuous Gram formula gives the time-uniform acceleration as well.
 All input and output external radii are identical.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,7 +42,7 @@ open Set ContinuousLinearMap InnerProductSpace EulerTimeLp EulerVolterraConvolut
 open scoped ContDiff
 
 /-- Trace cost, given by `T⁻¹*Real.sqrt T+2*Real.sqrt T`. -/
-def traceCost (T : ℝ) : ℝ := T⁻¹*Real.sqrt T+2*Real.sqrt T
+@[expose] def traceCost (T : ℝ) : ℝ := T⁻¹*Real.sqrt T+2*Real.sqrt T
 
 theorem traceCost_nonneg (T : ℝ) (hT : 0 ≤ T) : 0 ≤ traceCost T := by
   unfold traceCost

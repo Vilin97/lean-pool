@@ -520,7 +520,7 @@ invariance of domain. `LeanEval/SpecAudit.lean` checks that the current public t
 is the exact published Lean-Eval type over the vendored disc relations.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

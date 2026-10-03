@@ -31,7 +31,7 @@ the
 stated patched-sample representation.  No overlap or seam assumption is hidden in the adapter.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

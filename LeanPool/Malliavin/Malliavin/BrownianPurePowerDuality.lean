@@ -17,7 +17,7 @@ computes the pairing of a Wick power with every ordered Brownian increment chain
 density then identifies the Wick power with the canonical pure-power multiple integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

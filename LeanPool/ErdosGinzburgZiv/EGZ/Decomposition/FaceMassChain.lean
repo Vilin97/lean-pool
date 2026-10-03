@@ -20,7 +20,7 @@ loss by global mass loss. Passing to the final cumulative weight then gives
 the uniform common-measure large-face bound.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

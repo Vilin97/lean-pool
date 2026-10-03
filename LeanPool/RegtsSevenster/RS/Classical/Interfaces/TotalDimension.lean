@@ -23,7 +23,7 @@ block faithfulness therefore bounds `(k + 2 * ℓ) ^ n` by `R ^ n`
 times a fixed polynomial, forcing `k + 2 * ℓ ≤ R`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

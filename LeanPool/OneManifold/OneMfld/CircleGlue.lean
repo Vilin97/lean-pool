@@ -32,7 +32,7 @@ whose frontier is the two split points. The result is a chart of `M` onto the wh
 `AddCircle 1` with source `a.source ∪ b.source`.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

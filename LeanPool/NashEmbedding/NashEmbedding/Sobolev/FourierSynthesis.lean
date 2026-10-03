@@ -31,7 +31,7 @@ We prove a concrete bound: for each multi-index `α` with `|α| ≤ k`,
 `sup_θ |∂^α a_check(θ)| ≤ C · ‖a‖_(s+k)`, where `C` depends only on `n`, `s`, `k`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Real
 open NashEmbedding.Sobolev Complex
@@ -45,7 +45,7 @@ namespace NashEmbedding.Sobolev
 variable {n : ℕ}
 
 /-- The Fourier synthesis map: `a_check(θ) = ∑ aₘ eₘ(θ)`. -/
-def fourierSynthesis (n : ℕ) (a : (Fin n → ℤ) → ℂ) (θ : Fin n → ℝ) : ℂ :=
+@[expose] def fourierSynthesis (n : ℕ) (a : (Fin n → ℤ) → ℂ) (θ : Fin n → ℝ) : ℂ :=
   ∑' m : Fin n → ℤ, a m * fourierExp n m θ
 
 /-- For a multi-index `α : Fin n → ℕ`, the monomial `m^α = ∏ mⱼ^{αⱼ}`. -/

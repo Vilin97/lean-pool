@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 Generic consequences of an average identity and pointwise nonnegativity.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open CKN.Foundation.Parabolic

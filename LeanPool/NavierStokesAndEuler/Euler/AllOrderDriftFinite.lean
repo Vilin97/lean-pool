@@ -20,7 +20,7 @@ section
 /-! Drift-aware version: Whole-interval inviscid correction retaining quantitative Gevrey bounds and
 its actual finite-Sobolev pressure equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,7 +98,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,6 +147,7 @@ theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget per
   exact (valueOperator period q).hasFDerivAt.comp_hasDerivAt t hs
 
 /-- The genuine finite solution chosen from the proved drift-aware construction. -/
+@[expose]
 def Budget.solution {T : ℝ} {hT : 0 < T} {A : Data period T} (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) : C(Icc (0 : ℝ) T, SobolevSpace period (q+1)) :=
   Classical.choose (finite_exists period hT A B q hq)
@@ -163,6 +164,7 @@ theorem Budget.solution_energy {T : ℝ} {hT : 0 < T} {A : Data period T} (B : B
 
 /-- Actual drift-aware data construct the complete finite correction family; no finite-existence
 hypothesis is supplied. -/
+@[expose]
 def Budget.family {T : ℝ} {hT : 0 < T} {A : Data period T} (B : Budget period hT A) :
     FiniteFamily period hT A where
   solution := B.solution period

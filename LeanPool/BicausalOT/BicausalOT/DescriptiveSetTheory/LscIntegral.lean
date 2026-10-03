@@ -31,7 +31,7 @@ public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 
 /-! ## J1: joint continuity of the pairing -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal

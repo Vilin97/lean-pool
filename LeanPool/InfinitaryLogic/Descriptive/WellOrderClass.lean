@@ -32,7 +32,7 @@ The comparison structures are the arbitrary-language ones already built for
 generic code-transport API.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -43,7 +43,7 @@ variable {L : Language.{0, 0}} [L.IsRelational]
 /-! ## The class -/
 
 /-- **The coded well-order class**: codes whose distinguished relation well-orders `ℕ`. -/
-def wellOrderClass (lt : L.Relations 2) : Set (StructureSpace L) :=
+@[expose] def wellOrderClass (lt : L.Relations 2) : Set (StructureSpace L) :=
   {c | IsWellOrder ℕ fun x y : ℕ => @Structure.RelMap L ℕ c.toStructure 2 lt ![x, y]}
 
 /-- An `L`-isomorphism of decoded structures is an order isomorphism of the distinguished

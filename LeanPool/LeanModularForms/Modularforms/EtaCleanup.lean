@@ -21,7 +21,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 /-! # EtaCleanup -/
 
-@[expose] public section
+public section
 
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
@@ -73,7 +73,7 @@ local notation "ηₚ" => etaProdTerm
 
 /-- The Dedekind eta function, defined on all of `ℂ` so that its logarithmic derivative
 can be taken. -/
-noncomputable def dedekindEtaFun' (z : ℂ) := (𝕢 24 z) * ηₚ z
+@[expose] noncomputable def dedekindEtaFun' (z : ℂ) := (𝕢 24 z) * ηₚ z
 
 local notation "η" => dedekindEtaFun'
 

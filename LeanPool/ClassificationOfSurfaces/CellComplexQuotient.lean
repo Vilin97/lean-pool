@@ -29,7 +29,7 @@ realization, and the standard one-face examples have occurrence-validity witness
 derives its orbit conditions from `IsSurfaceValid`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -41,7 +41,7 @@ abbrev occurrenceDart (K : SurfaceCellComplex) (o : K.BoundaryOccurrence) : K.Da
   o.dart
 
 /-- The polygon side indexed by a boundary occurrence. -/
-def occurrenceSide (K : SurfaceCellComplex) (o : K.BoundaryOccurrence) :
+@[expose] def occurrenceSide (K : SurfaceCellComplex) (o : K.BoundaryOccurrence) :
     PolygonGluing.Side K.Face K.faceBoundaryLength :=
   ⟨o.1, o.2⟩
 
@@ -132,7 +132,7 @@ end OccurrencePairingValid
 namespace SignedDart
 
 /-- The unoriented edge name carried by a signed dart. -/
-def edgeName {Edge : Type} : SignedDart Edge → Edge
+@[expose] def edgeName {Edge : Type} : SignedDart Edge → Edge
   | pos e => e
   | neg e => e
 
@@ -148,7 +148,7 @@ theorem eq_or_eq_flip_iff_edgeName_eq {Edge : Type} (x d : SignedDart Edge) :
 end SignedDart
 
 /-- Positions in a boundary word carrying either orientation of `e`. -/
-def wordEdgeOccurrences {Edge : Type} [DecidableEq Edge]
+@[expose] def wordEdgeOccurrences {Edge : Type} [DecidableEq Edge]
     (word : List (SignedDart Edge)) (e : Edge) : Finset (Fin word.length) :=
   Finset.univ.filter fun i ↦ SignedDart.edgeName (word.get i) = e
 
@@ -234,7 +234,7 @@ theorem oneFacePresentation_occurrencePairingValid
 namespace BoundaryPairing
 
 /-- The generic polygon-side identification associated to an occurrence pairing. -/
-def identification {K : SurfaceCellComplex} (pairing : K.BoundaryPairing) :
+@[expose] def identification {K : SurfaceCellComplex} (pairing : K.BoundaryPairing) :
     PolygonGluing.Identification K.Face K.faceBoundaryLength where
   source := K.occurrenceSide pairing.source
   target := K.occurrenceSide pairing.target
@@ -258,6 +258,7 @@ theorem identification_direction {K : SurfaceCellComplex} (pairing : K.BoundaryP
 end BoundaryPairing
 
 /-- All side identifications compatible with a pairing-valid complex. -/
+@[expose]
 def polygonalIdentifications (K : SurfaceCellComplex) (_valid : K.OccurrencePairingValid) :
     Set (PolygonGluing.Identification K.Face K.faceBoundaryLength) :=
   Set.range BoundaryPairing.identification
@@ -307,7 +308,7 @@ theorem mem_polygonalIdentifications_iff_exists_occurrences
     rfl
 
 /-- The boundary occurrence at position `i` in a one-face word. -/
-def oneFaceOccurrence {Edge : Type} [Fintype Edge]
+@[expose] def oneFaceOccurrence {Edge : Type} [Fintype Edge]
     (word : List (SignedDart Edge)) (i : Fin word.length) :
     (oneFacePresentation Edge word).BoundaryOccurrence :=
   ⟨PUnit.unit, i⟩
@@ -390,7 +391,7 @@ theorem not_isBoundaryDart_of_occurs_at_ne
   exact (hunique source hsource).trans (hunique target htarget).symm
 
 /-- Reverse the directed presentation of a side identification. -/
-def swapIdentification {K : SurfaceCellComplex}
+@[expose] def swapIdentification {K : SurfaceCellComplex}
     (identification : PolygonGluing.Identification K.Face K.faceBoundaryLength) :
     PolygonGluing.Identification K.Face K.faceBoundaryLength where
   source := identification.target
@@ -510,6 +511,7 @@ abbrev PolygonalRealization (K : SurfaceCellComplex) (valid : K.OccurrencePairin
   PolygonGluing.Realization (K.polygonalIdentifications valid)
 
 /-- The quotient map from the polygonal disjoint union of `K`. -/
+@[expose]
 def polygonalMk (K : SurfaceCellComplex) (valid : K.OccurrencePairingValid) :
     K.PolygonalPreRealization → K.PolygonalRealization valid :=
   PolygonGluing.mk (K.polygonalIdentifications valid)
@@ -535,11 +537,11 @@ theorem polygonalMk_pairing_eq {K : SurfaceCellComplex} (valid : K.OccurrencePai
 /-! ## The two-monogon sphere presentation -/
 
 /-- The positively oriented side in the two-monogon sphere presentation. -/
-def spherePositiveOccurrence : sphere.BoundaryOccurrence :=
+@[expose] def spherePositiveOccurrence : sphere.BoundaryOccurrence :=
   ⟨false, ⟨0, by simp [sphere]⟩⟩
 
 /-- The negatively oriented side in the two-monogon sphere presentation. -/
-def sphereNegativeOccurrence : sphere.BoundaryOccurrence :=
+@[expose] def sphereNegativeOccurrence : sphere.BoundaryOccurrence :=
   ⟨true, ⟨0, by simp [sphere]⟩⟩
 
 @[simp]
@@ -588,7 +590,7 @@ theorem sphere_not_isBoundaryDart (d : sphere.Dart) : ¬sphere.IsBoundaryDart d 
   exact hne heq
 
 /-- The gluing from the positive monogon to the negative monogon. -/
-def sphereBoundaryPairing : sphere.BoundaryPairing where
+@[expose] def sphereBoundaryPairing : sphere.BoundaryPairing where
   source := spherePositiveOccurrence
   target := sphereNegativeOccurrence
   source_ne_target := by

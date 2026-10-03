@@ -25,7 +25,7 @@ Tags: combinatory-algebra, lambda-calculus, computability
 MSC: 03B40, 03D75
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

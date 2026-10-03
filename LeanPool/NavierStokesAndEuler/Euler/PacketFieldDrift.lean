@@ -23,7 +23,7 @@ section
 /-! The actual four-component transport vector retains the small normal
 component separately from its three scaled spatial components. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -122,7 +122,7 @@ section
 /-! Exact bounded-map naturality of every genuine Sobolev coordinate of
 an actual packet field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -163,7 +163,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

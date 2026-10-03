@@ -21,7 +21,7 @@ Lemma 5.7 proves the change of basis and the invariance of the
 partition function under the isometry `Ψ`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 /-- The star coordinate: the vertex star vector transported to
 the colouring model, read at a colouring; zero on odd-parity
 colourings. -/
+@[expose]
 noncomputable def starCoord (d : ℕ)
     (c : MixedColouring k ℓ d) : ℂ :=
   if hc : c.IsEven then

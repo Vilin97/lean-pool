@@ -18,7 +18,7 @@ function `(1−z)^{−m}`); at `−m` they are the signed binomials
 the tensor-space traces of the dimension-bound argument.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

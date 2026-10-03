@@ -16,7 +16,7 @@ is independent of the number of other strands: each midpoint doubles to the
 same endpoint pencil.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

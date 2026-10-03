@@ -30,7 +30,7 @@ of which — the node `top v` — does not pass `v` on to its parent.
 * `SimpleGraph.CliqueTree.card_eq_sum_card_bag_sub_sum_card_inter`
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

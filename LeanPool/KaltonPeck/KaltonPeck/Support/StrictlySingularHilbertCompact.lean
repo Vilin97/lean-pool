@@ -22,7 +22,7 @@ This file proves that every strictly singular endomorphism of the canonical real
 is compact by approximation with finite-dimensional compressions.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.StrictlySingular

@@ -13,7 +13,7 @@ public import LeanPool.Zeta32.Arith.Small.Gram
 `v_p(β_j) ≥ -3⌊log_p j⌋ - v_p(den r)`; (c) `polynomialMoment_VG`. Every entry of `binomGram r n`
 has Gauss valuation `≥ -3⌊log_p(10n+2)⌋ - v_p(den r)`. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 

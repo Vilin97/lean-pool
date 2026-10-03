@@ -27,7 +27,7 @@ section
 # Gevrey Cutoff
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,7 +321,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -16,7 +16,7 @@ This file proves the pure finite-row count left open by
 `crossOneOff_corrected_inversion_lower_bound_of_finiteRows`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

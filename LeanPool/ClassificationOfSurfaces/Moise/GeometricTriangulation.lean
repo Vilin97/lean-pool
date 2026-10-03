@@ -29,7 +29,7 @@ Semantic anchors (see `Moise/Countermodels.lean` and the Definition Faithfulness
 * non-example: `ℝ` and `ℚ` admit no geometric triangulation (they are not compact).
 -/
 
-@[expose] public section
+public section
 
 /-- A finite closed cover of a preconnected set has a connected intersection graph.
 
@@ -102,7 +102,7 @@ variable (𝕜 : Type*) (ι : Type*) [Semiring 𝕜] [PartialOrder 𝕜] [Fintyp
 
 /-- The standard simplex in the space of functions `ι → 𝕜` is the set of vectors with
 non-negative coordinates with total sum `1`. -/
-def stdSimplex : Set (ι → 𝕜) :=
+@[expose] def stdSimplex : Set (ι → 𝕜) :=
   {f | (∀ x, 0 ≤ f x) ∧ ∑ x, f x = 1}
 
 theorem stdSimplex_eq_inter :
@@ -206,7 +206,7 @@ noncomputable def map (f : X → Y) (s : stdSimplex S X) : stdSimplex S Y :=
   ⟨FunOnFinite.linearMap S S f s, image_linearMap f (by aesop)⟩
 
 @[simp] lemma map_coe (f : X → Y) (s : stdSimplex S X) :
-    ⇑(map f s) = FunOnFinite.linearMap S S f s := rfl
+    ⇑(map f s) = FunOnFinite.linearMap S S f s := by rfl
 
 @[simp] lemma map_id_apply (x : stdSimplex S X) : map id x = x := by
   aesop
@@ -265,7 +265,7 @@ end stdSimplex
 points of the standard simplex on `V` whose support lies inside some face of `F`.  For a face `t`
 this carves out the geometric simplex spanned by `t`, so the realization is the finite union of
 the geometric simplexes of `F`, glued along shared barycentric-coordinate faces. -/
-def GeometricRealization (V : Type*) [Fintype V] (F : Finset (Finset V)) : Set (V → ℝ) :=
+@[expose] def GeometricRealization (V : Type*) [Fintype V] (F : Finset (Finset V)) : Set (V → ℝ) :=
   {x | x ∈ stdSimplex ℝ V ∧ ∃ t ∈ F, ∀ v ∉ t, x v = 0}
 
 /-- The geometric simplex carried by one finite set of vertices. -/
@@ -386,18 +386,18 @@ abbrev Face (faces : Finset (Finset Vertex)) :=
   {t : Finset Vertex // t ∈ faces}
 
 /-- The two-vertex faces occurring in a finite triangle family. -/
-def edges (faces : Finset (Finset Vertex)) : Finset (Finset Vertex) :=
+@[expose] def edges (faces : Finset (Finset Vertex)) : Finset (Finset Vertex) :=
   faces.biUnion fun t => t.powersetCard 2
 
 /-- Two listed triangles are dual-adjacent when they share a two-vertex face. -/
-def FaceAdjacent (faces : Finset (Finset Vertex)) (f g : Face faces) : Prop :=
+@[expose] def FaceAdjacent (faces : Finset (Finset Vertex)) (f g : Face faces) : Prop :=
   ∃ e : Finset Vertex, e.card = 2 ∧ e ⊆ f.1 ∧ e ⊆ g.1
 
 /-- Two listed triangles are adjacent at `v` when they share a two-vertex face containing `v`.
 
 Unlike `FaceAdjacent`, this relation remembers the vertex star in which the adjacency step
 occurs. -/
-def FaceAdjacentAtVertex (faces : Finset (Finset Vertex)) (v : Vertex)
+@[expose] def FaceAdjacentAtVertex (faces : Finset (Finset Vertex)) (v : Vertex)
     (f g : Face faces) : Prop :=
   ∃ e : Finset Vertex, e.card = 2 ∧ v ∈ e ∧ e ⊆ f.1 ∧ e ⊆ g.1
 
@@ -497,7 +497,7 @@ theorem mem_of_reflTransGen_faceAdjacentAtVertex
   | tail _h hstep _ih => exact mem_right_of_faceAdjacentAtVertex hstep
 
 /-- Every two listed triangles are connected by a finite chain of shared edges. -/
-def IsDualConnected (faces : Finset (Finset Vertex)) : Prop :=
+@[expose] def IsDualConnected (faces : Finset (Finset Vertex)) : Prop :=
   ∀ f g : Face faces, Relation.ReflTransGen (FaceAdjacent faces) f g
 
 /-- Every pair of triangles incident to one vertex can be joined through shared edges.
@@ -511,7 +511,7 @@ def IsVertexStarConnected (faces : Finset (Finset Vertex)) : Prop :=
 
 /-- Every pair of triangles incident to one vertex can be joined by a chain whose every adjacency
 step shares an edge containing that same vertex. -/
-def IsStrongVertexStarConnected (faces : Finset (Finset Vertex)) : Prop :=
+@[expose] def IsStrongVertexStarConnected (faces : Finset (Finset Vertex)) : Prop :=
   ∀ (v : Vertex) (f g : Face faces), v ∈ f.1 → v ∈ g.1 →
     Relation.ReflTransGen (FaceAdjacentAtVertex faces v) f g
 
@@ -584,7 +584,7 @@ theorem IsVertexStarConnected.isDualConnected
       exact hstar v a b (Finset.mem_inter.mp hv).1
         (Finset.mem_inter.mp hv).2)) f g (hinter f g)
 /-- Regard a face of a subfamily as a face of a larger family. -/
-def faceOfSubset {faces faces' : Finset (Finset Vertex)} (h : faces ⊆ faces') :
+@[expose] def faceOfSubset {faces faces' : Finset (Finset Vertex)} (h : faces ⊆ faces') :
     Face faces → Face faces' :=
   fun f => ⟨f.1, h f.2⟩
 
@@ -592,7 +592,7 @@ omit [DecidableEq Vertex] in
 @[simp]
 theorem faceOfSubset_val {faces faces' : Finset (Finset Vertex)} (h : faces ⊆ faces')
     (f : Face faces) : (faceOfSubset h f).1 = f.1 :=
-  rfl
+  by rfl
 
 omit [DecidableEq Vertex] in
 theorem faceAdjacent_faceOfSubset {faces faces' : Finset (Finset Vertex)}
@@ -650,7 +650,7 @@ theorem isDualConnected_union {left right : Finset (Finset Vertex)}
     simpa [f', g', faceOfSubset] using hpath
 
 /-- A face from each family shares a genuine two-vertex edge in the union family. -/
-def HasCrossEdge (left right : Finset (Finset Vertex)) : Prop :=
+@[expose] def HasCrossEdge (left right : Finset (Finset Vertex)) : Prop :=
   ∃ (fleft : Face left) (fright : Face right),
       FaceAdjacent (left ∪ right)
         (faceOfSubset Finset.subset_union_left fleft)
@@ -815,7 +815,7 @@ theorem three_le_card_vertex [Nonempty S] : 3 ≤ Fintype.card T.Vertex := by
     _ = Fintype.card T.Vertex := Finset.card_univ
 
 /-- The edges of the triangulation: the 2-element subsets of its faces. -/
-def edges : Finset (Finset T.Vertex) :=
+@[expose] def edges : Finset (Finset T.Vertex) :=
   T.faces.biUnion fun t => t.powersetCard 2
 
 theorem card_of_mem_edges {e : Finset T.Vertex} (he : e ∈ T.edges) : e.card = 2 := by
@@ -841,11 +841,11 @@ theorem triangle_card (t : T.Triangle) : t.1.card = 3 :=
   T.faces_card t.1 t.2
 
 /-- The chosen first endpoint of an edge. -/
-noncomputable def edgeSource (e : T.Edge) : T.Vertex :=
+@[expose] noncomputable def edgeSource (e : T.Edge) : T.Vertex :=
   (Finset.card_eq_two.mp (T.edge_card e)).choose
 
 /-- The chosen second endpoint of an edge. -/
-noncomputable def edgeTarget (e : T.Edge) : T.Vertex :=
+@[expose] noncomputable def edgeTarget (e : T.Edge) : T.Vertex :=
   (Finset.card_eq_two.mp (T.edge_card e)).choose_spec.choose
 
 theorem edgeSource_ne_edgeTarget (e : T.Edge) : T.edgeSource e ≠ T.edgeTarget e :=

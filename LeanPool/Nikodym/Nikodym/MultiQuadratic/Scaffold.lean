@@ -22,7 +22,7 @@ monotone in `K₀`, so the same data is a scaffold with the larger constant `∏
 `rⱼ ∣ ℓⱼ ℓ'ⱼ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

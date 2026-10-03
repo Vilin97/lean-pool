@@ -21,7 +21,7 @@ not asserted here because the available Mathlib API does not provide the
 needed local convolution bound and translation-continuity package.
 -/
 
-@[expose] public section
+public section
 
 open scoped Convolution Topology
 open MeasureTheory

@@ -27,7 +27,7 @@ Derives the Cauchy-Davenport theorem `cauchy_davenport` on sumsets in `ZMod p`
 from the Alon-Nathanson-Ruzsa polynomial method.
 -/
 
-@[expose] public section
+public section
 
 open Finsupp
 open scoped Finset

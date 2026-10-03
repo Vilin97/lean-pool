@@ -15,7 +15,7 @@ This file develops the Gaussian moment and orthogonality identities for the vari
 Hermite polynomials used by the Brownian chaos construction.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

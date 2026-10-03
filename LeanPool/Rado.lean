@@ -20,4 +20,4 @@ Tags: riemann-surfaces, second-countability, harmonic-functions, perron-method
 MSC: 30F15, 30F20, 54D65
 -/
 
-@[expose] public section
+public section

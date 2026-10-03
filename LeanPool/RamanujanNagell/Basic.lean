@@ -22,7 +22,7 @@ below uses these facts together with `units_pm_one`, `theta_irreducible`,
 `theta'_irreducible`, and the UFD scaffolding `ufd_power_association`.
 -/
 
-@[expose] public section
+public section
 
 namespace RamanujanNagell
 

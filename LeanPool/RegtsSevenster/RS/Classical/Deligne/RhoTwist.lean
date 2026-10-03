@@ -18,7 +18,7 @@ components.  These four identifications are the base cases of the
 computation of `ρ` on the free modules of 2.11.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -46,6 +46,7 @@ noncomputable def rhoOddUnit
 
 /-- **The even part of a twist by the odd line** is the odd part
 of the object. -/
+@[expose]
 noncomputable def rhoEvenOdd
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]
@@ -56,6 +57,7 @@ noncomputable def rhoEvenOdd
 
 /-- **The odd part of a twist by the odd line** is the even part
 of the object. -/
+@[expose]
 noncomputable def rhoOddOdd
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]

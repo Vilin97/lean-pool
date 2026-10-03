@@ -37,7 +37,7 @@ the proven Minlos theorem.
 - `gaussian_measure_symmetry`: covariance-preserving maps induce measure symmetries
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Matrix TopologicalSpace
 open BigOperators
@@ -145,7 +145,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
 /-- For Gaussian measures, the characteristic functional has the special form
     Φ(f) = exp(-½⟨f, Cf⟩) where C is a nuclear covariance operator.
 -/
-def gaussianCharacteristicFunctional
+@[expose] def gaussianCharacteristicFunctional
   (covariance_form : E → E → ℝ) (f : E) : ℂ :=
   Complex.exp (-(1/2 : ℂ) * (covariance_form f f))
 

@@ -59,7 +59,7 @@ formalized below; their distinct analytic hypotheses remain explicit.
 * `crouzeix_palencia_of_isStarNormal` -- the sharper normal-operator branch.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

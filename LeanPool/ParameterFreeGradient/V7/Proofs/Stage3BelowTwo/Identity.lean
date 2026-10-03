@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Primal
 The pointwise primal-dual residual identity for the below-two coefficient recurrences.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

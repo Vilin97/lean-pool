@@ -34,7 +34,7 @@ the forest hypothesis nor the looplessness hypothesis has to be re-proved at
 the moved face -- `isForest_iff` and `isLoopy_iff` transport them.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ClosedOrbit
 

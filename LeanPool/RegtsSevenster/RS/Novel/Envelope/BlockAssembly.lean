@@ -21,7 +21,7 @@ proof at every strand arity. The mainline semisimplicity proof
 uses the factorial argument in `BlockFactorialTrace`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

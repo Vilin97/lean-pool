@@ -21,7 +21,7 @@ The main theorem of this file was originally proved by Aristotle
 (Lean v4.24.0, project request uuid 08cb15be-5c46-4619-9dbf-e523d453b544).
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 

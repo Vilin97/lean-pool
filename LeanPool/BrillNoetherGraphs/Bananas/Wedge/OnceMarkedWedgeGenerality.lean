@@ -25,7 +25,7 @@ Proposition 6.10.  It uses only the exact vertex-wedge rank formula and the
 all-row definition `OnceMarkedCensusContains`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -146,6 +146,7 @@ theorem pointedRankThreshold_succ_le
 /-! ## Finite pointed diagrams -/
 
 /-- The `i`th (truncated) Weierstrass row attached to a pointed divisor. -/
+@[expose]
 noncomputable def pointedRowLength
     (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (i : ℕ) : ℕ :=
@@ -164,6 +165,7 @@ theorem pointedRowLength_anti
 
 /-- The first `r+1` pointed rows, sufficient for studying a divisor of rank
 `r` on a vertex wedge. -/
+@[expose]
 noncomputable def finitePointedRows
     (G : CFGraph.{u}) (hG : graphConnected G) (D : CFDiv G) (q : G.V)
     (r : ℕ) : List ℕ :=

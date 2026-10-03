@@ -19,7 +19,7 @@ an intermediate model-comparison API; the final unconditional odd-degree proof u
 cohomology-dimension-vanishing route.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

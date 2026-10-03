@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! The literal transport and order-zero quadratic operators in the Euler correction equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,18 +29,18 @@ variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup Y] [NormedSpace ℝ Y]
 
 /-- Postcompose an actual continuous bilinear map by an actual bounded operator. -/
-def postcompose (A : Y →L[ℝ] Y) (B : X →L[ℝ] X →L[ℝ] Y) : X →L[ℝ] X →L[ℝ] Y :=
+@[expose] def postcompose (A : Y →L[ℝ] Y) (B : X →L[ℝ] X →L[ℝ] Y) : X →L[ℝ] X →L[ℝ] Y :=
   (ContinuousLinearMap.compL ℝ X Y Y A).comp B
 
 @[simp] theorem postcompose_apply (A : Y →L[ℝ] Y) (B : X →L[ℝ] X →L[ℝ] Y) (u v : X) :
-    postcompose A B u v = A (B u v) := rfl
+    postcompose A B u v = A (B u v) := by rfl
 
 /-- Linearization of a quadratic term about the actual approximate solution. -/
 def linearize (B : X →L[ℝ] X →L[ℝ] Y) (C : X →L[ℝ] Y) (z : X) : X →L[ℝ] Y :=
   B z + B.flip z + C
 
 @[simp] theorem linearize_apply (B : X →L[ℝ] X →L[ℝ] Y) (C : X →L[ℝ] Y) (z e : X) :
-    linearize B C z e = B z e + B e z + C e := rfl
+    linearize B C z e = B z e + B e z + C e := by rfl
 
 /-- The correction source is exactly the difference of the full quadratic equations. -/
 theorem quadratic_correction_identity (B : X →L[ℝ] X →L[ℝ] Y) (C : X →L[ℝ] Y) (z e : X) :
@@ -72,7 +72,7 @@ local instance sobolevBilinearGroup (q : ℕ) : SeminormedAddCommGroup
         inferInstance
 
 /-- The actual derivative-free coordinate product on the input Sobolev level. -/
-def coordinateProduct {q : ℕ} (hq : 6 ≤ q) (i : Fin 3) :
+@[expose] def coordinateProduct {q : ℕ} (hq : 6 ≤ q) (i : Fin 3) :
     SobolevSpace period (q+1) →L[ℝ] SobolevSpace period (q+1) →L[ℝ] SobolevSpace period q :=
   (productHqBilinear period hq (coordinate 3 i) (coordinate_norm_le 3 i)).bilinearComp
     (truncateOperator period q) (truncateOperator period q)
@@ -81,10 +81,11 @@ def coordinateProduct {q : ℕ} (hq : 6 ≤ q) (i : Fin 3) :
     (u v : SobolevSpace period (q + 1)) :
     coordinateProduct period hq i u v = productHq period hq (coordinate 3 i) (coordinate_norm_le 3
         i)
-      (truncateOperator period q u) (truncateOperator period q v) := rfl
+      (truncateOperator period q u) (truncateOperator period q v) := by
+  simp only [coordinateProduct, ContinuousLinearMap.bilinearComp_apply, productHqBilinear_apply]
 
 /-- The actual order-zero quadratic coefficient terms, Σ Cᵢ(uᵢ v). -/
-def algebraicBilinear {q : ℕ} (hq : 6 ≤ q)
+@[expose] def algebraicBilinear {q : ℕ} (hq : 6 ≤ q)
     (C : Fin 3 → SobolevSpace period q →L[ℝ] SobolevSpace period q) :
     SobolevSpace period (q+1) →L[ℝ] SobolevSpace period (q+1) →L[ℝ] SobolevSpace period q :=
   ∑ i : Fin 3, postcompose (C i) (coordinateProduct period hq i)
@@ -96,7 +97,7 @@ theorem algebraicBilinear_apply {q : ℕ} (hq : 6 ≤ q)
   simp only [algebraicBilinear, sum_apply, postcompose_apply]
 
 /-- The full bilinear nonlinearity of the transformed Euler equation. -/
-def eulerBilinear {q : ℕ} (hq : 6 ≤ q)
+@[expose] def eulerBilinear {q : ℕ} (hq : 6 ≤ q)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C : Fin 3 → SobolevSpace period q →L[ℝ] SobolevSpace period q) :
     SobolevSpace period (q+1) →L[ℝ] SobolevSpace period (q+1) →L[ℝ] SobolevSpace period q :=
@@ -128,9 +129,7 @@ theorem algebraicBilinear_ae {q : ℕ} (hq : 6 ≤ q)
         hv]
       with x h1 h2 h3 h4
     rw [h1]
-    change (C i).coefficient x (value period (productHq period hq (coordinate 3 i)
-        (coordinate_norm_le 3 i)
-      (truncateOperator period q u) (truncateOperator period q v)) x) = _
+    rw [coordinateProduct_apply]
     rw [h2, value_truncateOperator, value_truncateOperator, h3, h4, map_smul]
     rfl
   filter_upwards [Lp.coeFn_finsetSum Finset.univ (fun i : Fin 3 => value period

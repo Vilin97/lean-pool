@@ -31,7 +31,7 @@ convex sets, `Ball.Pointwise` identifies closures of metric thickenings,
 supplies the smooth regular circle parametrization API.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff
@@ -54,6 +54,7 @@ structure SmoothJordanDomain where
   boundaryParam_regular : ∀ t, deriv boundaryParam t ≠ 0
 
 /-- A positive-radius open disk, with `circleMap` as its smooth Jordan boundary. -/
+@[expose]
 noncomputable def SmoothJordanDomain.ball (c : ℂ) (R : ℝ) (hR : 0 < R) :
     SmoothJordanDomain where
   carrier := Metric.ball c R
@@ -82,9 +83,11 @@ theorem exists_smoothJordanDomain_superset_of_isCompact (K : Set ℂ) (hK : IsCo
 
 /-- The positive radii `1, 1/2, 1/3, ...` used for the explicit thickening
 approximation. -/
+@[expose]
 noncomputable def smoothApproxRadius (n : ℕ) : ℝ := 1 / (n + 1 : ℝ)
 
 /-- The `n`th open metric thickening of `K`, at radius `1 / (n + 1)`. -/
+@[expose]
 noncomputable def convexThickeningApprox (K : Set ℂ) (n : ℕ) : Set ℂ :=
   Metric.thickening (smoothApproxRadius n) K
 
@@ -165,6 +168,7 @@ structure SmoothConvexApproximation (K : Set ℂ) where
 /-- Closed disks admit a complete smooth convex approximation: enlarge the
 radius by `1 / (n + 1)` and use the standard circle parametrization at every
 stage.  This is the fully verified model case for the general L4.2b package. -/
+@[expose]
 noncomputable def smoothClosedBallApproximation (c : ℂ) (R : ℝ) (hR : 0 ≤ R) :
     SmoothConvexApproximation (Metric.closedBall c R) where
   domain n := SmoothJordanDomain.ball c (smoothApproxRadius n + R)

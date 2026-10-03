@@ -19,7 +19,7 @@ from the terminal coordinate of the past.  This is finite-dimensional kernel inf
 does not assert a path-space or conditional Markov theorem.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory
@@ -28,17 +28,20 @@ namespace MarkovProcess
 
 /-- Reassociate the cardinality of a split finite path so recursion removes its first point
 definitionally while the coordinate order remains past-then-future. -/
+@[expose]
 def cutIndexOrderIso (m n : ℕ) : Fin ((m + 1) + n) ≃o Fin (n + (m + 1)) :=
   Fin.castOrderIso (Nat.add_comm (m + 1) n)
 
 namespace FiniteOrderedTimes
 
 /-- Restrict an ordered family to the coordinates at or before a designated cut. -/
+@[expose]
 def initialSegment {m n : ℕ}
     (times : FiniteOrderedTimes (n + (m + 1))) : FiniteOrderedTimes (m + 1) :=
   times.restrict ((Fin.castAddOrderEmb n).trans (cutIndexOrderIso m n).toOrderEmbedding)
 
 /-- Times after the cut, measured relative to the time at the cut. -/
+@[expose]
 def relativeFinalSegment {m n : ℕ}
     (times : FiniteOrderedTimes (n + (m + 1))) : FiniteOrderedTimes n :=
   OrderEmbedding.ofStrictMono
@@ -98,6 +101,7 @@ private theorem relativeFinalSegment_relativeTail {m n : ℕ}
     simp [cutIndexOrderIso]
 
 /-- Separate a finite path into its coordinates at or before the cut and those after the cut. -/
+@[expose]
 def splitFinitePath {m n : ℕ} (path : Fin (n + (m + 1)) → alpha) :
     (Fin (m + 1) → alpha) × (Fin n → alpha) :=
   (fun i ↦ path (cutIndexOrderIso m n (Fin.castAdd n i)),
@@ -140,6 +144,7 @@ private theorem splitFinitePath_cons {m n : ℕ}
     rw [hidx, Fin.cons_succ]
 
 /-- The terminal state of the first component of a split finite path. -/
+@[expose]
 def splitPastTerminal {m : ℕ}
     (z : alpha × (Fin (m + 1) → alpha)) : alpha :=
   z.2 (Fin.last m)

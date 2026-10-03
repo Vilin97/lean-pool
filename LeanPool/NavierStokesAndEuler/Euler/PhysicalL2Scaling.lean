@@ -19,7 +19,7 @@ import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 /-! The physical dilation f(x) ↦ ell*f(x/ell), including actual spatial
 derivatives and their genuine Banach-valued L² norms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ theorem lpNorm_inv_dilation (f : Space → V) (hf : MemLp f 2 volume)
 variable [NormedSpace ℝ V]
 
 /-- Scale, defined pointwise by `ell • f (ell⁻¹ • x)`. -/
-def scale (ell : ℝ) (f : Space → V) : Space → V := fun x => ell • f (ell⁻¹ • x)
+@[expose] def scale (ell : ℝ) (f : Space → V) : Space → V := fun x => ell • f (ell⁻¹ • x)
 
 theorem scale_contDiff (ell : ℝ) (f : Space → V) (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (scale ell f) :=

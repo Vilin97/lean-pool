@@ -17,7 +17,7 @@ selects a distinct inversion: its smaller index selects an odd row and its
 larger index selects a later even row.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

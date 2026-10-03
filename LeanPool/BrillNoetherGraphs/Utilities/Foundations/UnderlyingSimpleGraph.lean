@@ -18,11 +18,12 @@ connectivity and `SimpleGraph.Connected`.  This provides a general interface
 from chip-firing multigraphs to Mathlib's simple-graph connectivity theory.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The simple graph underlying a chip-firing multigraph. -/
+@[expose]
 def underlyingSimpleGraph (G : CFGraph) : SimpleGraph G.V where
   Adj v w := numEdges G v w > 0
   -- `SimpleGraph.symm` now asks for `Std.Symm Adj` (a one-field class), not the

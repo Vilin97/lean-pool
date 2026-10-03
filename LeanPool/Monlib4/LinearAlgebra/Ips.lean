@@ -27,4 +27,4 @@ public import LeanPool.Monlib4.LinearAlgebra.Ips.Vn
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Ips`.
 -/
 
-@[expose] public section
+public section

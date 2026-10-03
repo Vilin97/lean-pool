@@ -26,7 +26,7 @@ nonvanishing exactly from the nonvanishing of the corresponding
 power objects.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

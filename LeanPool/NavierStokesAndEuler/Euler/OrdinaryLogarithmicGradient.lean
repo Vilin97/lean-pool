@@ -36,7 +36,7 @@ section
 
 /-! The small-time heat remainder from genuine third spatial L² derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,7 +94,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +223,7 @@ section
 /-! Optimization of the actual heat-scale estimate used in the
 whole-space logarithmic gradient bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -272,7 +272,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -331,7 +331,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

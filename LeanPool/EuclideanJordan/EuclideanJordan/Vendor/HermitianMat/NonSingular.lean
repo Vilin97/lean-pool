@@ -10,7 +10,7 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Isometry
 
 /-! Nonsingular Hermitian matrices and their inverses. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

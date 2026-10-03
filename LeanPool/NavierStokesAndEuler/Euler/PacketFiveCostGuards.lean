@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketFiveCostPolynomial
 A single polynomial source bound suffices simultaneously for all five
 requirements. No eventual threshold is hidden in this statement. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

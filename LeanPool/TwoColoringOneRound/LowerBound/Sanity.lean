@@ -26,7 +26,7 @@ This file proves, in a fully kernel-checked way, that for `n = 5` there is an ex
 with monochromatic edge fraction exactly `1/5`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

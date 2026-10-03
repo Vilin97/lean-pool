@@ -20,7 +20,7 @@ the carrier boundary. Both the origin past cylinder and the symmetric
 parabolic metric ball are treated without any small-cell estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

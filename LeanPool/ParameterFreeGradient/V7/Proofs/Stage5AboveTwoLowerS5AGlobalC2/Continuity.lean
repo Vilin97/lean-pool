@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AGlo
 Continuity of the assembled kernel Hessian at all points.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -21,6 +21,7 @@ namespace V7.Stage5AboveTwoLower.S5AGlobalC2
 open S5ARepair S5AFinalRepair S5AHessianContinuity
 
 /-- The linear map sending a vector to its continuous pairing functional. -/
+@[expose]
 noncomputable def pairingCLMLinear {d : ℕ} :
     Point d →ₗ[ℝ] (Point d →L[ℝ] ℝ) where
   toFun := pairingCLM
@@ -41,7 +42,7 @@ noncomputable def pairingCLMLinear {d : ℕ} :
     ring
 
 /-- The continuous linear map sending a vector to its pairing functional. -/
-noncomputable def pairingCLMCLM {d : ℕ} :
+@[expose] noncomputable def pairingCLMCLM {d : ℕ} :
     Point d →L[ℝ] (Point d →L[ℝ] ℝ) :=
   LinearMap.toContinuousLinearMap (pairingCLMLinear (d := d))
 
@@ -112,6 +113,7 @@ lemma continuousAt_kernelHessianCoord_of_ne_zero {r theta : ℝ}
   exact hfirst.add hsecond
 
 /-- The linear assembly of coordinate functionals into a vector-valued continuous linear map. -/
+@[expose]
 noncomputable def assemblePiLinear {d : ℕ} :
     ((i : Fin d) → Point d →L[ℝ] ℝ) →ₗ[ℝ] (Point d →L[ℝ] Point d) where
   toFun := ContinuousLinearMap.pi
@@ -123,7 +125,7 @@ noncomputable def assemblePiLinear {d : ℕ} :
     simp
 
 /-- The continuous linear assembly of coordinate functionals into a vector-valued derivative. -/
-noncomputable def assemblePiCLM {d : ℕ} :
+@[expose] noncomputable def assemblePiCLM {d : ℕ} :
     ((i : Fin d) → Point d →L[ℝ] ℝ) →L[ℝ] (Point d →L[ℝ] Point d) :=
   LinearMap.toContinuousLinearMap (assemblePiLinear (d := d))
 

@@ -31,7 +31,7 @@ This file records the two global properties:
   square (`prod_eq_one_of_isSquare`, where every local symbol is `1`) as a step.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 
@@ -193,7 +193,7 @@ formalises.  We record the statement as a `Prop` for downstream reference. -/
 /-- Hilbert reciprocity for `ℚ`: for nonzero rationals `a, b`, the product of the local
 Hilbert symbols over all places (the finite places `ℚ_[p]` and the archimedean place `ℝ`)
 is `1`.  Stated for reference; not proved in this file. -/
-def HilbertReciprocity : Prop :=
+@[expose] def HilbertReciprocity : Prop :=
   ∀ a b : ℚ, a ≠ 0 → b ≠ 0 →
     (∏ᶠ p : Nat.Primes, hilbertSym (a : ℚ_[p]) (b : ℚ_[p]))
       * hilbertSym (a : ℝ) (b : ℝ) = 1
@@ -210,6 +210,7 @@ cases themselves (the content of quadratic reciprocity) are Phase 2. -/
 
 /-- The product of the local Hilbert symbols of `a` and `b` over all places of `ℚ`: the
 finite places `ℚ_[p]` together with the archimedean place `ℝ`. -/
+@[expose]
 noncomputable def hilbertProd (a b : ℚ) : ℤ :=
   (∏ᶠ p : Nat.Primes, hilbertSym (a : ℚ_[p]) (b : ℚ_[p])) * hilbertSym (a : ℝ) (b : ℝ)
 

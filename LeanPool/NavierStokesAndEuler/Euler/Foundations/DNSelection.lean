@@ -10,7 +10,7 @@ public import Mathlib.Analysis.InnerProductSpace.Positive
 
 /-! Quantitative endpoint selection in the activation step, equations (26)–(27). -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

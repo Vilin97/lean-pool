@@ -23,7 +23,7 @@ multiplicities alone do not prevent a certificate from identifying two
 disconnected pieces of the source graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -38,6 +38,7 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 /-- The fibre over `target` is connected, expressed by finite cuts of the
 ambient source graph.  Only cuts which split that fibre need be crossed, and
 the crossing edge is required to remain inside the fibre. -/
+@[expose]
 def FibreConnectedAt (c : GraphContractionCertificate G H) (target : H.V) : Prop :=
   ∀ S : Finset G.V,
     (∃ inside outside : G.V,
@@ -48,6 +49,7 @@ def FibreConnectedAt (c : GraphContractionCertificate G H) (target : H.V) : Prop
         numEdges G inside outside > 0
 
 /-- Every vertex fibre is connected. -/
+@[expose]
 def ConnectedFibres (c : GraphContractionCertificate G H) : Prop :=
   ∀ target : H.V, c.FibreConnectedAt target
 
@@ -68,6 +70,7 @@ def connectedFibresCheck (c : GraphContractionCertificate G H) : Bool :=
   simp [connectedFibresCheck, ConnectedFibres, FibreConnectedAt]
 
 /-- A quotient certificate whose fibres are actual connected subgraphs. -/
+@[expose]
 def TopologicalValid (c : GraphContractionCertificate G H) : Prop :=
   c.Valid ∧ c.ConnectedFibres
 

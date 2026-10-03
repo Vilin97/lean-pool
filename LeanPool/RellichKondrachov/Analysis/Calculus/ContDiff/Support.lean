@@ -18,7 +18,7 @@ is contained in `s`, then `f` is globally `C^n` (it is `0` in a neighborhood of 
 outside `s`).
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

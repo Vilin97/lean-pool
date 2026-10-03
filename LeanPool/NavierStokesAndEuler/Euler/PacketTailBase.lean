@@ -15,7 +15,7 @@ import Mathlib.Tactic.Bound
 /-! A single polynomial base absorbs the finite residual multiplicity and
 the fixed profile envelope, before the geometric tail is summed. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerPacketCoarseMajorant
@@ -70,7 +70,7 @@ theorem tailBase_absorption (R H C : ℝ) (hC : 0 ≤ C) (N n : ℕ) :
       ring
 
 /-- Tail polynomial constant, given by `(1+163*C)*H^2*(4*R*550^2)^110`. -/
-def tailPolynomialConstant (R H C : ℝ) : ℝ :=
+@[expose] def tailPolynomialConstant (R H C : ℝ) : ℝ :=
   (1+163*C)*H^2*(4*R*550^2)^110
 
 theorem tailPolynomialConstant_nonneg (R H C : ℝ) (hC : 0 ≤ C) :

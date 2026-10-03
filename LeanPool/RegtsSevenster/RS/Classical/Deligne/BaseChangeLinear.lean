@@ -18,7 +18,7 @@ intertwines the descended actions, and the two linearity laws
 follow by chaining the factors.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

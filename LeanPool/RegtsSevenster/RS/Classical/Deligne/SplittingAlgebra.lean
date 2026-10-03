@@ -20,7 +20,7 @@ hypotheses under which the fibre functor over that algebra is strong
 monoidal and exact.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

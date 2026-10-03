@@ -18,7 +18,7 @@ constructions trim each embedded edge at the last exits from those regions and p
 remaining pairwise-disjoint compact arcs.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -1929,7 +1929,7 @@ theorem completeCarrier_avoids_nonincident
 end CentralPolygonalArc
 
 /-- The selected replacement arc for an enumerated edge. -/
-noncomputable def replacementArc {h : Plane → Plane} (hcont : ContinuousOn h K.support)
+@[expose] noncomputable def replacementArc {h : Plane → Plane} (hcont : ContinuousOn h K.support)
     (D : K.VertexDiskControl h) (C : K.CentralTubeControl hcont D)
     (i : Fin (Fintype.card K.EdgeFace)) : K.CentralPolygonalArc hcont D C i :=
   K.centralPolygonalArc hcont D C i
@@ -1945,7 +1945,7 @@ noncomputable def rawMiddleBreakpoint
       (A.exitData.right - A.exitData.left) + 2) / 4
 
 /-- The `middleSourceScalarMap` declaration. -/
-noncomputable def middleSourceScalarMap
+@[expose] noncomputable def middleSourceScalarMap
     {h : Plane → Plane} {hcont : ContinuousOn h K.support}
     {D : K.VertexDiskControl h} {C : K.CentralTubeControl hcont D}
     {i : Fin (Fintype.card K.EdgeFace)}
@@ -1956,7 +1956,7 @@ noncomputable def middleSourceScalarMap
         ((4 : ℝ) • K.edgeParameter i - AffineMap.const ℝ Plane 2))
 
 /-- The `middleSourceMap` declaration. -/
-noncomputable def middleSourceMap
+@[expose] noncomputable def middleSourceMap
     {h : Plane → Plane} {hcont : ContinuousOn h K.support}
     {D : K.VertexDiskControl h} {C : K.CentralTubeControl hcont D}
     {i : Fin (Fintype.card K.EdgeFace)}
@@ -2084,7 +2084,7 @@ theorem graphBreakpointPoint_mem_support {h : Plane → Plane}
   K.edge_lineMap_mem_support b.1 (K.graphBreakpointParameter_mem hcont D C b)
 
 /-- The common source subdivision carrying all edgewise PL breakpoints. -/
-noncomputable def graphReplacementSubdivision {h : Plane → Plane}
+@[expose] noncomputable def graphReplacementSubdivision {h : Plane → Plane}
     (hcont : ContinuousOn h K.support) (D : K.VertexDiskControl h)
     (C : K.CentralTubeControl hcont D) : PlaneComplex :=
   K.markedEdgeSubdivision (K.graphBreakpointPoint hcont D C)
@@ -2668,7 +2668,7 @@ theorem graphReplacementMap_affineOn_middle {h : Plane → Plane}
       exact ⟨x, hx, rfl⟩
     rw [K.graphReplacementMap_eq_edge_on_cellCarrier hcont D C i (hui hx),
       K.edgeReplacementMap_eq_middle hcont D C i (hui hx) (hmid0 x hx) (hmid1 x hx)]
-    exact hg hxSource
+    simpa only [A, middleSourceMap_apply, AffineMap.comp_apply] using hg hxSource
 
 /-- The simultaneous edge replacement is affine on every face of its named common source
 subdivision. -/

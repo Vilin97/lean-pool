@@ -65,7 +65,7 @@ outward-field zero theorem. It is consumed by `NRR.EMP.exists_equalArea_weights`
  `continuous_EMP_areaVec_weights`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

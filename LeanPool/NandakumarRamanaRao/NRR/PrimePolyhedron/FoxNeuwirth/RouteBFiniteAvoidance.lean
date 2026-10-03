@@ -20,7 +20,7 @@ Once every individual geometric bad set has been proved null, the theorem
 positive-measure perturbation ball which avoids all of them simultaneously.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

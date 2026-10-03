@@ -56,7 +56,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapBlockCover
 
 /-! # CoreGapBlockCoverCoupled -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -495,7 +495,7 @@ end
 
 /-! # CoreGapBlockAlloc -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -721,7 +721,7 @@ end
 
 /-! # ClusterTripleLP -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -1120,7 +1120,7 @@ end
 
 /-! # ClusterTripleLPCount -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -1292,7 +1292,7 @@ end
 
 /-! # CoarseCellBlocks -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -1424,7 +1424,7 @@ end
 
 /-! # CoarseCellAssembly -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -1586,7 +1586,7 @@ end
 
 /-! # GridTripleDesign -/
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1
 
@@ -1706,7 +1706,7 @@ end
 
 /-! # GridTripleDesignRect -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -1868,7 +1868,7 @@ end
 
 /-! # BlockCoverUniformAux -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -1971,7 +1971,7 @@ end
 
 /-! # CoarseCellCoupled -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 

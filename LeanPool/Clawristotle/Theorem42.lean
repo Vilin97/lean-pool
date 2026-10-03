@@ -30,7 +30,7 @@ velocities $v \in \mathbb{R}^3$ are unbounded. This admits superluminal particle
 but is the standard mathematical setting for the classical Landau equation.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

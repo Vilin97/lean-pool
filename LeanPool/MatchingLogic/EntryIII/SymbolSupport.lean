@@ -15,7 +15,7 @@ public import Mathlib.Data.Fintype.Basic
 # MatchingLogic.EntryIII.SymbolSupport
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -24,7 +24,7 @@ variable {S : Signature} {Var : Type}
 namespace Pattern
 
 /-- The finite set of signature symbols occurring in a pattern. -/
-def symbolSupport [DecidableEq S.Sym] : Pattern S Var → Finset S.Sym
+@[expose] def symbolSupport [DecidableEq S.Sym] : Pattern S Var → Finset S.Sym
   | .var _ => ∅
   | .bot => ∅
   | .app sigma args => insert sigma (Finset.univ.biUnion (fun i => (args i).symbolSupport))

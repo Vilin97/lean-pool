@@ -16,7 +16,7 @@ those product constructions to hypercubes, we need a lightweight way to move
 pebbling distributions and solvability statements across graph isomorphisms.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

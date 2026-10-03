@@ -20,7 +20,7 @@ factor off it.  Twisting back turns that unit factor into a line
 factor of the original state.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

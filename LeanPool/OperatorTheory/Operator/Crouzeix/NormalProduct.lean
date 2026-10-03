@@ -32,7 +32,7 @@ auxiliary identity.
   specializes the result to a star-normal operator.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

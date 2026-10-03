@@ -15,7 +15,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! Both nonlinear-profile and exact-correction coefficient budgets are
 derived from the original joined-source coefficient bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,6 +31,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 
 /-- Joined coefficient budget as an element of `CoefficientBudget (joinedSourceCoefficientData P
 M D τ hτ hτT B hTime)`. -/
+@[expose]
 def joinedCoefficientBudget {R : ℝ} (NB : EulerTransversePacketJoin.NormalBudget D 6 R) :
     CoefficientBudget (joinedSourceCoefficientData P M D τ hτ hτT B hTime) :=
   (sourceCoefficientBudget P M D (InitialData.zero P D) hTime NB.Rc NB.C
@@ -52,6 +53,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 /-- No additional coefficient-bound hypothesis is needed by correction:
 the source frame, frame derivative and inverse bounds already suffice. -/
+@[expose]
 def correctionCoefficients (P : ℝ) [Fact (0 < P)] : CorrectionCoefficientBudget D P :=
   correctionCoefficientBudget D P (max L.Rc NB.Rc) L.C₀ L.C₁ NB.C
     (L.Rc_nonneg.trans (le_max_left _ _)) L.C₀_nonneg L.C₁_nonneg NB.C_nonneg

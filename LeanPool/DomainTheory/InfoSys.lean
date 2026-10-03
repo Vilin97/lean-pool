@@ -43,7 +43,7 @@ This is the **1982** presentation; the development is kept choice-free
 matching Scott's emphasis on the constructive nature of the definitions.
 -/
 
-@[expose] public section
+public section
 
 /-- A Scott information system on a type of tokens `α`, following Scott's
 Definition 2.1

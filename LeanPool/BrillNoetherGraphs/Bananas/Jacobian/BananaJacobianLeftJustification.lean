@@ -17,7 +17,7 @@ sorting pass: terminal coordinates move left of zero coordinates.  The sum of
 the reverse indices of all zeros is a strictly decreasing natural measure.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

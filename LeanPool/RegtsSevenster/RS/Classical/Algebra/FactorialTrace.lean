@@ -25,7 +25,7 @@ and strand instances are supplied in `Novel/Envelope/FactorialTrace`
 and `Novel/Envelope/BlockFactorialTrace`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

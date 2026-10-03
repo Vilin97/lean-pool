@@ -17,7 +17,7 @@ realizable, up to a positive affine transform, by valid density matrices via the
 quantum kernel `tr{ρ(x)ρ(x')}`. Converse of `quantumKernel_gram_posSemidef`. No assumptions.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

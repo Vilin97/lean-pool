@@ -18,7 +18,7 @@ and the new low--low product have a genuinely non-rational quadratic
 collision in `Aff + T`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -116,6 +116,7 @@ def CubicLowLowNormalCollisionAt
     ¬ IsRationalCoeff targetCoeff
 
 /-- Existence of a target and affine correction in the normalized cubic low-low collision form. -/
+@[expose]
 def CubicLowLowNormalCollision (g : ANF 8) : Prop :=
   ∃ (target targetAffine : ANF 8) (targetCoeff : TargetCoeff),
     CubicLowLowNormalCollisionAt g target targetAffine targetCoeff
@@ -214,6 +215,7 @@ def ExteriorFirstJetCollision : Prop :=
           booleanContraction childLinear (rationalTwo childCoeff))
 
 /-- Exterior collision data retaining the seed projections and the particular target. -/
+@[expose]
 def ExteriorFirstJetCollisionAt
     (g target targetAffine : ANF 8) (targetCoeff : TargetCoeff) : Prop :=
   targetAffine ∈ affine 8 ∧
@@ -376,6 +378,7 @@ theorem contraction_sum_mem_rational_of_cubic_equal
   exact Submodule.smul_mem _ _ (rationalPlaceTwo_mem theta)
 
 /-- The reduced exterior-coordinate form of a first-jet collision. -/
+@[expose]
 def ExteriorFirstJetReducedCollision : Prop :=
   ∃ (seedCoeff childCoeff rationalCoeff : Fin 3 → F₂)
     (seedLinear seedCompanion childLinear childCompanion : LinearForm)
@@ -445,6 +448,7 @@ theorem exteriorFirstJetCollision_reduced
     hcubicNonzero, hcubic, htargetNonrational, htarget⟩
 
 /-- A linear form lies in the two-input support of a rational place. -/
+@[expose]
 def InPlaceSupport (theta : Fin 3) (u : LinearForm) : Prop :=
   ∃ a b : F₂, u = a • placeA theta + b • placeB theta
 

@@ -18,7 +18,7 @@ splitting is a section of the base-changed epimorphism as module
 maps over the algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -38,6 +38,7 @@ theorem freeModMap_lin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     ← associator_inv_naturality_right_assoc]
 
 /-- The free module on a morphism. -/
+@[expose]
 noncomputable def freeModMap
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     {V W : D} (f : V ⟶ W) :
@@ -53,6 +54,7 @@ section Statement
 the consumed direction): a short exact sequence acquires a
 module-level section of its epimorphism after base change to
 some nonzero commutative algebra. -/
+@[expose]
 def Rappel210Statement
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] [Abelian D]
     (S : ShortComplex D) (_ : S.ShortExact) :

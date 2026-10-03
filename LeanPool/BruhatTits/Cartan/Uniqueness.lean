@@ -28,7 +28,7 @@ completeness, this is stated as `iUnion₂_doset_cartanDiag_eq_univ` and
 `disjoint_doset_cartanDiag_of_ne` below.
 -/
 
-@[expose] public section
+public section
 
 open Module
 

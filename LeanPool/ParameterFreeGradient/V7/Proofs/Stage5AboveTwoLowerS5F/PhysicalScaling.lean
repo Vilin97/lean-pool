@@ -12,16 +12,16 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Co
 Affine transport of algorithms, oracle observations, and exact chronological traces.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 
 /-- The affine map from normalized coordinates to the requested physical radius and center. -/
-noncomputable def physicalForward (x0 : Point d) (R rT : ℝ) (z : Point d) : Point d :=
+@[expose] noncomputable def physicalForward (x0 : Point d) (R rT : ℝ) (z : Point d) : Point d :=
   x0 + (R / rT) • z
 
 /-- The affine map from physical coordinates back to the normalized construction. -/
-noncomputable def physicalBackward (x0 : Point d) (R rT : ℝ) (x : Point d) : Point d :=
+@[expose] noncomputable def physicalBackward (x0 : Point d) (R rT : ℝ) (x : Point d) : Point d :=
   (rT / R) • (x - x0)
 
 lemma physicalForward_backward (x0 : Point d) {R rT : ℝ}
@@ -41,7 +41,7 @@ lemma physicalBackward_forward (x0 : Point d) {R rT : ℝ}
     smul_smul, hscale, one_smul]
 
 /-- The normalized oracle rescaled to the prescribed physical smoothness and radius. -/
-noncomputable def physicalOracle (x0 : Point d) (L R rT : ℝ)
+@[expose] noncomputable def physicalOracle (x0 : Point d) (L R rT : ℝ)
     (bar : PairOracle d) : PairOracle d :=
   { value := fun x => (L * R ^ (2 : ℕ) / rT ^ (2 : ℕ)) *
       bar.value (physicalBackward x0 R rT x)
@@ -49,6 +49,7 @@ noncomputable def physicalOracle (x0 : Point d) (L R rT : ℝ)
       bar.gradient (physicalBackward x0 R rT x) }
 
 /-- An observation transported to physical coordinates with rescaled value and gradient. -/
+@[expose]
 noncomputable def physicalObservation (x0 : Point d) (L R rT : ℝ)
     (obs : Observation d) : Observation d :=
   { point := physicalForward x0 R rT obs.point
@@ -75,7 +76,7 @@ noncomputable def normalizedAdversaryAlgorithm (x0 : Point d) (L R rT : ℝ)
         (algorithm.output x0 (trace.map (physicalObservation x0 L R rT))) }
 
 /-- The normalized observation trace transported to physical coordinates. -/
-noncomputable def physicalTrace (x0 : Point d) (L R rT : ℝ)
+@[expose] noncomputable def physicalTrace (x0 : Point d) (L R rT : ℝ)
     (trace : List (Observation d)) : List (Observation d) :=
   trace.map (physicalObservation x0 L R rT)
 

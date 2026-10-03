@@ -17,7 +17,7 @@ power times the iterated vertex-star tensor class composed with
 the bundle map of the sort.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

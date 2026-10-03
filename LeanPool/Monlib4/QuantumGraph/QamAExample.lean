@@ -16,7 +16,7 @@ import LeanPool.Monlib4.LinearAlgebra.Ips.Basic
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.QamAExample`.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -212,7 +212,7 @@ theorem spectra_fin_two_ext {α : Type _} (α₁ α₂ β₁ β₂ : α) :
   simp only [exists_eq_right_right, and_true, eq_comm]
   simp_rw [and_comm]
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def Multiset.hasSmul {α : Type _} [SMul ℂ α] : SMul ℂ (Multiset α)
     where smul a s := s.map ((· • ·) a)
 
@@ -237,12 +237,12 @@ theorem Matrix.IsAlmostHermitian.trace {x : Matrix n n ℂ} (hx : x.IsAlmostHerm
   simp [Matrix.IsAlmostHermitian.eigenvalues, Finset.mul_sum]
 
 /-- The unitary eigenvector matrix chosen for an almost-Hermitian matrix. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def Matrix.IsAlmostHermitian.eigenvectorUnitary {x : Matrix n n ℂ}
     (hx : x.IsAlmostHermitian) : unitaryGroup n ℂ :=
 hx.matrix_isHermitian.eigenvectorUnitary
 /-- The eigenvector matrix chosen for an almost-Hermitian matrix. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def Matrix.IsAlmostHermitian.eigenvectorMatrix {x : Matrix n n ℂ}
   (hx : x.IsAlmostHermitian) : Matrix n n ℂ :=
 hx.matrix_isHermitian.eigenvectorMatrix

@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 
 /-! Actual highest derivative words preserve the gained-derivative heat mild formula. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,7 +57,7 @@ theorem mild_of_truncated_formula (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 �
   exact congrArg (fun x : SobolevSpace period 0 => value period x) h
 
 /-- A genuine bounded derivative block with an arbitrary available Sobolev margin. -/
-def boundedWordBlock (p n : ℕ) {q : ℕ} (h : p + n ≤ q) (w : Fin n → Fin 4) :
+@[expose] def boundedWordBlock (p n : ℕ) {q : ℕ} (h : p + n ≤ q) (w : Fin n → Fin 4) :
     SobolevSpace period q →L[ℝ] SobolevSpace period p :=
   (wordBlock period p n w).comp (restrictOperator period h)
 

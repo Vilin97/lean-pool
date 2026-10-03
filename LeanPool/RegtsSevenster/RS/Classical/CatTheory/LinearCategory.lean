@@ -18,7 +18,7 @@ scalar endomorphisms of the tensor unit (`HasScalarUnit`), is
 defined in `RS/Definitions.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -29,11 +29,13 @@ universe v u
 variable (A : Type u)
 
 /-- Every Hom-space is finite dimensional over ℂ. -/
+@[expose]
 def HasFinDimHom [Category.{v} A]
     [Preadditive A] [Linear ℂ A] : Prop :=
   ∀ X Y : A, FiniteDimensional ℂ (X ⟶ Y)
 
 /-- Every object is a finite biproduct of simple objects. -/
+@[expose]
 def IsSemisimple [Category.{v} A]
     [Preadditive A] [HasFiniteBiproducts A] : Prop :=
   ∀ X : A, ∃ (n : ℕ) (S : Fin n → A),

@@ -23,7 +23,7 @@ blueprint unit currently owns "pullback of holomorphic `1`-forms along a holomor
 this unit's final report for the flag to the orchestrator.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 
@@ -48,10 +48,10 @@ def uliftDownHom : ULift.{u} G →ₜ+ G :=
     continuous_toFun := (Homeomorph.ulift (X := G)).continuous }
 
 omit [IsTopologicalAddGroup G] in
-@[simp] theorem uliftUpHom_apply (x : G) : uliftUpHom.{u} x = ULift.up x := rfl
+@[simp] theorem uliftUpHom_apply (x : G) : uliftUpHom.{u} x = ULift.up x := by rfl
 
 omit [IsTopologicalAddGroup G] in
-@[simp] theorem uliftDownHom_apply (x : ULift.{u} G) : uliftDownHom x = x.down := rfl
+@[simp] theorem uliftDownHom_apply (x : ULift.{u} G) : uliftDownHom x = x.down := by rfl
 
 end RS
 
@@ -69,7 +69,7 @@ functoriality substrate `Jacobian X →ₜ+ Jacobian Y`. The *closure*-level hyp
 `Torus.inducedHom` needs is derived from this one via minimality of the topological closure
 (`AddSubgroup.topologicalClosure_minimal`), since `(periodSubgroup Y).topologicalClosure` is
 already closed and `T` is continuous (finite-dimensional). -/
-noncomputable def inducedHom {T : (Fin (genus X) → ℂ) →ₗ[ℂ] (Fin (genus Y) → ℂ)}
+@[expose] noncomputable def inducedHom {T : (Fin (genus X) → ℂ) →ₗ[ℂ] (Fin (genus Y) → ℂ)}
     (hT : RS.periodSubgroup X ≤ (RS.periodSubgroup Y).topologicalClosure.comap T.toAddMonoidHom) :
     Jacobian X →ₜ+ Jacobian Y :=
   RS.uliftUpHom.comp

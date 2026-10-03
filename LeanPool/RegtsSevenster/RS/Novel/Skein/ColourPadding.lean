@@ -18,7 +18,7 @@ zero vertex factor. Equality of superdimensions then preserves the
 free-circle factor as well.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

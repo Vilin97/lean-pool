@@ -84,7 +84,7 @@ Three groups of declarations here are general and have no home yet on `main`:
   `Graph.IsArcK33`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 

@@ -11,4 +11,4 @@ public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveTwoPoleClosed
 
 /-! # genus-five-specialization-audit -/
 
-@[expose] public section
+public section

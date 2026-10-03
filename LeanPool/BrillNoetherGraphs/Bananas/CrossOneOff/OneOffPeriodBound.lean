@@ -17,7 +17,7 @@ to lie strictly beyond `g + floor(g/(n-1))`, the exact natural-number form of
 the paper's rational cutoff `(n/(n-1))g`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

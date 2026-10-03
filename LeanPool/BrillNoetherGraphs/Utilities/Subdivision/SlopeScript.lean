@@ -30,7 +30,7 @@ unit step of slot `edge`.  Then
 Both statements are exact, and neither refers to the values of the script.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -42,6 +42,7 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 
 /-- A slope datum for a firing script: the script rises by `slope edge k`
 across the `k`-th unit step of slot `edge`. -/
+@[expose]
 def IsStepSlope (script : firingScript spec.graph) (slope : Fin p → ℕ → ℤ) :
     Prop :=
   ∀ (edge : Fin p) (offset : Fin (spec.length edge)),
@@ -231,6 +232,7 @@ theorem prin_interiorVertex_eq_slopeDifference
 
 /-- The script whose value at path position `k` of slot `edge` is
 `value edge k`, and `potential v` at the core vertex `v`. -/
+@[expose]
 def slotValueScript (potential : Fin n → ℤ) (value : Fin p → ℕ → ℤ) :
     firingScript spec.graph
   | Sum.inl vertex => potential vertex

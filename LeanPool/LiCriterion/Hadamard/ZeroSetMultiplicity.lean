@@ -23,7 +23,7 @@ public import LeanPool.LiCriterion.Hadamard.ZeroSet
 as a sigma type so that the factorization theorem applies without assuming simple zeros.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -41,15 +41,18 @@ namespace ZeroSetMultiplicity
 variable {f : ℂ → ℂ} (Z : ZeroSetMultiplicity f)
 
 /-- Repeat each zero according to its multiplicity. -/
+@[expose]
 def ZeroWithMultiplicity : Type := Σ ρ : Z.Zero, Fin (Z.mult ρ)
 
 /-- The underlying complex value of a repeated zero index. -/
+@[expose]
 def zWithMultiplicity : Z.ZeroWithMultiplicity → ℂ := fun i => Z.z i.1
 
 @[simp] lemma zWithMultiplicity_mk (ρ : Z.Zero) (k : Fin (Z.mult ρ)) :
     Z.zWithMultiplicity ⟨ρ, k⟩ = Z.z ρ := rfl
 
 /-- The genus‑1 canonical product where each zero occurs with its multiplicity. -/
+@[expose]
 noncomputable def canonicalProductZeroSetMultiplicity (s : ℂ) : ℂ :=
   ∏' i : Z.ZeroWithMultiplicity, weierstrassE 1 (s / Z.zWithMultiplicity i)
 

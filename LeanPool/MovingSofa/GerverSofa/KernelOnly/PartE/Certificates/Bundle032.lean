@@ -15,7 +15,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.PartE.Certificates.Bundl
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch046`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,7 +34,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC6KernelFinalClosure`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,7 +44,7 @@ section
 # Intermediate reconstruction of the upper theta cover
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5564,7 +5564,7 @@ section
 # Reconstruction of the upper theta cover
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9645,7 +9645,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC6Kernel Final Closure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

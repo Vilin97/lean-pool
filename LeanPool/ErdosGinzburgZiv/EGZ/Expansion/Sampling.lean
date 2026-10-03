@@ -17,7 +17,7 @@ then turns concentration of an exchange sum into a bounded relation among
 those centres.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

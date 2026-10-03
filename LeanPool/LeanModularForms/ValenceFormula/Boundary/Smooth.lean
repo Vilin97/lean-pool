@@ -25,7 +25,7 @@ for the fundamental domain boundary.
 * `fdBoundaryImmersion` — fixed-height boundary as `PiecewiseC1Immersion`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -568,7 +568,7 @@ lemma fdBoundary_H_right_deriv_limit (H : ℝ)
   · linarith
 
 /-- The H-parameterized boundary as a `PiecewiseC1Curve`. -/
-noncomputable def fdBoundaryHCurve (H : ℝ) :
+@[expose] noncomputable def fdBoundaryHCurve (H : ℝ) :
     PiecewiseC1Curve where
   toFun := fdBoundaryH H
   a := 0
@@ -595,6 +595,7 @@ noncomputable def fdBoundaryHCurve (H : ℝ) :
 
 /-- The H-parameterized boundary as a `PiecewiseC1Immersion`.
 Requires H > √3/2 for nonzero derivative. -/
+@[expose]
 noncomputable def fdBoundaryHImmersion (H : ℝ)
     (hH : Real.sqrt 3 / 2 < H) :
     PiecewiseC1Immersion where

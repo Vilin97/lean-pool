@@ -28,7 +28,7 @@ categorical side consumes it in [Letters.lean](Letters.lean).
   `parSign_swap` on an adjacent transposition.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -43,6 +43,7 @@ A permutation routes the factor in slot `i` to slot `σ i`
 
 /-- Reindexing a slot labelling along a permutation: the label of
 slot `i` moves to slot `σ i`. -/
+@[expose]
 def permIndex {K : Type*} {n : ℕ} (σ : Equiv.Perm (Fin n))
     (c : Fin n → K) : Fin n → K :=
   c ∘ ⇑σ⁻¹
@@ -73,6 +74,7 @@ enumerations gives a permutation of `Fin (popCount w)` whose sign
 is the Koszul sign of the shuffle. -/
 
 /-- The set of `true` slots of a word. -/
+@[expose]
 def trueSet {n : ℕ} (w : Fin n → Bool) : Finset (Fin n) :=
   Finset.univ.filter fun i => w i = true
 
@@ -112,6 +114,7 @@ noncomputable def trueEnum {n : ℕ} (w : Fin n → Bool) :
 
 /-- A permutation carries the `true` slots of a word bijectively
 onto the `true` slots of the shuffled word. -/
+@[expose]
 def trueShift {n : ℕ} (σ : Equiv.Perm (Fin n)) (w : Fin n → Bool) :
     {i // i ∈ trueSet w} ≃ {i // i ∈ trueSet (permIndex σ w)} :=
   (σ : Fin n ≃ Fin n).subtypeEquiv fun i => by
@@ -126,6 +129,7 @@ theorem trueShift_apply {n : ℕ} (σ : Equiv.Perm (Fin n))
 
 /-- **The induced permutation on the odd slots**: conjugate the
 shift by the monotone enumerations. -/
+@[expose]
 noncomputable def oddPerm {n : ℕ} (σ : Equiv.Perm (Fin n))
     (w : Fin n → Bool) : Equiv.Perm (Fin (popCount w)) :=
   (trueEnum w).toEquiv.trans ((trueShift σ w).trans

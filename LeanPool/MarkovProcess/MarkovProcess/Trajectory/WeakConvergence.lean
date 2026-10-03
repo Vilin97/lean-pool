@@ -43,7 +43,7 @@ when the constants are allowed to vary, nor for a family whose limit is not itse
 a Feller semigroup.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

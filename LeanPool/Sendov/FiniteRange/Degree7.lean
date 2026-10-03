@@ -30,7 +30,7 @@ but small: the exact maximum of `R 7 α` over the feasible range is about `0.598
 `0.664` for this upper bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

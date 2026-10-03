@@ -18,7 +18,7 @@ heat exterior the resulting potential is a finite, anchored heat primitive,
 which has a smooth extension through the terminal central plane.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,9 +33,11 @@ open scoped Topology ContDiff
 abbrev Point := AxisymmetricFields.ProfilePoint
 
 /-- The radial anchor is physical and independent of the similarity scale. -/
+@[expose]
 noncomputable def radialAnchor (p : Point) : Point := (p.1, (1, p.2.2))
 
 /-- Radial normalize, given by `K p - K (radialAnchor p)`. -/
+@[expose]
 noncomputable def radialNormalize (K : Point → ℝ) (p : Point) : ℝ :=
   K p - K (radialAnchor p)
 
@@ -68,6 +70,7 @@ theorem radialNormalize_anchor (K : Point → ℝ) (t z : ℝ) :
     radialNormalize K (t, (1, z)) = 0 := sub_self _
 
 /-- This is the entire summed swirl potential, with all slow orders retained. -/
+@[expose]
 noncomputable def gaugedSwirl (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) : Point → ℝ :=
   radialNormalize (SlowBorelBase.swirlPotential a h C d)
 
@@ -78,6 +81,7 @@ theorem gaugedSwirl_apply (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coeff
 
 /-- Potential, given by `AxisymmetricFields.potential (SlowBorelBase.streamFactor a h C d)
 (gaugedSwirl a h C d)`. -/
+@[expose]
 noncomputable def potential (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) : VelocityField
     :=
   AxisymmetricFields.potential (SlowBorelBase.streamFactor a h C d) (gaugedSwirl a h C d)
@@ -500,6 +504,7 @@ end FinalBase
 
 /-- A closed choice of the already constructed leading profile, repaired
 hierarchy, modulation, and common cutoff schedule. -/
+@[expose]
 noncomputable def constructedPotential (upper : ℝ) (B : ℕ) : VelocityField :=
   finalPotential FinalSlowBase.actualProfile.certificate FinalSlowBase.actualProfile.modulation
       upper B

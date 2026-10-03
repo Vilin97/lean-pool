@@ -23,7 +23,7 @@ same subsequence would converge to zero along the free ultrafilter.
 This observation avoids any separate oscillating-marker construction.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 
@@ -35,7 +35,7 @@ noncomputable section
 
 /-- Every injective sequence has a strictly reindexed subsequence with a nonzero limit along a
 free ultrafilter. -/
-def HasNonzeroLimitProperty
+@[expose] def HasNonzeroLimitProperty
     (G : Type u) [TopologicalSpace G] [Zero G] : Prop :=
   ∀ s : ℕ → G, Function.Injective s →
     ∃ (φ : ℕ → ℕ) (x : G) (p : Ultrafilter ℕ),

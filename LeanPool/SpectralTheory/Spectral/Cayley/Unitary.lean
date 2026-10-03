@@ -16,7 +16,7 @@ surjective, and combines this with its isometry (from `Spectral.Cayley.Basic`)
 to show it is unitary.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

@@ -27,7 +27,7 @@ import Mathlib.Tactic.Bound.Init
 # MatchingLogic.EntryIII.Conclusion
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

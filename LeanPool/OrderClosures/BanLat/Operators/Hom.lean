@@ -29,7 +29,7 @@ The final section introduces `BanachLatEquiv`, the type of Banach lattice isomet
 real linear isometric equivalences that also preserve `⊔` and `⊓`.
 -/
 
-@[expose] public section
+public section
 
 /-! ## Vector lattice homomorphisms -/
 
@@ -71,6 +71,7 @@ theorem isVecLatHom (f : VecLatHom X Y) : IsVecLatHom f where
   map_inf' := f.toLatticeHom.map_inf'
 
 /-- Construct a `VecLatHom` from a proof that a function satisfies `IsVecLatHom`. -/
+@[expose]
 def ofIsVecLatHom (f : X → Y) (h : IsVecLatHom f) : VecLatHom X Y where
   toFun := f
   map_add' := h.map_add
@@ -251,6 +252,7 @@ end LLexpr
 namespace IsVecLatHom
 
 /-- Bundle an `IsVecLatHom` proof into a `VecLatHom`. -/
+@[expose]
 def mk' (f : X → Y) (vlh : IsVecLatHom f) : VecLatHom X Y :=
   VecLatHom.ofIsVecLatHom f vlh
 
@@ -522,6 +524,7 @@ variable {X : Type*} [NormedAddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
 
 /-- The canonical inclusion of a normed vector lattice into its completion, as a vector
 lattice homomorphism. -/
+@[expose]
 noncomputable def toCompletionVecLatHom : VecLatHom X (Completion X) where
   toFun := ((↑) : X → Completion X)
   map_add' := Completion.coe_add

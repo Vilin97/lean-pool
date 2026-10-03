@@ -17,7 +17,7 @@ Bounds on iterated derivatives of continuous linear maps and quadratic forms,
 used in the Schwartz decay proof for the equilibrium Maxwellian.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

@@ -44,4 +44,4 @@ Tags: directed-topology, algebraic-topology, category-theory
 MSC: 55U40, 55Q05, 18A30
 -/
 
-@[expose] public section
+public section

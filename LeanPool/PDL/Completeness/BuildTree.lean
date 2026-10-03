@@ -12,7 +12,7 @@ public import LeanPool.PDL.PdlSteps
 
 /-! # From winning strategies to model graphs, part 1: BuildTree and PreState (Section 6.3) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -22,7 +22,7 @@ open Lean4GlCoalgebras
 
 /-- Open local tableaux for `X` that are *the* uniform one, i.e. `uniLocalTab X`.
 This type has at most one element, and it is inhabited iff `uniLocalTab X` has an end node. -/
-def UniOpenLT (X : Sequent) : Type :=
+@[expose] def UniOpenLT (X : Sequent) : Type :=
   {lt : LocalTableau X // endNodesOf lt ≠ {} ∧ lt = uniLocalTab X}
 
 instance UniOpenLT.instDecidableEq {X} : DecidableEq (UniOpenLT X) :=
@@ -91,14 +91,14 @@ open Lean4GlCoalgebras
 
 mutual
 /-- Manual replacement for `sizeOf (bt : BuildTree)` so we also count the `next` parts. -/
-def BuildTree.size : BuildTree H X → Nat
+@[expose] def BuildTree.size : BuildTree H X → Nat
   | .loc _ _ next => 1 + ((UniOpenLT.all X).map (fun lt => (next lt).size)).sum
   | .pdl _ _ next => 1 + ((PdlRule.all X).map (fun ⟨Y,r⟩ => (next Y r).size)).sum
   | .freeRepeat _ => 1
   | .openLeaf _ _ => 1
 
 /-- The size of the continuation selected by Builder. -/
-def BuildChoice.size {YS} : BuildChoice H X YS → Nat
+@[expose] def BuildChoice.size {YS} : BuildChoice H X YS → Nat
   | .pick _ bt_Y => bt_Y.size
 end
 
@@ -147,7 +147,7 @@ lemma BuildChoice.frth_mem {H X YS} {bc : BuildChoice H X YS} : bc.4 ∈ YS := b
   cases bc; assumption
 
 /-- Whether this strategy tree is a leaf justified by a free repeat. -/
-def BuildTree.isFreeRepeat {H X} : BuildTree H X → Prop
+@[expose] def BuildTree.isFreeRepeat {H X} : BuildTree H X → Prop
   | BuildTree.freeRepeat _ => True
   | _ => False
 
@@ -344,14 +344,14 @@ def Match.length {H : History} {X : Sequent} {bt : BuildTree H X} : Match bt →
   | .pdl tail => tail.length + 1
 
 /-- The subtree reached by a match, together with its history and root sequent. -/
-@[implicit_reducible]
+@[implicit_reducible, expose]
 def Match.btAt {H X} {bt : BuildTree H X} : Match bt → Σ H' Y, BuildTree H' Y
 | .nil => ⟨_, _, bt⟩
 | .loc tail => btAt tail
 | .pdl tail => btAt tail
 
 /-- The sequent reached at the end of a match. -/
-def Match.endSeq {bt : BuildTree H X} (m : Match bt) : Sequent := m.btAt.2.1
+@[expose] def Match.endSeq {bt : BuildTree H X} (m : Match bt) : Sequent := m.btAt.2.1
 
 /- All possible Matches in a given BuildTree. -/
 /-- Enumerate every finite match in a strategy tree. -/
@@ -391,7 +391,7 @@ theorem Match.all_spec {H X} {bt : BuildTree H X} {m} :
     simp
 
 /-- Whether the subtree reached by a match is an open leaf. -/
-def Match.isOpenLeaf {H X} {bt : BuildTree H X} {m : Match bt} : Prop :=
+@[expose] def Match.isOpenLeaf {H X} {bt : BuildTree H X} {m : Match bt} : Prop :=
   match (btAt m) with | ⟨_, _, .openLeaf _ _⟩ => True | _ => False
 
 instance instDecidableIsOpenLeaf {H X} {bt : BuildTree H X} {m : Match bt} : Decidable
@@ -404,7 +404,7 @@ instance instDecidableIsOpenLeaf {H X} {bt : BuildTree H X} {m : Match bt} : Dec
     try exact instDecidableFalse
 
 /-- Whether the subtree reached by a match is a free-repeat leaf. -/
-def Match.isFreeRepeat {H X} {bt : BuildTree H X} (m : Match bt) : Prop :=
+@[expose] def Match.isFreeRepeat {H X} {bt : BuildTree H X} (m : Match bt) : Prop :=
   match (btAt m) with | ⟨_, _, .freeRepeat _⟩ => True | _ => False
 
 instance instMatchDecidableIsFreeRepeat {H X} {bt : BuildTree H X} {m : Match bt} :
@@ -660,7 +660,7 @@ We collect the sequents along such paths directly by induction on the `BuildTree
 /-- Collect pre-states in the whole BuildTree.
 The local pre-states come from paths in a local tableau,
 and PDL pre-states each consist of just a single node. -/
-def BuildTree.collect {H X} : (bt : BuildTree H X) → Finset (List Sequent)
+@[expose] def BuildTree.collect {H X} : (bt : BuildTree H X) → Finset (List Sequent)
   | .loc _ _ next => (UniOpenLT.all X).toFinset.sup
                       fun lt => lt.1.pathsTo (next lt).4 ∪ (next lt).6.collect
   | .pdl _ _ next => { [X] } ∪ (PdlRule.all X).toFinset.sup fun ⟨Y,r⟩ => (next Y r).collect
@@ -741,7 +741,7 @@ lemma BuildTree.collect_nonempty (bt : BuildTree [] X) :
 /-! ## Pre-states (Def 6.13) -/
 
 /-- A pre-state is a list of sequents collected from a `BuildTree`. -/
-def PreState {H X} (bt : BuildTree H X) : Type := Subtype (· ∈ bt.collect)
+@[expose] def PreState {H X} (bt : BuildTree H X) : Type := Subtype (· ∈ bt.collect)
 
 lemma PreState.nonempty {H X} {bt : BuildTree H X} {π : PreState bt} : π.val ≠ [] := by
   rcases π with ⟨L, L_in⟩
@@ -773,11 +773,12 @@ decreasing_by -- almost same termination proof as for Match.all etc above :-)
 
 /-- Λ(π) gets all formulas for a pre-state but keep the information what is loaded.
 Returns the `WhateverFormula` type so that lemmas like 6.15 and 6.18 are sayable. -/
+@[expose]
 def PreState.wForms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset WhateverFormula :=
   pathWForms π.val
 
 /-- Λ⁻(π) gets all formulas from a pre-state π, via unloading if needed. -/
-def PreState.forms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset Formula :=
+@[expose] def PreState.forms {H X} {bt : BuildTree H X} (π : PreState bt) : Finset Formula :=
   pathForms π.val
 
 @[simp]

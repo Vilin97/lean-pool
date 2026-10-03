@@ -19,7 +19,7 @@ cut — a nested chord contributes both ends, a crossing chord
 exactly one.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -29,6 +29,7 @@ variable {α : Type}
 
 /-- A chord crosses the cut when exactly one endpoint lies
 between the cut labels. -/
+@[expose]
 def CrossesCut [LinearOrder α]
     (i j : α) (p : α × α) : Prop :=
   Xor (i < p.1 ∧ p.1 < j) (i < p.2 ∧ p.2 < j)

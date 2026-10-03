@@ -22,7 +22,7 @@ orthogonal idempotents whose corner rings are division rings, and packages the
 data as `OrtIdem` / `OrtIdemDiv` structures.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 
@@ -31,10 +31,10 @@ variable (I J : Ideal R)
 variable {e f : R}
 
 /-- Two elements are orthogonal when their products in both orders vanish. -/
-def IsOrthogonal (e f : R) : Prop := e * f = 0 ∧ f * e = 0
+@[expose] def IsOrthogonal (e f : R) : Prop := e * f = 0 ∧ f * e = 0
 
 /-- `e` and `f` are orthogonal idempotents when each is idempotent and they are orthogonal. -/
-def AreOrthogonalIdempotents (e f : R) : Prop :=
+@[expose] def AreOrthogonalIdempotents (e f : R) : Prop :=
   IsIdempotentElem e ∧ IsIdempotentElem f ∧ IsOrthogonal e f
 
 theorem leq_neq_lt (I J : Ideal R) : I ≤ J → I ≠ J → I < J := by
@@ -92,7 +92,7 @@ theorem e_span_larger_e_sub_f (e f : R) (h : AreOrthogonalIdempotents (1 - e) f)
 
 /-- `R` has a system of `n × n` matrix units when there exist `n^2` elements `es i j`
 summing to `1` on the diagonal and multiplying like matrix units. -/
-def HasMatrixUnits (R : Type*) [Ring R] (n : ℕ) : Prop :=
+@[expose] def HasMatrixUnits (R : Type*) [Ring R] (n : ℕ) : Prop :=
   ∃ (es : Fin n → Fin n → R), (∑ i, es i i = 1) ∧
     (∀ i j k l, es i j * es k l = (if j = k then es i l else 0))
 
@@ -100,7 +100,7 @@ def HasMatrixUnits (R : Type*) [Ring R] (n : ℕ) : Prop :=
 def kroneckerDelta (n : ℕ) (i j : Fin n) : R := if i = j then 1 else 0
 
 /-- Two elements are pairwise orthogonal when both of their products vanish. -/
-def PairwiseOrthogonal (a b : R) : Prop := a * b = 0 ∧ b * a = 0
+@[expose] def PairwiseOrthogonal (a b : R) : Prop := a * b = 0 ∧ b * a = 0
 
 -- Lemma 2.18
 theorem OrtIdem_imply_MatUnits {n : ℕ} (hn : 0 < n)

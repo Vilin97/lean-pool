@@ -28,7 +28,7 @@ connectedness theorem be applied to a complement.
   open; the exterior of a plane graph is open for this reason.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

@@ -15,7 +15,7 @@ target of four-term multiplication.  All classifications are expressed as
 polynomial identities over `F₂`; no circuit or truth-table enumeration is used.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -26,32 +26,32 @@ noncomputable section
 abbrev TargetCoeff := Fin 7 → F₂
 
 /-- The coefficient vector supported at one target coordinate. -/
-def targetBasis (s : Fin 7) : TargetCoeff :=
+@[expose] def targetBasis (s : Fin 7) : TargetCoeff :=
   (Pi.basisFun F₂ (Fin 7)) s
 
 /-- The rational place at zero. -/
-def rZeroCoeff : TargetCoeff := ![1, 0, 0, 0, 0, 0, 0]
+@[expose] def rZeroCoeff : TargetCoeff := ![1, 0, 0, 0, 0, 0, 0]
 
 /-- The rational place at one. -/
-def rOneCoeff : TargetCoeff := ![1, 1, 1, 1, 1, 1, 1]
+@[expose] def rOneCoeff : TargetCoeff := ![1, 1, 1, 1, 1, 1, 1]
 
 /-- The rational place at infinity. -/
-def rInfinityCoeff : TargetCoeff := ![0, 0, 0, 0, 0, 0, 1]
+@[expose] def rInfinityCoeff : TargetCoeff := ![0, 0, 0, 0, 0, 0, 1]
 
 /-- The three-dimensional space spanned by the rational places. -/
-def rationalCoeffSpace : Submodule F₂ TargetCoeff :=
+@[expose] def rationalCoeffSpace : Submodule F₂ TargetCoeff :=
   Submodule.span F₂ {rZeroCoeff, rOneCoeff, rInfinityCoeff}
 
 /-- Interpret a target coefficient vector as an ANF in the `Mul 4` target. -/
-def targetANF (c : TargetCoeff) : ANF 8 :=
+@[expose] def targetANF (c : TargetCoeff) : ANF 8 :=
   ∑ s : Fin 7, c s • Mul 4 s
 
 /-- The `4 × 4` Hankel matrix attached to a target coefficient vector. -/
-def hankelMatrix (c : TargetCoeff) : Matrix (Fin 4) (Fin 4) F₂ :=
+@[expose] def hankelMatrix (c : TargetCoeff) : Matrix (Fin 4) (Fin 4) F₂ :=
   fun i j => c ⟨i.val + j.val, by omega⟩
 
 /-- Algebraic rank-at-most-one condition: every `2 × 2` minor vanishes. -/
-def HankelRankLEOne (c : TargetCoeff) : Prop :=
+@[expose] def HankelRankLEOne (c : TargetCoeff) : Prop :=
   ∀ i k j l : Fin 4,
     hankelMatrix c i j * hankelMatrix c k l =
       hankelMatrix c i l * hankelMatrix c k j

@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketLinearCostAbsorption
 Only fixed source costs are absorbed into the radius; the grade amplitude
 cancels without any loss. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

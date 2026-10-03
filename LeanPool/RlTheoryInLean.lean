@@ -25,7 +25,7 @@ Tags: probability, reinforcement-learning, stochastic-matrices
 MSC: 62L20, 60J10
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Provenance

@@ -20,7 +20,7 @@ is the finiteness of `t_min` (which the paper quotes from the asymptotic complet
 Navascués–Wolfe hierarchy). Only the explicit finite bounds are stated.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 
@@ -30,6 +30,7 @@ noncomputable
 section
 
 /-- `σ = ½ ε^{2/3}`, so that `P_ε = Q(ε, 1 - σ)` (paper Proposition 5.13). -/
+@[expose]
 def sigmaEps (ε : ℝ) : ℝ := ε ^ ((2 : ℝ) / 3) / 2
 
 /-- `m = ε + (1-ε)σ`, the common one-variable zero marginal of `P_ε`. -/

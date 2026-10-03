@@ -24,7 +24,7 @@ and under it the descended group-algebra action becomes the
 ambient action under the head.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

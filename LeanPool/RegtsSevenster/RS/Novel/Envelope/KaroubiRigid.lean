@@ -23,7 +23,7 @@ adjoint mate, the second onto the base snake identity.
 When `C` is moreover braided, `Karoubi C` is rigid.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

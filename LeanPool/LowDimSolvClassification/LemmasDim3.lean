@@ -13,7 +13,7 @@ import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 # LeanPool.LowDimSolvClassification.LemmasDim3
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule
@@ -1006,17 +1006,30 @@ lemma case2_coarse (dim3 : Module.finrank K L = 3) (h₂ : Module.finrank K (com
               · exact hXc
               · exact LieSubmodule.lie_mem_lie trivial trivial
           )
-        simp only [Nat.succ_eq_add_one, Nat.reduceAdd, LieIdeal.toLieSubalgebra_toSubmodule,
-          SetLike.coe_sort_coe, Fin.isValue, V, B] at XcX
-        let XcXBasis : Basis (Fin 2) K (commutator K L) :=
-          basisOfLinearIndependentOfCardEqFinrank XcX (by simp only [Fintype.card_fin]; rw [h₂])
+        let e : (commutator K L) ≃ₗ[K]
+            ↥(↑((LieIdeal.toLieSubalgebra K L (commutator K L) : Submodule K L)) : Set L) := {
+          toFun := fun z => ⟨z.1, z.2⟩
+          invFun := fun z => ⟨z.1, z.2⟩
+          left_inv := by intro z; cases z; rfl
+          right_inv := by intro z; cases z; rfl
+          map_add' := by intro a b; apply Subtype.ext; rfl
+          map_smul' := by intro c z; apply Subtype.ext; rfl
+        }
+        have h₂' : Module.finrank K
+            ↥(↑((LieIdeal.toLieSubalgebra K L (commutator K L) : Submodule K L)) : Set L) = 2 :=
+          e.finrank_eq.symm.trans h₂
+        let XcXBasis :=
+          basisOfLinearIndependentOfCardEqFinrank XcX
+            (by simpa only [Fintype.card_fin] using h₂'.symm)
         have XcXBasis0 : XcXBasis 0 = ⁅B 0, X⁆ := by
-          simp only [XcXBasis, basisOfLinearIndependentOfCardEqFinrank]
-          exact congrArg (fun x : commutator K L => x.val) (Basis.mk_apply _ _ 0)
+          dsimp only [XcXBasis]
+          rw [coe_basisOfLinearIndependentOfCardEqFinrank]
+          simp only [Set.map_into_subtype_apply, Matrix.cons_val_zero]
         have XcXBasis1 : XcXBasis 1 = X := by
-          simp only [XcXBasis, basisOfLinearIndependentOfCardEqFinrank]
-          exact congrArg (fun x : commutator K L => x.val) (Basis.mk_apply _ _ 1)
-        let x : commutator K L := ⟨⁅B 0, ⁅B 0, X⁆⁆, by
+          dsimp only [XcXBasis]
+          rw [coe_basisOfLinearIndependentOfCardEqFinrank]
+          simp only [Set.map_into_subtype_apply, Matrix.cons_val_one, Matrix.cons_val_zero]
+        let x : (commutator K L).toSubmodule := ⟨⁅B 0, ⁅B 0, X⁆⁆, by
           simp only [derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_zero,
             Nat.reduceAdd, Fin.isValue, V, B]
           exact LieSubmodule.lie_mem_lie trivial trivial
@@ -1026,11 +1039,13 @@ lemma case2_coarse (dim3 : Module.finrank K L = 3) (h₂ : Module.finrank K (com
         symm
         have BnB02 : ⁅BnBasis 0, BnBasis 2⁆ = (XcXBasis.repr x) 1 • BnBasis 1 +
             (XcXBasis.repr x) 0 • BnBasis 2 := by
-          have meq := Subtype.ext_iff.mp co
+          have meq := congrArg
+            ((LieIdeal.toLieSubalgebra K L (commutator K L) : Submodule K L).subtype) co
           unfold x at meq
-          simp only [Nat.reduceAdd, Fin.isValue, LieSubmodule.coe_add, SetLike.val_smul, V, B,
-            ] at meq
+          simp only [Nat.reduceAdd, Fin.isValue, V, B,
+            map_add, map_smul, Submodule.subtype_apply] at meq
           rw [XcXBasis0,XcXBasis1] at meq
+          change ⁅B 0, ⁅B 0, X⁆⁆ = _ at meq
           rw [coe_basisOfLinearIndependentOfCardEqFinrank]
           dsimp [Bn]
           simp only [Fin.isValue, B, V]

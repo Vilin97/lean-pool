@@ -9,7 +9,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Caccioppoli.CaccioppoliAssem
 
 /-! The scalar normalization used by the centered Caccioppoli estimate. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

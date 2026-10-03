@@ -15,7 +15,7 @@ Tran–Vu Remark 2.5: binomial mixture of level fractions plus a `2^{-X}` Markov
 tail, yielding Park–Pham from the covering theorem.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

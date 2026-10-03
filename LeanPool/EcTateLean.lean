@@ -31,7 +31,7 @@ Tags: number-theory, elliptic-curves, algebraic-geometry
 MSC: 11G05, 11G07, 14H52
 -/
 
-@[expose] public section
+public section
 
 /-!
 This is the foundational layer of the `ec-tate-lean` formalization of Tate's

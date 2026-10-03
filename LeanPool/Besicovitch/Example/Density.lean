@@ -24,7 +24,7 @@ Hence almost every point of `A` eventually avoids the grid on *both* sides, and 
 recursion of `LeanPool.Besicovitch.Example.Zero` applies to the resulting sets.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

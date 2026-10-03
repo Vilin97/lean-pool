@@ -17,7 +17,7 @@ It is kept separate from the construction of the latent law: any probability
 measure on augmented parameters that is almost surely admissible can be used.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

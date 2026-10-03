@@ -8,7 +8,7 @@ module
 public import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
 
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

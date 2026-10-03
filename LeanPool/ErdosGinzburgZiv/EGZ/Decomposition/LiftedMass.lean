@@ -17,7 +17,7 @@ integer support coordinate. Thus mass on any set of real fibre coordinates
 can be computed directly on the ambient finite-field space.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

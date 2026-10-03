@@ -16,7 +16,7 @@ The Lean-Eval challenge owns `Complex.ClosedUnitDisc`, `OrientableRel`, and
 only the project-owned sphere abbreviation and the index type used by the normal-form reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -38,6 +38,7 @@ deriving DecidableEq, Repr
 The orientable sphere is represented by the separate sphere branch, so an orientable polygonal
 normal form must have a handle or a boundary component; nonorientable forms must have at least one
 crosscap. -/
+@[expose]
 def NormalForm.IsEvalAdmissible : NormalForm → Prop
   | NormalForm.sphere => True
   | NormalForm.orientable handles boundaryComponents =>

@@ -30,7 +30,7 @@ the unit-square integrals of that source. No output regularity or decay
 assumptions are part of the construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,23 +47,23 @@ abbrev Source (P : Type) := Point P → ℂ
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Slice, defined pointwise by `f (p, Y)`. -/
-noncomputable def slice (f : Source P) (p : P) : Plane → ℂ := fun Y => f (p, Y)
+@[expose] noncomputable def slice (f : Source P) (p : P) : Plane → ℂ := fun Y => f (p, Y)
 
 /-- Periodic, given by `∀ p, SmoothFourierData.UnitPeriodic (slice f p)`. -/
-def Periodic (f : Source P) : Prop :=
+@[expose] def Periodic (f : Source P) : Prop :=
   ∀ p, SmoothFourierData.UnitPeriodic (slice f p)
 
 /-- Coefficient, given by `SmoothFourierData.coefficient (slice f p) k`. -/
-noncomputable def coefficient (f : Source P) (p : P) (k : Frequency) : ℂ :=
+@[expose] noncomputable def coefficient (f : Source P) (p : P) (k : Frequency) : ℂ :=
   SmoothFourierData.coefficient (slice f p) k
 
 /-- Mean, given by `coefficient f p 0`. -/
 noncomputable def mean (f : Source P) (p : P) : ℂ := coefficient f p 0
 /-- Zero mean, given by `∀ p, mean f p = 0`. -/
-def ZeroMean (f : Source P) : Prop := ∀ p, mean f p = 0
+@[expose] def ZeroMean (f : Source P) : Prop := ∀ p, mean f p = 0
 
 /-- Inverse, given by `directionalInverse d (coefficient f z.1) z.2`. -/
-noncomputable def inverse (d : Direction) (f : Source P) (z : Point P) : ℂ :=
+@[expose] noncomputable def inverse (d : Direction) (f : Source P) (z : Point P) : ℂ :=
   directionalInverse d (coefficient f z.1) z.2
 
 /-- Fixed partial, given by `fderiv ℝ f z v`. -/
@@ -415,15 +415,15 @@ noncomputable def torusLiftY : ℂ →L[ℝ] (Point P →L[ℝ] ℂ) :=
     (dy.comp (ContinuousLinearMap.snd ℝ P Plane))
 
 @[simp] theorem parameterLift_apply (i : BasisIndex P) (c : ℂ) (v : Point P) :
-    parameterLift i c v = parameterCoord i v.1 • c := rfl
+    parameterLift i c v = parameterCoord i v.1 • c := by rfl
 
 omit [FiniteDimensional ℝ P] in
 @[simp] theorem torusLiftX_apply (c : ℂ) (v : Point P) :
-    torusLiftX c v = v.2.1 • c := rfl
+    torusLiftX c v = v.2.1 • c := by rfl
 
 omit [FiniteDimensional ℝ P] in
 @[simp] theorem torusLiftY_apply (c : ℂ) (v : Point P) :
-    torusLiftY c v = v.2.2 • c := rfl
+    torusLiftY c v = v.2.2 • c := by rfl
 
 theorem clm_parameter_expansion (L : P →L[ℝ] ℂ) (v : P) :
     L v = ∑ i : BasisIndex P, parameterCoord i v • L (parameterBasis i) := by
@@ -650,7 +650,7 @@ theorem inverse_zeroMean (d : Direction) {f : Source P} (hf : ContDiff ℝ ∞ f
   simp only [multiplier, symbol_zero, Complex.ofReal_zero, mul_zero, inv_zero, zero_mul]
 
 /-- Directional partial, given by `fderiv ℝ f z (0, vector d)`. -/
-noncomputable def directionalPartial (d : Direction) (f : Source P) (z : Point P) : ℂ :=
+@[expose] noncomputable def directionalPartial (d : Direction) (f : Source P) (z : Point P) : ℂ :=
   fderiv ℝ f z (0, vector d)
 
 theorem inverse_solves (d : Direction) {f : Source P} (hf : ContDiff ℝ ∞ f)
@@ -699,6 +699,7 @@ theorem parameterPartial_inverse (d : Direction) {f : Source P} (hf : ContDiff �
 
 /-- A prefix of actual full joint Fréchet-jet bounds on a parameter set.
 The torus argument ranges over the whole universal cover. -/
+@[expose]
 def JetBound (f : Source P) (S : Set P) (n : ℕ) (C : ℝ) : Prop :=
   ∀ j ≤ n, ∀ p ∈ S, ∀ Y, ‖iteratedFDeriv ℝ j f (p, Y)‖ ≤ C
 
@@ -1200,7 +1201,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1307,7 +1308,7 @@ variable {E F : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The exact defect in the compact transport primitive, with all auxiliary
 slow variables retained in `E`. -/
-noncomputable def exactAlias (χ : ℝ → ℝ) (M : ℝ) (v : E)
+@[expose] noncomputable def exactAlias (χ : ℝ → ℝ) (M : ℝ) (v : E)
     (f : ℝ × E → F) (z : ℝ × E) : F :=
   deriv χ z.1 • TransportPrimitive.totalIntegral M v f z
 
@@ -1483,7 +1484,7 @@ variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Complexify, given by `f z`. -/
-noncomputable def complexify (f : D → ℝ) (z : D) : ℂ := f z
+@[expose] noncomputable def complexify (f : D → ℝ) (z : D) : ℂ := f z
 
 theorem complexify_smooth {f : D → ℝ} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (complexify f) := Complex.ofRealCLM.contDiff.comp hf
@@ -1539,20 +1540,20 @@ variable {S F : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Reassociate radial, slow, and torus variables without changing the norm. -/
-noncomputable def toProduct (f : ℝ × (S × Plane) → F) (z : (ℝ × S) × Plane) : F :=
+@[expose] noncomputable def toProduct (f : ℝ × (S × Plane) → F) (z : (ℝ × S) × Plane) : F :=
   f (z.1.1, (z.1.2, z.2))
 
 /-- From product, given by `f ((z.1, z.2.1), z.2.2)`. -/
-noncomputable def fromProduct (f : (ℝ × S) × Plane → F) (z : ℝ × (S × Plane)) : F :=
+@[expose] noncomputable def fromProduct (f : (ℝ × S) × Plane → F) (z : ℝ × (S × Plane)) : F :=
   f ((z.1, z.2.1), z.2.2)
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [NormedAddCommGroup F] [NormedSpace ℝ F] in
 @[simp] theorem fromProduct_toProduct (f : ℝ × (S × Plane) → F) :
-    fromProduct (toProduct f) = f := rfl
+    fromProduct (toProduct f) = f := by rfl
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [NormedAddCommGroup F] [NormedSpace ℝ F] in
 @[simp] theorem toProduct_fromProduct (f : (ℝ × S) × Plane → F) :
-    toProduct (fromProduct f) = f := rfl
+    toProduct (fromProduct f) = f := by rfl
 
 theorem toProduct_smooth {f : ℝ × (S × Plane) → F} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (toProduct f) :=
@@ -1575,11 +1576,11 @@ theorem norm_iteratedFDeriv_fromProduct (f : (ℝ × S) × Plane → F)
   (LinearIsometryEquiv.prodAssoc ℝ ℝ S Plane).symm.norm_iteratedFDeriv_comp_right f z m
 
 /-- Source mean, given by `FourierAlias.torusMean (fun Y => f (p.1, (p.2, Y)))`. -/
-noncomputable def sourceMean (f : ℝ × (S × Plane) → F) (p : ℝ × S) : F :=
+@[expose] noncomputable def sourceMean (f : ℝ × (S × Plane) → F) (p : ℝ × S) : F :=
   FourierAlias.torusMean (fun Y => f (p.1, (p.2, Y)))
 
 /-- Source periodic, given by `∀ U s, FourierAlias.TorusPeriodic (fun Y => f (U, (s, Y)))`. -/
-noncomputable def SourcePeriodic (f : ℝ × (S × Plane) → F) : Prop :=
+@[expose] noncomputable def SourcePeriodic (f : ℝ × (S × Plane) → F) : Prop :=
   ∀ U s, FourierAlias.TorusPeriodic (fun Y => f (U, (s, Y)))
 
 /-- Radial slice, given by `f (z.1, (s, z.2))`. -/
@@ -1640,6 +1641,7 @@ section RealInverse
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Parameter periodic, given by `∀ p, FourierAlias.TorusPeriodic (fun Y => f (p, Y))`. -/
+@[expose]
 noncomputable def ParameterPeriodic {F : Type} (f : P × Plane → F) : Prop :=
   ∀ p, FourierAlias.TorusPeriodic (fun Y => f (p, Y))
 
@@ -1680,7 +1682,7 @@ theorem torusMean_map {F H : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- A genuine real directional inverse, obtained from the actual complex
 Fourier inverse by real part. -/
-noncomputable def realInverse (d : Direction) (f : P × Plane → ℝ) (z : P × Plane) : ℝ :=
+@[expose] noncomputable def realInverse (d : Direction) (f : P × Plane → ℝ) (z : P × Plane) : ℝ :=
   Complex.re (SmoothFamilyTorusInverse.inverse d (complexify f) z)
 
 /-- Real centered, given by `f z - parameterMean f z.1`. -/
@@ -1848,6 +1850,7 @@ section TransportInverse
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S]
 
 /-- Family inverse, given by `fromProduct (SmoothFamilyTorusInverse.inverse d (toProduct f))`. -/
+@[expose]
 noncomputable def familyInverse (d : Direction) (f : ℝ × (S × Plane) → ℂ) :
     ℝ × (S × Plane) → ℂ := fromProduct (SmoothFamilyTorusInverse.inverse d (toProduct f))
 
@@ -1857,12 +1860,13 @@ theorem mean_toProduct (f : ℝ × (S × Plane) → ℂ) (p : ℝ × S) :
   SmoothFamilyTorusInverse.mean_eq_integral _ _
 
 /-- Real center source, given by `fromProduct (realCentered (toProduct f))`. -/
+@[expose]
 noncomputable def realCenterSource (f : ℝ × (S × Plane) → ℝ) : ℝ × (S × Plane) → ℝ :=
   fromProduct (realCentered (toProduct f))
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S] in
 theorem realCenterSource_apply (f : ℝ × (S × Plane) → ℝ) (z : ℝ × (S × Plane)) :
-    realCenterSource f z = f z - sourceMean f (z.1, z.2.1) := rfl
+    realCenterSource f z = f z - sourceMean f (z.1, z.2.1) := by rfl
 
 theorem realCenterSource_smooth {f : ℝ × (S × Plane) → ℝ}
     (hf : ContDiff ℝ ∞ f) (hp : SourcePeriodic f) : ContDiff ℝ ∞ (realCenterSource f) :=
@@ -1994,6 +1998,7 @@ theorem familyInverse_solves (d : Direction) {f : ℝ × (S × Plane) → ℂ}
   exact hi
 
 /-- Admissible, constructed using `ContDiff`. -/
+@[expose]
 noncomputable def Admissible (a b : ℝ) (f : ℝ × (S × Plane) → ℂ) : Prop :=
   ContDiff ℝ ∞ f ∧ SmoothFamilyTorusInverse.Periodic (toProduct f) ∧
     SmoothFamilyTorusInverse.ZeroMean (toProduct f) ∧ RadialAlias.RadiallySupported a b f
@@ -2262,7 +2267,7 @@ end FiberClass
 section BandScales
 
 /-- The actual slow scale, clipped only at the finitely many initial bands. -/
-noncomputable def bandSlow (n : ℕ) : ℝ := max 1 (ChartScales.S n)
+@[expose] noncomputable def bandSlow (n : ℕ) : ℝ := max 1 (ChartScales.S n)
 
 theorem one_le_bandSlow (n : ℕ) : 1 ≤ bandSlow n := le_max_left _ _
 
@@ -2329,7 +2334,7 @@ open WeightedClasses WeightedRadialPrimitive
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The concrete radial strip with the manuscript's actual band scales. -/
-noncomputable def chartStrip (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
+@[expose] noncomputable def chartStrip (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
     (h : ℝ) (hh : 0 < h) : StripData (ℝ × E) :=
   logStripData a b cL cR ha hcL hcR (ChartScales.epsilon h) bandSlow
     (ChartScales.epsilon_pos h) (ChartScales.epsilon_le_one h hh.le) one_le_bandSlow

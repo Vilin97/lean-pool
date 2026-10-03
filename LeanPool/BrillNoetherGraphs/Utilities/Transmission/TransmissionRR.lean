@@ -17,7 +17,7 @@ canonical complement.  This file packages that conversion without yet using
 any ASP-specific simplification of the complementary slipface expression.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

@@ -16,7 +16,7 @@ factors uniquely through their integer coordinate charts.  Uniqueness then
 supplies the identity and composition laws for recharted flag transitions.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.IntegerLatticeChart
 

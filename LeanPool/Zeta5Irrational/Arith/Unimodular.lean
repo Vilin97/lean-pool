@@ -23,7 +23,7 @@ where the `γ_c ∈ 𝔽_p` are distinct, `idx a < L (cls a)` and `(cls, idx)` i
 Then the coefficient matrix of the `E a` has a determinant prime to `p`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

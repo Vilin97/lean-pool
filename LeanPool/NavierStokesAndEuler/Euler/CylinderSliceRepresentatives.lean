@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-! Equality of actual cylinder L² slices identifies their continuous representatives everywhere. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

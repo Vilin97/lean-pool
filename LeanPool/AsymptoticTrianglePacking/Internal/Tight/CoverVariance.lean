@@ -44,7 +44,7 @@ the nibble's residual degrees concentrate.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -253,7 +253,7 @@ Proof.  Writing `S = ∑_{h ∈ H} a(h)·b(h)` with `a(h) = #{f ∋ u : h ∈ co
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -478,7 +478,7 @@ codegree, which the nibble hypothesis lets us choose as small as we like) below 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -752,7 +752,7 @@ i.e. `≤ 1/2` as soon as `N ≥ 16/γ` and `μ ≤ γ/16` — INDEPENDENTLY of 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

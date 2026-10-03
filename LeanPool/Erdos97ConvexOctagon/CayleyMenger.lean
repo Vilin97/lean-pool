@@ -10,17 +10,17 @@ import LeanPool.Erdos97ConvexOctagon.Gram
 
 /-! # Erdős 97 convex-octagon formalization: Cayley Menger -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
 open scoped InnerProductSpace
 
 /-- Squared Euclidean distance. -/
-noncomputable def sqDist (a b : Plane) : ℝ := dist a b ^ 2
+@[expose] noncomputable def sqDist (a b : Plane) : ℝ := dist a b ^ 2
 
 /-- The four-point Cayley--Menger polynomial in its six squared distances. -/
-def cm4 (A B C D E F : ℝ) : ℝ :=
+@[expose] def cm4 (A B C D E F : ℝ) : ℝ :=
   -2 * A ^ 2 * F - 2 * A * B * D + 2 * A * B * E + 2 * A * B * F +
     2 * A * C * D - 2 * A * C * E + 2 * A * C * F + 2 * A * D * F +
     2 * A * E * F - 2 * A * F ^ 2 - 2 * B ^ 2 * E + 2 * B * C * D +

@@ -30,7 +30,7 @@ This construction does not assert a Kolmogorov moment bound or construct a conti
 process.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -126,6 +126,7 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
   [SecondCountableTopology X]
 
 /-- The part of a function on the one-point compactification which vanishes at infinity. -/
+@[expose]
 noncomputable def onePointRemainder (g : C₀(OnePoint X, ℝ)) : C₀(X, ℝ) where
   toFun x := g (x : OnePoint X) - g OnePoint.infty
   continuous_toFun :=
@@ -230,6 +231,7 @@ variable [MeasurableSpace X] [BorelSpace X]
 variable (R : PositiveC0ContractiveResolvent X)
 
 /-- Extend the generated semigroup action by fixing the value at infinity. -/
+@[expose]
 noncomputable def onePointSemigroupAction (t : NNReal) (g : C₀(OnePoint X, ℝ)) :
     C₀(OnePoint X, ℝ) :=
   onePointAssemble
@@ -304,6 +306,7 @@ private theorem norm_onePointSemigroupAction_le (t : NNReal) (g : C₀(OnePoint 
         _ = ‖g‖ := by ring
 
 /-- The compactified semigroup action, bundled as a linear map. -/
+@[expose]
 noncomputable def onePointSemigroupLinearMap (t : NNReal) :
     C₀(OnePoint X, ℝ) →ₗ[ℝ] C₀(OnePoint X, ℝ) where
   toFun := R.onePointSemigroupAction t
@@ -328,6 +331,7 @@ noncomputable def onePointSemigroupLinearMap (t : NNReal) :
       ring
 
 /-- The contraction on the compactified function space induced at time `t`. -/
+@[expose]
 noncomputable def onePointSemigroupOperator (t : NNReal) :
     C₀(OnePoint X, ℝ) →L[ℝ] C₀(OnePoint X, ℝ) :=
   (R.onePointSemigroupLinearMap t).mkContinuous 1 fun g ↦ by
@@ -395,6 +399,7 @@ private theorem onePointSemigroupAction_eq (t : NNReal) (g : C₀(OnePoint X, �
       ring
 
 /-- The generated semigroup on the one-point compactification. -/
+@[expose]
 noncomputable def onePointSemigroup :
     Semigroup.StronglyContinuousContractionSemigroup C₀(OnePoint X, ℝ) where
   operator := R.onePointSemigroupOperator
@@ -538,6 +543,7 @@ theorem onePointResolvent_operator (mu : Semigroup.PositiveShift)
   exact (onePointAssemble_remainder _).symm
 
 /-- The Feller kernel semigroup represented by the compactified resolvent. -/
+@[expose]
 noncomputable def onePointKernelSemigroup : SubMarkovKernelSemigroup (OnePoint X) :=
   R.onePointResolvent.kernelSemigroup
 

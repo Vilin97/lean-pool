@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 
 /-! The actual smooth representative retains the proved compact spatial support of its L² class. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ import Mathlib.Data.Set.Finite.Basic
 # MatchingLogic.EntryIII.WitnessSupply
 -/
 
-@[expose] public section
+public section
 
 /-!
 The variable-supply hypothesis separating ordinary and fresh witnessedness.

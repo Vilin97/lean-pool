@@ -22,7 +22,7 @@ appears in `Utilities.Gonality.LegalFiring`; here it is a short consequence of
 maximum closure, without importing the gonality development.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -55,6 +55,7 @@ theorem effective_add_prin_max {D : CFDiv G} {σ τ : firingScript G}
     exact le_trans (hσ v) (add_le_add le_rfl hle)
 
 /-- Subtract a constant from a script and replace negative values by zero. -/
+@[expose]
 def clampScript (σ : firingScript G) (c : ℤ) : firingScript G :=
   fun v => max (σ v - c) 0
 

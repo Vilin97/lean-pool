@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 their actual cylinder L² bounds. The estimate selects a summand of the
 weighted H6 norm and has no loss depending on the derivative order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -90,6 +90,14 @@ theorem coverTensor_weighted (n : ℕ) (ρ C : ℝ) (hρ : 0 < ρ)
 
 theorem toSmoothTimeField_jetSeries (n : ℕ) (t : Icc (0 : ℝ) T) :
     (fun q => jetSeries P (A.toSmoothTimeField.field t : LiftTangent → Vector3) q n) =
-      tensor P (A.pointField t) n := rfl
+      tensor P (A.pointField t) n := by
+  have he : (fun z : LiftTangent => A.toSmoothTimeField.field t z) =
+      fun z => A.pointField t (coveringMap P z) := by
+    funext z
+    exact A.toSmoothTimeField_apply t z
+  funext q
+  change jetSeries P (fun z : LiftTangent => A.toSmoothTimeField.field t z) q n =
+    jetSeries P (fun z : LiftTangent => A.pointField t (coveringMap P z)) q n
+  rw [he]
 
 end EulerAllOrderCorrectionData.FieldTower

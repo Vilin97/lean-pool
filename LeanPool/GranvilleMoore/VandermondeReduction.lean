@@ -64,7 +64,7 @@ So the matrix here is the **transpose** of a Vandermonde matrix; `Matrix.det_tra
 the two. In fact `(Matrix.vandermonde v)ᵀ` is definitionally `Matrix.of fun i j => v j ^ (i : ℕ)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix
 

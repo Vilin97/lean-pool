@@ -24,4 +24,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.StateContraction
 # Convergence proof for PL-accelerated Nesterov convergence
 -/
 
-@[expose] public section
+public section

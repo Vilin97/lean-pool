@@ -27,7 +27,7 @@ import Mathlib.Topology.Bases
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet
@@ -44,13 +44,13 @@ structure Hyp (G : Game A) (k : ℕ) where
 variable {G : Game A} {k : ℕ} (hyp : Hyp G k)
 --the second component is the residual tree of valid extensions
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def upA (hyp : Hyp G k) :=
+@[expose] def upA (hyp : Hyp G k) :=
   let _ : IsClosed G.payoff := hyp.closed
   A × tree A
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev A' {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} := upA hyp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def getTree' (hyp : Hyp G k) (x : List (upA hyp)) := match x.getLast? with
+@[expose] def getTree' (hyp : Hyp G k) (x : List (upA hyp)) := match x.getLast? with
   | none => G.tree
   | some a => a.2
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -62,7 +62,7 @@ variable {hyp}
   simp [getTree']
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LosingCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
+@[expose] def LosingCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
   body (pullSub (getTree' hyp x) (x.map Prod.fst)) ∩ G.payoff = ∅ ∧
   ∃ y : subAt (getTree' hyp (x.take (2 * k + 1))) [x[2 * k + 1].1],
     getTree' hyp x = pullSub (subAt G.tree (x.map Prod.fst ++ y)) y
@@ -79,7 +79,7 @@ lemma LosingCondition.of_concat {x : List (upA hyp)} {a h} (H : LosingCondition 
   ∃ y : subAt (getTree' hyp x) [a.1], a.2
   = pullSub (subAt G.tree (x.map Prod.fst ++ a.1 :: y)) y := (concat.mp H).2
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def WinningCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
+@[expose] def WinningCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
   body (pullSub (getTree' hyp x) (x.map Prod.fst)) ⊆ G.payoff ∧
   ∃ S' : QuasiStrategy (subAt (getTree' hyp (x.take (2 * k + 1))) [x[2 * k + 1].1])
     Player.one, getTree' hyp x = S'.1.subtree
@@ -103,7 +103,7 @@ lemma WinningCondition.of_concat {x : List (upA hyp)} {a h} (H : WinningConditio
   = S'.1.subtree := (concat.mp H).2
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def ValidExt (x : List (upA hyp)) (a : upA hyp) := [a.1] ∈ getTree' hyp x ∧
+@[expose] def ValidExt (x : List (upA hyp)) (a : upA hyp) := [a.1] ∈ getTree' hyp x ∧
   if x.length = 2 * k then
     ∃ S : QuasiStrategy (subAt (getTree' hyp x) [a.1]) Player.one, a.2 = S.1.subtree
   else if h : x.length = 2 * k + 1 then
@@ -126,15 +126,15 @@ def ValidExt (x : List (upA hyp)) (a : upA hyp) := [a.1] ∈ getTree' hyp x ∧
 
 variable (hyp)
 /-- the tree of the unraveled game of a closed game -/
-def gameTree : tree (upA hyp) where
+@[expose] def gameTree : tree (upA hyp) where
   val := {x | List.reverseRecOn x True (fun x a hx ↦ hx ∧ ValidExt x a)}
   property _ := by simp; tauto
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def oldAsTrees (hyp : Hyp G k) : Trees :=
+@[expose, simps] def oldAsTrees (hyp : Hyp G k) : Trees :=
   let _ : IsClosed G.payoff := hyp.closed
   ⟨A, G.tree⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def gameAsTrees (hyp : Hyp G k) : Trees := ⟨upA hyp, gameTree hyp⟩
+@[expose, simps] def gameAsTrees (hyp : Hyp G k) : Trees := ⟨upA hyp, gameTree hyp⟩
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev T {A : Type*} {G : Game A} : tree A := G.tree
@@ -234,7 +234,7 @@ end «Section2»
 
 variable (hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def treeHom : gameAsTrees hyp ⟶ oldAsTrees hyp where
+@[expose] def treeHom : gameAsTrees hyp ⟶ oldAsTrees hyp where
   toFun x := ⟨x.val.map Prod.fst, by
     have h : [] ∈ subAt _ _ := getTree_sub x (getTree_ne_and_pruned x).1
     change x.val.map Prod.fst ∈ G.tree
@@ -247,7 +247,7 @@ abbrev π {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} :
     gameAsTrees hyp ⟶ oldAsTrees hyp :=
   treeHom hyp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def pInvTreeHomMap (hyp : Hyp G k) (x : List A) : List (upA hyp) :=
+@[expose] def pInvTreeHomMap (hyp : Hyp G k) (x : List A) : List (upA hyp) :=
   x.zipInitsMap (fun a y ↦ (a, (G.residual y).tree))
 variable {hyp}
 lemma treeHom_val x : (treeHom hyp x).val = x.val.map Prod.fst := by
@@ -313,7 +313,7 @@ lemma pInvTreeHomMap_mem : ∀ {x : List A}, x ∈ G.tree → x.length ≤ 2 * k
       ⟨ih (mem_of_append hmem) hxlt.le, hvalid⟩
 variable (hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def pInvTreeHom : (Tree.res (2 * k)).obj ⟨_, G.tree⟩ ⟶
+@[expose] def pInvTreeHom : (Tree.res (2 * k)).obj ⟨_, G.tree⟩ ⟶
     (Tree.res (2 * k)).obj ⟨_, gameTree hyp⟩ where
   toFun x := ⟨pInvTreeHomMap hyp x.val,
     pInvTreeHomMap_mem x.prop.1 x.prop.2,
@@ -334,7 +334,9 @@ def treeHomRes : (Tree.res (2 * k)).obj ⟨_, gameTree hyp⟩ ≅
     rcases x with ⟨x, h⟩
     change pInvTreeHomMap hyp (List.map Prod.fst x) = x
     induction x using List.reverseRecOn with
-    | nil => rfl
+    | nil =>
+      change pInvTreeHomMap hyp [] = []
+      exact pInvTreeHomMap_nil (hyp := hyp)
     | append_singleton x a ih =>
       have hx : x ++ [a] ∈ gameTree hyp := h.1
       have hxprev : x ∈ gameTree hyp := mem_of_append hx
@@ -372,7 +374,7 @@ instance treeHom_fixing : Tree.Fixing (2 * k) (treeHom hyp) := ⟨Iso.isIso_hom 
       xs = List.map Prod.fst (xs.zipInitsMap fun a y => (a, (G.residual y).tree)) := by
     intro xs
     induction xs using List.reverseRecOn with
-    | nil => rfl
+    | nil => simp
     | append_singleton xs a ih =>
       rw [List.zipInitsMap_concat, List.map_append, ← ih]
       rfl
@@ -440,7 +442,7 @@ lemma gameTree_isPruned : IsPruned <| gameTree hyp := by
 
 variable (hyp) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def game : Game (upA hyp) where
+@[expose, simps] def game : Game (upA hyp) where
   tree := gameTree hyp
   payoff := (bodyFunctor.map (treeHom hyp))⁻¹' G.payoff
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

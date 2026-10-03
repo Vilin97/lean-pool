@@ -26,7 +26,7 @@ its stored realization. The classification proof therefore starts from `Geometri
 and uses the incidence certificate constructed by its bridge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -41,11 +41,12 @@ deriving DecidableEq, Repr, Fintype
 namespace OrientedEdge
 
 /-- The underlying unoriented edge. -/
-def edge {α : Type*} : OrientedEdge α → α
+@[expose] def edge {α : Type*} : OrientedEdge α → α
   | pos e => e
   | neg e => e
 
 /-- Reverse an oriented edge. -/
+@[expose]
 def flip {α : Type*} : OrientedEdge α → OrientedEdge α
   | pos e => neg e
   | neg e => pos e
@@ -154,19 +155,19 @@ abbrev BoundaryPosition {S : Type*} [TopologicalSpace S]
 namespace BoundaryPosition
 
 /-- The oriented edge stored at a triangle-boundary position. -/
-def orientedEdge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
+@[expose] def orientedEdge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
     (o : T.BoundaryPosition) : OrientedEdge T.Edge :=
   (T.triangleBoundary o.1).get o.2
 
 /-- The unoriented edge stored at a triangle-boundary position. -/
-def edge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
+@[expose] def edge {S : Type*} [TopologicalSpace S] {T : FiniteSurfaceTriangulation S}
     (o : T.BoundaryPosition) : T.Edge :=
   o.orientedEdge.edge
 
 end BoundaryPosition
 
 /-- Two triangles are adjacent when their stored boundaries share an unoriented edge. -/
-def TriangleAdjacent {S : Type*} [TopologicalSpace S]
+@[expose] def TriangleAdjacent {S : Type*} [TopologicalSpace S]
     (T : FiniteSurfaceTriangulation S) (f g : T.Triangle) : Prop :=
   ∃ df ∈ T.triangleBoundary f, ∃ dg ∈ T.triangleBoundary g, df.edge = dg.edge
 
@@ -198,7 +199,7 @@ namespace GeometricTriangulation
 variable {S : Type*} [TopologicalSpace S] (T : GeometricTriangulation S)
 
 /-- Forget the target-space homeomorphism and retain the intrinsic two-complex. -/
-@[reducible] def toIntrinsic : Moise.IntrinsicTwoComplex where
+@[expose, reducible] def toIntrinsic : Moise.IntrinsicTwoComplex where
   Vertex := T.Vertex
   faces := T.faces
   faces_card := T.faces_card
@@ -206,11 +207,13 @@ variable {S : Type*} [TopologicalSpace S] (T : GeometricTriangulation S)
 @[simp] theorem toIntrinsic_faces : T.toIntrinsic.faces = T.faces := rfl
 
 /-- Source vertex of an oriented geometric edge. -/
+@[expose]
 noncomputable def orientedEdgeSource : OrientedEdge T.Edge → T.Vertex
   | OrientedEdge.pos e => T.edgeSource e
   | OrientedEdge.neg e => T.edgeTarget e
 
 /-- Target vertex of an oriented geometric edge. -/
+@[expose]
 noncomputable def orientedEdgeTarget : OrientedEdge T.Edge → T.Vertex
   | OrientedEdge.pos e => T.edgeTarget e
   | OrientedEdge.neg e => T.edgeSource e
@@ -361,7 +364,7 @@ theorem triangleBoundary_nodup (t : T.Triangle) : (T.triangleBoundary t).Nodup :
 This is the compatibility bridge: downstream consumers (the cell-complex conversion and the
 Gallier--Xu route) keep their interface, while the triangulation content now lives in the
 faithful geometric object. -/
-noncomputable def toFiniteSurfaceTriangulation : FiniteSurfaceTriangulation S where
+@[expose] noncomputable def toFiniteSurfaceTriangulation : FiniteSurfaceTriangulation S where
   Vertex := T.Vertex
   Edge := T.Edge
   Triangle := T.Triangle
@@ -571,6 +574,7 @@ theorem moise_triangulation_explicit :
   nonempty_geometricTriangulation_iff_explicit.mp (moise_triangulation S)
 
 /-- The named geometric triangulation produced for a compact connected Eval surface. -/
+@[expose]
 noncomputable def compactEvalSurfaceGeometricTriangulation :
     GeometricTriangulation S :=
   Classical.choice (moise_triangulation S)

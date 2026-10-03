@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeFieldRestriction
 /-! Restricting the actual parent to a nested horizon preserves its
 flow identities, physical-label budget and the source low-order guards. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,6 +28,7 @@ variable (G : Parent) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
 /-- Restrict time, bundling `T`, `T_pos`, `ell`, `ell_pos` and the required compatibility
 proofs. -/
+@[expose]
 def restrictTime : Parent where
   T := S
   T_pos := hS
@@ -61,12 +62,35 @@ theorem restrictTime_inverse (t : Icc (0 : ℝ) S) (x : Space) :
 
 theorem restrictTime_strain (t : Icc (0 : ℝ) S) (x : Space) :
     (G.restrictTime S hS hST).strain.field t x=G.strain.field (initialInclusion G.T S hST t) x := by
-  erw [strain_apply]
+  calc
+    (G.restrictTime S hS hST).strain.field t x =
+        ((G.restrictTime S hS hST).first.field t x).comp
+          ((G.restrictTime S hS hST).inverse.field t x) :=
+      (G.restrictTime S hS hST).strain_apply t x
+    _ = (G.first.field (initialInclusion G.T S hST t) x).comp
+          (G.inverse.field (initialInclusion G.T S hST t) x) := by
+      exact congrArg₂ (fun f g : Space →L[ℝ] Space => f.comp g)
+        (G.restrictTime_first S hS hST t x)
+        (G.restrictTime_inverse S hS hST t x)
+    _ = G.strain.field (initialInclusion G.T S hST t) x :=
+      (G.strain_apply (initialInclusion G.T S hST t) x).symm
 
 theorem restrictTime_curvature (t : Icc (0 : ℝ) S) (x : Space) :
     (G.restrictTime S hS hST).curvature.field t x=G.curvature.field (initialInclusion G.T S hST t)
         x := by
-  erw [curvature_apply]
+  calc
+    (G.restrictTime S hS hST).curvature.field t x =
+        -(((G.restrictTime S hS hST).second.field t x).comp
+          ((G.restrictTime S hS hST).inverse.field t x)) :=
+      (G.restrictTime S hS hST).curvature_apply t x
+    _ = -((G.second.field (initialInclusion G.T S hST t) x).comp
+          (G.inverse.field (initialInclusion G.T S hST t) x)) := by
+      exact congrArg (fun z : Space →L[ℝ] Space => -z)
+        (congrArg₂ (fun f g : Space →L[ℝ] Space => f.comp g)
+          (G.restrictTime_second S hS hST t x)
+          (G.restrictTime_inverse S hS hST t x))
+    _ = G.curvature.field (initialInclusion G.T S hST t) x :=
+      (G.curvature_apply (initialInclusion G.T S hST t) x).symm
 
 theorem restrictTime_initialStrain (x : Space) :
     (G.restrictTime S hS hST).initialStrain.field x=G.initialStrain.field x := by
@@ -80,6 +104,7 @@ variable {G : Parent} (L : LabelData G) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
 /-- Restrict time, bundling `K`, `K_one`, `displacement`, `velocity` and the required
 compatibility proofs. -/
+@[expose]
 def restrictTime : LabelData (G.restrictTime S hS hST) where
   K := L.K
   K_one := L.K_one
@@ -100,6 +125,7 @@ namespace LowBounds
 variable {G : Parent} (H : LowBounds G) (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
 
 /-- Restrict time, bundling `Be`, `Bc`, `L`, `r` and the required compatibility proofs. -/
+@[expose]
 def restrictTime : LowBounds (G.restrictTime S hS hST) where
   Be := H.Be
   Bc := H.Bc

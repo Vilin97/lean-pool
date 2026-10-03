@@ -20,7 +20,7 @@ This file proves the parity results for finite-dimensional alternating forms and
 structures that underlie the later rank-parity arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.FiniteParity
 

@@ -20,7 +20,7 @@ with the canonical sum over zeros, and the transfer of the two abstract finite-s
 the three zero-counting functions.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

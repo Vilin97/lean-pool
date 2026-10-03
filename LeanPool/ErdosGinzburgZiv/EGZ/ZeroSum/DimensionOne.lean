@@ -15,7 +15,7 @@ It proves the classical one-dimensional Erdős--Ginzburg--Ziv theorem already
 supported by Mathlib.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

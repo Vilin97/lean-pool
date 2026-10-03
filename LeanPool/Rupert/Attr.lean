@@ -15,7 +15,7 @@ import Lean.Meta.Tactic.Simp.RegisterCommand
 Imported Lean Pool material for `LeanPool.Rupert.Attr`.
 -/
 
-@[expose] public section
+public section
 
 /-- Simp set for evaluating concrete matrices in Rupert certificates. -/
 register_simp_attr matrix_simps

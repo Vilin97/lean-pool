@@ -31,7 +31,7 @@ Main results: `IsFellerKernelSemigroup.resolvent_isLambdaExcessive`,
 No converse characterization of excessive functions is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

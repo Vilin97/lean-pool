@@ -61,7 +61,7 @@ for all of them.  Nothing in this file asserts that the square root exists; it
 only exploits one when it does.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 
@@ -143,6 +143,7 @@ theorem sum_abs_stepCost_le_sum_abs_group {ι J : Type*} [Fintype ι] [Fintype J
 namespace Chip
 
 /-- Re-round a chip to a prescribed end of its coarse step. -/
+@[expose]
 def reround {n p : ℕ} {spec : Spec n p} {N : ℕ} (c : spec.Chip N) (b : Bool) : spec.Chip N :=
   { c with toRight := b }
 
@@ -167,6 +168,7 @@ def reround {n p : ℕ} {spec : Spec n p} {N : ℕ} (c : spec.Chip N) (b : Bool)
 /-- The two chips of a doubled interior point, rounded so that their total
 signed cost is the distance from `2 * offset` to `N * ℤ`: both left when
 `4 * offset ≤ N`, both right when `3 * N ≤ 4 * offset`, and split otherwise. -/
+@[expose]
 def double {n p : ℕ} {spec : Spec n p} {N : ℕ} (c : spec.Chip N) (k : Fin 2) : spec.Chip N :=
   c.reround (if k.val = 0 then decide (3 * N ≤ 4 * c.offset) else decide (N < 4 * c.offset))
 

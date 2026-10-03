@@ -21,7 +21,7 @@ nonzero — the even and odd sectors of the dimension-bound
 dichotomy.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

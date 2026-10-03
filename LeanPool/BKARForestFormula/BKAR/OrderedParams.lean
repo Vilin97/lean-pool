@@ -17,7 +17,7 @@ parameter bookkeeping for the nested integrals in the ordered expansion of
 the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -60,6 +60,7 @@ reading newly added edge parameters from a list in growth order.
 If the list is shorter than the order, the missing new parameters are filled
 with `0`; extra parameters are ignored once the growth terminates.
 -/
+@[expose]
 def params {F G : Forest V} {order : List (Edge V)}
     (h : OrderedGrowth F order G) :
     (F.EdgeParam → ℝ) → List ℝ → G.EdgeParam → ℝ :=

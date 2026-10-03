@@ -26,7 +26,7 @@ section
 
 /-! The same-radius fixed-Sobolev product estimate needs bounds only at the base parameter. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -70,7 +70,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

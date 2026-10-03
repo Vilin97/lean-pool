@@ -23,7 +23,7 @@ it is compressible with respect to `TopCat.diskBoundaryIncl n : ∂𝔻 n ⟶ �
 for each `n`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory TopCat
 open scoped unitInterval ContinuousMap Topology Topology.Homotopy
@@ -332,7 +332,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
         apply this }
 
 /-- `stretchToWall` -/
-noncomputable def _root_.TopCat.Cyl.stretchToWall :
+@[expose] noncomputable def _root_.TopCat.Cyl.stretchToWall :
     C(I × (disk.{u} (n + 1)), I × (disk.{u} (n + 1))) := by
   refine
     { toFun := fun ⟨t, ⟨x, hx⟩⟩ ↦

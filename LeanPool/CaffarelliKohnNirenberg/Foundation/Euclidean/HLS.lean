@@ -16,7 +16,7 @@ estimate.  The a.e. maximal-data hypothesis is exposed so that zero data and
 finite truncations can be handled by the consuming pressure lemma.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -30,6 +30,7 @@ namespace CKN.Foundation.Euclidean
 open CKN.Foundation.Parabolic
 
 /-- The constant in the three-dimensional order-one HLS estimate. -/
+@[expose]
 def hlsRieszConstant : ℝ≥0∞ :=
   (hedbergNearConstant + hedbergFarConstant) *
     (maximalStrongConstant (5 / 2 : ℝ)) ^ (1 / 15 : ℝ)

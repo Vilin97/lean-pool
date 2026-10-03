@@ -29,7 +29,7 @@ section
 
 /-! Same-radius mixed-word and continuous-time estimates for the actual angular operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,12 +83,12 @@ local instance instCylinderAngleWordBounds4 : NormedSpace ℝ (C(K,LiftL2 P) →
     inferInstance
 
 /-- Path primitive, given by `(primitive P).compLeftContinuous ℝ K`. -/
-def pathPrimitive : C(K,LiftL2 P) →L[ℝ] C(K,LiftL2 P) :=
+@[expose] def pathPrimitive : C(K,LiftL2 P) →L[ℝ] C(K,LiftL2 P) :=
   (primitive P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathPrimitive_apply (u : C(K, LiftL2 P)) (t : K) :
-    pathPrimitive P u t = primitive P (u t) := rfl
+    pathPrimitive P u t = primitive P (u t) := by rfl
 
 theorem pathPrimitive_norm : ‖pathPrimitive (K := K) P‖ ≤ P := by
   have hP : 0 ≤ P := le_of_lt (Fact.out : 0 < P)
@@ -124,7 +124,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -156,8 +156,7 @@ theorem primitive_sobolevPath (p : C(K, LiftL2 P))
     sobolevPath P q (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t =
       sobolevPrimitive P q (sobolevPath P q p hp t) := by
   apply value_injective P
-  change value P (sobolevPath P q (pathPrimitive P p) _ t) =
-    primitive P (value P (sobolevPath P q p hp t))
+  rw [value_sobolevPrimitive]
   rw [sobolevPath_value, sobolevPath_value]
   rfl
 
@@ -216,7 +215,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -235,7 +234,7 @@ variable (P : ℝ) [Fact (0 < P)]
   (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- Potential path, given by `fullMultiplierMap P B (pathPrimitive P p)`. -/
-def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
+@[expose] def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
 
 include hB hp in
 theorem potentialPath_orbit :
@@ -244,7 +243,7 @@ theorem potentialPath_orbit :
 
 /-- Potential field, given by `pointField P (potentialPath P B p) (potentialPath_orbit P B hB p
 hp) t`. -/
-def potentialField (t : K) : LiftDomain P → Space :=
+@[expose] def potentialField (t : K) : LiftDomain P → Space :=
   pointField P (potentialPath P B p) (potentialPath_orbit P B hB p hp) t
 
 theorem potentialPath_ae (t : K) :

@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! Scaling the actual Laplacian and harmonic interior estimates on R³. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

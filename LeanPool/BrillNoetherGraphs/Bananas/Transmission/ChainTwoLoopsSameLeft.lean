@@ -19,7 +19,7 @@ The graph is the vertex wedge of two positive two-path cycles.  This file
 isolates the same-left-side argument in paper Proposition 3.7.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

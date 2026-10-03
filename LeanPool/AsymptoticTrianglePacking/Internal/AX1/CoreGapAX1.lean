@@ -67,7 +67,7 @@ public import Mathlib.Analysis.Convex.Cone.InnerDual
 
 /-! # YusterNibbleApply -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -124,7 +124,7 @@ end
 
 /-! # YusterSubBridge -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -199,7 +199,7 @@ end
 
 /-! # Reduction to duality and rounding -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Nibble.YusterE
 
@@ -221,7 +221,7 @@ noncomputable def tau3Star : ℝ :=
 
 /-- **AX1 statement** (PaperIII Layer X, verbatim): the fractional–integral triangle-packing gap is
 `o(n²)`, uniformly over graphs, read cover-side (`τ₃* − ν₃`). -/
-def AX1Statement : Prop :=
+@[expose] def AX1Statement : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ n₀ : ℕ,
     ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
       n₀ ≤ Fintype.card V →
@@ -237,7 +237,7 @@ def StrongDualityHyp : Prop :=
 near-regularity
 discharged
 for all large graphs): `ν₃* − ν₃ ≤ ε n²` uniformly. -/
-def NibbleGapHyp : Prop :=
+@[expose] def NibbleGapHyp : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ n₀ : ℕ,
     ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
       n₀ ≤ Fintype.card V →
@@ -268,7 +268,7 @@ end
 
 /-! # Finite packing-cover LP duality -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -987,7 +987,7 @@ end
 
 /-! # Strong duality for triangle packing and covering -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Nibble.YusterE LPDuality
 
@@ -1490,7 +1490,7 @@ end
 
 /-! # YusterGap -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -1529,7 +1529,7 @@ end
 
 /-! # YusterAX1 -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -1587,7 +1587,7 @@ end
 
 /-! # YusterMost -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -1652,7 +1652,7 @@ end
 
 /-! # NibbleGapReduction -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -1888,7 +1888,7 @@ end
 
 /-! # TightNibble -/
 
-@[expose] public section
+public section
 
 open LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -2100,7 +2100,7 @@ end
 
 /-! # YusterSubDegree -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -2137,7 +2137,7 @@ end
 
 /-! # YusterSubDegreeChar -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -2263,7 +2263,7 @@ end
 
 /-! # YusterSubRegular -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -2301,7 +2301,7 @@ end
 
 /-! # DenseNearRegular -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -2439,7 +2439,7 @@ end
 
 /-! # Tight.DenseRegDischarge -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -2483,7 +2483,7 @@ end
 
 /-! # DenseGapAX1 -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -2633,7 +2633,7 @@ end
 
 /-! # CoreGapAX1 -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -2766,7 +2766,7 @@ theorem gap_le_core_gap (G G' : SimpleGraph V) [DecidableRel G.Adj] [DecidableRe
 /-! ### The low-degree core -/
 
 /-- `G` with every edge at a vertex of `K` deleted. -/
-def restrictAway (G : SimpleGraph V) (K : Finset V) : SimpleGraph V where
+@[expose] def restrictAway (G : SimpleGraph V) (K : Finset V) : SimpleGraph V where
   Adj x y := G.Adj x y ∧ x ∉ K ∧ y ∉ K
   symm := ⟨by rintro x y ⟨h1, h2, h3⟩; exact ⟨h1.symm, h3, h2⟩⟩
   loopless := ⟨fun x h => G.irrefl h.1⟩
@@ -3136,7 +3136,7 @@ theorem nibbleGap_of_dense_core (ε : ℝ) (hε : 0 < ε) :
 /-- **The core packing-gap statement at parameters `(ε, δ)`.**  The gap `ν₃* − ν₃ ≤ ε|V|²` for large
 graphs in which every vertex is isolated or has degree at least `δ|V|`, and whose fractional packing
 number exceeds `ε|V|²` (otherwise the conclusion is immediate from `ν₃ ≥ 0`). -/
-def CoreGapAt (ε δ : ℝ) : Prop :=
+@[expose] def CoreGapAt (ε δ : ℝ) : Prop :=
   ∃ n₀ : ℕ, ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
     n₀ ≤ Fintype.card V →
     (∀ x : V, G.degree x = 0 ∨ δ * (Fintype.card V : ℝ) ≤ (G.degree x : ℝ)) →
@@ -3144,7 +3144,7 @@ def CoreGapAt (ε δ : ℝ) : Prop :=
     nu3star G - (nu3 G : ℝ) ≤ ε * (Fintype.card V : ℝ) ^ 2
 
 /-- **The residual.**  The core packing gap at every pair of parameters. -/
-def CoreGapResidual : Prop := ∀ ε : ℝ, 0 < ε → ∀ δ : ℝ, 0 < δ → CoreGapAt ε δ
+@[expose] def CoreGapResidual : Prop := ∀ ε : ℝ, 0 < ε → ∀ δ : ℝ, 0 < δ → CoreGapAt ε δ
 
 /-- Raising the degree threshold weakens the statement. -/
 theorem CoreGapAt.mono_delta {ε δ δ' : ℝ} (h : CoreGapAt ε δ) (hδ : δ ≤ δ') : CoreGapAt ε δ' := by

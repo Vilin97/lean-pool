@@ -22,7 +22,7 @@ and the signed interval is connected, so the continuous image contains `0`. No z
 introduced; only existence is proved. Zeros never occur at either endpoint, by the strict signs.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -31,10 +31,12 @@ variable {X : Type*} [TopologicalSpace X]
 namespace NiceMV
 
 /-- A point `(x, y)` is a zero of `φ` when the observable vanishes there. -/
+@[expose]
 def Zero (φ : NiceMV X) (x : X) (y : SignedInterval) : Prop :=
   φ.eval x y = 0
 
 /-- The total zero set (graph) of `φ` inside `X × SignedInterval`. -/
+@[expose]
 def zeroSet (φ : NiceMV X) : Set (X × SignedInterval) :=
   {z | φ.Zero z.1 z.2}
 

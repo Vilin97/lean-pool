@@ -17,7 +17,7 @@ diagrams, and the elementary factorial bounds feeding the square
 growth estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -31,7 +31,7 @@ three-way disjunction, and `ClosedOrbit.closedConstruction_of_chamber` turns one
 chamber proof per disjunct into the statement on the whole closed orthant.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow08
 

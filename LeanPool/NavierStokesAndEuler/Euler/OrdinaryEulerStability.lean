@@ -29,7 +29,7 @@ section
 
 /-! The scalar comparison lemma with genuine one-sided endpoint derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -230,7 +230,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

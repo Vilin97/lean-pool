@@ -18,7 +18,7 @@ vertex, by two parallel slot occurrences.  The two vertices therefore form a
 canonical genus-one side of a core vertex cut.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.PseudocoreMarkerCut
 

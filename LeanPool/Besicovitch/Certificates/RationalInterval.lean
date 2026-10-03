@@ -17,7 +17,7 @@ numbers. The operations provide the enclosure primitives used by the radical-exp
 with soundness checked by the kernel.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -34,23 +34,24 @@ structure RationalInterval where
 namespace RationalInterval
 
 /-- A real number belongs to a rational interval. -/
+@[expose]
 def Contains (I : RationalInterval) (x : ℝ) : Prop :=
   (I.lower : ℝ) ≤ x ∧ x ≤ (I.upper : ℝ)
 
 /-- The degenerate interval containing one rational number. -/
-def singleton (q : ℚ) : RationalInterval :=
+@[expose] def singleton (q : ℚ) : RationalInterval :=
   ⟨q, q, le_rfl⟩
 
 /-- The interval sum. -/
-def add (I J : RationalInterval) : RationalInterval :=
+@[expose] def add (I J : RationalInterval) : RationalInterval :=
   ⟨I.lower + J.lower, I.upper + J.upper, add_le_add I.lower_le_upper J.lower_le_upper⟩
 
 /-- The additive inverse of an interval. -/
-def neg (I : RationalInterval) : RationalInterval :=
+@[expose] def neg (I : RationalInterval) : RationalInterval :=
   ⟨-I.upper, -I.lower, neg_le_neg I.lower_le_upper⟩
 
 /-- The smallest interval whose endpoints include all four endpoint products. -/
-def mul (I J : RationalInterval) : RationalInterval where
+@[expose] def mul (I J : RationalInterval) : RationalInterval where
   lower := min (min (I.lower * J.lower) (I.lower * J.upper))
     (min (I.upper * J.lower) (I.upper * J.upper))
   upper := max (max (I.lower * J.lower) (I.lower * J.upper))
@@ -65,7 +66,7 @@ def pow (I : RationalInterval) : ℕ → RationalInterval
   | n + 1 => (pow I n).mul I
 
 /-- An interval which avoids zero has a well-defined reciprocal interval. -/
-def inv (I : RationalInterval) (h : 0 < I.lower ∨ I.upper < 0) : RationalInterval where
+@[expose] def inv (I : RationalInterval) (h : 0 < I.lower ∨ I.upper < 0) : RationalInterval where
   lower := 1 / I.upper
   upper := 1 / I.lower
   lower_le_upper := by

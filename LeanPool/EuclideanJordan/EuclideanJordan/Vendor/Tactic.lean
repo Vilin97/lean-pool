@@ -16,4 +16,4 @@ Supporting modules for Euclidean Jordan algebras: power associativity, the spect
     trace form, Koecher/Alfsen-Shultz, and the frame Peirce decomposition.
 -/
 
-@[expose] public section
+public section

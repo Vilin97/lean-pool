@@ -71,7 +71,7 @@ The numerical majorant is `oneSidedPressureGradientKPAffine`, and all
 numerical constants are fixed before the solution fields.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

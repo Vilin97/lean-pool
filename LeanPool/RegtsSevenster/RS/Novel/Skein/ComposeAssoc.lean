@@ -23,7 +23,7 @@ association, and the final meet in the middle via two-stage
 folding and reordering.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -470,6 +470,7 @@ noncomputable def glueListPullRelabelTrans {α β γ : Type} (W : Fragment α)
       (Fragment.Equiv.relabelTrans _ _ _))
 
 /-- Transport the two closure casts across a normalized right-hand fragment. -/
+@[expose]
 noncomputable def pairCloseAmbientEquiv {n : ℕ} (F G : Fragment (Fin n))
     {α : Type} {N : Fragment α} {e : α ≃ Fin n} (E : G.Equiv (N.relabel e)) :=
   (Fragment.relabelDisjUnionLeft F
@@ -495,6 +496,7 @@ noncomputable def pairCloseAmbientEquiv {n : ℕ} (F G : Fragment (Fin n))
 flatten the two-stage survivors, pass through the embedded and
 relabelled fold equivalences, and read off the outer boundary
 identification. -/
+@[expose]
 noncomputable def lhsLabelEquiv (s t u v : ℕ) :
     Fragment.FoldSurviving
         ((Fin (s + t) ⊕ Fin (t + u)) ⊕ Fin (u + v))
@@ -604,6 +606,7 @@ theorem rhs_ground_eq (s t u v : ℕ) :
 /-- The associativity bridge: survivors of the ambient
 `u`-interface pairs are survivors of the right-embedded pairs in
 the right-associated ambient. -/
+@[expose]
 noncomputable def rhsBridgeEquiv (s t u v : ℕ) :
     Fragment.FoldSurviving
         ((Fin (s + t) ⊕ Fin (t + u)) ⊕ Fin (u + v))
@@ -828,6 +831,7 @@ noncomputable def assocNormalLeft {s t u v : ℕ}
 
 /-- The outer interface pairs of the right association, pulled
 back to the boundary of the inner composition. -/
+@[expose]
 noncomputable def rhsQs1 (s t u v : ℕ) :
     List ((Fin (s + t) ⊕
       Fragment.FoldSurviving (Fin (t + u) ⊕ Fin (u + v))
@@ -846,6 +850,7 @@ private theorem rhsQs1_wf (s t u v : ℕ) :
 
 /-- The outer interface pairs, pulled into the right-embedded
 fold survivors. -/
+@[expose]
 noncomputable def rhsQs2 (s t u v : ℕ) :=
   Fragment.mapPairs
     (Fragment.inrFoldEquiv (α := Fin (s + t))
@@ -854,12 +859,14 @@ noncomputable def rhsQs2 (s t u v : ℕ) :=
 
 /-- The outer interface pairs, pulled across the associativity
 bridge. -/
+@[expose]
 noncomputable def rhsQs3 (s t u v : ℕ) :=
   Fragment.mapPairs (rhsBridgeEquiv s t u v).symm
     (rhsQs2 s t u v)
 
 /-- The composed label identification of the right
 association. -/
+@[expose]
 noncomputable def rhsLabelEquiv (s t u v : ℕ) :
     Fragment.FoldSurviving
         ((Fin (s + t) ⊕ Fin (t + u)) ⊕ Fin (u + v))

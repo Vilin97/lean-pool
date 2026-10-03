@@ -19,7 +19,7 @@ that theorem across commutativity of vertex wedges, supplying the symmetric
 right-cycle statement required by the paper's Proposition 3.7.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -19,7 +19,7 @@ with the free circles split off.  Specialised to the star union
 this is the fragment-level star factorization.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

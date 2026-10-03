@@ -18,7 +18,7 @@ literal exponential sum, multiplication is convolution, and angular means
 are actual interval integrals over a period of length `2*pi`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ abbrev Coefficients.sum {α M : Type*} [AddCommMonoid M] (c : Coefficients α)
     (f : ℤ → (α → ℂ) → M) : M := c.coeff.sum f
 
 /-- Character, given by `Complex.exp ((j : ℂ) * (φ : ℂ) * Complex.I)`. -/
-noncomputable def character (j : ℤ) (φ : ℝ) : ℂ :=
+@[expose] noncomputable def character (j : ℤ) (φ : ℝ) : ℂ :=
   Complex.exp ((j : ℂ) * (φ : ℂ) * Complex.I)
 
 @[simp] theorem character_zero (φ : ℝ) : character 0 φ = 1 := by
@@ -79,6 +79,7 @@ theorem character_continuous (j : ℤ) : Continuous (character j) := by
   exact ((continuous_const.mul Complex.continuous_ofReal).mul continuous_const).cexp
 
 /-- Character hom, bundling `toFun`, `map_one`, `map_mul`. -/
+@[expose]
 noncomputable def characterHom (φ : ℝ) : Multiplicative ℤ →* ℂ where
   toFun j := character (Multiplicative.toAdd j) φ
   map_one' := character_zero φ
@@ -86,16 +87,17 @@ noncomputable def characterHom (φ : ℝ) : Multiplicative ℤ →* ℂ where
 
 /-- Evaluate hom, given by `AddMonoidAlgebra.liftNCRingHom (Pi.evalRingHom (fun _ : α => ℂ) x)
 (characterHom φ) (fun _ _ => Commute.all _ _)`. -/
+@[expose]
 noncomputable def evaluateHom {α : Type*} (x : α) (φ : ℝ) : Coefficients α →+* ℂ :=
   AddMonoidAlgebra.liftNCRingHom (Pi.evalRingHom (fun _ : α => ℂ) x) (characterHom φ)
     (fun _ _ => Commute.all _ _)
 
 /-- Evaluate, given by `c.sum (fun j a => a x * character j φ)`. -/
-noncomputable def evaluate {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) : ℂ :=
+@[expose] noncomputable def evaluate {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) : ℂ :=
   c.sum (fun j a => a x * character j φ)
 
 theorem evaluate_eq_hom {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) :
-    evaluate c x φ = evaluateHom x φ c := rfl
+    evaluate c x φ = evaluateHom x φ c := by rfl
 
 @[simp] theorem evaluate_zero {α : Type*} (x : α) (φ : ℝ) :
     evaluate (0 : Coefficients α) x φ = 0 := (evaluateHom x φ).map_zero
@@ -122,7 +124,7 @@ theorem evaluate_over {α : Type*} (c : Coefficients α) (s : Finset ℤ)
 
 /-- The slow/auxiliary parameter is `x`. Its coefficient functions have
 no angular input. The angular frequency is the literal integer `j*kp`. -/
-noncomputable def field {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α → ℝ)
+@[expose] noncomputable def field {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α → ℝ)
     (kp : ℤ) (p : α × ℝ) : ℂ := evaluate c p.1 (k * Φ p.1 + (kp : ℝ) * p.2)
 
 theorem field_expansion {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α → ℝ)
@@ -142,14 +144,14 @@ theorem field_angular_continuous {α : Type*} (c : Coefficients α) (k : ℝ)
   exact continuous_finsetSum _ (fun j _ => continuous_const.fun_mul (character_continuous _))
 
 /-- Period, given by `2 * Real.pi`. -/
-noncomputable def period : ℝ := 2 * Real.pi
+@[expose] noncomputable def period : ℝ := 2 * Real.pi
 
 theorem period_pos : 0 < period := mul_pos (by norm_num) Real.pi_pos
 
 theorem period_ne_zero : period ≠ 0 := period_pos.ne'
 
 /-- This is a genuine normalized angular integral. -/
-noncomputable def angularMean (f : ℝ → ℂ) : ℂ :=
+@[expose] noncomputable def angularMean (f : ℝ → ℂ) : ℂ :=
   (period : ℂ)⁻¹ * ∫ θ in (0 : ℝ)..period, f θ
 
 theorem character_period (j : ℤ) : character j period = 1 := by
@@ -220,7 +222,7 @@ theorem angularMean_field {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α 
     simp [h0, hc]
 
 /-- Coefficient mass, given by `∑ j ∈ c.support, ‖c j x‖`. -/
-noncomputable def coefficientMass {α : Type*} (c : Coefficients α) (x : α) : ℝ :=
+@[expose] noncomputable def coefficientMass {α : Type*} (c : Coefficients α) (x : α) : ℝ :=
   ∑ j ∈ c.support, ‖c j x‖
 
 theorem coefficientMass_nonneg {α : Type*} (c : Coefficients α) (x : α) :
@@ -270,12 +272,13 @@ theorem angularMean_product {α : Type*} (c d : Coefficients α) (k : ℝ) (Φ :
   simp only [zero_sub]
 
 /-- Conjugate reverse, constructed using `AddMonoidAlgebra.ofCoeff`. -/
+@[expose]
 noncomputable def conjugateReverse {α : Type*} (c : Coefficients α) : Coefficients α :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.equivMapDomain (Equiv.neg ℤ)
     (Finsupp.mapRange (fun a : α → ℂ => fun x => conj (a x)) (by ext x; simp) c.coeff)
 
 @[simp] theorem conjugateReverse_apply {α : Type*} (c : Coefficients α) (j : ℤ) (x : α) :
-    conjugateReverse c j x = conj (c (-j) x) := rfl
+    conjugateReverse c j x = conj (c (-j) x) := by rfl
 
 theorem evaluate_conjugateReverse {α : Type*} (c : Coefficients α) (x : α) (φ : ℝ) :
     evaluate (conjugateReverse c) x φ = conj (evaluate c x φ) := by
@@ -285,6 +288,7 @@ theorem evaluate_conjugateReverse {α : Type*} (c : Coefficients α) (x : α) (�
   simp only [Equiv.neg_apply, Finsupp.sum, map_sum, map_mul, character_neg]
 
 /-- Conjugate symmetric, given by `∀ j x, c (-j) x = conj (c j x)`. -/
+@[expose]
 def ConjugateSymmetric {α : Type*} (c : Coefficients α) : Prop :=
   ∀ j x, c (-j) x = conj (c j x)
 
@@ -353,7 +357,7 @@ theorem meanResidual_product_covariance
   rw [he, angularMean_coefficient_covariance c hconj 1 Ψ hkp q]
 
 /-- Band limited, given by `∀ j ∈ c.support, j.natAbs ≤ N`. -/
-def BandLimited {α : Type*} (c : Coefficients α) (N : ℕ) : Prop :=
+@[expose] def BandLimited {α : Type*} (c : Coefficients α) (N : ℕ) : Prop :=
   ∀ j ∈ c.support, j.natAbs ≤ N
 
 theorem BandLimited.mono {α : Type*} {c : Coefficients α} {M N : ℕ}
@@ -382,7 +386,7 @@ theorem band_single_zero {α : Type*} (a : α → ℂ) :
   simp [hj0]
 
 /-- Constant coefficient, given by `AddMonoidAlgebra.single 0 a`. -/
-noncomputable def constantCoefficient {α : Type*} (a : α → ℂ) : Coefficients α :=
+@[expose] noncomputable def constantCoefficient {α : Type*} (a : α → ℂ) : Coefficients α :=
   AddMonoidAlgebra.single 0 a
 
 theorem band_constantCoefficient {α : Type*} (a : α → ℂ) :
@@ -490,7 +494,7 @@ theorem wave_eq_evaluate (c : Coefficients E) (k : ℝ) (Φ : E → ℝ) (x : E)
 /-- Derivative coefficient, given by `HarmonicCalculus.along V a x +
 HarmonicCalculus.phaseFactor (k * (j : ℝ)) * Complex.ofReal (HarmonicCalculus.along V Φ x) *
 a x`. -/
-noncomputable def derivativeCoefficient (V : E → E) (k : ℝ) (Φ : E → ℝ)
+@[expose] noncomputable def derivativeCoefficient (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (j : ℤ) (a : E → ℂ) (x : E) : ℂ :=
   HarmonicCalculus.along V a x + HarmonicCalculus.phaseFactor (k * (j : ℝ)) *
     Complex.ofReal (HarmonicCalculus.along V Φ x) * a x
@@ -501,6 +505,7 @@ theorem derivativeCoefficient_zero (V : E → E) (k : ℝ) (Φ : E → ℝ) (j :
   simp [derivativeCoefficient, HarmonicCalculus.along]
 
 /-- Differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
+@[expose]
 noncomputable def differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (c : Coefficients E) : Coefficients E :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.onFinset c.support (fun j => derivativeCoefficient V k Φ j (c
@@ -513,7 +518,7 @@ noncomputable def differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ)
 
 @[simp] theorem differentiate_apply (V : E → E) (k : ℝ) (Φ : E → ℝ)
     (c : Coefficients E) (j : ℤ) :
-    differentiate V k Φ c j = derivativeCoefficient V k Φ j (c j) := rfl
+    differentiate V k Φ c j = derivativeCoefficient V k Φ j (c j) := by rfl
 
 theorem support_differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ) (c : Coefficients E) :
     (differentiate V k Φ c).support ⊆ c.support := by
@@ -663,6 +668,7 @@ theorem character_hasDerivAt (j : ℤ) (θ : ℝ) :
   ring
 
 /-- Angular differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
+@[expose]
 noncomputable def angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients α) :
     Coefficients α :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.onFinset c.support (fun j x => (((j * kp : ℤ) : ℂ) *
@@ -676,7 +682,7 @@ noncomputable def angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients
 
 @[simp] theorem angularDifferentiate_apply {α : Type*} (kp : ℤ) (c : Coefficients α)
     (j : ℤ) (x : α) :
-    angularDifferentiate kp c j x = (((j * kp : ℤ) : ℂ) * Complex.I) * c j x := rfl
+    angularDifferentiate kp c j x = (((j * kp : ℤ) : ℂ) * Complex.I) * c j x := by rfl
 
 theorem support_angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients α) :
     (angularDifferentiate kp c).support ⊆ c.support := by

@@ -17,7 +17,7 @@ They identify the continuous acceleration family with translation of the
 original acceleration, including endpoint time values.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -84,7 +84,7 @@ theorem gramInverse_translation (a : Space) (F : L2 →L[ℝ] L2) (c : ℝ) (hc 
     (solenoidalTranslation a (gramInverse (F.comp solenoidalSpace.subtypeL) c hc hF g)))
 
 /-- The actual one-time acceleration operator from the strong mean equation. -/
-def acceleration (F F₁ : L2 →L[ℝ] L2) (c : ℝ) (hc : 0 < c)
+@[expose] def acceleration (F F₁ : L2 →L[ℝ] L2) (c : ℝ) (hc : 0 < c)
     (hF : ∀ v : solenoidalSpace, c*‖v‖^2 ≤ ‖(F.comp solenoidalSpace.subtypeL) v‖^2)
     (v : solenoidalSpace) (f : L2) : solenoidalSpace :=
   gramInverse (F.comp solenoidalSpace.subtypeL) c hc hF

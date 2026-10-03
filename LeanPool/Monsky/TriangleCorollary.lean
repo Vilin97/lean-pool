@@ -18,7 +18,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 Imported Lean Pool material for `LeanPool.Monsky.TriangleCorollary`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -73,7 +73,7 @@ theorem map_pres (X : Set ℝ²) : volume X = volume (idMap '' X) :=
       (volume_preserving_finTwoArrow ℝ)) X
 
 /-- `idMap` sends a Euclidean plane vector to the pair of its coordinates. -/
-@[simp] lemma idMap_apply (x : ℝ²) : idMap x = (x 0, x 1) := rfl
+@[simp] lemma idMap_apply (x : ℝ²) : idMap x = (x 0, x 1) := by rfl
 
 /-- The unit triangle with vertices `(0,0)`, `(1,0)` and `(0,1)`. -/
 def unitTriangle : Triangle := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)

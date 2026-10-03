@@ -10,7 +10,7 @@ public import LeanPool.TuttePath.DiamondRanks
 -- Modified for Lean Pool: module integration, public visibility, and import paths.
 
 /-! The source `prop:indecomposable-diamond` construction. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 variable {α : Type*} {M : Matroid α} [M.Finite] {S T : Set α}

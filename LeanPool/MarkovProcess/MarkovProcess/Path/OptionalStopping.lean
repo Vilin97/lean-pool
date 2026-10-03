@@ -38,7 +38,7 @@ a filtration indexed by `ℝ≥0`.  No optional-stopping result for unbounded st
 asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

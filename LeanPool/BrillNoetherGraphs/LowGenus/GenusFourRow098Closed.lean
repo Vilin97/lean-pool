@@ -22,7 +22,7 @@ This gives a short structural proof on the whole closed orthant; the generated
 `g4row098.rpf` cut-vertex certificate is therefore no longer load-bearing.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourRow098Closed
 
 open Utilities

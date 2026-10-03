@@ -28,7 +28,7 @@ Tags: incompleteness, provability, first-order-arithmetic, mathematical-logic
 MSC: 03F40, 03F30
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Incompleteness
 

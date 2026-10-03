@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Expectations
 
 /-! # Averaging -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -26,6 +26,7 @@ variable {α : Type*} [Fintype α]
 Choose a time uniformly from `Fin T`, then sample from the law assigned to
 that time.
 -/
+@[expose]
 def timeAverage {T : ℕ} (hT : 0 < T)
     (μ : Fin T → FiniteLaw α) : FiniteLaw (Fin T × α) where
   mass z := (1 / (T : ℝ)) * (μ z.1).mass z.2
@@ -92,6 +93,7 @@ theorem expect_timeAverage_state {T : ℕ} (hT : 0 < T)
   simpa using expect_timeAverage_eq_sum_range hT μ (fun _ => f)
 
 /-- Lift a state permutation without changing the sampled time. -/
+@[expose]
 def timeLiftPerm {T : ℕ} (e : Equiv.Perm α) :
     Equiv.Perm (Fin T × α) :=
   (Equiv.refl (Fin T)).prodCongr e

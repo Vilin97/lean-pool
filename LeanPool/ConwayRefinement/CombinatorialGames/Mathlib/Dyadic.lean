@@ -17,7 +17,7 @@ A dyadic (rational) number is a rational number whose denominator is a power of 
 the `CommRing` structure, as well as proving some auxiliary theorems on them.
 -/
 
-@[expose] public section
+public section
 
 /-! ### For Mathlib -/
 
@@ -173,14 +173,14 @@ instance instSMulIntConway : SMul Int Dyadic where
   (coe_mul x y).trans (by simp)
 
 /-- The dyadic number ½. -/
-def half : Dyadic := (1 : Dyadic) >>> 1
+@[expose] def half : Dyadic := (1 : Dyadic) >>> 1
 
 @[simp, norm_cast] theorem coe_half : half.toRat = 2⁻¹ := (Rat.inv_def 2).symm
 @[simp] theorem num_half : half.num = 1 := rfl
 @[simp] theorem num_den : half.den = 2 := rfl
 
 /-- Constructor for the fraction `m / n`. -/
-protected def mkRat (m : ℤ) {n : ℕ} (h : n ∈ Submonoid.powers 2) : Dyadic :=
+@[expose] protected def mkRat (m : ℤ) {n : ℕ} (h : n ∈ Submonoid.powers 2) : Dyadic :=
   ofIntWithPrec m (Submonoid.log ⟨n, h⟩)
 
 @[simp, norm_cast]
@@ -348,7 +348,7 @@ theorem den_add_le_den_right {x y : Dyadic} (h : x.den ≤ y.den) : (x + y).den 
   exact den_mkRat_le _ y.den_ne_zero
 
 /-- Coercion as a `RingHom`. -/
-@[simps]
+@[expose, simps]
 def coeRingHom : Dyadic →+* ℚ where
   toFun := Dyadic.toRat
   map_zero' := rfl

@@ -20,7 +20,7 @@ The signed cellular cycle, orientation comparison, and nonzero orbit count are n
 They provide the finite model used by the obstruction argument.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

@@ -72,7 +72,7 @@ and `RS.evenEmbedLinear_scalarUnit` reads that off for the even
 embedding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

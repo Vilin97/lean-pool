@@ -15,7 +15,7 @@ The two inclusions of an index into the doubled finite set have
 distinct values.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

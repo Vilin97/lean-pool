@@ -18,7 +18,7 @@ sense, transports invertibility of the comparison map of Deligne's
 (2.11.1) in exactly the same way.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

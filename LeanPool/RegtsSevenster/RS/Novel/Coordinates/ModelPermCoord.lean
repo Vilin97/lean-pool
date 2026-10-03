@@ -16,7 +16,7 @@ The model permutation map acts on coordinates by the adjacent-word
 sign and the permutation reindex.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 

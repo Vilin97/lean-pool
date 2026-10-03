@@ -20,7 +20,7 @@ The package in this file starts from the resolvent identity, the Hille--Yosida b
 and positivity of the actual shifted resolvents.  It assumes neither a semigroup nor a kernel.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -98,6 +98,7 @@ variable [T2Space X] [LocallyCompactSpace X] [SecondCountableTopology X]
   [MeasurableSpace X] [BorelSpace X]
 
 /-- The sub-Markov kernel semigroup represented by the canonical positive `C₀` semigroup. -/
+@[expose]
 noncomputable def kernelSemigroup : SubMarkovKernelSemigroup X :=
   PositiveC0SemigroupKernel.kernelSemigroup
     R.toContractiveResolvent.generatedSemigroup R.isPositive_generatedSemigroup

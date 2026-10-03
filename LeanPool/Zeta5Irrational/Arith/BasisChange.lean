@@ -20,7 +20,7 @@ import Mathlib.Tactic.Ring.Basic
   `det [μ_X(D_N⁶ E_a E_b / D_K)] = det(C)² Δ_K` where `C` is the coefficient matrix.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

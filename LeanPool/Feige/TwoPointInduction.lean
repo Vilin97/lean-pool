@@ -14,14 +14,14 @@ This file defines the independent product expectation and the rejection
 payoff used by the ordered insertion proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace Feige
 
 /-- Expectation under the independent product law on high sets. -/
-noncomputable def productHighSetExpectation {m : ℕ}
+@[expose] noncomputable def productHighSetExpectation {m : ℕ}
     (p : Fin m → ℝ) (g : Finset (Fin m) → ℝ) : ℝ :=
   ∑ S ∈ Finset.univ.powerset, highSetMass p S * g S
 

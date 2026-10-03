@@ -18,7 +18,7 @@ and lose a fixed fraction of that mass on every proper subface. The bound
 depends only on the dimension and these two fractions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

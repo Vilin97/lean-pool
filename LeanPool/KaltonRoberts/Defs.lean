@@ -26,7 +26,7 @@ import Mathlib.Tactic.Positivity.Finset
 Core definitions used throughout the formalization of the companion paper.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 
@@ -37,7 +37,7 @@ open Finset BigOperators
 /-- A function `f : Finset U → ℝ` is `Δ`-additive if `f ∅ = 0` and
 `|f A + f B − f (A ∪ B)| ≤ Δ` for every pair of disjoint finite subsets `A, B`.
 **Reference**: Equation (1) in Section 1 of the companion paper. -/
-def IsApproxAdditive {U : Type*} [DecidableEq U]
+@[expose] def IsApproxAdditive {U : Type*} [DecidableEq U]
     (f : Finset U → ℝ) (Δ : ℝ) : Prop :=
   f ∅ = 0 ∧ ∀ A B : Finset U, Disjoint A B → |f A + f B - f (A ∪ B)| ≤ Δ
 
@@ -47,19 +47,19 @@ bottom and is additive up to `Δ` on disjoint joins.
 This is the set-algebra formulation from Equation (1), with a set algebra
 represented by its Boolean algebra of events. A concrete algebra of subsets is
 the subtype of a `BooleanSubalgebra (Set Ω)`. -/
-def IsApproxAdditiveBA {α : Type*} [BooleanAlgebra α]
+@[expose] def IsApproxAdditiveBA {α : Type*} [BooleanAlgebra α]
     (f : α → ℝ) (Δ : ℝ) : Prop :=
   f ⊥ = 0 ∧ ∀ A B : α, Disjoint A B → |f A + f B - f (A ⊔ B)| ≤ Δ
 
 /-- A finitely additive signed measure on a Boolean algebra. -/
-def IsFinitelyAdditiveBA {α : Type*} [BooleanAlgebra α] (μ : α → ℝ) : Prop :=
+@[expose] def IsFinitelyAdditiveBA {α : Type*} [BooleanAlgebra α] (μ : α → ℝ) : Prop :=
   μ ⊥ = 0 ∧ ∀ A B : α, Disjoint A B → μ (A ⊔ B) = μ A + μ B
 
 /-- An additive signed measure on `2^U` is identified with a function
 `A ↦ ∑ i ∈ A, a i` for some weight function `a : U → ℝ`.
 **Reference**: paragraph after Lemma 1.2 in Section 1 of
 the companion paper. -/
-def additiveFunction {U : Type*} (a : U → ℝ) :
+@[expose] def additiveFunction {U : Type*} (a : U → ℝ) :
     Finset U → ℝ :=
   fun A => ∑ i ∈ A, a i
 
@@ -68,18 +68,18 @@ on `2^U`.
 **Reference**: last paragraph of Section 1 in the companion paper,
 where `M := ‖f‖_∞ = dist_∞(f, L)` after subtracting a closest additive
 approximant. -/
-noncomputable def distToAdditive {U : Type*}
+@[expose] noncomputable def distToAdditive {U : Type*}
     (f : Finset U → ℝ) : ℝ :=
   ⨅ a : U → ℝ, ⨆ S : Finset U, |f S - additiveFunction a S|
 
 /-- The deficit of a set `A` relative to `f` and the value `M`: this is
 `M − f(A)`. Used throughout Section 2–5 of the companion paper. -/
-def deficit {U : Type*}
+@[expose] def deficit {U : Type*}
     (f : Finset U → ℝ) (M : ℝ) (A : Finset U) : ℝ := M - f A
 
 /-- The surplus of a set `A` relative to `f` and the value `M`: this is
 `M + f(A)`. Used throughout Section 2–5 of the companion paper. -/
-def surplus {U : Type*}
+@[expose] def surplus {U : Type*}
     (f : Finset U → ℝ) (M : ℝ) (A : Finset U) : ℝ := M + f A
 
 /-- The Kalton–Roberts constant `K_KR` is the infimum of all `C ≥ 0` such that
@@ -91,7 +91,7 @@ This abstract Boolean-algebra formulation captures the paper's statement for
 arbitrary set algebras: a set algebra is a Boolean subalgebra of `Set Ω`.
 **Reference**: paragraph after Equation (1) in Section 1 of
 the companion paper. -/
-noncomputable def krConstant : ℝ :=
+@[expose] noncomputable def krConstant : ℝ :=
   sInf { C : ℝ | 0 ≤ C ∧
     ∀ (α : Type) [BooleanAlgebra α] (f : α → ℝ),
       IsApproxAdditiveBA f 1 →
@@ -123,7 +123,7 @@ def ExpandersExist (α : ℚ) (r : ℕ) (θ : ℚ) : Prop :=
 /-! ## Strong expander witness (Section 3, refined interface) -/
 
 /-- Edge-neighbor set of vertex `v` in a bipartite graph with labelled edges. -/
-def edgeNeighbors {V W : Type*} [DecidableEq W]
+@[expose] def edgeNeighbors {V W : Type*} [DecidableEq W]
     {r : ℕ} (edge : V → Fin r → W) (v : V) : Finset W :=
   Finset.univ.image (edge v)
 
@@ -181,7 +181,7 @@ that expanders exist for all sufficiently large *admissible* `k`, where
 admissible sizes form an infinite arithmetic progression.
 
 **Reference**: Section 3 and Lemma 4.1 of the companion paper. -/
-def StrongExpandersExist (α : ℚ) (r : ℕ) (θ : ℚ) : Prop :=
+@[expose] def StrongExpandersExist (α : ℚ) (r : ℕ) (θ : ℚ) : Prop :=
   ∃ (step : ℕ), 0 < step ∧ ∀ᶠ (k : ℕ) in Filter.atTop,
     step ∣ k →
     ∃ (E : FiniteExpanderWitness r),
@@ -206,58 +206,58 @@ compatibility with the existing spine proofs.
 the definition of `Φ_{r,θ}`.
 **Reference**: paragraph before Equation (6) in Section 4 of
 the companion paper. -/
-noncomputable def hEntropy (a b : ℝ) : ℝ :=
+@[expose] noncomputable def hEntropy (a b : ℝ) : ℝ :=
   a * Real.log a - b * Real.log b - (a - b) * Real.log (a - b)
 
 /-- The function `Φ_{r,θ}(x) = h(1,x) + h(θ,x) + h(rx/θ, rx) − h(r, rx)` from
 Equation (6) in Section 4 of the companion paper. -/
-noncomputable def Phi (r θ x : ℝ) : ℝ :=
+@[expose] noncomputable def Phi (r θ x : ℝ) : ℝ :=
   hEntropy 1 x + hEntropy θ x + hEntropy (r * x / θ) (r * x) - hEntropy r (r * x)
 
 /-- The second derivative `Φ''_{r,θ}(x) = (r−2)/x + (r−1)/(1−x) − 1/(θ−x)`,
 from Equation (8) in Section 4 of the companion paper. -/
-noncomputable def Phi'' (r θ x : ℝ) : ℝ :=
+@[expose] noncomputable def Phi'' (r θ x : ℝ) : ℝ :=
   (r - 2) / x + (r - 1) / (1 - x) - 1 / (θ - x)
 
 /-! ## Numerical constants from Section 5 -/
 
 /-- The case-split parameter `q₀ = 7437/15625`.
 **Reference**: Equation (9) in Section 5 of the companion paper. -/
-def q₀ : ℚ := 7437 / 15625
+@[expose] def q₀ : ℚ := 7437 / 15625
 
 /-- The complementary parameter `p₀ = 1 − q₀ = 8188/15625`.
 **Reference**: Equation (9) in Section 5 of the companion paper. -/
-def p₀ : ℚ := 8188 / 15625
+@[expose] def p₀ : ℚ := 8188 / 15625
 
 /-- The frequency cap in Case 1: `α₁ = 1003/10000`.
 **Reference**: Equation (9) in Section 5 of the companion paper. -/
-def α₁ : ℚ := 1003 / 10000
+@[expose] def α₁ : ℚ := 1003 / 10000
 
 /-- The frequency cap in Case 2: `α₂ = 47/625`.
 **Reference**: Equation (9) in Section 5 of the companion paper. -/
-def α₂ : ℚ := 47 / 625
+@[expose] def α₂ : ℚ := 47 / 625
 
 /-- The mixing parameter `τ₁` from Equation (10) in Section 5 of
 the companion paper. Satisfies
 `(1 − τ₁) q₀³ + τ₁ q₀⁴ = α₁`. -/
-def τ₁ : ℚ := (q₀ ^ 3 - α₁) / (q₀ ^ 3 - q₀ ^ 4)
+@[expose] def τ₁ : ℚ := (q₀ ^ 3 - α₁) / (q₀ ^ 3 - q₀ ^ 4)
 
 /-- The mixing parameter `τ₂` from Equation (10) in Section 5 of
 the companion paper. Satisfies
 `(1 − τ₂) p₀⁴ + τ₂ p₀⁵ = α₂`. -/
-def τ₂ : ℚ := (p₀ ^ 4 - α₂) / (p₀ ^ 4 - p₀ ^ 5)
+@[expose] def τ₂ : ℚ := (p₀ ^ 4 - α₂) / (p₀ ^ 4 - p₀ ^ 5)
 
 /-- The Case 1 bound `C₁` from Equation (14) in Section 5 of
 the companion paper. -/
-def C₁ : ℚ := 23662339508853784054849 / 1192830849380162250000
+@[expose] def C₁ : ℚ := 23662339508853784054849 / 1192830849380162250000
 
 /-- The Case 2 bound `C₂`, which is the final headline constant, from
 Equation (17) in Section 5 of the companion paper. -/
-def C₂ : ℚ := 694198146664396294486127753 / 34994834677886019996000000
+@[expose] def C₂ : ℚ := 694198146664396294486127753 / 34994834677886019996000000
 
 /-- The simplified upper bound `9919/500 = 19.838`, from the statement of
 Theorem 1.1 in Section 1 of the companion paper. -/
-def krUpper : ℚ := 9919 / 500
+@[expose] def krUpper : ℚ := 9919 / 500
 
 /-! ## Dual certificate structure (Section 2) -/
 

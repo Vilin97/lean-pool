@@ -13,7 +13,7 @@ import LeanPool.Feige.TransferProbability
 # Endpoint tail identities for the local transfer step
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

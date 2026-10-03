@@ -25,7 +25,7 @@ This file contains the proof of the pumping lemma for context-free grammars
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B}
     (hf : f.Injective) : A.card ≤ B.card := by

@@ -19,7 +19,7 @@ the family and retains precisely the chambers lying inside at least one polygon.
 single triangle mesh has support equal to the union.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,7 +29,7 @@ namespace Moise
 namespace TriangleMesh
 
 /-- The canonical barycentric embedding of a finite plane triangle mesh realization. -/
-noncomputable def coordinateEmbed (M : TriangleMesh) :
+@[expose] noncomputable def coordinateEmbed (M : TriangleMesh) :
     GeometricRealization M.Vertex M.triangles → Plane :=
   fun x ↦ M.toPlaneComplex.baryEval x.1
 
@@ -71,7 +71,7 @@ theorem range_coordinateEmbed (M : TriangleMesh) :
     exact congrArg Subtype.val hy
 
 /-- Restrict the coordinate embedding to any plane region containing the mesh support. -/
-noncomputable def coordinateEmbedInto (M : TriangleMesh) (W : Set Plane)
+@[expose] noncomputable def coordinateEmbedInto (M : TriangleMesh) (W : Set Plane)
     (hW : M.toPlaneComplex.support ⊆ W) :
     GeometricRealization M.Vertex M.triangles → W :=
   fun x ↦ ⟨M.coordinateEmbed x, hW (by
@@ -90,7 +90,7 @@ namespace PolygonalFamily
 variable {ι : Type*} [Fintype ι] (J : ι → PolygonalCircle)
 
 /-- The union of the finitely many closed polygonal disks. -/
-def closedRegion : Set Plane :=
+@[expose] def closedRegion : Set Plane :=
   ⋃ i, (J i).closedRegion
 
 omit [Fintype ι] in
@@ -99,7 +99,7 @@ theorem isCompact_closedRegion [Finite ι] : IsCompact (closedRegion J) := by
   exact isCompact_iUnion fun i ↦ (J i).isCompact_closedRegion
 
 /-- A positive radius of a ball containing every disk in the family. -/
-noncomputable def enclosingRadius : ℝ :=
+@[expose] noncomputable def enclosingRadius : ℝ :=
   max ((isCompact_closedRegion J).isBounded.subset_closedBall (0 : Plane)).choose 1
 
 theorem enclosingRadius_pos : 0 < enclosingRadius J :=
@@ -113,7 +113,7 @@ theorem closedRegion_subset_enclosingBall :
   exact Metric.closedBall_subset_closedBall (le_max_left _ _) h
 
 /-- The common enclosing triangle. -/
-noncomputable def enclosingMesh : TriangleMesh :=
+@[expose] noncomputable def enclosingMesh : TriangleMesh :=
   TriangleMesh.single (PolygonalCircle.enclosingTriangleVertices (enclosingRadius J))
     (PolygonalCircle.enclosingTriangleVertices_affineIndependent (enclosingRadius_pos J))
 
@@ -133,7 +133,7 @@ theorem edgeLine_mem_edgeLines (i : ι) (k : ZMod (J i).n) :
   exact ⟨i, by simp, (J i).edgeLine_mem_edgeLines k⟩
 
 /-- The common supporting-line arrangement. -/
-noncomputable def arrangementMesh : TriangleMesh :=
+@[expose] noncomputable def arrangementMesh : TriangleMesh :=
   (enclosingMesh J).refineByLines (edgeLines J)
 
 theorem arrangementMesh_support :
@@ -152,7 +152,7 @@ theorem arrangementMesh_isMonochromatic (i : ι) (k : ZMod (J i).n) :
     (edgeLines J) (edgeLine_mem_edgeLines J i k)
 
 /-- Carrier of one maximal chamber of the common arrangement. -/
-def arrangementTriangleCarrier (t : Finset (arrangementMesh J).Vertex) : Set Plane :=
+@[expose] def arrangementTriangleCarrier (t : Finset (arrangementMesh J).Vertex) : Set Plane :=
   convexHull ℝ ((arrangementMesh J).position '' (t : Set _))
 
 theorem convex_arrangementTriangleCarrier
@@ -257,7 +257,7 @@ def IsInteriorArrangementTriangle
   ∃ i, interior (arrangementTriangleCarrier J t) ⊆ (J i).interiorRegion
 
 /-- The common finite mesh of the union of all closed regions. -/
-noncomputable def closedRegionMesh : TriangleMesh := by
+@[expose] noncomputable def closedRegionMesh : TriangleMesh := by
   classical
   exact (arrangementMesh J).restrictTriangles (IsInteriorArrangementTriangle J)
 
@@ -331,7 +331,7 @@ theorem closedRegionMesh_support :
 /-! ## Synchronized submeshes of one family arrangement -/
 
 /-- The union of a selected subfamily of polygonal closed disks. -/
-def selectedClosedRegion (p : ι → Prop) : Set Plane :=
+@[expose] def selectedClosedRegion (p : ι → Prop) : Set Plane :=
   ⋃ i, ⋃ (_ : p i), (J i).closedRegion
 
 /-- An arrangement chamber belongs to the selected submesh when its interior lies on the
@@ -343,7 +343,7 @@ def IsSelectedInteriorArrangementTriangle (p : ι → Prop)
 /-- Restrict the common arrangement to the chambers belonging to a selected subfamily.
 Different predicates therefore produce meshes with definitionally the same ambient vertex
 type and position map. -/
-noncomputable def selectedClosedRegionMesh (p : ι → Prop) : TriangleMesh := by
+@[expose] noncomputable def selectedClosedRegionMesh (p : ι → Prop) : TriangleMesh := by
   classical
   exact (arrangementMesh J).restrictTriangles
     (IsSelectedInteriorArrangementTriangle J p)
@@ -473,7 +473,7 @@ theorem selectedClosedRegionMeshes_joint_edge_valence (p q : ι → Prop)
 /-! ## Synchronization with an independent finite patch mesh -/
 
 /-- Cut the polygon-family arrangement by all barycentric face lines of a second mesh. -/
-noncomputable def synchronizedArrangement (N : TriangleMesh) : TriangleMesh :=
+@[expose] noncomputable def synchronizedArrangement (N : TriangleMesh) : TriangleMesh :=
   (arrangementMesh J).refineTo N
 
 /-- A chamber of the synchronized arrangement lies in the selected polygonal region. -/
@@ -484,7 +484,7 @@ def IsSelectedSynchronizedTriangle (N : TriangleMesh) (p : ι → Prop)
       (J i).interiorRegion
 
 /-- The polygonal side of the common old/patch arrangement. -/
-noncomputable def selectedSynchronizedMesh (N : TriangleMesh)
+@[expose] noncomputable def selectedSynchronizedMesh (N : TriangleMesh)
     (p : ι → Prop) : TriangleMesh := by
   classical
   exact (synchronizedArrangement J N).restrictTriangles
@@ -497,7 +497,7 @@ def IsTargetSynchronizedTriangle (N : TriangleMesh)
     N.toPlaneComplex.support).Nonempty
 
 /-- The target-mesh side of the common old/patch arrangement. -/
-noncomputable def targetSynchronizedMesh (N : TriangleMesh) : TriangleMesh := by
+@[expose] noncomputable def targetSynchronizedMesh (N : TriangleMesh) : TriangleMesh := by
   classical
   exact (synchronizedArrangement J N).restrictTriangles
     (IsTargetSynchronizedTriangle J N)

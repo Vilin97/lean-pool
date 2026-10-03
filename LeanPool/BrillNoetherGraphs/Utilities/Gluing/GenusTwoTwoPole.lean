@@ -29,7 +29,7 @@ choose one seam phase compatible with the desired rank tests; that scalar
 problem is represented by `TwoPoleProfile.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 namespace TwoPole

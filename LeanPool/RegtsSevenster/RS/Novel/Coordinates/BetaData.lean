@@ -15,7 +15,7 @@ The colour-form entries at a partner slot, the colouring of a sum
 index on either side, and the `β`-diagonal these produce.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

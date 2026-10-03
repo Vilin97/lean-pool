@@ -25,7 +25,7 @@ The open Erdős 132 conjecture is not asserted here.  Recon:
 `~/Knowledge/Construct/recon/erdos_132.md`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -33,20 +33,20 @@ namespace LeanPool.Erdos132ConvexK3
 abbrev Point (K : Type*) := K × K
 
 /-- Signed two-dimensional cross product. -/
-def cross {K : Type*} [Ring K] (u v : Point K) : K :=
+@[expose] def cross {K : Type*} [Ring K] (u v : Point K) : K :=
   u.1 * v.2 - u.2 * v.1
 
 /-- Cartesian dot product.  Keeping this polynomial form explicit lets the
 majorant angle argument stay over exact ordered rings. -/
-def dot {K : Type*} [Ring K] (u v : Point K) : K :=
+@[expose] def dot {K : Type*} [Ring K] (u v : Point K) : K :=
   u.1 * v.1 + u.2 * v.2
 
 /-- Signed turn from the ray `a ⟶ b` to the ray `a ⟶ c`. -/
-def turn {K : Type*} [Ring K] (a b c : Point K) : K :=
+@[expose] def turn {K : Type*} [Ring K] (a b c : Point K) : K :=
   (b.1 - a.1) * (c.2 - a.2) - (b.2 - a.2) * (c.1 - a.1)
 
 /-- Squared Euclidean distance, used to compare distance classes exactly. -/
-def sqDist {K : Type*} [Ring K] (a b : Point K) : K :=
+@[expose] def sqDist {K : Type*} [Ring K] (a b : Point K) : K :=
   (b.1 - a.1) ^ 2 + (b.2 - a.2) ^ 2
 
 theorem sqDist_comm {K : Type*} [CommRing K] (a b : Point K) :
@@ -55,7 +55,7 @@ theorem sqDist_comm {K : Type*} [CommRing K] (a b : Point K) :
   ring
 
 /-- The next index in a cyclic labelling. -/
-def cyclicNext {n : ℕ} [NeZero n] (i : Fin n) : Fin n := i + 1
+@[expose] def cyclicNext {n : ℕ} [NeZero n] (i : Fin n) : Fin n := i + 1
 
 /-- Strict convex position in a specified cyclic order.
 
@@ -63,7 +63,7 @@ Every vertex other than the endpoints of a boundary edge lies strictly in
 that oriented edge's left open half-plane.  This signed-area formulation is
 stronger and less ambiguous than checking consecutive turns alone.
 -/
-def CyclicStrictConvex
+@[expose] def CyclicStrictConvex
     {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} [NeZero n]
     (P : Fin n → Point K) : Prop :=
@@ -71,19 +71,19 @@ def CyclicStrictConvex
 
 /-- Four vertices in positive cyclic order, in the exact form needed for the
 diagonal-crossing proof. -/
-def StrictConvexQuad
+@[expose] def StrictConvexQuad
     {K : Type*} [Ring K] [LinearOrder K]
     (a b c d : Point K) : Prop :=
   0 < turn a b c ∧ 0 < turn a b d ∧ 0 < turn b c d ∧ 0 < turn c d a
 
 /-- Membership in the open left half-plane of the oriented line `a ⟶ b`. -/
-def InLeftOpenHalfPlane
+@[expose] def InLeftOpenHalfPlane
     {K : Type*} [Ring K] [LinearOrder K]
     (a b p : Point K) : Prop :=
   0 < turn a b p
 
 /-- Executable increasing representatives of unordered pairs of labels. -/
-def unorderedPairList (n : ℕ) : List (Fin n × Fin n) :=
+@[expose] def unorderedPairList (n : ℕ) : List (Fin n × Fin n) :=
   (List.finRange n).flatMap fun i ↦
     ((List.finRange n).filter fun j ↦ decide (i < j)).map fun j ↦ (i, j)
 
@@ -97,7 +97,7 @@ def realizedSquaredDistances
   (unorderedPairs n).image fun e ↦ sqDist (P e.1) (P e.2)
 
 /-- `d₁ > d₂ > d₃` are exactly the three largest squared distance classes. -/
-def HasTopThreeDistanceClasses
+@[expose] def HasTopThreeDistanceClasses
     {K : Type*} [Ring K] [LinearOrder K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) : Prop :=
   d₃ < d₂ ∧ d₂ < d₁ ∧
@@ -193,7 +193,7 @@ theorem hasTopThreeDistanceClasses_of_check
     exact hall e he
 
 /-- Adjacency in the union of the three named largest distance classes. -/
-def TopThreeAdjacent
+@[expose] def TopThreeAdjacent
     {K : Type*} [Ring K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) (i j : Fin n) : Prop :=
   i ≠ j ∧
@@ -201,7 +201,7 @@ def TopThreeAdjacent
       sqDist (P i) (P j) = d₃)
 
 /-- The graph `G(S,3)` for three explicitly identified distance classes. -/
-def topThreeGraph
+@[expose] def topThreeGraph
     {K : Type*} [CommRing K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) : SimpleGraph (Fin n) where
   Adj i j := TopThreeAdjacent P d₁ d₂ d₃ i j
@@ -215,7 +215,7 @@ def topThreeGraph
     exact hii.1 rfl⟩
 
 /-- Vertex degree in `G(S,3)`, executable for exact coordinate fields. -/
-def vertexDegree
+@[expose] def vertexDegree
     {K : Type*} [CommRing K] [DecidableEq K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) (i : Fin n) : ℕ :=
   ((Finset.univ.erase i).filter fun j ↦

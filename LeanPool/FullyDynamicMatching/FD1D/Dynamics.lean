@@ -13,7 +13,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.PotentialBounds
 
 /-! # Dynamics -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -34,12 +34,14 @@ namespace HierarchicalDynamics
 variable {L m : ℕ}
 
 /-- Regard a fixed-total count vector as a leaf inventory. -/
+@[expose]
 def leafInventory (x : InventoryState (DyadicNode L) m) :
     LeafInventory L m where
   count := x.1
   total_count := x.2
 
 /-- Canonical coherent counts associated with a count-chain state. -/
+@[expose]
 def aggregatedInventory (x : InventoryState (DyadicNode L) m) :
     AggregatedInventory L m :=
   (leafInventory x).aggregate
@@ -65,6 +67,7 @@ theorem aggregatedInventory_count
     LeafInventory.nodeCount, leafInventory, hdL]
 
 /-- Leaf deletion probabilities prescribed by the hierarchical policy. -/
+@[expose]
 def deletionRule (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
     DeletionRule (DyadicNode L) m where
   prob x w :=
@@ -94,6 +97,7 @@ def deletionRule (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
   rfl
 
 /-- Delete according to the hierarchical rule, then add a uniform leaf. -/
+@[expose]
 def kernel (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
     FiniteKernel (InventoryState (DyadicNode L) m) :=
   (deletionRule a ha hm).kernel
@@ -321,6 +325,7 @@ theorem deletionMarginal_eq
     (coherent_eq_sum_leafBlock q hdL v).symm
 
 /-- Probability that a uniform arriving leaf lies below a given node. -/
+@[expose]
 def arrivalMarginal {d : ℕ} (hdL : d ≤ L) (v : DyadicNode d) : ℝ :=
   ∑ _w ∈ leafBlock hdL v,
     (1 / Fintype.card (DyadicNode L) : ℝ)
@@ -605,16 +610,19 @@ theorem kernel_expected_nodePotentialChange
 /-! ## Global state observables and exact kernel drift -/
 
 /-- Coherent natural count label of a count-chain state. -/
+@[expose]
 def countLabel (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℕ :=
   (aggregatedInventory x).count
 
 /-- Hierarchical deletion mass at every tree node. -/
+@[expose]
 def deletionLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℝ :=
   HierarchicalPolicy.deletionMass (aggregatedInventory x) a
 
 /-- Extended policy hazard at every tree node. -/
+@[expose]
 def hazardLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℝ :=
   HierarchicalPolicy.hazard (aggregatedInventory x) a
@@ -635,6 +643,7 @@ def stateRemainder (a : ℝ)
   potentialRemainder L a (countLabel x) (deletionLabel a x)
 
 /-- Hazard energy at one level in a count-chain state. -/
+@[expose]
 def stateHazardEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) (d : ℕ) : ℝ :=
   hazardEnergy (hazardLabel a x) d

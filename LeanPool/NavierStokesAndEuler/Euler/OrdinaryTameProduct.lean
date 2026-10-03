@@ -15,7 +15,7 @@ H³ and the high norm has any integer order at least three.  The only
 interpolation input is the integration-by-parts theorem in
 `OrdinaryWordInterpolation`. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

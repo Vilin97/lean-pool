@@ -39,7 +39,7 @@ a theorem about them (`GranvilleMoore.exists_intCast_iteratedFermatQuot` and
 * `GranvilleMoore.collapsedCoeff` — `A_j(m)`.
 -/
 
-@[expose] public section
+public section
 
 namespace GranvilleMoore
 
@@ -53,7 +53,7 @@ open Polynomial
 
 The value is a rational number; that it is in fact an integer for prime `p` is
 `GranvilleMoore.exists_intCast_iteratedFermatQuot`. The recursion is on `j`, uniformly in `k`. -/
-def iteratedFermatQuot (p : ℕ) : ℕ → ℕ → ℤ → ℚ
+@[expose] def iteratedFermatQuot (p : ℕ) : ℕ → ℕ → ℤ → ℚ
   | 0, k, x => (x : ℚ) ^ p ^ k
   | j + 1, k, x =>
       (iteratedFermatQuot p j (k + 1) x - iteratedFermatQuot p j k x) / (p : ℚ) ^ (k + 1)
@@ -75,10 +75,10 @@ theorem iteratedFermatQuot_succ (p j k : ℕ) (x : ℤ) :
 
 /-- The falling `p`-power product `∏_{r<j}(X + p^r)`, whose coefficients are the
 `c_{j,i}(p)` of Granville's paper. The empty product for `j = 0` is `1`. -/
-noncomputable def cPoly (p j : ℕ) : ℤ[X] := ∏ r ∈ Finset.range j, (X + C ((p : ℤ) ^ r))
+@[expose] noncomputable def cPoly (p j : ℕ) : ℤ[X] := ∏ r ∈ Finset.range j, (X + C ((p : ℤ) ^ r))
 
 /-- The coefficient `c_{j,i}(p)` of `X^i` in `∏_{r<j}(X + p^r)`. -/
-noncomputable def cCoeff (p j i : ℕ) : ℤ := (cPoly p j).coeff i
+@[expose] noncomputable def cCoeff (p j i : ℕ) : ℤ := (cPoly p j).coeff i
 
 /-- The empty falling `p`-power product is `1`. -/
 @[simp] theorem cPoly_zero (p : ℕ) : cPoly p 0 = 1 := by simp [cPoly]
@@ -154,6 +154,7 @@ noncomputable def binomPoly (p m : ℕ) : ℚ[X] :=
 
 /-- The coefficient `β_{m,n}` of `z^n` in `B_m`. It vanishes for `n > m`
 (`binomPolyCoeff_eq_zero_of_lt`), so no bound on `n` is built into the definition. -/
+@[expose]
 noncomputable def binomPolyCoeff (p m n : ℕ) : ℚ := (binomPoly p m).coeff n
 
 /-- The empty rescaled binomial polynomial is `1`. -/
@@ -197,6 +198,7 @@ quantities in the master expansion `GranvilleMoore.iteratedFermatQuot_eq_mul_sum
 though the summands are integers. Its content is in `GranvilleMoore.collapsedCoeff_eq_sum`,
 `GranvilleMoore.collapsedCoeff_eq_zero`, `GranvilleMoore.le_padicValRat_collapsedCoeff` and
 `GranvilleMoore.collapsedCoeff_self_eq`. -/
+@[expose]
 noncomputable def collapsedCoeff (p j m : ℕ) : ℚ :=
   ∑ i ∈ Finset.range (j + 1),
     (-1) ^ (j - i) * (cCoeff p j i : ℚ) * ((∑ r ∈ Finset.range i, p ^ r).choose m : ℚ)

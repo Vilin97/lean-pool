@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
 
 /-! Comparison of the actual time profiles and absorption of a finite family at a fixed radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,12 +26,12 @@ open scoped ContDiff
 
 /-- Profile ratio, given by `⟨fun t => g t/b t,g.continuous.div b.continuous (fun t => (hb
 t).ne')⟩`. -/
-def profileRatio {K : Type*} [TopologicalSpace K]
+@[expose] def profileRatio {K : Type*} [TopologicalSpace K]
     (g b : C(K, ℝ)) (hb : ∀ t, 0 < b t) : C(K,ℝ) :=
   ⟨fun t => g t/b t,g.continuous.div b.continuous (fun t => (hb t).ne')⟩
 
 @[simp] theorem profileRatio_apply {K : Type*} [TopologicalSpace K]
-    (g b : C(K, ℝ)) (hb : ∀ t, 0 < b t) (t : K) : profileRatio g b hb t = g t/b t := rfl
+    (g b : C(K, ℝ)) (hb : ∀ t, 0 < b t) (t : K) : profileRatio g b hb t = g t/b t := by rfl
 
 theorem profileRatio_abs_le {K : Type*} [TopologicalSpace K]
     (g b : C(K, ℝ)) (hg : ∀ t, 0 ≤ g t) (hb : ∀ t, 0 < b t)

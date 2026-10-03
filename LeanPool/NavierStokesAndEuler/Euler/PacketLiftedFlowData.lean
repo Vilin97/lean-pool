@@ -42,7 +42,7 @@ section
 /-! The actual lifted time coefficient has simultaneous sup and cylinder
 L² bounds from the genuine approximation and correction time derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,7 +240,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -252,11 +252,11 @@ open Set MeasureTheory EulerAllOrderCorrectionData EulerLiftedGradientSpace Eule
 open scoped ContDiff
 
 /-- Physical input radius, given by `max (liftedInputRadius R ρ) (liftedInputRadius Rt ρ)`. -/
-def physicalInputRadius (R Rt ρ : ℝ) : ℝ :=
+@[expose] def physicalInputRadius (R Rt ρ : ℝ) : ℝ :=
   max (liftedInputRadius R ρ) (liftedInputRadius Rt ρ)
 
 /-- Physical input size, given by `liftedInputConstant P*((C0+Cn)/k+2*Ev)`. -/
-def physicalInputSize (P k C0 Cn Ev : ℝ) [Fact (0 < P)] : ℝ :=
+@[expose] def physicalInputSize (P k C0 Cn Ev : ℝ) [Fact (0 < P)] : ℝ :=
   liftedInputConstant P*((C0+Cn)/k+2*Ev)
 
 theorem envelope_radius_mono {C R S : ℝ} (hC : 0 ≤ C) (hR : 0 ≤ R)
@@ -269,6 +269,7 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {hT : 0 < T} {A : EulerAllOrderCorre
   (B : Budget P hT A) {raw raw_t : VectorField}
 
 /-- Physical flow data as an element of `EulerPhysicalGraphFlowBounds.Data P T`. -/
+@[expose]
 def Budget.physicalFlowData (G : Field P T raw) (H : Field P T raw_t)
     (hGfield : A.approximation = G.toFieldTower) (htime : TimeDerivative hT.le G H)
     (k R Rt ρ C0 Cn Ch Ev Et : ℝ)
@@ -346,7 +347,7 @@ section
 velocity gradient and the Hessian of the constructed scalar potential
 for that same correction. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -363,7 +364,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Weighted physical gradient cost, given by `((1+9*CF)*physicalFixedCost D R CF ρ⁻¹
 1)*(sobolevEmbeddingConstant P 3*Cw)`. -/
-def weightedPhysicalGradientCost (R CF ρ Cw : ℝ) : ℝ :=
+@[expose] def weightedPhysicalGradientCost (R CF ρ Cw : ℝ) : ℝ :=
   ((1+9*CF)*physicalFixedCost D R CF ρ⁻¹ 1)*(sobolevEmbeddingConstant P 3*Cw)
 
 theorem weightedPhysicalGradientCost_nonneg (R CF ρ Cw : ℝ)
@@ -468,7 +469,7 @@ section
 physical point. The slow primary derivative and finite tail contribute
 only a fixed source constant divided by the frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -484,6 +485,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerSpatialCuto
 open scoped ContDiff
 
 /-- Initialized global shear cost as an element of `ℝ`. -/
+@[expose]
 def initializedGlobalShearCost (R H0 C : ℝ) : ℝ :=
   ‖coordinateEquiv.symm.toContinuousLinearMap‖*
       (sobolevEmbeddingConstant period 3*fixedVelocityGradeCost R H0 1*(4*R))*C +
@@ -614,7 +616,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -628,6 +630,7 @@ open EulerSmoothLimit EulerPacketTerminalDatum EulerPacketProfileRecursion
   EulerParameterWordGevrey
 
 /-- Coordinate cost, given by `‖coordinateEquiv.symm.toContinuousLinearMap‖`. -/
+@[expose]
 def coordinateCost : ℝ := ‖coordinateEquiv.symm.toContinuousLinearMap‖
 
 /-- Physical envelope, given by `3*X*((1+18*X^2*X)*(9*X^2*(X+coordinateCost*2*S)+2))`. -/
@@ -646,24 +649,29 @@ def hessianEnvelope (X : ℝ) : ℝ :=
 
 /-- Time envelope, given by `6*EulerPacketRadiusPolynomial.normalEnvelope X *
 (fixedVelocityGradeCost X X 1+fixedVelocityGradeCost X X 2+1)`. -/
-def timeEnvelope (X : ℝ) : ℝ :=
+@[expose] def timeEnvelope (X : ℝ) : ℝ :=
   6*EulerPacketRadiusPolynomial.normalEnvelope X *
     (fixedVelocityGradeCost X X 1+fixedVelocityGradeCost X X 2+1)
 
 /-- Radius envelope, given by `1+coordinateCost*(4*X+4*inverseRadiusEnvelope X)`. -/
+@[expose]
 def radiusEnvelope (X : ℝ) : ℝ := 1+coordinateCost*(4*X+4*inverseRadiusEnvelope X)
 
 /-- Velocity input envelope, given by `liftedInputConstant period*(velocity X X X+normal X X
 X)`. -/
+@[expose]
 def velocityInputEnvelope (X : ℝ) : ℝ := liftedInputConstant period*(velocity X X X+normal X X X)
 /-- Error input envelope, given by `2*liftedInputConstant period*outputEnvelope period X`. -/
+@[expose]
 def errorInputEnvelope (X : ℝ) : ℝ := 2*liftedInputConstant period*outputEnvelope period X
 /-- Time input envelope, given by `2*liftedInputConstant period*(timeEnvelope X+outputEnvelope
 period X)`. -/
+@[expose]
 def timeInputEnvelope (X : ℝ) : ℝ := 2*liftedInputConstant period*(timeEnvelope X+outputEnvelope
     period X)
 /-- Weighted error envelope, given by `(1+9*X)*physicalEnvelope X (4*inverseRadiusEnvelope
 X)*sobolevEmbeddingConstant period 3 * outputEnvelope period X`. -/
+@[expose]
 def weightedErrorEnvelope (X : ℝ) : ℝ :=
   (1+9*X)*physicalEnvelope X (4*inverseRadiusEnvelope X)*sobolevEmbeddingConstant period 3 *
     outputEnvelope period X

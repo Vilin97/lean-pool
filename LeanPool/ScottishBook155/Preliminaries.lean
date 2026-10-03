@@ -16,7 +16,7 @@ This module formalizes the line-segment subdivision argument from the
 preliminaries of `paper1`.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

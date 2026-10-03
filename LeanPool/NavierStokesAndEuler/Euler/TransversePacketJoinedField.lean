@@ -21,7 +21,7 @@ All raw fields are canonical continuous representatives of the constructed
 L² paths. Restriction recovers the actual history and forward solutions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,29 +40,34 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Vector, defined pointwise by `pointField P (velocityPath τ hτ hτT B G) (velocityPath_orbit τ
 hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
+@[expose]
 def vector : VectorField := fun z =>
   pointField P (velocityPath τ hτ hτT B G) (velocityPath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Vector derivative, defined pointwise by `pointField P (derivativePath τ hτ hτT B G)
 (derivativePath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
+@[expose]
 def vectorDerivative : VectorField := fun z =>
   pointField P (derivativePath τ hτ hτT B G) (derivativePath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Scalar, defined pointwise by `scalarPointField P (pressurePath τ hτ hτT B G)
 (pressurePath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
+@[expose]
 def scalar : ScalarField := fun z =>
   scalarPointField P (pressurePath τ hτ hτT B G) (pressurePath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Vector field, bundling `path`, `orbit`, `raw_eq`. -/
+@[expose]
 def vectorField : Field P D.T (vector τ hτ hτT B G) where
   path := velocityPath τ hτ hτT B G
   orbit := velocityPath_orbit τ hτ hτT B G
   raw_eq t x θ := by simp only [vector,Data.clamp_coe]
 
 /-- Vector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
+@[expose]
 def vectorDerivativeField : Field P D.T (vectorDerivative τ hτ hτT B G) where
   path := derivativePath τ hτ hτT B G
   orbit := derivativePath_orbit τ hτ hτT B G
@@ -83,6 +88,7 @@ theorem scalar_eq_pointField (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
         t (x,(θ : AddCircle P)) := by simp only [scalar,Data.clamp_coe]
 
 /-- Scalar gradient field, constructed using `EulerPacketCylinderField.scalarGradientField`. -/
+@[expose]
 def scalarGradientField : Field P D.T (pressureGradient (scalar τ hτ hτT B G)) :=
   EulerPacketCylinderField.scalarGradientField (scalar τ hτ hτT B G)
     (pressurePath τ hτ hτT B G) (pressurePath_orbit τ hτ hτT B G)

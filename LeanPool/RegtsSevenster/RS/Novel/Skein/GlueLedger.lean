@@ -26,7 +26,7 @@ the same on both sides, the chord matching is unchanged, and so is
 the circuit count.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -164,6 +164,7 @@ theorem chordInv_glueOpen_miss
 include hc' hc hni in
 /-- **The used labels are the same** across a glue whose edge the
 subset misses. -/
+@[expose]
 noncomputable def usedLabelGlueMissEquiv :
     {l : SurvivingLabel α i j //
         (W.gluePairOpen i j hij hopen).boundaryFlag l ∈
@@ -331,6 +332,7 @@ theorem boundaryFlagJ_not_mem_of_closed_miss :
 include hij hc' hcF in
 /-- **The used labels are the same** across a closed glue whose edge
 the subset leaves out. -/
+@[expose]
 noncomputable def usedLabelGlueClosedMissEquiv :
     {l : SurvivingLabel α i j //
         (W.gluePairClosed i j hclosed).boundaryFlag l ∈

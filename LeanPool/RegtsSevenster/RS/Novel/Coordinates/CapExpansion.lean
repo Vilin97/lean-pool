@@ -16,7 +16,7 @@ the cap values of the colour basis vectors: linearity through the
 coordinate expansion.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

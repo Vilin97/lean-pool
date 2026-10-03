@@ -23,7 +23,7 @@ section
 /-! One source-dependent radius accommodates the literal terminal wave, the
 primary endpoint solve, all later linear solves, and every recursive grade. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -33,7 +33,7 @@ conclusion `∀ y, A.e' y = chartAt ℂ (F x) y - chartAt ℂ (F x) (F x)` threa
   recentered `chartAt ℂ y₀`; this discharges `resAtP1_trace_eq_sum`'s `hcal` verbatim.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set OpenPartialHomeomorph Metric Function
 open scoped ContDiff Manifold Topology

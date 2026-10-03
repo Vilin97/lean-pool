@@ -24,7 +24,7 @@ the velocity budgets. These are the numerical bounds a selected field is
 compared against.
 -/
 
-@[expose] public section
+public section
 
 section
 

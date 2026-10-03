@@ -15,7 +15,7 @@ This module constructs the pseudometric on the original space whose metric
 separation quotient is the quotient used for the injectivity coordinate.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -24,6 +24,7 @@ open ENNReal lp Metric
 universe u
 
 /-- The distance obtained by allowing a path to jump for free inside `S`. -/
+@[expose]
 noncomputable def collapsedDist {P : Type u} [MetricSpace P] (S : Set P) (x y : P) : ℝ :=
   min (dist x y) (infDist x S + infDist y S)
 
@@ -60,7 +61,7 @@ theorem collapsedDist_triangle {P : Type u} [MetricSpace P] (S : Set P) (x y z :
       linarith
 
 /-- The pseudometric whose separation quotient collapses `S`. -/
-@[implicit_reducible]
+@[implicit_reducible, expose]
 noncomputable def collapsedPseudoMetricSpace {P : Type u} [MetricSpace P] (S : Set P) :
     PseudoMetricSpace P where
   dist := collapsedDist S
@@ -69,6 +70,7 @@ noncomputable def collapsedPseudoMetricSpace {P : Type u} [MetricSpace P] (S : S
   dist_triangle := collapsedDist_triangle S
 
 /-- The metric separation quotient of the collapsed pseudometric. -/
+@[expose]
 noncomputable def CollapsedQuotient (P : Type u) [MetricSpace P] (S : Set P) : Type u :=
   letI := collapsedPseudoMetricSpace S
   SeparationQuotient P
@@ -80,6 +82,7 @@ noncomputable instance {P : Type u} [MetricSpace P] (S : Set P) :
   infer_instance
 
 /-- The canonical map to the collapsed quotient. -/
+@[expose]
 noncomputable def collapseMk {P : Type u} [MetricSpace P] (S : Set P) (x : P) :
     CollapsedQuotient P S := by
   unfold CollapsedQuotient

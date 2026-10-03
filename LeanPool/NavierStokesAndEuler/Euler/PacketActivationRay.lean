@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitialGeometry
 It has unit length and its inverse-transpose transport is exactly the
 prescribed old-frame cross direction, with a positive scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ def activationDirection (F : Space ≃L[ℝ] Space) (n : Space) : Space :=
   unit (F.toContinuousLinearMap.adjoint n)
 
 /-- Activation ray scale, given by `‖F.toContinuousLinearMap.adjoint n‖⁻¹`. -/
-def activationRayScale (F : Space ≃L[ℝ] Space) (n : Space) : ℝ :=
+@[expose] def activationRayScale (F : Space ≃L[ℝ] Space) (n : Space) : ℝ :=
   ‖F.toContinuousLinearMap.adjoint n‖⁻¹
 
 theorem inverse_adjoint_forward_adjoint (F : Space ≃L[ℝ] Space) (n : Space) :

@@ -18,4 +18,4 @@ Tags: quantum-information, nonlocal-games, parallel-repetition, theoretical-comp
 MSC: 81P68, 68Q12
 -/
 
-@[expose] public section
+public section

@@ -32,7 +32,7 @@ harmonic on `ℝ³`, and the whole-space Liouville theorem with local `L^{3/2}`
 linear growth identifies them almost everywhere.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

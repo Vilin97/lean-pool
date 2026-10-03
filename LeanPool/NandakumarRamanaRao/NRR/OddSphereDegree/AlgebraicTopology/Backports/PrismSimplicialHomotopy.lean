@@ -21,7 +21,7 @@ consumed by the backported algebraic prism
 `CategoryTheory.SimplicialObject.Homotopy.toChainHomotopy`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Simplicial Limits AlgebraicTopology SSet
 

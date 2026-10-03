@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.Statement
 The forcing property is monotone in its density threshold.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

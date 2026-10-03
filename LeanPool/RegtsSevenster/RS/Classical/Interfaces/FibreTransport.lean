@@ -24,7 +24,7 @@ monoidal functor) is Mathlib's
 `ExactPairing.ofFaithful`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -40,7 +40,7 @@ an `ExactPairing X Y` in `C` yields an
 with evaluation and coevaluation conjugated
 through the tensorator and unit isomorphisms
 of `F`. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def ExactPairing.map
     [Category C] [Category D] [MonoidalCategory C] [MonoidalCategory D]
     (F : C ⥤ D) [F.Monoidal]

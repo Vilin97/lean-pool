@@ -19,7 +19,7 @@ Key identity: u' = ((1-a)·P⊥v + √μ'·e - √η·P⊥g) + √μ'·ξ
 where u' = auxVarOfState at step(s), and all quantities are computed from s.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

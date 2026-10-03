@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ClassicalPressureCurl
 /-! Joint reflection for arbitrary Hilbert-valued cylinder fields and their actual supported spaces.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Reflection, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain P => -x)
 (EulerCylinderReflection.measurePreserving_reflection P)`. -/
-def reflection : CylinderL2 P V →ₗᵢ[ℝ] CylinderL2 P V :=
+@[expose] def reflection : CylinderL2 P V →ₗᵢ[ℝ] CylinderL2 P V :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain P => -x)
     (EulerCylinderReflection.measurePreserving_reflection P)
 
@@ -73,12 +73,12 @@ theorem representative_of_reflection (u : CylinderL2 P V) (f : LiftDomain P → 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Path reflection, given by `(reflection P).toContinuousLinearMap.compLeftContinuous ℝ K`. -/
-def pathReflection : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
+@[expose] def pathReflection : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
   (reflection P).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathReflection_apply (u : C(K, CylinderL2 P V)) (t : K) :
-    pathReflection P u t = reflection P (u t) := rfl
+    pathReflection P u t = reflection P (u t) := by rfl
 
 end Basic
 
@@ -96,9 +96,10 @@ theorem reflection_fullOperator (A : Space →ᵇ E →L[ℝ] F)
       (EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P A) u),
     EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P A) (reflection P u),
     reflection_ae P u] with x hr hn hf hu
-  change fullOperatorMap P A u (-x) = A (-x.1) (u (-x)) at hn
-  change fullOperatorMap P A (reflection P u) x = A x.1 (reflection P u x) at hf
-  rw [hr,hn,hf,hu,hA]
+  simp only [fullOperatorMap_apply, fieldLift_apply] at hr hn hf ⊢
+  rw [hr,hn,hf,hu]
+  change A (-x.1) _ = A x.1 _
+  rw [hA]
 
 end Coefficients
 
@@ -122,23 +123,24 @@ theorem reflection_mem (u : Supported P V S hS) :
   exact hx ((hSym x.1).mp hn)
 
 /-- Supported reflection as an element of `Supported P V S hS →L[ℝ] Supported P V S hS`. -/
-def supportedReflection : Supported P V S hS →L[ℝ] Supported P V S hS :=
+@[expose] def supportedReflection : Supported P V S hS →L[ℝ] Supported P V S hS :=
   ((reflection P).toContinuousLinearMap.comp (Supported P V S hS).subtypeL).codRestrict
     (Supported P V S hS) (reflection_mem P S hS hSym)
 
 @[simp] theorem supportedReflection_coe (u : Supported P V S hS) :
-    (supportedReflection P S hS hSym u : CylinderL2 P V) = reflection P (u : CylinderL2 P V) := rfl
+    (supportedReflection P S hS hSym u : CylinderL2 P V) = reflection P (u : CylinderL2 P V) := by
+  rfl
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Supported path reflection, given by `(supportedReflection P S hS hSym).compLeftContinuous ℝ
 K`. -/
-def supportedPathReflection : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
+@[expose] def supportedPathReflection : C(K,Supported P V S hS) →L[ℝ] C(K,Supported P V S hS) :=
   (supportedReflection P S hS hSym).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem supportedPathReflection_apply (u : C(K, Supported P V S hS)) (t : K) :
-    supportedPathReflection P S hS hSym u t = supportedReflection P S hS hSym (u t) := rfl
+    supportedPathReflection P S hS hSym u t = supportedReflection P S hS hSym (u t) := by rfl
 
 end Supported
 
@@ -153,7 +155,8 @@ theorem supportedReflection_operator (A : Space →ᵇ E →L[ℝ] F)
     supportedReflection P S hS hSym (supportedOperatorMap P S hS A u) =
       supportedOperatorMap P S hS A (supportedReflection P S hS hSym u) := by
   apply Subtype.ext
-  exact reflection_fullOperator P A hA (u : CylinderL2 P E)
+  simpa only [supportedReflection_coe, supportedOperatorMap_coe] using
+    reflection_fullOperator P A hA (u : CylinderL2 P E)
 
 end SupportedCoefficients
 end EulerCylinderFieldReflection

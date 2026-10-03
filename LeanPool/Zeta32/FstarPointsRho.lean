@@ -12,7 +12,7 @@ public import LeanPool.Zeta32.FstarPointsRho.Ell
 (`FstarPointsRho/Points.lean`, one declaration per point). Generic lemmas:
 `FstarPointsRho/Basic.lean`. -/
 
-@[expose] public section
+public section
 
 namespace Zeta32.Fstar
 

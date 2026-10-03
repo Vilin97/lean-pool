@@ -35,4 +35,4 @@ public import LeanPool.Monlib4.LinearAlgebra.ToMatrixOfEquiv
 Import-only index for the `LinearAlgebra` directory of the monlib4 import.
 -/
 
-@[expose] public section
+public section

@@ -15,7 +15,7 @@ algebraic seven-gate obstruction and the explicit nine-gate construction,
 this closes the `n = 4` theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

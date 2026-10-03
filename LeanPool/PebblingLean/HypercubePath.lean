@@ -21,7 +21,7 @@ distance `d` are joined by a walk of length `d`.  This is the geometric input
 needed for direct delivery in the upper-bound proof.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

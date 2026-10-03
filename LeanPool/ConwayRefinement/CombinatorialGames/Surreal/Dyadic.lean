@@ -35,7 +35,7 @@ the future:
 universe u
 open IGame
 
-@[expose] public section
+public section
 
 namespace Dyadic
 
@@ -278,7 +278,7 @@ termination_by x.den
 decreasing_by dyadic_wf
 
 /-- `Dyadic.toIGame` as an `OrderEmbedding`. -/
-@[simps!]
+@[expose, simps!]
 noncomputable def toIGameEmbedding : Dyadic ↪o IGame :=
   .ofStrictMono toIGame fun _ _ ↦ by exact toIGame_lt_toIGame_aux
 
@@ -562,7 +562,6 @@ rational number.
 
 TODO: it should be possible to compute this value explicitly, given the finsets of `Dyadic`
 rationals corresponding to the left and right moves. -/
-@[no_expose]
 noncomputable def toDyadic (x : IGame) [Short x] [Numeric x] : Dyadic :=
   Classical.choose x.equiv_dyadic
 

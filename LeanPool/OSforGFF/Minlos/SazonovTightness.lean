@@ -32,7 +32,7 @@ spectral decomposition, and Chebyshev inequalities.
 - `sazonov_tight_marginals_apply`: Explicit tightness bound via Gaussian averaging
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Filter Topology Set InnerProductSpace Function
 open scoped Real FourierTransform
@@ -1050,7 +1050,7 @@ theorem sazonov_tightness (φ : H → ℂ) (_hpd : IsPositiveDefinite φ)
   set ε := η / 3 with hε_def
   have hε : 0 < ε := by linarith
   obtain ⟨S, hS_bound⟩ := hsaz ε hε
-  obtain ⟨hpos, ι, b, hsum⟩ := S.traceClass
+  obtain ⟨hpos, ι, b, hsum⟩ := (isPositiveTraceClass_iff S.op).mp S.traceClass
   set T := ∑' i, @inner ℝ H _ (b i) (S.op (b i)) with hT_def
   have hT_nn : 0 ≤ T := by
     apply tsum_nonneg; intro i

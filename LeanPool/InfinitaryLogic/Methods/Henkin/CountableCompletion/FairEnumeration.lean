@@ -23,7 +23,7 @@ The remaining piece (the `HenkinComplete Sstar` acceptance theorem) is the per-f
 it consumes `request_fires_after` plus per-request "what `process` adds" facts.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

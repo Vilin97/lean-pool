@@ -20,7 +20,7 @@ over `[0, 1]` in the unique cube coordinate, identified through the
 ordered cube-sector contribution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

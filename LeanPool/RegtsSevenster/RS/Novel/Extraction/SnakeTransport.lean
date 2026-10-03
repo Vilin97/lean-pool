@@ -26,7 +26,7 @@ via `tensorHom_def'`, and the transported copairing is then pinned
 by `stdCopair_unique`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

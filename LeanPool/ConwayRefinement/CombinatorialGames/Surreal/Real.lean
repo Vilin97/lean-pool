@@ -26,7 +26,7 @@ universe u
 
 open IGame
 
-@[expose] public noncomputable section
+public noncomputable section
 
 theorem exists_dyadic_btwn {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
     [Archimedean K] {x y : K} (h : x < y) : ∃ q : Dyadic, x < q.toRat ∧ q.toRat < y := by
@@ -50,7 +50,7 @@ namespace Real
 
 /-- The canonical map from `ℝ` to `IGame`, sending a real number to its Dedekind cut of dyadic
 rationals. -/
-@[coe, match_pattern] def toIGame (x : ℝ) : IGame.{u} :=
+@[coe, match_pattern, expose] def toIGame (x : ℝ) : IGame.{u} :=
   !{(↑) '' {q : Dyadic | q.toRat < x} | (↑) '' {q : Dyadic | x < q.toRat}}
 
 instance : Coe ℝ IGame := ⟨toIGame⟩
@@ -96,7 +96,7 @@ theorem mem_rightMoves_toIGame_of_lt {q : Dyadic} {x : ℝ} (h : x < q.toRat) :
   simpa
 
 /-- `Real.toIGame` as an `OrderEmbedding`. -/
-@[simps!]
+@[expose, simps!]
 def toIGameEmbedding : ℝ ↪o IGame := by
   refine .ofStrictMono toIGame fun x y h ↦ ?_
   obtain ⟨q, hx, hy⟩ := exists_dyadic_btwn h
@@ -280,7 +280,7 @@ theorem toIGame_sub_equiv (x y : ℝ) : toIGame (x - y) ≈ x - y := by
 /-! ### `ℝ` to `ConwayGame` -/
 
 /-- The canonical map from `ℝ` to `ConwayGame`, sending a real number to its Dedekind cut. -/
-@[coe, match_pattern] def toGame (x : ℝ) : ConwayGame := .mk x
+@[coe, match_pattern, expose] def toGame (x : ℝ) : ConwayGame := .mk x
 
 instance : Coe ℝ ConwayGame := ⟨toGame⟩
 
@@ -293,7 +293,7 @@ theorem toGame_def (x : ℝ) :
   simp [Set.image_image]
 
 /-- `Real.toGame` as an `OrderEmbedding`. -/
-@[simps!]
+@[expose, simps!]
 def toGameEmbedding : ℝ ↪o ConwayGame :=
   .ofStrictMono toGame fun _ _ h ↦ toIGameEmbedding.strictMono h
 
@@ -334,7 +334,7 @@ theorem toGame_sub (x y : ℝ) : toGame (x - y) = toGame x - toGame y := by
   simpa using ConwayGame.mk_eq (toIGame_sub_equiv x y)
 
 /-- `Real.toGame` as an `OrderAddMonoidHom`. -/
-@[simps]
+@[expose, simps]
 def toGameAddHom : ℝ →+o ConwayGame where
   toFun := toGame
   map_zero' := toGame_zero
@@ -344,7 +344,7 @@ def toGameAddHom : ℝ →+o ConwayGame where
 /-! ### `ℝ` to `Surreal` -/
 
 /-- The canonical map from `ℝ` to `Surreal`, sending a real number to its Dedekind cut. -/
-@[coe, match_pattern] def toSurreal (x : ℝ) : Surreal := .mk x
+@[coe, match_pattern, expose] def toSurreal (x : ℝ) : Surreal := .mk x
 
 instance : Coe ℝ Surreal := ⟨toSurreal⟩
 
@@ -366,7 +366,7 @@ theorem toSurreal_def (x : ℝ) : toSurreal x =
   congr! <;> aesop
 
 /-- `Real.toSurreal` as an `OrderEmbedding`. -/
-@[simps!]
+@[expose, simps!]
 def toSurrealEmbedding : ℝ ↪o Surreal :=
   .ofStrictMono toSurreal fun _ _ h ↦ toIGameEmbedding.strictMono h
 
@@ -626,7 +626,7 @@ theorem toSurreal_mul (x y : ℝ) : (x * y).toSurreal = x * y :=
   Surreal.mk_eq (toIGame_mul_equiv x y)
 
 /-- `Real.toSurreal` as an `OrderRingHom`. -/
-@[simps]
+@[expose, simps]
 def toSurrealRingHom : ℝ →+*o Surreal where
   toFun := toSurreal
   map_zero' := toSurreal_zero

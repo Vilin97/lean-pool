@@ -23,4 +23,4 @@ public import LeanPool.Monlib4.LinearAlgebra.Matrix.StarOrderedRing
 Import-only index for the `Matrix` directory of the monlib4 import.
 -/
 
-@[expose] public section
+public section

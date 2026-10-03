@@ -17,7 +17,7 @@ formalization: simple undirected graphs, pebbling distributions, legal pebbling
 moves, reachability, solvability, and optimality.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -51,11 +51,11 @@ namespace Pebbling
 variable {V : Type u}
 
 /-- The total number of pebbles in a finite distribution. -/
-def size [Fintype V] (D : Pebbling V) : ℕ :=
+@[expose] def size [Fintype V] (D : Pebbling V) : ℕ :=
   ∑ v, D v
 
 /-- Pointwise domination of pebbling distributions. -/
-def Dominates (D E : Pebbling V) : Prop :=
+@[expose] def Dominates (D E : Pebbling V) : Prop :=
   ∀ v : V, E v ≤ D v
 
 @[simp]
@@ -72,7 +72,7 @@ theorem le_size [Fintype V] (D : Pebbling V) (v : V) :
 
 /-- The distribution obtained by moving two pebbles from `u` to one pebble at
 `v`. Legality of this operation is recorded separately in `Move`. -/
-def moveDistribution [DecidableEq V] (D : Pebbling V) (u v : V) : Pebbling V :=
+@[expose] def moveDistribution [DecidableEq V] (D : Pebbling V) (u v : V) : Pebbling V :=
   fun x =>
     if x = u then D x - 2
     else if x = v then D x + 1
@@ -110,33 +110,33 @@ theorem moveDistribution_mono [DecidableEq V] {D D' : Pebbling V} {u v : V}
 
 /-- One legal pebbling move: remove two pebbles from `u` and add one pebble to
 an adjacent vertex `v`. -/
-def Move [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
+@[expose] def Move [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
   ∃ u v : V,
     G.Adj u v ∧
       2 ≤ D u ∧
         E = moveDistribution D u v
 
 /-- `E` is reachable from `D` by zero or more pebbling moves. -/
-def Reaches [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
+@[expose] def Reaches [DecidableEq V] (G : Graph V) (D E : Pebbling V) : Prop :=
   Relation.ReflTransGen (Move G) D E
 
 /-- Reach a target with at least `T` pebbles. -/
-def CanReachAtLeast [DecidableEq V] (G : Graph V) (D : Pebbling V) (target : V) (T : ℕ) :
+@[expose] def CanReachAtLeast [DecidableEq V] (G : Graph V) (D : Pebbling V) (target : V) (T : ℕ) :
     Prop :=
   ∃ E : Pebbling V, Reaches G D E ∧ T ≤ E target
 
 /-- A distribution can reach a target if some reachable distribution has at
 least one pebble on that target. -/
-def CanReach [DecidableEq V] (G : Graph V) (D : Pebbling V) (target : V) : Prop :=
+@[expose] def CanReach [DecidableEq V] (G : Graph V) (D : Pebbling V) (target : V) : Prop :=
   CanReachAtLeast G D target 1
 
 /-- A distribution is `T`-solvable if it can move at least `T` pebbles to every
 target. -/
-def SolvableAtLeast [DecidableEq V] (G : Graph V) (D : Pebbling V) (T : ℕ) : Prop :=
+@[expose] def SolvableAtLeast [DecidableEq V] (G : Graph V) (D : Pebbling V) (T : ℕ) : Prop :=
   ∀ target : V, CanReachAtLeast G D target T
 
 /-- A distribution is solvable if it can reach every target vertex. -/
-def Solvable [DecidableEq V] (G : Graph V) (D : Pebbling V) : Prop :=
+@[expose] def Solvable [DecidableEq V] (G : Graph V) (D : Pebbling V) : Prop :=
   SolvableAtLeast G D 1
 
 /-- Reaching demand zero is automatic. -/
@@ -151,7 +151,7 @@ theorem solvableAtLeast_zero [DecidableEq V] (G : Graph V) (D : Pebbling V) :
   exact canReachAtLeast_zero G D target
 
 /-- There is a solvable distribution of total size `k`. -/
-def HasSolvableSize [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
+@[expose] def HasSolvableSize [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
   ∃ D : Pebbling V, size D = k ∧ Solvable G D
 
 /-- There is a `T`-solvable distribution of total size `k`. -/
@@ -160,11 +160,11 @@ def HasSolvableAtLeastSize [Fintype V] [DecidableEq V] (G : Graph V) (T k : ℕ)
 
 /-- There is a `T`-solvable distribution of total size at most `k`.  This is
 the natural form for upper-bound constructions. -/
-def HasSolvableAtMostSize [Fintype V] [DecidableEq V] (G : Graph V) (T k : ℕ) : Prop :=
+@[expose] def HasSolvableAtMostSize [Fintype V] [DecidableEq V] (G : Graph V) (T k : ℕ) : Prop :=
   ∃ D : Pebbling V, size D ≤ k ∧ SolvableAtLeast G D T
 
 /-- Every occupied pile in `D` has size at least `S`. -/
-def MinOccupiedPileSize (D : Pebbling V) (S : ℕ) : Prop :=
+@[expose] def MinOccupiedPileSize (D : Pebbling V) (S : ℕ) : Prop :=
   ∀ v : V, D v ≠ 0 → S ≤ D v
 
 /-- Number of occupied vertices in a finite pebbling distribution. -/
@@ -175,7 +175,7 @@ def supportSize [Fintype V] (D : Pebbling V) : ℕ :=
 a solvable distribution with `k` pebbles, and none with fewer. This avoids
 choosing a numerical value before proving existence for the graph family under
 study. -/
-def IsOptimalNumber [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
+@[expose] def IsOptimalNumber [Fintype V] [DecidableEq V] (G : Graph V) (k : ℕ) : Prop :=
   HasSolvableSize G k ∧ ∀ l : ℕ, l < k → ¬ HasSolvableSize G l
 
 /-- A relational form of the optimal `T`-pebbling number. -/

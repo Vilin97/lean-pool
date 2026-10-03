@@ -38,7 +38,7 @@ Witt algebra, Lie algebra cohomology
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 

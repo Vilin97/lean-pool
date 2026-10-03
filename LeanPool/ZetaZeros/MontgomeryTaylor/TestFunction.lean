@@ -15,7 +15,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 continuous on its support. Every later step rests on these, and none mentions the functional.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

@@ -16,7 +16,7 @@ With the per-component potentials (Poisson) and the `g`-integrals of `kC`, `wC` 
 `2L − W = ℓ` on `[-a, a]`, `2L − W ≤ ℓ` everywhere, and `2I − W = ℓ`, `ℓ = ellA a`, when
 `massA a = 1`. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set Filter
 open scoped Interval

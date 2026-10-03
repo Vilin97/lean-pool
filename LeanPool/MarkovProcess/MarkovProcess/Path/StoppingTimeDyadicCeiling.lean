@@ -19,7 +19,7 @@ infrastructure and proves no restart identity; the restart identity obtained fro
 approximation is in `Trajectory/FellerStoppingRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -31,6 +31,7 @@ namespace MarkovProcess
 section
 
 /-- The level-`n` dyadic ceiling of a nonnegative real time. -/
+@[expose]
 def dyadicCeiling (n : ℕ) (t : NNReal) : NNReal :=
   ⟨(⌈(2 ^ n : ℝ) * (t : ℝ)⌉₊ : ℝ) / 2 ^ n, by positivity⟩
 
@@ -122,9 +123,11 @@ theorem tendsto_dyadicCeiling (t : NNReal) :
     (fun n ↦ le_dyadicCeiling n t) (fun n ↦ dyadicCeiling_le_add n t)
 
 /-- The level-`n` dyadic grid point with index `k`. -/
+@[expose]
 def dyadicGrid (n k : ℕ) : NNReal := ⟨(k : ℝ) / 2 ^ n, by positivity⟩
 
 /-- The grid index of the level-`n` dyadic ceiling. -/
+@[expose]
 def dyadicCeilingIndex (n : ℕ) (t : NNReal) : ℕ :=
   ⌈(2 ^ n : ℝ) * (t : ℝ)⌉₊
 

@@ -53,7 +53,7 @@ associated dimension calculation from Lemma 2.1 are constructed in
 `Nivat.Descent.ExactDescent`, where they enter Theorem 2.2 (`thm:descent`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 

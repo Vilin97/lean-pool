@@ -24,7 +24,7 @@ section
 
 /-! Actual multiplication closure for admissible mean forcing. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -52,7 +52,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

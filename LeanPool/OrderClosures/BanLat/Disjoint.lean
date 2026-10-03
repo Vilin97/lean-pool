@@ -24,7 +24,7 @@ independent over `ℝ`. Finally, in a normed vector lattice, a limit of a
 pairwise-disjoint sequence is forced to be zero.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 open Filter Finset
@@ -37,6 +37,7 @@ variable {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
 
 /-- Two elements of a lattice-ordered group are **disjoint** when
 `|x| ⊓ |y| = 0`. -/
+@[expose]
 def IsVLDisjoint (x y : X) : Prop := |x| ⊓ |y| = 0
 
 omit [IsOrderedAddMonoid X] in

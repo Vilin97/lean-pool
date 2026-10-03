@@ -9,7 +9,7 @@ public import LeanPool.Zeta32.Criterion
 
 /-! Adapted from the Li₂ light-certificate project and mo271/Zeta5; see NOTICE. -/
 
-@[expose] public section
+public section
 open Polynomial
 namespace Zeta32
 

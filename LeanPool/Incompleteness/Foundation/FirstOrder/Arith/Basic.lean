@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -27,7 +27,7 @@ namespace ORingStruc
 variable {α : Type*} [ORingStruc α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def numeral : ℕ → α
+@[expose] def numeral : ℕ → α
   | 0     => 0
   | 1     => 1
   | n + 2 => numeral (n + 1) + 1
@@ -50,7 +50,7 @@ namespace Language
 variable {L : Language} [L.ORing]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def oringEmb : ℒₒᵣ →ᵥ L where
+@[expose] def oringEmb : ℒₒᵣ →ᵥ L where
   func := fun {k} f ↦
     match k, f with
     | _, Zero.zero => Zero.zero
@@ -183,11 +183,11 @@ namespace Semiformula
 variable {L : Language} [L.LT] [L.Zero] [L.One] [L.Add]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ballLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def ballLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := φ.ballLT ‘!!t + 1’
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bexLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
+@[expose] def bexLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
     Semiformula L ξ n := φ.bexLT ‘!!t + 1’
 
 variable {M : Type*} {s : Structure L M} [LT M] [One M] [Add M] [Structure.LT L M]

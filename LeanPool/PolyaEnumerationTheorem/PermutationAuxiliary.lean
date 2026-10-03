@@ -10,7 +10,7 @@ public import Mathlib.GroupTheory.Perm.Cycle.Basic
 # Auxiliary results on permutations
 -/
 
-@[expose] public section
+public section
 
 universe u
 

@@ -18,7 +18,7 @@ the manuscript and derive the zero-wedge structure needed by the low--low
 second-feedback exclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -30,7 +30,7 @@ targets. -/
 abbrev FeedbackCoord := Fin 4 → F₂
 
 /-- Represent feedback coordinates in the target coefficient space. -/
-def feedbackCoeffRep (q : FeedbackCoord) : TargetCoeff :=
+@[expose] def feedbackCoeffRep (q : FeedbackCoord) : TargetCoeff :=
   q 0 • targetBasis 0 + q 1 • targetBasis 1 +
     q 2 • targetBasis 6 + q 3 • rOneCoeff
 
@@ -113,6 +113,7 @@ theorem feedback_wedge_relations {q c : FeedbackCoord}
   exact ⟨h02, h03, h12, h13, h23⟩
 
 /-- The feedback vector lies in the plane of the first two target coefficients. -/
+@[expose]
 def InFirstJetPlane (q : FeedbackCoord) : Prop := q 2 = 0 ∧ q 3 = 0
 
 theorem feedback_dependent_or_firstJetPlane {q c : FeedbackCoord}
@@ -247,6 +248,7 @@ theorem feedback_zero_wedge_structure_of_rows {q c : FeedbackCoord}
   exact feedback_dependent_or_firstJetPlane h02 h03 h12 h13 h23
 
 /-- The second-jet coefficient vector with its two lower-order parameters. -/
+@[expose]
 def secondJetFeedbackCoeff (α β : F₂) : TargetCoeff :=
   targetBasis 2 + α • targetBasis 1 + β • targetBasis 0
 

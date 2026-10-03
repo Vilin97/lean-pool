@@ -21,7 +21,7 @@ section
 flow. Symmetry of the genuine second derivative supplies the mixed-derivative
 identity; no independent strain evolution is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -128,7 +128,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

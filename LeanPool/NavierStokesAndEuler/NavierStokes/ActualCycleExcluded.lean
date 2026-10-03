@@ -18,7 +18,7 @@ covering index, and fast operator. Their bounds are derived from primitive
 state regularity and ordinary cumulative/covariance estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -67,12 +67,14 @@ structure SimilarityData where
 
 /-- Strip, given by `GaugeExcludedBounds.actualStrip (b := d.outer) d.region d.inner_pos
 d.left_pos d.right_pos d.h_pos d.slow d.slow_one`. -/
+@[expose]
 noncomputable def SimilarityData.strip (d : SimilarityData) : StripData Point :=
   GaugeExcludedBounds.actualStrip (b := d.outer) d.region d.inner_pos d.left_pos d.right_pos
     d.h_pos d.slow d.slow_one
 
 /-- Gauge, given by `GaugeExcludedBounds.actualGauge d.h d.inner d.outer d.baseScale
 d.inner_lt_outer d.index`. -/
+@[expose]
 noncomputable def SimilarityData.gauge (d : SimilarityData) : GaugeData TorusInverse.Plane :=
   GaugeExcludedBounds.actualGauge d.h d.inner d.outer d.baseScale d.inner_lt_outer d.index
 

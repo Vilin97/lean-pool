@@ -22,7 +22,7 @@ satisfiable (no hidden vacuity) and that the closure is usable downstream.
 All three MUST be kernel-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.SmokeProbe
 

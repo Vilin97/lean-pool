@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ZFLean.Embeddings`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZFSet
 /-- Imported ZFLean declaration. -/

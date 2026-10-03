@@ -40,7 +40,7 @@ of a real *inner product space* with its complex inner product. This file
 constructs it, kept deliberately elementary and self-contained.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,6 +50,7 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 /-- The **complexification** of a real inner product space `H`, modelled as the
 pair type `H × H`; the pair `(x, y)` represents the formal sum `x + i·y`. -/
+@[expose]
 def Complexification (H : Type*) :
     Type _ := H × H
 
@@ -65,6 +66,7 @@ type `Complexification H` is only type-correct after unfolding `Complexification
 which `simp` and `rw` refuse to do; going through `mk` together with the
 projection lemmas `mk_fst`/`mk_snd` below keeps every goal in this file stated in
 terms the simp set can act on. -/
+@[expose]
 def mk (x y : H) : Complexification H := (x, y)
 
 omit [NormedAddCommGroup H] [InnerProductSpace ℝ H] in
@@ -177,6 +179,7 @@ instance [Nontrivial H] : Nontrivial (Complexification H) :=
   rw [RCLike.real_smul_eq_coe_smul (K := ℂ), smul_snd]; simp
 
 /-- The canonical embedding `x ↦ x + i·0` of `H` into its complexification. -/
+@[expose]
 def ofReal (x : H) : Complexification H := mk x 0
 
 omit [InnerProductSpace ℝ H] in
@@ -200,6 +203,7 @@ omit [InnerProductSpace ℝ H] in
   exact Real.sqrt_sq (norm_nonneg x)
 
 /-- The embedding `ofReal` as a real-linear isometry `H →ₗᵢ[ℝ] Complexification H`. -/
+@[expose]
 def ofRealLi : H →ₗᵢ[ℝ] Complexification H where
   toFun := ofReal
   map_add' x y := by apply Prod.ext <;> simp
@@ -234,12 +238,14 @@ lemma norm_le_add (u : Complexification H) : ‖u‖ ≤ ‖u.1‖ + ‖u.2‖ :
     mul_nonneg (norm_nonneg u.1) (norm_nonneg u.2)]
 
 /-- The real-part projection `(x, y) ↦ x` as an `ℝ`-linear map. -/
+@[expose]
 def fstₗ : Complexification H →ₗ[ℝ] H where
   toFun u := u.1
   map_add' := add_fst
   map_smul' r u := rsmul_fst r u
 
 /-- The real-part projection `(x, y) ↦ x` as a continuous `ℝ`-linear map. -/
+@[expose]
 def fstL : Complexification H →L[ℝ] H :=
   fstₗ.mkContinuous 1 fun u => by rw [one_mul]; exact norm_fst_le u
 
@@ -270,6 +276,7 @@ involution of the complexification. Its set of fixed points is exactly the image
 object descends to the real space. -/
 
 /-- Complex conjugation on the complexification: `(x, y) ↦ (x, -y)`. -/
+@[expose]
 def conj (u : Complexification H) : Complexification H := mk u.1 (-u.2)
 
 omit [InnerProductSpace ℝ H] in
@@ -303,6 +310,7 @@ lemma conj_smul (c : ℂ) (u : Complexification H) :
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp hsq
 
 /-- Conjugation as a real-linear isometry. -/
+@[expose]
 def conjLi : Complexification H →ₗᵢ[ℝ] Complexification H where
   toFun := conj
   map_add' := conj_add
@@ -310,6 +318,7 @@ def conjLi : Complexification H →ₗᵢ[ℝ] Complexification H where
   norm_map' := norm_conj
 
 /-- Conjugation as a continuous `ℝ`-linear map. -/
+@[expose]
 def conjL : Complexification H →L[ℝ] Complexification H := conjLi.toContinuousLinearMap
 
 @[simp] lemma conjL_apply (u : Complexification H) : conjL u = conj u := rfl
@@ -339,6 +348,7 @@ variable {H₁ H₂ : Type*}
   [NormedAddCommGroup H₂] [InnerProductSpace ℝ H₂]
 
 /-- The complexification of `S` as a `ℂ`-linear map, `(x, y) ↦ (S x, S y)`. -/
+@[expose]
 def complexifyₗ (S : H₁ →L[ℝ] H₂) : Complexification H₁ →ₗ[ℂ] Complexification H₂ where
   toFun u := mk (S u.1) (S u.2)
   map_add' u v := by apply Prod.ext <;> simp
@@ -358,6 +368,7 @@ lemma norm_complexifyₗ_le (S : H₁ →L[ℝ] H₂) (u : Complexification H₁
 
 /-- The complexification of a real bounded operator `S`, as a `ℂ`-linear bounded
 operator `(x, y) ↦ (S x, S y)`. -/
+@[expose]
 def complexify (S : H₁ →L[ℝ] H₂) : Complexification H₁ →L[ℂ] Complexification H₂ :=
   (complexifyₗ S).mkContinuous ‖S‖ (norm_complexifyₗ_le S)
 

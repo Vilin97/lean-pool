@@ -16,7 +16,7 @@ bilinear, so the skein category is preadditive and ℂ-linear —
 two of the instance hypotheses of the Deligne package carrier.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

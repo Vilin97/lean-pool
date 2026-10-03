@@ -21,7 +21,7 @@ measures, which suffice for bounded integrability.  This is an analytic identifi
 statement about path space is proved here, and the process itself is built in `Trajectory/`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ProbabilityTheory ZeroAtInfty

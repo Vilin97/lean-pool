@@ -17,7 +17,7 @@ block number and the second coordinate is the permutation rank.  This realizes e
 Fox--Neuwirth symbol by an actual collision-free configuration and is equivariant for relabelling.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -54,6 +54,7 @@ theorem canonicalPoint_injective (c : BarredPermutation p) :
   exact_mod_cast hy
 
 /-- Concrete configuration representing the stratum symbol. -/
+@[expose]
 noncomputable def canonicalConfig (c : BarredPermutation p) : Config p :=
   ⟨c.canonicalPoint, c.canonicalPoint_injective⟩
 

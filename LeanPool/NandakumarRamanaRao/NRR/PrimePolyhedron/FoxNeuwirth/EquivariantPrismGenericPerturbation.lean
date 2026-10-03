@@ -31,7 +31,7 @@ retains half of that margin, while polynomial nonvanishing gives facet regularit
 codimension-two avoidance on every refined prism simplex.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -54,6 +54,7 @@ variable {p : Nat}
 /-! ## A genuinely small generic multivariate perturbation -/
 
 /-- Pointwise coordinate closeness of two finite parameter assignments. -/
+@[expose]
 def AssignmentClose {J : Type*} (a b : J → Real) (eps : Real) : Prop :=
   ∀ j, |a j - b j| < eps
 
@@ -277,6 +278,7 @@ theorem local_regular_and_avoidsCodimTwo_of_generic
 /-- A coordinate witness for a lower bound on the sup norm of every affine value.  For the finite
 function space `Fin p → Real`, this is the concrete form needed to retain a zero-free norm margin
 under coordinatewise perturbation. -/
+@[expose]
 def LocalAffineCoordinateNormMargin
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (m : Real) : Prop :=

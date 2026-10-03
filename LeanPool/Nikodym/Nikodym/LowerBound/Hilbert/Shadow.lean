@@ -18,7 +18,7 @@ Blueprint node H02: for a divisor-closed set `S` of exponent vectors in `N` vari
 `α ↦ α + eᵢ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -31,6 +31,7 @@ noncomputable def layer (S : Set (Fin N → ℕ)) (t : ℕ) : Finset (Fin N → 
   classical exact (Nat.antidiagonalTuple N t).filter (· ∈ S)
 
 /-- Blueprint H02: the number of elements of `S` of total degree `t`. -/
+@[expose]
 noncomputable def layerCard (S : Set (Fin N → ℕ)) (t : ℕ) : ℕ := (layer S t).card
 
 /-- Blueprint H02: membership in a degree layer. -/

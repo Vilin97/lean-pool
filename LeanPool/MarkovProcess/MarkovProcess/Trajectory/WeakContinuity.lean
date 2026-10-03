@@ -41,7 +41,7 @@ Nothing here asserts relative compactness of a family of laws, and no convergenc
 of semigroups is treated.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -183,6 +183,7 @@ theorem IsFellerKernelSemigroup.continuous_integral_continuousProcess
   linarith [htri1, htri2, h1, h2', hxnear]
 
 /-- The law of the continuous-path process, read as a probability measure on path space. -/
+@[expose]
 def IsConservative.pathLaw (x : alpha) : ProbabilityMeasure (ContinuousPath alpha) :=
   ⟨continuousProcess P hP x, inferInstance⟩
 

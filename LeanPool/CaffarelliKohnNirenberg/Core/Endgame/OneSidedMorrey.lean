@@ -26,7 +26,7 @@ small-cell growth coefficient and `B` the total integral; the two enter
 through the two regimes just described.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal
@@ -82,6 +82,7 @@ theorem cylinder_morrey_cell_le
 
 /-- The explicit small-scale plus large-scale constant for the one-sided
 Morrey transfer. -/
+@[expose]
 def oneSidedMorreyBound (P τ ρ₀ : ℝ) (A B : ℝ≥0∞) : ℝ≥0∞ :=
   (A * ENNReal.ofReal ((2 : ℝ) ^ (5 * (1 - P / τ)))) ^ (1 / P : ℝ) +
     ENNReal.ofReal ((ρ₀ / 2) ^ (-(5 * (1 - P / τ) / P))) * B ^ (1 / P : ℝ)

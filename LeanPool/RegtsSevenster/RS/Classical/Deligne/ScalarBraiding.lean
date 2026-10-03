@@ -26,7 +26,7 @@ give the vanishing half of Deligne 1.9 for `𝟙^p ⊕ 1-bar^q` inside any
 ambient category — the engine of the trichotomy 2.9.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -322,6 +322,7 @@ theorem schurKilled_odd_row
 section Sums
 
 /-- `p + 1` biproduct copies of an object. -/
+@[expose]
 noncomputable def sumPow
     [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
     (X : A) : ℕ → A

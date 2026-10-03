@@ -17,7 +17,7 @@ module on the same object, so a decomposition over one algebra
 becomes a decomposition over any algebra under it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

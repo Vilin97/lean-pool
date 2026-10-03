@@ -41,7 +41,7 @@ graph.
 - `BruhatTits.dist_inv_isSimilar`: The distance function is invariant under homothety.
 -/
 
-@[expose] public section
+public section
 
 open Module
 

@@ -26,7 +26,7 @@ count.  Keeping this boundary explicit avoids silently treating arbitrary
 quotients as rank-preserving contractions.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -40,6 +40,7 @@ variable {G : CFGraph.{u}} {H : CFGraph.{v}}
 
 /-- The total directed multiplicity of source edges which stay inside one
 vertex fibre. -/
+@[expose]
 def internalDirectedMultiplicity (c : GraphContractionCertificate G H) : ℤ :=
   ∑ x : G.V, ∑ y : G.V,
     if c.vertexMap x = c.vertexMap y then (numEdges G x y : ℤ) else 0
@@ -51,6 +52,7 @@ def externalDirectedMultiplicity (c : GraphContractionCertificate G H) : ℤ :=
     if c.vertexMap x ≠ c.vertexMap y then (numEdges G x y : ℤ) else 0
 
 /-- The vertices in one contraction fibre. -/
+@[expose]
 def fibreVertices (c : GraphContractionCertificate G H) (target : H.V) :
     Finset G.V :=
   Finset.univ.filter fun x => c.vertexMap x = target
@@ -61,6 +63,7 @@ theorem fibreVertices_nonempty (c : GraphContractionCertificate G H)
   exact ⟨x, by simp [fibreVertices, hx]⟩
 
 /-- The actual induced graph carried by a contraction fibre. -/
+@[expose]
 noncomputable def fibreGraph (c : GraphContractionCertificate G H)
     (hValid : c.Valid) (target : H.V) : CFGraph :=
   inducedSubgraph G (c.fibreVertices target) (c.fibreVertices_nonempty hValid target)

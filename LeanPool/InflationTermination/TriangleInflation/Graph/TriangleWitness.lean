@@ -17,7 +17,7 @@ the ancestral-independence feasible set of the triangle module at every order `t
 1/(16t)` (`triangle_linear_witness`). Everything here is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 

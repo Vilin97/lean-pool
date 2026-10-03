@@ -14,7 +14,7 @@ The slice Sobolev estimate and the nine-component tensor estimate supply
 the estimates proved in `CKN.Pressure.SliceVelocityCube`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

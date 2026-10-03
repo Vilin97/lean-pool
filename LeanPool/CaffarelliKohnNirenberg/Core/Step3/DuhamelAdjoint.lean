@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.SpaceTi
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -150,6 +150,7 @@ private lemma canonical_cutoff_potential_agreement
 /-! The causal heat potential with a divergence-form source. -/
 
 /-- Vector Duhamel potential with the sign convention for the localized divergence equation. -/
+@[expose]
 def duhamelPotential (g : ParabolicPoint → Vec3)
     (h : Fin 3 → ParabolicPoint → Vec3) (z : ParabolicPoint) : Vec3 :=
   fun i =>

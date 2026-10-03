@@ -76,7 +76,7 @@ argument through Mathlib's
 classical `Set.Finite`). Both are flagged in their docstrings.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -182,7 +182,7 @@ theorem updTuple_apply_ne {i j : ι} (U : Set (α i)) (h : j ≠ i) :
 def slice (D : ∀ i, NeighborhoodSystem (α i)) (i : ι) (U : Set (α i)) : Set (Σ i, α i) :=
   iprodNbhd (updTuple D i U)
 
-theorem slice_eq (i : ι) (U : Set (α i)) : slice D i U = iprodNbhd (updTuple D i U) := rfl
+theorem slice_eq (i : ι) (U : Set (α i)) : slice D i U = iprodNbhd (updTuple D i U) := by rfl
 
 /-- A slice has support `⊆ {i}`, hence is a neighbourhood of the product when `U ∈
 𝒟ᵢ`. -/

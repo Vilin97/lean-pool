@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.AnalyticBridge
 Correctness certificates for all possible reports of the Euclidean local trial.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage1E03

@@ -12,7 +12,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.V5.LocalPolicy
 # Feasibility and invariant domain of the v5 local policy
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.LocalPolicy
 

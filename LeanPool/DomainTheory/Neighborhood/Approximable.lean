@@ -65,7 +65,7 @@ classical lemma is `ext_of_toElementMap`, which decides neighbourhood membership
 by `by_cases`
 (`Classical.em`). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -97,6 +97,11 @@ def sSupDirected (V : NeighborhoodSystem α) (S : Set V.Element) (hne : S.Nonemp
   up_mem := by
     rintro Z Z' ⟨a, haS, haZ⟩ hZ' hZZ'
     exact ⟨a, haS, a.up_mem haZ hZ' hZZ'⟩
+
+/-- Membership in a directed union is membership in one of its elements. -/
+theorem mem_sSupDirected (V : NeighborhoodSystem α) (S : Set V.Element) (hne : S.Nonempty)
+    (hdir : ∀ a ∈ S, ∀ b ∈ S, ∃ c ∈ S, a ≤ c ∧ b ≤ c) {Z : Set α} :
+    (V.sSupDirected S hne hdir).mem Z ↔ ∃ s ∈ S, s.mem Z := by rfl
 
 /-- Each member of a directed family approximates the directed union. -/
 theorem le_sSupDirected (V : NeighborhoodSystem α) (S : Set V.Element) (hne : S.Nonempty)
@@ -161,7 +166,7 @@ approximable mapping: `f(x) = {Y ∈ 𝒟₁ ∣ ∃ X ∈ x, X f Y}`. The four 
 Definition 2.1: `master_mem` uses (i); `inter_mem` uses (ii) together with (iii)
 (to pull both
 outputs back along the common input `X ∩ X'`); `up_mem` uses (iii). -/
-def toElementMap (f : ApproximableMap V₀ V₁) (x : V₀.Element) : V₁.Element where
+@[expose] def toElementMap (f : ApproximableMap V₀ V₁) (x : V₀.Element) : V₁.Element where
   mem Y := ∃ X, x.mem X ∧ f.rel X Y
   sub := fun ⟨_, _, hXY⟩ => f.rel_cod hXY
   master_mem := ⟨V₀.master, x.master_mem, f.master_rel⟩
@@ -227,6 +232,7 @@ mappings. -/
 (confined to `𝒟 × 𝒟`). It is approximable: (i) `Δ ⊆ Δ`; (ii) `X ⊆ Y`, `X ⊆ Y'`
 give `X ⊆ Y ∩ Y'`
 with witness `X`; (iii) is transitivity `X' ⊆ X ⊆ Y ⊆ Y'`. -/
+@[expose]
 def idMap (V : NeighborhoodSystem α) : ApproximableMap V V where
   rel X Y := V.mem X ∧ V.mem Y ∧ X ⊆ Y
   rel_dom h := h.1
@@ -251,6 +257,7 @@ witnesses via
 `g.mono`); (iii) narrow
 the input with `f.mono` and widen the output with `g.mono`, keeping the same
 witness. -/
+@[expose]
 def comp (g : ApproximableMap V₁ V₂) (f : ApproximableMap V₀ V₁) : ApproximableMap V₀ V₂ where
   rel X Z := ∃ Y, f.rel X Y ∧ g.rel Y Z
   rel_dom := fun ⟨_, hXY, _⟩ => f.rel_dom hXY
@@ -353,6 +360,7 @@ mapping" is the relation `X f Y ↔ Y ∈ e(↑X)`. The conditions of 2.1 hold b
 sharpening `X' ⊆ X`
 means `↑X ⊑ ↑X'`, so `e(↑X) ⊑ e(↑X')` and the output transports along, then widens
 by `up_mem`. -/
+@[expose]
 def ofIso (e : V₀.Element ≃o V₁.Element) : ApproximableMap V₀ V₁ where
   rel X Y := ∃ hX : V₀.mem X, (e (V₀.principal hX)).mem Y
   rel_dom := by rintro X Y ⟨hX, _⟩; exact hX

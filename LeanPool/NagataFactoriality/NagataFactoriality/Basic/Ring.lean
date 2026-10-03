@@ -16,7 +16,7 @@ public import Mathlib.Tactic
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NagataFactoriality
 

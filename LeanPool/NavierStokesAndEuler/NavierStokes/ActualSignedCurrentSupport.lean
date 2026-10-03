@@ -18,7 +18,7 @@ copy sum as the correction cycle.  Their support implies membership in the
 actual active-label set, before any physical pullback or finite sum.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

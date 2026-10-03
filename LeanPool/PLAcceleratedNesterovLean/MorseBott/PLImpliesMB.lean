@@ -41,7 +41,7 @@ Combining these two gives μ-MB.
   conditions for C² functions", Corollary 2.17.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric
 

@@ -28,7 +28,7 @@ back — become isomorphisms of modules.
   inverse, with roundtrips.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -64,6 +64,7 @@ theorem powSplit_act [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
 
 /-- **The module-level inverse of the merge**: the split bundled
 as a map of modules. -/
+@[expose]
 noncomputable def powMulModInv
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -147,6 +148,7 @@ theorem modTensorSwapMod_modTensorSwapMod
 /-- **The front insertion**: merge a fresh factor onto the front
 of a module power, through the braiding.  This is the `M`-side leg
 of the chain transition `powDelta`. -/
+@[expose]
 noncomputable def powFrontMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -220,6 +222,7 @@ theorem powFrontModInv_powFrontMod
 /-- **The back insertion**: merge a fresh factor onto the back of
 a module power — the bundled merge with a singleton right
 block. -/
+@[expose]
 noncomputable def powBackMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

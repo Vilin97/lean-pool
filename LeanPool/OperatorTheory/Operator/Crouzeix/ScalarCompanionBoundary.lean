@@ -40,7 +40,7 @@ closure and the frontier estimate remain explicit hypotheses.
   sharp reduction stated directly in terms of Plemelj boundary limits.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Set
 

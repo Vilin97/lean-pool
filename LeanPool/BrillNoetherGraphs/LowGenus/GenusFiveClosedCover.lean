@@ -23,7 +23,7 @@ Generated row modules contain data only: certificates, cones, and one checked
 cover tree.  All graph and divisor semantics are proved here once.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveClosedCover
 
@@ -53,6 +53,7 @@ theorem degSpec_ext
   rfl
 
 /-- The affine coordinate reading the length of slot `edge`. -/
+@[expose]
 def coordinateForm (edge : Fin p) : ExplicitPotential.AffineForm p where
   fixedValue := 0
   coefficient := fun coordinate => if coordinate = edge then 1 else 0
@@ -71,6 +72,7 @@ structure CoordinateCell (core : ExplicitPotential.Core n p) where
   cone : List (ExplicitPotential.AffineForm p)
 
 /-- Interpret a cell as the standard explicit-potential certificate. -/
+@[expose]
 def CoordinateCell.certificate {core : ExplicitPotential.Core n p}
     (cell : CoordinateCell core) : CertificateData p n p where
   core := core
@@ -199,6 +201,7 @@ def Valid {core : ExplicitPotential.Core n p}
 
 /-- The Boolean checker for cell coverage, contradiction receipts, and both branches of each
 affine split. -/
+@[expose]
 def check {core : ExplicitPotential.Core n p}
     (cells : List (CoordinateCell core))
     (active : List (ExplicitPotential.AffineForm p)) : CellTree p → Bool
@@ -297,6 +300,7 @@ namespace CompactCellTree
 
 /-- Expand the shared form and receipt indices into a full cell tree, using zero forms and empty
 receipts for invalid indices. -/
+@[expose]
 def decode {p : ℕ}
     (forms : List (ExplicitPotential.AffineForm p))
     (receipts : List Certificate.AffineCover.FarkasData) :
@@ -309,6 +313,7 @@ def decode {p : ℕ}
         (nonnegative.decode forms receipts) (negative.decode forms receipts)
 
 /-- Check a compact tree by decoding its shared tables and checking the resulting cell tree. -/
+@[expose]
 def check {core : ExplicitPotential.Core n p}
     (tree : CompactCellTree) (forms : List (ExplicitPotential.AffineForm p))
     (receipts : List Certificate.AffineCover.FarkasData)

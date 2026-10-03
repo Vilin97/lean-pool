@@ -17,7 +17,7 @@ the negatives of the completed Riesz operator, so measurable derivative
 selection gives representatives of that operator with the correct sign.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal Topology

@@ -23,7 +23,7 @@ a function that preserves logical connectives.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -94,7 +94,7 @@ section «lp_section_2»
 variable {α : Type*} [LogicalConnective α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[match_pattern] def iff (a b : α) := (a ==> b) ⋏ (b ==> a)
+@[expose, match_pattern] def iff (a b : α) := (a ==> b) ⋏ (b ==> a)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:61 " <=> " => LogicalConnective.iff
@@ -199,7 +199,7 @@ instance : HomClass (α →ˡᶜ β) α β where
 variable (f : α →ˡᶜ β) (a b : α)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def id : α →ˡᶜ α where
+@[expose] protected def id : α →ˡᶜ α where
   toTr := id
   map_top' := by simp
   map_bot' := by simp
@@ -211,7 +211,7 @@ protected def id : α →ˡᶜ α where
 @[simp] lemma app_id (a : α) : LogicalConnective.Hom.id a = a := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def comp (g : β →ˡᶜ γ) (f : α →ˡᶜ β) : α →ˡᶜ γ where
+@[expose] def comp (g : β →ˡᶜ γ) (f : α →ˡᶜ β) : α →ˡᶜ γ where
   toTr := g ∘ f
   map_top' := by simp
   map_bot' := by simp
@@ -277,7 +277,7 @@ section «lp_section_4»
 variable {α β : Type*} [LogicalConnective α] [LogicalConnective β]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def conjLt (φ : ℕ → α) : ℕ → α
+@[expose] def conjLt (φ : ℕ → α) : ℕ → α
   | 0     => ⊤
   | k + 1 => φ k ⋏ conjLt φ k
 
@@ -303,7 +303,7 @@ def conjLt (φ : ℕ → α) : ℕ → α
       exact ⟨h k (by simp), fun i hi ↦ h i (Nat.lt_add_right 1 hi)⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def disjLt (φ : ℕ → α) : ℕ → α
+@[expose] def disjLt (φ : ℕ → α) : ℕ → α
   | 0     => ⊥
   | k + 1 => φ k ⋎ disjLt φ k
 
@@ -341,7 +341,7 @@ variable {α : Type*}
 variable [LogicalConnective α] [LogicalConnective β]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def conjVec : {n : ℕ} → (Fin n → α) → α
+@[expose] def conjVec : {n : ℕ} → (Fin n → α) → α
   | 0,     _ => ⊤
   | _ + 1, v => v 0 ⋏ conjVec (vecTail v)
 
@@ -372,7 +372,7 @@ lemma hom_conj₂ [FunLike F α β] [LogicalConnective.HomClass F α β] (f : F)
   hom_conj f v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def disj : {n : ℕ} → (Fin n → α) → α
+@[expose] def disj : {n : ℕ} → (Fin n → α) → α
   | 0,     _ => ⊥
   | _ + 1, v => v 0 ⋎ disj (vecTail v)
 
@@ -414,7 +414,7 @@ section «lp_section_6»
 variable {α : Type*} [LogicalConnective α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def conj : List α → α
+@[expose] def conj : List α → α
   | []      => ⊤
   | a :: as => a ⋏ as.conj
 
@@ -432,7 +432,7 @@ lemma map_conj_append [FunLike F α Prop] [LogicalConnective.HomClass F α Prop]
   induction l₁ <;> induction l₂ <;> aesop;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def disj : List α → α
+@[expose] def disj : List α → α
   | []      => ⊥
   | a :: as => a ⋎ as.disj
 
@@ -457,7 +457,7 @@ variable {F : Type u} [LogicalConnective F]
 variable {φ ψ : F}
 
 /-- Remark: `[φ].conj₂ = φ ≠ φ ⋏ ⊤ = [φ].conj` -/
-def conj₂ : List F → F
+@[expose] def conj₂ : List F → F
 | [] => ⊤
 | [φ] => φ
 | φ :: ψ :: rs => φ ⋏ (ψ :: rs).conj₂
@@ -478,7 +478,7 @@ prefix:80 "⋀" => List.conj₂
   | cons ψ rs => simp [List.conj₂]
 
 /-- Remark: `[φ].disj = φ ≠ φ ⋎ ⊥ = [φ].disj` -/
-def disj₂ : List F → F
+@[expose] def disj₂ : List F → F
 | [] => ⊥
 | [φ] => φ
 | φ :: ψ :: rs => φ ⋎ (ψ :: rs).disj₂
@@ -509,7 +509,7 @@ section «lp_section_8»
 variable [LogicalConnective α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def conj (s : Finset α) : α := s.toList.conj
+@[expose] noncomputable def conj (s : Finset α) : α := s.toList.conj
 
 lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.conj ↔ ∀ a ∈ s, f a := by
@@ -522,7 +522,7 @@ lemma map_conj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.Hom
   aesop
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def disj (s : Finset α) : α := s.toList.disj
+@[expose] noncomputable def disj (s : Finset α) : α := s.toList.disj
 
 lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.disj ↔ ∃ a ∈ s, f a := by

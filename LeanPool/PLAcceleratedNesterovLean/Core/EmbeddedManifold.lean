@@ -33,7 +33,7 @@ structure.
   sub-neighborhood.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

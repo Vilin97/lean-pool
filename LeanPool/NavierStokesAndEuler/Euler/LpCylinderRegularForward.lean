@@ -37,7 +37,7 @@ section
 
 /-! Genuine scalar-profile normalization commutes with bounded linear intertwiners. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -82,7 +82,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,7 +182,11 @@ theorem weighted_solution_translation (a : LiftTangent) (ha : shiftedSet a.1 K �
   rw [he]
   apply ContinuousMap.ext
   intro t
-  rfl
+  simp only [includePath_apply, compLeftContinuous_apply, pathTranslate_apply]
+  change (L ((U.weightedSolution g hg f a₀) t) : CylinderL2 period V) =
+    translate period a (((U.weightedSolution g hg f a₀) t : Supported period V K hK) :
+      CylinderL2 period V)
+  exact EulerLpCylinderTranslation.intoLarger_coe period a K Ω hK hΩ ha _
 
 /-- Normalization preserves the exact local translation identification. -/
 theorem weighted_solution_translation_eventually
@@ -210,7 +214,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -270,16 +274,17 @@ local instance instLpCylinderRegularForward10 : NormedSpace ℝ C(Icc (0 : ℝ) 
     hΩ) := inferInstance
 
 /-- The actual multiplication coefficient on the one fixed supported space. -/
-def coefficientFamily (a : LiftTangent) :
+@[expose] def coefficientFamily (a : LiftTangent) :
     C(Icc (0 : ℝ) T,Supported period V Ω hΩ →L[ℝ] Supported period V Ω hΩ) :=
   liftedOperatorPath period Ω hΩ T (translateCoefficientPath B a.1)
 
 /-- Its homogeneous evolution is constructed, not assumed. -/
+@[expose]
 def evolutionFamily (a : LiftTangent) : Evolution T hT (coefficientFamily period T Ω hΩ B a) :=
   constructedEvolution period Ω hΩ T hT (translateCoefficientPath B a.1)
 
 /-- The genuine profile-normalized forced solution in this fixed space. -/
-def solutionFamily (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
+@[expose] def solutionFamily (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
     (f : C(Icc (0 : ℝ) T, CylinderL2 period V)) (a₀ : CylinderL2 period V) (a : LiftTangent) :
     C(Icc (0 : ℝ) T,Supported period V Ω hΩ) :=
   (evolutionFamily period T hT Ω hΩ B a).weightedSolution g hg

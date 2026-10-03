@@ -14,7 +14,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,7 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A centered nonzero fractional shape theta mellin kernel used in the Odlyzko-bound argument. -/
-noncomputable def centeredNonzeroFractionalShapeThetaMellinKernel
+@[expose] noncomputable def centeredNonzeroFractionalShapeThetaMellinKernel
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ)
     (y : mixedEmbedding.realSpace K) : ℂ :=
   logarithmicMellinWeight K s y *

@@ -17,4 +17,4 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 Import aggregator for the `Covariance` directory.
 -/
 
-@[expose] public section
+public section

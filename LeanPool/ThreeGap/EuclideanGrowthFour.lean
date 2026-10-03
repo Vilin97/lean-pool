@@ -26,7 +26,7 @@ shortest record `r(qₙ₊₄)` cannot lie in the open cone of two others, becau
 (`hbest`, the index difference lies in `(0, qₖ)`) forces `‖r(qₙ₊₄) − vⱼ − vₖ‖ > ‖vₖ‖`. Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 

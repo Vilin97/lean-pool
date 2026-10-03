@@ -21,7 +21,7 @@ The declarations below close `thm:square-extension` and `thm:main`; the interven
 reduction, closed-interior, pointed, and exterior extensions are supplied by `Endgame.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

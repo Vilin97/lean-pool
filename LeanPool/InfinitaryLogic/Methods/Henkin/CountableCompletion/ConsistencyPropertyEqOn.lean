@@ -26,7 +26,7 @@ no general `C6` (a countable `U` cannot close under arbitrary substitution templ
 finiteness** — finiteness belongs to the inseparable-pair instance (commit 4).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

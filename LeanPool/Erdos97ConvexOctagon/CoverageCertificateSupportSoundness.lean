@@ -16,7 +16,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Support lemmas for compact coverage certificates -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

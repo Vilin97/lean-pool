@@ -14,7 +14,7 @@ on which a pressure gradient is characterized, without changing its time
 interval or losing compact containment in the original domain.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open CKN.Foundation.Parabolic

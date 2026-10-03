@@ -16,7 +16,7 @@ the single head is already at the front, and re-inserting it puts
 it back where it was.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

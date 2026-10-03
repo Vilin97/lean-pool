@@ -19,7 +19,7 @@ interior chips as a semibreak divisor, shifts them after deleting a marked
 point, and applies the endpoint/semibreak rank formula four times.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

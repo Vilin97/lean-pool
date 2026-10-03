@@ -21,7 +21,7 @@ the convexity estimate, so it is the Euclidean norm used by the scale
 quantities.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -34,6 +34,7 @@ noncomputable section
 namespace CKN
 
 /-- Tsai's velocity excess `C_tilde` on the one-sided parabolic cylinder. -/
+@[expose]
 noncomputable def tsaiVelocityExcess (u : ParabolicPoint → Vec3)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ (2 : ℕ) *
@@ -42,6 +43,7 @@ noncomputable def tsaiVelocityExcess (u : ParabolicPoint → Vec3)
         (u w - ⨍ y in parabolicCylinder z.1 z.2 r, u y) ^ (3 : ℕ))
 
 /-- Tsai's pressure excess `D_tilde` on the one-sided parabolic cylinder. -/
+@[expose]
 noncomputable def tsaiPressureExcess (p : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r⁻¹ ^ (2 : ℕ) *
@@ -49,13 +51,14 @@ noncomputable def tsaiPressureExcess (p : ParabolicPoint → ℝ)
       |p w - spatialAverage z.1 r w.2 p| ^ (3 / 2 : ℝ))
 
 /-- Tsai's combined excess `φ`. -/
+@[expose]
 noncomputable def tsaiPhi (u : ParabolicPoint → Vec3) (p : ParabolicPoint → ℝ)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   tsaiVelocityExcess u z r ^ (1 / 3 : ℝ) +
     tsaiPressureExcess p z r ^ (2 / 3 : ℝ)
 
 /-- Tsai's drift functional `Ψ`. -/
-noncomputable def tsaiPsi (u : ParabolicPoint → Vec3)
+@[expose] noncomputable def tsaiPsi (u : ParabolicPoint → Vec3)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r * vec3EuclideanNorm (⨍ w in parabolicCylinder z.1 z.2 r, u w)
 

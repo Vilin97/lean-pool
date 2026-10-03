@@ -18,7 +18,7 @@ Collar composition then converts those two one-sided statements into the global 
 condition because the two half-cylinder embeddings have no other horizontal points.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

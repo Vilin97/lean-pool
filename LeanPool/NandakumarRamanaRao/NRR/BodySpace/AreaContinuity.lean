@@ -26,7 +26,7 @@ theorem, with the constant parent indicator as an integrable dominating function
 * `ConvexSubbody.continuous_area` — the area functional is continuous.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open Filter Topology

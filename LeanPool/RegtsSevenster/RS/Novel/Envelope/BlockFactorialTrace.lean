@@ -20,7 +20,7 @@ connection pairing supplies semisimplicity by the trace criterion.
 The Schur and trace-zeta proof remains in `BlockAssembly`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

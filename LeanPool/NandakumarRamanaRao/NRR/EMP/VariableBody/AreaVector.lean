@@ -24,7 +24,7 @@ an equal-area weight assigns to every cell.
 * `continuous_targetArea` — continuity of the average area in the parent subbody.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -34,7 +34,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ} {n : ℕ}
 
 /-- The **area vector** of the variable body `C` for sites `s` and weights `w`: the vector whose
 `i`-th component is the area of the restricted power cell of site `i`. -/
-noncomputable def areaVec
+@[expose] noncomputable def areaVec
     (hA : 0 < A) (C : BodySpace K A)
     (s : Config n) (w : Fin n → ℝ) :
     Fin n → ℝ :=
@@ -42,7 +42,7 @@ noncomputable def areaVec
 
 /-- The **target area** for an equal-area partition of the variable body `C` into `n` cells: the
 average cell area `C.body.area / n`. -/
-noncomputable def targetArea
+@[expose] noncomputable def targetArea
     (C : BodySpace K A) (n : ℕ) : ℝ :=
   C.body.area / (n : ℝ)
 

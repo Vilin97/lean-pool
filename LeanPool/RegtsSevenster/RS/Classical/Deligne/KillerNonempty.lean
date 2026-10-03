@@ -17,7 +17,7 @@ every diagram, so a killed object is killed at some diagram with
 at least one cell.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

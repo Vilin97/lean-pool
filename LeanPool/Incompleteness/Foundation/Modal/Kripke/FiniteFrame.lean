@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
 
 /-! # FiniteFrame -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -37,7 +37,7 @@ def _root_.LO.Modal.Kripke.FrameClass.restrictFinite (C : FrameClass) : FiniteFr
     FiniteFrame | F.toFrame ∈ C }
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Modal.Kripke.FiniteFrameClass.toFrameClass (C : FiniteFrameClass) :
+@[expose] def _root_.LO.Modal.Kripke.FiniteFrameClass.toFrameClass (C : FiniteFrameClass) :
     FrameClass :=
   C.image (·.toFrame)
 
@@ -61,7 +61,7 @@ namespace Formula
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFiniteFrame (F : Kripke.FiniteFrame) (φ : Formula ℕ) := F.toFrame ⊧ φ
+@[expose] def ValidOnFiniteFrame (F : Kripke.FiniteFrame) (φ : Formula ℕ) := F.toFrame ⊧ φ
 
 namespace ValidOnFiniteFrame
 
@@ -103,6 +103,7 @@ end ValidOnFiniteFrame
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ValidOnFiniteFrameClass (C : Kripke.FiniteFrameClass) (φ : Formula ℕ) := C.toFrameClass ⊧ φ
 
 namespace ValidOnFiniteFrameClass

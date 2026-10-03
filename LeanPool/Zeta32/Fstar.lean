@@ -19,7 +19,7 @@ a]` dropped (≥ 0):
 4. `ellA a ≤ −159/100`, `log 3 > 549/500`; the final rational inequality by `linarith`
    (`F ≤ −6.2474 < −6`). No code copied from other repositories. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory
 namespace Zeta32.Fstar

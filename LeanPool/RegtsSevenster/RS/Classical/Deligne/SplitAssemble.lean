@@ -22,7 +22,7 @@ the base entry, in the exact shape of the splitting data of the
 Key Lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ variable {D : Type u}
 
 /-- **The base entry on the carrier**: the base algebra enters
 the degree-zero component at the bottom stage. -/
+@[expose]
 noncomputable def splitOfBase
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -50,6 +51,7 @@ noncomputable def splitOfBase
 
 /-- **The module entry on the carrier**: the module enters the
 degree `+1` component at the bottom stage. -/
+@[expose]
 noncomputable def splitIns
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -66,6 +68,7 @@ noncomputable def splitIns
 /-- **The dual entry on the carrier**: the dual module enters the
 degree `−1` component at the bottom stage, through the arity
 transport identifying the bottom stage of the `−1` line. -/
+@[expose]
 noncomputable def splitIns'
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

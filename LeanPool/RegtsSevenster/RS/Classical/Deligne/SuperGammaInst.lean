@@ -48,7 +48,7 @@ generator `indOf.obj sOdd`, and the three hypotheses are proved.
   the scalar unit as in `RS.ScalarLinear`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -433,6 +433,7 @@ def lineTensorEquiv :
 /-- **The trivialization of the odd square in `SuperVect`**: the
 even component pairs the two odd lines through `lineTensorEquiv`,
 and the odd component is trivial. -/
+@[expose]
 def superOddSquare : stdSuper 0 1 ⊗ stdSuper 0 1 ≅ 𝟙_ SuperVect :=
   let : Subsingleton ((stdSuper 0 1).even ⊗[ℂ] (stdSuper 0 1).even) := by
     infer_instance
@@ -715,6 +716,7 @@ section IndAssembly
 
 /-- **The odd line of the instantiated ambient**: the embedded odd
 generator of the small model. -/
+@[expose]
 def indOddLine : Ind SmallSuperVect := indOf.obj sOdd
 
 /-- **The trivialized odd square of the ambient**: the transported
@@ -747,6 +749,7 @@ form a super-commutative ℂ-algebra under prefixed convolution —
 `RS.superGammaAlgebra` at the odd line `indOddLine`, with the
 ℂ-linear structure installed from the scalar unit of the small
 model as in `RS.ScalarLinear`. -/
+@[expose]
 def superGammaAlgebraInd (R : Ind SmallSuperVect) [MonObj R]
     [IsCommMonObj R] : SuperCommAlgebra :=
   letI := linearOfScalarUnit (indScalarUnit smallScalarUnit)

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 
 /-! Smooth high-regularity approximations converging contractively in the original Sobolev order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open scoped Topology ContDiff NNReal
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Three successive genuine heat smoothing steps. -/
-def heatGainThree (q : ℕ) (v : ℝ≥0) (hv : 0 < v) :
+@[expose] def heatGainThree (q : ℕ) (v : ℝ≥0) (hv : 0 < v) :
     SobolevSpace period q →L[ℝ] SobolevSpace period (q+3) :=
   (heatGain period (q+2) v hv).comp ((heatGain period (q+1) v hv).comp (heatGain period q v hv))
 
@@ -56,7 +56,8 @@ theorem smoothingVariance_tendsto : Filter.Tendsto smoothingVariance Filter.atTo
   simpa only [Real.toNNReal_zero, Function.comp_def, smoothingVariance] using h
 
 /-- An approximation having three extra strong derivatives and an actual C∞ representative. -/
-def smoothApprox (q n : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period (q+3) :=
+@[expose] def smoothApprox (q n : ℕ) :
+    SobolevSpace period q →L[ℝ] SobolevSpace period (q+3) :=
   (sobolevMollifier period (q+3) n).comp
     (heatGainThree period q (smoothingVariance n) (smoothingVariance_pos n))
 
@@ -66,10 +67,8 @@ theorem restrict_smoothApprox {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :
       sobolevMollifier period q n (heatOperator period q
         (smoothingVariance n+(smoothingVariance n+smoothingVariance n)) u) := by
   apply value_injective period
-  change mollify period n (value period (heatGainThree period q (smoothingVariance n)
-      (smoothingVariance_pos n) u)) = _
-  rw [heatGainThree_value]
-  rfl
+  simp only [value_restrictOperator, smoothApprox, ContinuousLinearMap.comp_apply,
+    sobolevMollifier_value, heatGainThree_value, heatOperator_value]
 
 /-- The approximations are contractive at the original Sobolev order. -/
 theorem smoothApprox_bound {q : ℕ} (n : ℕ) (u : SobolevSpace period q) :

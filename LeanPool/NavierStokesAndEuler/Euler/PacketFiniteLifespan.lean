@@ -28,7 +28,7 @@ section
 positive-time Euler solution for its limiting datum. Only the already
 proved common packet interval and actual stability are used. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -125,7 +125,7 @@ open Set Filter EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2F
 open scoped Topology
 
 /-- Initial datum, given by `Stage.initialDataLimit packets le_rfl le_rfl`. -/
-def initialDatum : SmoothL2Field Space := Stage.initialDataLimit packets le_rfl le_rfl
+@[expose] def initialDatum : SmoothL2Field Space := Stage.initialDataLimit packets le_rfl le_rfl
 
 theorem initialDatum_Hm (s : ℕ) :
     Tendsto (fun n => derivativeSum s

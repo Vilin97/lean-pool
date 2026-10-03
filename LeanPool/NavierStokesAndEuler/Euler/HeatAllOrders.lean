@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevSmoothApproximation
 /-! Positive-time Gaussian heat has every actual Sobolev derivative, enabling genuine H∞
 approximations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

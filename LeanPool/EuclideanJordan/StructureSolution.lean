@@ -18,7 +18,7 @@ projections. Named adapters preserve the multiplication, unit and frame data whe
 the shared interface; they introduce no ambient library algebra instance into theorem headers.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan.StructureSolution
 
@@ -33,20 +33,20 @@ theorem mul_smul_comm' (r : ℝ) (a b : J) : a * (r • b) = r • (a * b) :=
 
 /-- **The Jordan multiplication operator** `L_c : y ↦ c * y`, as an `ℝ`-linear map. Its
 `ℝ`-linearity is exactly what the scalar tower buys, and it is what makes `L_c` traceable. -/
-def mulL (c : J) : J →ₗ[ℝ] J :=
+@[expose] def mulL (c : J) : J →ₗ[ℝ] J :=
   _root_.JordanTraceForm.mulL c
 
 @[simp] theorem mulL_apply (c y : J) : mulL c y = c * y := rfl
 
 /-- `L_·` bundled as a linear map in the multiplier, which is what makes `jtr` linear. -/
-def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J :=
+@[expose] def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J :=
   _root_.JordanTraceForm.mulLₗ
 
 @[simp] theorem mulLₗ_apply (a : J) : mulLₗ a = mulL a := rfl
 
 /-- **The Jordan trace functional** `x ↦ tr(L_x)`, as an `ℝ`-linear form. Not normalised: see
 the module docstring. -/
-noncomputable def jtr : J →ₗ[ℝ] ℝ :=
+@[expose] noncomputable def jtr : J →ₗ[ℝ] ℝ :=
   _root_.JordanTraceForm.jtr
 
 @[simp] theorem jtr_apply (x : J) : jtr x = LinearMap.trace ℝ J (mulL x) := rfl
@@ -55,7 +55,7 @@ noncomputable def jtr : J →ₗ[ℝ] ℝ :=
 
 Bilinearity is part of the type. This compatibility definition reuses the standalone
 trace-form construction with the same multiplication operator. -/
-noncomputable def traceForm : J →ₗ[ℝ] J →ₗ[ℝ] ℝ :=
+@[expose] noncomputable def traceForm : J →ₗ[ℝ] J →ₗ[ℝ] ℝ :=
   _root_.JordanTraceForm.traceForm
 
 @[simp] theorem traceForm_apply (x y : J) : traceForm x y = jtr (x * y) := rfl
@@ -237,7 +237,7 @@ def JordanFrame.toFramePeirce {n : ℕ} (F : JordanFrame J n) :
 /-! ## The blocks -/
 
 /-- The `r`-eigenspace of `L_a : x ↦ a ∘ x`, as a submodule. -/
-def eigSub (a : J) (r : ℝ) : Submodule ℝ J :=
+@[expose] def eigSub (a : J) (r : ℝ) : Submodule ℝ J :=
   letI := EuclideanJordanAlgebra.toFramePeirce (J := J)
   _root_.JordanFramePeirce.eigSub a r
 
@@ -255,7 +255,7 @@ theorem blockCoef_comm (i j : Fin n) : blockCoef i j = blockCoef j i :=
 /-- `V_{ij}` before it is pushed through `Sym2`: the joint `blockCoef i j`-eigenspace of `L_{pᵢ}`
 and `L_{pⱼ}`.  On the diagonal this is `J₂(pᵢ) = {x | pᵢ ∘ x = x}`; off it, the joint
 `½`-eigenspace. -/
-def frameBlockRaw (F : JordanFrame J n) (i j : Fin n) : Submodule ℝ J :=
+@[expose] def frameBlockRaw (F : JordanFrame J n) (i j : Fin n) : Submodule ℝ J :=
   letI := EuclideanJordanAlgebra.toFramePeirce (J := J)
   _root_.JordanFramePeirce.frameBlockRaw F.toFramePeirce i j
 
@@ -266,7 +266,7 @@ theorem frameBlockRaw_comm (F : JordanFrame J n) (i j : Fin n) :
 
 /-- **`V_{ij}`**, indexed by unordered pairs.  For `i ≠ j` the joint `½`-eigenspace of `L_{pᵢ}`
 and `L_{pⱼ}`; on the diagonal, `J₂(pᵢ)`. -/
-def frameBlock (F : JordanFrame J n) : Sym2 (Fin n) → Submodule ℝ J :=
+@[expose] def frameBlock (F : JordanFrame J n) : Sym2 (Fin n) → Submodule ℝ J :=
   letI := EuclideanJordanAlgebra.toFramePeirce (J := J)
   _root_.JordanFramePeirce.frameBlock F.toFramePeirce
 

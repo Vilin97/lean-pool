@@ -20,7 +20,7 @@ maps for divisors and firing scripts.  Later vertex-gluing arguments can use
 these maps without choosing a quotient representative.
 -/
 
-@[expose] public section
+public section
 
 open Multiset Finset
 
@@ -30,6 +30,7 @@ universe u v
 
 /-- Map the vertices of the right factor into a wedge, sending its marked
 vertex to the marked vertex on the left. -/
+@[expose]
 def wedgeRightVertex (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : H.V → Sum G.V { b : H.V // b ≠ y } :=
   fun b => if h : b = y then Sum.inl x else Sum.inr ⟨b, h⟩
@@ -108,7 +109,7 @@ abbrev vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
           (wedgeRightVertex G H x y e.1, wedgeRightVertex G H x y e.2)) := rfl
 
 /-- The left factor is included literally in the wedge. -/
-def wedgeLeftVertex (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def wedgeLeftVertex (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : G.V → (vertexWedge G H x y).V := Sum.inl
 
 @[simp] theorem wedgeLeftVertex_apply
@@ -117,19 +118,20 @@ def wedgeLeftVertex (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- A divisor on the wedge obtained by adding a left divisor and a right
 divisor, with the right marked chip placed at the common vertex. -/
-def wedgeAddDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def wedgeAddDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (D : CFDiv G) (E : CFDiv H) :
     CFDiv (vertexWedge G H x y) :=
   Sum.elim (fun a => D a + if a = x then E y else 0) (fun b => E b.1)
 
 /-- Extend a left divisor by zero away from the common vertex. -/
+@[expose]
 def wedgeLiftLeftDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (D : CFDiv G) : CFDiv (vertexWedge G H x y) :=
   wedgeAddDivisor G H x y D 0
 
 /-- Extend a right divisor by zero away from the common vertex, placing its
 marked coefficient at the common vertex. -/
-def wedgeLiftRightDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def wedgeLiftRightDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (E : CFDiv H) : CFDiv (vertexWedge G H x y) :=
   wedgeAddDivisor G H x y 0 E
 
@@ -260,7 +262,7 @@ theorem effective_wedgeLiftLeftDivisor_iff
 
 /-- Glue firing scripts by requiring their values to agree at the identified
 vertex. -/
-def wedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def wedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript G) (τ : firingScript H)
     (_hxy : σ x = τ y) : firingScript (vertexWedge G H x y) :=
   Sum.elim σ (fun b => τ b.1)
@@ -616,6 +618,7 @@ theorem prin_const_script (G : CFGraph.{u}) (c : ℤ) :
   simp [prin]
 
 /-- Add a constant to a firing script.  This changes no principal divisor. -/
+@[expose]
 def shiftScript (G : CFGraph.{u}) (σ : firingScript G) (c : ℤ) :
     firingScript G := fun v => σ v + c
 
@@ -815,13 +818,13 @@ theorem BNExists_vertexWedge_rank_one
   rw [deg_wedgeAddDivisor, hDegD, hDegE]
 
 /-- Restrict a wedge firing script to the left factor. -/
-def restrictLeftWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def restrictLeftWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript (vertexWedge G H x y)) :
     firingScript G := fun a => σ (Sum.inl a)
 
 /-- Restrict a wedge firing script to the right factor, reading the common
 vertex at `y`. -/
-def restrictRightWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
+@[expose] def restrictRightWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript (vertexWedge G H x y)) :
     firingScript H := fun b => σ (wedgeRightVertex G H x y b)
 
@@ -854,6 +857,7 @@ def restrictRightWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
       rw [wedgeRightVertex_unmarked G H x y b.1 b.2]
 
 /-- Add a prescribed integral number of chips at a vertex. -/
+@[expose]
 def chipShift (G : CFGraph.{u}) (D : CFDiv G) (v : G.V) (t : ℤ) : CFDiv G :=
   D + t • oneChip v
 

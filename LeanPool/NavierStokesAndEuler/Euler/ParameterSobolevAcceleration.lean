@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevOperations
 
 /-! Coefficient-only Sobolev costs for the actual acceleration right side. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -23,7 +23,7 @@ open scoped ContDiff
 
 /-- Acceleration block amplitude, given by `3*sobolevCoefficientAmplitude ι q Rc CA *
 (Cf+6*sobolevCoefficientAmplitude ι q Rc CB*Cv)`. -/
-def accelerationBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
+@[expose] def accelerationBlockAmplitude (ι : Type*) [Fintype ι] (q : ℕ)
     (Rc CA CB Cf Cv : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q Rc CA *
     (Cf+6*sobolevCoefficientAmplitude ι q Rc CB*Cv)

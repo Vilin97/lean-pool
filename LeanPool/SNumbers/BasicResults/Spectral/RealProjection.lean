@@ -27,7 +27,7 @@ complexification). Hence `Eℂ` maps the real subspace `range ofReal` into itsel
 a real operator `E` inheriting the two operator-norm bounds.
 -/
 
-@[expose] public section
+public section
 
 open Complexification ContinuousLinearMap
 

@@ -16,7 +16,7 @@ When `C` is a braided (resp. symmetric) monoidal preadditive category, so is
 componentwise braidings of `C`, reindexed by the swap `M.ι × N.ι ↔ N.ι × M.ι`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -17,4 +17,4 @@ public import LeanPool.NagataFactoriality.NagataFactoriality.Applications
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section

@@ -36,7 +36,7 @@ not stay at the Borel level.
 - BorelAnalyticBridge.lean (this kernel)
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -64,7 +64,7 @@ noncomputable def routerOfSetFamily {X : Type u}
 /-! ## Concept Class Definitions -/
 
 /-- Interpolation with a fixed region A. -/
-def interpClassFixed {X : Type u}
+@[expose] def interpClassFixed {X : Type u}
     (C₁ C₂ : ConceptClass X Bool) (A : Set X) : ConceptClass X Bool :=
   {h | ∃ h₁ ∈ C₁, ∃ h₂ ∈ C₂, h = piecewiseConcept A h₁ h₂}
 

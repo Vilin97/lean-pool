@@ -35,7 +35,7 @@ Euclidean space. They bound the full one-sided space-time derivative tensors,
 including time zero, and allow every real decay exponent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,7 +130,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -343,12 +343,14 @@ def pressure (P : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (cutPressure P)
 
 /-- Periodic velocity, constructed using `TimeLocalization.activatedVelocity`. -/
+@[expose]
 def periodicVelocity (A B : VelocityField) : VelocityField :=
   TimeLocalization.activatedVelocity (fun z => SpatialLocalization.periodicVelocity A z +
     PeriodicLocalization.periodize (cutPotential B) z)
 
 /-- Periodic pressure, given by `TimeLocalization.activatedPressure
 (SpatialLocalization.periodicPressure P)`. -/
+@[expose]
 def periodicPressure (P : PressureField) : PressureField :=
   TimeLocalization.activatedPressure (SpatialLocalization.periodicPressure P)
 

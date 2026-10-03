@@ -32,7 +32,7 @@ bijection `{(d-1)-subsets} ≃ {canonical} × Fin d` (uniqueness of the canonica
 freeness for free), giving `card = #canonical * d`.
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits
 

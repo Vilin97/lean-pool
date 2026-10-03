@@ -36,7 +36,7 @@ and for the Wick exponential `exp (B T - T / 2)` (`clarkOcone_wickExp`).  The te
 contract.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -105,6 +105,7 @@ theorem ClarkOconeFamily.IsBrownianOnDeterministic.duality_wienerIntegral
   rfl
 
 /-- The Wiener integral `∫ g dB` as an element of `𝔻₁,₂`. -/
+@[expose]
 noncomputable def wienerIntegralD12 (hB : IsPreBrownianReal B P) (L : ℝ≥0 → StrongDual ℝ W)
     (hL : ∀ t w, B t w = L t w) (hgen : IsWienerGenerated B)
     (g : Lp ℝ 2 nonnegativeLebesgueMeasure) : D12 P :=

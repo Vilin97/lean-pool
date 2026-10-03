@@ -28,7 +28,7 @@ including bit flips, sensitivity, and local sensitivity.
   coordinates simultaneously.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 
@@ -40,7 +40,7 @@ variable {n : ℕ}
 
 /-- Flip the `i`-th bit of an input `x : Fin n → Bool`, leaving all other
 coordinates fixed. -/
-def flipBit (x : Fin n → Bool) (i : Fin n) : Fin n → Bool :=
+@[expose] def flipBit (x : Fin n → Bool) (i : Fin n) : Fin n → Bool :=
   Function.update x i (!x i)
 
 @[simp]
@@ -77,7 +77,7 @@ namespace BoolFun
 
 /-- `f` is sensitive at input `x` in coordinate `i` when flipping bit `i`
 changes the value of `f`. -/
-def sensitiveAt (f : BoolFun n) (x : Fin n → Bool) (i : Fin n) : Prop :=
+@[expose] def sensitiveAt (f : BoolFun n) (x : Fin n → Bool) (i : Fin n) : Prop :=
   f (flipBit x i) ≠ f x
 
 instance (f : BoolFun n) (x : Fin n → Bool) (i : Fin n) :
@@ -86,12 +86,12 @@ instance (f : BoolFun n) (x : Fin n → Bool) (i : Fin n) :
 
 /-- The local sensitivity of `f` at input `x`: number of coordinates `i` at
 which `f` is sensitive. -/
-def localSensitivity (f : BoolFun n) (x : Fin n → Bool) : ℕ :=
+@[expose] def localSensitivity (f : BoolFun n) (x : Fin n → Bool) : ℕ :=
   (Finset.univ.filter fun i => f.sensitiveAt x i).card
 
 /-- The sensitivity of `f`: the maximum of `f.localSensitivity x` over all
 inputs `x`. -/
-noncomputable def sensitivity (f : BoolFun n) : ℕ :=
+@[expose] noncomputable def sensitivity (f : BoolFun n) : ℕ :=
   Finset.univ.sup (fun x => f.localSensitivity x)
 
 /-- The sensitivity of any Boolean function on `n` variables is at most `n`. -/

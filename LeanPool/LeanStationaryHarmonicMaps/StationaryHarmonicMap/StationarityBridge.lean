@@ -20,7 +20,7 @@ compactly supported `CÂ¹` tests. It bridges to the custom `WeakStationaryIn Du Î
 interface used by the proved monotonicity theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

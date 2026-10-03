@@ -17,7 +17,7 @@ The complement of an isomorphism-invariant class of coded structures is again in
 elementary lemma is the only closure property needed by the retained López–Escobar branch.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

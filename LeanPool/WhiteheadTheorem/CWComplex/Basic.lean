@@ -16,7 +16,7 @@ public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.CWComplex.Basic`.
 -/
 
-@[expose] public section
+public section
 
 /-!
 # CW-complexes
@@ -80,7 +80,7 @@ namespace AttachCells
 
 /-- The inclusion map from `X` to `X'`, given that `X'` is obtained from `X` by attaching
 `(n + 1)`-disks -/
-noncomputable def incl (att : AttachCells n X X') : X ⟶ X' :=
+@[expose] noncomputable def incl (att : AttachCells n X X') : X ⟶ X' :=
   Limits.pushout.inl (Limits.Sigma.desc att.attachMaps)
     (Limits.Sigma.map fun _ ↦ diskBoundaryIncl n) ≫ att.isoPushout.inv
 
@@ -118,7 +118,7 @@ end AttachCells
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton) to `sk (n + 1)` (i.e., the
 $n$-skeleton) of a relative CW-complex -/
-noncomputable def skInclSucc (X : RelCWComplex) (n : ℕ) : X.sk n ⟶ X.sk (n + 1) :=
+@[expose] noncomputable def skInclSucc (X : RelCWComplex) (n : ℕ) : X.sk n ⟶ X.sk (n + 1) :=
   (X.attachCells n).incl
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton) to `sk m` (i.e., the
@@ -128,7 +128,7 @@ noncomputable def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤
   (Functor.ofSequence X.skInclSucc).map (homOfLE hnm)
 
 /-- The topology on a relative CW-complex -/
-noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
+@[expose] noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
   Limits.colimit (Functor.ofSequence X.skInclSucc)
 
 noncomputable instance : Coe RelCWComplex TopCat where
@@ -138,7 +138,7 @@ noncomputable instance : Coe CWComplex TopCat where
   coe X := toTopCat X.toRelCWComplex
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton of `X`) to `X` -/
-noncomputable def skIncl (X : RelCWComplex.{u}) (n : ℕ) : X.sk n ⟶ X :=
+@[expose] noncomputable def skIncl (X : RelCWComplex.{u}) (n : ℕ) : X.sk n ⟶ X :=
   Limits.colimit.ι (Functor.ofSequence _) n
 
 @[simp]

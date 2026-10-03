@@ -19,7 +19,7 @@ equivalence and records the one-vector inner-product identities used by
 downstream quantum graph files.
 -/
 
-@[expose] public section
+public section
 
 /-- The `Upsilon` equivalence viewed through the tensor-product bimodule map API. -/
 noncomputable abbrev PhiMap {A B : Type*} [starAlgebra B] [starAlgebra A] [QuantumSet A]

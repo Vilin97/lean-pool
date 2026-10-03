@@ -20,7 +20,7 @@ triangle. It also proves the exact rational separator that excludes an internal 
 primitive on the matching branch of the endpoint failure tree.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -282,14 +282,14 @@ theorem redRootEdgeBlueTrianglePacking_totalRadius
         ring
 
 /-- Cross reach from the red root to a labelled blue triangle ball. -/
-def redRootBlueTriangleReach (configuration : SixPointConfiguration)
+@[expose] def redRootBlueTriangleReach (configuration : SixPointConfiguration)
     (label : SixPointLabel) : ℝ :=
   dist (configuration .red .root) (configuration .blue label) +
     canonicalTriangleRadius (configuration .blue .root) (configuration .blue .left)
       (configuration .blue .right) label
 
 /-- Cross reach from a red child to a labelled blue triangle ball. -/
-def redChildBlueTriangleReach (configuration : SixPointConfiguration)
+@[expose] def redChildBlueTriangleReach (configuration : SixPointConfiguration)
     (redLabel blueLabel : SixPointLabel) : ℝ :=
   dist (configuration .red redLabel) (configuration .blue blueLabel) +
     canonicalTriangleRadius (configuration .blue .root) (configuration .blue .left)
@@ -562,14 +562,14 @@ theorem blueRootEdgeRedTrianglePacking_totalRadius
         ring
 
 /-- Cross reach from the blue root to a labelled red triangle ball. -/
-def blueRootRedTriangleReach (configuration : SixPointConfiguration)
+@[expose] def blueRootRedTriangleReach (configuration : SixPointConfiguration)
     (label : SixPointLabel) : ℝ :=
   dist (configuration .blue .root) (configuration .red label) +
     canonicalTriangleRadius (configuration .red .root) (configuration .red .left)
       (configuration .red .right) label
 
 /-- Cross reach from a blue child to a labelled red triangle ball. -/
-def blueChildRedTriangleReach (configuration : SixPointConfiguration)
+@[expose] def blueChildRedTriangleReach (configuration : SixPointConfiguration)
     (blueLabel redLabel : SixPointLabel) : ℝ :=
   dist (configuration .blue blueLabel) (configuration .red redLabel) +
     canonicalTriangleRadius (configuration .red .root) (configuration .red .left)
@@ -1060,23 +1060,23 @@ theorem rootEdge_internal_expanded_lt {E : Type*} [NormedAddCommGroup E]
   nlinarith [rootEdge_internal_polynomial_lt]
 
 /-- Failure slack for the diagonal four-child matching. -/
-def matchingFailureSlack (c L M B₁₁ B₂₂ : ℝ) : ℝ :=
+@[expose] def matchingFailureSlack (c L M B₁₁ B₂₂ : ℝ) : ℝ :=
   B₁₁ + B₂₂ - (2 * c - 1) * (L + M)
 
 /-- Failure slack for the red coincident endpoint on the first matching edge. -/
-def redEndpointFailureSlack (c L M b₁ b₂ B₁₁ : ℝ) : ℝ :=
+@[expose] def redEndpointFailureSlack (c L M b₁ b₂ B₁₁ : ℝ) : ℝ :=
   L - 1 + B₁₁ + (b₁ + M - b₂) / 2 - c * (L + (b₁ + b₂ + M) / 2)
 
 /-- Internal failure slack for the red root--second-child edge. -/
-def redRootEdgeInternalSlack (c M r₂ b₁ b₂ : ℝ) : ℝ :=
+@[expose] def redRootEdgeInternalSlack (c M r₂ b₁ b₂ : ℝ) : ℝ :=
   2 * M - c * (r₂ + (b₁ + b₂ + M) / 2)
 
 /-- Failure slack for the blue coincident endpoint on the first matching edge. -/
-def blueEndpointFailureSlack (c L M r₁ r₂ B₁₁ : ℝ) : ℝ :=
+@[expose] def blueEndpointFailureSlack (c L M r₁ r₂ B₁₁ : ℝ) : ℝ :=
   M - 1 + B₁₁ + (r₁ + L - r₂) / 2 - c * (M + (r₁ + r₂ + L) / 2)
 
 /-- Internal failure slack for the blue root--second-child edge. -/
-def blueRootEdgeInternalSlack (c L b₂ r₁ r₂ : ℝ) : ℝ :=
+@[expose] def blueRootEdgeInternalSlack (c L b₂ r₁ r₂ : ℝ) : ℝ :=
   2 * L - c * (b₂ + (r₁ + r₂ + L) / 2)
 
 /-- The internal root-edge slack has a strictly negative positive separator. -/

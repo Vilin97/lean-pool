@@ -19,7 +19,7 @@ restriction to any event measurable with respect to the conditioning variable.
 No stochastic process or Markov property is asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

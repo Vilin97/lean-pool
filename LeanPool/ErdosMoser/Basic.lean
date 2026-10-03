@@ -24,7 +24,7 @@ establishes the elementary upper bound on their sum of squares in terms of
 their largest element.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ErdosMoser
 
@@ -32,7 +32,7 @@ open Finset
 
 /-- A finite set has distinct subset sums if the subset-sum map on its powerset
 is injective. -/
-def HasDistinctSubsetSums (A : Finset ℕ) : Prop :=
+@[expose] def HasDistinctSubsetSums (A : Finset ℕ) : Prop :=
   ∀ S ∈ A.powerset, ∀ T ∈ A.powerset, S.sum id = T.sum id → S = T
 
 /-- The powerset of a finite set has cardinality `2 ^ A.card`. -/

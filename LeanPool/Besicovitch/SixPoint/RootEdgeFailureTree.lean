@@ -17,19 +17,19 @@ the opposite children. This file connects their geometric packings to the root--
 records the elementary reductions shared by the two color directions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace LeanPool.Besicovitch
 
 /-- The endpoint diameter target for the red root--second-child support. -/
-def redRootEdgeTarget (configuration : SixPointConfiguration) : ℝ :=
+@[expose] def redRootEdgeTarget (configuration : SixPointConfiguration) : ℝ :=
   barC * (dist (configuration .red .root) (configuration .red .right) +
     rootedTriangleTotalRadius configuration .blue)
 
 /-- The endpoint diameter target for the blue root--second-child support. -/
-def blueRootEdgeTarget (configuration : SixPointConfiguration) : ℝ :=
+@[expose] def blueRootEdgeTarget (configuration : SixPointConfiguration) : ℝ :=
   barC * (dist (configuration .blue .root) (configuration .blue .right) +
     rootedTriangleTotalRadius configuration .red)
 
@@ -98,14 +98,14 @@ theorem blueRootEdgePackingAtEndpoint_score_nonnegative
   simpa [blueRootEdgeTarget, rootedTriangleTotalRadius, mul_comm] using hdiameter
 
 /-- Every feasible split of support `57` has negative score. -/
-def RedRootEdgeFails (configuration : SixPointConfiguration)
+@[expose] def RedRootEdgeFails (configuration : SixPointConfiguration)
     (h : configuration.IsAdmissibleAt barS) : Prop :=
   ∀ (x : ℝ) (hxZero : 0 ≤ x)
     (hxEdge : x ≤ dist (configuration .red .root) (configuration .red .right)),
     (redRootEdgePackingAtEndpoint configuration h x hxZero hxEdge).score barS < 0
 
 /-- Every feasible split of support `75` has negative score. -/
-def BlueRootEdgeFails (configuration : SixPointConfiguration)
+@[expose] def BlueRootEdgeFails (configuration : SixPointConfiguration)
     (h : configuration.IsAdmissibleAt barS) : Prop :=
   ∀ (x : ℝ) (hxZero : 0 ≤ x)
     (hxEdge : x ≤ dist (configuration .blue .root) (configuration .blue .right)),

@@ -17,7 +17,7 @@ Defines the core data structures for the VML steady state problem:
 - `VMLInput`: minimal physical input for the steady state problem
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

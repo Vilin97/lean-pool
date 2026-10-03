@@ -30,7 +30,7 @@ We import `Pdl.Uniformity` and not `Pdl.ClusterInterpolation`, because the latte
 are the copies in the `Uniformity` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

@@ -18,7 +18,7 @@ argument.  They converge to the original vector and never increase pairwise
 distance.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -28,6 +28,7 @@ universe u
 
 
 /-- Keep exactly the coordinates in a finite set. -/
+@[expose]
 noncomputable def lpTruncation {ι : Type u} (s : Finset ι) (f : ℓ^1(ι, ℝ)) :
     ℓ^1(ι, ℝ) := by
   classical
@@ -97,6 +98,7 @@ theorem lpTruncation_tendsto {ι : Type u} (f : ℓ^1(ι, ℝ)) :
     (lp.hasSum_single (E := fun _ : ι => ℝ) (p := (1 : ℝ≥0∞)) (by simp) f)
 
 /-- Restrict an l-one vector to an arbitrary set of coordinates. -/
+@[expose]
 noncomputable def lpSetTruncation {ι : Type u} (A : Set ι) (f : ℓ^1(ι, ℝ)) :
     ℓ^1(ι, ℝ) :=
   ⟨A.indicator f, f.2.mono' fun i => by
@@ -115,12 +117,14 @@ variable {M : Type*}
 abbrev L1ExtensionSpace (M : Type*) (ι : Type u) := WithLp 1 (M × ℓ^1(ι, ℝ))
 
 /-- Leave the first summand fixed and truncate the l-one coordinates. -/
+@[expose]
 noncomputable def l1ExtensionTruncation {ι : Type u} (s : Finset ι)
     (x : L1ExtensionSpace M ι) : L1ExtensionSpace M ι :=
   WithLp.toLp 1 (x.fst, lpTruncation s x.snd)
 
 /-- Leave the first summand fixed and restrict the l-one tail to an arbitrary
 set of coordinates. -/
+@[expose]
 noncomputable def l1ExtensionSetTruncation {ι : Type u} (A : Set ι)
     (x : L1ExtensionSpace M ι) : L1ExtensionSpace M ι :=
   WithLp.toLp 1 (x.fst, lpSetTruncation A x.snd)

@@ -30,7 +30,7 @@ The proof works throughout with Lebesgue integrals in `ℝ≥0∞`; measurabilit
 the input function and of its image under `T` are explicit hypotheses.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -425,6 +425,7 @@ private lemma weighted_low_integral {N : Vec3 → ℝ≥0∞} (hN : Measurable N
 
 /-- The `ℝ≥0∞`-valued modulus of a real function; it converts the real-valued
 weak- and strong-type hypotheses into inequalities between Lebesgue integrals. -/
+@[expose]
 def absE (f : Vec3 → ℝ) : Vec3 → ℝ≥0∞ := fun x ↦ ENNReal.ofReal |f x|
 
 private lemma absE_apply (f : Vec3 → ℝ) (x : Vec3) : absE f x = ENNReal.ofReal |f x| :=
@@ -714,11 +715,13 @@ lemma interp_integrand {A₁ A₂ p t : ℝ} (hA₁ : 0 ≤ A₁) (hp1 : 1 < p) 
 
 /-- The high-frequency tail integral `∫_{N > t/2} N`, viewed as a function of the
 level `t`. -/
+@[expose]
 def highTail (N : Vec3 → ℝ≥0∞) (t : ℝ) : ℝ≥0∞ :=
   ∫⁻ x in N ⁻¹' Ioi (ENNReal.ofReal (t / 2)), N x
 
 /-- The low-frequency tail integral `∫_{N ≤ t/2} N ^ 2`, viewed as a function of the
 level `t`. -/
+@[expose]
 def lowTail (N : Vec3 → ℝ≥0∞) (t : ℝ) : ℝ≥0∞ :=
   ∫⁻ x in N ⁻¹' Iic (ENNReal.ofReal (t / 2)), N x ^ 2
 

@@ -18,7 +18,7 @@ coherent forward embeddings and backward projections, and the fixed-band
 recovery identity between every two stages.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

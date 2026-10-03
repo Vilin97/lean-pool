@@ -16,7 +16,7 @@ surjective onto `1 - U`'s complement, giving the inverse construction used to
 recover the self-adjoint operator from its unitary Cayley transform.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

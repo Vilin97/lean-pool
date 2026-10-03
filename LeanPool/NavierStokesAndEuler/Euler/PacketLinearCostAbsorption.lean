@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGradeAbsorption
 
 /-! A single spare shift absorbs every fixed linear-operator amplitude at the same radius. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerGevrey

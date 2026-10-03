@@ -37,7 +37,7 @@ The proof follows Steps 1–6 of §4.4.5:
 - `gaussianFreeField_satisfies_OS4`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex
 open scoped Real BigOperators SchwartzMap
@@ -218,7 +218,8 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
     simp only [euclideanAction, SchwartzMap.compCLM_apply,
                Function.comp_apply, euclideanPullback, act]
     simp only [QFT.inv_R, QFT.inv_t, LinearIsometry_inv_one, LinearIsometry.one_apply]
-    rfl
+    simp only [T_a_gC, gC, toComplex_apply, SchwartzMap.translate_apply,
+      sub_eq_add_neg]
   have h_transl : GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) T_a_gC =
                   GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) gC := by
     rw [h_transl_eq]
@@ -525,7 +526,7 @@ lemma timeShiftConst_norm (s : ℝ) : ‖TimeTranslation.timeShiftConst s‖ = |
 /-- Time translation of Schwartz function at a point equals function evaluated at shifted point. -/
 lemma timeTranslationSchwartzℂ_at_point (s : ℝ) (g : TestFunctionℂ) (y : SpaceTime) :
     TimeTranslation.timeTranslationSchwartzℂ s g y = g (TimeTranslation.timeShift s y) := by
-  rfl
+  exact TimeTranslation.timeTranslationSchwartzℂ_apply s g y
 
 /-- Time shift by s equals adding the time shift constant. -/
 lemma timeShift_eq_add (s : ℝ) (y : SpaceTime) :

@@ -41,7 +41,7 @@ feeding the caps into the twin-incidence total against the degree-excess ledger
   `9·(deg u + deg v) ≤ n + 56`) discharging the last moat-provenance hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

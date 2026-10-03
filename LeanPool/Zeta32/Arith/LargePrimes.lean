@@ -14,7 +14,7 @@ have degree
 normalizer
 `S_n^{3n}/F_n` is a `p`-adic unit. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 namespace Zeta32.Outer

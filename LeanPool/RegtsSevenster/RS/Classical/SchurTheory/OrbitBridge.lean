@@ -15,7 +15,7 @@ The multiset of orbit sizes of a permutation `π : Equiv.Perm (Fin n)` equals
 its cycle type plus singleton fixed-point orbits.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

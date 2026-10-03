@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.Statement
 This file records exactly the metric assumptions in the finite six-point problem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Besicovitch
 
@@ -47,6 +47,7 @@ abbrev SixPointConfiguration := SixPointColor → SixPointLabel → (EuclideanSp
 namespace SixPointConfiguration
 
 /-- The labelled configuration determined by two roots and two children of each color. -/
+@[expose]
 def ofPoints (redRoot redLeft redRight blueRoot blueLeft blueRight : (EuclideanSpace ℝ (Fin 2))) :
     SixPointConfiguration
   | .red, .root => redRoot

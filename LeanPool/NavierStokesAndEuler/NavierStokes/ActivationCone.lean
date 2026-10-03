@@ -20,7 +20,7 @@ In particular, none of their constants involves the inverse of the retained
 damping parameter. The later results use the constructed activation fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -337,8 +337,10 @@ theorem normalizedConeGap_edge_positive {r : ℝ} (hr : r ≠ 0) (v dP dv dJ : �
   positivity
 
 /-- The actual cone coordinates formed from two stock coordinates and a shear ratio. -/
+@[expose]
 noncomputable def stockProjection (p q t : ℝ) : ℝ := p + q * t
 /-- Stock cross, given by `q - p * t`. -/
+@[expose]
 noncomputable def stockCross (p q t : ℝ) : ℝ := q - p * t
 
 /-- Projection error, given by `dA + dB * (B / A) * (1 + z * dR) + (B ^ 2 / A) * dR`. -/
@@ -459,33 +461,33 @@ theorem shearSize_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0
 
 /-- Activated stock one, given by `ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
 (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))`. -/
-noncomputable def activatedStockOne (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedStockOne (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field :=
   ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
 /-- Activated stock two, constructed using `ActivationStocks.logViewTwo`. -/
-noncomputable def activatedStockTwo (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedStockTwo (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field :=
   ActivationStocks.logViewTwo h X0 (activatedAngular T κ L) (controlled T κ U)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
 /-- Activated projection, defined pointwise by `stockProjection (activatedStockOne h X0 initial
 L U T κ p) (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
-noncomputable def activatedProjection (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedProjection (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field := fun p =>
   stockProjection (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
 /-- Activated cross, defined pointwise by `stockCross (activatedStockOne h X0 initial L U T κ p)
 (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
-noncomputable def activatedCross (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedCross (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) : Field := fun p =>
   stockCross (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
 /-- Activated stress as an element of `ℝ × ℝ`. -/
-noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
+@[expose] noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (L U : Field) (T κ : ℝ) (p : Point) : ℝ × ℝ :=
   (activatedAngular T κ L p * (activatedStockOne h X0 initial L U T κ p - actualP1 T κ L p),
     activatedAngular T κ L p * (activatedStockTwo h X0 initial L U T κ p - actualP2 T κ X0 L U p))

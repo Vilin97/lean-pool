@@ -19,7 +19,7 @@ uses Fréchet derivatives on an open lifted strip; the graph operators are
 instantiated from `CorrectionState.Context.operators`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.LiftedMeanResidual
@@ -33,6 +33,7 @@ variable {D E : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Cylinder, given by `U ×ˢ univ`. -/
+@[expose]
 noncomputable def cylinder (U : Set D) : Set (D × ℝ) := U ×ˢ univ
 
 omit [NormedSpace ℝ D] in
@@ -128,6 +129,7 @@ theorem parameterIntegral_smooth [CompleteSpace E] {U : Set D} (hU : IsOpen U)
   contDiffOn_infty.mpr (fun m => parameterIntegral_smooth_nat hU m hf a b)
 
 /-- Period, given by `2 * Real.pi`. -/
+@[expose]
 noncomputable def period : ℝ := 2 * Real.pi
 
 theorem period_ne : period ≠ 0 := mul_ne_zero (by norm_num) Real.pi_ne_zero
@@ -137,12 +139,14 @@ noncomputable def avg (f : D × ℝ → ℝ) (x : D) : ℝ :=
   (∫ θ in (0 : ℝ)..period, f (x, θ)) / period
 
 /-- Lift direction, given by `(V p.1, 0)`. -/
-noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
+@[expose] noncomputable def liftDirection (V : D → D) (p : D × ℝ) : D × ℝ := (V p.1, 0)
 
 /-- Angular direction, given by `(0, 1)`. -/
+@[expose]
 noncomputable def angularDirection (_p : D × ℝ) : D × ℝ := (0, 1)
 
 /-- Lift scalar, given by `f p.1`. -/
+@[expose]
 noncomputable def liftScalar (f : D → ℝ) (p : D × ℝ) : ℝ := f p.1
 
 theorem liftDirection_smooth {U : Set D} {V : D → D} (hV : ContDiffOn ℝ ∞ V U) :
@@ -222,6 +226,7 @@ theorem avg_along_twice {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
   exact along_congr hU (fun y hy => (along_avg hU hf V hy).symm) hx
 
 /-- Periodic on, given by `∀ x ∈ U, ∀ θ : ℝ, f (x, θ + period) = f (x, θ)`. -/
+@[expose]
 def PeriodicOn (U : Set D) (f : D × ℝ → E) : Prop :=
   ∀ x ∈ U, ∀ θ : ℝ, f (x, θ + period) = f (x, θ)
 
@@ -297,35 +302,42 @@ theorem theta_lift_zero {f : D → ℝ} {x : D} (hf : DifferentiableAt ℝ f x) 
   exact map_zero _
 
 /-- Radial vector, given by `o.eR + (o.radialFrequency n * o.radialProfile x) • o.vR`. -/
+@[expose]
 noncomputable def radialVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (x : D) : D :=
   o.eR + (o.radialFrequency n * o.radialProfile x) • o.vR
 
 /-- Axial vector, given by `o.epsilon n • o.eZ`. -/
+@[expose]
 noncomputable def axialVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (_x : D) : D :=
   o.epsilon n • o.eZ
 
 /-- Temporal vector, given by `o.fastCoefficient n • o.vT - o.epsilon n • o.eT`. -/
+@[expose]
 noncomputable def temporalVector (o : MeanIncrementBounds.Operators D) (n : ℕ) (_x : D) : D :=
   o.fastCoefficient n • o.vT - o.epsilon n • o.eT
 
 /-- Radial direction, given by `liftDirection (radialVector c.operators n)`. -/
+@[expose]
 noncomputable def radialDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (radialVector c.operators n)
 
 /-- Axial direction, given by `liftDirection (axialVector c.operators n)`. -/
+@[expose]
 noncomputable def axialDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (axialVector c.operators n)
 
 /-- Time direction, given by `liftDirection (temporalVector c.operators n)`. -/
-noncomputable def timeDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
+@[expose] noncomputable def timeDirection (c : CorrectionState.Context D) (n : ℕ) : D × ℝ → D × ℝ :=
   liftDirection (temporalVector c.operators n)
 
 /-- Complex base, given by `![(c.base.radial n x.1 : ℂ), (c.base.angular n x.1 : ℂ),
 (c.base.axial n x.1 : ℂ)]`. -/
+@[expose]
 noncomputable def complexBase (c : CorrectionState.Context D) (n : ℕ) (x : D × ℝ) : ComplexVector :=
   ![(c.base.radial n x.1 : ℂ), (c.base.angular n x.1 : ℂ), (c.base.axial n x.1 : ℂ)]
 
 /-- Complex perturbation as an element of `ComplexVector`. -/
+@[expose]
 noncomputable def complexPerturbation (u : CorrectionState.State D) (n : ℕ) (x : D × ℝ) :
     ComplexVector :=
   ![(u.mean.radial n x.1 + u.oscillation n x 0 : ℝ),
@@ -333,11 +345,13 @@ noncomputable def complexPerturbation (u : CorrectionState.State D) (n : ℕ) (x
     (u.mean.axial n x.1 + u.oscillation n x 2 : ℝ)]
 
 /-- Complex pressure, given by `(u.totalPressureIncrement n x : ℝ)`. -/
+@[expose]
 noncomputable def complexPressure (u : CorrectionState.State D) (n : ℕ) (x : D × ℝ) : ℂ :=
   (u.totalPressureIncrement n x : ℝ)
 
 /-- Virtual divergence, given by `![0, -(c.operators.radialDiv 2 c.virtualTheta n x.1),
 -(c.operators.radialDiv 1 c.virtualAxial n x.1)]`. -/
+@[expose]
 noncomputable def virtualDivergence (c : CorrectionState.Context D) (n : ℕ) (x : D × ℝ) : Fin 3 → ℝ
     :=
   ![0, -(c.operators.radialDiv 2 c.virtualTheta n x.1),
@@ -345,13 +359,14 @@ noncomputable def virtualDivergence (c : CorrectionState.Context D) (n : ℕ) (x
 
 /-- Nonlinear residual, given by `LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x +
 LinearWaveResidual.transport R Vr Vθ Vz a a x`. -/
-noncomputable def nonlinearResidual (ε : ℝ) (R : (D × ℝ) → ℝ)
+@[expose] noncomputable def nonlinearResidual (ε : ℝ) (R : (D × ℝ) → ℝ)
     (Vr Vθ Vz Vt : D × ℝ → D × ℝ) (B a : D × ℝ → ComplexVector)
     (p : D × ℝ → ℂ) (x : D × ℝ) : ComplexVector :=
   LinearWaveResidual.linearResidual ε R Vr Vθ Vz Vt B a p x +
     LinearWaveResidual.transport R Vr Vθ Vz a a x
 
 /-- Full residual as an element of `CorrectionState.Oscillation D`. -/
+@[expose]
 noncomputable def fullResidual (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     CorrectionState.Oscillation D := fun n x i =>
   (nonlinearResidual (c.operators.epsilon n) (fun y : D × ℝ => c.operators.radius y.1)
@@ -360,18 +375,20 @@ noncomputable def fullResidual (c : CorrectionState.Context D) (u : CorrectionSt
       virtualDivergence c n x i + u.errors.base n x i
 
 /-- Full good residual, given by `fullResidual c u - u.errors.total`. -/
+@[expose]
 noncomputable def fullGoodResidual (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     CorrectionState.Oscillation D := fullResidual c u - u.errors.total
 
 /-- Angular mean vector, defined pointwise by `CorrectionState.angularAverage (fun k p => f k p
 i) n x`. -/
+@[expose]
 noncomputable def angularMeanVector (f : CorrectionState.Oscillation D) :
     CorrectionState.MeanVector D :=
   fun n x i => CorrectionState.angularAverage (fun k p => f k p i) n x
 
 /-- Real divergence, given by `along Vr (fun y => a y 0) p + a p 0 / R p + along Vθ (fun y => a
 y 1) p / R p + along Vz (fun y => a y 2) p`. -/
-noncomputable def realDivergence (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
+@[expose] noncomputable def realDivergence (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     (a : D × ℝ → Fin 3 → ℝ) (p : D × ℝ) : ℝ :=
   along Vr (fun y => a y 0) p + a p 0 / R p +
     along Vθ (fun y => a y 1) p / R p + along Vz (fun y => a y 2) p
@@ -851,14 +868,17 @@ theorem viscosity_eq (o : MeanIncrementBounds.Operators D) (c : ℝ)
   ring
 
 /-- Triple vector, given by `![m.radial n x, m.angular n x, m.axial n x]`. -/
+@[expose]
 noncomputable def tripleVector (m : MeanIncrementBounds.Triple D) (n : ℕ) (x : D) : Fin 3 → ℝ :=
   ![m.radial n x, m.angular n x, m.axial n x]
 
 /-- Base lift, given by `tripleVector c.base n p.1`. -/
+@[expose]
 noncomputable def baseLift (c : CorrectionState.Context D) (n : ℕ) (p : D × ℝ) : Fin 3 → ℝ :=
   tripleVector c.base n p.1
 
 /-- Perturbation, given by `tripleVector u.mean n p.1 + u.oscillation n p`. -/
+@[expose]
 noncomputable def perturbation (u : CorrectionState.State D) (n : ℕ) (p : D × ℝ) : Fin 3 → ℝ :=
   tripleVector u.mean n p.1 + u.oscillation n p
 

@@ -31,7 +31,7 @@ and review. The project card records AI provenance and the source details. The u
 notice is retained below.
 -/
 
-@[expose] public section
+public section
 
 /-
 MIT License

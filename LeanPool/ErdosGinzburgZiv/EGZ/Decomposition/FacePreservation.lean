@@ -20,7 +20,7 @@ a realized face whenever its pullback is nonempty. The key order inequality
 compares the new face index with the old one.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -29,6 +29,7 @@ open scoped BigOperators
 namespace ConvexFlag
 
 /-- Map a flag point using a map on nodes and compatible affine fibre maps. -/
+@[expose]
 def Point.map {F G : ConvexFlag} (q : F.Point) (node : SupHom F.Node G.Node)
     (fibre : (x : F.Node) → RealCoord (F.rank x) →ᵃ[ℝ] RealCoord (G.rank (node x)))
     (hpolytope : ∀ x, Set.MapsTo (fibre x)
@@ -123,6 +124,7 @@ namespace RationalPolytope.Face
 
 /-- Pull back an exposed face along an affine map taking one polytope into
 another. The pullback includes the source polytope constraint. -/
+@[expose]
 def preimage {m n : ℕ} {P : RationalPolytope m} {Q : RationalPolytope n}
     (Γ : P.Face) (A : RealCoord n →ᵃ[ℝ] RealCoord m)
     (hA : Set.MapsTo A Q.carrier P.carrier)
@@ -178,6 +180,7 @@ variable {Φ Ψ : FlagDecomposition p d f} (M : SubdivisionMap Φ Ψ)
 /-- To construct a subdivision map it suffices to send local generators to
 old local generators. Convex-combination preservation then gives inclusion
 of the entire proper-point sets. -/
+@[expose]
 def ofLocalGenerators
     (node : SupHom Ψ.flag.Node Φ.flag.Node)
     (fibre : (x : Ψ.flag.Node) →
@@ -201,6 +204,7 @@ def ofLocalGenerators
       hcomb.map node fibre polytope_mem transition_comm⟩
 
 /-- The induced map on flag points. -/
+@[expose]
 def point (q : Ψ.flag.Point) : Φ.flag.Point :=
   ⟨M.node q.base, M.fibre q.base q.val, M.polytope_mem q.base q.val_mem⟩
 
@@ -215,6 +219,7 @@ theorem point_proper {q : Ψ.flag.Point} (hq : q ∈ Ψ.omega) : M.point q ∈ �
   M.proper q hq
 
 /-- Compose successive subdivisions, including their proper-point maps. -/
+@[expose]
 def comp {Θ : FlagDecomposition p d f} (N : SubdivisionMap Ψ Θ) :
     SubdivisionMap Φ Θ where
   node := M.node.comp N.node
@@ -233,6 +238,7 @@ theorem comp_point {Θ : FlagDecomposition p d f} (N : SubdivisionMap Ψ Θ)
     (q : Θ.flag.Point) : (M.comp N).point q = M.point (N.point q) := rfl
 
 /-- The part of an old face lying in the new fibre. -/
+@[expose]
 def face (x : Ψ.flag.Node) (Γ : (Φ.flag.polytope (M.node x)).Face)
     (hne : ((Ψ.flag.polytope x).carrier ∩ M.fibre x ⁻¹' Γ.carrier).Nonempty) :
     (Ψ.flag.polytope x).Face :=
@@ -292,6 +298,7 @@ end SubdivisionMap
 
 /-- The inclusion of reduced nodes is a subdivision map. Its fibre maps are
 identities and every original proper point survives the restriction. -/
+@[expose]
 noncomputable def reducedSubdivisionMap (Φ : FlagDecomposition p d f) (hp : Odd p) :
     SubdivisionMap Φ (Φ.reduced hp) where
   node := {

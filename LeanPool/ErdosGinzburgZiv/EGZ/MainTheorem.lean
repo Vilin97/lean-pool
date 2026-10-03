@@ -14,7 +14,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.RelativeProof
 # Main Theorem
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

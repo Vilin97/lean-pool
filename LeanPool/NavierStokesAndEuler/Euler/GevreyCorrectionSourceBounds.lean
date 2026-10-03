@@ -18,7 +18,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Actual raw-source, elliptic-pressure, and time-source bounds at a smaller radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,7 +34,7 @@ open Set Finset EulerLiftedGradientSpace EulerCylinderSobolevSpace EulerCylinder
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The explicit polynomial controlling the literal unprojected correction source. -/
-def sourceBound (B0 B1 A0 A2 residual E DE : ℝ) : ℝ :=
+@[expose] def sourceBound (B0 B1 A0 A2 residual E DE : ℝ) : ℝ :=
   productConstant period 3*(B0+E)*DE + residual +
     (productConstant period 3*B1+A0+2*A2*productConstant period 3*B0)*E +
     A2*productConstant period 3*E^2

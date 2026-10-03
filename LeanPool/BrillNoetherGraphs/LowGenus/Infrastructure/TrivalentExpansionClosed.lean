@@ -18,7 +18,7 @@ original subdivision.  This file expresses that observation in the closed
 orthant language consumed by the Atanasov--Ranganathan row constructions.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Subdivision.TrivalentExpansion
 
 open Utilities
@@ -184,6 +184,7 @@ theorem closedLength_not_isLoopy
       exact hLoop j (by simpa [bigTail, bigHead] using hFib)
 
 /-- The canonical closed face of the centipede expansion. -/
+@[expose]
 noncomputable def closedFace (small : Spec n p)
     (hLoop : ∀ e : Fin p, C.tail e ≠ C.head e) :
     DegSpec (expandedVertexCount (n := n) (p := p)) (expandedSlotCount (n := n) (p := p)) :=

@@ -15,7 +15,7 @@ import Mathlib.RingTheory.Coalgebra.CoassocSimps
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Coalgebra.Lemmas`.
 -/
 
-@[expose] public section
+public section
 
 theorem TensorProduct.map_left_up {R A B C D : Type*}
   [CommSemiring R]

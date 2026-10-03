@@ -13,7 +13,7 @@ public import LeanPool.RegtsSevenster.RS.Classical.SchurTheory.JTIrreducible
 # The Jacobi–Trudi character is plus-or-minus a native character
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

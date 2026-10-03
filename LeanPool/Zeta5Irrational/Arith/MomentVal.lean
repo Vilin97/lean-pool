@@ -24,7 +24,7 @@ import Mathlib.Tactic.Ring.Basic
 for `e < 2p - 3` (von Staudt–Clausen).
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

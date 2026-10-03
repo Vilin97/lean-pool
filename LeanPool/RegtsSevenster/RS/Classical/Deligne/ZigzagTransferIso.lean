@@ -17,7 +17,7 @@ transfer is vacuous and the zigzag laws pass across without any
 further hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

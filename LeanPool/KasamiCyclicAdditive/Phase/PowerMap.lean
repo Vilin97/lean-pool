@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # Basic facts: the power map `x ↦ x^D` and the group `μ₃(K)`
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

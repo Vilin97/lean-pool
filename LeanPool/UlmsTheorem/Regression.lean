@@ -55,7 +55,7 @@ Two checks that cannot live in a build, recorded here so they are not lost:
   from hand-computed finite instances like this one.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 

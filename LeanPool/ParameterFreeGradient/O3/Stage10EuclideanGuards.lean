@@ -18,7 +18,7 @@ inequality is derived from convexity and the exact `L/2` descent lemma; it is
 not assumed as a certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 

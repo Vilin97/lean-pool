@@ -11,14 +11,14 @@ public import Mathlib.LinearAlgebra.Lagrange
 
 This generic API is shared by the Zeta5 and Zeta32 arithmetic and contour proofs. -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
 namespace Zeta5Irrational
 
 /-- `∏_{r ∈ Pl} (x - r)`. -/
-noncomputable def piPl (Pl : Finset ℤ) : ℚ[X] :=
+@[expose] noncomputable def piPl (Pl : Finset ℤ) : ℚ[X] :=
   ∏ r ∈ Pl, (X - C (r : ℚ))
 
 lemma piPl_monic (Pl : Finset ℤ) : (piPl Pl).Monic :=
@@ -31,11 +31,11 @@ lemma natDegree_piPl (Pl : Finset ℤ) : (piPl Pl).natDegree = Pl.card := by
   simp
 
 /-- The polynomial part. -/
-noncomputable def polyPart (A : ℚ[X]) (Pl : Finset ℤ) : ℚ[X] :=
+@[expose] noncomputable def polyPart (A : ℚ[X]) (Pl : Finset ℤ) : ℚ[X] :=
   A /ₘ piPl Pl
 
 /-- The residue at `r`. -/
-noncomputable def resP (A : ℚ[X]) (Pl : Finset ℤ) (r : ℤ) : ℚ :=
+@[expose] noncomputable def resP (A : ℚ[X]) (Pl : Finset ℤ) (r : ℤ) : ℚ :=
   A.eval (r : ℚ) / ∏ s ∈ Pl.erase r, ((r : ℚ) - s)
 
 lemma lagrange_basis_eq (Pl : Finset ℤ) (r : ℤ) :

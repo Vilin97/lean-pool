@@ -25,7 +25,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory
@@ -34,7 +34,7 @@ namespace Descriptive.Tree
 noncomputable section «Section1»
 
 /-- The objects of the category of trees -/
-def Trees := Σ A, tree A
+@[expose] def Trees := Σ A, tree A
 instance : CoeSort Trees (Type _) where
   coe S := S.2
 variable {S T U : Trees}

@@ -21,7 +21,7 @@ as the base's summands, summed over its subsets and over the
 interface colours.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -83,6 +83,7 @@ four sums puts the pairing in that form.
 
 open Classical in
 /-- A fragment tensor's term at one subset. -/
+@[expose]
 noncomputable def tensorTermAt {α : Type} [LinearOrder α]
     [Fintype α] (V : Fragment α) {k ℓ : ℕ} (h : MixedFunctional k ℓ)
     (s : Finset V.Flag) (x : GenBoundaryState k ℓ α) : ℂ :=
@@ -1501,6 +1502,7 @@ glue applies; elsewhere the value is junk the identity never reads.
 
 open Classical in
 /-- **The upward glue of a data family, at an open cut.** -/
+@[expose]
 noncomputable def glueDataOpen {α : Type} [LinearOrder α]
     {V : Fragment α} {i j : α} (hij : i ≠ j)
     (hopen : V.pairing (V.boundaryFlag i) ≠ V.boundaryFlag j)
@@ -1527,6 +1529,7 @@ open Classical in
 closing cut rewires no directions, so no compatibility is needed;
 what it does need is the lift's bit, since a glued subset has two
 lifts and they are different subsets of the base. -/
+@[expose]
 noncomputable def glueDataClosed {α : Type} [LinearOrder α]
     {V : Fragment α} {i j : α}
     (hclosed : V.pairing (V.boundaryFlag i) = V.boundaryFlag j)
@@ -1546,6 +1549,7 @@ noncomputable def glueDataClosed {α : Type} [LinearOrder α]
 open Classical in
 /-- **A data family under a relabel, upward.**  The counterpart of
 `relabelDataDown`. -/
+@[expose]
 noncomputable def relabelDataUp {α' β' : Type} [LinearOrder α']
     [LinearOrder β'] (e : α' ≃o β') {W' : Fragment α'}
     (𝒟 : DataFamily W') : DataFamily (W'.relabel e.toEquiv) :=
@@ -1567,6 +1571,7 @@ open Classical in
 /-- **One stage of the upward lift.**  The mirror of
 `stepDataDown`: dispatch on whether the stage's cut closes, glue the
 family across it, and relabel up. -/
+@[expose]
 noncomputable def stepDataUp (n : ℕ)
     (V : Fragment (Fin (0 + (n + 1)) ⊕ Fin ((n + 1) + 0)))
     (b : Bool) (𝒟 : DataFamily V) :
@@ -1584,6 +1589,7 @@ open Classical in
 /-- **The upward lift over the whole interface.**  The mirror of
 `pushData`, carrying one bit for each stage — the lift the closing
 cuts leave undetermined. -/
+@[expose]
 noncomputable def liftData : (n : ℕ) →
     (V : Fragment (Fin (0 + n) ⊕ Fin (n + 0))) →
     (Fin n → Bool) → DataFamily V →

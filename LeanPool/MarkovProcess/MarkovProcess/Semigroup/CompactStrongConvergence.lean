@@ -22,7 +22,7 @@ Neither completeness of the spaces nor countable generation of the index filter 
 nothing is asserted about convergence in the operator norm, which is strictly stronger.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

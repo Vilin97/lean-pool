@@ -31,7 +31,7 @@ germs imply a zero germ of the two-term cutoff error.  The global source
 complement is retained once, exactly as in `CopyData.globalGaussian`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -369,6 +369,7 @@ variable {D I L : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Indexed cutoff error, given by `d.Dfast (fun n => ψ n i) n x • u n i x + (1 - ψ n i x) • f n
 i x`. -/
+@[expose]
 noncomputable def indexedCutoffError (d : GraphDirections D)
     (ψ : ℕ → I → D → ℝ) (u f : ℕ → I → D → ComplexVector)
     (n : ℕ) (i : I) (x : D) : ComplexVector :=
@@ -595,7 +596,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -660,7 +661,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale Label)
 
 /-- Theta, given by `clock.value l n * v / F.L (l, n)`. -/
-noncomputable def theta (l : Label) (n : ℕ) (v : ℝ) : ℝ :=
+@[expose] noncomputable def theta (l : Label) (n : ℕ) (v : ℝ) : ℝ :=
   clock.value l n * v / F.L (l, n)
 
 theorem theta_eq (l : Label) (n : ℕ) (v : ℝ) :
@@ -735,12 +736,14 @@ end PathGerms
 /-! ## The separate Gaussian cutoff and its genuine outer padding -/
 
 /-- Padding, given by `min r L / 16`. -/
+@[expose]
 noncomputable def padding (r L : ℝ) : ℝ := min r L / 16
 
 theorem padding_pos {r L : ℝ} (hr : 0 < r) (hL : 0 < L) : 0 < padding r L :=
   div_pos (lt_min hr hL) (by norm_num)
 
 /-- Reference window, bundling `lower`, `upper`, `padding`, `padding_pos`. -/
+@[expose]
 noncomputable def referenceWindow (r L : ℝ) (hr : 0 < r) (hL : 0 < L) :
     PeriodicPhaseAssembly.ClockWindow where
   lower := (-r, 0)
@@ -753,18 +756,20 @@ theorem referenceWindow_core (r L : ℝ) (hr : 0 < r) (hL : 0 < L) :
 
 /-- This cutoff is separate from every dyadic, radial and slow source
 mask.  The outer padding is transported together with the Gaussian. -/
-noncomputable def nativeCutoff (r L : ℝ) (hr : 0 < r) (hL : 0 < L) (c : ℝ) : Plane → ℝ :=
+@[expose] noncomputable def nativeCutoff (r L : ℝ) (hr : 0 < r) (hL : 0 < L) (c : ℝ) : Plane → ℝ :=
   fun z => (referenceWindow r L hr hL).cutoff (CopySolveCompatibility.nativeTimeMap 0 c z) *
     GaussianTailFlat.slotCutoff L (c * z.2)
 
 /-- Outer cell, given by `Icc (-r - 2 * padding r L) (r + 2 * padding r L) ×ˢ Icc ((-2 * padding
 r L) / c) ((L + 2 * padding r L) / c)`. -/
+@[expose]
 noncomputable def outerCell (r L c : ℝ) : Set Plane :=
   Icc (-r - 2 * padding r L) (r + 2 * padding r L) ×ˢ
     Icc ((-2 * padding r L) / c) ((L + 2 * padding r L) / c)
 
 /-- The support inherited from a Gaussian slot profile has a strict
 temporal margin at both ends of the full Volterra integration interval. -/
+@[expose]
 noncomputable def sourceCell (r L c : ℝ) : Set Plane :=
   Icc (-r) r ×ˢ Icc ((L / c) / 6) (5 * (L / c) / 6)
 
@@ -888,6 +893,7 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Source region, given by `Prod.fst ⁻¹' S ∩ HarmonicSourceSupport.nativeUnion g (sourceCell r
 L rate)`. -/
+@[expose]
 noncomputable def sourceRegion (S : Set P) (g : Geometry) (r L rate : ℝ) : Set (P × Plane) :=
   Prod.fst ⁻¹' S ∩ HarmonicSourceSupport.nativeUnion g (sourceCell r L rate)
 
@@ -961,15 +967,18 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Cutoff family, given by `nativeCutoff (r l n) (F.L (l,n)) (hr l n) (F.L_pos (l,n))
 (clock.value l n)`. -/
+@[expose]
 noncomputable def cutoffFamily (l : Label) (n : ℕ) : Plane → ℝ :=
   nativeCutoff (r l n) (F.L (l,n)) (hr l n) (F.L_pos (l,n)) (clock.value l n)
 
 /-- Outer family, given by `outerCell (r l n) (F.L (l,n)) (clock.value l n)`. -/
+@[expose]
 noncomputable def outerFamily (l : Label) (n : ℕ) : Set Plane :=
   outerCell (r l n) (F.L (l,n)) (clock.value l n)
 
 /-- Source regions, given by `sourceRegion (S l n) (ScaledActualParticularControl.geometry
 reference gap clock l n) (r l n) (F.L (l,n)) (clock.value l n)`. -/
+@[expose]
 noncomputable def sourceRegions (S : Label → ℕ → Set P) (l : Label) (n : ℕ) : Set (P × Plane) :=
   sourceRegion (S l n) (ScaledActualParticularControl.geometry reference gap clock l n)
     (r l n) (F.L (l,n)) (clock.value l n)
@@ -990,6 +999,7 @@ variable (base : Label → LinearWaveBounds.WaveCoefficients ((P × ℝ) × Plan
 
 /-- The same actual complex solve as the correction step, with entry zero,
 exit `Lref/clock`, and a single transported Gaussian-times-padding cutoff. -/
+@[expose]
 noncomputable def data (l : Label) : CopyData ((P × ℝ) × Plane) Frequency :=
   complexCopyData (base l) (tangent l)
     (ParticularWaveAssembly.sourceFamily ctx u (b l) (G l) (A l) j)
@@ -1386,6 +1396,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   (r : Label → ℕ → ℝ) (hr : ∀ l n, 0 < r l n)
 
 /-- Field envelope, constructed using `ActualParticularControl.groupedEnvelope`. -/
+@[expose]
 noncomputable def fieldEnvelope : Label → ℕ → (P × ℝ) × Plane → ℝ :=
   ActualParticularControl.groupedEnvelope
     (ScaledActualParticularControl.geometry reference gap clock) r
@@ -1412,6 +1423,7 @@ theorem fieldEnvelope_eq (s : StripData P) (χ : P →L[ℝ] PhaseCalculus.Slow)
     (fun l n => reference_outer_separated _ (hr l n) (F.L_pos (l,n)) (hinj l n)) hx
 
 /-- Cells, constructed using `nativeCells`. -/
+@[expose]
 noncomputable def cells
     (hinj : ∀ l n, InjOn TorusAverages.quotientPoint
       ((fun z => (reference l n).center + (reference l n).basis z) ''
@@ -1568,6 +1580,7 @@ end CurrentSourceJets
 
 /-- Reference cutoff, given by `(referenceWindow r L hr hL).cutoff z *
 GaussianTailFlat.slotCutoff L z.2`. -/
+@[expose]
 noncomputable def referenceCutoff (r L : ℝ) (hr : 0 < r) (hL : 0 < L) (z : Plane) : ℝ :=
   (referenceWindow r L hr hL).cutoff z * GaussianTailFlat.slotCutoff L z.2
 
@@ -1654,6 +1667,7 @@ theorem prepared_gaussian_rate_pos : 0 < gaussianRate a.M⁻¹ a.u :=
 
 /-- The closed slow support is the actual one-mesh primary mask.
 Its inclusion in the two-mesh analytic phase cell has a genuine margin. -/
+@[expose]
 noncomputable def actualSlowCore (L : PrimaryGeometryAssembly.Index W a.N) : Set PhaseCalculus.Slow
     :=
   tsupport (PrimaryRepresentatives.nativeMask (BaseChartJets.cellBand L)
@@ -1669,7 +1683,7 @@ theorem actualSlowCore_inside (L : PrimaryGeometryAssembly.Index W a.N) {p : Pha
 
 /-- Actual source core, given by `actualSlowCore H v a L ×ˢ sourceCell r0
 (ChartScales.slotLength r0 profile.data.h (BaseChartJets.cellBand L)) 1`. -/
-noncomputable def actualSourceCore (L : PrimaryGeometryAssembly.Index W a.N) : Set
+@[expose] noncomputable def actualSourceCore (L : PrimaryGeometryAssembly.Index W a.N) : Set
     ActualSignedGeometry.Native :=
   actualSlowCore H v a L ×ˢ sourceCell r0
     (ChartScales.slotLength r0 profile.data.h (BaseChartJets.cellBand L)) 1

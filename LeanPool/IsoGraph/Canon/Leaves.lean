@@ -31,7 +31,7 @@ Bookkeeping for the optimality proof, one layer above `Jump.lean`.
   tree, and every generator it records is a genuine automorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -71,7 +71,7 @@ theorem nodePath_take_succ (n : Nat) (f : Nat → Nat → Bool) (path : Array Na
   rw [he, nodePath_append]
 
 /-- The leaves below the depth-`j` ancestor of `path`. -/
-def ancReach (n : Nat) (f : Nat → Nat → Bool) (path : Array Nat) (j : Nat)
+@[expose] def ancReach (n : Nat) (f : Nat → Nat → Bool) (path : Array Nat) (j : Nat)
     (k : List (List UInt64)) : Prop :=
   Reach n f (nodePath n f (path.toList.take j)).1 (nodePath n f (path.toList.take j)).2 k
 
@@ -100,11 +100,11 @@ theorem Node.ancestor_targetCell {n : Nat} {f : Nat → Nat → Bool} {path : Ar
 /-! ## Children -/
 
 /-- `w` is a child of the node `p`: a vertex of its target cell. -/
-def Chld (n : Nat) (p : Part) (w : Nat) : Prop :=
+@[expose] def Chld (n : Nat) (p : Part) (w : Nat) : Prop :=
   ∃ c, p.targetCell n = some c ∧ w < n ∧ p.cst[p.pos[w]!]! = c
 
 /-- The leaves below the child `w`. -/
-def SubR (n : Nat) (f : Nat → Nat → Bool) (invPath : Array UInt64) (p : Part) (w : Nat)
+@[expose] def SubR (n : Nat) (f : Nat → Nat → Bool) (invPath : Array UInt64) (p : Part) (w : Nat)
     (k : List (List UInt64)) : Prop :=
   Reach n f (childInv (Graph.ofOracle n f) invPath p w) (child (Graph.ofOracle n f) p w).1 k
 
@@ -201,7 +201,7 @@ theorem invAuto_isAuto {n : Nat} {f : Nat → Nat → Bool} {g : Array Nat} (hg 
 
 /-- `l` really is a leaf of the search tree: its path individualises down to a discrete
 partition, and its labelling and certificate are that partition's. -/
-def LeafNode (n : Nat) (f : Nat → Nat → Bool) (l : Leaf) : Prop :=
+@[expose] def LeafNode (n : Nat) (f : Nat → Nat → Bool) (l : Leaf) : Prop :=
   ∃ p, Node n f l.path l.invPath p ∧ p.targetCell n = none ∧ l.lab = p.lab ∧
     l.cert = certOf (Graph.ofOracle n f) p.lab
 
@@ -216,7 +216,7 @@ theorem LeafNode.cert_eq {n : Nat} {f : Nat → Nat → Bool} {l : Leaf} (h : Le
   rw [hc, hlab]
 
 /-- Everything a state remembers is genuine: both recorded leaves, and every generator. -/
-def StGood (n : Nat) (f : Nat → Nat → Bool) (st : St) : Prop :=
+@[expose] def StGood (n : Nat) (f : Nat → Nat → Bool) (st : St) : Prop :=
   (∀ l, st.best = some l → LeafNode n f l) ∧ (∀ l, st.first = some l → LeafNode n f l) ∧
     (∀ g ∈ st.autos, IsAutoArr n f g)
 

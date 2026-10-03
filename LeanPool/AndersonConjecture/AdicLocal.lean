@@ -18,7 +18,7 @@ a local ring. The maximal ideal of the completion is the kernel
 of the natural surjection onto the residue field R/M.
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 open AdicCompletion Ideal Finset

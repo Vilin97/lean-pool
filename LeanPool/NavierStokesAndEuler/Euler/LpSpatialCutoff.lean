@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! Expanding ordinary-space cutoffs and their actual first derivative controls. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -77,7 +77,7 @@ theorem cutoff_derivative_tendsto (x : Space) :
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Cutoff field, given by `cutoff n x • f x`. -/
-def cutoffField (f : Space → V) (n : ℕ) (x : Space) : V := cutoff n x • f x
+@[expose] def cutoffField (f : Space → V) (n : ℕ) (x : Space) : V := cutoff n x • f x
 
 theorem cutoffField_smooth (f : Space → V) (hf : ContDiff ℝ ∞ f) (n : ℕ) :
     ContDiff ℝ ∞ (cutoffField f n) := (cutoff_smooth n).smul hf

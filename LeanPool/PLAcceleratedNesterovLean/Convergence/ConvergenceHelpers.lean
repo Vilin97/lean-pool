@@ -22,7 +22,7 @@ bounds and phase transitions.
 2. `gen_at_every_phase` — gen theorem at any m ∈ S for any phase k ≥ 1
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

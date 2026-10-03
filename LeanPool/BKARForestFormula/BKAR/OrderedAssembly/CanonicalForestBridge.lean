@@ -17,7 +17,7 @@ canonical order of the support.  Both carry the support as their edge set,
 so every abstract forest index acquires a concrete forest realizing it.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,6 +32,7 @@ The canonical list order of a forest index, obtained from the finite edge-set
 enumeration. This is a definite support representative; later sector sums may
 still range over all permutations of the same support.
 -/
+@[expose]
 def canonicalOrder (I : ForestIndex V) :
     {order : List (Edge V) // order ∈ Forest.edgeSetOrders I.edges} :=
   ⟨I.edges.toList,
@@ -52,6 +53,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 The `Forest` representative grown by following a canonical order of a forest index from
 the empty forest through the selected active-extension choices.
 -/
+@[expose]
 def grownForestForSupportOrder
     (choices : ActiveExtensionChoice V)
     (I : ForestIndex V)
@@ -105,6 +107,7 @@ The `Forest` representative grown through the canonical order of the support. Th
 fixed representative for the support once an active-extension choice system is
 fixed.
 -/
+@[expose]
 def canonicalGrownForestForSupport
     (choices : ActiveExtensionChoice V) (I : ForestIndex V) :
     Forest V :=

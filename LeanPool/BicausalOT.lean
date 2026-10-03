@@ -71,4 +71,4 @@ analytic superlevel sets for finite-kernel sections, measurable selection, and c
 results. Its local Souslin-scheme construction supports the kernel-section proof.
 -/
 
-@[expose] public section
+public section

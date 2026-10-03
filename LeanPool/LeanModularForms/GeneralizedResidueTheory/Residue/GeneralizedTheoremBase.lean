@@ -42,7 +42,7 @@ The convex-domain theorems `generalizedResidueTheorem`,
 where they are proved as corollaries of the null-homologous versions.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval
@@ -493,7 +493,7 @@ lemma CauchyPrincipalValueExists'.const_mul
 
 This is well-defined for meromorphic functions and agrees with
 `residueSimplePole` when `f` has a simple pole at `z₀`. -/
-def residueAt (f : ℂ → ℂ) (z₀ : ℂ) : ℂ :=
+@[expose] def residueAt (f : ℂ → ℂ) (z₀ : ℂ) : ℂ :=
   limUnder (𝓝[>] (0 : ℝ)) fun r =>
     (2 * ↑Real.pi * I)⁻¹ * ∮ z in C(z₀, r), f z
 

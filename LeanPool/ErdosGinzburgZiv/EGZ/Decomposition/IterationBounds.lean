@@ -17,7 +17,7 @@ The state at stage `i` has at most `2^i` nodes, lies within the predetermined
 radius horizon, and has lost at most the first `i` explicit mass budgets.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,6 +26,7 @@ namespace EGZ.FlagDecomposition.Iteration
 open DecompositionParameters
 
 /-- Scale assigned to a given stage of the bounded iteration. -/
+@[expose]
 noncomputable def stageScale (d : ℕ) (ε : ℝ) (i : ℕ) : ℝ :=
   scale d (initialScale d ε) (i + 1)
 
@@ -97,6 +98,7 @@ theorem mass_bounds (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 2) :
   constructor <;> nlinarith [s.mass_loss_bound]
 
 /-- Initial bounded state for a nonzero input weight. -/
+@[expose]
 noncomputable def initial (hf : f ≠ 0) : BoundedState (f := f) P ε 0 where
   decomposition := FlagDecomposition.initial f hf
   radius := 1
@@ -109,6 +111,7 @@ noncomputable def initial (hf : f ≠ 0) : BoundedState (f := f) P ε 0 where
   mass_loss_bound := by rw [initial_retainedMass, prefixBudget_zero]; simp
 
 /-- Advance a bounded state using a certified progress step and a radius bound. -/
+@[expose]
 noncomputable def advance {t : State p d f} (hε : 0 < ε)
     (D : Progress s.toState t ε (stageScale d ε i) g)
     (hR : t.radius ≤ P.radiusGrowth s.radius) : BoundedState (f := f) P ε (i + 1) where
@@ -131,6 +134,7 @@ noncomputable def advance {t : State p d f} (hε : 0 < ε)
     nlinarith [s.mass_loss_bound]
 
 /-- Retain the same underlying state at the next iteration index. -/
+@[expose]
 noncomputable def keep (hε : 0 < ε) : BoundedState (f := f) P ε (i + 1) where
   toState := s.toState
   card_bound := s.card_bound.trans (Nat.pow_le_pow_right (by omega) (Nat.le_succ i))

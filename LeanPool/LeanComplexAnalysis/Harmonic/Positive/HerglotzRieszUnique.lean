@@ -22,7 +22,7 @@ the two functions ∫ x, (x + z) / (x - z) ∂μ₁ and ∫ x, (x + z) / (x - z)
 identical on the unit disc, then `μ₁` = `μ₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanComplexAnalysis
 

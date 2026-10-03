@@ -9,7 +9,7 @@ module
 # CencovPetz.Basic
 
 Root namespace and shared foundation for the Čencov–Petz uniqueness theorem package.
--/@[expose] public section
+-/public section
 
 namespace LeanPool.CencovPetz
 

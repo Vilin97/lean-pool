@@ -21,7 +21,7 @@ pairing at the flipped data colouring is the crossing and
 representative parities times the Definition 5 odd signs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

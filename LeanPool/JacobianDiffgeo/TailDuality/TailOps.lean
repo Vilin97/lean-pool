@@ -23,7 +23,7 @@ Unit: serre-duality-tails (`docs/design/serre-duality-tails.md` §3 D1/D3, §5.1
   plus the `μ_{1/f}` inversion identity `nuL_mulInto_inv` the surjectivity endgame needs.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace
@@ -93,14 +93,13 @@ theorem truncT_alpha [CompactSpace X] [ConnectedSpace X] {D₁ D₂ : RS.Divisor
     (h : D₁ ≤ D₂) (f : RS.Mero X) : truncT h (alphaL D₁ f) = alphaL D₂ f := by
   apply DFinsupp.ext
   intro p
-  rw [truncT_apply]
-  change truncAt p h (alpha D₁ f p) = alpha D₂ f p
+  rw [truncT_apply, alphaL_apply, alphaL_apply]
   rw [alpha_apply, truncAt_mk, alpha_apply]
 
 /-! ### `singleT` (the test-vector tails) -/
 
 /-- A single-point test tail: the class of `ψ` at `p`, zero elsewhere. -/
-noncomputable def singleT (p : X) (D : RS.Divisor X)
+@[expose] noncomputable def singleT (p : X) (D : RS.Divisor X)
     (ψ : RS.MeroGermOn X (chartAt ℂ p).source) : T D :=
   DFinsupp.single p (TailAt.mk p D ψ)
 
@@ -175,7 +174,7 @@ theorem mulIntoAt_surjective {f : RS.Mero X} (hf0 : f ≠ 0) [ConnectedSpace X] 
   rw [mulIntoAt_mk, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hf0, map_one, one_mul]
 
 /-- Miranda's `t ∘ μ_f : T D →ₗ T E`, uniform in `f` (linear in `f`, §3 D3). -/
-noncomputable def mulInto (f : RS.Mero X) {D E : RS.Divisor X}
+@[expose] noncomputable def mulInto (f : RS.Mero X) {D E : RS.Divisor X}
     (hf : ∀ p, ((D p - E p : ℤ) : WithTop ℤ) ≤ f.ord p) : T D →ₗ[ℂ] T E where
   toFun τ := DFinsupp.mapRange (fun p => mulIntoAt f p (hf p)) (fun _ => map_zero _) τ
   map_add' τ σ := by
@@ -233,8 +232,7 @@ theorem mulInto_alpha [CompactSpace X] [ConnectedSpace X] (f : RS.Mero X)
     mulInto f hf (alphaL D g) = alphaL E (f * g) := by
   apply DFinsupp.ext
   intro p
-  rw [mulInto_apply]
-  change mulIntoAt f p (hf p) (alpha D g p) = alpha E (f * g) p
+  rw [mulInto_apply, alphaL_apply, alphaL_apply]
   rw [alpha_apply, mulIntoAt_mk, ← map_mul, alpha_apply]
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] [DecidableEq X] in
@@ -279,7 +277,7 @@ noncomputable def nuL (A C : RS.Divisor X) [ConnectedSpace X] :
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] [DecidableEq X] in
 theorem nuL_apply (A C : RS.Divisor X) [ConnectedSpace X]
-    (f : ↥(RS.LinSys C)) : nuL A C f = mulInto (f : RS.Mero X) (nu_bound A C f) := rfl
+    (f : ↥(RS.LinSys C)) : nuL A C f = mulInto (f : RS.Mero X) (nu_bound A C f) := by rfl
 
 theorem nuL_alpha (A C : RS.Divisor X) [CompactSpace X] [ConnectedSpace X]
     (f : ↥(RS.LinSys C)) (g : RS.Mero X) :

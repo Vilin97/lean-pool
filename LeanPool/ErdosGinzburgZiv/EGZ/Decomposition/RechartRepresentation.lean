@@ -17,7 +17,7 @@ An affine left inverse of the modular lattice chart then gives a surjective
 representation in the new coordinates, compatible with all transitions.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Rechart
 
@@ -26,11 +26,13 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
     (C : ∀ x, IntegerLatticeChart (Φ.liftedSupport x))
 
 /-- The minimal ambient affine space at a node. -/
+@[expose]
 def space (x : Φ.flag.Node) : AffineSubspace (ZMod p) (FpCoord p d) :=
   affineSpan (ZMod p) {v | Φ.cumulativeWeight x v ≠ 0}
 
 /-- The old representation expressed through an affine left inverse of the
 modular chart. The definition is an affine map on the whole ambient space. -/
+@[expose]
 noncomputable def map (x : Φ.flag.Node) :
     FpCoord p d →ᵃ[ZMod p] FpCoord p (C x).rank :=
   (affineLeftInverse ((chart Φ C x).modp p)).comp (Φ.representation.map x)
@@ -136,6 +138,7 @@ theorem map_compatible {x y : Φ.flag.Node} (h : x ≤ y)
 
 /-- The finite-field representation in minimal lattice and ambient affine
 coordinates. Modular injectivity is the only chart hypothesis. -/
+@[expose]
 noncomputable def representation : FpRepresentation p d (flag Φ C) where
   space := space Φ
   map := map Φ C

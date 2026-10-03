@@ -33,7 +33,7 @@ section
 
 /-! Separate the full background norm from the drift norm in the radius-loss term. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,7 +101,7 @@ section
 
 /-! Actual transport and pressure bounds retaining the small four-component drift norm. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -208,7 +208,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -338,7 +338,7 @@ section
 
 /-! Actual nonlinear correction forcing with distinct full-velocity and drift factors. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -534,7 +534,7 @@ section
 
 /-! Actual nonlinear forcing with separate full-background and drift envelopes. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -663,7 +663,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -769,7 +769,7 @@ section
 
 /-! Continuous energy majorants that retain the actual small transport drift. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -856,7 +856,7 @@ section
 
 /-! The actual time-dependent correction forcing obeys the sharp drift majorant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -937,7 +937,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1025,7 +1025,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ It flattens the resulting nested power partitions and derives the arbitrary-numb
 theorem. The fixed Fox--Neuwirth interface specializes that same construction.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

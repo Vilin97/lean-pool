@@ -45,4 +45,4 @@ public import LeanPool.BicausalOT.BicausalOT.Existence
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section

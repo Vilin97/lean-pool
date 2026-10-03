@@ -18,7 +18,7 @@ explicit duality/Fenchel reduction.  The exported theorem is the frozen
 `O3.BelowGeometryStatement` without additional hypotheses.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 namespace Stage2Closure

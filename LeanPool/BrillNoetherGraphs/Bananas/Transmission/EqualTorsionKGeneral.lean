@@ -25,7 +25,7 @@ and iterated graph statements and the resulting Brill--Noether generality
 criterion.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

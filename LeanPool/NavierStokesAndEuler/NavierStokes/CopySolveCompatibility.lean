@@ -17,7 +17,7 @@ actual coefficient/forcing paths and then for the constructed Volterra
 inverse; no native periodicity of an inhomogeneous solution is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ theorem coverPower_add (d k : ℕ) (Y : Plane) :
   simp only [coverPower_apply, pow_add, _root_.mul_apply_eq_comp]
 
 /-- Refine geometry, given by `{ g with gap := g.gap + k }`. -/
-noncomputable def refineGeometry (g : Geometry) (k : ℕ) : Geometry :=
+@[expose] noncomputable def refineGeometry (g : Geometry) (k : ℕ) : Geometry :=
   { g with gap := g.gap + k }
 
 theorem coordinates_refine (g : Geometry) (k : ℕ) (j : Frequency) (Y : Plane) :
@@ -75,14 +75,14 @@ variable {P Q V E : Type}
 
 /-- Input data transported through a slow-parameter map and a refinement of
 the common cover. All native coefficients retain their native arguments. -/
-noncomputable def transformData (d : LinearData P V E) (φ : Q → P) (k : ℕ) :
+@[expose] noncomputable def transformData (d : LinearData P V E) (φ : Q → P) (k : ℕ) :
     LinearData Q V E where
   coefficient z := d.coefficient (φ z.1, z.2)
   forcingMap z := d.forcingMap (φ z.1, z.2)
   source z := d.source (φ z.1, coverPower k z.2)
 
 /-- Pullback data, given by `transformData d id k`. -/
-noncomputable def pullbackData (d : LinearData P V E) (k : ℕ) : LinearData P V E :=
+@[expose] noncomputable def pullbackData (d : LinearData P V E) (k : ℕ) : LinearData P V E :=
   transformData d id k
 
 theorem coefficientAlong_transform (d : LinearData P V E) (φ : Q → P)
@@ -184,8 +184,13 @@ theorem commonOnTorus_refine
     (pullbackData d k).commonOnTorus (refineGeometry g k) hab κ p
         (source_periodic_transform d id k p hp) (TorusAverages.quotientPoint Y) =
       d.commonOnTorus g hab κ p hp (TorusAverages.quotientPoint (coverPower k Y)) := by
-  simp only [LinearData.commonOnTorus_coe]
-  exact commonSolve_refine d g hab k κ p Y
+  calc
+    _ = (pullbackData d k).commonSolve (refineGeometry g k) hab κ (p, Y) :=
+      LinearData.commonOnTorus_coe (pullbackData d k) (refineGeometry g k) hab κ p
+        (source_periodic_transform d id k p hp) Y
+    _ = d.commonSolve g hab κ (p, coverPower k Y) :=
+      commonSolve_refine d g hab k κ p Y
+    _ = _ := (LinearData.commonOnTorus_coe d g hab κ p hp (coverPower k Y)).symm
 
 end Paths
 
@@ -266,7 +271,7 @@ variable {P V E : Type}
   {a b : ℝ}
 
 /-- Scale source, given by `{ d with source := fun x => c • d.source x }`. -/
-noncomputable def scaleSource (d : LinearData P V E) (c : ℝ) : LinearData P V E :=
+@[expose] noncomputable def scaleSource (d : LinearData P V E) (c : ℝ) : LinearData P V E :=
   { d with source := fun x => c • d.source x }
 
 omit [CompleteSpace E] in
@@ -346,13 +351,14 @@ end SourceScale
 /-! ## Transporting the native clock, its anchor, and its cutoff together -/
 
 /-- Native time map, given by `(z.1, τ + rate * z.2)`. -/
-noncomputable def nativeTimeMap (τ rate : ℝ) (z : Plane) : Plane :=
+@[expose] noncomputable def nativeTimeMap (τ rate : ℝ) (z : Plane) : Plane :=
   (z.1, τ + rate * z.2)
 
 theorem nativeTimeMap_continuous (τ rate : ℝ) : Continuous (nativeTimeMap τ rate) :=
   continuous_fst.prodMk (continuous_const.add (continuous_const.mul continuous_snd))
 
 /-- Time geometry, bundling `gap`, `basis`, `center`. -/
+@[expose]
 noncomputable def timeGeometry (g : Geometry) (τ rate : ℝ) (hrate : rate ≠ 0) : Geometry where
   gap := g.gap
   basis := CommonCoverClass.scaledBasis g.basis rate hrate
@@ -397,6 +403,7 @@ variable {P V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Time data, bundling `coefficient`, `forcingMap`, `source`. -/
+@[expose]
 noncomputable def timeData (d : LinearData P V E) (τ rate : ℝ) : LinearData P V E where
   coefficient z := rate • d.coefficient (z.1, nativeTimeMap τ rate z.2)
   forcingMap z := rate • d.forcingMap (z.1, nativeTimeMap τ rate z.2)
@@ -523,11 +530,12 @@ variable {P Q V E X I : Type}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Transport data, given by `scaleSource (transformData (timeData d τ rate) φ k) amplitude`. -/
-noncomputable def transportData (d : LinearData P V E) (φ : Q → P) (k : ℕ)
+@[expose] noncomputable def transportData (d : LinearData P V E) (φ : Q → P) (k : ℕ)
     (τ rate amplitude : ℝ) : LinearData Q V E :=
   scaleSource (transformData (timeData d τ rate) φ k) amplitude
 
 /-- Transport geometry, given by `refineGeometry (timeGeometry g τ rate hrate) k`. -/
+@[expose]
 noncomputable def transportGeometry (g : Geometry) (k : ℕ) (τ rate : ℝ) (hrate : rate ≠ 0) :
     Geometry := refineGeometry (timeGeometry g τ rate hrate) k
 

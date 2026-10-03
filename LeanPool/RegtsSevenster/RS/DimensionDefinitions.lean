@@ -18,22 +18,25 @@ colour dimension is the least total colour bound of a representing
 mixed model; it is zero when no representing model exists.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The closed fragment of `c` free circles. -/
+@[expose]
 noncomputable def circlesClosed (c : ℕ) : ClosedFragment :=
   (Fragment.circlesOnly c).relabel
     (_root_.Equiv.equivOfIsEmpty Empty (Fin 0))
 
 /-- The natural dimension of the connection-map range. It agrees
 with connection rank whenever the range is finite-dimensional. -/
+@[expose]
 noncomputable def connectionRank (f : ClosedFragment → ℂ) (t : ℕ) : ℕ :=
   Module.finrank ℂ (LinearMap.range (connectionMap f t))
 
 /-- A mixed functional represents the parameter on every closed
 fragment, including those with free circles. -/
+@[expose]
 def MixedFunctional.Represents {k ℓ : ℕ} (h : MixedFunctional k ℓ)
     (f : ClosedFragment → ℂ) : Prop :=
   ∀ W, f W = mixedPartition h W

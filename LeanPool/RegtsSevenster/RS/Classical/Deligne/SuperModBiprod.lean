@@ -31,7 +31,7 @@ biproducts then follow formally from the zero object and the binary
 ones.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -53,6 +53,7 @@ variable {A E₁ E₂ F₁ F₂ : Type*}
 blocks acting on the two factors of a product separately.  The four
 action blocks of a biproduct of super modules are the four instances
 of this construction. -/
+@[expose]
 def prodAct [AddCommGroup A] [Module ℂ A] [AddCommGroup E₁] [Module ℂ E₁]
     [AddCommGroup E₂] [Module ℂ E₂] [AddCommGroup F₁] [Module ℂ F₁]
     [AddCommGroup F₂] [Module ℂ F₂]
@@ -120,6 +121,7 @@ instance hasZeroObject :
 /-- **The biproduct of two super modules**: the product of the even
 components, the product of the odd components, and the four action
 blocks taken componentwise. -/
+@[expose]
 def biprod (M N : Mod.{u, u', w, w'} S) : Mod.{u, u', w, w'} S
     where
   even := M.even × N.even

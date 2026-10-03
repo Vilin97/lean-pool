@@ -11,4 +11,4 @@ public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
 
-@[expose] public section
+public section

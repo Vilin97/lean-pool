@@ -17,7 +17,7 @@ This module proves that the canonical normalized weights, power-partition pieces
 and perimeter deviation commute with relabelling of sites.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

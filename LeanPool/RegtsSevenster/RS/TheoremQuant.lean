@@ -17,7 +17,7 @@ nonvanishing, so the quantitative Regts–Sevenster statement rests
 on Deligne's theorem and one binomial determinant.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

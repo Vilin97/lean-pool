@@ -31,7 +31,7 @@ coordinate velocity at τ is the initial value of the homogeneous forward
 solve. Both the physical velocity and its true derivative match at τ.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,6 +48,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 /-- Zero forcing, bundling `path`, `path_orbit`, `raw_eq`, `mean_zero`. -/
+@[expose]
 def zeroForcing (D : Data U) : Forcing P D (0 : VectorField) where
   path := 0
   path_orbit := by
@@ -60,12 +61,14 @@ variable {D : Data U} (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
   (B : HistoryData (D.initial τ hτ hτT.le)) (Y : InitialData P D)
 
 /-- Endpoint data, bundling `value`, `orbit`, `mean_zero`. -/
+@[expose]
 def endpointData : InitialData P (D.initial τ hτ hτT.le) where
   value := Y.value
   orbit := Y.orbit
   mean_zero := Y.mean_zero
 
 /-- Forward initial, bundling `value`, `orbit`, `mean_zero`. -/
+@[expose]
 def forwardInitial : InitialData P (D.tail τ hτ.le hτT) where
   value := (EulerTransversePacketEndpoint.terminalInitial B (endpointData τ hτ hτT Y)).value
   orbit := (EulerTransversePacketEndpoint.terminalInitial B (endpointData τ hτ hτT Y)).orbit
@@ -73,22 +76,26 @@ def forwardInitial : InitialData P (D.tail τ hτ.le hτT) where
 
 /-- Past velocity, given by `EulerTransversePacketEndpoint.velocityPath B (endpointData τ hτ hτT
 Y)`. -/
+@[expose]
 def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   EulerTransversePacketEndpoint.velocityPath B (endpointData τ hτ hτT Y)
 
 /-- Past derivative, given by `EulerTransversePacketEndpoint.derivativePath B (endpointData τ hτ
 hτT Y)`. -/
+@[expose]
 def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   EulerTransversePacketEndpoint.derivativePath B (endpointData τ hτ hτT Y)
 
 /-- Future velocity, given by `includePath P D.support D.support_measurable ((zeroForcing
 (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))`. -/
+@[expose]
 def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))
 
 /-- Future derivative, given by `includePath P D.support D.support_measurable ((zeroForcing
 (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))`. -/
+@[expose]
 def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))
@@ -192,7 +199,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,19 +218,21 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Velocity path, given by `join D.T τ hτ.le hτT.le (pastVelocity τ hτ hτT B Y) (futureVelocity
 τ hτ hτT B Y) (velocity_match τ hτ hτT B Y)`. -/
+@[expose]
 def velocityPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   join D.T τ hτ.le hτT.le (pastVelocity τ hτ hτT B Y) (futureVelocity τ hτ hτT B Y)
     (velocity_match τ hτ hτT B Y)
 
 /-- Derivative path, given by `join D.T τ hτ.le hτT.le (pastDerivative τ hτ hτT B Y)
 (futureDerivative τ hτ hτT B Y) (derivative_match τ hτ hτT B Y)`. -/
+@[expose]
 def derivativePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   join D.T τ hτ.le hτT.le (pastDerivative τ hτ hτT B Y) (futureDerivative τ hτ hτT B Y)
     (derivative_match τ hτ hτT B Y)
 
 /-- Pressure path, given by `sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
 D.normal_lower 0 (velocityPath τ hτ hτT B Y)`. -/
-def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
+@[expose] def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y)
 

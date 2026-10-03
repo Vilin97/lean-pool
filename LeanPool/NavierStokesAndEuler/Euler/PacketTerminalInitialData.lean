@@ -21,7 +21,7 @@ section
 
 /-! The literal terminal datum belongs to the actual supported, mean-zero cylinder space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -112,13 +112,13 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (hs : tsupport innerCutoff ⊆ D.support)
 
 /-- Initial data, bundling `value`, `orbit`, `mean_zero`. -/
-def initialData : InitialData period D where
+@[expose] def initialData : InitialData period D where
   value := ⟨terminal δ hδ ξ,terminal_supported δ hδ ξ D.support D.support_measurable hs⟩
   orbit := terminal_orbit_contDiff δ hδ ξ
   mean_zero := terminal_average_zero δ hδ ξ
 
 theorem initialData_value : ((initialData D δ hδ ξ hs).value : CylinderL2 period U) =
-    terminal δ hδ ξ := rfl
+    terminal δ hδ ξ := by rfl
 
 theorem initialData_bound {ι : Type*} [Fintype ι]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)

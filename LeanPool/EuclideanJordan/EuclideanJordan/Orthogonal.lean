@@ -39,7 +39,7 @@ and `EuclideanJordan/Frame.lean` assembles it (`opCommute_scalarOn_frame`).
 * Faraut and Korányi, *Analysis on Symmetric Cones*, Ch. IV.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

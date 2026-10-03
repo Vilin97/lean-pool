@@ -57,7 +57,7 @@ the parity files:
   merges the circuit into `a`'s component, Δ = −1).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -211,6 +211,7 @@ variable {F : EdgeSubset W} {κ : F.RelTransitionSystem}
   {a b c d : W.Flag} {S : Finset W.Flag}
 
 /-- The `∂`-flip of a core odd colouring on the segment edges. -/
+@[expose]
 noncomputable def segFlipColouring (hSpair : ∀ f ∈ S, W.pairing f ∈ S) {ℓ : ℕ}
     (φ : F.CoreOddColouring ℓ) : F.CoreOddColouring ℓ :=
   ⟨fun g => if g.val ∈ S then oddPartner ℓ (φ.val g) else φ.val g,
@@ -1581,6 +1582,7 @@ variable {F : EdgeSubset W}
 /-- The walk from `c` reaches `a` with internal pairings: the
 same-component configuration of the non-separated move (both the
 same-circuit and the same-chain reversal sub-cases). -/
+@[expose]
 def WalkReach (κ : F.RelTransitionSystem) (c a : W.Flag) : Prop :=
   ∃ m : ℕ, 1 ≤ m ∧
     (∀ j, j < m →
@@ -1919,6 +1921,7 @@ square preserves the circuit-count parity — the segment reversal
 maps the two traversal orbits of the affected component onto two
 orbits of the same sizes (Δ = 0 on circuits; chains carry no
 periodic flags).  Proved in `OrbitParities.lean`. -/
+@[expose]
 def NonSeparatedSegmentParity : Prop :=
   ∀ {α : Type} {W : Fragment α} {F : EdgeSubset W}
     {κ : F.RelTransitionSystem} {a b c d : W.Flag} {v : W.Vertex}
@@ -1931,6 +1934,7 @@ def NonSeparatedSegmentParity : Prop :=
 `c`-edge lies on a circuit not carrying `a` flips the count parity
 — the splice merges the circuit into `a`'s component (Δ = −1).
 Proved in `OrbitParities.lean`. -/
+@[expose]
 def NonSeparatedMergeParity : Prop :=
   ∀ {α : Type} {W : Fragment α} {F : EdgeSubset W}
     {κ : F.RelTransitionSystem} {a b c d : W.Flag} {v : W.Vertex}

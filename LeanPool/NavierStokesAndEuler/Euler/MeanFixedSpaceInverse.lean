@@ -18,7 +18,7 @@ coercive inverse is constructed and identified with the original mean solve,
 so coefficient comparisons can use a common domain without assuming an inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -80,19 +80,19 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
 
 /-- Actual physical derivative on the fixed solenoidal coordinate space. -/
-def fixedMeanDerivative : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
+@[expose] def fixedMeanDerivative : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
   productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F₁)
 
 /-- Actual physical displacement on the fixed coordinate space. -/
-def fixedMeanPrimitive : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
+@[expose] def fixedMeanPrimitive : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
   (primitiveTimeLp T hT).comp (fixedMeanDerivative T hT F F₁)
 
 /-- Actual physical initial trace on the fixed coordinate space. -/
-def fixedMeanTrace : TimeLp T solenoidalSpace →L[ℝ] L2 :=
+@[expose] def fixedMeanTrace : TimeLp T solenoidalSpace →L[ℝ] L2 :=
   (initialTrace T hT).comp (fixedMeanDerivative T hT F F₁)
 
 /-- The full original mean form as an operator on one fixed Hilbert space. -/
-def fixedMeanOperator : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def fixedMeanOperator : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
   transportedOperator (fixedMeanDerivative T hT F F₁)
     (meanOperator (primitiveTimeLp T hT) (initialTrace T hT) (timeMultiplier T hT H) (M0+L • A))
 
@@ -116,7 +116,7 @@ variable (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     HasDerivWithinAt (extendPath T hT F) (F₁ t) (Icc (0 : ℝ) T) t)
 
 /-- An explicit positive coercivity constant from the proved mean transport bound. -/
-def fixedMeanCoercivity : ℝ := (meanTransportCost T FInv F F₁)⁻¹^2 / 2
+@[expose] def fixedMeanCoercivity : ℝ := (meanTransportCost T FInv F F₁)⁻¹^2 / 2
 
 include hT in
 /-- The fixed-space coercivity constant is positive. -/
@@ -159,14 +159,14 @@ theorem fixedMeanOperator_coercive (v : TimeLp T solenoidalSpace) :
       hp.trans_eq (fixedMeanOperator_inner T hT F F₁ H M0 A L v v).symm
 
 /-- The actual fixed-space inverse operator. -/
-def fixedMeanInverse : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def fixedMeanInverse : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
   coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) (fixedMeanCoercivity T F F₁ FInv)
     (fixedMeanCoercivity_pos T hT F F₁ FInv)
     (fixedMeanOperator_coercive T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary
         hsmall)
 
 /-- The actual forcing-to-coordinate-derivative map on the fixed space. -/
-def fixedMeanSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def fixedMeanSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
   (fixedMeanInverse T hT F F₁ H M0 A L FInv hInv hF K B hK hB hFInv₀ hH hboundary hsmall).comp
     (-(fixedMeanPrimitive T hT F F₁).adjoint)
 

@@ -20,7 +20,7 @@ it: closing a tensor product multiplies the two closures, proved
 by bilinear induction down to single fragments.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -30,6 +30,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The trace of an `n`-strand endomorphism: the closure against
 the strand bundle. -/
+@[expose]
 noncomputable def skeinTrace (n : ℕ) (g : skeinEnd f n) : ℂ :=
   HomSpace.traceMap f.val n g
 

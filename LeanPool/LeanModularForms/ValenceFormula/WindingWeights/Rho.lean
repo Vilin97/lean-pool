@@ -28,7 +28,7 @@ around the elliptic point ρ = e^{2πi/3}.
 * `gWN_fdBoundary_H_at_rho` — gWN = -1/6 at ρ
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

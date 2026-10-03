@@ -21,7 +21,7 @@ quotient-facet level, while the geometric theorems are stated for arbitrary repr
 canonical occurrences.  The signed boundary formula is supplied in the following module.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -83,6 +83,7 @@ private theorem localPoint_upper_vertex
     (RelativeSubdivisionCylinderCombinatorics.vertex_succ_upper n pi i)
 
 /-- Split a level-`N + 1` top cell into its level-`N` prefix and final subdivision permutation. -/
+@[expose]
 noncomputable def splitTopCellEquiv
     (hp : Nat.Prime p) (N : Nat) :
     TopCell hp (N + 1) ≃ TopCell hp N × Equiv.Perm (Fin p) where
@@ -117,6 +118,7 @@ theorem coefficient_snoc
   ring
 
 /-- Canonical lower horizontal occurrence over a level-`N` top cell. -/
+@[expose]
 noncomputable def lowerOccurrence
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) :
     (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence :=
@@ -124,6 +126,7 @@ noncomputable def lowerOccurrence
 
 /-- Canonical upper horizontal occurrence over a level-`N` cell and one final subdivision
 permutation. -/
+@[expose]
 noncomputable def upperOccurrenceBase
     (hp : Nat.Prime p) (N : Nat)
     (q : TopCell hp N) (pi : Equiv.Perm (Fin p)) :
@@ -132,6 +135,7 @@ noncomputable def upperOccurrenceBase
       simpa [Nat.sub_add_cancel hp.pos] using pi)), 0)
 
 /-- Canonical upper horizontal occurrence indexed by a level-`N + 1` top cell. -/
+@[expose]
 noncomputable def upperOccurrence
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp (N + 1)) :
     (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence :=
@@ -139,12 +143,14 @@ noncomputable def upperOccurrence
   upperOccurrenceBase hp N data.1 data.2
 
 /-- Canonical lower quotient facet. -/
+@[expose]
 noncomputable def lowerFacet
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) :
     (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet :=
   (RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass (lowerOccurrence hp N q)
 
 /-- Canonical upper quotient facet. -/
+@[expose]
 noncomputable def upperFacet
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp (N + 1)) :
     (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet :=

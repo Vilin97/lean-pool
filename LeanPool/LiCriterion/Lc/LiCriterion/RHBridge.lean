@@ -20,7 +20,7 @@ This file connects the project-local Li-criterion theorems to mathlib's
 biconditional.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped Topology

@@ -9,12 +9,12 @@ public import LeanPool.HadwigerNelsonBounds.PartsCertificate
 
 /-! Generated chunk 1 of the Parts coloring-tree certificate. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Normalized root orbit 3, checked by Parts tree `L2`. -/
-def partsBaseCertificate3 : PartsCertificate := {
+@[expose] def partsBaseCertificate3 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 1⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -37,7 +37,7 @@ def partsBaseCertificate3 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 17, checked by Parts tree `L8`. -/
-def partsBaseCertificate17 : PartsCertificate := {
+@[expose] def partsBaseCertificate17 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 3⟩,
@@ -156,7 +156,7 @@ def partsBaseCertificate17 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 23, checked by Parts tree `L2`. -/
-def partsBaseCertificate23 : PartsCertificate := {
+@[expose] def partsBaseCertificate23 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 3⟩,
@@ -179,7 +179,7 @@ def partsBaseCertificate23 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 28, checked by Parts tree `S`. -/
-def partsBaseCertificate28 : PartsCertificate := {
+@[expose] def partsBaseCertificate28 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,

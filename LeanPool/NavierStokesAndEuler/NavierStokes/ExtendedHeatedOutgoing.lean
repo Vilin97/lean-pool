@@ -17,7 +17,7 @@ restriction supplies the physical-band witness; no comparison of unrelated
 existential choices is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,6 +36,7 @@ abbrev Coeff := TerminalCompensation.Coeff
 /-- Parameter domain, given by `Ioo (-(3 / 2 : ℝ)) (3 / 2)`. -/
 def parameterDomain : Set ℝ := Ioo (-(3 / 2 : ℝ)) (3 / 2)
 /-- Domain, given by `Ioi 0 ×ˢ parameterDomain`. -/
+@[expose]
 def domain : Set (ℝ × ℝ) := Ioi 0 ×ˢ parameterDomain
 
 theorem parameterDomain_open : IsOpen parameterDomain := isOpen_Ioo
@@ -172,6 +173,7 @@ theorem parameter_correction_contDiffOn (x : ℝ) :
       (contDiffOn_id.prodMk contDiffOn_const) (fun _ heta => ⟨heta, mem_univ _⟩))
 
 /-- Restriction of the constructed branch, rather than a new existential solve. -/
+@[expose]
 noncomputable def physical : HeatedOutgoing.CompensationWitness F XR C where
   radius_pos := w.radius_pos
   switch_large := w.switch_large
@@ -205,7 +207,7 @@ noncomputable def physical : HeatedOutgoing.CompensationWitness F XR C where
   patch_positive := fun eta heta => w.patch_positive eta (parameterDomain_subset
       (physicalBand_subset heta))
 
-@[simp] theorem physical_coefficients : w.physical.coefficients = w.coefficients := rfl
+@[simp] theorem physical_coefficients : w.physical.coefficients = w.coefficients := by rfl
 
 end Witness
 
@@ -251,7 +253,7 @@ theorem Pi_eq_physical (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ
 
 theorem heatE_eq_edit (F : Profile) (XR eta X : ℝ) :
     heatE F XR (X, eta) = ExtendedHeatDebts.edit (fun u => OutgoingDilation.E F XR (u, eta))
-      F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X := rfl
+      F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X := by rfl
 
 theorem edit_before (f : ℝ → ℝ) (h nu : ℝ) {K X : ℝ} (hK : 0 < K) (hX : 0 < X) (hle : X ≤ K) :
     ExtendedHeatDebts.edit f h nu K X = f X := by
@@ -472,7 +474,7 @@ theorem J_integrand_eq (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ
     congrArg (fun z => Real.sqrt (2 * X) * z) (E_times_U F XR c eta X hXR hX)
 
 theorem M_unchanged (F : Profile) (XR eta X : ℝ) : M F XR eta X = OutgoingDilation.M F XR eta X :=
-    rfl
+  by exact HeatedOutgoing.M_unchanged F XR eta X
 
 theorem J_unchanged (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) (hXR : 0 < XR) :
     J F XR c eta X = OutgoingDilation.J F XR eta X :=
@@ -491,7 +493,7 @@ theorem Pi_exp (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta y : ℝ) :
   simp_rw [canonicalKernel_comp_exp]
 
 theorem freeLogE_eq (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta y : ℝ) :
-    HeatedOutgoing.freeLogE F XR ((c eta, eta), y) = E F XR c (Real.exp y, eta) := rfl
+    HeatedOutgoing.freeLogE F XR ((c eta, eta), y) = E F XR c (Real.exp y, eta) := by rfl
 
 namespace Witness
 
@@ -719,7 +721,7 @@ theorem ScheduleBounds.physicalBand_subset {F : Profile} (b : ScheduleBounds F) 
 
 /-- Amplitude bound, given by `128 * CorrectedPulseAmplitude.combinedConstant F.data.core.P
 F.data.core.m F.coefficientBound`. -/
-noncomputable def amplitudeBound (F : Profile) : ℝ :=
+@[expose] noncomputable def amplitudeBound (F : Profile) : ℝ :=
   128 * CorrectedPulseAmplitude.combinedConstant F.data.core.P F.data.core.m F.coefficientBound
 
 theorem ScheduleBounds.amplitudeBound_pos {F : Profile} (b : ScheduleBounds F) :

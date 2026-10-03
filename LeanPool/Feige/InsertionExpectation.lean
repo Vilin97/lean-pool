@@ -17,7 +17,7 @@ from concrete Boolean chains to the pairwise mass-transport calculation in
 the proof of Theorem 2.1.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -78,7 +78,7 @@ noncomputable def insertionUpperPayoff {n : ℕ}
 
 /-- Payoff after independently revealing the new last coordinate with
 probability `p`. -/
-noncomputable def revealedLastPayoff {n : ℕ}
+@[expose] noncomputable def revealedLastPayoff {n : ℕ}
     (p : ℝ) (g : Finset (Fin (n + 1)) → ℝ)
     (S : Finset (Fin n)) : ℝ :=
   (1 - p) * g (liftChainState S) +

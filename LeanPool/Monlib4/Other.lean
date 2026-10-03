@@ -19,4 +19,4 @@ import Mathlib.Tactic.NormNum.Pow
 Import-only index for miscellaneous self-contained monlib4 files.
 -/
 
-@[expose] public section
+public section

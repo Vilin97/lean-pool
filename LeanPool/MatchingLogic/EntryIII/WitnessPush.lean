@@ -23,7 +23,7 @@ import LeanPool.MatchingLogic.EntryIII.LocalTheory
 # MatchingLogic.EntryIII.WitnessPush
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -33,7 +33,7 @@ namespace Pattern
 
 /-- Nested source notation `exists y1 ... exists yn, p`, with the
 list order giving the outer-to-inner binder order. -/
-def exList : List Nat -> Pattern S Nat -> Pattern S Nat
+@[expose] def exList : List Nat -> Pattern S Nat -> Pattern S Nat
   | [], p => p
   | y :: ys, p => .ex y (exList ys p)
 

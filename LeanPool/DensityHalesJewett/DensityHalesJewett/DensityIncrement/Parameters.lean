@@ -15,7 +15,7 @@ The thresholds `θ`, `η`, and `γ` attached to an alphabet size and a density, 
 monotonicity and positivity properties.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -26,7 +26,7 @@ namespace DensityHalesJewett
 namespace Parameters
 
 /-- A positive dimension selected from the density Hales--Jewett assertion when available. -/
-noncomputable def m₀ (k : ℕ) (δ : ℝ) : ℕ := by
+@[expose] noncomputable def m₀ (k : ℕ) (δ : ℝ) : ℕ := by
   classical
   exact if h : 0 < δ ∧ HasDensityHJ k then
     Nat.succ <| Nat.find <| h.2 (δ / 4) (by linarith)
@@ -77,7 +77,7 @@ lemma θ_denominator_pos {k : ℕ} (hk : 2 ≤ k) (δ : ℝ) :
   · exact Nat.ne_of_gt <| m₀_pos k δ
 
 /-- The correlated-fibers threshold attached to an alphabet size and density. -/
-noncomputable def θ (k : ℕ) (δ : ℝ) : ℝ :=
+@[expose] noncomputable def θ (k : ℕ) (δ : ℝ) : ℝ :=
   (δ / 4) /
     (((k + 1 : ℕ) : ℝ) ^ m₀ k δ - (k : ℝ) ^ m₀ k δ)
 
@@ -131,7 +131,7 @@ lemma η_pos {k : ℕ} (hk : 2 ≤ k) {δ : ℝ} (hδ : 0 < δ) : 0 < η k δ :=
     · positivity
 
 /-- The density increment attached to an alphabet size and density. -/
-noncomputable def γ (k : ℕ) (δ : ℝ) : ℝ :=
+@[expose] noncomputable def γ (k : ℕ) (δ : ℝ) : ℝ :=
   min (δ * η k δ ^ 2 / k) (min (η k δ ^ 2 / 2) (3 * η k δ))
 
 /-- The increment is monotone in the density parameter. -/

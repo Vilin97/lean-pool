@@ -20,7 +20,7 @@ companion and add only the genuinely-local extras (`mem_conjGL'`,
 to an arbitrary finite-index `Γ`).
 -/
 
-@[expose] public section
+public section
 
 open ConjAct Matrix.SpecialLinearGroup Matrix ModularGroup CongruenceSubgroup
 

@@ -25,7 +25,7 @@ section
 velocity update. Odd particle displacements fix the origin, and the two
 literal velocity laws identify the source matrices there. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -90,7 +90,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 from the two physical velocity identities. The remaining quantitative
 inputs are the preceding packet's center shear error and parent low
 norm bounds, as used by the geometric induction. -/
-def geometryFrameOfPhysicalUpdate (τ : ℝ) (hτ : 0 ≤ τ)
+@[expose] def geometryFrameOfPhysicalUpdate (τ : ℝ) (hτ : 0 ≤ τ)
     (η : U) (hη : η ≠ 0) (c CM CH K error : ℝ)
     (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
     (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
@@ -113,7 +113,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -183,7 +183,7 @@ variable (N : Parent) (hTime : N.T = G.T)
 
 /-- Forward geometry frame as an element of `ParentFrame (N.transverseData mNew hmNew RNew SNew
 hSNew) τ`. -/
-def forwardGeometryFrame (η : U) (hη : η ≠ 0)
+@[expose] def forwardGeometryFrame (η : U) (hη : η ≠ 0)
     (hsource20 : ∀ t : Icc (0 : ℝ) G.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (w t) 0-(α*deriv (profile δ) (k*⟪m,Y t 0⟫_ℝ)) •
         rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
@@ -201,7 +201,7 @@ def forwardGeometryFrame (η : U) (hη : η ≠ 0)
 
 /-- Joined geometry frame as an element of `ParentFrame (N.transverseData mNew hmNew RNew SNew
 hSNew) τ`. -/
-def joinedGeometryFrame
+@[expose] def joinedGeometryFrame
     (s : ℝ) (hs : 0 < s) (hsT : s < G.T)
     (B : HistoryData ((G.transverseData m hm R S hS).initial s hs hsT.le))
     (ξ : U) (hξ : ξ ≠ 0) (hcut : tsupport innerCutoff ⊆ S)
@@ -230,7 +230,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -244,7 +244,7 @@ open scoped ContDiff
 variable {A N : Parent} (S : SmoothState A) (T : SmoothState N) (hTime : N.T = A.T)
 
 /-- Velocity increment, given by `T.evolution.velocity (t,x)-S.evolution.velocity (t,x)`. -/
-def velocityIncrement (t : ℝ) (x : Space) : Space :=
+@[expose] def velocityIncrement (t : ℝ) (x : Space) : Space :=
   T.evolution.velocity (t,x)-S.evolution.velocity (t,x)
 
 include hTime in
@@ -279,7 +279,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (δ : ℝ) (hδ : 0 < δ) (α k : ℝ)
 
 /-- Forward renewal, constructed using `A.forwardGeometryFrame`. -/
-def forwardRenewal (ξ : U) (hξ : ξ ≠ 0)
+@[expose] def forwardRenewal (ξ : U) (hξ : ξ ≠ 0)
     (hsource : ∀ t : Icc (0 : ℝ) A.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (S.velocityIncrement T t) 0 -
         (α*deriv (profile δ) (k*⟪m,S.evolution.inverse.normalized t 0⟫_ℝ)) •
@@ -297,7 +297,7 @@ def forwardRenewal (ξ : U) (hξ : ξ ≠ 0)
     S.evolution.inverse.normalized S.normalized_inverse_zero δ hδ α k ξ hξ hsource
 
 /-- Joined renewal, constructed using `A.joinedGeometryFrame`. -/
-def joinedRenewal (s : ℝ) (hs : 0 < s) (hsT : s < A.T)
+@[expose] def joinedRenewal (s : ℝ) (hs : 0 < s) (hsT : s < A.T)
     (H : HistoryData ((A.transverseData m hm J support hSupport).initial s hs hsT.le))
     (ξ : U) (hξ : ξ ≠ 0) (hcut : tsupport innerCutoff ⊆ support)
     (hsource : ∀ t : Icc (0 : ℝ) A.T, τ ≤ (t : ℝ) →

@@ -25,7 +25,7 @@ the total integral reduces to log(g(t₀-δ)) - log(g(t₀+δ)).
   to the log difference at the crossing boundary
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Complex
 open scoped Interval

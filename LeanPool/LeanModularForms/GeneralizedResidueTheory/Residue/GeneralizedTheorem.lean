@@ -23,4 +23,4 @@ parts of the project — `Cycle.lean`, `ViazovskaMagicFunction.lean` — actuall
 We retire this duplicate as a re-export.
 -/
 
-@[expose] public section
+public section

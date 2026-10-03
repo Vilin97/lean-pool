@@ -20,7 +20,7 @@ set `S` in `ℝ^d` with `s` distinct distances by `Nat.choose (d + s) s`, follow
 the short proof of Petrov and Pohoata via the Croot-Lev-Pach lemma.
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 

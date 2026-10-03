@@ -79,7 +79,7 @@ their identities) is stated for an *arbitrary* edge multiset, because step (1) r
 
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -336,6 +336,7 @@ lemma edgesBetweenOf_eq_sum (M : Multiset (G.V × G.V)) {S T : Finset G.V}
 /-- `e(S, T)`, as the double sum of edge multiplicities over `S × T`. For disjoint `S` and
 `T` this is the number of edges with one end in each (`edgesBetweenOf_eq_sum`), which is what
 makes it the right bookkeeping device for a set firing. -/
+@[expose]
 def edgesBetween (G : CFGraph) (S T : Finset G.V) : ℕ :=
   ∑ v ∈ S, ∑ w ∈ T, numEdges G v w
 

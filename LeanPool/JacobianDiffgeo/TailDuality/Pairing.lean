@@ -35,7 +35,7 @@ functional needs). All PUBLIC lemmas are stated at the `MForm`/`laurentCoeffAt` 
 * `resMap`/`resMap_injective`: the induced map `Ω(-D) →ₗ Dual(H1Tail D)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace Filter Topology
@@ -71,7 +71,7 @@ noncomputable def readAt (p : X) :
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 @[simp] theorem readAt_mk (p : X) {f : X → ℂ} (hf : RS.MeromorphicOnX f (chartAt ℂ p).source) :
-    readAt p (RS.MeroGermOn.mk f hf) = (f ∘ (chartAt ℂ p).symm : Filter.Germ _ ℂ) := rfl
+    readAt p (RS.MeroGermOn.mk f hf) = (f ∘ (chartAt ℂ p).symm : Filter.Germ _ ℂ) := by rfl
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem meromorphicGerm_readAt (p : X) (ψ : RS.MeroGermOn X (chartAt ℂ p).source) :
@@ -156,7 +156,7 @@ omit [T2Space X] in
 theorem pairAtData_mk (θ : MFormData X) (p : X) {f : X → ℂ}
     (hf : RS.MeromorphicOnX f (chartAt ℂ p).source) :
     pairAtData θ p (RS.MeroGermOn.mk f hf) =
-      RS.resAt (fun z => f ((chartAt ℂ p).symm z) * θ.coeffAt p z) (chartAt ℂ p p) := rfl
+      RS.resAt (fun z => f ((chartAt ℂ p).symm z) * θ.coeffAt p z) (chartAt ℂ p p) := by rfl
 
 omit [T2Space X] in
 theorem pairAtData_congr {θ θ' : MFormData X} (p : X)
@@ -176,7 +176,7 @@ noncomputable def pairAt (θ : MForm X) (p : X) :
   Quotient.liftOn θ (pairAtData · p) (fun _ _ hab => pairAtData_congr p (hab p))
 
 omit [T2Space X] in
-theorem pairAt_apply_mk (θ : MFormData X) (p : X) : pairAt (MForm.mk θ) p = pairAtData θ p := rfl
+theorem pairAt_apply_mk (θ : MFormData X) (p : X) : pairAt (MForm.mk θ) p = pairAtData θ p := by rfl
 
 omit [T2Space X] in
 theorem pairAt_tailGerm (θ : MForm X) (p : X) (m : ℤ) :
@@ -453,7 +453,7 @@ theorem pairT_alpha {D : RS.Divisor X} (θ : MForm X) (hθ : θ ∈ MForm.OmegaS
     (f : RS.Mero X) : pairT θ hθ (alphaL D f) = 0 := by
   have hsum : pairT θ hθ (alphaL D f)
       = ∑ p ∈ alphaFinset D f, (f • θ).resAt p := by
-    change pairT θ hθ (alpha D f) = _
+    rw [alphaL_apply]
     rw [alpha_eq_sum_singleT, map_sum]
     apply Finset.sum_congr rfl
     intro p _

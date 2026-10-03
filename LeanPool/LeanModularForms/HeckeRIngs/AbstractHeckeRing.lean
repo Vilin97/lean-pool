@@ -32,4 +32,4 @@ This file re-exports the Hecke ring construction, split across:
 * `Degree` — degree ring homomorphism `deg : 𝕋 P ℤ →+* ℤ` (Shimura Prop 3.3)
 -/
 
-@[expose] public section
+public section

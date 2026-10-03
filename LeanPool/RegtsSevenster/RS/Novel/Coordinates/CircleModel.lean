@@ -20,7 +20,7 @@ and the standard model identifies it with the superdimension
 `k − 2ℓ`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

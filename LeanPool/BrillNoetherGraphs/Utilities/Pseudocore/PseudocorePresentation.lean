@@ -39,7 +39,7 @@ vertex/unit-step bijection has to be built by hand: the split's own
 `canonicalSplitLaplacianEquiv` supplies it.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Certificate.PseudocorePresentation
 
 open Finset
@@ -87,6 +87,7 @@ def slotEnds {n p : ℕ} (core : Core n p) (vertex : Fin n) :
     if x.2 then core.head x.1 = vertex else core.tail x.1 = vertex
 
 /-- Core valence: the number of slot ends at a core vertex. -/
+@[expose]
 def slotValence {n p : ℕ} (core : Core n p) (vertex : Fin n) : ℕ :=
   (slotEnds core vertex).card
 

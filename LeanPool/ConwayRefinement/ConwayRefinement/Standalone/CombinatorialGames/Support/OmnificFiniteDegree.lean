@@ -16,18 +16,20 @@ These predicates state the finite-degree examples in `Examples/`.
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz
 
 open Ordinal
 
 /-- An omnific integer is ordinary when its Conway normal form is an integer constant. -/
+@[expose]
 def IsOrdinaryInteger (x : OmnificInteger.{u}) : Prop :=
   ∃ z : ℤ, x.1 = (z : SurrealHahnSeries)
 
 /-- LM24 reducedness: `x` is nonzero, and the exponents occurring in both `x` and `x - 1` lie in
 one Archimedean class. -/
+@[expose]
 def IsReduced (x : OmnificInteger.{u}) : Prop :=
   x ≠ 0 ∧ ∃ c : ArchimedeanClass Surreal,
     x.1.support ∩ (x.1 - 1).support ⊆ {i | ArchimedeanClass.mk i = c}
@@ -37,6 +39,7 @@ def ReducedIsPrimal : Prop :=
   ∀ x : OmnificInteger.{u}, ¬ IsOrdinaryInteger x → IsReduced x → IsPrimal x
 
 /-- The Conway normal form has finite degree when its support order type is below `ω ^ ω`. -/
+@[expose]
 def HasFiniteDegree (x : OmnificInteger.{u}) : Prop :=
   Ordinal.lift.{u + 1, u} x.1.length <
     (ω : Ordinal.{u + 1}) ^ (ω : Ordinal.{u + 1})

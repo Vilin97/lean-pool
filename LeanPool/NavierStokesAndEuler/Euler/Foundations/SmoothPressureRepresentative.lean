@@ -24,7 +24,7 @@ section
 
 /-! Full Fréchet tensor convergence from the genuine cylinder derivative words. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -105,7 +105,7 @@ section
 # Smooth Uniform Limit
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -276,7 +276,8 @@ theorem exists_smooth_representative (U : LiftL2 period)
   let w : Fin 0 → Fin 4 := Fin.elim0
   obtain ⟨g, hg⟩ := exists_smoothMollifier_word_uniform_limit period U (J 3) w
   have hpoint : ∀ x, Filter.Tendsto (fun n => smoothMollifier period n U x)
-      Filter.atTop (𝓝 (g x)) := fun x => hg.tendsto_at x
+      Filter.atTop (𝓝 (g x)) := fun x => by
+    simpa only [iteratedFieldDerivative_zero] using hg.tendsto_at x
   have hC : ∀ m (v : Fin m → Fin 4), UniformCauchySeqOn
       (fun n => iteratedFieldDerivative period v (smoothMollifier period n U)) Filter.atTop
           Set.univ :=

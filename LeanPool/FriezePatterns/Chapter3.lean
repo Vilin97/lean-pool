@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.FriezePatterns.Chapter3`.
 -/
 
-@[expose] public section
+public section
 
 
 /-- An *arithmetic frieze pattern* of height `n`: a rational-valued frieze pattern with all
@@ -497,16 +497,9 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
       have h₃ : ¬ 2 * j + 2 ≤ j := by omega
       simp only [friezeF, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le,
         add_le_add_iff_right, h₃, add_tsub_cancel_right, Nat.cast_inj]
-      unfold fibFluteEven
-      by_cases h₂ : j = 0
-      · simp only [h₂, mul_zero, zero_add, Nat.fib_two]
-        unfold aEven
-        simp
-      -- j ≠ 0
-      simp only
+      rw [fibFluteEven_a]
       have h₄ : ¬ j ≥ 2 * j + 1 := by omega
-      unfold aEven
-      simp [h₄]
+      simp [aEven, h₄]
     simp_all
   -- odd case
   · use friezeF (fibFluteOdd k)
@@ -520,17 +513,12 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
       have h₃ : ¬ 2 * k + 1 ≤ k := by omega
       simp only [friezeF, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le,
         add_le_add_iff_right, h₃, add_tsub_cancel_right, Nat.cast_inj]
-      unfold fibFluteOdd
+      rw [fibFluteOdd_a]
       by_cases h₂ : k = 0
-      · simp only [h₂, ↓reduceDIte, Pi.natCast_apply, Nat.cast_id, mul_zero, zero_add, Nat.fib_one]
-        unfold aOdd
-        simp
-      -- k ≠ 0
-      simp only [h₂, ↓reduceDIte]
+      · simp [h₂, aOdd]
       have h₄ : ¬ 2 * k ≤ k := by omega
       have h₅ : 1 + 4 * k - 2 * k = 2 * k + 1 := by omega
-      unfold aOdd
-      simp [h₂, h₄, h₅]
+      simp [aOdd, h₂, h₄, h₅]
     simp_all
 
 theorem main3 (n : ℕ) (hn : n ≠ 0) : ∃ (g : ℕ × ℕ → ℚ) (_ : arith_fp g n),

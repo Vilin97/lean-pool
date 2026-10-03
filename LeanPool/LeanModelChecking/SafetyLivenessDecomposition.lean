@@ -21,7 +21,7 @@ We prove that every linear-time property decomposes as the intersection of a
 safety property and a liveness property, following Alpern and Schneider.
 -/
 
-@[expose] public section
+public section
 
 namespace SafetyLivenessDecomposition
 

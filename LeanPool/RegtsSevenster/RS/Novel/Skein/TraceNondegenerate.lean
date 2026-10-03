@@ -20,7 +20,7 @@ so the two test families coincide, and an element all of whose
 traces vanish lies in the pairing kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

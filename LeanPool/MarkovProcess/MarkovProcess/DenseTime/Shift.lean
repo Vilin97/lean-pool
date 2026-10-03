@@ -17,7 +17,7 @@ induced shift of dense-time paths.  Restriction of a continuous path commutes wi
 No probability law or Markov property is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -28,6 +28,7 @@ section
 namespace DenseTime
 
 /-- Addition by a fixed dense time as an order embedding of the dense time carrier. -/
+@[expose]
 def addOrderEmbedding (s : DenseTime) : DenseTime ↪o DenseTime :=
   OrderEmbedding.ofStrictMono (fun t ↦ s + t) fun _ _ h ↦ by
     simpa only [add_comm] using add_lt_add_left h s
@@ -49,6 +50,7 @@ namespace DenseTimePath
 variable {alpha : Type*}
 
 /-- Shift a dense-time path by a fixed nonnegative rational time. -/
+@[expose]
 def shift (s : DenseTime) (path : DenseTime → alpha) : DenseTime → alpha :=
   path ∘ DenseTime.addOrderEmbedding s
 

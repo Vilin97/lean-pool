@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
 
 /-! Actual spatial jets outside a closed support and for angle-independent fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

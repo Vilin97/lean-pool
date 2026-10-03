@@ -19,7 +19,7 @@ stored in `ContractionData`, its degenerate subdivision is equivalent to a
 positive subdivision of the displayed target core.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Certificate.ClosedFaceDispatch
 
 open Utilities

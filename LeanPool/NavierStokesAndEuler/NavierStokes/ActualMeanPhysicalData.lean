@@ -30,7 +30,7 @@ variable. Pressure reconstruction, the temporal inverse and the rank repair
 are the literal operations in `CorrectionStep.CycleState.step`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -84,6 +84,7 @@ noncomputable def Geometry.gauge (G : Geometry) : VariableGaugeMean.GaugeData Pl
 
 /-- Rank, given by `RankStateBounds.normalizedData (2 * G.h) (CoordinateAlgebra.A G.h)
 G.rankAmplitude G.rankShape G.rankInner G.rankOuter`. -/
+@[expose]
 noncomputable def Geometry.rank (G : Geometry) : CorrectionState.RankData Plane :=
   RankStateBounds.normalizedData (2 * G.h) (CoordinateAlgebra.A G.h)
     G.rankAmplitude G.rankShape G.rankInner G.rankOuter
@@ -105,17 +106,20 @@ structure Realizes {ι : Type} (G : Geometry) (p : CycleParameters ι) (c : Cont
 
 /-- State band, given by `StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
 (bandVelocityScale G.h n m) (bandScale n m) u u n m`. -/
+@[expose]
 def StateBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (u : State Point) : Prop :=
   StateOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
     (bandVelocityScale G.h n m) (bandScale n m) u u n m
 
 /-- Context band, given by `ContextOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m
 k) (bandVelocityScale G.h n m) (bandScale n m) c c n m`. -/
+@[expose]
 def ContextBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (c : Context Point) : Prop :=
   ContextOn (PhysicalMeanDomain.slowDomain V) (bandChartEquiv G.h n m k)
     (bandVelocityScale G.h n m) (bandScale n m) c c n m
 
 /-- Axis band as an element of `Prop`. -/
+@[expose]
 def AxisBand (G : Geometry) (V : Set Plane) (n m k : ℕ) (a : AxisymmetricAlias) : Prop :=
   ∀ x ∈ PhysicalMeanDomain.slowDomain V, ∀ i,
     a n x i = (bandVelocityScale G.h n m * bandVelocityScale G.h n m * bandScale n m) *
@@ -775,7 +779,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -800,6 +804,7 @@ structure Atlas (h : ℝ) (N Δ : ℕ) where
   gap_le : ∀ n ≥ N, ChartScales.nativeIndex h n - index n ≤ Δ
 
 /-- Gap, given by `ChartScales.nativeIndex h n - A.index n`. -/
+@[expose]
 noncomputable def Atlas.gap {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ) (n : ℕ) : ℕ :=
   ChartScales.nativeIndex h n - A.index n
 
@@ -808,6 +813,7 @@ theorem Atlas.index_eq {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ) {n : ℕ} (hn :
   Nat.sub_sub_self (A.index_le n hn)
 
 /-- Common atlas, bundling `index`, `index_le`, `gap_le`. -/
+@[expose]
 noncomputable def commonAtlas (h : ℝ) (hh : 0 ≤ h) (N : ℕ) :
     Atlas h N (CorrectionInitialization.CommonWindow.gap h) where
   index := CorrectionInitialization.CommonWindow.index h
@@ -815,10 +821,12 @@ noncomputable def commonAtlas (h : ℝ) (hh : 0 ≤ h) (N : ℕ) :
   gap_le n _ := CorrectionInitialization.CommonWindow.gap_le h hh n
 
 /-- Chart, given by `VariableGaugeMean.physicalToChartTZ h n (A.index n)`. -/
+@[expose]
 noncomputable def Atlas.chart {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ) (n : ℕ) : Point →L[ℝ] Point :=
   VariableGaugeMean.physicalToChartTZ h n (A.index n)
 
 /-- Overlap, given by `U ∩ (bandSlowEquiv h n m) ⁻¹' U`. -/
+@[expose]
 noncomputable def overlap (h : ℝ) (U : Set Plane) (n m : ℕ) : Set Plane :=
   U ∩ (bandSlowEquiv h n m) ⁻¹' U
 
@@ -866,6 +874,7 @@ def Atlas.OverlapLaw {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
       f n x = (ChartScales.Q n / ChartScales.Q m) ^ degree * f m (bandChartEquiv h n m k x)
 
 /-- Valid, given by `N ≤ n ∧ 0 < z.2.1.1 ∧ (A.chart n z).2.1 ∈ U`. -/
+@[expose]
 def Atlas.Valid {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     (U : Set Plane) (z : Point) (n : ℕ) : Prop :=
   N ≤ n ∧ 0 < z.2.1.1 ∧ (A.chart n z).2.1 ∈ U
@@ -896,6 +905,7 @@ theorem Atlas.values_eq {h degree : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
   · exact (A.values_eq_ordered H hm hn hi).symm
 
 /-- Physical, choosing the witness provided by `hz`. -/
+@[expose]
 noncomputable def Atlas.physical {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     (U : Set Plane) (degree : ℝ) (f : Scalar) (z : Point) : ℝ := by
   classical
@@ -915,6 +925,7 @@ theorem Atlas.physical_eq {h degree : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
 
 /-- The physical field is constructed from overlapping valid bands. No
 reference band is evaluated outside its original slow strip. -/
+@[expose]
 noncomputable def Atlas.family {h degree : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     {U : Set Plane} {f : Scalar} (H : A.OverlapLaw U degree f) :
     PhysicalMeanJetBounds.CoherentFamily h degree N Δ U ℝ where
@@ -931,6 +942,7 @@ noncomputable def Atlas.family {h degree : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
 /-! ## Extracting scalar families from actual state overlap -/
 
 /-- State overlap as an element of `Prop`. -/
+@[expose]
 def Atlas.StateOverlap {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     (U : Set Plane) (u : CorrectionState.State Point) : Prop :=
   ∀ n ≥ N, ∀ m ≥ N, ∀ k, A.index n + k = A.index m →
@@ -968,19 +980,23 @@ theorem Atlas.StateOverlap.pressure {h : ℝ} {N Δ : ℕ} {A : Atlas h N Δ}
   simpa only [velocityScale_square] using (H n hn m hm k hk).pressure x hx
 
 /-- Radial family, given by `A.family H.radial`. -/
+@[expose]
 noncomputable def Atlas.radialFamily {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     {U : Set Plane} {u : CorrectionState.State Point} (H : A.StateOverlap U u) := A.family H.radial
 
 /-- Angular family, given by `A.family H.angular`. -/
+@[expose]
 noncomputable def Atlas.angularFamily {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     {U : Set Plane} {u : CorrectionState.State Point} (H : A.StateOverlap U u) := A.family H.angular
 
 /-- Axial family, given by `A.family H.axial`. -/
+@[expose]
 noncomputable def Atlas.axialFamily {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     {U : Set Plane} {u : CorrectionState.State Point} (H : A.StateOverlap U u) := A.family H.axial
 
 /-- Pressure family, given by `A.family H.pressure /-! ## The literal initialized mean and
 pressure -/ open CorrectionInitialization.ActualPrimary`. -/
+@[expose]
 noncomputable def Atlas.pressureFamily {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
     {U : Set Plane} {u : CorrectionState.State Point} (H : A.StateOverlap U u) := A.family
         H.pressure
@@ -990,6 +1006,7 @@ noncomputable def Atlas.pressureFamily {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
 open CorrectionInitialization.ActualPrimary
 
 /-- Initial atlas, given by `commonAtlas h outgoing.data.h_pos.le N`. -/
+@[expose]
 noncomputable def initialAtlas (N : ℕ) := commonAtlas h outgoing.data.h_pos.le N
 
 theorem initialized_overlap (B N0 N : ℕ) :
@@ -1000,20 +1017,24 @@ theorem initialized_overlap (B N0 N : ℕ) :
 
 /-- Initial radial family, given by `(initialAtlas N).radialFamily (initialized_overlap B N0
 N)`. -/
+@[expose]
 noncomputable def initialRadialFamily (B N0 N : ℕ) :=
   (initialAtlas N).radialFamily (initialized_overlap B N0 N)
 
 /-- Initial angular family, given by `(initialAtlas N).angularFamily (initialized_overlap B N0
 N)`. -/
+@[expose]
 noncomputable def initialAngularFamily (B N0 N : ℕ) :=
   (initialAtlas N).angularFamily (initialized_overlap B N0 N)
 
 /-- Initial axial family, given by `(initialAtlas N).axialFamily (initialized_overlap B N0 N)`. -/
+@[expose]
 noncomputable def initialAxialFamily (B N0 N : ℕ) :=
   (initialAtlas N).axialFamily (initialized_overlap B N0 N)
 
 /-- Initial pressure family, given by `(initialAtlas N).pressureFamily (initialized_overlap B N0
 N)`. -/
+@[expose]
 noncomputable def initialPressureFamily (B N0 N : ℕ) :=
   (initialAtlas N).pressureFamily (initialized_overlap B N0 N)
 
@@ -1245,12 +1266,14 @@ theorem initial_temporalState_overlap (B N0 N : ℕ) :
     (ActualInitialCoherence.seed_band B N0 n m k hk inter_subset_left (fun _ hx => hx.2))
 
 /-- Initial temporal scalar, constructed using `VariableGaugeMean.temporalPotential`. -/
+@[expose]
 noncomputable def initialTemporalScalar (B N0 : ℕ) : Scalar :=
   VariableGaugeMean.temporalPotential commonGauge h (CorrectionInitialization.CommonWindow.index h)
     (commonContext B) (ActualInitialCoherence.primary B N0)
 
 /-- Initial rank scalar, given by `VariableGaugeMean.rankPotential commonGauge rankData
 (commonContext B) (ActualInitialCoherence.temporal B N0)`. -/
+@[expose]
 noncomputable def initialRankScalar (B N0 : ℕ) : Scalar :=
   VariableGaugeMean.rankPotential commonGauge rankData (commonContext B)
       (ActualInitialCoherence.temporal B N0)
@@ -1278,10 +1301,12 @@ theorem initialRank_overlap (B N0 N : ℕ) :
 
 /-- Initial temporal family, given by `(initialAtlas N).family (initialTemporal_overlap B N0
 N)`. -/
+@[expose]
 noncomputable def initialTemporalFamily (B N0 N : ℕ) :=
   (initialAtlas N).family (initialTemporal_overlap B N0 N)
 
 /-- Initial rank family, given by `(initialAtlas N).family (initialRank_overlap B N0 N)`. -/
+@[expose]
 noncomputable def initialRankFamily (B N0 N : ℕ) :=
   (initialAtlas N).family (initialRank_overlap B N0 N)
 
@@ -1491,19 +1516,23 @@ theorem stage_transport (j : ℕ) (n : ℕ) (hn : N ≤ n) (m : ℕ) (hm : N ≤
 /-- Radial family, given by `D.atlas.radialFamily (D.state_overlap j)`. -/
 noncomputable def radialFamily (j : ℕ) := D.atlas.radialFamily (D.state_overlap j)
 /-- Angular family, given by `D.atlas.angularFamily (D.state_overlap j)`. -/
+@[expose]
 noncomputable def angularFamily (j : ℕ) := D.atlas.angularFamily (D.state_overlap j)
 /-- Axial family, given by `D.atlas.axialFamily (D.state_overlap j)`. -/
 noncomputable def axialFamily (j : ℕ) := D.atlas.axialFamily (D.state_overlap j)
 /-- Pressure family, given by `D.atlas.pressureFamily (D.state_overlap j)`. -/
+@[expose]
 noncomputable def pressureFamily (j : ℕ) := D.atlas.pressureFamily (D.state_overlap j)
 
 /-- Temporal scalar, constructed using `VariableGaugeMean.temporalPotential`. -/
+@[expose]
 noncomputable def temporalScalar (_D : CycleData G N Δ p c seed U) (j : ℕ) : Scalar :=
   VariableGaugeMean.temporalPotential (p j).gauge (p j).timeExponent (p j).commonIndex c
     ((p j).afterSigned (CycleState.iterate p c seed j).coefficients c (CycleState.iterate p c seed
         j).state)
 
 /-- Rank scalar, constructed using `VariableGaugeMean.rankPotential`. -/
+@[expose]
 noncomputable def rankScalar (_D : CycleData G N Δ p c seed U) (j : ℕ) : Scalar :=
   VariableGaugeMean.rankPotential (p j).gauge (p j).rank c
     ((p j).afterTemporal (CycleState.iterate p c seed j).coefficients c (CycleState.iterate p c
@@ -1541,8 +1570,10 @@ theorem rankScalar_overlap (j : ℕ) :
     (D.stage_primitives j).rankGeometry
 
 /-- Temporal family, given by `D.atlas.family (D.temporalScalar_overlap j)`. -/
+@[expose]
 noncomputable def temporalFamily (j : ℕ) := D.atlas.family (D.temporalScalar_overlap j)
 /-- Rank family, given by `D.atlas.family (D.rankScalar_overlap j)`. -/
+@[expose]
 noncomputable def rankFamily (j : ℕ) := D.atlas.family (D.rankScalar_overlap j)
 
 theorem temporal_moving (j : ℕ) :
@@ -1589,6 +1620,7 @@ end CycleData
 
 /-- Initial geometry, bundling `h`, `inner`, `outer`, `frequency` and the required compatibility
 proofs. -/
+@[expose]
 noncomputable def initialGeometry : CycleStateCoherence.Geometry where
   h := h
   inner := PrimaryTargetBounds.leftRadius nominal
@@ -1654,6 +1686,7 @@ structure InitialCycleInput (B N0 N : ℕ)
 
 /-- Initial cycle data, bundling `atlas`, `index_eq`, `realizes`, `context` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def initialCycleData {B N0 N : ℕ}
     {p : ℕ → CycleParameters (ActualInitialization.Index B N0)} (H : InitialCycleInput B N0 N p) :
     CycleData initialGeometry N (CorrectionInitialization.CommonWindow.gap h) p (commonContext B)
@@ -1715,6 +1748,7 @@ theorem Atlas.physical_sub {h : ℝ} {N Δ : ℕ} (A : Atlas h N Δ)
 
 /-- Initial stream family, given by `(initialAtlas N).family ((initialTemporal_overlap B N0
 N).add (initialRank_overlap B N0 N))`. -/
+@[expose]
 noncomputable def initialStreamFamily (B N0 N : ℕ) :=
   (initialAtlas N).family ((initialTemporal_overlap B N0 N).add (initialRank_overlap B N0 N))
 
@@ -1737,16 +1771,19 @@ variable {ι : Type} {G : CycleStateCoherence.Geometry} {N Δ : ℕ}
 
 /-- Stream family, given by `D.atlas.family ((D.temporalScalar_overlap j).add
 (D.rankScalar_overlap j))`. -/
+@[expose]
 noncomputable def streamFamily (j : ℕ) :=
   D.atlas.family ((D.temporalScalar_overlap j).add (D.rankScalar_overlap j))
 
 /-- Angular increment family, given by `D.atlas.family (((D.state_overlap (j+1)).angular).sub
 ((D.state_overlap j).angular))`. -/
+@[expose]
 noncomputable def angularIncrementFamily (j : ℕ) :=
   D.atlas.family (((D.state_overlap (j+1)).angular).sub ((D.state_overlap j).angular))
 
 /-- Pressure increment family, given by `D.atlas.family (((D.state_overlap (j+1)).pressure).sub
 ((D.state_overlap j).pressure))`. -/
+@[expose]
 noncomputable def pressureIncrementFamily (j : ℕ) :=
   D.atlas.family (((D.state_overlap (j+1)).pressure).sub ((D.state_overlap j).pressure))
 

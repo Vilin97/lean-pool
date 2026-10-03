@@ -23,7 +23,7 @@ radius is unchanged; the coordinate/velocity use two shifts and the true
 time derivative uses three. Every inverse guard is source-only.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

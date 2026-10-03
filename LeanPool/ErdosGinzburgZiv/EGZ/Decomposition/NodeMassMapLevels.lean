@@ -18,7 +18,7 @@ contains all data needed for level monotonicity and equal-level coordinate
 injectivity; no extra transport fields are required.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.NodeMassMap
 

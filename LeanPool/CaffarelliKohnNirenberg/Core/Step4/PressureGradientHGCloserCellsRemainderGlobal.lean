@@ -14,7 +14,7 @@ cell controls small cells. Together these estimates give a finite Morrey
 seminorm from an `L^{3/2}` temporal bound on the spatial supremum.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

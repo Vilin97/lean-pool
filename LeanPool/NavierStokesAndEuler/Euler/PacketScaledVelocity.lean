@@ -22,7 +22,7 @@ section
 
 /-! The actual projected primary-velocity ODE in the normalized moving frame. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -74,7 +74,7 @@ theorem movingVelocityRate_identity (B M : Space →L[ℝ] Space) (p q w : Space
     sub_neg_eq_add] using h
 
 /-- Moving velocity, given by `⟪normalizedFrame m v t i,w t⟫_ℝ`. -/
-def movingVelocity (m v w : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
+@[expose] def movingVelocity (m v w : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
   ⟪normalizedFrame m v t i,w t⟫_ℝ
 
 /-- Moving flux, given by `∑ i : Fin 3, movingRay m v r t i * (∑ j : Fin 3, frameMatrix M (unit
@@ -136,7 +136,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -146,7 +146,7 @@ open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProdu
 
 /-- Scaled velocity, given by `movingVelocity m v w (physicalTime t₀ a ε τ) i / velocityScale ε
 i`. -/
-def scaledVelocity (m v w : ℝ → Space) (t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
+@[expose] def scaledVelocity (m v w : ℝ → Space) (t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
   movingVelocity m v w (physicalTime t₀ a ε τ) i / velocityScale ε i
 
 theorem scaledRay_restore (m v r : ℝ → Space) {s₀ t₀ a ε τ : ℝ}
@@ -163,10 +163,12 @@ theorem scaledVelocity_restore (m v w : ℝ → Space) {t₀ a ε τ : ℝ}
   field_simp [velocityScale_ne_zero hε i]
 
 /-- Scaled action, given by `scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))`. -/
-def scaledAction (M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
+@[expose] def scaledAction (M : Space →L[ℝ] Space) (m v : ℝ → Space)
+    (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (frameMatrix M (unit (m t)) (unit (v t)))
 
 /-- Scaled transport, constructed using `scaledVelocityEntry`. -/
+@[expose]
 def scaledTransport (B M : Space →L[ℝ] Space) (m v : ℝ → Space) (a ε t : ℝ) : Fin 3 → Fin 3 → ℝ :=
   scaledVelocityEntry a ε (fun i j => frameMatrix M (unit (m t)) (unit (v t)) i j +
     frameSkew (frameMatrix B (unit (m t)) (unit (v t))) i j)

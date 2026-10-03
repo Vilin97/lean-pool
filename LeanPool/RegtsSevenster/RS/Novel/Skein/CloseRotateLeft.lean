@@ -20,7 +20,7 @@ where `Wᵀ` transposes the boundary of `W`.  This is the
 left-mirror variant of `pairCloseComposeRotate`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

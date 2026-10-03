@@ -20,7 +20,7 @@ image of a capped simplex. The cap can be selected at the largest centrality,
 so the resulting coefficients do not depend on the centrality parameter.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

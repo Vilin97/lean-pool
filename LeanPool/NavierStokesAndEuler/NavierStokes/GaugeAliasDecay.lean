@@ -15,7 +15,7 @@ The finite-jet estimates are local in the slow variables. The radial
 frequency is finally specialized to the actual manuscript exponent.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ section FiberInverse
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensional ℝ S]
 
 /-- Fiber shell, given by `{z | z.1 ∈ Icc a b ∧ z.2.1 = s}`. -/
-noncomputable def fiberShell (a b : ℝ) (s : S) : Set (Point S) :=
+@[expose] noncomputable def fiberShell (a b : ℝ) (s : S) : Set (Point S) :=
   {z | z.1 ∈ Icc a b ∧ z.2.1 = s}
 
 /-- The torus inverse estimate uses only jets on the designated slow fiber. -/

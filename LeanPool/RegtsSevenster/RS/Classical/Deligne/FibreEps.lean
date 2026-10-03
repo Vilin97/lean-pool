@@ -20,7 +20,7 @@ components it is composition with the inverse right unitor of the
 algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ variable {D : Type u}
 open SuperCommAlgebra.Mod
 
 /-- **The unit comparison of the fibre functor.** -/
+@[expose]
 noncomputable def fibreEpsIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]

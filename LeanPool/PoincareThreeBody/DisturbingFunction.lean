@@ -19,33 +19,33 @@ torus. We define the first-order disturbing function on this family and its aver
 period. Nonconstancy of this average is the concrete perturbative input in Poincaré's argument.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 open MeasureTheory
 
 /-- A resonant Kepler ellipse with an arbitrary inertial orientation phase. -/
-noncomputable def orientedResonantEllipsePosition
+@[expose] noncomputable def orientedResonantEllipsePosition
     (p q : ℕ) (eccentricity orientation time : ℝ) : ActionSpace :=
   positionInRotatingFrame (time - orientation)
     (inertialEllipsePosition (resonantFirstAction p q) eccentricity
       (resonantEccentricAnomaly p q eccentricity time))
 
 /-- The oriented resonant position embedded in phase space. -/
-noncomputable def orientedResonantEllipsePhasePoint
+@[expose] noncomputable def orientedResonantEllipsePhasePoint
     (p q : ℕ) (eccentricity orientation time : ℝ) :
     PhaseSpace :=
   positionPhasePoint (orientedResonantEllipsePosition p q eccentricity orientation time)
 
 /-- The first-order disturbing function along an oriented resonant ellipse. -/
-noncomputable def resonantDisturbingFunction
+@[expose] noncomputable def resonantDisturbingFunction
     (p q : ℕ) (eccentricity orientation time : ℝ) : ℝ :=
   firstMassPerturbation
     (orientedResonantEllipsePhasePoint p q eccentricity orientation time)
 
 /-- The disturbing function averaged over one common resonant period. -/
-noncomputable def resonantDisturbingAverage
+@[expose] noncomputable def resonantDisturbingAverage
     (p q : ℕ) (eccentricity orientation : ℝ) : ℝ :=
   ∫ time in 0..resonantOrbitPeriod p,
     resonantDisturbingFunction p q eccentricity orientation time

@@ -17,7 +17,7 @@ Only stripped coefficients are placed in the weighted classes. The carrier is
 retained in the exact differential identities and is removed before estimating.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.WaveInteractionBounds
@@ -163,11 +163,13 @@ theorem axial_vector_class (s : StripData D) (v : D) :
 abbrev Family (D : Type*) := ℕ → D → ComplexVector
 
 /-- Wave vector, given by `∀ i, WaveClass s P α (fun n x => a n x i)`. -/
+@[expose]
 def WaveVector (s : StripData D) (P : ℕ → D → ℝ) (α : ℝ) (a : Family D) : Prop :=
   ∀ i, WaveClass s P α (fun n x => a n x i)
 
 /-- Mean vector, given by `MeanClass s (μ + 1) (fun n x => a n x 0) ∧ MeanClass s μ (fun n x =>
 a n x 1) ∧ MeanClass s μ (fun n x => a n x 2)`. -/
+@[expose]
 def MeanVector (s : StripData D) (μ : ℝ) (a : Family D) : Prop :=
   MeanClass s (μ + 1) (fun n x => a n x 0) ∧
     MeanClass s μ (fun n x => a n x 1) ∧ MeanClass s μ (fun n x => a n x 2)
@@ -181,11 +183,12 @@ theorem meanVector_component {s : StripData D} {μ : ℝ} {a : Family D}
 
 /-- Angular independent, given by `∀ n i x, x ∈ s.domain → along (G.angular n) (fun y => a n y
 i) x = 0`. -/
+@[expose]
 def AngularIndependent {s : StripData D} {κ : ℝ} (G : Geometry s κ) (a : Family D) : Prop :=
   ∀ n i x, x ∈ s.domain → along (G.angular n) (fun y => a n y i) x = 0
 
 /-- Stripped transport as an element of `Family D`. -/
-noncomputable def strippedTransport {s : StripData D} {κ : ℝ}
+@[expose] noncomputable def strippedTransport {s : StripData D} {κ : ℝ}
     (G : Geometry s κ) (a b : Family D) : Family D := fun n x i =>
   a n x 0 * along (G.radial n) (fun y => b n y i) x +
     (a n x 1 / (G.radius n x : ℂ)) * angularGenerator (b n x) i +
@@ -387,7 +390,7 @@ theorem phaseFactor_class {s : StripData D} {w : ℕ → D → ℝ} {α β : ℝ
   ring
 
 /-- Wave mean coefficient as an element of `Family D`. -/
-noncomputable def waveMeanCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
+@[expose] noncomputable def waveMeanCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
     (Φ : ℕ → D → ℝ) (ν : ℕ → ℝ) (m a : Family D) : Family D := fun n x i =>
   strippedTransport G m a n x i + strippedTransport G a m n x i +
     phaseFactor (ν n) * normalDot
@@ -454,7 +457,7 @@ theorem switched_longitudinal (R : D → ℝ) (Vr Vθ Vz : D → D) (ν ξ : ℝ
   rfl
 
 /-- Same coefficient as an element of `Family D`. -/
-noncomputable def sameCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
+@[expose] noncomputable def sameCoefficient {s : StripData D} {κ : ℝ} (G : Geometry s κ)
     (Φ : ℕ → D → ℝ) (ξ : ℕ → ℝ) (a b : Family D) : Family D := fun n x i =>
   strippedTransport G a b n x i + phaseFactor (ξ n) * normalDot
     (phaseNormal (G.radius n) (G.radial n) (G.angular n) (G.axial n) (Φ n) x) (a n x) * b n x i

@@ -18,7 +18,7 @@ square diagram is the shape whose dimension growth drives that
 confinement.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -31,7 +31,7 @@ face.  Their Farkas receipts and firing scripts are rechecked by Lean's kernel;
 no external checker is trusted.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourGeneratedRows
 
 open Utilities

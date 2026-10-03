@@ -16,7 +16,7 @@ Decomposes the subtype of colourings fixed by a lifted permutation
 on the first `m` coordinates and free colourings on the tail.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

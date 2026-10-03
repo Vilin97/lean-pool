@@ -18,7 +18,7 @@ An `OChart` has an open-interval target `Ioo x y` (an interior chart); an `HChar
 half-open target `Iio x` (a boundary chart); an `IChart` is either.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 
@@ -42,14 +42,17 @@ variable
   [TopologicalSpace M]
 
 /-- Regard an interior chart as an interval chart. -/
+@[expose]
 def OChart.toIChart (a : OChart M) : IChart M :=
   { a with is_interval := Or.inl a.target_ioo }
 
 /-- Regard a boundary chart as an interval chart. -/
+@[expose]
 def HChart.toIChart (a : HChart M) : IChart M :=
   { a with is_interval := Or.inr a.target_iio }
 
 /-- Two sets meet and each has a point outside the other. -/
+@[expose]
 def Overlap (U : Set α) (V : Set α) : Prop :=
   (U ∩ V).Nonempty ∧ (U \ V).Nonempty ∧ (V \ U).Nonempty
 

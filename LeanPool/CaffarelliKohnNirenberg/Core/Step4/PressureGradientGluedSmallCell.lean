@@ -33,7 +33,7 @@ Cells above the margin scale are **not** reached by this argument; they belong t
 the other regime and are bounded by the whole-carrier integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

@@ -38,7 +38,7 @@ functionals and of their derivatives, and closedness of the graph (`mem_domD12_o
 concludes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

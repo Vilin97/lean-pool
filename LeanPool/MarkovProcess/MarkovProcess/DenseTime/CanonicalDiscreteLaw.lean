@@ -18,7 +18,7 @@ records exact finite-prefix and coordinate marginal identities.  No
 conditional-expectation Markov property is asserted here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

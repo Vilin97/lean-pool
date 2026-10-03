@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.SimpleExtension
 
 /-! # Unnecessitation -/
 
-@[expose] public section
+public section
 
 
 namespace LO

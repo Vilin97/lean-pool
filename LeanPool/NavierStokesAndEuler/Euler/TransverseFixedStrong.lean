@@ -17,7 +17,7 @@ spatial or cylinder L² spaces, where a pointwise transverse constraint must
 not be replaced by orthogonality to a single Hilbert-space vector.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -69,7 +69,8 @@ theorem momentum_weak (f : TimeLp T E) (v : TimeLp T U)
         primitiveTimeLp T hT v⟫_ℝ := by
   apply momentum_weak_of_product_tests T hT Q Q₁ hd H
     (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) f v
-  exact fixedFrameSolver_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f ⟨v,hv⟩
+  exact fixedFrameSolver_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f
+    ⟨v, (mem_zeroTraceDerivatives T hT v).2 hv⟩
 
 variable (Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
   (hd₁ : ∀ t : Icc (0 : ℝ) T,

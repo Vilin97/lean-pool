@@ -35,7 +35,7 @@ by the same checked `(2,3)` articulation.  The public canonical classifiers
 make both reductions exhaustive.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.Highlights
 

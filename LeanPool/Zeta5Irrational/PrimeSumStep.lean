@@ -19,14 +19,14 @@ of a partition `a = c_0 < ⋯ < c_r = b`, then
 `K² ∑_j v_j (1/c_j² - 1/c_{j+1}²)/2 + o(K²)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology Set
 
 namespace Zeta5Irrational
 
 /-- `∑_{K/b < p ≤ K/a} p f(K/p) log p`. -/
-noncomputable def psum (f : ℝ → ℝ) (a b K : ℝ) : ℝ :=
+@[expose] noncomputable def psum (f : ℝ → ℝ) (a b K : ℝ) : ℝ :=
   ∑ k ∈ Ioc ⌊K / b⌋₊ ⌊K / a⌋₊, (k : ℝ) * cPrime k * f (K / k)
 
 lemma cPrime_nonneg (k : ℕ) : 0 ≤ cPrime k := by

@@ -23,7 +23,7 @@ the converse it gives is `regts_sevenster_converse` in
 `RS/TheoremConverse.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -60,6 +60,7 @@ the fragment's own free circles riding along.  The flag model
 carries vertex-free loops the graph model has no room for, and the
 partition function weights each by `k - 2ℓ`; the circles the closure
 creates come out of the contraction instead. -/
+@[expose]
 noncomputable def fragmentTensor {k ℓ : ℕ} (h : MixedFunctional k ℓ)
     (t : ℕ) (F : Fragment (Fin t))
     (x : GenBoundaryState k ℓ (Fin t)) : ℂ :=

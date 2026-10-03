@@ -20,7 +20,7 @@ generates, so an algebra map vanishing on a block element but not
 on the projector is impossible.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -138,12 +138,14 @@ noncomputable abbrev natBlock [Group G] [Fintype G]
   LinearMap.range (mulLeft ℂ (nProjector S))
 
 /-- The standard-coordinates equivalence of the carrier. -/
+@[expose]
 noncomputable def stdEquiv [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)) :
     subCarrier S ≃ₗ[ℂ] (Fin (nDim S) → ℂ) :=
   (Module.finBasis ℂ (subCarrier S)).equivFun
 
 /-- The block map in standard coordinates. -/
+@[expose]
 noncomputable def mPsi [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G))
     (y : MonoidAlgebra ℂ G) :
@@ -211,6 +213,7 @@ theorem mPsi_projector_eq_one [Group G] [Fintype G]
   rfl
 
 /-- The standard-coordinates block map on the block. -/
+@[expose]
 noncomputable def mPsiLin [Group G] [Fintype G]
     (S : Submodule (MonoidAlgebra ℂ G) (MonoidAlgebra ℂ G)) :
     natBlock S →ₗ[ℂ]

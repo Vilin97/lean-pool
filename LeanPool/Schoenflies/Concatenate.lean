@@ -44,7 +44,7 @@ itself. Pinning those needs the start/finish counterparts of the midpoint lemmas
   of a curve takes.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

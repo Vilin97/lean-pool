@@ -24,7 +24,7 @@ constructions.)
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace LieAlgebra
@@ -59,7 +59,7 @@ lemma _root_.LieAlgebra.Representation.apply_bracket_eq_commutator
 /-- An auxiliary definition for constructing representation of Lie algebras from a basis and a
 corresponding collection of operators; `representationOfBasisAux` is just a linear map from
 the Lie algebra to the space of operators (not yet a morphism of Lie algebras). -/
-noncomputable def representationOfBasisAux
+@[expose] noncomputable def representationOfBasisAux
     {𝕂 : Type*} [Field 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
     {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Basis ι 𝕂 𝓰)
     (genOper : ι → (V →ₗ[𝕂] V)) :
@@ -94,7 +94,7 @@ lemma representationOfBasisAux_property
 
 /-- A representation of a Lie algebra `𝓰` with basis `B` constructed from a collection of operators
 satisfying the commutation relations specified by the Lie brackets of the basis elements. -/
-noncomputable def representationOfBasis
+@[expose] noncomputable def representationOfBasis
     {𝕂 : Type*} [Field 𝕂] {V : Type*} [AddCommGroup V] [Module 𝕂 V]
     {𝓰 : Type*} [LieRing 𝓰] [LieAlgebra 𝕂 𝓰] {ι : Type*} (B : Basis ι 𝕂 𝓰)
     {genOper : ι → (V →ₗ[𝕂] V)}

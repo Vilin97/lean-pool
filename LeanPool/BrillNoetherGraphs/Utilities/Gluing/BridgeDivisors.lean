@@ -16,7 +16,7 @@ by joining the factors with a bridge. A script which is one on the left factor
 and zero on the right records the elementary chip transfer across the bridge.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -27,12 +27,14 @@ open Utilities
 universe u v
 
 /-- Extend a divisor on the left factor by zero on the right factor. -/
+@[expose]
 def liftLeftDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (D : CFDiv G) :
     CFDiv (bridgeGraph G H x y) :=
   Sum.elim D (fun _ => 0)
 
 /-- Extend a divisor on the right factor by zero on the left factor. -/
+@[expose]
 def liftRightDivisor (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (D : CFDiv H) :
     CFDiv (bridgeGraph G H x y) :=
@@ -105,12 +107,14 @@ divisor is effective. -/
     | inr b => exact h b
 
 /-- Extend a firing script on the left factor by zero on the right. -/
+@[expose]
 def liftLeftScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript G) :
     firingScript (bridgeGraph G H x y) :=
   Sum.elim σ (fun _ => 0)
 
 /-- Extend a firing script on the right factor by zero on the left. -/
+@[expose]
 def liftRightScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript H) :
     firingScript (bridgeGraph G H x y) :=
@@ -138,6 +142,7 @@ def liftRightScript (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- Extend a left-factor script constantly across the right factor, using its
 value at the bridge endpoint. This introduces no firing across the bridge. -/
+@[expose]
 def extendLeftScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript G) :
     firingScript (bridgeGraph G H x y) :=
@@ -145,6 +150,7 @@ def extendLeftScript (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- Extend a right-factor script constantly across the left factor, using its
 value at the bridge endpoint. This introduces no firing across the bridge. -/
+@[expose]
 def extendRightScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) (σ : firingScript H) :
     firingScript (bridgeGraph G H x y) :=
@@ -323,6 +329,7 @@ theorem winnable_liftRightDivisor
     linear_equiv_liftRightDivisor G H x y hDE⟩
 
 /-- The firing script which is one on the left factor and zero on the right. -/
+@[expose]
 def leftSideIndicator (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : firingScript (bridgeGraph G H x y) :=
   liftLeftScript G H x y (fun _ => 1)

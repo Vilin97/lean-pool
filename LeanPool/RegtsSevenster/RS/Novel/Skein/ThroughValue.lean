@@ -27,7 +27,7 @@ Even colourings stay fully pairing-constant: the even gluing
 weight is diagonal, which pairing-constancy implements already.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -40,12 +40,14 @@ namespace EdgeSubset
 open scoped Classical in
 /-- The through-flags: participating flags on boundary–boundary
 edges. -/
+@[expose]
 noncomputable def throughFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags.filter (fun f => (∃ i : α, W.attach f = Sum.inr i) ∧
     (∃ j : α, W.attach (W.pairing f) = Sum.inr j))
 
 /-- The core flags: participating flags on edges with at least one
 internal end. -/
+@[expose]
 noncomputable def coreFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags \ F.throughFlags
 
@@ -105,6 +107,7 @@ theorem internalFlags_subset_coreFlags (F : EdgeSubset W) :
 
 /-- Odd colourings of the core: pairing-constant colours on the
 participating flags of edges with an internal end. -/
+@[expose]
 def CoreOddColouring (F : EdgeSubset W) (ℓ : ℕ) : Type :=
   {φ : {f : W.Flag // f ∈ F.coreFlags} → Fin (2 * ℓ) //
     ∀ f : {f : W.Flag // f ∈ F.coreFlags},
@@ -123,6 +126,7 @@ noncomputable instance CoreOddColouring.instFintype
 open Classical in
 /-- The odd pair contributed by an incoming internal flag, from the
 core colouring. -/
+@[expose]
 noncomputable def coreOddPairFn (F : EdgeSubset W) {ℓ : ℕ}
     (κ : F.RelTransitionSystem) (φ : F.CoreOddColouring ℓ)
     (f : {f : W.Flag // f ∈ F.internalFlags}) :
@@ -134,6 +138,7 @@ noncomputable def coreOddPairFn (F : EdgeSubset W) {ℓ : ℕ}
 open Classical in
 /-- The odd-pairing sign contributed by an incoming internal flag,
 from the core colouring. -/
+@[expose]
 noncomputable def coreOddSignFn (F : EdgeSubset W) {ℓ : ℕ}
     (κ : F.RelTransitionSystem) (φ : F.CoreOddColouring ℓ)
     (f : {f : W.Flag // f ∈ F.internalFlags}) : ℤ :=
@@ -142,6 +147,7 @@ noncomputable def coreOddSignFn (F : EdgeSubset W) {ℓ : ℕ}
 
 open Classical in
 /-- The odd-colour list at a vertex, from the core colouring. -/
+@[expose]
 noncomputable def coreOddListAt (F : EdgeSubset W) {ℓ : ℕ}
     {κ : F.RelTransitionSystem} (o : κ.Orientation)
     (φ : F.CoreOddColouring ℓ) (v : W.Vertex) :
@@ -152,6 +158,7 @@ noncomputable def coreOddListAt (F : EdgeSubset W) {ℓ : ℕ}
 
 open Classical in
 /-- The odd-pairing sign at a vertex, from the core colouring. -/
+@[expose]
 noncomputable def coreOddSignAt (F : EdgeSubset W) {ℓ : ℕ}
     {κ : F.RelTransitionSystem} (o : κ.Orientation)
     (φ : F.CoreOddColouring ℓ) (v : W.Vertex) : ℤ :=
@@ -187,6 +194,7 @@ open scoped Classical in
 /-- The through-edge state weight of an edge subset: each
 through-edge contributes its state factor exactly once, from its
 lower-label flag. -/
+@[expose]
 noncomputable def throughProduct [LinearOrder α] {k ℓ : ℕ}
     (F : EdgeSubset W) (st : GenBoundaryState k ℓ α) : ℂ :=
   ∏ f ∈ F.throughFlags.attach,
@@ -198,6 +206,7 @@ noncomputable def throughProduct [LinearOrder α] {k ℓ : ℕ}
 /-- The core odd boundary constraint: the state's odd colours are
 imposed on the core boundary flags (through-edges are constrained
 by the through factor instead). -/
+@[expose]
 def coreOddBoundaryMatch {k ℓ : ℕ} (F : EdgeSubset W)
     (st : GenBoundaryState k ℓ α)
     (φ : F.CoreOddColouring ℓ) : Prop :=
@@ -208,6 +217,7 @@ def coreOddBoundaryMatch {k ℓ : ℕ} (F : EdgeSubset W)
 open Classical in
 /-- **The corrected constrained summand**: circuit sign, through
 factor, and the core colouring sum. -/
+@[expose]
 noncomputable def throughSummand [LinearOrder α]
     (F : EdgeSubset W) {k ℓ : ℕ} (h : MixedFunctional k ℓ)
     (st : GenBoundaryState k ℓ α)

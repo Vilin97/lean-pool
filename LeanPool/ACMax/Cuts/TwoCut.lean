@@ -29,7 +29,7 @@ quadratic form is at most `2 · (∑ c) · (∑ x²) = 4 ∑ x²`, hence
 `xᵀ L x ≤ 2 ∑ x²` and the universal test-vector certificate applies.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

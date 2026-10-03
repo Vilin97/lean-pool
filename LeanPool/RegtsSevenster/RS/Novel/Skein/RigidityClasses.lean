@@ -21,7 +21,7 @@ under any boundary relabelling.  These are the data that the
 Deligne fibre functor sends to the standard form and copairing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -55,24 +55,29 @@ noncomputable def strandRelabelEquiv (e : Fin 2 ≃ Fin 2) :
   circles_eq := rfl
 
 /-- The evaluation fragment: the strand as a `(2,0)`-morphism. -/
+@[expose]
 noncomputable def evFrag : Fragment (Fin (2 + 0)) :=
   Fragment.strand.relabel (finCongr (by omega : 2 = 2 + 0))
 
 /-- The coevaluation fragment: the strand as a `(0,2)`-morphism. -/
+@[expose]
 noncomputable def coevFrag : Fragment (Fin (0 + 2)) :=
   Fragment.strand.relabel (finCongr (by omega : 2 = 0 + 2))
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The evaluation class. -/
+@[expose]
 noncomputable def evClass : HomSpace f.val (2 + 0) :=
   HomSpace.ofFragment f.val evFrag
 
 /-- The coevaluation class. -/
+@[expose]
 noncomputable def coevClass : HomSpace f.val (0 + 2) :=
   HomSpace.ofFragment f.val coevFrag
 
 /-- The braiding class on two strands. -/
+@[expose]
 noncomputable def braidClass : HomSpace f.val (2 + 2) :=
   HomSpace.ofFragment f.val
     (permFragment (_root_.Equiv.swap (0 : Fin 2) 1))

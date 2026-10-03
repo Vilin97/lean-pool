@@ -18,7 +18,7 @@ pruning. A surviving collection is pointwise below the old local weights and
 has at least one nonzero atom.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

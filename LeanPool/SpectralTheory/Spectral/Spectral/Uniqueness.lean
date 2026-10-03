@@ -21,7 +21,7 @@ measures from characteristic functions, and then recovers projections. It also s
 representing PVM computes the selected measurable functional calculus.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory
 

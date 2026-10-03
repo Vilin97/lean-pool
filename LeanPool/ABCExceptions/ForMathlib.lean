@@ -16,4 +16,4 @@ Import-only index for Mathlib-adjacent support files used by the ABC exceptions
 development.
 -/
 
-@[expose] public section
+public section

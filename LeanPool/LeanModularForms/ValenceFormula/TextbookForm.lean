@@ -23,7 +23,7 @@ non-elliptic orbits of `SL₂(ℤ)` acting on `ℍ`.
 * `valence_formula_textbook_orbit_finsum` — the valence formula with `∑ᶠ`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

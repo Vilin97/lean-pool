@@ -40,7 +40,7 @@ public import LeanPool.MovingSofa.Development.Geometry.Foundations.Development00
 * `Main`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -65,7 +65,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.QVariation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -100,7 +100,7 @@ inclusion for the fourth boundary piece: every interior point of the base segmen
 the niche (`gerver_bottom_segment_mem_gerverLiteralNiche`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1063,7 +1063,7 @@ walls, the closed-interval velocity signs `paperGerverVelocityComponents_fst_non
 `hasDerivWithinAt_paperGerverContacts_three_pos_smul`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1237,7 +1237,7 @@ containment of the contact curves in the tails and the injectivity of the two
 parametrizations.  The support sums are the cut identity `h_L (s + π) = -m s`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2016,7 +2016,7 @@ window that is closed on the right, so the only atom to compute is the one at th
 endpoint `t₃` of the `B` arc.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2558,7 +2558,7 @@ computation at the included stage endpoints is needed: a single parameter is Leb
 the four measures are only ever evaluated through their densities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3114,7 +3114,7 @@ sum, which is `≤ 1 - 1 = 0` by the cap-tail constraints.
 
 /-! ### The angular phase windows are measurable -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3669,7 +3669,7 @@ of `Q`'s connector segments, whose signed areas therefore vanish.
 
 /-! ## The four-piece traversal of the niche boundary -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3914,7 +3914,7 @@ The variation integral is therefore the sum of the eight phase contributions
 windows while the competitor's are at most `1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4041,7 +4041,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.Upper.Properties`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4057,7 +4057,7 @@ Authors: Dean Cureton
 # Bounds / Upper / Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4278,7 +4278,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Sofa.BalancedConsumed`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4294,7 +4294,7 @@ Authors: Dean Cureton
 # Sofa / Balanced
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4355,7 +4355,7 @@ Authors: Dean Cureton
 # Sofa / Balanced Consumed
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4844,7 +4844,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Motion.RotationAngle`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4860,7 +4860,7 @@ Authors: Dean Cureton
 # Motion / Rotation Angle
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5768,7 +5768,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Sofa.BalancedRightAngle`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5784,7 +5784,7 @@ Authors: Dean Cureton
 # Sofa / Balanced Right Angle
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5835,7 +5835,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Sofa.Maximum`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5860,7 +5860,7 @@ triple in the cap-tail space; the area functional is then bounded by `Q`, which
 is maximized by Gerver's triple and matches the area functional there.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5934,7 +5934,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Motion.CanonicalUpperBound`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5955,7 +5955,7 @@ set is a paper moving sofa, and admissible sets are compact, so the comparison o
 comparison of Lebesgue measures.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6004,7 +6004,7 @@ The imported development proves uniqueness of Gerver's defining parameters in
 with the proved area upper bound `MovingSofa.areaUpperBound`.
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 

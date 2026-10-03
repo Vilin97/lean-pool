@@ -23,7 +23,7 @@ stopping-time statement is proved here; those are in `Trajectory/FellerCondition
 `Trajectory/FellerStoppingConditional.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

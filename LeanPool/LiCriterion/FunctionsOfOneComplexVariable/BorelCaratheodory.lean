@@ -31,7 +31,7 @@ public import Mathlib.Analysis.Complex.AbsMax
 A bound on `‖g‖` on a disk in terms of the supremum of `re g` on a larger disk.
 -/
 
-@[expose] public section
+public section
 
 open Complex Real Filter Topology
 open scoped BigOperators ComplexConjugate
@@ -41,6 +41,7 @@ noncomputable section
 
 -- Define the boundary supremum using conditionally complete lattice
 /-- The supremum of the real part of `g` on the circle of radius `R` centered at zero. -/
+@[expose]
 noncomputable def boundaryRealSup (g : ℂ → ℂ) (R : ℝ) : ℝ :=
   sSup {x | ∃ ζ : ℂ, ‖ζ‖ = R ∧ x = (g ζ).re}
 

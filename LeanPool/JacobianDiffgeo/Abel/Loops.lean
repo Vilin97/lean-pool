@@ -30,7 +30,7 @@ Unit: abel-theorem. Namespace `RS.Abel`. Two deliverables:
   of `RS.pathIntegralₗ` and `Module.Basis.ext`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

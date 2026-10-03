@@ -21,7 +21,7 @@ If `top a - 1 ≤ top c` for all `a, c ≠ 0` (P) and `top a - 1 ≤ 2 L 0 + (b 
 (Z), then `v_p^G(Δ) ≥ 2 ∑ w`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -30,11 +30,11 @@ namespace Zeta5Irrational
 variable {m : ℕ}
 
 /-- `top a = L a + (b a - 4)/2`. -/
-noncomputable def topw (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) (a : Fin (m + 1)) : ℚ :=
+@[expose] noncomputable def topw (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) (a : Fin (m + 1)) : ℚ :=
   L a + (b a - 4) / 2
 
 /-- The minimum of `top` over the ordinary classes. -/
-noncomputable def tmin (hm : 1 ≤ m) (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) : ℚ :=
+@[expose] noncomputable def tmin (hm : 1 ≤ m) (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) : ℚ :=
   (Finset.univ.erase (0 : Fin (m + 1))).inf' ⟨⟨1, by omega⟩, by simp [Fin.ext_iff]⟩ (topw L b)
 
 lemma tmin_le (hm : 1 ≤ m) (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) {c : Fin (m + 1)} (hc : c ≠ 0) :
@@ -141,11 +141,12 @@ theorem inner_bound {p : ℕ} [Fact p.Prime] (hp5 : 5 ≤ p) (hm : 2 * m + 1 = p
 /-! ### Capped weights: validity needs only the zero-class condition -/
 
 /-- Uncapped weights. -/
+@[expose]
 noncomputable def wraw (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ) (s : Σ a : Fin (m + 1), Fin (L a)) : ℚ :=
   if s.1 = 0 then 2 * (s.2 : ℚ) + (b 0 - 4) / 2 else (s.2 : ℚ) + (b s.1 - 4) / 2
 
 /-- Capped weights `min (wraw) (min_{c ≠ 0} top c)`. -/
-noncomputable def wcap (hm : 1 ≤ m) (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ)
+@[expose] noncomputable def wcap (hm : 1 ≤ m) (L : Fin (m + 1) → ℕ) (b : ℕ → ℚ)
     (s : Σ a : Fin (m + 1), Fin (L a)) : ℚ :=
   min (wraw L b s) (tmin hm L b)
 

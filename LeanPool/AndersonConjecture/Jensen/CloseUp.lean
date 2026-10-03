@@ -30,4 +30,4 @@ Index file for the `LeanPool.AndersonConjecture.Jensen.CloseUp` directory:
 closing up finitely generated ideals (Heitmann, Lemma 4).
 -/
 
-@[expose] public section
+public section

@@ -22,7 +22,7 @@ formalized; see the header of `Defs.lean`. The paper's `Q(ε,r) ∈ I^exp_t ⊆ 
 is formalized here as its two weaker halves, membership in `I^AI_t` and in `I^NW_t`.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 

@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.OrderPQ.MonoidHom
 -/
 
-@[expose] public section
+public section
 
 lemma Set.nat_card_range_of_injective {α β : Type*} (f : α → β) (hf : Function.Injective f) :
     Nat.card (range f) = Nat.card α :=

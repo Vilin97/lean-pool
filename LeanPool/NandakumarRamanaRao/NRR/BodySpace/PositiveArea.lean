@@ -34,7 +34,7 @@ area is at least `A`.
   with the continuous projection `BodySpace.body`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology
 
@@ -57,7 +57,7 @@ instance instT2Space : T2Space (BodySpace K A) :=
   inferInstanceAs (T2Space {C : ConvexSubbody K // A ≤ C.area})
 
 /-- The underlying convex subbody of an element of `BodySpace K A`. -/
-def body (C : BodySpace K A) : ConvexSubbody K := C.1
+@[expose] def body (C : BodySpace K A) : ConvexSubbody K := C.1
 
 /-- The area lower bound satisfied by every element of `BodySpace K A`. -/
 theorem area_lower (C : BodySpace K A) :
@@ -95,7 +95,7 @@ theorem area_pos
 /-- **Positive-area solid bridge.** When `A > 0`, an element of `BodySpace K A` repackages as a
 solid geometry body: its carrier is convex and compact (from the underlying subbody) and has
 nonempty interior (from positive area). -/
-noncomputable def toGeometryConvexBody
+@[expose] noncomputable def toGeometryConvexBody
     (C : BodySpace K A) (hA : 0 < A) :
     Geometry.ConvexBody Plane where
   carrier := (C.body : Set Plane)

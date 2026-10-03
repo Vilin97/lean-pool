@@ -16,7 +16,7 @@ provides the resulting coordinate equivalence and relates restriction after shif
 path to restriction on the translated finite set.  It makes no probability-law or Markov claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -27,6 +27,7 @@ section
 namespace DenseTime
 
 /-- The image of a finite dense-time set under addition by `s`. -/
+@[expose]
 def addFinset (s : DenseTime) (I : Finset DenseTime) : Finset DenseTime :=
   I.map (addOrderEmbedding s).toEmbedding
 
@@ -41,6 +42,7 @@ theorem mem_addFinset (s : DenseTime) (I : Finset DenseTime) (t : DenseTime) :
     exact ⟨r, hr, hrt⟩
 
 /-- Addition by `s` identifies a finite dense-time set with its translated image. -/
+@[expose]
 def addFinsetEquiv (s : DenseTime) (I : Finset DenseTime) : I ≃ addFinset s I :=
   Equiv.ofBijective
     (fun t ↦ ⟨s + t, (mem_addFinset s I (s + t)).mpr ⟨t, t.property, rfl⟩⟩)
@@ -66,6 +68,7 @@ namespace DenseTimePath
 variable {alpha : Type*}
 
 /-- Reindex a path on a translated finite dense-time set back to the original coordinates. -/
+@[expose]
 def pullbackAddFinset (s : DenseTime) (I : Finset DenseTime)
     (path : DenseTime.addFinset s I → alpha) : I → alpha :=
   fun t ↦ path (DenseTime.addFinsetEquiv s I t)

@@ -17,7 +17,7 @@ The master summand, the flag pattern of a colouring, and the
 fibrewise partition of the master colour sum over flag patterns.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 
 /-- The master summand of a colouring. -/
+@[expose]
 noncomputable def masterSummand (W : ClosedFragment)
     (c : MixedColouring k ℓ (edgeCount W + edgeCount W)) :
     ℂ :=
@@ -63,6 +64,7 @@ theorem parameter_masterSummand (W : ClosedFragment)
 
 open Classical in
 /-- The flag pattern of a colouring: the flags at odd slots. -/
+@[expose]
 noncomputable def colourFlags (W : ClosedFragment)
     (c : MixedColouring k ℓ (edgeCount W + edgeCount W)) :
     Finset W.Flag :=
@@ -84,6 +86,7 @@ theorem masterSum_partition (W : ClosedFragment) :
   (Finset.sum_fiberwise _ _ _).symm
 
 /-- Parity purity: cap-paired slots share parity. -/
+@[expose]
 def PairPure {m : ℕ} (c : MixedColouring k ℓ (m + m)) :
     Prop :=
   ∀ i : Fin m,

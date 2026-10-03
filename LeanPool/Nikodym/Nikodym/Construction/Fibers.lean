@@ -36,7 +36,7 @@ Throughout, `n` denotes `Fintype.card ι` in Layer S/D statements; in Layer C, `
 integer parameters of Q01 and the number of embeddings is written `Fintype.card ι`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 
@@ -116,6 +116,7 @@ section Radix
 
 /-- Blueprint C02: the radix vector `(Q₁, …, Q_k)` of Q01, as a function on `Fin k`
 (here `k = h - 1`): `radix n q k i = Params.Q n q (i + 1)`. -/
+@[expose]
 noncomputable def radix (n q k : ℕ) : Fin k → ℕ := fun i ↦ Params.Q n q (i.val + 1)
 
 variable {n q k : ℕ}
@@ -156,10 +157,12 @@ noncomputable def digitSpace (S : Scaffold b σ φ K₀ K₁) (n q k : ℕ) (ρ 
   Fintype.piFinset fun i ↦ S.boxFinset (ρ * radix n q k i)
 
 /-- Blueprint C02: the prefix sum `yᵢ(w) = ∑_{j ≤ i} Dⱼ wⱼ`. -/
+@[expose]
 noncomputable def prefixSum (n q k : ℕ) (w : Fin k → R) (i : Fin k) : R :=
   ∑ j ∈ Finset.Iic i, (D (radix n q k) j : R) * w j
 
 /-- Blueprint C02: the base point `b(w) = ∑ j, Dⱼ wⱼ`. -/
+@[expose]
 noncomputable def base (n q k : ℕ) (w : Fin k → R) : R := ∑ j, (D (radix n q k) j : R) * w j
 
 /-- Blueprint C02: the energy color `c(w)ᵢ = trace (yᵢ(w) ^ 2)`, landed in `ℤ` via the floor

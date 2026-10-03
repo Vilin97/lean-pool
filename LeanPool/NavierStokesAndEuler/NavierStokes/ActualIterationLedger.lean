@@ -19,7 +19,7 @@ This module does not assert the existence of correction cycles or their
 native class estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,6 +30,7 @@ open scoped Topology ContDiff
 namespace NavierStokes.ActualIterationLedger
 
 /-- Accuracy of the state after this many correction cycles. -/
+@[expose]
 noncomputable def sigma (J : ℕ) : ℝ := ExponentLedger.stageParameter J
 
 /-- The input accuracy used to construct a positive physical increment.
@@ -143,14 +144,14 @@ theorem all_cycle_margins (n : ℕ) {κ : ℝ} (hκ : κ ≤ 1 / 100000) :
 
 /-- Conservative class for the actual wave potential.  The local inverse
 frequency can give an additional half power, which is not needed here. -/
-noncomputable def waveNative (κ : ℝ) (j : ℕ) : ℝ :=
+@[expose] noncomputable def waveNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.waveExponent (inputSigma j) - κ
 
 /-- Wave pressure native, given by `waveNative κ j + 1 / 2`. -/
-noncomputable def wavePressureNative (κ : ℝ) (j : ℕ) : ℝ := waveNative κ j + 1 / 2
+@[expose] noncomputable def wavePressureNative (κ : ℝ) (j : ℕ) : ℝ := waveNative κ j + 1 / 2
 
 /-- Mean native, given by `ExponentLedger.meanUpdateExponent (inputSigma j) κ`. -/
-noncomputable def meanNative (κ : ℝ) (j : ℕ) : ℝ :=
+@[expose] noncomputable def meanNative (κ : ℝ) (j : ℕ) : ℝ :=
   ExponentLedger.meanUpdateExponent (inputSigma j) κ
 
 /-- Radial native, given by `meanNative κ j + 1`. -/
@@ -250,6 +251,7 @@ theorem fixed_offset_inequalities {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 
 /-! ## Residual indexing after a finite number of cycles -/
 
 /-- Residual wave, given by `ExponentLedger.waveExponent (sigma J)`. -/
+@[expose]
 noncomputable def residualWave (J : ℕ) : ℝ := ExponentLedger.waveExponent (sigma J)
 /-- Residual mean, given by `ExponentLedger.meanExponent (sigma J)`. -/
 noncomputable def residualMean (J : ℕ) : ℝ := ExponentLedger.meanExponent (sigma J)
@@ -309,6 +311,7 @@ theorem gain_after_cycle {h : ℝ} (hh : 0 ≤ h) (n : ℕ) :
 
 /-- The full-phase derivative cost is a fixed parameter `beta`, not a
 stage-dependent loss. -/
+@[expose]
 noncomputable def residualLoss (h beta : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.graphLoss m + 1 + (2 * CoordinateAlgebra.A h + 1 / 2) + beta * m
 

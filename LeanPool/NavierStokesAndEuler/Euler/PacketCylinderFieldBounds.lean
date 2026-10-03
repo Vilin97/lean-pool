@@ -22,7 +22,7 @@ section
 
 /-! Fixed bounded vector operations preserve the genuine nonlinear H6 word estimates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -125,7 +125,7 @@ variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
 /-- Word bound, given by `∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P
 a G.path) n 0 ≤ A*majorant R d n`. -/
-def WordBound (G : Field P T raw) (q : ℕ) (R A : ℝ) (d : ℕ) : Prop :=
+@[expose] def WordBound (G : Field P T raw) (q : ℕ) (R A : ℝ) (d : ℕ) : Prop :=
   ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0 ≤
     A*majorant R d n
 

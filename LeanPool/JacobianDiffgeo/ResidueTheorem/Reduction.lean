@@ -57,7 +57,7 @@ duplicate the ~90-line proof or require importing residue-theorem back into cano
 (`import Jacobian.CanonicalForms.Existence`, above) — the call site below is unchanged.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter Topology OnePoint Function
@@ -78,7 +78,7 @@ omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
 private theorem resAt_smul_d (h φ : ℳ X) (x : X) :
     (h • MForm.d φ).resAt x = RS.resAt (fun z => h.holoRepr ((chartAt ℂ x).symm z) *
       deriv (φ.holoRepr ∘ ⇑(chartAt ℂ x).symm) z) (chartAt ℂ x x) := by
-  have hd : MForm.d φ = MForm.mk (MFormData.d φ) := rfl
+  have hd : MForm.d φ = MForm.mk (MFormData.d φ) := MForm.d_eq_mk φ
   rw [hd, MForm.mero_smul_mk, MForm.resAt_mk]
   change RS.resAt ((MFormData.smul h (MFormData.d φ)).coeffAt x) (chartAt ℂ x x) = _
   apply RS.resAt_congr
@@ -86,9 +86,7 @@ private theorem resAt_smul_d (h φ : ℳ X) (x : X) :
     eventually_nhdsWithin_of_eventually_nhds
       ((chartAt ℂ x).open_target.mem_nhds (mem_chart_target ℂ x))
   filter_upwards [htarget] with z hz
-  change h.holoRepr ((chartAt ℂ x).symm z) *
-      (if z ∈ (chartAt ℂ x).target then deriv (φ.holoRepr ∘ ⇑(chartAt ℂ x).symm) z else 0) = _
-  rw [ite_eq_left hz]
+  rw [MFormData.coeffAt_smul_meromorphic, MFormData.coeffAt_d φ x hz]
 
 /-! ### Honesty of `toP1 ∘ holoRepr` at nonnegative-order points -/
 
@@ -366,8 +364,8 @@ theorem residue_sum_eq_zero_of_exists_nonconstant
           = RS.resAt (fun w => -(w ^ 2)⁻¹ * R_T w⁻¹) 0 := by
         change RS.resAt (θT.coeffAt (∞ : OnePoint ℂ))
           (chartAt ℂ (∞ : OnePoint ℂ) (∞ : OnePoint ℂ)) = _
-        rw [P1.chartAt_infty, P1.invChart_apply_infty]
-        rfl
+        rw [P1.chartAt_infty, P1.invChart_apply_infty, hθT_def,
+          P1.formOfCoeFn_coeffAt_infty]
       have hP1 : FormTrace.resAtP1 (MTrace.trace F Hinf) (∞ : OnePoint ℂ)
           = RS.resAt (MTrace.trace F Hinf ∘ ⇑P1.invChart.symm) 0 := by
         rw [FormTrace.resAtP1_def, P1.chartAt_infty, P1.invChart_apply_infty]
@@ -389,8 +387,8 @@ theorem residue_sum_eq_zero_of_exists_nonconstant
       have hL : (MForm.mk θT).resAt ((a : ℂ) : OnePoint ℂ) = RS.resAt R_T a := by
         change RS.resAt (θT.coeffAt (((a : ℂ) : OnePoint ℂ)))
           (chartAt ℂ (((a : ℂ) : OnePoint ℂ)) (((a : ℂ) : OnePoint ℂ))) = _
-        rw [P1.chartAt_coe, P1.coeChart_apply_coe]
-        rfl
+        rw [P1.chartAt_coe, P1.coeChart_apply_coe, hθT_def,
+          P1.formOfCoeFn_coeffAt_coe]
       have hP1 : FormTrace.resAtP1 (MTrace.trace F h.holoRepr) ((a : ℂ) : OnePoint ℂ)
           = RS.resAt R_T a := by
         rw [FormTrace.resAtP1_def, P1.chartAt_coe, P1.coeChart_apply_coe]

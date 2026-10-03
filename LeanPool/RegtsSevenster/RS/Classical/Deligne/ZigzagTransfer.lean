@@ -23,7 +23,7 @@ projection, this gives the zigzag laws of the symmetric-power
 datum from those of the power datum — Deligne's 1.15.1.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

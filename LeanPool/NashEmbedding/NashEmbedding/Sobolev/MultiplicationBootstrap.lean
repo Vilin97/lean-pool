@@ -33,7 +33,7 @@ bootstrap inequality used in Nash's isometric embedding theorem.
 * `third_multiplication_theorem` — distribution-side result
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
@@ -49,23 +49,23 @@ variable {n : ℕ}
 /-! ## Definitions -/
 
 /-- Sum of inverse Sobolev weights controlling the zeroth-order embedding term. -/
-noncomputable def mt3KSq (n : Nat) (r : Real) : Real :=
+@[expose] noncomputable def mt3KSq (n : Nat) (r : Real) : Real :=
   tsum (fun (j : Fin n → Int) => weight n (-r) j)
 
 /-- Sum of weights controlling the first-derivative embedding term. -/
-noncomputable def mt3LSq (n : Nat) (r : Real) : Real :=
+@[expose] noncomputable def mt3LSq (n : Nat) (r : Real) : Real :=
   tsum (fun (j : Fin n → Int) => weight n (1 - r) j)
 
 /-- Polynomial and exponential factor in the higher-order multiplication estimate. -/
-noncomputable def mt3BStar (k : Nat) : Real :=
+@[expose] noncomputable def mt3BStar (k : Nat) : Real :=
   64 * (k : Real) ^ 2 * ((2 : Real) ^ (2 * (k : Real) - 1) - 2)
 
 /-- Squared leading constant in the third Sobolev multiplication theorem. -/
-noncomputable def mt3AConstSq (n : Nat) (r : Real) : Real :=
+@[expose] noncomputable def mt3AConstSq (n : Nat) (r : Real) : Real :=
   8 * mt3KSq n r
 
 /-- Squared lower-order constant in the third Sobolev multiplication theorem. -/
-noncomputable def mt3BConstSq (n : Nat) (k : Nat) (r : Real) : Real :=
+@[expose] noncomputable def mt3BConstSq (n : Nat) (k : Nat) (r : Real) : Real :=
   4 * mt3BStar k * mt3LSq n r
 
 /-! ## Basic properties of constants -/

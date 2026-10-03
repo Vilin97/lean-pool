@@ -10,4 +10,4 @@ public import Mathlib.AlgebraicTopology.SimplexCategory.ToMkOne
 
 /-! # Simplex Category To Mk One -/
 
-@[expose] public section
+public section

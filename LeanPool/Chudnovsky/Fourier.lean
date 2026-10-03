@@ -27,7 +27,7 @@ final product formula `fouriersigma` stated here is unaffected.
 All statements in this file are fully proved.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

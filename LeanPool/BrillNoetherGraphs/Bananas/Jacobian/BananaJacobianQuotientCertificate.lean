@@ -19,7 +19,7 @@ vector and the position vector differ by an explicit combination of the
 paper's displayed relation generators.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

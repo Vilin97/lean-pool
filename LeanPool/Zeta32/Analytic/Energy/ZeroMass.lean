@@ -24,7 +24,7 @@ Gaussian positivity is
 new here (the Li₂ version needs bounded continuous curve densities; our comparison density is
 unbounded). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 

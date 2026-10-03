@@ -29,7 +29,7 @@ whose canonical factors are the quadratic terms
 This removes the linear divergence and restores absolute convergence
 under the genus‑1 hypothesis `∑ 1/‖ρ‖² < ∞`. -/
 
-@[expose] public section
+public section
 
 open Complex Real Set Function Filter
 open scoped Topology

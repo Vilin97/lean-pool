@@ -21,7 +21,7 @@ construction supplies quantitative face control and separation.  Polygonal Schoe
 fills every face, and local finiteness glues the fillings into a homeomorphism of supports.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -43,7 +43,7 @@ def PlaneGraphRealization.ControlsStayInRegion (G : K.PlaneGraphRealization)
 
 /-- A global bound and a frontier-relative bound sufficient to control a locally finite
 family of polygonal face fillings. -/
-def PlaneGraphRealization.UniformFrontierControl (G : K.PlaneGraphRealization)
+@[expose] def PlaneGraphRealization.UniformFrontierControl (G : K.PlaneGraphRealization)
     (phi : K.support → ℝ) : Prop :=
   (∀ p, phi p ≤ 1) ∧
     ∀ (_ : G.regionᶜ.Nonempty) (p : K.support),
@@ -301,7 +301,7 @@ def PlaneGraphRealization.SourceCoordZeroCarriedByOneSkeleton
 /-- On every source triangle, the supporting-line locus is an exposed face with at most two
 vertices.  This is the intrinsic condition which excludes a boundary chord: the zero locus in
 a triangle is either empty, a vertex, or an entire edge. -/
-def PlaneGraphRealization.FacewiseCoordZeroExposed
+@[expose] def PlaneGraphRealization.FacewiseCoordZeroExposed
     (G : K.PlaneGraphRealization) : Prop :=
   ∀ f : K.Face, ∃ b : Finset K.Vertex,
     b ⊆ K.faceVertices f ∧ b.card ≤ 2 ∧

@@ -14,7 +14,7 @@ The velocity and its gradient are bounded by one on the positive time
 interval. Compact local boxes therefore have finite energy and slice bounds.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

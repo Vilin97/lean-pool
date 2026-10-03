@@ -18,7 +18,7 @@ form of the identity: `ρ` at the all-ones configuration equals `ρ` at zero
 plus the sum of the nonempty-support fibers.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

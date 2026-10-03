@@ -22,7 +22,7 @@ proved here: the Definition 5 value of any flagless
 fragment is `(k − 2ℓ) ^ circles`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

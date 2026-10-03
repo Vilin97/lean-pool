@@ -20,7 +20,7 @@ fields, so that the four inequalities are never read off a nested
 conjunction by position.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

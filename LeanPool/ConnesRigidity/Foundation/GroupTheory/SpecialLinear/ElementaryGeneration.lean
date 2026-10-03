@@ -19,7 +19,7 @@ import Mathlib.FieldTheory.Finite.Basic
 # Elementary generation for Zhou §4
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace SpecialLinear

@@ -20,7 +20,7 @@ No parameter family is selected here, and no concrete coefficient, domain, Felle
 or stochastic-process assertion is made.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -76,6 +76,7 @@ theorem ext {P Q : ParameterizedSubMarkovKernelSemigroup Theta alpha}
 variable (P : ParameterizedSubMarkovKernelSemigroup Theta alpha)
 
 /-- The jointly measurable kernel with input ordered as parameter, then time and state. -/
+@[expose]
 def jointKernel : Kernel (Theta × (NNReal × alpha)) alpha where
   toFun q := P q.1 q.2.1 q.2.2
   measurable' := P.measurable_kernel
@@ -98,6 +99,7 @@ theorem measurable_measure {s : Set alpha} (hs : MeasurableSet s) :
   (Measure.measurable_coe hs).comp P.measurable_kernel
 
 /-- The ordinary sub-Markov kernel semigroup at one fixed parameter. -/
+@[expose]
 def toSubMarkovKernelSemigroup (theta : Theta) : SubMarkovKernelSemigroup alpha where
   kernel := P theta
   measurable_kernel := by

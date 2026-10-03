@@ -15,12 +15,12 @@ distance-preserving rotations.  The two exact cosines are the angles used in
 Parts' doubled wheel and spindle.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- A point in `R²` from its two Cartesian coordinates. -/
-noncomputable def pointR2 (x y : ℝ) : R2 :=
+@[expose] noncomputable def pointR2 (x y : ℝ) : R2 :=
   WithLp.toLp 2 ![x, y]
 
 @[simp] lemma pointR2_zero (x y : ℝ) : pointR2 x y 0 = x := rfl
@@ -53,13 +53,13 @@ lemma partsAxialPoint_sub (q r q' r' : ℤ) :
   fin_cases i <;> simp [partsAxialPoint, pointR2] <;> ring
 
 private lemma partsPoint_195 :
-    partsPoint (195 : Fin 481) = ⟨6, 0, 6, 0⟩ := by decide
+    partsPoint (195 : Fin 481) = ⟨6, 0, 6, 0⟩ := by rfl
 
 private lemma partsPoint_205 :
-    partsPoint (205 : Fin 481) = ⟨6, 0, -6, 0⟩ := by decide
+    partsPoint (205 : Fin 481) = ⟨6, 0, -6, 0⟩ := by rfl
 
 private lemma partsPoint_215 :
-    partsPoint (215 : Fin 481) = ⟨-12, 0, 0, 0⟩ := by decide
+    partsPoint (215 : Fin 481) = ⟨-12, 0, 0, 0⟩ := by rfl
 
 lemma partsTriangleA_eq_axial : partsTriangleA = partsAxialPoint 1 0 := by
   ext i
@@ -181,7 +181,7 @@ lemma partsPatchRotation_displacement_sq (p : R2) :
   planeRotation_zero _ _
 
 /-- Apply the doubled-wheel rotation exactly when selecting its second patch. -/
-noncomputable def partsApplyPatch (rotated : Bool) (p : R2) : R2 :=
+@[expose] noncomputable def partsApplyPatch (rotated : Bool) (p : R2) : R2 :=
   if rotated then partsPatchRotation p else p
 
 lemma partsApplyPatch_dist_eq (rotated : Bool) (p q : R2) :
@@ -252,7 +252,7 @@ lemma partsTriangleMotion_C (rotated : Bool) (centerQ centerR : ℤ)
       simp [partsApplyNegation, partsAxialPoint, pointR2] <;> ring
 
 /-- Pull a proper plane coloring back along any distance-preserving map. -/
-noncomputable def pullbackUnitDistanceColoring {color : Type*}
+@[expose] noncomputable def pullbackUnitDistanceColoring {color : Type*}
     (planeColoring : unitDistanceGraph.Coloring color) (motion : R2 → R2)
     (hdist : ∀ p q, dist (motion p) (motion q) = dist p q) :
     unitDistanceGraph.Coloring color :=

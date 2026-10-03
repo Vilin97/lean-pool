@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Finiteness.Prod
 
 /-! Expanding spatial cutoffs and transport cancellation for noncompact fields on the cylinder. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -28,6 +28,7 @@ open scoped ContDiff ENNReal NNReal Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- A fixed smooth spatial cutoff equal to one on the unit ball. -/
+@[expose]
 def spatialBump : ContDiffBump (0 : Vector3) where
   rIn := 1
   rOut := 2

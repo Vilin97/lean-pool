@@ -19,7 +19,7 @@ multiset at the block's vertex, and the odd list carries the
 Definition 5 odd values.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

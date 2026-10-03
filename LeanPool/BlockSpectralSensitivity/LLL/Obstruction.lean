@@ -42,7 +42,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -805,6 +805,7 @@ def radiusTwoOwnerConst : ℕ :=
   2 ^ 20 * ∑ l ∈ Finset.range 9, Nat.choose 8 l * Nat.choose 28 (8 - l) * 2 ^ l
 
 /-- The constant `radiusTwoConst = 9 · 2 ^ 20 · ∑_{l=0}^{8} C(8,l) C(28,8-l) 2 ^ l` of Section 9. -/
+@[expose]
 def radiusTwoConst : ℕ := 1300311466573824
 
 /-- `radiusTwoConst` has one `radiusTwoOwnerConst` for each of the nine possible owners. -/

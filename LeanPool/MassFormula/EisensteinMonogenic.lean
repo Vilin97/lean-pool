@@ -36,7 +36,7 @@ identification.
   (The English translation of *Corps locaux*, whose numbering it keeps.)
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel IntermediateField
 

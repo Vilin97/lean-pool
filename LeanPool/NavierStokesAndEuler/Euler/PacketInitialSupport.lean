@@ -21,7 +21,7 @@ section
 /-! Common compact support for the two actual initial increments after
 the physical spatial dilation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -116,7 +116,7 @@ section
 /-! The actual localized mean initial condition vanishes when the source
 boundary coefficient L is zero. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -158,7 +158,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

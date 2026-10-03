@@ -22,7 +22,7 @@ Closedness of the CP cone upgrades SC18 on the enlargements to CP of the
 original `M`, including the case `p = 0` (SC21).
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -60,10 +60,10 @@ noncomputable def configXstar (t : Fin k → ℝ) : ℝ :=
   | 0, _ => 0
   | _ + 1, t => univ.sup' univ_nonempty t + 1
 
-lemma configXstar_zero (t : Fin 0 → ℝ) : configXstar t = 0 := rfl
+lemma configXstar_zero (t : Fin 0 → ℝ) : configXstar t = 0 := by rfl
 
 lemma configXstar_succ {n : ℕ} (t : Fin (n + 1) → ℝ) :
-    configXstar t = univ.sup' univ_nonempty t + 1 := rfl
+    configXstar t = univ.sup' univ_nonempty t + 1 := by rfl
 
 lemma configXstar_nonneg {t : Fin k → ℝ} (ht : ∀ i, 0 < t i) :
     0 ≤ configXstar t := by

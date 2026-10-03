@@ -23,7 +23,7 @@ This is the structural shortcut used by the first Draisma--Vargas genus-four
 type.  It is independent of that application and of any finite cone cover.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate.CoreBridgeCut.Data
 

@@ -17,7 +17,7 @@ mixed-partial integrand along the appended coordinate.  Analytic input for
 converting nested simplex integrals into sector set integrals.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 

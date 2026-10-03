@@ -28,7 +28,7 @@ so we obtain an injective monoid homomorphism `D ≀ᵣ Q →* WreathProduct D Q
 - `regularWreathToMonoidWreath_injective` : injectivity of the bridge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 

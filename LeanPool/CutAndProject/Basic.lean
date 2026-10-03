@@ -33,7 +33,7 @@ projections is not formalised here. The irrational-slope case
 (`LeanPool.CutAndProject.Irrational`) is built from the lattice directly.
 -/
 
-@[expose] public section
+public section
 
 open Nat
 

@@ -20,7 +20,7 @@ germ ring there is canonically `ℂ`, so its only prime ideal is zero; the zero
 ideal has the full neighborhood as its zero-set germ.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry

@@ -16,7 +16,7 @@ search over circuits.  Subsequent proofs consume the named rational, tangent,
 and degree-two-place families rather than raw bit patterns.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,18 +24,18 @@ namespace N4
 noncomputable section
 
 /-- Determinant of a `3 × 3` matrix in characteristic two. -/
-def detThree (M : Matrix (Fin 3) (Fin 3) F₂) : F₂ :=
+@[expose] def detThree (M : Matrix (Fin 3) (Fin 3) F₂) : F₂ :=
   M 0 0 * M 1 1 * M 2 2 + M 0 0 * M 1 2 * M 2 1 +
   M 0 1 * M 1 0 * M 2 2 + M 0 1 * M 1 2 * M 2 0 +
   M 0 2 * M 1 0 * M 2 1 + M 0 2 * M 1 1 * M 2 0
 
 /-- A cubic minor obtained by deleting one row and one column. -/
-def hankelMinorThree (c : TargetCoeff) (dropRow dropCol : Fin 4) : F₂ :=
+@[expose] def hankelMinorThree (c : TargetCoeff) (dropRow dropCol : Fin 4) : F₂ :=
   detThree fun i j =>
     hankelMatrix c (dropRow.succAbove i) (dropCol.succAbove j)
 
 /-- Algebraic rank-at-most-two condition: all `3 × 3` minors vanish. -/
-def HankelRankLETwo (c : TargetCoeff) : Prop :=
+@[expose] def HankelRankLETwo (c : TargetCoeff) : Prop :=
   ∀ dropRow dropCol : Fin 4, hankelMinorThree c dropRow dropCol = 0
 
 instance (c : TargetCoeff) : Decidable (HankelRankLETwo c) := by
@@ -44,7 +44,7 @@ instance (c : TargetCoeff) : Decidable (HankelRankLETwo c) := by
 
 /-- The sixteen coefficient words in the manuscript's rank-at-most-two
 table, including zero. -/
-def rankTwoWord : Fin 16 → TargetCoeff :=
+@[expose] def rankTwoWord : Fin 16 → TargetCoeff :=
   ![![0, 0, 0, 0, 0, 0, 0],
     ![0, 0, 0, 0, 0, 1, 0],
     ![0, 0, 0, 0, 0, 0, 1],
@@ -69,7 +69,7 @@ theorem rankTwo_target_classification (c : TargetCoeff) :
   decide +kernel
 
 /-- Direct algebraic description of the rational-place span. -/
-def IsRationalCoeff (c : TargetCoeff) : Prop :=
+@[expose] def IsRationalCoeff (c : TargetCoeff) : Prop :=
   ∃ α β γ : F₂,
     c = α • rZeroCoeff + β • rOneCoeff + γ • rInfinityCoeff
 
@@ -77,6 +77,7 @@ instance (c : TargetCoeff) : Decidable (IsRationalCoeff c) :=
   Fintype.decidableExistsFintype
 
 /-- Six tangent words followed by the three nonzero degree-two-place words. -/
+@[expose]
 def outsideRankTwoWord : Fin 9 → TargetCoeff :=
   ![![0, 1, 0, 0, 0, 0, 0],
     ![1, 1, 0, 0, 0, 0, 0],
@@ -106,6 +107,7 @@ def degreeTwoCoeffSpace : Submodule F₂ TargetCoeff :=
 
 /-- The first Hasse-jet direction at each rational place, with its translate
 by the place itself. -/
+@[expose]
 def tangentWord : Fin 6 → TargetCoeff :=
   ![outsideRankTwoWord 0, outsideRankTwoWord 1,
     outsideRankTwoWord 2, outsideRankTwoWord 3,

@@ -24,7 +24,7 @@ identity comes from the cycle-type formula for the trace of a
 permutation against a tensor power.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

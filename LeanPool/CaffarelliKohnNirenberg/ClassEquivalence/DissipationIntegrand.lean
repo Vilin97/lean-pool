@@ -22,7 +22,7 @@ is a bounded factor.  Nothing about the identities of `def:sws` is used, so the
 conclusion is available while those identities are still being established.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

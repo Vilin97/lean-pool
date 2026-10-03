@@ -16,7 +16,7 @@ inversion count is the both-odd indicator, so a colouring fixed
 by an adjacent swap of equal odd colours equals its own negation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

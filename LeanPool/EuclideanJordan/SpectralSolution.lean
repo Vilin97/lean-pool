@@ -26,7 +26,7 @@ ring on `J`, `IsCommJordan`, `IsScalarTower ℝ J J`, `IsFormallyReal J`) are bu
 library from `m`, `hcomm`, `hjordan` and `hfr`, and none of them escapes into the statement.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanSpectral
 

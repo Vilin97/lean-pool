@@ -34,7 +34,7 @@ intersection (`functionsIn_not`/`relationsIn_not` strip the negation), then `res
 into `L₀` and read both directions off the reduct realization bridge (`realize_mapLanguage`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

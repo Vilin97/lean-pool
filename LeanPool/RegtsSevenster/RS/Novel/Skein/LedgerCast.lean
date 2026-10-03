@@ -22,7 +22,7 @@ Nothing here is more than `subst`: the transports exist so the
 recursion can name them rather than unfold them.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

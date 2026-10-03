@@ -23,7 +23,7 @@ A positive harmonic function `u` on the unit disc satisfies the inequalities
 for all `z` in the unit disc.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanComplexAnalysis
 

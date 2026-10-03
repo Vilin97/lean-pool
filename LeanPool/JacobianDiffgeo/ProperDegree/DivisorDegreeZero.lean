@@ -41,7 +41,7 @@ estimate of 40–60 lines (the extra margin is the constancy-translation case sp
   declaration, `CONVENTIONS.md` rule 4).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter

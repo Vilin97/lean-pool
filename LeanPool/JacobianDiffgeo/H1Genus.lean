@@ -31,4 +31,4 @@ produced, since it needs `H1Tail.equiv`'s full (unconditional) comparison, itsel
 addendum. See `Basic.lean`'s docstring for the full account.
 -/
 
-@[expose] public section
+public section

@@ -59,7 +59,7 @@ library, and is one of the declarations covered by the repository's `#print axio
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

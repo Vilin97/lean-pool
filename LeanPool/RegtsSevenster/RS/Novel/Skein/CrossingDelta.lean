@@ -21,7 +21,7 @@ mixed block (per-third-chord parity transfer, `third_chord_reparity`)
 and the four-end block (evaluated to the mutual-crossing indicator).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {α : Type}
 /-- Symmetrized crossing of two chords given by (unordered) label
 pairs: each chord is normalized low-to-high and the two normalized
 chords interleave, in either order. -/
+@[expose]
 def chordPairCrossSym [LinearOrder α]
     (p q : α × α) : Prop :=
   ChordPairCross (min p.1 p.2) (max p.1 p.2) (min q.1 q.2)

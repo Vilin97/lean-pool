@@ -28,7 +28,7 @@ coprime to `n` to `k % n` using the proved periodicity results in
 representative is also derived, not assumed.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

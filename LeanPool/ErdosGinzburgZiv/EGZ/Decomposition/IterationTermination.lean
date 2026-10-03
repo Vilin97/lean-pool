@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationFaceCapacity
 
 /-! # Uniform termination of certified finite refinement runs -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

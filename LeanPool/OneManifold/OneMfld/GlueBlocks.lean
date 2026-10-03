@@ -32,7 +32,7 @@ Two overlapping boundary charts glue to a *closed* interval, so the glued chart 
 * reflection images of end-segments in `ℝ≥0`, used to re-orient `OChart`s.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

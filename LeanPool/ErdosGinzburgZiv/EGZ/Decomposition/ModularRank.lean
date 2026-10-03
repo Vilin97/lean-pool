@@ -18,7 +18,7 @@ integer determinant is nonzero. Its real scalar extension is therefore
 injective. This applies to integral affine maps between equal-rank fibres.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.IntegralAffineMap
 

@@ -20,7 +20,7 @@ adjacency operator.  A two-point vector proves that neither `A` nor `I + A`
 is idempotent.  Maschke's theorem then proves irreducibility.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

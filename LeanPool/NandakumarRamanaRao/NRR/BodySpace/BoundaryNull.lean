@@ -22,7 +22,7 @@ lemma required by membership stability and area continuity: almost every point o
 the frontier of a given subbody.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

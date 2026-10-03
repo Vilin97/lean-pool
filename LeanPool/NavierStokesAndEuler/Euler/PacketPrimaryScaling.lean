@@ -22,7 +22,7 @@ section
 /-! Exact rank-one primary shear throughout the joined history and forward
 interval, obtained from the proved factorization of the actual primary. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -168,7 +168,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

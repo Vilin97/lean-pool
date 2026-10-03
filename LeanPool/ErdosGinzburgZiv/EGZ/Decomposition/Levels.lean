@@ -19,13 +19,14 @@ and increase under restriction of the represented space when the old map
 factors through the new map. This includes minimalization.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
 namespace LevelCode
 
 /-- Encode two coordinates in the square `[0,d]²` in lexicographic order. -/
+@[expose]
 def code (d a b : ℕ) : ℕ := (d + 1) * a + b
 
 theorem lt_of_first_lt {d a b a' b' : ℕ} (h : a < a') (hb : b ≤ d) :
@@ -68,14 +69,17 @@ namespace FpRepresentation
 variable {p d : ℕ} [Fact p.Prime] {F G : ConvexFlag}
 
 /-- Dimension of the represented affine space. -/
+@[expose]
 noncomputable def spaceDimension (R : FpRepresentation p d F) (x : F.Node) : ℕ :=
   Module.finrank (ZMod p) (R.space x).direction
 
 /-- Codimension of the represented affine space in the ambient space. -/
+@[expose]
 noncomputable def codimension (R : FpRepresentation p d F) (x : F.Node) : ℕ :=
   d - R.spaceDimension x
 
 /-- Natural-number encoding of `(codim V_x, rank Λ_x)`. -/
+@[expose]
 noncomputable def level (R : FpRepresentation p d F) (x : F.Node) : ℕ :=
   LevelCode.code d (R.codimension x) (F.rank x)
 
@@ -299,17 +303,16 @@ theorem level_antitone (Φ : FlagDecomposition p d f) : Antitone Φ.level :=
 
 @[simp]
 theorem reduced_level (Φ : FlagDecomposition p d f) (hp : Odd p)
-    (x : (Φ.reduced hp).flag.Node) : (Φ.reduced hp).level x = Φ.level x.1 := rfl
+    (x : (Φ.reduced hp).flag.Node) : (Φ.reduced hp).level x = Φ.level x.1 := by rfl
 
 @[simp]
 theorem PrunedWeights.rebuilt_level {Φ : FlagDecomposition p d f} (D : PrunedWeights Φ)
     (hp : Odd p) (x : (D.rebuilt hp).flag.Node) :
-    (D.rebuilt hp).level x = Φ.level x.1 := rfl
+    (D.rebuilt hp).level x = Φ.level x.1 := by rfl
 
-@[simp]
 theorem PrunedWeights.cleaned_level {Φ : FlagDecomposition p d f} (D : PrunedWeights Φ)
     (hp : Odd p) (x : (D.cleaned hp).flag.Node) :
-    (D.cleaned hp).level x = Φ.level x.1.1 := rfl
+    (D.cleaned hp).level x = Φ.level x.1.1 := by rfl
 
 namespace Rechart
 

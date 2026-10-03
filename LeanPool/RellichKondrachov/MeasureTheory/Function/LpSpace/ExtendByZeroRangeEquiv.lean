@@ -23,7 +23,7 @@ This is used in the manifold Rellich glue to transport compactness on `volume` t
 fixed compact supports.
 -/
 
-@[expose] public section
+public section
 
 namespace MeasureTheory
 
@@ -41,7 +41,7 @@ variable {s : Set α} (hs : MeasurableSet s)
 
 /-- If `μ.restrict s` and `ν.restrict s` are mutually comparable (with finite constants), then the
 extend-by-zero ranges in `Lp` are continuously linearly equivalent. -/
-noncomputable def extendByZeroRangeEquivOfRestrictChangeMeasureEquiv {c₁ c₂ : ℝ≥0∞}
+@[expose] noncomputable def extendByZeroRangeEquivOfRestrictChangeMeasureEquiv {c₁ c₂ : ℝ≥0∞}
     (hc₁ : c₁ ≠ ∞) (hc₂ : c₂ ≠ ∞)
     (hν : ν.restrict s ≤ c₁ • μ.restrict s) (hμ : μ.restrict s ≤ c₂ • ν.restrict s)
     (hp : p ≠ ∞) :

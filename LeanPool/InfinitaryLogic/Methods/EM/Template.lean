@@ -14,7 +14,7 @@ The downstream EM modules construct templates from indiscernible sequences and d
 realization properties.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

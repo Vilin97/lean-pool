@@ -12,6 +12,6 @@ public import LeanPool.BruhatTits.Cartan.Uniqueness
 # Cartan decomposition
 -/
 
-@[expose] public section
+public section
 
 open Module

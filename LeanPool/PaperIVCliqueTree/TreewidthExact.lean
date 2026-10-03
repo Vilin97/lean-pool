@@ -18,7 +18,7 @@ gives the universal clique lower bound; the clique-forest adapter attains it
 for finite chordal graphs. The successor form excludes the empty vertex type.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 

@@ -26,7 +26,7 @@ express and which is what a chip-free component of a two-edge-connected core
 actually presents.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gluing
 

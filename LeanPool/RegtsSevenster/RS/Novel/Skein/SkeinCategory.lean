@@ -22,7 +22,7 @@ with the per-single case supplied by a fragment equivalence
 (identity laws, associativity) through isomorphism invariance.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

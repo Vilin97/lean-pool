@@ -46,7 +46,7 @@ carries the same point as the start and so lands back on `s`.
 * `IsLoop.two_arcs_at_parameters` — the parameter-level form the clause is assembled from.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 

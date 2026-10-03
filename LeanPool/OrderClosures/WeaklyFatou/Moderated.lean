@@ -13,7 +13,7 @@ public import LeanPool.OrderClosures.WeaklyFatou.Bands
 # Thinning, transient bands, and component moderatedness
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

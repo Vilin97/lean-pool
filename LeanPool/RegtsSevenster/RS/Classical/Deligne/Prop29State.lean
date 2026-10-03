@@ -23,7 +23,7 @@ Lemma), splits a line factor (through the sign-twisted mirror),
 or exits with the remainder already zero.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -80,6 +80,7 @@ section Steps
 
 /-- **Case (a) of the dévissage**: when every symmetric power of
 the remainder survives, a further unit factor splits off. -/
+@[expose]
 def DevissageStepA [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D]
@@ -95,6 +96,7 @@ def DevissageStepA [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
 
 /-- **Case (b)**: when every alternating power of the remainder
 survives, a further line factor splits off. -/
+@[expose]
 def DevissageStepB [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
     [HasCoequalizers D]
@@ -154,6 +156,7 @@ theorem devissageExit
 /-- **The trichotomy**: over any state, either every symmetric
 power of the remainder survives, or every alternating power
 survives, or the remainder has died. -/
+@[expose]
 def DevissageTrichotomy
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

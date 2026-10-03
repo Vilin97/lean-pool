@@ -35,7 +35,7 @@ The main results are
 The number `L` of lines of the blueprint is `Fintype.card E`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -78,6 +78,7 @@ variable [Algebra F K]
 
 /-- Blueprint F05: the line ideal `λ_{ι(b e), ι(v e)}` of the `e`-th line, over the extension
 field `K`. -/
+@[expose]
 noncomputable def lineIdeal (e : E) : Ideal (MvPolynomial (Fin d) K) :=
   LowerBound.lineIdeal (liftPt (K := K) (P.b e)) (liftPt (P.v e))
 
@@ -131,6 +132,7 @@ section Subfamily
 
 /-- Blueprint F05: pulling back a private family along an injective map of index types gives a
 private family. -/
+@[expose]
 def comap {E' : Type*} [Fintype E'] (g : E' → E) (hg : Function.Injective g) :
     PrivateFamily F d E' where
   b := P.b ∘ g
@@ -151,6 +153,7 @@ theorem comap_v {E' : Type*} [Fintype E'] (g : E' → E) (hg : Function.Injectiv
   rfl
 
 /-- Blueprint F05: every subfamily (indexed by a finset `s` of indices) is private. -/
+@[expose]
 def restrict (s : Finset E) : PrivateFamily F d s :=
   P.comap Subtype.val Subtype.val_injective
 

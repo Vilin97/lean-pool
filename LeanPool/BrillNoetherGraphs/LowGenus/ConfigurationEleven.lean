@@ -97,7 +97,7 @@ row 10 supplies `alpha = gamma` in the first place.  The one-edge arithmetic is
 `ConfigurationFive`'s, reused unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationEleven
 

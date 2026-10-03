@@ -25,7 +25,7 @@ Cameron--Martin space lies in `𝔻₁,₂` by closedness (`coe_space_mem_domD12
 `Dₜ (∫ g dB) = g(t)` for every `g ∈ L²(ℝ≥0)` (`timeDerivative_mderivClosure_wienerIntegral`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -318,6 +318,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   (μ : Measure W) [IsGaussian μ]
 
 /-- The constant `H`-valued random variable `h`, as a linear isometry `H → L²(μ; H)`. -/
+@[expose]
 noncomputable def constLp : Space μ →ₗᵢ[ℝ] Lp (Space μ) 2 μ :=
   ⟨(Lp.constL 2 μ ℝ : Space μ →L[ℝ] Lp (Space μ) 2 μ).toLinearMap, fun h ↦ by
     rw [ContinuousLinearMap.coe_coe, Lp.constL_apply]

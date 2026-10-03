@@ -31,7 +31,7 @@ permutation action on strand bundles, `pow` the tensor power of an
 endomorphism, and `frobenius` the categorical Frobenius formula.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

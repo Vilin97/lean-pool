@@ -22,7 +22,7 @@ No probability law is shown to be supported on this image, and no continuous mod
 stochastic-process association, or path-regularity claim is made here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -37,6 +37,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- Restriction of a continuous path to the fixed dense time carrier. -/
+@[expose]
 def denseRestriction (omega : ContinuousPath alpha) : DenseTime → alpha :=
   fun q ↦ omega (DenseTime.castOrderEmbedding q)
 

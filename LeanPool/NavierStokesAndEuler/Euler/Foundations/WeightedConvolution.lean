@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.NatFactorial
 # Weighted Convolution
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -14,7 +14,7 @@ import Mathlib.CategoryTheory.Limits.Shapes.FiniteLimits
 # LeanPool.FactorizationSystems.Orthogonality
 -/
 
-@[expose] public section
+public section
 
 /-
 Given two morphisms l: A ⟶ B and r: X ⟶ Y in a category C, we say that l is left orthogonal to r
@@ -155,7 +155,7 @@ def homSquare : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
 
 /- The canonical pullback of the cospan given by the right and bottom maps in the hom square -/
 /-- Imported FactorizationSystems declaration. -/
-def homCospanPullback : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → Type v := by
+@[expose] def homCospanPullback : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → Type v := by
   intro A B X Y l r
   exact Limits.pullback (homSquareRight l r) (homSquareBot l r)
 
@@ -432,13 +432,13 @@ lemma diagonals_comm {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
     := by rw [(homSquare l r).comm]
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonalsCone
+@[expose] def diagonalsCone
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
     Limits.PullbackCone (homSquare l r).right (homSquare l r).bot :=
   Limits.PullbackCone.mk (homSquare l r).top (homSquare l r).left (diagonals_comm l r)
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonalsConePoint
+@[expose] def diagonalsConePoint
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Type v :=
   (diagonalsCone l r).pt
 

@@ -13,7 +13,7 @@ import LeanPool.Polytopes.Cutspace
 Definitions and basic properties of V-polytopes and H-polytopes.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 open Pointwise Module
@@ -23,7 +23,7 @@ open Pointwise Module
 
 The finiteness witness is recorded as it characterises the polytope and is used by the
 surrounding API, even though the convex hull itself does not depend on it. -/
-def Vpolytope {S : Set E} (hS : S.Finite) : Set E :=
+@[expose] def Vpolytope {S : Set E} (hS : S.Finite) : Set E :=
   (fun _ : S.Finite => convexHull ℝ S) hS
 
 omit [CompleteSpace E] in
@@ -47,7 +47,7 @@ lemma Compact_Vpolytope {S : Set E} (hS : S.Finite) :
 
 The finiteness witness is recorded as it characterises the polytope and is used by the
 surrounding API, even though the intersection itself does not depend on it. -/
-def Hpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) : Set E :=
+@[expose] def Hpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) : Set E :=
   (fun _ : H_.Finite => ⋂₀ (SetLike.coe '' H_)) hH_
 
 @[simp]

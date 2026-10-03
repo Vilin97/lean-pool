@@ -17,7 +17,7 @@ Non-Eulerian patterns kill every master summand in their fibre:
 the odd-degree vertex is a block of odd parity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

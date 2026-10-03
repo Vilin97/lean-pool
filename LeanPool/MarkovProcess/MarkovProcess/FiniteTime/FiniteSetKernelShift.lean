@@ -19,7 +19,7 @@ for conservative transition-kernel semigroups.  It is finite-dimensional kernel 
 it does not assert a path-space Markov property.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -41,6 +41,7 @@ theorem mem_finiteSetTranslate (s : NNReal) (I : Finset NNReal) (t : NNReal) :
   rfl
 
 /-- Translation identifies the original finite time set with its translated image. -/
+@[expose]
 def finiteSetTranslateEquiv (s : NNReal) (I : Finset NNReal) : I ≃ finiteSetTranslate s I :=
   Equiv.ofBijective
     (fun t ↦ ⟨s + t, (mem_finiteSetTranslate s I (s + t)).mpr ⟨t, t.property, rfl⟩⟩)
@@ -59,6 +60,7 @@ theorem finiteSetTranslateEquiv_apply (s : NNReal) (I : Finset NNReal) (t : I) :
   rfl
 
 /-- Reindex a path on translated times back to the original finite set. -/
+@[expose]
 def pullbackFiniteSetTranslate {alpha : Type*} (s : NNReal) (I : Finset NNReal)
     (path : finiteSetTranslate s I → alpha) : I → alpha :=
   fun t ↦ path (finiteSetTranslateEquiv s I t)

@@ -22,7 +22,7 @@ No discontinuous endpoint-adjusted sampler and no unnecessary codimension-two de
 part of the certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -172,6 +172,7 @@ noncomputable def toExactRelativeStableCollarData
 end ExactRelativeStableCollarGeneralPositionData
 
 /-- Existence proposition for the geometric construction. -/
+@[expose]
 def ExactRelativeStableCollarConstructionTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)

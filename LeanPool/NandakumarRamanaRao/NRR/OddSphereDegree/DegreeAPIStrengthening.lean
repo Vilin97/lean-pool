@@ -18,7 +18,7 @@ chosen top-homology isomorphism or orientation; later modules supply the uncondi
 positive-dimensional orientation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ of the conditional degree: it consumes a raw categorical morphism, and the raw
 /-- The integer **degree of a `TopCat.sphere n` self-morphism `g`** relative to a
 chosen identification `e : Hₙ(Sⁿ; ℤ) ≅ ℤ`. The raw `Sphere n` degree is the
 special case `g = toTopCatSphereSelfMap f` (see `degreeOfIso_eq_degreeOfIsoTop`). -/
-def degreeOfIsoTop {n : ℕ} (e : SphereTopHomologyIso n)
+@[expose] def degreeOfIsoTop {n : ℕ} (e : SphereTopHomologyIso n)
     (g : TopCat.sphere.{0} n ⟶ TopCat.sphere.{0} n) : ℤ :=
   degreeRingHomOfIso _ e ((singularHomologyℤ n).map g)
 

@@ -37,7 +37,7 @@ The main results are `short_translates` (Proposition 1.2) and
 κ = 1/8, and a larger fixed constant in the auxiliary smoothness cutoff.
 -/
 
-@[expose] public section
+public section
 
 namespace LongGapsBetweenPrimes
 noncomputable section
@@ -2230,7 +2230,7 @@ lemma assignmentVariance_tuple {P k : ℕ} (hP : Squarefree P) (r : DivisorTuple
     (hpair : ∀ i j, i ≠ j → Nat.Coprime (r i).val (r j).val) :
     assignmentVariance (fun p : PrimeIndex P => p.val) (tupleAssignment r) =
       ∏ i, 1 / ((r i).val.totient : ℝ) := by
-  rw [assignmentVariance, tupleAssignment_prod r hpair (fun p _ => 1 / ((p.val : ℝ) - 1))]
+  refine (tupleAssignment_prod r hpair (fun p _ => 1 / ((p.val : ℝ) - 1))).trans ?_
   apply Finset.prod_congr rfl
   intro i _
   have hd := (Nat.mem_divisors.mp (r i).property).1

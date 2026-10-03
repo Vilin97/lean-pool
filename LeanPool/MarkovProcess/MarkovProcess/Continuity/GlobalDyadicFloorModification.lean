@@ -23,7 +23,7 @@ No measurability of the path-valued map, path-space law, Markov property, or Hun
 asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

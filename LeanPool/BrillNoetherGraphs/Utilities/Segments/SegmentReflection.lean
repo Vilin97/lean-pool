@@ -18,7 +18,7 @@ so extending it by zero away from the chosen subdivision slot creates no
 unwanted firing across the rest of the core.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -29,6 +29,7 @@ open Certificate
 open Certificate.SubdivisionGraph
 
 /-- The path position symmetric to `position` under reversal of the slot. -/
+@[expose]
 def symmetricPosition {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
     (edge : Fin p) (position : spec.PathPosition edge) :
     spec.PathPosition edge :=
@@ -51,6 +52,7 @@ def value (length position i : ℕ) : ℤ :=
   else (i : ℤ) - (length : ℤ)
 
 /-- The oriented slope after numerical path position `i`. -/
+@[expose]
 def slope (length position i : ℕ) : ℤ :=
   if i < min position (length - position) then -1
   else if max position (length - position) ≤ i then 1
@@ -103,6 +105,7 @@ theorem slope_divergence {length position j : ℕ}
 
 /-- Extend the plateau potential by zero over every core vertex and every
 other subdivision slot. -/
+@[expose]
 def script {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
     (edge : Fin p) (position : spec.PathPosition edge) :
     firingScript spec.graph

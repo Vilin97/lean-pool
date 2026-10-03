@@ -15,7 +15,7 @@ Ranges, containment, relative density, alphabet restriction, and lines inside ma
 `Combinatorics.Subspace`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Function
 open Combinatorics
@@ -34,7 +34,7 @@ lemma injective (V : Combinatorics.Subspace η α ι) :
   simpa only [V.apply_inr hi] using congrFun hxy i
 
 /-- The finite range of a combinatorial subspace. -/
-def range [Fintype (η → α)] [DecidableEq (ι → α)]
+@[expose] def range [Fintype (η → α)] [DecidableEq (ι → α)]
     (V : Combinatorics.Subspace η α ι) : Finset (ι → α) :=
   Finset.univ.image V
 
@@ -45,11 +45,11 @@ lemma mem_range [Fintype (η → α)] [DecidableEq (ι → α)]
   simp [range]
 
 /-- A subspace is contained in a finite word family when all its evaluations belong to it. -/
-def IsContained (V : Combinatorics.Subspace η α ι) (A : Finset (ι → α)) : Prop :=
+@[expose] def IsContained (V : Combinatorics.Subspace η α ι) (A : Finset (ι → α)) : Prop :=
   ∀ x, V x ∈ A
 
 /-- Compose a parameter subspace with an ambient subspace. -/
-def compose (V : Combinatorics.Subspace η α ι) (W : Combinatorics.Subspace θ α η) :
+@[expose] def compose (V : Combinatorics.Subspace η α ι) (W : Combinatorics.Subspace θ α η) :
     Combinatorics.Subspace θ α ι where
   idxFun i := (V.idxFun i).elim Sum.inl W.idxFun
   proper e := by
@@ -119,17 +119,17 @@ lemma lineToSubspaceFinOne_apply (l : Combinatorics.Line α ι) (x : Fin 1 → �
   simp [lineToSubspaceFinOne, Fin.eq_zero]
 
 /-- Relative density on a subspace, defined on its parameter cube. -/
-def relativeDensity [Fintype (η → α)] [DecidableEq (ι → α)]
+@[expose] def relativeDensity [Fintype (η → α)] [DecidableEq (ι → α)]
     (V : Combinatorics.Subspace η α ι) (A : Finset (ι → α)) : ℚ≥0 :=
   (Finset.univ.filter fun x ↦ V x ∈ A).dens
 
 /-- Ambient line structures whose evaluations are contained in a subspace. -/
-def Lines [Fintype (η → α)] [DecidableEq (ι → α)]
+@[expose] def Lines [Fintype (η → α)] [DecidableEq (ι → α)]
     (V : Combinatorics.Subspace η α ι) :=
   {l : Combinatorics.Line α ι // ∀ a, l a ∈ range V}
 
 /-- Compose a parameter-cube line with a combinatorial subspace. -/
-def composeLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
+@[expose] def composeLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
     Combinatorics.Line α ι where
   idxFun i := (V.idxFun i).elim some l.idxFun
   proper := by
@@ -229,7 +229,7 @@ def mapLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η)
   composeLine V l
 
 lemma mapLine_eq_composeLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
-    mapLine V l = composeLine V l :=
+    mapLine V l = composeLine V l := by
   rfl
 
 @[simp]
@@ -238,7 +238,7 @@ lemma mapLine_apply (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Lin
   composeLine_apply V l a
 
 /-- Restrict the variable letters of a subspace along an alphabet embedding. -/
-def restrictAlphabet {β : Type*} [Fintype (η → β)] [DecidableEq (ι → α)]
+@[expose] def restrictAlphabet {β : Type*} [Fintype (η → β)] [DecidableEq (ι → α)]
     (V : Combinatorics.Subspace η α ι) (e : β ↪ α) : Finset (ι → α) :=
   Finset.univ.image fun x ↦ V (e ∘ x)
 
@@ -261,7 +261,7 @@ lemma transportSubspace_apply {α η ι ω ν : Type*} (e : ι ≃ ω ⊕ ν) (z
   cases e c <;> simp only [Sum.elim_inl, Sum.elim_inr, id_eq, Combinatorics.Subspace.coe_apply]
 
 /-- The preimage of a word family in a subspace parameter cube. -/
-noncomputable def parameterPreimage {η α ι : Type*} [Fintype (η → α)]
+@[expose] noncomputable def parameterPreimage {η α ι : Type*} [Fintype (η → α)]
     (V : Combinatorics.Subspace η α ι) (D : Finset (ι → α)) : Finset (η → α) := by
   classical
   apply Finset.univ.filter

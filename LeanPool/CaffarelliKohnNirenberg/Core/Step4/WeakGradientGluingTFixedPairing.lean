@@ -13,7 +13,7 @@ Integrability of the same selected field on the inner carrier upgrades its
 slice weak derivative identity to the full-space test-function pairing.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

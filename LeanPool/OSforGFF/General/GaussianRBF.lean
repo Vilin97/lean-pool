@@ -25,7 +25,7 @@ definiteness via the Hadamard series in `HadamardExp.lean`; (3) the Gaussian ker
 the RBF to the inner product kernel.
 -/
 
-@[expose] public section
+public section
 
 open Complex BigOperators Real InnerProductSpace Matrix
 

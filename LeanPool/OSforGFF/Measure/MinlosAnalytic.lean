@@ -24,7 +24,7 @@ This file provides infrastructure for Gaussian measures constructed via Minlos' 
 - `moment_zero_from_realCF`: Zero mean from characteristic functional symmetry
 -/
 
-@[expose] public section
+public section
 
 open TopologicalSpace MeasureTheory Complex Filter
 

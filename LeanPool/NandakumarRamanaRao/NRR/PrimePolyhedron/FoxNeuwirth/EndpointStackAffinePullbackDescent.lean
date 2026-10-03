@@ -24,7 +24,7 @@ The upper values are the ordinary PL values at the next
 barycentric-subdivision vertices.  Hence this convention is seam-compatible under iteration.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -154,6 +154,7 @@ theorem oneStepAffinePullbackCompatible
       (localSpatialWeight hp A.level b.2) hchart
 
 /-- Compatible affine-pullback values descend to global collar vertices. -/
+@[expose]
 noncomputable def globalPullbackVector
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}

@@ -26,7 +26,7 @@ category is used: additivity of `▷` is `MonoidalPreadditive` and its
 ℂ-homogeneity is `MonoidalLinear`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -42,6 +42,7 @@ variable {A : Type u}
 endomorphisms.  Multiplicativity is functoriality of `▷` — note that
 `End` multiplies in the order opposite to composition, which is why
 no reversal appears. -/
+@[expose]
 noncomputable def whiskerAlg
     [Category.{v} A] [MonoidalCategory A] [Preadditive A] [Linear ℂ A]
     [MonoidalPreadditive A] [MonoidalLinear ℂ A]
@@ -59,6 +60,7 @@ noncomputable def whiskerAlg
 /-- **Repeated whiskering**: the algebra map carrying an
 endomorphism of `X ^ ⊗ m` to the endomorphism of `X ^ ⊗ (m + k)`
 that acts on the first `m` factors and fixes the last `k`. -/
+@[expose]
 noncomputable def whiskerPowAlg
     [Category.{v} A] [MonoidalCategory A] [Preadditive A] [Linear ℂ A]
     [MonoidalPreadditive A] [MonoidalLinear ℂ A]

@@ -25,7 +25,7 @@ complex polynomial is precomposed with the affine map `z ↦ a * z + b`.
 * `polynomialSupNorm_affineComposition_image` — exact transport of the polynomial sup-norm.
 -/
 
-@[expose] public section
+public section
 
 open scoped Polynomial
 

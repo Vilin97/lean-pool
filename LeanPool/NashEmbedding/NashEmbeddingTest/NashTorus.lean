@@ -40,7 +40,7 @@ Tests are grouped by what they discriminate:
  - N6: the flat metric is realized by the expected explicit map.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding NashEmbedding.Sobolev Matrix

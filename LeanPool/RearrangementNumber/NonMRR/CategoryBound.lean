@@ -24,7 +24,7 @@ that of any rearranging family. All block, coding and category ingredients
 are instantiated by the constructions in the preceding modules.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal
 

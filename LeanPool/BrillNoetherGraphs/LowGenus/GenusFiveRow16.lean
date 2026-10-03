@@ -21,7 +21,7 @@ is name the row's lookup tables and check the incidence facts that file asks
 for.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow16
 

@@ -27,7 +27,7 @@ staggered crossing of the two marked rank profiles; its one-step offset is
 exactly the offset required by the common chip shift on the wedge.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

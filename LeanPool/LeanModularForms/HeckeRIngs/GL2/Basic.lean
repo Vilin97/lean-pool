@@ -33,7 +33,7 @@ structural lemmas for Shimura's Theorem 3.24.
 * Shimura, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset HeckeRing.GLn
 
@@ -43,7 +43,7 @@ namespace HeckeRing.GL2
 
 /-- `T(a,d)` for n=2: the Hecke basis element for diagonal `(a,d)` with `a | d`.
     Returns 0 when `a = 0` or `d = 0` or `a ∤ d`. -/
-noncomputable def TAd (a d : ℕ) : HeckeAlgebra 2 :=
+@[expose] noncomputable def TAd (a d : ℕ) : HeckeAlgebra 2 :=
   if _ : 0 < a ∧ 0 < d ∧ a ∣ d then TElem ![a, d] else 0
 
 /-- Unfold `TAd` to `TElem` when all positivity and divisibility conditions hold. -/
@@ -56,7 +56,7 @@ lemma T_ad_eq_zero {a d : ℕ} (h : ¬(0 < a ∧ 0 < d ∧ a ∣ d)) : TAd a d =
   dite_eq_right h
 
 /-- `T(p,p)`: the scalar double coset for prime `p`, equal to `TAd p p`. -/
-noncomputable def TPp (p : ℕ) : HeckeAlgebra 2 := TAd p p
+@[expose] noncomputable def TPp (p : ℕ) : HeckeAlgebra 2 := TAd p p
 
 /-- For `p` prime, `T(p,p)` equals the scalar diagonal element `TElem(p,p)`. -/
 lemma T_pp_of_pos (p : ℕ) (hp : p.Prime) : TPp p = TElem (fun _ : Fin 2 => p) := by
@@ -78,7 +78,7 @@ lemma T_elem_ones_eq : TElem (fun _ : Fin 2 => 1) = 1 := by
     (funext fun i => by fin_cases i <;> rfl)).trans T_elem_ones_eq
 
 /-- `T(m) = Σ_{a | m} T(a, m/a)`. -/
-noncomputable def TSum (m : ℕ+) : HeckeAlgebra 2 :=
+@[expose] noncomputable def TSum (m : ℕ+) : HeckeAlgebra 2 :=
   ∑ a ∈ (m : ℕ).divisors, TAd a ((m : ℕ) / a)
 
 section Structural

@@ -16,7 +16,7 @@ failure tree turns that into the six-point finite property at `barS = 6934/10000
 six-point transfer turns that into the planar rectifiability bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

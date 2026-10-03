@@ -20,7 +20,7 @@ the same coercive form as the forced history inverse. In particular, no
 spatially constant nonzero vector is silently treated as L² data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ variable {U E : Type*}
   (P : ℝ) [Fact (0 < P)] {T : ℝ} (D : Coefficients T U E)
 
 /-- The genuine zero-trace correction to the affine terminal lift. -/
-def endpointCorrection : CylinderL2 P U →L[ℝ]
+@[expose] def endpointCorrection : CylinderL2 P U →L[ℝ]
     zeroTraceDerivatives (U := CylinderL2 P U) T D.time_pos.le :=
   fixedEndpointCorrection T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
     D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
@@ -49,16 +49,17 @@ def endpointCorrection : CylinderL2 P U →L[ℝ]
     (affineTrial T D.time_pos.le (D.frame P) (D.frameDerivative P))
 
 /-- The actual coordinate derivative in L² time. -/
-def endpointSlope : CylinderL2 P U →L[ℝ] TimeLp T (CylinderL2 P U) :=
+@[expose] def endpointSlope : CylinderL2 P U →L[ℝ] TimeLp T (CylinderL2 P U) :=
   coordinateSlope T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
     D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
     D.potential D.potential_nonneg (D.hessian_upper P) D.small
 
 /-- The actual coordinate displacement with prescribed terminal trace. -/
-def endpointDisplacement : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P U) :=
+@[expose] def endpointDisplacement : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P U) :=
   (initialPrimitive T D.time_pos.le).comp (D.endpointSlope P)
 
 /-- Bounded H¹ reconstruction of the stationary coordinate velocity. -/
+@[expose]
 def endpointCoordinate : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P U) :=
   continuousCoordinateVelocity T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
     D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
@@ -71,11 +72,11 @@ def endpointAcceleration : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2
       (D.endpointCoordinate P)
 
 /-- The physical history velocity, with a genuine L² terminal datum. -/
-def endpointVelocity : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
+@[expose] def endpointVelocity : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
   (EulerContinuousTimeIntegral.multiplier (D.frame P)).comp (D.endpointCoordinate P)
 
 /-- The product-rule expression for the actual physical time derivative. -/
-def endpointDerivative : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
+@[expose] def endpointDerivative : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
   (EulerContinuousTimeIntegral.multiplier (D.frameDerivative P)).comp (D.endpointCoordinate P) +
     (EulerContinuousTimeIntegral.multiplier (D.frame P)).comp (D.endpointAcceleration P)
 

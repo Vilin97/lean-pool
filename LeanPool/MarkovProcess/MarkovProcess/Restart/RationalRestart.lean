@@ -23,7 +23,7 @@ This file merges the following former modules, one section each:
 * `RationalJointLaw`: Rational-time joint restart law
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

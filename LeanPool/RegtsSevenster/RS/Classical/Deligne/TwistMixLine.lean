@@ -20,7 +20,7 @@ sum `L.mix q p` of `q` copies of the unit and `p` copies of the
 line.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

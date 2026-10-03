@@ -24,7 +24,7 @@ invariance-outside-support congruence (`realize_congr_const`), bridged to arbitr
 separator from constant support `insert c A` back to `A` (the InsepAt C7 step).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -34,7 +34,7 @@ variable {L : Language.{0, 0}} {M : Type}
 
 /-- Existentially generalize the constant `c_j` out of a sentence: abstract `c_j` into the free
 variable `0`, then existentially quantify it. -/
-noncomputable def genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) : L[[ℕ]].Sentenceω :=
+@[expose] noncomputable def genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) : L[[ℕ]].Sentenceω :=
   ((ρ.abstractConst j).relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).ex
 
 /-- Realizing the generalization is existentially witnessing the original with `c_j`

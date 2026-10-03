@@ -16,7 +16,7 @@ extension.  This file packages that linear-algebra step once.  It is entirely
 independent of the later homogeneous-coordinate calculations.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

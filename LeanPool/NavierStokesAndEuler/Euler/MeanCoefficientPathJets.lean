@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 
 /-! Uniform time-path bounds for actual spatial derivatives of the multiplication operators. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -83,7 +83,7 @@ def operatorPathMap (T : ℝ) : C(Icc (0 : ℝ) T, Field) →L[ℝ]
   multiplierMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
 @[simp] theorem operatorPathMap_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) :
-    operatorPathMap T A = operatorPath T A := rfl
+    operatorPathMap T A = operatorPath T A := by rfl
 
 theorem operatorPathMap_norm_le_one (T : ℝ) : ‖operatorPathMap T‖ ≤ 1 := by
   apply (operatorPathMap T).opNorm_le_bound zero_le_one

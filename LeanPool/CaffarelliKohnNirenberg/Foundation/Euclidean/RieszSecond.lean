@@ -17,7 +17,7 @@ public import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -126,6 +126,7 @@ private lemma vec3EuclideanNorm_le_sqrt_three_mul_norm (v : Vec3) :
     abs_of_nonneg (mul_nonneg (Real.sqrt_nonneg 3) (norm_nonneg v))] at h2
 /-- The Euclidean `2√3` enlargement of a dyadic cube, with the cube's
     sup-radius `dyadicScale Q.scale / 2`. -/
+@[expose]
 def rieszSecondCubeStar (Q : DyadicIndex) : Set Vec3 :=
   {x | vec3EuclideanNorm (x - dyadicCubeCenter Q.scale Q.corner) ≤
     2 * Real.sqrt 3 * (dyadicScale Q.scale / 2)}

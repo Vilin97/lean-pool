@@ -42,7 +42,7 @@ the interior chip at distance `|e10|` from `4` -- and its second inequality is
 exactly `gamma ≤ beta`.  Both are used, and nothing else about the chamber is.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow10ChamberOne
 

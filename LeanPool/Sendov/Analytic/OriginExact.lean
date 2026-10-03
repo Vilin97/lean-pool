@@ -36,7 +36,7 @@ The chain is:
 * `Sendov.grow`: the lower bound `‖W‖ ≥ 2an/(n-1)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

@@ -19,7 +19,7 @@ the two incident face charts can introduce incompatible auxiliary points.  This 
 that global finite edge order and its consecutive intervals.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -40,7 +40,7 @@ structure EdgeMarking where
   second_mem : ∀ e : K.Edge, K.edgeSecondPoint e ∈ points
 
 /-- Enlarge any prescribed finite point set by all abstract edge endpoints. -/
-noncomputable def EdgeMarking.ofFinset (P : Finset K.realization) :
+@[expose] noncomputable def EdgeMarking.ofFinset (P : Finset K.realization) :
     K.EdgeMarking := by
   classical
   let first : Finset K.realization :=
@@ -1026,18 +1026,18 @@ theorem fanVertex_mem_faceCarrier (f : M.FanFace) {p : K.realization}
       hvt (K.faceEdge_subset_face f.1 f.2.1 hve)
 
 /-- The distinguished cone-center vertex of a marked fan triangle. -/
-noncomputable def fanCenterVertex (f : M.FanFace) :
+@[expose] noncomputable def fanCenterVertex (f : M.FanFace) :
     {p // p ∈ M.fanFaceVertices f} :=
   ⟨K.faceCenter f.1, by simp [fanFaceVertices]⟩
 
 /-- The first base vertex of a marked fan triangle. -/
-noncomputable def fanFirstVertex (f : M.FanFace) :
+@[expose] noncomputable def fanFirstVertex (f : M.FanFace) :
     {p // p ∈ M.fanFaceVertices f} :=
   ⟨M.edgeIntervalFirst (K.faceEdge f.1 f.2.1) f.2.2, by
     simp [fanFaceVertices]⟩
 
 /-- The second base vertex of a marked fan triangle. -/
-noncomputable def fanSecondVertex (f : M.FanFace) :
+@[expose] noncomputable def fanSecondVertex (f : M.FanFace) :
     {p // p ∈ M.fanFaceVertices f} :=
   ⟨M.edgeIntervalSecond (K.faceEdge f.1 f.2.1) f.2.2, by
     simp [fanFaceVertices]⟩
@@ -1086,7 +1086,7 @@ theorem fanFirstVertex_ne_second (f : M.FanFace) :
     (K.faceEdge f.1 f.2.1) f.2.2 (congrArg Subtype.val h)
 
 /-- The affine barycentric realization of one marked fan triangle inside its parent face. -/
-noncomputable def fanFaceMap (f : M.FanFace) :
+@[expose] noncomputable def fanFaceMap (f : M.FanFace) :
     stdSimplex ℝ {p // p ∈ M.fanFaceVertices f} → K.realization := by
   classical
   intro x
@@ -2672,14 +2672,14 @@ theorem fanExtendedCoordinates_eq_of_faceMap_eq
       hxy hxCenter hyCenter
 
 /-- The finite set of every geometric point used as a marked fan vertex. -/
-noncomputable def fanVertices : Finset K.realization :=
+@[expose] noncomputable def fanVertices : Finset K.realization :=
   (Finset.univ : Finset M.FanFace).biUnion M.fanFaceVertices
 
 /-- Geometric vertices occurring in the global marked fan family. -/
 abbrev FanVertex := {p : K.realization // p ∈ M.fanVertices}
 
 /-- Include the three local vertices of one fan face in the global used-vertex type. -/
-noncomputable def fanVertexEmbedding (f : M.FanFace) :
+@[expose] noncomputable def fanVertexEmbedding (f : M.FanFace) :
     {p // p ∈ M.fanFaceVertices f} ↪ M.FanVertex where
   toFun p := ⟨p.1, Finset.mem_biUnion.mpr
     ⟨f, Finset.mem_univ f, p.2⟩⟩
@@ -2689,7 +2689,7 @@ noncomputable def fanVertexEmbedding (f : M.FanFace) :
     exact congrArg (fun z : M.FanVertex ↦ z.1) hpq
 
 /-- The three vertices of a marked fan face, regarded as global used vertices. -/
-noncomputable def globalFanFaceVertices (f : M.FanFace) :
+@[expose] noncomputable def globalFanFaceVertices (f : M.FanFace) :
     Finset M.FanVertex :=
   (M.fanFaceVertices f).attach.map (M.fanVertexEmbedding f)
 
@@ -2710,15 +2710,15 @@ theorem mem_globalFanFaceVertices_iff (f : M.FanFace) (v : M.FanVertex) :
     rfl
 
 /-- The center vertex of a fan face, included in the global fan-vertex type. -/
-noncomputable def globalFanCenter (f : M.FanFace) : M.FanVertex :=
+@[expose] noncomputable def globalFanCenter (f : M.FanFace) : M.FanVertex :=
   M.fanVertexEmbedding f (M.fanCenterVertex f)
 
 /-- The first base vertex of a fan face, included in the global fan-vertex type. -/
-noncomputable def globalFanFirst (f : M.FanFace) : M.FanVertex :=
+@[expose] noncomputable def globalFanFirst (f : M.FanFace) : M.FanVertex :=
   M.fanVertexEmbedding f (M.fanFirstVertex f)
 
 /-- The second base vertex of a fan face, included in the global fan-vertex type. -/
-noncomputable def globalFanSecond (f : M.FanFace) : M.FanVertex :=
+@[expose] noncomputable def globalFanSecond (f : M.FanFace) : M.FanVertex :=
   M.fanVertexEmbedding f (M.fanSecondVertex f)
 
 @[simp] theorem globalFanCenter_val (f : M.FanFace) :
@@ -2792,7 +2792,7 @@ theorem eq_globalFanBase_of_card_two_of_subset_of_center_notMem
     simp [hne]
 
 /-- Relabel global vertices of one face by their underlying intrinsic points. -/
-noncomputable def fanFaceVertexEquiv (f : M.FanFace) :
+@[expose] noncomputable def fanFaceVertexEquiv (f : M.FanFace) :
     {v // v ∈ M.globalFanFaceVertices f} ≃
       {p // p ∈ M.fanFaceVertices f} where
   toFun v := ⟨v.1.1,
@@ -2893,7 +2893,7 @@ theorem fanRelabel_extended_eq_iff
           extendFaceCoordinates_of_notMem _ _ hpg]
 
 /-- One marked fan face parametrized by the global used-vertex type. -/
-noncomputable def globalFanFaceMap (f : M.FanFace) :
+@[expose] noncomputable def globalFanFaceMap (f : M.FanFace) :
     stdSimplex ℝ {v // v ∈ M.globalFanFaceVertices f} → K.realization :=
   fun x ↦ M.fanFaceMap f (M.fanRelabelSimplex f x)
 
@@ -3320,7 +3320,7 @@ theorem markedFanLocallyFiniteTriangleComplex_support :
   exact ⟨x, hx⟩
 
 /-- The finite geometric triangulation of the old realization induced by all global edge marks. -/
-noncomputable def markedFanGeometricTriangulation :
+@[expose] noncomputable def markedFanGeometricTriangulation :
     GeometricTriangulation K.realization :=
   M.markedFanLocallyFiniteTriangleComplex.toGeometricTriangulation
     M.markedFanLocallyFiniteTriangleComplex_support
@@ -3333,7 +3333,7 @@ noncomputable def markedFanGeometricTriangulation :
 
 /-- The same evaluation homeomorphism with its source stated directly as the compact intrinsic
 complex, avoiding any projection opacity through `GeometricTriangulation`. -/
-noncomputable def markedFanHomeomorph :
+@[expose] noncomputable def markedFanHomeomorph :
     M.markedFanLocallyFiniteTriangleComplex.compactIntrinsic.realization ≃ₜ
       K.realization := by
   let L := M.markedFanLocallyFiniteTriangleComplex

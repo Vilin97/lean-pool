@@ -18,7 +18,7 @@ Extracted from BanLat `LocallySolid/WithSeminorms.lean` at
 `b00e59836016aa1099b8011add6b07385e66428e`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology Pointwise
 

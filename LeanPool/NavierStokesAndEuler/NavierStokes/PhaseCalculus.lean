@@ -20,7 +20,7 @@ The primary material operator uses the manuscript's backward-time convention
 `∂v - ε ∂T` from equation (25).
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,25 +37,25 @@ abbrev Slot := Slow × (ℝ × ℝ)
 abbrev Vec3 := EuclideanSpace ℝ (Fin 3)
 
 /-- E R, given by `((1, (0, 0)), (0, 0))`. -/
-def eR : Slot := ((1, (0, 0)), (0, 0))
+@[expose] def eR : Slot := ((1, (0, 0)), (0, 0))
 /-- E Z, given by `((0, (1, 0)), (0, 0))`. -/
-def eZ : Slot := ((0, (1, 0)), (0, 0))
+@[expose] def eZ : Slot := ((0, (1, 0)), (0, 0))
 /-- E T, given by `((0, (0, 1)), (0, 0))`. -/
-def eT : Slot := ((0, (0, 1)), (0, 0))
+@[expose] def eT : Slot := ((0, (0, 1)), (0, 0))
 /-- E theta, given by `((0, (0, 0)), (1, 0))`. -/
-def eTheta : Slot := ((0, (0, 0)), (1, 0))
+@[expose] def eTheta : Slot := ((0, (0, 0)), (1, 0))
 /-- E V, given by `((0, (0, 0)), (0, 1))`. -/
-def eV : Slot := ((0, (0, 0)), (0, 1))
+@[expose] def eV : Slot := ((0, (0, 0)), (0, 1))
 
 /-- Slow R, given by `fderiv ℝ F s (1, (0, 0))`. -/
-def slowR (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (1, (0, 0))
+@[expose] def slowR (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (1, (0, 0))
 /-- Slow Z, given by `fderiv ℝ F s (0, (1, 0))`. -/
-def slowZ (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (1, 0))
+@[expose] def slowZ (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (1, 0))
 /-- Slow T, given by `fderiv ℝ F s (0, (0, 1))`. -/
-def slowT (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (0, 1))
+@[expose] def slowT (F : Slow → ℝ) (s : Slow) : ℝ := fderiv ℝ F s (0, (0, 1))
 
 /-- Equation (26). The axial term `(pz/ε)*Z` equals `pz*Z/ε`. -/
-def phase (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : ℝ :=
+@[expose] def phase (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : ℝ :=
   p * q.2.1 + (pz / ε) * q.1.2.1 + x0 * q.1.1 -
     q.2.2 * (p * F q.1 + pz * G q.1)
 
@@ -114,7 +114,7 @@ theorem phase_dV (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot)
   simpa [eV, hzeroF, hzeroG] using fderiv_phase_apply ε p pz x0 F G q eV hF hG
 
 /-- The cylindrical chart gradient `(∂R Φ, R⁻¹∂θ Φ, ε∂Z Φ)`. -/
-def phaseNormal (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : Vec3 :=
+@[expose] def phaseNormal (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : Vec3 :=
   !₂[fderiv ℝ (phase ε p pz x0 F G) q eR,
     fderiv ℝ (phase ε p pz x0 F G) q eTheta / q.1.1,
     ε * fderiv ℝ (phase ε p pz x0 F G) q eZ]
@@ -146,17 +146,17 @@ theorem contDiff_phase {n : WithTop ℕ∞} (ε p pz x0 : ℝ) (F G : Slow → �
             (contDiff_const.mul (hG.comp contDiff_fst))))
 
 /-- The chart angular velocity is `V = R F`. -/
-def baseV (F : Slow → ℝ) (s : Slow) : ℝ := s.1 * F s
+@[expose] def baseV (F : Slow → ℝ) (s : Slow) : ℝ := s.1 * F s
 
 /-- `σ=-1` is the backward slow-time convention of (25); `σ=1` describes
 the forward slow-time convention. The differential operators are real ones. -/
-def signedMaterialOp (σ ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q : Slot) : ℝ :=
+@[expose] def signedMaterialOp (σ ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q : Slot) : ℝ :=
   fderiv ℝ f q eV + σ * ε * fderiv ℝ f q eT +
     b q.1 * fderiv ℝ f q eR + (baseV F q.1 / q.1.1) * fderiv ℝ f q eTheta +
       ε * G q.1 * fderiv ℝ f q eZ
 
 /-- Backward material op, given by `signedMaterialOp (-1) ε b F G f q`. -/
-def backwardMaterialOp (ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q : Slot) : ℝ :=
+@[expose] def backwardMaterialOp (ε : ℝ) (b F G : Slow → ℝ) (f : Slot → ℝ) (q : Slot) : ℝ :=
   signedMaterialOp (-1) ε b F G f q
 
 /-- Exact cancellation of the fast-time and leading angular/axial terms. -/
@@ -200,7 +200,7 @@ theorem phase_angularShift (ε p pz x0 h : ℝ) (F G : Slow → ℝ) (q : Slot) 
   ring
 
 /-- The actual complex carrier `exp(i k j Φ)`, with integer harmonic `j`. -/
-def harmonic (k : ℝ) (j : ℤ) (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : ℂ :=
+@[expose] def harmonic (k : ℝ) (j : ℤ) (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot) : ℂ :=
   Complex.exp ((↑(k * (j : ℝ) * phase ε p pz x0 F G q) : ℂ) * Complex.I)
 
 /-- Rounding `k*p` to an integer makes every integer harmonic single-valued
@@ -259,7 +259,7 @@ theorem contDiffAt_phaseNormal (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot
     exact contDiffAt_const.mul (hp eZ).contDiffAt
 
 /-- The exact fast-slot derivative of `nΦ` used by the tangent ODE. -/
-def normalSlotDerivative (ε p pz : ℝ) (F G : Slow → ℝ) (s : Slow) : Vec3 :=
+@[expose] def normalSlotDerivative (ε p pz : ℝ) (F G : Slow → ℝ) (s : Slow) : Vec3 :=
   !₂[-(p * slowR F s + pz * slowR G s), 0,
     -ε * (p * slowZ F s + pz * slowZ G s)]
 

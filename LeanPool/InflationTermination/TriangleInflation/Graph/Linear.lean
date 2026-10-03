@@ -27,7 +27,7 @@ and `square_linear_witness` using the pushforward of this density along the copi
 map together with symmetry, the diagonal law and the injectable/ancestral prescriptions.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -45,6 +45,7 @@ section Walsh
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The Walsh character of a set of coordinates, in the sign convention of `sgn`. -/
+@[expose]
 def walsh (S : Finset ι) (w : ι → Bool) : ℝ := ∏ i ∈ S, sgn (w i)
 
 -- `sgn_mul_self` is provided by `Cycles.lean`.
@@ -195,6 +196,7 @@ copy indices each. -/
 abbrev TriSign (t : ℕ) := Fin 3 × Fin t
 
 /-- The complex atom `1 + i√q ε` of the Fourier density, with `ε = sgn b`. -/
+@[expose]
 noncomputable def triAtom (q : ℝ) (b : Bool) : ℂ :=
   1 + Complex.I * ((Real.sqrt q * sgn b : ℝ) : ℂ)
 
@@ -206,11 +208,13 @@ noncomputable def triAtom (q : ℝ) (b : Bool) : ℂ :=
   simp [triAtom]
 
 /-- `f_g(s) = ∏_i (1 + i√q s_{g,i})`, the factor of the family `g`. -/
+@[expose]
 noncomputable def triFactor (t : ℕ) (q : ℝ) (s : TriSign t → Bool) (g : Fin 3) : ℂ :=
   ∏ i : Fin t, triAtom q (s (g, i))
 
 /-- `W(s) = Re(f_x f_z f_y) + 4 ∑_g (1 − Re f_g)`, the `m = 3`, `c = 4` density of
 AUDIT-NOTES B2 relative to the uniform sign cube. -/
+@[expose]
 noncomputable def triW (t : ℕ) (q : ℝ) (s : TriSign t → Bool) : ℝ :=
   (triFactor t q s 0 * triFactor t q s 1 * triFactor t q s 2).re
     + 4 * ((1 - (triFactor t q s 0).re) + (1 - (triFactor t q s 1).re)
@@ -283,6 +287,7 @@ theorem triZeta_sq (q : ℝ) (hq : 0 ≤ q) : triZeta q ^ 2 = ((-q : ℝ) : ℂ)
 
 /-- The target moment of a character with `n` coordinates: `(−q)^{n/2}` for even `n`
 and `0` for odd `n`. -/
+@[expose]
 def triMom (q : ℝ) (n : ℕ) : ℝ := if n % 2 = 0 then (-q) ^ (n / 2) else 0
 
 theorem triZeta_pow_re (q : ℝ) (hq : 0 ≤ q) (n : ℕ) :
@@ -409,6 +414,7 @@ theorem sum_walsh_triOne (t : ℕ) (S : Finset (TriSign t)) :
 /-- The Fourier coefficient correction of AUDIT-NOTES B2 with `c = 4`: the characters that
 are nonempty and confined to one sign family have their moment multiplied by `1 − 4 = −3`;
 every other character keeps the target moment. -/
+@[expose]
 def triCoeff {t : ℕ} (S : Finset (TriSign t)) : ℝ :=
   if S = ∅ then 1 else if ∃ g : Fin 3, ∀ v ∈ S, v.1 = g then -3 else 1
 
@@ -486,6 +492,7 @@ theorem triW_sum (t : ℕ) (q : ℝ) (hq : 0 ≤ q) :
   rw [h]; norm_num
 
 /-- `ρ(s) = 2^{-3t} W(s)`, the witness density on the auxiliary signs. -/
+@[expose]
 noncomputable def triDensity (t : ℕ) (q : ℝ) (s : TriSign t → Bool) : ℝ :=
   (1 / 2 ^ (3 * t)) * triW t q s
 

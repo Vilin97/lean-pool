@@ -15,7 +15,7 @@ Strictly exceeding a lower-density level gives the corresponding ball-mass estim
 sufficiently small positive radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

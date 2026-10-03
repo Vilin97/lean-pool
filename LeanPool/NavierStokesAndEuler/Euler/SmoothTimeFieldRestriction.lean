@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestricti
 /-! Restriction of a genuine smooth time field preserves the spatial
 jets and the actual one-sided time derivative on a shorter interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,7 +44,7 @@ local instance instSmoothTimeFieldRestriction4 (n : ℕ) : NormedSpace ℝ (E �
     inferInstance
 
 /-- Comp time, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
-def compTime (A : SmoothTimeField K E V) (f : C(J, K)) : SmoothTimeField J E V where
+@[expose] def compTime (A : SmoothTimeField K E V) (f : C(J, K)) : SmoothTimeField J E V where
   field := A.field.comp f
   smooth t := A.smooth (f t)
   jet n := (A.jet n).comp f

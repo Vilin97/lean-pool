@@ -92,7 +92,7 @@ into the module that owns `Schoenflies.IsHomeoOn`:
 `Schoenflies.paste` and `Schoenflies.Plane.IsSquareMover.isHomeoOn`.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 
@@ -146,7 +146,7 @@ variable {f g : Plane → Plane} {S T : Set Plane}
 
 /-- A restricted homeomorphism of the whole plane onto the whole plane *is* a
 homeomorphism. This is the last step of `thm:main`. -/
-noncomputable def homeomorphOfUniv (h : IsHomeoOn f g univ univ) : Plane ≃ₜ Plane where
+@[expose] noncomputable def homeomorphOfUniv (h : IsHomeoOn f g univ univ) : Plane ≃ₜ Plane where
   toFun := f
   invFun := g
   left_inv z := h.invOn.1 (mem_univ z)
@@ -247,7 +247,7 @@ and every homeomorphism `u : C → S` there is a homeomorphism `C ∪ Int(C) →
 Written in the unbundled `Schoenflies.IsHomeoOn` style: `u` comes with its inverse `v`, and the
 conclusion produces the extension `F` together with its inverse `G`. `S` is
 `Schoenflies.modelCurve` and `Q` is `Schoenflies.Plane.closedSquare 0 1`. -/
-def SquareExtension : Prop :=
+@[expose] def SquareExtension : Prop :=
   ∀ (C : Set Plane) (u v : Plane → Plane), IsJordanCurve C → IsHomeoOn u v C modelCurve →
     ∃ F G : Plane → Plane,
       IsHomeoOn F G (C ∪ inside C) (Plane.closedSquare 0 1) ∧ EqOn F u C

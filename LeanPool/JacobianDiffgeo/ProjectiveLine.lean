@@ -46,7 +46,7 @@ basepoints), meromorphic-and-divisors (`contMDiffAt_of_pole` + `ContMDiffAt.oneP
 two atoms for the future `ℳ.toP1` bridge, junk-value contract `coeChart ∞ = 0`).
 -/
 
-@[expose] public section
+public section
 
 /-- The Riemann sphere, as the one-point compactification of `ℂ`. -/
 scoped[RS.P1] notation "ℙ¹" => OnePoint ℂ

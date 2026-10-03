@@ -48,7 +48,7 @@ the matching could be augmented), so the partner involution injects the neighbou
 the complement of the neighbourhood of `v`, contradicting the degree hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

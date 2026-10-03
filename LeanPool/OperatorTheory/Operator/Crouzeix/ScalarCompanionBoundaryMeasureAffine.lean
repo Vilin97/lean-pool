@@ -38,7 +38,7 @@ domain.
   density.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped Interval Real

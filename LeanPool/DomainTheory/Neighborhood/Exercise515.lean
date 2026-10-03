@@ -52,7 +52,7 @@ recursion (`kpow`) rather than `⋃ₙ zⁿ`, and phrase Arden's lemma without
 everything **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise515
 
@@ -97,6 +97,7 @@ theorem smul_union (a b c : Set S) : a * (b ∪ c) = a * b ∪ a * c := by
 /-! ### The star `z* = ⋃ₙ zⁿ`, by explicit recursion -/
 
 /-- `zⁿ` as an iterated pointwise product (left-recursion `z^{n+1} = z·zⁿ`). -/
+@[expose]
 def kpow (z : Set S) : ℕ → Set S
   | 0 => 1
   | n + 1 => z * kpow z n

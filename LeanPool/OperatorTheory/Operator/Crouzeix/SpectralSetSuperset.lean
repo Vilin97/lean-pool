@@ -18,7 +18,7 @@ improvement, persist on every compact set containing the closed numerical
 range.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace

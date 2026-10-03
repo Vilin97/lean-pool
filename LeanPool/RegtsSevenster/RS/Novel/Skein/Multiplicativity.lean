@@ -18,11 +18,12 @@ normalized there), so every row is a scalar multiple of it, and
 evaluating at the empty graph identifies the scalar.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- Disjoint union of closed fragments. -/
+@[expose]
 noncomputable def ClosedFragment.union (W₁ W₂ : ClosedFragment) :
     ClosedFragment :=
   (W₁.disjUnion W₂).relabel (Equiv.equivOfIsEmpty _ _)

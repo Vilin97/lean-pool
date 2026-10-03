@@ -41,7 +41,7 @@ product of one-qubit Pauli matrices is a separate statement, proved in `Pauli/Te
   for the matrix of a Hermitian Pauli string.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

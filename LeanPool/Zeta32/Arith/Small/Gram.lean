@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.Arith.Small.Bern
 `Q_n/F_n = det[U_r(binom(t,a) binom(t,b) R_n)]`, and with one factor `S_n` per row,
 `Qtilde r n = det[U_r(S_n D_n^4 binom(t,a) binom(t,b) / D_{5n})]`. -/
 
-@[expose] public section
+public section
 
 -- adapted from
 -- dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/NumeratorFunctional.lean
@@ -29,6 +29,7 @@ noncomputable section
 
 /-- The functional `U_r` on `F / D_{5n}`: polynomial part plus simple poles `U_r(1/(t+j)) = 2jX
 + β_j`. -/
+@[expose]
 def Ufun (r : ℚ) (n : ℕ) (F : ℚ[X]) : ℚ[X] :=
   C (polynomialMoment r (F /ₘ D (5*n))) +
     ∑ j ∈ Finset.Icc 1 (5*n),
@@ -173,6 +174,7 @@ lemma coeffMat_binom_det_sq (n : ℕ) :
   exact Finset.prod_congr rfl fun i _ => by rw [inv_pow]
 
 /-- The binomial Gram matrix with the scalar `S_n` inside every entry. -/
+@[expose]
 def binomGram (r : ℚ) (n : ℕ) : Matrix (Fin (3*n)) (Fin (3*n)) ℚ[X] :=
   Matrix.of fun a b =>
     Ufun r n (C (Sn n) * (D n)^4 * binomPoly a * binomPoly b)

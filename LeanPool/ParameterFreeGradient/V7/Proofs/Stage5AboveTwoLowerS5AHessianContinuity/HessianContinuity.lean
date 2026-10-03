@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5AFin
 Ambient norm estimates imply continuity of the kernel Hessian at the origin.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

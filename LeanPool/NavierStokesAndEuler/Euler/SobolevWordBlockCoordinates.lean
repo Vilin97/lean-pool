@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevWordBlocks
 
 /-! Exact derivative coordinates of genuine Sobolev word blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

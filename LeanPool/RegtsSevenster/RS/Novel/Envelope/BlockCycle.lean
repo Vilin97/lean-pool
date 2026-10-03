@@ -25,7 +25,7 @@ into the tuple's cyclic composite, which for a constant tuple is a
 power.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

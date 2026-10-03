@@ -15,31 +15,31 @@ bounded C3 corollary. Ternary digit lists are little-endian, following
 `Nat.digits`.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
 /-- Length of the canonical base-three expansion of `n`. -/
-def ternaryLength (n : ℕ) : ℕ :=
+@[expose] def ternaryLength (n : ℕ) : ℕ :=
   (Nat.digits 3 n).length
 
 /-- The first `depth` ternary digits of `n` contain at least two `2`s. -/
-def hasTwoTernaryTwosBelow (depth n : ℕ) : Prop :=
+@[expose] def hasTwoTernaryTwosBelow (depth n : ℕ) : Prop :=
   2 ≤ ((Nat.digits 3 n).take depth).count 2
 
 /-- One outgoing-carry step when a ternary digit is doubled. -/
-def ternaryDoubleCarryStep (carry digit : ℕ) : ℕ :=
+@[expose] def ternaryDoubleCarryStep (carry digit : ℕ) : ℕ :=
   if 3 ≤ 2 * digit + carry then 1 else 0
 
 /-- Count outgoing carries while doubling a little-endian ternary digit list. -/
-def ternaryDoubleCarryCountAux : List ℕ → ℕ → ℕ
+@[expose] def ternaryDoubleCarryCountAux : List ℕ → ℕ → ℕ
   | [], _ => 0
   | digit :: digits, carry =>
       let next := ternaryDoubleCarryStep carry digit
       next + ternaryDoubleCarryCountAux digits next
 
 /-- Count carries while doubling a little-endian ternary digit list. -/
-def ternaryDoubleCarryCount (digits : List ℕ) : ℕ :=
+@[expose] def ternaryDoubleCarryCount (digits : List ℕ) : ℕ :=
   ternaryDoubleCarryCountAux digits 0
 
 /-- Number of doubling carries visible in the first `depth` ternary digits. -/

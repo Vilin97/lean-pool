@@ -26,7 +26,7 @@ transition maps of a `Finset ι`-shaped diagram, and the big
 tensor product is its colimit.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -47,7 +47,7 @@ variable {D : Type u}
 
 /-- The tensor product of the factors `B i` over a list of
 indices, folded to the right with the unit object as seed. -/
-def listTensor [Category.{v} D] [MonoidalCategory D]
+@[expose] def listTensor [Category.{v} D] [MonoidalCategory D]
     (B : ι → D) : List ι → D
   | [] => 𝟙_ D
   | i :: l => B i ⊗ listTensor B l
@@ -63,7 +63,7 @@ section LinearOrder
 
 /-- The tensor product of the factors `B i` over a finite set of
 indices, in the slot order given by the linear order on `ι`. -/
-def finTensor [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
+@[expose] def finTensor [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
     (B : ι → D) (s : Finset ι) : D :=
   listTensor B (s.sort (· ≤ ·))
 
@@ -173,6 +173,7 @@ Convention: all stated morphisms have `listTensor`-form
 endpoints; the tensor-shaped intermediate objects appear only
 between explicit `eqToHom` guards, so that every composition in
 the subsequent lemmas is well typed on the nose. -/
+@[expose]
 def inclFilter
     [Category.{v} D] [MonoidalCategory D] (B : ι → D) [∀ i, MonObj (B i)]
     (p : ι → Bool) :
@@ -454,7 +455,7 @@ example : IsFiltered (Finset ι) := inferInstance
 
 /-- The `Finset ι`-shaped diagram of finite sub-tensor-products,
 with the unit insertions as transition maps. -/
-@[simps]
+@[expose, simps]
 def finTensorDiagram
     [Category.{v} D] [MonoidalCategory D] [LinearOrder ι] (B : ι → D)
     [∀ i, MonObj (B i)] : Finset ι ⥤ D where
@@ -466,6 +467,7 @@ def finTensorDiagram
 
 /-- The tensor product of the whole family `B`, as the filtered
 colimit of its finite sub-tensor-products. -/
+@[expose]
 noncomputable def bigTensor
     [Category.{v} D] [MonoidalCategory D] [LinearOrder ι] (B : ι → D)
     [∀ i, MonObj (B i)] [HasColimitsOfShape (Finset ι) D] :
@@ -473,6 +475,7 @@ noncomputable def bigTensor
 
 /-- The stage inclusion of a finite sub-tensor-product into the
 big tensor product. -/
+@[expose]
 noncomputable def bigTensorStage
     [Category.{v} D] [MonoidalCategory D] [LinearOrder ι] (B : ι → D)
     [∀ i, MonObj (B i)] [HasColimitsOfShape (Finset ι) D]
@@ -559,7 +562,7 @@ lemma finTensorIncl_empty [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
 
 /-- The merge map of two finite stages: include both into the
 union stage and multiply there. -/
-def finTensorMul [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
+@[expose] def finTensorMul [Category.{v} D] [MonoidalCategory D] [LinearOrder ι]
     [BraidedCategory D] (B : ι → D) [∀ i, MonObj (B i)]
     (s t : Finset ι) :
     finTensor B s ⊗ finTensor B t ⟶ finTensor B (s ∪ t) :=

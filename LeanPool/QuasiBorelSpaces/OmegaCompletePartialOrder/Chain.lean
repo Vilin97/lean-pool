@@ -17,4 +17,4 @@ Re-exports the chain instances and lemmas for `Option`, `Sigma`, `Sum`, and
 constant chains used by the ω-complete partial order infrastructure.
 -/
 
-@[expose] public section
+public section

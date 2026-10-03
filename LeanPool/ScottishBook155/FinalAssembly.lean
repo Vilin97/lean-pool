@@ -17,7 +17,7 @@ provide; the theorem proves that those data yield the canonical claim-14
 witness.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

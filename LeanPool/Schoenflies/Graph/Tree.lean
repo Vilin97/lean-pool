@@ -60,7 +60,7 @@ single edge, and a path takes no edge twice.
 The root `Graph` namespace, as in `Walk.lean`, `Degree.lean` and `Cycle.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

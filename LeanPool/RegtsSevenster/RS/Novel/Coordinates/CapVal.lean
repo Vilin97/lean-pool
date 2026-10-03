@@ -16,7 +16,7 @@ final computation evaluates.  Its base case: the zero cap reads
 off the scalar itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

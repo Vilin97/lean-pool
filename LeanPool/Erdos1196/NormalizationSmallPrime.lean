@@ -24,7 +24,7 @@ Its main theorem shows that this part is summable and contributes only `O(1 / lo
 * `summable_normalizationSmallPrimePart_and_tsum_le`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators Topology
 

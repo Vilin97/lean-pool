@@ -19,7 +19,7 @@ the periodized amplitude and the curl correction are then compared in
 the actual charts.  No coherence of a signed output is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,10 +41,12 @@ variable {B N0 : ℕ}
 
 /-- Full strip, given by `HarmonicWaveInteraction.productStrip
 ActualInitialization.geometry.strip`. -/
+@[expose]
 noncomputable def fullStrip : StripData FullPoint :=
   HarmonicWaveInteraction.productStrip ActualInitialization.geometry.strip
 
 /-- Request, constructed using `LocalSignedRequest.fullRequest`. -/
+@[expose]
 noncomputable def request (B : ℕ) (u : CorrectionState.State Point) :
     ℕ → FullPoint → SignedWaveUpdate.Vec2 :=
   LocalSignedRequest.fullRequest ActualInitialization.geometry.strip
@@ -52,6 +54,7 @@ noncomputable def request (B : ℕ) (u : CorrectionState.State Point) :
 
 /-- Copies, given by `(ActualSignedStageControls.parameters l).copyData
 ActualInitialization.geometry.strip (request B u)`. -/
+@[expose]
 noncomputable def copies (l : SignedLabel B N0) (u : CorrectionState.State Point) :
     PeriodizedWaveBounds.CopyData FullPoint TorusInverse.Frequency :=
   (ActualSignedStageControls.parameters l).copyData ActualInitialization.geometry.strip (request B
@@ -59,6 +62,7 @@ noncomputable def copies (l : SignedLabel B N0) (u : CorrectionState.State Point
 
 /-- Chart, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required compatibility
 proofs. -/
+@[expose]
 noncomputable def chart (n m k : ℕ) : FullPoint ≃L[ℝ] FullPoint where
   toFun x := (bandChartEquiv h n m k x.1, x.2)
   invFun x := ((bandChartEquiv h n m k).symm x.1, x.2)

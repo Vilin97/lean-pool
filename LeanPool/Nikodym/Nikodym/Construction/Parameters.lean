@@ -22,7 +22,7 @@ natural-number power inequalities that follow from the floor definition. Q02 rec
 threshold `q ≥ 2^{n 2^{h-1}}`, which forces `M, Qᵢ ≥ 2` and the matching real lower bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,6 +43,7 @@ def Q (i : ℕ) : ℕ := ⌊(q : ℝ) ^ (1 / ((n : ℝ) * 2 ^ i))⌋₊
 
 This makes `D 0 = D 1 = 1` (empty products) and `D (i + 1) = D i * Q i` whenever `1 ≤ i`,
 which is the recurrence `D₁ = 1`, `D_{i+1} = Dᵢ Qᵢ` of the blueprint. -/
+@[expose]
 def D (i : ℕ) : ℕ := ∏ j ∈ Ico 1 i, Q n q j
 
 variable {n q}

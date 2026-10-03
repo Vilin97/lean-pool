@@ -32,7 +32,7 @@ forces dimension one, and the idempotents coincide with the
 symmetriser and antisymmetriser on the nose.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

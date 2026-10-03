@@ -16,7 +16,7 @@ product.  They are measure-kernel infrastructure and make no assertion about a s
 process.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ProbabilityTheory

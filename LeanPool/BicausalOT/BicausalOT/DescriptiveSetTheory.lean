@@ -29,4 +29,4 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Tree
 Supporting modules for BicausalOT.
 -/
 
-@[expose] public section
+public section

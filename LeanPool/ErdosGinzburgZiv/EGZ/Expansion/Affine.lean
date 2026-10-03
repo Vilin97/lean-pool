@@ -19,7 +19,7 @@ An affine surjection from an affine subspace becomes first-coordinate
 projection after choosing coordinates on its kernel.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -116,6 +116,7 @@ theorem exists_affineModel {p d r : ℕ} [Fact p.Prime]
   simpa using hdim
 
 /-- Relative thickness restricted to the affine space carrying the weight. -/
+@[expose]
 def IsThickRelativeOn {p d r : ℕ} [NeZero p]
     (w : FpCoord p d → ℕ) (V : Set (FpCoord p d))
     (φ : FpCoord p d → FpCoord p r) (T : ℕ) (δ : ℝ) : Prop :=

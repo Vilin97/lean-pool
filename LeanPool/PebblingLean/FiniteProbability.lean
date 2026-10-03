@@ -25,7 +25,7 @@ objects used there are uniform on finite types, so probability and expectation
 are just normalized finite sums.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -35,12 +35,12 @@ variable {Ω ι : Type*}
 
 /-- Uniform probability of an event on a finite sample space, as a rational
 number. -/
-noncomputable def uniformProbability [Fintype Ω] (P : Ω → Prop) [DecidablePred P] : ℚ :=
+@[expose] noncomputable def uniformProbability [Fintype Ω] (P : Ω → Prop) [DecidablePred P] : ℚ :=
   ((Finset.univ.filter P).card : ℚ) / (Fintype.card Ω : ℚ)
 
 /-- Uniform expectation of a natural-valued random variable on a finite sample
 space, as a rational number. -/
-noncomputable def uniformExpectation [Fintype Ω] (X : Ω → ℕ) : ℚ :=
+@[expose] noncomputable def uniformExpectation [Fintype Ω] (X : Ω → ℕ) : ℚ :=
   (∑ ω : Ω, (X ω : ℚ)) / (Fintype.card Ω : ℚ)
 
 theorem exists_not_of_uniformProbability_lt_one [Fintype Ω] [Nonempty Ω]

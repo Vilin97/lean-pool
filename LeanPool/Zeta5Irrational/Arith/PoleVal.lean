@@ -25,7 +25,7 @@ import Mathlib.Tactic.Ring.RingNF
 /-! # Valuations of the pole values `μ_X(1/(t + j²)) = j⁴(X - H⁽⁵⁾_j) - 1/4 + 1/(2j)`
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

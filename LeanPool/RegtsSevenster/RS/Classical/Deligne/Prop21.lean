@@ -20,7 +20,7 @@ there is a nonzero commutative algebra in the Ind-completion whose
 fibre functor is strong monoidal, exact and faithful.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

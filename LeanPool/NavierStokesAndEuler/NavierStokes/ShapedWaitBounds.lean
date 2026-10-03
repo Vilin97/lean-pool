@@ -16,7 +16,7 @@ The two decaying modes are kept separate, so no inverse small-slope constant
 appears in the error estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -129,7 +129,7 @@ theorem angularLag_abs_bound (c : Parameters) {h y η : ℝ} (hh : 0 ≤ h)
   linarith
 
 /-- Equilibrium, given by `(c.lam - h + D h * η * shapeGradient η) / (1 - c.lam)`. -/
-noncomputable def equilibrium (c : Parameters) (h η : ℝ) : ℝ :=
+@[expose] noncomputable def equilibrium (c : Parameters) (h η : ℝ) : ℝ :=
   (c.lam - h + D h * η * shapeGradient η) / (1 - c.lam)
 
 /-- Hold coefficient, given by `L h η * averagedDrop c c.holdStart`. -/
@@ -283,7 +283,7 @@ theorem canonical_Qs_pulseStart_error {v : TailData} {K : ℝ}
   exact angularLag_hold_error v hh1 hη (by linarith [v.core.wait_gt])
 
 /-- Wait for power, given by `-(n : ℝ) * Real.log c.lam / (1 - c.lam)`. -/
-noncomputable def waitForPower (c : Parameters) (n : ℕ) : ℝ :=
+@[expose] noncomputable def waitForPower (c : Parameters) (n : ℕ) : ℝ :=
   -(n : ℝ) * Real.log c.lam / (1 - c.lam)
 
 theorem decay_le_power (c : Parameters) (n : ℕ) (ht : waitForPower c n ≤ c.wait) :

@@ -19,7 +19,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -491,7 +491,7 @@ open scoped FourierTransform Real Topology
 namespace NumberField.Odlyzko
 
 /-- A regularized poitou vertical profile used in the Odlyzko-bound argument. -/
-noncomputable def regularizedPoitouVerticalProfile
+@[expose] noncomputable def regularizedPoitouVerticalProfile
     (y δ σ x : ℝ) : ℂ :=
   (poitouKernel (regularizedScaledTartar y δ) x : ℂ) *
     Complex.exp ((σ - 1 / 2) * x)

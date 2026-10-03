@@ -42,7 +42,7 @@ flags lying on non-canonically oriented boundary-to-boundary chains.
    chain's canonicality status (`pathCanonical_canonOrientation`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -253,6 +253,7 @@ theorem canonIsOut_of_not_bad
 /-- **The flipped orientation**: negate the given orientation on the
 flip set.  The closure lemmas make the flip commute with both
 orientation axioms. -/
+@[expose]
 noncomputable def canonOrientation
     [LinearOrder α] {W : Fragment α} {F : EdgeSubset W}
     (κ : F.RelTransitionSystem)

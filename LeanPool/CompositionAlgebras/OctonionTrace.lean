@@ -55,7 +55,7 @@ maxHeartbeats` is needed anywhere in this file.
 octonionic matrices is built over.
 -/
 
-@[expose] public section
+public section
 
 namespace Octonion
 

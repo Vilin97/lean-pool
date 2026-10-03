@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PhysicalChildParent
 The constructed child inherits this interface from its proved three-field
 estimate; frame and coefficient identifications are not extra hypotheses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,6 +61,7 @@ theorem second_match (t : Icc (0 : ℝ) G.T) (x : Space) :
   rw [G.second_apply,← funext (L.acceleration_match t)]
 
 /-- Normal budget, constructed using `EulerPacketParentLabelBudgets.normalBudget`. -/
+@[expose]
 def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     (m : Space) (hm : ‖m‖ = 1) (R : U ≃ₗᵢ[ℝ] EulerTransverseFrameCoordinates.referencePlane m)
     (S : Set Space) (hS : IsCompact S) (q : ℕ) :
@@ -72,6 +73,7 @@ def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     L.displacement_bound L.velocity_bound L.frame_match L.first_match G.frame_det
 
 /-- Mean budget, constructed using `EulerPacketParentLabelBudgets.meanBudget`. -/
+@[expose]
 def meanBudget (H : LowBounds G) (q : ℕ) (Ti : ℝ) (hT : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti) :
     EulerMeanPacketProvider.Budget (G.meanData H) q
       (EulerPacketParentMeanBudget.radius q G.T Ti (coefficientRadius L.K)
@@ -99,6 +101,7 @@ variable {P : ℝ} [Fact (0 < P)] (B : EulerPhysicalGraphFlowBounds.Data P G.T)
   (hw : ∀ t, (E t).acceleration = B.accelerationFieldL2 k m G.ell G.ell_pos t)
 
 /-- Child as an element of `LabelData (G.child B k m hgraph nextEll hnext hnext1)`. -/
+@[expose]
 def child (K : ℝ) (hK : 1 ≤ K)
     (hb : ∀ t n,
       classicalBlockSize direction 6 (E t).childDisplacement.toLp (E

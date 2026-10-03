@@ -32,7 +32,7 @@ the insertion lemma.  The `ℂ`-bilinear extension to the group
 algebras then holds on basis permutations and extends linearly.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -51,6 +51,7 @@ variable {a b : ℕ}
 convention is that of `finSumFinEquiv`, which carries the `Fin a`
 summand onto `{0, …, a − 1}` by `Fin.castAdd` and the `Fin b`
 summand onto `{a, …, a + b − 1}` by `Fin.natAdd`. -/
+@[expose]
 noncomputable def blockEmbed (σ : Equiv.Perm (Fin a))
     (τ : Equiv.Perm (Fin b)) : Equiv.Perm (Fin (a + b)) :=
   finSumFinEquiv.permCongr (σ.sumCongr τ)
@@ -209,6 +210,7 @@ variable {A : Type u}
 `tensorPow` itself: the empty second power is absorbed by the right
 unitor, and one further factor reassociates off the second power and
 whiskers the previous stage. -/
+@[expose]
 noncomputable def tensorPowConcat [Category.{v} A] [MonoidalCategory A]
     (X : A) (a : ℕ) :
     (b : ℕ) → (tensorPow A X a ⊗ tensorPow A X b ≅ tensorPow A X (a + b))
@@ -473,6 +475,7 @@ end Symmetric
 section Linear
 
 /-- The first-block embedding as a monoid homomorphism. -/
+@[expose]
 noncomputable def blockEmbedFstHom (a b : ℕ) :
     Equiv.Perm (Fin a) →* Equiv.Perm (Fin (a + b)) where
   toFun σ := blockEmbed σ 1
@@ -480,6 +483,7 @@ noncomputable def blockEmbedFstHom (a b : ℕ) :
   map_mul' σ σ' := by rw [← blockEmbed_mul, one_mul]
 
 /-- The second-block embedding as a monoid homomorphism. -/
+@[expose]
 noncomputable def blockEmbedSndHom (a b : ℕ) :
     Equiv.Perm (Fin b) →* Equiv.Perm (Fin (a + b)) where
   toFun τ := blockEmbed 1 τ
@@ -489,6 +493,7 @@ noncomputable def blockEmbedSndHom (a b : ℕ) :
 /-- **The block embedding of group algebras**: the `ℂ`-bilinear
 extension of `blockEmbed`, carrying a pair of group-algebra elements
 to the product of their one-sided embeddings. -/
+@[expose]
 noncomputable def blockAlgEmbed {a b : ℕ} (x : SymGroupAlgebra a)
     (y : SymGroupAlgebra b) : SymGroupAlgebra (a + b) :=
   MonoidAlgebra.mapDomainAlgHom ℂ ℂ (blockEmbedFstHom a b) x *

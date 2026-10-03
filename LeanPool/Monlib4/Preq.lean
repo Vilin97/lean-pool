@@ -23,4 +23,4 @@ import Mathlib.Tactic.Positivity.Finset
 Import-only index for the `Preq` directory of the monlib4 import.
 -/
 
-@[expose] public section
+public section

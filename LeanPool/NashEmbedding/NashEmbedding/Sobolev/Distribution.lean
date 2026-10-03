@@ -58,7 +58,7 @@ from `ℓ²_(s)`.
 * `sobolev_embedding_factorization` — `ι(ε(φ)) = φ` in `X_n^*`
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev
@@ -86,7 +86,7 @@ lemma starRingEnd_fourierExp (m : Fin n → ℤ) (θ : Fin n → ℝ) :
 
 /-- The standard Fourier coefficient of a function `f`:
 `f̂ₘ = (2π)^{-n} ∫_{[0,2π]^n} f(θ) · e_{-m}(θ) dθ`. -/
-def stdFourierCoeff (n : ℕ) (f : (Fin n → ℝ) → ℂ) (m : Fin n → ℤ) : ℂ :=
+@[expose] def stdFourierCoeff (n : ℕ) (f : (Fin n → ℝ) → ℂ) (m : Fin n → ℤ) : ℂ :=
   (((2 * π : ℝ) ^ n : ℝ) : ℂ)⁻¹ *
     ∫ θ in Set.Icc (0 : Fin n → ℝ) (2 * π • (1 : Fin n → ℝ)),
       f θ * fourierExp n (-m) θ
@@ -126,12 +126,12 @@ abbrev TrigPolyDual (n : ℕ) := TrigPoly n →ₗ[ℂ] ℂ
 /-- The Fourier coefficient `φ̂ₘ := φ(e_{-m})` of a distribution `φ ∈ X_n^*`.
 The sign inversion ensures compatibility with the standard Fourier coefficient
 convention for functions via the integration embedding. -/
-def fourierCoeffDistrib (φ : TrigPolyDual n) (m : Fin n → ℤ) : ℂ :=
+@[expose] def fourierCoeffDistrib (φ : TrigPolyDual n) (m : Fin n → ℤ) : ℂ :=
   φ (Finsupp.single (-m) 1)
 
 /-- Reconstruct a distribution from a sequence `a : ℤⁿ → ℂ`. The linear
 functional sends the basis element `eₘ` to `a(-m)`, extended by linearity. -/
-def seqToDual (n : ℕ) (a : (Fin n → ℤ) → ℂ) : TrigPolyDual n :=
+@[expose] def seqToDual (n : ℕ) (a : (Fin n → ℤ) → ℂ) : TrigPolyDual n :=
   Finsupp.linearCombination ℂ (fun m => a (-m))
 
 /-- `fourierCoeffDistrib` and `seqToDual` are inverses (forward direction):
@@ -166,12 +166,12 @@ def dualEquivSeq (n : ℕ) : TrigPolyDual n ≃ₗ[ℂ] ((Fin n → ℤ) → ℂ
 
 /-- A distribution `φ ∈ X_n^*` belongs to `H^s_{2πℤⁿ}(ℝⁿ)` iff its
 Fourier coefficient sequence `φ̂` belongs to `ℓ²_(s)(ℤⁿ)`. -/
-def MemSobolevDistrib (n : ℕ) (s : ℝ) (φ : TrigPolyDual n) : Prop :=
+@[expose] def MemSobolevDistrib (n : ℕ) (s : ℝ) (φ : TrigPolyDual n) : Prop :=
   MemSobolev n s (fourierCoeffDistrib φ)
 
 /-- The squared Sobolev norm of a distribution, pulled back from `ℓ²_(s)`:
 `‖φ‖²_{(s)} = ∑ₘ (1 + |m|²)^s |φ̂ₘ|²`. -/
-def sobolevNormSqDistrib (n : ℕ) (s : ℝ) (φ : TrigPolyDual n) : ℝ :=
+@[expose] def sobolevNormSqDistrib (n : ℕ) (s : ℝ) (φ : TrigPolyDual n) : ℝ :=
   sobolevNormSq n s (fourierCoeffDistrib φ)
 
 /-! ## Continuous inclusion -/
@@ -228,7 +228,7 @@ distribution in `X_n^*` defined by
 We construct this via the canonical identification `X_n^* ≅ ℂ^{ℤⁿ}`:
 the Fourier coefficient sequence of `ι(f)` is the standard Fourier
 coefficient sequence of `f`. -/
-def integrationEmbed (n : ℕ) (f : (Fin n → ℝ) → ℂ) : TrigPolyDual n :=
+@[expose] def integrationEmbed (n : ℕ) (f : (Fin n → ℝ) → ℂ) : TrigPolyDual n :=
   seqToDual n (stdFourierCoeff n f)
 
 /-- The Fourier coefficients of the integration embedding are the standard

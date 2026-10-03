@@ -33,4 +33,4 @@ public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Highlights
 
 /-! # Treewidth Gonality -/
 
-@[expose] public section
+public section

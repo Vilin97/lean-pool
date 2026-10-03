@@ -36,7 +36,7 @@ into `A`-module algebras.
   equivariance of the descended action.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

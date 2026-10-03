@@ -16,7 +16,7 @@ The reducedness theorem supplies the rank `-1` conclusion directly; no
 additional rank-zero argument is bundled into it.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -32,7 +32,7 @@ the polynomial sup norm on every nonempty set.
   -- the sharp L4.2e base case.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

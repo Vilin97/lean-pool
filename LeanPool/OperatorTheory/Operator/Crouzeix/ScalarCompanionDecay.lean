@@ -37,7 +37,7 @@ assert boundary continuity or the sharp companion contraction.
   companion tends to zero at infinity.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Set
 open scoped Interval Real

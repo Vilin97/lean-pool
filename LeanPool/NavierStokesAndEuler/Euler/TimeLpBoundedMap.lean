@@ -18,7 +18,7 @@ terminal integration and initial trace. These identities let spatial
 translations and their difference quotients act on a fixed time Hilbert space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,7 +34,7 @@ variable {E F G : Type*}
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
 /-- The actual pointwise lift of a bounded spatial map to Bochner L² time. -/
-def timeLift (T : ℝ) (A : E →L[ℝ] F) : TimeLp T E →L[ℝ] TimeLp T F :=
+@[expose] def timeLift (T : ℝ) (A : E →L[ℝ] F) : TimeLp T E →L[ℝ] TimeLp T F :=
   A.compLpL 2 (timeMeasure T)
 
 theorem timeLift_ae (T : ℝ) (A : E →L[ℝ] F) (u : TimeLp T E) :
@@ -85,7 +85,8 @@ theorem timeLift_norm_map (T : ℝ) (A : E →L[ℝ] F)
     (Lp.norm_le_norm_of_ae_le (he.mono (fun _ h => h.ge)))
 
 /-- The actual pointwise lift of a linear spatial isometry. -/
-def timeLiftIsometry (T : ℝ) (A : E →ₗᵢ[ℝ] F) : TimeLp T E →ₗᵢ[ℝ] TimeLp T F where
+@[expose] def timeLiftIsometry (T : ℝ) (A : E →ₗᵢ[ℝ] F) :
+    TimeLp T E →ₗᵢ[ℝ] TimeLp T F where
   toLinearMap := (timeLift T A.toContinuousLinearMap).toLinearMap
   norm_map' := timeLift_norm_map T A.toContinuousLinearMap A.norm_map
 

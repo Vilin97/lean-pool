@@ -29,7 +29,7 @@ cohort sums, `digitEquiv` and its round-trips) live in
 `CountExtras.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 

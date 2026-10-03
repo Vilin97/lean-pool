@@ -16,19 +16,19 @@ public import LeanPool.NandakumarRamanaRao.NRR.ConvexBody
 map, and permutations act by precomposition with `σ.symm`. The action is continuous and free.
 -/
 
-@[expose] public section
+public section
 
 open NRR
 
 namespace NRR
 
 /-- **Configuration space** of `n` distinct labelled points in the plane. -/
-def Config (n : ℕ) : Type := {p : Fin n → E2 // Function.Injective p}
+@[expose] def Config (n : ℕ) : Type := {p : Fin n → E2 // Function.Injective p}
 
 namespace Config
 
 /-- The underlying point map of a configuration. -/
-def pts {n : ℕ} (p : Config n) : Fin n → E2 := p.1
+@[expose] def pts {n : ℕ} (p : Config n) : Fin n → E2 := p.1
 
 end Config
 
@@ -48,7 +48,7 @@ theorem topology_eq_induced (n : ℕ) :
 
 /-- The underlying point map of a configuration, as a bundled function. Compatibility alias of
 `Config.pts`. -/
-def toFun {n : ℕ} (s : Config n) : Fin n → E2 := s.pts
+@[expose] def toFun {n : ℕ} (s : Config n) : Fin n → E2 := s.pts
 
 @[simp] theorem toFun_apply {n : ℕ} (s : Config n) (i : Fin n) : s.toFun i = s.pts i := rfl
 
@@ -69,7 +69,7 @@ theorem continuous_pts {n : ℕ} : Continuous fun s : Config n => s.pts :=
 configuration `s : Config n`, the relabelled configuration `Config.relabel σ s` is obtained by
 precomposing the point map with `σ.symm`, i.e. `(Config.relabel σ s).pts i = s.pts (σ.symm i)`.
 This `σ.symm` convention is fixed for the remainder of the current development. -/
-def relabel {n : ℕ} (σ : Equiv.Perm (Fin n)) (s : Config n) : Config n :=
+@[expose] def relabel {n : ℕ} (σ : Equiv.Perm (Fin n)) (s : Config n) : Config n :=
   ⟨fun i => s.pts (σ.symm i), s.injective_pts.comp σ.symm.injective⟩
 
 @[simp] theorem relabel_pts {n : ℕ} (σ : Equiv.Perm (Fin n)) (s : Config n) (i : Fin n) :

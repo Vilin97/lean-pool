@@ -16,7 +16,7 @@ computationally exact. Natural-number division is the floor in the definition
 of the tree depth.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -25,6 +25,7 @@ noncomputable section
 open Filter Asymptotics
 
 /-- The regularization parameter `a = 200 * ceil(log₂(m+1))`. -/
+@[expose]
 def parameterA (m : ℕ) : ℕ :=
   200 * Nat.clog 2 (m + 1)
 
@@ -33,10 +34,12 @@ def depthTarget (m : ℕ) : ℕ :=
   max 1 (m / parameterA m)
 
 /-- The depth of the complete dyadic tree. -/
+@[expose]
 def treeDepth (m : ℕ) : ℕ :=
   Nat.log 2 (depthTarget m)
 
 /-- The number `n = 2^L` of leaves in the complete dyadic tree. -/
+@[expose]
 def leafCount (m : ℕ) : ℕ :=
   2 ^ treeDepth m
 

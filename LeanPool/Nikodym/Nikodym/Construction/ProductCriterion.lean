@@ -18,7 +18,7 @@ point of `P`, then the complement `univ \ P` is a Nikodym set. The file also rec
 cardinality identity `|univ \ P| = q^h - |P|` in `ℕ` and in `ℝ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

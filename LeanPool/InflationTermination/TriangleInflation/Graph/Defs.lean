@@ -71,7 +71,7 @@ yet proved).
   it assumes the conditioning cell is positive.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -99,6 +99,7 @@ attribute [instance] PairGraph.fintypeV PairGraph.decEqV PairGraph.decAdj
 abbrev PairGraph.Edge (Γ : PairGraph) := {e : Sym2 Γ.V // e ∈ Γ.G.edgeFinset}
 
 /-- The sources incident to a vertex. -/
+@[expose]
 def PairGraph.inc (Γ : PairGraph) (v : Γ.V) : Finset Γ.Edge :=
   Finset.univ.filter (fun e => v ∈ (e.1 : Sym2 Γ.V))
 
@@ -120,15 +121,18 @@ abbrev GLatent (Γ : PairGraph) (t : ℕ) := Γ.Edge × Fin t
 variable {Γ : PairGraph} {t : ℕ}
 
 /-- The action of a per-source permutation of copy indices on copied observations. -/
+@[expose]
 def gPerm (π : Γ.Edge → Equiv.Perm (Fin t)) (o : GObs Γ t) : GObs Γ t :=
   ⟨o.1, fun e => π e.1 (o.2 e)⟩
 
 /-- The induced action on assignments. -/
+@[expose]
 def gRelabel (π : Γ.Edge → Equiv.Perm (Fin t)) (ω : GAssign Γ t) : GAssign Γ t :=
   fun o => ω (gPerm π o)
 
 /-- Symmetry of a witness under independent permutations of the copy indices of each source
 (AUDIT-NOTES A1; the pair-source form of `TriangleInflation.SymmetricLaw`). -/
+@[expose]
 def GSymmetric (t : ℕ) (Δ : GAssign Γ t → ℝ) : Prop :=
   ∀ (π : Γ.Edge → Equiv.Perm (Fin t)) (ω : GAssign Γ t), Δ (gRelabel π ω) = Δ ω
 
@@ -136,19 +140,24 @@ def GSymmetric (t : ℕ) (Δ : GAssign Γ t → ℝ) : Prop :=
 
 /-- The copied observation of the vertex `v` in the copy of the original scenario selected by
 the index vector `ι`. -/
+@[expose]
 def copyObs (ι : Γ.Edge → Fin t) (v : Γ.V) : GObs Γ t := ⟨v, fun e => ι e.1⟩
 
 /-- The copied original scenario selected by `ι`: one copied observation per vertex. -/
+@[expose]
 def copySet (ι : Γ.Edge → Fin t) : Finset (GObs Γ t) := Finset.univ.image (copyObs ι)
 
 /-- The observed outcome that an assignment gives to the copied scenario selected by `ι`. -/
+@[expose]
 def readCopy (ι : Γ.Edge → Fin t) (ω : GAssign Γ t) : Γ.V → Bool := fun v => ω (copyObs ι v)
 
 /-- The `t` diagonal rows: row `r` takes the copy index `r` on every source
 (AUDIT-NOTES A1). -/
+@[expose]
 def readDiag (ω : GAssign Γ t) : Fin t → (Γ.V → Bool) := fun r => readCopy (fun _ => r) ω
 
 /-- The `t`-fold tensor power of a target law. -/
+@[expose]
 def gTensorPow (t : ℕ) (P : GTarget Γ) : (Fin t → (Γ.V → Bool)) → ℝ :=
   fun v => ∏ r : Fin t, P (v r)
 
@@ -156,15 +165,18 @@ def gTensorPow (t : ℕ) (P : GTarget Γ) : (Fin t → (Γ.V → Bool)) → ℝ 
 
 /-- The copied latent ancestors of a copied observation: for each incident source, the copy
 selected by that observation. -/
+@[expose]
 def gAncestors (o : GObs Γ t) : Finset (GLatent Γ t) :=
   (Finset.univ : Finset (Γ.inc o.1)).image (fun e => (e.1, o.2 e))
 
 /-- The copied latent ancestors of a set of copied observations. -/
+@[expose]
 def gAncestorsOf (S : Finset (GObs Γ t)) : Finset (GLatent Γ t) := S.biUnion gAncestors
 
 /-- Two sets of copied observations are ancestrally independent when their copied latent
 ancestors are disjoint (`TriangleInflation.AncestrallyIndependent` for a general pair
 graph). -/
+@[expose]
 def GAncestrallyIndependent (S T : Finset (GObs Γ t)) : Prop :=
   Disjoint (gAncestorsOf S) (gAncestorsOf T)
 
@@ -176,9 +188,11 @@ def edgesOf (S : Finset (GObs Γ t)) : Finset Γ.Edge := S.biUnion (fun o => Γ.
 
 /-- The working definition of injectability: a set of copied observations lies inside one
 copied original scenario. -/
+@[expose]
 def GInjectable (S : Finset (GObs Γ t)) : Prop := ∃ ι : Γ.Edge → Fin t, S ⊆ copySet ι
 
 /-- Two copied observations agree in the copy index of every source incident to both. -/
+@[expose]
 def GSharedAgree (o p : GObs Γ t) : Prop :=
   ∀ (e : Γ.Edge) (ho : e ∈ Γ.inc o.1) (hp : e ∈ Γ.inc p.1), o.2 ⟨e, ho⟩ = p.2 ⟨e, hp⟩
 
@@ -186,35 +200,42 @@ def GSharedAgree (o p : GObs Γ t) : Prop :=
 erasing copy indices is injective on the set, and any two members agree in the copy index of
 every shared source. `Statements.gInjectable_iff_raw` records the equivalence with
 `GInjectable`, as `TriangleInflation.injectable_iff_injectableRaw` does for the triangle. -/
+@[expose]
 def GInjectableRaw (S : Finset (GObs Γ t)) : Prop :=
   (∀ o ∈ S, ∀ p ∈ S, o.1 = p.1 → o = p) ∧ (∀ o ∈ S, ∀ p ∈ S, GSharedAgree o p)
 
 /-- The restriction of an assignment to a set of copied observations. -/
+@[expose]
 def gRestrict (S : Finset (GObs Γ t)) (ω : GAssign Γ t) : S → Bool := fun o => ω o.1
 
 /-- The outcome pattern that a target law prescribes on a set of copied observations: each
 member reads the bit of the vertex it is a copy of. -/
+@[expose]
 def gPartyRead (S : Finset (GObs Γ t)) (w : Γ.V → Bool) : S → Bool := fun o => w o.1.1
 
 /-- The restriction map between laws on nested sets of copied observations. -/
+@[expose]
 def subRestrict {S T : Finset (GObs Γ t)} (h : S ⊆ T) (φ : T → Bool) : S → Bool :=
   fun o => φ ⟨o.1, h o.2⟩
 
 /-- Reading a block inside an ambient set. When `B ⊆ S` this is `subRestrict`; the `else`
 branch is unreachable and is present only so that the block may be given as a bare `Finset`,
 without carrying the inclusion proof. -/
+@[expose]
 def readOnBlock (B S : Finset (GObs Γ t)) (φ : S → Bool) : B → Bool :=
   fun o => if h : o.1 ∈ S then φ ⟨o.1, h⟩ else false
 
 /-! ## The finite inflation tests -/
 
 /-- Every injectable set carries the corresponding marginal of the target. -/
+@[expose]
 def GInjectableMarginals (t : ℕ) (Δ : GAssign Γ t → ℝ) (P : GTarget Γ) : Prop :=
   ∀ S : Finset (GObs Γ t), GInjectable S →
     pushforward Δ (gRestrict S) = pushforward P (gPartyRead S)
 
 /-- Every finite family of pairwise ancestrally independent injectable sets carries the
 product of the corresponding marginals. -/
+@[expose]
 def GAncestralProducts (t : ℕ) (Δ : GAssign Γ t → ℝ) (P : GTarget Γ) : Prop :=
   ∀ (n : ℕ) (S : Fin n → Finset (GObs Γ t)), (∀ m, GInjectable (S m)) →
     (∀ m m', m ≠ m' → GAncestrallyIndependent (S m) (S m')) →
@@ -224,10 +245,12 @@ def GAncestralProducts (t : ℕ) (Δ : GAssign Γ t → ℝ) (P : GTarget Γ) : 
 
 /-- The Navascués–Wolfe feasible set of a pair-source scenario (AUDIT-NOTES A1): a symmetric
 law on the copied observations whose diagonal law is the tensor power of the target. -/
+@[expose]
 def GNWFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) : Prop :=
   ∃ Δ : GAssign Γ t → ℝ, IsLaw Δ ∧ GSymmetric t Δ ∧ pushforward Δ readDiag = gTensorPow t P
 
 /-- The ancestral-independence feasible set of a pair-source scenario (AUDIT-NOTES A1). -/
+@[expose]
 def GAIFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) : Prop :=
   ∃ Δ : GAssign Γ t → ℝ, IsLaw Δ ∧ GSymmetric t Δ ∧
     pushforward Δ readDiag = gTensorPow t P ∧
@@ -240,11 +263,13 @@ roots, the copied observations are sinks, and the parents of a copied observatio
 its `gAncestors`. -/
 
 /-- Two copied observations share a copied latent parent. -/
+@[expose]
 def SharesParent (o p : GObs Γ t) : Prop := ¬ Disjoint (gAncestors o) (gAncestors p)
 
 /-- A trail from `X` to `Y` that is active given `Z`: a sequence of copied observations
 `o₀ ∈ X`, `mid`, `o₁ ∈ Y` (so of length at least two) in which consecutive members share a
 copied latent parent and every internal member lies in `Z`. -/
+@[expose]
 def ActiveTrail (X Y Z : Finset (GObs Γ t)) (o₀ : GObs Γ t) (mid : List (GObs Γ t))
     (o₁ : GObs Γ t) : Prop :=
   o₀ ∈ X ∧ o₁ ∈ Y ∧ (∀ o ∈ mid, o ∈ Z) ∧ List.IsChain SharesParent (o₀ :: (mid ++ [o₁]))
@@ -263,6 +288,7 @@ AUDIT-NOTES A2 corrects the packet's stated criterion ("no component of the shar
 graph on `X ∪ Y ∪ Z` meets both `X` and `Y`", which is only sufficient); this definition is
 the corrected trail criterion, and the component statement becomes a theorem for AI sets
 (`Statements.expressible_iff_ai`). -/
+@[expose]
 def dsep (X Y Z : Finset (GObs Γ t)) : Prop := ∀ o₀ mid o₁, ¬ ActiveTrail X Y Z o₀ mid o₁
 
 theorem sub_left_union (X Y Z : Finset (GObs Γ t)) : X ∪ Z ⊆ X ∪ Y ∪ Z := by
@@ -282,6 +308,7 @@ section
 `μ(x,y,z) = μ₁(x,z) μ₂(y,z) / μ_Z(z)` when the common `Z`-marginal `μ_Z(z)` is positive, and
 `0` otherwise. `μ_Z` is taken as the `Z`-marginal of `μ₁`; on the sets where the rule is
 applied the two marginals agree. -/
+@[expose]
 def glueLaw (X Y Z : Finset (GObs Γ t))
     (μ₁ : ((X ∪ Z : Finset (GObs Γ t)) → Bool) → ℝ)
     (μ₂ : ((Y ∪ Z : Finset (GObs Γ t)) → Bool) → ℝ) :
@@ -316,6 +343,7 @@ end
 
 /-- The recursively expressible feasible set of a pair-source scenario (paper
 Definition 2.3). -/
+@[expose]
 def GExpFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) : Prop :=
   ∃ Δ : GAssign Γ t → ℝ, IsLaw Δ ∧ GSymmetric t Δ ∧
     pushforward Δ readDiag = gTensorPow t P ∧
@@ -328,12 +356,14 @@ The sets and laws that the ancestral-independence prescriptions cover. AUDIT-NOT
 identifies these with the recursively expressible ones. -/
 
 /-- Connectivity in the shared-parent graph on a set of copied observations. -/
+@[expose]
 def sharedComponent (S : Finset (GObs Γ t)) : S → S → Prop :=
   Relation.ReflTransGen (fun a b : S => SharesParent a.1 b.1)
 
 /-- An AI set: every connected component of the shared-parent graph on `S` is injectable
 (AUDIT-NOTES A2). The component of `o` is described by its membership predicate rather than
 constructed, so that no decidability of `sharedComponent` is needed. -/
+@[expose]
 def IsAISet (S : Finset (GObs Γ t)) : Prop :=
   ∀ o : S, ∃ B : Finset (GObs Γ t),
     (∀ p, p ∈ B ↔ ∃ h : p ∈ S, sharedComponent S o ⟨p, h⟩) ∧ GInjectable B
@@ -351,6 +381,7 @@ structure AIDecomposition (S : Finset (GObs Γ t)) where
 
 /-- The AI product law of a decomposition: the product of the injectable marginals of the
 blocks. -/
+@[expose]
 def aiProduct (S : Finset (GObs Γ t)) (D : AIDecomposition S) (P : GTarget Γ) :
     (S → Bool) → ℝ :=
   fun φ => ∏ m : Fin D.n, pushforward P (gPartyRead (D.block m)) (readOnBlock (D.block m) S φ)
@@ -373,23 +404,27 @@ attribute [instance] GModel.fintypeL
 
 /-- A model is valid when every source law is a law and every response probability lies in
 `[0,1]`. -/
+@[expose]
 def GModel.Valid (M : GModel Γ) : Prop :=
   (∀ e, IsLaw (M.μ e)) ∧ (∀ v c, 0 ≤ M.resp v c ∧ M.resp v c ≤ 1)
 
 /-- The observed law of a model: the sources are independent and the responses are
 conditionally independent given the sources. -/
+@[expose]
 def GModel.law (M : GModel Γ) : GTarget Γ := fun w =>
   ∑ x : (∀ e : Γ.Edge, M.L e),
     (∏ e : Γ.Edge, M.μ e (x e)) * ∏ v : Γ.V, respMass (M.resp v (fun e => x e.1)) (w v)
 
 /-- The compatible set `C_G` of a pair-source scenario, with the finite-latent-alphabet
 boundary described in the file header (AUDIT-NOTES D1). -/
+@[expose]
 def GCompatible (Γ : PairGraph) (P : GTarget Γ) : Prop :=
   ∃ M : GModel Γ, M.Valid ∧ M.law = P
 
 /-! ## Named scenarios -/
 
 /-- The path `P_k` on `Fin k`. -/
+@[expose]
 def pathAdj (k : ℕ) : SimpleGraph (Fin k) where
   Adj a b := a.val + 1 = b.val ∨ b.val + 1 = a.val
   symm := ⟨by intro a b h; tauto⟩
@@ -406,6 +441,7 @@ theorem path_no_isolated {k : ℕ} (hk : 2 ≤ k) (v : Fin k) : ∃ w, (pathAdj 
 
 /-- The cycle `C_m` on `Fin m`. For `m ≥ 3` the adjacency `a ≠ b ∧ (a+1 ≡ b ∨ b+1 ≡ a)` is
 the `m`-cycle; the explicit `a ≠ b` makes the relation irreflexive for every `m`. -/
+@[expose]
 def cycleAdj (m : ℕ) : SimpleGraph (Fin m) where
   Adj a b := a ≠ b ∧ ((a.val + 1) % m = b.val ∨ (b.val + 1) % m = a.val)
   symm := ⟨by intro a b h; exact ⟨h.1.symm, h.2.symm⟩⟩
@@ -432,6 +468,7 @@ inductive DoubleStarV (p q : ℕ)
 
 open DoubleStarV in
 /-- Adjacency of the double star: the centre edge, and each leaf to its centre. -/
+@[expose]
 def doubleStarRel (p q : ℕ) : DoubleStarV p q → DoubleStarV p q → Prop
   | left, right => True
   | right, left => True
@@ -462,10 +499,12 @@ theorem doubleStar_no_isolated (p q : ℕ) (v : DoubleStarV p q) :
   · exact ⟨DoubleStarV.right, trivial⟩
 
 /-- The path scenario `P_k`, `k ≥ 2`. -/
+@[expose]
 def path (k : ℕ) (hk : 2 ≤ k) : PairGraph :=
   ⟨Fin k, inferInstance, inferInstance, pathAdj k, inferInstance, path_no_isolated hk⟩
 
 /-- The cycle scenario `C_m`, `m ≥ 3`. -/
+@[expose]
 def cycle (m : ℕ) (hm : 3 ≤ m) : PairGraph :=
   ⟨Fin m, inferInstance, inferInstance, cycleAdj m, inferInstance, cycle_no_isolated hm⟩
 
@@ -475,32 +514,39 @@ def doubleStar (p q : ℕ) : PairGraph :=
     doubleStar_no_isolated p q⟩
 
 /-- The triangle scenario, `C₃`. -/
+@[expose]
 def triangleGraph : PairGraph := cycle 3 (by norm_num)
 
 /-- The square scenario, `C₄`. -/
+@[expose]
 def squareGraph : PairGraph := cycle 4 (by norm_num)
 
 /-- The five-observer path `P₅` (AUDIT-NOTES A4). -/
+@[expose]
 def fivePathGraph : PairGraph := path 5 (by norm_num)
 
 /-- A double-star forest: every connected component is a tree of diameter at most three
 (AUDIT-NOTES A3). Stated as acyclicity together with a diameter bound inside each
 component. -/
+@[expose]
 def IsDoubleStarForest {V : Type} (G : SimpleGraph V) : Prop :=
   G.IsAcyclic ∧ ∀ u v : V, G.Reachable u v → G.dist u v ≤ 3
 
 /-! ## Signs, flips and explicit laws -/
 
 /-- The sign of a bit: `sgn false = 1`, `sgn true = -1` (AUDIT-NOTES convention). -/
+@[expose]
 def sgn (b : Bool) : ℝ := if b then -1 else 1
 
 /-- The kernel of independent flips with probability `η` at every coordinate. -/
+@[expose]
 def flipKernel {ι : Type} [Fintype ι] (η : ℝ) (x y : ι → Bool) : ℝ :=
   ∏ i, (if x i = y i then 1 - η else η)
 
 /-- A law after independent flips of each coordinate with probability `η`. Applied to a
 target on `Γ.V → Bool` it is the noisy target of AUDIT-NOTES A7; applied to a witness on
 `GObs Γ t → Bool` it is the local flip of every copied observation. -/
+@[expose]
 def flipLaw {ι : Type} [Fintype ι] [DecidableEq ι] (η : ℝ) (P : (ι → Bool) → ℝ) :
     (ι → Bool) → ℝ := fun y => ∑ x, P x * flipKernel η x y
 
@@ -508,9 +554,11 @@ noncomputable
 section
 
 /-- The total variation distance, half the `ℓ¹` distance. -/
+@[expose]
 def dTV {α : Type*} [Fintype α] (P Q : α → ℝ) : ℝ := (1 / 2) * ∑ a, |P a - Q a|
 
 /-- The total variation distance from a target to the compatible set. -/
+@[expose]
 def distToCompatible (Γ : PairGraph) (P : GTarget Γ) : ℝ :=
   sInf {d : ℝ | ∃ Q : GTarget Γ, GCompatible Γ Q ∧ d = dTV P Q}
 
@@ -518,6 +566,7 @@ def distToCompatible (Γ : PairGraph) (P : GTarget Γ) : ℝ :=
 `P_h(x,b,c,d,z) = (1/32)[1 + bcd (1+h)/4 (1 + (−1)^{x+z})]`, with vertex `0` the left
 endpoint `A`, vertices `1,2,3` the middle observations `B,C,D` and vertex `4` the right
 endpoint `E`. -/
+@[expose]
 def fivePathTarget (h : ℝ) : (Fin 5 → Bool) → ℝ := fun w =>
   (1 / 32) *
     (1 + sgn (w 1) * sgn (w 2) * sgn (w 3) * ((1 + h) / 4) * (1 + sgn (w 0) * sgn (w 4)))
@@ -525,21 +574,25 @@ def fivePathTarget (h : ℝ) : (Fin 5 → Bool) → ℝ := fun w =>
 /-- The conditional correlator `f_{xz} = E[BCD | A = x, E = z]` of AUDIT-NOTES A4. The
 denominator is the conditioning cell; the value is junk `0` when that cell is null, and every
 statement about it assumes the cell is positive. -/
+@[expose]
 def fivePathCorr (P : (Fin 5 → Bool) → ℝ) (x z : Bool) : ℝ :=
   (∑ w : Fin 5 → Bool, if w 0 = x ∧ w 4 = z then sgn (w 1) * sgn (w 2) * sgn (w 3) * P w else 0)
     / (∑ w : Fin 5 → Bool, if w 0 = x ∧ w 4 = z then P w else 0)
 
 /-- `I = ¼ Σ_{x,z} f_{xz}` (AUDIT-NOTES A4). -/
+@[expose]
 def fivePathI (P : (Fin 5 → Bool) → ℝ) : ℝ :=
   (1 / 4) * ∑ x : Bool, ∑ z : Bool, fivePathCorr P x z
 
 /-- `J = ¼ Σ_{x,z} (−1)^{x+z} f_{xz}` (AUDIT-NOTES A4). -/
+@[expose]
 def fivePathJ (P : (Fin 5 → Bool) → ℝ) : ℝ :=
   (1 / 4) * ∑ x : Bool, ∑ z : Bool, sgn x * sgn z * fivePathCorr P x z
 
 /-- The source boundary `∂F` of a set of vertices of the cycle `C_m`, encoded by its lower
 endpoint: the edge `{v, v+1}` is recorded by `v`, and lies in `∂F` exactly when exactly one
 of `v`, `v+1` lies in `F` (AUDIT-NOTES A5). -/
+@[expose]
 def cycleBoundary (m : ℕ) (F : Finset (Fin m)) : Finset (Fin m) :=
   Finset.univ.filter
     (fun v : Fin m => (v ∈ F) ≠ (⟨(v.val + 1) % m, Nat.mod_lt _ v.pos⟩ ∈ F))
@@ -547,33 +600,39 @@ def cycleBoundary (m : ℕ) (F : Finset (Fin m)) : Finset (Fin m) :=
 /-- The cycle target `P_{m,q}` of AUDIT-NOTES A5, given by its Fourier expansion: the
 character of `F ⊆ V` has moment `(−q)^{|∂F|/2}`. The boundary has even size, so the natural
 division is exact. -/
+@[expose]
 def cycleTarget (m : ℕ) (q : ℝ) : (Fin m → Bool) → ℝ := fun w =>
   (1 / 2 : ℝ) ^ m *
     ∑ F : Finset (Fin m), (-q) ^ ((cycleBoundary m F).card / 2) * ∏ v ∈ F, sgn (w v)
 
 /-- The square parity target of AUDIT-NOTES B2(i): the case `m = 4` of `cycleTarget`. -/
+@[expose]
 def squareTarget (q : ℝ) : (Fin 4 → Bool) → ℝ := cycleTarget 4 q
 
 /-- The parity-perfect triangle target `Π(−q,−q,−q)` of AUDIT-NOTES B2(ii): supported on the
 even-parity triples, where it equals `(1 − q(α+β+γ))/4` with `α,β,γ` the signs of the three
 bits. All one- and two-point moments are `−q` and the triple moment is `1`. Stated in the
 three-bit type of `TriangleInflation`. -/
-def triParity (q : ℝ) : ThreeBit → ℝ := fun w =>
+@[expose] def triParity (q : ℝ) : ThreeBit → ℝ := fun w =>
   if (xor (xor w.1 w.2.1) w.2.2) = false then
     (1 - q * (sgn w.1 + sgn w.2.1 + sgn w.2.2)) / 4
   else 0
 
 /-- `E[A]` for a three-bit law, in the sign convention. -/
+@[expose]
 def triMeanA (P : ThreeBit → ℝ) : ℝ := ∑ w : ThreeBit, sgn w.1 * P w
 
 /-- `E[B]` for a three-bit law. -/
+@[expose]
 def triMeanB (P : ThreeBit → ℝ) : ℝ := ∑ w : ThreeBit, sgn w.2.1 * P w
 
 /-- `E[C]` for a three-bit law. -/
+@[expose]
 def triMeanC (P : ThreeBit → ℝ) : ℝ := ∑ w : ThreeBit, sgn w.2.2 * P w
 
 /-- The transported target of AUDIT-NOTES A6: the `H`-target on the image of an induced
 embedding, tensored with fair bits on the remaining vertices of `G`. -/
+@[expose]
 def transportTarget (G H : PairGraph) (φ : H.V → G.V) (P : GTarget H) : GTarget G :=
   fun w => P (fun u => w (φ u)) * (1 / 2 : ℝ) ^ (Fintype.card G.V - Fintype.card H.V)
 
@@ -588,6 +647,7 @@ and `{1,2}`, the paper's `X` and `Y`) and vertex `2` is `C` (sources `{1,2}` and
 paper's `Y` and `Z`). -/
 
 /-- The re-encoding of a three-bit outcome as a function on `Fin 3`. -/
+@[expose]
 def threeBitEquiv : (Fin 3 → Bool) ≃ ThreeBit where
   toFun w := (w 0, w 1, w 2)
   invFun x := ![x.1, x.2.1, x.2.2]

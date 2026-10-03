@@ -21,7 +21,7 @@ Blueprint node C02: with `2 ≤ d`, `2 ≤ q` and `8 * d ^ 2 ≤ r ≤ q`, writi
 For `1 ≤ k ≤ d` one also has `Nat.choose (T + k) k ≤ q ^ k * Nat.choose (r + k - 1) k`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

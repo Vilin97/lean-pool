@@ -17,7 +17,7 @@ independent of the stable endpoint interpolation and global Stokes modules, so b
 endpoint cells without an import cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -41,6 +41,7 @@ open SubdivisionPrismCharts
 variable {p : Nat}
 
 /-- Final staircase simplex.  Its final facet is the lower horizontal copy. -/
+@[expose]
 def lowerStaircaseIndex (hp : Nat.Prime p) : Fin p :=
   ⟨p - 1, by
     have hp0 := hp.pos
@@ -110,6 +111,7 @@ theorem upperStaircaseFacet_indices
       exact ⟨hk, rfl⟩
 
 /-- Refined prism cell whose endpoint face is the lower boundary simplex. -/
+@[expose]
 noncomputable def lowerPrismCell
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N) (eta : RefinementWord p L) : PrismCell hp N L :=
@@ -117,12 +119,14 @@ noncomputable def lowerPrismCell
     liftBoundaryRefinementWord L (Fin.last p) eta)
 
 /-- Refined prism cell whose endpoint face is the upper boundary simplex. -/
+@[expose]
 noncomputable def upperPrismCell
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N) (eta : RefinementWord p L) : PrismCell hp N L :=
   ((q, (⟨0, hp.pos⟩ : Fin p)), liftBoundaryRefinementWord L 0 eta)
 
 /-- Canonical lower horizontal facet occurrence. -/
+@[expose]
 noncomputable def lowerOccurrence
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N) (eta : RefinementWord p L) :
@@ -130,6 +134,7 @@ noncomputable def lowerOccurrence
   (lowerPrismCell hp N L q eta, endpointOmittedPrime L (Fin.last p))
 
 /-- Canonical upper horizontal facet occurrence. -/
+@[expose]
 noncomputable def upperOccurrence
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N) (eta : RefinementWord p L) :

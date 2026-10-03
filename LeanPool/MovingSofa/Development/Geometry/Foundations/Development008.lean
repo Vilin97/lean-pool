@@ -13,7 +13,7 @@ public import LeanPool.MovingSofa.Development.Geometry.Foundations.Development00
 * `Cap.Foundations.Development008`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,7 +31,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Monotone`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ Authors: Dean Cureton
 # Cap / Monotone
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa

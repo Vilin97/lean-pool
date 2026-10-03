@@ -29,7 +29,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.FormalizationOfBoundedArithmetic.V0
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder Language
 open HasTypesIs
@@ -529,7 +529,7 @@ class HasSucc (α : Type*) where
   succ : α -> α
 
 /-- Carry predicate for binary string addition below position `i`. -/
-def Carry {num str} [V0Model num str] (i : num) (X Y : str) :=
+@[expose] def Carry {num str} [V0Model num str] (i : num) (X Y : str) :=
   ∃ k < i, (k ∈ X ∧ k ∈ Y ∧ ∀ j < i, (k < j → (j ∈ X ∨ j ∈ Y)))
 
 /-- Extension of `V0` with string successor and string addition. -/
@@ -567,6 +567,7 @@ lemma len_empty : len (0 : str) = (0 : num) := by
   exact @not_lt_zero _ _ _ pred ((@ax_empty _ _ M pred).mp (L2 pred_eq))
 
 /-- Majority predicate on three propositions. -/
+@[expose]
 def Maj (P Q R : Prop) :=
   (P ∧ Q ∧ ¬ R) ∨ (P ∧ ¬ Q ∧ R) ∨ (¬ P ∧ Q ∧ R) ∨ (P ∧ Q ∧ R)
 

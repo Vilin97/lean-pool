@@ -18,7 +18,7 @@ equivalence (with the label re-bracketing), and a single-pair glue
 commutes with extending the ambient fragment by a disjoint union.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ variable {α β : Type}
 /-- The label equivalence for gluing inside an ambient union:
 surviving labels of the sum at an inl-pair decompose as
 the surviving labels of the left factor plus the right labels. -/
+@[expose]
 def ambientLabelEquiv (i j : α) :
     SurvivingLabel (α ⊕ β) (Sum.inl i) (Sum.inl j) ≃
       (SurvivingLabel α i j ⊕ β) where
@@ -453,6 +454,7 @@ noncomputable def gluePairRelabel (W : Fragment α) (e : α ≃ β)
 /-! ### Component swap of a single glue -/
 
 /-- Swapping the two removed labels. -/
+@[expose]
 def survLabelSwapEquiv (α : Type) (i j : α) :
     SurvivingLabel α j i ≃ SurvivingLabel α i j where
   toFun x := ⟨x.val, x.prop.2, x.prop.1⟩

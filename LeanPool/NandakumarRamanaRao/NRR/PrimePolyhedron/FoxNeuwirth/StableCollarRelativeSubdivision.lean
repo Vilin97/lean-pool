@@ -36,7 +36,7 @@ cells.  The fixed horizontal boundaries require only the `PositiveRaySkeletonFre
 already carried by `StableRegularApproximation`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -316,6 +316,7 @@ noncomputable def ofRelativeGeneric
       move hgeneric hhorizontal havoid
 
 /-- The actual compatible assignment represented by a geometric stable-collar certificate. -/
+@[expose]
 noncomputable def assignment
     {hp : Nat.Prime p}
     {F₀ F₁ : ZeroFreeMap hp}

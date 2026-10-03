@@ -16,7 +16,7 @@ must have a winning strategy: `gamedet` at the end.
 
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -41,7 +41,7 @@ theorem Player.not_eq_B_iff_eq_A {p} : (¬ p = B) ↔ p = A := by cases p <;> si
 theorem Player.eq_A_or_eq_B {p} : p = A ∨ p = B := by cases p <;> simp
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def other : Player → Player
+@[expose] def other : Player → Player
 | A => B
 | B => A
 
@@ -104,7 +104,7 @@ instance {g : Game} : LT g.Pos := ⟨fun p q => g.wf.rel q p⟩
 /-! ## Strategies -/
 
 /-- A strategy in `g` for `i`, whenever it is `i`'s turn, chooses a move, if there are any. -/
-def Strategy (g : Game) (i : Player) : Type :=
+@[expose] def Strategy (g : Game) (i : Player) : Type :=
   ∀ p : g.Pos, g.turn p = i → p.moves.Nonempty → p.moves
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
@@ -117,6 +117,7 @@ instance Strategy.instNonempty {g i} : Nonempty (Strategy g i) := ⟨fun _ _ => 
 /-- Winner of a game, if the given strategies are used.
 A player loses iff it is their turn and there are no moves.
 A player wins if the opponent loses. -/
+@[expose]
 def winner {i} {g : Game} (sI : Strategy g i) (sJ : Strategy g (other i)) (p : g.Pos) : Player :=
   if h1 : (g.moves p).Nonempty
     then if h2 : g.turn p = i --
@@ -130,7 +131,7 @@ decreasing_by
     apply g.move_rel; simp
 
 /-- A strategy is winning at `p` if it wins against all strategies of the other player. -/
-def winning {g : Game} {i : Player} (sI : Strategy g i) (p : g.Pos) : Prop :=
+@[expose] def winning {g : Game} {i : Player} (sI : Strategy g i) (p : g.Pos) : Prop :=
   ∀ sJ : Strategy g (other i), winner sI sJ p = i
 
 /-! ## Good positions -/

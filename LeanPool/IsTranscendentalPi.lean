@@ -19,4 +19,4 @@ Tags: transcendence, pi, number-theory, niven
 MSC: 11A41
 -/
 
-@[expose] public section
+public section

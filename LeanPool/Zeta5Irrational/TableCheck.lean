@@ -24,7 +24,7 @@ For each interval `[l, r]` of the partition of `(0, 2]`, the inequality `2Uρ(t)
 The tail `t ≥ 2` is handled by the elementary bound (6.8).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set Finset
 

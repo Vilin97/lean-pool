@@ -16,7 +16,7 @@ public import Mathlib.MeasureTheory.Integral.MeanInequalities
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -30,7 +30,7 @@ namespace CKN.Foundation.Euclidean
 open CKN
 
 /-- The scalar convolution convention used for the Newtonian derivative. -/
-def scalarConvolution (f g : Vec3 → ℝ) (x : Vec3) : ℝ :=
+@[expose] def scalarConvolution (f g : Vec3 → ℝ) (x : Vec3) : ℝ :=
   ∫ y : Vec3, f y * g (x - y)
 
 /-- Extended nonnegative convolution used to majorize ordinary convolution integrals. -/
@@ -297,6 +297,7 @@ private theorem ae_integrable_scalarConvolution_six_fifths_three_halves
 three-dimensional Newtonian derivative. -/
 
 /-- The Newtonian derivative kernel truncated to a ball about the origin. -/
+@[expose]
 def truncatedNewtonianDerivative (R : ℝ) (i : Fin 3) : Vec3 → ℝ := fun z =>
   if ‖z‖ < R then spatialDeriv newtonianKernel i z else 0
 
@@ -376,7 +377,7 @@ theorem truncatedNewtonianDerivative_memLp
   norm_num [kp]
 
 /-- The first Newtonian derivative potential, with the derivative in the kernel slot. -/
-def newtonianDerivativePotential (i : Fin 3) (G : Vec3 → ℝ) (x : Vec3) : ℝ :=
+@[expose] def newtonianDerivativePotential (i : Fin 3) (G : Vec3 → ℝ) (x : Vec3) : ℝ :=
   ∫ y, spatialDeriv newtonianKernel i (x - y) * G y
 
 /-- The derivative kernel has the expected inverse-square bound away from the origin. -/

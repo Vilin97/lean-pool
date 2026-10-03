@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Transport
 The total local trial cost is bounded by the endpoint costs of the realized controller path.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2Resume

@@ -18,7 +18,7 @@ gives the geometric and measure comparison between any two stages, while
 the parent agrees with the abstract lineage ancestor.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 
@@ -27,6 +27,7 @@ variable {p d : ℕ} [Fact p.Prime] {f : FpCoord p d → ℕ}
 namespace SubdivisionMap
 
 /-- The identity subdivision of a flag decomposition. -/
+@[expose]
 def refl (Φ : FlagDecomposition p d f) : SubdivisionMap Φ Φ where
   node := SupHom.id _
   fibre _ := AffineMap.id ℝ _
@@ -84,6 +85,7 @@ namespace Transport
 variable {L i j k l : ℕ}
 
 /-- Identity transport at a single stage. -/
+@[expose]
 def refl (Φ : ℕ → FlagDecomposition p d f) (L i : ℕ) : Transport Φ L i i where
   subdivision := SubdivisionMap.refl (Φ i)
   level_parent _ := le_rfl
@@ -91,12 +93,14 @@ def refl (Φ : ℕ → FlagDecomposition p d f) (L i : ℕ) : Transport Φ L i i
   stable_real _ := rfl
 
 /-- The parent of a low-level node is still below the cutoff. -/
+@[expose]
 def lowParent (M : Transport Φ L i j)
     (y : {y : (Φ j).flag.Node // (Φ j).level y ≤ L}) :
     {x : (Φ i).flag.Node // (Φ i).level x ≤ L} :=
   ⟨M.subdivision.node y, (M.level_parent y).trans y.property⟩
 
 /-- Compose transports across two consecutive intervals of stages. -/
+@[expose]
 def comp (M : Transport Φ L i j) (N : Transport Φ L j k) : Transport Φ L i k where
   subdivision := M.subdivision.comp N.subdivision
   level_parent y := (M.level_parent (N.subdivision.node y)).trans (N.level_parent y)
@@ -121,6 +125,7 @@ theorem comp_stable_coord (M : Transport Φ L i j) (N : Transport Φ L j k)
     ((M.comp N).stable y).coord = (M.stable (N.lowParent y)).coord.comp (N.stable y).coord := rfl
 
 /-- A stable map whose target is named by an equal node. -/
+@[expose]
 def stableAt (M : Transport Φ L i j)
     (y : {y : (Φ j).flag.Node // (Φ j).level y ≤ L})
     (x : (Φ i).flag.Node) (h : M.subdivision.node y = x) :
@@ -174,6 +179,7 @@ theorem system_injectiveBelow : D.system.InjectiveBelow L :=
   fun i ↦ D.injective_below i L (hL i)
 
 /-- A one-step comparison at a cutoff below the current selected level. -/
+@[expose]
 def stepTransport (i : ℕ) : Transport Φ L i (i + 1) where
   subdivision := D.step i
   level_parent := D.level_parent i

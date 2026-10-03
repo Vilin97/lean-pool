@@ -142,7 +142,7 @@ there as `Schoenflies.finite_transfer_toward_square`.
   finite-transfer induction parametrized by its two construction interfaces.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -599,6 +599,7 @@ drawings by `EarCrosscut.isWeaklyAdmissible_realize`. -/
 
 /-- Build the next generated pair from matching geometric realizations of one abstract face
 split. -/
+@[expose]
 noncomputable def split (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (hS : P.str.CombInvariants) (d : P.str.SplitData)
     (srcPos : γ → Plane) (srcDraw : γ → ℝ → Plane)
@@ -657,7 +658,7 @@ noncomputable def split (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (htgtEdgePoly : ∀ ⦃e⦄, e ∈ E(d.ear) → IsPolygonal (edgeArc tgtDraw e)) :
     (P.split hS d srcPos srcDraw tgtPos tgtDraw hsrc htgt m hsrcEdgePoly
       htgtEdgePoly).str =
-      P.str.splitFace d := rfl
+      P.str.splitFace d := by exact rfl
 
 end GeneratedPair
 
@@ -892,16 +893,17 @@ variable {T : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom}
   {B H : Graph Plane γ} {Hdraw : γ → ℝ → Plane} {a : Plane} {D : List γ}
 
 /-- The generated pair assembled from the data of one realized ear. -/
+@[expose]
 noncomputable def pair (w : EarStepData T B H Hdraw a D) :
     GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom :=
   T.split T.str_combInvariants w.splitData w.srcPos w.srcDraw w.tgtPos w.tgtDraw
     w.srcCrosscut w.tgtCrosscut w.earHomeo w.srcEdgePolygonal w.tgtEdgePolygonal
 
 @[simp] theorem pair_src (w : EarStepData T B H Hdraw a D) :
-    w.pair.src = w.splitData.realize T.src w.srcPos w.srcDraw w.srcCrosscut := rfl
+    w.pair.src = w.splitData.realize T.src w.srcPos w.srcDraw w.srcCrosscut := by exact rfl
 
 @[simp] theorem pair_tgt (w : EarStepData T B H Hdraw a D) :
-    w.pair.tgt = w.splitData.realize T.tgt w.tgtPos w.tgtDraw w.tgtCrosscut := rfl
+    w.pair.tgt = w.splitData.realize T.tgt w.tgtPos w.tgtDraw w.tgtCrosscut := by exact rfl
 
 /-- The exposed constructor data really performs one `EarStep`: the pair it builds refines the
 original pair along the composite parent map, occupies the enlarged source graph, and contains
@@ -1063,6 +1065,7 @@ existence theorems, rather than as an unused parameter of the predicates, makes 
 explicit. -/
 
 /-- **Step 1, the common subdivision**, as an interface. -/
+@[expose]
 def CommonSubdivision (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (H : Graph Plane γ) (Hdraw : γ → ℝ → Plane) : Prop :=
   ∃ (K : Graph Plane γ) (T₀ : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom) (par₀ : γ → γ),

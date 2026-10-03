@@ -17,7 +17,7 @@ algebra which is simple as an algebra: its only ideals are `⊥` and
 `⊤`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -89,6 +89,7 @@ theorem factors_of_isColimit [SmallCategory C] [Abelian C]
 
 /-- **An ideal of an algebra object**: a subobject that absorbs
 multiplication by the algebra. -/
+@[expose]
 def IsIdeal [SmallCategory C] [MonoidalCategory C]
     (𝔸 : Ind C) [MonObj 𝔸] (I : Subobject 𝔸) : Prop :=
   I.Factors ((𝔸 ◁ I.arrow) ≫ μ[𝔸])
@@ -179,6 +180,7 @@ instance small_subobject_subset [SmallCategory C] [Abelian C]
 
 /-- A `v`-small copy of a family of subobjects of an ind-object,
 serving as the index of the diagram of its members. -/
+@[expose]
 def SubIndex [SmallCategory C] [Abelian C]
     {A : Ind C} (s : Set (Subobject A)) : Type v :=
   Shrink.{v} ↥s
@@ -235,6 +237,7 @@ theorem isFiltered_subIndex [SmallCategory C] [Abelian C]
   exact isFiltered_of_directed_le_nonempty _
 
 /-- The diagram of the members of a family of subobjects. -/
+@[expose]
 noncomputable def subDiagram [SmallCategory C] [Abelian C]
     {A : Ind C} (s : Set (Subobject A)) :
     SubIndex s ⥤ Ind C where

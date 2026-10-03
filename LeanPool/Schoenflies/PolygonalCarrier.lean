@@ -35,7 +35,7 @@ Brick B6 of `lem:polygonal-redrawing` (H6): polygonal connectivity one level up.
   it, verbatim; the `example` below it is a machine check that the statements agree.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -129,7 +129,7 @@ The neighbourhood is presented as `V ∩ C` for an ambient open `V`, which is ex
 relatively open neighbourhood is; the paths are only required to stay inside `C`, not inside
 the neighbourhood, since that is all the clopen argument uses and it is the weaker demand on
 a producer. Ball, half-disk and three-quarter disk all qualify. -/
-def IsLocallyPolyConnected (C : Set Plane) : Prop :=
+@[expose] def IsLocallyPolyConnected (C : Set Plane) : Prop :=
   ∀ w ∈ C, ∃ V : Set Plane, IsOpen V ∧ w ∈ V ∧ ∀ z ∈ V ∩ C, PolyReaches C w z
 
 /-- The relative-openness step, stated once because the clopen argument uses it twice — for

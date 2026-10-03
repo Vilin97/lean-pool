@@ -13,7 +13,7 @@ Transport the concrete first-module semisimplicity proof into the paper-facing
 predicate and expose the resulting Section 6 nonisomorphism theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperModuleSemisimpleTransport
@@ -39,7 +39,7 @@ abbrev D := PaperKernel.D
 /--
 The `paperFirstProductRepresentation` construction used in the Connes rigidity formalization.
 -/
-def paperFirstProductRepresentation : Representation k Q D :=
+@[expose] def paperFirstProductRepresentation : Representation k Q D :=
   PaperModuleSemisimple.firstProductRepresentation
 
 /- The paper-facing first action agrees with the decomposed representation. Paper: §6. -/

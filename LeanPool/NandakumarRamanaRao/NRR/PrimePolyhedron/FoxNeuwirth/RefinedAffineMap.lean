@@ -21,7 +21,7 @@ representative together with a word of barycentric-subdivision permutations.  A 
 coordinate map is sampled at the vertices of that refined simplex and extended affinely.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -42,7 +42,7 @@ noncomputable instance (hp : Nat.Prime p) (N : Nat) : Fintype (TopCell hp N) := 
 noncomputable instance (hp : Nat.Prime p) (N : Nat) : DecidableEq (TopCell hp N) := inferInstance
 
 /-- Sign of an iterated barycentric-subdivision summand. -/
-noncomputable def subdivisionSign (N : Nat) (rho : RefinementWord p N) : ZMod p :=
+@[expose] noncomputable def subdivisionSign (N : Nat) (rho : RefinementWord p N) : ZMod p :=
   ∏ r : Fin N, ((Equiv.Perm.sign (rho r) : ℤ) : ZMod p)
 
 /-- Integer version of the subdivision sign. -/
@@ -53,31 +53,33 @@ noncomputable def subdivisionSignInt (N : Nat) (rho : RefinementWord p N) : Int 
 abbrev ContinuousCoordinateMap (p : Nat) := C(Realization p, Fin p → Real)
 
 /-- Refined chart attached to a top-orbit representative and a subdivision word. -/
-noncomputable def chart
+@[expose] noncomputable def chart
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) :
     C(Delta (p - 1), Realization p) :=
   (ReferenceAffineOrbitCount.topRepr hp q.1).refinedContinuousMap N q.2
 
 /-- Vertices of a refined top simplex. -/
+@[expose]
 noncomputable def vertex
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) (i : Fin (p - 1 + 1)) : Realization p :=
   chart hp N q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
 
 /-- Vertex samples of a continuous coordinate map on one refined simplex. -/
-noncomputable def vertexValue
+@[expose] noncomputable def vertexValue
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N)
     (i : Fin (p - 1 + 1)) (j : Fin p) : Real :=
   F (vertex hp N q i) j
 
 /-- Affine interpolation of the sampled full coordinate vector. -/
-noncomputable def value
+@[expose] noncomputable def value
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N)
     (w : StandardSimplex (p - 1)) : Fin p → Real :=
   fun j => ∑ i : Fin (p - 1 + 1), w i * vertexValue hp N F q i j
 
 /-- Difference-coordinate vertex samples. -/
+@[expose]
 noncomputable def deviationVertexValue
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N)
@@ -86,6 +88,7 @@ noncomputable def deviationVertexValue
     vertexValue hp N F q i (ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- Augmented matrix controlling affine regularity on a refined simplex. -/
+@[expose]
 noncomputable def augmentedMatrix
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N) :
@@ -94,12 +97,13 @@ noncomputable def augmentedMatrix
     (fun k => deviationVertexValue hp N F q i k) r
 
 /-- Refined-simplex determinant. -/
-noncomputable def determinant
+@[expose] noncomputable def determinant
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N) : Real :=
   Matrix.det (augmentedMatrix hp N F q)
 
 /-- Relative-interior positive-ray intersection on a refined top simplex. -/
+@[expose]
 def HasPositiveInteriorZero
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N) : Prop :=
@@ -117,7 +121,7 @@ noncomputable instance hasPositiveInteriorZeroDecidable
   Classical.propDecidable _
 
 /-- Signed local positive-ray index on one refined simplex. -/
-noncomputable def localIndex
+@[expose] noncomputable def localIndex
     (hp : Nat.Prime p) (N : Nat)
     (F : ContinuousCoordinateMap p) (q : TopCell hp N) : ZMod p :=
   if HasPositiveInteriorZero hp N F q then
@@ -125,16 +129,18 @@ noncomputable def localIndex
   else 0
 
 /-- Coefficient of a refined top cell: original orbit-cycle coefficient times subdivision sign. -/
+@[expose]
 noncomputable def coefficient
     (hp : Nat.Prime p) (N : Nat) (q : TopCell hp N) : ZMod p :=
   (PrimeOrbitCycle.orbitCycle hp).coefficient q.1 * subdivisionSign N q.2
 
 /-- Refined positive orbit count. -/
-noncomputable def zeroCount
+@[expose] noncomputable def zeroCount
     (hp : Nat.Prime p) (N : Nat) (F : ContinuousCoordinateMap p) : ZMod p :=
   ∑ q : TopCell hp N, coefficient hp N q * localIndex hp N F q
 
 /-- Straight-line combination of two continuous coordinate maps. -/
+@[expose]
 noncomputable def segment
     (F G : ContinuousCoordinateMap p) (t : Real) : ContinuousCoordinateMap p where
   toFun x := (1 - t) • F x + t • G x
@@ -150,6 +156,7 @@ noncomputable def segment
   simp [segment]
 
 /-- A continuous map obtained from an original affine vertex map. -/
+@[expose]
 noncomputable def ofCoordinateAffineVertexMap
     (F : CoordinateAffineVertexMap p) : ContinuousCoordinateMap p where
   toFun := F.globalValue

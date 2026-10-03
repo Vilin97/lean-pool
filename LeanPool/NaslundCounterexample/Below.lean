@@ -20,7 +20,7 @@ This file is the toolkit: the coefficient characterisation, the passage to `natD
 under the operations the lift performs, and the two multiplication bounds for `P` and `Q`.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 
@@ -28,9 +28,10 @@ open Polynomial
 
 /-- `f` has degree below `m`: membership in `P_{3,m}`, the polynomials of degree less than `m`.
 For `m = 0` this says `f = 0`, since `degree 0 = ⊥`. -/
-def Below (m : ℕ) (f : (ZMod 3)[X]) : Prop := f.degree < m
+@[expose] def Below (m : ℕ) (f : (ZMod 3)[X]) : Prop := f.degree < m
 
 /-- Every element of `B` has degree below `m`, that is, `B ⊆ P_{3,m}`. -/
+@[expose]
 def AllBelow (m : ℕ) (B : Finset (ZMod 3)[X]) : Prop := ∀ f ∈ B, Below m f
 
 /-- Degree below `m` read off the coefficients: all coefficients from `T^m` on vanish. -/

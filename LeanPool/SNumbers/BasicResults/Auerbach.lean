@@ -20,7 +20,7 @@ The proof maximizes `|det|` on the product of unit balls, then reads off the bas
 and dual functionals from the maximizer.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

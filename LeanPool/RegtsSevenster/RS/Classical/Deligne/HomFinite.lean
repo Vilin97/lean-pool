@@ -34,7 +34,7 @@ to the unit, and is the line `End (𝟙_ A) = ℂ` when it is — the
 scalar-unit hypothesis read as a ℂ-linear equivalence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -55,6 +55,7 @@ section ScalarEnd
 variable {A : Type u}
 
 /-- Scaling the identity of the tensor unit, as a ℂ-linear map. -/
+@[expose]
 def unitScalarMap
     [Category.{v} A] [Preadditive A] [Linear ℂ A] [MonoidalCategory A] :
     ℂ →ₗ[ℂ] (𝟙_ A ⟶ 𝟙_ A) where
@@ -65,6 +66,7 @@ def unitScalarMap
 /-- **The scalars exhaust the unit endomorphisms**, as a ℂ-linear
 equivalence `ℂ ≃ₗ End (𝟙_ A)`: this is exactly the content of
 `HasScalarUnit`, packaged linearly. -/
+@[expose]
 noncomputable def unitEndEquiv
     [Category.{v} A] [Preadditive A] [Linear ℂ A] [MonoidalCategory A]
     (hu : HasScalarUnit A) :

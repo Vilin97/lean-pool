@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
 The Euclidean source execution connected to the analytic gap and terminal-gradient estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage1E03

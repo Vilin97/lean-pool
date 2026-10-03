@@ -23,7 +23,7 @@ public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 
@@ -35,29 +35,29 @@ variable (X Y : ℕ → Type*)
 
 /-- D1: pair-history up to time `t`, as nested products. Appending one
     step is literally pairing `(h, z)`. -/
-def PairHist : ℕ → Type _
+@[expose] def PairHist : ℕ → Type _
   | 0 => X 0 × Y 0
   | t + 1 => PairHist t × (X (t + 1) × Y (t + 1))
 
 /-- D2: X-side history. -/
-def XHist : ℕ → Type _
+@[expose] def XHist : ℕ → Type _
   | 0 => X 0
   | t + 1 => XHist t × X (t + 1)
 
 /-- D2: Y-side history. -/
-def YHist : ℕ → Type _
+@[expose] def YHist : ℕ → Type _
   | 0 => Y 0
   | t + 1 => YHist t × Y (t + 1)
 
 variable {X Y}
 
 /-- D3: X-side projection of a pair-history. -/
-def projX : (t : ℕ) → PairHist X Y t → XHist X t
+@[expose] def projX : (t : ℕ) → PairHist X Y t → XHist X t
   | 0, h => h.1
   | t + 1, hz => (projX t hz.1, hz.2.1)
 
 /-- D3: Y-side projection of a pair-history. -/
-def projY : (t : ℕ) → PairHist X Y t → YHist Y t
+@[expose] def projY : (t : ℕ) → PairHist X Y t → YHist Y t
   | 0, h => h.2
   | t + 1, hz => (projY t hz.1, hz.2.2)
 
@@ -69,25 +69,26 @@ variable (c : (t : ℕ) → PairHist X Y t → ℝ≥0∞)
 
 /-- D5: one-step feasible couplings after history `h`: couplings of the
     conditional marginals. -/
-def Feas (t : ℕ) (h : PairHist X Y t) :
+@[expose] def Feas (t : ℕ) (h : PairHist X Y t) :
     Set (Measure (X (t + 1) × Y (t + 1))) :=
   {γ | γ.map Prod.fst = κμ t (projX t h) ∧ γ.map Prod.snd = κν t (projY t h)}
 
 /-- D6: a strategy is an arbitrary family of one-step transition plans
     (no measurability imposed; mirrors the T=1 design). -/
-def Strat (X Y : ℕ → Type*)
+@[expose] def Strat (X Y : ℕ → Type*)
     [∀ n, MeasurableSpace (X n)] [∀ n, MeasurableSpace (Y n)] : Type _ :=
   (t : ℕ) → PairHist X Y t → Measure (X (t + 1) × Y (t + 1))
 
 variable {κμ κν}
 
 /-- D7: cost-to-go with `k` remaining periods, starting at time `t`. -/
+@[expose]
 def costGo (γ : Strat X Y) : (k : ℕ) → (t : ℕ) → PairHist X Y t → ℝ≥0∞
   | 0, t, h => c t h
   | k + 1, t, h => c t h + ∫⁻ z, costGo γ k (t + 1) (h, z) ∂(γ t h)
 
 /-- D8: Bellman value with `k` remaining periods. -/
-def VGo (κμ : (t : ℕ) → XHist X t → Measure (X (t + 1)))
+@[expose] def VGo (κμ : (t : ℕ) → XHist X t → Measure (X (t + 1)))
     (κν : (t : ℕ) → YHist Y t → Measure (Y (t + 1))) :
     (k : ℕ) → (t : ℕ) → PairHist X Y t → ℝ≥0∞
   | 0, t, h => c t h

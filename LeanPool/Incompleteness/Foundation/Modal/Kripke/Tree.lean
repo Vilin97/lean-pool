@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Foundation.Vorspiel.Chain
 
 /-! # Tree -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace Modal
@@ -65,6 +65,7 @@ add_decl_doc FiniteTransitiveTreeModel.toModel
 variable {F : Frame} {r : F.World}
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Modal.Kripke.Frame.TreeUnravelling (F : Frame) (r : F.World) : Kripke.Frame where
   World := { c : List F.World | [r] <+: c ∧ c.IsChain F.Rel }
   Rel cx cy := ∃ z, cx.1 ++ [z] = cy.1
@@ -248,6 +249,7 @@ end Model
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Modal.Kripke.Model.TransitiveTreeUnravelling (M : Kripke.Model) (r : M.World) :
     Kripke.Model where
   toFrame := M.toFrame.TransitiveTreeUnravelling r

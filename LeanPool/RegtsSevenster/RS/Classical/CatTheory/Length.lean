@@ -25,7 +25,7 @@ at most `0`, simple objects have length at most `1`, and the bound
 is subadditive over binary biproducts.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -18,7 +18,7 @@ uniform thresholds in the original ambient dimension.  Translating the
 integer centre doubles the box radius and changes the weighted sum to zero.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

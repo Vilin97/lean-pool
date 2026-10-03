@@ -15,7 +15,7 @@ two-reflection extension.  The derivative is glued across the unit sphere using 
 matching identities from `Seeley`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Topology
@@ -399,7 +399,7 @@ theorem seeleyExtension_fderiv_eq_reflection_combo_of_mem_annulus
   exact hext.fderiv
 
 /-- Seeley extension multiplied by a compactly supported spatial cutoff. -/
-def seeleyCutoffExtension (v : Vec 3 → ℝ) : Vec 3 → ℝ :=
+@[expose] def seeleyCutoffExtension (v : Vec 3 → ℝ) : Vec 3 → ℝ :=
   canonicalBallCutoff (0 : Vec 3) 1 2 * seeleyExtension v
 
 end

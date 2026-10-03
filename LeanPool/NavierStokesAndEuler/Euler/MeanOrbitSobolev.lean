@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Genuine Sobolev arrays and bounded spatial evaluation for ordinary L² translation orbits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped ContDiff
 local instance instMeanOrbitSobolev1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 
 /-- Coordinate tuple, defined pointwise by `(standardDirection (w i)).1`. -/
-def coordinateTuple {n : ℕ} (w : Fin n → Fin 4) : Fin n → Space :=
+@[expose] def coordinateTuple {n : ℕ} (w : Fin n → Fin 4) : Fin n → Space :=
   fun i => (standardDirection (w i)).1
 
 theorem coordinateTuple_norm_le {n : ℕ} (w : Fin n → Fin 4) : ‖coordinateTuple w‖ ≤ 1 := by
@@ -85,7 +85,8 @@ theorem ordinarySpatialJet_word (n q : ℕ) (hn : n ≤ q) (u : EulerMeanSolenoi
       exact Fin.snoc_init_self _
 
 /-- A concrete element of the previously constructed complete cylinder Sobolev space. -/
-def ordinarySobolev (q : ℕ) (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) : SobolevSpace 1 q :=
+@[expose] def ordinarySobolev (q : ℕ) (u : EulerMeanSolenoidal.L2)
+    (hu : SmoothOrbit u) : SobolevSpace 1 q :=
   ofJet 1 (ordinarySpatialJet q u hu)
 
 @[simp] theorem ordinarySobolev_value (q : ℕ) (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) :
@@ -95,8 +96,9 @@ theorem ordinarySobolev_coordinate (q : ℕ) (u : EulerMeanSolenoidal.L2) (hu : 
     (w : SobolevWord q) :
     (ordinarySobolev q u hu).val w = ordinaryLift
       (iteratedFDeriv ℝ w.1.val (fun a : Space => EulerMeanSolenoidal.translation a u) 0
-        (coordinateTuple w.2)) :=
-  ordinarySpatialJet_word w.1.val q (Nat.le_of_lt_succ w.1.isLt) u hu w.2
+        (coordinateTuple w.2)) := by
+  rw [ordinarySobolev, ofJet_apply]
+  exact ordinarySpatialJet_word w.1.val q (Nat.le_of_lt_succ w.1.isLt) u hu w.2
 
 /-- The finite Sobolev array is bounded directly by actual L² orbit-derivative norms. -/
 theorem ordinarySobolev_norm_le (q : ℕ) (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) :

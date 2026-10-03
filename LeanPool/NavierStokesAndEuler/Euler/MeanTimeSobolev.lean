@@ -25,7 +25,7 @@ The fixed time reconstruction and actual frame products preserve the input
 radius. No conversion of forcing or solution tensors is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

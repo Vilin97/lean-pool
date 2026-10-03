@@ -24,7 +24,7 @@ If `v(A_{st}) ≥ w_s + w_t` with `w ≤ 0`, and `U`, `V` are `p`-integral of in
 `v_p^G(det(A + p⁻¹ U V)) ≥ 2 ∑ w - r` (via the Schur complement).
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial Matrix
 

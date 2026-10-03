@@ -15,7 +15,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # Browkin and Brzeziński's 1994 result
 -/
 
-@[expose] public section
+public section
 
 
 namespace BB94

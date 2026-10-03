@@ -18,7 +18,7 @@ itself is packaged as a continuous linear map by `kernelLpTop` in
 `Kernel/Lp.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

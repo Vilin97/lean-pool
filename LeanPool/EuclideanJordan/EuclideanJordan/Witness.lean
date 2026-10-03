@@ -54,7 +54,7 @@ with all three components nonzero, and nothing more. The rank-two carrier is use
 is the smallest place where a `1/2`-eigenvector exists, not because rank two matters here.
 -/
 
-@[expose] public section
+public section
 
 open HermMul EuclideanJordan
 
@@ -73,9 +73,11 @@ noncomputable example : IsScalarTower ℝ H2 H2 := inferInstance
 /-! ### 2. An idempotent with a nonzero `1/2`-eigenspace -/
 
 /-- The rank-one projection `diag(1,0)`. -/
+@[expose]
 noncomputable def cWit : H2 := HermitianMat.diagonal ℂ ![1, 0]
 
 /-- The off-diagonal Hermitian matrix `[[0,1],[1,0]]`. -/
+@[expose]
 def xWit : H2 :=
   ⟨!![0, 1; 1, 0], by
     simp only [selfAdjoint.mem_iff, Matrix.star_eq_conjTranspose]
@@ -226,6 +228,7 @@ section JordanFrame
 variable {d : Type*} [Fintype d] [DecidableEq d]
 
 /-- The diagonal matrix units `E_ii`, as Hermitian matrices. -/
+@[expose]
 noncomputable def diagFrame (i : d) : HermitianMat d ℂ :=
   HermitianMat.diagonal ℂ (fun j => if j = i then 1 else 0)
 

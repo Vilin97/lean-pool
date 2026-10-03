@@ -22,7 +22,7 @@ plane complex for one tile.  The next layer proves that the transported tile com
 overlaps and takes their locally finite union.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -47,7 +47,7 @@ theorem levelFaceHomeoSymm_mem_carrier {n : ℕ} (t : K.LevelFace n)
   simpa only [(K.safeSubdivision n).homeo.symm_apply_apply] using hx
 
 /-- Remove the faithful subdivision transport from one adaptive tile. -/
-noncomputable def adaptiveFaceSourceHomeomorph (t : K.AdaptiveFace U) :
+@[expose] noncomputable def adaptiveFaceSourceHomeomorph (t : K.AdaptiveFace U) :
     K.AdaptiveClosedFace U t ≃ₜ
       (K.safeSubdivision t.1).refined.ClosedFace t.2.1 where
   toFun p := ⟨(K.safeSubdivision t.1).homeo.symm p.1,
@@ -67,7 +67,7 @@ noncomputable def adaptiveFaceSourceHomeomorph (t : K.AdaptiveFace U) :
     exact (K.safeSubdivision t.1).homeo.continuous.comp continuous_subtype_val
 
 /-- The canonical standard-plane chart of an adaptive tile. -/
-noncomputable def adaptiveFacePlaneHomeomorph (t : K.AdaptiveFace U) :
+@[expose] noncomputable def adaptiveFacePlaneHomeomorph (t : K.AdaptiveFace U) :
     K.AdaptiveClosedFace U t ≃ₜ standardTrianglePlaneComplex.support :=
   (K.adaptiveFaceSourceHomeomorph U t).trans
     ((K.safeSubdivision t.1).refined.facePlaneHomeomorph t.2.1)

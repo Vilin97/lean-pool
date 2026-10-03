@@ -51,7 +51,7 @@ no collapsed-middle-slot case, so the delivered chip is always charged to the
 centre itself and a row needs no `owner` indirection at a tripod.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedTripod
 

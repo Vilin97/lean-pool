@@ -44,7 +44,7 @@ Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib
 imports are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -56,6 +56,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The translate of a convex body by a vector `v`, as a convex body with carrier
 `(fun x => v + x) '' K`. Translation is a homeomorphism, so solidity is preserved. -/
+@[expose]
 def translate (K : ConvexBody E) (v : E) : ConvexBody E where
   carrier := (fun x => v + x) '' (K : Set E)
   convex' := K.convex.translate v
@@ -96,6 +97,7 @@ theorem translate_translate (K : ConvexBody E) (v w : E) :
 /-- The positive scaling of a convex body by `r > 0`, as a convex body with carrier
 `(fun x => r • x) '' K`. Scaling by a nonzero scalar is a homeomorphism, so solidity is
 preserved. -/
+@[expose]
 def scalePos (K : ConvexBody E) (r : ℝ) (hr : 0 < r) : ConvexBody E where
   carrier := (fun x => r • x) '' (K : Set E)
   convex' := by

@@ -10,7 +10,7 @@ import Mathlib.Topology.MetricSpace.Pseudo.Real
 
 /-! ### Auxiliary lemmas -/
 
-@[expose] public section
+public section
 
 /-
   This file contains two applications of the Lebesgue Number Lemma:
@@ -108,7 +108,7 @@ lemma compact_unitSquare : IsCompact UnitSquare := isCompact_univ
 /-- For any four natural numbers `n m i j : ℕ` such that `i < n + 1` and `j < m + 1`,
 we have the rectangle `[i/(n+1), (i+1)/(n+1)] × [j/(m+1), (j+1)/(m+1)]` in the unit square.
 -/
-def UnitSubrectangle {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) : Set (I × I) :=
+@[expose] def UnitSubrectangle {n m i j : ℕ} (hi : i < n.succ) (hj : j < m.succ) : Set (I × I) :=
   Set.ofPred <|
   fun (a : I × I) =>
     ((Fraction (Nat.succ_pos n) (le_of_lt hi)) ≤ a.1 ∧

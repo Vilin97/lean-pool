@@ -26,7 +26,7 @@ This file contains some results on the Hilbert space on finite-dimensional C*-al
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {n : Type _} [Fintype n]
@@ -183,7 +183,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.matrixIsPosDef {k : Type _} {s : k → T
     (hψ : ∀ i, (ψ i).IsFaithfulPosMap) : ∀ i, (ψ i).matrix.PosDef := fun i => (hψ i).matrixIsPosDef
 
 /-- Pointwise real powers of a positive-definite element of `PiMat`. -/
-noncomputable def Pi.PosDef.rpow {k : Type _} {s : k → Type _} [∀ i, Fintype (s i)]
+@[expose] noncomputable def Pi.PosDef.rpow {k : Type _} {s : k → Type _} [∀ i, Fintype (s i)]
     [∀ i, DecidableEq (s i)] {a : PiMat ℂ k s} (ha : ∀ i, (a i).PosDef) (r : ℝ) :=
   fun i => (ha i).rpow r
 
@@ -257,6 +257,7 @@ theorem pi_includeBlock_left_rankOne [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
   rfl
 
 /-- The modular automorphism on a direct product of matrix blocks. -/
+@[expose]
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.sig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     (z : ℝ) : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s :=
   let hQ := Module.Dual.pi.IsFaithfulPosMap.matrixIsPosDef hψ
@@ -558,7 +559,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply [hψ : ∀ i, (ψ i).IsF
 
 
 /-- Transpose each matrix block of a product as an algebra equivalence to the opposite algebra. -/
-@[simps]
+@[simps, expose]
 def Pi.transposeAlgEquiv (p : Type _) (n : p → Type _)
     [∀ i, Fintype (n i)] [∀ i, DecidableEq (n i)] :
     (PiMat ℂ p n) ≃ₐ[ℂ] (PiMat ℂ p n)ᵐᵒᵖ
@@ -680,7 +681,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.Psi_right_inv [hψ : ∀ i, (ψ i).IsFai
 
 /-- Linear equivalence between linear maps and tensor products for faithful positive block
   functionals. -/
-@[simps]
+@[simps, expose]
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.psi (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
   (hψ₂ : ∀ i, (ψ₂ i).IsFaithfulPosMap)
     (t r : ℝ) : (PiMat ℂ k s →ₗ[ℂ] PiMat ℂ k₂ s₂) ≃ₗ[ℂ] ((PiMat ℂ k₂ s₂) ⊗[ℂ] (PiMat ℂ k s)ᵐᵒᵖ) :=

@@ -24,7 +24,7 @@ section
 
 /-! One actual mean/transverse solve preserves every joint profile symmetry. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -129,7 +129,7 @@ section
 
 /-! Every profile in the literal recursively generated family has the source parity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

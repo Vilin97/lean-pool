@@ -11,7 +11,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationConstants
 
 /-! # A finished bounded state supplies the public decomposition conclusion -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

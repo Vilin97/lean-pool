@@ -18,7 +18,7 @@ subdivision induces a faithful intrinsic subdivision through the barycentric rea
 homeomorphisms.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -31,7 +31,7 @@ variable (K : PlaneComplex)
 
 /-- Forget the planar placement of a complex, retaining its maximal triangles as an intrinsic
 two-complex. -/
-@[reducible] def toIntrinsic : IntrinsicTwoComplex where
+@[expose, reducible] def toIntrinsic : IntrinsicTwoComplex where
   Vertex := K.Vertex
   faces := K.cells
   faces_card := fun _ ht => K.card_of_mem_cells ht
@@ -39,7 +39,7 @@ two-complex. -/
 @[simp] theorem toIntrinsic_faces : K.toIntrinsic.faces = K.cells := rfl
 
 /-- Barycentric evaluation is an affine map on the ambient coordinate space. -/
-noncomputable def baryEvalAffine : (K.Vertex → ℝ) →ᵃ[ℝ] Plane :=
+@[expose] noncomputable def baryEvalAffine : (K.Vertex → ℝ) →ᵃ[ℝ] Plane :=
   (∑ v, (LinearMap.proj v).smulRight (K.position v)).toAffineMap
 
 @[simp] theorem baryEvalAffine_apply (x : K.Vertex → ℝ) :

@@ -12,7 +12,7 @@ public import LeanPool.Zeta32.PrimeEdge.Auxiliary.ClassBasis
 each of degree `< h`. On the disc `t = -b + p u` it is `(p u)^i · (p-unit)`, and on every other disc
 `b'` it carries the factor `(t + b')^{m_{b'}}`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

@@ -16,7 +16,7 @@ Boolean ANF algebra bounds the product by degree three.  The independent
 high-part argument then makes its cubic projection nonzero.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

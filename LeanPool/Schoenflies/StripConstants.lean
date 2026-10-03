@@ -61,7 +61,7 @@ use whichever side is convenient. It carries enough simplicity for both statemen
   `R`-neighbourhood of the curve, which is how the prescribed open set is honoured.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

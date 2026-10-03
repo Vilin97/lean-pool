@@ -19,7 +19,7 @@ These two inequalities are the rank-side input for propagating transmission
 conditions between adjacent lattice rows.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

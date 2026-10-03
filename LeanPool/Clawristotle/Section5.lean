@@ -19,7 +19,7 @@ identity matching that constrains the Maxwellian parameters (a, b, c) from the
 Vlasov transport equation.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

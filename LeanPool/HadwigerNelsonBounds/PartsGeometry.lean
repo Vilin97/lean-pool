@@ -18,7 +18,7 @@ The equivalent coordinates below use only `sqrt 33` and `sqrt 3`; this makes
 the unit-distance check an integer calculation.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -37,18 +37,18 @@ deriving DecidableEq
 namespace PartsPoint
 
 /-- Difference of two exact Parts coordinates. -/
-def sub (p q : PartsPoint) : PartsPoint :=
+@[expose] def sub (p q : PartsPoint) : PartsPoint :=
   ⟨p.a - q.a, p.b - q.b, p.c - q.c, p.d - q.d⟩
 
 /-- Rational coefficient of 144 times the squared norm. -/
-def normNumerator (p : PartsPoint) : Int :=
+@[expose] def normNumerator (p : PartsPoint) : Int :=
   p.a ^ 2 + 33 * p.b ^ 2 + 3 * p.c ^ 2 + 11 * p.d ^ 2
 
 /-- Coefficient of `2 * sqrt 33` in 144 times the squared norm. -/
-def radicalCoefficient (p : PartsPoint) : Int := p.a * p.b + p.c * p.d
+@[expose] def radicalCoefficient (p : PartsPoint) : Int := p.a * p.b + p.c * p.d
 
 /-- Exact decidable test that an integer coordinate vector has length one. -/
-def IsUnit (p : PartsPoint) : Bool :=
+@[expose] def IsUnit (p : PartsPoint) : Bool :=
   decide (p.normNumerator = 144 ∧ p.radicalCoefficient = 0)
 
 lemma isUnit_iff (p : PartsPoint) :
@@ -56,7 +56,7 @@ lemma isUnit_iff (p : PartsPoint) :
   simp [IsUnit]
 
 /-- Embed exact certificate coordinates in the Euclidean plane. -/
-noncomputable def toR2 (p : PartsPoint) : R2 :=
+@[expose] noncomputable def toR2 (p : PartsPoint) : R2 :=
   WithLp.toLp 2
     ![((p.a : ℝ) + (p.b : ℝ) * Real.sqrt 33) / 12,
       (3 * (p.c : ℝ) + (p.d : ℝ) * Real.sqrt 33) / (12 * Real.sqrt 3)]

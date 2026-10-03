@@ -31,7 +31,7 @@ Faà di Bruno partition sum stays bounded at every positive order, provided
 its scalar argument is at most one half.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -192,7 +192,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -268,7 +268,7 @@ theorem norm_iteratedFDeriv_comp_predecessor_at
     (ftaylorSeries ℝ f x) n hn A B R S hA hB hR hS hBS hgjet hfjet
 
 /-- Inverse map radius, given by `1 + 2*C*R`. -/
-def inverseMapRadius (C R : ℝ) : ℝ := 1 + 2*C*R
+@[expose] def inverseMapRadius (C R : ℝ) : ℝ := 1 + 2*C*R
 
 lemma inverseMapRadius_ge_one (C R : ℝ) (hC : 0 ≤ C) (hR : 0 ≤ R) :
     1 ≤ inverseMapRadius C R := by

@@ -16,7 +16,7 @@ unit-padded standard basis vectors: the single-layer computation
 of `colourPowerEquiv 1` on padded pure tensors.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

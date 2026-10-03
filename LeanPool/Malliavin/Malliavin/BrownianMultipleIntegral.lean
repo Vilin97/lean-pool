@@ -16,7 +16,7 @@ constructed from Brownian increment products.  Its range agrees orderwise with t
 operator range, so its closed ranges are the canonical Brownian homogeneous chaoses.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -35,7 +35,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 omit [CompleteSpace W] [BorelSpace W] in
 /-- The canonical Brownian multiple-integral operator
 `Iₙ = n! Jₙ ∘ symmetrizeL`. -/
-noncomputable def brownianMultipleIntegralCLM
+@[expose] noncomputable def brownianMultipleIntegralCLM
     (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel n →L[ℝ] RandomL2 P :=
   (n.factorial : ℝ) • (integralCLM hB n).comp

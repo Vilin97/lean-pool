@@ -26,4 +26,4 @@ Tags: information-theory, entropy, non-shannon-inequality
 MSC: 94A17, 94A15
 -/
 
-@[expose] public section
+public section

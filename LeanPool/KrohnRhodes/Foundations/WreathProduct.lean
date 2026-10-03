@@ -26,7 +26,7 @@ public import Mathlib.Data.Fintype.Pi
 * [Eilenberg, *Automata, Languages, and Machines, Vol. B*, 1976]
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 
@@ -35,6 +35,7 @@ universe u v w
 /-! ### Semigroup division -/
 
 /-- Semigroup `S` divides `T` if `S` is a homomorphic image of a subsemigroup of `T`. -/
+@[expose]
 def SgDiv (S T : Type*) [Mul S] [Mul T] : Prop :=
   ∃ (U : Subsemigroup T) (φ : U →ₙ* S), Function.Surjective φ
 

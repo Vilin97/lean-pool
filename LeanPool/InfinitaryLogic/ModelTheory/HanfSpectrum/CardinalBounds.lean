@@ -30,7 +30,7 @@ the right side is the empty supremum), so Mathlib's `beth_zero`/`beth_succ`/`bet
 used directly as the formal interface; no second recursive beth is introduced.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

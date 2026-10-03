@@ -27,7 +27,7 @@ section
 /-! Actual coercive projected sources have precisely the signed energy forcing required by the
 differentiated equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -114,7 +114,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -187,7 +187,7 @@ section
 /-! Actual representatives of linear source, transport, and pressure combinations in Bochner time
 spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +311,7 @@ section
 /-! The constructed Bochner correction source is literally the higher-order nonlinear correction
 almost everywhere. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -369,7 +369,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -397,13 +397,14 @@ local instance correctionTimeGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace 
 local instance correctionTimeSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual continuous background-plus-error velocity at the energy level. -/
-def velocityPath {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
+@[expose] def velocityPath {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period
         (q+1))
         :=
   (truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) D.approximation + e
 
 /-- The actual continuous order-zero source along the original energy-level solution. -/
+@[expose]
 def lowerOrderPath {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ)
     T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period
@@ -414,7 +415,7 @@ def lowerOrderPath {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ} (D : CorrectionData pe
     D.linear.operatorPath (fun i => (D.quadratic i).operatorPath) D.approximation D.residual e
 
 /-- The genuine full energy-order nonlinear raw time field, constructed using maximal regularity. -/
-def rawTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def rawTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (U : TimeLp T (SobolevSpace period (2 +
         q))) :
@@ -425,7 +426,7 @@ def rawTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (reindexMaximalTime period q T U)
 
 /-- The actual full energy-order projected nonlinear forcing belongs to Bochner L² time. -/
-def sourceTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def sourceTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (U : TimeLp T (SobolevSpace period (2 +
         q))) :
@@ -434,7 +435,7 @@ def sourceTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (rawTime period hq T hT D e U)
 
 /-- The actual signed coercive pressure has full energy-order Bochner regularity. -/
-def signedPressureTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def signedPressureTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (U : TimeLp T (SobolevSpace period (2 +
         q))) :
@@ -444,6 +445,7 @@ def signedPressureTime {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
 
 /-- The actual limiting weighted word forcing constructed from the genuine correction time fields.
 -/
+@[expose]
 def weightedCorrectionForcing {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (hG : Continuous (fun t => (D.metric.coefficient t).operator))
@@ -459,7 +461,7 @@ def weightedCorrectionForcing {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT : 0 ≤
 
 /-- The seven literal spatial correction terms evaluated on an actual higher Sobolev representative.
 -/
-def correctionArray {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ}
+@[expose] def correctionArray {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ}
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (K6 : ∀ t, CoefficientJet period standardDirection 6 (D.metric.coefficient t))
     (N : ℕ) (hN : N + 6 ≤ q + 1) (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))

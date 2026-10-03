@@ -20,7 +20,7 @@ The Laplacian spectrum of `K_{2,n-2}` is `0, 2^(n-3), (n-2), n`, so its
 second-smallest eigenvalue is `2`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

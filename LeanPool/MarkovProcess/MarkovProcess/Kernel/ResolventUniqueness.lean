@@ -22,7 +22,7 @@ Main results: `perturbed_unique`, `resolventFamily_eq_of_eventually`, and
 The operators are plain maps on functions; no Banach-space carrier or continuity is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

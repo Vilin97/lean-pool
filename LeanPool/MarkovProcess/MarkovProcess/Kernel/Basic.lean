@@ -16,7 +16,7 @@ not define transition families or connect kernels to operator semigroups or
 stochastic processes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal ProbabilityTheory
@@ -26,6 +26,7 @@ namespace MarkovProcess
 variable {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 /-- A kernel is sub-Markov if each of its measures has total mass at most one. -/
+@[expose]
 def IsSubMarkovKernel (κ : ProbabilityTheory.Kernel α β) : Prop :=
   ∀ x, κ x Set.univ ≤ 1
 

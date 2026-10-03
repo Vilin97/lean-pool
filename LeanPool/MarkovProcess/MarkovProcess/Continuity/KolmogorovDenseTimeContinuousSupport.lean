@@ -21,7 +21,7 @@ No measurability of the totalized modification as a path-valued map, PDE increme
 Markov property of the resulting paths, or Hunt-process assertion is made here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

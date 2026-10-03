@@ -20,7 +20,7 @@ This file develops compact-restriction machinery for failed upper semi-Fredholm 
 the compact-perturbation argument for the canonical Kalton--Peck space.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.GraphFredholm
@@ -36,6 +36,7 @@ open scoped ENNReal NNReal Topology lp BigOperators InnerProductSpace
 /-- A bounded operator is upper semi-Fredholm when its kernel is finite-dimensional and its
 range is closed.
 Blueprint label: `def:upper-semi`; audit ID `INF-UPPER-SEMI-FREDHOLM`. -/
+@[expose]
 def IsUpperSemiFredholm {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (A : X →L[ℝ] Y) : Prop := by
   exact FiniteDimensional ℝ A.toLinearMap.ker ∧ IsClosed (A.toLinearMap.range : Set Y)
@@ -108,6 +109,7 @@ theorem IsUpperSemiFredholm.not_isStrictlySingular
 /-- An operator has an infinite-dimensional compact restriction when its restriction to some
 closed infinite-dimensional subspace is compact.
 Blueprint label: `def:infinite-dimensional-compact-restriction`. -/
+@[expose]
 def HasInfiniteDimensionalCompactRestriction
     {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : Prop :=

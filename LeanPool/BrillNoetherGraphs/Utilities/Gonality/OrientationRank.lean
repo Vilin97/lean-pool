@@ -24,7 +24,7 @@ when its class contains, for each vertex `q`, a source-free orientation with
 also be expressed as reachability in the cycle--cocycle reversal system.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 

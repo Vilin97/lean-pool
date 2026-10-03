@@ -46,7 +46,7 @@ are ever needed.
 - The nested-term pilot `f(g(x), h(c))` (genuinely nested, includes a `0`-ary application).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -74,7 +74,7 @@ the `L`-term `t` — its variables read through the embedding `ρ` into the curr
 the value of `y`. A variable is an equality atom; an application `f(t₀, …, t_{k-1})` extends the
 context by `k` witness variables, pins each argument's value with a recursive graph formula,
 adds the graph atom `G_f(ys, y)`, and existentially closes the witness block. -/
-def termGraphAux : ∀ {m : ℕ}, L.Term β → (β → (graphLanguage L).Term (α ⊕ Fin m)) →
+@[expose] def termGraphAux : ∀ {m : ℕ}, L.Term β → (β → (graphLanguage L).Term (α ⊕ Fin m)) →
     (graphLanguage L).Term (α ⊕ Fin m) → (graphLanguage L).BoundedFormulaω α m
   | _, .var z, ρ, y => .equal (ρ z) y
   | m, .func f ts, ρ, y =>

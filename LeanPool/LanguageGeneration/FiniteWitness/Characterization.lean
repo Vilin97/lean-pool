@@ -10,7 +10,7 @@ public import Mathlib.Basic.Denumerable
 
 /-! # The complete ordinary-generation finite-witness characterization -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

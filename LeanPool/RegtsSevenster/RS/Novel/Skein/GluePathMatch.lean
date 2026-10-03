@@ -32,7 +32,7 @@ terms of the `pathMatch` of `κ`:
   lifted one.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

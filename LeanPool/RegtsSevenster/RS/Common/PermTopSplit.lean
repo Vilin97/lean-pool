@@ -23,7 +23,7 @@ induced permutation is not the one a tensor power's factors see.  The
 compression here is `finSuccAboveEquiv`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ open Equiv
 variable {n : ℕ}
 
 /-- Where a permutation sends the top slot. -/
+@[expose]
 def topImage (σ : Perm (Fin (n + 1))) : Fin (n + 1) := σ (Fin.last n)
 
 /-- The identity leaves the top slot alone. -/
@@ -330,6 +331,7 @@ targets they consume.  Everything below them is untouched.
 -/
 
 /-- The transposition of the top two slots. -/
+@[expose]
 noncomputable def topSwap : Perm (Fin (n + 2)) :=
   Equiv.swap (Fin.castSucc (Fin.last n)) (Fin.last (n + 1))
 

@@ -40,7 +40,7 @@ The physical partition scale is `Q n * q_normalized`; finite low bands retain
 their partition factor.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -118,20 +118,24 @@ noncomputable def velocityScale (L : Label B N0) (n : ℕ) : ℝ :=
       L))
 
 /-- Common matrix, given by `covariance B N0 L (nativePoint n x L)`. -/
+@[expose]
 noncomputable def commonMatrix (L : Label B N0) (n : ℕ) (x : Point) : Mat2 :=
   covariance B N0 L (nativePoint n x L)
 
 /-- Reference target, defined pointwise by `PrimaryTargetBounds.actualTarget modulation
 (nativePoint n x L) i`. -/
+@[expose]
 noncomputable def referenceTarget (L : Label B N0) (n : ℕ) (x : Point) : Vec2 :=
   fun i => PrimaryTargetBounds.actualTarget modulation (nativePoint n x L) i
 
 /-- Common target, given by `(ActualSignedStageControls.coefficientScale (L, (0 : Fin 2)) n) ^ 2
 • referenceTarget L n x`. -/
+@[expose]
 noncomputable def commonTarget (L : Label B N0) (n : ℕ) (x : Point) : Vec2 :=
   (ActualSignedStageControls.coefficientScale (L, (0 : Fin 2)) n) ^ 2 • referenceTarget L n x
 
 /-- Signed ratio, constructed using `SignedCovariance.increment`. -/
+@[expose]
 noncomputable def signedRatio (request : ℕ → FullPoint → Vec2) (L : Label B N0)
     (n : ℕ) (x : Point) (j : Fin 2) : ℝ :=
   SignedCovariance.increment (commonMatrix L n x) (commonTarget L n x) (request n (x, 0)) j /
@@ -376,6 +380,7 @@ theorem primary_diagonal_average (n : ℕ) {x : Point}
 /-! ## The literal requested field and its finite covariance sum -/
 
 /-- Actual request, constructed using `LocalSignedRequest.fullRequest`. -/
+@[expose]
 noncomputable def actualRequest (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) : ℕ → FullPoint → Vec2 :=
   LocalSignedRequest.fullRequest ActualInitialization.geometry.strip
@@ -383,6 +388,7 @@ noncomputable def actualRequest (c : CorrectionState.Context Point)
 
 /-- Actual signed block, given by `(ActualSignedStageControls.parameters l).tangentBlock
 ActualInitialization.geometry.strip (actualRequest c u)`. -/
+@[expose]
 noncomputable def actualSignedBlock (c : CorrectionState.Context Point)
     (u : CorrectionState.State Point) (l : Label B N0 × Fin 2) :=
   (ActualSignedStageControls.parameters l).tangentBlock ActualInitialization.geometry.strip
@@ -584,6 +590,7 @@ open CorrectionStep CorrectionState
 /-- This is the actual cycle constructor with its particular solver left
 as a parameter.  Both fixed and state-dependent actual particular solvers
 use this very signed subsystem. -/
+@[expose]
 noncomputable def cycleParameters
     (particular : (Label B N0 × Fin 2) → ParticularParameters CycleSlow) :
     CycleParameters (Label B N0 × Fin 2) :=
@@ -788,7 +795,7 @@ the actual error vanishes on the central Gaussian plateau and retains
 the exact square-root edge weight at every decay exponent.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -801,6 +808,7 @@ open scoped ContDiff Topology BigOperators
 variable {B N0 : ℕ}
 
 /-- Copies, given by `(parameters l).copyData ActualPrimaryBounds.strip request`. -/
+@[expose]
 noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : PeriodizedWaveBounds.CopyData FullPoint Frequency :=
   (parameters l).copyData ActualPrimaryBounds.strip request
@@ -965,7 +973,13 @@ theorem localGaussian_wave_jets {σ : ℝ}
     LocalizedWaveBounds.LocalClass.zero (fun n i x hx => hw i.1 n x hx)
   have hfast : BandBound fullStrip 0 (directions B).fastScale :=
     (ActualPrimaryBounds.actual_local_inputs (B := B) (N0 := N0)).fast_scale
-  exact LocalizedGaussianBounds.indexedCutoffError_wave_class (directions B) hψ hfast hu hf
+  refine (LocalizedGaussianBounds.indexedCutoffError_wave_class
+    (directions B) hψ hfast hu hf).congr ?_
+  intro n i x
+  rw [localGaussian_formula]
+  unfold LocalizedGaussianBounds.indexedCutoffError
+  simp only [smul_zero, add_zero]
+  simp only [PeriodizedWaveBounds.CopyData.raw, copies]
 
 /-- All joint jets of the literal local Gaussian error have every
 epsilon exponent, with exactly the square-root edge weight. -/
@@ -1086,7 +1100,7 @@ change are evaluated on the literal intermediate states.  No estimate of
 the post-temporal debt is supplied as a premise.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1284,7 +1298,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1413,6 +1427,7 @@ theorem step_labels {B N0 : ℕ} (x : CycleState (Index B N0)) :
       x.coefficients.labels := rfl
 
 /-- State, constructed using `CycleState.iterate`. -/
+@[expose]
 noncomputable def state (B N0 : ℕ) : ℕ → CycleState (Index B N0) :=
   CycleState.iterate (fun _ => ActualCycleParameters.fixedParameters B N0)
     (ActualPrimary.commonContext B) (ActualInitialization.initialCycleState B N0)

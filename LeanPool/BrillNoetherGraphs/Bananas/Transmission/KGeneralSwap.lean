@@ -22,7 +22,7 @@ and consequently that `KGeneralTransmission` is independent of the ordering
 of the two marks.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -53,20 +53,24 @@ theorem IsKAffine.rawInverse {k : ℕ} {tau : ℤ → ℤ}
     apply_rawInverse_apply tau hBij]
 
 /-- Reflection in both the domain and range. -/
+@[expose]
 def rawAffineReflection (tau : ℤ → ℤ) : ℤ → ℤ :=
   fun n => -tau (-n)
 
 /-- The reflected inverse is the raw transmission permutation after swapping
 the two marks. -/
+@[expose]
 noncomputable def swapTransmissionPermutation
     (tau : ℤ → ℤ) : ℤ → ℤ :=
   rawAffineReflection (rawInverse tau)
 
 /-- Simultaneously translate a pair by an integral number of periods. -/
+@[expose]
 def shiftPair (k : ℕ) (q : ℤ) (p : ℤ × ℤ) : ℤ × ℤ :=
   (p.1 + q * k, p.2 + q * k)
 
 /-- Normalize the first coordinate of a pair into the standard period. -/
+@[expose]
 def normalizeFirstPair (k : ℕ) (p : ℤ × ℤ) : ℤ × ℤ :=
   (p.1 % k, p.2 - (p.1 / k) * k)
 

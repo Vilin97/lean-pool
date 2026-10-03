@@ -38,7 +38,7 @@ carrier as a field.
   identity for a bounded smooth Jordan carrier.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 

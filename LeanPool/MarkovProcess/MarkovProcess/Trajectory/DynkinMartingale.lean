@@ -44,7 +44,7 @@ The exponentially discounted extension is developed in `Trajectory/DiscountedDyn
 its zero-discount process is identified with this one by `discountedDynkinProcess_zero`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -77,6 +77,7 @@ section Definition
 `f (omega t)` corrected by the time integral `∫₀ᵗ (L f) (omega s) ds` of the generator along the
 path.  Under the continuous-path process of `P` this is a martingale
 (`martingale_dynkinProcess`). -/
+@[expose]
 def IsFellerKernelSemigroup.dynkinProcess (hFeller : P.IsFellerKernelSemigroup)
     (f : hFeller.c0Semigroup.generatorDomain) (t : NNReal) (omega : ContinuousPath alpha) : ℝ :=
   (f : C₀(alpha, ℝ)) (omega t) -

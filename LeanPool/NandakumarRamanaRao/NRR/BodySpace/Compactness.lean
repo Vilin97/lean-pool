@@ -28,7 +28,7 @@ that embedding yields compactness of `Set.univ` in `ConvexSubbody K`, hence the 
 compactness is grounded in the fixed compact parent rather than in an unproved Blaschke selection.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric TopologicalSpace Filter Topology
 

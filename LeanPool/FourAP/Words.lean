@@ -19,7 +19,7 @@ The two arithmetic-progression equations used below include both increasing
 and decreasing progressions.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
@@ -200,7 +200,7 @@ theorem safe_of_reverse_pairwise {P : List ℕ} (hn : P.Nodup)
 
 /-- The non-strict reverse of `◁`, used solely for sorting the finite set in
 Lemma 1 and in the base case of the Extension Lemma. -/
-def reverseBitsLE (a b : ℕ) : Prop := a = b ∨ bits b a
+@[expose] def reverseBitsLE (a b : ℕ) : Prop := a = b ∨ bits b a
 
 /-- The finite sorting relation in Lemma 1 has a computable comparison. -/
 instance reverseBitsLEDecidable : DecidableRel reverseBitsLE :=
@@ -235,7 +235,7 @@ instance reverseBitsLETotal : Std.Total reverseBitsLE where
 
 /-- List a finite set in reverse `◁` order, exactly as prescribed in Lemma 1.
 This definition is computable, using mathlib's finite-set merge sort. -/
-def reverseWord (T : Finset ℕ) : List ℕ := T.sort reverseBitsLE
+@[expose] def reverseWord (T : Finset ℕ) : List ℕ := T.sort reverseBitsLE
 
 /-- The reverse listing contains each and only each prescribed entry. -/
 @[simp] theorem mem_reverseWord {T : Finset ℕ} {x : ℕ} :

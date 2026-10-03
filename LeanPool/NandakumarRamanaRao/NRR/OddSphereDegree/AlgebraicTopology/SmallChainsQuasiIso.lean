@@ -44,7 +44,7 @@ an isomorphism of `ModuleCat`-modules, hence the chain map is a quasi-isomorphis
  theorem**: `smallChainsInclusion R X 𝒰` is a quasi-isomorphism.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision

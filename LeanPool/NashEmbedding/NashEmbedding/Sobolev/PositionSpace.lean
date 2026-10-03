@@ -43,7 +43,7 @@ its smoothness, periodicity, and non-negativity properties.
   `convexComboScalar_nonneg` — properties of the scalar coefficient.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory
@@ -60,7 +60,7 @@ variable {n : ℕ}
 /-- The position-space Riemann-sum operator
     `r_M^φ u(x) = δⁿ ∑_z φ^per(x - z) · u_check(z)`,
     where `δ = 2π/M` and `u_check` is the continuous representative of `u`. -/
-def positionSpaceRiemann (n : ℕ) (φ : (Fin n → ℝ) → ℂ)
+@[expose] def positionSpaceRiemann (n : ℕ) (φ : (Fin n → ℝ) → ℂ)
     (u : TrigPolyDual n) (M : ℕ) (x : Fin n → ℝ) : ℂ :=
   let δ := (2 * Real.pi / (M : ℝ))
   ((δ ^ n : ℝ) : ℂ) * ∑ k : Fin n → Fin M,
@@ -219,7 +219,7 @@ lemma riemannSumDistrib_memSobolevDistrib {φ : (Fin n → ℝ) → ℂ}
     `f_k` is non-negative, smooth, and `2πℤⁿ`-periodic — yielding the
     scalar weights in the convex-combination approximation of smooth
     metrics. -/
-def convexComboScalar (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (M : ℕ)
+@[expose] def convexComboScalar (n : ℕ) (φ : (Fin n → ℝ) → ℂ) (M : ℕ)
     (k : Fin n → Fin M) (x : Fin n → ℝ) : ℝ :=
   (2 * Real.pi / (M : ℝ)) ^ n
     * (periodicExtension n φ (fun j => x j - meshPoint n M k j)).re

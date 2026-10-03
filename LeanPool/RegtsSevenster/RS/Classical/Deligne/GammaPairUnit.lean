@@ -28,7 +28,7 @@ module element on the odd-odd block braids `L` past `L`, which is
 `−1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

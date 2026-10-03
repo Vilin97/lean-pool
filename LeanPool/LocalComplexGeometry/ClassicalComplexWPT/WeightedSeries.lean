@@ -17,7 +17,7 @@ high shifts and low cuts have operator norm at most one, and evaluation on the
 unit polydisc is bounded by the `ℓ¹` norm.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped ENNReal NNReal Topology
@@ -45,7 +45,7 @@ section Convolution
 variable {A : Type*} [AddCommMonoid A] [Finset.HasAntidiagonal A]
 
 /-- Antidiagonal Cauchy product of two `ℓ¹` coefficient families. -/
-def convolutionFun (f g : L1Coeff A) (n : A) : ℂ :=
+@[expose] def convolutionFun (f g : L1Coeff A) (n : A) : ℂ :=
   ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2
 
 lemma summable_antidiagonal_norm_product (f g : L1Coeff A) :
@@ -67,7 +67,7 @@ lemma summable_norm_convolutionFun (f g : L1Coeff A) :
       exact norm_mul_le _ _
 
 /-- Antidiagonal convolution as an `ℓ¹` coefficient family. -/
-def convolution (f g : L1Coeff A) : L1Coeff A :=
+@[expose] def convolution (f g : L1Coeff A) : L1Coeff A :=
   ⟨convolutionFun f g, by
     apply memℓp_gen
     simpa using summable_norm_convolutionFun f g⟩
@@ -115,13 +115,13 @@ lemma convolution_smul_left (c : ℂ) (f g : L1Coeff A) :
     Finset.mul_sum]
 
 /-- Right convolution as a linear map. -/
-def convolutionRightLinear (g : L1Coeff A) : L1Coeff A →ₗ[ℂ] L1Coeff A where
+@[expose] def convolutionRightLinear (g : L1Coeff A) : L1Coeff A →ₗ[ℂ] L1Coeff A where
   toFun f := convolution f g
   map_add' f₁ f₂ := convolution_add_left f₁ f₂ g
   map_smul' c f := convolution_smul_left c f g
 
 /-- Right convolution as a continuous linear map. -/
-def convolutionRight (g : L1Coeff A) : L1Coeff A →L[ℂ] L1Coeff A :=
+@[expose] def convolutionRight (g : L1Coeff A) : L1Coeff A →L[ℂ] L1Coeff A :=
   (convolutionRightLinear g).mkContinuous ‖g‖ (fun f ↦ by
     change ‖convolution f g‖ ≤ ‖g‖ * ‖f‖
     simpa [mul_comm] using norm_convolution_le f g)
@@ -142,7 +142,7 @@ section DistinguishedShift
 variable {A : Type*}
 
 /-- Index map which discards the first `d` distinguished-variable coefficients. -/
-def highIndex (d : ℕ) : A × ℕ → A × ℕ := fun x ↦ (x.1, x.2 + d)
+@[expose] def highIndex (d : ℕ) : A × ℕ → A × ℕ := fun x ↦ (x.1, x.2 + d)
 
 lemma highIndex_injective (d : ℕ) : Function.Injective (highIndex (A := A) d) := by
   rintro ⟨a, n⟩ ⟨b, m⟩ h
@@ -150,7 +150,7 @@ lemma highIndex_injective (d : ℕ) : Function.Injective (highIndex (A := A) d) 
   exact ⟨h.1, Nat.add_right_cancel h.2⟩
 
 /-- Delete the first `d` distinguished-variable coefficient layers. -/
-def highShift (d : ℕ) (f : L1Coeff (A × ℕ)) : L1Coeff (A × ℕ) :=
+@[expose] def highShift (d : ℕ) (f : L1Coeff (A × ℕ)) : L1Coeff (A × ℕ) :=
   ⟨fun x ↦ f (highIndex d x), by
     apply memℓp_gen
     simpa [Function.comp_def] using
@@ -185,13 +185,13 @@ lemma highShift_smul (d : ℕ) (c : ℂ) (f : L1Coeff (A × ℕ)) :
   rfl
 
 /-- High shift as a complex-linear map. -/
-def highShiftLinear (d : ℕ) : L1Coeff (A × ℕ) →ₗ[ℂ] L1Coeff (A × ℕ) where
+@[expose] def highShiftLinear (d : ℕ) : L1Coeff (A × ℕ) →ₗ[ℂ] L1Coeff (A × ℕ) where
   toFun := highShift d
   map_add' := highShift_add d
   map_smul' := highShift_smul d
 
 /-- High shift as a contraction. -/
-def highShiftCLM (d : ℕ) : L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
+@[expose] def highShiftCLM (d : ℕ) : L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
   (highShiftLinear d).mkContinuous 1 (by
     intro f
     change ‖highShift d f‖ ≤ 1 * ‖f‖

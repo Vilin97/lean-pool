@@ -19,7 +19,7 @@ open region and a genuine local equality with the selected band field.
 The field itself is the existing coherent physical field, not a band sum.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

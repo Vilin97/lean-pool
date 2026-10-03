@@ -83,7 +83,7 @@ Nets are passed as functions `Fin k → Y` rather than as the `Finset` of
   [link](https://zbmath.org/3996455), 2.4 ([Pie87]).
 -/
 
-@[expose] public section
+public section
 
 universe u
 

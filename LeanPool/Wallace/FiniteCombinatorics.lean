@@ -32,7 +32,7 @@ The paper writes integer bounds as `|c| ≤ M`.  We use `Int.natAbs c ≤ M`, wh
 definitionally the corresponding natural-number inequality.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Set
@@ -50,7 +50,7 @@ variable {I : Type u} {T : Type v} [LinearOrder I]
 
 /-- The support condition in the triangular enumeration: every coordinate occurring in a term of
 the sequence lies strictly below its assigned index. -/
-def SupportedBelow (s : ℕ → I →₀ ℤ) (i : I) : Prop :=
+@[expose] def SupportedBelow (s : ℕ → I →₀ ℤ) (i : I) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
 end Triangular
@@ -61,7 +61,7 @@ variable {G : Type u} [AddCommGroup G]
 
 /-- A finite set is `M`-independent if every integer relation whose coefficients have absolute
 value at most `M` is trivial.  This is the paper's definition, specialized to a finite set. -/
-def BoundedIndependent (M : ℕ) (X : Finset G) : Prop :=
+@[expose] def BoundedIndependent (M : ℕ) (X : Finset G) : Prop :=
   ∀ c : G → ℤ, (∀ x ∈ X, Int.natAbs (c x) ≤ M) →
     (∑ x ∈ X, c x • x) = 0 → ∀ x ∈ X, c x = 0
 
@@ -275,7 +275,7 @@ end IntegerDependence
 section BoundedDeletion
 
 /-- A bounded relation using both the finite families `A` and `Y`. -/
-def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
+@[expose] def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
   ∃ (b c : G → ℤ),
     (∀ a ∈ A, Int.natAbs (b a) ≤ Q) ∧
     (∀ y ∈ Y, Int.natAbs (c y) ≤ Q) ∧
@@ -284,7 +284,7 @@ def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
       (∑ a ∈ A, b a • a) + ∑ y ∈ Y, c y • y = 0
 
 /-- No nontrivial relation of coefficient height at most `Q` uses both `A` and `Y`. -/
-def MixedRelationFree (Q : ℕ) (A Y : Finset G) : Prop :=
+@[expose] def MixedRelationFree (Q : ℕ) (A Y : Finset G) : Prop :=
   ¬ HasMixedRelation Q A Y
 
 theorem mixedRelationFree_empty (Q : ℕ) (A : Finset G) :

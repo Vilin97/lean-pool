@@ -21,7 +21,7 @@ membership in `codeReduct '' ModelsOf Θ`.  This freezes the PC-class interface 
 of López–Escobar's tree machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -31,7 +31,7 @@ variable {L : Language.{0, 0}} [L.IsRelational] [Countable (Σ l, L.Relations l)
 
 /-- The base embedding of `L` into the relationalized `graphLanguage (KLang L)`: functions are
 vacuous (`L` is relational), base relations go to their graph-language base image. -/
-def baseGraphEmb : L →ᴸ graphLanguage (KLang L) where
+@[expose] def baseGraphEmb : L →ᴸ graphLanguage (KLang L) where
   onFunction {_} f := isEmptyElim f
   onRelation {_} R := GraphRelation.base (Sum.inl R)
 

@@ -17,7 +17,7 @@ real-valued dimensions, teaching/eluder dimensions, SQ dimension,
 KL complexity, margin theory, covering numbers.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -154,7 +154,7 @@ noncomputable def FatShatteringDim (X : Type u) (C : ConceptClass X ℝ)
     pairwise small correlations under D. Captures the hardness of learning C
     using only statistical queries (expected values of functions of the sample).
     M-DefinitionRepair: added distribution parameter D (originally missing). -/
-noncomputable def SQDimension (X : Type u) [MeasurableSpace X]
+@[expose] noncomputable def SQDimension (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (τ : ℝ) : WithTop ℕ :=
   ⨆ (S : Finset (Concept X Bool))
     (_ : ↑S ⊆ C ∧ ∀ c₁ ∈ S, ∀ c₂ ∈ S, c₁ ≠ c₂ →
@@ -250,7 +250,7 @@ attribute [instance] CompressionSchemeWithInfo.infoFinite
     kernel size + number of side information states.
     (The paper uses k + log₂(|I|+1); we use the simpler k + |I| which is an
     upper bound and avoids importing Real.log.) -/
-noncomputable def CompressionSchemeWithInfo.size
+@[expose] noncomputable def CompressionSchemeWithInfo.size
     {X : Type u} {Y : Type v} {C : ConceptClass X Y}
     (cs : CompressionSchemeWithInfo X Y C) : ℕ :=
   cs.kernelSize + Fintype.card cs.Info

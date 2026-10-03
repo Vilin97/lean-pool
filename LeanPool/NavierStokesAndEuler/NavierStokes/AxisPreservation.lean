@@ -18,7 +18,7 @@ therefore preserves the zeroth potential's curl. No uniform radius in the
 stage number and no estimate on the final velocity are assumed.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.AxisPreservation

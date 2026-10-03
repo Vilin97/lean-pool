@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Exp -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -93,6 +93,7 @@ def _root_.LO.Arith.Exponential.Seqₘ (x y X Y : V) :
   ∃ u ≤ y ^ 2, u ≠ 2 ∧ PPow2 u ∧ ext u X = x ∧ ext u Y = y
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def Exponential (x y : V) :
     Prop :=
   (x = 0 ∧ y = 1) ∨ ∃ X ≤ y^4, ∃ Y ≤ y^4, Exponential.Seq₀ X Y ∧ Exponential.Seqₛ y X Y ∧

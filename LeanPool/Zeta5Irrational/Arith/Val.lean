@@ -22,7 +22,7 @@ import Mathlib.Tactic.Ring.Basic
 * `det_GV` : if `M i j` has Gauss valuation `≥ ρ i + κ j`, then `det M` has `≥ ∑ ρ + ∑ κ`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -31,7 +31,7 @@ namespace Zeta5Irrational
 variable {p : ℕ}
 
 /-- `v_p(q) ≥ r` (vacuous for `q = 0`). -/
-def VG (p : ℕ) (q : ℚ) (r : ℚ) : Prop :=
+@[expose] def VG (p : ℕ) (q : ℚ) (r : ℚ) : Prop :=
   q = 0 ∨ r ≤ (padicValRat p q : ℚ)
 
 namespace VG
@@ -150,7 +150,7 @@ lemma inv_nat [hp : Fact p.Prime] {j n : ℕ} (hj : 1 ≤ j) (hjn : j ≤ n) :
 end VG
 
 /-- Gauss valuation bound for polynomials in `X`. -/
-def GV (p : ℕ) (f : ℚ[X]) (r : ℚ) : Prop :=
+@[expose] def GV (p : ℕ) (f : ℚ[X]) (r : ℚ) : Prop :=
   ∀ n, VG p (f.coeff n) r
 
 namespace GV

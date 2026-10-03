@@ -19,7 +19,7 @@ These are used in the reverse direction of Li's criterion to turn a zero of a ho
 function into an unboundedness statement for its logarithmic derivative.
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 open Filter

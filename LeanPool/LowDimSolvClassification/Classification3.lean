@@ -12,7 +12,7 @@ import LeanPool.LowDimSolvClassification.LemmasDim3
 # LeanPool.LowDimSolvClassification.Classification3
 -/
 
-@[expose] public section
+public section
 
 open Module
 open Submodule
@@ -563,9 +563,9 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
       w ∈ commutator K (Hyperbolic K) := by
     have fe₁_repr := Basis.repr_fin_three Hyperbolic.stdBasis (f Family.e₁)
     rw [add_assoc, Hyperbolic.stdBasis₁, Hyperbolic.stdBasis₂, Hyperbolic.stdBasis₃] at fe₁_repr
-    use (Hyperbolic.stdBasis.repr (f Hyperbolic.e₁)) 0
-    use ((Hyperbolic.stdBasis.repr (f Hyperbolic.e₁)) 1 • Hyperbolic.e₂ +
-      (Hyperbolic.stdBasis.repr (f Hyperbolic.e₁)) 2 • Hyperbolic.e₃)
+    use (Hyperbolic.stdBasis.repr (f Family.e₁)) 0
+    use ((Hyperbolic.stdBasis.repr (f Family.e₁)) 1 • Hyperbolic.e₂ +
+      (Hyperbolic.stdBasis.repr (f Family.e₁)) 2 • Hyperbolic.e₃)
     constructor
     · assumption
     · rw [Hyperbolic.commutator_repr]

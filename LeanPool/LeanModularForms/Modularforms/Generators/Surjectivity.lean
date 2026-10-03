@@ -18,7 +18,7 @@ We prove that `evalE₄E₆` is surjective by showing each `DirectSum.of _ k f` 
 its range (strong induction on weight), then using the subalgebra closure of the range.
 -/
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral

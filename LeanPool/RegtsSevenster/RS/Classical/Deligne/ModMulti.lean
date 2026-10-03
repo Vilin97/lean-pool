@@ -62,7 +62,7 @@ is outside this module's scope; its substrate (the head modules,
 the concatenation map, and the slot relations) is complete.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -79,6 +79,7 @@ section ModList
 
 /-- The tensor fold of the underlying objects of a list of modules,
 folded to the right with the monoidal unit as seed. -/
+@[expose]
 def modList [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
     List (Mod D A) → D
   | [] => 𝟙_ D
@@ -97,6 +98,7 @@ def modList [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
 
 /-- Transport of the tensor fold along an equality of lists.  It is
 an `eqToHom`, so it composes and cancels by `eqToHom` simp lemmas. -/
+@[expose]
 def modListCast [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     {l₁ l₂ : List (Mod D A)} (h : l₁ = l₂) :
     modList A l₁ ⟶ modList A l₂ :=
@@ -139,6 +141,7 @@ section Slots
 
 /-- The relation object of a slot: the ambient fold with the monoid
 inserted between the two factors of the slot. -/
+@[expose]
 def modMultiMid [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
     List (Mod D A) → Mod D A → Mod D A →
     List (Mod D A) → D
@@ -162,6 +165,7 @@ def modMultiMid [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
 /-- Assemble a window morphism on `(M.X ⊗ A) ⊗ N.X` into a relation
 leg over a prefix: resolve the window, reassociate the second factor
 onto the suffix, and whisker through the prefix. -/
+@[expose]
 def modMultiLegOf [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (M N : Mod D A) (post : List (Mod D A))
     (w : (M.X ⊗ A) ⊗ N.X ⟶ M.X ⊗ N.X) :
@@ -189,6 +193,7 @@ def modMultiLegOf [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The first relation leg at a slot: act on the left factor of the
 window through the braided right action. -/
+@[expose]
 def modMultiLegM [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D]
     (pre : List (Mod D A)) (M N : Mod D A)
@@ -198,6 +203,7 @@ def modMultiLegM [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The second relation leg at a slot: associate and act on the
 right factor of the window. -/
+@[expose]
 def modMultiLegN [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (pre : List (Mod D A)) (M N : Mod D A)
     (post : List (Mod D A)) :
@@ -234,6 +240,7 @@ def ModSlot.consSlot [Category.{v} D] [MonoidalCategory D] {A : D} [MonObj A]
   ⟨P :: s.pre, s.fst, s.snd, s.post, congrArg (List.cons P) s.eq⟩
 
 /-- The list of all adjacent slots of a list of modules. -/
+@[expose]
 def modSlots [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
     (Xs : List (Mod D A)) → List (ModSlot Xs)
   | [] => []
@@ -339,6 +346,7 @@ section ModMulti
 coequalizer of the wide relation pair, identifying
 `(x·c) ⊗ y ~ x ⊗ (c·y)` in every adjacent slot simultaneously.  No
 binary module tensor product and no associativity enter. -/
+@[expose]
 noncomputable def modMulti
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [Preadditive D] [HasFiniteBiproducts D]
@@ -347,6 +355,7 @@ noncomputable def modMulti
   coequalizer (modMultiLegFst A Xs) (modMultiLegSnd A Xs)
 
 /-- The projection of the ambient fold onto the multi-tensor. -/
+@[expose]
 noncomputable def modMultiπ
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [Preadditive D] [HasFiniteBiproducts D]
@@ -455,6 +464,7 @@ is the empty biproduct, the legs agree, and the projection is an
 isomorphism. -/
 
 /-- On a slot-free list the projection is an isomorphism. -/
+@[expose]
 noncomputable def modMultiTriv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [Preadditive D] [HasFiniteBiproducts D]
@@ -480,6 +490,7 @@ noncomputable def modMultiNil
   modMultiTriv A (modSlots_nil A)
 
 /-- **The singleton multi-tensor is the module.** -/
+@[expose]
 noncomputable def modMultiSingle
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [Preadditive D] [HasFiniteBiproducts D]
@@ -520,6 +531,7 @@ def pairResolve
   X.X ◁ (ρ_ Y.X).hom
 
 /-- The inverse resolution: reinstate the unit seed. -/
+@[expose]
 def pairResolveInv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) : X.X ⊗ Y.X ⟶ modList A [X, Y] :=
@@ -547,12 +559,14 @@ lemma pairResolveInv_resolve
 
 /-- The window seed of the pair: the right unitor of the single
 relation object, retyped at `modMultiMid`. -/
+@[expose]
 def pairSeed
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) : modMultiMid A [] X Y [] ⟶ (X.X ⊗ A) ⊗ Y.X :=
   (ρ_ ((X.X ⊗ A) ⊗ Y.X)).hom
 
 /-- The inverse window seed of the pair. -/
+@[expose]
 def pairSeedInv
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : Mod D A)
     (Y : Mod D A) : (X.X ⊗ A) ⊗ Y.X ⟶ modMultiMid A [] X Y [] :=
@@ -657,6 +671,7 @@ lemma modTensorπ_pairInv
 /-- **The two-element multi-tensor is the binary module tensor
 product**: the one-slot wide presentation and the parallel-pair
 presentation coequalize the same relations. -/
+@[expose]
 noncomputable def modMultiPair
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [Preadditive D] [HasFiniteBiproducts D]
@@ -687,6 +702,7 @@ section Concat
 
 /-- Concatenation of tensor folds: the two-block fold reassociates
 onto the fold of the concatenated list. -/
+@[expose]
 def modListConcat [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
     (Xs Ys : List (Mod D A)) →
     (modList A Xs ⊗ modList A Ys ≅ modList A (Xs ++ Ys))
@@ -1213,6 +1229,7 @@ section HeadAction
 
 /-- The head action on the fold of a non-empty list: act on the
 head factor. -/
+@[expose]
 def modListHeadAct [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : Mod D A) (l : List (Mod D A)) :
     A ⊗ modList A (X :: l) ⟶ modList A (X :: l) :=
@@ -1386,6 +1403,7 @@ lemma modListHeadAct_slotwise
         h4).trans (Category.assoc _ _ _).symm)
 
 /-- **The head action on the multi-tensor**, by descent. -/
+@[expose]
 noncomputable def modMultiHeadAct
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] [Preadditive D]
@@ -1450,7 +1468,7 @@ lemma modMultiHeadAct_mul
   rw [reassoc_of% (modListHeadAct_mul A X l)]
 
 /-- The multi-tensor of a non-empty list is a module over `A`. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def modMultiModObj
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] [Preadditive D]
@@ -1464,6 +1482,7 @@ noncomputable def modMultiModObj
   mul_smul := modMultiHeadAct_mul A X l
 
 /-- The multi-tensor of a non-empty list, bundled as a module. -/
+@[expose]
 noncomputable def modMultiMod
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] [Preadditive D]

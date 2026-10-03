@@ -26,7 +26,7 @@ The resulting minimum is the cancellation factor used before interchanging
 the heat-time and spatial integrals.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -120,12 +120,12 @@ theorem cutoffSquareDifference_swap (φ : Space → ℝ) (x y : Space) :
   ring
 
 /-- The time-integrated kernel with cancellation already inserted. -/
-def cancelledTimeKernel (K : ℝ → Space → ℝ) (φ : Space → ℝ)
+@[expose] def cancelledTimeKernel (K : ℝ → Space → ℝ) (φ : Space → ℝ)
     (x y : Space) : ℝ :=
   ∫ s in Ioi (0 : ℝ), K s (x - y) * cutoffSquareDifference φ x y
 
 /-- The absolute time integral is used to justify the subsequent Fubini step. -/
-def absoluteCancelledTimeKernel (K : ℝ → Space → ℝ) (φ : Space → ℝ)
+@[expose] def absoluteCancelledTimeKernel (K : ℝ → Space → ℝ) (φ : Space → ℝ)
     (x y : Space) : ℝ :=
   ∫ s in Ioi (0 : ℝ), |K s (x - y) * cutoffSquareDifference φ x y|
 
@@ -236,7 +236,7 @@ coordinate Hessian.  The latter is proved to agree with the spatial derivatives
 used in the comparison argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -247,11 +247,11 @@ namespace NavierStokesR3.Comparison
 open ProblemStatement
 
 /-- The Euclidean heat kernel in three spatial dimensions. -/
-def heatKernel (s : ℝ) (z : Space) : ℝ :=
+@[expose] def heatKernel (s : ℝ) (z : Space) : ℝ :=
   (4 * Real.pi * s) ^ (-(3 / 2 : ℝ)) * Real.exp (-(‖z‖ ^ 2) / (4 * s))
 
 /-- The explicit coordinate Hessian of the Euclidean heat kernel. -/
-def heatKernelSecond (s : ℝ) (i j : Fin 3) (z : Space) : ℝ :=
+@[expose] def heatKernelSecond (s : ℝ) (i j : Fin 3) (z : Space) : ℝ :=
   (z i * z j / (4 * s ^ 2) - (if i = j then 1 else 0) / (2 * s)) *
     heatKernel s z
 

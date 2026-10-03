@@ -19,11 +19,12 @@ theorem.  The protected one-point extension and the transfinite construction
 are not asserted here.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
 /-- The `ℓ₁` distance on the real plane. -/
+@[expose]
 def l1Dist (x y : ℝ × ℝ) : ℝ := |x.1 - y.1| + |x.2 - y.2|
 
 /-- The bent line used as the seed of the construction in `paper1`. -/
@@ -33,6 +34,7 @@ noncomputable def bentMap (t : ℝ) : ℝ × ℝ :=
   else (1 - t, 1)
 
 /-- Preservation of all distances up to a fixed scale. -/
+@[expose]
 def PreservesUpTo {X Y : Type*} [PseudoMetricSpace X] [PseudoMetricSpace Y]
     (r : ℝ) (f : X → Y) : Prop :=
   ∀ ⦃x y : X⦄, dist x y ≤ r → dist (f x) (f y) = dist x y

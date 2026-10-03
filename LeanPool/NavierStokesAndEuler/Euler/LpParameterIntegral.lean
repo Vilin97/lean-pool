@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 The result is proved directly on raw jointly measurable representatives,
 without assuming a pre-existing Bochner path in the L² space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

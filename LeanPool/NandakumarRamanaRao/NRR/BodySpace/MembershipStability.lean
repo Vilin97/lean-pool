@@ -33,7 +33,7 @@ from a compact convex set by a unit normal, packaged as the auxiliary set lemmas
 `exists_separating_unit` and `mem_of_hausdorffDist_lt`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology
 open scoped RealInnerProductSpace

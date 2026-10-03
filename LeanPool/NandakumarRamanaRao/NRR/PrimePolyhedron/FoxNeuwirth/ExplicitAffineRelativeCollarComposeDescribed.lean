@@ -23,7 +23,7 @@ between two genuine endpoint stacks without assuming an unproved middle-prism ex
 lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -70,6 +70,7 @@ structure EndpointDescribedRelativeAffineCollar
 namespace EndpointDescribedRelativeAffineCollar
 
 /-- Forget only endpoint-facet exhaustiveness. -/
+@[expose]
 noncomputable def ofEndpointIdentified
     (C : EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ M₀ L₀) :
     EndpointDescribedRelativeAffineCollar hp N₀ N₁ M₀ L₀ where
@@ -315,6 +316,7 @@ theorem upperFacetOccurrenceVertex_eq
         congrArg rightPoint (hg i)
 
 /-- Composition preserving all endpoint data used by a later seam. -/
+@[expose]
 noncomputable def describedCollar :
     EndpointDescribedRelativeAffineCollar hp N₀ N₁ (max M₀ M₁) (L₀ + L₁ + 1) where
   toFoxNeuwirthRelativeAffineCollar := {
@@ -393,6 +395,7 @@ theorem upperFacet_exhaustive_of_right
 
 /-- Package a described composition as a genuine endpoint-identified collar when only the two
 external endpoint families are exhaustive. -/
+@[expose]
 noncomputable def endpointIdentifiedCollar
     (hC : ∀ s, C.cells.IsLowerFacet s → ∃ q, C.lowerFacet q = s)
     (hD : ∀ s, D.cells.IsUpperFacet s → ∃ q, D.upperFacet q = s) :

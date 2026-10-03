@@ -17,7 +17,7 @@ summand equals the (κ, o)-free normal form — the engine of Eulerian
 independence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

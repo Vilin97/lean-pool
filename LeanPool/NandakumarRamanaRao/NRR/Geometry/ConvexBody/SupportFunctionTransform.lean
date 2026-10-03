@@ -61,7 +61,7 @@ Only `SupportFunctionBasic` is imported; it transitively provides the whole `Con
 support-function, `AffineOps` and `LinearImage` API (and, through `Basic`, `import Mathlib`).
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -92,6 +92,7 @@ theorem supportFunction_scalePos_body
 /-- The **reflection** `-K` of a convex body through the origin, as a convex body with carrier
 `(-·) '' K = -K`. Implemented as the image under the negation linear isometry equivalence, so
 solidity is preserved. -/
+@[expose]
 def neg (K : ConvexBody E) : ConvexBody E where
   carrier := Neg.neg '' (K : Set E)
   convex' := by
@@ -140,6 +141,7 @@ theorem mem_neg (K : ConvexBody E) (x : E) :
 /-- The image of a convex body under a **linear isometry equivalence** `e : E ≃ₗᵢ[ℝ] F`, as a
 convex body with carrier `e '' K`. Implemented as the image under the underlying continuous
 linear equivalence `e.toContinuousLinearEquiv`. -/
+@[expose]
 def imageLinearIsometryEquiv (K : ConvexBody E) (e : E ≃ₗᵢ[ℝ] F) : ConvexBody F :=
   K.imageLinearEquiv e.toContinuousLinearEquiv
 

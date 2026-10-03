@@ -19,7 +19,7 @@ continuous-path space; no Markov or kernel assumption is used.  The deterministi
 versions are in `ContinuousPathShiftCompactTestConvergence.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -19,7 +19,7 @@ Boolean closure of insensitive families and the subspace-tiling results used in 
 increment argument.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -28,11 +28,11 @@ open scoped BigOperators
 namespace DensityHalesJewett
 
 /-- Two words are equivalent after freely interchanging the letters `i` and `j`. -/
-def InsensitiveEquiv {α ι : Type*} (i j : α) (x y : ι → α) : Prop :=
+@[expose] def InsensitiveEquiv {α ι : Type*} (i j : α) (x y : ι → α) : Prop :=
   ∀ a, a ≠ i → a ≠ j → ∀ c, (x c = a ↔ y c = a)
 
 /-- Membership in an `(i,j)`-insensitive family is constant on insensitive-equivalence classes. -/
-def IsInsensitive {α ι : Type*} (i j : α) (D : Finset (ι → α)) : Prop :=
+@[expose] def IsInsensitive {α ι : Type*} (i j : α) (D : Finset (ι → α)) : Prop :=
   ∀ ⦃x y⦄, InsensitiveEquiv i j x y → (x ∈ D ↔ y ∈ D)
 
 /-- Transport a word family along an equivalence of coordinate types. -/
@@ -84,14 +84,14 @@ lemma compl {α ι : Type*} [Fintype (ι → α)] [DecidableEq (ι → α)]
   simp only [mem_compl, hD hxy]
 
 /-- The part of `D` left uncovered by a set of subspaces. -/
-noncomputable def uncovered {η α ι : Type*} [Fintype (η → α)]
+@[expose] noncomputable def uncovered {η α ι : Type*} [Fintype (η → α)]
     [DecidableEq (ι → α)] (D : Finset (ι → α))
     (𝒱 : Set (Combinatorics.Subspace η α ι)) : Finset (ι → α) := by
   classical
   exact D.filter fun w ↦ ∀ V ∈ 𝒱, w ∉ Subspace.range V
 
 /-- The intersection of a finite indexed family of finite sets. -/
-noncomputable def intersection {r : ℕ} {X : Type*} [Fintype X]
+@[expose] noncomputable def intersection {r : ℕ} {X : Type*} [Fintype X]
     (D : Fin r → Finset X) : Finset X := by
   classical
   exact Finset.univ.inf D

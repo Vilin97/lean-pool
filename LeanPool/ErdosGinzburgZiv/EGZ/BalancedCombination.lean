@@ -22,7 +22,7 @@ case. The constants are chosen before the centrality parameter, as required
 by the paper's uniformity in the main proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -32,6 +32,7 @@ namespace BalancedCombination
 
 /-- Centrality for a finite weight on integer coordinate points. Testing
 closed halfspaces through the center suffices for all containing halfspaces. -/
+@[expose]
 def IsCentral {d : ℕ} (S : Finset (IntCoord d)) (w : S → ℝ)
     (θ : ℝ) (c : RealCoord d) : Prop := by
   classical
@@ -130,17 +131,21 @@ namespace BoundedConfiguration
 variable {d K W : ℕ}
 
 /-- Underlying finite lattice support of the bounded configuration. -/
+@[expose]
 def support (Q : BoundedConfiguration d K W) : Finset (IntCoord d) := Q.1.val
 
 /-- Real weights obtained from the bounded integer weights. -/
+@[expose]
 def weight (Q : BoundedConfiguration d K W) : Q.support → ℝ :=
   fun q ↦ (Q.2.1 q).val
 
 /-- Integral center encoded by the bounded configuration. -/
+@[expose]
 def center (Q : BoundedConfiguration d K W) : IntCoord d := Q.2.2.val
 
 /-- Geometric validity and positivity are checked before applying the
 balanced-combination statement. Centrality is deliberately absent. -/
+@[expose]
 def Valid (Q : BoundedConfiguration d K W) : Prop :=
   Q.support.Nonempty ∧ (∀ q, 0 < Q.weight q) ∧
     Q.center ∈ affineSpan ℤ (↑Q.support : Set (IntCoord d)) ∧
@@ -148,6 +153,7 @@ def Valid (Q : BoundedConfiguration d K W) : Prop :=
         (convexHull ℝ (IntCoord.real '' (↑Q.support : Set (IntCoord d))))
 
 /-- Construct balanced-combination data from a valid bounded configuration. -/
+@[expose]
 def data (Q : BoundedConfiguration d K W) (h : Q.Valid) : Data d where
   support := Q.support
   support_nonempty := h.1
@@ -158,6 +164,7 @@ def data (Q : BoundedConfiguration d K W) (h : Q.Valid) : Data d where
   center_mem_interior := h.2.2.2
 
 /-- Encode any support and positive bounded integer weights. -/
+@[expose]
 def ofWeights (S : Finset (IntCoord d)) (hS : S ⊆ latticeBox d K)
     (w : S → ℕ) (hw : ∀ q, w q ≤ W)
     (c : IntCoord d) (hc : c ∈ latticeBox d K) : BoundedConfiguration d K W :=
@@ -170,6 +177,7 @@ end BalancedCombination
 /-- The finite balanced convex-combination lemma in integer lattice
 coordinates. This is a proposition interface, not an axiom or a proved
 theorem. In particular, both `μ` and `N` are independent of `θ` and `n`. -/
+@[expose]
 def BalancedCombinationLemma : Prop :=
   ∀ (d : ℕ) (D : BalancedCombination.Data d) (ε : ℝ), 0 < ε →
     ∃ (μ : ℝ) (N : ℕ), 0 < μ ∧

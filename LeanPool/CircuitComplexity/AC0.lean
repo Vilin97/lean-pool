@@ -18,7 +18,7 @@ This module re-exports the AC0 definitions and main results.
   unbounded fan-in AND/OR)
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

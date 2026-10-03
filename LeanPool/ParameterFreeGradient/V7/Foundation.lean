@@ -15,7 +15,7 @@ This module contains transparent data carriers only.  It deliberately does
 not import any historical O3 result or concrete O3 dispatcher.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 
@@ -53,27 +53,29 @@ structure PairRunResult (d : ℕ) where
   trace : List (Observation d)
 
 /-- The number of oracle calls recorded after initialization. -/
-def PairRunResult.postInitializationCallCount (run : PairRunResult d) : ℕ :=
+@[expose] def PairRunResult.postInitializationCallCount (run : PairRunResult d) : ℕ :=
   run.trace.length
 
 /-- Every trace entry equals the exact oracle observation at its recorded point. -/
-def TraceExact (oracle : PairOracle d) (trace : List (Observation d)) : Prop :=
+@[expose] def TraceExact (oracle : PairOracle d) (trace : List (Observation d)) : Prop :=
   ∀ obs ∈ trace, obs = oracle.observe obs.point
 
 /-- The point occurs among the recorded oracle queries. -/
+@[expose]
 def WasQueried (trace : List (Observation d)) (x : Point d) : Prop :=
   ∃ obs ∈ trace, obs.point = x
 
 /-- The point was queried at the specified chronological trace index. -/
+@[expose]
 def QueriedAt (trace : List (Observation d)) (k : ℕ) (x : Point d) : Prop :=
   ∃ obs, (trace.drop k).head? = some obs ∧ obs.point = x
 
 /-- The returned point occurs in the run's query trace. -/
-def PairRunResult.returnedWasQueried (run : PairRunResult d) : Prop :=
+@[expose] def PairRunResult.returnedWasQueried (run : PairRunResult d) : Prop :=
   WasQueried run.trace run.returned
 
 /-- The numerical input viewed in the underlying causal machine interface. -/
-def MethodInput.toO3 (input : MethodInput d) : O3.MethodInput d :=
+@[expose] def MethodInput.toO3 (input : MethodInput d) : O3.MethodInput d :=
   ⟨input.p, input.eps, input.x0, input.z0, input.M0⟩
 
 /-- A single causal machine family selected before `p`, dimension, or
@@ -81,6 +83,7 @@ instance data.  Objective information reaches it only through `query`. -/
 abbrev RuntimeMethodFamily := (d : ℕ) → O3.FirstOrderMethod d
 
 /-- A finite-fuel execution of the underlying method produces the specified result and trace. -/
+@[expose]
 def Executes (method : O3.FirstOrderMethod d) (input : MethodInput d)
     (oracle : PairOracle d) (run : PairRunResult d) : Prop :=
   ∃ (fuel : ℕ) (oldRun : O3.RunResult d),
@@ -88,7 +91,7 @@ def Executes (method : O3.FirstOrderMethod d) (input : MethodInput d)
     run.returned = oldRun.returned ∧ run.trace = oldRun.queries
 
 /-- A supplied nondegenerate secant relation; discovery is outside the count. -/
-def SecantInitialization (input : MethodInput d) (oracle : PairOracle d) : Prop :=
+@[expose] def SecantInitialization (input : MethodInput d) (oracle : PairOracle d) : Prop :=
   input.z0 ≠ input.x0 ∧
   oracle.gradient input.z0 ≠ oracle.gradient input.x0 ∧
   input.M0 =

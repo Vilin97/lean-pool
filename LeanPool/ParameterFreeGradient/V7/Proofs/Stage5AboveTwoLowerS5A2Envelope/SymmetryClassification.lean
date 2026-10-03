@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2En
 Pairing-preserving `ℓp` symmetries preserve every coordinate-power norm.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
@@ -200,6 +200,7 @@ lemma signedLpSymmetry_column_abs_at_index {p : ℝ} (hp : 2 < p)
     (by linarith : p ≠ 0)).mp (by simpa [honepow] using hsingle)
 
 /-- The primal symmetry bundled as a real linear map. -/
+@[expose]
 def signedLpLinearMap {p : ℝ}
     (Q Qdual : Point d → Point d) (hsym : SignedLpSymmetry p Q Qdual) :
     Point d →ₗ[ℝ] Point d where

@@ -40,7 +40,7 @@ constructions used in the multi-dimensional Hermite expansion proof.
 - `schwartz_slice_partial_seminorm_bound` — seminorm bound for scalarized slices
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real SchwartzMap Measure
 open scoped ContDiff
@@ -61,7 +61,7 @@ namespace GaussianField
 /-- Embed `EuclideanSpace ℝ (Fin d) × ℝ` into `EuclideanSpace ℝ (Fin (d + 1))`
 by appending the real value as the last coordinate.
 -/
-def euclideanSnoc (d : ℕ) (y : EuclideanSpace ℝ (Fin d)) (t : ℝ) :
+@[expose] def euclideanSnoc (d : ℕ) (y : EuclideanSpace ℝ (Fin d)) (t : ℝ) :
     EuclideanSpace ℝ (Fin (d + 1)) :=
   (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y i) t)
 
@@ -195,6 +195,11 @@ noncomputable def schwartzSlice (d : ℕ)
   decay' := by
     exact (compCLMOfAntilipschitz ℝ (euclideanSnoc_hasTemperateGrowth d y)
       (euclideanSnoc_antilipschitz d y) f).decay'
+
+@[simp] theorem schwartzSlice_apply (d : ℕ)
+    (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
+    (y : EuclideanSpace ℝ (Fin (d + 1))) (t : ℝ) :
+    schwartzSlice d f y t = f (euclideanSnoc (d + 1) y t) := by rfl
 
 /-! ## A2: Partial Hermite coefficient is Schwartz
 
@@ -561,13 +566,13 @@ lemma schwartz_partial_hermiteCoeff_eq_1D (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (n : ℕ) (y : EuclideanSpace ℝ (Fin (d + 1))) :
     schwartzPartialHermiteCoeff d f n y =
-      hermiteCoeff1D n (schwartzSlice d f y) := rfl
+      hermiteCoeff1D n (schwartzSlice d f y) := by rfl
 
 -- A3c: Slice evaluation (definitionally true)
 lemma schwartz_slice_eq (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) (t : ℝ) :
-    schwartzSlice d f y t = f (euclideanSnoc (d + 1) y t) := rfl
+    schwartzSlice d f y t = f (euclideanSnoc (d + 1) y t) := by rfl
 
 /-- Fubini theorem for EuclideanSpace slicing.
 Isolates the measure equivalence between ℝ^{d+2} and ℝ^{d+1} × ℝ.

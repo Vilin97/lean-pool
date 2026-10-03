@@ -18,7 +18,7 @@ section
 /-! Spatial smoothness of the actual physical particle inverse follows
 from its inverse identities and the genuine determinant-one Jacobian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,7 +55,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,6 +130,7 @@ theorem curvature_eq (t : Icc (0 : ℝ) A.T) (x : Space) :
 
 /-- Restrict time, bundling `inverse`, `velocity`, `pressure`, `force` and the required
 compatibility proofs. -/
+@[expose]
 def restrictTime (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) :
     Evolution (A.restrictTime S hS hST) where
   inverse := E.inverse.restrictTime S hS hST

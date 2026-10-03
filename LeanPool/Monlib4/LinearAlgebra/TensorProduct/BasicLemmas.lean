@@ -13,7 +13,7 @@ import Mathlib.LinearAlgebra.Basis.VectorSpace
 # Some lemmas about `tensor_product`
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct BigOperators
 

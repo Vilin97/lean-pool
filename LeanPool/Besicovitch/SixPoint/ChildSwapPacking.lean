@@ -17,7 +17,7 @@ across the simultaneous swap of both colors, preserving its total radius, virtua
 score.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ def swapChildrenIndexEquiv : SixPointIndex ≃ SixPointIndex where
 
 /-- Child relabelling preserves the color of each index. -/
 @[simp] theorem swapChildrenIndexEquiv_color (index : SixPointIndex) :
-    (swapChildrenIndexEquiv index).1 = index.1 := rfl
+    (swapChildrenIndexEquiv index).1 = index.1 := by rfl
 
 @[simp] private theorem swapChildrenIndexEquiv_involution (index : SixPointIndex) :
     swapChildrenIndexEquiv (swapChildrenIndexEquiv index) = index := by

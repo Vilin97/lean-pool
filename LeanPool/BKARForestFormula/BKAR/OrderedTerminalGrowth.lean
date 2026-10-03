@@ -17,7 +17,7 @@ run the recursion behind the BKAR forest interpolation formula (see
 `BKAR.Formula`) to completion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,16 +47,19 @@ namespace TerminalGrowth
 variable {F : Forest V}
 
 /-- The ordered branch integral with an explicit outer bound. -/
+@[expose]
 def branchIntegralAux (data : TerminalGrowth F) (top : ℝ)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   data.growth.branchIntegralAux top u ρ
 
 /-- The ordered branch integral over the unit simplex. -/
+@[expose]
 def branchIntegral (data : TerminalGrowth F)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   data.branchIntegralAux 1 u ρ
 
 /-- The empty terminal branch attached to a forest with no active edges. -/
+@[expose]
 def ofActiveEdgesEqEmpty (F : Forest V) (hF : F.activeEdges = ∅) :
     TerminalGrowth F where
   order := []
@@ -65,6 +68,7 @@ def ofActiveEdgesEqEmpty (F : Forest V) (hF : F.activeEdges = ∅) :
   terminal_activeEdges_eq_empty := hF
 
 /-- Prepend a chosen active extension to a terminal branch from the extended forest. -/
+@[expose]
 def cons {e : Edge V} (h : ActiveExtension F e)
     (tail : TerminalGrowth h.forest) : TerminalGrowth F where
   order := e :: tail.order
@@ -115,6 +119,7 @@ theorem edges_eq_toFinset_union (data : TerminalGrowth F) :
   data.growth.edges_eq_toFinset_union
 
 /-- The finite forest index grown by a terminal branch. -/
+@[expose]
 def support (data : TerminalGrowth F) : ForestIndex V :=
   data.terminal.support
 
@@ -341,6 +346,7 @@ namespace ActiveTerminalBranchData
 variable {F : Forest V}
 
 /-- Forget terminality, retaining the active-branch data underneath. -/
+@[expose]
 def branchData (data : ActiveTerminalBranchData F) : ActiveBranchData F where
   extension := data.extension
   order := fun e => (data.tail e).order
@@ -348,16 +354,19 @@ def branchData (data : ActiveTerminalBranchData F) : ActiveBranchData F where
   tail := fun e => (data.tail e).growth
 
 /-- The full terminal branch selected over one active edge. -/
+@[expose]
 def growth (data : ActiveTerminalBranchData F)
     (e : {e // e ∈ F.activeEdges}) : TerminalGrowth F :=
   TerminalGrowth.cons (data.extension e) (data.tail e)
 
 /-- The finite active-edge sum of terminal branch integrals with an explicit bound. -/
+@[expose]
 def branchIntegralAux (data : ActiveTerminalBranchData F) (top : ℝ)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   data.branchData.branchIntegralAux top u ρ
 
 /-- The finite active-edge sum of terminal branch integrals over the unit simplex. -/
+@[expose]
 def branchIntegral (data : ActiveTerminalBranchData F)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   data.branchIntegralAux 1 u ρ
@@ -366,6 +375,7 @@ def branchIntegral (data : ActiveTerminalBranchData F)
 The active-terminal branch data whose selected branch over each active edge
 stops after the first extension.
 -/
+@[expose]
 def singleton
     (extensions : ∀ e : {e // e ∈ F.activeEdges},
       ActiveExtension F e.val)

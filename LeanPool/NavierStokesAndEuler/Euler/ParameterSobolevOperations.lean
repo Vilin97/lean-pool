@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! Same-radius operations on literal fixed-base ordered derivative blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

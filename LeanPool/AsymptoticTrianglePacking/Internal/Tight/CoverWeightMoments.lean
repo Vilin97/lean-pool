@@ -37,7 +37,7 @@ regime, which is precisely the concentration the residual degree cannot have.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -50,7 +50,7 @@ variable {V : Type*} [DecidableEq V] [Fintype V] {Ω : Type*} [MeasureSpace Ω]
 /-! ## The covering indicator -/
 
 /-- The indicator that `u` is covered by the round matching. -/
-noncomputable def coverInd {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def coverInd {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (u : V) (ω : Ω) : ℝ :=
   if u ∈ covered (retainedSet H ρ ω) then 1 else 0
 
@@ -114,7 +114,7 @@ theorem integrable_coverInd_mul {H : Finset (Finset V)} {p : ℝ}
 /-! ## The centred covering indicator -/
 
 /-- The centred covering indicator `1[u covered] − q_u`. -/
-noncomputable def coverIndC {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def coverIndC {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (u : V) (ω : Ω) : ℝ :=
   coverInd ρ u ω - coverRate H p u
 
@@ -189,7 +189,7 @@ noncomputable def lossWeight {H : Finset (Finset V)} {p : ℝ}
   ∑ u ∈ (Finset.univ : Finset V).erase v, (codegree H v u : ℝ) * coverInd ρ u ω
 
 /-- Its deterministic mean. -/
-noncomputable def lossWeightMean (H : Finset (Finset V)) (p : ℝ) (v : V) : ℝ :=
+@[expose] noncomputable def lossWeightMean (H : Finset (Finset V)) (p : ℝ) (v : V) : ℝ :=
   ∑ u ∈ (Finset.univ : Finset V).erase v, (codegree H v u : ℝ) * coverRate H p u
 
 omit [IsProbabilityMeasure (ℙ : Measure Ω)] in

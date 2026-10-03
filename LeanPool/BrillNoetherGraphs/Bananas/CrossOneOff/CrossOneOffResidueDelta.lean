@@ -21,7 +21,7 @@ difference is zero, not one; arithmetically that boundary is exactly the
 paper's `N = 2, b = 1` case.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

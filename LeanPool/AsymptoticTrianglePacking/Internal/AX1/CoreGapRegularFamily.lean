@@ -35,7 +35,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 
 /-! # CoreGapRemoval -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -185,7 +185,7 @@ end
 
 /-! # WeightedNibble -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -413,7 +413,7 @@ end
 
 /-! # CoreGapNearComplete -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Nibble.YusterE
 
@@ -658,7 +658,7 @@ end
 
 /-! # CoreGapRegularDegrees -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -667,6 +667,7 @@ namespace Nibble.AX1
 variable {V : Type} [Fintype V] [DecidableEq V]
 
 /-- The **triangle degree of an edge**: the number of triangles of `G` containing it. -/
+@[expose]
 def edgeTriangleDegree (G : SimpleGraph V) [DecidableRel G.Adj] (e : Finset V) : ℕ :=
   ((G.cliqueFinset 3).filter (fun t => e ⊆ t)).card
 
@@ -945,7 +946,7 @@ end
 
 /-! # CoreGapRegularDecomp -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -956,7 +957,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 /-! ### Colour classes of an edge colouring -/
 
 /-- The spanning subgraph of `G` consisting of the edges `e` with `P e`. -/
-def edgeSelect (G : SimpleGraph V) (P : Finset V → Prop) : SimpleGraph V where
+@[expose] def edgeSelect (G : SimpleGraph V) (P : Finset V → Prop) : SimpleGraph V where
   Adj x y := G.Adj x y ∧ P {x, y}
   symm := ⟨by
     rintro x y ⟨h1, h2⟩
@@ -976,6 +977,7 @@ theorem edgeSelect_le (G : SimpleGraph V) (P : Finset V → Prop) : edgeSelect G
   fun _ _ h => h.1
 
 /-- The `i`-th colour class of the edge colouring `col`. -/
+@[expose]
 noncomputable def colorPart (G : SimpleGraph V) (col : Finset V → ℕ) (i : ℕ) : SimpleGraph V :=
   edgeSelect G (fun e => col e = i)
 
@@ -1141,7 +1143,7 @@ def RegularDecompAt (ε μ η d₀ : ℝ) : Prop :=
         (((colorPart G col i).cliqueFinset 2).card : ℝ) / 3) + ε * (Fintype.card V : ℝ) ^ 2
 
 /-- **The structural residual**: a near-regular decomposition at every window of parameters. -/
-def RegularDecompResidual : Prop :=
+@[expose] def RegularDecompResidual : Prop :=
   ∀ ε : ℝ, 0 < ε → ∀ μ : ℝ, 0 < μ → ∀ η : ℝ, 0 < η → ∀ d₀ : ℝ, 0 < d₀ →
     RegularDecompAt ε μ η d₀
 
@@ -1267,7 +1269,7 @@ end
 
 /-! # CoreGapRegularFamily -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -1278,6 +1280,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 /-! ### Edge-disjoint families and the colouring they induce -/
 
 /-- The first `k` members of the family `H` are pairwise edge-disjoint. -/
+@[expose]
 def EdgeDisjointFamily (H : ℕ → SimpleGraph V) (k : ℕ) : Prop :=
   ∀ i < k, ∀ j < k, i ≠ j → ∀ x y, (H i).Adj x y → ¬ (H j).Adj x y
 
@@ -1341,6 +1344,7 @@ open Classical in
 subgraphs `H 0, …, H (k−1)` of `G`, each with near-regular triangle degrees at its own scale
 `d i ≥ d₀` (the lower bound being allowed to fail on at most an `η`-fraction of that member's
 edges), whose total edge count is at least `3ν₃*(G) − 3ε|V|²`. -/
+@[expose]
 def HasNearRegularFamily (G : SimpleGraph V) [DecidableRel G.Adj] (ε μ η d₀ : ℝ) : Prop :=
   ∃ (k : ℕ) (H : ℕ → SimpleGraph V) (d : ℕ → ℝ),
     (∀ i < k, H i ≤ G) ∧
@@ -1505,6 +1509,7 @@ triangle removal lemma have been applied: all pairs of parts carrying edges are 
 so the missing mathematics is the Haxell–Rödl splitting of each uniform pair among the cluster
 triples together with the sparsification making the triangle degrees of each triple concentrate at
 a common scale. -/
+@[expose]
 def ReducedFamilyAt (ε μ η d₀ ε₁ : ℝ) : Prop :=
   ∃ n₀ : ℕ, ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj]
     (P : Finpartition (univ : Finset V)),
@@ -1520,6 +1525,7 @@ def ReducedFamilyAt (ε μ η d₀ ε₁ : ℝ) : Prop :=
 /-- **The reduced residual**: at every window of parameters, *for some* regularity scale `ε₁` as
 small as one likes.  The scale is existentially quantified — the cleaning loss it causes is paid for
 out of the accuracy `ε` — so a proof is free to run the regularity lemma as finely as it needs. -/
+@[expose]
 def ReducedFamilyResidual : Prop :=
   ∀ ε : ℝ, 0 < ε → ∀ μ : ℝ, 0 < μ → ∀ η : ℝ, 0 < η → ∀ d₀ : ℝ, 0 < d₀ →
     ∃ ε₁ : ℝ, 0 < ε₁ ∧ ε₁ ≤ ε ∧ ε₁ ≤ 1 ∧ ReducedFamilyAt ε μ η d₀ ε₁

@@ -27,7 +27,7 @@ The time here is deterministic. The strong Markov property at a finite stopping 
 `Trajectory/FellerStoppingRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

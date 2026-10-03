@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.SuccPred
 
 /-! # D1 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -40,6 +40,7 @@ namespace Derivation2
 def cast {T : Theory L} (d : T ⊢₂ Γ) (h : Γ = Δ) : T ⊢₂ Δ := h ▸ d
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 noncomputable def _root_.LO.FirstOrder.Derivation2.Sequent.codeIn
     (Γ : Finset (SyntacticFormula L)) :
     V := ∑ φ ∈ Γ, exp (⌜φ⌝ : V)

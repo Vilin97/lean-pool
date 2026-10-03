@@ -14,7 +14,7 @@ carrier. Additivity and sublinearity are asserted only almost everywhere;
 no algebraic property of the definition outside L² is used.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 open scoped ENNReal

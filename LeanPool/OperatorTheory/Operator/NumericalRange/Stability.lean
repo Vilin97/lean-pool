@@ -16,7 +16,7 @@ numerical ranges mutually approximate one another to within the
 operator-norm distance.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

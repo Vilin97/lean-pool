@@ -19,7 +19,7 @@ This file also collects the basic normalization facts about the weight functions
 `Defs.lean`, which the later files use.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 
@@ -79,8 +79,10 @@ theorem Q_isLaw {ε r : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1) (hr0 : 0 ≤ r)
 /-- `R_p` is a law for `p ∈ [0,1]` (paper Proposition 5.12). -/
 theorem Rlaw_isLaw {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) : IsLaw (Rlaw p) := by
   refine ⟨fun w => ?_, ?_⟩
-  · have h1' : (0:ℝ) ≤ 1 - p := by linarith
-    refine add_nonneg (mul_nonneg h1' ?_) (mul_nonneg h0 ?_) <;> (split <;> norm_num)
+  · dsimp [Rlaw]
+    apply add_nonneg
+    · exact mul_nonneg (by linarith) (by split <;> norm_num)
+    · exact mul_nonneg h0 (by split <;> norm_num)
   · simp only [Rlaw, Fintype.sum_prod_type, Fintype.sum_bool]
     norm_num
 

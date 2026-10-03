@@ -18,14 +18,14 @@ space. The equivalence below identifies these coordinates with Mathlib's
 finitely supported simplex without changing their pointwise values.
 -/
 
-@[expose] public section
+public section
 
 open Set Convexity
 
 namespace SphereOddDegree
 
 /-- Nonnegative finite coordinate functions whose coordinates sum to one. -/
-def finiteSimplex (R X : Type*) [Semiring R] [PartialOrder R] [Fintype X] : Set (X → R) :=
+@[expose] def finiteSimplex (R X : Type*) [Semiring R] [PartialOrder R] [Fintype X] : Set (X → R) :=
   {f | (∀ x, 0 ≤ f x) ∧ ∑ x, f x = 1}
 
 namespace FiniteSimplex
@@ -46,7 +46,7 @@ instance : FunLike (finiteSimplex S X) X S where
   Subtype.ext h
 
 /-- Conversion to finitely supported weights preserves every coordinate. -/
-noncomputable def equivalence : finiteSimplex S X ≃ StdSimplex S X where
+@[expose] noncomputable def equivalence : finiteSimplex S X ≃ StdSimplex S X where
   toFun s :=
     { weights := Finsupp.equivFunOnFinite.symm s.val
       nonneg x := by simpa using s.property.1 x
@@ -93,7 +93,7 @@ theorem image_linearMap (f : X → Y) :
     exact Finset.sum_fiberwise Finset.univ f s
 
 /-- Push a finite simplex point forward by summing weights over each fiber. -/
-noncomputable def map (f : X → Y) (s : finiteSimplex S X) : finiteSimplex S Y :=
+@[expose] noncomputable def map (f : X → Y) (s : finiteSimplex S X) : finiteSimplex S Y :=
   ⟨FunOnFinite.linearMap S S f s, image_linearMap f ⟨s, s.property, rfl⟩⟩
 
 /-- The underlying coordinate function is the finite fiber-sum linear map. -/
@@ -139,7 +139,7 @@ variable {𝕜 X : Type*} [Field 𝕜] [LinearOrder 𝕜] [IsStrictOrderedRing �
   [Fintype X] [Nonempty X]
 
 /-- The finite simplex point assigning the same mass to every coordinate. -/
-def barycenter : finiteSimplex 𝕜 X :=
+@[expose] def barycenter : finiteSimplex 𝕜 X :=
   ⟨fun _ => (Fintype.card X : 𝕜)⁻¹, by simp [finiteSimplex]⟩
 
 /-- Every barycenter coordinate is the reciprocal of the number of vertices. -/
@@ -206,7 +206,7 @@ theorem bounded_finiteSimplex (X : Type*) [Fintype X] :
 
 
 /-- The one-dimensional finite coordinate simplex is the unit interval. -/
-noncomputable def FiniteSimplex.homeomorphUnitInterval :
+@[expose] noncomputable def FiniteSimplex.homeomorphUnitInterval :
     finiteSimplex ℝ (Fin 2) ≃ₜ unitInterval where
   toFun s := ⟨s.val 1, s.2.1 1, FiniteSimplex.le_one s 1⟩
   invFun t := ⟨![1 - t, t], Fin.forall_fin_two.2

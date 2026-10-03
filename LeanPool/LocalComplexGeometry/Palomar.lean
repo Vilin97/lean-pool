@@ -21,7 +21,7 @@ coordinate, quotient-basis, and local-biholomorphism structures remain in the
 proof development and are eliminated from the public statement surface.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

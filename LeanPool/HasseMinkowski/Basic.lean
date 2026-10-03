@@ -41,7 +41,7 @@ nondegeneracy with orthogonal sums and base change.  This file supplies them.
 * `Indefinite.isotropic`: an indefinite real form is isotropic (intermediate value theorem).
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 
@@ -55,7 +55,7 @@ variable {R M N : Type*} [CommSemiring R] [AddCommMonoid M] [AddCommMonoid N]
   [Module R M] [Module R N]
 
 /-- A quadratic map is *isotropic* if it vanishes on some nonzero vector. -/
-def Isotropic (Q : QuadraticMap R M N) : Prop := ∃ x, x ≠ 0 ∧ Q x = 0
+@[expose] def Isotropic (Q : QuadraticMap R M N) : Prop := ∃ x, x ≠ 0 ∧ Q x = 0
 
 -- Theorem: isotropy is exactly the negation of Mathlib's anisotropy.
 theorem isotropic_iff_not_anisotropic (Q : QuadraticMap R M N) :
@@ -86,7 +86,7 @@ variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 
 For `a ≠ 0` the restriction to nonzero vectors is immaterial, since `Q 0 = 0`; for `a = 0`
 it makes the notion agree with isotropy, as in the classical theory. -/
-def represents (Q : QuadraticForm R M) (a : R) : Prop := ∃ x, x ≠ 0 ∧ Q x = a
+@[expose] def represents (Q : QuadraticForm R M) (a : R) : Prop := ∃ x, x ≠ 0 ∧ Q x = a
 
 -- Theorem: a form represents `0` iff it is isotropic.
 theorem represents_zero_iff_isotropic (Q : QuadraticForm R M) :

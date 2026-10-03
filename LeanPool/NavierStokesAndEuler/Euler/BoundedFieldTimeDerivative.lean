@@ -18,7 +18,7 @@ both the field and prescribed derivative are continuous in that norm. The
 proof uses the Bochner fundamental theorem of calculus and bounded evaluation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpCylinderFullTime
 
 /-! Actual within-time differentiation and bounds for the constructed slow-curl path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable (P : ℝ) [Fact (0 < P)] (T : ℝ) (hT : 0 ≤ T)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
 
 /-- Derivative, given by `path P G₁ p + path P G f`. -/
-def derivative : C(Icc (0 : ℝ) T,LiftL2 P) := path P G₁ p + path P G f
+@[expose] def derivative : C(Icc (0 : ℝ) T,LiftL2 P) := path P G₁ p + path P G f
 
 include hG hG₁ hp hf in
 theorem derivative_orbit :

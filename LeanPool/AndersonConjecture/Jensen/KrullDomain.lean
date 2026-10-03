@@ -26,4 +26,4 @@ Index file for the `LeanPool.AndersonConjecture.Jensen.KrullDomain` directory:
 Krull domain intersection for the two-generator coprime case.
 -/
 
-@[expose] public section
+public section

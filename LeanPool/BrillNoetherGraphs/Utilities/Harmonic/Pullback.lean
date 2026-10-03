@@ -24,7 +24,7 @@ added, so the degree can be adjusted independently; only the final
 transmission-degree equation remains to be supplied.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs
 

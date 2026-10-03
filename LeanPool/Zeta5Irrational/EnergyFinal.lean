@@ -34,7 +34,7 @@ The paper uses `(120 + √2)h + 2h log K` for the lower-order terms and `ε = K�
 Here the different regularisation estimate and `ε = K⁻⁶` give `5h + 6h log K`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real Filter Topology Finset
 

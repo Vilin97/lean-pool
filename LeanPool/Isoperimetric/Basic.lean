@@ -15,7 +15,7 @@ powers of `ENNReal`-valued functions used throughout the formalization of the
 Prékopa–Leindler, Brunn–Minkowski, and isoperimetric inequalities.
 -/
 
-@[expose] public section
+public section
 
 /-- The sum of two bounded indexed suprema in `ENNReal` equals the
 indexed supremum of the pointwise sums. -/

@@ -11,7 +11,7 @@ public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Iter -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -20,7 +20,7 @@ namespace SphereOddDegree
 namespace AffineBarycentricSubdivision
 /-- The `N`-fold barycentric subdivision chain map `sd^N`, defined by
 `sd^0 = 𝟙` and `sd^(N+1) = sd ≫ sd^N`. -/
-noncomputable def barycentricSubdivisionIterChainMap
+@[expose] noncomputable def barycentricSubdivisionIterChainMap
     (R : Type) [CommRing R] (X : TopCat.{0}) (N : ℕ) :
     singularChainComplex R X ⟶ singularChainComplex R X :=
   match N with
@@ -37,7 +37,7 @@ theorem barycentricSubdivisionIterChainMap_succ
       = barycentricSubdivisionChainMap R X ≫ barycentricSubdivisionIterChainMap R X N := rfl
 
 /-- The degree-`n` component of `sd^N` as an `R`-linear map. -/
-noncomputable def barycentricSubdivisionIterLinearMap
+@[expose] noncomputable def barycentricSubdivisionIterLinearMap
     (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ) :
     singularChainGroup R X n →ₗ[R] singularChainGroup R X n :=
   ((barycentricSubdivisionIterChainMap R X N).f n).hom
@@ -69,7 +69,7 @@ theorem barycentricSubdivisionIterLinearMap_commutes_boundary
 /-- The explicit accumulated homotopy operator
 `H^(N) = Σ_{r=0}^{N-1} (sd^r) ∘ H`, defined by `H^(0) = 0` and
 `H^(N+1)_n = H^(N)_n + (sd^N)_{n+1} ∘ H_n`. -/
-noncomputable def barycentricSubdivisionIterHomotopyLinearMap
+@[expose] noncomputable def barycentricSubdivisionIterHomotopyLinearMap
     (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ) :
     singularChainGroup R X n →ₗ[R] singularChainGroup R X (n + 1) :=
   match N with
@@ -93,7 +93,7 @@ theorem barycentricSubdivisionIterHomotopyLinearMap_succ
 `0` it is `0`; in degree `m+1` it is `H^(N)_m (∂_m c)`. This matches the library's
 index convention `∂ : C_{n+1} → C_n = singularBoundary R X n`, exactly as
 `homotopyBoundaryTerm` did for the one-step formula. -/
-noncomputable def barycentricSubdivisionIterHomotopyBoundaryTerm
+@[expose] noncomputable def barycentricSubdivisionIterHomotopyBoundaryTerm
     (R : Type) [CommRing R] (X : TopCat.{0}) (N n : ℕ)
     (c : singularChainGroup R X n) : singularChainGroup R X n :=
   match n with

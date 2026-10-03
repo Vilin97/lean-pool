@@ -27,7 +27,7 @@ it is stated here generically for any symmetric `c : ℤ → ℝ` and instantiat
 `c = deltaN (euclNorm 2) α` (symmetric by `deltaN_neg`). Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.EuclideanRecords
 
@@ -99,6 +99,7 @@ theorem gapVal_eq_nnDistC (c : ℤ → ℝ) (hsymm : ∀ t : ℤ, c (-t) = c t) 
 
 /-- **The Euclidean torus nearest-neighbour distance** of `qα` among `{0, α, …, Nα}`, via
 `d_𝕋(iα, jα) = deltaN (euclNorm 2) α (i − j)`. -/
+@[expose]
 noncomputable def nnDistE (α : Fin 2 → ℝ) (N q : ℕ) : ℝ := nnDistC (deltaN (euclNorm 2) α) N q
 
 /-- **`g₂ ≤ 6` for the actual Euclidean nearest-neighbour distances on `𝕋²` (unconditional).** For

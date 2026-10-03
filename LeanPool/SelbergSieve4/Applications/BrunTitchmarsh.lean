@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SelbergSieve4.Applications.BrunTitchmarsh
 -/
 
-@[expose] public section
+public section
 
 open PrimeUpperBound
 open scoped Nat ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega

@@ -17,7 +17,7 @@ import Mathlib.Tactic.TautoSet
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 lemma diff_subset_union {I} {A B C : Set I} : A \ C ⊆ (A \ B) ∪ (B \ C) := by tauto_set

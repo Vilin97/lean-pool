@@ -18,7 +18,7 @@ contained in that of `A`.  Numerical radius is therefore monotone under
 isometric compression.
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap
 open scoped InnerProductSpace InnerProduct

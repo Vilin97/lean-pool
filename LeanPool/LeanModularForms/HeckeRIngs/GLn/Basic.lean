@@ -34,7 +34,7 @@ This is the foundation for the Hecke ring of GL_n following Shimura §3.2.
 * `posDetInt_le_commensurator` — `Δ ⊆ commensurator(SL_n(ℤ))`
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise Matrix.SpecialLinearGroup
 
@@ -64,7 +64,7 @@ section PosDetInt
 
 /-- An element of `GL_n(ℚ)` has integer matrix entries if its underlying matrix
     is the image of an integer matrix under `ℤ → ℚ`. -/
-def HasIntEntries (g : GL (Fin n) ℚ) : Prop :=
+@[expose] def HasIntEntries (g : GL (Fin n) ℚ) : Prop :=
   ∃ A : Matrix (Fin n) (Fin n) ℤ,
     (↑g : Matrix (Fin n) (Fin n) ℚ) = A.map (Int.cast : ℤ → ℚ)
 
@@ -99,7 +99,7 @@ private lemma intMat_map_mul (A B : Matrix (Fin n) (Fin n) ℤ) :
 
 /-- The submonoid of `GL_n(ℚ)` consisting of invertible matrices with integer entries
     and positive determinant. This is Shimura's `Δ`. -/
-noncomputable def posDetIntSubmonoid : Submonoid (GL (Fin n) ℚ) where
+@[expose] noncomputable def posDetIntSubmonoid : Submonoid (GL (Fin n) ℚ) where
   carrier := {g | HasIntEntries n g ∧ 0 < (↑g : Matrix (Fin n) (Fin n) ℚ).det}
   one_mem' := ⟨hasIntEntries_one n, by simp⟩
   mul_mem' := fun ⟨ha, hda⟩ ⟨hb, hdb⟩ =>
@@ -356,7 +356,7 @@ lemma posDetInt_le_commensurator :
 
 /-- The standard arithmetic group pair for number theory:
     `SL_n(ℤ) ≤ Δ ≤ commensurator(SL_n(ℤ))` in `GL_n(ℚ)`. -/
-noncomputable def GLPair : HeckePair (GL (Fin n) ℚ) where
+@[expose] noncomputable def GLPair : HeckePair (GL (Fin n) ℚ) where
   H := SLnZSubgroup n
   Δ := posDetIntSubmonoid n
   h₀ := SLnZ_le_posDetInt n

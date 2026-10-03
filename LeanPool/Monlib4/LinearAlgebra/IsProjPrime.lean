@@ -15,7 +15,7 @@ This file contains the definition of `linear_map.is_proj'` and lemmas relating t
 essentially `linear_map.is_proj` but as a linear map from `E` to `U`.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -29,7 +29,7 @@ def isProj' {p : E →ₗ[R] E} (hp : LinearMap.IsProj U p) : E →ₗ[R] U
   map_smul' r x := by simp_rw [LinearMap.map_smul, RingHom.id_apply, SetLike.mk_smul_mk]
 
 theorem isProj'_apply {p : E →ₗ[R] E} (hp : LinearMap.IsProj U p) (x : E) : ↑(isProj' hp x) = p x :=
-  rfl
+  by rfl
 
 theorem isProj'_eq {p : E →ₗ[R] E} (hp : LinearMap.IsProj U p) : ∀ x : U, isProj' hp (x : E) = x :=
   by
@@ -53,7 +53,7 @@ theorem orthogonalProjection_eq_linear_proj''
   Submodule.orthogonalProjectionOnto_apply_eq_projectionOnto x
 
 /-- The orthogonal projection onto a submodule as an endomorphism of the ambient space. -/
-noncomputable def orthogonalProjection'
+@[expose] noncomputable def orthogonalProjection'
     (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] : E →L[𝕜] E :=
   U.starProjection
 

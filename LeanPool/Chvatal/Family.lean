@@ -52,7 +52,7 @@ intersecting on an empty ground type, but is not antipodal. Accordingly,
 Proposition 4.1 is stated for a nonempty ground type.
 -/
 
-@[expose] public section
+public section
 
 namespace Chvatal
 
@@ -83,7 +83,7 @@ def IsMaximalIntersecting (B : Family ι) : Prop :=
 
 /-- The star `D_i = {S ∈ D : i ∈ S}` appearing in Chvátal's conjecture
 (Theorem 1.1 and Section 4). -/
-def star (D : Family ι) (i : ι) : Family ι := D.filter (i ∈ ·)
+@[expose] def star (D : Family ι) (i : ι) : Family ι := D.filter (i ∈ ·)
 
 /-- Membership in the star from Theorem 1.1. -/
 @[simp] theorem mem_star {D : Family ι} {i : ι} {S : Finset ι} :
@@ -148,7 +148,7 @@ Sections 1–3. -/
 
 /-- A family is antipodal when exactly one of each complementary pair belongs to
 it, as defined immediately before Proposition 4.1. -/
-def IsAntipodal (B : Family ι) : Prop := ∀ S : Finset ι, S ∈ B ↔ Sᶜ ∉ B
+@[expose] def IsAntipodal (B : Family ι) : Prop := ∀ S : Finset ι, S ∈ B ↔ Sᶜ ∉ B
 
 /-- Antipodality is the self-duality condition used in Section 4. -/
 theorem isAntipodal_iff_dual_eq (B : Family ι) : B.IsAntipodal ↔ B.dual = B := by

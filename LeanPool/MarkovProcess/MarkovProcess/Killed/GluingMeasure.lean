@@ -23,7 +23,7 @@ to all nonnegative measurable observables through the two potential measures.
 Monotonicity of the transported resolvents in the index is a bare hypothesis throughout.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

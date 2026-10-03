@@ -21,7 +21,7 @@ turn vertex equalities into slot equalities when the positions concerned are
 genuinely interior.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

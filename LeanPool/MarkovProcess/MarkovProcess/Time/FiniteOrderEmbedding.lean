@@ -17,7 +17,7 @@ the range of an order embedding. It is ordinary combinatorial infrastructure and
 probability-law or stochastic-process claim.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 

@@ -19,7 +19,7 @@ have a zero germ there.  Local smoothness of the actual raw primary is
 proved from the fixed prepared family before using that flatness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -210,6 +210,7 @@ theorem projectedPressure_contDiffAt (frequency : ℝ)
 end LocalAlgebra
 
 /-- Native Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (x.1.2.2, x.1.2.1)`. -/
+@[expose]
 noncomputable def nativeQ (h : ℝ) (x : Native) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (x.1.2.2, x.1.2.1)
 
@@ -336,6 +337,7 @@ structure ClosedMargins (vr vt : TorusInverse.Plane) where
       (fun k => PrimaryTargetBounds.actualTarget v p k)
 
 /-- Base velocity, constructed using `primaryVelocity`. -/
+@[expose]
 noncomputable def baseVelocity (hr0 : 0 < r0) (vr vt : TorusInverse.Plane) (j : Fin 2) :
     PrimaryGeometryAssembly.Index W a.N → Native → ProblemStatement.Space :=
   primaryVelocity (PrimaryGeometryAssembly.construction H v a hr0)
@@ -392,6 +394,7 @@ theorem bandPressure_eq_phasePressure (hr0 : 0 < r0) (vr vt : TorusInverse.Plane
 end Prepared
 
 /-- Radial interior, constructed using `WaveEdgeExtension.windowDomain`. -/
+@[expose]
 noncomputable def radialInterior {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : Set
     Native :=
   WaveEdgeExtension.windowDomain WaveEdgeExtension.nativeSlowDomain (WaveEdgeExtension.nativeRadius
@@ -809,6 +812,7 @@ theorem band_pair_band_edge_jets (M : ClosedMargins H v a vr vt)
 
 /-- The full open radial domain, preserving the original native growth
 function exactly and adding the flat band/transverse boundary points. -/
+@[expose]
 noncomputable def radialDomain : JetDomain (PrimaryGeometryAssembly.Index W a.N) Native where
   scale := (ActualSignedGeometry.nativeDomain H v a).scale
   carrier := fun _ => radialInterior W
@@ -882,17 +886,20 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Envelope, given by `pulseEnvelope (PrimaryGeometryAssembly.construction H v a hr0)
 (ActualSignedGeometry.pulseCoordinates H v a) j`. -/
+@[expose]
 noncomputable def envelope (j : Fin 2) : PrimaryGeometryAssembly.Index W a.N → Native → ℝ :=
   pulseEnvelope (PrimaryGeometryAssembly.construction H v a hr0)
     (ActualSignedGeometry.pulseCoordinates H v a) j
 
 /-- Velocity weight, constructed using `Real.sqrt`. -/
+@[expose]
 noncomputable def velocityWeight (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) (x : Native)
     : ℝ :=
   Real.sqrt (ChartScales.epsilon F.data.h (BaseChartJets.cellBand L)) *
     Real.sqrt (PrimaryTargetBounds.movingWeight W x.1) * envelope H v a hr0 j L x
 
 /-- Pressure weight, constructed using `ChartScales.epsilon`. -/
+@[expose]
 noncomputable def pressureWeight (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N) (x : Native)
     : ℝ :=
   ChartScales.epsilon F.data.h (BaseChartJets.cellBand L) *
@@ -971,6 +978,7 @@ theorem band_pair_native_regular (M : ClosedMargins H v a vr vt) (j : Fin 2)
 
 /-- Pre outer velocity, given by `(SquaredPartition.dyadicProfile (nativeQ F.data.h x) *
 PartitionedCovariance.cutoff r0 x.2.1) • baseVelocity H v a hr0 vr vt j L x`. -/
+@[expose]
 noncomputable def preOuterVelocity (j : Fin 2) (L : PrimaryGeometryAssembly.Index W a.N)
     (x : Native) : ProblemStatement.Space :=
   (SquaredPartition.dyadicProfile (nativeQ F.data.h x) * PartitionedCovariance.cutoff r0 x.2.1) •

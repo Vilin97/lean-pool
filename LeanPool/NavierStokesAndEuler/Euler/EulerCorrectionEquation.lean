@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevPressureResolvent
 /-! The constructed local viscous Euler correction satisfies the actual differential equation and
 pressure constraint. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ synthesis. -/
 local instance equationSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual non-pressure residual and nonlinear increment in equation (17). -/
-def CorrectionData.rawSource {q : ℕ} {T : Type*} [TopologicalSpace T]
+@[expose] def CorrectionData.rawSource {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T) (e : SobolevSpace period (q + 1)) :
         SobolevSpace period q :=
   (D.coefficients period hq).forcing t + (D.coefficients period hq).linear t e +
@@ -47,7 +47,7 @@ def CorrectionData.rawSource {q : ℕ} {T : Type*} [TopologicalSpace T]
 
 /-- The correction pressure is the actual unique coercive gradient solution with the sign of
 equation (17). -/
-def CorrectionData.pressure {q : ℕ} {T : Type*} [TopologicalSpace T]
+@[expose] def CorrectionData.pressure {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T) (e : SobolevSpace period (q + 1)) :
         SobolevSpace period q :=
   -(pressureSobolevOperator period (D.metric.jet t) D.κ D.direction D.coercivity D.coercivity_pos

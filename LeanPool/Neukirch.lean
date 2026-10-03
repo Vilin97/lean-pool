@@ -20,7 +20,7 @@ Tags: number-theory, algebraic-number-theory, ramification, galois-theory
 MSC: 11R32, 11S15, 13B25
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

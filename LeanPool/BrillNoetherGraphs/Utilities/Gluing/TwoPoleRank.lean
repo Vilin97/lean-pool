@@ -25,7 +25,7 @@ condition.  They also apply to every seam phase and to arbitrary factor
 divisors, not only canonical divisors or genus-two graphs.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 namespace TwoPole

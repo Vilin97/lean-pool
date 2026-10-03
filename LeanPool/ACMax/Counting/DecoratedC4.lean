@@ -16,7 +16,7 @@ The four-cycle itself misses the order-15 cut inequality by one edge; adjoining
 one parent, or two adjacent parents, supplies exactly the missing slack.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -32,7 +32,7 @@ summands are `−1` and `0`, so the canonical value depends on the
 boundary pairing and independence can only be asserted within one.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ open EdgeSubset
 
 /-- `cKappa` repaired along `cSquare` (`0 1 2 3`): the matching
 `0 ↔ 2`, `1 ↔ 3`, with chords `(4,7)` and `(5,6)`. -/
+@[expose]
 def lvKappa₂R : cSubset.RelTransitionSystem :=
   cKappa.repair 0 1 2 3 cV cSquare
 
@@ -51,6 +52,7 @@ def lvKappa₂R : cSubset.RelTransitionSystem :=
 
 /-- `cO` with the boundary chain `5–1–3–6` (flags `1, 3`)
 reversed — the chain carrying the colour `3`. -/
+@[expose]
 def lvO₂flip : lvKappa₂R.Orientation where
   isOut := ![false, false, true, true, false, false, false, false]
   match_flip := fun f hf => by

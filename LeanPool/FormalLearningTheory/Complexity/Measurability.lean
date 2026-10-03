@@ -47,7 +47,7 @@ Combined with `MeasurableBatchLearner` (Learner/Core.lean), these two typeclasse
 provide the complete regularity infrastructure for PAC learning proofs.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -174,7 +174,7 @@ Uses sSup over value sets (not ⨆) to avoid class-inference ambiguity.
 V-measurability is ONE-SIDED (not absolute) to match WellBehavedVC's event shape. -/
 
 /-- One-sided ghost-sample empirical error gap. -/
-noncomputable def oneSidedGhostGap
+@[expose] noncomputable def oneSidedGhostGap
     {X : Type u}
     (h : Concept X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
@@ -189,7 +189,7 @@ noncomputable def absGhostGap
   |oneSidedGhostGap h c m p|
 
 /-- Value set of one-sided ghost gaps over a concept class. -/
-noncomputable def ghostGapVals
+@[expose] noncomputable def ghostGapVals
     {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : Set ℝ :=
@@ -203,7 +203,7 @@ noncomputable def absGhostGapVals
   {r | ∃ h ∈ C, r = absGhostGap h c m p}
 
 /-- Supremum of one-sided ghost gaps over a concept class. -/
-noncomputable def ghostGapSup
+@[expose] noncomputable def ghostGapSup
     {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
@@ -225,6 +225,7 @@ because WellBehavedVC's event is one-sided.
 The paper-faithful ABSOLUTE version is KrappWirthVAbs, kept separately. -/
 
 /-- V-measurability (one-sided): the ghost gap sup map is measurable. -/
+@[expose]
 def KrappWirthV (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=
   ∀ (c : Concept X Bool) (m : ℕ),
@@ -396,6 +397,7 @@ the quantification to measurable targets. -/
     This is the correct target for the Borel-analytic positive bridge:
     Borel parameterization ⇒ analytic bad event ⇒ NullMeasurableSet,
     but only when c is measurable (so the ghost-gap map is measurable). -/
+@[expose]
 def WellBehavedVCMeasTarget
     (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=
@@ -412,6 +414,7 @@ def WellBehavedVCMeasTarget
 /-- OPEN QUESTION (measurable-target version):
     Does WellBehavedVCMeasTarget separate from KrappWirthWellBehaved?
     The Borel-analytic bridge (BorelAnalyticBridge.lean) closes this. -/
+@[expose]
 def KrappWirthSeparationMeasTarget : Prop :=
   ∃ (C : ConceptClass ℝ Bool),
     MeasurableHypotheses ℝ C ∧

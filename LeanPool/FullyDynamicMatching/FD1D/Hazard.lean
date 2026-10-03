@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Hazard -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -31,9 +31,11 @@ keeps all `q = N * h` propagation identities valid without a separate API.
 namespace LocalHazard
 
 /-- The parent count, coerced to `ℝ`. -/
+@[expose]
 def N (x y : ℕ) : ℝ := (x : ℝ) + (y : ℝ)
 
 /-- The denominator `D = 2xy + a(x+y)` at a nonempty parent. -/
+@[expose]
 def D (a : ℝ) (x y : ℕ) : ℝ :=
   2 * (x : ℝ) * (y : ℝ) + a * N x y
 
@@ -46,26 +48,33 @@ def dR (a : ℝ) (x y : ℕ) : ℝ :=
   if x + y = 0 then 1 / 2 else (y : ℝ) * ((x : ℝ) + a) / D a x y
 
 /-- The left child hazard, including the paper's extension at an empty node. -/
+@[expose]
 def hL (a h : ℝ) (x y : ℕ) : ℝ :=
   if x + y = 0 then h else h * N x y * ((y : ℝ) + a) / D a x y
 
 /-- The right child hazard, including the paper's extension at an empty node. -/
+@[expose]
 def hR (a h : ℝ) (x y : ℕ) : ℝ :=
   if x + y = 0 then h else h * N x y * ((x : ℝ) + a) / D a x y
 
 /-- Parent deletion mass under the invariant `q = N h`. -/
+@[expose]
 def q (h : ℝ) (x y : ℕ) : ℝ := N x y * h
 
 /-- Left deletion mass obtained from the policy split. -/
+@[expose]
 def qL (a h : ℝ) (x y : ℕ) : ℝ := q h x y * dL a x y
 
 /-- Right deletion mass obtained from the policy split. -/
+@[expose]
 def qR (a h : ℝ) (x y : ℕ) : ℝ := q h x y * dR a x y
 
 /-- The signed child-mass imbalance `b = q_L - q_R`. -/
+@[expose]
 def b (a h : ℝ) (x y : ℕ) : ℝ := qL a h x y - qR a h x y
 
 /-- The average hazard increment in `h_L = h + V + w`. -/
+@[expose]
 def V (a h : ℝ) (x y : ℕ) : ℝ := (hL a h x y + hR a h x y) / 2 - h
 
 /-- The antisymmetric hazard increment in `h_L = h + V + w`. -/
@@ -75,12 +84,15 @@ def w (a h : ℝ) (x y : ℕ) : ℝ := (hL a h x y - hR a h x y) / 2
 def rho (x y : ℕ) : ℝ := ((x : ℝ) - (y : ℝ)) / N x y
 
 /-- The parent discrepancy variable `t = (p-q)/a`. -/
+@[expose]
 def t (a p h : ℝ) (x y : ℕ) : ℝ := (p - q h x y) / a
 
 /-- The left child discrepancy variable. -/
+@[expose]
 def tL (a p h : ℝ) (x y : ℕ) : ℝ := (p / 2 - qL a h x y) / a
 
 /-- The right child discrepancy variable. -/
+@[expose]
 def tR (a p h : ℝ) (x y : ℕ) : ℝ := (p / 2 - qR a h x y) / a
 
 theorem N_nonneg (x y : ℕ) : 0 ≤ N x y := by

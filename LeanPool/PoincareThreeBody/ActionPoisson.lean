@@ -17,13 +17,13 @@ This file rewrites the physical Poisson bracket with the zero-mass Hamiltonian a
 the Kepler frequency with the two Poisson brackets against the Cartesian actions `(L,G)`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Canonical symplectic pairing of two phase covectors. -/
-def phasePoissonPairing
+@[expose] def phasePoissonPairing
     (first second : PhaseSpace →L[ℝ] ℝ) : ℝ :=
   first (coordinateVector 0) * second (coordinateVector 2) -
       first (coordinateVector 2) * second (coordinateVector 0) +
@@ -31,7 +31,7 @@ def phasePoissonPairing
       first (coordinateVector 3) * second (coordinateVector 1))
 
 /-- The canonical Hamiltonian vector associated with a phase covector. -/
-def phaseHamiltonianVector (covector : PhaseSpace →L[ℝ] ℝ) : PhaseSpace :=
+@[expose] def phaseHamiltonianVector (covector : PhaseSpace →L[ℝ] ℝ) : PhaseSpace :=
   ![covector (coordinateVector 2), covector (coordinateVector 3),
     -covector (coordinateVector 0), -covector (coordinateVector 1)]
 
@@ -98,7 +98,7 @@ lemma phasePoissonPairing_self (covector : PhaseSpace →L[ℝ] ℝ) :
   ring
 
 /-- A coordinate row of a phase-to-action linear map. -/
-def actionDerivativeCovector
+@[expose] def actionDerivativeCovector
     (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) (coordinate : Fin 2) :
     PhaseSpace →L[ℝ] ℝ :=
   (ContinuousLinearMap.proj coordinate).comp actionDerivative
@@ -111,7 +111,7 @@ lemma actionDerivativeCovector_apply
   rfl
 
 /-- The two Hamiltonian tangent vectors associated with the rows of an action derivative. -/
-def actionHamiltonianTangentMap
+@[expose] def actionHamiltonianTangentMap
     (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) : ActionSpace →ₗ[ℝ] PhaseSpace where
   toFun vector :=
     vector 0 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0) +
@@ -302,13 +302,13 @@ lemma poissonBracket_eq_phasePoissonPairing
   rfl
 
 /-- The two Poisson brackets of an observable with the reconstructed actions. -/
-noncomputable def actionPoissonVector
+@[expose] noncomputable def actionPoissonVector
     (f : PhaseSpace → ℝ) (state : PhaseSpace) : ActionSpace :=
   ![poissonBracket f cartesianFirstAction state,
     poissonBracket f cartesianAngularAction state]
 
 /-- Hamiltonian vector field of the angular action. -/
-def angularActionVectorField (state : PhaseSpace) : PhaseSpace :=
+@[expose] def angularActionVectorField (state : PhaseSpace) : PhaseSpace :=
   ![-state 1, state 0, -state 3, state 2]
 
 /-- Varying the negated rotation angle generates the angular-action Hamiltonian flow. -/

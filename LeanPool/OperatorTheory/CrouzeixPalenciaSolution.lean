@@ -21,7 +21,7 @@ The definitions abbreviate the proof library's public representations, and the
 theorems delegate to its proofs.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace Polynomial
 

@@ -18,7 +18,7 @@ estimation returns the basis index `j = s * (2^t / r)` exactly, and a classical
 gcd recovers the order.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -109,8 +109,7 @@ def modExpOracleTarget {N x t m : ℕ} (A : ModExpOracleAccess N x t m)
 @[simp]
 theorem modExpOracleTarget_val {N x t m : ℕ} (A : ModExpOracleAccess N x t m)
     (a : Fin (2 ^ t)) (y : Fin (2 ^ m)) :
-    (modExpOracleTarget A a y).val = Nat.xor y.val (x ^ a.val % N) :=
-  rfl
+    (modExpOracleTarget A a y).val = Nat.xor y.val (x ^ a.val % N) := by rfl
 
 /-- The basis permutation underlying the modular-exponentiation oracle. -/
 def modExpOraclePerm {N x t m : ℕ} (A : ModExpOracleAccess N x t m) :
@@ -125,13 +124,11 @@ def modExpOraclePerm {N x t m : ℕ} (A : ModExpOracleAccess N x t m) :
 @[simp]
 theorem modExpOraclePerm_apply {N x t m : ℕ} (A : ModExpOracleAccess N x t m)
     (p : Fin (2 ^ t) × Fin (2 ^ m)) :
-    modExpOraclePerm A p = (p.1, modExpOracleTarget A p.1 p.2) :=
-  rfl
+    modExpOraclePerm A p = (p.1, modExpOracleTarget A p.1 p.2) := by rfl
 
 @[simp]
 theorem modExpOraclePerm_symm {N x t m : ℕ} (A : ModExpOracleAccess N x t m) :
-    (modExpOraclePerm A).symm = modExpOraclePerm A :=
-  rfl
+    (modExpOraclePerm A).symm = modExpOraclePerm A := by rfl
 
 /-- The modular-exponentiation oracle gate in the public access model:
 `U_x |a,y> = |a, y xor (x^a mod N)>`. -/

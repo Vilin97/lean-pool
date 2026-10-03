@@ -16,7 +16,7 @@ the power integrals of its spatial slices.  Consequently a bound on the `L^P`
 norm of almost every spatial slice controls the full cylinder power integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

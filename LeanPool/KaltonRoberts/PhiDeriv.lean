@@ -26,7 +26,7 @@ First and second derivative computations for the entropy expressions defining
 the Phi functions.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

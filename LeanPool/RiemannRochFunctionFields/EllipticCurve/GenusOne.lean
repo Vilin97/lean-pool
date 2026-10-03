@@ -17,7 +17,7 @@ Weierstrass monomials in `L(n·∞)`.  The zero canonical divisor is then obtain
 arbitrary canonical divisor with its unique nonzero Riemann–Roch section.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

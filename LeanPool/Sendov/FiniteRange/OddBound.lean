@@ -31,7 +31,7 @@ Note that only `0 ≤ Q` is needed, never `Q ≤ 1`: the tangent-line inequality
 `(√q - w)² ≥ 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

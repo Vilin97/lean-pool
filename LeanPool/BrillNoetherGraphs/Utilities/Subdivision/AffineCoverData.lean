@@ -23,7 +23,7 @@ converted to the already-proved `CoverTree` checker.  An emitter may use any
 easy upper bound on tree depth, such as the number of witness commands.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.AffineCover
 open Utilities.Certificate
@@ -85,6 +85,7 @@ def ValidActive {m : ℕ}
 /-- Direct Boolean replay of list-backed data.  This deliberately fuses
 decoding and checking: generated trees remain ordinary lists all the way down,
 so kernel reduction never materializes a large function-backed tree. -/
+@[expose]
 def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : ℕ → CoverTreeData → Bool
@@ -111,12 +112,14 @@ def checkActive {m : ℕ}
 
 /-- Propositional validity of list-backed data, stated directly on the passive
 representation checked by the kernel. -/
+@[expose]
 def Valid {m : ℕ} (data : CoverTreeData) (fuel : ℕ)
     (base : List (AffineForm m))
     (cones : List (List (AffineForm m))) : Prop :=
   ValidActive cones base fuel data
 
 /-- Executable checker for list-backed covering data. -/
+@[expose]
 def check {m : ℕ} (data : CoverTreeData) (fuel : ℕ)
     (base : List (AffineForm m))
     (cones : List (List (AffineForm m))) : Bool :=
@@ -245,6 +248,7 @@ open Utilities.Certificate.AffineCover.Examples
 
 /-- List-backed spelling of the strict two-cone partition example from
 `AffineCover`.  Child-list position is the corresponding cone-form index. -/
+@[expose]
 def strictPartitionTreeData : CoverTreeData :=
   .branch 0 [
     .branch 1 [

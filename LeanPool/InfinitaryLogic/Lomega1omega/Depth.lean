@@ -21,7 +21,7 @@ structural subterm.  `depth` uses `Ordinal.iSup` at the countable connectives an
 by `castLE`, `relabel`, `openBounds`, and `subst`, with strict decrease into every connective.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

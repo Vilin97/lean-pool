@@ -41,7 +41,7 @@ with `R[T;T⁻¹]`.
   then `R[X]` is a UFD, proved by localizing at constant primes and using Nagata's theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

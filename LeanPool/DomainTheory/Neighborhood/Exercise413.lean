@@ -60,7 +60,7 @@ used in 4.1
 (`nat_iterate_unique`), closing the loop without circularity.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

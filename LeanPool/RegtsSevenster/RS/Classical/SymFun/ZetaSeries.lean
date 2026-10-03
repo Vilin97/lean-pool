@@ -19,7 +19,7 @@ for formal power series over ℂ and applies it to characterize the
 Newton series.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

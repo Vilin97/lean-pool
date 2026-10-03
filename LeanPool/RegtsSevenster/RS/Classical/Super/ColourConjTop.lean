@@ -17,7 +17,7 @@ Koszul-signed adjacent swap: coordinate evaluation of the braid
 on the block structure, one encoding context throughout.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

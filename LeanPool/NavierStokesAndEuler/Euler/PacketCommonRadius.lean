@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 /-! Monotone enlargement of the actual source budgets and a common external
 radius for the mean, forced transverse and nonlinear packet estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,6 +25,7 @@ variable {D : Data} {q : ℕ} {R : ℝ} (M : Budget D q R)
 
 /-- Only the three upper-radius guards change.  Every coefficient, inverse
 constant, and actual source solver is preserved. -/
+@[expose]
 def enlargeRadius (R' : ℝ) (h : R ≤ R') : Budget D q R' where
   toSobolevData := { M.toSobolevData with
     radius_budget := M.radius_budget.trans h
@@ -34,13 +35,13 @@ def enlargeRadius (R' : ℝ) (h : R ≤ R') : Budget D q R' where
   forcing_time := M.forcing_time
 
 @[simp] theorem enlargeRadius_velocityCost (R' : ℝ) (h : R ≤ R') :
-    (M.enlargeRadius R' h).velocityCost = M.velocityCost := rfl
+    (M.enlargeRadius R' h).velocityCost = M.velocityCost := by rfl
 
 @[simp] theorem enlargeRadius_derivativeCost (R' : ℝ) (h : R ≤ R') :
-    (M.enlargeRadius R' h).derivativeCost = M.derivativeCost := rfl
+    (M.enlargeRadius R' h).derivativeCost = M.derivativeCost := by rfl
 
 @[simp] theorem enlargeRadius_pressureGradientCost (R' : ℝ) (h : R ≤ R') :
-    (M.enlargeRadius R' h).pressureGradientCost = M.pressureGradientCost := rfl
+    (M.enlargeRadius R' h).pressureGradientCost = M.pressureGradientCost := by rfl
 
 end EulerMeanPacketProvider.Budget
 
@@ -54,6 +55,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 /-- The homogeneous propagator, time profile and all source constants are
 unchanged.  The five external-radius inequalities are monotone. -/
+@[expose]
 def Budget.enlargeRadius (L : Budget D τ hτ hτT B ι q) (R' : ℝ) (h : L.R ≤ R') :
     Budget D τ hτ hτT B ι q :=
   { L with
@@ -65,16 +67,17 @@ def Budget.enlargeRadius (L : Budget D τ hτ hτT B ι q) (R' : ℝ) (h : L.R �
     forward_radius := L.forward_radius.trans h }
 
 @[simp] theorem Budget.enlargeRadius_R (L : Budget D τ hτ hτT B ι q)
-    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).R = R' := rfl
+    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).R = R' := by rfl
 
 @[simp] theorem Budget.enlargeRadius_fullProfile (L : Budget D τ hτ hτT B ι q)
-    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).fullProfile = L.fullProfile := rfl
+    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).fullProfile = L.fullProfile := by rfl
 
 @[simp] theorem Budget.enlargeRadius_commonCost (L : Budget D τ hτ hτT B ι q)
-    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).commonCost = L.commonCost := rfl
+    (R' : ℝ) (h : L.R ≤ R') : (L.enlargeRadius R' h).commonCost = L.commonCost := by rfl
 
 /-- The normal inverse radius and the actual inverse-frame/strain jets stay
 fixed; only the target radius of their multiplier bound is enlarged. -/
+@[expose]
 def NormalBudget.enlargeRadius {R : ℝ} (N : NormalBudget D q R) (R' : ℝ) (h : R ≤ R') :
     NormalBudget D q R' := { N with radius := N.radius.trans h }
 
@@ -83,15 +86,15 @@ variable {P : ℝ}
 
 @[simp] theorem Budget.enlargeRadius_pressureAmplitude (R' : ℝ) (h : L.R ≤ R') :
     (L.enlargeRadius R' h).pressureAmplitude (P := P) (N.enlargeRadius R' h) =
-      L.pressureAmplitude (P := P) N := rfl
+      L.pressureAmplitude (P := P) N := by rfl
 
 @[simp] theorem Budget.enlargeRadius_correctorAmplitude (R' : ℝ) (h : L.R ≤ R') :
     (L.enlargeRadius R' h).correctorAmplitude (P := P) (N.enlargeRadius R' h) =
-      L.correctorAmplitude (P := P) N := rfl
+      L.correctorAmplitude (P := P) N := by rfl
 
 @[simp] theorem Budget.enlargeRadius_correctorTimeAmplitude (R' : ℝ) (h : L.R ≤ R') :
     (L.enlargeRadius R' h).correctorTimeAmplitude (P := P) (N.enlargeRadius R' h) =
-      L.correctorTimeAmplitude (P := P) N := rfl
+      L.correctorTimeAmplitude (P := P) N := by rfl
 
 end EulerTransversePacketJoin
 
@@ -147,7 +150,7 @@ variable {P Tc : ℝ} [Fact (0 < P)] {O : Operators} {C : CoefficientData P Tc O
 
 /-- Every summand is a fixed source quantity.  There is no occurrence of the
 new target radius, the forcing amplitude, or the recursive grade on the right. -/
-def commonRadius : ℝ :=
+@[expose] def commonRadius : ℝ :=
   Rm + L.R + CB.termCost + sobolevCoefficientRadius (Fin 4) CB.Rc +
     M.velocityCost + M.derivativeCost + M.pressureGradientCost +
       L.commonCost + L.correctorAmplitude (P := P) N +

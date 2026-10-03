@@ -19,4 +19,4 @@ public import LeanPool.OrderClosures.GaoLeungProblem.Iterations
 Compatibility umbrella for the paper-ordered Gao--Leung formalization.
 -/
 
-@[expose] public section
+public section

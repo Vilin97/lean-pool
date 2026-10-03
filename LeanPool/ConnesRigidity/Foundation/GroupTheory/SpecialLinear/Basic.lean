@@ -15,7 +15,7 @@ import Mathlib.Data.Finsupp.Encodable
 # The special-linear carrier in Zhou's construction
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace SpecialLinear
@@ -43,6 +43,7 @@ noncomputable instance : Countable SL3 := by
   infer_instance
 
 /-- Countable discrete acting-group carrier. Paper: §§4, 5. -/
+@[expose]
 noncomputable def sl3Group : CountableDiscreteGroup where
   Carrier := SL3
   group := inferInstance

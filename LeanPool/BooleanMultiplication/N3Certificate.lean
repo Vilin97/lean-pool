@@ -11,7 +11,7 @@ public import LeanPool.BooleanMultiplication.SmallCases
 # N3Certificate for unrestricted Boolean polynomial multiplication
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul.N3Certificate
 
@@ -31,46 +31,46 @@ theorem six_eq_zero_f2 : (6 : F2) = 0 := by decide
 theorem eight_eq_zero_f2 : (8 : F2) = 0 := by decide
 
 /-- A bilinear coordinate product from two rational-basis coefficient vectors. -/
-def ab (a b : Fin 10 -> F2) (i j : Fin 10) : F2 := a i * b j
+@[expose] def ab (a b : Fin 10 -> F2) (i j : Fin 10) : F2 := a i * b j
 
 /-- The product coefficient at the squarefree monomial `{0, 1, 4}`. -/
-def c3 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def c3 (a b : Fin 10 -> F2) : F2 :=
   ab a b 1 9 + ab a b 2 9 + ab a b 9 1 + ab a b 9 2
 
 /-- The product coefficient at the squarefree monomial `{0, 4, 5}`. -/
-def c20 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def c20 (a b : Fin 10 -> F2) : F2 :=
   ab a b 5 9 + ab a b 6 9 + ab a b 9 5 + ab a b 9 6
 
 /-- The product coefficient at the squarefree monomial `{0, 1}`. -/
-def c25 (a b : Fin 10 -> F2) : F2 := ab a b 1 2 + ab a b 2 1
+@[expose] def c25 (a b : Fin 10 -> F2) : F2 := ab a b 1 2 + ab a b 2 1
 /-- The product coefficient at the squarefree monomial `{4, 5}`. -/
-def c30 (a b : Fin 10 -> F2) : F2 := ab a b 5 6 + ab a b 6 5
+@[expose] def c30 (a b : Fin 10 -> F2) : F2 := ab a b 5 6 + ab a b 6 5
 
 /-- Sum of product coefficients at `{0, 4}` and `{1, 3}`. -/
-def c31 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def c31 (a b : Fin 10 -> F2) : F2 :=
   ab a b 1 5 + ab a b 1 9 + ab a b 2 4 + ab a b 2 9 +
   ab a b 4 2 + ab a b 4 9 + ab a b 5 1 + ab a b 5 9 +
   ab a b 9 1 + ab a b 9 2 + ab a b 9 4 + ab a b 9 5
 
 /-- Sum of product coefficients at `{0, 5}` and `{1, 4}`. -/
-def c32 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def c32 (a b : Fin 10 -> F2) : F2 :=
   ab a b 1 6 + ab a b 1 9 + ab a b 2 5 + ab a b 2 9 +
   ab a b 5 2 + ab a b 5 9 + ab a b 6 1 + ab a b 6 9 +
   ab a b 9 1 + ab a b 9 2 + ab a b 9 5 + ab a b 9 6
 
 /-- Sum of product coefficients at `{1, 5}` and `{2, 4}`. -/
-def c34 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def c34 (a b : Fin 10 -> F2) : F2 :=
   ab a b 2 6 + ab a b 2 9 + ab a b 3 5 + ab a b 3 9 +
   ab a b 5 3 + ab a b 5 9 + ab a b 6 2 + ab a b 6 9 +
   ab a b 9 2 + ab a b 9 3 + ab a b 9 5 + ab a b 9 6
 
 /-- The first target-coordinate obstruction, detected at `{0, 4}` and `{0, 5}`. -/
-def g0 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def g0 (a b : Fin 10 -> F2) : F2 :=
   ab a b 1 5 + ab a b 1 6 + ab a b 5 1 + ab a b 5 9 +
   ab a b 6 1 + ab a b 6 9 + ab a b 9 5 + ab a b 9 6
 
 /-- The second target-coordinate obstruction, detected at `{0, 5}` and `{1, 5}`. -/
-def g1 (a b : Fin 10 -> F2) : F2 :=
+@[expose] def g1 (a b : Fin 10 -> F2) : F2 :=
   ab a b 1 6 + ab a b 1 9 + ab a b 2 6 + ab a b 2 9 +
   ab a b 6 1 + ab a b 6 2 + ab a b 9 1 + ab a b 9 2
 

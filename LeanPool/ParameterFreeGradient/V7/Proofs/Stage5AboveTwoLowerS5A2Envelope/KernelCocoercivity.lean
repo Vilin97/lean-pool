@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 A positive semidefinite Hessian bound yields cocoercivity of the kernel gradient.
 -/
 
-@[expose] public section
+public section
 
 open scoped Interval
 

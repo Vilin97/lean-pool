@@ -27,14 +27,14 @@ partial sums `Q k = ∑_{j<k} a j` (so `Q (k+n) = Q k + 1`). A shift `i` is *goo
 over `[0,n)`. The count `#level-canonical = C(N,d-1)/d` will follow (`a_k = 1 - (level counts)`).
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits.Cycle
 
 variable {n : ℕ}
 
 /-- Partial sums of `a`. -/
-def Q (a : ℕ → ℤ) (k : ℕ) : ℤ := ∑ j ∈ Finset.range k, a j
+@[expose] def Q (a : ℕ → ℤ) (k : ℕ) : ℤ := ∑ j ∈ Finset.range k, a j
 
 lemma Q_zero (a : ℕ → ℤ) : Q a 0 = 0 := by simp [Q]
 
@@ -62,7 +62,7 @@ lemma Q_periodic (a : ℕ → ℤ) (hper : ∀ k, a (k + n) = a k) (hsum : Q a n
 
 /-- Shift `i` is *good*: every partial sum of the shifted sequence is positive, i.e.
     `Q i` is a strict minimum of `Q` over the half-open window `(i, i+n)`. -/
-def Good (n : ℕ) (a : ℕ → ℤ) (i : ℕ) : Prop := ∀ t, i < t → t < i + n → Q a i < Q a t
+@[expose] def Good (n : ℕ) (a : ℕ → ℤ) (i : ℕ) : Prop := ∀ t, i < t → t < i + n → Q a i < Q a t
 
 /-- **The cycle lemma (Raney), sum = 1.** For a period-`n` integer sequence with period-sum `1`,
     exactly one shift `i ∈ [0,n)` is good. The witness is the *last* argmin of `Q` over `[0,n)`. -/

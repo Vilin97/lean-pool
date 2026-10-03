@@ -22,4 +22,4 @@ Tags: riemann-roch, function-fields, algebraic-curves, weil-differentials, ellip
 MSC: 14H05, 11R58, 14H52
 -/
 
-@[expose] public section
+public section

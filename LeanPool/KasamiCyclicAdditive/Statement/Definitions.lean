@@ -23,7 +23,7 @@ agreement with the independently structured literature specification was
 checked in the source project before this import.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -32,20 +32,21 @@ namespace KasamiCyclicAdditive
 variable {K : Type*} [Field K] [Fintype K] [DecidableEq K]
 
 /-- The Kasami exponent `4^k - 2^k + 1`. -/
-def kasamiExponent (k : ℕ) : ℕ := 4 ^ k - 2 ^ k + 1
+@[expose] def kasamiExponent (k : ℕ) : ℕ := 4 ^ k - 2 ^ k + 1
 
 /-- The normalized derivative of the Kasami monomial in direction `1`:
 `δ(b) = (b+1)^d + b^d + 1`. -/
-def kasamiDerivative (k : ℕ) (b : K) : K :=
+@[expose] def kasamiDerivative (k : ℕ) (b : K) : K :=
   (b + 1) ^ kasamiExponent k + b ^ kasamiExponent k + 1
 
 /-- The image `Δ` of the normalized Kasami derivative. -/
+@[expose]
 def derivativeImage (k : ℕ) (K : Type*) [Field K] [Fintype K] [DecidableEq K] : Finset K :=
   Finset.image (kasamiDerivative k) Finset.univ
 
 /-- The number of triples `(x,y,z) ∈ Δ³` satisfying
 `v₁ x + v₂ y + (v₁+v₂) z = 0`. -/
-def coefficientTripleCount (k : ℕ) (v₁ v₂ : K) : ℕ :=
+@[expose] def coefficientTripleCount (k : ℕ) (v₁ v₂ : K) : ℕ :=
   (((derivativeImage k K) ×ˢ (derivativeImage k K) ×ˢ (derivativeImage k K)).filter
     (fun p => v₁ * p.1 + v₂ * p.2.1 + (v₁ + v₂) * p.2.2 = 0)).card
 

@@ -22,7 +22,7 @@ of the test function; the velocities and pressures need no support or decay
 assumptions for the identities in this module.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -46,7 +46,7 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
 
 /-- The ordinary scalar Laplacian, with the same coordinate directions as the
 vector Laplacian in the Navier--Stokes residual. -/
-def scalarLaplacian (f : Space → ℝ) (x : Space) : ℝ :=
+@[expose] def scalarLaplacian (f : Space → ℝ) (x : Space) : ℝ :=
   ∑ i : Fin 3, spatialPartial i (spatialPartial i f) x
 
 theorem scalarLaplacian_contDiff {f : Space → ℝ} (hf : ContDiff ℝ ∞ f) :

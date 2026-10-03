@@ -17,7 +17,7 @@ it equal to the same zero-axis primitive in every containing gauge.  All
 moment estimates below use the local physical domain, not global slow data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ abbrev ScalarField (D : Type) := MeanIncrementBounds.Field D
 
 /-- Positive domain, given by `DefectIncrementBounds.positiveDomain ∩
 PhysicalMeanDomain.slowDomain U`. -/
-noncomputable def positiveDomain (U : Set P) : Set (Point P) :=
+@[expose] noncomputable def positiveDomain (U : Set P) : Set (Point P) :=
   DefectIncrementBounds.positiveDomain ∩ PhysicalMeanDomain.slowDomain U
 
 omit [NormedSpace ℝ P] in
@@ -413,6 +413,7 @@ theorem remainders_mem_local (i : Fin 3) :
 end IntegratedBounds
 
 /-- Is slow on, given by `∀ n R p, p ∈ U → ∀ Y, f n (R, (p, Y)) = slowSlice f n p R`. -/
+@[expose]
 noncomputable def IsSlowOn (U : Set P) (f : ScalarField (Point P)) : Prop :=
   ∀ n R p, p ∈ U → ∀ Y, f n (R, (p, Y)) = slowSlice f n p R
 

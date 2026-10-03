@@ -13,10 +13,11 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Tactic.Commutes
 
 /-! Hermitian matrices, their algebraic structure, eigenspaces, and tensor products. -/
 
-@[expose] public section
+public section
 
 /-- The type of Hermitian matrices, as a `Subtype`. Equivalent to a `Matrix n n α` bundled
 with the fact that `Matrix.IsHermitian`. -/
+@[expose]
 def HermitianMat (n : Type*) (α : Type*) [AddGroup α] [StarAddMonoid α] :=
   (selfAdjoint (Matrix n n α) : Type (max u_1 u_2))
 
@@ -34,7 +35,7 @@ theorem eq_IsHermitian : HermitianMat n α  = { m : Matrix n n α // m.IsHermiti
   rfl
 
 /-- The underlying matrix of a Hermitian matrix. -/
-@[coe] def mat : HermitianMat n α → Matrix n n α :=
+@[coe, expose] def mat : HermitianMat n α → Matrix n n α :=
   Subtype.val
 
 instance : Coe (HermitianMat n α) (Matrix n n α) := ⟨mat⟩
@@ -206,7 +207,7 @@ instance : Module R (HermitianMat n α) :=
 variable [TopologicalSpace α]
 
 /-- The projection from HermitianMat to Matrix, as a continuous linear map. -/
-@[simps]
+@[simps, expose]
 def matₗ : HermitianMat n α →L[R] Matrix n n α where
   toFun := mat
   cont := by fun_prop
@@ -363,6 +364,7 @@ square, this would apply to any `Semigroup`+`StarMul` (as proved by `IsSelfAdjoi
 us conjugate to other sizes too, as is done in e.g. Kraus operators. That is, it's a
     _heterogeneous_ conjguation.
 -/
+@[expose]
 def conj {m} (B : Matrix m n α) : HermitianMat n α →+ HermitianMat m α where
   toFun A :=
     ⟨B * A.mat * B.conjTranspose, by
@@ -450,6 +452,7 @@ instance [i : Nonempty n] : FaithfulSMul ℝ (HermitianMat n 𝕜) where
     simpa [RCLike.smul_re, -mat_apply] using congr(RCLike.re ($(h 1).val i.some i.some))
 
 /-- The continuous linear map associated with a Hermitian matrix. -/
+@[expose]
 noncomputable def lin : EuclideanSpace 𝕜 n →L[𝕜] EuclideanSpace 𝕜 n where
   toLinearMap := A.mat.toEuclideanLin
   cont := LinearMap.continuous_of_finiteDimensional _
@@ -472,6 +475,7 @@ noncomputable def eigenspace (μ : 𝕜) : Submodule 𝕜 (EuclideanSpace 𝕜 n
 
 /-- The kernel of a Hermitian matrix `A` as a submodule of Euclidean space, defined by
 `LinearMap.ker A.toMat.toEuclideanLin`. Equivalently, the zero-eigenspace. -/
+@[expose]
 noncomputable def ker : Submodule 𝕜 (EuclideanSpace 𝕜 n) :=
   LinearMap.ker A.lin.toLinearMap
 
@@ -496,6 +500,7 @@ theorem ker_pos_smul {c : ℝ} (hc : c ≠ 0) : (c • A).ker = A.ker := by
 
 /-- The support of a Hermitian matrix `A` as a submodule of Euclidean space, defined by
 `LinearMap.range A.toMat.toEuclideanLin`. Equivalently, the sum of all nonzero eigenspaces. -/
+@[expose]
 noncomputable def support : Submodule 𝕜 (EuclideanSpace 𝕜 n) :=
   LinearMap.range A.lin.toLinearMap
 
@@ -530,6 +535,7 @@ variable {𝕜 : Type*} [RCLike 𝕜] [DecidableEq n]
 
 variable (𝕜) in
 /-- The Hermitian diagonal matrix whose diagonal is the given real-valued function. -/
+@[expose]
 def diagonal (f : n → ℝ) : HermitianMat n 𝕜 :=
   ⟨Matrix.diagonal (f ·),
     by simp [selfAdjoint.mem_iff, Matrix.star_eq_conjTranspose, Matrix.diagonal_conjTranspose]⟩

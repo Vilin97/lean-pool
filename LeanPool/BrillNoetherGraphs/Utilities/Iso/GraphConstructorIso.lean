@@ -18,7 +18,7 @@ uses its presentation interface so that the dependent subtype of unmarked
 right vertices never has to be relabelled directly.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -29,6 +29,7 @@ namespace CFGraphIso
 variable {G : CFGraph.{u}} {G' : CFGraph.{v}}
   {H : CFGraph.{w}} {H' : CFGraph.{x}}
 /-- Relabel both factors of a separating bridge. -/
+@[expose]
 def bridgeGraphCongr (φ : CFGraphIso G G') (ψ : CFGraphIso H H')
     (a : G.V) (b : H.V) :
     CFGraphIso (bridgeGraph G H a b)
@@ -71,6 +72,7 @@ def bridgeGraphCongr (φ : CFGraphIso G G') (ψ : CFGraphIso H H')
     (bridgeGraphCongr φ ψ a b).vertexEquiv (Sum.inr y) =
       Sum.inr (ψ.vertexEquiv y) := rfl
 /-- A presentation of the relabelled wedge by the original two factors. -/
+@[expose]
 noncomputable def vertexWedgeCongrPresentation
     (φ : CFGraphIso G G') (ψ : CFGraphIso H H')
     (a : G.V) (b : H.V) :
@@ -120,6 +122,7 @@ noncomputable def vertexWedgeCongrPresentation
     simp [φ.vertexEquiv.apply_eq_iff_eq, ψ.map_num_edges]
 
 /-- Relabel both factors of a vertex wedge. -/
+@[expose]
 noncomputable def vertexWedgeCongr (φ : CFGraphIso G G') (ψ : CFGraphIso H H')
     (a : G.V) (b : H.V) :
     CFGraphIso (vertexWedge G H a b)

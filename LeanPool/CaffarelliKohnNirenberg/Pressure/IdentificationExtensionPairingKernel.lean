@@ -27,7 +27,7 @@ derivative of `ψ`.  The translation identities `spatialDeriv_sub_const` and
 derivative, and the kernel vanishes outside its support ball.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric
 open CKN.Foundation.Parabolic

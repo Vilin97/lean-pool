@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseForwardCoefficientGevrey
 enlargement obey the same fixed polynomial envelope as the joined branch.
 The homogeneous growth constant is arbitrary and remains an input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -126,6 +126,7 @@ variable {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}
 
 /-- Canonical radius, given by `EulerPacketForwardCommonRadius.commonRadius LM L N BC (wordCost
 (Fin 4) 6 δ*‖ξ‖) (wordRadius (Fin 4) δ)`. -/
+@[expose]
 def canonicalRadius : ℝ :=
   EulerPacketForwardCommonRadius.commonRadius LM L N BC
     (wordCost (Fin 4) 6 δ*‖ξ‖) (wordRadius (Fin 4) δ)

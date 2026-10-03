@@ -30,7 +30,7 @@ proof (files `Dist/*`). No `ℚ_p` constants are needed. Write
   `p`-integral value (`VG_far`). So the error on one pole has valuation `≥ -2` (`VG_Err_Ej`).
 * `v_p(c_j) ≥ β + 1` (`VG_res`, and `p ∣ j` when `j` is in the class `0`). -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

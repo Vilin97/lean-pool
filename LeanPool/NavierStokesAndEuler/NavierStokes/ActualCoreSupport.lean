@@ -19,7 +19,7 @@ part.  No continuity of the totalized similarity coordinate at time zero is
 used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,11 +37,13 @@ abbrev Point := LocalSignedRequest.Point
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
 /-- Radial ratio, given by `x.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.2.1`. -/
+@[expose]
 noncomputable def radialRatio (x : Point) : ℝ :=
   x.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.2.1
 
 /-- This is the original label's native similarity scale, not the scale in
 the current chart. -/
+@[expose]
 noncomputable def nativeQ {B N0 : ℕ} (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   SimilarityHomogeneity.chartQ ActualPrimary.h
     (ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x))

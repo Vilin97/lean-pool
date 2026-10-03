@@ -24,7 +24,7 @@ identities are proved for genuine variable families and transferred
 to arbitrary prospective power sums.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -29,7 +29,7 @@ scaled copy receives the monogon, while the other child fills the collar between
 the full teardrop.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -242,6 +242,7 @@ theorem im_le_chordHeight (z : PolygonCell 2) :
 
 /-- The lower unit-circle point on the vertical chord through a digon point, squared so that the
 two chord endpoints sweep the teardrop boundary once. -/
+@[expose]
 noncomputable def collarCircleValue (z : PolygonCell 2) : ℂ :=
   ((z.val.re : ℂ) - (chordHeight z : ℂ) * Complex.I) ^ 2
 
@@ -534,6 +535,7 @@ abbrev BaseChildPair :=
   DiskSquare.ChildPair 0 1
 
 /-- Map both children into their complementary regions of the teardrop. -/
+@[expose]
 noncomputable def baseChildPairMap : BaseChildPair → Teardrop
   | .inl z => ⟨monogonMap z, monogonMap_mem_teardrop z⟩
   | .inr z => ⟨collarMap z, collarMap_mem_teardrop z⟩
@@ -579,6 +581,7 @@ theorem baseChildPairMap_respects
   | trans _ _ _ _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
 /-- The continuous analytic map induced on the one-sided-degenerate child quotient. -/
+@[expose]
 noncomputable def baseChildGluingMap :
     C(DiskSquare.ParamChildGluing 0 1, Teardrop) where
   toFun :=
@@ -658,7 +661,7 @@ theorem collarCircleValue_eq_of_collarMap_eq
     hzw
 
 /-- The lower unit-circle representatives used by the squaring map. -/
-noncomputable def lowerChordValue (z : PolygonCell 2) : ℂ :=
+@[expose] noncomputable def lowerChordValue (z : PolygonCell 2) : ℂ :=
   (z.val.re : ℂ) - (chordHeight z : ℂ) * Complex.I
 
 theorem collarCircleValue_eq_lowerChordValue_sq
@@ -1365,6 +1368,7 @@ theorem baseChildGluingMap_surjective :
       rw [hw, hscale]
 
 /-- A monogon glued along its entire side to one side of a digon is a closed disk. -/
+@[expose]
 noncomputable def baseChildGluingHomeomorph :
     DiskSquare.ParamChildGluing 0 1 ≃ₜ Teardrop := by
   let e : DiskSquare.ParamChildGluing 0 1 ≃ Teardrop :=
@@ -1749,6 +1753,7 @@ theorem sourceCellHomeomorph_side
 
 /-- Simultaneously straighten a one-sided-degenerate child pair to the base monogon--digon
 pair. -/
+@[expose]
 noncomputable def childPairBaseHomeomorph
     (r : ℕ) (hr : 0 < r) :
     DiskSquare.ChildPair 0 r ≃ₜ BaseChildPair :=
@@ -1861,6 +1866,7 @@ theorem childPairBase_eqvGen_iff
 
 /-- The arbitrary one-sided-degenerate child quotient is identified with the base
 monogon--digon quotient. -/
+@[expose]
 noncomputable def childGluingBaseHomeomorph
     (r : ℕ) (hr : 0 < r) :
     DiskSquare.ParamChildGluing 0 r ≃ₜ

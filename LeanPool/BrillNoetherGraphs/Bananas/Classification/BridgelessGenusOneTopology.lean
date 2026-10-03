@@ -16,7 +16,7 @@ two-regular.  This is the numerical cycle property needed by an explicit
 cycle-presentation construction.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

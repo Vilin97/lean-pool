@@ -31,7 +31,7 @@ cutoff integrals converge along dyadic subsequences.
     integral
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval
@@ -304,7 +304,7 @@ lemma exists_delta_for_error_bound {γ : ℝ → ℂ}
     hγ_cont_deriv ((1 / 2) ^ n) (by positivity)
 
 /-- An auxiliary summable subsequence used in the step-bound estimates. -/
-def summableSubseqAux {γ : ℝ → ℂ} {t₀ : ℝ}
+@[expose] def summableSubseqAux {γ : ℝ → ℂ} {t₀ : ℝ}
     {L : ℂ} (hL : L ≠ 0)
     (hγ_hasderiv : HasDerivAt γ L t₀)
     (hγ_cont_deriv : ContinuousAt (deriv γ) t₀)
@@ -326,7 +326,7 @@ lemma summableSubseqAux_zero {γ : ℝ → ℂ}
       hγ_cont_deriv δ₀ 0 =
       min δ₀ ((exists_delta_for_error_bound hL
         hγ_hasderiv hγ_cont_deriv 0).choose) /
-        2 := rfl
+        2 := by rfl
 
 lemma summableSubseqAux_succ {γ : ℝ → ℂ}
     {t₀ : ℝ} {L : ℂ} (hL : L ≠ 0)
@@ -339,7 +339,7 @@ lemma summableSubseqAux_succ {γ : ℝ → ℂ}
       (exists_delta_for_error_bound hL hγ_hasderiv
         hγ_cont_deriv m).choose
     ε (n + 1) =
-      min (ε n / 2) (δ (n + 1)) / 2 := rfl
+      min (ε n / 2) (δ (n + 1)) / 2 := by rfl
 
 lemma summableSubseqAux_pos {γ : ℝ → ℂ}
     {t₀ : ℝ} {L : ℂ} (hL : L ≠ 0)

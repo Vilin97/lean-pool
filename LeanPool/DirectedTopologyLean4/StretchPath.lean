@@ -14,7 +14,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.StretchPath
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains definitions about stretching a (directed) path in `I` in two ways:
@@ -37,7 +37,7 @@ lemma double_mem_I_of_bounded {t₀ t₁ : I} (t : I) (γ : Dipath t₀ t₁) (h
 
 /-- Stretch a path whose image lies in `[0, 1/2]` to a path on the full unit interval by doubling
 all parameter values. -/
-def stretchUpPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Path
+@[expose] def stretchUpPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Path
   (⟨2 * ↑t₀, by { rw [←γ.source']; exact double_mem_I_of_bounded 0 γ ht₁ }⟩ : I)
   ⟨2 * ↑t₁, double_mem_I ht₁⟩ where
     toFun := fun t => ⟨2 * (γ t), double_mem_I_of_bounded t γ ht₁⟩
@@ -54,7 +54,7 @@ lemma isDipath_stretch_up {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t�
 
 /-- The dipath obtained by stretching a dipath whose image lies in `[0, 1/2]` to the full unit
 interval. -/
-def stretchUp {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Dipath
+@[expose] def stretchUp {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Dipath
   (⟨2 * ↑t₀, by { rw [←γ.source']; exact double_mem_I_of_bounded 0 γ ht₁ }⟩ : I)
   ⟨2 * ↑t₁, double_mem_I ht₁⟩ where
     toPath := stretchUpPath γ ht₁
@@ -68,7 +68,7 @@ lemma double_sub_one_mem_I_of_bounded {t₀ t₁ : I} (t : I) (γ : Dipath t₀ 
 
 /-- Stretch a path whose image lies in `[1/2, 1]` to a path on the full unit interval by mapping
 each parameter `s` to `2s - 1`. -/
-def stretchDownPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Path
+@[expose] def stretchDownPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Path
   (⟨2 * ↑t₀ - 1, double_sub_one_mem_I ht₀⟩ : I)
   ⟨2 * ↑t₁ - 1, by { rw [←γ.target']; exact double_sub_one_mem_I_of_bounded 1 γ ht₀ }⟩ where
     toFun := fun t => ⟨2 * (γ t) - 1, double_sub_one_mem_I_of_bounded t γ ht₀⟩
@@ -85,7 +85,7 @@ lemma isDipath_stretch_down {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2�
 
 /-- The dipath obtained by stretching a dipath whose image lies in `[1/2, 1]` to the full unit
 interval. -/
-def stretchDown {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Dipath
+@[expose] def stretchDown {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Dipath
   (⟨2 * ↑t₀ - 1, double_sub_one_mem_I ht₀⟩ : I)
   ⟨2 * ↑t₁ - 1, by { rw [←γ.target']; exact double_sub_one_mem_I_of_bounded 1 γ ht₀ }⟩ where
     toPath := stretchDownPath γ ht₀

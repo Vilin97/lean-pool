@@ -20,7 +20,7 @@ preservation; eventual target recovery and injectivity of the earlier stages
 prove injectivity of the completed map.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -66,6 +66,7 @@ abbrev Target := NormedDirectLimit.CompletedCarrier N eN
 
 /-- The continuous extension to completed limits of the compatible nonexpansive stage
 maps. -/
+@[expose]
 noncomputable def limitMap :
     Source M eM → Target N eN :=
   CompletedLimitMap.completedMap M N eM eN V
@@ -198,6 +199,7 @@ theorem eventualRecovery_of_bounded_lt
   exact boundedRecovery a x ha
 
 /-- The completed directed limit is another protected stage. -/
+@[expose]
 noncomputable def toProtectedStage {r : ℝ}
     (stageInjective : ∀ i, Function.Injective (V i))
     (stagePreserves : ∀ i, PreservesUpTo r (V i))
@@ -238,6 +240,7 @@ noncomputable def toProtectedStageOfBounded {r L : ℝ} (hL : 0 < L)
       hL boundedRecovery)
 
 /-- Version of `toProtectedStage` for an open uniform recovery band. -/
+@[expose]
 noncomputable def toProtectedStageOfBoundedLt {r L : ℝ} (hL : 0 < L)
     (stageInjective : ∀ i, Function.Injective (V i))
     (stagePreserves : ∀ i, PreservesUpTo r (V i))

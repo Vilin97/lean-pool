@@ -35,7 +35,7 @@ Throughout `hδ2 : ∀ v, 2 ≤ G.degree v`.  A directed edge is the `(penultima
   walks is exactly `D = ∑ v, deg v` — the normalization the weighted AM–GM (W7) consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

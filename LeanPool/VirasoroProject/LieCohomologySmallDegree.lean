@@ -48,7 +48,7 @@ Lie algebra, cohomology
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -289,20 +289,22 @@ section LieTwoCoboundary
 variable {𝕜 𝓰 𝓪}
 
 /-- A Lie algebra 1-cochain determines a bilinear map via the differential. -/
-def _root_.VirasoroProject.LieOneCochain.bdry' (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdry'
+    (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun X ↦ β ∘ₗ LieAlgebra.bracketHom 𝕜 𝓰 X
   map_add' X₁ X₂ := by ext; simp
   map_smul' c X := by ext; simp
 
 /-- A Lie algebra 1-cochain linearly determines a bilinear map via the differential. -/
-def _root_.VirasoroProject.LieOneCochain.bdryHom'
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdryHom'
     : LieOneCochain 𝕜 𝓰 𝓪 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun β ↦ LieOneCochain.bdry' β
   map_add' β₁ β₂ := by ext X Y; rfl
   map_smul' c Z := by ext X Y; rfl
 
 /-- The `∂` of a Lie algebra 1-cochain as a Lie algebra 2-cocycle. -/
-def _root_.VirasoroProject.LieOneCochain.bdry (β : LieOneCochain 𝕜 𝓰 𝓪) : LieTwoCocycle 𝕜 𝓰 𝓪 where
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdry
+    (β : LieOneCochain 𝕜 𝓰 𝓪) : LieTwoCocycle 𝕜 𝓰 𝓪 where
   toBilin := LieOneCochain.bdryHom' β
   self' X := by simp [LieOneCochain.bdryHom', LieOneCochain.bdry']
   leibniz' X Y Z := by simp [LieOneCochain.bdryHom', LieOneCochain.bdry']
@@ -310,7 +312,7 @@ def _root_.VirasoroProject.LieOneCochain.bdry (β : LieOneCochain 𝕜 𝓰 𝓪
 variable (𝕜 𝓰 𝓪)
 
 /-- The `∂` as a linear map from Lie algebra 1-cochains to Lie algebra 2-cocycles. -/
-def _root_.VirasoroProject.LieOneCochainBdryHom
+@[expose] def _root_.VirasoroProject.LieOneCochainBdryHom
     : LieOneCochain 𝕜 𝓰 𝓪 →ₗ[𝕜] LieTwoCocycle 𝕜 𝓰 𝓪 where
   toFun β := β.bdry
   map_add' _ _ := rfl
@@ -322,7 +324,7 @@ def _root_.VirasoroProject.LieOneCochainBdryHom
   simp
 
 lemma _root_.VirasoroProject.LieOneCochain.bdry_apply (β : LieOneCochain 𝕜 𝓰 𝓪) (X Y : 𝓰) :
-    β.bdry X Y = β (⁅X, Y⁆) := rfl
+    β.bdry X Y = β (⁅X, Y⁆) := by rfl
 
 /-- Lie algebra 2-coboundaries as a vector space. -/
 abbrev _root_.VirasoroProject.LieTwoCoboundary := LinearMap.range (LieOneCochainBdryHom 𝕜 𝓰 𝓪)
@@ -334,7 +336,8 @@ section LieTwoCohomology
 /-! ### Lie algebra 2-cohomology -/
 
 /-- The 2-cohomology `H²(𝓰,𝓪)` of a Lie algebra `𝓰` with coefficients in `𝓪`. -/
-def _root_.VirasoroProject.LieTwoCohomology := LieTwoCocycle 𝕜 𝓰 𝓪 ⧸ LieTwoCoboundary 𝕜 𝓰 𝓪
+@[expose] def _root_.VirasoroProject.LieTwoCohomology :=
+  LieTwoCocycle 𝕜 𝓰 𝓪 ⧸ LieTwoCoboundary 𝕜 𝓰 𝓪
 
 namespace LieTwoCohomology
 
@@ -352,7 +355,7 @@ namespace LieTwoCocycle
 
 /-- The linear map from 2-cocycles to 2-cohomologies of a Lie algebra `𝓰` with coefficients
 in `𝓪`. -/
-def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomology
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomology
     : LieTwoCocycle 𝕜 𝓰 𝓪 →ₗ[𝕜] LieTwoCohomology 𝕜 𝓰 𝓪 :=
   (LieTwoCoboundary 𝕜 𝓰 𝓪).mkQ
 
@@ -364,7 +367,7 @@ variable {𝕜 𝓰 𝓪}
 
 /-- The projection to 2-cohomologies from 2-cocycles of a Lie algebra `𝓰` with coefficients
 in `𝓪`. (This definition is to enable dot notation, while the linear map version doesn't.) -/
-def _root_.VirasoroProject.LieTwoCocycle.cohomologyClass
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.cohomologyClass
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) : LieTwoCohomology 𝕜 𝓰 𝓪 :=
   LieTwoCocycle.toLieTwoCohomology _ _ _ γ
 
@@ -418,7 +421,7 @@ lemma _root_.VirasoroProject.LieTwoCocycle.ker_toLieTwoCohomology_eq_bot_of_isLi
 
 /-- For abelian Lie algebras, the map from 2-cocycles to their cohomology classes is a linear
 equivalence. -/
-noncomputable def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomologyEquiv :
+@[expose] noncomputable def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomologyEquiv :
     LieTwoCocycle 𝕜 𝓰 𝓪 ≃ₗ[𝕜] LieTwoCohomology 𝕜 𝓰 𝓪 :=
   LinearEquiv.ofBijective (LieTwoCocycle.toLieTwoCohomology 𝕜 𝓰 𝓪)
     ⟨LinearMap.ker_eq_bot.mp <| LieTwoCocycle.ker_toLieTwoCohomology_eq_bot_of_isLieAbelian ..,

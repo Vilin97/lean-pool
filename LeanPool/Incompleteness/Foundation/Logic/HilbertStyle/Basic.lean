@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Order.Ring.Nat
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO

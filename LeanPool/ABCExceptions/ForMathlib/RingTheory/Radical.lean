@@ -15,7 +15,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
 -/
 
-@[expose] public section
+public section
 
 namespace UniqueFactorizationMonoid
 

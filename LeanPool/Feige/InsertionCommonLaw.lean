@@ -19,7 +19,7 @@ The event defining `twoPointKFinset` is rewritten as nonnegativity of the
 corresponding signed exponential sum.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 open scoped BigOperators ENNReal
@@ -34,7 +34,7 @@ local instance : IsProbabilityMeasure (expMeasure 1) :=
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The signed exponential statistic at Boolean state `S`. -/
-def stateSignedSum (γ β : ι → ℝ) (S : Finset ι)
+@[expose] def stateSignedSum (γ β : ι → ℝ) (S : Finset ι)
     (e : Option ι → NNReal) : ℝ :=
   (e none : ℝ) +
     ∑ i, if i ∈ S then -(β i * (e (some i) : ℝ))
@@ -54,7 +54,7 @@ theorem measurable_stateSignedSum (γ β : ι → ℝ) (S : Finset ι) :
       fun_prop
 
 /-- Pushforward law of the signed sum at state `S`. -/
-noncomputable def stateLaw (γ β : ι → ℝ) (S : Finset ι) : Measure ℝ :=
+@[expose] noncomputable def stateLaw (γ β : ι → ℝ) (S : Finset ι) : Measure ℝ :=
   Measure.map (stateSignedSum γ β S) (expProductMeasure ι)
 
 instance stateLaw_isProbability (γ β : ι → ℝ) (S : Finset ι) :
@@ -165,7 +165,7 @@ theorem stateSignedSum_insert_eq_common_sub
 /-- The common law on an insertion edge, constructed as the convolution of
 the unchanged signed exponential factors together with the distinguished
 rate-one exponential `E₀`. -/
-noncomputable def insertionCommonLaw
+@[expose] noncomputable def insertionCommonLaw
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
     (S : Finset ι) (changed : ι) : Measure ℝ :=
   LikelihoodRatio.finiteSignedExpSumMeasure
@@ -192,7 +192,7 @@ theorem insertionCommonLaw_eq_withDensity
 
 /-- Law of the low endpoint obtained by adding the changed coordinate's
 positive scaled exponential to the common part. -/
-noncomputable def insertionLowEndpointLaw
+@[expose] noncomputable def insertionLowEndpointLaw
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
     (S : Finset ι) (changed : ι) : Measure ℝ :=
   TransferStein.zPlusLaw
@@ -200,7 +200,7 @@ noncomputable def insertionLowEndpointLaw
 
 /-- Law of the high endpoint obtained by subtracting the changed
 coordinate's scaled exponential from the common part. -/
-noncomputable def insertionHighEndpointLaw
+@[expose] noncomputable def insertionHighEndpointLaw
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
     (S : Finset ι) (changed : ι) : Measure ℝ :=
   TransferStein.zMinusLaw

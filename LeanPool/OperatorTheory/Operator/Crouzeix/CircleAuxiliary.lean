@@ -24,7 +24,7 @@ the Crouzeix--Palencia polynomial auxiliary operator is simply
   auxiliary identity used by the sharp product bound.
 -/
 
-@[expose] public section
+public section
 
 open Complex ComplexConjugate Polynomial Set
 open scoped InnerProductSpace Interval Real

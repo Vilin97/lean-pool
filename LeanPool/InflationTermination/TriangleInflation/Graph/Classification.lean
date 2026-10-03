@@ -21,7 +21,7 @@ named cycle and path scenarios, the fact that a target passing the order-`t` tes
 the total variation cost of a local flip, and the passage to a connected component.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -282,6 +282,7 @@ theorem exists_bad_component (Γ : PairGraph) (hnot : ¬ IsDoubleStarForest Γ.G
     ((SimpleGraph.ConnectedComponent.connected_toSimpleGraph _).preconnected _ _)
 
 /-- The pair-source scenario carried by one connected component. -/
+@[expose]
 noncomputable def componentPairGraph (Γ : PairGraph) (C : Γ.G.ConnectedComponent) :
     PairGraph where
   V := C

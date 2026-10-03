@@ -25,14 +25,14 @@ analytic mass germs, infinite-order vanishing makes them locally zero, and the i
 propagates that equality along any connected collision-free mass fiber.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- A coordinate minor of the Hamiltonian and candidate phase differentials at fixed mass and
 phase. -/
-noncomputable def massDifferentialMinor
+@[expose] noncomputable def massDifferentialMinor
     (F : ℝ → PhaseSpace → ℝ) (i j : Fin 4)
     (mass : ℝ) (state : PhaseSpace) : ℝ :=
   phaseCovectorMinor (fderiv ℝ (hamiltonian mass) state)

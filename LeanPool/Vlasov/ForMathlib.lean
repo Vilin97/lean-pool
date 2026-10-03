@@ -9,4 +9,4 @@ public import LeanPool.Vlasov.ForMathlib.PicardLindelof
 
 /-! # Vendored Picard-Lindelof with an explicit confinement conjunct. -/
 
-@[expose] public section
+public section

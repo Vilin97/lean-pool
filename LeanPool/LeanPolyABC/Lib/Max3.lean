@@ -12,11 +12,12 @@ module
 Imported Lean Pool material for `LeanPool.LeanPolyABC.Lib.Max3`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nat
 
 /-- The maximum of three natural numbers, `max (max a b) c`. -/
+@[expose]
 def max₃ (a b c : Nat) : Nat :=
   max (max a b) c
 

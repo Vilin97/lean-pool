@@ -36,7 +36,7 @@ import LeanPool.FoZfc.FixedSnoc
 
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder
 open FirstOrder.Language
@@ -52,13 +52,13 @@ variable {V : Type u} {L : Language} {α : Type v}
 namespace BoundedFormula
 
 /-- Or operator in the formula. -/
-@[match_pattern]
+@[expose, match_pattern]
 def or {n : ℕ} (ϕ1 ϕ2 : L.BoundedFormula α n) : L.BoundedFormula α n := (∼ϕ1)⟹ϕ2
 
 @[inherit_doc] infix : 63 "∨'" => BoundedFormula.or
 
 /-- And operator in the formula. -/
-@[match_pattern]
+@[expose, match_pattern]
 def and {n : ℕ} (ϕ1 ϕ2 : L.BoundedFormula α n) : L.BoundedFormula α n :=  ∼(ϕ1⟹∼ϕ2)
 
 @[inherit_doc] infix : 64 "∧'" => BoundedFormula.and
@@ -109,14 +109,14 @@ match ϕ with
 
 /-- Make a function on `ℕ` whose value at `k` is `ts k` if `k < m + 1` and
   `fv' k` otherwise. -/
-def makeTsN {n m : ℕ} (ts : Fin (m + 1) → L.Term (ℕ ⊕ Fin n)) (k : ℕ) :=
+@[expose] def makeTsN {n m : ℕ} (ts : Fin (m + 1) → L.Term (ℕ ⊕ Fin n)) (k : ℕ) :=
   if k < m + 1 then
     ts (Fin.ofNat (m+1) k)
   else
     Term.var (Sum.inl k)
 
 /-- Replace the initial part of `s : ℕ → V` by `xs : Fin (n + 1) → V`. -/
-def replaceInitialValues {n : ℕ} (s : ℕ → V)
+@[expose] def replaceInitialValues {n : ℕ} (s : ℕ → V)
     (xs : Fin (n + 1) → V) (k : ℕ) :=
   if k < n + 1 then
     xs (Fin.ofNat (n+1) k)
@@ -124,7 +124,7 @@ def replaceInitialValues {n : ℕ} (s : ℕ → V)
     s k
 
 /-- Apply `liftAt n' m` and `replace (makeTsN ts)` in one call. -/
-@[simp]
+@[expose, simp]
 def liftAndReplaceFV {n l : ℕ} (ϕ : L.BoundedFormula ℕ n)
     (n' m : ℕ) (ts : Fin (l + 1) → L.Term (ℕ ⊕ Fin (n + n'))) :
     L.BoundedFormula ℕ (n+n') := (ϕ.liftAt n' m).replaceFV (makeTsN ts)

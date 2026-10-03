@@ -29,7 +29,7 @@ full-space form is exactly the slice hypothesis consumed by the pressure
 module's force-cancellation results.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology Set
 open CKN.Foundation.Parabolic

@@ -25,4 +25,4 @@ import Mathlib.Tactic.NormNum.Pow
 Import-only index for tree, body, restriction, limit, and functoriality modules.
 -/
 
-@[expose] public section
+public section

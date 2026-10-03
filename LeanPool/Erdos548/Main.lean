@@ -38,7 +38,7 @@ target of order `t ≥ 2`. The marked-state count is exactly `2 * |E(G)| * (n - 
 and exact.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph
 

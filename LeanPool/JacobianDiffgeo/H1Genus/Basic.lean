@@ -35,7 +35,7 @@ scope for this challenge (per the orchestrator's 2026-07-08 addendum). Only the 
 mentions Čech `H¹` — this gap does not block anything else in this project.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

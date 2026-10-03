@@ -27,19 +27,19 @@ with an endomorphism `π` satisfying `π² = [-2]`.  No field, curve, Frobenius
 map or algebraic closure appears.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.Isogeny
 
 /-- The `n`-fold iterate of `pi`. -/
-def piIter
+@[expose] def piIter
     {G : Type*} [AddCommGroup G]
     (pi : G →+ G) : ℕ → G → G
   | 0, x => x
   | n + 1, x => pi (piIter pi n x)
 
 /-- `a - b*pi`. -/
-def gMap
+@[expose] def gMap
     {G : Type*} [AddCommGroup G]
     (pi : G →+ G) (a b : ℤ) (x : G) : G :=
   a • x - b • pi x

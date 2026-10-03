@@ -19,7 +19,7 @@ the dimension of the selected proper face. Its represented space must then
 shrink, giving the strict level increase used in termination.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.FaceRefinement
 

@@ -35,7 +35,7 @@ identifies the two constructed solutions from their common zero entry value.
 No energy inequality for the ambient projected operator is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -57,7 +57,7 @@ abbrev Space := PrimaryODE.Space
 /-! ## Exact reindexing of primitive frame data -/
 
 /-- Reindex, bundling `beta`, `betaDot`, `rho`, `rhoDot` and the required compatibility proofs. -/
-noncomputable def reindex {P Q : Type} (d : PrimaryODE.FrameData P) (φ : Q → P) :
+@[expose] noncomputable def reindex {P Q : Type} (d : PrimaryODE.FrameData P) (φ : Q → P) :
     PrimaryODE.FrameData Q where
   beta z := d.beta (φ z.1, z.2)
   betaDot z := d.betaDot (φ z.1, z.2)
@@ -78,30 +78,31 @@ theorem reindex_kinematics {P Q : Type} (d : PrimaryODE.FrameData P) (φ : Q →
     h.eigenvector_deriv, h.frameK_deriv, h.frameN_deriv⟩
 
 /-- Copy parameter, given by `(q.1, (g.coordinates k q.2).1)`. -/
+@[expose]
 noncomputable def copyParameter {P : Type} (g : CommonCoverSolve.Geometry)
     (k : Frequency) (q : P × Plane) : P × ℝ := (q.1, (g.coordinates k q.2).1)
 
 /-- Copy frame, given by `reindex d (copyParameter g k)`. -/
-noncomputable def copyFrame {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
+@[expose] noncomputable def copyFrame {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (g : CommonCoverSolve.Geometry) (k : Frequency) : PrimaryODE.FrameData (P × Plane) :=
   reindex d (copyParameter g k)
 
 /-- Copy source, given by `f (z.1.1, g.path k z.1.2 z.2)`. -/
-noncomputable def copySource {P : Type} (f : P × Plane → Space)
+@[expose] noncomputable def copySource {P : Type} (f : P × Plane → Space)
     (g : CommonCoverSolve.Geometry) (k : Frequency) (z : (P × Plane) × ℝ) : Space :=
   f (z.1.1, g.path k z.1.2 z.2)
 
 @[simp] theorem copyFrame_normal {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (g : CommonCoverSolve.Geometry) (k : Frequency) (z : (P × Plane) × ℝ) :
-    (copyFrame d g k).normal z = d.normal (copyParameter g k z.1, z.2) := rfl
+    (copyFrame d g k).normal z = d.normal (copyParameter g k z.1, z.2) := by rfl
 
 @[simp] theorem copyFrame_normalMotion {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (g : CommonCoverSolve.Geometry) (k : Frequency) (z : (P × Plane) × ℝ) :
-    (copyFrame d g k).normalMotion z = d.normalMotion (copyParameter g k z.1, z.2) := rfl
+    (copyFrame d g k).normalMotion z = d.normalMotion (copyParameter g k z.1, z.2) := by rfl
 
 @[simp] theorem copyFrame_ambient {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (g : CommonCoverSolve.Geometry) (k : Frequency) (z : (P × Plane) × ℝ) (w : State) :
-    (copyFrame d g k).ambient z w = d.ambient (copyParameter g k z.1, z.2) w := rfl
+    (copyFrame d g k).ambient z w = d.ambient (copyParameter g k z.1, z.2) w := by rfl
 
 theorem ambient_zero {P : Type} (d : PrimaryODE.FrameData P) (z : P × ℝ) :
     d.ambient z 0 = 0 := by
@@ -111,6 +112,7 @@ theorem ambient_zero {P : Type} (d : PrimaryODE.FrameData P) (z : P × ℝ) :
 /-! ## The native tangent data can be built directly from the frame -/
 
 /-- Base operator, constructed using `MovingFrameODE.packCLM.comp`. -/
+@[expose]
 noncomputable def baseOperator (F : ℝ) (g : State) : Space →L[ℝ] Space :=
   MovingFrameODE.packCLM.comp
     (((-2 * F) • PiLp.proj 2 (fun _ : Fin 3 => ℝ) 1).prod
@@ -118,15 +120,15 @@ noncomputable def baseOperator (F : ℝ) (g : State) : Space →L[ℝ] Space :=
         ((2 * F) • MovingFrameODE.unitTheta + g)))
 
 @[simp] theorem baseOperator_apply (F : ℝ) (g : State) (x : Space) :
-    baseOperator F g x = MovingFrameODE.baseAction F g x := rfl
+    baseOperator F g x = MovingFrameODE.baseAction F g x := by rfl
 
 /-- Native point, given by `((z.1, z.2.1), z.2.2)`. -/
-noncomputable def nativePoint {P : Type} (z : P × Plane) : (P × ℝ) × ℝ :=
+@[expose] noncomputable def nativePoint {P : Type} (z : P × Plane) : (P × ℝ) × ℝ :=
   ((z.1, z.2.1), z.2.2)
 
 /-- Frame tangent data, bundling `normal`, `normalDot`, `action`, `damping` and the required
 compatibility proofs. -/
-noncomputable def frameTangentData {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
+@[expose] noncomputable def frameTangentData {P : Type} (d : PrimaryODE.FrameData (P × ℝ))
     (j : ℤ) (f : P × Plane → Space) : CommonCoverSolve.TangentData P Space where
   normal z := d.normal (nativePoint z)
   normalDot z := d.normalMotion (nativePoint z)
@@ -372,6 +374,7 @@ end Bridge
 /-! ## Smooth primitive data discharge the continuity requirements -/
 
 /-- Base operator family, constructed using `LinearMap.toContinuousLinearMap`. -/
+@[expose]
 noncomputable def baseOperatorFamily : (ℝ × State) →L[ℝ] (Space →L[ℝ] Space) :=
   LinearMap.toContinuousLinearMap {
     toFun := fun z => baseOperator z.1 z.2
@@ -391,7 +394,7 @@ noncomputable def baseOperatorFamily : (ℝ × State) →L[ℝ] (Space →L[ℝ]
         ring }
 
 @[simp] theorem baseOperatorFamily_apply (z : ℝ × State) :
-    baseOperatorFamily z = baseOperator z.1 z.2 := rfl
+    baseOperatorFamily z = baseOperator z.1 z.2 := by rfl
 
 theorem projectedOperator_continuousOn {X H : Type*} [TopologicalSpace X]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -599,7 +602,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1210,7 +1213,7 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /-- Direction of increasing native slot time in common coordinates. -/
-noncomputable def slotDirection (g : Geometry) : Plane :=
+@[expose] noncomputable def slotDirection (g : Geometry) : Plane :=
   (coverPower g.gap).symm (g.basis (0, 1))
 
 theorem path_hasDerivAt (g : Geometry) (k : Frequency) (Y : Plane) (s : ℝ) :
@@ -1254,19 +1257,20 @@ theorem along_copySolve (d : LinearData P V H) (g : Geometry) {a b : ℝ} (hab :
     t, g.path_current, Prod.mk.eta] using he
 
 /-- Native point, given by `(p.1, g.coordinates k p.2)`. -/
+@[expose]
 noncomputable def nativePoint (g : Geometry) (k : Frequency) (p : P × Plane) : P × Plane :=
   (p.1, g.coordinates k p.2)
 
 /-- The pressure coefficient is constructed from the solved tangent field,
 the actual normal motion, and the source at the current common point. -/
-noncomputable def copyPressureReal (t : TangentData P H) (g : Geometry)
+@[expose] noncomputable def copyPressureReal (t : TangentData P H) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (k : Frequency) (p : P × Plane) : ℝ :=
   TangentProjection.pressureCoefficient (t.normal (nativePoint g k p))
     (t.normalDot (nativePoint g k p)) (t.linearData.copySolve g hab k p)
     (t.action (nativePoint g k p) (t.linearData.copySolve g hab k p)) (t.source p)
 
 /-- Copy pressure, given by `Complex.I * (copyPressureReal t g hab k p : ℂ) / (frequency : ℂ)`. -/
-noncomputable def copyPressure (t : TangentData P H) (g : Geometry)
+@[expose] noncomputable def copyPressure (t : TangentData P H) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (k : Frequency) (frequency : ℝ) (p : P × Plane) : ℂ :=
   Complex.I * (copyPressureReal t g hab k p : ℂ) / (frequency : ℂ)
 
@@ -1384,7 +1388,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Projected pressure, given by `Complex.I * (TangentProjection.pressureCoefficient (N x) (Ndot
 x) (u x) (action x) (source x) : ℂ) / (frequency : ℂ)`. -/
-noncomputable def projectedPressure (frequency : ℝ)
+@[expose] noncomputable def projectedPressure (frequency : ℝ)
     (N Ndot u action source : E → ProblemStatement.Space) (x : E) : ℂ :=
   Complex.I * (TangentProjection.pressureCoefficient
     (N x) (Ndot x) (u x) (action x) (source x) : ℂ) / (frequency : ℂ)
@@ -1448,7 +1452,7 @@ open CommonCoverSolve TorusInverse HarmonicCalculus WeightedClasses
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Copy velocity, given by `CurlClassBounds.complexify (t.linearData.copySolve g hab k p)`. -/
-noncomputable def copyVelocity (t : TangentData P ProblemStatement.Space) (g : Geometry)
+@[expose] noncomputable def copyVelocity (t : TangentData P ProblemStatement.Space) (g : Geometry)
     {a b : ℝ} (hab : a ≤ b) (k : Frequency) (p : P × Plane) : ComplexVector :=
   CurlClassBounds.complexify (t.linearData.copySolve g hab k p)
 
@@ -1562,6 +1566,7 @@ open PrimaryODE
 variable {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- The explicit source projection in the two-dimensional moving frame. -/
+@[expose]
 noncomputable def frameForcingLinear (d : FrameData Q) (z : Q × ℝ) : PrimaryODE.Space →L[ℝ]
     PrimaryODE.State :=
   LinearMap.toContinuousLinearMap {
@@ -1586,7 +1591,7 @@ noncomputable def frameForcingLinear (d : FrameData Q) (z : Q × ℝ) : PrimaryO
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 @[simp] theorem frameForcingLinear_apply (d : FrameData Q) (f : Q × ℝ → PrimaryODE.Space) (z : Q ×
     ℝ) :
-    frameForcingLinear d z (f z) = d.forcing f z := rfl
+    frameForcingLinear d z (f z) = d.forcing f z := by rfl
 
 omit [NormedAddCommGroup Q] [NormedSpace ℝ Q] in
 theorem forcing_eq_columns (d : FrameData Q) (f : Q × ℝ → PrimaryODE.Space) (z : Q × ℝ) :
@@ -1725,7 +1730,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   ENat.natCast_le_of_coe_top_le_withTop le_rfl n
 
 /-- Ambient jet constant, constructed using `2`. -/
-noncomputable def ambientJetConstant (N : ℕ) : ℝ :=
+@[expose] noncomputable def ambientJetConstant (N : ℕ) : ℝ :=
   2 ^ N * (‖(EuclideanSpace.proj (0 : Fin 2) : PrimaryODE.State →L[ℝ] ℝ)‖ +
     ‖(EuclideanSpace.proj (1 : Fin 2) : PrimaryODE.State →L[ℝ] ℝ)‖)
 
@@ -2189,11 +2194,12 @@ noncomputable def imagPart : ComplexVector →L[ℝ] ProblemStatement.Space :=
 
 /-- Complex scale, given by `ContinuousLinearMap.pi fun i => ((ContinuousLinearMap.mul ℝ ℂ)
 c).comp (ContinuousLinearMap.proj i)`. -/
+@[expose]
 noncomputable def complexScale (c : ℂ) : ComplexVector →L[ℝ] ComplexVector :=
   ContinuousLinearMap.pi fun i => ((ContinuousLinearMap.mul ℝ ℂ) c).comp (ContinuousLinearMap.proj
       i)
 
-@[simp] theorem complexScale_apply (c : ℂ) (a : ComplexVector) : complexScale c a = c • a := rfl
+@[simp] theorem complexScale_apply (c : ℂ) (a : ComplexVector) : complexScale c a = c • a := by rfl
 
 theorem complex_parts (a : ComplexVector) :
     CurlClassBounds.complexify (realPart a) + Complex.I • CurlClassBounds.complexify (imagPart a) =
@@ -2206,18 +2212,18 @@ theorem complex_parts (a : ComplexVector) :
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Real data, given by `{ t with source := fun p => realPart (source p) }`. -/
-noncomputable def realData (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def realData (t : TangentData P ProblemStatement.Space)
     (source : P × Plane → ComplexVector) : TangentData P ProblemStatement.Space :=
   { t with source := fun p => realPart (source p) }
 
 /-- Imag data, given by `{ t with source := fun p => imagPart (source p) }`. -/
-noncomputable def imagData (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def imagData (t : TangentData P ProblemStatement.Space)
     (source : P × Plane → ComplexVector) : TangentData P ProblemStatement.Space :=
   { t with source := fun p => imagPart (source p) }
 
 /-- The actual particular coefficient for an arbitrary complex harmonic
 source, obtained from two real Volterra solves with the same geometry. -/
-noncomputable def complexCopyVelocity (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def complexCopyVelocity (t : TangentData P ProblemStatement.Space)
     (source : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (copy : Frequency) (p : P × Plane) : ComplexVector :=
   copyVelocity (realData t source) g hab copy p +
@@ -2225,7 +2231,7 @@ noncomputable def complexCopyVelocity (t : TangentData P ProblemStatement.Space)
 
 /-- Complex copy pressure, given by `copyPressure (realData t source) g hab copy frequency p +
 Complex.I * copyPressure (imagData t source) g hab copy frequency p`. -/
-noncomputable def complexCopyPressure (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def complexCopyPressure (t : TangentData P ProblemStatement.Space)
     (source : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b)
     (copy : Frequency) (frequency : ℝ) (p : P × Plane) : ℂ :=
   copyPressure (realData t source) g hab copy frequency p +
@@ -2258,6 +2264,7 @@ theorem copyVelocity_component_differentiable (t : TangentData P ProblemStatemen
     (x := t.linearData.copySolve g hab copy p)).comp p hu
 
 /-- Complex copy coefficients as an element of `LinearWaveBounds.WaveCoefficients (P × Plane)`. -/
+@[expose]
 noncomputable def complexCopyCoefficients (base : LinearWaveBounds.WaveCoefficients (P × Plane))
     (t : ℕ → TangentData P ProblemStatement.Space) (source : ℕ → P × Plane → ComplexVector)
     (g : ℕ → Geometry) (copy : ℕ → Frequency) (L : ℕ → ℝ) (hL : ∀ n, 0 < L n) :
@@ -2433,6 +2440,7 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Zero amplitudes, given by `{ base with amplitude := fun _ _ => 0, pressure := fun _ _ => 0
 }`. -/
+@[expose]
 noncomputable def zeroAmplitudes (base : WaveCoefficients (P × Plane)) : WaveCoefficients (P ×
     Plane) :=
   { base with amplitude := fun _ _ => 0, pressure := fun _ _ => 0 }
@@ -3130,7 +3138,7 @@ theorem complexCopyPressure_deck (t : TangentData P ProblemStatement.Space)
 variable {H : Type} [NormedAddCommGroup H] [NormedSpace ℝ H] [CompleteSpace H]
 
 /-- Periodized copies, given by `∑' k : Frequency, κ (g.coordinates k p.2) • F k p`. -/
-noncomputable def periodizedCopies (g : Geometry) (κ : Plane → ℝ)
+@[expose] noncomputable def periodizedCopies (g : Geometry) (κ : Plane → ℝ)
     (F : Frequency → P × Plane → H) (p : P × Plane) : H :=
   ∑' k : Frequency, κ (g.coordinates k p.2) • F k p
 
@@ -3195,13 +3203,13 @@ theorem periodizedCopies_periodic (g : Geometry) (κ : Plane → ℝ)
       rw [g.coordinates_deck, hF k m Y]
 
 /-- Common velocity, given by `periodizedCopies g κ (fun k => complexCopyVelocity t f g hab k)`. -/
-noncomputable def commonVelocity (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def commonVelocity (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Plane → ℝ) :
     P × Plane → ComplexVector := periodizedCopies g κ (fun k => complexCopyVelocity t f g hab k)
 
 /-- Common pressure, given by `periodizedCopies g κ (fun k => complexCopyPressure t f g hab k
 frequency)`. -/
-noncomputable def commonPressure (t : TangentData P ProblemStatement.Space)
+@[expose] noncomputable def commonPressure (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ComplexVector) (g : Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Plane → ℝ)
     (frequency : ℝ) : P × Plane → ℂ := periodizedCopies g κ (fun k => complexCopyPressure t f g hab
         k frequency)
@@ -3234,7 +3242,7 @@ variable [NormedAddCommGroup H] [NormedSpace ℝ H]
 
 /-- Reindex strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the required
 compatibility proofs. -/
-noncomputable def reindexStrip (e : E ≃ₗᵢ[ℝ] F) (s : StripData F) : StripData E where
+@[expose] noncomputable def reindexStrip (e : E ≃ₗᵢ[ℝ] F) (s : StripData F) : StripData E where
   domain := e ⁻¹' s.domain
   isOpen_domain := s.isOpen_domain.preimage e.continuous
   epsilon := s.epsilon
@@ -3268,6 +3276,7 @@ theorem waveClass_reindex (e : E ≃ₗᵢ[ℝ] F) {s : StripData F} {W : ℕ �
   memClass_reindex e hf
 
 /-- Reindex vector, defined pointwise by `e.symm (V (e x))`. -/
+@[expose]
 noncomputable def reindexVector (e : E ≃ₗᵢ[ℝ] F) (V : F → F) : E → E := fun x => e.symm (V (e x))
 
 theorem along_reindex (e : E ≃ₗᵢ[ℝ] F) (V : F → F) {f : F → H} {x : E}
@@ -3304,6 +3313,7 @@ theorem principal_reindex (e : E ≃ₗᵢ[ℝ] F) (ε frequency : ℝ)
 
 /-- Reindex coefficients, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def reindexCoefficients (e : E ≃ₗᵢ[ℝ] F) (a : WaveCoefficients F) : WaveCoefficients
     E where
   radius n x := a.radius n (e x)
@@ -3317,6 +3327,7 @@ noncomputable def reindexCoefficients (e : E ≃ₗᵢ[ℝ] F) (a : WaveCoeffici
 
 /-- Reindex directions, bundling `radial`, `auxiliary`, `axial`, `angular` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def reindexDirections (e : E ≃ₗᵢ[ℝ] F) (d : GraphDirections F) : GraphDirections E
     where
   radial := e.symm d.radial
@@ -3347,7 +3358,7 @@ theorem reindex_fastField (e : E ≃ₗᵢ[ℝ] F) (d : GraphDirections F) (n : 
 
 /-- Explicit associator from `PressureStream.Lift S` to the common-copy
 domain with slow parameter `P = ℝ × S`. -/
-noncomputable def liftAssoc (S : Type*) [NormedAddCommGroup S] [NormedSpace ℝ S] :
+@[expose] noncomputable def liftAssoc (S : Type*) [NormedAddCommGroup S] [NormedSpace ℝ S] :
     (ℝ × (S × TorusInverse.Plane)) ≃ₗᵢ[ℝ] ((ℝ × S) × TorusInverse.Plane) :=
   (LinearIsometryEquiv.prodAssoc ℝ ℝ S TorusInverse.Plane).symm
 

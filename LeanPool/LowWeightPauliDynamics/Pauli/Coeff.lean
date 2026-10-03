@@ -91,7 +91,7 @@ and hence vanishing entries. Neither a `finrank` count nor an `InnerProductSpace
 needed for it.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -113,7 +113,7 @@ variable {n : ℕ}
 /-! ### Classes and their Hermitian representatives -/
 
 /-- The class of a Pauli string. -/
-def cls (s : PauliString n) : PauliIndex n := (s.x, s.z)
+@[expose] def cls (s : PauliString n) : PauliIndex n := (s.x, s.z)
 
 @[simp] lemma cls_fst (s : PauliString n) : (cls s).1 = s.x := rfl
 
@@ -122,7 +122,7 @@ def cls (s : PauliString n) : PauliIndex n := (s.x, s.z)
 /-- The **self-adjoint representative** of a class, `i^{z ⬝ᵥ x} X^x Z^z`. Defined, not
 characterized: `isSelfAdjoint_iff_phase` admits two phases differing by `2`, and this picks the
 one in `{0, 1}`. See `herm_eq_or_eq_neg` for what the other choice would cost. -/
-def herm (p : PauliIndex n) : PauliString n := ⟨p.1, p.2, ((p.2 ⬝ᵥ p.1).val : ZMod 4)⟩
+@[expose] def herm (p : PauliIndex n) : PauliString n := ⟨p.1, p.2, ((p.2 ⬝ᵥ p.1).val : ZMod 4)⟩
 
 @[simp] lemma herm_x (p : PauliIndex n) : (herm p).x = p.1 := rfl
 
@@ -166,6 +166,7 @@ lemma weight_congr {s t : PauliString n} (hx : s.x = t.x) (hz : s.z = t.z) :
 
 /-- **The weight of a Pauli class**, `def:pauli_weight` transported to the index
 set. Well defined because the weight cannot see a phase. -/
+@[expose]
 def wt (p : PauliIndex n) : ℕ := weight (herm p)
 
 @[simp] lemma wt_cls (s : PauliString n) : wt (cls s) = weight s := weight_congr rfl rfl
@@ -174,11 +175,13 @@ def wt (p : PauliIndex n) : ℕ := weight (herm p)
 
 /-- **The Pauli coefficient vector** `x_P = 2^{-n} Tr(P O)`, with `P` the
 self-adjoint representative of the class `p`. -/
+@[expose]
 noncomputable def coeff (O : Matrix (Bits n) (Bits n) ℂ) (p : PauliIndex n) : ℂ :=
   ((2 : ℂ) ^ n)⁻¹ * (toMatrix (herm p) * O).trace
 
 /-- The squared **Pauli 2-norm** `‖O‖_{2,normalized}² = 2^{-n} Tr(O† O)`, written entrywise as
 `2^{-n} ∑_{a,b} |O_{ab}|²`. `pauliNormSq_eq_trace` is the equality with the trace form. -/
+@[expose]
 noncomputable def pauliNormSq (O : Matrix (Bits n) (Bits n) ℂ) : ℝ :=
   ((2 : ℝ) ^ n)⁻¹ * ∑ a : Bits n, ∑ b : Bits n, ‖O a b‖ ^ 2
 
@@ -186,6 +189,7 @@ noncomputable def pauliNormSq (O : Matrix (Bits n) (Bits n) ℂ) : ℝ :=
 `‖O‖_{2,normalized}² = 2^{-n} Tr(O† O)`,
 so that every Pauli string has norm one. This is the norm in which the high-weight norm of
 `apd:eq:def_high_weight_norm` is measured. -/
+@[expose]
 noncomputable def pauliNorm (O : Matrix (Bits n) (Bits n) ℂ) : ℝ := Real.sqrt (pauliNormSq O)
 
 lemma pauliNormSq_nonneg (O : Matrix (Bits n) (Bits n) ℂ) : 0 ≤ pauliNormSq O := by
@@ -359,6 +363,7 @@ Minkowski's inequality on that space, so the coefficients are packaged as an ele
 inner product. -/
 
 /-- **The coefficient vector** `x = (x_P)_P` of an operator, as a vector in `ℓ²(PauliIndex n)`. -/
+@[expose]
 noncomputable def coeffVec (O : Matrix (Bits n) (Bits n) ℂ) : EuclideanSpace ℂ (PauliIndex n) :=
   WithLp.toLp 2 (coeff O)
 
@@ -376,6 +381,7 @@ theorem norm_coeffVec (O : Matrix (Bits n) (Bits n) ℂ) : ‖coeffVec O‖ = pa
 For `S` the high-weight region this is the block `x_R` of the splitting `x = x_R + x_B` used in the
 proof of `apd:thm:local_flow_k_local`; for its complement it is the coefficient side of the
 truncation `Π_{≤ w}` (see `truncOp` in `Pauli/Truncate.lean`). -/
+@[expose]
 noncomputable def restr (S : Finset (PauliIndex n)) (y : EuclideanSpace ℂ (PauliIndex n)) :
     EuclideanSpace ℂ (PauliIndex n) :=
   WithLp.toLp 2 fun p => if p ∈ S then y.ofLp p else 0
@@ -423,6 +429,7 @@ lemma restr_add_restr_compl (S : Finset (PauliIndex n)) (y : EuclideanSpace ℂ 
 /-! ### The high-weight region -/
 
 /-- The high-weight region `R = {p : |p| > w}`: the classes of weight above the threshold `w`. -/
+@[expose]
 def highSet (n w : ℕ) : Finset (PauliIndex n) := univ.filter fun p => w < wt p
 
 @[simp] lemma mem_highSet {n w : ℕ} {p : PauliIndex n} : p ∈ highSet n w ↔ w < wt p := by
@@ -430,6 +437,7 @@ def highSet (n w : ℕ) : Finset (PauliIndex n) := univ.filter fun p => w < wt p
 
 /-- **The high-weight norm** `‖O_{≥ w+1}‖_{2,normalized}` of `apd:eq:def_high_weight_norm`,
 at threshold `w`: the `ℓ²` mass of the coefficients on classes of weight `> w`. -/
+@[expose]
 noncomputable def highNorm (w : ℕ) (O : Matrix (Bits n) (Bits n) ℂ) : ℝ :=
   ‖restr (highSet n w) (coeffVec O)‖
 

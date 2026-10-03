@@ -24,7 +24,7 @@ edge at a time (`explodeAtGluePair`, next file), giving the star
 decomposition by induction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -43,6 +43,7 @@ theorem ClosedFragment.attach_eq_vertexOf (W : ClosedFragment)
   · exact Fin.elim0 ℓ
 
 /-- A pairing-closed cut set: with each flag, its partner. -/
+@[expose]
 def CutClosed (W : ClosedFragment) (C : Finset W.Flag) : Prop :=
   ∀ f ∈ C, W.pairing f ∈ C
 
@@ -55,6 +56,7 @@ theorem CutClosed.pairing_mem {W : ClosedFragment}
 /-- **The explosion at a cut set**: sever each cut flag's edge,
 the freed half-edge becoming a pendant boundary edge labelled by
 the cut flag itself. -/
+@[expose]
 def explodeAt (W : ClosedFragment) (C : Finset W.Flag)
     (hC : CutClosed W C) : Fragment {f : W.Flag // f ∈ C} where
   Flag := W.Flag ⊕ {f : W.Flag // f ∈ C}
@@ -129,9 +131,11 @@ theorem cutErase_closed : CutClosed W (cutErase W C f₀) := by
     exact hg.2.1 (by rw [← W.pairing_invol g, h, W.pairing_invol])
 
 /-- The glued labels of the step, as labels of the explosion. -/
+@[expose]
 def stepLabelI : {f : W.Flag // f ∈ C} := ⟨f₀, h₀⟩
 
 /-- The partner label of the step. -/
+@[expose]
 def stepLabelJ : {f : W.Flag // f ∈ C} :=
   ⟨W.pairing f₀, hC f₀ h₀⟩
 
@@ -141,6 +145,7 @@ theorem stepLabel_ne : stepLabelI W C f₀ h₀ ≠
   W.pairing_ne f₀ (congrArg Subtype.val h).symm
 
 /-- The surviving labels of the step are the shrunken cut set. -/
+@[expose]
 def stepLabelEquiv :
     {f : W.Flag // f ∈ cutErase W C f₀} ≃
       Fragment.SurvivingLabel {f : W.Flag // f ∈ C}

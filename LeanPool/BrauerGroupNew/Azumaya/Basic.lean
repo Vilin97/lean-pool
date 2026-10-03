@@ -29,7 +29,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Azumaya.Basic`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The literal periodic scalar pressure primitive, with actual smoothness and normalization. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,6 +35,7 @@ theorem scalarAngle_periodic (y : Space) : Function.Periodic (fun s : ℝ => f (
   rw [AddCircle.coe_add_period]
 
 /-- The normalized integral descended to the actual periodic cylinder. -/
+@[expose]
 def classicalPrimitive (x : LiftDomain P) : ℝ :=
   (EulerAngleMeanZeroPrimitive.primitive_periodic P (fun s => f (x.1,(s : AddCircle P)))
     (hf.comp (continuous_const.prodMk (AddCircle.continuous_mk' P)))

@@ -16,7 +16,7 @@ degree-two divisor.  This is the rank-theoretic exclusion used in the
 `SameStrand` argument: a rank-zero pair cannot be a reflected pair.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

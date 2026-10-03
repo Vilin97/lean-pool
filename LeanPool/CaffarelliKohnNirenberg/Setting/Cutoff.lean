@@ -23,7 +23,7 @@ public import Mathlib.Tactic.Ring
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter
 open scoped Topology

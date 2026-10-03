@@ -28,7 +28,7 @@ for a solvable distribution on `Q_n`, every target has initial weight at least
 one, and hence the sum of all target weights is at least `|Q_n|`.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

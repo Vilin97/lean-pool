@@ -34,7 +34,7 @@ as well — contradicting `not_schurKilled_stdSuper`.
   of `schurKilled_unit_odd`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -59,6 +59,7 @@ section BiprodLetters
 variable {A : Type u}
 
 /-- The inclusion of one copy into an iterated biproduct sum. -/
+@[expose]
 noncomputable def sumPowIns
     [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
     (X : A) : (k : ℕ) → Fin (k + 1) →
@@ -69,6 +70,7 @@ noncomputable def sumPowIns
         (fun j => sumPowIns X k j ≫ biprod.inl) i
 
 /-- The projection onto one copy of an iterated biproduct sum. -/
+@[expose]
 noncomputable def sumPowPrj
     [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
     (X : A) : (k : ℕ) → Fin (k + 1) →

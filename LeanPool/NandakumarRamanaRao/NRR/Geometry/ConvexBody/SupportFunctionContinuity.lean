@@ -36,7 +36,7 @@ so the map is `R`-Lipschitz. This is more robust than a compact-maximum-with-par
 and yields the strongest downstream API.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

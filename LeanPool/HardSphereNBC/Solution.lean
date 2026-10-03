@@ -18,7 +18,7 @@ exposes the same declarations as `Challenge.lean` and connects them to the
 machine-checked flat-coordinate and fork-packing theorems.
 -/
 
-@[expose] public section
+public section
 
 namespace PalomarHS
 

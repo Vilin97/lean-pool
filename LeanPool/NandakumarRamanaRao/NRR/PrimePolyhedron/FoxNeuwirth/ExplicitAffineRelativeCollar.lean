@@ -34,7 +34,7 @@ codimension-two minors are governed by stable endpoint transversality rather tha
 genericity family.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -57,6 +57,7 @@ open AffinePositiveRayBoundary
 variable {p : Nat}
 
 /-- A cylinder point belongs to one of the two fixed horizontal boundary layers. -/
+@[expose]
 def IsHorizontalPoint (z : CylinderPoint p) : Prop :=
   z.time.1 = 0 ∨ z.time.1 = 1
 
@@ -120,10 +121,12 @@ instance facetOccurrenceFintype : Fintype C.FacetOccurrence := inferInstance
 instance facetOccurrenceDecidableEq : DecidableEq C.FacetOccurrence := inferInstance
 
 /-- Geometric point at a local cell vertex occurrence. -/
+@[expose]
 def slotPoint (s : C.VertexSlot) : CylinderPoint p :=
   C.vertex s.1 s.2
 
 /-- Ordered geometric vertex tuple of the facet obtained by omitting `o.2`. -/
+@[expose]
 def facetSignature (o : C.FacetOccurrence) : Fin p → CylinderPoint p :=
   fun i => C.vertex o.1 (o.2.succAbove i)
 
@@ -131,6 +134,7 @@ def facetSignature (o : C.FacetOccurrence) : Fin p → CylinderPoint p :=
 geometric signature is the simultaneous prime translate of the other.  This is the facet-orbit
 relation required by the Fox--Neuwirth orbit cycle: spatial side faces cancel after passage to the
 prime quotient, not necessarily as identical facets of the chosen top-cell representatives. -/
+@[expose]
 noncomputable def facetSetoid : Setoid C.FacetOccurrence where
   r a b := ∃ g : PrimeSymmetry p,
     (fun i => g • C.facetSignature a i) = C.facetSignature b
@@ -159,28 +163,33 @@ noncomputable instance facetFintype : Fintype C.Facet := Fintype.ofFinite _
 noncomputable instance facetDecidableEq : DecidableEq C.Facet := Classical.decEq _
 
 /-- Quotient facet represented by a local occurrence. -/
+@[expose]
 noncomputable def facetClass (o : C.FacetOccurrence) : C.Facet :=
   Quotient.mk _ o
 
 /-- Alternating boundary sign attached to an omitted local vertex. -/
+@[expose]
 def alternatingSign (k : Fin (p + 1)) : ZMod p :=
   (-1 : ZMod p) ^ k.1
 
 /-- Total signed incidence coefficient of one ordered prime-orbit facet. -/
-noncomputable def facetIncidence (s : C.Facet) : ZMod p :=
+@[expose] noncomputable def facetIncidence (s : C.Facet) : ZMod p :=
   ∑ o : C.FacetOccurrence,
     if C.facetClass o = s then C.coefficient o.1 * alternatingSign o.2 else 0
 
 /-- A local facet occurrence lies in the fixed lower horizontal boundary. -/
+@[expose]
 def IsLowerFacetOccurrence (o : C.FacetOccurrence) : Prop :=
   ∀ i : Fin p, (C.facetSignature o i).time.1 = 0
 
 /-- A local facet occurrence lies in the fixed upper horizontal boundary. -/
+@[expose]
 def IsUpperFacetOccurrence (o : C.FacetOccurrence) : Prop :=
   ∀ i : Fin p, (C.facetSignature o i).time.1 = 1
 
 /-- Lower-horizontal status is well-defined on ordered quotient-facet classes because
 prime symmetry preserves the interval coordinate. -/
+@[expose]
 noncomputable def IsLowerFacet : C.Facet → Prop :=
   Quotient.lift C.IsLowerFacetOccurrence (by
     intro a b hab
@@ -201,6 +210,7 @@ noncomputable def IsLowerFacet : C.Facet → Prop :=
 
 /-- Upper-horizontal status is well-defined on ordered quotient-facet classes because prime
 symmetry preserves the interval coordinate. -/
+@[expose]
 noncomputable def IsUpperFacet : C.Facet → Prop :=
   Quotient.lift C.IsUpperFacetOccurrence (by
     intro a b hab
@@ -220,6 +230,7 @@ noncomputable def IsUpperFacet : C.Facet → Prop :=
       exact hb i)
 
 /-- A geometric facet is horizontal when it belongs to either fixed endpoint boundary. -/
+@[expose]
 def IsHorizontalFacet (s : C.Facet) : Prop :=
   C.IsLowerFacet s ∨ C.IsUpperFacet s
 
@@ -267,10 +278,12 @@ end FoxNeuwirthRelativeAffineCollar
 /-! ## Exact endpoint identification -/
 
 /-- Embed a realization point in the lower horizontal boundary of the cylinder. -/
+@[expose]
 def lowerCylinderPoint (x : Realization p) : CylinderPoint p :=
   ⟨x, ⟨0, by simp⟩⟩
 
 /-- Embed a realization point in the upper horizontal boundary of the cylinder. -/
+@[expose]
 def upperCylinderPoint (x : Realization p) : CylinderPoint p :=
   ⟨x, ⟨1, by simp⟩⟩
 
@@ -343,6 +356,7 @@ end EndpointIdentifiedRelativeAffineCollar
 /-- Existence proposition for the genuine relative affine collar.  In contrast with the previous
 raw interface, this proposition cannot be inhabited by an empty cell family or by a collar whose
 horizontal boundary is unrelated to the supplied Fox--Neuwirth subdivision levels. -/
+@[expose]
 def RelativeAffineCollarExists
     (hp : Nat.Prime p) (N₀ N₁ M L : Nat) : Prop :=
   Nonempty (EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ M L)
@@ -362,10 +376,12 @@ noncomputable instance coverVertexSlotFintype : Fintype (CoverVertexSlot hp C) :
 instance coverVertexSlotDecidableEq : DecidableEq (CoverVertexSlot hp C) := inferInstance
 
 /-- Geometric point represented by a decorated local occurrence. -/
+@[expose]
 def coverPoint (s : CoverVertexSlot hp C) : CylinderPoint p :=
   s.1 • C.slotPoint s.2
 
 /-- Equality of geometric cylinder points identifies duplicate local occurrences. -/
+@[expose]
 noncomputable def coverVertexSetoid : Setoid (CoverVertexSlot hp C) where
   r a b := coverPoint hp C a = coverPoint hp C b
   iseqv := ⟨fun _ => rfl, fun h => h.symm, fun h₁ h₂ => h₁.trans h₂⟩
@@ -380,6 +396,7 @@ noncomputable instance globalVertexDecidableEq : DecidableEq (GlobalVertex hp C)
   Classical.decEq _
 
 /-- Left multiplication on the symmetry decoration. -/
+@[expose]
 def actCoverVertex
     (g : PrimeSymmetry p) (s : CoverVertexSlot hp C) : CoverVertexSlot hp C :=
   (g * s.1, s.2)
@@ -412,6 +429,7 @@ noncomputable instance globalVertexAction :
     simp [mul_smul]
 
 /-- Actual geometric point represented by a global vertex. -/
+@[expose]
 noncomputable def globalPoint : GlobalVertex hp C → CylinderPoint p :=
   Quotient.lift (coverPoint hp C) (by
     intro a b hab
@@ -429,6 +447,7 @@ noncomputable def globalPoint : GlobalVertex hp C → CylinderPoint p :=
   exact coverPoint_actCoverVertex hp C g s
 
 /-- Global vertex represented by an undecorated local slot. -/
+@[expose]
 noncomputable def sampleVertex (s : C.VertexSlot) : GlobalVertex hp C :=
   Quotient.mk _ ((1 : PrimeSymmetry p), s)
 
@@ -457,6 +476,7 @@ noncomputable instance parameterFintype : Fintype (Parameter hp C) := Fintype.of
 noncomputable instance parameterDecidableEq : DecidableEq (Parameter hp C) := Classical.decEq _
 
 /-- A global vertex is frozen precisely on one of the two horizontal boundaries. -/
+@[expose]
 def IsFrozenVertex (x : GlobalVertex hp C) : Prop :=
   IsHorizontalPoint (globalPoint hp C x)
 
@@ -466,6 +486,7 @@ def IsFrozenVertex (x : GlobalVertex hp C) : Prop :=
   simp [IsFrozenVertex, IsHorizontalPoint]
 
 /-- Frozen status is well-defined on diagonal parameter orbits. -/
+@[expose]
 noncomputable def IsFrozenParameter : Parameter hp C → Prop :=
   Quotient.lift
     (fun s : ScalarSite hp C => IsFrozenVertex hp C s.1)
@@ -492,6 +513,7 @@ noncomputable instance movableParameterFintype : Fintype (MovableParameter hp C)
 abbrev Assignment := Parameter hp C → Real
 
 /-- Replace only movable values, retaining the horizontal boundary assignment literally. -/
+@[expose]
 noncomputable def replaceMovable
     (base : Assignment hp C) (move : MovableParameter hp C → Real) : Assignment hp C := by
   classical
@@ -555,11 +577,13 @@ theorem eval_restrictPolynomial
   rw [hhom]
 
 /-- Scalar value reconstructed at a global vertex. -/
+@[expose]
 noncomputable def scalarValue
     (a : Assignment hp C) (x : GlobalVertex hp C) (j : Fin p) : Real :=
   a (Quotient.mk _ (x, j))
 
 /-- Vector value reconstructed at a global vertex. -/
+@[expose]
 noncomputable def vectorValue
     (a : Assignment hp C) (x : GlobalVertex hp C) : Fin p → Real :=
   fun j => scalarValue hp C a x j
@@ -750,6 +774,7 @@ noncomputable def deviationPolynomial
     y (ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- Real local vertex map reconstructed from an assignment. -/
+@[expose]
 noncomputable def localVertexMap
     (a : Assignment hp C) (q : C.Cell) : VertexMap p where
   value i := vectorValue hp C a (sampleVertex hp C (q, i))
@@ -834,6 +859,7 @@ abbrev CodimTwoFace (p : Nat) :=
   EquivariantPrismGenericityPolynomials.CodimTwoFace p
 
 /-- Retained local vertex after the two ordered omissions. -/
+@[expose]
 def codimTwoVertex
     (f : CodimTwoFace p) (i : Fin (p - 1)) : Fin (p + 1) :=
   EquivariantPrismGenericityPolynomials.codimTwoVertex hp f i
@@ -851,6 +877,7 @@ noncomputable def codimTwoMinorPolynomial
   Matrix.det (codimTwoDeviationMatrixPolynomial hp C q f)
 
 /-- Corresponding real deviation matrix. -/
+@[expose]
 noncomputable def codimTwoDeviationMatrix
     (a : Assignment hp C) (q : C.Cell) (f : CodimTwoFace p) :
     Matrix (Fin (p - 1)) (Fin (p - 1)) Real :=
@@ -909,16 +936,19 @@ theorem eval_restrictedCodimTwoMinorPolynomial
   exact eval_codimTwoMinorPolynomial hp C (replaceMovable hp C base move) q f
 
 /-- An ordered codimension-two face is purely lower horizontal. -/
+@[expose]
 def IsLowerHorizontalCodimTwo
     (q : C.Cell) (f : CodimTwoFace p) : Prop :=
   ∀ i : Fin (p - 1), (C.vertex q (codimTwoVertex hp f i)).time.1 = 0
 
 /-- An ordered codimension-two face is purely upper horizontal. -/
+@[expose]
 def IsUpperHorizontalCodimTwo
     (q : C.Cell) (f : CodimTwoFace p) : Prop :=
   ∀ i : Fin (p - 1), (C.vertex q (codimTwoVertex hp f i)).time.1 = 1
 
 /-- Purely horizontal codimension-two faces are excluded from the movable full-minor family. -/
+@[expose]
 def IsPurelyHorizontalCodimTwo
     (q : C.Cell) (f : CodimTwoFace p) : Prop :=
   IsLowerHorizontalCodimTwo hp C q f ∨ IsUpperHorizontalCodimTwo hp C q f
@@ -953,6 +983,7 @@ noncomputable def restrictedGenericityPolynomial
   | Sum.inr qf => restrictedCodimTwoMinorPolynomial hp C base qf.1.1 qf.1.2
 
 /-- Real determinant family corresponding to a full boundary-relative assignment. -/
+@[expose]
 noncomputable def genericityValue
     (a : Assignment hp C) : RelativeGenericityIndex hp C → Real
   | Sum.inl qk => VertexMap.facetDeterminant hp (localVertexMap hp C a qk.1) qk.2

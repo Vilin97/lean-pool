@@ -20,7 +20,7 @@ We construct, for every negation normal form formula, an alternating Büchi
 automaton (`ABW`) accepting the same language, establishing `exists_ABW_lang_for_LTL`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanModelChecking
 

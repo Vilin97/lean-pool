@@ -22,7 +22,7 @@ import Mathlib.Algebra.Order.Floor.Semifield
 /-! # Growth: the three prime ranges `K/400 < p ≤ K/20`, `K/20 < p ≤ K/3`, `K/3 < p ≤ 2h`
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 

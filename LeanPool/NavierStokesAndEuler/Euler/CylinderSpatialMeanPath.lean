@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Continuous-time and same-radius word estimates for the actual spatial mean. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -49,16 +49,16 @@ local instance instCylinderSpatialMeanPath6 : NormedSpace ℝ (C(K,CylinderL2 P 
     C(K,SpatialL2 V)) := inferInstance
 
 /-- Path mean, given by `(mean P).compLeftContinuous ℝ K`. -/
-def pathMean : C(K,CylinderL2 P V) →L[ℝ] C(K,SpatialL2 V) :=
+@[expose] def pathMean : C(K,CylinderL2 P V) →L[ℝ] C(K,SpatialL2 V) :=
   (mean P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathMean_apply (p : C(K, CylinderL2 P V)) (t : K) :
-    pathMean P p t = mean P (p t) := rfl
+    pathMean P p t = mean P (p t) := by rfl
 
 /-- Spatial path translation, given by `(EulerLpTranslation.translation
 a).toContinuousLinearMap.compLeftContinuous ℝ K`. -/
-def spatialPathTranslation (a : Space) : C(K,SpatialL2 V) →L[ℝ] C(K,SpatialL2 V) :=
+@[expose] def spatialPathTranslation (a : Space) : C(K,SpatialL2 V) →L[ℝ] C(K,SpatialL2 V) :=
   (EulerLpTranslation.translation a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in

@@ -45,7 +45,7 @@ No Gröbner basis algorithm is used: leading-term cancellation against an arbitr
 with the same leading exponent suffices.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

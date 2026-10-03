@@ -18,7 +18,7 @@ relative tensor collapses to the plain tensor, and the pairing
 and copairing pass through the collapse.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

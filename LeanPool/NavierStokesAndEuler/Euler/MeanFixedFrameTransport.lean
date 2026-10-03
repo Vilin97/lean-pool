@@ -19,7 +19,7 @@ These maps are proved inverse, so no parameter-dependent test space is hidden
 when comparing translated or differentiated coefficients.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -81,7 +81,7 @@ def meanTransportEquiv
   continuous_invFun := (meanBackward T hT FInv F F₁ hInv).continuous
 
 /-- Explicit polynomial transport cost for the mean fixed-space formulation. -/
-def meanTransportCost : ℝ :=
+@[expose] def meanTransportCost : ℝ :=
   transportCost T (solenoidalFrame T F) (solenoidalFrame T F₁) (meanFrameCoercivity T FInv)
 
 include hT in

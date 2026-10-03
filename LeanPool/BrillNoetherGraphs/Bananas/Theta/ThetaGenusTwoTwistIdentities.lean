@@ -16,7 +16,7 @@ marked chips from a fixed-degree twist.  These elementary identities make the
 resulting shifts of the finite torsion index explicit.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

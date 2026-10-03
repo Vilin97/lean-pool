@@ -19,7 +19,7 @@ identity for `p₁`; the interior half is the localized identity of the pressure
 decomposition.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

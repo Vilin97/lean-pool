@@ -20,7 +20,7 @@ of the two cross brackets.  The hypotheses expose precisely the mixed derivative
 be obtained from joint analyticity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

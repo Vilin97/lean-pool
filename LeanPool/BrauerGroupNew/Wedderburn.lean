@@ -22,7 +22,7 @@ import Mathlib.RingTheory.TwoSidedIdeal.BigOperators
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Wedderburn`.
 -/
 
-@[expose] public section
+public section
 
 variable (A : Type*) [Ring A]
 
@@ -66,7 +66,7 @@ The two-sided-ideals of `A` corresponds bijectively to that of `Mₙ(A)`.
 Given an ideal `I ≤ A`, we send it to `Mₙ(I)`.
 Given an ideal `J ≤ Mₙ(A)`, we send it to `{x₀₀ | x ∈ J}`.
 -/
-@[simps]
+@[expose, simps]
 def TwoSidedIdeal.equivRingConMatrix (oo : ι) : TwoSidedIdeal A ≃ TwoSidedIdeal M[ι, A] where
   toFun I := I.mapMatrix A ι
   invFun J := TwoSidedIdeal.mk'
@@ -117,7 +117,7 @@ The two-sided-ideals of `A` corresponds bijectively to that of `Mₙ(A)`.
 Given an ideal `I ≤ A`, we send it to `Mₙ(I)`.
 Given an ideal `J ≤ Mₙ(A)`, we send it to `{x₀₀ | x ∈ J}`.
 -/
-@[simps!]
+@[expose, simps!]
 def TwoSidedIdeal.equivRingConMatrix' (oo : ι) : TwoSidedIdeal A ≃o TwoSidedIdeal M[ι, A] where
 __ := TwoSidedIdeal.equivRingConMatrix A _ oo
 map_rel_iff' {I J} := by
@@ -145,7 +145,7 @@ instance op_simple : IsSimpleRing Aᵐᵒᵖ :=
 /--
 The canonical map from `Aᵒᵖ` to `Hom(A, A)`
 -/
-@[simps]
+@[expose, simps]
 def mopToEnd : Aᵐᵒᵖ →+* Module.End A A where
   toFun a :=
     { toFun := fun x ↦ x * a.unop
@@ -159,7 +159,7 @@ def mopToEnd : Aᵐᵒᵖ →+* Module.End A A where
 /--
 The canonical map from `A` to `Hom(A, A)ᵒᵖ`
 -/
-@[simps]
+@[expose, simps]
 def toEndMop : A →+* (Module.End A A)ᵐᵒᵖ where
   toFun a := op
     { toFun := fun x ↦ x * a
@@ -173,7 +173,7 @@ def toEndMop : A →+* (Module.End A A)ᵐᵒᵖ where
 /--
 the map `Aᵒᵖ → Hom(A, A)` is bijective
 -/
-noncomputable def mopEquivEnd : Aᵐᵒᵖ ≃+* Module.End A A :=
+@[expose] noncomputable def mopEquivEnd : Aᵐᵒᵖ ≃+* Module.End A A :=
   .ofBijective (mopToEnd A) ⟨RingHom.injective_iff_ker_eq_bot _ |>.mpr <|
     SetLike.ext fun α => ⟨by rintro (ha : mopToEnd A α = 0); simpa using (DFunLike.ext_iff.mp ha) 1,
       by rintro rfl; ext; simp⟩, fun φ => ⟨op (φ 1), by ext; simp⟩⟩
@@ -181,7 +181,7 @@ noncomputable def mopEquivEnd : Aᵐᵒᵖ ≃+* Module.End A A :=
 /--
 the map `Aᵒᵖ → Hom(A, A)` is bijective
 -/
-@[simps!]
+@[expose, simps!]
 noncomputable def equivEndMop : A ≃+* (Module.End A A)ᵐᵒᵖ :=
   .ofBijective (toEndMop A) ⟨RingHom.injective_iff_ker_eq_bot _ |>.mpr <| SetLike.ext
     fun α => ⟨fun ha => by
@@ -193,7 +193,7 @@ noncomputable def equivEndMop : A ≃+* (Module.End A A)ᵐᵒᵖ :=
 /--
 For any ring `D`, `Mₙ(D) ≅ Mₙ(D)ᵒᵖ`.
 -/
-@[simps]
+@[expose, simps]
 def matrixEquivMatrixMop (n : ℕ) (D : Type*) [Ring D] :
     Matrix (Fin n) (Fin n) Dᵐᵒᵖ ≃+* (Matrix (Fin n) (Fin n) D)ᵐᵒᵖ where
   toFun M := MulOpposite.op (M.transpose.map (fun d => MulOpposite.unop d))
@@ -446,7 +446,7 @@ variable {B} in
 /--
 For a `K`-algebra B, there is a map from `I : Ideal B` to `End(I)ᵒᵖ` defined by `k ↦ x ↦ k • x`.
 -/
-@[simps]
+@[expose, simps]
 def algebraMapEndIdealMop (I : Ideal B) : K →+* (Module.End B I)ᵐᵒᵖ where
   toFun k := .op {
     toFun x := k • x

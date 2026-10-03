@@ -18,7 +18,7 @@ twice.  This is the symmetric-category companion of Mathlib's
 adjacent symmetry cancellation dissolves the doubled crossing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

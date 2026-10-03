@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Monotonicity of the explicit finite-order inverse polynomials. These
 lemmas replace actual operator constants by source-scale upper bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

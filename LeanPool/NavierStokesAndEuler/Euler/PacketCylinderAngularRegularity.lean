@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 
 /-! Genuine periodicity and zero-mean identities for raw cylinder-path witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

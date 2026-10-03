@@ -50,7 +50,7 @@ Virasoro algebra
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -66,7 +66,7 @@ variable (𝕜 : Type*) [Field 𝕜]
 variable [CharZero 𝕜]
 
 /-- The Virasoro algebra. -/
-def VirasoroAlgebra := LieTwoCocycle.CentralExtension (WittAlgebra.virasoroCocycle 𝕜)
+@[expose] def VirasoroAlgebra := LieTwoCocycle.CentralExtension (WittAlgebra.virasoroCocycle 𝕜)
 
 namespace VirasoroAlgebra
 
@@ -85,13 +85,13 @@ noncomputable instance : LieAlgebra 𝕜 (VirasoroAlgebra 𝕜) :=
 variable {𝕜}
 
 /-- The projection from Virasoro algebra to Witt algebra. -/
-noncomputable def toWittAlgebra : VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ WittAlgebra 𝕜 :=
+@[expose] noncomputable def toWittAlgebra : VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ WittAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.proj (WittAlgebra.virasoroCocycle 𝕜)
 
 variable (𝕜)
 
 /-- The embedding of central elements to Virasoro algebra. -/
-noncomputable def ofCentral : 𝕜 →ₗ⁅𝕜⁆ VirasoroAlgebra 𝕜 :=
+@[expose] noncomputable def ofCentral : 𝕜 →ₗ⁅𝕜⁆ VirasoroAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.emb (WittAlgebra.virasoroCocycle 𝕜)
 
 lemma bracket_def' (X Y : VirasoroAlgebra 𝕜) :
@@ -128,11 +128,11 @@ theorem isCentralExtension : LieAlgebra.IsCentralExtension (ofCentral 𝕜) toWi
   LieTwoCocycle.CentralExtension.isCentralExtension _
 
 /-- The (commonly used) `Lₙ` elements of the Virasoro algebra, for `n ∈ ℤ`. -/
-noncomputable def lgen (n : ℤ) : VirasoroAlgebra 𝕜 :=
+@[expose] noncomputable def lgen (n : ℤ) : VirasoroAlgebra 𝕜 :=
   ⟨WittAlgebra.lgen 𝕜 n, 0⟩
 
 /-- The (commonly used) `C` central element of the Virasoro algebra. -/
-noncomputable def cgen : VirasoroAlgebra 𝕜 := ofCentral 𝕜 1
+@[expose] noncomputable def cgen : VirasoroAlgebra 𝕜 := ofCentral 𝕜 1
 
 lemma cgen_eq_ofCentral_one : cgen 𝕜 = ofCentral 𝕜 1 := rfl
 
@@ -192,7 +192,7 @@ lemma lgen_bracket' (n m : ℤ) :
   rw [lgen_bracket]; congr; ring
 
 /-- A section of the standard projection from the Virasoro algebra to the Witt algebra. -/
-noncomputable def lsection : WittAlgebra 𝕜 →ₗ[𝕜] VirasoroAlgebra 𝕜 :=
+@[expose] noncomputable def lsection : WittAlgebra 𝕜 →ₗ[𝕜] VirasoroAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (WittAlgebra.virasoroCocycle 𝕜)
 
 lemma lsection_prop : toWittAlgebra.toLinearMap ∘ₗ lsection 𝕜 = 1 := by

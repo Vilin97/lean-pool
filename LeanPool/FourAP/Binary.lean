@@ -18,14 +18,14 @@ removes a common least significant bit.  We use this recursive description
 both for a computable comparison and for the elementary proofs in the paper.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
 /-- The binary comparison from the paragraph defining `◁` in the paper.
 It returns `true` precisely when the first argument precedes the second.
 The special case `(0, 0)` ends the recursion after all bits have been removed. -/
-def binaryCompare (a b : ℕ) : Bool :=
+@[expose] def binaryCompare (a b : ℕ) : Bool :=
   if a + b = 0 then false
   else if a % 2 = b % 2 then binaryCompare (a / 2) (b / 2)
   else decide (b % 2 < a % 2)
@@ -34,7 +34,7 @@ decreasing_by omega
 
 /-- The paper's strict order `◁`, the reverse order on binary strings when
 compared at their first unequal bit starting from the least significant end. -/
-def bits (a b : ℕ) : Prop := binaryCompare a b = true
+@[expose] def bits (a b : ℕ) : Prop := binaryCompare a b = true
 
 /-- Binary comparison is decidable by the recursion defining the paper's order. -/
 instance bitsDecidable : DecidableRel bits := fun _ _ => inferInstanceAs (Decidable (_ = true))

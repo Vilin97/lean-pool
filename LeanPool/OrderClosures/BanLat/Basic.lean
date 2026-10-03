@@ -31,7 +31,7 @@ real scalar multiplication (`VectorLattice`) and proves that positive scalars di
 `⊔` and `⊓`, culminating in `abs_smul'`. The Archimedean case is treated at the end.
 -/
 
-@[expose] public section
+public section
 
 /-- A real vector lattice is a real module whose scalar multiplication is monotone for
 non-negative scalars and is compatible with the lattice-ordered additive structure. -/

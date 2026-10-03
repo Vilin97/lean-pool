@@ -28,7 +28,7 @@ The Bernstein numbers are the *smallest injective strict s-number sequence*
 The development needs only `[NontriviallyNormedField 𝕜]`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -55,6 +55,7 @@ noncomputable def gainOnSubspace (S : X →L[𝕜] Y) (M : Submodule 𝕜 X) : �
 /-- The set of admissible gains at stage `n`: the numbers
 `gainOnSubspace S M` for subspaces `M ⊆ X` of dimension exactly `n + 1`.
 The `n`-th Bernstein number is its supremum. -/
+@[expose]
 def bernsteinSet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
   {r | ∃ M : Submodule 𝕜 X,
       Module.rank 𝕜 M = (n + 1 : ℕ) ∧ r = gainOnSubspace S M}
@@ -62,6 +63,7 @@ def bernsteinSet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
 /-- The `n`-th **Bernstein number** of a continuous linear map.
 
 `b_n S = sup_{M ⊆ X, dim M = n + 1} gainOnSubspace S M`. -/
+@[expose]
 noncomputable def bernsteinNumber (S : X →L[𝕜] Y) (n : ℕ) : ℝ :=
   sSup (bernsteinSet S n)
 

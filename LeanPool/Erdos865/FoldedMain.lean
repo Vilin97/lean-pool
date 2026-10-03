@@ -23,7 +23,7 @@ Monotonicity of the sum sets, the reflection `-B = {m - b}` and its effect on
 additive lemma `folded_additive`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

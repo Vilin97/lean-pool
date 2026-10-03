@@ -21,7 +21,7 @@ resolvent-set condition.  Oriented scalar winding then computes the common
 mass as `2 * pi * I • 1`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Metric Set spectrum
 open scoped InnerProductSpace Interval Pointwise Real

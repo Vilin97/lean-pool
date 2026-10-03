@@ -13,10 +13,10 @@ public import Mathlib.Algebra.Algebra.Opposite
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.LinearMapOp`.
 -/
 
-@[expose] public section
+public section
 
 /-- Push a semilinear map between modules through the multiplicative opposite. -/
-@[simps]
+@[expose, simps]
 def LinearMap.op {R S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
   {M M₂ : Type*} [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module S M₂]
   (f : M →ₛₗ[σ] M₂) : Mᵐᵒᵖ →ₛₗ[σ] M₂ᵐᵒᵖ where
@@ -25,7 +25,7 @@ def LinearMap.op {R S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
     map_smul' _ _ := by simp only [MulOpposite.unop_smul, LinearMap.map_smulₛₗ, MulOpposite.op_smul]
 
 /-- Pull a semilinear map between opposite modules back through the multiplicative opposite. -/
-@[simps]
+@[expose, simps]
 def LinearMap.unop {R S : Type*} [Semiring R] [Semiring S] {σ : R →+* S}
   {M M₂ : Type*} [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module S M₂]
   (f : Mᵐᵒᵖ →ₛₗ[σ] M₂ᵐᵒᵖ) : M →ₛₗ[σ] M₂ where

@@ -27,7 +27,7 @@ consequences `flip_gExpFeasible` and `compatible_gExpFeasible` are proved at the
 file from the root-sink lemma. Everything in this file is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 

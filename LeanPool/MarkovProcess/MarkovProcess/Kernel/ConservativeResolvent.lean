@@ -30,7 +30,7 @@ equivalence and not merely a sufficient condition.
 No topology on the state space is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

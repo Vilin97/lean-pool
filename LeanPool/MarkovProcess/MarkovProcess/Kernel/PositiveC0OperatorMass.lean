@@ -19,7 +19,7 @@ This file proves only a pointwise total-mass bound and finiteness.  It does not 
 or prove any regularity in the evaluation point.
 -/
 
-@[expose] public section
+public section
 
 open CompactlySupported MeasureTheory
 open scoped ZeroAtInfty

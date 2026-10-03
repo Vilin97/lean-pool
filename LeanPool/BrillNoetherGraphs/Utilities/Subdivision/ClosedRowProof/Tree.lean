@@ -113,7 +113,7 @@ conditions at `p … p+k−1`.  That stability is what lets the emitter address
 context rows by a fixed index in every certificate it synthesises.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

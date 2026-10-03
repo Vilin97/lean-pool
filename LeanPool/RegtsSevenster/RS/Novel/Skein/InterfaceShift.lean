@@ -20,7 +20,7 @@ engine of the permutation calculus of §3.1: strand fragments
 compose by composing their permutations.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

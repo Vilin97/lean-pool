@@ -25,7 +25,7 @@ sets (sets determined by a single relation query) are measurable.
 - `measurableSet_relHolds`: The set of codes where a given relation query holds is measurable.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

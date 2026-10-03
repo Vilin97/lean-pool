@@ -35,7 +35,7 @@ maps that raw phase vector to the computational-basis vector `|j>`.
   outcome `j` has probability one after the exact readout.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -135,8 +135,7 @@ def phaseState (t : Nat) (phi : Real) : StateVector t :=
 @[simp]
 theorem phaseState_apply (t : Nat) (phi : Real) (k : Fin (2 ^ t)) :
     phaseState t phi k =
-      invSqrtN t * Complex.exp (2 * Real.pi * phi * k.val * Complex.I) :=
-  rfl
+      invSqrtN t * Complex.exp (2 * Real.pi * phi * k.val * Complex.I) := by rfl
 
 /-- Dyadic/Fourier bridge: when the eigenphase is `j / 2^t`, the QPE phase
 superposition is exactly `QFT t |j>`. -/

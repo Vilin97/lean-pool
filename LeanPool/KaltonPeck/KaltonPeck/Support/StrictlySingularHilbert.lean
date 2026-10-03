@@ -20,7 +20,7 @@ This file proves that strict singularity of bounded operators between real Hilbe
 preserved by, and hence invariant under, the Hilbert-space adjoint.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.StrictlySingular

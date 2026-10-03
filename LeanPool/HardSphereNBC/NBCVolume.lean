@@ -23,7 +23,7 @@ public import LeanPool.HardSphereNBC.GraphicMatroid
   weight sum with Lebesgue integration after this algebraic identity.
 -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 

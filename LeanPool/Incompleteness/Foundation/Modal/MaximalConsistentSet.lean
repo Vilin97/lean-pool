@@ -14,7 +14,7 @@ import Mathlib.Tactic.TautoSet
 
 /-! # MaximalConsistentSet -/
 
-@[expose] public section
+public section
 
 
 namespace LO

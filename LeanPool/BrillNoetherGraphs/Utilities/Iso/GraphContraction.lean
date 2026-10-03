@@ -23,7 +23,7 @@ source to the target.  It does **not** assert that arbitrary divisor rank is
 preserved by contraction.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -47,6 +47,7 @@ Laplacian-preserving relabeling.  The quotient target is left unchanged.
 
 This is a change of names on source vertices, not a rank-transport claim
 through a contraction. -/
+@[expose]
 def precomposeLaplacianEquiv {G' : CFGraph.{w}}
     (c : GraphContractionCertificate G H) (equivalence : LaplacianEquiv G' G) :
     GraphContractionCertificate G' H where
@@ -61,6 +62,7 @@ def precomposeLaplacianEquiv {G' : CFGraph.{w}}
 /-- Reindex the target of a contraction certificate along a checked
 Laplacian-preserving relabeling.  This only changes the names of quotient
 vertices; it is not a claim that rank descends through a contraction. -/
+@[expose]
 def postcomposeLaplacianEquiv {H' : CFGraph.{w}}
     (c : GraphContractionCertificate G H) (equivalence : LaplacianEquiv H H') :
     GraphContractionCertificate G H' where
@@ -75,6 +77,7 @@ def postcomposeLaplacianEquiv {H' : CFGraph.{w}}
 /-- The exact quotient condition.  It is imposed only for distinct target
 vertices: source edges internal to one fibre are precisely the edges which
 are contracted, so no equation is required on the diagonal. -/
+@[expose]
 def Valid (c : GraphContractionCertificate G H) : Prop :=
   Function.Surjective c.vertexMap ∧
   ∀ a b : H.V, a ≠ b →
@@ -178,10 +181,12 @@ def check (c : GraphContractionCertificate G H) : Bool :=
   exact and_congr (@decide_eq_true_eq (Function.Surjective c.vertexMap) _).to_iff Iff.rfl
 
 /-- Push a divisor forward by summing it over fibres. -/
+@[expose]
 def pushDiv (c : GraphContractionCertificate G H) (D : CFDiv G) : CFDiv H :=
   fun b => ∑ x : G.V, if c.vertexMap x = b then D x else 0
 
 /-- Pull a firing script back by composition with the quotient map. -/
+@[expose]
 def pullScript (c : GraphContractionCertificate G H)
     (tau : firingScript H) : firingScript G :=
   fun x => tau (c.vertexMap x)

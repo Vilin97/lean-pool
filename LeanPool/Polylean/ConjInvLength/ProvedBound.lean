@@ -12,7 +12,7 @@ import Batteries.Logic
 # LeanPool.Polylean.ConjInvLength.ProvedBound
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 open Letter
@@ -63,13 +63,13 @@ def provedSplits (z : Letter) : (w : Word) → List (ProvedSplit z w)
 abbrev Length := Word → Nat
 
 /-- A length function invariant under conjugation by letters. -/
-def conjInv (l : Length) : Prop := (x : Letter) → (g : Word) → l (g^x) = l (g)
+@[expose] def conjInv (l : Length) : Prop := (x : Letter) → (g : Word) → l (g^x) = l (g)
 
 /-- The triangle inequality for a length function. -/
-def triangIneq (l : Length) : Prop := (g h : Word) → l (g ++ h) ≤ l g + l h
+@[expose] def triangIneq (l : Length) : Prop := (g h : Word) → l (g ++ h) ≤ l g + l h
 
 /-- A length function normalized on single letters. -/
-def normalized (l : Length) : Prop := (x : Letter) → l [x] = 1
+@[expose] def normalized (l : Length) : Prop := (x : Letter) → l [x] = 1
 
 /-- A length function that sends the empty word to zero. -/
 def emptyWord (l : Length) : Prop := l [] = 0

@@ -25,7 +25,7 @@ sub-cases into the main factor theorem for the close-up
 induction (Heitmann, Lemma 4, case n >= 3).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

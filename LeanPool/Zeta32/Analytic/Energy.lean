@@ -21,7 +21,7 @@ Poisson, CIntegrals, Regularity, Potential — (8′), (11′), (15′) and the 
 `massA` of FstarDefs; ZeroMass, CircleTools, Discrete — (12), (13′); Assembly — (14′) and the
 constant. -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial
 

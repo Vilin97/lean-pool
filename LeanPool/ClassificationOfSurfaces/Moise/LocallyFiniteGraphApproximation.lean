@@ -21,7 +21,7 @@ nonincident edges and all other vertices.  Local finiteness makes the two obstac
 closed, which is the only compactness input needed for this pointwise construction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -76,7 +76,7 @@ variable {K : LocallyFiniteTriangleComplex S} (G : K.PlaneGraphRealization)
 
 /-- Reduce the quantitative replacement controls without changing the realized map, its target
 region, or any local-finiteness data. -/
-def withApproximationControls
+@[expose] def withApproximationControls
     (vertexControl : K.Vertex → ℝ) (hvertex : ∀ v, 0 < vertexControl v)
     (edgeControl : K.Edge → ℝ) (hedge : ∀ e, 0 < edgeControl e) :
     K.PlaneGraphRealization where
@@ -103,17 +103,17 @@ def withApproximationControls
     (G.withApproximationControls vertexControl hvertex edgeControl hedge).map = G.map := rfl
 
 /-- Include an edge point into the whole support. -/
-def edgeToSupport (e : K.Edge) (p : K.edgeCarrier e) : K.support :=
+@[expose] def edgeToSupport (e : K.Edge) (p : K.edgeCarrier e) : K.support :=
   ⟨p.1, by
     apply Set.mem_iUnion.mpr
     exact ⟨K.edgeFace e, K.edgeCarrier_subset_faceCarrier e p.2⟩⟩
 
 /-- The image of a global vertex in chart coordinates. -/
-noncomputable def vertexImage (v : K.Vertex) : Plane :=
+@[expose] noncomputable def vertexImage (v : K.Vertex) : Plane :=
   G.map ⟨K.vertexPoint v, K.vertexPoint_mem_support v⟩
 
 /-- The image of an edge carrier in chart coordinates. -/
-def edgeImage (e : K.Edge) : Set Plane :=
+@[expose] def edgeImage (e : K.Edge) : Set Plane :=
   G.map '' {p : K.support | p.1 ∈ K.edgeCarrier e}
 
 theorem edgeImage_eq_structure_family (e : K.Edge) :
@@ -248,7 +248,7 @@ theorem isClosed_edgeImage (e : K.Edge) : IsClosed (G.edgeImage e) :=
   (G.isCompact_edgeImage e).isClosed
 
 /-- The canonical interval parametrization of an edge, included into the source support. -/
-noncomputable def edgePathInSupport (e : K.Edge) (r : Set.Icc (0 : ℝ) 1) : K.support :=
+@[expose] noncomputable def edgePathInSupport (e : K.Edge) (r : Set.Icc (0 : ℝ) 1) : K.support :=
   edgeToSupport (K := K) e
     ⟨K.edgePath e r, by rw [← K.range_edgePath e]; exact Set.mem_range_self r⟩
 
@@ -264,7 +264,7 @@ theorem edgePathInSupport_injective (e : K.Edge) :
   exact congrArg Subtype.val hrs
 
 /-- The charted embedded arc carried by one abstract edge. -/
-noncomputable def chartEdgePath (e : K.Edge) : Set.Icc (0 : ℝ) 1 → Plane :=
+@[expose] noncomputable def chartEdgePath (e : K.Edge) : Set.Icc (0 : ℝ) 1 → Plane :=
   G.map ∘ edgePathInSupport (K := K) e
 
 theorem continuous_chartEdgePath (e : K.Edge) : Continuous (G.chartEdgePath e) :=
@@ -444,11 +444,11 @@ theorem vertexImage_not_mem_nonincidentEdgeImage (v : K.Vertex) :
       ⟨K.vertexPoint v, K.vertexPoint_mem_support v⟩)
 
 /-- Singleton chart images of the global vertices. -/
-def vertexImageCarrier (v : K.Vertex) : Set Plane :=
+@[expose] def vertexImageCarrier (v : K.Vertex) : Set Plane :=
   {G.vertexImage v}
 
 /-- A singleton vertex image in the open chart range. -/
-def vertexImageCarrierInRange (v : K.Vertex) : Set G.region :=
+@[expose] def vertexImageCarrierInRange (v : K.Vertex) : Set G.region :=
   {q | q.1 ∈ G.vertexImageCarrier v}
 
 /-- Local finiteness of vertex images transported to the chart plane.  It follows from edge
@@ -1896,7 +1896,7 @@ theorem exists_parameterization (A : G.CentralPolygonalArc e) :
   ⟨A.parameterizationData⟩
 
 /-- The `parameterization` declaration. -/
-noncomputable def parameterization (A : G.CentralPolygonalArc e) : A.Parameterization :=
+@[expose] noncomputable def parameterization (A : G.CentralPolygonalArc e) : A.Parameterization :=
   A.parameterizationData
 
 /-- Ordered exits of the resolved polygonal arc from the two variable-radius vertex disks. -/
@@ -1917,7 +1917,7 @@ noncomputable def exitData (A : G.CentralPolygonalArc e) :
   · exact G.disjoint_vertexDisks (K.edgeFirst_ne_edgeSecond e)
 
 /-- The `trimmedCarrier` declaration. -/
-def trimmedCarrier (A : G.CentralPolygonalArc e) : Set Plane :=
+@[expose] def trimmedCarrier (A : G.CentralPolygonalArc e) : Set Plane :=
   A.parameterization.curve '' Set.Icc A.exitData.left A.exitData.right
 
 theorem trimmedCarrier_subset_resolvedCarrier (A : G.CentralPolygonalArc e) :
@@ -1953,23 +1953,23 @@ theorem trimmedCarrier_avoids_second (A : G.CentralPolygonalArc e) {x : Plane}
     · exact lt_of_le_of_ne ht.2 fun heq => hxright (by rw [heq])
 
 /-- The `leftEndpoint` declaration. -/
-noncomputable def leftEndpoint (A : G.CentralPolygonalArc e) : Plane :=
+@[expose] noncomputable def leftEndpoint (A : G.CentralPolygonalArc e) : Plane :=
   A.parameterization.curve A.exitData.left
 
 /-- The `rightEndpoint` declaration. -/
-noncomputable def rightEndpoint (A : G.CentralPolygonalArc e) : Plane :=
+@[expose] noncomputable def rightEndpoint (A : G.CentralPolygonalArc e) : Plane :=
   A.parameterization.curve A.exitData.right
 
 /-- The `leftSpoke` declaration. -/
-noncomputable def leftSpoke (A : G.CentralPolygonalArc e) : Set Plane :=
+@[expose] noncomputable def leftSpoke (A : G.CentralPolygonalArc e) : Set Plane :=
   segment ℝ (G.vertexImage (K.edgeFirst e)) A.leftEndpoint
 
 /-- The `rightSpoke` declaration. -/
-noncomputable def rightSpoke (A : G.CentralPolygonalArc e) : Set Plane :=
+@[expose] noncomputable def rightSpoke (A : G.CentralPolygonalArc e) : Set Plane :=
   segment ℝ A.rightEndpoint (G.vertexImage (K.edgeSecond e))
 
 /-- The `completeCarrier` declaration. -/
-noncomputable def completeCarrier (A : G.CentralPolygonalArc e) : Set Plane :=
+@[expose] noncomputable def completeCarrier (A : G.CentralPolygonalArc e) : Set Plane :=
   A.leftSpoke ∪ A.trimmedCarrier ∪ A.rightSpoke
 
 theorem leftEndpoint_on_sphere (A : G.CentralPolygonalArc e) :
@@ -2114,7 +2114,7 @@ theorem leftSpoke_disjoint_rightSpoke (A : G.CentralPolygonalArc e) :
     A.leftSpoke_subset_vertexDisk A.rightSpoke_subset_vertexDisk
 
 /-- The trimmed resolved middle, with its parameter interval normalized to the unit interval. -/
-noncomputable def middlePath (A : G.CentralPolygonalArc e) :
+@[expose] noncomputable def middlePath (A : G.CentralPolygonalArc e) :
     Path A.leftEndpoint A.rightEndpoint where
   toFun t := A.parameterization.curve
     (Path.segment A.exitData.left A.exitData.right t)
@@ -2164,7 +2164,7 @@ theorem middlePath_injective (A : G.CentralPolygonalArc e) :
   exact Path.segment_injective_of_ne A.exitData.left_lt_right.ne hparam
 
 /-- The complete polygonal replacement path of a locally finite abstract edge. -/
-noncomputable def completePath (A : G.CentralPolygonalArc e) :
+@[expose] noncomputable def completePath (A : G.CentralPolygonalArc e) :
     Path (G.vertexImage (K.edgeFirst e)) (G.vertexImage (K.edgeSecond e)) :=
   (Path.segment (G.vertexImage (K.edgeFirst e)) A.leftEndpoint).trans
     (A.middlePath.trans
@@ -2589,7 +2589,7 @@ end CentralPolygonalArc
 /-! ## Strongly-positive edge controls -/
 
 /-- The carrier of an abstract edge, included into the whole source support. -/
-def edgeInSupport (e : K.Edge) : Set K.support :=
+@[expose] def edgeInSupport (e : K.Edge) : Set K.support :=
   Set.range (edgeToSupport (K := K) e)
 
 theorem isCompact_edgeInSupport (e : K.Edge) :
@@ -2679,6 +2679,7 @@ noncomputable def ofIsOpenEmbedding (f : K.support → Plane)
 /-- Build a plane graph realization when the source image is closed in a specified open
 perturbation region.  Unlike `ofIsOpenEmbedding`, this permits the source image itself to have
 boundary, which is the form used on a Rado chart overlap. -/
+@[expose]
 noncomputable def ofEmbeddingInOpenRegion (V : Set Plane) (hV : IsOpen V)
     (f : K.support → Plane) (hf : _root_.Topology.IsEmbedding f)
     (hmem : ∀ p, f p ∈ V)
@@ -2733,7 +2734,7 @@ theorem range_edgePathInSupport (e : K.Edge) :
     exact hr
 
 /-- Restrict the source edge path to its carrier inside the full support. -/
-noncomputable def edgePathInSupportToCarrier (e : K.Edge) :
+@[expose] noncomputable def edgePathInSupportToCarrier (e : K.Edge) :
     Set.Icc (0 : ℝ) 1 → edgeInSupport (K := K) e :=
   fun r ↦ ⟨edgePathInSupport (K := K) e r,
     by rw [← range_edgePathInSupport (K := K) e]; exact Set.mem_range_self r⟩
@@ -2757,7 +2758,7 @@ theorem edgePathInSupportToCarrier_surjective (e : K.Edge) :
   exact ⟨r, rfl⟩
 
 /-- The canonical source interval of an edge, inside the support subtype. -/
-noncomputable def edgePathInSupportHomeomorph (e : K.Edge) :
+@[expose] noncomputable def edgePathInSupportHomeomorph (e : K.Edge) :
     Set.Icc (0 : ℝ) 1 ≃ₜ edgeInSupport (K := K) e := by
   letI : T2Space K.support := G.isEmbedding.t2Space
   exact ((continuous_edgePathInSupportToCarrier (K := K) e).isClosedEmbedding
@@ -2770,7 +2771,7 @@ noncomputable def edgePathInSupportHomeomorph (e : K.Edge) :
       edgePathInSupport (K := K) e r := rfl
 
 /-- The polygonal replacement map on one closed source edge. -/
-noncomputable def replacementEdgeMap (e : K.Edge) :
+@[expose] noncomputable def replacementEdgeMap (e : K.Edge) :
     edgeInSupport (K := K) e → Plane :=
   fun p ↦ (G.replacementArc e).completePath
     ((G.edgePathInSupportHomeomorph e).symm p)
@@ -2846,7 +2847,7 @@ theorem replacementEdgeMap_vertex (e : K.Edge) (v : K.Vertex) (hve : v ∈ e.1) 
     exact (G.replacementArc e).completePath.target
 
 /-- The source one-skeleton as a subspace of the complete support. -/
-def oneSkeletonInSupport : Set K.support :=
+@[expose] def oneSkeletonInSupport : Set K.support :=
   ⋃ e : K.Edge, edgeInSupport (K := K) e
 
 /-- A chosen source edge carrying a one-skeleton point. -/
@@ -3257,7 +3258,7 @@ def IsPhiApproximation (phi : K.support → ℝ) (f : K.support → Plane) : Pro
   ∀ p, dist (f p) (G.map p) < phi p
 
 /-- The edge-mesh condition which converts setwise polygonal tubes into a pointwise control. -/
-def EdgeImagesControlled (phi : K.support → ℝ) : Prop :=
+@[expose] def EdgeImagesControlled (phi : K.support → ℝ) : Prop :=
   ∀ e : K.Edge, ∀ p ∈ edgeInSupport (K := K) e,
     2 * Metric.diam (G.edgeImage e) < phi p
 
@@ -3307,7 +3308,7 @@ theorem edgeImagesControlled_of_diam_lt_controlRadius {phi : K.support → ℝ}
   exact (hsmall e).trans_le (edgeControlRadius_le (K := K) hphi e hp)
 
 /-- Include a maximal face into the whole source support. -/
-def faceToSupport (f : K.Face)
+@[expose] def faceToSupport (f : K.Face)
     (p : stdSimplex ℝ {v // v ∈ K.faceVertices f}) : K.support :=
   ⟨K.faceMap f p, Set.mem_iUnion.mpr ⟨f, Set.mem_range_self p⟩⟩
 
@@ -3317,7 +3318,7 @@ theorem continuous_faceToSupport (f : K.Face) :
   exact K.faceMap_continuous f
 
 /-- A face carrier as a compact subset of the whole source support. -/
-def faceInSupport (f : K.Face) : Set K.support :=
+@[expose] def faceInSupport (f : K.Face) : Set K.support :=
   Set.range (faceToSupport (K := K) f)
 
 theorem isCompact_faceInSupport (f : K.Face) :

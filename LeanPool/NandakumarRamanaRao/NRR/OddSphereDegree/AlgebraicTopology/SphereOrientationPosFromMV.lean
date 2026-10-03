@@ -33,7 +33,7 @@ positive-dimensional `SphereOrientationPos`.
 The construction is assembled from the Mayer–Vietoris results.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,7 +45,7 @@ This is the stable export of the Branch 1 construction: a genuine, non-vacuous
 `SphereOrientationPos` built entirely from the unconditional Mayer–Vietoris
 suspension tower `sphereSuspensionTowerFromMV` (no Branch 1 hypothesis is
 assumed). -/
-def sphereOrientationPosUnconditional : SphereOrientationPos :=
+@[expose] def sphereOrientationPosUnconditional : SphereOrientationPos :=
   sphereOrientationPosFromMV
 
 /-- The unconditional positive-dimensional orientation agrees with the
@@ -56,13 +56,13 @@ theorem sphereOrientationPos_unconditional_eq :
 /-- **Stable projection.** The integral top-homology identification
 `Hₙ(Sⁿ; ℤ) ≅ ℤ` for every dimension `n ≥ 1`, read off the unconditional
 positive-dimensional orientation. -/
-def sphereTopHomologyIsoUnconditional (n : ℕ) (hn : 1 ≤ n) :
+@[expose] def sphereTopHomologyIsoUnconditional (n : ℕ) (hn : 1 ≤ n) :
     SphereTopHomologyIso n :=
   sphereOrientationPosUnconditional.iso n hn
 
 /-- Alias for `sphereTopHomologyIsoUnconditional`: the positive-dimensional
 top-homology identification `Hₙ(Sⁿ; ℤ) ≅ ℤ` (`n ≥ 1`). -/
-def sphereTopHomologyIsoOfPos (n : ℕ) (hn : 1 ≤ n) :
+@[expose] def sphereTopHomologyIsoOfPos (n : ℕ) (hn : 1 ≤ n) :
     SphereTopHomologyIso n :=
   sphereTopHomologyIsoUnconditional n hn
 

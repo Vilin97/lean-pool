@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.TrialInterfaces
 Finite Euclidean phase data, guard schedules, and the two-phase local trial contract.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -42,6 +42,7 @@ structure EuclideanGapData (d m : ℕ) where
   trace : List (Observation d)
 
 /-- The initial state, coefficient equations, and accelerated Euclidean update recurrences. -/
+@[expose]
 def EuclideanGapDynamics (data : EuclideanGapData d m) : Prop :=
   0 < data.M ∧ data.A 0 = 0 ∧ data.x 0 = data.x0 ∧ data.w 0 = data.x0 ∧
   ∀ k < m,
@@ -59,6 +60,7 @@ def EuclideanGapDynamics (data : EuclideanGapData d m) : Prop :=
       (data.a (k + 1) / data.A (k + 1)) • data.w (k + 1)
 
 /-- The Euclidean dynamics, radius bound, accepted models, and exact observation trace. -/
+@[expose]
 def EuclideanGapAssumptions (data : EuclideanGapData d m) : Prop :=
   EuclideanGapDynamics data ∧ data.inst.R ≤ data.D ∧
   data.x 0 = data.x0 ∧ data.w 0 = data.x0 ∧
@@ -84,6 +86,7 @@ def EuclideanGapAssumptions (data : EuclideanGapData d m) : Prop :=
   0 < data.A m
 
 /-- Source carrier for `lem:euclideangap` (E01). -/
+@[expose]
 noncomputable def EuclideanGapStatement : Prop :=
   ∀ (d m : ℕ) (data : EuclideanGapData d m),
     EuclideanGapAssumptions data →
@@ -114,6 +117,7 @@ structure OGMGData (d n : ℕ) where
   trace : List (Observation d)
 
 /-- The backward coefficient equations, initial state, and literal OGM-G update recurrences. -/
+@[expose]
 def OGMGDynamics (data : OGMGData d n) : Prop :=
   1 ≤ n ∧ 0 < data.M ∧ data.theta n = 1 ∧
   data.u 0 = data.U ∧ data.vMinusOne = data.U ∧
@@ -133,6 +137,7 @@ def OGMGDynamics (data : OGMGData d n) : Prop :=
   data.v n = data.u n - (1 / data.M) • data.oracle.gradient (data.u n)
 
 /-- The OGM-G dynamics, convex gradient oracle, attained minimum, guards, and exact trace. -/
+@[expose]
 def OGMGAssumptions (data : OGMGData d n) : Prop :=
   OGMGDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -163,6 +168,7 @@ def OGMGAssumptions (data : OGMGData d n) : Prop :=
   TerminalDescentGuard data.M data.oracle (data.u n) (data.v n)
 
 /-- Source carrier for `lem:ogmg` (E02). -/
+@[expose]
 noncomputable def FiniteDataOGMGStatement : Prop :=
   ∀ (d n : ℕ) (data : OGMGData d n), OGMGAssumptions data →
     (lpNorm 2 (data.oracle.gradient (data.u n))) ^ (2 : ℕ) ≤
@@ -171,7 +177,7 @@ noncomputable def FiniteDataOGMGStatement : Prop :=
     data.theta 0 ≥ ((n : ℝ) + 1) / Real.sqrt 2
 
 /-- The prescribed observation list for the Euclidean gap and OGM-G phases. -/
-def euclideanPlannedTrace (inst : PositiveInstance 2 d x0)
+@[expose] def euclideanPlannedTrace (inst : PositiveInstance 2 d x0)
     (phaseA : EuclideanGapData d m) (phaseB : OGMGData d n) :
     List (Observation d) :=
   ((List.range m).flatMap (fun k =>
@@ -182,12 +188,13 @@ def euclideanPlannedTrace (inst : PositiveInstance 2 d x0)
   [inst.oracle.observe (phaseB.v n)]
 
 /-- A guard check formed from the exact oracle observations at its two points. -/
+@[expose]
 def exactGuardCheck (kind : ObservableGuardKind) (oracle : PairOracle d)
     (x y : Point d) : ObservableGuardCheck d :=
   ⟨kind, oracle.observe x, oracle.observe y⟩
 
 /-- The upper-model, interpolation, and terminal-descent checks of a Euclidean trial. -/
-def euclideanGuardSchedule (inst : PositiveInstance 2 d x0)
+@[expose] def euclideanGuardSchedule (inst : PositiveInstance 2 d x0)
     (phaseA : EuclideanGapData d m) (phaseB : OGMGData d n) :
     List (ObservableGuardCheck d) :=
   ((List.range m).map (fun k =>
@@ -201,6 +208,7 @@ def euclideanGuardSchedule (inst : PositiveInstance 2 d x0)
 checkable.  Phase-A upper-model checks are made after each two-query step;
 the ordered interpolation ledger is checked after `u_n` and before the
 separate terminal-descent query at `v_n`. -/
+@[expose]
 def EuclideanScaleTraceStopsAtFailure (inst : PositiveInstance 2 d x0)
     (report : TrialReport d) (phaseA : EuclideanGapData d m)
     (phaseB : OGMGData d n) : Prop :=
@@ -218,6 +226,7 @@ def EuclideanScaleTraceStopsAtFailure (inst : PositiveInstance 2 d x0)
       report.trace = euclideanPlannedTrace inst phaseA phaseB)
 
 /-- The linked Euclidean phases, guard schedule, and chronological trial report contract. -/
+@[expose]
 def EuclideanTrialOperationalContract (x0 : Point d) (M D : ℝ)
     (inst : PositiveInstance 2 d x0) (report : TrialReport d)
     (phaseA : EuclideanGapData d m) (phaseB : OGMGData d n) : Prop :=
@@ -250,6 +259,7 @@ def EuclideanTrialOperationalContract (x0 : Point d) (M D : ℝ)
 
 /-- Source carrier for `prop:euclideantrial` (E03), retaining the exact
 `2m+n+1` accounting and the distinct terminal descent query. -/
+@[expose]
 noncomputable def EuclideanTrialStatement : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (d : ℕ) (eps M D : ℝ),
     0 < eps → 0 < M → 0 < D → ∀ (x0 : Point d)

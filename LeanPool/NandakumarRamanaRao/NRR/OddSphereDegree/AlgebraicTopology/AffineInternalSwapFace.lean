@@ -26,7 +26,7 @@ No chain-level boundary statement is asserted here. This is only the affine
 face identity needed before the sign-cancellation proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

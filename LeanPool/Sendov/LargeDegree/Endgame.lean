@@ -47,7 +47,7 @@ and the certificate were closed by `ring` under a twentyfold heartbeat budget.
 * `Sendov.large_degree`: `R n α < 1` for `n ≥ 101`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

@@ -18,7 +18,7 @@ convex integral path potential; the second connector is constant. This avoids
 requiring an isomorphism to a separately constructed path-join graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.TwoPole
 

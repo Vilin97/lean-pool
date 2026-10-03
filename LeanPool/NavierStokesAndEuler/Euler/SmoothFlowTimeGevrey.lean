@@ -21,7 +21,7 @@ of the constructed flow.  The second expression is literally
 `(A₁ + D A · A) ∘ Φ`; identifying A₁ as the time derivative is a separate
 qualitative chain rule, not an assumption about its size. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ local instance instSmoothFlowTimeGevrey4 (n : ℕ) : NormedSpace ℝ (E →ᵇ (
     inferInstance
 
 /-- Flow radius, given by `(4*R+1)*((1+B*T)*S+2)`. -/
-def flowRadius (B R T S : ℝ) : ℝ := (4*R+1)*((1+B*T)*S+2)
+@[expose] def flowRadius (B R T S : ℝ) : ℝ := (4*R+1)*((1+B*T)*S+2)
 
 omit [FiniteDimensional ℝ E] in
 theorem field_jet_bound (B R : ℝ)
@@ -103,7 +103,7 @@ theorem forward_positive_bound (B R : ℝ)
     _ = _ := by dsimp [W]; ring
 
 /-- Material velocity, given by `A.field t ((flowData T hT A).forward t x)`. -/
-def materialVelocity (t : Icc (0 : ℝ) T) (x : E) : E :=
+@[expose] def materialVelocity (t : Icc (0 : ℝ) T) (x : E) : E :=
   A.field t ((flowData T hT A).forward t x)
 
 theorem materialVelocity_bound (B R : ℝ)
@@ -122,7 +122,7 @@ theorem materialVelocity_bound (B R : ℝ)
     exact forward_positive_bound T hT A B R hB hR hsmall hb j hj t y
 
 /-- Acceleration field, given by `A₁.field t x + fderiv ℝ (A.field t : E → E) x (A.field t x)`. -/
-def accelerationField (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
+@[expose] def accelerationField (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (t : Icc (0 : ℝ) T) (x : E) : E :=
   A₁.field t x + fderiv ℝ (A.field t : E → E) x (A.field t x)
 
@@ -179,7 +179,7 @@ theorem accelerationField_bound (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
 /-- Material acceleration, given by `accelerationField T A A₁ t ((flowData T hT A).forward t
 x)`. -/
-def materialAcceleration (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
+@[expose] def materialAcceleration (A₁ : SmoothTimeField (Icc (0 : ℝ) T) E E)
     (t : Icc (0 : ℝ) T) (x : E) : E :=
   accelerationField T A A₁ t ((flowData T hT A).forward t x)
 

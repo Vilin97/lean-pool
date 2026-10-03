@@ -21,7 +21,7 @@ theorem `shannon_lower_bound_circuit` (which speaks in terms of `Circuit`)
 is in `Circ.Internal.Bridge`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -43,7 +43,7 @@ abbrev CircDesc (N s : Nat) := Fin s → GateSlot (N + s)
 /-- Evaluate wire `w` in a circuit descriptor.
     Primary input wires return the corresponding input bit.
     Gate wires evaluate their gate, with forward references defaulting to `false`. -/
-def wireValD {N s : Nat} (d : CircDesc N s) (input : BitString N)
+@[expose] def wireValD {N s : Nat} (d : CircDesc N s) (input : BitString N)
     (w : Fin (N + s)) : Bool :=
   if h : w.val < N then
     input ⟨w.val, h⟩
@@ -56,7 +56,7 @@ def wireValD {N s : Nat} (d : CircDesc N s) (input : BitString N)
 termination_by w.val
 
 /-- Evaluate a circuit descriptor: the output is the value of the last gate. -/
-def evalD {N s : Nat} (hs : 0 < s) (d : CircDesc N s) : BitString N → Bool :=
+@[expose] def evalD {N s : Nat} (hs : 0 < s) (d : CircDesc N s) : BitString N → Bool :=
   fun input => wireValD d input ⟨N + s - 1, by omega⟩
 
 /-! ## Cardinality Lemmas -/

@@ -18,7 +18,7 @@ is real analytic in eccentricity.  This is the pointwise analytic input for the 
 parameter-integral argument.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

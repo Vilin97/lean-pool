@@ -37,7 +37,7 @@ contours of the Crouzeix–Palencia argument — become available.
   for integrands with a primitive).
 -/
 
-@[expose] public section
+public section
 
 open scoped Real Interval
 open MeasureTheory Set
@@ -46,11 +46,13 @@ variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℂ F]
 
 /-- `f` is integrable along the parameterized curve `γ` over `[0, 2π]`: the integrand
 `t ↦ deriv γ t • f (γ t)` is interval integrable. -/
+@[expose]
 def ContourIntegrable (f : ℂ → F) (γ : ℝ → ℂ) : Prop :=
   IntervalIntegrable (fun t => deriv γ t • f (γ t)) volume 0 (2 * π)
 
 /-- The contour integral `∫ t in 0..2π, γ'(t) • f (γ t)` of `f` along the parameterized curve
 `γ`. -/
+@[expose]
 noncomputable def contourIntegral (f : ℂ → F) (γ : ℝ → ℂ) : F :=
   ∫ t in (0 : ℝ)..(2 * π), deriv γ t • f (γ t)
 

@@ -25,7 +25,7 @@ The indexed cells are also compact. The instance is transported through the exis
 homeomorphism with the closed unit disk, keeping this fact tied to the actual polygon carrier.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -37,7 +37,7 @@ open scoped ComplexConjugate
 namespace PolygonCell
 
 /-- Complex conjugation as a self-homeomorphism of an indexed polygon cell. -/
-noncomputable def conjHomeomorph (n : ℕ) : PolygonCell n ≃ₜ PolygonCell n where
+@[expose] noncomputable def conjHomeomorph (n : ℕ) : PolygonCell n ≃ₜ PolygonCell n where
   toFun z := ⟨conj z.val, by
     simpa only [Metric.mem_closedBall, Complex.dist_eq, sub_zero, Complex.norm_conj]
       using z.property⟩

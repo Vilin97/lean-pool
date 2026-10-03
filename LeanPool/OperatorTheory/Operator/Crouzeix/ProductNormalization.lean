@@ -22,7 +22,7 @@ Crouzeix--Palencia product estimate to polynomials of unit sup norm.
   polynomial.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

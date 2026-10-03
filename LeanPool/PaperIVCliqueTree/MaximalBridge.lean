@@ -29,7 +29,7 @@ Two complements to `CliqueTree/Maximal.lean`.
 * `SimpleGraph.IsChordal.card_maximalCliques_le`
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

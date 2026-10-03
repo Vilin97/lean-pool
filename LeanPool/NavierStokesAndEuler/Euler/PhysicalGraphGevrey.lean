@@ -18,7 +18,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 oscillating graph, a linear projection and the physical label dilation.
 The resulting bounds apply to the literal derivatives of those fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,13 +46,13 @@ theorem HasJetBound.map_contracting {A : SmoothL2Field V} {C R : ℝ}
     (by simpa only [one_mul] using h n))
 
 /-- Scale field, bundling `field`, `smooth`, `integrable`. -/
-def scaleField (ell : ℝ) (hell : 0 < ell) (A : SmoothL2Field V) : SmoothL2Field V where
+@[expose] def scaleField (ell : ℝ) (hell : 0 < ell) (A : SmoothL2Field V) : SmoothL2Field V where
   field := scale ell A.field
   smooth := scale_contDiff ell A.field A.smooth
   integrable n := scale_jet_memLp ell hell A.field A.smooth n (A.integrable n)
 
 @[simp] theorem scaleField_apply (ell : ℝ) (hell : 0 < ell) (A : SmoothL2Field V) (x : Space) :
-    (scaleField ell hell A).field x = ell • A.field (ell⁻¹ • x) := rfl
+    (scaleField ell hell A).field x = ell • A.field (ell⁻¹ • x) := by rfl
 
 theorem norm_jetLp_scale_le (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (A : SmoothL2Field V) (n : ℕ) :
@@ -105,7 +105,7 @@ variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace
     C * R ^ n * (n.factorial : ℝ) ^ 2)
 
 /-- Graph field, bundling `field`, `smooth`, `integrable`. -/
-def graphField : SmoothL2Field V where
+@[expose] def graphField : SmoothL2Field V where
   field := f ∘ graphMap k m
   smooth := hf.comp (graphMap k m).contDiff
   integrable n := (graph_Lp_bound P f hperiod hf k m C R hC hR hLp hn n).1
@@ -119,12 +119,12 @@ theorem graphField_bound :
 
 /-- Physical field, given by `scaleField ell hell (mapField L (graphField P f hperiod hf k m C R
 hC hR hLp hn))`. -/
-def physicalField (ell : ℝ) (hell : 0 < ell) (L : V →L[ℝ] W) : SmoothL2Field W :=
+@[expose] def physicalField (ell : ℝ) (hell : 0 < ell) (L : V →L[ℝ] W) : SmoothL2Field W :=
   scaleField ell hell (mapField L (graphField P f hperiod hf k m C R hC hR hLp hn))
 
 @[simp] theorem physicalField_apply (ell : ℝ) (hell : 0 < ell) (L : V →L[ℝ] W) (x : Vector3) :
     (physicalField P f hperiod hf k m C R hC hR hLp hn ell hell L).field x =
-      ell • L (f (graphMap k m (ell⁻¹ • x))) := rfl
+      ell • L (f (graphMap k m (ell⁻¹ • x))) := by rfl
 
 theorem physicalField_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
     (L : V →L[ℝ] W) (hL : ‖L‖ ≤ 1) :

@@ -22,7 +22,7 @@ the genus-four factor uses the supplied genus-four theorem, and bridge gluing
 followed by contraction of the artificial bridge loses exactly one degree.
 -/
 
-@[expose] public section
+public section
 namespace Utilities
 
 universe u

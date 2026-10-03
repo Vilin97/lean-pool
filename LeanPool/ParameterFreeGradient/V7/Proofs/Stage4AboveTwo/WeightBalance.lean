@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Constants
 The above-two weight scale balances accumulated residual error against terminal weight growth.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

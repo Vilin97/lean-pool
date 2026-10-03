@@ -17,7 +17,7 @@ The physical variables are `(t,s,z)`, with `s = r²/2`. Inner profiles use
 `(X,η)`. All partial derivatives below are genuine Fréchet derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,42 +44,42 @@ abbrev d := CoordinateAlgebra.d
 abbrev L := CoordinateAlgebra.L
 
 /-- Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)`. -/
-def q (h : ℝ) (p : PhysicalPoint) : ℝ :=
+@[expose] def q (h : ℝ) (p : PhysicalPoint) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)
 
 /-- Eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)`. -/
-def eta (h : ℝ) (p : PhysicalPoint) : ℝ :=
+@[expose] def eta (h : ℝ) (p : PhysicalPoint) : ℝ :=
   SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)
 
 /-- X, given by `p.2.1 / q h p`. -/
-def X (h : ℝ) (p : PhysicalPoint) : ℝ := p.2.1 / q h p
+@[expose] def X (h : ℝ) (p : PhysicalPoint) : ℝ := p.2.1 / q h p
 /-- Inner, given by `(X h p, eta h p)`. -/
-def inner (h : ℝ) (p : PhysicalPoint) : InnerPoint := (X h p, eta h p)
+@[expose] def inner (h : ℝ) (p : PhysicalPoint) : InnerPoint := (X h p, eta h p)
 
 /-- Partial X, given by `fderiv ℝ f w (1, 0)`. -/
-def partialX (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (1, 0)
+@[expose] def partialX (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (1, 0)
 /-- Partial eta, given by `fderiv ℝ f w (0, 1)`. -/
-def partialEta (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (0, 1)
+@[expose] def partialEta (f : InnerProfile) (w : InnerPoint) : ℝ := fderiv ℝ f w (0, 1)
 
 /-- T, given by `CoordinateAlgebra.timeCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)`. -/
-def T (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
+@[expose] def T (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
   CoordinateAlgebra.timeCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)
 
 /-- Z, given by `CoordinateAlgebra.axialCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f
 w)`. -/
-def Z (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
+@[expose] def Z (h b : ℝ) (f : InnerProfile) (w : InnerPoint) : ℝ :=
   CoordinateAlgebra.axialCoeff b h w.2 w.1 (f w) (partialX f w) (partialEta f w)
 
 /-- Pullback, given by `q h p ^ b * f (inner h p)`. -/
-def pullback (h b : ℝ) (f : InnerProfile) (p : PhysicalPoint) : ℝ :=
+@[expose] def pullback (h b : ℝ) (f : InnerProfile) (p : PhysicalPoint) : ℝ :=
   q h p ^ b * f (inner h p)
 
 /-- Partial T, given by `fderiv ℝ F p (1, (0, 0))`. -/
-def partialT (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (1, (0, 0))
+@[expose] def partialT (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (1, (0, 0))
 /-- Partial S, given by `fderiv ℝ F p (0, (1, 0))`. -/
-def partialS (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (1, 0))
+@[expose] def partialS (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (1, 0))
 /-- Partial Z, given by `fderiv ℝ F p (0, (0, 1))`. -/
-def partialZ (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (0, 1))
+@[expose] def partialZ (F : PhysicalProfile) (p : PhysicalPoint) : ℝ := fderiv ℝ F p (0, (0, 1))
 
 theorem D_eq (h : ℝ) : (1 - 2 * h) / 2 = D h := by unfold D CoordinateAlgebra.D; ring
 
@@ -342,7 +342,7 @@ theorem partialZ_partialZ_pullback {h b : ℝ} {f : InnerProfile}
   rw [show b - D h - D h = b - 2 * D h by ring]
 
 /-- The natural open physical domain associated to an open inner-profile domain. -/
-def physicalDomain (h : ℝ) (U : Set InnerPoint) : Set PhysicalPoint :=
+@[expose] def physicalDomain (h : ℝ) (U : Set InnerPoint) : Set PhysicalPoint :=
   {p | p.1 < 1 ∧ inner h p ∈ U}
 
 theorem isOpen_physicalDomain {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)

@@ -29,7 +29,7 @@ The annealed process is in general not Markov in the probabilistic sense (the av
 not have the Markov property); nothing of that kind is claimed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal

@@ -20,7 +20,7 @@ proof uses the nearest-point characterization for closed convex sets and the
 direction of the displacement from a nearest point.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped InnerProductSpace

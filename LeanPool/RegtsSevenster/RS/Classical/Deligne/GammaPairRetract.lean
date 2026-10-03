@@ -21,7 +21,7 @@ cases; it needs no biproducts in the category of module objects,
 only the retraction identities and the totality of the projectors.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

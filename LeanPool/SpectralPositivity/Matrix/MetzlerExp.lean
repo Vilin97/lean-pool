@@ -30,7 +30,7 @@ of partial sums to the matrix exponential.
 - Horn–Johnson, *Matrix Analysis*, Cambridge, 2013, Thm 8.5.5
 -/
 
-@[expose] public section
+public section
 
 open Matrix BigOperators Finset
 

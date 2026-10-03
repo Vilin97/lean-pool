@@ -16,7 +16,7 @@ These lemmas translate the normalized sequence factorization into the monic
 polynomial identity used by the public preparation witness.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped ENNReal NNReal Topology

@@ -39,7 +39,7 @@ but KrappWirthWellBehaved fails. See Theorem/BorelAnalyticSeparation.lean.
 - This kernel: NullMeasurableSet weakening discovered during Lean4 formalization
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -74,6 +74,7 @@ def paramBadEvent
 /-- Patched evaluation: combine two concept families using a region selector.
     patchEval(θ₁, θ₂, ρ)(x) = e₁(θ₁)(x) if r(ρ)(x), else e₂(θ₂)(x).
     Used for the closure principle (Theorem F). -/
+@[expose]
 def patchEval
     {X : Type u}
     {Θ₁ Θ₂ Ρ : Type*}

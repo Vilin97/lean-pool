@@ -18,7 +18,7 @@ section
 
 /-! Actual one-sided time differentiation of the packet's spatial curl corrector. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -81,7 +81,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -102,7 +102,7 @@ variable (P : ℝ) [Fact (0 < P)] (T : ℝ) (hT : 0 ≤ T)
   (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
 
 /-- Potential derivative, given by `potentialPath P B₁ p + potentialPath P B f`. -/
-def potentialDerivative : C(Icc (0 : ℝ) T,LiftL2 P) :=
+@[expose] def potentialDerivative : C(Icc (0 : ℝ) T,LiftL2 P) :=
   potentialPath P B₁ p + potentialPath P B f
 
 include hB hB₁ hp hf in

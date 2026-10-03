@@ -59,7 +59,7 @@ Tags: analysis, pde, sobolev-embedding
 MSC: 46E35
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Rellich–Kondrachov Compact Embedding Theorem

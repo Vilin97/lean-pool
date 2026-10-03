@@ -32,7 +32,7 @@ single enlargement of the coefficient radius gives fixed-base Sobolev
 bounds, independent of the jet truncation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -156,7 +156,7 @@ The positive-order coefficient normalization is paid once by a fixed
 coefficient radius, independent of the solution amplitude and grade.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -170,6 +170,7 @@ open scoped ContDiff BoundedContinuousFunction
 
 /-- Normalized coefficient radius, given by `max 1 (sobolevCoefficientAmplitude (Fin 4) q Rc C)
 * sobolevCoefficientRadius (Fin 4) Rc`. -/
+@[expose]
 def normalizedCoefficientRadius (q : ℕ) (Rc C : ℝ) : ℝ :=
   max 1 (sobolevCoefficientAmplitude (Fin 4) q Rc C) * sobolevCoefficientRadius (Fin 4) Rc
 
@@ -252,7 +253,7 @@ section
 /-! Actual coefficient-orbit bounds control the fixed H5/H6 pressure
 constants uniformly over all higher jet truncations. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -316,7 +317,7 @@ section
 
 /-! Quantitative bounds for the actual packet coefficient towers. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -370,7 +371,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -419,28 +420,28 @@ structure CorrectionCoefficientBudget (D : EulerTransversePacketProvider.Data U)
 
 /-- Correction metric envelope, given by `sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
 (3*CI*CI)`. -/
-def correctionMetricEnvelope (R CI : ℝ) : ℝ :=
+@[expose] def correctionMetricEnvelope (R CI : ℝ) : ℝ :=
   sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (3*CI*CI)
 
 /-- Correction linear envelope, given by `2*sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
 (6*CI*C1)`. -/
-def correctionLinearEnvelope (R C1 CI : ℝ) : ℝ :=
+@[expose] def correctionLinearEnvelope (R C1 CI : ℝ) : ℝ :=
   2*sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (6*CI*C1)
 
 /-- Correction quadratic envelope, given by `6*sobolevCoefficientAmplitude (Fin 4) 6 (4*R)
 (3*CI*(C0*R))`. -/
-def correctionQuadraticEnvelope (R C0 CI : ℝ) : ℝ :=
+@[expose] def correctionQuadraticEnvelope (R C0 CI : ℝ) : ℝ :=
   6*sobolevCoefficientAmplitude (Fin 4) 6 (4*R) (3*CI*(C0*R))
 
 /-- Correction coefficient radius, given by `max 1 (max (normalizedCoefficientRadius 6 (4*R)
 (3*CI*CI)) (sobolevCoefficientRadius (Fin 4) (4*R)))`. -/
-def correctionCoefficientRadius (R CI : ℝ) : ℝ :=
+@[expose] def correctionCoefficientRadius (R CI : ℝ) : ℝ :=
   max 1 (max (normalizedCoefficientRadius 6 (4*R) (3*CI*CI))
     (sobolevCoefficientRadius (Fin 4) (4*R)))
 
 /-- Correction pressure envelope, given by `max 1 (max (pressureCost c (correctionMetricEnvelope
 R CI) 5) (pressureCost c (correctionMetricEnvelope R CI) 6))`. -/
-def correctionPressureEnvelope (c R CI : ℝ) : ℝ :=
+@[expose] def correctionPressureEnvelope (c R CI : ℝ) : ℝ :=
   max 1 (max (pressureCost c (correctionMetricEnvelope R CI) 5)
     (pressureCost c (correctionMetricEnvelope R CI) 6))
 
@@ -469,6 +470,7 @@ include hR hC0 hC1 hCI hF hF1 hFI
 /-- All coefficient hypotheses of the correction energy estimate, derived
 from genuine source spatial jets.  The radius condition is the same one used
 by the projected inverse, rather than a separate cutoff-dependent restriction. -/
+@[expose]
 def correctionCoefficientBudget : CorrectionCoefficientBudget D P where
   Rc := correctionCoefficientRadius R CI
   M := correctionPressureEnvelope D.normalLower R CI

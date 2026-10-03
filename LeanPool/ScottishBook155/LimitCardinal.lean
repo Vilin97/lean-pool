@@ -13,7 +13,7 @@ public import LeanPool.ScottishBook155.RecursionCardinal
 # Cardinal bounds at protected limit stages
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

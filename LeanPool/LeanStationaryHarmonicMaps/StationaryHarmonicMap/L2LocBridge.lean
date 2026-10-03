@@ -19,7 +19,7 @@ energy integrability part, while global a.e. measurability on an arbitrary
 domain is a separate measurable-cover problem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -28,7 +28,7 @@ constructors. Physical copies are then assembled before the locally finite
 sum is estimated; no maximum over infinitely many per-label constants occurs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ namespace Family
 variable (f : Family)
 
 /-- Singleton label, given by `⟨L.val, L.property, Set.mem_singleton _⟩`. -/
-noncomputable def singletonLabel (L : NativeLabel f.active) :
+@[expose] noncomputable def singletonLabel (L : NativeLabel f.active) :
     NativeLabel ({(L : BandLabel)} : Set BandLabel) :=
   ⟨L.val, L.property, Set.mem_singleton _⟩
 
@@ -72,6 +72,7 @@ theorem singleton_label_val (L : NativeLabel f.active)
   congrArg Subtype.val (Set.mem_singleton_iff.mp K.mem)
 
 /-- Singleton payload as an element of `(f.primary L).Views K.val.1, V.StateData`. -/
+@[expose]
 noncomputable def singletonPayload (L : NativeLabel f.active)
     (K : NativeLabel ({(L : BandLabel)} : Set BandLabel)) :
     Σ V : (f.primary L).Views K.val.1, V.StateData := by
@@ -81,7 +82,7 @@ noncomputable def singletonPayload (L : NativeLabel f.active)
 
 /-- Reuse the old homogeneous interface for exactly one actual label.
 There is no choice of data for an omitted label. -/
-noncomputable def singleton (L : NativeLabel f.active) :
+@[expose] noncomputable def singleton (L : NativeLabel f.active) :
     ActualSignedPhysicalData.SignedFamily (f.domain L) where
   active := {(L : BandLabel)}
   primary _ := f.primary L
@@ -118,7 +119,7 @@ theorem singleton_request (L : NativeLabel f.active) :
   rfl
 
 /-- Extend actual values by zero without extending their primary data. -/
-noncomputable def valueAt {V : Type*} [Zero V]
+@[expose] noncomputable def valueAt {V : Type*} [Zero V]
     (value : NativeLabel f.active → V) (L : BandLabel) : V := by
   classical
   exact if hL : L ∈ f.active then value ⟨L.val, L.property, hL⟩ else 0
@@ -142,7 +143,7 @@ end Family
 variable {H : ℕ} {K : Type*}
 
 /-- Zero copies, bundling `gap`, `carrier`, `amplitude`. -/
-noncomputable def zeroCopies : CopyFamily H K where
+@[expose] noncomputable def zeroCopies : CopyFamily H K where
   gap _ := 0
   carrier _ _ := ⟨0, 0, 0, 0, 0, fun _ => 0, fun _ => 0⟩
   amplitude _ _ _ := 0
@@ -154,6 +155,7 @@ noncomputable def zeroCopies : CopyFamily H K where
 
 /-- Zero cells, bundling `cells`, `carrier`, `closed`, `locallyFinite` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def zeroCells : SupportCells (zeroCopies : CopyFamily H K) where
   cells _ := {
     carrier := fun _ _ => ∅
@@ -178,7 +180,7 @@ theorem zeroSmooth {a h r0 : ℝ} :
       ⟨univ, isOpen_univ, mem_univ _, contDiffOn_const⟩⟩
 
 /-- Diagonal, bundling `gap`, `carrier`, `amplitude`. -/
-noncomputable def diagonal (f : BandLabel → CopyFamily H K) : CopyFamily H K where
+@[expose] noncomputable def diagonal (f : BandLabel → CopyFamily H K) : CopyFamily H K where
   gap L := (f L).gap L
   carrier k L := (f L).carrier k L
   amplitude k I := (f I.1).amplitude k I
@@ -204,6 +206,7 @@ theorem diagonal_sum (f : BandLabel → CopyFamily H K) (a h r0 : ℝ) (w : Spac
     (diagonal f).sum a h r0 w = ∑ᶠ I : WaveIndex H, (f I.1).periodized a h r0 I w := rfl
 
 /-- Diagonal cells, bundling `cells`, `support`. -/
+@[expose]
 noncomputable def diagonalCells (f : BandLabel → CopyFamily H K)
     (c : ∀ L, SupportCells (f L)) : SupportCells (diagonal f) where
   cells L := (c L).cells L
@@ -254,7 +257,7 @@ namespace Family
 variable (f : Family)
 
 /-- The missing labels receive zero copies, never invented primary data. -/
-noncomputable def copyAt (copies : NativeLabel f.active → CopyFamily H K)
+@[expose] noncomputable def copyAt (copies : NativeLabel f.active → CopyFamily H K)
     (L : BandLabel) : CopyFamily H K := by
   classical
   exact if hL : L ∈ f.active then copies ⟨L.val, L.property, hL⟩ else zeroCopies
@@ -271,7 +274,7 @@ theorem copyAt_inactive (copies : NativeLabel f.active → CopyFamily H K)
   simp only [copyAt, dite_eq_right hL]
 
 /-- Assembled, given by `diagonal (f.copyAt copies)`. -/
-noncomputable def assembled (copies : NativeLabel f.active → CopyFamily H K) :
+@[expose] noncomputable def assembled (copies : NativeLabel f.active → CopyFamily H K) :
     CopyFamily H K := diagonal (f.copyAt copies)
 
 theorem assembled_term_active (copies : NativeLabel f.active → CopyFamily H K)
@@ -286,7 +289,7 @@ theorem assembled_term_inactive (copies : NativeLabel f.active → CopyFamily H 
   rw [assembled, diagonal_term, copyAt_inactive f copies hI, zeroCopies_term]
 
 /-- Branch cells as an element of `SupportCells (f.copyAt copies L)`. -/
-noncomputable def branchCells (copies : NativeLabel f.active → CopyFamily H K)
+@[expose] noncomputable def branchCells (copies : NativeLabel f.active → CopyFamily H K)
     (c : ∀ L, SupportCells (copies L)) (L : BandLabel) :
     SupportCells (f.copyAt copies L) := by
   classical
@@ -329,6 +332,7 @@ variable {D h : ℝ}
 
 /-- The exact native source belonging to a primary label. Uniform bounds
 must hold jointly over this label and the native source index. -/
+@[expose]
 noncomputable def potentialSource (L : BandLabel) :
     ActualSignedPhysicalData.SourceIndex → ℕ → ActualSignedPhysicalData.Native →
       HarmonicCalculus.ComplexVector :=
@@ -336,6 +340,7 @@ noncomputable def potentialSource (L : BandLabel) :
 
 /-- Pressure source, given by `f.valueAt (fun L => ActualSignedPhysicalData.nativePressureSource
 sys hh (f.singleton L)) L`. -/
+@[expose]
 noncomputable def pressureSource (L : BandLabel) :
     ActualSignedPhysicalData.SourceIndex → ℕ → ActualSignedPhysicalData.Native → ℂ :=
   f.valueAt (fun L => ActualSignedPhysicalData.nativePressureSource sys hh (f.singleton L)) L
@@ -352,13 +357,13 @@ noncomputable def pressureSource (L : BandLabel) :
 
 /-- Potential copies, given by `f.assembled (fun L => ActualSignedPhysicalData.potentialFamily
 sys hh (f.singleton L) i)`. -/
-noncomputable def potentialCopies (i : Fin 3) :
+@[expose] noncomputable def potentialCopies (i : Fin 3) :
     CopyFamily 1 TorusInverse.Frequency :=
   f.assembled (fun L => ActualSignedPhysicalData.potentialFamily sys hh (f.singleton L) i)
 
 /-- Pressure copies, given by `f.assembled (fun L => ActualSignedPhysicalData.pressureFamily sys
 hh (f.singleton L))`. -/
-noncomputable def pressureCopies : CopyFamily 1 TorusInverse.Frequency :=
+@[expose] noncomputable def pressureCopies : CopyFamily 1 TorusInverse.Frequency :=
   f.assembled (fun L => ActualSignedPhysicalData.pressureFamily sys hh (f.singleton L))
 
 /-- Native Cartesian rotation and the physical factor are retained
@@ -421,6 +426,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   {ι : BandLabel → Type*}
 
 /-- Joint source, defined pointwise by `source I.1 I.2`. -/
+@[expose]
 noncomputable def jointSource {V : Type*}
     (source : (L : BandLabel) → ι L → ℕ → E → V) :
     (Σ L, ι L) → ℕ → E → V := fun I => source I.1 I.2
@@ -444,6 +450,7 @@ theorem localSourceBounds_slice {V : Type} [NormedAddCommGroup V] [NormedSpace �
 
 /-- Diagonal chart, bundling `sourceIndex`, `map`, `domain`, `open_domain` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def diagonalChart (f : BandLabel → CopyFamily H K)
     (c : ∀ L, SupportCells (f L)) {a b h r0 σ : ℝ}
     (source : (L : BandLabel) → ι L → ℕ → E → ℂ)
@@ -572,6 +579,7 @@ variable {J : Type*} {a b h r0 Z P0 α σ : ℝ} {Δ : ℕ}
 /-- The physical factory is applied once to all labels. Its source and
 phase bounds are jointly quantified; individual physical bounds are not
 inputs to this constructor. -/
+@[expose]
 noncomputable def waveData : PhysicalStageBounds.WaveData h E (Σ L, ι L) K J where
   lowerRadius := a
   upperRadius := b
@@ -626,7 +634,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -643,6 +651,7 @@ variable {B N0 : ℕ}
 
 /-- Active, given by `ActualPolarCoverage.active /-! ## The normalized radial coordinate does
 not depend on the band -/`. -/
+@[expose]
 noncomputable def active : Set SpaceTime := ActualPolarCoverage.active
 
 /-! ## The normalized radial coordinate does not depend on the band -/
@@ -710,6 +719,7 @@ theorem primary_mask_or_target_zero (l : Label B N0) (n m : ℕ)
 
 /-- Band label, given by `⟨ActualSignedPhysicalBinding.spatialLabel l,
 ActualPrimaryBounds.label_large (l.2, l.1)⟩`. -/
+@[expose]
 noncomputable def bandLabel (l : Label B N0) : BandLabel :=
   ⟨ActualSignedPhysicalBinding.spatialLabel l, ActualPrimaryBounds.label_large (l.2, l.1)⟩
 
@@ -728,16 +738,19 @@ theorem bandLabel_injective : Injective (bandLabel (B := B) (N0 := N0)) := by
   simpa only [bandLabel, ActualSignedPhysicalBinding.spatialLabel, hfirst] using he
 
 /-- Labels, given by `range (bandLabel (B := B) (N0 := N0))`. -/
+@[expose]
 noncomputable def labels (B N0 : ℕ) : Set BandLabel := range (bandLabel (B := B) (N0 := N0))
 
 /-- Native label, given by `⟨ActualSignedPhysicalBinding.spatialLabel l,
 ActualPrimaryBounds.label_large (l.2, l.1), Set.mem_range_self l⟩`. -/
+@[expose]
 noncomputable def nativeLabel (l : Label B N0) :
     ActualSignedPhysicalData.NativeLabel (labels B N0) :=
   ⟨ActualSignedPhysicalBinding.spatialLabel l, ActualPrimaryBounds.label_large (l.2, l.1),
     Set.mem_range_self l⟩
 
 /-- Actual label, given by `Classical.choose L.mem`. -/
+@[expose]
 noncomputable def actualLabel (L : ActualSignedPhysicalData.NativeLabel (labels B N0)) :
     Label B N0 := Classical.choose L.mem
 
@@ -772,6 +785,7 @@ theorem actualLabel_reference (L : ActualSignedPhysicalData.NativeLabel (labels 
   congrArg (fun L : BandLabel => L.val.1) (bandLabel_actualLabel L)
 
 /-- Reband payload, given by `he ▸ ⟨V, s⟩`. -/
+@[expose]
 noncomputable def rebandPayload {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     {P : PhysicalSignedWave.PrimaryData U} {n m : ℕ} (he : n = m)
     (V : P.Views n) (s : V.StateData) : Σ W : P.Views m, W.StateData :=
@@ -786,6 +800,7 @@ theorem rebandPayload_referenceRequest {U : PhaseJetBounds.Domain ℕ PhaseCalcu
 
 /-- Payload, given by `rebandPayload (actualLabel_reference L)
 (ActualSignedPhysicalBinding.nativeViews (actualLabel L)) (s (actualLabel L))`. -/
+@[expose]
 noncomputable def payload (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews
     l).StateData)
     (L : ActualSignedPhysicalData.NativeLabel (labels B N0)) :
@@ -795,7 +810,7 @@ noncomputable def payload (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.
 
 /-- Both signs and every actual primary label are retained. Only proof
 transport of the reference index is used in the view/state fields. -/
-noncomputable def family (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews
+@[expose] noncomputable def family (s : ∀ l : Label B N0, (ActualSignedPhysicalBinding.nativeViews
     l).StateData) :
     DependentSignedPhysicalFamily.Family where
   active := labels B N0
@@ -920,13 +935,13 @@ theorem pressure_sum_zero (a r0 : ℝ) {w : SpaceTime}
   simp only [CopyFamily.sum, CopyFamily.periodized, hz, tsum_zero, finsum_zero]
 
 /-- The literal dependent-family potential, at the fixed physical chart radius. -/
-noncomputable def potential : VelocityField :=
+@[expose] noncomputable def potential : VelocityField :=
   PhysicalCopyBounds.vectorSum ((family s).potentialCopies slots outgoing.data.h_pos.le)
     ActualPolarCoverage.inner h slots.radius
 
 /-- Pressure, defined pointwise by `(((family s).pressureCopies slots
 outgoing.data.h_pos.le).sum ActualPolarCoverage.inner h slots.radius w).re`. -/
-noncomputable def pressure : PressureField :=
+@[expose] noncomputable def pressure : PressureField :=
   fun w => (((family s).pressureCopies slots outgoing.data.h_pos.le).sum
     ActualPolarCoverage.inner h slots.radius w).re
 
@@ -984,6 +999,7 @@ variable (x : CorrectionStep.CycleState (Label B N0))
         x.coefficients (commonContext B) x.state).pressure)
 
 /-- Cycle native states, constructed using `ActualSignedPhysicalBinding.nativeStateData`. -/
+@[expose]
 noncomputable def cycleNativeStates (l : Label B N0) :
     (ActualSignedPhysicalBinding.nativeViews l).StateData :=
   ActualSignedPhysicalBinding.nativeStateData l ActualInitialization.patch
@@ -991,13 +1007,16 @@ noncomputable def cycleNativeStates (l : Label B N0) :
       x.coefficients (commonContext B) x.state) H hp
 
 /-- Cycle family, given by `family (cycleNativeStates x H hp)`. -/
+@[expose]
 noncomputable def cycleFamily : DependentSignedPhysicalFamily.Family :=
   family (cycleNativeStates x H hp)
 
 /-- Cycle potential, given by `potential (cycleNativeStates x H hp)`. -/
+@[expose]
 noncomputable def cyclePotential : VelocityField := potential (cycleNativeStates x H hp)
 
 /-- Cycle pressure, given by `pressure (cycleNativeStates x H hp)`. -/
+@[expose]
 noncomputable def cyclePressure : PressureField := pressure (cycleNativeStates x H hp)
 
 /-- The exterior statement concerns the signed request of the literal

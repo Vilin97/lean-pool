@@ -24,7 +24,7 @@ lattice copy of the origin. No residual identity or residual limit after
 periodization is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,7 @@ theorem cutResidual_smoothOn {A : VelocityField} {p : PressureField} {U : Set Sp
     (SpatialLocalization.spatialCutoff_contDiff.comp contDiff_snd).contDiffOn.smul hA
   have huc : ContDiffOn ℝ ∞ (SpatialLocalization.cutVelocity A) U := by
     intro z hz
-    exact (SpatialCurl.contDiffAt_spatialCurl
+    exact (SpatialCurl.contDiffAt_spatialCurl (m := ∞) (n := ∞)
       (hAc.contDiffAt (hU.mem_nhds hz)) (by simp)).contDiffWithinAt
   exact ResidualRegularity.contDiffOn_residual hU huc
     ((SpatialLocalization.spatialCutoff_contDiff.comp contDiff_snd).contDiffOn.mul hp)
@@ -160,7 +160,7 @@ be assumed to preserve continuity of the constructed boundary tensors. -/
 noncomputable def nearestIndex (x : Space) : Fin 3 → ℤ := fun i => round (x i)
 
 /-- Representative, given by `x - CompactForceDecay.integerShift (nearestIndex x)`. -/
-noncomputable def representative (x : Space) : Space :=
+@[expose] noncomputable def representative (x : Space) : Space :=
   x - CompactForceDecay.integerShift (nearestIndex x)
 
 theorem representative_mem_innerCube (x : Space) :

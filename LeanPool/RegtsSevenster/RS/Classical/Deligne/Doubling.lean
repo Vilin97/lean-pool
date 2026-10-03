@@ -34,7 +34,7 @@ componentwise matrix checks against the distributor calculus set
 up in the `Distributors` section.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -75,12 +75,12 @@ instance instCategory [Category.{v} A] : Category (Doubled A) where
   comp f g := ⟨f.even ≫ g.even, f.odd ≫ g.odd⟩
 
 /-- The even component of a morphism of super-objects. -/
-def evenHom [Category.{v} A]
+@[expose] def evenHom [Category.{v} A]
     {X Y : Doubled A} (f : X ⟶ Y) : X.even ⟶ Y.even :=
   Hom.even f
 
 /-- The odd component of a morphism of super-objects. -/
-def oddHom [Category.{v} A]
+@[expose] def oddHom [Category.{v} A]
     {X Y : Doubled A} (f : X ⟶ Y) : X.odd ⟶ Y.odd :=
   Hom.odd f
 
@@ -95,7 +95,7 @@ theorem hom_ext [Category.{v} A]
 
 /-- A morphism of super-objects from a pair of component
 morphisms. -/
-def homMk [Category.{v} A]
+@[expose] def homMk [Category.{v} A]
     {X Y : Doubled A} (fe : X.even ⟶ Y.even)
     (fo : X.odd ⟶ Y.odd) : X ⟶ Y :=
   ⟨fe, fo⟩
@@ -136,7 +136,7 @@ theorem oddHom_comp [Category.{v} A]
 
 /-- An isomorphism of super-objects from a pair of component
 isomorphisms. -/
-@[simps]
+@[expose, simps]
 def isoMk [Category.{v} A]
     {X Y : Doubled A} (e : X.even ≅ Y.even)
     (o : X.odd ≅ Y.odd) : X ≅ Y where
@@ -537,6 +537,7 @@ theorem tensorObj_odd [Category.{v} A] [MonoidalCategory A] [Preadditive A]
   rfl
 
 /-- The graded tensor product of morphisms, blockwise. -/
+@[expose]
 def tensorHom [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [HasBinaryBiproducts A]
     {X₁ Y₁ X₂ Y₂ : Doubled A} (f : X₁ ⟶ Y₁)
@@ -546,6 +547,7 @@ def tensorHom [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     (biprod.map (evenHom f ⊗ₘ oddHom g) (oddHom f ⊗ₘ evenHom g))
 
 /-- Left whiskering of super-objects, blockwise. -/
+@[expose]
 def whiskerLeft [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [HasBinaryBiproducts A]
     (X : Doubled A) {Y₁ Y₂ : Doubled A} (g : Y₁ ⟶ Y₂) :
@@ -555,6 +557,7 @@ def whiskerLeft [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     (biprod.map (X.even ◁ oddHom g) (X.odd ◁ evenHom g))
 
 /-- Right whiskering of super-objects, blockwise. -/
+@[expose]
 def whiskerRight [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [HasBinaryBiproducts A]
     {X₁ X₂ : Doubled A} (f : X₁ ⟶ X₂) (Y : Doubled A) :
@@ -566,6 +569,7 @@ def whiskerRight [Category.{v} A] [MonoidalCategory A] [Preadditive A]
 /-- The even component of the associator: each of the four parity
 blocks re-associates through `A`'s associator and is routed to the
 matching block of the right-nested product. -/
+@[expose]
 def assocEven [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A]
     (X Y Z : Doubled A) :
@@ -698,6 +702,7 @@ theorem isZero_tensorZero [Category.{v} A] [MonoidalCategory A] [Preadditive A]
 
 /-- Collapse of a unit block against a zero block, in the shape of
 the left unitor components. -/
+@[expose]
 def leftUnitorComp [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A]
     (M M' : A) :
@@ -712,6 +717,7 @@ def leftUnitorComp [Category.{v} A] [MonoidalCategory A] [Preadditive A]
 
 /-- Collapse of a unit block against a zero block, in the shape of
 the even right unitor component. -/
+@[expose]
 def rightUnitorComp [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A]
     (M M' : A) :
@@ -1335,6 +1341,7 @@ instance [Category.{v} A] [Preadditive A] [HasZeroObject A]
 
 /-- The even embedding is monoidal up to isomorphism: the graded
 tensor of two even objects collapses to the even tensor. -/
+@[expose]
 def evenEmbedTensorIso [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A]
     (X Y : A) :
@@ -1358,6 +1365,7 @@ theorem evenEmbedTensorIso_braided
     simp
 
 /-- The unit comparison of the even embedding: definitional. -/
+@[expose]
 def evenEmbedUnitIso [Category.{v} A] [MonoidalCategory A] [Preadditive A]
     [MonoidalPreadditive A] [HasBinaryBiproducts A] [HasZeroObject A] :
     𝟙_ (Doubled A) ≅ evenEmbed.obj (𝟙_ A) :=
@@ -1423,6 +1431,7 @@ end OddUnit
 section Biproducts
 
 /-- The componentwise binary bicone on a pair of super-objects. -/
+@[expose]
 def binaryBicone [Category.{v} A] [Preadditive A] [HasBinaryBiproducts A]
     (X Y : Doubled A) : BinaryBicone X Y where
   pt := ⟨X.even ⊞ Y.even, X.odd ⊞ Y.odd⟩
@@ -1519,6 +1528,7 @@ section Kernels
 
 /-- The componentwise kernel fork of a morphism of
 super-objects. -/
+@[expose]
 def kernelFork [Category.{v} A] [Preadditive A] [HasKernels A]
     {X Y : Doubled A} (f : X ⟶ Y) : KernelFork f :=
   KernelFork.ofι
@@ -1557,6 +1567,7 @@ section Cokernels
 
 /-- The componentwise cokernel cofork of a morphism of
 super-objects. -/
+@[expose]
 def cokernelCofork [Category.{v} A] [Preadditive A] [HasCokernels A]
     {X Y : Doubled A} (f : X ⟶ Y) :
     CokernelCofork f :=

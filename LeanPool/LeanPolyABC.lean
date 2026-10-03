@@ -32,7 +32,7 @@ Tags: number-theory, polynomials, algebra, mason-stothers
 MSC: 11C08, 12E05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

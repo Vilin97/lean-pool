@@ -22,7 +22,7 @@ recovers the local cell values and cellwise origin avoidance.  No compatibility 
 hidden: the required compatibility theorem is `OneStepLastVertexCompatible`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -127,6 +127,7 @@ theorem oneStepLastVertexCompatible_of_pointCompatible
   exact congrArg A.map (hpoint a b hab)
 
 /-- Under the exact overlap theorem, the selected vectors descend to global collar vertices. -/
+@[expose]
 noncomputable def globalSelectedVector
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}

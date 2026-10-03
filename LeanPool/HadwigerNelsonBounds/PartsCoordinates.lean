@@ -14,12 +14,12 @@ The order and coordinates are transcribed from `JP/Pink/g481.vtx` in the
 Polymath 16 data archive accompanying Jaan Parts, arXiv:2010.12661.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Coordinate lookup chunk 0. -/
-def partsPointChunk0 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk0 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨0, 0, 0, 0⟩
   | 1 => ⟨-5, 1, 3, -1⟩
@@ -88,7 +88,7 @@ def partsPointChunk0 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 1. -/
-def partsPointChunk1 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk1 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨-4, 0, 6, -2⟩
   | 1 => ⟨3, -1, -3, 3⟩
@@ -157,7 +157,7 @@ def partsPointChunk1 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 2. -/
-def partsPointChunk2 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk2 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨-8, 0, 6, -2⟩
   | 1 => ⟨-13, 1, 1, 1⟩
@@ -226,7 +226,7 @@ def partsPointChunk2 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 3. -/
-def partsPointChunk3 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk3 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨-4, 0, 2, 2⟩
   | 1 => ⟨-5, 1, 5, 1⟩
@@ -295,7 +295,7 @@ def partsPointChunk3 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 4. -/
-def partsPointChunk4 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk4 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨0, 0, -8, 0⟩
   | 1 => ⟨-4, 0, 0, -4⟩
@@ -364,7 +364,7 @@ def partsPointChunk4 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 5. -/
-def partsPointChunk5 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk5 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨4, 2, 0, -2⟩
   | 1 => ⟨2, 2, -2, -2⟩
@@ -433,7 +433,7 @@ def partsPointChunk5 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 6. -/
-def partsPointChunk6 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk6 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨4, 0, -4, -4⟩
   | 1 => ⟨-4, 0, -4, -4⟩
@@ -502,7 +502,7 @@ def partsPointChunk6 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Coordinate lookup chunk 7. -/
-def partsPointChunk7 (index : Nat) : PartsPoint :=
+@[expose] def partsPointChunk7 (index : Nat) : PartsPoint :=
   match index with
   | 0 => ⟨8, 2, 4, 2⟩
   | 1 => ⟨10, 2, 2, 2⟩
@@ -540,7 +540,7 @@ def partsPointChunk7 (index : Nat) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- The exact coordinate attached to a vertex number in the base graph. -/
-def partsPoint (v : Fin 481) : PartsPoint :=
+@[expose] def partsPoint (v : Fin 481) : PartsPoint :=
   match v.val / 64 with
   | 0 => partsPointChunk0 (v.val % 64)
   | 1 => partsPointChunk1 (v.val % 64)
@@ -553,7 +553,7 @@ def partsPoint (v : Fin 481) : PartsPoint :=
   | _ => ⟨0, 0, 0, 0⟩
 
 /-- Decidable unit adjacency used by the lower-bound certificate checker. -/
-def partsAdjacent (v w : Fin 481) : Bool :=
+@[expose] def partsAdjacent (v w : Fin 481) : Bool :=
   ((partsPoint v).sub (partsPoint w)).IsUnit
 
 lemma dist_partsPoint_eq_one {v w : Fin 481} (h : partsAdjacent v w) :

@@ -42,7 +42,7 @@ Everything is arranged for a realization with shrunken approximation controls
 radii; the resulting entry point is `exists_controlled_polygonalReplacement_of_comparison`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -56,7 +56,7 @@ open PlaneGraphRealization
 /-! ## Barycentric coordinates on the standard triangle -/
 
 /-- The standard triangle vertices as an affine basis of the plane. -/
-noncomputable def stdTriBasis : AffineBasis (Fin 3) ℝ Plane :=
+@[expose] noncomputable def stdTriBasis : AffineBasis (Fin 3) ℝ Plane :=
   planeAffineBasisOfTriple standardTriangleVertex standardTriangleVertex_affineIndependent
 
 @[simp] theorem stdTriBasis_apply (j : Fin 3) :
@@ -377,7 +377,7 @@ theorem exists_comparisonScale (G : K.PlaneGraphRealization) (f : K.Face) :
   exact (hd₁close z hzmem x hx hzx).le
 
 /-- A canonical positive comparison scale for every face. -/
-noncomputable def comparisonScale (G : K.PlaneGraphRealization) (f : K.Face) : ℝ :=
+@[expose] noncomputable def comparisonScale (G : K.PlaneGraphRealization) (f : K.Face) : ℝ :=
   Classical.choose (exists_comparisonScale G f)
 
 theorem comparisonScale_pos (G : K.PlaneGraphRealization) (f : K.Face) :

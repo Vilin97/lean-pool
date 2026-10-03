@@ -20,7 +20,7 @@ from `IntrinsicCloseGraphApproximation`.  The proofs parallel the first intrinsi
 construction, but the boundary map is now the second, metrically controlled graph replacement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -40,7 +40,7 @@ variable (A : K.CloseGraphApproximation
   (hcont := hcont) (hinj := hinj) (D := D) (C := C) ε)
 
 /-- The close graph embedding in standard coordinates on one face boundary. -/
-noncomputable def faceBoundaryMap (t : K.Face) : Plane → Plane :=
+@[expose] noncomputable def faceBoundaryMap (t : K.Face) : Plane → Plane :=
   A.planeMap ∘
     K.faceBoundaryMap (hcont := hcont) (hinj := hinj) (D := D) (C := C) t
 

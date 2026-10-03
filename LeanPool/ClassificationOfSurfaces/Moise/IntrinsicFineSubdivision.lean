@@ -17,7 +17,7 @@ each new face is at most half that of its parent.  This supplies the finite fine
 open-subcomplex extraction used in the compact form of Moise Chapter 8, Theorem 2.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,11 +29,11 @@ namespace IntrinsicTwoComplex
 variable (K : IntrinsicTwoComplex)
 
 /-- The barycentric realization point at a specified vertex of a specified maximal face. -/
-noncomputable def facePoint (t : K.Face) (v : t.1) : K.realization :=
+@[expose] noncomputable def facePoint (t : K.Face) (v : t.1) : K.realization :=
   K.vertexPoint ⟨v.1, t.1, t.2, v.2⟩
 
 @[simp] theorem facePoint_val (t : K.Face) (v : t.1) :
-    (K.facePoint t v).1 = Pi.single v.1 1 := rfl
+    (K.facePoint t v).1 = Pi.single v.1 1 := by rfl
 
 theorem facePoint_mem_faceCarrier (t : K.Face) (v : t.1) :
     K.facePoint t v ∈ K.faceCarrier t.1 :=
@@ -180,7 +180,7 @@ theorem midpointEvalAffine_facePoint
   simpa only [← K.midpointEval_val] using K.midpointEval_facePoint s w
 
 /-- A mesh bound measured after transporting each refined face into the original realization. -/
-def Subdivision.MeshLE {K : IntrinsicTwoComplex} (R : K.Subdivision) (d : ℝ) : Prop :=
+@[expose] def Subdivision.MeshLE {K : IntrinsicTwoComplex} (R : K.Subdivision) (d : ℝ) : Prop :=
   ∀ t ∈ R.refined.faces, ∀ x ∈ R.refined.faceCarrier t,
     ∀ y ∈ R.refined.faceCarrier t, dist (R.homeo x) (R.homeo y) ≤ d
 
@@ -356,7 +356,8 @@ theorem Subdivision.meshLE_trans_midpoint
     change dist ((R.homeo (R.refined.midpointEval x)).1)
       ((R.homeo (R.refined.midpointEval y)).1) = _
     rw [ha _ hxParent, ha _ hyParent]
-    rfl
+    exact congrArg₂ (fun u v => dist (a u) (a v))
+      (R.refined.midpointEval_val x) (R.refined.midpointEval_val y)
   rw [hxy]
   refine hvw.trans ?_
   have hbv : b (R.refined.midpointComplex.facePoint S v).1 =
@@ -397,7 +398,7 @@ theorem Subdivision.refl_meshLE (K : IntrinsicTwoComplex) :
   constructor <;> linarith
 
 /-- The `n`-fold intrinsic midpoint subdivision. -/
-noncomputable def iteratedMidpointSubdivision (K : IntrinsicTwoComplex) :
+@[expose] noncomputable def iteratedMidpointSubdivision (K : IntrinsicTwoComplex) :
     (n : ℕ) → K.Subdivision
   | 0 => Subdivision.refl K
   | n + 1 =>
@@ -405,12 +406,12 @@ noncomputable def iteratedMidpointSubdivision (K : IntrinsicTwoComplex) :
       R.trans R.refined.midpointSubdivision
 
 @[simp] theorem iteratedMidpointSubdivision_zero (K : IntrinsicTwoComplex) :
-    K.iteratedMidpointSubdivision 0 = Subdivision.refl K := rfl
+    K.iteratedMidpointSubdivision 0 = Subdivision.refl K := by rfl
 
 theorem iteratedMidpointSubdivision_succ (K : IntrinsicTwoComplex) (n : ℕ) :
     K.iteratedMidpointSubdivision (n + 1) =
       (K.iteratedMidpointSubdivision n).trans
-        (K.iteratedMidpointSubdivision n).refined.midpointSubdivision := rfl
+        (K.iteratedMidpointSubdivision n).refined.midpointSubdivision := by rfl
 
 /-- Every iterated midpoint refinement preserves the surface edge-valence bound. -/
 theorem hasSurfaceEdgeValence_iteratedMidpointSubdivision

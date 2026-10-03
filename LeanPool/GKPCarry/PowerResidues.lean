@@ -17,12 +17,12 @@ of three. At level `n`, its order modulo `3 ^ (n + 1)` is exactly
 unit group.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
 /-- The unit represented by `2` modulo `3 ^ (level + 1)`. -/
-def twoUnit (level : ℕ) : (ZMod (3 ^ (level + 1)))ˣ :=
+@[expose] def twoUnit (level : ℕ) : (ZMod (3 ^ (level + 1)))ˣ :=
   ZMod.unitOfCoprime 2
     ((by decide : Nat.Coprime 2 3).pow_right (level + 1))
 
@@ -72,7 +72,7 @@ theorem card_units_three_pow_succ (level : ℕ) :
 
 /-- Send an exponent in one complete period to the corresponding power of
 `2` in the unit group. -/
-def twoPowerUnitMap (level : ℕ) :
+@[expose] def twoPowerUnitMap (level : ℕ) :
     Fin (2 * 3 ^ level) → (ZMod (3 ^ (level + 1)))ˣ :=
   fun exponent => twoUnit level ^ exponent.val
 
@@ -87,7 +87,7 @@ lemma twoPowerUnitMap_injective (level : ℕ) :
 
 /-- A complete period of exponents is equivalent to all units modulo the
 corresponding power of three. -/
-noncomputable def twoPowerUnitEquiv (level : ℕ) :
+@[expose] noncomputable def twoPowerUnitEquiv (level : ℕ) :
     Fin (2 * 3 ^ level) ≃ (ZMod (3 ^ (level + 1)))ˣ :=
   Equiv.ofBijective (twoPowerUnitMap level) <|
     (Fintype.bijective_iff_injective_and_card _).2

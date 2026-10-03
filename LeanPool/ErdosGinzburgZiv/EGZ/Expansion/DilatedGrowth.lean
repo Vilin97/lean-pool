@@ -18,13 +18,14 @@ spectral gap for short integer multiples of the available translations.
 Subadditivity then transfers growth back to an original translation.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace EGZ.Expansion
 
 /-- The non-strict central-slab thickness condition for real weights. -/
+@[expose]
 def IsCentrallyThick {p d : ℕ} [NeZero p] (w : FpCoord p d → ℝ)
     (K : ℕ) (δ : ℝ) : Prop := by
   classical

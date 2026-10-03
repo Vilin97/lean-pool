@@ -20,7 +20,7 @@ raw integral as a contractive continuous linear map on `C₀(α, ℝ)`.  It make
 continuity in time or the existence of an associated stochastic process.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal ZeroAtInfty
@@ -33,6 +33,7 @@ variable {α : Type*} [TopologicalSpace α] [MeasurableSpace α]
 
 /-- A kernel semigroup maps `C₀(α, ℝ)` into itself when its raw kernel integral is continuous
 and vanishes at infinity at every time. -/
+@[expose]
 def MapsC0 (P : SubMarkovKernelSemigroup α) : Prop :=
   ∀ t (f : C₀(α, ℝ)),
     Continuous (kernelIntegral (P t) f) ∧
@@ -41,6 +42,7 @@ def MapsC0 (P : SubMarkovKernelSemigroup α) : Prop :=
 variable (P : SubMarkovKernelSemigroup α) (hC0 : P.MapsC0)
 
 /-- The exact `C₀` representative obtained by integrating against `P t`. -/
+@[expose]
 noncomputable def c0KernelIntegral (t : NNReal) (f : C₀(α, ℝ)) : C₀(α, ℝ) where
   toFun := kernelIntegral (P t) f
   continuous_toFun := (hC0 t f).1
@@ -77,6 +79,7 @@ private theorem norm_c0KernelIntegral_le (t : NNReal) (f : C₀(α, ℝ)) :
       rw [one_mul, ZeroAtInftyContinuousMap.norm_toBCF_eq_norm]
 
 /-- The kernel integral as a contraction on real continuous functions vanishing at infinity. -/
+@[expose]
 noncomputable def c0Operator (t : NNReal) : C₀(α, ℝ) →L[ℝ] C₀(α, ℝ) :=
   LinearMap.mkContinuous
     { toFun := P.c0KernelIntegral hC0 t

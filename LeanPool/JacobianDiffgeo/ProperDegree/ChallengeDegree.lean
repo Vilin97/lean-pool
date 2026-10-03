@@ -31,7 +31,7 @@ match "the exact challenge signature" this file declares `f` explicit throughout
 (dot notation) still works since `f` is fully determined by unification against `hf`'s type.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 
@@ -54,7 +54,7 @@ noncomputable def _root_.ContMDiff.degree (f : X → Y) (_hf : ContMDiff 𝓘(�
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [CompactSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 @[simp] theorem _root_.ContMDiff.degree_eq (f : X → Y) (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) :
-    hf.degree = RS.degree f := rfl
+    hf.degree = RS.degree f := by rfl
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [CompactSpace Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in

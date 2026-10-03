@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.SixPoint.Packing
 A color-preserving permutation transports a packing and preserves its radius sum and score.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

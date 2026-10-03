@@ -19,14 +19,14 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ZFLean.Sum`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
 namespace ZFSet
 
 /-- Imported ZFLean declaration. -/
-def Sum (A B : ZFSet) :=
+@[expose] def Sum (A B : ZFSet) :=
   {x // x ∈ (ZFSet.prod { ZFBool.false.val } A) ∪ (ZFSet.prod { ZFBool.true.val } B)}
 /-- Imported ZFLean declaration. -/
 infixr:50 " ⊎ " => Sum
@@ -169,7 +169,7 @@ noncomputable def instEquivSumSubtypeMem {A B : ZFSet} : A ⊎ B ≃ ({x // x �
 
 end Sum
 /-- Imported ZFLean declaration. -/
-def Option (S : ZFSet) := {∅} ⊎ S
+@[expose] def Option (S : ZFSet) := {∅} ⊎ S
 
 instance {T : ZFSet} : Nonempty (Option T) := ⟨Sum.inl ⟨∅, mem_singleton.mpr rfl⟩⟩
 

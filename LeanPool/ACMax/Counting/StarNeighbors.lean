@@ -10,7 +10,7 @@ public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-! # External degrees in three-vertex stars -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

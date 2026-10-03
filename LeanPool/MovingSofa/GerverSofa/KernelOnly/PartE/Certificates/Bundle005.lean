@@ -13,7 +13,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch028`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2474,7 +2474,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC5TerminalBatchT102400005`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2482,7 +2482,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5085,7 +5085,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC6ProofBatchC0ea1b4a6af3d1dc`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5093,7 +5093,7 @@ section
 
 /-! E24KC6 explicit proof-producing certificate batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

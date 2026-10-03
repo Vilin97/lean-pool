@@ -18,7 +18,7 @@ combinatorial engine of the alternating evaluation of mixed vertex
 functionals.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

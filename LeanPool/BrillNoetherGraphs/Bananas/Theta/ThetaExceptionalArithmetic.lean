@@ -17,7 +17,7 @@ from its divisor-rank content.  Coordinates here are the normalized
 coordinates used by `strandVertex`, measured from core vertex `0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

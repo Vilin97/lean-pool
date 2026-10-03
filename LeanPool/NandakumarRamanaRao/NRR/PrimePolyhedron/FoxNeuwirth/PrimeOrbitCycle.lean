@@ -24,7 +24,7 @@ unconditional top-flag cycle.  The resulting finite incidence cycle has one top 
 per prime-symmetry orbit and is the correct input for orbit-level zero counts.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -188,6 +188,7 @@ theorem coveringEquivariantData
     exact simplicialIncidence_smul p g f s
 
 /-- Prime-symmetry orbit quotient of the unconditional top-flag cycle. -/
+@[expose]
 noncomputable def orbitCycle (hp : Nat.Prime p) : FiniteIncidenceCycle (ZMod p) :=
   FiniteIncidenceCycle.orbitQuotient
     (G := PrimeSymmetry p) (coveringCycle hp) (coveringEquivariantData hp)
@@ -208,6 +209,7 @@ abbrev FacetOrbit (hp : Nat.Prime p) :=
   (orbitCycle hp).Facet
 
 /-- Canonical representative of a top orbit. -/
+@[expose]
 noncomputable def topRepresentative
     (hp : Nat.Prime p) (q : TopOrbit hp) :
     (coveringCycle hp).TopCell :=
@@ -215,7 +217,7 @@ noncomputable def topRepresentative
     (G := PrimeSymmetry p) (coveringCycle hp) q
 
 /-- Canonical representative of a facet orbit. -/
-noncomputable def facetRepresentative
+@[expose] noncomputable def facetRepresentative
     (hp : Nat.Prime p) (q : FacetOrbit hp) :
     (coveringCycle hp).Facet :=
   FiniteIncidenceCycle.facetRepresentative

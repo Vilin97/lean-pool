@@ -31,7 +31,7 @@ using `Tendsto` statements for the ε-truncated integrals.
     `fdBoundaryH H` tends to `-(2πi · (k/12 - ord_∞(f)))`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

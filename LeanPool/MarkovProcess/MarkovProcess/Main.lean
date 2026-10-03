@@ -37,7 +37,7 @@ Nothing here asserts a Hunt-process property, and no statement covers a stopping
 infinite.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -134,6 +134,7 @@ with an admissible Hölder exponent.
 
 This is the hypothesis under which the dense-time trajectory of `P` admits a continuous
 modification, and every statement about `continuousProcess P hP` carries it. -/
+@[expose]
 def KolmogorovRegular : Prop :=
   ∀ x, ∃ p q gamma : ℝ, ∃ M : ℝ≥0,
     IsKolmogorovProcess (fun r omega ↦ omega r)
@@ -145,6 +146,7 @@ def KolmogorovRegular : Prop :=
 continuous trajectory kernel, with the fallback path of the underlying measurable extension fixed
 once and for all.  Under `P.KolmogorovRegular hP` the choice of fallback is immaterial, by
 `continuousProcess_eq_continuousPathTrajectory`. -/
+@[expose]
 def IsConservative.continuousProcess : Kernel alpha (ContinuousPath alpha) :=
   continuousPathTrajectory P hP (ContinuousMap.const NNReal (Classical.arbitrary alpha))
 

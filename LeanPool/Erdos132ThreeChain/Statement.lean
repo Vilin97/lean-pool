@@ -43,7 +43,7 @@ numbered result anywhere else.  Hopf--Pannwitz (1934) and Caro--Wei are classica
 but their Lean proofs here are written from scratch.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 

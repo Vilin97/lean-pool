@@ -23,7 +23,7 @@ annulus center.  This file proves that the counted quantity is not just
 bookkeeping: it is actually deliverable by pebbling moves.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -42,7 +42,7 @@ def stackListDistribution {n : ℕ} (rOut : ℕ) :
 /-- A center list is good for demand `T` if every target receives annulus
 contribution at least `T`.  The probabilistic estimates will prove existence of
 such lists. -/
-def IsGoodCenterList (n rIn rOut T : ℕ) (centers : List (HypercubeVertex n)) : Prop :=
+@[expose] def IsGoodCenterList (n rIn rOut T : ℕ) (centers : List (HypercubeVertex n)) : Prop :=
   ∀ target : HypercubeVertex n, T ≤ annulusTotalContribution rIn rOut target centers
 
 theorem size_stackListDistribution {n rOut : ℕ}

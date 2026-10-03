@@ -39,7 +39,7 @@ Unit 4b adds the sixteen consistency-property fields, the Henkin completion, and
 endpoint.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -104,7 +104,7 @@ theorem lyndonInsepAt_insert_right_of_shared_constEq_entails {φ : L[[ℕ]].Sent
 /-- **A polarity-refined paired family member**: a symmetrically support-budgeted, `GenU`-bounded,
 side-typed pair `(Γ, Δ)`, inseparable at the **flipped** intersection class
 `(F₁ ∩ F₂, P₁ ∩ N₂, N₁ ∩ P₂)`. -/
-def LyndonPairedMem (F₁ : Set (Σ n, L.Functions n)) (P₁ N₁ : Set (Σ n, L.Relations n))
+@[expose] def LyndonPairedMem (F₁ : Set (Σ n, L.Functions n)) (P₁ N₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (P₂ N₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω) (S : Set L[[ℕ]].Sentenceω) : Prop :=
   ∃ (Γ Δ : Set L[[ℕ]].Sentenceω) (A : Finset ℕ),

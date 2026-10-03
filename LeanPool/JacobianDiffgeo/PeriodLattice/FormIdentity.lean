@@ -23,7 +23,7 @@ whole neighborhood, `η = 0` identically. Needed by `Nondegeneracy.lean`'s maxim
 Main declaration: `RS.form1_eq_zero_of_eventually_coeffIn_zero`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology Metric IsManifold

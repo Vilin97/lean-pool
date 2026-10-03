@@ -12,7 +12,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.BallBoundaryLES
 
 /-! # Sub Chain Subspace Bridge -/
 
-@[expose] public section
+public section
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -24,7 +24,7 @@ namespace SphereOddDegree
 variable {R : Type} [CommRing R] {X : TopCat.{0}}
 
 /-- The continuous inclusion of a subspace into the ambient space. -/
-def sInclusion (S : Set X) : TopCat.of S ⟶ X :=
+@[expose] def sInclusion (S : Set X) : TopCat.of S ⟶ X :=
   TopCat.ofHom ⟨Subtype.val, continuous_subtype_val⟩
 
 @[simp] theorem sInclusion_hom_apply (S : Set X) (x : S) :
@@ -82,7 +82,7 @@ theorem singularChainMap_sInclusion_mem (S : Set X) (n : ℕ)
   exact hc
 
 /-- Corestrict the subspace singular-chain map to the subcomplex of supported chains. -/
-def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
+@[expose] def subChainCorestrict (R : Type) [CommRing R] (X : TopCat.{0}) (S : Set X) :
     ((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj (TopCat.of S) ⟶
       subChainComplex R X S where
   f n := ModuleCat.ofHom
@@ -186,14 +186,14 @@ instance subChainCorestrict_isIso (S : Set X) :
   HomologicalComplex.Hom.isIso_of_components _
 
 /-- Identify homology of supported chains with singular homology of the subspace. -/
-def subspaceHomologyIso (S : Set X) (n : ℕ) :
+@[expose] def subspaceHomologyIso (S : Set X) (n : ℕ) :
     (subChainComplex R X S).homology n ≅
       (((singularChainComplexFunctor (ModuleCat.{0} R)).obj
         (ModuleCat.of R R)).obj (TopCat.of S)).homology n :=
   ((HomologicalComplex.homologyFunctor _ _ n).mapIso (asIso (subChainCorestrict R X S))).symm
 
 /-- The subspace homology identification with integer coefficients. -/
-def subspaceHomologyIsoℤ (X : TopCat.{0}) (S : Set X) (n : ℕ) :
+@[expose] def subspaceHomologyIsoℤ (X : TopCat.{0}) (S : Set X) (n : ℕ) :
     (subChainComplex ℤ X S).homology n ≅ (singularHomologyℤ n).obj (TopCat.of S) :=
   subspaceHomologyIso S n
 

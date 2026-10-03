@@ -13,7 +13,7 @@ The local API reuses the existing `Zeta5Irrational` valuation and integral-polyn
 Only the product identity and the inverse bound without a nonzero premise are specific here.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

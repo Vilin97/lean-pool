@@ -43,7 +43,7 @@ braided category the `tensorRight` mirror follows — together with
 intended consumers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -194,6 +194,7 @@ end CastTransport
 section ModCast
 
 /-- Transport of a module power along an equality of arities. -/
+@[expose]
 noncomputable def modPowCast
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -247,6 +248,7 @@ section SlotEmbed
 /-- The bridge carrying a left-block slot into the concatenated
 power: reassociate the right block onto the slot context and
 concatenate the contexts. -/
+@[expose]
 noncomputable def midConcatFst
     [Category.{v} D] [MonoidalCategory D] (A : D) (X : D)
     (a b n : ℕ) :
@@ -259,6 +261,7 @@ noncomputable def midConcatFst
 /-- The bridge carrying a right-block slot into the concatenated
 power: reassociate the left block onto the slot's lower context and
 concatenate. -/
+@[expose]
 noncomputable def midConcatSnd
     [Category.{v} D] [MonoidalCategory D] (A : D) (X : D)
     (m a b : ℕ) :
@@ -953,6 +956,7 @@ section SymMulDef
 
 /-- **The multiplication on symmetric powers**, through the
 sections and the raw multiplication. -/
+@[expose]
 noncomputable def symMul
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1066,6 +1070,7 @@ theorem symPowIdem_one
   rfl
 
 /-- **The singleton symmetric power is the module.** -/
+@[expose]
 noncomputable def symPowOne
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1079,6 +1084,7 @@ noncomputable def symPowOne
       Category.id_comp, Iso.inv_hom_id]
 
 /-- Transport of a symmetric power along an equality of arities. -/
+@[expose]
 noncomputable def symPowCast
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]

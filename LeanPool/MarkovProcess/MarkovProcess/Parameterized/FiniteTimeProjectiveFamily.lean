@@ -18,7 +18,7 @@ derives projectivity under fiberwise conservativity. It does not construct a pro
 measure or a stochastic process.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

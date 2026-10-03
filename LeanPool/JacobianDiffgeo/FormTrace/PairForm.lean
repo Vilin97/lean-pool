@@ -48,7 +48,7 @@ than assumed away (see `ResidueTraceCompat.lean`).
 * Basic algebra: `resAtX_congr`, `resAtX_add`, `resAtX_const_mul`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Filter Topology Metric Function Set
@@ -68,7 +68,7 @@ noncomputable def resAtX (F : X → Y) (h : X → ℂ) (x : X) : ℂ :=
 omit [IsManifold 𝓘(ℂ) ω X] [IsManifold 𝓘(ℂ) ω Y] in
 theorem resAtX_def (F : X → Y) (h : X → ℂ) (x : X) :
     resAtX F h x = RS.resAt (fun z => h ((chartAt ℂ x).symm z) *
-      deriv (chartAt ℂ (F x) ∘ F ∘ (chartAt ℂ x).symm) z) (chartAt ℂ x x) := rfl
+      deriv (chartAt ℂ (F x) ∘ F ∘ (chartAt ℂ x).symm) z) (chartAt ℂ x x) := by rfl
 
 /-! ### Compat: the two-chart `ContMDiffAt ↔ AnalyticAt` bridge
 

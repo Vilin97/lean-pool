@@ -18,7 +18,7 @@ pair-multiplicity tables and the twenty connected canonical leaf payloads.
 Generated classifier data, checked by the consuming Lean declarations.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.Generated.GenusFourCanonicalClassifierData
 
 open Utilities.Certificate.CubicMatrixReplay
@@ -26,6 +26,7 @@ open Utilities.Certificate.CubicMatrixReplay
 abbrev Payload := Fin 6 × (Fin 6 → Fin 6)
 
 /-- Pair-multiplicity tables of the six atlas rows, in atlas order. -/
+@[expose]
 def atlasTable : Fin 6 → Fin 6 → Fin 6 → ℕ :=
   ![
     ![![0, 0, 0, 0, 1, 2], ![0, 0, 0, 1, 1, 1], ![0, 0, 0, 2, 1, 0], ![0, 1, 2, 0, 0, 0], ![1, 1,
@@ -44,10 +45,12 @@ def atlasTable : Fin 6 → Fin 6 → Fin 6 → ℕ :=
 
 /-- Base-four lookup key for a leaf row list.  Payloads are independently
 checked entry by entry, so a key collision cannot validate a bad leaf. -/
+@[expose]
 def rowKey (rows : List (List ℕ)) : ℕ :=
   rows.foldl (fun acc row => row.foldl (fun a x => a * 4 + x) acc) 0
 
 /-- Payloads of all twenty connected leaves reached by the pruned traversal. -/
+@[expose]
 def payloadTable : List (ℕ × Payload) :=
   [
     (6379776, (0, ![0, 1, 2, 3, 4, 5])),

@@ -17,7 +17,7 @@ terminal endpoint and the first is an interior point at least two steps from
 the initial endpoint.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -17,7 +17,7 @@ compatibility with the model transport: transporting blockwise
 and merging through the structure map agrees with merging first.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

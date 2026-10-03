@@ -29,7 +29,7 @@ With positions in `ZMod N` (`N = d*m`) and the delete-min map `T`:
   agree; composing with the **denominator** count `card_levelCanonical_mul` yields the result.
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits
 open Finset

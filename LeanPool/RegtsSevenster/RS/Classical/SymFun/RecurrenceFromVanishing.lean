@@ -34,7 +34,7 @@ The proof proceeds in three stages:
    recurrence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -88,7 +88,7 @@ corresponding target side, whose trace on `S` is `u(A₁)` — and `r ∉ A₁`.
   **`thm:square-extension`**.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Filter Metric Schoenflies Set Topology
 open scoped Graph
@@ -283,7 +283,7 @@ crosscut `P` of `C`, whose image under the limit map is a crosscut `P'` of the o
 
 The agreement clause is stated on `P ∖ {a, b}`, which by `IsCrosscut.inter_eq` is exactly
 `P ∩ Int(C)` — the part of the crosscut on which `F` is defined at all. -/
-def HasAnchorCrosscuts (C 𝒜 : Set Plane) (u F : Plane → Plane) : Prop :=
+@[expose] def HasAnchorCrosscuts (C 𝒜 : Set Plane) (u F : Plane → Plane) : Prop :=
   ∀ ⦃a b : Plane⦄, a ∈ 𝒜 → b ∈ 𝒜 → a ≠ b → ∃ P P' : Set Plane,
     IsCrosscut C P a b ∧ IsCrosscut modelCurve P' (u a) (u b) ∧
       F '' (P \ {a, b}) = P' \ {u a, u b}
@@ -295,7 +295,7 @@ This is the germ of the nonboundary edge that `lem:anchor-density` attaches to `
 initial subarc of that edge with the endpoint `c` removed, and `F '' J` is the corresponding
 initial subarc of the target edge, which ends at `u c` because the finite skeleton
 homeomorphism sends `c` to `u c`. Nothing else about the spokes is used anywhere. -/
-def HasSpokes (C 𝒜 : Set Plane) (u F : Plane → Plane) : Prop :=
+@[expose] def HasSpokes (C 𝒜 : Set Plane) (u F : Plane → Plane) : Prop :=
   ∀ c ∈ 𝒜, ∀ ε > 0, ∃ J : Set Plane, J ⊆ inside C ∧ IsPreconnected J ∧ J ⊆ ball c ε ∧
     c ∈ closure J ∧ u c ∈ closure (F '' J)
 
@@ -690,7 +690,7 @@ interiors (`prop:interior-homeomorphism`), the anchor crosscuts with their targe
 
 `Schoenflies.squareExtension_of_hasLimitHomeomorphism` turns this into
 `Schoenflies.SquareExtension`, which is the input required by the final reduction. -/
-def HasLimitHomeomorphism : Prop :=
+@[expose] def HasLimitHomeomorphism : Prop :=
   ∀ (C : Set Plane) (u v : Plane → Plane), IsJordanCurve C → IsHomeoOn u v C modelCurve →
     ∃ (𝒜 : Set Plane) (F F' : Plane → Plane), 𝒜 ⊆ C ∧ C ⊆ closure 𝒜 ∧
       IsHomeoOn F F' (inside C) (Plane.openSquare 0 1) ∧

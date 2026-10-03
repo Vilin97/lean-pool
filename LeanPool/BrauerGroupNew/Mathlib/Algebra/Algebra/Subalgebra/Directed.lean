@@ -15,7 +15,7 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Directed`.
 -/
 
-@[expose] public section
+public section
 
 namespace Subalgebra
 variable {R A ι : Type*} [CommSemiring R] [Semiring A] [Algebra R A] {K : ι → Subalgebra R A}

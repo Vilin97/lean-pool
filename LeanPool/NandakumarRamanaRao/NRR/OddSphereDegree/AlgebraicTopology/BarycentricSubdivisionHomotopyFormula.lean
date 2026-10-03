@@ -12,7 +12,7 @@ public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Formula -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -175,7 +175,7 @@ theorem barycentricHomotopyUniversal_succ_eq (R : Type) [CommRing R] (m : ℕ) :
 /-! ## 5. The boundary term and the chain-homotopy formula -/
 
 /-- Apply the subdivision homotopy to the boundary of a chain, using zero in degree zero. -/
-noncomputable def homotopyBoundaryTerm (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ)
+@[expose] noncomputable def homotopyBoundaryTerm (R : Type) [CommRing R] (X : TopCat.{0}) (n : ℕ)
     (c : singularChainGroup R X n) : singularChainGroup R X n :=
   match n with
   | 0 => 0

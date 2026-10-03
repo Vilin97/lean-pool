@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
 
 /-! A genuine bounded cylinder-to-spatial mean, defined by the adjoint of constant extension. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,10 +42,10 @@ theorem embedding_translate (a : LiftTangent) (u : SpatialL2 V) :
   rfl
 
 /-- Mean, given by `P⁻¹ • (embedding P).adjoint`. -/
-def mean : CylinderL2 P V →L[ℝ] SpatialL2 V := P⁻¹ • (embedding P).adjoint
+@[expose] def mean : CylinderL2 P V →L[ℝ] SpatialL2 V := P⁻¹ • (embedding P).adjoint
 
 @[simp] theorem mean_apply (u : CylinderL2 P V) :
-    mean P u = P⁻¹ • (embedding P).adjoint u := rfl
+    mean P u = P⁻¹ • (embedding P).adjoint u := by rfl
 
 theorem mean_norm : ‖mean (V := V) P‖ ≤ P⁻¹*Real.sqrt P := by
   change ‖P⁻¹ • (embedding (V := V) P).adjoint‖ ≤ _
@@ -88,7 +88,7 @@ theorem mean_translate (a : LiftTangent) (u : CylinderL2 P V) :
 
 /-- Averaging over the angular translations does not change the actual spatial mean. -/
 theorem mean_average (u : CylinderL2 P V) : mean P (average P u) = mean P u := by
-  change mean P (P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s)) = _
+  rw [average_eq_integral]
   rw [map_smul, ← (mean (V := V) P).intervalIntegral_comp_comm
     ((angleCurve_continuous P u).intervalIntegrable 0 P)]
   have he : (fun s : ℝ => mean P (angleCurve P u s)) = fun _ : ℝ => mean P u := by

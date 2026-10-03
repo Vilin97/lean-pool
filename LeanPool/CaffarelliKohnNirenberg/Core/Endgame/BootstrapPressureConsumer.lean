@@ -27,7 +27,7 @@ bound at times after `0` is used; the pressure values there enter only the
 local representation of the localized velocity.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Filter
 open scoped ENNReal Topology

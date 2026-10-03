@@ -17,7 +17,7 @@ section
 /-! Exact identification of the nonlinear Sobolev transport with the operator used in metric energy.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,7 +48,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

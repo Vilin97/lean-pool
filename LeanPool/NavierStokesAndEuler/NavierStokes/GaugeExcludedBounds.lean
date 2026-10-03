@@ -19,7 +19,7 @@ regularity is supplied by the incoming primitive fields and the genuine
 pressure reconstruction, not by a hypothesis on an alias output.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

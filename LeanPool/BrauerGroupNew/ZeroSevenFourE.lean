@@ -20,7 +20,7 @@ This file ports the upstream Wedderburn-Artin uniqueness arguments used by the B
 development.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory DirectSum
 
@@ -559,7 +559,7 @@ lemma gen_spec (M : Type v) [AddCommGroup M]
     ∃ a : A, m' = a • gen A M := (exists_gen A M).choose_spec.2 m'
 
 /-- The left action map into the double centralizer endomorphism algebra. -/
-@[simps]
+@[simps, expose]
 def toEndEnd (M : Type v) [AddCommGroup M] [Module A M] :
     A →ₗ[A] Module.End (Module.End A M) M where
   toFun a :=
@@ -575,6 +575,7 @@ lemma toEndEnd_apply (M : Type v) [AddCommGroup M] [Module A M] (a : A) (m : M) 
     toEndEnd A M a m = a • m := rfl
 
 /-- The algebra homomorphism induced by the double centralizer action map. -/
+@[expose]
 def toEndEndAlgHom (M : Type v) [AddCommGroup M] [Module A M] [Module k M] [IsScalarTower k A M] :
     A →ₐ[k] Module.End (Module.End A M) M where
   __ := toEndEnd A M
@@ -700,7 +701,7 @@ lemma isBalanced_of_simpleMod (k : Type u) (A : Type v) [Field k] [Ring A] [Alge
   exact this
 
 /-- The double centralizer algebra equivalence for a simple module. -/
-noncomputable def endEndIso
+@[expose] noncomputable def endEndIso
     (M : Type v) [AddCommGroup M]
     [Module A M] [IsSimpleModule A M] [Module k M] [IsScalarTower k A M] :
     A ≃ₐ[k] Module.End (Module.End A M) M :=

@@ -23,7 +23,7 @@ import Mathlib.RingTheory.DedekindDomain.Basic
 # LeanPool.Zeta3Irrational.Basic
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

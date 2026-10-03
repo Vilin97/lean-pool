@@ -24,7 +24,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -57,7 +57,7 @@ lemma headD_nonempty (x : constTreeObj k A) (h : x.val ≠ []) : headD x = x.val
 @[simp] lemma constTree_zero (x : constTreeObj 0 A) : x.val = [] := by
   apply List.eq_nil_of_length_eq_zero; linarith [constTree_length x]
 /-- Adjoint of `res k` -/
-def constTree (k : ℕ) : Type* ⥤ Trees where
+@[expose] def constTree (k : ℕ) : Type* ⥤ Trees where
   obj A := ⟨A, constTreeObj k A⟩
   map f := {
     toFun := fun ⟨x, h⟩ ↦ ⟨List.map (ConcreteCategory.hom f) x, by

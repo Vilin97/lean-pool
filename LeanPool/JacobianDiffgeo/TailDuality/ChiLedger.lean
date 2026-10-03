@@ -51,7 +51,7 @@ out of scope, per `Comparison.lean`/the root docstring) — it is not used here 
 * **`chiT_eq_chiT_zero_add_degree (D) : chiT D = chiT 0 + D.degree`** — the primary deliverable.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace
@@ -92,7 +92,7 @@ noncomputable def windowConnectT {D D' : RS.Divisor X} (h : D ≤ D') :
   (H1Tail.mk D).comp (RS.LaurentTail.windowToT D D' h)
 
 theorem windowConnectT_apply {D D' : RS.Divisor X} (h : D ≤ D') (w : RS.Cech.Window D D') :
-    windowConnectT h w = H1Tail.mk D (RS.LaurentTail.windowToT D D' h w) := rfl
+    windowConnectT h w = H1Tail.mk D (RS.LaurentTail.windowToT D D' h w) := by rfl
 
 omit [ConnectedSpace X] [T1Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- `windowToT`'s value off the witness `Finset` is `0` (unfolds `T.mk`). -/

@@ -54,7 +54,7 @@ and the filtered complexity inequality in Corollary 2.3 come from
 combines them with the geometry proved here.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 

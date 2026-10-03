@@ -41,7 +41,7 @@ The two families are combined exactly as in `GenusFiveRow12`: each names its
 own centres, and between them they cover every chip-free vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow14
 

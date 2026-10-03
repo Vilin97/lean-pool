@@ -18,7 +18,7 @@ the last coordinate, the induction hypothesis constructs a chain on the old
 coordinates, and one insertion of the new coordinate completes the step.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,7 +26,7 @@ namespace Feige
 
 /-- The uniform local conclusion needed at every induction stage, restricted
 to the strict ordered systems to which the analytic insertion proof applies. -/
-def StrictOrderedLocalInsertion : Prop :=
+@[expose] def StrictOrderedLocalInsertion : Prop :=
   ∀ {n : ℕ}
     (γ β : Fin (n + 1) → ℝ)
     (hγpos : ∀ i, 0 < γ i) (_hγle : ∀ i, γ i ≤ 1)

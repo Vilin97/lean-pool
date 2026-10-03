@@ -21,7 +21,7 @@ an arbitrary enclosing disk by the usual affine normalization.
   -- the unconditional polynomial bound on an arbitrary open operator-norm disk.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace Polynomial
 

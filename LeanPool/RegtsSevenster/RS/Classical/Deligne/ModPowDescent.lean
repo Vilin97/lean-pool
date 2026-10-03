@@ -18,7 +18,7 @@ tower.  Together with the merge isomorphisms this descends the
 vanishing of a relative power to the module itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {D : Type u}
 
 /-- **The sandwich tower**: iterate tensoring with the pair
 `M ⊗ M'` on the left. -/
+@[expose]
 noncomputable def sandwichTower
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

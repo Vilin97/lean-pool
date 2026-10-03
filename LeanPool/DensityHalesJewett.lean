@@ -35,4 +35,4 @@ Tags: combinatorics
 MSC: 05D10, 05A05, 11B75, 68R15
 -/
 
-@[expose] public section
+public section

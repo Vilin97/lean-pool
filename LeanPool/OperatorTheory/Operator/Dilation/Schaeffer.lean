@@ -23,7 +23,7 @@ The negative sites stay zero, so the system component at site zero evolves as
 the resulting power-compression identity.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal InnerProductSpace
 
@@ -39,6 +39,7 @@ abbrev SchaefferSpace (E : Type u) [NormedAddCommGroup E] :=
   lp (fun _ : ℤ => E) 2
 
 /-- Embed `E` isometrically as coordinate zero of its bilateral Hilbert sum. -/
+@[expose]
 noncomputable def schaefferEmbedding : E →L[ℂ] SchaefferSpace E :=
   lp.singleContinuousLinearMap ℂ (fun _ : ℤ => E) 2 0
 
@@ -61,6 +62,7 @@ theorem adjoint_schaefferEmbedding_apply (f : SchaefferSpace E) :
   simp only [schaefferEmbedding_apply, lp.inner_single_right]
 
 /-- Reindex a square-summable family along an equivalence. -/
+@[expose]
 noncomputable def lpReindexForward {ι ι' : Type*} (e : ι ≃ ι')
     (f : lp (fun _ : ι => E) 2) : lp (fun _ : ι' => E) 2 :=
   ⟨fun j => f (e.symm j), by
@@ -93,6 +95,7 @@ private theorem norm_lpReindexForward {ι ι' : Type*} (e : ι ≃ ι')
           (by norm_num : 0 < (2 : ℝ≥0∞).toReal) f
 
 /-- Reindexing a square-summable family along an equivalence is a linear isometry equivalence. -/
+@[expose]
 noncomputable def lpReindex {ι ι' : Type*} (e : ι ≃ ι') :
     lp (fun _ : ι => E) 2 ≃ₗᵢ[ℂ] lp (fun _ : ι' => E) 2 where
   toFun := lpReindexForward e
@@ -114,6 +117,7 @@ noncomputable def lpReindex {ι ι' : Type*} (e : ι ≃ ι') :
   norm_map' := by exact norm_lpReindexForward e
 
 /-- The right bilateral shift, as a linear isometry equivalence of the dilation space. -/
+@[expose]
 noncomputable def schaefferBilateralShiftEquiv :
     SchaefferSpace E ≃ₗᵢ[ℂ] SchaefferSpace E :=
   lpReindex (Equiv.addRight (1 : ℤ))
@@ -153,6 +157,7 @@ abbrev SchaefferNetworkSpace (E : Type u) [NormedAddCommGroup E] :=
   lp (fun _ : ℤ => SchaefferNetworkFiber E) 2
 
 /-- Insert the system space into the system component of one network site. -/
+@[expose]
 noncomputable def schaefferFiberEmbedding :
     E →L[ℂ] SchaefferNetworkFiber E :=
   (WithLp.prodContinuousLinearEquiv 2 ℂ E E).symm.toContinuousLinearMap.comp
@@ -164,6 +169,7 @@ private theorem schaefferFiberEmbedding_apply (x : E) :
     schaefferFiberEmbedding x = WithLp.toLp 2 (x, 0) := rfl
 
 /-- Embed the original space at the system component of site zero. -/
+@[expose]
 noncomputable def schaefferNetworkEmbedding :
     E →L[ℂ] SchaefferNetworkSpace E :=
   (lp.singleContinuousLinearMap ℂ (fun _ : ℤ => SchaefferNetworkFiber E) 2 0).comp

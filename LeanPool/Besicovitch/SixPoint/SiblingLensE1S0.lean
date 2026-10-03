@@ -17,7 +17,7 @@ matrix preserves the correlation between the three positive distances. The resul
 colorwise quadratics are bounded on the three radial vertices.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

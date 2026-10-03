@@ -18,7 +18,7 @@ products equals `1`.  This is the polynomial form of the
 orthonormality `⟨χ_μ, χ_μ⟩ = 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,6 +27,7 @@ open Finset MvPolynomial Equiv
 variable {k : ℕ}
 
 /-- The diagonal staircase exponent of a shape. -/
+@[expose]
 noncomputable def diagExp (v : Fin k → ℕ) : Fin k →₀ ℕ :=
   ∑ i, Finsupp.single i (v i + ((k - 1) - (i : ℕ)))
 

@@ -31,7 +31,7 @@ evenness of vertices (see `BruhatTits.isEven_specialLinearGroup_smul_iff`).
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -85,7 +85,12 @@ lemma isEven_iff' (L : Lattice R) :
     L.IsEven ↔ ∃ (b : Basis (Fin 2) K (Fin 2 → K)),
       b.toLattice = L ∧ Even (zaddVal (R := R) b.toGeneralLinearGroup.det) := by
   rw [isEven_iff]
-  refine ⟨fun ⟨b, hb⟩ ↦ ⟨b.fromLattice, by simp, hb⟩, ?_⟩
+  refine ⟨?_, ?_⟩
+  · rintro ⟨b, hb⟩
+    have hGL : b.fromLattice.toGeneralLinearGroup = b.toGL := by
+      ext i j
+      simp only [Basis.toGeneralLinearGroup_apply, Basis.fromLattice_apply, Basis.toGL_apply]
+    exact ⟨b.fromLattice, by simp, by simpa only [hGL] using hb⟩
   rintro ⟨b, rfl, hb⟩
   use b.restrictToLattice
   have : (b.restrictToLattice (R := R)).toGL = b.toGeneralLinearGroup := by
@@ -183,7 +188,8 @@ lemma isEven_specialLinearGroup_smul {x : Vertices R} (h : IsEven x)
     (g : Matrix.SpecialLinearGroup (Fin 2) K) : IsEven (g • x) := by
   revert h
   refine Quotient.inductionOn x fun x h ↦ ?_
-  change IsEven ⟦g • x⟧
+  change IsEven (smulGL g.toGL (⟦x⟧ : Vertices R))
+  rw [smulGL_mk]
   simpa
 
 @[simp]

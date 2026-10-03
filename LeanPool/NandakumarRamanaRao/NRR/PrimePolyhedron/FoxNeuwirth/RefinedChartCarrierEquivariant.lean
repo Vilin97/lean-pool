@@ -18,7 +18,7 @@ when two decorated refined charts represent the same global realization point, t
 affine interpolants of one equivariant sampling map are related by the same decorations.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

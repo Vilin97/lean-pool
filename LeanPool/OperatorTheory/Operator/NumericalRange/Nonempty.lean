@@ -17,7 +17,7 @@ space is nontrivial.  Thus the only empty numerical ranges are those on a
 subsingleton space.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

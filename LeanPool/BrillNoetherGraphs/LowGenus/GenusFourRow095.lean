@@ -30,7 +30,7 @@ We first normalize `length 0 <= length 5`.  The opposite chamber is carried
 to this one by the Core-095 involution and is treated separately below.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate
@@ -44,6 +44,7 @@ open WindowProfile
 /-- The ordered nine-slot presentation of the catalog's loopless Core 095.
 Keeping the concrete cardinalities visible makes subsequent `Fin` arithmetic
 small and transparent. -/
+@[expose]
 def core : ExplicitPotential.Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 2]
   head := ![4, 5, 5, 3, 4, 5, 3, 3, 4]
@@ -93,6 +94,7 @@ theorem length_five_eq_A_add_X (hNorm : length 0 ≤ length 5) :
   omega
 
 /-- The moving chip `q`, at distance `X` from vertex 1 on slot 5. -/
+@[expose]
 def q (_hNorm : length 0 ≤ length 5) : (Spec length hLength).Vertex :=
   (Spec length hLength).pathVertex 5
     ⟨X length, by
@@ -104,6 +106,7 @@ def q (_hNorm : length 0 ≤ length 5) : (Spec length hLength).Vertex :=
 the three displayed divisors.  Its endpoint divisor is
 `a + b - c - q`.
 -/
+@[expose]
 def abProfile (hNorm : length 0 ≤ length 5) :
     WindowProfile.Data (Spec length hLength) where
   coreValue := fun vertex =>

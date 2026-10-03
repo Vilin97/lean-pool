@@ -20,7 +20,7 @@ high-genus banana cannot have `k ≥ g`, since Proposition 6.1 would make the
 underlying banana Brill--Noether general.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

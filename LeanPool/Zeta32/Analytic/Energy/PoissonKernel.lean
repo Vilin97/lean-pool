@@ -13,7 +13,7 @@ The three facts: `∫₀^{2π} PK w = 2π`, `∫₀^{2π} PK w · log|e^{iθ} �
 ≥ 1`, and
 `∫₀^{2π} log|e^{iθ} − q| = 2π log⁺|q|`; all from Mathlib's Poisson/Jensen formulas. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Metric InnerProductSpace
 

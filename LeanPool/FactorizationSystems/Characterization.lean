@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 # LeanPool.FactorizationSystems.Characterization
 -/
 
-@[expose] public section
+public section
 
 namespace CategoryTheory
 universe u v
@@ -83,7 +83,7 @@ def WFSOfFS (L R : MorphismProperty C) (F : FactorizationSystem L R) :
 
 /- The predicate of classes of morphisms being orthogonal -/
 /-- Imported FactorizationSystems declaration. -/
-def orthogonalClass (L R : MorphismProperty C) :=
+@[expose] def orthogonalClass (L R : MorphismProperty C) :=
   ∀ ⦃A B X Y : C⦄ (l : A ⟶ B) (_ : L l) (r : X ⟶ Y) (_ : R r) , orthogonal l r
 
 /- Towards the proof that the two classes of a factorization system are orthogonal -/

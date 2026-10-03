@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
 support. The forward mean contribution is localized even when its
 boundary coefficient is nonzero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ membership relation, together with notation and metaprogramming infrastructure f
 building and realizing bounded formulas in models of ZF.
 -/
 
-@[expose] public section
+public section
 
 open Lean Parser Elab Term Meta Qq Std FirstOrder.Language
 
@@ -29,7 +29,7 @@ inductive memRel : ℕ → Type
 
 open FirstOrder in
 /-- The first-order language of ZF set theory, with a single binary membership relation. -/
-def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
+@[expose] def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
 deriving IsRelational
 
 attribute [local implicit_reducible] 𝓛ZF
@@ -390,7 +390,7 @@ namespace VariableParams
 variable (ps : VariableParams)
 
 /-- The `numFreeVariables` declaration. -/
-def numFreeVariables : Nat := ps.countP (·.isFreeVariable)
+@[expose] def numFreeVariables : Nat := ps.countP (·.isFreeVariable)
 /-- The `numHypotheses` declaration. -/
 def numHypotheses : Nat := ps.countP (·.isHypothesis)
 
@@ -431,7 +431,7 @@ abbrev BuildFormulaM := StateT BuildFormulaState MetaM
 namespace BuildFormula
 
 /-- The `removeNameSuffix` declaration. -/
-def removeNameSuffix (name : Name) : Name :=
+@[expose] def removeNameSuffix (name : Name) : Name :=
   match name with
   | .anonymous => .anonymous
   | _ =>
@@ -751,7 +751,7 @@ def buildFormula (formulaName : Name) : BuildFormulaM Unit := do
   applyAttributes formulaName #[{name := `irreducible}] |>.run'
 
 /-- The `prefixIdents` declaration. -/
-def prefixIdents (typeLetter := "M") : Array Ident :=
+@[expose] def prefixIdents (typeLetter := "M") : Array Ident :=
   #[mkIdent typeLetter.toName, mkIdent ("s" ++ typeLetter).toName]
 
 /-- The prefix identifiers are exactly the carrier type and its structure instance. -/

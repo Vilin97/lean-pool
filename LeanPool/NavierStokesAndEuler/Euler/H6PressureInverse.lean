@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedPressure
 /-! The actual coercive pressure inverse in fixed Sobolev blocks, followed by external Gevrey
 weighting. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ monomorphism, and in particular nonzero.  This is the input that
 makes a tensor product of nonzero algebras nonzero.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -23,7 +23,7 @@ other deletions are respectively one chip and a nonprincipal degree-zero
 divisor.  Thus `rankDelta D = -1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -11,18 +11,18 @@ public import Mathlib.Data.Finset.Order
 
 /-! Elementary weight arguments in dimension two. No claim resolving GMC(2). -/
 
-@[expose] public section
+public section
 noncomputable section
 open MvPolynomial Finset
 open scoped BigOperators Pointwise
 namespace GaussianMomentsCounterexamples
 
 /-- Natural coordinates [W,Z] for one normalized complex Gaussian pair. -/
-def pairSub : MvPolynomial (Fin 2) ℂ →ₐ[ℂ] MvPolynomial (Fin 2) ℂ :=
+@[expose] def pairSub : MvPolynomial (Fin 2) ℂ →ₐ[ℂ] MvPolynomial (Fin 2) ℂ :=
   aeval ![normalizedW 0 1, normalizedZ 0 1]
 
 /-- Actual Gaussian expectation expressed in the two natural complex coordinates. -/
-def pairExpectation : MvPolynomial (Fin 2) ℂ →ₗ[ℂ] ℂ :=
+@[expose] def pairExpectation : MvPolynomial (Fin 2) ℂ →ₗ[ℂ] ℂ :=
   (expectationLinear 2).comp pairSub.toLinearMap
 
 @[simp] theorem pairExpectation_monomial (d : Fin 2 →₀ ℕ) (c : ℂ) :

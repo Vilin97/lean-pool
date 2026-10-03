@@ -25,7 +25,7 @@ import Mathlib.Tactic.Ring.Basic
 /-! # Outer range: the entry theorem
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -114,15 +114,15 @@ lemma pole_sum_cross {cs ct : Fin (m + 1)} (hc : cs ≠ ct) (is it : ℕ) :
   · right; left; exact h
 
 /-- `ℓ(c) = #{j ≤ K : j ≡ ±c}`. -/
-def ellC (c : Fin (m + 1)) : ℕ :=
+@[expose] def ellC (c : Fin (m + 1)) : ℕ :=
   ((Icc 1 (40 * n)).filter fun j => jc hm j = c).card
 
 /-- `δ(c) = [c ≤ N]`. -/
-def delC (c : Fin (m + 1)) : ℕ :=
+@[expose] def delC (c : Fin (m + 1)) : ℕ :=
   if (c : ℕ) ≤ 3 * n then 1 else 0
 
 /-- The outer weights (4.12). -/
-noncomputable def wO (c : Fin (m + 1)) (i : ℕ) : ℚ :=
+@[expose] noncomputable def wO (c : Fin (m + 1)) (i : ℕ) : ℚ :=
   if c = 0 then (if i < nbC hm n 0 then -2 else if nbC hm n 0 = 0 then -1 / 2 else 0)
   else
     (if i < nbC hm n c then min 0 ((i : ℚ) + 3 * delC n c - ((ellC hm n c : ℚ) + 4) / 2) else 0)

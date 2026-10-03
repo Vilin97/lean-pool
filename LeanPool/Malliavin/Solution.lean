@@ -20,7 +20,7 @@ boundary definitions remain explicit for independent statement auditing;
 `IsSmoothBounded.toMalliavin` transfers their witnesses to the shared library API.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace
@@ -65,6 +65,7 @@ noncomputable def centeredIdLp
   (memLp_centeredId μ).toLp (centeredId μ)
 
 /-- The covariance map from scalar `L²(μ)` into the ambient Banach space. -/
+@[expose]
 noncomputable def covarianceMap
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
@@ -74,6 +75,7 @@ noncomputable def covarianceMap
     (centeredIdLp μ)
 
 /-- The covariance embedding of the Cameron–Martin space into `W`. -/
+@[expose]
 noncomputable def inclusion
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
@@ -95,6 +97,7 @@ end CameronMartin
 
 /-- The Malliavin derivative as the Riesz representative of differentiation
 along the Cameron–Martin covariance embedding. -/
+@[expose]
 noncomputable def mderiv
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]
@@ -170,6 +173,7 @@ noncomputable def toLp
 
 /-- The Malliavin derivative of a smooth bounded functional as an element
 of L²(μ; H), where H is the Cameron–Martin space. -/
+@[expose]
 noncomputable def mderivLp
     {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [CompleteSpace W] [MeasurableSpace W] [BorelSpace W]

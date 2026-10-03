@@ -26,7 +26,7 @@ where `e_c` (resp. `ℓ_c`) is the number of zeros (resp. poles) in the class `c
 This replaces the `p`-adic distribution formula of the paper (Lemmas 3.1–3.2).
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -35,15 +35,15 @@ namespace Zeta5Irrational
 variable {p : ℕ} [hp : Fact p.Prime]
 
 /-- The numerator `κ ∏_{ζ ∈ Z} (x - ζ)`. -/
-noncomputable def numOf (κ : ℚ) (Z : Multiset ℤ) : ℚ[X] :=
+@[expose] noncomputable def numOf (κ : ℚ) (Z : Multiset ℤ) : ℚ[X] :=
   C κ * (Z.map fun ζ : ℤ => X - C (ζ : ℚ)).prod
 
 /-- Number of zeros in the class `c`. -/
-def cnt (p : ℕ) (Z : Multiset ℤ) (c : ZMod p) : ℕ :=
+@[expose] def cnt (p : ℕ) (Z : Multiset ℤ) (c : ZMod p) : ℕ :=
   (Z.filter fun ζ : ℤ => (ζ : ZMod p) = c).card
 
 /-- Poles in the class `c`. -/
-def plc (p : ℕ) (Pl : Finset ℤ) (c : ZMod p) : Finset ℤ :=
+@[expose] def plc (p : ℕ) (Pl : Finset ℤ) (c : ZMod p) : Finset ℤ :=
   Pl.filter fun r : ℤ => (r : ZMod p) = c
 
 /-! ### Integer valuations -/
@@ -148,7 +148,7 @@ lemma VG_eval_numOf (κ : ℚ) (hκ : VG p κ 0) (Z : Multiset ℤ) (x : ℤ) :
   simpa using hκ.mul (VG_prod_sub Z x)
 
 /-- Poles in the same class differ by exactly one power of `p`. -/
-def Sep (p : ℕ) (Pl : Finset ℤ) : Prop :=
+@[expose] def Sep (p : ℕ) (Pl : Finset ℤ) : Prop :=
   ∀ r ∈ Pl, ∀ s ∈ Pl, r ≠ s → (r : ZMod p) = s → ¬(p : ℤ) ^ 2 ∣ r - s
 
 lemma padicValRat_denom_le (Pl : Finset ℤ) (hsep : Sep p Pl) {r : ℤ} (hr : r ∈ Pl) :

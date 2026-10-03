@@ -36,7 +36,7 @@ fire once a caller supplies them — which is exactly the hook period-lattice-ra
 establishes discreteness/full-rank for the actual period subgroup.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Pointwise
 open Set Filter Topology Metric
@@ -143,24 +143,25 @@ def rawChartAux (x : V) : OpenPartialHomeomorph V (V ⧸ L) :=
     Metric.isOpen_ball
 
 omit [NormedSpace ℂ V] in
-@[simp] theorem rawChartAux_apply (x z : V) : rawChartAux L x z = QuotientAddGroup.mk z := rfl
+@[simp] theorem rawChartAux_apply (x z : V) : rawChartAux L x z = QuotientAddGroup.mk z := by rfl
 
 omit [NormedSpace ℂ V] in
-@[simp] theorem rawChartAux_source (x : V) : (rawChartAux L x).source = ball x (injRadius L) := rfl
+@[simp] theorem rawChartAux_source (x : V) : (rawChartAux L x).source = ball x (injRadius L) := by
+  rfl
 
 /-- The chart at representative `x : V`: sends a class near `x` to its unique representative in
 `ball x (injRadius L)`. -/
 def chartAt' (x : V) : OpenPartialHomeomorph (V ⧸ L) V := (rawChartAux L x).symm
 
 omit [NormedSpace ℂ V] in
-@[simp] theorem chartAt'_symm (x : V) : (chartAt' L x).symm = rawChartAux L x := rfl
+@[simp] theorem chartAt'_symm (x : V) : (chartAt' L x).symm = rawChartAux L x := by rfl
 
 omit [NormedSpace ℂ V] in
 @[simp] theorem chartAt'_source (x : V) :
-    (chartAt' L x).source = QuotientAddGroup.mk '' ball x (injRadius L) := rfl
+    (chartAt' L x).source = QuotientAddGroup.mk '' ball x (injRadius L) := by rfl
 
 omit [NormedSpace ℂ V] in
-@[simp] theorem chartAt'_target (x : V) : (chartAt' L x).target = ball x (injRadius L) := rfl
+@[simp] theorem chartAt'_target (x : V) : (chartAt' L x).target = ball x (injRadius L) := by rfl
 
 omit [NormedSpace ℂ V] in
 /-- The defining property of `chartAt'`: on a representative `z` inside the ball, the chart

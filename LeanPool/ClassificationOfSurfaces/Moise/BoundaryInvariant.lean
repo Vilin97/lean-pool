@@ -23,7 +23,7 @@ The frontier of the chart's extended target follows because its interior is cont
 interior of the model range.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 
@@ -55,12 +55,12 @@ instance chartBoundaryInvariant_of_invarianceOfDomain
     exact hyNotInteriorRange (f.interior_extend_target_subset_interior_range hyInterior)
 
 /-- Reflection in the boundary line of the Euclidean half-plane. -/
-def reflectAcrossHalfPlaneBoundary (p : Moise.Plane) : Moise.Plane :=
+@[expose] def reflectAcrossHalfPlaneBoundary (p : Moise.Plane) : Moise.Plane :=
   WithLp.toLp 2 (fun i => if i = 0 then -p i else p i)
 
 /-- Fold the plane onto the Euclidean half-plane by taking the absolute value of its normal
 coordinate. -/
-def foldPlaneToHalfSpace (p : Moise.Plane) : EuclideanHalfSpace 2 :=
+@[expose] def foldPlaneToHalfSpace (p : Moise.Plane) : EuclideanHalfSpace 2 :=
   ⟨WithLp.toLp 2 (fun i => if i = 0 then |p i| else p i), by simp⟩
 
 /-- Reflection across the boundary line is continuous. -/

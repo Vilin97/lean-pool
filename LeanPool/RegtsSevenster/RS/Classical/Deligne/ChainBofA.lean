@@ -20,7 +20,7 @@ reduces along the colimit defining equations to the bilinearity
 of the stage multiplication over the base.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

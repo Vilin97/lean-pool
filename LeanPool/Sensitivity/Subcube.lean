@@ -32,7 +32,7 @@ decrease sensitivity and preserves Möbius coefficients on subsets of the
   restriction has full degree `d`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 
@@ -40,7 +40,7 @@ variable {n : ℕ}
 
 /-- Embed an assignment of the "free" coordinates into the full hypercube by
 copying values from `base` on the non-free coordinates. -/
-def embed (free : Finset (Fin n)) (base : Fin n → Bool)
+@[expose] def embed (free : Finset (Fin n)) (base : Fin n → Bool)
     (x : Fin n → Bool) : Fin n → Bool :=
   fun j => if j ∈ free then x j else base j
 
@@ -83,7 +83,7 @@ namespace BoolFun
 
 /-- Restriction of `f` to the subcube parametrised by the free coordinates
 `free` and the fixed assignment `base` on the remaining coordinates. -/
-def restrictTo (f : BoolFun n) (free : Finset (Fin n))
+@[expose] def restrictTo (f : BoolFun n) (free : Finset (Fin n))
     (base : Fin n → Bool) : BoolFun n :=
   fun x => f (embed free base x)
 

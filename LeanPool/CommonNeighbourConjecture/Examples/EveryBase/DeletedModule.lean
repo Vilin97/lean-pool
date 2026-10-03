@@ -17,7 +17,7 @@ irreducibility proof: every endomorphism of the deleted module extends to the
 full permutation module, while the all-ones operator restricts to zero.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,7 +50,7 @@ instance permModSMulCommClass : SMulCommClass H F2 (PermMod Ω) where
   smul_comm _ _ _ := by funext x; rfl
 
 /-- Sum all coordinates of a vector in the permutation module. -/
-def coordSum : PermMod Ω →ₗ[F2] F2 where
+@[expose] def coordSum : PermMod Ω →ₗ[F2] F2 where
   toFun f := ∑ x, f x
   map_add' f g := by simp only [Pi.add_apply, Finset.sum_add_distrib]
   map_smul' a f := by
@@ -62,7 +62,7 @@ theorem coordSum_smul (g : H) (f : PermMod Ω) :
   exact (MulAction.toPerm g).symm.sum_comp f
 
 /-- The deleted binary permutation module, i.e. the coordinate-sum kernel. -/
-def DeletedModule (Ω : Type*) [Fintype Ω] :=
+@[expose] def DeletedModule (Ω : Type*) [Fintype Ω] :=
   LinearMap.ker (coordSum (Ω := Ω))
 
 instance deletedModuleDistribMulAction :
@@ -87,7 +87,7 @@ instance deletedModuleSMulCommClass :
   smul_comm _ _ _ := by apply Subtype.ext; rfl
 
 /-- The inclusion of the deleted module into the full permutation module. -/
-def deletedIncl : DeletedModule Ω →ₗ[F2] PermMod Ω :=
+@[expose] def deletedIncl : DeletedModule Ω →ₗ[F2] PermMod Ω :=
   (DeletedModule Ω).subtype
 
 theorem coordSum_one (hΩodd : Odd (Fintype.card Ω)) :
@@ -202,11 +202,11 @@ theorem vq_card (d : Nat) (hd : Odd d) :
   norm_num
 
 /-- The natural representation of `Hq d` on its deleted module. -/
-def hqRepresentation (d : Nat) : Representation F2 (Hq d) (Vq d) :=
+@[expose] def hqRepresentation (d : Nat) : Representation F2 (Hq d) (Vq d) :=
   Representation.ofDistribMulAction F2 (Hq d) (Vq d)
 
 /-- The characteristic vector of `{0,1}`, written as a deleted vector. -/
-noncomputable def pairVector (d : Nat) : Vq d :=
+@[expose] noncomputable def pairVector (d : Nat) : Vq d :=
   ⟨Pi.basisFun F2 (Fq d) 0 + Pi.basisFun F2 (Fq d) 1, by
     change coordSum (Pi.basisFun F2 (Fq d) 0 +
       Pi.basisFun F2 (Fq d) 1) = 0
@@ -265,7 +265,7 @@ theorem hq_faithful (d : Nat) (hd : Odd d) : FaithfulSMul (Hq d) (Vq d) := by
   exact pairVector_isRegular d hd g (hfix (pairVector d))
 
 /-- The complement-of-zero vector used in the displayed obstruction. -/
-noncomputable def hqBadSeedVector (d : Nat) (hd : Odd d) : Vq d :=
+@[expose] noncomputable def hqBadSeedVector (d : Nat) (hd : Odd d) : Vq d :=
   ⟨(1 : PermMod (Fq d)) + Pi.basisFun F2 (Fq d) 0, by
     change coordSum ((1 : PermMod (Fq d)) +
       Pi.basisFun F2 (Fq d) 0) = 0
@@ -327,7 +327,7 @@ theorem hqBadSeedVector_not_regular
     exact hzero
 
 /-- The coordinate map from the deleted module to binary-valued functions. -/
-def deletedCoord (d : Nat) : Vq d →+ (Fq d → F2) :=
+@[expose] def deletedCoord (d : Nat) : Vq d →+ (Fq d → F2) :=
   (Vq d).subtype.toAddHom
 
 end SaxlCounterexamples.EveryBase

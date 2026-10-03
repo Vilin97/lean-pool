@@ -11,7 +11,7 @@ public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
 # LeanPool.DirectedTopologyLean4.PushoutAlternative
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains an alternative way for proving a commutative square in a category is a pushout.

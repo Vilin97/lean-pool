@@ -35,7 +35,7 @@ the index `0` is the homogenizing variable `X₀` and `Fin.succ i` is the variab
   quotDim I + 1` for a prime `I`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -157,6 +157,7 @@ theorem homogenizeTo_monomial (t : ℕ) (α : Fin d →₀ ℕ) (c : K) :
   exact Finsupp.sum_single_index (map_zero _)
 
 /-- Blueprint A05: `homogenizeTo t` as a `K`-linear map. -/
+@[expose]
 noncomputable def homogenizeToₗ (t : ℕ) :
     MvPolynomial (Fin d) K →ₗ[K] MvPolynomial (Fin (d + 1)) K where
   toFun := homogenizeTo t
@@ -200,6 +201,7 @@ theorem homogenizeTo_dehom {t : ℕ} {G : MvPolynomial (Fin (d + 1)) K} (hG : G.
 /-- Blueprint A05: the monomial bijection between forms of degree `t` in `d + 1` variables and
 polynomials of degree `≤ t` in `d` variables, as a `K`-linear isomorphism `P̂_t ≃ P_{≤t}` given
 by `dehom` (inverse `homogenizeTo t`). -/
+@[expose]
 noncomputable def dehomEquiv (t : ℕ) :
     homogeneousSubmodule (Fin (d + 1)) K t ≃ₗ[K] restrictTotalDegree (Fin d) K t :=
   LinearEquiv.ofLinearMap

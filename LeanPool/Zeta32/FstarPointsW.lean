@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.FstarPointsW.MassLog
 `log 3` lower bound and the 15 lower bounds for `Wt` at `x_k = aMinus·k/16` (index `k : Fin 15`
 stands for `x_(k+1)`). No `sorry`, no new axioms, no `native_decide`. -/
 
-@[expose] public section
+public section
 
 namespace Zeta32.Fstar
 

@@ -24,7 +24,7 @@ The key idea: Dπ is continuous at m⋆, so for small enough R,
 all perturbation terms are O(ε₁ · Ln) with ε₁ = sup ‖Dπ-P‖ → 0.
 -/
 
-@[expose] public section
+public section
 
 open scoped NNReal
 noncomputable section

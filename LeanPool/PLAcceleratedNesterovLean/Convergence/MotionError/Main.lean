@@ -17,7 +17,7 @@ Combined with ‖e_n‖² ≤ C_coer/μ' · L_n from coercivity:
   ‖g_n‖ ≤ L · √(C_coer/μ') · √L_n =: C_g · √L_n
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

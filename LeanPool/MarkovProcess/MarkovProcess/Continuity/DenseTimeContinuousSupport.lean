@@ -21,7 +21,7 @@ argument of `Continuity/GlobalDyadicFloorModification.lean`, applied to dense-ti
 kernels in `Continuity/KolmogorovDenseTimeContinuousSupport.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

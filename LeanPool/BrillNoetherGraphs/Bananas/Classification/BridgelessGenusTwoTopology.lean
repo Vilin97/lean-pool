@@ -18,7 +18,7 @@ have valence at least two.  This module records that reduction and its sharp
 genus-two topological-vertex bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

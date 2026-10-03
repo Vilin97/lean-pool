@@ -30,7 +30,7 @@ Gagliardo--Nirenberg inequality at `p = 1`.  The affine bookkeeping is kept
 explicit so that the final constant is independent of the ball.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal Pointwise
@@ -597,7 +597,7 @@ private theorem cutoff_gradient_lintegral_le (g : Vec 3 → ℝ) (hg : ContDiff 
     _ = _ := by ring
 
 /-- The absolute unit-ball constant in the smooth `W^{1,1}` endpoint estimate. -/
-noncomputable def poincareSobolevL1Constant : ℝ≥0∞ :=
+@[expose] noncomputable def poincareSobolevL1Constant : ℝ≥0∞ :=
   (SNormLESNormFDerivOfEqConst ℝ (volume : Measure (Vec 3)) (1 : ℝ) : ℝ≥0∞) *
     ((1 + 3 * 25 * 64 + 2 * 169 * 648 : ℝ≥0∞) +
       96 * (3 * 64 + 2 * 648 : ℝ≥0∞) * ENNReal.ofReal unitL1PoincareConstant)

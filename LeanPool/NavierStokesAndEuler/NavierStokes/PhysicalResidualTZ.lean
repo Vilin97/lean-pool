@@ -16,7 +16,7 @@ pipeline uses `(T,Z)`.  The map below swaps those two input coordinates and
 leaves radius, fast variables, angle, and vector components unchanged.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,6 +34,7 @@ abbrev Lift := PhysicalResidualBridge.Lift
 abbrev Cylinder := PhysicalResidualBridge.Cylinder
 
 /-- The fixed isometric involution `(R,(Z,T),Y) ↔ (R,(T,Z),Y)`. -/
+@[expose]
 noncomputable def swapSlow : Lift ≃ₗᵢ[ℝ] Lift where
   toFun x := (x.1, ((x.2.1.2, x.2.1.1), x.2.2))
   invFun x := (x.1, ((x.2.1.2, x.2.1.1), x.2.2))
@@ -54,6 +55,7 @@ noncomputable def swapSlow : Lift ≃ₗᵢ[ℝ] Lift where
 theorem swapSlow_swapSlow (x : Lift) : swapSlow (swapSlow x) = x := rfl
 
 /-- Extension to the actual angular cylinder; the angle is not permuted. -/
+@[expose]
 noncomputable def swapCylinder : Cylinder ≃ₗᵢ[ℝ] Cylinder where
   toLinearEquiv := swapSlow.toLinearEquiv.prodCongr (LinearEquiv.refl ℝ ℝ)
   norm_map' x := by
@@ -84,6 +86,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Pullback of a vector field under a fixed linear change of coordinates. -/
+@[expose]
 noncomputable def reindexVector (e : E ≃L[ℝ] E) (V : E → E) (x : E) : E :=
   e.symm (V (e x))
 
@@ -181,10 +184,12 @@ theorem graphResidual_reindex (e : E ≃L[ℝ] E) (epsilon : ℝ) (R : E → ℝ
 end Calculus
 
 /-- Swap field, defined pointwise by `f n (swapSlow x)`. -/
+@[expose]
 noncomputable def swapField (f : MeanIncrementBounds.Field Lift) : MeanIncrementBounds.Field Lift :=
   fun n x => f n (swapSlow x)
 
 /-- Swap triple, given by `⟨swapField m.radial, swapField m.angular, swapField m.axial⟩`. -/
+@[expose]
 noncomputable def swapTriple (m : MeanIncrementBounds.Triple Lift) : MeanIncrementBounds.Triple
     Lift :=
   ⟨swapField m.radial, swapField m.angular, swapField m.axial⟩
@@ -205,6 +210,7 @@ noncomputable def swapOperators (o : MeanIncrementBounds.Operators Lift) :
   vT := swapSlow o.vT
 
 /-- Swap context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
+@[expose]
 noncomputable def swapContext (c : CorrectionState.Context Lift) : CorrectionState.Context Lift
     where
   operators := swapOperators c.operators
@@ -213,10 +219,12 @@ noncomputable def swapContext (c : CorrectionState.Context Lift) : CorrectionSta
   virtualAxial := swapField c.virtualAxial
 
 /-- Swap oscillation, defined pointwise by `f n (swapCylinder x)`. -/
+@[expose]
 noncomputable def swapOscillation (f : CorrectionState.Oscillation Lift) :
     CorrectionState.Oscillation Lift := fun n x => f n (swapCylinder x)
 
 /-- Swap errors, bundling `base`, `gaussian`, `aliasError`. -/
+@[expose]
 noncomputable def swapErrors (e : CorrectionState.ExcludedErrors Lift) :
     CorrectionState.ExcludedErrors Lift where
   base := swapOscillation e.base
@@ -225,6 +233,7 @@ noncomputable def swapErrors (e : CorrectionState.ExcludedErrors Lift) :
 
 /-- Swap state, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def swapState (s : CorrectionState.State Lift) : CorrectionState.State Lift where
   mean := swapTriple s.mean
   pressure := swapField s.pressure
@@ -287,15 +296,15 @@ theorem angularDirection_swap :
 
 theorem complexBase_swap (c : CorrectionState.Context Lift) (n : ℕ) :
     LiftedMeanResidual.complexBase (swapContext c) n =
-      fun x => LiftedMeanResidual.complexBase c n (swapCylinder x) := rfl
+      fun x => LiftedMeanResidual.complexBase c n (swapCylinder x) := by rfl
 
 theorem complexPerturbation_swap (s : CorrectionState.State Lift) (n : ℕ) :
     LiftedMeanResidual.complexPerturbation (swapState s) n =
-      fun x => LiftedMeanResidual.complexPerturbation s n (swapCylinder x) := rfl
+      fun x => LiftedMeanResidual.complexPerturbation s n (swapCylinder x) := by rfl
 
 theorem complexPressure_swap (s : CorrectionState.State Lift) (n : ℕ) :
     LiftedMeanResidual.complexPressure (swapState s) n =
-      fun x => LiftedMeanResidual.complexPressure s n (swapCylinder x) := rfl
+      fun x => LiftedMeanResidual.complexPressure s n (swapCylinder x) := by rfl
 
 theorem virtualDivergence_swap (c : CorrectionState.Context Lift) (n : ℕ) (x : Cylinder) :
     LiftedMeanResidual.virtualDivergence (swapContext c) n x =
@@ -407,27 +416,32 @@ theorem matchesAtTZ_graphOperators (r : CorrectionState.ReconstructionData)
   · rfl
 
 /-- The actual scaled physical graph, with the slow coordinates in `(T,Z)` order. -/
-noncomputable def graphMapTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def graphMapTZ (G : PhysicalResidualBridge.ScaledGraph)
     (p : ProblemStatement.SpaceTime) : Cylinder := swapCylinder (G.map p)
 
 /-- Graph source TZ, given by `{p | 0 < p.2 0 ∧ graphMapTZ G p ∈ U}`. -/
+@[expose]
 noncomputable def graphSourceTZ (G : PhysicalResidualBridge.ScaledGraph) (U : Set Cylinder) :
     Set ProblemStatement.SpaceTime := {p | 0 < p.2 0 ∧ graphMapTZ G p ∈ U}
 
 /-- Graph radial TZ, given by `reindexVector swapCylinder.toContinuousLinearEquiv G.radial`. -/
+@[expose]
 noncomputable def graphRadialTZ (G : PhysicalResidualBridge.ScaledGraph) : Cylinder → Cylinder :=
   reindexVector swapCylinder.toContinuousLinearEquiv G.radial
 
 /-- Graph angular TZ, given by `reindexVector swapCylinder.toContinuousLinearEquiv
 PhysicalResidualBridge.ScaledGraph.angular`. -/
+@[expose]
 noncomputable def graphAngularTZ : Cylinder → Cylinder :=
   reindexVector swapCylinder.toContinuousLinearEquiv PhysicalResidualBridge.ScaledGraph.angular
 
 /-- Graph axial TZ, given by `reindexVector swapCylinder.toContinuousLinearEquiv G.axial`. -/
+@[expose]
 noncomputable def graphAxialTZ (G : PhysicalResidualBridge.ScaledGraph) : Cylinder → Cylinder :=
   reindexVector swapCylinder.toContinuousLinearEquiv G.axial
 
 /-- Graph temporal TZ, given by `reindexVector swapCylinder.toContinuousLinearEquiv G.temporal`. -/
+@[expose]
 noncomputable def graphTemporalTZ (G : PhysicalResidualBridge.ScaledGraph) : Cylinder → Cylinder :=
   reindexVector swapCylinder.toContinuousLinearEquiv G.temporal
 
@@ -443,12 +457,12 @@ theorem graphRadialTZ_eq (G : PhysicalResidualBridge.ScaledGraph) : graphRadialT
 theorem graphAngularTZ_eq : graphAngularTZ = PhysicalResidualBridge.ScaledGraph.angular := rfl
 
 /-- Velocity TZ, given by `G.velocity (fun x => a (swapCylinder x))`. -/
-noncomputable def velocityTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def velocityTZ (G : PhysicalResidualBridge.ScaledGraph)
     (a : Cylinder → Fin 3 → ℝ) : ProblemStatement.VelocityField :=
   G.velocity (fun x => a (swapCylinder x))
 
 /-- Pressure TZ, given by `G.pressure (fun x => p (swapCylinder x))`. -/
-noncomputable def pressureTZ (G : PhysicalResidualBridge.ScaledGraph)
+@[expose] noncomputable def pressureTZ (G : PhysicalResidualBridge.ScaledGraph)
     (p : Cylinder → ℝ) : ProblemStatement.PressureField :=
   G.pressure (fun x => p (swapCylinder x))
 
@@ -467,6 +481,7 @@ theorem graphResidual_swap (G : PhysicalResidualBridge.ScaledGraph)
     (swapCylinder x)).symm
 
 /-- The same fixed linear chart map used by the variable-gauge mean, in `(T,Z)` order. -/
+@[expose]
 noncomputable def physicalToChartTZ (h : ℝ) (n k : ℕ) : Lift →L[ℝ] Lift :=
   swapSlow.toContinuousLinearEquiv.toContinuousLinearMap.comp
     ((MeanChartCompatibility.physicalToChart h n k).comp
@@ -484,7 +499,7 @@ theorem physicalToChartTZ_eq_formula (h : ℝ) (n k : ℕ) :
             (TemporalMeanUpdate.coverMap k)) := rfl
 
 /-- Absolute lift TZ, given by `swapSlow (PhysicalResidualBridge.absoluteLift h p)`. -/
-noncomputable def absoluteLiftTZ (h : ℝ) (p : ProblemStatement.SpaceTime) : Lift :=
+@[expose] noncomputable def absoluteLiftTZ (h : ℝ) (p : ProblemStatement.SpaceTime) : Lift :=
   swapSlow (PhysicalResidualBridge.absoluteLift h p)
 
 theorem commonGraph_eq_physicalToChartTZ (h : ℝ) (n k : ℕ) {p : ProblemStatement.SpaceTime}

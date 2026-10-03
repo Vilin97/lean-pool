@@ -19,7 +19,7 @@ across `SchemaCompletion.lean`, `Interpolation/CraigRelational.lean` and
 order.  Consolidating here removes that hazard.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

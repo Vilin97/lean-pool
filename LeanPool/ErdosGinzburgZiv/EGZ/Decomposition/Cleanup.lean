@@ -18,7 +18,7 @@ once: after deletion its mass remains zero. Strong induction on the remaining
 finite set of fibres proves termination and the total mass bound together.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -47,7 +47,7 @@ asserted here; those are the remaining analytic inputs.
   sharp interior reduction in terms of the explicit regularized values.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real
@@ -55,6 +55,7 @@ open scoped Interval Real
 /-- The normalized scalar Cauchy kernel of the parametrized frontier.  For a
 positively oriented Jordan curve it is `1` in the carrier and `0` outside the
 closed domain. -/
+@[expose]
 noncomputable def crouzeixScalarCauchyKernel
     (Omega : SmoothJordanDomain) (z : ℂ) : ℂ :=
   (2 * (Real.pi : ℂ) * I)⁻¹ *
@@ -62,6 +63,7 @@ noncomputable def crouzeixScalarCauchyKernel
 
 /-- The scalar companion regularized at `xi` by subtracting the boundary
 datum at `xi` from its numerator. -/
+@[expose]
 noncomputable def crouzeixPolynomialScalarCompanionRegularized
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ) (xi z : ℂ) : ℂ :=
   (2 * (Real.pi : ℂ) * I)⁻¹ *
@@ -73,6 +75,7 @@ noncomputable def crouzeixPolynomialScalarCompanionRegularized
 
 /-- The explicit prospective interior boundary value: the original datum at
 `xi` plus the regularized transform evaluated at `xi`. -/
+@[expose]
 noncomputable def crouzeixPolynomialScalarCompanionBoundaryValue
     (Omega : SmoothJordanDomain) (p : Polynomial ℂ) (xi : ℂ) : ℂ :=
   star (Polynomial.eval xi p) +

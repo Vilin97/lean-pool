@@ -18,7 +18,7 @@ survives the level-`n` holes contracts by a factor `1 - c/n` at each level, up t
 error, and `∑ 1/n = ∞`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Topology
 

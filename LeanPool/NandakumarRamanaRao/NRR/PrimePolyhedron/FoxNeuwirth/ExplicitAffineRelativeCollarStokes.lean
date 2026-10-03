@@ -28,7 +28,7 @@ this finite Stokes theorem.  It requires the boundary assignment to equal the tw
 endpoint maps on all frozen horizontal vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -280,11 +280,13 @@ end FoxNeuwirthRelativeAffineCollar
 
 /-- Canonical identification of the `p` facet vertices with the vertex index type used by a
 `(p - 1)`-simplex.  Keeping this transport named prevents repeated dependent casts. -/
+@[expose]
 def refinedVertexEquiv (hp : Nat.Prime p) :
     Fin p ≃ Fin (p - 1 + 1) :=
   augmentedRowEquiv hp
 
 /-- The corresponding transported refined vertex index. -/
+@[expose]
 def refinedVertexIndex (hp : Nat.Prime p) (i : Fin p) :
     Fin (p - 1 + 1) :=
   refinedVertexEquiv hp i

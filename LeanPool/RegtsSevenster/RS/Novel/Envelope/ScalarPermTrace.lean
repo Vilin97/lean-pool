@@ -18,7 +18,7 @@ the Frobenius formula. Fixed points can be recorded separately
 from the nontrivial cycles.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

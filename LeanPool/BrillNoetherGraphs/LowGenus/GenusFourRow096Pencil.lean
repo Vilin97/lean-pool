@@ -61,7 +61,7 @@ three-slot instance of `prin_cutRamp` at the cut `{e0,e6,e7}`.
 This file is complete: no `sorry` remains.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow096Pencil
 

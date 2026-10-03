@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.NormalizedOperations
 
 /-! # Gap cleanup as a certified iteration step -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 
@@ -21,6 +21,7 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime] {f : FpCoord p d → ℕ}
     (D : NormalizedGapStep s.decomposition s.radius R (ε * δ ^ 2))
 
 /-- Iteration state produced by the gap-cleanup data. -/
+@[expose]
 noncomputable def gapState : State p d f where
   decomposition := D.decomposition
   radius := D.radius

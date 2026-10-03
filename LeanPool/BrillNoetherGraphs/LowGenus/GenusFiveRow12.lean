@@ -25,7 +25,7 @@ name the row's lookup tables, check the incidence facts, and observe that the
 two tables between them cover every chip-free vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow12
 

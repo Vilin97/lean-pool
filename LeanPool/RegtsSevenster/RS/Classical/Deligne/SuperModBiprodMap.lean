@@ -17,7 +17,7 @@ biproducts, componentwise; a pair of isomorphisms induces an
 isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

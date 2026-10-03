@@ -22,7 +22,7 @@ by normalizing both sides to iterated gluing over the common
 ambient `(F₁ ⊔ G₁) ⊔ (F₂ ⊔ G₂)` and meeting the label chains.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -32,7 +32,7 @@ Later genericity modules only need to define their determinant and codimension-t
 this finite type.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -57,10 +57,12 @@ structure CylinderPoint (p : Nat) where
 namespace CylinderPoint
 
 /-- Convert the product representation used by the homotopy and prism charts. -/
+@[expose]
 def ofProd (z : Realization p × Set.Icc (0 : Real) 1) : CylinderPoint p :=
   ⟨z.1, z.2⟩
 
 /-- Convert back to the product representation used by the homotopy. -/
+@[expose]
 def toProd (z : CylinderPoint p) : Realization p × Set.Icc (0 : Real) 1 :=
   (z.spatial, z.time)
 
@@ -107,6 +109,7 @@ noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (VertexSlot 
   inferInstance
 
 /-- A local prism vertex occurrence as an actual point of the realization cylinder. -/
+@[expose]
 noncomputable def slotPoint
     (hp : Nat.Prime p) (N L : Nat) (s : VertexSlot hp N L) : CylinderPoint p :=
   CylinderPoint.ofProd (SubdivisionPrismCharts.vertex hp N L s.1 s.2)
@@ -122,12 +125,14 @@ noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (CoverVertex
   inferInstance
 
 /-- Geometric point represented by one symmetry-decorated local vertex occurrence. -/
+@[expose]
 noncomputable def coverPoint
     (hp : Nat.Prime p) (N L : Nat) (s : CoverVertexSlot hp N L) : CylinderPoint p :=
   s.1 • slotPoint hp N L s.2
 
 /-- Two decorated local slots represent the same global sampled vertex when their cylinder points
 are equal. -/
+@[expose]
 noncomputable def coverVertexSetoid
     (hp : Nat.Prime p) (N L : Nat) : Setoid (CoverVertexSlot hp N L) where
   r a b := coverPoint hp N L a = coverPoint hp N L b
@@ -147,6 +152,7 @@ noncomputable instance globalVertexDecidableEq
   Classical.decEq _
 
 /-- Left multiplication on the symmetry decoration. -/
+@[expose]
 def actCoverVertex {hp : Nat.Prime p}
     (g : PrimeSymmetry p) (s : CoverVertexSlot hp N L) : CoverVertexSlot hp N L :=
   (g * s.1, s.2)
@@ -181,6 +187,7 @@ noncomputable instance globalVertexAction
     simp [mul_smul]
 
 /-- Actual cylinder point represented by a global sampled vertex. -/
+@[expose]
 noncomputable def globalPoint
     (hp : Nat.Prime p) (N L : Nat) : GlobalVertex hp N L → CylinderPoint p :=
   Quotient.lift (coverPoint hp N L) (by
@@ -201,6 +208,7 @@ noncomputable def globalPoint
   exact coverPoint_actCoverVertex hp N L g s
 
 /-- The global sampled vertex represented by an undecorated local slot. -/
+@[expose]
 noncomputable def sampleVertex
     (hp : Nat.Prime p) (N L : Nat) (s : VertexSlot hp N L) : GlobalVertex hp N L :=
   Quotient.mk _ ((1 : PrimeSymmetry p), s)
@@ -247,12 +255,14 @@ abbrev Assignment (hp : Nat.Prime p) (N L : Nat) :=
   Parameter hp N L → Real
 
 /-- Scalar value reconstructed at a sampled global vertex and coordinate label. -/
+@[expose]
 noncomputable def scalarValue
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (x : GlobalVertex hp N L) (j : Fin p) : Real :=
   a (Quotient.mk _ (x, j))
 
 /-- Full coordinate vector reconstructed at a sampled global vertex. -/
+@[expose]
 noncomputable def vectorValue
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (x : GlobalVertex hp N L) : Fin p → Real :=
@@ -291,6 +301,7 @@ theorem vectorValue_smul
   exact congrArg a hsite
 
 /-- Vector value attached to one local prism vertex occurrence. -/
+@[expose]
 noncomputable def localVertexValue
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) (q : PrismCell hp N L) (i : Fin (p + 1)) :

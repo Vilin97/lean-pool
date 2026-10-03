@@ -22,7 +22,7 @@ bilinear maps. They transfer coefficient bounds to the time multipliers,
 transported variational forms, and right sides of the constructed inverses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

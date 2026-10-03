@@ -17,7 +17,7 @@ on polynomials.
 * if `deg g ≤ d` and `v_p(g(z)) ≥ β` for all `z ∈ ℤ`, then
   `v_p(polynomialMoment r g) ≥ β - 2⌊log_p(d+2)⌋ - v_p(den r)`. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 

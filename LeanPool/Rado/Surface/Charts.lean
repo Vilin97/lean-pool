@@ -29,7 +29,7 @@ is only needed at the very end). This file sets up the chart-level toolkit:
   second countability.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric Manifold Filter
 
@@ -69,7 +69,7 @@ theorem chartAt_mem_riemannAtlas (x : X) : chartAt ℂ x ∈ riemannAtlas X :=
   IsManifold.chart_mem_maximalAtlas x
 
 /-- Chartwise holomorphy of a map `X → ℂ` on a set, via the preferred charts. -/
-def HolomorphicOn (F : X → ℂ) (s : Set X) : Prop :=
+@[expose] def HolomorphicOn (F : X → ℂ) (s : Set X) : Prop :=
   ∀ x ∈ s, AnalyticAt ℂ (F ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 
 namespace HolomorphicOn

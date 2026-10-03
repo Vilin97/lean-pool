@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitialSupport
 initial increment is supported in the small physical packet ball. The
 exact correction starts from zero, so it adds no initial tail. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,13 +33,13 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized initial high, given by `scale M.ℓ (fun x => EulerPacketInitial.high N
 k⁻¹ 0 (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))`. -/
-def forwardInitializedInitialHigh (N : ℕ) (k : ℝ) : Space → Space :=
+@[expose] def forwardInitializedInitialHigh (N : ℕ) (k : ℝ) : Space → Space :=
   scale M.ℓ (fun x => EulerPacketInitial.high N k⁻¹ 0
     (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))
 
 /-- Forward initialized initial mean, given by `scale M.ℓ (fun x => EulerPacketInitial.mean N
 k⁻¹ 0 (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))`. -/
-def forwardInitializedInitialMean (N : ℕ) (k : ℝ) : Space → Space :=
+@[expose] def forwardInitializedInitialMean (N : ℕ) (k : ℝ) : Space → Space :=
   scale M.ℓ (fun x => EulerPacketInitial.mean N k⁻¹ 0
     (forwardInitializedProfiles M D δ hδ ξ hs α) (0,(x,k*inner ℝ D.m₀ x)))
 

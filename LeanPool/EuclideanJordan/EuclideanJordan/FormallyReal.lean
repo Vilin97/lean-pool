@@ -49,7 +49,7 @@ conclusion whose connecting lemma was already in the tree (after row 35 and the 
 that documents it.**
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

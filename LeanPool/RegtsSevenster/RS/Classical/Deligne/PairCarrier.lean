@@ -18,7 +18,7 @@ and the copair element multiplies to the unit of the carrier —
 the section identity of the splitting data of the Key Lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {D : Type u}
 /-- **The pair product on the carrier**: the descended pair
 product of the entries, entering the degree-zero component two
 stages up. -/
+@[expose]
 noncomputable def splitPairMul
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

@@ -19,7 +19,7 @@ If a line `T ↦ b + T v` lies on an ideal `I` (that is, `I ≤ λ_{b,v}`) and a
 restriction `res_{b,v} g`. The finite-field form substitutes the coordinate lift `liftPt`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

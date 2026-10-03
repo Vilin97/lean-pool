@@ -19,7 +19,7 @@ strip retains the same domain, edge distance, and vanishing weight.  Every
 constant is chosen before both the original band and the label.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ variable {ι E F G : Type*} {D : Type}
 
 /-- Only the discrete scales are reindexed. The spatial edge geometry and
 its possibly vanishing weight are exactly the original ones. -/
-noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : StripData D where
+@[expose] noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : StripData D where
   domain := s.domain
   isOpen_domain := s.isOpen_domain
   epsilon k := s.epsilon (e k).1
@@ -52,6 +52,7 @@ noncomputable def reindexedStrip (s : StripData D) (e : ℕ → ℕ × ι) : Str
   zeta_nonneg := s.zeta_nonneg
 
 /-- Pull, defined pointwise by `f (e k).2 (e k).1`. -/
+@[expose]
 noncomputable def pull (e : ℕ → ℕ × ι) (f : ι → ℕ → D → E) : ℕ → D → E :=
   fun k => f (e k).2 (e k).1
 
@@ -242,6 +243,7 @@ theorem class_of_single {w : ℕ → D → ℝ} {f : ℕ → D → E} (hf : MemC
 
 /-- Uniform band bound, given by `∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ l n, ‖a l n‖ ≤ C * s.epsilon n ^ β
 * s.slow n ^ p`. -/
+@[expose]
 noncomputable def UniformBandBound (s : StripData D) (β : ℝ) (a : ι → ℕ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ, ∀ l n,
     ‖a l n‖ ≤ C * s.epsilon n ^ β * s.slow n ^ p

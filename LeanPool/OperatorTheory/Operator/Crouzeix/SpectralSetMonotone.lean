@@ -16,7 +16,7 @@ Polynomial spectral-set estimates persist when the constant is increased or
 when a compact control set is enlarged.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace Polynomial

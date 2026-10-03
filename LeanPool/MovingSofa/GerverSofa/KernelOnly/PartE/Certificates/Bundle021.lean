@@ -15,7 +15,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch034`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2523,7 +2523,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC6R4Join459e5b5f3815ebd2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2531,7 +2531,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3222,7 +3222,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3305,7 +3305,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3356,7 +3356,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3439,7 +3439,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3522,7 +3522,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4247,7 +4247,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4281,7 +4281,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4940,7 +4940,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5023,7 +5023,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5070,7 +5070,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5153,7 +5153,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5187,7 +5187,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5455,7 +5455,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5580,7 +5580,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6323,7 +6323,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6374,7 +6374,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6421,7 +6421,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6455,7 +6455,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6594,7 +6594,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6628,7 +6628,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6711,7 +6711,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6794,7 +6794,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7337,7 +7337,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7371,7 +7371,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7608,7 +7608,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8186,7 +8186,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8220,7 +8220,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8254,7 +8254,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8301,7 +8301,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9044,7 +9044,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9078,7 +9078,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9112,7 +9112,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9146,7 +9146,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9193,7 +9193,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9431,7 +9431,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9465,7 +9465,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9499,7 +9499,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10158,7 +10158,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10192,7 +10192,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10226,7 +10226,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10260,7 +10260,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10307,7 +10307,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10341,7 +10341,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10850,7 +10850,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10884,7 +10884,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10918,7 +10918,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10952,7 +10952,7 @@ section
 
 /-! KC6R4 pure logical subtree join. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

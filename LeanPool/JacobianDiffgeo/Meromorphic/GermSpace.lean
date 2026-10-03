@@ -29,7 +29,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.3,
   maps), with `restrict_mk`, `restrict_restrict`, `restrict_id`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -62,6 +62,7 @@ variable {U V : Set X} {f g : X → ℂ}
 
 variable (X) in
 /-- Germs over `codiscreteWithin U` admitting a meromorphic representative. -/
+@[expose]
 noncomputable def meroGermSubalgebra (U : Set X) :
     Subalgebra ℂ (Filter.Germ (Filter.codiscreteWithin U) ℂ) where
   carrier := {γ | ∃ f, MeromorphicOnX f U ∧ γ = (f : Filter.Germ (codiscreteWithin U) ℂ)}
@@ -75,6 +76,7 @@ noncomputable def meroGermSubalgebra (U : Set X) :
 
 variable (X) in
 /-- The space of meromorphic germ classes on `U` (CC3 relativized; junk-free). -/
+@[expose]
 def MeroGermOn (U : Set X) : Type _ := meroGermSubalgebra X U
 
 variable (X) in
@@ -100,6 +102,7 @@ instance instNontrivialMero [Nonempty X] : Nontrivial (ℳ X) := by
 namespace MeroGermOn
 
 /-- Constructor: the class of a meromorphic function. -/
+@[expose]
 noncomputable def mk (f : X → ℂ) (hf : MeromorphicOnX f U) : MeroGermOn X U :=
   ⟨(f : Filter.Germ (codiscreteWithin U) ℂ), f, hf, rfl⟩
 
@@ -166,7 +169,7 @@ end MeroGermOn
 
 /-- The germ-level restriction map: pulling back a `codiscreteWithin U`-germ to a
 `codiscreteWithin V`-germ, for `V ⊆ U`. Meromorphy-free. -/
-noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin U) ℂ) :
+@[expose] noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin U) ℂ) :
     Filter.Germ (codiscreteWithin V) ℂ :=
   γ.liftOn (fun f => (f : Filter.Germ (codiscreteWithin V) ℂ))
     (fun _f _g hfg => Filter.Germ.coe_eq.2 (hfg.filter_mono (codiscreteWithin_mono h)))
@@ -174,7 +177,7 @@ noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin
 omit [ChartedSpace ℂ X] in
 @[simp] theorem restrictGerm_coe (h : V ⊆ U) (f : X → ℂ) :
     restrictGerm h (f : Filter.Germ (codiscreteWithin U) ℂ) =
-      (f : Filter.Germ (codiscreteWithin V) ℂ) := rfl
+      (f : Filter.Germ (codiscreteWithin V) ℂ) := by rfl
 
 omit [ChartedSpace ℂ X] in
 theorem restrictGerm_add (h : V ⊆ U) (γ₁ γ₂ : Filter.Germ (codiscreteWithin U) ℂ) :
@@ -210,7 +213,7 @@ theorem restrictGerm_mem (h : V ⊆ U) {γ : Filter.Germ (codiscreteWithin U) �
 namespace MeroGermOn
 
 /-- Restriction to a smaller open set (Čech's structure maps). -/
-noncomputable def restrict (h : V ⊆ U) : MeroGermOn X U →ₐ[ℂ] MeroGermOn X V where
+@[expose] noncomputable def restrict (h : V ⊆ U) : MeroGermOn X U →ₐ[ℂ] MeroGermOn X V where
   toFun φ := ⟨restrictGerm h φ.1, restrictGerm_mem h φ.2⟩
   map_one' := Subtype.ext (restrictGerm_one h)
   map_mul' φ ψ := Subtype.ext (restrictGerm_mul h φ.1 ψ.1)

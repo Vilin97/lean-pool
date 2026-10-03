@@ -19,7 +19,7 @@ homogeneous forward evolution, has the prescribed initial field, and supplies
 the literal homogeneous equation and all primary regularity/parity inputs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,9 +52,11 @@ theorem forcing_path_zero : (forcing (P := P) D).path = 0 := by
   rfl
 
 /-- Profile, given by `homogeneousPrimary D Y O`. -/
+@[expose]
 def profile (O : Operators) : Profile := homogeneousPrimary D Y O
 
 /-- Regularity, given by `homogeneousPrimaryRegularity D Y O hcorrector`. -/
+@[expose]
 def regularity (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector P) :
     ProfileRegularity P D.T D.T_pos.le D.support (profile D Y O) :=
   homogeneousPrimaryRegularity D Y O hcorrector
@@ -98,11 +100,13 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
   (hs : tsupport innerCutoff ⊆ D.support)
 
 /-- Forward primary, given by `EulerPacketForwardPrimary.profile D (initialData D δ hδ ξ hs) O`. -/
+@[expose]
 def forwardPrimary (O : Operators) : Profile :=
   EulerPacketForwardPrimary.profile D (initialData D δ hδ ξ hs) O
 
 /-- Forward primary regularity, given by `EulerPacketForwardPrimary.regularity D (initialData D
 δ hδ ξ hs) O hcorrector`. -/
+@[expose]
 def forwardPrimaryRegularity (O : Operators) (hcorrector : O.curlCorrector = D.curlCorrector
     period) :
     ProfileRegularity period D.T D.T_pos.le D.support (forwardPrimary D δ hδ ξ hs O) :=

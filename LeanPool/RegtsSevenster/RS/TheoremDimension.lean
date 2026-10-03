@@ -18,7 +18,7 @@ the even roots of the actual connection ranks. The assembly is
 conditional on Deligne's theorem, discharged in `RS/Summit.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

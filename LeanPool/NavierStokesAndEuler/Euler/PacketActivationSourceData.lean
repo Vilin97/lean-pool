@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketHistoryData
 normal.  The new reference plane is the literal orthogonal complement,
 and the history hypotheses are inherited without any new analytic input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Reframe, bundling `T`, `T_pos`, `support`, `support_compact` and the required compatibility
 proofs. -/
-def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖ = 1) : Data (referencePlane m) where
+@[expose] def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖ = 1) : Data (referencePlane m) where
   T := D.T
   T_pos := D.T_pos
   support := D.support
@@ -46,6 +46,7 @@ def Data.reframe (D : Data U) (m : Space) (hm : ‖m‖ = 1) : Data (referencePl
 
 /-- Reframe, bundling `H`, `jacobi`, `potential`, `potential_nonneg` and the required
 compatibility proofs. -/
+@[expose]
 def HistoryData.reframe {D : Data U} (B : HistoryData D) (m : Space) (hm : ‖m‖ = 1) :
     HistoryData (D.reframe m hm) where
   H := B.H
@@ -57,7 +58,7 @@ def HistoryData.reframe {D : Data U} (B : HistoryData D) (m : Space) (hm : ‖m�
 
 /-- Activation, given by `D.reframe (activationDirection (D.deformationEquiv t₀ 0) n)
 (activationDirection_unit _ hn)`. -/
-def Data.activation (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n ≠ 0) :
+@[expose] def Data.activation (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (n : Space) (hn : n ≠ 0) :
     Data (referencePlane (activationDirection (D.deformationEquiv t₀ 0) n)) :=
   D.reframe (activationDirection (D.deformationEquiv t₀ 0) n)
     (activationDirection_unit _ hn)

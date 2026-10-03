@@ -17,12 +17,12 @@ identities.  It deliberately does not turn either load-bearing identity into
 a certificate field.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
 /-- The positive quadratic root used to update the Euclidean acceleration weight. -/
-noncomputable def euclideanWeight (A : ℝ) : ℝ :=
+@[expose] noncomputable def euclideanWeight (A : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 4 * A)) / 2
 
 theorem euclideanWeight_pos {A : ℝ} (hA : 0 ≤ A) : 0 < euclideanWeight A := by
@@ -37,11 +37,11 @@ theorem euclideanWeight_equation {A : ℝ} (hA : 0 ≤ A) :
   nlinarith
 
 /-- The standard accelerated theta update with discriminant `1 + 4 t²`. -/
-noncomputable def thetaStep (t : ℝ) : ℝ :=
+@[expose] noncomputable def thetaStep (t : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 4 * t ^ 2)) / 2
 
 /-- The modified terminal theta update with discriminant `1 + 8 t²`. -/
-noncomputable def thetaZeroStep (t : ℝ) : ℝ :=
+@[expose] noncomputable def thetaZeroStep (t : ℝ) : ℝ :=
   (1 + Real.sqrt (1 + 8 * t ^ 2)) / 2
 
 theorem thetaStep_pos (t : ℝ) : 0 < thetaStep t := by
@@ -79,7 +79,7 @@ noncomputable def ogmgTheta (n : ℕ) : Fin (n + 1) → ℝ := fun i =>
   else Nat.rec (motive := fun _ => ℝ) 1 (fun _ t => thetaStep t) (n - i.val)
 
 /-- The ordinary backward tail `theta_n=1`, iterated away from the endpoint. -/
-noncomputable def ogmgThetaTail : ℕ → ℝ
+@[expose] noncomputable def ogmgThetaTail : ℕ → ℝ
   | 0 => 1
   | k + 1 => thetaStep (ogmgThetaTail k)
 
@@ -100,7 +100,7 @@ theorem ogmgThetaTail_ge (k : ℕ) :
       linarith
 
 /-- The special doubled first coefficient of the OGM-G certificate. -/
-noncomputable def ogmgThetaZero (n : ℕ) : ℝ :=
+@[expose] noncomputable def ogmgThetaZero (n : ℕ) : ℝ :=
   thetaZeroStep (ogmgThetaTail (n - 1))
 
 theorem thetaZeroStep_ge_sqrtTwo_mul {t : ℝ} (_ht : 0 ≤ t) :
@@ -140,6 +140,7 @@ theorem ogmgThetaZero_ge {n : ℕ} (hn : 1 ≤ n) :
 /-- Exact number of pair calls in the source's Euclidean trial: Phase A makes
 at most two calls per iteration, Phase B reuses `U`, makes `n` further iterate
 queries, and makes one terminal descent query. -/
+@[expose]
 def euclideanTrialCallBudget (m n : ℕ) : ℕ := 2 * m + n + 1
 
 theorem euclideanTrialCallBudget_diagonal (n : ℕ) :
@@ -148,7 +149,7 @@ theorem euclideanTrialCallBudget_diagonal (n : ℕ) :
   omega
 
 /-- The source horizon `ceil (2 sqrt (M D / eps))`. -/
-noncomputable def euclideanHorizon (kappa : ℝ) : ℕ :=
+@[expose] noncomputable def euclideanHorizon (kappa : ℝ) : ℕ :=
   Nat.ceil (2 * Real.sqrt kappa)
 
 theorem euclideanHorizon_real_le {kappa : ℝ} :
@@ -192,7 +193,7 @@ theorem euclideanPhaseTrace_exact {d m : ℕ} (oracle : PairOracle d)
 Phase B reuses `U`; this trace therefore contains only the `n` newly queried
 iterates `u_1,...,u_n` and the additional terminal query at `v_n`.
 -/
-def finiteDataOGMGTrace {d n : ℕ} (oracle : PairOracle d)
+@[expose] def finiteDataOGMGTrace {d n : ℕ} (oracle : PairOracle d)
     (newIterates : Fin n → Vec d) (terminalDescent : Vec d) : OracleTrace d :=
   (List.finRange n).map (fun i => oracle.observe (newIterates i)) ++
     [oracle.observe terminalDescent]
@@ -251,6 +252,7 @@ theorem finiteDataOGMGTrace_final_iterate_queried {d n : ℕ}
   exact ⟨last, List.mem_finRange last, rfl⟩
 
 /-- Scalar denominator step used at the end of the guarded Euclidean-gap proof. -/
+@[expose]
 noncomputable def EuclideanGapScalarStatement : Prop :=
   ∀ (M D fGap A : ℝ) (m : ℕ),
     0 < M → 0 ≤ D → 1 ≤ m →

@@ -19,7 +19,7 @@ general case of 2.11, where the category itself need not contain
 such an object.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

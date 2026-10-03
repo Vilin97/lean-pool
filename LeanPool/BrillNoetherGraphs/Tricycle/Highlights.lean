@@ -32,7 +32,7 @@ Thus a proof for metric gonality alone does not imply the corresponding result
 for discrete divisorial gonality.
 -/
 
-@[expose] public section
+public section
 
 namespace Tricycle.Highlights
 

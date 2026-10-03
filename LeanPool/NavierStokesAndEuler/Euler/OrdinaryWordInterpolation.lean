@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordBounds
 by parts gives log-convexity of the largest norm at each order. This
 yields endpoint product estimates without a change of Sobolev order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,6 +29,7 @@ open scoped ContDiff
 
 /-- Word maximum, given by `(univ : Finset (Fin n → Fin 3)).sup' univ_nonempty (fun w =>
 ‖(wordField A w).toLp‖)`. -/
+@[expose]
 def wordMaximum (n : ℕ) (A : SmoothL2Field Space) : ℝ :=
   (univ : Finset (Fin n → Fin 3)).sup' univ_nonempty (fun w => ‖(wordField A w).toLp‖)
 

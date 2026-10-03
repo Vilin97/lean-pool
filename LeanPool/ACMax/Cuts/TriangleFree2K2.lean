@@ -29,7 +29,7 @@ NOTE: the threshold is `8`, not `7` — there is an explicit triangle-free, max-
 `2K₂`-free graph on `7` vertices (containing an induced `C₅`).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

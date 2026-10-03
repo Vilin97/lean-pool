@@ -34,7 +34,7 @@ hypothesis `coeffAt x η = coeffAt x η'` cancels it, reducing the comparison to
 argument (`tendsto_nhds_unique_of_eventuallyEq`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter IsManifold

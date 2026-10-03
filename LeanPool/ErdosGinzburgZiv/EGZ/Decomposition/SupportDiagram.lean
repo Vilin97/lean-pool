@@ -19,7 +19,7 @@ is required. Choosing the support-generated lattice charts gives a new diagram
 and a convex flag in minimal integer lattice coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -93,6 +93,7 @@ noncomputable abbrev toConvexFlag : ConvexFlag where
 variable (C : ∀ x, IntegerLatticeChart (D.support x))
 
 /-- Real, integer, and modular realizations of the chosen lattice chart. -/
+@[expose]
 noncomputable def chart (x : D.Node) : IntegralAffineMap (C x).rank (D.rank x) :=
   IntegralAffineMap.ofIntAffineMap (C x).map
 

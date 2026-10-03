@@ -21,7 +21,7 @@ identity.  These are what let a decomposition of a module object
 into a finite family of retracts be pushed through the comparison.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -26,7 +26,7 @@ and `toRat` between rationals and floats, and the round-trip and rounding-error
 correctness results such as `to_float_to_rat`.
 -/
 
-@[expose] public section
+public section
 
 variable {C : FloatCfg}
 

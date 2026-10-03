@@ -20,7 +20,7 @@ the junction, and its mixed translation orbit is smooth in the uniform
 time-path topology.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,12 +40,14 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Velocity path, given by `join D.T τ hτ.le hτT.le (pastVelocity τ hτ hτT B G) (futureVelocity
 τ hτ hτT B G) (velocity_match τ hτ hτT B G)`. -/
+@[expose]
 def velocityPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   join D.T τ hτ.le hτT.le (pastVelocity τ hτ hτT B G) (futureVelocity τ hτ hτT B G)
     (velocity_match τ hτ hτT B G)
 
 /-- Derivative path, given by `join D.T τ hτ.le hτT.le (pastDerivative τ hτ hτT B G)
 (futureDerivative τ hτ hτT B G) (derivative_match τ hτ hτT B G)`. -/
+@[expose]
 def derivativePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   join D.T τ hτ.le hτT.le (pastDerivative τ hτ hτT B G) (futureDerivative τ hτ hτT B G)
     (derivative_match τ hτ hτT B G)

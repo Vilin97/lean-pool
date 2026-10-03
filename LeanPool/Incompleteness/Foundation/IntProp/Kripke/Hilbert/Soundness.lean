@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Basic
 
 /-! # Soundness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

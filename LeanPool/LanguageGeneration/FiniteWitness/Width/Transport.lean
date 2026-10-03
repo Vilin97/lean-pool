@@ -11,18 +11,19 @@ public import LeanPool.LanguageGeneration.FiniteWitness.Width.Cost
 # Transport of language families, witnesses, and width along equivalences
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α β : Type*}
 
 /-- Transport a language family along an equivalence of universes. -/
+@[expose]
 def transportClass (e : α ≃ β) (H : Set (Set α)) : Set (Set β) :=
   {K | e ⁻¹' K ∈ H}
 
 /-- Transport finite witnesses along an equivalence of universes. -/
-noncomputable def transportAssignment (e : α ≃ β) (T : Set α → Finset α)
+@[expose] noncomputable def transportAssignment (e : α ≃ β) (T : Set α → Finset α)
     (K : Set β) : Finset β := (T (e ⁻¹' K)).map e.toEmbedding
 
 @[simp] theorem transportClass_inverse (e : α ≃ β) (H : Set (Set α)) :

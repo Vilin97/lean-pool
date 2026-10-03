@@ -14,7 +14,7 @@ public import LeanPool.BrooksSubcubic.NonRegular
 Part of the proof that a finite subcubic K₄-free graph is three-colourable.
 -/
 
-@[expose] public section
+public section
 
 section
 

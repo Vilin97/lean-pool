@@ -12,7 +12,7 @@ public import Mathlib.Algebra.MvPolynomial.Rename
 
 /-! Marginal compatibility for any injective selection of real Gaussian coordinates. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MeasureTheory ProbabilityTheory
 

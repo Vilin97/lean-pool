@@ -26,7 +26,7 @@ four pole chips.  In genus two plus genus two, Riemann--Roch therefore says
 that the two degree-four candidates have exactly the same rank.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -68,6 +68,7 @@ theorem second_endpoints_ne (A : CFGraph.{u}) (B : CFGraph.{v})
 /-- Add divisors on the two factors by placing them on the two summands.  The
 same function is a divisor on both `bridge` and `join`, since `addEdge` keeps
 the vertex type unchanged. -/
+@[expose]
 def sumDivisor (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) (D : CFDiv A) (E : CFDiv B) :
     CFDiv (join A B p q) :=
@@ -240,6 +241,7 @@ def boundaryDivisor (A : CFGraph.{u}) (B : CFGraph.{v})
     oneChip (Sum.inr q.first) + oneChip (Sum.inr q.second)
 
 /-- The sum of the two local canonical divisors, with no pole chips added. -/
+@[expose]
 def canonicalSum (A : CFGraph.{u}) (B : CFGraph.{v})
     (p : TwoPole A) (q : TwoPole B) : CFDiv (join A B p q) :=
   sumDivisor A B p q (canonicalDivisor A) (canonicalDivisor B)

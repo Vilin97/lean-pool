@@ -17,7 +17,7 @@ by the refined S6 route.  This module provides the final adapter and exports the
 `n` fair-partition theorem without a theorem-provider argument.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

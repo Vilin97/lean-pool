@@ -27,7 +27,7 @@ The canonical functor `toKaroubi C : C ⥤ Karoubi C` is strong monoidal.
 When `C` is braided (respectively symmetric), so is `Karoubi C`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

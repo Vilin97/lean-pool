@@ -18,7 +18,7 @@ Defines the discrete martingale transform and proves the sharp `Lp` Burkholder
 inequality for martingale transforms by a predictable multiplier bounded by `1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

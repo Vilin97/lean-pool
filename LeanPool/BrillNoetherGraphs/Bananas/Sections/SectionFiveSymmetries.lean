@@ -17,7 +17,7 @@ The two symmetry arguments are deliberately carried out at the raw
 linear-equivalence transports independent of the ASP packaging.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

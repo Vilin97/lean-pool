@@ -32,7 +32,7 @@ plus a complexity term involving KL(Q‖P).
 - McAllester, "Simplified PAC-Bayesian Margin Bounds", COLT 2003
 -/
 
-@[expose] public section
+public section
 
 universe u
 

@@ -24,14 +24,14 @@ bounded by `1/(n+1)`.  The first bound gives strict nesting; the second makes
 the intersection exactly `K`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped InnerProductSpace
 
 /-- A planar set admits smooth Jordan outer approximations at every positive
 metric scale. -/
-def HasSmoothJordanOuterApproximation (K : Set ℂ) : Prop :=
+@[expose] def HasSmoothJordanOuterApproximation (K : Set ℂ) : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ Omega : SmoothJordanDomain,
     K ⊆ Omega.carrier ∧
       closure Omega.carrier ⊆ Metric.thickening ε K

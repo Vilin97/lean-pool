@@ -26,7 +26,7 @@ maintain an automated comparison with the upstream challenge.
 `#print axioms` gives exactly `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory

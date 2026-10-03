@@ -25,7 +25,7 @@ mark is the midpoint of a distinct length-two strand, or an explicit divisor
 has negative marked rank difference.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

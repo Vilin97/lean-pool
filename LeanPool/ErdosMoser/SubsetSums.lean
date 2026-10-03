@@ -25,7 +25,7 @@ combines them with the discrete variance bound to obtain Leo Moser's exact
 finite sum-of-squares inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ErdosMoser
 

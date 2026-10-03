@@ -80,4 +80,4 @@ dimension-counting endgame). `mulTail`/`mulTailEquiv` are deliberately not built
 accounted for in that unit's design. `firstFormRR`/`g0` remain gated on `H1Tail.equiv` too.
 -/
 
-@[expose] public section
+public section

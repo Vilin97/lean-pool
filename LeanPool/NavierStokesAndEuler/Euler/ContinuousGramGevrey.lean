@@ -23,7 +23,7 @@ frozen-coefficient recurrence in the uniform norm gives actual inverse-path
 and solution estimates, without a Hilbert structure on the path space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

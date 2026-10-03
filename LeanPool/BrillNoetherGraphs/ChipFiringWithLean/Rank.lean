@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Basic
 
 /-! # Rank -/
 
-@[expose] public section
+public section
 open Multiset Finset
 
 /-!
@@ -43,6 +43,7 @@ lemma winnable_equiv_winnable (G : CFGraph) (D1 D2 : CFDiv G) :
 
 /-- A divisor is maximal unwinnable if it is unwinnable but adding a chip to any vertex
 makes it winnable. -/
+@[expose]
 def maximalUnwinnable (G : CFGraph) (D : CFDiv G) : Prop :=
   ¬winnable G D ∧ ∀ v : G.V, winnable G (D + oneChip v)
 
@@ -62,6 +63,7 @@ lemma maximal_unwinnable_preserved (G : CFGraph) (D1 D2 : CFDiv G) :
 
 This is used to define `rankGeq`: the relation $r(D) \ge k$ means that $D-E$ is
 winnable for every effective divisor $E$ of degree $k$. -/
+@[expose]
 def effOfDegree (G : CFGraph) (k : ℤ) : Set (CFDiv G) :=
   {E | effective E ∧ CFDiv.degree E = k}
 
@@ -76,10 +78,12 @@ private lemma eff_of_degree_nonempty (G : CFGraph) {k : ℤ} (h_nonneg : 0 ≤ k
 
 /-- The relation $r(D) \ge k$: the game remains winnable after removing any effective
 divisor of degree $k$. -/
+@[expose]
 def rankGeq (G : CFGraph) (D : CFDiv G) (k : ℤ) : Prop :=
   ∀ E ∈ effOfDegree G k, winnable G (D-E)
 
 /-- The relation $r(D)=r$: `rankGeq G D r` holds, but `rankGeq G D (r+1)` does not. -/
+@[expose]
 def rankEq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
   rankGeq G D r ∧ ¬(rankGeq G D (r+1))
 

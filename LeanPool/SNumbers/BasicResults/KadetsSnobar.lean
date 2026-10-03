@@ -24,7 +24,7 @@ weaken `dim V` to `n`; the underlying input is `John.john_decomposition`, the
 John decomposition of identity.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

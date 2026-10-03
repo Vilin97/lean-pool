@@ -12,7 +12,7 @@ public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Chain Homotopy -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits

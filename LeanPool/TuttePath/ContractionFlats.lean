@@ -14,7 +14,7 @@ BG-01 interval transport of flats and hyperplanes across contraction by a flat.
 These statements implement the background correspondence used in lem:separation.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

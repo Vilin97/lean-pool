@@ -24,7 +24,7 @@ public import Mathlib.MeasureTheory.Measure.GiryMonad
 
 /-! ## Node A: Lévy-Prokhorov Cauchy sequences are uniformly tight -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Topology TopologicalSpace Metric Filter Set
 open scoped ENNReal NNReal

@@ -21,7 +21,7 @@ map from `Fin n` down to the first four coordinates. Witness-specific `Fin n` le
 witness and its cone membership / violation) live in `ZhangYeung.Theorem4`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 
@@ -31,25 +31,25 @@ open scoped Topology
 universe u
 
 /-- `IF` generalized to `Finset (Fin n)`. -/
-def IFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β : Finset (Fin n)) : ℝ :=
+@[expose] def IFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β : Finset (Fin n)) : ℝ :=
   F α + F β - F (α ∪ β)
 
 /-- `condIF` generalized to `Finset (Fin n)`. -/
-def condIFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β γ : Finset (Fin n)) : ℝ :=
+@[expose] def condIFN {n : ℕ} (F : Finset (Fin n) → ℝ) (α β γ : Finset (Fin n)) : ℝ :=
   F (α ∪ γ) + F (β ∪ γ) - F (α ∪ β ∪ γ) - F γ
 
 /-- `deltaF` generalized to `Finset (Fin n)`. -/
-def deltaFN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : ℝ :=
+@[expose] def deltaFN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : ℝ :=
   IFN F {i} {j} - condIFN F {i} {j} {k} - condIFN F {i} {j} {l}
 
 /-- `Γ_n` (paper eq. 11) as a predicate on `Finset (Fin n) → ℝ`. -/
-def shannonConeN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
+@[expose] def shannonConeN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
   F ∅ = 0 ∧
   (∀ α β : Finset (Fin n), α ⊆ β → F α ≤ F β) ∧
   (∀ α β : Finset (Fin n), F (α ∪ β) + F (α ∩ β) ≤ F α + F β)
 
 /-- The Zhang-Yeung inequality at a 4-tuple labeling over `Fin n`. -/
-def zhangYeungAtN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : Prop :=
+@[expose] def zhangYeungAtN {n : ℕ} (F : Finset (Fin n) → ℝ) (i j k l : Fin n) : Prop :=
   deltaFN F i j k l ≤ (1 / 2) * (IFN F {k} {l} + IFN F {k} ({i} ∪ {j})
     + condIFN F {i} {j} {k} - condIFN F {i} {j} {l})
 
@@ -71,7 +71,7 @@ the test module); the quantifier shapes of `zhangYeungHoldsN` and `zhangYeungHol
 differ, so
 their equivalence at `n = 4` is extensional rather than definitional.
 -/
-def zhangYeungHoldsN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
+@[expose] def zhangYeungHoldsN {n : ℕ} (F : Finset (Fin n) → ℝ) : Prop :=
   ∀ i j k l : Fin n, i ≠ j → i ≠ k → i ≠ l → j ≠ k → j ≠ l → k ≠ l →
     zhangYeungAtN F i j k l
 
@@ -80,7 +80,7 @@ The entropy function of an `n`-variable random-variable family `X : ∀ i : Fin 
 i`,
 expressed as a set function on `Finset (Fin n)`.
 -/
-noncomputable def entropyFnN
+@[expose] noncomputable def entropyFnN
     {Ω : Type*} [MeasurableSpace Ω]
     {n : ℕ} {S : Fin n → Type u}
     [∀ i, MeasurableSpace (S i)]
@@ -103,7 +103,7 @@ noncomputable abbrev entropyFn
 The Shannon outer bound `Γ_n`, packaged as a set. Membership is definitionally
 `shannonConeN`.
 -/
-def shannonRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def shannonRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   {F | shannonConeN F}
 
 /--
@@ -113,7 +113,7 @@ variables. The quantified probability space and codomain family range over the a
 universe
 `u`, so a `Type u` realization is literally a member of the set.
 -/
-def entropyRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def entropyRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   {F | ∃ (Ω : Type u) (_ : MeasurableSpace Ω) (μ : Measure Ω) (_ : IsProbabilityMeasure μ)
       (S : Fin n → Type u) (_ : ∀ i, MeasurableSpace (S i)) (_ : ∀ i, Fintype (S i))
       (_ : ∀ i, MeasurableSingletonClass (S i))
@@ -126,11 +126,11 @@ The almost-entropic region `closure (Γ_n^*)`. Inherits the universe parameter f
 witnessed by a
 `Type u` entropy function (or a limit of such) is literally a member of the set.
 -/
-def almostEntropicRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
+@[expose] def almostEntropicRegionN (n : ℕ) : Set (Finset (Fin n) → ℝ) :=
   closure (entropyRegionN.{u} n)
 
 /-- Restrict a set function on `Fin n` to its first four coordinates. -/
-def restrictFirstFour {n : ℕ} (hn : 4 ≤ n) :
+@[expose] def restrictFirstFour {n : ℕ} (hn : 4 ≤ n) :
     (Finset (Fin n) → ℝ) → (Finset (Fin 4) → ℝ) :=
   fun F α => F (α.map (Fin.castLEEmb hn))
 

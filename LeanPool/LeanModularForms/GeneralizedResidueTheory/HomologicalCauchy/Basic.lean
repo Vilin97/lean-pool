@@ -34,7 +34,7 @@ condition required by the generalized residue theorem of Hungerbuhler-Wasem.
   is null-homologous (bridge lemma)
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

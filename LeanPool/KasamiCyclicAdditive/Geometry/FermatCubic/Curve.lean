@@ -31,7 +31,7 @@ through `x = Z/(X+Y)`, `y = X/(X+Y)`.  Under this isomorphism:
 All group-law statements are proved in this model.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
@@ -40,7 +40,7 @@ open WeierstrassCurve
 variable {K : Type*} [Field K]
 
 /-- The Weierstrass model `y^2 + y = x^3 + 1` of the Fermat cubic in characteristic two. -/
-def fer (K : Type*) [Field K] : WeierstrassCurve K := ⟨0, 0, 1, 0, 1⟩
+@[expose] def fer (K : Type*) [Field K] : WeierstrassCurve K := ⟨0, 0, 1, 0, 1⟩
 
 /-! The Weierstrass coefficients of `fer`, as `simp` lemmas. -/
 

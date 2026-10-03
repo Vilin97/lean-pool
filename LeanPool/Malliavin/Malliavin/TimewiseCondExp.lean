@@ -30,7 +30,7 @@ a general filtration this issue is substantive at filtration jumps: the predicta
 left-continuity or usual-augmentation result for the natural filtration is assumed here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

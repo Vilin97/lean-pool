@@ -20,7 +20,7 @@ one-dimensional closure is proved by the TP2/Cauchy--Binet argument in
 `Feige.FiniteSignedExp`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

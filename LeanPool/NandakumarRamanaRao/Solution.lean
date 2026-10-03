@@ -10,4 +10,4 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.Main
 
 /-! # Solution -/
 
-@[expose] public section
+public section

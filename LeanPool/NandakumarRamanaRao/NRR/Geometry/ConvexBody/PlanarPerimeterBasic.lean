@@ -28,7 +28,7 @@ Only `PlanarPerimeter.lean` is imported; it transitively provides all of Mathlib
 the `planarPerimeter`, `widthFunction`, and `circleVec` APIs. No extra imports are required.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

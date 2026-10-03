@@ -33,7 +33,7 @@ We call the basis representing this automorphism the unipotent matrix associated
   `n ≥ k`.
 -/
 
-@[expose] public section
+public section
 
 open Module
 

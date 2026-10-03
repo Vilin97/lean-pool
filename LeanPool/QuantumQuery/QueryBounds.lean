@@ -14,7 +14,7 @@ Ported from the corresponding upstream modules listed by the source sections bel
 References beginning with `Source` name these retained sections.
 -/
 
-@[expose] public section
+public section
 
 section SourceQuantumLowerBoundBridge
 
@@ -311,6 +311,7 @@ lemma gramForm_sub_eq_mask {Γ M : Matrix X X ℝ} {p : X → X → Prop} [Decid
 /-! ## Sector decomposition by the query-index register -/
 
 /-- The query-index register, used as a readout map. -/
+@[expose]
 def idxOf : QBasis ι σ W → Option ι := fun p => p.1
 
 omit [DecidableEq W] [DecidableEq ι] [DecidableEq σ] [Fintype W] [Fintype ι] [Fintype σ] in
@@ -378,6 +379,7 @@ lemma oracleMat_mulVec_qRestrict_some {a b : ι → σ} {i : ι} (hab : a i = b 
 /-! ## The progress measure -/
 
 /-- The weighted family `x ↦ δ x • ψ x`. -/
+@[expose]
 noncomputable def qScale (δ : X → ℝ) (ψ : X → (H → ℂ)) : X → (H → ℂ) :=
   fun x => (δ x : ℂ) • ψ x
 
@@ -457,6 +459,7 @@ variable (read : X → ι → σ) (Γ : Matrix X X ℝ) (δ : X → ℝ)
   (ψ : X → (QBasis ι σ W → ℂ))
 
 /-- The weighted family restricted to the sector `o`. -/
+@[expose]
 noncomputable def sectFam (o : Option ι) (δ : X → ℝ)
     (ψ : X → (QBasis ι σ W → ℂ)) : X → (QBasis ι σ W → ℂ) :=
   fun x => (δ x : ℂ) • qRestrict idxOf o (ψ x)

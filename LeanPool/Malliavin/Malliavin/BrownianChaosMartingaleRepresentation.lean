@@ -16,7 +16,7 @@ canonical Brownian multiple-integral ranges.  The remaining hypothesis is exactl
 that concrete tower.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -33,6 +33,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   {B : ℝ≥0 → W → ℝ}
 
 /-- Totality of the canonical Brownian homogeneous chaos tower. -/
+@[expose]
 def BrownianChaosTotal (hB : IsPreBrownianReal B P) : Prop :=
   (⨆ n : ℕ, (brownianHomogeneousChaos hB n : Submodule ℝ (RandomL2 P))
     ).topologicalClosure = ⊤

@@ -22,7 +22,7 @@ The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity

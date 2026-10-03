@@ -34,7 +34,7 @@ or out of the zero object is unique; so it preserves all limits and
 all colimits, in particular the finite ones.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

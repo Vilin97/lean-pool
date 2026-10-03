@@ -11,7 +11,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationGapCapacity
 
 /-! # Combining the three event capacities -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

@@ -16,7 +16,7 @@ Directional integration by parts for a smooth field and a compactly supported
 test on the raw product of space and time, expressed using factor derivatives.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic

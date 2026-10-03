@@ -14,7 +14,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Wedge.WedgeTorsionRestriction
 # The period in the same-factor wedge exception
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

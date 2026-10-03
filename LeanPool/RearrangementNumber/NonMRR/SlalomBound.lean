@@ -21,13 +21,14 @@ classical bounding-number lower bound. The category comparison needed for
 the topological cardinal `nonM` is proved in `NonMRR.CategoryBound`.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal
 
 namespace NonMRR
 
 /-- The norm of the specific bounded-slalom relation used in the construction. -/
+@[expose]
 noncomputable def blockSlalomNumber : Cardinal :=
   (slalomRelation blockCapacity blockCapacity_pos).norm
 

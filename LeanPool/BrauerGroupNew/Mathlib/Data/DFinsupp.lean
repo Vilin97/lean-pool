@@ -14,4 +14,4 @@ import Mathlib.Tactic.Bound.Init
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

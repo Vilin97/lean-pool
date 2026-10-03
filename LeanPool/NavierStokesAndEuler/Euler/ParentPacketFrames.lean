@@ -18,7 +18,7 @@ particle-map displacement and its two time derivatives. The inverse is
 the polynomial cofactor, and the strain and Jacobi curvature are their
 literal products; no separate inverse or coefficient evolution is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,33 +57,39 @@ namespace Parent
 variable (G : Parent)
 
 /-- Zero time, given by `⟨0,le_rfl,G.T_pos.le⟩`. -/
-def zeroTime : Icc (0 : ℝ) G.T := ⟨0,le_rfl,G.T_pos.le⟩
+@[expose] def zeroTime : Icc (0 : ℝ) G.T := ⟨0,le_rfl,G.T_pos.le⟩
 
 /-- Frame as an element of `SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace`. -/
+@[expose]
 def frame : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   (SmoothTimeField.boundConstant (ContinuousLinearMap.id ℝ Space)).add
     (G.displacement.derivative.precompLinear (G.ell • ContinuousLinearMap.id ℝ Space))
 
 /-- First, given by `G.velocity.derivative.precompLinear (G.ell • ContinuousLinearMap.id ℝ
 Space)`. -/
+@[expose]
 def first : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   G.velocity.derivative.precompLinear (G.ell • ContinuousLinearMap.id ℝ Space)
 
 /-- Second, given by `G.acceleration.derivative.precompLinear (G.ell • ContinuousLinearMap.id ℝ
 Space)`. -/
+@[expose]
 def second : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   G.acceleration.derivative.precompLinear (G.ell • ContinuousLinearMap.id ℝ Space)
 
 /-- Inverse, given by `SmoothTimeField.bilinear cofactorBilinear G.frame G.frame`. -/
+@[expose]
 def inverse : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   SmoothTimeField.bilinear cofactorBilinear G.frame G.frame
 
 /-- Strain, given by `SmoothTimeField.bilinear (compL ℝ Space Space Space) G.first G.inverse`. -/
+@[expose]
 def strain : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   SmoothTimeField.bilinear (compL ℝ Space Space Space) G.first G.inverse
 
 /-- Curvature, given by `(SmoothTimeField.bilinear (compL ℝ Space Space Space) G.second
 G.inverse).map (-ContinuousLinearMap.id ℝ EndSpace)`. -/
+@[expose]
 def curvature : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   (SmoothTimeField.bilinear (compL ℝ Space Space Space) G.second G.inverse).map
     (-ContinuousLinearMap.id ℝ EndSpace)
@@ -103,13 +109,13 @@ def curvature : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace :=
   G.acceleration.derivativeField_eq t (G.ell • x)
 
 @[simp] theorem inverse_apply (t : Icc (0 : ℝ) G.T) (x : Space) :
-    G.inverse.field t x = adjugate (G.frame.field t x) := rfl
+    G.inverse.field t x = adjugate (G.frame.field t x) := by rfl
 
 @[simp] theorem strain_apply (t : Icc (0 : ℝ) G.T) (x : Space) :
-    G.strain.field t x = (G.first.field t x).comp (G.inverse.field t x) := rfl
+    G.strain.field t x = (G.first.field t x).comp (G.inverse.field t x) := by rfl
 
 @[simp] theorem curvature_apply (t : Icc (0 : ℝ) G.T) (x : Space) :
-    G.curvature.field t x = -((G.second.field t x).comp (G.inverse.field t x)) := rfl
+    G.curvature.field t x = -((G.second.field t x).comp (G.inverse.field t x)) := by rfl
 
 theorem frame_det (t : Icc (0 : ℝ) G.T) (x : Space) : (operatorMatrix (G.frame.field t x)).det=1 :=
     by
@@ -157,6 +163,7 @@ theorem second_equation (t : Icc (0 : ℝ) G.T) (x v : Space) :
   rw [G.curvature_apply,neg_apply,comp_apply,G.inverse_left,neg_neg]
 
 /-- Initial strain, bundling `field`, `smooth`, `bounded`. -/
+@[expose]
 def initialStrain : BoundedSmoothField EndSpace where
   field := G.first.field G.zeroTime
   smooth := G.first.smooth G.zeroTime
@@ -165,7 +172,7 @@ def initialStrain : BoundedSmoothField EndSpace where
     exact (G.first.jet n G.zeroTime).norm_coe_le_norm x⟩
 
 @[simp] theorem initialStrain_apply (x : Space) :
-    G.initialStrain.field x = G.first.field G.zeroTime x := rfl
+    G.initialStrain.field x = G.first.field G.zeroTime x := by rfl
 
 end Parent
 end EulerParentPacketFrames

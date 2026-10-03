@@ -18,7 +18,7 @@ compact-uniform limit of a single sequence of complex polynomials.  This is
 the finite-quadrature closure step used in constructive Runge arguments.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Set
 open scoped Topology

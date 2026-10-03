@@ -61,7 +61,7 @@ remains the literal reading of the definition and stays available as an
 independent cross-check.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 

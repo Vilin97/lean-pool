@@ -23,7 +23,7 @@ allowed to be any integer; the `-1`, `0`, and `1` profiles used in genus four
 are special cases.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -144,6 +144,7 @@ def pathValue (data : Data spec) (edge : Fin p) (offset : ℕ) : ℤ :=
     windowValue (data.start edge) (data.stop edge) (data.slope edge) offset
 
 /-- Extend a compatible profile over every subdivision vertex. -/
+@[expose]
 def script (data : Data spec) : firingScript spec.graph
   | Sum.inl vertex => data.coreValue vertex
   | Sum.inr interior => data.pathValue interior.1 (interior.2.val + 1)
@@ -213,6 +214,7 @@ theorem script_stepDifference (data : Data spec) (edge : Fin p)
 /-! ## Exact principal divisor -/
 
 /-- The initial endpoint of a slot's signed slope window. -/
+@[expose]
 def startPosition (data : Data spec) (edge : Fin p) :
     spec.PathPosition edge :=
   ⟨data.start edge, by
@@ -221,6 +223,7 @@ def startPosition (data : Data spec) (edge : Fin p) :
     omega⟩
 
 /-- The terminal endpoint of a slot's signed slope window. -/
+@[expose]
 def stopPosition (data : Data spec) (edge : Fin p) :
     spec.PathPosition edge :=
   ⟨data.stop edge, by

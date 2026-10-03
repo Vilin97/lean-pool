@@ -15,4 +15,4 @@ public import LeanPool.BrauerGroupNew.Mathlib.Algebra.Algebra.Subalgebra.Lattice
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

@@ -47,7 +47,7 @@ the approximation numbers.
 Here `ℓ₁ = lp (fun _ : ℕ => 𝕜) 1` and `ℓ_∞ = lp (fun _ : ℕ => 𝕜) ∞`, and `𝕜` is `RCLike`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 
@@ -74,6 +74,7 @@ lemma norm_coe_linf_le_norm {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ 0)
   exact lp.norm_apply_le_norm hp f i
 
 /-- The natural inclusion `I : ℓ₁ → ℓ_∞`, a contraction. -/
+@[expose]
 noncomputable def incl : L1 𝕜 →L[𝕜] Linf 𝕜 :=
   LinearMap.mkContinuous (lp.linearMapOfLE 𝕜 (fun _ : ℕ => 𝕜) le_top) 1 (fun f => by
     rw [one_mul]; exact norm_coe_linf_le_norm (by norm_num) f)
@@ -386,6 +387,7 @@ lemma norm_coe_l2_le_norm_l1 (f : L1 𝕜) :
   nlinarith [norm_nonneg g, norm_nonneg f, hsq, hle]
 
 /-- The norm-one inclusion `J₁ : ℓ₁ → ℓ₂`. -/
+@[expose]
 noncomputable def inclL1L2 : L1 𝕜 →L[𝕜] L2 𝕜 :=
   LinearMap.mkContinuous (lp.linearMapOfLE 𝕜 (fun _ : ℕ => 𝕜)
       (by norm_num : (1 : ℝ≥0∞) ≤ 2)) 1 (fun f => by
@@ -398,6 +400,7 @@ lemma norm_inclL1L2_le : ‖(inclL1L2 : L1 𝕜 →L[𝕜] L2 𝕜)‖ ≤ 1 :=
   LinearMap.mkContinuous_norm_le _ zero_le_one _
 
 /-- The norm-one inclusion `J₂ : ℓ₂ → ℓ_∞`. -/
+@[expose]
 noncomputable def inclL2Linf : L2 𝕜 →L[𝕜] Linf 𝕜 :=
   LinearMap.mkContinuous (lp.linearMapOfLE 𝕜 (fun _ : ℕ => 𝕜) le_top) 1 (fun f => by
     rw [one_mul]; exact norm_coe_linf_le_norm (by norm_num) f)

@@ -20,7 +20,7 @@ vertices lie in the same partition cell exactly when they are connected by
 forest edges whose parameters are at least `s`.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -80,6 +80,7 @@ noncomputable
 section
 
 /-- The `Forest` representative carried by the threshold edge set. -/
+@[expose]
 def thresholdForest (F : Forest V) (u : F.EdgeParam → ℝ) (s : ℝ) :
     Forest V :=
   (Classical.choice (F.thresholdIndex u s).acyclic).toForest

@@ -14,7 +14,7 @@ public import LeanPool.HardSphereNBC.HardSphereTreeEdges
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -30,7 +30,7 @@ noncomputable section
 abbrev HardSphereForkTriple (k : Nat) := Fin k × Fin k × Fin k
 
 /-- The three vertices supporting an order-compatible fork triple. -/
-def hardSphereForkSupport {k : Nat} (f : HardSphereForkTriple k) : Finset (Fin k) :=
+@[expose] def hardSphereForkSupport {k : Nat} (f : HardSphereForkTriple k) : Finset (Fin k) :=
   {f.1, f.2.1, f.2.2}
 
 /-- The event associated with an order-compatible fork triple. -/
@@ -40,6 +40,7 @@ def hardSphereForkEventOfTriple {k : Nat} [NeZero k]
   hardSphereForkEvent T f.1 f.2.1 f.2.2
 
 /-- A finite family of pairwise vertex-disjoint, order-compatible forks in a tree. -/
+@[expose]
 def hardSphereForkPacking {k : Nat}
     (T : Finset (Sym2 (Fin k))) (P : Finset (HardSphereForkTriple k)) : Prop :=
   (∀ f ∈ P, hardSphereFork T f.1 f.2.1 f.2.2) ∧

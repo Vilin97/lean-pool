@@ -18,7 +18,7 @@ multiplication, translation by a scalar operator, and the centered-rescaled
 operators used in disk normalization arguments.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace

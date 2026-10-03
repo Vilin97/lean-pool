@@ -18,7 +18,7 @@ character of the induced representation equals the completed
 cycle-type product at the constant sequence `fun _ => (m : ℂ)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

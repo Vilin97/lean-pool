@@ -44,7 +44,7 @@ plus a factor limit pin `meromorphicOrderAt`, via mathlib's removable-singularit
 `wirtingerDbar_finset_prod`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory Filter Topology
@@ -166,7 +166,7 @@ variable {X : Type*} [TopologicalSpace X] [T2Space X] [CompactSpace X]
   [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ) ω X]
 
 /-- The contribution of the link `(A ↦ pole, B ↦ zero)` to the order at `x`. -/
-def linkOrd [DecidableEq X] (A B x : X) : ℤ :=
+@[expose] def linkOrd [DecidableEq X] (A B x : X) : ℤ :=
   (if x = B then 1 else 0) - (if x = A then 1 else 0)
 
 omit [TopologicalSpace X] [T2Space X] [CompactSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ, ℂ) ω X]

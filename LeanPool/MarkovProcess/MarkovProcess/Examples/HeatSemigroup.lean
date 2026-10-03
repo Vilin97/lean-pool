@@ -37,7 +37,7 @@ Nothing in this file asserts independence of increments; that is proved in
 `MarkovProcess.Examples.BrownianMotion`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -360,6 +360,7 @@ theorem isFellerKernelSemigroup_heatSemigroup :
   ⟨mapsC0_heatSemigroup, hasContinuousC0Orbits_heatSemigroup⟩
 
 /-- The positive contractive `C₀` resolvent obtained from the heat semigroup. -/
+@[expose]
 noncomputable def heatResolvent : PositiveC0ContractiveResolvent ℝ :=
   isFellerKernelSemigroup_heatSemigroup.positiveC0ContractiveResolvent
 
@@ -501,6 +502,7 @@ theorem existsUnique_continuousProcess_heatSemigroup :
 
 /-- **Brownian motion on the line**, as a Markov kernel from the starting point to continuous
 paths: the continuous-path process of the heat semigroup. -/
+@[expose]
 def brownianMotion : Kernel ℝ (ContinuousPath ℝ) :=
   SubMarkovKernelSemigroup.IsConservative.continuousProcess heatSemigroup
     isConservative_heatSemigroup

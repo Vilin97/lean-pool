@@ -18,7 +18,7 @@ public import Mathlib.MeasureTheory.Function.L2Space
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology
@@ -30,15 +30,15 @@ noncomputable section
 namespace CKN
 
 /-- Space-time vector test built from a spatial gradient and a temporal scalar test. -/
-def pressureTest (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) : Vec3 × ℝ → Vec3 :=
+@[expose] def pressureTest (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) : Vec3 × ℝ → Vec3 :=
   fun z i => θ z.2 * spatialDeriv ψ i z.1
 
 /-- The product test field on the ordinary product carrier. -/
-def pressureTestProduct (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) : Vec3 × ℝ → Vec3 :=
+@[expose] def pressureTestProduct (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) : Vec3 × ℝ → Vec3 :=
   pressureTest ψ θ
 
 /-- The product test field viewed on the parabolic-point carrier. -/
-def pressureTestParabolic (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) :
+@[expose] def pressureTestParabolic (ψ : Vec3 → ℝ) (θ : ℝ → ℝ) :
     ParabolicPoint → Vec3 :=
   fun z => pressureTest ψ θ (z.1, z.2)
 

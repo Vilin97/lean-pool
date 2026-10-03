@@ -38,7 +38,7 @@ The shift hypothesis is phrased with `End.asHom f`, so consumers
 supply factorisations of the morphism `(F k).arrow ≫ End.asHom f`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

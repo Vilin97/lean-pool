@@ -43,4 +43,4 @@ executed directly on the project's Čech colimit `RS.Cech.H1` (Hodge-free, duali
   **`Jacobian.ofCurve_inj`** (the challenge's `ofCurve_inj`, hypothesis-free).
 -/
 
-@[expose] public section
+public section

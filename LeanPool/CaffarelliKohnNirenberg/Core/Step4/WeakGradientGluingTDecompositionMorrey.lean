@@ -18,7 +18,7 @@ Finite sums of the completed source fields and the measurable remainder
 control the same identified pressure field on its target carrier.
 -/
 
-@[expose] public section
+public section
 
 section
 

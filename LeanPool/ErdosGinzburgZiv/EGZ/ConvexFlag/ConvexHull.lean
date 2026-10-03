@@ -18,7 +18,7 @@ positive supports are used throughout, so the least-upper-bound base is
 preserved by flattening.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

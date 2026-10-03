@@ -46,7 +46,7 @@ public import LeanPool.FoZfc.BoundedFormulaOps
 
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder
 open FirstOrder.Language

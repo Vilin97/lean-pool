@@ -18,7 +18,7 @@ is always the literal `HarmonicResidual.residualBlock`, including its real
 projection and its Gaussian and alias subtractions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable {D E F : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Scalar multiplication by a nonzero real number, with its actual inverse. -/
-noncomputable def scalarEquiv (F : Type) [NormedAddCommGroup F] [NormedSpace ℝ F]
+@[expose] noncomputable def scalarEquiv (F : Type) [NormedAddCommGroup F] [NormedSpace ℝ F]
     (a : ℝ) (ha : a ≠ 0) : F ≃L[ℝ] F :=
   { LinearEquiv.smulOfNeZero ℝ F a ha with
     continuous_toFun := continuous_const.smul continuous_id
@@ -64,6 +64,7 @@ theorem along_pull (e : D ≃L[ℝ] E) (a b : ℝ) (V : D → D) (W : E → E)
   rw [hV, map_smul, smul_smul]
 
 /-- Equality of every coefficient on a full lifted open set, with one weight. -/
+@[expose]
 def CoefficientsOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ)
     (c : Coefficients D) (d : Coefficients E) : Prop :=
   ∀ j x, x ∈ U → c j x = a • d j (e x)
@@ -571,7 +572,7 @@ abbrev Lift := PhysicalResidualBridge.Lift
 abbrev Associated := PhysicalParticularWave.Parameter × TorusInverse.Plane
 
 /-- The invertible real-lift map underlying the integer torus cover. -/
-noncomputable def chartEquiv (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
+@[expose] noncomputable def chartEquiv (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Lift ≃L[ℝ] Lift :=
   (scalarEquiv ℝ (ratioPower Q Qr (1/2)) (ratioPower_pos hQ hQr _).ne').prodCongr
     (((scalarEquiv ℝ (ratioPower Q Qr (CoordinateAlgebra.D h)) (ratioPower_pos hQ hQr
@@ -582,7 +583,7 @@ noncomputable def chartEquiv (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) (x : Lift) : chartEquiv h hQ hQr gap x = chartChange h Q Qr gap x := rfl
 
 /-- Actual graph directions on the free lift, before adjoining the angle. -/
-noncomputable def commonFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Lift where
+@[expose] noncomputable def commonFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Lift where
   radius := Prod.fst
   radial x := ((PhysicalResidualBridge.commonGraph Q h i).radial (x,0)).1
   axial x := ((PhysicalResidualBridge.commonGraph Q h i).axial (x,0)).1
@@ -638,7 +639,7 @@ theorem commonFrame_chart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
   · exact weight_viscosity hQ hQr h
 
 /-- Association and the `(T,Z)` order used by the correction state. -/
-noncomputable def associatedToLift : Associated ≃ₗᵢ[ℝ] Lift :=
+@[expose] noncomputable def associatedToLift : Associated ≃ₗᵢ[ℝ] Lift :=
   (ParticularWaveBounds.liftAssoc TorusInverse.Plane).symm.trans PhysicalResidualTZ.swapSlow
 
 @[simp] theorem associatedToLift_apply (x : Associated) :
@@ -646,7 +647,7 @@ noncomputable def associatedToLift : Associated ≃ₗᵢ[ℝ] Lift :=
 
 /-- Associated chart, given by `(associatedToLift.toContinuousLinearEquiv.trans (chartEquiv h hQ
 hQr gap)).trans associatedToLift.symm.toContinuousLinearEquiv`. -/
-noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
+@[expose] noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Associated ≃L[ℝ] Associated :=
   (associatedToLift.toContinuousLinearEquiv.trans (chartEquiv h hQ hQr gap)).trans
     associatedToLift.symm.toContinuousLinearEquiv
@@ -656,7 +657,7 @@ noncomputable def associatedChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 <
     associatedChart h hQ hQr gap x = (parameterChange h Q Qr x.1, coverPower gap x.2) := rfl
 
 /-- Associated frame, given by `StateReindex.frame associatedToLift (commonFrame h Q i)`. -/
-noncomputable def associatedFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Associated :=
+@[expose] noncomputable def associatedFrame (h Q : ℝ) (i : ℕ) : HarmonicResidual.Frame Associated :=
   StateReindex.frame associatedToLift (commonFrame h Q i)
 
 theorem associatedFrame_chart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
@@ -689,6 +690,7 @@ theorem associatedFrame_chart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
   · exact H.viscosity
 
 /-- The positive-radius free lift.  Every auxiliary variable remains free. -/
+@[expose]
 def positiveLift : Set Associated := {x | 0 < x.1.1}
 
 theorem positiveLift_open : IsOpen positiveLift := isOpen_lt continuous_const continuous_fst.fst
@@ -802,7 +804,7 @@ theorem BandCoherence.residualBandPressure_eq
 /-! ## A lift-coherence invariant preserved by actual state addition -/
 
 /-- Scalar on, given by `∀ x ∈ U, f x = a * g (e x)`. -/
-def ScalarOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) (f : D → ℝ) (g : E → ℝ) : Prop :=
+@[expose] def ScalarOn (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) (f : D → ℝ) (g : E → ℝ) : Prop :=
   ∀ x ∈ U, f x = a * g (e x)
 
 namespace ScalarOn

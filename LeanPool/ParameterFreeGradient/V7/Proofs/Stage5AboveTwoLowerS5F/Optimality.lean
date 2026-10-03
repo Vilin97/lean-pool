@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5F.Up
 The matching known-parameter upper and lower bounds establish above-two optimality.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

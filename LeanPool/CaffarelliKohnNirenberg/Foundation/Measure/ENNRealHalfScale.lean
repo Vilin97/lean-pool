@@ -15,7 +15,7 @@ public import Mathlib.Tactic.Linarith
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

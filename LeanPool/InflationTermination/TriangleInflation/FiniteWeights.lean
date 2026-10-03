@@ -18,7 +18,7 @@ positivity nor additive inverses. The original real and complex APIs specialize 
 common toolkit while retaining their existing weight definitions.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.FiniteWeights
 
@@ -27,10 +27,12 @@ open Finset
 variable {R : Type*} [CommSemiring R]
 
 /-- Pushforward sums a finite weight over each fibre of a map. -/
+@[expose]
 def pushforward {α β : Type*} [Fintype α] [DecidableEq β] (w : α → R) (F : α → β) : β → R :=
   fun b => ∑ a : α, if F a = b then w a else 0
 
 /-- The product of the weights of a Boolean coordinate configuration. -/
+@[expose]
 def prodLaw {ι : Type*} [Fintype ι] (w : ι → Bool → R) : (ι → Bool) → R :=
   fun x => ∏ i, w i (x i)
 
@@ -187,6 +189,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι] {A : ι → Type*} [∀ i, F
 variable {w : ∀ i, A i → R}
 
 /-- The product weight of independent coordinates with dependent alphabets. -/
+@[expose]
 def dprod (w : ∀ i, A i → R) (x : ∀ i, A i) : R := ∏ i, w i (x i)
 
 /-- A product of normalized coordinate weights has total mass one. -/
@@ -195,6 +198,7 @@ theorem sum_dprod (hw : ∀ i, ∑ a, w i a = 1) : ∑ x : (∀ i, A i), dprod w
   exact Finset.prod_eq_one fun i _ => hw i
 
 /-- `dmix I x y` takes its `I`-coordinates from `x` and the others from `y`. -/
+@[expose]
 def dmix (I : Finset ι) (x y : ∀ i, A i) : ∀ i, A i := fun i => if i ∈ I then x i else y i
 
 omit [Fintype ι] [∀ i, Fintype (A i)] in

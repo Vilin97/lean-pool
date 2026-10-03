@@ -33,7 +33,7 @@ geometric core of the forward half of the quantitative-refinement recursion.
   carried source-connectedness invariant and two distinct common source/grid vertices.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -260,12 +260,12 @@ namespace SourceNonboundarySegmentCover
 variable (Q : SourceNonboundarySegmentCover P)
 
 /-- The two finite segment families in the source local-grid overlay. -/
-noncomputable def localPieces (p : Plane) (s epsilon : ℝ) : List Piece :=
+@[expose] noncomputable def localPieces (p : Plane) (s epsilon : ℝ) : List Piece :=
   Q.pieces ++ localGridEdges p s (localGridCount s epsilon)
 
 /-- The compact old source core overlaid with a fine local grid.  Old nonboundary vertices and
 any prescribed attachment points are retained as overlay vertices. -/
-noncomputable def localOverlay (p : Plane) (s epsilon : ℝ)
+@[expose] noncomputable def localOverlay (p : Plane) (s epsilon : ℝ)
     (extra : List Plane) : Graph Plane Piece :=
   attachGraph (Q.localPieces p s epsilon)
     (extra ++ P.sourceNonboundaryGraph.vertexFinset.toList)
@@ -645,7 +645,7 @@ noncomputable abbrev innerGraph : Graph Plane γ :=
   (Q.localOverlay p s epsilon extra).relabelEdges w.name w.name_inj
 
 /-- The mixed source extension graph. -/
-noncomputable def graph : Graph Plane γ := w.outerGraph.union w.innerGraph
+@[expose] noncomputable def graph : Graph Plane γ := w.outerGraph.union w.innerGraph
 
 /-- The mixed drawing uses the original parametrizations on the wild outer edges and straight
 segments on every freshly named inner edge. -/

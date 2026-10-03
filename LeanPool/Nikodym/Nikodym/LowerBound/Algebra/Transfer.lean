@@ -36,7 +36,7 @@ This file implements the items **TR5** and **TR7** of the base-change node **TR*
   `Finset.sum_image`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

@@ -16,7 +16,7 @@ fibres' cycle types: a fibrewise permutation moves each fibre inside
 itself, so its orbits are the fibres' orbits.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

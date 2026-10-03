@@ -17,7 +17,7 @@ These aliases preserve names that Lean Pool's deterministic quality audit derive
 from dotted declarations inside namespaces.
 -/
 
-@[expose] public section
+public section
 
 namespace AllWinning
 alias residual := GaleStewartGame.Game.AllWinning.residual

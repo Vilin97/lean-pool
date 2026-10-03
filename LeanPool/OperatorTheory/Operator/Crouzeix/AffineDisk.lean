@@ -29,7 +29,7 @@ while the polynomial is precomposed with `z ↦ R * z + c`.
   package.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace Pointwise Polynomial
 

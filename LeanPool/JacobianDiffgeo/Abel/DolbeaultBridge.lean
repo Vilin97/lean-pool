@@ -70,7 +70,7 @@ explicitly does not build this global object) is independent, substantial new an
 not an external blocker — flagged precisely in `Sufficiency.lean`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

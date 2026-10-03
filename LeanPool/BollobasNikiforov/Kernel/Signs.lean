@@ -19,7 +19,7 @@ The expansions and nonnegativity statements for `P` and `Z` in `docs/sol.tex` §
 (`eq:functions`, after `eq:factor`).
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

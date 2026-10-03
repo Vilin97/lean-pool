@@ -21,7 +21,7 @@ universality is the class-preservation lemma proved alongside `stripConsts` itse
 composition only.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

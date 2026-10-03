@@ -21,7 +21,7 @@ used implicitly in Moise's gluing theorem: two pages around an edge already form
 neighborhood, so a third page approaching the same edge would have to enter their open image.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

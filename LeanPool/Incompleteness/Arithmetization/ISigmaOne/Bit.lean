@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Bit -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -31,6 +31,7 @@ variable {V : Type*} [ORingStruc V]
 variable [V ⊧ₘ* 𝐈Sg1]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def Bit (i a : V) : Prop := LenBit (exp i) a
 
 instance instMembershipVV : Membership V V := ⟨fun a i ↦ Bit i a⟩
@@ -319,7 +320,7 @@ section «lp_section_5»
 
 open Classical in
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def bitInsert (i a : V) : V := if i ∈ a then a else a + exp i
+@[expose] noncomputable def bitInsert (i a : V) : V := if i ∈ a then a else a + exp i
 
 open Classical in
 /-- Imported declaration from the Incompleteness formalization. -/

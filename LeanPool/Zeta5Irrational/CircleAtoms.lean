@@ -27,7 +27,7 @@ Consequences of Mathlib's circle-average identities, in the normalisation used h
 preimages under `circleMap` and `cos`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 

@@ -78,7 +78,7 @@ assumed away:
   it as the field `core_loopless`; on a concrete row core it is `by decide`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 open Utilities.Certificate

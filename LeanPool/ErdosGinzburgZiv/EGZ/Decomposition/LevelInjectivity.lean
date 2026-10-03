@@ -18,7 +18,7 @@ levels force equal spaces and equal ranks. The factor is then bijective
 modulo the prime, injective on integer lattices, and bijective over the reals.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FpRepresentation
 

@@ -23,7 +23,7 @@ section
 
 /-! Weighted removal of root regularization, preserving the signed derivative of the radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -132,7 +132,7 @@ section
 # Weighted Energy
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

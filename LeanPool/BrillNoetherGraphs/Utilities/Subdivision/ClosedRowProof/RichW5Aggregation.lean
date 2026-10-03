@@ -23,7 +23,7 @@ module, so that `RichLeafFullSound.richLeaf_sound` can consume it; the
 `hTail`/`hHead` hypotheses are produced by `RichChipBridge`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

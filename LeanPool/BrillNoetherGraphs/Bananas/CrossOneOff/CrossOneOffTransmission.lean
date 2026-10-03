@@ -16,7 +16,7 @@ corresponding row of a transmission permutation.  The geometric calculations
 are kept in the preceding modules; this file is deliberately purely formal.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

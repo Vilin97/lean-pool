@@ -11,7 +11,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Log -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -178,7 +178,7 @@ def binaryLength (a : V) : V := if 0 < a then log a + 1 else 0
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped instance : Length V := ⟨binaryLength⟩
 
-lemma length_eq_binaryLength (a : V) : ‖a‖ = if 0 < a then log a + 1 else 0 := rfl
+lemma length_eq_binaryLength (a : V) : ‖a‖ = if 0 < a then log a + 1 else 0 := by exact rfl
 
 @[simp] lemma length_zero : ‖(0 : V)‖ = 0 := by simp [length_eq_binaryLength]
 

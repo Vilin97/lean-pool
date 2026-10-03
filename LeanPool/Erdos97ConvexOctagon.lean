@@ -24,4 +24,4 @@ Tags: discrete-geometry, distance-geometry, erdos-problems, convexity
 MSC: 51K05, 52A10
 -/
 
-@[expose] public section
+public section

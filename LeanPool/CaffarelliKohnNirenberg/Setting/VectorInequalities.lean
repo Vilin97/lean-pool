@@ -21,7 +21,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.SuitableWeakSolutionIn
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
 open scoped ENNReal NNReal Topology

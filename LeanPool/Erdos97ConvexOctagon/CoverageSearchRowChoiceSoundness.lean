@@ -15,12 +15,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Soundness and completeness of lightweight legal-row search data -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- The lightweight choice at one legal-row index. -/
-def searchRowChoiceAt (centre : Vertex) (index : Fin 35) : SearchRowChoice :=
+@[expose] def searchRowChoiceAt (centre : Vertex) (index : Fin 35) : SearchRowChoice :=
   (searchRowChoices.getD centre.val #[]).getD index.val ⟨0, 0⟩
 
 /-- Each centre has exactly the expected 35 legal rows. -/

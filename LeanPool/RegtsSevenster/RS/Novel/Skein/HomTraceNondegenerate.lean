@@ -18,7 +18,7 @@ the input to the semisimplicity of the End algebras (Theorem 4.4)
 and the atom dichotomy (Lemma 4.5).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

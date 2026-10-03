@@ -17,7 +17,7 @@ The phase `ell = 0` in the exact wedge rank formula shows that one chip on
 each factor has rank zero whenever neither chip is the gluing point.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

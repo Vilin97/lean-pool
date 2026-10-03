@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.DemazureOperatorsLean.DemazureAux
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MvPolynomial
@@ -44,10 +44,10 @@ structure PolyFraction' (n : ℕ) where
 
 example : PolyFraction' 2 := ⟨X 0 + X 1, 1, one_ne_zero⟩
 /-- View a polynomial as a fraction with denominator one. -/
-def toFrac (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction' n := ⟨p, 1, one_ne_zero⟩
+@[expose] def toFrac (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction' n := ⟨p, 1, one_ne_zero⟩
 
 /-- The proportionality relation on polynomial fractions. -/
-def r (n : ℕ) : PolyFraction' n → PolyFraction' n → Prop :=
+@[expose] def r (n : ℕ) : PolyFraction' n → PolyFraction' n → Prop :=
   fun p q => p.numerator * q.denominator = q.numerator * p.denominator
 
 lemma r_equiv : Equivalence (r n) := by
@@ -86,13 +86,15 @@ lemma equiv_r {a b : PolyFraction' n} : (r n) a b ↔ a ≈ b := by
 
 
 /-- The quotient type of polynomial fractions modulo proportionality. -/
+@[expose]
 def PolyFraction (n : ℕ) := (Quotient (s n))
 
 /-- The quotient map from fraction representatives. -/
+@[expose]
 def mk (p : PolyFraction' n) : PolyFraction n := Quotient.mk (s n) p
 
 /-- The quotient map from polynomials, viewed as fractions with denominator one. -/
-def mk' (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction n := mk ⟨p, 1, one_ne_zero⟩
+@[expose] def mk' (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction n := mk ⟨p, 1, one_ne_zero⟩
 
 
 /- This lemmas enables us to compute the result of a lift of a function applied at a
@@ -129,12 +131,12 @@ lemma get_polyfraction_rep (p : PolyFraction n) : ∃p' : PolyFraction' n, mk p'
   exact Quotient.exists_rep p
 
 /-- Addition of polynomial-fraction representatives. -/
-def add' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
+@[expose] def add' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
   fun p q => ⟨p.numerator * q.denominator + q.numerator * p.denominator,
     p.denominator * q.denominator, mul_ne_zero p.denominator_ne_zero q.denominator_ne_zero⟩
 
 /-- Addition of representatives followed by the quotient map. -/
-def addMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
+@[expose] def addMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
   fun p q => mk (add' p q)
 
 lemma add'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a₂ → b₁ ≈ b₂ →
@@ -158,6 +160,7 @@ lemma add'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a�
   ring_nf
 
 /-- Addition on quotient polynomial fractions. -/
+@[expose]
 def add : PolyFraction n → PolyFraction n → PolyFraction n :=
   fun p q ↦ Quotient.lift₂ (addMk) (add'_s) p q
 
@@ -195,12 +198,12 @@ def sub : PolyFraction n → PolyFraction n → PolyFraction n :=
   fun p q ↦ Quotient.lift₂ (sub') (sub'_s) p q
 
 /-- Multiplication of polynomial-fraction representatives. -/
-def mul' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
+@[expose] def mul' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
   fun p q => ⟨p.numerator * q.numerator, p.denominator * q.denominator,
     mul_ne_zero p.denominator_ne_zero q.denominator_ne_zero⟩
 
 /-- Multiplication of representatives followed by the quotient map. -/
-def mulMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
+@[expose] def mulMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
   fun p q => mk (mul' p q)
 
 lemma mul'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a₂ → b₁ ≈ b₂ →
@@ -221,7 +224,7 @@ lemma mul'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a�
   ring_nf
 
 /-- Multiplication on quotient polynomial fractions. -/
-def mul : PolyFraction n → PolyFraction n → PolyFraction n :=
+@[expose] def mul : PolyFraction n → PolyFraction n → PolyFraction n :=
   fun p q ↦ Quotient.lift₂ (mulMk) (mul'_s) p q
 
 -- Enable use of * notation
@@ -239,13 +242,14 @@ def one' : PolyFraction' n where
 def one : PolyFraction n := mk one'
 
 /-- The additive identity as a fraction representative. -/
-@[simp]
+@[expose, simp]
 def zero' : PolyFraction' n where
   numerator := 0
   denominator := 1
   denominator_ne_zero := one_ne_zero
 
 /-- The additive identity as a quotient fraction. -/
+@[expose]
 def zero : PolyFraction n := mk zero'
 
 /-- Negation of polynomial-fraction representatives. -/
@@ -302,7 +306,7 @@ lemma add_assoc (p q r : PolyFraction n) : add (add p q) r = add p (add q r) := 
 /- We directly define the Demazure operator on fractions (even though we proved that
 the result is a polynomial, for the proofs it's better to keep the result as a fraction)-/
 /-- The auxiliary Demazure operator on fraction representatives. -/
-def DemAux' (i : Fin n) : PolyFraction' n → PolyFraction' n := fun p =>
+@[expose] def DemAux' (i : Fin n) : PolyFraction' n → PolyFraction' n := fun p =>
   ⟨
     p.numerator * (SwapVariables (Fin.castSucc i) (Fin.succ i) p.denominator) -
       (SwapVariables (Fin.castSucc i) (Fin.succ i) p.numerator) * p.denominator,
@@ -338,7 +342,7 @@ lemma DemAux_well_defined (i : Fin n) : ∀ (p q : PolyFraction' n),
         ring_nf
 
 /-- The auxiliary Demazure operator on quotient polynomial fractions. -/
-def DemAux (i : Fin n) (p : PolyFraction n) : PolyFraction n :=
+@[expose] def DemAux (i : Fin n) (p : PolyFraction n) : PolyFraction n :=
   Quotient.lift (mk ∘ (DemAux' i)) (DemAux_well_defined i) p
 
 /- This definition is equivalent to the direct one on the polynomial ring-/

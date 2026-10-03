@@ -57,7 +57,7 @@ incident with one unique current source face.
   and direction-(b) theorem assuming only that combinatorial invariant.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -188,6 +188,7 @@ variable {T : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom}
   {B H : Graph Plane γ} {Hdraw : γ → ℝ → Plane} {a : Plane} {D : List γ}
 
 /-- Assemble the generated pair exposed by one reverse-ear construction. -/
+@[expose]
 noncomputable def pair (w : TargetEarStepData T B H Hdraw a D) :
     GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom :=
   T.split T.str_combInvariants w.splitData w.srcPos w.srcDraw w.tgtPos w.tgtDraw
@@ -195,11 +196,11 @@ noncomputable def pair (w : TargetEarStepData T B H Hdraw a D) :
 
 @[simp] theorem pair_src (w : TargetEarStepData T B H Hdraw a D) :
     w.pair.src =
-      w.splitData.realize T.src w.srcPos w.srcDraw w.srcCrosscut := rfl
+      w.splitData.realize T.src w.srcPos w.srcDraw w.srcCrosscut := by exact rfl
 
 @[simp] theorem pair_tgt (w : TargetEarStepData T B H Hdraw a D) :
     w.pair.tgt =
-      w.splitData.realize T.tgt w.tgtPos w.tgtDraw w.tgtCrosscut := rfl
+      w.splitData.realize T.tgt w.tgtPos w.tgtDraw w.tgtCrosscut := by exact rfl
 
 /-- The assembled pair realizes the enlarged target subgraph and refines the original pair. -/
 theorem isTargetPartialTransferOf_pair
@@ -368,7 +369,7 @@ theorem target_ear_edge_polygonal
 /-- Every boundary endpoint of a nonouter ambient target edge comes from a strongly accessible
 source anchor.  The stage construction will discharge this from the fresh-point list of its
 anchored square mesh. -/
-def TargetBoundaryAnchored {β : Type*}
+@[expose] def TargetBoundaryAnchored {β : Type*}
     (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (H : Graph Plane β) (Hdraw : β → ℝ → Plane) : Prop :=
   ∀ {f : β} {y : Plane}, f ∈ E(H) → H.Inc f y → y ∈ tgtOuter →
@@ -378,7 +379,7 @@ def TargetBoundaryAnchored {β : Type*}
 /-- The relative anchoring condition used by reverse ear insertion.  Only genuinely new
 ambient edges need to end at prescribed strongly accessible anchors; edges already covering
 the original target skeleton are irrelevant to the next ear. -/
-def NewTargetBoundaryAnchored {β : Type*}
+@[expose] def NewTargetBoundaryAnchored {β : Type*}
     (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom) (base : Set Plane)
     (H : Graph Plane β) (Hdraw : β → ℝ → Plane) : Prop :=
   ∀ {B : Graph Plane β}, B ≤ H → base ⊆ pointSet B Hdraw →
@@ -398,7 +399,7 @@ theorem TargetBoundaryAnchored.new
 /-- At a point of the distinguished boundary, there is at most one incident ambient edge not
 contained in that boundary.  The ambient edge-name type is deliberately independent of the
 cell-name type. -/
-def NonouterIncidenceUniqueAtBoundary {β : Type*}
+@[expose] def NonouterIncidenceUniqueAtBoundary {β : Type*}
     (H : Graph Plane β) (Hdraw : β → ℝ → Plane) (outer : Set Plane) : Prop :=
   ∀ {z : Plane} {e f : β}, z ∈ outer → e ∈ E(H) → f ∈ E(H) →
     H.Inc e z → H.Inc f z →
@@ -408,7 +409,7 @@ def NonouterIncidenceUniqueAtBoundary {β : Type*}
 nonouter ambient edge cannot meet, at the distinguished boundary, a nonouter edge already in
 the current trace.  Unlike `NonouterIncidenceUniqueAtBoundary`, this permits several old
 nonouter edges at an old boundary vertex, which is essential for target-mesh overlays. -/
-def NoNewNonouterIncidenceAtBoundary {β : Type*}
+@[expose] def NoNewNonouterIncidenceAtBoundary {β : Type*}
     (base : Set Plane) (H : Graph Plane β) (Hdraw : β → ℝ → Plane)
     (outer : Set Plane) : Prop :=
   ∀ {B : Graph Plane β}, B ≤ H → base ⊆ pointSet B Hdraw →
@@ -813,12 +814,12 @@ def CellStructure.OuterIncidenceAtMostTwo (S : CellStructure γ) (v : γ) : Prop
     S.outerGraph.Inc g v → e = f ∨ e = g ∨ f = g
 
 /-- The distinguished outer graph is locally at most two-branched at every vertex. -/
-def CellStructure.OuterIncidenceAtMostTwoEverywhere (S : CellStructure γ) : Prop :=
+@[expose] def CellStructure.OuterIncidenceAtMostTwoEverywhere (S : CellStructure γ) : Prop :=
   ∀ v, S.OuterIncidenceAtMostTwo v
 
 /-- The edge set of the distinguished outer graph is exactly one simple cycle.  Isolated
 vertices are intentionally irrelevant: reverse transfer only reads edge incidence. -/
-def CellStructure.OuterEdgesFormCycle (S : CellStructure γ) : Prop :=
+@[expose] def CellStructure.OuterEdgesFormCycle (S : CellStructure γ) : Prop :=
   ∃ e u v D, S.outerGraph.IsCycleThrough e u v D ∧
     E(S.outerGraph) = {f | f ∈ e :: D}
 
@@ -1213,13 +1214,13 @@ theorem GeneratedPair.unique_source_face_of_outerOnly
 /-- Source vertices incident with a nonboundary edge.  Outer-only vertices are deliberately
 excluded: a fresh anchor must not enter the compact set merely because it is already a vertex
 of the outer cycle. -/
-def GeneratedPair.sourceNonboundaryVertices
+@[expose] def GeneratedPair.sourceNonboundaryVertices
     (T : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom) : Set Plane :=
   {x | ∃ e, e ∈ E(T.src.graph) ∧ e ∉ E(T.str.outerGraph) ∧ T.src.graph.Inc e x}
 
 /-- The current source graph with outer edges and outer-only vertices removed.  Its point set is
 the compact union of the closed nonboundary edges used in the fresh-anchor argument. -/
-def GeneratedPair.sourceNonboundaryGraph
+@[expose] def GeneratedPair.sourceNonboundaryGraph
     (T : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom) : Graph Plane γ :=
   (T.src.graph.deleteEdges E(T.str.outerGraph)).induce T.sourceNonboundaryVertices
 
@@ -1433,7 +1434,7 @@ def GeneratedPair.SourceEndpointReady
 
 /-- The two genuinely evolving obligations at a wild-boundary endpoint: no nonboundary edge
 has reached it yet, and the next ear's face is its unique incident current source face. -/
-def GeneratedPair.SourceEndpointFreshCombinatorics
+@[expose] def GeneratedPair.SourceEndpointFreshCombinatorics
     (T : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom) (F : γ) (x : Plane) : Prop :=
   x ∈ srcOuter →
     x ∉ pointSet T.sourceNonboundaryGraph T.src.drawing ∧
@@ -1442,7 +1443,7 @@ def GeneratedPair.SourceEndpointFreshCombinatorics
 
 /-- The remaining prescribed-ear combinatorics after boundary anchoring has supplied strong
 accessibility: both outer endpoints are fresh and incident with the selected face alone. -/
-def TargetEarFreshCombinatorics
+@[expose] def TargetEarFreshCombinatorics
     (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (H : Graph Plane γ) (Hdraw : γ → ℝ → Plane) : Prop :=
   ∀ (B : Graph Plane γ) (a b : Plane) (D : List γ), B.IsTwoConnected → B ≤ H →

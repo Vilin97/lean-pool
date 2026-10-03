@@ -23,7 +23,7 @@ Mathlib.
   nonzero eigenvalues.
 -/
 
-@[expose] public section
+public section
 
 namespace ContinuousLinearMap
 

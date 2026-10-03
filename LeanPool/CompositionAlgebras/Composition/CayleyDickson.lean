@@ -64,7 +64,7 @@ Substrate for the classification. The headline declaration is the instance
 `Composition/Classification.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace CompositionAlgebra
 
@@ -75,7 +75,7 @@ universe u
 
 Kept as a type synonym rather than a structure so that the additive and `ℝ`-module structure
 transfer from `Prod` verbatim; the product and the unit are the only new data. -/
-def CD (D : Type u) : Type u := D × D
+@[expose] def CD (D : Type u) : Type u := D × D
 
 namespace CD
 
@@ -86,75 +86,75 @@ instance instAddCommGroup : AddCommGroup (CD D) := inferInstanceAs (AddCommGroup
 instance instModule : Module ℝ (CD D) := inferInstanceAs (Module ℝ (D × D))
 
 /-- Assemble an element of the double from its two components. -/
-def mk (a b : D) : CD D := (a, b)
+@[expose] def mk (a b : D) : CD D := (a, b)
 
 /-- The first component of an element of the double. -/
-def fst (x : CD D) : D := Prod.fst (α := D) (β := D) x
+@[expose] def fst (x : CD D) : D := Prod.fst (α := D) (β := D) x
 
 /-- The second component of an element of the double. -/
-def snd (x : CD D) : D := Prod.snd (α := D) (β := D) x
+@[expose] def snd (x : CD D) : D := Prod.snd (α := D) (β := D) x
 
 omit [NonAssocRing D] [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_mk (a b : D) : (mk a b).fst = a := rfl
+@[simp] theorem fst_mk (a b : D) : (mk a b).fst = a := by rfl
 
 omit [NonAssocRing D] [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_mk (a b : D) : (mk a b).snd = b := rfl
+@[simp] theorem snd_mk (a b : D) : (mk a b).snd = b := by rfl
 
 omit [NonAssocRing D] [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
 @[ext] theorem ext {x y : CD D} (h1 : x.fst = y.fst) (h2 : x.snd = y.snd) : x = y :=
   Prod.ext (α := D) (β := D) h1 h2
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_zero : (0 : CD D).fst = 0 := rfl
+@[simp] theorem fst_zero : (0 : CD D).fst = 0 := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_zero : (0 : CD D).snd = 0 := rfl
+@[simp] theorem snd_zero : (0 : CD D).snd = 0 := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_add (x y : CD D) : (x + y).fst = x.fst + y.fst := rfl
+@[simp] theorem fst_add (x y : CD D) : (x + y).fst = x.fst + y.fst := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_add (x y : CD D) : (x + y).snd = x.snd + y.snd := rfl
+@[simp] theorem snd_add (x y : CD D) : (x + y).snd = x.snd + y.snd := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_neg (x : CD D) : (-x).fst = -x.fst := rfl
+@[simp] theorem fst_neg (x : CD D) : (-x).fst = -x.fst := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_neg (x : CD D) : (-x).snd = -x.snd := rfl
+@[simp] theorem snd_neg (x : CD D) : (-x).snd = -x.snd := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_sub (x y : CD D) : (x - y).fst = x.fst - y.fst := rfl
+@[simp] theorem fst_sub (x y : CD D) : (x - y).fst = x.fst - y.fst := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_sub (x y : CD D) : (x - y).snd = x.snd - y.snd := rfl
+@[simp] theorem snd_sub (x y : CD D) : (x - y).snd = x.snd - y.snd := by rfl
 
 omit [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem fst_smul (r : ℝ) (x : CD D) : (r • x).fst = r • x.fst := rfl
+@[simp] theorem fst_smul (r : ℝ) (x : CD D) : (r • x).fst = r • x.fst := by rfl
 
 omit [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] in
-@[simp] theorem snd_smul (r : ℝ) (x : CD D) : (r • x).snd = r • x.snd := rfl
+@[simp] theorem snd_smul (r : ℝ) (x : CD D) : (r • x).snd = r • x.snd := by rfl
 
 variable [CompositionAlgebra D]
 
 instance instOne : One (CD D) := ⟨mk 1 0⟩
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] [CompositionAlgebra D] in
-@[simp] theorem fst_one : (1 : CD D).fst = 1 := rfl
+@[simp] theorem fst_one : (1 : CD D).fst = 1 := by rfl
 
 omit [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommClass ℝ D D] [CompositionAlgebra D] in
-@[simp] theorem snd_one : (1 : CD D).snd = 0 := rfl
+@[simp] theorem snd_one : (1 : CD D).snd = 0 := by rfl
 
 instance instMul : Mul (CD D) :=
   ⟨fun x y => mk (x.fst * y.fst - cstar y.snd * x.snd) (y.snd * x.fst + x.snd * cstar y.fst)⟩
 
 @[simp] theorem fst_mul (x y : CD D) :
-    (x * y).fst = x.fst * y.fst - cstar y.snd * x.snd := rfl
+    (x * y).fst = x.fst * y.fst - cstar y.snd * x.snd := by rfl
 
 @[simp] theorem snd_mul (x y : CD D) :
-    (x * y).snd = y.snd * x.fst + x.snd * cstar y.fst := rfl
+    (x * y).snd = y.snd * x.fst + x.snd * cstar y.fst := by rfl
 
 theorem mul_def (a b c d : D) :
-    mk a b * mk c d = mk (a * c - cstar d * b) (d * a + b * cstar c) := rfl
+    mk a b * mk c d = mk (a * c - cstar d * b) (d * a + b * cstar c) := by rfl
 
 /-! ### The ring structure -/
 
@@ -197,7 +197,7 @@ def bilin : CD D →ₗ[ℝ] CD D →ₗ[ℝ] ℝ :=
     (by intro c x y; simp; ring)
 
 @[simp] theorem bilin_apply (x y : CD D) :
-    bilin x y = ip x.fst y.fst + ip x.snd y.snd := rfl
+    bilin x y = ip x.fst y.fst + ip x.snd y.snd := by rfl
 
 /-! ### The composition law
 
@@ -247,9 +247,9 @@ variable {D : Type u} [Ring D] [Module ℝ D] [IsScalarTower ℝ D D] [SMulCommC
 instance CD.instCompositionAlgebra : CompositionAlgebra (CD D) :=
   CD.compositionAlgebraOfAssoc (fun p q r => mul_assoc p q r)
 
-@[simp] theorem CD.nf_eq (x : CD D) : nf x = nf x.fst + nf x.snd := rfl
+@[simp] theorem CD.nf_eq (x : CD D) : nf x = nf x.fst + nf x.snd := by rfl
 
-@[simp] theorem CD.ip_eq (x y : CD D) : ip x y = ip x.fst y.fst + ip x.snd y.snd := rfl
+@[simp] theorem CD.ip_eq (x y : CD D) : ip x y = ip x.fst y.fst + ip x.snd y.snd := by rfl
 
 /-- The conjugation of the double negates the second component. -/
 theorem CD.cstar_eq (x : CD D) : cstar x = CD.mk (cstar x.fst) (-x.snd) := by

@@ -21,7 +21,7 @@ public import LeanPool.LiCriterion.Hadamard.General.Factorization
 Aggregator for the general order-`≤ 1` factorization theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Hadamard
 

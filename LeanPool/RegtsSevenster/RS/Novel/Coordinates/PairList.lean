@@ -16,7 +16,7 @@ The edge and oriented pair lists enumerate each participating flag
 exactly once. The slot helpers identify the two ends of each edge.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

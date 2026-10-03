@@ -28,7 +28,7 @@ the binomial count, and the character expansion of each block
 factor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -104,6 +104,7 @@ private theorem blockEmbed_injective {a b : ℕ}
 the joint size: the normalized pairing, over the block product
 `S_a × S_b`, of the recast Jacobi–Trudi character of the joint shape
 with the recast characters of the two shapes. -/
+@[expose]
 noncomputable def indMult {a b : ℕ} (lam : Shape (a + b)) (μ : Shape a)
     (ν : Shape b) : ℂ :=
   ((a.factorial : ℂ) * (b.factorial : ℂ))⁻¹ *

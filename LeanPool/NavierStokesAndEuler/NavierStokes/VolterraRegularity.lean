@@ -25,7 +25,7 @@ do not identify the clamped extension of a positive path with a smooth
 extension across zero.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

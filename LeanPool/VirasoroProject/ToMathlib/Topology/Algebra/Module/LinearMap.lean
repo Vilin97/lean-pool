@@ -13,4 +13,4 @@ public import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearM
 Import-only index for linear-map support modules used by the Virasoro Project.
 -/
 
-@[expose] public section
+public section

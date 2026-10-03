@@ -17,7 +17,7 @@ the Jacobson ring ℂ, and lift to the algebraically closed base.
 This is the Nullstellensatz input of the descent's final step.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

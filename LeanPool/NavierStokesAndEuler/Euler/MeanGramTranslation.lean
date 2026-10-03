@@ -22,7 +22,7 @@ is the spatial orbit of the original acceleration. The final identification
 uses the already proved strong equation of the actual variational solution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -123,7 +123,7 @@ theorem gramSolver_translate (a : Space)
   exact hl.trans hr.symm
 
 /-- The genuine fixed-coordinate acceleration recovered from velocity and forcing. -/
-def meanAcceleration (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
+@[expose] def meanAcceleration (F F₁ : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (c : ℝ) (hc : 0 < c) (hF : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖solenoidalFrame T F t v‖ ^ 2)
     (v : TimeLp T solenoidalSpace) (f : TimeLp T L2) : TimeLp T solenoidalSpace :=
   gramSolver T hT (solenoidalFrame T F) c hc hF

@@ -19,7 +19,7 @@ split off further mixed sums, and consequently a direct summand of
 a free mixed module is again a free mixed module.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -153,6 +153,7 @@ section Line
 variable {D : Type u}
 
 /-- Whiskering an object twice by the line returns the object. -/
+@[expose]
 noncomputable def OddLine.rot
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] (L : OddLine D)

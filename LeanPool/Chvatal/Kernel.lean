@@ -46,7 +46,7 @@ This file proves the kernel calculation (8) and the lower bound (14) in the proo
 of Theorem 1.4. All sums are finite and the normalization is made explicit.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 

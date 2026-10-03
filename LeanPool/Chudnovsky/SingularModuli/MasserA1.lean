@@ -61,7 +61,7 @@ Everything, unconditionally:
 The top-level deliverable is `masser_s₂_rational : ∃ r : ℚ, s₂ τ₁₆₃ = r`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -94,7 +94,7 @@ lemma two_tau_sub_one_ne_zero : 2 * (τ₁₆₃ : ℂ) - 1 ≠ 0 := by
 def LamGL : GL (Fin 2) ℝ :=
   .mkOfDetNeZero !![1, -82; 2, -1] (by rw [Matrix.det_fin_two_of]; norm_num)
 
-@[simp] lemma val_LamGL : (LamGL).val = !![1, -82; 2, -1] := rfl
+@[simp] lemma val_LamGL : (LamGL).val = !![1, -82; 2, -1] := by rfl
 
 lemma LamGL_det_pos : 0 < (LamGL).det.val := by
   rw [Matrix.GeneralLinearGroup.val_det_apply, val_LamGL, Matrix.det_fin_two_of]
@@ -844,7 +844,7 @@ private lemma mβ10_ne_zero : mβ10 ≠ 0 := by
 
 private lemma two_tau_eq : 2 * (τ₁₆₃ : ℂ) - 1 = 2 * Complex.I * ((τ₁₆₃.im : ℝ) : ℂ) := by
   apply Complex.ext
-  · simp [Complex.mul_re, show τ₁₆₃.re = 1 / 2 from rfl]
+  · simp [Complex.mul_re, show τ₁₆₃.re = 1 / 2 from τ₁₆₃_re]
   · simp [Complex.mul_im, UpperHalfPlane.coe_im]
 
 /-- **The analytic gate of `masser_s₂_rational_of`, discharged**: Masser's identity (106)

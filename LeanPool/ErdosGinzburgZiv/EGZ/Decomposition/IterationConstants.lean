@@ -11,11 +11,12 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IntervalCapacity
 
 /-! # Uniform constants for the bounded decomposition iteration -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 
 /-- A positive integer upper bound for face events on one surviving lineage. -/
+@[expose]
 noncomputable def faceCapacity (d : ℕ) (ε : ℝ) : ℕ :=
   max 1 ⌈((((ε / 2) ^ 3)⁻¹ + (d : ℝ) + 2) ^ (d + 2))⌉₊
 
@@ -29,6 +30,7 @@ theorem le_faceCapacity_of_real_le {d n : ℕ} {ε : ℝ}
   exact hn.trans (le_max_right _ _)
 
 /-- Capacity of the interval beginning at a given iteration index. -/
+@[expose]
 noncomputable def intervalCapacity (d : ℕ) (ε : ℝ) (a : ℕ) : ℕ :=
   2 ^ a * faceCapacity d ε
 
@@ -42,6 +44,7 @@ theorem one_le_intervalCapacity (d : ℕ) (ε : ℝ) (a : ℕ) :
   (Nat.one_le_two_pow).trans (pow_le_intervalCapacity d ε a)
 
 /-- Uniform stopping bound derived from the interval capacities. -/
+@[expose]
 noncomputable def stoppingBound (d : ℕ) (ε : ℝ) : ℕ :=
   intervalCapacityBound (2 * (d + 1) ^ 2 + 1) (intervalCapacity d ε)
 

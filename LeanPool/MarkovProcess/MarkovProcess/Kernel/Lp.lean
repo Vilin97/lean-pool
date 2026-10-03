@@ -17,7 +17,7 @@ This file packages the raw kernel integral as continuous linear contractions on
 finite-exponent and infinite-exponent real `Lᵖ` spaces.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

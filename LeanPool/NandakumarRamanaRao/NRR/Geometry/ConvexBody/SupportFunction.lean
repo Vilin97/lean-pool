@@ -45,7 +45,7 @@ imports are required here. The decisive Mathlib results used are `IsCompact.exis
 `IsGreatest.csSup_eq`, `le_csSup`, `csSup_le`, and continuity of the inner product.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -56,6 +56,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-- The **support function** of a convex body `K` in direction `u`:
 `h_K(u) = sup { ⟪x, u⟫ | x ∈ K }`. For compact nonempty `K` the supremum is finite and
 attained (see `exists_supportPoint`). -/
+@[expose]
 noncomputable def supportFunction (K : ConvexBody E) (u : E) : ℝ :=
   sSup ((fun x : E => (inner ℝ x u : ℝ)) '' (K : Set E))
 

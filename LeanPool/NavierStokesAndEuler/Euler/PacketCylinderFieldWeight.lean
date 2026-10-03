@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Actual time-profile multiplication of raw cylinder witnesses and their same-radius bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,7 +45,7 @@ open scoped ContDiff
 variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField} (G : Field P T raw)
 
 /-- Weighted, constructed using `ofLifted`. -/
-def weighted (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
+@[expose] def weighted (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
     Field P T (fun z => g (projIcc 0 T hT z.1) • raw z) :=
   ofLifted (weight g G.path) (weighted_orbit P g G.path G.orbit)
     (fun t x => g t • pointField P G.path G.orbit t x)
@@ -57,15 +57,15 @@ def weighted (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
     (fun t x θ => by rw [projIcc_of_mem hT t.property,G.raw_eq])
 
 /-- Normalized, given by `G.weighted hT (reciprocal g hg)`. -/
-def normalized (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) :
+@[expose] def normalized (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) :
     Field P T (fun z => (g (projIcc 0 T hT z.1))⁻¹ • raw z) :=
   G.weighted hT (reciprocal g hg)
 
 @[simp] theorem weighted_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
-    (G.weighted hT g).path = weight g G.path := rfl
+    (G.weighted hT g).path = weight g G.path := by rfl
 
 @[simp] theorem normalized_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) :
-    (G.normalized hT g hg).path = normalize g hg G.path := rfl
+    (G.normalized hT g hg).path = normalize g hg G.path := by rfl
 
 theorem derivative_weighted_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (i : Fin 4) :
     ((G.weighted hT g).derivative i).path = ((G.derivative i).weighted hT g).path :=

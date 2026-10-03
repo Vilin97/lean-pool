@@ -17,7 +17,7 @@ The definitions here should eventually be aligned with whichever sphere API is
 most convenient for the full formalization, possibly `TopCat.sphere n`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,7 @@ abbrev Sphere (n : ℕ) : Type :=
   ↥(Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) (1 : ℝ))
 
 /-- An odd map between spheres is equivariant for the antipodal map. -/
-def IsOddMap {n : ℕ} (f : C(Sphere n, Sphere n)) : Prop :=
+@[expose] def IsOddMap {n : ℕ} (f : C(Sphere n, Sphere n)) : Prop :=
   ∀ x : Sphere n, f (-x) = - f x
 
 /-- `IsOddMap f` unfolds to the pointwise oddness condition `f (-x) = - f x`.

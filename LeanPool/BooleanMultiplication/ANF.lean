@@ -16,7 +16,7 @@ set union, so the resulting monoid algebra over `ZMod 2` is exactly the Boolean
 ANF quotient in canonical normal form.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 
@@ -30,7 +30,7 @@ abbrev F₂ := ZMod 2
 structure Monomial (m : Nat) where
   /-- Variables occurring in this squarefree monomial. -/
   vars : Finset (Fin m)
-deriving DecidableEq
+deriving @[expose] DecidableEq
 
 namespace Monomial
 
@@ -70,7 +70,7 @@ theorem Monomial.singleton_mul_singleton {m : Nat} (i j : Fin m) :
 abbrev ANF (m : Nat) := MonoidAlgebra F₂ (Monomial m)
 
 /-- The ANF consisting of one squarefree monomial. -/
-def monomial {m : Nat} (s : Finset (Fin m)) : ANF m :=
+@[expose] def monomial {m : Nat} (s : Finset (Fin m)) : ANF m :=
   MonoidAlgebra.single ⟨s⟩ 1
 
 @[simp]
@@ -93,7 +93,7 @@ theorem coeff_sum_smul_mul_sum_smul {m : Nat} {ι κ : Type*}
   rw [Finset.sum_comm]
 
 /-- The `i`th input variable. -/
-def X {m : Nat} (i : Fin m) : ANF m := monomial {i}
+@[expose] def X {m : Nat} (i : Fin m) : ANF m := monomial {i}
 
 @[simp]
 theorem monomial_mul {m : Nat} (s t : Finset (Fin m)) :
@@ -125,6 +125,7 @@ theorem anf_four_eq_zero {m : Nat} : (4 : ANF m) = 0 := by
   simp [CharTwo.ofNat_eq_mod]
 
 /-- Evaluation of a canonical ANF on a Boolean input. -/
+@[expose]
 def eval {m : Nat} (p : ANF m) (x : Fin m → F₂) : F₂ :=
   p.coeff.sum fun s c => c * ∏ i ∈ s.vars, x i
 
@@ -174,12 +175,14 @@ theorem prod_union_f2 {m : Nat} (x : Fin m → F₂) (s t : Finset (Fin m)) :
     · rw [h, k]
 
 /-- Evaluation of a squarefree monomial as a monoid homomorphism. -/
+@[expose]
 def monomialEval {m : Nat} (x : Fin m → F₂) : Monomial m →* F₂ where
   toFun s := ∏ i ∈ s.vars, x i
   map_one' := by simp
   map_mul' s t := prod_union_f2 x s.vars t.vars
 
 /-- Evaluation at a Boolean point as an `F₂`-algebra homomorphism. -/
+@[expose]
 noncomputable def evalHom {m : Nat} (x : Fin m → F₂) : ANF m →ₐ[F₂] F₂ :=
   MonoidAlgebra.lift F₂ F₂ (Monomial m) (monomialEval x)
 
@@ -274,7 +277,7 @@ noncomputable def evalLinearEquiv (m : Nat) : ANF m ≃ₗ[F₂] ((Fin m → F�
   LinearEquiv.ofBijective (evalLinearMap m) ⟨eval_injective m, evalLinearMap_surjective m⟩
 
 /-- The subspace of constants and input-linear functions. -/
-noncomputable def affine (m : Nat) : Submodule F₂ (ANF m) :=
+@[expose] noncomputable def affine (m : Nat) : Submodule F₂ (ANF m) :=
   Submodule.span F₂ ({1} ∪ Set.range X)
 
 theorem one_mem_affine (m : Nat) : (1 : ANF m) ∈ affine m := by

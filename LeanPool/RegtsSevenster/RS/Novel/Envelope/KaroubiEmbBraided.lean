@@ -16,7 +16,7 @@ The canonical functor `toKaroubi C` is a braided monoidal functor
 the Karoubi envelope) and is ℂ-linear.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

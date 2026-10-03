@@ -13,7 +13,7 @@ public import LeanPool.Zeta32.Arith.Local.Val
 `H_j^{(e)}` and `β_j` (`v_p(β_j) ≥ 0` for `j < p`, `≥ -2` for `p ∣ j`, `≥ -3` otherwise, `j <
 p²`). -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 
@@ -150,6 +150,7 @@ lemma H_VG_small {e j : ℕ} (hj : j < p) : VG p (H e j) 0 := by
   exact inv_pow_VG_small ha1 (by omega)
 
 /-- The weight of the constant `min(v_p(2j), v_p(β_j))` in the proof notes, Lemma 5. -/
+@[expose]
 def betaWt (p j : ℕ) : ℚ := if j < p then 0 else if p ∣ j then -2 else -3
 
 lemma nat_VG_dvd (j : ℕ) (hj : 0 < j) : VG p (j:ℚ) (if p ∣ j then 1 else 0) := by

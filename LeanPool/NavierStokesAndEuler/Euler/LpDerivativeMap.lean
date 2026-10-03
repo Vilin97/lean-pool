@@ -11,7 +11,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 /-! Currying an actual L² field of derivatives into a bounded derivative operator. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,6 +26,7 @@ variable {X P V : Type*} [MeasurableSpace X]
   (μ : Measure X)
 
 /-- Apply derivative, given by `(ContinuousLinearMap.apply ℝ V a).compLpL 2 μ D`. -/
+@[expose]
 def applyDerivative (D : Lp (P →L[ℝ] V) 2 μ) (a : P) : Lp V 2 μ :=
   (ContinuousLinearMap.apply ℝ V a).compLpL 2 μ D
 
@@ -64,6 +65,11 @@ def derivativeLinear (D : Lp (P →L[ℝ] V) 2 μ) : P →ₗ[ℝ] Lp V 2 μ whe
 /-- This is a concrete bounded derivative with values in the actual L² function space. -/
 def derivativeMap (D : Lp (P →L[ℝ] V) 2 μ) : P →L[ℝ] Lp V 2 μ :=
   (derivativeLinear μ D).mkContinuous ‖D‖ (applyDerivative_norm_le μ D)
+
+/-- Applying the bounded derivative agrees with pointwise evaluation in `Lp`. -/
+@[simp] theorem derivativeMap_apply (D : Lp (P →L[ℝ] V) 2 μ) (a : P) :
+    derivativeMap μ D a = applyDerivative μ D a := by
+  rfl
 
 theorem derivativeMap_ae (D : Lp (P →L[ℝ] V) 2 μ) (a : P) :
     derivativeMap μ D a =ᵐ[μ] fun x => D x a := applyDerivative_ae μ D a

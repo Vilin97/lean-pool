@@ -21,7 +21,7 @@ a genus-three factor and a pointed rigid genus-one factor glue without adding
 a chip.  This module keeps those statements in the public gluing layer.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

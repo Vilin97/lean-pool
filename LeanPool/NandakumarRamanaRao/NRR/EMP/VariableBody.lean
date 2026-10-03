@@ -54,4 +54,4 @@ compact. The proofs go through the equal-area existence and uniqueness cores rea
 `EMP.normalizedWeight`, and do not invoke `EMP.continuous_normalizedWeight_core`.
 -/
 
-@[expose] public section
+public section

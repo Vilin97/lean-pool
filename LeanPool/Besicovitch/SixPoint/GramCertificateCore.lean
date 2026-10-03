@@ -22,7 +22,7 @@ completed by elementary two-vector squares, dominates that form, so the score is
 explicit rational number depending only on the certificate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,20 +37,20 @@ abbrev Five := Fin 5
 abbrev Three := Fin 3
 
 /-- The small rational weight on the coincident-endpoint slack. -/
-def gramLambda : ℝ := 1 / 12
+@[expose] def gramLambda : ℝ := 1 / 12
 
 /-- The small rational weight on the balanced root--edge slack. -/
-def gramMu : ℝ := 13 / 14
+@[expose] def gramMu : ℝ := 13 / 14
 
 theorem gramLambda_pos : 0 < gramLambda := by norm_num [gramLambda]
 
 theorem gramMu_pos : 0 < gramMu := by norm_num [gramMu]
 
 /-- Half the first-child radial penalty at the small rational weights. -/
-def gramFirstPenalty : ℝ := weightedFirstPenalty barC gramLambda gramMu / 2
+@[expose] def gramFirstPenalty : ℝ := weightedFirstPenalty barC gramLambda gramMu / 2
 
 /-- Half the second-child radial penalty at the small rational weights. -/
-def gramSecondPenalty : ℝ := weightedSecondPenalty barC gramLambda gramMu / 2
+@[expose] def gramSecondPenalty : ℝ := weightedSecondPenalty barC gramLambda gramMu / 2
 
 theorem gramFirstPenalty_pos : 0 < gramFirstPenalty := by
   norm_num [gramFirstPenalty, weightedFirstPenalty, gramLambda, gramMu, barC]
@@ -88,19 +88,19 @@ structure GramCertificate where
   factor : Fin 3 → Fin 5 → ℚ
 
 /-- Scale a table of integers by `10⁻⁴`. -/
-def tenThousandthFactor (entries : Fin 3 → Fin 5 → ℤ) : Fin 3 → Fin 5 → ℚ :=
+@[expose] def tenThousandthFactor (entries : Fin 3 → Fin 5 → ℤ) : Fin 3 → Fin 5 → ℚ :=
   fun i j ↦ entries i j / 10000
 
 /-- One rational Gram-factor row, cast to real coordinates. -/
-def factorRow (certificate : GramCertificate) (k : Three) : Five → ℝ :=
+@[expose] def factorRow (certificate : GramCertificate) (k : Three) : Five → ℝ :=
   fun i ↦ certificate.factor k i
 
 /-- The positive semidefinite Gram matrix represented by the three factor rows. -/
-def factorGram (certificate : GramCertificate) : Matrix Five Five ℝ :=
+@[expose] def factorGram (certificate : GramCertificate) : Matrix Five Five ℝ :=
   ∑ k, Matrix.vecMulVec (factorRow certificate k) (factorRow certificate k)
 
 /-- The negated off-diagonal coefficients of the quadratic form. -/
-def targetOffDiagonal (certificate : GramCertificate) : Matrix Five Five ℝ :=
+@[expose] def targetOffDiagonal (certificate : GramCertificate) : Matrix Five Five ℝ :=
   !![0, certificate.alpha₀ + certificate.alpha₂ + certificate.alpha₄,
         certificate.alpha₁ + certificate.alpha₅,
         certificate.alpha₀ + certificate.alpha₃ + certificate.alpha₅,
@@ -115,7 +115,7 @@ def targetOffDiagonal (certificate : GramCertificate) : Matrix Five Five ℝ :=
         certificate.etaW, 0]
 
 /-- The discrepancy between the target quadratic form and its rational Gram factor. -/
-def residual (certificate : GramCertificate) (i j : Five) : ℝ :=
+@[expose] def residual (certificate : GramCertificate) (i j : Five) : ℝ :=
   targetOffDiagonal certificate i j - factorGram certificate i j
 
 private def certificateMatrix (certificate : GramCertificate) : Matrix Five Five ℝ :=
@@ -181,27 +181,27 @@ private theorem certificateMatrix_offDiagonal (certificate : GramCertificate) {i
     simp_all [certificateMatrix, fivePairCompletion, residual, targetOffDiagonal]
 
 /-- Diagonal entry 0 after adding the rank-one residual corrections. -/
-def diagonal₀ (certificate : GramCertificate) : ℝ :=
+@[expose] def diagonal₀ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 0 0 + |residual certificate 0 1| +
     |residual certificate 0 2| + |residual certificate 0 3| + |residual certificate 0 4|
 
 /-- Diagonal entry 1 after adding the rank-one residual corrections. -/
-def diagonal₁ (certificate : GramCertificate) : ℝ :=
+@[expose] def diagonal₁ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 1 1 + |residual certificate 0 1| +
     |residual certificate 1 2| + |residual certificate 1 3| + |residual certificate 1 4|
 
 /-- Diagonal entry 2 after adding the rank-one residual corrections. -/
-def diagonal₂ (certificate : GramCertificate) : ℝ :=
+@[expose] def diagonal₂ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 2 2 + |residual certificate 0 2| +
     |residual certificate 1 2| + |residual certificate 2 3| + |residual certificate 2 4|
 
 /-- Diagonal entry 3 after adding the rank-one residual corrections. -/
-def diagonal₃ (certificate : GramCertificate) : ℝ :=
+@[expose] def diagonal₃ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 3 3 + |residual certificate 0 3| +
     |residual certificate 1 3| + |residual certificate 2 3| + |residual certificate 3 4|
 
 /-- Diagonal entry 4 after adding the rank-one residual corrections. -/
-def diagonal₄ (certificate : GramCertificate) : ℝ :=
+@[expose] def diagonal₄ (certificate : GramCertificate) : ℝ :=
   factorGram certificate 4 4 + |residual certificate 0 4| +
     |residual certificate 1 4| + |residual certificate 2 4| + |residual certificate 3 4|
 
@@ -231,10 +231,10 @@ private theorem gram_sum_nonneg {E : Type*} [NormedAddCommGroup E]
   exact matrix_inner_sum_nonneg (certificateMatrix_posSemidef certificate) v
 
 /-- The lower bound the separation forces on the first red radius. -/
-def redFirstLower (certificate : GramCertificate) : ℝ := barC - certificate.pUpper
+@[expose] def redFirstLower (certificate : GramCertificate) : ℝ := barC - certificate.pUpper
 
 /-- The lower bound the separation forces on the first blue radius. -/
-def blueFirstLower (certificate : GramCertificate) : ℝ := barC - certificate.wUpper
+@[expose] def blueFirstLower (certificate : GramCertificate) : ℝ := barC - certificate.wUpper
 
 private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : GramCertificate) (e p₁ p₂ w₁ w₂ : E) :
@@ -284,32 +284,32 @@ private theorem certificate_gram_nonneg {E : Type*} [NormedAddCommGroup E]
   nlinarith
 
 /-- The balance of the root vector. -/
-def balance₀ (certificate : GramCertificate) : ℝ :=
+@[expose] def balance₀ (certificate : GramCertificate) : ℝ :=
   diagonal₀ certificate + certificate.alpha₀ + certificate.alpha₁ + certificate.alpha₂ +
     certificate.alpha₃ + certificate.alpha₄ + certificate.alpha₅
 
 /-- The balance of the first red vector. -/
-def balance₁ (certificate : GramCertificate) : ℝ :=
+@[expose] def balance₁ (certificate : GramCertificate) : ℝ :=
   diagonal₁ certificate + certificate.alpha₀ + certificate.alpha₂ + certificate.alpha₄ -
     gramFirstPenalty / (redFirstLower certificate + 1) + certificate.etaP
 
 /-- The balance of the second red vector. -/
-def balance₂ (certificate : GramCertificate) : ℝ :=
+@[expose] def balance₂ (certificate : GramCertificate) : ℝ :=
   diagonal₂ certificate + certificate.alpha₁ + certificate.alpha₅ -
     gramSecondPenalty / (certificate.pLower + certificate.pUpper) + certificate.etaP
 
 /-- The balance of the first blue vector. -/
-def balance₃ (certificate : GramCertificate) : ℝ :=
+@[expose] def balance₃ (certificate : GramCertificate) : ℝ :=
   diagonal₃ certificate + certificate.alpha₀ + certificate.alpha₃ + certificate.alpha₅ -
     gramFirstPenalty / (blueFirstLower certificate + 1) + certificate.etaW
 
 /-- The balance of the second blue vector. -/
-def balance₄ (certificate : GramCertificate) : ℝ :=
+@[expose] def balance₄ (certificate : GramCertificate) : ℝ :=
   diagonal₄ certificate + certificate.alpha₁ + certificate.alpha₄ -
     gramSecondPenalty / (certificate.wLower + certificate.wUpper) + certificate.etaW
 
 /-- The radius-box maximum of the diagonal form after the Gram corrections. -/
-def dualRadialBound (certificate : GramCertificate) : ℝ :=
+@[expose] def dualRadialBound (certificate : GramCertificate) : ℝ :=
   balance₀ certificate +
     positivePart (balance₁ certificate) -
     negativePart (balance₁ certificate) * redFirstLower certificate ^ 2 +
@@ -322,7 +322,7 @@ def dualRadialBound (certificate : GramCertificate) : ℝ :=
     (certificate.etaP + certificate.etaW) * barC ^ 2
 
 /-- The exact rational upper bound the certificate proves for the weighted score. -/
-def GramCertificate.upperBound (certificate : GramCertificate) : ℝ :=
+@[expose] def GramCertificate.upperBound (certificate : GramCertificate) : ℝ :=
   -weightedConstantTerm barC gramLambda gramMu +
     (1 + gramLambda) ^ 2 / (4 * certificate.alpha₀) +
     1 / (4 * certificate.alpha₁) +
@@ -339,7 +339,7 @@ def GramCertificate.upperBound (certificate : GramCertificate) : ℝ :=
     dualRadialBound certificate
 
 /-- The arithmetic conditions making a certificate usable. -/
-def GramCertificate.Valid (certificate : GramCertificate) : Prop :=
+@[expose] def GramCertificate.Valid (certificate : GramCertificate) : Prop :=
   barC - 1 ≤ (certificate.pLower : ℝ) ∧
     (certificate.pLower : ℝ) ≤ certificate.pUpper ∧ (certificate.pUpper : ℝ) ≤ 1 ∧
     barC - 1 ≤ (certificate.wLower : ℝ) ∧

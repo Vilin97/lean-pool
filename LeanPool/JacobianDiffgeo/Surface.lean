@@ -39,4 +39,4 @@ API summary (see `docs/design/surfaces-and-charts.md`):
   `map_nhds_eq_of_deriv_ne_zero`).
 -/
 
-@[expose] public section
+public section

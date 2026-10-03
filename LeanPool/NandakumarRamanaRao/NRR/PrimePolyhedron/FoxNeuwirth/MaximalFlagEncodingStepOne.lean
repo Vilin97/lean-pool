@@ -30,7 +30,7 @@ identities, and packages the requested equivalence with all maximal strict flags
 coefficient, or cancellation statement is included in that classification hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -40,12 +40,15 @@ namespace FoxNeuwirthOrderComplex
 namespace MaximalFlagCode
 
 /-- The first (bottom) stage index, in `Fin p`. -/
+@[expose]
 def firstStage (hp : Nat.Prime p) : Fin p := ⟨0, hp.pos⟩
 
 /-- The last (top) stage index, in `Fin p`. -/
+@[expose]
 def lastStage (hp : Nat.Prime p) : Fin p := ⟨p - 1, by have := hp.pos; omega⟩
 
 /-- Cast a stage index back to the arithmetic index used by a maximal simplex. -/
+@[expose]
 def simplexIndex (hp : Nat.Prime p) (j : Fin p) : Fin (p - 1 + 1) :=
   Fin.cast (FoxNeuwirthChain.maximalIndex_eq hp).symm j
 
@@ -262,6 +265,7 @@ theorem toSimplex_injective (hp : Nat.Prime p) :
     simpa [toSimplex_apply, stageCell_last hp] using hlast
 
 /-- Maximal strict flags produced by the explicit stage construction. -/
+@[expose]
 def EncodedSimplex (hp : Nat.Prime p) :=
   {s : Simplex p (p - 1) // s ∈ Set.range (toSimplex hp)}
 
@@ -302,6 +306,7 @@ noncomputable def codeEquivEncodedSimplex
     exact toSimplex_encodedSimplexToCode hp s
 
 /-- The classification statement for Step 1: every maximal strict flag is encoded. -/
+@[expose]
 def EveryMaximalFlagEncoded (hp : Nat.Prime p) : Prop :=
   Function.Surjective (toSimplex hp : Code p → Simplex p (p - 1))
 

@@ -18,7 +18,7 @@ Standard consequences of the main theorem, including C5 (Clifford) and C6 (exist
 non-special divisors).
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

@@ -14,7 +14,7 @@ import LeanPool.Rupert.Equivalences.Util
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.RupertEquivRupertSet`.
 -/
 
-@[expose] public section
+public section
 open Matrix
 
 theorem rupert_imp_rupert_set {ι : Type} [Finite ι] (v : ι → ℝ³) :

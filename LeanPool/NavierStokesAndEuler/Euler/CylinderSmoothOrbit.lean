@@ -23,7 +23,7 @@ existing Sobolev arrays and a smooth representative; no spatial regularity of
 the solution is assumed separately.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -78,7 +78,7 @@ theorem orbitDerivative_hasDerivAt (u : LiftL2 period) (hu : SmoothOrbit period 
   exact hd
 
 /-- Every finite tree of genuine mixed strong derivatives is constructed. -/
-def spatialJet (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
+@[expose] def spatialJet (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
     SpatialJet period standardDirection q u :=
   match q with
   | 0 => .zero u
@@ -108,6 +108,7 @@ theorem spatialJet_norm (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u
     exact orbitDerivative_translation period u hu (standardDirection i) a
 
 /-- Actual mixed orbit smoothness supplies an existing genuine cylinder Sobolev element. -/
+@[expose]
 def sobolev (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) : SobolevSpace period q :=
   ofJet period (spatialJet period q u hu)
 

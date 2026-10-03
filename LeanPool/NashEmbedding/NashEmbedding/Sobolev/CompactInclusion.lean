@@ -30,7 +30,7 @@ In this file we state the result in the following concrete form:
 any sequence in the unit ball of `ℓ²_(t)` has a subsequence that converges in `ℓ²_(s)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev

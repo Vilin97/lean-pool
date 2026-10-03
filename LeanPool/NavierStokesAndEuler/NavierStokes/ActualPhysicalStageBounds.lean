@@ -34,7 +34,7 @@ velocity is its actual leading angular field. In the far exterior it is the
 physical heat field. The final rate is on the full open-past endpoint filter.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,7 +46,7 @@ namespace NavierStokes.ActualBaseVelocityBounds
 open ProblemStatement SlowBorelBase BaseResidual DiagonalResidual
 
 /-- Endpoint, given by `𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space))`. -/
-noncomputable def endpoint : Filter SpaceTime :=
+@[expose] noncomputable def endpoint : Filter SpaceTime :=
   𝓝[SpacetimeEndpoint.openPast 1] (1, (0 : Space))
 
 theorem endpoint_past : ∀ᶠ z in endpoint, z.1 < 1 := by
@@ -69,6 +69,7 @@ theorem endpoint_q_small {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
   exact ⟨PhysicalWaveSum.physicalQ_pos hh hh1 hz, hq.le⟩
 
 /-- Physical energy, given by `AxisymmetricFields.radialEnergy z.2`. -/
+@[expose]
 noncomputable def physicalEnergy (z : SpaceTime) : ℝ :=
   AxisymmetricFields.radialEnergy z.2
 
@@ -631,7 +632,7 @@ increment bounds it controls every finite prefix with one derivative-loss
 function, independent of the number of correction stages.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -740,6 +741,7 @@ theorem mixed_background {l : Filter SpaceTime} {q : SpaceTime → ℝ}
   exact hc.add hb hU hlU hsCurl hsB
 
 /-- Stage velocity, defined pointwise by `SpatialCurl.spatialCurl (A j) x + B j x`. -/
+@[expose]
 noncomputable def stageVelocity (A B : ℕ → VelocityField) (j : ℕ) : VelocityField :=
   fun x => SpatialCurl.spatialCurl (A j) x + B j x
 
@@ -772,7 +774,7 @@ theorem uncutVelocity_eq_stagePrefix {U : Set SpaceTime} (hU : IsOpen U)
 
 /-- This version only needs a bound for the initialized physical velocity.
 It imposes no growth assumption on the gauge of the initial potential. -/
-noncomputable def initialBackgroundLoss (Lzero LA LB : ℕ → ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def initialBackgroundLoss (Lzero LA LB : ℕ → ℝ) (m : ℕ) : ℝ :=
   max (Lzero m) (max (LA (m + 1)) (LB m))
 
 theorem mixed_background_from_initial {l : Filter SpaceTime} {q : SpaceTime → ℝ}
@@ -822,7 +824,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -843,7 +845,7 @@ noncomputable def seedDirectLoss (h meanAlpha : ℝ) (m : ℕ) : ℝ :=
 
 /-- This loss depends only on fixed initialization data and derivative
 order. It has no later correction-stage parameter. -/
-noncomputable def initialLoss (h waveAlpha waveShift potentialAlpha directAlpha : ℝ)
+@[expose] noncomputable def initialLoss (h waveAlpha waveShift potentialAlpha directAlpha : ℝ)
     (m : ℕ) : ℝ :=
   max (ActualBaseVelocityBounds.heatLoss m)
     (max (seedPotentialLoss h waveAlpha waveShift potentialAlpha (m + 1))
@@ -927,6 +929,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Initialized potential, defined pointwise by `TailGaugePotential.finalPotential H v upper B w
 + potentialIncrement WA MA w`. -/
+@[expose]
 noncomputable def initializedPotential (upper : ℝ) (B : ℕ)
     (WA : WaveData F.data.h D I K (Fin 3))
     (MA : MeanData F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2)) : VelocityField :=
@@ -934,6 +937,7 @@ noncomputable def initializedPotential (upper : ℝ) (B : ℕ)
 
 /-- Literal curl of the initialized potential plus the direct angular
 initialization. The latter is not differentiated as a potential. -/
+@[expose]
 noncomputable def initializedVelocity (upper : ℝ) (B : ℕ)
     (WA : WaveData F.data.h D I K (Fin 3))
     (MA : MeanData F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2))
@@ -1051,6 +1055,13 @@ theorem uncutVelocity_zero_eq_initialized (upper : ℝ) (B : ℕ)
         (directStages MB) 0 =
       initializedVelocity H v upper B (WA 0) (MA 0) (MB 0) := by
   rw [MixedFiniteBackground.uncutVelocity_zero]
+  change (fun x => SpatialCurl.spatialCurl
+      (potentialStages (TailGaugePotential.finalPotential H v upper B) WA MA 0) x +
+      (directStages MB 0) x) =
+    (fun x => SpatialCurl.spatialCurl
+      (initializedPotential H v upper B (WA 0) (MA 0)) x +
+      (MB 0).family.angularField x)
+  rw [potentialStages_zero]
   rfl
 
 /-- Direct input for `MixedFiniteBackground.mixed_background_from_initial`,
@@ -1142,7 +1153,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1152,6 +1163,7 @@ open Set Function Filter ProblemStatement DiagonalResidual
 open scoped Topology ContDiff BigOperators
 
 /-- Region, given by `PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 2) 2`. -/
+@[expose]
 noncomputable def region (h : ℝ) : Set PhysicalGraphBounds.Plane :=
   PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 2) 2
 
@@ -1186,7 +1198,7 @@ structure MeanInput (h degree : ℝ) where
 
 /-- Package the existing moving-field and native-class theorems without
 changing the supplied coherent physical field. -/
-noncomputable def MeanInput.ofMoving {h degree a b α : ℝ} {N Δ : ℕ}
+@[expose] noncomputable def MeanInput.ofMoving {h degree a b α : ℝ} {N Δ : ℕ}
     (R : LocalSignedRequest.SlowRegion (2 * h)) (hR : R.carrier = region h)
     (M : PhysicalMeanJetBounds.CoherentFamily h degree N Δ (region h) ℝ)
     (hN : 4 ≤ N) (ha : 0 < a) (hab : a < b)
@@ -1312,6 +1324,7 @@ variable {h : ℝ}
   [NormedAddCommGroup DS] [NormedSpace ℝ DS] {IP KP IS KS : Type*}
 
 /-- The four actual potential contributions of one cycle. -/
+@[expose]
 noncomputable def potentialIncrement
     (WP : PhysicalStageBounds.WaveData h DP IP KP (Fin 3))
     (WS : PhysicalStageBounds.WaveData h DS IS KS (Fin 3))
@@ -1320,6 +1333,7 @@ noncomputable def potentialIncrement
 
 /-- Pressure increment, defined pointwise by `WP.pressure w + WS.pressure w + MP.family.field
 w`. -/
+@[expose]
 noncomputable def pressureIncrement
     (WP : PhysicalStageBounds.WaveData h DP IP KP Unit)
     (WS : PhysicalStageBounds.WaveData h DS IS KS Unit)
@@ -1457,15 +1471,15 @@ variable {h : ℝ}
 
 /-- Potential, given by `potentialIncrement (D.particularPotential k) (D.signedPotential k)
 (D.temporal k) (D.rank k)`. -/
-noncomputable def potential (k : ℕ) : VelocityField :=
+@[expose] noncomputable def potential (k : ℕ) : VelocityField :=
   potentialIncrement (D.particularPotential k) (D.signedPotential k) (D.temporal k) (D.rank k)
 
 /-- Direct, given by `(D.angular k).family.angularField`. -/
-noncomputable def direct (k : ℕ) : VelocityField := (D.angular k).family.angularField
+@[expose] noncomputable def direct (k : ℕ) : VelocityField := (D.angular k).family.angularField
 
 /-- Pressure field, given by `pressureIncrement (D.particularPressure k) (D.signedPressure k)
 (D.pressure k)`. -/
-noncomputable def pressureField (k : ℕ) : PressureField :=
+@[expose] noncomputable def pressureField (k : ℕ) : PressureField :=
   pressureIncrement (D.particularPressure k) (D.signedPressure k) (D.pressure k)
 
 /-- Cycle `k` contributes physical stage `k+1`. These are native exponent
@@ -1663,6 +1677,7 @@ variable {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D] {I K : 
 
 /-- Initial increment, defined pointwise by `W.vector w + MT.family.angularField w +
 MR.family.angularField w`. -/
+@[expose]
 noncomputable def initialIncrement (W : PhysicalStageBounds.WaveData h D I K (Fin 3))
     (MT MR : MeanInput h (CoordinateAlgebra.A h - 1 / 2)) : VelocityField :=
   fun w => W.vector w + MT.family.angularField w + MR.family.angularField w
@@ -1725,6 +1740,7 @@ theorem initialIncrement_rate (W : PhysicalStageBounds.WaveData h D I K (Fin 3))
 
 /-- The finite pressure inserted at initialization, apart from the actual
 base pressure. Both terms retain their original native class exponents. -/
+@[expose]
 noncomputable def initialPressureIncrement (W : PhysicalStageBounds.WaveData h D I K Unit)
     (M : MeanInput h (2 * CoordinateAlgebra.A h)) : PressureField :=
   fun w => W.pressure w + M.family.field w
@@ -1799,6 +1815,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Initial potential, defined pointwise by `TailGaugePotential.finalPotential H v upper B w +
 initialIncrement WA MT MR w`. -/
+@[expose]
 noncomputable def initialPotential (upper : ℝ) (B : ℕ)
     (WA : PhysicalStageBounds.WaveData F.data.h D I K (Fin 3))
     (MT MR : MeanInput F.data.h (CoordinateAlgebra.A F.data.h - 1 / 2)) : VelocityField :=
@@ -2040,32 +2057,91 @@ open CorrectionStep CorrectionState
 
 /-- The constructed initialization families, with their proved native
 classes and common band choice. No native estimate is left as an input. -/
-noncomputable def actualInitialTemporalInput (B N0 N : ℕ) (hN : 4 ≤ N) :
-    MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
-  MeanInput.ofMoving standardRegion rfl (initialTemporalFamily B N0 N) hN
+@[expose] noncomputable def actualInitialTemporalInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+    MeanInput h (CoordinateAlgebra.A h - 1 / 2) := by
+  have hInner : commonGauge.radial.inner = PrimaryTargetBounds.leftRadius nominal := by rfl
+  have hOuter : commonGauge.radial.outer = PrimaryTargetBounds.rightRadius nominal := by rfl
+  have hNative : (initialTemporalFamily B N0 N).native = initialTemporalScalar B N0 := by rfl
+  have hMoving : GaugeMomentBalances.MovingField standardRegion
+      (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
+      (initialTemporalFamily B N0 N).native := by
+    simpa only [hInner, hOuter, hNative] using initialTemporal_moving B N0
+  have hJets : PhysicalMeanJetBounds.NativeJets N standardRegion.carrier
+      (h * (1 - ChartScales.kappa)) (initialTemporalFamily B N0 N).native :=
+    initialTemporal_nativeJets B N0 N (by omega)
+  exact MeanInput.ofMoving (h := h) (degree := CoordinateAlgebra.A h - 1 / 2)
+    (a := PrimaryTargetBounds.leftRadius nominal)
+    (b := PrimaryTargetBounds.rightRadius nominal) (α := 1 - ChartScales.kappa)
+    (N := N) (Δ := CorrectionInitialization.CommonWindow.gap h)
+    standardRegion rfl (initialTemporalFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
-    (initialTemporal_moving B N0) (initialTemporal_nativeJets B N0 N (by omega))
+    hMoving hJets
 
 /-- Actual initial rank input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualInitialRankInput (B N0 N : ℕ) (hN : 4 ≤ N) :
-    MeanInput h (CoordinateAlgebra.A h - 1 / 2) :=
-  MeanInput.ofMoving standardRegion rfl (initialRankFamily B N0 N) hN
+@[expose] noncomputable def actualInitialRankInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+    MeanInput h (CoordinateAlgebra.A h - 1 / 2) := by
+  have hInner : commonGauge.radial.inner = PrimaryTargetBounds.leftRadius nominal := by rfl
+  have hOuter : commonGauge.radial.outer = PrimaryTargetBounds.rightRadius nominal := by rfl
+  have hNative : (initialRankFamily B N0 N).native = initialRankScalar B N0 := by rfl
+  have hMoving : GaugeMomentBalances.MovingField standardRegion
+      (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
+      (initialRankFamily B N0 N).native := by
+    simpa only [hInner, hOuter, hNative] using initialRank_moving B N0
+  have hJets : PhysicalMeanJetBounds.NativeJets N standardRegion.carrier
+      (h * (1 - ChartScales.kappa)) (initialRankFamily B N0 N).native :=
+    initialRank_nativeJets B N0 N (by omega)
+  exact MeanInput.ofMoving (h := h) (degree := CoordinateAlgebra.A h - 1 / 2)
+    (a := PrimaryTargetBounds.leftRadius nominal)
+    (b := PrimaryTargetBounds.rightRadius nominal) (α := 1 - ChartScales.kappa)
+    (N := N) (Δ := CorrectionInitialization.CommonWindow.gap h)
+    standardRegion rfl (initialRankFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
-    (initialRank_moving B N0) (initialRank_nativeJets B N0 N (by omega))
+    hMoving hJets
 
 /-- Actual initial angular input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualInitialAngularInput (B N0 N : ℕ) (hN : 4 ≤ N) :
-    MeanInput h (CoordinateAlgebra.A h) :=
-  MeanInput.ofMoving standardRegion rfl (initialAngularFamily B N0 N) hN
+@[expose] noncomputable def actualInitialAngularInput (B N0 N : ℕ) (hN : 4 ≤ N) :
+    MeanInput h (CoordinateAlgebra.A h) := by
+  have hInner : commonGauge.radial.inner = PrimaryTargetBounds.leftRadius nominal := by rfl
+  have hOuter : commonGauge.radial.outer = PrimaryTargetBounds.rightRadius nominal := by rfl
+  have hNative : (initialAngularFamily B N0 N).native =
+      (ActualInitialCoherence.initialized B N0).mean.angular := by rfl
+  have hMoving : GaugeMomentBalances.MovingField standardRegion
+      (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
+      (initialAngularFamily B N0 N).native := by
+    simpa only [hInner, hOuter, hNative] using (initial_mean_moving B N0).angular
+  have hJets : PhysicalMeanJetBounds.NativeJets N standardRegion.carrier
+      (h * (9 / 10)) (initialAngularFamily B N0 N).native :=
+    initialAngular_nativeJets B N0 N (by omega)
+  exact MeanInput.ofMoving (h := h) (degree := CoordinateAlgebra.A h)
+    (a := PrimaryTargetBounds.leftRadius nominal)
+    (b := PrimaryTargetBounds.rightRadius nominal) (α := 9 / 10)
+    (N := N) (Δ := CorrectionInitialization.CommonWindow.gap h)
+    standardRegion rfl (initialAngularFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
-    (initial_mean_moving B N0).angular (initialAngular_nativeJets B N0 N (by omega))
+    hMoving hJets
 
 /-- Actual initial pressure input, constructed using `MeanInput.ofMoving`. -/
+@[expose]
 noncomputable def actualInitialPressureInput (B N0 N : ℕ) (hN : 4 ≤ N) :
-    MeanInput h (2 * CoordinateAlgebra.A h) :=
-  MeanInput.ofMoving standardRegion rfl (initialPressureFamily B N0 N) hN
+    MeanInput h (2 * CoordinateAlgebra.A h) := by
+  have hInner : commonGauge.radial.inner = PrimaryTargetBounds.leftRadius nominal := by rfl
+  have hOuter : commonGauge.radial.outer = PrimaryTargetBounds.rightRadius nominal := by rfl
+  have hNative : (initialPressureFamily B N0 N).native =
+      (ActualInitialCoherence.initialized B N0).pressure := by rfl
+  have hMoving : GaugeMomentBalances.MovingField standardRegion
+      (PrimaryTargetBounds.leftRadius nominal) (PrimaryTargetBounds.rightRadius nominal)
+      (initialPressureFamily B N0 N).native := by
+    simpa only [hInner, hOuter, hNative] using initial_pressure_moving B N0
+  have hJets : PhysicalMeanJetBounds.NativeJets N standardRegion.carrier
+      (h * (9 / 10)) (initialPressureFamily B N0 N).native :=
+    initialPressure_nativeJets B N0 N (by omega)
+  exact MeanInput.ofMoving (h := h) (degree := 2 * CoordinateAlgebra.A h)
+    (a := PrimaryTargetBounds.leftRadius nominal)
+    (b := PrimaryTargetBounds.rightRadius nominal) (α := 9 / 10)
+    (N := N) (Δ := CorrectionInitialization.CommonWindow.gap h)
+    standardRegion rfl (initialPressureFamily B N0 N) hN
     (PrimaryTargetBounds.leftRadius_pos nominal) (PrimaryTargetBounds.radii_ordered nominal)
-    (initial_pressure_moving B N0) (initialPressure_nativeJets B N0 N (by omega))
+    hMoving hJets
 
 @[simp] theorem actualInitialTemporalInput_family (B N0 N : ℕ) (hN : 4 ≤ N) :
     (actualInitialTemporalInput B N0 N hN).family = initialTemporalFamily B N0 N := rfl
@@ -2101,7 +2177,7 @@ variable {B N0 N : ℕ} {p : ℕ → CycleParameters (ActualInitialization.Index
 /-- These four cycle adapters retain the literal families of the actual
 iterate. Their quantitative hypotheses are native source, debt, or mean
 classes; physical derivative bounds are conclusions of the earlier API. -/
-noncomputable def actualCycleTemporalInput (H : InitialCycleInput B N0 N p)
+@[expose] noncomputable def actualCycleTemporalInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HC : WeightedClasses.MeanClass ActualInitialMean.strip α
       (((p j).afterSigned
@@ -2115,7 +2191,7 @@ noncomputable def actualCycleTemporalInput (H : InitialCycleInput B N0 N p)
     ((initialCycleData H).temporal_moving j) (cycleTemporal_nativeJets H j (by omega) HC)
 
 /-- Actual cycle rank input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualCycleRankInput (H : InitialCycleInput B N0 N p)
+@[expose] noncomputable def actualCycleRankInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HC : WeightedClasses.UnweightedClass ActualInitialMean.slowStrip α
       (CorrectionState.debt (commonContext B)
@@ -2130,7 +2206,7 @@ noncomputable def actualCycleRankInput (H : InitialCycleInput B N0 N p)
     ((initialCycleData H).rank_moving j) (cycleRank_nativeJets H j (by omega) HC)
 
 /-- Actual cycle angular input, constructed using `MeanInput.ofMoving`. -/
-noncomputable def actualCycleAngularInput (H : InitialCycleInput B N0 N p)
+@[expose] noncomputable def actualCycleAngularInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HT : MeanIncrementBounds.IncrementBounds ActualInitialMean.strip α
       ((p j).temporalIncrement
@@ -2151,7 +2227,7 @@ noncomputable def actualCycleAngularInput (H : InitialCycleInput B N0 N p)
         omega) HT HR)
 
 /-- Actual cycle pressure input as an element of `MeanInput h (2 * CoordinateAlgebra.A h)`. -/
-noncomputable def actualCyclePressureInput (H : InitialCycleInput B N0 N p)
+@[expose] noncomputable def actualCyclePressureInput (H : InitialCycleInput B N0 N p)
     (j : ℕ) (hN : 4 ≤ N) {α : ℝ}
     (HC : WeightedClasses.MeanClass ActualInitialMean.strip α
       ((CycleState.iterate p (commonContext B) (ActualInitialization.initialCycleState B N0)

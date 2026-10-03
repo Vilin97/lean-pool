@@ -20,7 +20,7 @@ are the same independent definitions, and the bridge lemmas identify their
 constants with the ones used by the full EGZ proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

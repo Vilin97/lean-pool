@@ -40,7 +40,7 @@ No compactness theorem for measures (Prokhorov's theorem) is proved or used, and
 convergence statement is made here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

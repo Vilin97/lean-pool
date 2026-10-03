@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -44,6 +44,7 @@ abbrev Block := N1000000WeakDuality.Block
 Scaled compression hypothesis: each reduced PSD block, after multiplying by its positive scale
 factor, is a congruence transform of `corrAvgMatrix f`.
 -/
+@[expose]
 def CompressionHypScaled : Prop :=
   ∃ B : Block → Matrix V (Fin 3) Q,
     ∀ f : Coloring n, ∀ r : Block,

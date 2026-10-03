@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryH3Products
 
 /-! The actual ordinary H³ transport commutator, without derivative loss. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,6 +34,7 @@ theorem advection_directional (A B : SmoothL2Field Space) (v : Space) :
 
 /-- Transport commutator, given by `fieldSub (wordField (advectionField A B) w) (advectionField
 A (wordField B w))`. -/
+@[expose]
 def transportCommutator (A B : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3) : SmoothL2Field
     Space :=
   fieldSub (wordField (advectionField A B) w) (advectionField A (wordField B w))

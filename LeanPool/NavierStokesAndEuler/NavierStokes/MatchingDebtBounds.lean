@@ -16,7 +16,7 @@ estimated separately.  All parameter derivatives below are actual derivatives
 of the constructed fields and their moment integrals.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -153,6 +153,7 @@ theorem extendField_slice_eventuallyEq {scale X eta : ℝ} (hscale : 0 < scale)
 /-! ## The actual five-row vector and its jets -/
 
 /-- Reset vector as an element of `Debt`. -/
+@[expose]
 noncomputable def resetVector (R r b : ℝ) (u f : Field) (Gi A : ℝ → ℝ)
     (eta : ℝ) : Debt :=
   ![ShapeTransition.resetDebtM u Gi r b eta,
@@ -275,6 +276,7 @@ noncomputable def extendedF : Field :=
     (extendParameter c.initialShape) (extendField A.scale c.seedF))
 
 /-- Extended debt, constructed using `resetVector`. -/
+@[expose]
 noncomputable def extendedDebt : ℝ → Debt :=
   resetVector c.radius c.separation NominalProfile.matchFraction (extendedU c) (extendedF c)
     (extendParameter c.initialAxial) (NominalProfile.idealAmplitude F)
@@ -554,6 +556,7 @@ theorem normalized_actual_debt_bound {F : OutgoingProfile.Profile} {A : NominalP
 
 /-- Small control, given by `c.reference.SmallLogControl (Icc (-1 : ℝ) 1) N eps c.activationTime
 c.kappa c.axialWidth c.angularWidth`. -/
+@[expose]
 noncomputable def SmallControl {F : OutgoingProfile.Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (N : ℕ) (eps : ℝ) : Prop :=
   c.reference.SmallLogControl (Icc (-1 : ℝ) 1) N eps

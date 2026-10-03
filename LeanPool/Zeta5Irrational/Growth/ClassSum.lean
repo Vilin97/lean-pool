@@ -31,7 +31,7 @@ nine interval counts. Each count is within `5/2` of `p` times its continuous ana
 We also prove `SX p X c = 2 ⌊X/p⌋ + a_c(X mod p)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -46,19 +46,19 @@ def ivHi (m v : ℕ) : Fin 3 → ℕ :=
   ![m, v, m]
 
 /-- The continuous intervals. -/
-noncomputable def cvLo (f : ℝ) : Fin 3 → ℝ :=
+@[expose] noncomputable def cvLo (f : ℝ) : Fin 3 → ℝ :=
   ![0, 0, 1 - f]
 
 /-- Upper endpoints of the continuous intervals corresponding to `ivHi`. -/
-noncomputable def cvHi (f : ℝ) : Fin 3 → ℝ :=
+@[expose] noncomputable def cvHi (f : ℝ) : Fin 3 → ℝ :=
   ![1 / 2, f, 1 / 2]
 
 /-- The coefficients of `h` in the basis `1, A, E`. -/
-def bcoef (h : ℕ → ℝ) : Fin 3 → ℝ :=
+@[expose] def bcoef (h : ℕ → ℝ) : Fin 3 → ℝ :=
   ![h 0, h 1 - h 0, h 2 - h 1]
 
 /-- `a(c) = [c ≤ v] + [p - v ≤ c]`. -/
-def aCnt (p v c : ℕ) : ℕ :=
+@[expose] def aCnt (p v c : ℕ) : ℕ :=
   (if c ≤ v then 1 else 0) + (if p - v ≤ c then 1 else 0)
 
 /-- The interval indicator. -/
@@ -125,7 +125,7 @@ theorem class_sum {p m v v' : ℕ} (hm : 2 * m + 1 = p) (hv : v < p) (hv' : v' <
   split_ifs <;> simp_all
 
 /-- The continuous analogue of an interval count. -/
-noncomputable def ccount (f g : ℝ) (i j : Fin 3) : ℝ :=
+@[expose] noncomputable def ccount (f g : ℝ) (i j : Fin 3) : ℝ :=
   max 0 (min (min (cvHi f i) (cvHi g j)) (1 / 2) - max (max (cvLo f i) (cvLo g j)) 0)
 
 lemma cast_trunc_sub (a b : ℕ) : ((a - b : ℕ) : ℝ) = max 0 ((a : ℝ) - b) := by

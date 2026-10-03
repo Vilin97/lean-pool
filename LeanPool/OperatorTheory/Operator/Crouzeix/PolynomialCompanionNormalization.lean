@@ -37,7 +37,7 @@ polynomial on an infinite compact control set.
   normalization.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 

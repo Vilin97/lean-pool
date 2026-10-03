@@ -18,7 +18,7 @@ criterion is Lemma 3.1(2) of the paper, stated without choosing an effective
 representative.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -26,6 +26,7 @@ open Utilities
 
 /-- The support complex of `D`: vertices whose one-chip deletion is still
 winnable (equivalently, has nonnegative rank). -/
+@[expose]
 def rankSupport (G : CFGraph) (D : CFDiv G) : Set G.V :=
   {x | 0 ≤ rank G (D - oneChip x)}
 

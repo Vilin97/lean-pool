@@ -40,7 +40,7 @@ zero residues vanish along null-homologous curves.
   PV residue sum convergence for null-homologous curves
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory intervalIntegral
 

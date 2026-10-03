@@ -19,7 +19,7 @@ Cartesian angular representation.  Native annulus support gives a positive
 inner radius and the common shrinking outer support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -182,6 +182,7 @@ theorem coefficient_vanishes (D : PhysicalMeanJetBounds.CoherentFamily h degree 
 
 /-- Coherent angular data, bundling `scalar`, `smooth`, `inner`, `inner_continuous` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def coherentAngularData (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ U ℝ)
     (hh : 0 < h) (hh1 : h < 1 / 2) {a b : ℝ} (ha : 0 < a) (hab : a < b)
     (hU : IsOpen U)
@@ -228,6 +229,7 @@ theorem nativeSupport_of_moving
   fun n _ z hz hne => Hm.supported n z hz hne
 
 /-- Actual angular data, constructed using `coherentAngularData`. -/
+@[expose]
 noncomputable def actualAngularData
     (D : PhysicalMeanJetBounds.CoherentFamily h degree N Δ standardRegion.carrier ℝ)
     (Hm : GaugeMomentBalances.MovingField standardRegion commonGauge.radial.inner

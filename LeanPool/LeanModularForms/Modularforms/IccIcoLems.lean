@@ -21,7 +21,7 @@ import Mathlib.Tactic.ContinuousFunctionalCalculus
 /-! # IccIcoLems -/
 
 
-@[expose] public section
+public section
 
 open TopologicalSpace Set
   Metric Filter Function Complex

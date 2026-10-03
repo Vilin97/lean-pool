@@ -46,4 +46,4 @@ Tags: topology
 MSC: 57N99, 54F65, 68V20
 -/
 
-@[expose] public section
+public section

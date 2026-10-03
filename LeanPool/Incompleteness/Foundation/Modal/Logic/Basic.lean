@@ -14,7 +14,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 

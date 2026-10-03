@@ -16,7 +16,7 @@ This file packages the successor clause independently of the transfinite
 recursion.  The new index is the top point of `WithTop ι`.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -29,6 +29,7 @@ variable {r L : ℝ} (C : ProtectedChain (ι := ι) r L)
 
 /-- The coherent systems of a chain give a protected link between any two
 comparable stages. -/
+@[expose]
 noncomputable def link (i j : ι) (hij : i ≤ j) :
     ProtectedLink (C.stage i) (C.stage j) L where
   sourceEmbedding := C.sourceSystem.embed i j hij
@@ -45,6 +46,7 @@ noncomputable def link (i j : ι) (hij : i ≤ j) :
 variable {C}
 
 /-- The stage family obtained by adjoining a new top stage. -/
+@[expose]
 noncomputable def appendStage
     (T : ProtectedTransition (C.stage ⊤) L) :
     WithTop ι → ProtectedStage.{u} r
@@ -52,6 +54,7 @@ noncomputable def appendStage
   | (i : ι) => C.stage i
 
 /-- Links in the chain with one new top stage. -/
+@[expose]
 noncomputable def appendLink
     (T : ProtectedTransition (C.stage ⊤) L)
     (i j : WithTop ι) (hij : i ≤ j) :
@@ -83,6 +86,7 @@ theorem appendLink_top_top
     appendLink T ⊤ ⊤ le_rfl = ProtectedLink.refl T.next := rfl
 
 /-- The coherent protected chain after one successor transition. -/
+@[expose]
 noncomputable def append
     (T : ProtectedTransition (C.stage ⊤) L) :
     ProtectedChain (ι := WithTop ι) r L where

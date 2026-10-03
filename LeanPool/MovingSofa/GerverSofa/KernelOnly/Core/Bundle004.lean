@@ -15,7 +15,7 @@ public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 * `GerverSofa.KernelOnly.Foundation.Batch002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertGerverNumericsCore`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ rational data already used by `ExactReplay`.  This avoids exposing private
 helpers during simplification.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -71,9 +71,11 @@ open LeanCert.Core
 open LeanCert.Engine
 
 /-- Construct an exact rational from an integer numerator and natural denominator. -/
+@[expose]
 def q (n : Int) (d : Nat) : ℚ := (n : ℚ) / (d : ℚ)
 
 /-- The rational preconditioner table for the four reduced equations. -/
+@[expose]
 def reducedCData : List (List ℚ) := [
   [q (-6807128249614081174405751646233895883477) 10000000000000000000000000000000000000000, q
     (-1668645298254898823756872685901589912999) 5000000000000000000000000000000000000000, q
@@ -94,6 +96,7 @@ def reducedCData : List (List ℚ) := [
 ]
 
 /-- The rational preconditioner table for the twenty-two full equations. -/
+@[expose]
 def fullCData : List (List ℚ) := [
   [q 97524664435861749 500000000000000000000000000000000000, q 0 1, q 0 1, q 0 1, q
     101771747759019027 100000000000000000, q 1 1, q 0 1, q 63813611575753437 50000000000000000, q
@@ -263,16 +266,19 @@ def fullCData : List (List ℚ) := [
 ]
 
 /-- Interpret rational row lists as a square matrix, using zero for missing entries. -/
+@[expose]
 def listMatrix {n : Nat} (rows : List (List ℚ)) :
     Matrix (Fin n) (Fin n) ℚ :=
   fun i j => ExactReplay.getQ (ExactReplay.getRow rows i.1) j.1
 
 /-- The rational midpoint of a selected interval coordinate. -/
+@[expose]
 def boxMid (box : List RatInterval) (i : Nat) : ℚ :=
   let z := ExactReplay.getI box i
   (z.lo + z.hi) / 2
 
 /-- Half the width of a selected rational interval coordinate. -/
+@[expose]
 def boxRad (box : List RatInterval) (i : Nat) : ℚ :=
   let z := ExactReplay.getI box i
   (z.hi - z.lo) / 2
@@ -288,6 +294,7 @@ def normalizeToBox {n : Nat} (box : List RatInterval)
   fun i => (x i - (boxMid box i.1 : ℝ)) / (boxRad box i.1 : ℝ)
 
 /-- The coordinate box with interval `[-1, 1]` in every dimension. -/
+@[expose]
 def unitBox {n : Nat} : Fin n → IntervalRat :=
   fun _ =>
     { lo := -1
@@ -295,19 +302,23 @@ def unitBox {n : Nat} : Fin n → IntervalRat :=
       le := by norm_num }
 
 /-- The rational origin used as the normalized Newton center. -/
+@[expose]
 def zeroCenter {n : Nat} : Fin n → ℚ := fun _ => 0
 
 /-- Rescale each preconditioner row by the inverse box radius. -/
+@[expose]
 def scaledPreconditioner {n : Nat}
     (box : List RatInterval) (rows : List (List ℚ)) :
     Matrix (Fin n) (Fin n) ℚ :=
   fun i j => (boxRad box i.1)⁻¹ * listMatrix rows i j
 
 /-- The preconditioner for the normalized four-dimensional system. -/
+@[expose]
 def reducedY : Matrix (Fin 4) (Fin 4) ℚ :=
   scaledPreconditioner ExactReplay.reducedInputBox reducedCData
 
 /-- The preconditioner for the normalized twenty-two-dimensional system. -/
+@[expose]
 def fullY : Matrix (Fin 22) (Fin 22) ℚ :=
   scaledPreconditioner ExactReplay.fullInputBox fullCData
 
@@ -327,6 +338,7 @@ def reducedNormalize : (Fin 4 → ℝ) → Fin 4 → ℝ :=
 The legacy exact bounds are ~5.2e-13 (4D) and ~8.6e-11 (22D), so `1/100`
 leaves many orders of magnitude of slack while keeping the normalized self-map
 well inside the unit box. -/
+@[expose]
 def qTarget : ℚ := 1 / 100
 
 end PartALeanCert
@@ -356,7 +368,7 @@ matrix norm machinery, Newton map, and contraction theorem unchanged.
 No interval arithmetic is reimplemented here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -383,6 +395,7 @@ inductive ADConstSupported : Expr → Prop where
   | namedConst (c : MathConst) : ADConstSupported (.namedConst c)
 
 /-- Computable recognition of the exact fragment used by the Gerver models. -/
+@[expose]
 def checkADConstSupported : Expr → Bool
   | .const _ | .var _ | .namedConst _ => true
   | .add a b | .mul a b => checkADConstSupported a && checkADConstSupported b
@@ -746,7 +759,7 @@ named mathematical constants.  `LeanCertNamedConstAD` supplies the one
 missing soundness case for `namedConst` (derivative zero).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -760,34 +773,34 @@ open LeanCert.Engine
 abbrev E := Expr
 
 /-- A rational constant expression. -/
-def ec (r : ℚ) : E := .const r
+@[expose] def ec (r : ℚ) : E := .const r
 /-- An indexed variable expression. -/
-def ev (i : Nat) : E := .var i
+@[expose] def ev (i : Nat) : E := .var i
 /-- Construct the sum of two expressions. -/
-def eadd (a b : E) : E := .add a b
+@[expose] def eadd (a b : E) : E := .add a b
 /-- Construct the negation of an expression. -/
-def eneg (a : E) : E := .neg a
+@[expose] def eneg (a : E) : E := .neg a
 /-- Construct a difference using addition and negation. -/
-def esub (a b : E) : E := .add a (.neg b)
+@[expose] def esub (a b : E) : E := .add a (.neg b)
 /-- Construct the product of two expressions. -/
-def emul (a b : E) : E := .mul a b
+@[expose] def emul (a b : E) : E := .mul a b
 /-- Multiply an expression by a rational constant. -/
-def escale (r : ℚ) (a : E) : E := .mul (.const r) a
+@[expose] def escale (r : ℚ) (a : E) : E := .mul (.const r) a
 /-- Apply sine in the expression syntax. -/
-def esin (a : E) : E := .sin a
+@[expose] def esin (a : E) : E := .sin a
 /-- Apply cosine in the expression syntax. -/
-def ecos (a : E) : E := .cos a
+@[expose] def ecos (a : E) : E := .cos a
 /-- The named π constant in the expression syntax. -/
-def epi : E := .namedConst .pi
+@[expose] def epi : E := .namedConst .pi
 
 /-- An expression for a box coordinate in terms of its normalized variable. -/
-def scaledVar (box : List RatInterval) (i : Nat) : E :=
+@[expose] def scaledVar (box : List RatInterval) (i : Nat) : E :=
   eadd (ec (boxMid box i)) (emul (ec (boxRad box i)) (ev i))
 
 /-! ## Reduced 4D -/
 
 /-- The four reduced equations encoded as evaluator expressions. -/
-def reducedExprList : List E :=
+@[expose] def reducedExprList : List E :=
   let a := scaledVar ExactReplay.reducedInputBox 0
   let b := scaledVar ExactReplay.reducedInputBox 1
   let phi := scaledVar ExactReplay.reducedInputBox 2
@@ -841,32 +854,32 @@ def reducedExprList : List E :=
   List.cons f1 (List.cons f2 (List.cons f3 (List.cons f4 List.nil)))
 
 /-- Select an equation from the reduced four-dimensional expression system. -/
-def reducedExpr (i : Fin 4) : E :=
+@[expose] def reducedExpr (i : Fin 4) : E :=
   reducedExprList.getD i.1 (ec 0)
 
 /-! ## Direct 22D -/
 
 /-- A full Romik parameter encoded as a normalized variable expression. -/
-def fv (i : Nat) : E := scaledVar ExactReplay.fullInputBox i
+@[expose] def fv (i : Nat) : E := scaledVar ExactReplay.fullInputBox i
 
 /-- The expression for the first switching angle φ. -/
-def phiE : E := fv 20
+@[expose] def phiE : E := fv 20
 /-- The expression for the second switching angle θ. -/
-def thetaE : E := fv 21
+@[expose] def thetaE : E := fv 21
 /-- The expression for the reflected angle `π/2 - θ`. -/
-def etaE : E := esub (escale (1 / 2) epi) thetaE
+@[expose] def etaE : E := esub (escale (1 / 2) epi) thetaE
 /-- The expression for the reflected angle `π/2 - φ`. -/
-def tauE : E := esub (escale (1 / 2) epi) phiE
+@[expose] def tauE : E := esub (escale (1 / 2) epi) phiE
 
 /-- Rotate a pair of coordinate expressions by an angle expression. -/
-def rotE (t z1 z2 : E) : E × E :=
+@[expose] def rotE (t z1 z2 : E) : E × E :=
   let ct := ecos t
   let st := esin t
   (esub (emul ct z1) (emul st z2),
    eadd (emul st z1) (emul ct z2))
 
 /-- Encode a selected closed path branch as two coordinate expressions. -/
-def pathPieceE (j : Nat) (t : E) : E × E :=
+@[expose] def pathPieceE (j : Nat) (t : E) : E × E :=
   let one := ec 1
   let half := ec (1 / 2)
   let quarter := ec (1 / 4)
@@ -895,7 +908,7 @@ def pathPieceE (j : Nat) (t : E) : E × E :=
   (eadd rr.1 data.2.2.1, eadd rr.2 data.2.2.2)
 
 /-- Encode the body-frame velocity of a selected path branch. -/
-def alphaBetaE (j : Nat) (t : E) : E × E :=
+@[expose] def alphaBetaE (j : Nat) (t : E) : E × E :=
   let one := ec 1
   let half := ec (1 / 2)
   let quarter := ec (1 / 4)
@@ -924,12 +937,12 @@ def alphaBetaE (j : Nat) (t : E) : E × E :=
                  (emul (escale 2 (fv 19)) st)) half)
 
 /-- Encode the world-frame derivative of a selected path branch. -/
-def pathPrimeE (j : Nat) (t : E) : E × E :=
+@[expose] def pathPrimeE (j : Nat) (t : E) : E × E :=
   let ab := alphaBetaE j t
   rotE t ab.1 ab.2
 
 /-- The twenty-two full equations encoded as evaluator expressions. -/
-def fullExprList : List E :=
+@[expose] def fullExprList : List E :=
   let halfPi := escale (1 / 2) epi
   let quarterPi := escale (1 / 4) epi
   let one := ec 1
@@ -966,7 +979,7 @@ def fullExprList : List E :=
     List.cons (esub lhs.1 be.1) (List.cons (esub lhs.2 be.2) List.nil)
 
 /-- Select one equation from the full Romik expression system. -/
-def fullExpr (i : Fin 22) : E :=
+@[expose] def fullExpr (i : Fin 22) : E :=
   fullExprList.getD i.1 (ec 0)
 
 /-- Purely syntactic support checks for the Gerver expression fragment. -/
@@ -997,7 +1010,7 @@ section
 # Gerver Sofa / Kernel Only / Lean Cert Gerver Correspondence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1666,7 +1679,7 @@ this one finite sum by structural recursion on `Fin n`.  Mathlib's existing
 `Fin.sum_univ_succ` is the semantic bridge to the ordinary real finite sum.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1678,6 +1691,7 @@ open LeanCert.Engine
 
 /-- A finite interval sum that reduces by structural recursion, with no
 `AddCommMonoid IntervalRat` instance involved in computation. -/
+@[expose]
 def kernelIntervalFinSum : {n : Nat} → (Fin n → IntervalRat) → IntervalRat
   | 0, _ => IntervalRat.singleton 0
   | n + 1, f =>
@@ -1703,6 +1717,7 @@ theorem mem_kernelIntervalFinSum :
           (fun j => h j.succ))
 
 /-- Kernel-reducible exact interval matrix-vector product. -/
+@[expose]
 def kernelIntervalRatMatVec {n : Nat}
     (Y : Matrix (Fin n) (Fin n) ℚ)
     (v : Fin n → IntervalRat) : Fin n → IntervalRat :=
@@ -1736,6 +1751,7 @@ its named-constant machinery does not always normalize far enough for closed
 `decide +kernel` comparisons.  Reusing the project's already-certified exact
 rational π endpoints removes only that reduction bottleneck; it does not
 change the represented real constant or weaken any enclosure. -/
+@[expose]
 def kernelPiInterval : IntervalRat :=
   { lo := ExactReplay.piI.lo
     hi := ExactReplay.piI.hi
@@ -1750,6 +1766,7 @@ theorem real_pi_mem_kernelPiInterval : Real.pi ∈ kernelPiInterval := by
 /-- Named constants for the point evaluator.  π takes the specialized
 kernel-reducible path; every other LeanCert named constant keeps LeanCert's
 public certified interval unchanged. -/
+@[expose]
 def kernelNamedConstInterval (c : MathConst) : IntervalRat :=
   if c = .pi then kernelPiInterval else c.interval
 
@@ -1757,6 +1774,7 @@ def kernelNamedConstInterval (c : MathConst) : IntervalRat :=
 Unsupported constructors are deliberately mapped to `{0}`; the soundness
 lemma below is only stated for `ADConstSupported`, whose constructors are all
 handled explicitly. -/
+@[expose]
 def kernelPointEvalCore (e : Expr) (ρ : IntervalEnv)
     (depth : Nat) : IntervalRat :=
   match e with
@@ -1826,10 +1844,12 @@ exact-rational replay of all
 strictly inside the unit box.  It materially reduces kernel rational size
 compared with depth 27/34 while leaving the Jacobian evaluator and its
 already-passing certificates untouched. -/
+@[expose]
 def kernelCenterTaylorDepth (n : Nat) : Nat :=
   if n ≤ 4 then 20 else 26
 
 /-- Point-value enclosures for a square system at a rational center. -/
+@[expose]
 def pointEvalIntervalsKernel {n : Nat}
     (F : Fin n → Expr) (m : Fin n → ℚ)
     (_cfg : EvalConfig := {}) : Fin n → IntervalRat :=
@@ -1851,6 +1871,7 @@ theorem systemEval_mem_pointEvalIntervalsKernel_const {n : Nat}
     (finEnv_ratCast_mem_pointIntervalEnv m) (kernelCenterTaylorDepth n)
 
 /-- Kernel-reducible version of LeanCert's Newton-center enclosure. -/
+@[expose]
 def kernelNewtonCenterInterval {n : Nat}
     (F : Fin n → Expr) (m : Fin n → ℚ)
     (Y : Matrix (Fin n) (Fin n) ℚ)
@@ -1879,6 +1900,7 @@ theorem newtonMap_center_mem_kernel_const {n : Nat}
 
 /-- Same checked self-map enclosure as before, now with a kernel-reducible
 finite interval sum at the Newton center. -/
+@[expose]
 def imageEnclosureWithQ {n : Nat}
     (F : Fin n → Expr) (X : Fin n → IntervalRat)
     (m : Fin n → ℚ) (Y : Matrix (Fin n) (Fin n) ℚ)
@@ -2084,6 +2106,7 @@ by a kernel proof that the corresponding real system value lies in it.
 -/
 
 /-- Endpoint inclusion between two rational intervals. -/
+@[expose]
 def intervalContained (I J : IntervalRat) : Prop :=
   J.lo ≤ I.lo ∧ I.hi ≤ J.hi
 
@@ -2099,6 +2122,7 @@ theorem mem_of_intervalContained {x : ℝ} {I J : IntervalRat}
 
 /-- Newton-center enclosure from externally supplied, proof-carrying point
 value intervals. -/
+@[expose]
 def kernelNewtonCenterIntervalWithValues {n : Nat}
     (m : Fin n → ℚ) (Y : Matrix (Fin n) (Fin n) ℚ)
     (V : Fin n → IntervalRat) : Fin n → IntervalRat :=
@@ -2124,6 +2148,7 @@ theorem newtonMap_center_mem_kernel_values {n : Nat}
       (fun j => IntervalRat.mem_scale (Y i j) (hV j))
 
 /-- Self-map enclosure built from independently certified center values. -/
+@[expose]
 def imageEnclosureWithValuesQ {n : Nat}
     (X : Fin n → IntervalRat) (m : Fin n → ℚ)
     (Y : Matrix (Fin n) (Fin n) ℚ) (V : Fin n → IntervalRat)
@@ -2256,7 +2281,7 @@ Only shared definitions and lightweight list lemmas live here.
 The expensive 22D kernel checks are split into one Lake module per row.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2267,14 +2292,17 @@ open LeanCert.Core
 open LeanCert.Engine
 
 /-- The default evaluation configuration used for the numerical certificates. -/
+@[expose]
 def cfg : EvalConfig := {}
 
 /-- The interval enclosure of the normalized reduced Newton-map derivative. -/
+@[expose]
 def reducedPJ : Matrix (Fin 4) (Fin 4) IntervalRat :=
   preconditionedJacobian reducedY
     (intervalJacobian reducedExpr (unitBox (n := 4)) cfg)
 
 /-- The interval enclosure of the normalized full Newton-map derivative. -/
+@[expose]
 def fullPJ : Matrix (Fin 22) (Fin 22) IntervalRat :=
   preconditionedJacobian fullY
     (intervalJacobian fullExpr (unitBox (n := 22)) cfg)
@@ -2315,6 +2343,7 @@ leave a large self-map margin.  Each coordinate is checked independently in a
 separate module before it is used by the final contraction theorem.
 -/
 /-- Cached interval evaluations of the full system at the normalized center. -/
+@[expose]
 def fullPointCacheList : List IntervalRat := [
   ⟨q (-1) 100000000000000000000000000000, q 1 100000000000000000000000000000, by norm_num [q]⟩,
   ⟨q (-1) 100000000000000000000000000000, q 1 100000000000000000000000000000, by norm_num [q]⟩,
@@ -2341,15 +2370,18 @@ def fullPointCacheList : List IntervalRat := [
 ]
 
 /-- Select a cached center evaluation of a full-system equation. -/
+@[expose]
 def fullPointCache (i : Fin 22) : IntervalRat :=
   fullPointCacheList.getD i.1 (IntervalRat.singleton 0)
 
 /-- The full Newton image enclosure computed with cached center evaluations. -/
+@[expose]
 def fullImageCachedQ (i : Fin 22) : IntervalRat :=
   imageEnclosureWithValuesQ (unitBox (n := 22)) (zeroCenter (n := 22))
     fullY fullPointCache qTarget i
 
 /-- The reduced Newton image enclosure on the normalized unit box. -/
+@[expose]
 def reducedImageQ (i : Fin 4) : IntervalRat :=
   imageEnclosureWithQ reducedExpr (unitBox (n := 4))
     (zeroCenter (n := 4)) reducedY cfg qTarget i

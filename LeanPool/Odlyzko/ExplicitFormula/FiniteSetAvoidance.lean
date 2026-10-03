@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Measure.Real
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,7 +26,7 @@ open scoped ENNReal
 namespace NumberField.Odlyzko
 
 /-- A finite set avoidance radius on length used in the Odlyzko-bound argument. -/
-def finiteSetAvoidanceRadiusOnLength (L : ℝ) (S : Finset ℝ) : ℝ :=
+@[expose] def finiteSetAvoidanceRadiusOnLength (L : ℝ) (S : Finset ℝ) : ℝ :=
   L / (4 * (S.card + 1))
 
 theorem finiteSetAvoidanceRadiusOnLength_pos {L : ℝ} (hL : 0 < L)

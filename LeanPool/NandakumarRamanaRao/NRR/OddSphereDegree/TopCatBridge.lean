@@ -19,7 +19,7 @@ homeomorphism and categorical isomorphism, and transports continuous maps
 between the models with identity and composition laws.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open CategoryTheory
@@ -36,7 +36,7 @@ theorem topCatSphere_carrier_eq (n : ℕ) :
 /-- `TopCat.sphere n` is homeomorphic to the raw subtype model `Sphere n`.
 The homeomorphism is simply the universe-lift equivalence `Homeomorph.ulift`,
 witnessing that the two models differ only by a `ULift` wrapper. -/
-noncomputable def topCatSphereHomeomorph (n : ℕ) :
+@[expose] noncomputable def topCatSphereHomeomorph (n : ℕ) :
     (TopCat.sphere.{u} n : Type u) ≃ₜ Sphere n :=
   Homeomorph.ulift
 
@@ -48,7 +48,7 @@ carries no mathematical content beyond the universe-lifting `ULift` wrapper.
 Use this to transport `TopCat`-phrased algebraic-topology constructions (e.g.
 categorical (co)homology of `TopCat.sphere n`) onto the library's working model
 `Sphere n`. -/
-noncomputable def topCatSphereIso (n : ℕ) :
+@[expose] noncomputable def topCatSphereIso (n : ℕ) :
     TopCat.sphere.{0} n ≅ TopCat.of (Sphere n) :=
   TopCat.isoOfHomeo (topCatSphereHomeomorph n)
 
@@ -111,7 +111,7 @@ original map through the homeomorphisms
 /-- Transport a continuous map `Sphere n → Sphere m` to a morphism of the
 categorical sphere objects `TopCat.sphere n ⟶ TopCat.sphere m`, by conjugating
 with the bridge isomorphism `topCatSphereIso`. -/
-noncomputable def toTopCatSphereMap {n m : ℕ} (f : C(Sphere n, Sphere m)) :
+@[expose] noncomputable def toTopCatSphereMap {n m : ℕ} (f : C(Sphere n, Sphere m)) :
     TopCat.sphere.{0} n ⟶ TopCat.sphere.{0} m :=
   (topCatSphereIso n).hom ≫ TopCat.ofHom f ≫ (topCatSphereIso m).inv
 

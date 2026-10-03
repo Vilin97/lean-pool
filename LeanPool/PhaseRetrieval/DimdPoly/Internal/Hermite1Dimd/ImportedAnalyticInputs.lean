@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # ImportedAnalyticInputs -/
 
-@[expose] public section
+public section
 
 
 
@@ -29,7 +29,7 @@ noncomputable section
 namespace Hermite1DimdLEAN
 
 /-- `oneDimLift`: one Dim Lift. -/
-def oneDimLift (f : ℂ → ℂ) : CSpace 1 → ℂ := fun z => f (z 0)
+@[expose] def oneDimLift (f : ℂ → ℂ) : CSpace 1 → ℂ := fun z => f (z 0)
 
 private lemma measurable_ofReal_gaussianDensity (d : ℕ) :
     Measurable (fun z : CSpace d => ENNReal.ofReal (gaussianDensity d z)) := by

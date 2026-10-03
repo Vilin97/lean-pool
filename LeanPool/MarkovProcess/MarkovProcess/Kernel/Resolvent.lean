@@ -22,7 +22,7 @@ Main definitions: `SubMarkovKernelSemigroup.kernelResolvent` and
 No conservativity, topology, or finiteness of the resolvent is asserted.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal NNReal
@@ -32,6 +32,7 @@ namespace MarkovProcess.SubMarkovKernelSemigroup
 variable {alpha : Type*} [MeasurableSpace alpha]
 
 /-- The kernel resolvent on nonnegative extended-real observables. -/
+@[expose]
 noncomputable def kernelResolvent (P : SubMarkovKernelSemigroup alpha) (lam : ℝ)
     (f : alpha → ℝ≥0∞) (x : alpha) : ℝ≥0∞ :=
   ∫⁻ t in Ioi (0 : ℝ), ENNReal.ofReal (Real.exp (-lam * t)) *
@@ -39,6 +40,7 @@ noncomputable def kernelResolvent (P : SubMarkovKernelSemigroup alpha) (lam : �
 
 /-- The kernel resolvent on real-valued observables.  Finiteness is established separately for
 bounded observables at positive shifts. -/
+@[expose]
 noncomputable def kernelResolventReal (P : SubMarkovKernelSemigroup alpha) (lam : ℝ)
     (f : alpha → ℝ) (x : alpha) : ℝ :=
   ∫ t in Ioi (0 : ℝ), Real.exp (-lam * t) *

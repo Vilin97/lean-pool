@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Formula
 
 /-! # Subformulas -/
 
-@[expose] public section
+public section
 
 
 

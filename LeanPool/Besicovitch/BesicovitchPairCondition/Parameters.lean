@@ -14,7 +14,7 @@ The approximate-root ratio and the sibling-density parameter are chosen strictly
 finite endpoint and the target density.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Besicovitch
 

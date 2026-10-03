@@ -19,7 +19,7 @@ unit comparison is invertible outright.  The lax symmetric monoidal
 structure of the fibre functor is therefore strong.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

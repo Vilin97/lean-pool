@@ -30,7 +30,7 @@ bounded continuous velocity on the prescribed finite time interval.
 Endpoint extension only defines the auxiliary velocity outside that
 interval; all stated ODE identities use the original velocity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,7 +43,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Of time interval, bundling `velocity`, `continuous`, `lipschitzConstant`, `lipschitz` and
 the required compatibility proofs. -/
-def ofTimeInterval (T : ℝ) (hT : 0 ≤ T)
+@[expose] def ofTimeInterval (T : ℝ) (hT : 0 ≤ T)
     (u : C(Icc (0 : ℝ) T, E →ᵇ E)) (K : ℝ≥0)
     (hLip : ∀ t, LipschitzWith K (u t)) : Data E where
   velocity t x := u (projIcc 0 T hT t) x
@@ -92,7 +92,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,11 +119,11 @@ theorem velocity_lipschitz (t : Icc (0 : ℝ) T) :
 
 /-- Flow data, given by `ofTimeInterval T hT A.field ‖A.derivative.field‖₊ (velocity_lipschitz T
 A)`. -/
-def flowData : EulerBoundedLipschitzFlow.Data E :=
+@[expose] def flowData : EulerBoundedLipschitzFlow.Data E :=
   ofTimeInterval T hT A.field ‖A.derivative.field‖₊ (velocity_lipschitz T A)
 
 /-- Path family as an element of `C(E, C(Icc (0 : ℝ) T, E))`. -/
-def pathFamily : C(E, C(Icc (0 : ℝ) T, E)) :=
+@[expose] def pathFamily : C(E, C(Icc (0 : ℝ) T, E)) :=
   (⟨fun p : E × Icc (0 : ℝ) T => (flowData T hT A).forward p.2 p.1,
     (flowData T hT A).forward_joint_continuous.comp
       ((continuous_subtype_val.comp continuous_snd).prodMk continuous_fst)⟩ :

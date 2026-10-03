@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 /-! The chosen geometric profile contributes only another fixed
 polynomial in the source primitives, including the target shear. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ namespace EulerPacketUniformSource
 open EulerParentInitializedRadius EulerPolynomialCost
 
 /-- Profile envelope, given by `1+sourceEnvelope X+8*Real.exp 6*X*(1+sourceEnvelope X)`. -/
-def profileEnvelope (X : ℝ) : ℝ :=
+@[expose] def profileEnvelope (X : ℝ) : ℝ :=
   1+sourceEnvelope X+8*Real.exp 6*X*(1+sourceEnvelope X)
 
 /-- Profile polynomial, given by `1+sourcePolynomial+Polynomial.C (8*Real.exp

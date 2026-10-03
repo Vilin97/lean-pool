@@ -35,7 +35,7 @@ assembly of the relationalization layer over the relational core:
 `craig_pcSeparation_relational` stays, in the exact form issue #10 consumes).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

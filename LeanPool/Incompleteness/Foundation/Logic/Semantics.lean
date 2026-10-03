@@ -25,7 +25,7 @@ Also provides 𝓜 characterization of compactness.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -121,18 +121,18 @@ infix:45 " ⊧* " => RealizeSet
 variable (M)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Valid (f : F) : Prop := ∀ 𝓜 : M, 𝓜 ⊧ f
+@[expose] def Valid (f : F) : Prop := ∀ 𝓜 : M, 𝓜 ⊧ f
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Satisfiable (T : Set F) : Prop := ∃ 𝓜 : M, 𝓜 ⊧* T
+@[expose] def Satisfiable (T : Set F) : Prop := ∃ 𝓜 : M, 𝓜 ⊧* T
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def models (T : Set F) : Set M := {𝓜 | 𝓜 ⊧* T}
+@[expose] def models (T : Set F) : Set M := {𝓜 | 𝓜 ⊧* T}
 
 variable {M}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def theory (𝓜 : M) : Set F := {φ | 𝓜 ⊧ φ}
+@[expose] def theory (𝓜 : M) : Set F := {φ | 𝓜 ⊧ φ}
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class Meaningful (𝓜 : M) : Prop where
@@ -200,7 +200,7 @@ instance : Semantics F (Set M) := ⟨fun s f ↦ ∀ ⦃𝓜⦄, 𝓜 ∈ s → 
 @[simp] lemma empty_models (f : F) : (∅ : Set M) ⊧ f := by rintro h; simp
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Consequence (T : Set F) (f : F) : Prop := models M T ⊧ f
+@[expose] def Consequence (T : Set F) (f : F) : Prop := models M T ⊧ f
 
 -- note that ⊨ (\vDash) is *NOT* ⊧ (\models)
 /-- Imported declaration from the Incompleteness formalization. -/

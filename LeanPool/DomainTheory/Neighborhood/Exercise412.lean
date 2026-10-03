@@ -36,7 +36,7 @@ classification, exactly
 as that file does.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise412
 

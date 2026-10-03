@@ -19,7 +19,7 @@ smoothness hypothesis every recursive ordered contribution equals the
 corresponding closed ordered cube-sector contribution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

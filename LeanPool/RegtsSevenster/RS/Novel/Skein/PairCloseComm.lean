@@ -16,7 +16,7 @@ an `(0+t)`- with a `(t+0)`-fragment, is invariant (up to
 `Fragment.Equiv`) under swapping `F` and `G`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ from the root to an end node, and show that they are saturated and locally consi
 
 This is used for the pre-states in the completeness proof, see `BuildTree.lean`. -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

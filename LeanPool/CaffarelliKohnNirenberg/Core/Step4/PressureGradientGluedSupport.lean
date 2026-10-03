@@ -18,7 +18,7 @@ integrable on the domain; and a set integral of a function supported in a
 common subset does not see the ambient set.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 noncomputable section

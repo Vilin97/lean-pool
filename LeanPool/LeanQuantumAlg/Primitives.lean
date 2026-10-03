@@ -31,4 +31,4 @@ import Mathlib.Tactic.Positivity.Finset
 This module re-exports reusable quantum primitives.
 -/
 
-@[expose] public section
+public section

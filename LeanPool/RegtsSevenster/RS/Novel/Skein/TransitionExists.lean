@@ -28,7 +28,7 @@ orientation.  The construction proceeds in two parts:
    orbit representatives under the flag order.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

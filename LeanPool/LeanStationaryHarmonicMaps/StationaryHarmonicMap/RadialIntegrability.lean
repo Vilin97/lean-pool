@@ -17,7 +17,7 @@ This module contains the weak radial integrands and the integrability lemmas
 that discharge the side conditions in the radial stationarity identity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,12 +28,12 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The main energy integrand in the weak radial identity at center `0`. -/
-def weakRadialMainIntegrand {n m : ℕ}
+@[expose] def weakRadialMainIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
   weakRadialMainCoeff n phi x * weakEnergyDensity Du x
 
 /-- The radial-energy integrand in the weak radial identity at center `0`. -/
-def weakRadialRhsIntegrand {n m : ℕ}
+@[expose] def weakRadialRhsIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (phi : ℝ → ℝ) (x : Domain n) : ℝ :=
   weakRadialRhsCoeff phi x * weakRadialEnergyDensity Du 0 x
 

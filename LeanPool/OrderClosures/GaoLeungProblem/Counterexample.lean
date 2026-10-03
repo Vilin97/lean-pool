@@ -20,7 +20,7 @@ Formalization of the paper's counterexamples concerning order and unbounded-orde
 adherences of sublattices and solid sets.
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

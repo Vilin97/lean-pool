@@ -53,7 +53,7 @@ development.
 Everything here is `⊆ {propext, Quot.sound}` (choice-free).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -71,12 +71,12 @@ theorem prodNbhd_eq_iff {X X' : Set α} {Y Y' : Set β} :
 variable {V₀ : NeighborhoodSystem α} {V₁ : NeighborhoodSystem β}
 
 /-- Scott's `W_k = X⁰_{p(k)} ∪ X¹_{q(k)}` with `p = ·.unpair.1`, `q = ·.unpair.2`. -/
-def prodEnum (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) (t : ℕ) :
+@[expose] def prodEnum (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) (t : ℕ) :
     Set (α ⊕ β) :=
   prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2)
 
 @[simp] theorem prodEnum_apply (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁)
-    (t : ℕ) : prodEnum P₀ P₁ t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := rfl
+    (t : ℕ) : prodEnum P₀ P₁ t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := by rfl
 
 /-- **Theorem 7.4 (Scott 1981, PRG-19) — `𝒟₀ × 𝒟₁` is effectively given.** The
 presentation
@@ -85,7 +85,7 @@ presentation
 `prodNbhd_subset_iff`, into the *conjunction* of the two factors' relations on the
 projected
 indices — recursively decidable by `RecDecidable.and`/`.comp`/`.of_iff`. -/
-def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) :
+@[expose] def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) :
     ComputablePresentation (prod V₀ V₁) where
   X := prodEnum P₀ P₁
   mem_X t := prod_mem_prodNbhd (P₀.mem_X _) (P₁.mem_X _)
@@ -153,7 +153,7 @@ def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePres
 
 @[simp] theorem prodPresentation_X (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁)
     (t : ℕ) :
-    (prodPresentation P₀ P₁).X t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := rfl
+    (prodPresentation P₀ P₁).X t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := by rfl
 
 /-- **Theorem 7.4 (Scott 1981, PRG-19).** The product of effectively given domains
 is effectively

@@ -22,13 +22,13 @@ import Std.Tactic.BVDecide.Normalize.Prop
 This module provides the end-to-end One-Time-Pad correctness proof.
 -/
 
-@[expose] public section
+public section
 
 
 
 /-- The precondition of the One-Time-Pad correctness proof, constraining the
 plaintext `p`, key `k`, ciphertext `c`, and length `l` addresses. -/
-def iPre (p k c l : UInt64) :=
+@[expose] def iPre (p k c l : UInt64) :=
   p < k ∧ k < c ∧
   c.toNat + l.toNat < UInt64.size ∧
   (p + l - 1 < k ∧ k + l - 1 < c)

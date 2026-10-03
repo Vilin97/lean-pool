@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Adams
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -94,7 +94,7 @@ written with the gauge `parabolicRho₂`, whose time component is symmetric;
 this is the geometry needed for a genuine parabolic metric ball.
 -/
 /-- Near region separated from the far shells at parabolic distance `64 * r`. -/
-def heatPotentialNearSet (z : ParabolicPoint) (r : ℝ) : Set ParabolicPoint :=
+@[expose] def heatPotentialNearSet (z : ParabolicPoint) (r : ℝ) : Set ParabolicPoint :=
   {v | parabolicRho₂ z v < (64 : ℝ) * r}
 
 

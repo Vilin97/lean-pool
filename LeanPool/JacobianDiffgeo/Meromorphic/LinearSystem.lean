@@ -32,7 +32,7 @@ bookkeeping for the two-sided bound is more delicate than the time budget allowe
 final report for the precise missing step. Everything else in §4.7 is proved.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology
@@ -61,7 +61,7 @@ variable [T1Space X] [IsManifold 𝓘(ℂ) ω X]
 /-! ### `LinSys D` -/
 
 /-- CC3's `L(D)` (carrier per D4; `0 ∈ L(D)` by `⊤`-arithmetic, not fiat). -/
-noncomputable def LinSys (D : Divisor X) : Submodule ℂ (ℳ X) where
+@[expose] noncomputable def LinSys (D : Divisor X) : Submodule ℂ (ℳ X) where
   carrier := {φ | ∀ x, ((-(D x) : ℤ) : WithTop ℤ) ≤ φ.ord x}
   zero_mem' := by
     intro x
@@ -103,13 +103,17 @@ theorem mem_linSys_iff_eq_zero_or_le_divisor [ConnectedSpace X] {φ : ℳ X} :
         have h := Function.locallyFinsuppWithin.le_def.1 hle x
         rw [Divisor.neg_apply, divisor_apply] at h
         calc ((-(D x) : ℤ) : WithTop ℤ) = (((-D) x : ℤ) : WithTop ℤ) := by rw [Divisor.neg_apply]
-          _ ≤ ((divisor φ x : ℤ) : WithTop ℤ) := by exact_mod_cast h
-          _ = φ.ord x := WithTop.coe_untop₀_of_ne_top (Mero.ord_ne_top hφ0 x)
+          _ ≤ ((divisor φ x : ℤ) : WithTop ℤ) := by
+            rw [Divisor.neg_apply, divisor_apply]
+            exact_mod_cast h
+          _ = φ.ord x := by
+            rw [divisor_apply]
+            exact WithTop.coe_untop₀_of_ne_top (Mero.ord_ne_top hφ0 x)
 
 /-- CC3: `l D`. Finiteness is NOT this unit's business (Čech/finiteness proves
 `FiniteDimensional`); until then `finrank` junk-returns `0` on infinite-dimensional spaces — no
 lemma here depends on finiteness. -/
-noncomputable def l (D : Divisor X) : ℕ := Module.finrank ℂ (LinSys D)
+@[expose] noncomputable def l (D : Divisor X) : ℕ := Module.finrank ℂ (LinSys D)
 
 omit [T1Space X] [IsManifold 𝓘(ℂ) ω X] in
 theorem linSys_mono (h : D ≤ E) : LinSys D ≤ LinSys E := by
@@ -233,6 +237,7 @@ theorem linSys_eq_bot_of_degree_neg [T2Space X] [CompactSpace X] [ConnectedSpace
 /-- Relative `L(D)` (CC8 Čech cochain spaces). Junk-gated on `IsOpen U` (D3): when `U` is not
 open, the condition is vacuous (every class qualifies), matching `ord`'s own junk convention so
 that `zero_mem'` holds unconditionally. -/
+@[expose]
 noncomputable def LinSysOn (D : Divisor X) (U : Set X) : Submodule ℂ (MeroGermOn X U) where
   carrier := {φ | IsOpen U → ∀ x ∈ U, ((-(D x) : ℤ) : WithTop ℤ) ≤ φ.ord x}
   zero_mem' := by

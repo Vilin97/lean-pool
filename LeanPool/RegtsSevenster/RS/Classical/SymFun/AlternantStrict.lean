@@ -17,7 +17,7 @@ is the equality indicator — the two facts driving nonnegativity in
 the Pieri chain.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

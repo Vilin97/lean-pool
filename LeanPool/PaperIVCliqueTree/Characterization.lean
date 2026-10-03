@@ -31,7 +31,7 @@ distance two along a cycle of length at least `4` their edge is not an edge of t
 * `SimpleGraph.isChordal_iff_exists_isPEO`
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

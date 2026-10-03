@@ -36,7 +36,7 @@ filters, Exercise 2.11 /
 All constructions are **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -51,7 +51,7 @@ def iterFrom (f : ApproximableMap V V) (a : V.Element) (n : ℕ) : V.Element :=
   (f.toElementMap)^[n] a
 
 @[simp] theorem iterFrom_zero (f : ApproximableMap V V) (a : V.Element) :
-    f.iterFrom a 0 = a := rfl
+    f.iterFrom a 0 = a := by rfl
 
 theorem iterFrom_succ (f : ApproximableMap V V) (a : V.Element) (n : ℕ) :
     f.iterFrom a (n + 1) = f.toElementMap (f.iterFrom a n) := by
@@ -78,6 +78,7 @@ theorem iterFrom_mono (f : ApproximableMap V V) {a : V.Element} (ha : a ≤ f.to
 /-- The fixed point of `f` lying above a pre-fixed-point candidate `a` (with `a ⊑
 f(a)`),
 constructed as the directed union `⊔ₙ fⁿ(a)`. -/
+@[expose]
 def fixAbove (f : ApproximableMap V V) {a : V.Element} (ha : a ≤ f.toElementMap a) : V.Element :=
   NeighborhoodSystem.iSupDirected (f.iterFrom a)
     (fun i j => ⟨max i j, iterFrom_mono f ha (le_max_left i j),

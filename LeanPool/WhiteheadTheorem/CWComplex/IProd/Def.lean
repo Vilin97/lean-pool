@@ -20,7 +20,7 @@ homeomorphic to `I × X`, where `I` is the unit interval.
 The $(-1)$-skeleton of `X.IProd` is homeomorphic to `{0, 1} × X`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval TopCat
@@ -63,13 +63,13 @@ r X n  |             pushout   |
 ```
 `X.IProd.sk 0 = {0, 1} × X ≅ X.IProd.sk 1`
 -/
-noncomputable def sk (n : ℕ) : TopCat.{u} :=
+@[expose] noncomputable def sk (n : ℕ) : TopCat.{u} :=
   match n with
   | 0 => TopCat.of (zeroOne × X.toTopCat)
   | n + 1 => Limits.pushout (IProd.l X n) (IProd.r X n)
 
 /-- `skZeroIsoSkOne` -/
-noncomputable def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
+@[expose] noncomputable def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
   have : IsIso <| ofHom <| zeroOneIncl.prodMap <| ContinuousMap.id <| X.sk 0 := by
     have := X.isEmpty_sk_zero
     infer_instance  -- TopCat.isIso_of_isEmpty
@@ -81,30 +81,31 @@ end IProd
 
 
 /-- `cubeInclToSk` -/
-noncomputable def cubeInclToSk {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X.sk (n + 1) :=
+@[expose] noncomputable def cubeInclToSk {n : ℕ} (α : (X.attachCells n).cells) :
+    𝕀 n ⟶ X.sk (n + 1) :=
   (diskPair.homeoCubePairULift n).inv.right ≫
   Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr .. ≫ (X.attachCells n).isoPushout.inv
 
 /-- `cubeIncl` -/
-noncomputable def cubeIncl {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X :=
+@[expose] noncomputable def cubeIncl {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X :=
   X.cubeInclToSk α ≫ X.skIncl (n + 1)
 
 /-- `cubeAtt` -/
-noncomputable def cubeAtt {n : ℕ} (α : (X.attachCells n).cells) : ∂𝕀 n ⟶ X.sk n :=
+@[expose] noncomputable def cubeAtt {n : ℕ} (α : (X.attachCells n).cells) : ∂𝕀 n ⟶ X.sk n :=
   (diskPair.homeoCubePairULift n).inv.left ≫ (X.attachCells n).attachMaps α
 
 
 namespace IProd
 
 /-- `cubeAttBotOrTop` -/
-noncomputable def cubeAttBotOrTop {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) :
+@[expose] noncomputable def cubeAttBotOrTop {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) :
     𝕀 n ⟶ IProd.sk X (n + 1) :=  -- bottom face of `∂𝕀 (n + 1)`
   X.cubeIncl α ≫
   ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩ ≫  -- X ⟶ {0, 1} × X
   Limits.pushout.inl ..
 
 /-- `cubeAttSides` -/
-noncomputable def cubeAttSides {n : ℕ} (α : (X.attachCells n).cells) :
+@[expose] noncomputable def cubeAttSides {n : ℕ} (α : (X.attachCells n).cells) :
     TopCat.of (I × ∂𝕀 n) ⟶ IProd.sk X (n + 1) :=  -- sides of `∂𝕀 (n + 1)`
   ofHom ((ContinuousMap.id I).prodMap (X.cubeAtt α).hom) ≫  -- of (I × ∂𝕀 n) ⟶ of (I × (X.sk n))
   Limits.pushout.inr ..
@@ -115,10 +116,13 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
   let iX : X.toTopCat ⟶ TopCat.of (zeroOne × X.toTopCat) := ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩
   let isk : X.sk n ⟶ TopCat.of (zeroOne × (X.sk n)) := ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩
   change ((diskPair.homeoCubePairULift n).inv.left ≫ diskBoundaryIncl n ≫
-      Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr .. ≫
-      (X.attachCells n).isoPushout.inv ≫ X.skIncl _ ≫ iX ≫ Limits.pushout.inl .. ) y =
+      Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫
+      Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
+        (Limits.Sigma.map fun x ↦ diskBoundaryIncl n) ≫
+      (X.attachCells n).isoPushout.inv ≫ X.skIncl _ ≫ iX ≫
+      Limits.pushout.inl (l X n) (r X n) ) y =
     ((diskPair.homeoCubePairULift n).inv.left ≫ (X.attachCells n).attachMaps α ≫
-      isk ≫ r X n ≫ Limits.pushout.inr .. ) y
+      isk ≫ r X n ≫ Limits.pushout.inr (l X n) (r X n) ) y
   have h := (X.attachCells n).w_cell α
   unfold RelCWComplex.AttachGeneralizedCells.pushoutInr at h
   unfold RelCWComplex.AttachGeneralizedCells.pushoutInl at h
@@ -175,7 +179,7 @@ noncomputable def sigmaDisksInclToSk (n : ℕ) :
   ≫ Limits.pushout.inr ..
 
 /-- `skInclSucc` -/
-noncomputable def skInclSucc (n : ℕ) : IProd.sk X (n + 1) ⟶ IProd.sk X (n + 1 + 1) :=
+@[expose] noncomputable def skInclSucc (n : ℕ) : IProd.sk X (n + 1) ⟶ IProd.sk X (n + 1 + 1) :=
   let il : TopCat.of (zeroOne × X.toTopCat) ⟶ IProd.sk X (n + 1 + 1) := Limits.pushout.inl ..
   let ir : TopCat.of (I × X.sk n) ⟶ IProd.sk X (n + 1 + 1) :=
     ofHom ((ContinuousMap.id I).prodMap (X.skInclSucc _).hom) ≫ Limits.pushout.inr ..
@@ -291,12 +295,12 @@ lemma commSqSkSk (n : ℕ) :
       change (X.cubeAtt α ≫ X.skInclSucc n) _ = _
       unfold CWComplex.cubeAtt CWComplex.cubeInclToSk
       rw [Category.assoc]
+      unfold RelCWComplex.skInclSucc RelCWComplex.AttachCells.incl
       change _ = ((diskPair.homeoCubePairULift n).inv.left ≫ diskBoundaryIncl _ ≫
           Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr .. ≫
             (X.attachCells n).isoPushout.inv )
           ⟨⟨(Cube.splitAtLast y).2, cubeBoundary.splitAtLast_snd_mem_boundary_of_mem_sides hk⟩⟩
       congr 3
-      unfold RelCWComplex.skInclSucc RelCWComplex.AttachCells.incl
       change (_ ≫ _) ≫ (X.attachCells n).isoPushout.inv =
         (_ ≫ _ ≫ _) ≫ (X.attachCells n).isoPushout.inv
       congr 1
@@ -373,17 +377,21 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
       (cubeBoundary.botTopSidesCover_closed n)) xt_cube
     rw [ContinuousMap.liftCoverClosed_coe' _ _ _ _ _ xt_cube this]
     change _ = (cubeAttSides X α) ⟨_, _⟩
-    simp only [↓cubeSplitAtLast_inv_down_eq, Homeomorph.apply_symm_apply]
+    simp only []
     change _ = (Limits.pushout.inr (l X n) (r X n)) _
     congr 2
-    simp only [cubeAtt, TopCat.hom_comp]
-    change (X.attachCells n).attachMaps α x =
-      (X.attachCells n).attachMaps α
-        (((diskPair.homeoCubePairULift n).hom.left ≫
-          (diskPair.homeoCubePairULift n).inv.left) x)
-    congr 1
-    rw [Arrow.hom_inv_id_left]
-    rfl
+    · change t = (Cube.splitAtLast (Cube.splitAtLast.symm (t, _))).1
+      simp only [Homeomorph.apply_symm_apply]
+    · change (X.attachCells n).attachMaps α x =
+        (X.cubeAtt α) ⟨⟨(Cube.splitAtLast (Cube.splitAtLast.symm (t, _))).2, _⟩⟩
+      simp only [Homeomorph.apply_symm_apply]
+      change (X.attachCells n).attachMaps α x =
+        (X.attachCells n).attachMaps α
+          (((diskPair.homeoCubePairULift n).hom.left ≫
+            (diskPair.homeoCubePairULift n).inv.left) x)
+      congr 1
+      rw [Arrow.hom_inv_id_left]
+      rfl
   change (Hom.hom Z.inl)
     ((Hom.hom (Limits.pushout.inr (l X n) (r X n)))
       (t, (Hom.hom ((X.attachCells n).attachMaps α)) x)) = _
@@ -607,7 +615,7 @@ noncomputable abbrev desc : IProd.sk X (n + 1 + 1) ⟶ Z.pt :=
   Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z)
 
 /-- `cocone` -/
-noncomputable def cocone (n : ℕ) :
+@[expose] noncomputable def cocone (n : ℕ) :
     Limits.PushoutCocone
       (Limits.Sigma.desc (IProd.attachMaps X))
       (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)) :=
@@ -948,7 +956,7 @@ end IProd
 
 
 /-- `IProd` -/
-noncomputable def IProd : RelCWComplex where
+@[expose] noncomputable def IProd : RelCWComplex where
   sk := IProd.sk X
   attachCells n :=
     match n with

@@ -16,7 +16,7 @@ envelope.  Adjoining the old target as a max-product coordinate makes the
 retraction linear and explicit: it is first-coordinate projection.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -31,12 +31,14 @@ abbrev RetractiveEnvelope (P : Type u) (N : Type v) [MetricSpace P]
 
 /-- Embed the attached metric space using a chosen metric retraction and the
 relative evaluation coordinate. -/
+@[expose]
 noncomputable def retractiveEmbedding {P : Type u} {N : Type v} [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) (R : P → N) (p : P) :
     RetractiveEnvelope P N j :=
   (R p, relativeEvaluation j p)
 
 /-- The old target embeds linearly in both coordinates. -/
+@[expose]
 noncomputable def retractiveTargetLinear {P : Type u} {N : Type v} [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     N →ₗ[ℝ] RetractiveEnvelope P N j where
@@ -51,6 +53,7 @@ theorem norm_retractiveTargetLinear_eq {P : Type u} {N : Type v} [MetricSpace P]
   exact max_eq_left (norm_relativeTargetLinear_le j n)
 
 /-- The old target is a linear isometric subspace of the retractive envelope. -/
+@[expose]
 noncomputable def retractiveTargetLinearIsometry {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     N →ₗᵢ[ℝ] RetractiveEnvelope P N j where
@@ -58,6 +61,7 @@ noncomputable def retractiveTargetLinearIsometry {P : Type u} {N : Type v}
   norm_map' := norm_retractiveTargetLinear_eq j
 
 /-- First-coordinate projection is the contractive linear retraction. -/
+@[expose]
 noncomputable def retractiveProjection {P : Type u} {N : Type v} [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     RetractiveEnvelope P N j →L[ℝ] N :=

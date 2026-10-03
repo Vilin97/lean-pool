@@ -15,7 +15,7 @@ This packages the natural Itô terminal values as closed subspaces of ambient an
 representation as triviality of the corresponding orthogonal complement.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -35,6 +35,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- The subspace of terminal `L²(P)` random variables obtained from the constructed natural Itô
 integral. -/
+@[expose]
 noncomputable def naturalItoRange
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -137,6 +138,7 @@ noncomputable def centeredNaturalItoRangeEquiv
 omit [CompleteSpace W] [BorelSpace W] [SecondCountableTopology W] in
 /-- The centered part `G - E[G]`, intrinsically regarded as an element of the expectation
 kernel. -/
+@[expose]
 noncomputable def centeredPartL2 (G : RandomL2 P) :
     (CameronMartin.expectationMap P).ker :=
   ⟨G - expectationL2 G, by
@@ -152,6 +154,7 @@ theorem centeredPartL2_coe (G : RandomL2 P) :
 
 /-- The canonical best predictable integrand for a centered terminal variable: orthogonally
 project onto the closed natural Itô range, then invert the Itô isometry on that range. -/
+@[expose]
 noncomputable def bestNaturalItoIntegrand
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -162,6 +165,7 @@ noncomputable def bestNaturalItoIntegrand
 
 /-- The canonical best predictable integrand of an arbitrary terminal variable, obtained by
 first subtracting its expectation. -/
+@[expose]
 noncomputable def bestNaturalItoIntegrandOfRandom
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -231,6 +235,7 @@ theorem bestNaturalItoIntegrand_centeredNaturalItoIntegral
   exact (centeredNaturalItoRangeEquiv hB hsm hnat).symm_apply_apply U
 
 /-- A deterministic Wiener integral intrinsically regarded as a centered terminal variable. -/
+@[expose]
 noncomputable def centeredWienerIntegral
     (hB : IsPreBrownianReal B P)
     (g : Lp ℝ 2 nonnegativeLebesgueMeasure) :

@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFieldGraphBounds
 finite pressure's Hessian plus the Hessian of its actual correction.
 The normalization of the scalar potential does not affect this identity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,6 +46,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized exact physical pressure, given by `(initializedExactPacket M D hTime τ hτ hτT B
 δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘ Y`. -/
+@[expose]
 def initializedExactPhysicalPressure (t : Icc (0 : ℝ) D.T) (Y : Space → Space) : Space → ℝ :=
   (initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk Q).graphPotential k t ∘
       Y

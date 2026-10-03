@@ -18,7 +18,7 @@ presentation interface for an ambient graph.  It is deliberately valid for
 an arbitrary ASP permutation and arbitrary factor divisors.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

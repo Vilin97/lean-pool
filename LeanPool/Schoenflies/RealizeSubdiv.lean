@@ -99,7 +99,7 @@ Declarations:
   realized 1-skeleton.
 -/
 
-@[expose] public section
+public section
 
 open Set unitInterval
 open scoped Graph
@@ -290,7 +290,7 @@ off the structure; it is decided by a case distinction, once, here. -/
 noncomputable def leftParam : ℝ := if R.drawing d.edge 0 = R.pos d.left then 0 else 1
 
 /-- The endpoint parameter at which the drawn subdivided edge sits at `R.pos d.right`. -/
-noncomputable def rightParam : ℝ := 1 - d.leftParam R
+@[expose] noncomputable def rightParam : ℝ := 1 - d.leftParam R
 
 theorem leftParam_eq_zero_or_one : d.leftParam R = 0 ∨ d.leftParam R = 1 := by
   unfold leftParam
@@ -447,7 +447,8 @@ noncomputable def realizeCell (d : S.SubdivData) (R : S.Realization) (t : ℝ) :
     else R.cell c
 
 /-- The drawn skeleton after the subdivision. -/
-noncomputable def realizeGraph (d : S.SubdivData) (R : S.Realization) (t : ℝ) : Graph Plane γ :=
+@[expose] noncomputable def realizeGraph (d : S.SubdivData) (R : S.Realization)
+    (t : ℝ) : Graph Plane γ :=
   d.skeleton.map (d.realizePos R t)
 
 variable {d R}
@@ -896,7 +897,7 @@ and every surviving cell is exactly where it was.
 
 There is no geometric side condition: everything the construction needs is already carried by
 `R`, and is extracted by the lemmas above rather than assumed. -/
-noncomputable def realize (d : S.SubdivData) (R : S.Realization) (t : ℝ)
+@[expose] noncomputable def realize (d : S.SubdivData) (R : S.Realization) (t : ℝ)
     (ht : t ∈ Ioo (0 : ℝ) 1) : (S.subdivideEdge d).Realization where
   pos := d.realizePos R t
   drawing := d.realizeDrawing R t

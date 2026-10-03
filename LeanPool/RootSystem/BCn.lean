@@ -16,7 +16,7 @@ its roots as the classical type-`BCₙ` root set `{±eᵢ, ±2eᵢ, ±eᵢ ± e�
 (`BCn.isReflective_iff_isClassicalRoot`, `BCn.range_rootPairing_root`).
 -/
 
-@[expose] public section
+public section
 
 namespace BCn
 
@@ -26,7 +26,7 @@ abbrev Space (n : ℕ) := Fin n → ℤ
 abbrev CoSpace (n : ℕ) := Module.Dual ℤ (Space n)
 
 /-- The standard dot product on `ℤⁿ`. -/
-noncomputable def dotProduct (n : ℕ) : Space n →ₗ[ℤ] Space n →ₗ[ℤ] ℤ where
+@[expose] noncomputable def dotProduct (n : ℕ) : Space n →ₗ[ℤ] Space n →ₗ[ℤ] ℤ where
   toFun x :=
     { toFun := fun y => ∑ i, x i * y i
       map_add' := by

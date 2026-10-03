@@ -21,7 +21,7 @@ the remaining
 irreducibles stay prime.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

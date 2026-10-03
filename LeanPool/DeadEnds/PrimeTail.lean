@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 Prime-tail and single-prime divisibility estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

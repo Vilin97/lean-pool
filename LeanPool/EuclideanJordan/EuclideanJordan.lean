@@ -56,4 +56,4 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Witness
 Root import for the library. See `README.md` for the headline results.
 -/
 
-@[expose] public section
+public section

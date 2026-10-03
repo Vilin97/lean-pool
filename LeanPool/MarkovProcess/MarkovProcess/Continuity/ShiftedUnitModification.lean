@@ -20,7 +20,7 @@ No global path is glued here, and no path-space measurability, law, or Hunt-proc
 asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

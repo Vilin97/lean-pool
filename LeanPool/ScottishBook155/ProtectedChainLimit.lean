@@ -16,7 +16,7 @@ completed direct limit. Together with `DirectedLimitStage`, this constructs a
 new protected stage at every nonempty limit segment.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -48,14 +48,17 @@ abbrev LimitTarget := NormedDirectLimit.CompletedCarrier
   (fun i => (C.stage i).target) C.targetSystem.embed
 
 /-- The compatible source projections, packaged for extension to the completed limit. -/
+@[expose]
 noncomputable def sourceProjectionSystem :=
   CoherentBiSystem.projectionSystem _ C.sourceSystem
 
 /-- The compatible target projections, packaged for extension to the completed limit. -/
+@[expose]
 noncomputable def targetProjectionSystem :=
   CoherentBiSystem.projectionSystem _ C.targetSystem
 
 /-- The map between completed limits induced by the uniformly nonexpansive stage maps. -/
+@[expose]
 noncomputable def completedMap : C.LimitSource → C.LimitTarget :=
   DirectedLimitStage.limitMap _ _ C.sourceSystem.embed C.targetSystem.embed
     (fun i => (C.stage i).map)
@@ -240,6 +243,7 @@ theorem completed_recovery_of_dist_lt (hr : 0 < r) (a : ι)
 
 /-- The completed direct limit of a protected chain is again a protected
 stage.  This is the limit clause used by the transfinite recursion. -/
+@[expose]
 noncomputable def limitStage (hr : 0 < r) (hL : 0 < L) :
     ProtectedStage.{u} r :=
   DirectedLimitStage.toProtectedStageOfBoundedLt _ _
@@ -251,6 +255,7 @@ noncomputable def limitStage (hr : 0 < r) (hL : 0 < L) :
     (C.completed_recovery_of_dist_lt hr)
 
 /-- Every component is coherently linked to the completed limit stage. -/
+@[expose]
 noncomputable def toLimitLink (hr : 0 < r) (hL : 0 < L) (a : ι) :
     ProtectedLink (C.stage a) (C.limitStage hr hL) L where
   sourceEmbedding := NormedDirectLimit.completedOf _ C.sourceSystem.embed a

@@ -21,7 +21,7 @@ the tensor paths therefore gives genuine within-time derivatives of all
 jets, without assuming differentiability of an ODE solution family.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensiona
   (T : ℝ) (hT : 0 ≤ T) (A : SmoothTimeField (Icc (0 : ℝ) T) E E)
 
 /-- Velocity family, given by `A.superposition (pathFamily T hT A x)`. -/
-def velocityFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
+@[expose] def velocityFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
   A.superposition (pathFamily T hT A x)
 
 theorem velocityFamily_contDiff : ContDiff ℝ ∞ (velocityFamily T hT A) :=
@@ -45,7 +45,7 @@ theorem velocityFamily_contDiff : ContDiff ℝ ∞ (velocityFamily T hT A) :=
 
 /-- Displacement family, given by `pathFamily T hT A x - (ContinuousLinearMap.const ℝ (Icc (0 :
 ℝ) T)) x`. -/
-def displacementFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
+@[expose] def displacementFamily (x : E) : C(Icc (0 : ℝ) T,E) :=
   pathFamily T hT A x - (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x
 
 theorem displacementFamily_contDiff : ContDiff ℝ ∞ (displacementFamily T hT A) := by
@@ -65,12 +65,12 @@ def jetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
 
 /-- Velocity jet path, given by `tensorPathMap n (iteratedFDeriv ℝ n (velocityFamily T hT A)
 x)`. -/
-def velocityJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
+@[expose] def velocityJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
   tensorPathMap n (iteratedFDeriv ℝ n (velocityFamily T hT A) x)
 
 /-- Displacement jet path, given by `tensorPathMap n (iteratedFDeriv ℝ n (displacementFamily T
 hT A) x)`. -/
-def displacementJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
+@[expose] def displacementJetPath (n : ℕ) (x : E) : C(Icc (0 : ℝ) T,E [×n]→L[ℝ] E) :=
   tensorPathMap n (iteratedFDeriv ℝ n (displacementFamily T hT A) x)
 
 theorem jetPath_apply (n : ℕ) (x : E) (t : Icc (0 : ℝ) T) :
@@ -101,7 +101,7 @@ theorem displacementJetPath_hasDerivWithinAt (n : ℕ) (x : E) (t : Icc (0 : ℝ
 
 /-- The clamped extension is used only to state derivatives on the closed
 time interval; there it is exactly the constructed flow minus its label. -/
-def displacement (t : ℝ) (x : E) : E :=
+@[expose] def displacement (t : ℝ) (x : E) : E :=
   extendPath T hT (displacementFamily T hT A x) t
 
 theorem displacement_eq (t : Icc (0 : ℝ) T) (x : E) :

@@ -17,7 +17,7 @@ at any dense-time coordinate when started from a live state.  This is a finite-c
 it does not assert that a dense-time path has a continuous lifetime-path extension.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

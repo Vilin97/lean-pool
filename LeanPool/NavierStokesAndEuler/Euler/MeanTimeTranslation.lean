@@ -28,7 +28,7 @@ This uses dominated convergence with the actual square-integrable time field.
 It does not assume operator-norm continuity of spatial translations.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -106,7 +106,8 @@ open Set MeasureTheory InnerProductSpace ContinuousLinearMap EulerSmoothLimit
   EulerMeanSolenoidal EulerTimeLp EulerTerminalTimePrimitive EulerTimeLpBoundedMap
 
 /-- Spatial translation restricted to the actual ordinary solenoidal space. -/
-def solenoidalTranslation (a : Space) : solenoidalSpace →ₗᵢ[ℝ] solenoidalSpace where
+@[expose] def solenoidalTranslation (a : Space) :
+    solenoidalSpace →ₗᵢ[ℝ] solenoidalSpace where
   toLinearMap := ((translation a).toLinearMap.comp solenoidalSpace.subtype).codRestrict
     solenoidalSpace (fun u => translation_solenoidal_mem a u.property)
   norm_map' := fun u => (translation a).norm_map (u : L2)
@@ -135,11 +136,11 @@ theorem solenoidalTranslation_continuous (u : solenoidalSpace) :
   (translation_continuous (u : L2)).subtype_mk (fun a => translation_solenoidal_mem a u.property)
 
 /-- Actual spatial translation at every Bochner time slice. -/
-def timeTranslation (T : ℝ) (a : Space) : TimeLp T L2 →ₗᵢ[ℝ] TimeLp T L2 :=
+@[expose] def timeTranslation (T : ℝ) (a : Space) : TimeLp T L2 →ₗᵢ[ℝ] TimeLp T L2 :=
   timeLiftIsometry T (translation a)
 
 /-- Actual spatial translation on the fixed solenoidal time Hilbert space. -/
-def timeSolenoidalTranslation (T : ℝ) (a : Space) :
+@[expose] def timeSolenoidalTranslation (T : ℝ) (a : Space) :
     TimeLp T solenoidalSpace →ₗᵢ[ℝ] TimeLp T solenoidalSpace :=
   timeLiftIsometry T (solenoidalTranslation a)
 

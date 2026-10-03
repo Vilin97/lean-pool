@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.ModularForms.QExpansion
 /-! # ResToImagAxis -/
 
 
-@[expose] public section
+public section
 
 open UpperHalfPlane hiding I
 
@@ -28,13 +28,13 @@ open scoped Interval Real Topology Manifold ModularForm MatrixGroups
 Restrict a function `F : ℍ → ℂ` to the positive imaginary axis, i.e. `t ↦ F (I * t)`.
 If $t \le 0$, then `F (I * t)` is not defined, and we return `0` in that case.
 -/
-noncomputable def ResToImagAxis (F : ℍ → ℂ) : ℝ → ℂ :=
+@[expose] noncomputable def ResToImagAxis (F : ℍ → ℂ) : ℝ → ℂ :=
   fun t => if ht : 0 < t then F ⟨(I * t), by simp [ht]⟩ else 0
 
 namespace Function
 
 /-- Dot notation alias for `ResToImagAxis`. -/
-noncomputable def resToImagAxis (F : ℍ → ℂ) : ℝ → ℂ := ResToImagAxis F
+@[expose] noncomputable def resToImagAxis (F : ℍ → ℂ) : ℝ → ℂ := ResToImagAxis F
 
 @[simp] lemma resToImagAxis_eq_resToImagAxis (F : ℍ → ℂ) :
     F.resToImagAxis = ResToImagAxis F := rfl
@@ -48,14 +48,14 @@ end Function
 Function $F : \mathbb{H} \to \mathbb{C}$ whose restriction to the imaginary axis is real-valued,
 i.e. imaginary part is zero.
 -/
-@[fun_prop]
+@[fun_prop, expose]
 noncomputable def ResToImagAxis.Real (F : ℍ → ℂ) : Prop :=
   ∀ t : ℝ, 0 < t → (F.resToImagAxis t).im = 0
 
 /--
 Function $F : \mathbb{H} \to \mathbb{C}$ is real and positive on the imaginary axis.
 -/
-@[fun_prop]
+@[fun_prop, expose]
 noncomputable def ResToImagAxis.Pos (F : ℍ → ℂ) : Prop :=
   ResToImagAxis.Real F ∧ ∀ t : ℝ, 0 < t → 0 < (F.resToImagAxis t).re
 
@@ -63,7 +63,7 @@ noncomputable def ResToImagAxis.Pos (F : ℍ → ℂ) : Prop :=
 Function $F : \mathbb{H} \to \mathbb{C}$ whose restriction to the imaginary axis is eventually
 positive, i.e. there exists $t_0 > 0$ such that for all $t \ge t_0$, $F(it)$ is real and positive.
 -/
-@[fun_prop]
+@[fun_prop, expose]
 noncomputable def ResToImagAxis.EventuallyPos (F : ℍ → ℂ) : Prop :=
   ResToImagAxis.Real F ∧ ∃ t₀ : ℝ, 0 < t₀ ∧ ∀ t : ℝ, t₀ ≤ t → 0 < (F.resToImagAxis t).re
 

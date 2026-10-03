@@ -56,7 +56,7 @@ the project's
 `Element.ext` machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise511
 

@@ -30,7 +30,7 @@ the ear construction.
   arbitrary plane drawings, used when assembling target/mesh overlays.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -127,13 +127,13 @@ theorem connected_of_isPreconnected_pointSet [G.Finite]
     exact Set.disjoint_left.1 hAB hxA (hsub (Or.inl hx))
 
 /-- The part of a drawn graph supported on a prescribed set. -/
-def traceGraph (G : Graph Plane β) (drawing : β → ℝ → Plane) (A : Set Plane) :
+@[expose] def traceGraph (G : Graph Plane β) (drawing : β → ℝ → Plane) (A : Set Plane) :
     Graph Plane β :=
   (G.restrict {e | edgeArc drawing e ⊆ A}).induce (V(G) ∩ A)
 
 /-- The vertices retained by a trace graph. -/
 @[simp] theorem traceGraph_vertexSet (A : Set Plane) :
-    V(traceGraph G drawing A) = V(G) ∩ A := rfl
+    V(traceGraph G drawing A) = V(G) ∩ A := by exact rfl
 
 /-- A trace edge is exactly an ambient edge whose full arc and endpoints lie in the support. -/
 @[simp] theorem traceGraph_isLink (A : Set Plane) :
@@ -1206,6 +1206,7 @@ variable {γ : Type*} {S₀ : CellStructure γ}
   {srcOuter srcDom tgtOuter tgtDom : Set Plane}
 
 /-- Subdivide a generated matched pair at corresponding source and target parameters. -/
+@[expose]
 noncomputable def subdivide
     (P : GeneratedPair S₀ srcOuter srcDom tgtOuter tgtDom)
     (d : P.str.SubdivData) {t : ℝ} (ht : t ∈ Set.Ioo (0 : ℝ) 1) :

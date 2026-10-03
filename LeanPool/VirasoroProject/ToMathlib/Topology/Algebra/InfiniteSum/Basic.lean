@@ -12,7 +12,7 @@ import Mathlib.Topology.Algebra.InfiniteSum.Basic
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -66,7 +66,7 @@ Heisenberg algebra, Fock space
 
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -108,7 +108,7 @@ open HeisenbergAlgebra in
 /-- The triangular decomposition of the Heisenberg algebra with upper and lower (essentially
 nilpotent) parts spanned by the `Jₖ` with positive and negative `k`, respectively, and the
 Cartan subalgebra spanned by `J₀` and the central element `K`. -/
-noncomputable def _root_.VirasoroProject.heisenbergTri :
+@[expose] noncomputable def _root_.VirasoroProject.heisenbergTri :
     TriangularDecomposition 𝕜 (HeisenbergAlgebra 𝕜) :=
   TriangularDecomposition.ofBasis (basisJK 𝕜) indexTri pairwise_disjoint_indexTri iUnion_indexTri
 
@@ -147,11 +147,11 @@ noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.hw (α : 𝕜) :
   (heisenbergTriCartanBasis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then 1 else α)
 
 /-- The Heisenberg generator `K` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.heisenbergTriKgen : (heisenbergTri 𝕜).part 0 :=
+@[expose] noncomputable def _root_.VirasoroProject.heisenbergTriKgen : (heisenbergTri 𝕜).part 0 :=
   ⟨.kgen 𝕜, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 /-- The Heisenberg generator `J₀` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.heisenbergTriJzero : (heisenbergTri 𝕜).part 0 :=
+@[expose] noncomputable def _root_.VirasoroProject.heisenbergTriJzero : (heisenbergTri 𝕜).part 0 :=
   ⟨.jgen 𝕜 0, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 @[simp] lemma _root_.VirasoroProject.heisenbergTri_kgen_val

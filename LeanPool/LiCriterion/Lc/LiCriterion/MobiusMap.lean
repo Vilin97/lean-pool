@@ -27,7 +27,7 @@ Elementary norm and real-part identities for the map carrying the critical line 
 circle, used to turn RH into a statement about the closed unit disk.
 -/
 
-@[expose] public section
+public section
 
 namespace LiCriterion
 

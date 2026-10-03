@@ -17,7 +17,7 @@ kernels have explicit integrable power majorants. The physical histories use
 the same outgoing profile and the same compensation witness throughout.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -356,14 +356,17 @@ theorem canonicalKernel_eq_kernel (F : Profile) {XR : ℝ} (hXR : 0 < XR) (c : �
 /-! ## The constants are fixed by the same compensation witness -/
 
 /-- Angular history, given by `∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)`. -/
+@[expose]
 noncomputable def angularHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (η X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, HeatedOutgoing.H F XR c (u,η)
 
 /-- Energy history, given by `∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u`. -/
+@[expose]
 noncomputable def energyHistory (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (η X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, HeatedOutgoing.energyDensity F XR c η u
 
 /-- Power history, given by `∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u`. -/
+@[expose]
 noncomputable def powerHistory (F : Profile) (XR X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, OutgoingDilation.powerH F XR u
 

@@ -20,7 +20,7 @@ all generators are zero germs, the common-zero hypothesis forces the target
 to be the zero germ.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology
@@ -33,7 +33,7 @@ noncomputable section
 /-! ## The standard coordinate on `ComplexEuclidean 1` -/
 
 /-- Evaluation at the unique coordinate, as a complex-linear equivalence. -/
-def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
+@[expose] def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
   toFun x := x 0
   invFun z := fun _ ↦ z
   left_inv x := by
@@ -44,7 +44,7 @@ def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
   map_smul' _ _ := rfl
 
 /-- The continuous complex-linear identification `ℂ¹ ≃ ℂ`. -/
-def oneCoordinateEquiv : ComplexEuclidean 1 ≃L[ℂ] ℂ :=
+@[expose] def oneCoordinateEquiv : ComplexEuclidean 1 ≃L[ℂ] ℂ :=
   oneCoordinateLinearEquiv.toContinuousLinearEquiv
 
 @[simp]

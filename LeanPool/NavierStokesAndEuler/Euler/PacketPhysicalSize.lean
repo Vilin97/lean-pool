@@ -15,7 +15,7 @@ coordinates of source (28).  These are identities for the constructed
 coordinate maps, rather than assumptions on a model system.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,18 +27,18 @@ open EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay
   EulerPacketCrossProduct InnerProductSpace ContinuousLinearMap
 
 /-- Velocity denominator, given by `1+ε^2*(r^2+w₃^2)`. -/
-def velocityDenominator (ε r w₃ : ℝ) : ℝ := 1+ε^2*(r^2+w₃^2)
+@[expose] def velocityDenominator (ε r w₃ : ℝ) : ℝ := 1+ε^2*(r^2+w₃^2)
 
 theorem velocityDenominator_pos (ε r w₃ : ℝ) : 0 < velocityDenominator ε r w₃ := by
   unfold velocityDenominator
   positivity
 
 /-- Normalized coupling, given by `⟪unit r,M (unit w)⟫_ℝ`. -/
-def normalizedCoupling (M : Space →L[ℝ] Space) (r w : Space) : ℝ :=
+@[expose] def normalizedCoupling (M : Space →L[ℝ] Space) (r w : Space) : ℝ :=
   ⟪unit r,M (unit w)⟫_ℝ
 
 /-- Normalized tilt, given by `⟪cross (unit r) (unit w),M (unit w)⟫_ℝ/normalizedCoupling M r w`. -/
-def normalizedTilt (M : Space →L[ℝ] Space) (r w : Space) : ℝ :=
+@[expose] def normalizedTilt (M : Space →L[ℝ] Space) (r w : Space) : ℝ :=
   ⟪cross (unit r) (unit w),M (unit w)⟫_ℝ/normalizedCoupling M r w
 
 theorem normalizedCoupling_eq (M : Space →L[ℝ] Space) (r w : Space) :

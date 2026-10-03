@@ -16,7 +16,7 @@ packages that map as a homeomorphism of intervals and, after identifying endpoin
 homeomorphism of circles.  It is the geometric core of Gallier--Xu P1 edge subdivision.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -35,7 +35,7 @@ noncomputable def unstretch : List ℕ → ℝ → ℝ
       if y ≤ w then y / w else 1 + unstretch weights (y - w)
 
 /-- Every weight is strictly positive. -/
-def Positive (weights : List ℕ) : Prop :=
+@[expose] def Positive (weights : List ℕ) : Prop :=
   ∀ w ∈ weights, 0 < w
 
 theorem Positive.head {w : ℕ} {weights : List ℕ}
@@ -61,11 +61,11 @@ theorem sum_take_lt_sum {weights : List ℕ} (h : Positive weights)
 
 @[simp]
 theorem stretch_nil (x : ℝ) : stretch [] x = 0 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem unstretch_nil (y : ℝ) : unstretch [] y = 0 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem stretch_zero (weights : List ℕ) : stretch weights 0 = 0 := by
@@ -397,7 +397,7 @@ noncomputable def intervalHomeomorph (weights : List ℕ) (h : Positive weights)
 theorem intervalHomeomorph_apply_val (weights : List ℕ) (h : Positive weights)
     (x : Set.Icc (0 : ℝ) (0 + weights.length)) :
     (intervalHomeomorph weights h x).val = stretch weights x :=
-  rfl
+  by rfl
 
 @[simp]
 theorem intervalHomeomorph_zero (weights : List ℕ) (h : Positive weights) :

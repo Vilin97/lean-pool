@@ -15,7 +15,7 @@ products of ordered, disjoint Brownian increments.  Thus its remaining totality 
 equivalent to a concrete dense-span statement for those products.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -32,11 +32,13 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   {B : ℝ≥0 → W → ℝ}
 
 /-- All finite products of ordered, disjoint Brownian increments, including the empty product. -/
+@[expose]
 def brownianOrderedChainSet (hB : IsPreBrownianReal B P) : Set (RandomL2 P) :=
   Set.range fun a : Σ n : ℕ, OrderedBoxIndex n =>
     chainIntegralLp hB a.2.u a.2.v
 
 /-- The algebraic span of finite ordered Brownian increment products. -/
+@[expose]
 def brownianOrderedChainSpan (hB : IsPreBrownianReal B P) :
     Submodule ℝ (RandomL2 P) :=
   Submodule.span ℝ (brownianOrderedChainSet hB)

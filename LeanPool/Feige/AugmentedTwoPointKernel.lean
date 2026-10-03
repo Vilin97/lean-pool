@@ -15,7 +15,7 @@ strict below/above pair.  Thus a single latent parameter always determines a
 mean-one law supported on at most two points.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 
@@ -87,7 +87,7 @@ theorem augmentedTwoPointKernel_support
 
 /-- The complete latent law: its left branch carries the atom at one, and its
 right branch carries the nondegenerate parameter measure. -/
-noncomputable def augmentedLatentMeasure (μ : Measure ℝ) (M : ℝ) :
+@[expose] noncomputable def augmentedLatentMeasure (μ : Measure ℝ) (M : ℝ) :
     Measure AugmentedTwoPointParams :=
   μ {1} • Measure.dirac (Sum.inl ()) +
     (latentParamsMeasure μ M).map Sum.inr

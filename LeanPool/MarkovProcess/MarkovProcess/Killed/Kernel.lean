@@ -34,7 +34,7 @@ the identity only on `U` (it is `0` off `U`); the semigroup structure on the car
 separate packaging.  No Feller property of the killed family is claimed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal
@@ -46,6 +46,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [PseudoMetricSpace alpha]
 
 /-- The event that a path is still inside `U` at time `t` and sits in `B` at time `t`. -/
+@[expose]
 def killedEvent (U : Set alpha) (t : NNReal) (B : Set alpha) : Set (ContinuousPath alpha) :=
   {omega | (t : ℝ≥0∞) < exitTime U omega ∧ omega t ∈ B}
 

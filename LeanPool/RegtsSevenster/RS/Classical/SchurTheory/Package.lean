@@ -18,12 +18,13 @@ symmetric-group representation theory consumed by the development
 is a theorem of this tree.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 open scoped Classical in
 /-- **The Schur package.** -/
+@[expose]
 noncomputable def schurPackage : SchurPackage.{u} :=
   schurPackageOf three_pow_mul_factorial_ge
     (fun lam mu hle h =>

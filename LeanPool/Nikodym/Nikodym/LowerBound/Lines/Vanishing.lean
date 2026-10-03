@@ -20,7 +20,7 @@ degree at most `r (q - 1) - 1` that satisfies the non-private jet conditions alo
 restricts identically to zero on that line.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

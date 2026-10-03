@@ -40,7 +40,7 @@ This file provides the honest objects for that induction:
 * `moise_triangulation_of_boundaries` — the finite induction and final geometric realization.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 
@@ -97,7 +97,7 @@ namespace PartialTriangulation
 variable {S : Type*} [TopologicalSpace S] (T : PartialTriangulation S)
 
 /-- Forget the ambient embedding and retain the intrinsic finite complex. -/
-@[reducible] def toIntrinsic : IntrinsicTwoComplex where
+@[expose, reducible] def toIntrinsic : IntrinsicTwoComplex where
   Vertex := T.Vertex
   faces := T.faces
   faces_card := T.faces_card
@@ -105,7 +105,7 @@ variable {S : Type*} [TopologicalSpace S] (T : PartialTriangulation S)
 @[simp] theorem toIntrinsic_faces : T.toIntrinsic.faces = T.faces := rfl
 
 /-- The part of `S` covered by the partial triangulation. -/
-def support : Set S :=
+@[expose] def support : Set S :=
   Set.range T.embed
 
 /-- Restrict the ambient embedding to a set known to contain the support. -/
@@ -138,7 +138,8 @@ abbrev reembed (f : T.toIntrinsic.realization → S)
 
 theorem reembed_support (f : T.toIntrinsic.realization → S)
     (hf : _root_.Topology.IsEmbedding f) :
-    (T.reembed f hf).support = Set.range f := rfl
+    (T.reembed f hf).support = Set.range f := by
+  exact rfl
 
 /-- Replace the ambient embedding on a selected part of the intrinsic realization and retain
 the old embedding outside.  The analytic frontier argument is deliberately supplied as an
@@ -251,7 +252,7 @@ theorem restrictFaces_support (p : Finset T.Vertex → Prop)
     exact ⟨z, rfl⟩
 
 /-- Replace a partial triangulation by a faithful finite intrinsic subdivision. -/
-noncomputable def refine (R : T.toIntrinsic.Subdivision) : PartialTriangulation S where
+@[expose] noncomputable def refine (R : T.toIntrinsic.Subdivision) : PartialTriangulation S where
   Vertex := R.refined.Vertex
   faces := R.refined.faces
   faces_card := R.refined.faces_card
@@ -316,7 +317,7 @@ noncomputable def toGeometricTriangulation (hcovers : T.support = Set.univ) :
     T.isEmbedding.toHomeomorphOfSurjective (Set.range_eq_univ.mp hcovers)
 
 /-- The edges of a partial triangulation: the two-element subsets of its faces. -/
-def edges : Finset (Finset T.Vertex) :=
+@[expose] def edges : Finset (Finset T.Vertex) :=
   T.faces.biUnion fun t => t.powersetCard 2
 
 /-- The dual graph of the maximal faces of a partial triangulation is connected. -/
@@ -335,7 +336,7 @@ boundary to be an edge subcomplex permits an interior chord joining two boundary
 arbitrary convex-hull polygonalization can flatten such a chord onto the model boundary.  The
 facewise condition rules that out and is stable under affine subdivision: the pullback of its
 supporting face to every new triangle is again empty, a vertex, or an edge. -/
-def BoundaryFacewiseRegular [ChartedSpace (EuclideanHalfSpace 2) S] : Prop :=
+@[expose] def BoundaryFacewiseRegular [ChartedSpace (EuclideanHalfSpace 2) S] : Prop :=
   ∀ t ∈ T.faces, ∃ b : Finset T.Vertex,
     b ⊆ t ∧ b.card ≤ 2 ∧
       ∀ x : T.toIntrinsic.realization, x ∈ T.toIntrinsic.faceCarrier t →
@@ -346,7 +347,7 @@ def BoundaryFacewiseRegular [ChartedSpace (EuclideanHalfSpace 2) S] : Prop :=
 
 This is the side-local form used by the gluing theorem.  It deliberately mentions only
 barycentric coordinates, so it transports transparently across vertex relabelings. -/
-def BoundaryFacewiseRegularEmbedding
+@[expose] def BoundaryFacewiseRegularEmbedding
     [ChartedSpace (EuclideanHalfSpace 2) S]
     {V : Type*} [Fintype V] (F : Finset (Finset V))
     (e : GeometricRealization V F → S) : Prop :=
@@ -1296,7 +1297,7 @@ namespace PartialTriangulation
 variable {S : Type*} [TopologicalSpace S]
 
 /-- The part of the intrinsic realization whose ambient image lies in a Rado chart domain. -/
-def chartOverlap (T : PartialTriangulation S) (c : MoiseChart S) :
+@[expose] def chartOverlap (T : PartialTriangulation S) (c : MoiseChart S) :
     Set T.toIntrinsic.realization :=
   T.embed ⁻¹' c.domain
 
@@ -1305,7 +1306,7 @@ theorem isOpen_chartOverlap (T : PartialTriangulation S) (c : MoiseChart S) :
   c.isOpen_domain.preimage T.isEmbedding.continuous
 
 /-- Include an overlap point into the chart domain through the old partial triangulation. -/
-def chartOverlapToDomain (T : PartialTriangulation S) (c : MoiseChart S) :
+@[expose] def chartOverlapToDomain (T : PartialTriangulation S) (c : MoiseChart S) :
     T.chartOverlap c → c.domain :=
   fun x ↦ ⟨T.embed x.1, x.2⟩
 
@@ -1316,7 +1317,7 @@ theorem isEmbedding_chartOverlapToDomain (T : PartialTriangulation S)
     c.domain fun x ↦ x.2
 
 /-- Chart coordinates of the old partial triangulation on the overlap. -/
-def chartOverlapMap (T : PartialTriangulation S) (c : MoiseChart S) :
+@[expose] def chartOverlapMap (T : PartialTriangulation S) (c : MoiseChart S) :
     T.chartOverlap c → Plane :=
   fun x ↦ (c.chart (T.chartOverlapToDomain c x) : Plane)
 
@@ -2112,7 +2113,7 @@ theorem finite_facesMeeting
   Q.complex.locallyFinite.finite_nonempty_inter_compact hC
 
 /-- The finite subtype of replacement faces meeting a specified compact chart set. -/
-noncomputable def FacesMeeting
+@[expose] noncomputable def FacesMeeting
     (Q : PolygonalReplacementPresentation X V) (C : Set V)
     (_ : IsCompact C) : Type :=
   {f : Q.complex.Face | (Q.complex.faceCarrier f ∩ C).Nonempty}
@@ -2487,13 +2488,13 @@ noncomputable def patchTriangleMesh (k : ChartKind) : TriangleMesh :=
   k.patchComplex.toTriangleMesh
 
 /-- The finite old-side coordinate mesh in the common old/patch arrangement. -/
-noncomputable def patchOldMesh (k : ChartKind)
+@[expose] noncomputable def patchOldMesh (k : ChartKind)
     (Q : PolygonalReplacementPresentation X k.perturbationRegion) : TriangleMesh :=
   PolygonalFamily.selectedSynchronizedMesh (Q.patchFacePolygon k)
     (patchTriangleMesh k) (fun _ ↦ True)
 
 /-- The finite new-patch coordinate mesh in the same common arrangement. -/
-noncomputable def patchNewMesh (k : ChartKind)
+@[expose] noncomputable def patchNewMesh (k : ChartKind)
     (Q : PolygonalReplacementPresentation X k.perturbationRegion) : TriangleMesh :=
   PolygonalFamily.targetSynchronizedMesh (Q.patchFacePolygon k)
     (patchTriangleMesh k)
@@ -2780,12 +2781,12 @@ theorem patchComplex_support_subset_arrangementMesh (k : ChartKind)
     (PolygonalFamily.enclosingRadius_pos J)
 
 /-- The old member of the common arrangement, restricted to the chosen polygonal union. -/
-noncomputable def synchronizedPatchOldMesh (k : ChartKind)
+@[expose] noncomputable def synchronizedPatchOldMesh (k : ChartKind)
     (J : ι → PolygonalCircle) : TriangleMesh :=
   PolygonalFamily.selectedSynchronizedMesh J k.patchComplex.toTriangleMesh (fun _ ↦ True)
 
 /-- The fixed chart patch in the same common arrangement. -/
-noncomputable def synchronizedPatchNewMesh (k : ChartKind)
+@[expose] noncomputable def synchronizedPatchNewMesh (k : ChartKind)
     (J : ι → PolygonalCircle) : TriangleMesh :=
   PolygonalFamily.targetSynchronizedMesh J k.patchComplex.toTriangleMesh
 
@@ -2985,11 +2986,11 @@ namespace SynchronizedTarget
 variable {ι : Type*} [Fintype ι]
 
 /-- The old polygonal member of the common arrangement with an arbitrary finite target mesh. -/
-noncomputable def oldMesh (J : ι → PolygonalCircle) (N : TriangleMesh) : TriangleMesh :=
+@[expose] noncomputable def oldMesh (J : ι → PolygonalCircle) (N : TriangleMesh) : TriangleMesh :=
   PolygonalFamily.selectedSynchronizedMesh J N (fun _ ↦ True)
 
 /-- The prescribed finite target member of the same common arrangement. -/
-noncomputable def newMesh (J : ι → PolygonalCircle) (N : TriangleMesh) : TriangleMesh :=
+@[expose] noncomputable def newMesh (J : ι → PolygonalCircle) (N : TriangleMesh) : TriangleMesh :=
   PolygonalFamily.targetSynchronizedMesh J N
 
 theorem oldMesh_support (J : ι → PolygonalCircle) (N : TriangleMesh) :
@@ -3230,12 +3231,12 @@ variable {ι : Type*} [Fintype ι]
 
 /-- The selected polygonal side of the common arrangement after finitely many additional
 certificate cuts. -/
-noncomputable def oldMesh (J : ι → PolygonalCircle) (N : TriangleMesh)
+@[expose] noncomputable def oldMesh (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) : TriangleMesh :=
   PolygonalFamily.selectedRelativeSynchronizedMesh J N lines (fun _ ↦ True)
 
 /-- The target side of the same additionally cut arrangement. -/
-noncomputable def newMesh (J : ι → PolygonalCircle) (N : TriangleMesh)
+@[expose] noncomputable def newMesh (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ)) : TriangleMesh :=
   PolygonalFamily.targetRelativeSynchronizedMesh J N lines
 
@@ -3300,15 +3301,15 @@ def newFaceToAmbient (J : ι → PolygonalCircle) (N : TriangleMesh)
 theorem oldFaceToAmbient_val (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ))
     (f : TriangleFamily.Face (oldMesh J N lines).triangles) :
-    (oldFaceToAmbient J N lines f).1 = f.1 :=
-  rfl
+    (oldFaceToAmbient J N lines f).1 = f.1 := by
+  exact rfl
 
 @[simp]
 theorem newFaceToAmbient_val (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ))
     (f : TriangleFamily.Face (newMesh J N lines).triangles) :
-    (newFaceToAmbient J N lines f).1 = f.1 :=
-  rfl
+    (newFaceToAmbient J N lines f).1 = f.1 := by
+  exact rfl
 
 /-- Ambient-adjacent chambers retained on opposite sides give a genuine cross-edge certificate
 for the two synchronized submeshes. -/
@@ -3362,7 +3363,7 @@ theorem meshes_coordinateEmbed_eq_iff
     exact ((PolygonalFamily.targetRelativeSynchronizedMesh_triangle_mem J N lines).mp ht).1
 
 /-- The `oldSurfaceEmbed` declaration. -/
-noncomputable def oldSurfaceEmbed
+@[expose] noncomputable def oldSurfaceEmbed
     {S : Type*} [TopologicalSpace S] (c : MoiseChart S)
     (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ))
@@ -3375,7 +3376,7 @@ noncomputable def oldSurfaceEmbed
       exact hmodel) x)).1
 
 /-- The `newSurfaceEmbed` declaration. -/
-noncomputable def newSurfaceEmbed
+@[expose] noncomputable def newSurfaceEmbed
     {S : Type*} [TopologicalSpace S] (c : MoiseChart S)
     (J : ι → PolygonalCircle) (N : TriangleMesh)
     (lines : List (Plane →ᵃ[ℝ] ℝ))
@@ -3601,7 +3602,7 @@ theorem tileFaceMeetingPullback_coordinateLine_mem
   exact ⟨f, by simp, ha⟩
 
 /-- The retained certificate lines together with any additional finite conforming cuts. -/
-noncomputable def tileFaceMeetingLines
+@[expose] noncomputable def tileFaceMeetingLines
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3625,7 +3626,7 @@ theorem tileFaceMeetingPullback_coordinateLine_mem_lines
     (A.tileFaceMeetingPullback_coordinateLine_mem C hC N f ha)
 
 /-- Two transverse coordinate cuts through each point in a finite family. -/
-noncomputable def coordinateAnchorLines
+@[expose] noncomputable def coordinateAnchorLines
     {α : Type*} [Fintype α] (p : α → Plane) :
     List (Plane →ᵃ[ℝ] ℝ) :=
   (Finset.univ : Finset α).toList.flatMap fun a ↦
@@ -3647,7 +3648,7 @@ theorem horizontalLine_mem_coordinateAnchorLines
   exact ⟨a, by simp, by simp⟩
 
 /-- The certificate-cut synchronized old mesh over the finite selected source family. -/
-noncomputable def tileFacesMeetingRelativeOldMesh
+@[expose] noncomputable def tileFacesMeetingRelativeOldMesh
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3801,7 +3802,7 @@ theorem sourceTileFacesMeeting_eq_coordinatePreimage
 
 /-- The certificate-cut synchronized old mesh, regarded as a subspace of the global
 replacement support. -/
-noncomputable def tileFacesMeetingRelativeOldCoordinateSupport
+@[expose] noncomputable def tileFacesMeetingRelativeOldCoordinateSupport
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3858,7 +3859,7 @@ theorem isEmbedding_tileFacesMeetingRelativeOldCoordinateSupport
 
 /-- Pull the certificate-cut old coordinate triangulation back through the retained source
 homeomorphism. -/
-noncomputable def tileFacesMeetingRelativeSourceEmbed
+@[expose] noncomputable def tileFacesMeetingRelativeSourceEmbed
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3942,7 +3943,7 @@ noncomputable abbrev tileFacesMeetingRelativeSourceComplex
 
 /-- The original intrinsic point represented by one used vertex of the certificate-cut local
 source mesh. -/
-noncomputable def tileFacesMeetingRelativeSourceVertexPoint
+@[expose] noncomputable def tileFacesMeetingRelativeSourceVertexPoint
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3957,7 +3958,7 @@ noncomputable def tileFacesMeetingRelativeSourceVertexPoint
 
 /-- The same local source vertex, retaining its proof of membership in the replacement
 domain. -/
-noncomputable def tileFacesMeetingRelativeSourceVertexPointInOpen
+@[expose] noncomputable def tileFacesMeetingRelativeSourceVertexPointInOpen
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
     {Q : PolygonalReplacementPresentation U V}
     (A : PolygonalReplacementSourceAtlas K U V Q)
@@ -3980,8 +3981,8 @@ noncomputable def tileFacesMeetingRelativeSourceVertexPointInOpen
       C hC N extraLines).UsedVertex) :
     (A.tileFacesMeetingRelativeSourceVertexPointInOpen
       C hC N extraLines v).1 =
-      A.tileFacesMeetingRelativeSourceVertexPoint C hC N extraLines v :=
-  rfl
+      A.tileFacesMeetingRelativeSourceVertexPoint C hC N extraLines v := by
+  exact rfl
 
 /-- In replacement coordinates, a used local source vertex is its literal plane-mesh
 vertex. -/
@@ -4458,8 +4459,8 @@ theorem relativeOldTrianglePoint_val_eq_triangleCoords
         C hC N extraLines).triangleCarrier t.1}) :
     (A.relativeOldTrianglePoint C hC N extraLines t p).1 =
       (A.tileFacesMeetingRelativeOldMesh
-        C hC N extraLines).triangleCoords t p.1 :=
-  rfl
+        C hC N extraLines).triangleCoords t p.1 := by
+  exact rfl
 
 theorem relativeOldTrianglePoint_supported
     {K : IntrinsicTwoComplex} {U : Set K.realization} {V : Set Plane}
@@ -4775,7 +4776,7 @@ theorem levelFaceParentPlaneAffine_surjective
   exact levelFaceParentPlaneAffine_injOn K s
 
 /-- Barycentric coordinate of a level face after transport to its original parent plane. -/
-noncomputable def levelFaceParentCoord
+@[expose] noncomputable def levelFaceParentCoord
     (K : IntrinsicTwoComplex) {n : ℕ} (s : K.LevelFace n)
     (k : Fin 3) : Plane →ᵃ[ℝ] ℝ :=
   (affineBasisOfTriangle
@@ -5300,7 +5301,7 @@ private noncomputable def straightenedChartOpenPresentation
     sourceHomeomorph := q
     facePolygon := fun f ↦ R.facePolygonalCircle (G := G) f
     faceFillingMap := fun f ↦ (R.facePLFilling (G := G) f).map
-    faceMap_eq := fun _ _ ↦ rfl
+    faceMap_eq := fun _ _ ↦ by exact rfl
     faceCertificate := fun f ↦ (R.facePLFilling (G := G) f).certificate
     faceClosedRegion_subset := fun f ↦ H.closedRegions_mem_region f
     faceCarrier_eq := fun f ↦ R.polygonalReplacementComplex_faceCarrier H f }
@@ -5535,8 +5536,16 @@ private theorem straightenedChartOpen_coordZero_iff_boundary
     let E := T.toIntrinsic.adaptiveFanFaceVertexEquiv U hU a
     let v₀ : {v // v ∈ T.toIntrinsic.adaptiveGlobalFanFaceVertices U hU a} :=
       E.symm (T.toIntrinsic.adaptiveFanCenterVertex U hU a)
+    have hv₀value : v₀.1.1 = T.toIntrinsic.adaptiveFaceCenter U a.1 := by
+      calc
+        v₀.1.1 = (E v₀).1 :=
+          (T.toIntrinsic.adaptiveFanFaceVertexEquiv_apply_val U hU a v₀).symm
+        _ = (T.toIntrinsic.adaptiveFanCenterVertex U hU a).1 :=
+          congrArg Subtype.val (E.apply_symm_apply _)
+        _ = T.toIntrinsic.adaptiveFaceCenter U a.1 := by
+          simp only [IntrinsicTwoComplex.adaptiveFanCenterVertex]
     have hv₀ : v₀.1.1 ∉ T.toIntrinsic.faceCarrier b := by
-      change T.toIntrinsic.adaptiveFaceCenter U a.1 ∉ T.toIntrinsic.faceCarrier b
+      rw [hv₀value]
       apply T.toIntrinsic.adaptiveFaceCenter_not_mem_faceCarrier_of_subordinate hU a t
       · exact (Classical.choose_spec hs).2
       · exact hbt
@@ -6347,7 +6356,7 @@ theorem moise_secondCountableTopology : SecondCountableTopology S := by
 
 /-- Two embeddings of the same source preserve the ambient manifold-boundary stratum
 pointwise.  This is the exact relative certificate needed by the crossing weld. -/
-def PreservesManifoldBoundary {X : Type*} (f g : X → S) : Prop :=
+@[expose] def PreservesManifoldBoundary {X : Type*} (f g : X → S) : Prop :=
   ∀ x,
     f x ∈ (modelWithCornersEuclideanHalfSpace 2).boundary S ↔
       g x ∈ (modelWithCornersEuclideanHalfSpace 2).boundary S
@@ -6355,7 +6364,7 @@ def PreservesManifoldBoundary {X : Type*} (f g : X → S) : Prop :=
 /-- The raw chart straightening, augmented only with the certificate that its frontier-glued
 embedding preserves ambient boundary membership.  The crossing-weld implementation consumes this
 proposition to retain the boundary-line subcomplex during the bordered induction. -/
-def PartialTriangulation.BoundaryPreservingStraightening
+@[expose] def PartialTriangulation.BoundaryPreservingStraightening
     (T : PartialTriangulation S) (c : MoiseChart S) : Prop :=
   ∀ (A : Set S), IsClosed A →
     ∃ (U : Set T.toIntrinsic.realization) (_ : IsOpen U)

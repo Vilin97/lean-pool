@@ -23,7 +23,7 @@ site family yields the closed normalized-weight graph over any topological param
   site family.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -97,7 +97,7 @@ theorem isClosed_isNormalizedEqualAreaWeight
 /-- The **normalized-weight graph** over a topological parameter space `X` carrying a continuous
 site family `sites : C(X, Config n)`: the set of pairs `((C, x), w)` for which `w` is a normalized
 equal-area weight for the sites `sites x` inside the variable body `C`. -/
-def NormalizedWeightGraph
+@[expose] def NormalizedWeightGraph
     {X : Type*} [TopologicalSpace X]
     (sites : C(X, Config n)) (hA : 0 < A) :
     Set ((BodySpace K A × X) × (Fin n → ℝ)) :=

@@ -18,7 +18,7 @@ genus-two inversion formula to vanish.  Here that is checked directly from
 the coordinate families of Corollary 3.6.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

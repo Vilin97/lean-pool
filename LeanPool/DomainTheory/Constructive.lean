@@ -45,7 +45,7 @@ folding `insert`. Every declaration here is audited to depend only on
 `[propext, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Constructive
 

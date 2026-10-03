@@ -14,7 +14,7 @@ public import LeanPool.ScottishBook155.ProtectedChainTransport
 # Gluing compatible closed prefixes below a limit
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -30,6 +30,7 @@ structure CompatiblePrefixFamily (j : RI) where
 namespace ProtectedPrefix
 
 /-- The top-to-top link supplied by a restriction equality. -/
+@[expose]
 noncomputable def linkOfRestriction {i k : RI}
     (Pi : ProtectedPrefix i) (Pk : ProtectedPrefix k) (hik : i ≤ k)
     (hchain : (Pk.restriction hik).chain = Pi.chain) :
@@ -54,6 +55,7 @@ abbrev stage (i : Set.Iio j) : ProtectedStage.{0} ((1 : ℝ) / 2) :=
 
 /-- The canonical protected link between two members of a compatible prefix
 family. -/
+@[expose]
 noncomputable def link (i k : Set.Iio j) (hik : i ≤ k) :
     ProtectedLink (F.stage i) (F.stage k) 1 :=
   (F.item i).linkOfRestriction (F.item k) hik (F.coherent i k hik)
@@ -212,6 +214,7 @@ theorem target_cast_project_eq_later (a i k : Set.Iio j)
 
 /-- Glue a compatible family of closed prefixes into one protected chain on
 the open initial segment. -/
+@[expose]
 noncomputable def openChain :
     ProtectedChain (ι := Set.Iio j) ((1 : ℝ) / 2) 1 where
   stage := F.stage

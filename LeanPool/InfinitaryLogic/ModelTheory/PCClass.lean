@@ -19,7 +19,7 @@ Deliberately language-generic and free of any nonemptiness assumption; the Lópe
 specialization (`baseGraphEmb`, code compatibility) lives in `Methods/LopezEscobar/PCMem.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -27,7 +27,7 @@ variable {L : Language.{u, v}} {L' : Language.{u', v'}}
 
 /-- **Projective-class membership**: `M` (as an `L`-structure) expands, on the same carrier, to
 an `L'`-structure satisfying `Θ`.  No nonemptiness is built in. -/
-def PCMem (g : L →ᴸ L') (Θ : L'.Sentenceω) (M : Type*) [L.Structure M] : Prop :=
+@[expose] def PCMem (g : L →ᴸ L') (Θ : L'.Sentenceω) (M : Type*) [L.Structure M] : Prop :=
   ∃ S' : L'.Structure M, @LHom.IsExpansionOn L L' g M _ S' ∧ @Sentenceω.Realize L' Θ M S'
 
 end FirstOrder.Language

@@ -36,7 +36,7 @@ and the theorem `doubleStar_terminates` assembled from it, live in
 `InflationGraphOpen/DoubleStar.lean`; everything in this file is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -65,6 +65,7 @@ theorem gRelabel_refl (ω : GAssign Γ t) :
 
 /-- Relabelling by `π` is a bijection of assignments, with inverse the relabelling by
 `π⁻¹`. -/
+@[expose]
 def gRelabelEquiv (π : Γ.Edge → Equiv.Perm (Fin t)) : GAssign Γ t ≃ GAssign Γ t where
   toFun := gRelabel π
   invFun := gRelabel (fun e => (π e)⁻¹)
@@ -98,6 +99,7 @@ theorem pushforward_comp_gRelabel {β : Type*} [DecidableEq β] {Δ : GAssign Γ
 /-- The rows read by a table after relabelling the copy indices of each source: row `r` reads,
 at every vertex, the copy `π_e r` of each incident source `e`.  For `π = 1` these are the `t`
 diagonal rows. -/
+@[expose]
 def gTwist (π : Γ.Edge → Equiv.Perm (Fin t)) (ω : GAssign Γ t) : Fin t → (Γ.V → Bool) :=
   fun r v => ω ⟨v, fun e => π e.1 r⟩
 
@@ -669,6 +671,7 @@ def tableOf (P : GTarget Γ) (ω : GAssign Γ 2) : (Γ.V → Bool) → (Γ.V →
 
 /-- The conditioning event of the component with centre source `y`: every leaf of that
 component has its two copies reading the prescribed array. -/
+@[expose]
 def evt (P : GTarget Γ) (y : Γ.Edge) (ω : GAssign Γ 2) : Prop :=
   ∀ ℓ ∈ D.leaves y, ∀ m : Fin 2, readDiag ω m ℓ = xarr P ℓ m
 

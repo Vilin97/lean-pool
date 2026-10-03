@@ -25,7 +25,7 @@ section
 uniform over every continuous phase graph, including arbitrarily high
 oscillation frequencies. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -104,7 +104,7 @@ section
 /-! Restriction to a fixed continuous phase graph preserves time continuity
 in actual spatial L². The proof uses the uniform trace estimate for differences. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -181,7 +181,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -290,7 +290,7 @@ section
 /-! The graph trace estimate applies to the actual affine remainder in a
 derivative quotient, with the same constants for all phase frequencies. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -353,7 +353,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -438,7 +438,7 @@ section
 /-! Genuine Sobolev time derivatives of coherent towers pass to actual
 spatial L² derivatives after restriction to any fixed phase graph. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -508,7 +508,7 @@ section
 /-! A genuine derivative at one Sobolev order gives the same derivative at
 all lower orders of the coherent towers. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -568,7 +568,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

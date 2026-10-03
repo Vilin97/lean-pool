@@ -19,7 +19,7 @@ its true time derivatives, and all endpoint conditions are constructed by
 the previously proved coercive solve. No solution is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -86,7 +86,7 @@ def frameSecond : C(Icc (0 : ℝ) D.T,Space →ᵇ U →L[ℝ] Space) :=
   -pathCompositionMap B.H.field D.frame.field
 
 @[simp] theorem frameSecond_apply (t : Icc (0 : ℝ) D.T) (x : Space) (v : U) :
-    B.frameSecond t x v = -(B.H.field t x (D.frame.field t x v)) := rfl
+    B.frameSecond t x v = -(B.H.field t x (D.frame.field t x v)) := by rfl
 
 theorem frameSecond_derivative (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) (x : Space) :
     HasDerivWithinAt (fun s => extendPath D.T D.T_pos.le D.frameDerivative.field s x)
@@ -99,7 +99,7 @@ theorem frameSecond_derivative (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) (x : Spa
 
 /-- The genuine spatial-angular L² inverse data, with uniform coercivity
 derived from the actual inverse deformation. -/
-def coefficients : EulerCylinderDirichlet.Coefficients D.T U Space where
+@[expose] def coefficients : EulerCylinderDirichlet.Coefficients D.T U Space where
   time_pos := D.T_pos
   Q := D.frame.field
   Q₁ := D.frameDerivative.field
@@ -117,10 +117,10 @@ def coefficients : EulerCylinderDirichlet.Coefficients D.T U Space where
   small := B.small
 
 theorem coefficient_frame (t : Icc (0 : ℝ) D.T) (x : Space) (v : U) :
-    B.coefficients.Q t x v = D.F.field t x (D.R v : Space) := rfl
+    B.coefficients.Q t x v = D.F.field t x (D.R v : Space) := by rfl
 
 theorem coefficient_hessian (t : Icc (0 : ℝ) D.T) (x : Space) :
-    B.coefficients.H t x = B.H.field t x := rfl
+    B.coefficients.H t x = B.H.field t x := by rfl
 
 end HistoryData
 

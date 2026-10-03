@@ -13,7 +13,7 @@ No strict deterministic method has a uniform finite query horizon on the normali
 family.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

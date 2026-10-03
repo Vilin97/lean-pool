@@ -9,7 +9,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.Examples.ShearFlow
 
 /-! # Pointwise energy calculus for the viscous shear -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic
@@ -19,9 +19,11 @@ open CKN.ShearCalculus
 namespace CKN
 
 /-- The kinetic-energy density of the shear. -/
+@[expose]
 noncomputable def shearEnergy (z : Vec3 × ℝ) : ℝ := shearAmplitude z * shearAmplitude z
 
 /-- The cubic scalar transport factor. -/
+@[expose]
 noncomputable def shearTransport (z : Vec3 × ℝ) : ℝ := shearEnergy z * shearAmplitude z
 
 /-- Smoothness of the energy density. -/

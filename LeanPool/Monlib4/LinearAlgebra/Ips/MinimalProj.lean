@@ -51,7 +51,7 @@ we finally have (i) if and only if (iv) for idempotent self-adjoint operators on
 
 -/
 
-@[expose] public section
+public section
 
 open Module.End
 

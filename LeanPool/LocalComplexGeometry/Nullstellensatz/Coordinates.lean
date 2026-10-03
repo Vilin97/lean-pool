@@ -18,7 +18,7 @@ coordinates.  This file records that invariance at the predicate-germ level,
 without evaluating abstract function germs away from the origin.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

@@ -23,7 +23,7 @@ Also provided: the annuli `1 ≤ |z ∓ 4| ≤ 2` sit inside `B(0, 8)`, and rela
 trivial inclusions used when instantiating the configuration in a chart.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Complex
 

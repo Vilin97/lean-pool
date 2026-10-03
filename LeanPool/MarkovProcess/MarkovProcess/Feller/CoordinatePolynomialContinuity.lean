@@ -20,7 +20,7 @@ This file handles only explicit finite coordinate polynomials.  The passage to a
 compactly supported continuous tests is in `Feller/FiniteTimeCompactTestContinuity.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

@@ -28,7 +28,7 @@ factor is minus the product of the two end colours' odd-partner
 signs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -39,6 +39,7 @@ namespace RS
 open scoped Classical in
 /-- Apply the odd-partner involution to the (odd) state entries at
 two labels, leaving all other labels untouched. -/
+@[expose]
 noncomputable def stateOddFlip {k ℓ : ℕ} {α : Type}
     (st : GenBoundaryState k ℓ α) (i₁ i₂ : α) :
     GenBoundaryState k ℓ α :=
@@ -1501,6 +1502,7 @@ original state.  Unlike the separated factor `−1`, it depends on
 the boundary state (only through those two signs), and the
 transform additionally `∂`-relabels the state at the two chain-end
 labels. -/
+@[expose]
 noncomputable def twoPathNonSepFactor (ℓ : ℕ)
     (c₁ c₂ : Fin (2 * ℓ)) : ℂ :=
   -(((oddPartnerSign ℓ c₁ * oddPartnerSign ℓ c₂ : ℤ) : ℂ))

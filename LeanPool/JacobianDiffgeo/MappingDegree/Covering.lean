@@ -33,7 +33,7 @@ Downstream may further compose with mathlib's `IsCoveringMapOn.isCoveringMap_res
 with `Topology/Homotopy/Lifting.lean` for path/homotopy lifting — no extra exports needed here.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

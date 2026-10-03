@@ -26,7 +26,7 @@ global uniqueness step is to propagate equality of the maximal difference across
 adjacency graph.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 

@@ -28,7 +28,7 @@ the local patterns from `LocalPattern` and the odd balancing theorem produce col
 such that adjacent gaps have different colours and every colour occurs evenly at each letter.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 namespace CyclicWord
@@ -52,6 +52,7 @@ variable (W : Word (V := V))
 abbrev Pos := Fin (W.n + 1)
 
 /-- The position immediately preceding `i`, cyclically. -/
+@[expose]
 def prev (i : W.Pos) : W.Pos := (finRotate (W.n + 1)).symm i
 
 /-- Occurrences of a letter. -/
@@ -61,6 +62,7 @@ instance (v : V) : Fintype (W.Occurrence v) :=
   Subtype.fintype fun i : W.Pos ↦ W.letter i = v
 
 /-- The two gap colours incident with an occurrence. -/
+@[expose]
 def incidentColor (x : W.Pos → Color) {v : V} (o : W.Occurrence v) (s : Fin 2) : Color :=
   if s = 0 then x (W.prev o.1) else x o.1
 

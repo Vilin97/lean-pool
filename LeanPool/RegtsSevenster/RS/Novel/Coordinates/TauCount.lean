@@ -16,7 +16,7 @@ Combinatorial lemmas connecting the tau-sign product over vertices
 to the number of outgoing flags, via the incoming/outgoing partition.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

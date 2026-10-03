@@ -17,7 +17,7 @@ orbits by the orbit representative gives the directions.  Canonical
 data therefore exist exactly when a transition system does.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -144,6 +144,7 @@ theorem relComplete_ne (κ : F.RelTransitionSystem)
 
 /-- The completed matching as a permutation of the participating
 flags. -/
+@[expose]
 noncomputable def relMatchPerm (κ : F.RelTransitionSystem) :
     Equiv.Perm {f : W.Flag // f ∈ F.flags} where
   toFun x := ⟨relComplete κ x.val, relComplete_mem κ x.prop⟩

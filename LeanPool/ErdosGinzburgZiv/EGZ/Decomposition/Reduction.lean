@@ -17,7 +17,7 @@ closed under joins.  These are the order-theoretic facts used when removing
 inactive nodes in the reduced-decomposition lemma.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -25,7 +25,7 @@ continuous facewise map on the polygonal pre-realization respects every raw glui
 `SphereQuotientHomeomorph` descends this map and proves that it is a homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -42,7 +42,7 @@ theorem normSq_le_one {n : ℕ} (z : PolygonCell n) : Complex.normSq z.val ≤ 1
   simpa only [Metric.mem_closedBall, Complex.dist_eq, sub_zero] using z.property
 
 /-- The nonnegative height above the equatorial plane associated to a disk point. -/
-noncomputable def hemisphereHeight {n : ℕ} (z : PolygonCell n) : ℝ :=
+@[expose] noncomputable def hemisphereHeight {n : ℕ} (z : PolygonCell n) : ℝ :=
   Real.sqrt (1 - Complex.normSq z.val)
 
 theorem hemisphereHeight_nonneg {n : ℕ} (z : PolygonCell n) :
@@ -62,12 +62,12 @@ theorem continuous_hemisphereHeight {n : ℕ} :
     (continuous_const.sub (Complex.continuous_normSq.comp PolygonCell.continuous_val))
 
 /-- A disk point placed on the upper unit hemisphere. -/
-noncomputable def upperHemisphereVector (z : PolygonCell 1) :
+@[expose] noncomputable def upperHemisphereVector (z : PolygonCell 1) :
     EuclideanSpace ℝ (Fin 3) :=
   !₂[z.val.re, z.val.im, hemisphereHeight z]
 
 /-- A conjugated disk point placed on the lower unit hemisphere. -/
-noncomputable def lowerHemisphereVector (z : PolygonCell 1) :
+@[expose] noncomputable def lowerHemisphereVector (z : PolygonCell 1) :
     EuclideanSpace ℝ (Fin 3) :=
   !₂[(conj z.val).re, (conj z.val).im, -hemisphereHeight z]
 
@@ -98,7 +98,7 @@ theorem continuous_lowerHemisphereVector : Continuous lowerHemisphereVector := b
   fun_prop
 
 /-- The continuous map from a monogon disk to the upper unit hemisphere. -/
-noncomputable def upperHemisphere : C(PolygonCell 1, SphereRepresentative) where
+@[expose] noncomputable def upperHemisphere : C(PolygonCell 1, SphereRepresentative) where
   toFun z := ⟨upperHemisphereVector z, by
     rw [Metric.mem_sphere]
     simpa only [dist_eq_norm, sub_zero] using upperHemisphereVector_norm z⟩
@@ -107,7 +107,7 @@ noncomputable def upperHemisphere : C(PolygonCell 1, SphereRepresentative) where
     simpa only [dist_eq_norm, sub_zero] using upperHemisphereVector_norm z
 
 /-- The continuous map from a monogon disk to the lower unit hemisphere. -/
-noncomputable def lowerHemisphere : C(PolygonCell 1, SphereRepresentative) where
+@[expose] noncomputable def lowerHemisphere : C(PolygonCell 1, SphereRepresentative) where
   toFun z := ⟨lowerHemisphereVector z, by
     rw [Metric.mem_sphere]
     simpa only [dist_eq_norm, sub_zero] using lowerHemisphereVector_norm z⟩

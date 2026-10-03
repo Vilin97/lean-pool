@@ -71,7 +71,7 @@ of the split edge lies on neither half.
   `Schoenflies.exists_closedPolygon_split`, which requires them to be corners.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 
@@ -177,7 +177,7 @@ theorem isArcBetween_chain (P : PrePolygon m) :
 `vertex_inj` and `edges_meet`, so it is the old proof verbatim. -/
 
 /-- The edge list of the arc of `P` that leaves vertex `a` and runs forward through `k` edges. -/
-def arcPieces (P : PrePolygon m) (a : ZMod (m + 3)) (k : ℕ) : List Piece :=
+@[expose] def arcPieces (P : PrePolygon m) (a : ZMod (m + 3)) (k : ℕ) : List Piece :=
   (List.range k).map fun t : ℕ => (P.vertex (a + t), P.vertex (a + t + 1))
 
 /-- Forgetting the `corner` field does not change the edge list of an arc. -/
@@ -301,6 +301,7 @@ theorem parity_splitting (P : PrePolygon m) (u : Plane) (a : ZMod (m + 3)) (hk :
 /-! ## The arcs as sets -/
 
 /-- The arc of `P` that leaves vertex `a` and runs forward through `k` edges, as a set. -/
+@[expose]
 def arc (P : PrePolygon m) (a : ZMod (m + 3)) (k : ℕ) : Set Plane := cover (P.arcPieces a k)
 
 @[simp] theorem arc_toPre (C : ClosedPolygon m) (a : ZMod (m + 3)) (k : ℕ) :
@@ -679,7 +680,7 @@ theorem insEdge_last_subset : segment ℝ z (P.vertex 0) ⊆ P.edge (-1) := by
 
 /-- **The polygon with one extra vertex, interior to its last edge** — equivalently, with the
 last edge split in two at a prescribed interior point. -/
-def insertLast (P : PrePolygon m) (hz : z ∈ openSegment ℝ (P.vertex (-1)) (P.vertex 0)) :
+@[expose] def insertLast (P : PrePolygon m) (hz : z ∈ openSegment ℝ (P.vertex (-1)) (P.vertex 0)) :
     PrePolygon (m + 1) where
   vertex := insVertex P z
   vertex_inj := by

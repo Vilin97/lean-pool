@@ -19,7 +19,7 @@ finite coordinate space.  The finite boxes also supply explicit support sets
 for the lifted weights used in flag decompositions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -63,6 +63,7 @@ theorem card_le_of_latticeSupNorm_le {n K : ℕ} (S : Finset (IntCoord n))
 namespace FpCoord
 
 /-- Coordinatewise integer representatives with least absolute value. -/
+@[expose]
 def centeredLift {p n : ℕ} (c : FpCoord p n) : IntCoord n :=
   fun i ↦ (c i).valMinAbs
 

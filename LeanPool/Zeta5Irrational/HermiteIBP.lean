@@ -30,7 +30,7 @@ Uniform bounds `|F_m(y)| ≤ c_m (1+2πy)^{m+1} / (2π y^{m+1} e^{2πy})` and `|
 give integrability of the products and vanishing boundary terms at `0⁺` and `∞`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set MeasureTheory
 

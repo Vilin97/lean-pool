@@ -20,7 +20,7 @@ carrier restriction is invisible on the collar time window because the
 correction vanishes off the source ball.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal BigOperators

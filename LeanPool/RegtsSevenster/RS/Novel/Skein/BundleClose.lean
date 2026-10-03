@@ -24,7 +24,7 @@ collapses to the fragment; and the lifted low-block pairs are
 then exactly the straight matching.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

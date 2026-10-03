@@ -43,7 +43,7 @@ the supply of
 maximal fixed points is classical.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

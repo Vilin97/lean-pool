@@ -26,7 +26,7 @@ The external discovery data are untrusted: `cells_check` and
 chamber is discharged by the generated coverage theorem, so the
 conclusion is the row on the whole closed orthant. -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow06FixedCover
 

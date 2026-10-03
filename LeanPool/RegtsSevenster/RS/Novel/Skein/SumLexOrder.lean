@@ -20,7 +20,7 @@ multiplicativity of the corrected value, first target of the
 factorization chain.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

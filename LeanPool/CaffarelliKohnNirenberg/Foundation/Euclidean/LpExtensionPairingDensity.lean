@@ -20,7 +20,7 @@ against a fixed dual class and are the device used to pass the identity from
 the dense set to every `Lᵖ` input.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

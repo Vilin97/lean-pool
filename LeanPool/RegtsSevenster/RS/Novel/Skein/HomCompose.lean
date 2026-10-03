@@ -17,13 +17,14 @@ bilinear composition of Hom spaces — the composition of the skein
 category.  On fragment classes it is composition of fragments.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The composition into the quotient, for a fixed left factor. -/
+@[expose]
 noncomputable def homComposeAux (s t u : ℕ)
     (x : Fragment (Fin (s + t)) →₀ ℂ) :
     HomSpace f.val (t + u) →ₗ[ℂ] HomSpace f.val (s + u) :=
@@ -48,6 +49,7 @@ theorem homComposeAux_mk (s t u : ℕ)
 
 /-- **The descended composition** of the skein category: the
 bilinear composition of Hom spaces. -/
+@[expose]
 noncomputable def HomSpace.comp (s t u : ℕ) :
     HomSpace f.val (s + t) →ₗ[ℂ]
       HomSpace f.val (t + u) →ₗ[ℂ] HomSpace f.val (s + u) :=

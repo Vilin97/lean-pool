@@ -22,7 +22,7 @@ powers (1.15.1), and the `δ` of a duality vanishes only on the
 zero module.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

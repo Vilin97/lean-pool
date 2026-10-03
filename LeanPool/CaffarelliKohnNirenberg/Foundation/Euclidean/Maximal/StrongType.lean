@@ -23,7 +23,7 @@ half the level and Tonelli's theorem, so it does not depend on an abstract
 interpolation package.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -37,6 +37,7 @@ namespace CKN.Foundation.Euclidean
 open CKN.Foundation.Parabolic
 
 /-- Explicit strong-type coefficient for the Euclidean maximal operator. -/
+@[expose]
 def maximalStrongConstant (p : ℝ) : ℝ≥0∞ :=
   (2 : ℝ≥0∞) ^ p * ENNReal.ofReal (5 ^ 3) * ENNReal.ofReal p /
     ENNReal.ofReal (p - 1)

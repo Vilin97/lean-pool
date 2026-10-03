@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.OfNorm`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ComplexOrder
 
@@ -202,7 +202,7 @@ def IsContinuousLinearMap.mk' {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [N
 theorem IsContinuousLinearMap.coe_mk' {𝕜 : Type _} [NormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
     {f : E → F} (h : IsContinuousLinearMap 𝕜 f) : f = h.mk' :=
-  rfl
+  by rfl
 
 theorem isBoundedLinearMap_iff_isContinuousLinearMap {𝕜 E : Type _} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
@@ -632,7 +632,7 @@ example {𝕜 X Y Z : Type _} [RCLike 𝕜] [NormedAddCommGroup X]
     LinearIsometryEquiv.apply_symm_apply]
 
 /-- Pull back continuous linear functionals along a continuous linear map. -/
-@[simps] def NormedSpace.Dual.transpose {E F : Type*} (𝕜 : Type*) [RCLike 𝕜]
+@[expose, simps] def NormedSpace.Dual.transpose {E F : Type*} (𝕜 : Type*) [RCLike 𝕜]
   [NormedAddCommGroup E] [NormedSpace 𝕜 E]
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F) :
   StrongDual 𝕜 F →ₗ[𝕜] StrongDual 𝕜 E :=
@@ -654,7 +654,7 @@ lemma NormedSpace.Dual.transpose_isometry
 
 open NormedSpace in
 /-- Pull back continuous linear functionals along a linear isometry equivalence. -/
-@[simps] noncomputable def LinearEquiv.transpose {E F : Type*} (𝕜 : Type*) [RCLike 𝕜]
+@[expose, simps] noncomputable def LinearEquiv.transpose {E F : Type*} (𝕜 : Type*) [RCLike 𝕜]
   [NormedAddCommGroup E] [NormedSpace 𝕜 E]
   [NormedAddCommGroup F] [NormedSpace 𝕜 F]
   (f : E ≃ₗᵢ[𝕜] F) :

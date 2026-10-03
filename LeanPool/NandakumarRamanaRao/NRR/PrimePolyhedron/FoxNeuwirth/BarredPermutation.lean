@@ -21,7 +21,7 @@ The dual Fox--Neuwirth cell has dimension `p - blockCount`.  Thus one-block symb
 dual cells of dimension `p - 1`, while the all-singleton symbols index vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -52,11 +52,11 @@ namespace BarredPermutation
   simp_all
 
 /-- Number of bars strictly before the rank of a label.  This is the zero-based block number. -/
-def blockIndex (c : BarredPermutation p) (i : Fin p) : ℕ :=
+@[expose] def blockIndex (c : BarredPermutation p) (i : Fin p) : ℕ :=
   (c.bars.filter fun k => k.1 < (c.rank i).1).card
 
 /-- Two labels lie on the same vertical line in the represented stratum. -/
-def SameBlock (c : BarredPermutation p) (i j : Fin p) : Prop :=
+@[expose] def SameBlock (c : BarredPermutation p) (i j : Fin p) : Prop :=
   c.blockIndex i = c.blockIndex j
 
 instance (c : BarredPermutation p) : DecidableRel c.SameBlock :=
@@ -71,7 +71,7 @@ def dualDimension (c : BarredPermutation p) : ℕ :=
   p - c.blockCount
 
 /-- One-block symbols are the top-dimensional dual cells. -/
-def IsTop (c : BarredPermutation p) : Prop :=
+@[expose] def IsTop (c : BarredPermutation p) : Prop :=
   c.bars = ∅
 
 instance isTopDecidable (c : BarredPermutation p) : Decidable c.IsTop := by
@@ -79,10 +79,11 @@ instance isTopDecidable (c : BarredPermutation p) : Decidable c.IsTop := by
   infer_instance
 
 /-- All-singleton symbols are vertices of the dual complex. -/
-def IsVertex (c : BarredPermutation p) : Prop :=
+@[expose] def IsVertex (c : BarredPermutation p) : Prop :=
   c.bars = Finset.univ
 
 /-- Relabel a symbol by precomposition with `σ.symm`, matching `Config.relabel`. -/
+@[expose]
 def relabel (σ : Equiv.Perm (Fin p))
     (c : BarredPermutation p) : BarredPermutation p where
   rank := σ.symm.trans c.rank
@@ -151,6 +152,7 @@ theorem relabel_mul
 `a.IsFace b` means that the stratum symbol `a` is a refinement of `b`: ordered blocks of `a` may
 be merged, but never reordered, and the vertical order inside every block of `a` is preserved.
 The final conjunct records the corresponding dual-dimension inequality explicitly. -/
+@[expose]
 def IsFace (a b : BarredPermutation p) : Prop :=
   (∀ i j, a.blockIndex i ≤ a.blockIndex j →
       b.blockIndex i ≤ b.blockIndex j) ∧
@@ -192,6 +194,7 @@ theorem isFace_relabel
     exact h.2.1 (σ.symm i) (σ.symm j) hij
 
 /-- Codimension-one face relation. -/
+@[expose]
 def IsFacet (a b : BarredPermutation p) : Prop :=
   a.IsFace b ∧ a.dualDimension + 1 = b.dualDimension
 

@@ -25,4 +25,4 @@ TODO: Add finite-dimensionality of these spaces of modular forms.
 
 -/
 
-@[expose] public section
+public section

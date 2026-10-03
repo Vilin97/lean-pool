@@ -53,7 +53,7 @@ Choice-free apart from the `ofMono`/Exercise-2.9 ingredients (whose uniqueness
 companions are the
 only classical pieces). -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

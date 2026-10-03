@@ -18,7 +18,7 @@ terms of its centered residue. The finite geometric-series identity then
 bounds every partial character sum independently of its length.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

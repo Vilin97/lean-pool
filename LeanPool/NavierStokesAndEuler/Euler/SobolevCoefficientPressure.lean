@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.H6Pressure
 /-! Actual coefficient multiplication and the coercive projected pressure inverse as Sobolev CLMs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,7 +34,7 @@ theorem sumNorm_ofJet {q : ℕ} {f : LiftL2 period} (J : SpatialJet period stand
       period J)
 
 /-- An L² operator with a genuine derivative-jet construction acts on the complete Sobolev space. -/
-def jetLift {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
+@[expose] def jetLift {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (Jmap : ∀ {f : LiftL2 period}, SpatialJet period standardDirection q f →
       SpatialJet period standardDirection q (A f))
     (u : SobolevSpace period q) : SobolevSpace period q := ofJet period (Jmap (toJet period u))
@@ -61,7 +61,7 @@ theorem jetLift_bound {q : ℕ} (A : LiftL2 period →L[ℝ] LiftL2 period)
     (mul_assoc _ _ _).symm)
 
 /-- Uniqueness of derivative arrays makes a genuine L² jet lift linear. -/
-def jetLiftLinearMap (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
+@[expose] def jetLiftLinearMap (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
     (Jmap : ∀ {f : LiftL2 period}, SpatialJet period standardDirection q f →
       SpatialJet period standardDirection q (A f)) : SobolevSpace period q →ₗ[ℝ] SobolevSpace
           period q where
@@ -81,7 +81,7 @@ def jetLiftLinearMap (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
     exact map_smul A r _
 
 /-- The bounded continuous lift of an actual L² operator with proved derivative-jet estimates. -/
-def jetLiftOperator (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
+@[expose] def jetLiftOperator (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
     (Jmap : ∀ {f : LiftL2 period}, SpatialJet period standardDirection q f →
       SpatialJet period standardDirection q (A f)) (C : ℝ) (hC : 0 ≤ C)
     (hJ : ∀ {f : LiftL2 period} (J : SpatialJet period standardDirection q f),
@@ -91,7 +91,7 @@ def jetLiftOperator (q : ℕ) (A : LiftL2 period →L[ℝ] LiftL2 period)
     (jetLift_bound period A Jmap C hC hJ)
 
 /-- Actual multiplication by a smooth bounded coefficient, as a Sobolev continuous linear map. -/
-def coefficientSobolevOperator {q : ℕ} {A : SmoothCoefficient period}
+@[expose] def coefficientSobolevOperator {q : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period standardDirection q A) :
     SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   jetLiftOperator period q A.operator (SpatialJet.multiply K) K.productConstant
@@ -107,6 +107,7 @@ theorem coefficientSobolevOperator_value {q : ℕ} {A : SmoothCoefficient period
   jetLift_value period A.operator (SpatialJet.multiply K) u
 
 /-- The existing Lax–Milgram pressure inverse as an ambient L² continuous linear map. -/
+@[expose]
 def pressureL2Operator (A : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) :
     LiftL2 period →L[ℝ] LiftL2 period :=
@@ -120,11 +121,11 @@ def pressureL2Operator (A : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (
 theorem pressureL2Operator_apply (A : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) (hc :
     0 < c)
     (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) (f : LiftL2 period) :
-    pressureL2Operator period A κ m c hc hpos f = A.pressure κ m c hc hpos f := rfl
+    pressureL2Operator period A κ m c hc hpos f = A.pressure κ m c hc hpos f := by rfl
 
 /-- The genuine coercive projected pressure inverse is a bounded map on every finite Sobolev space.
 -/
-def pressureSobolevOperator {q : ℕ} {A : SmoothCoefficient period}
+@[expose] def pressureSobolevOperator {q : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period standardDirection q A) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) :
     SobolevSpace period q →L[ℝ] SobolevSpace period q :=
@@ -153,7 +154,7 @@ theorem pressureSobolevOperator_bound {q : ℕ} {A : SmoothCoefficient period}
     (fun J => J.solvePressure_norm_le K κ m c hc hpos) u
 
 /-- Subtracting the actual coefficient-weighted pressure defines the projected Euler forcing. -/
-def projectedSourceOperator {q : ℕ} {A : SmoothCoefficient period}
+@[expose] def projectedSourceOperator {q : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period standardDirection q A) (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ) :
     SobolevSpace period q →L[ℝ] SobolevSpace period q :=

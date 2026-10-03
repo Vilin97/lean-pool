@@ -22,7 +22,7 @@ identity to the paper's sum over local flag points additionally uses uniqueness
 of centered representatives for odd `p`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -51,7 +51,7 @@ noncomputable def localToCumulativeMass
 
 /-- The same local mass sum, now partitioned by residue classes in the
 source lattice fibre and transported along the flag map. -/
-noncomputable def localTransitionMassBelow
+@[expose] noncomputable def localTransitionMassBelow
     (R : FpRepresentation p d F)
     (pieces : F.Node → FpCoord p d → ℕ) (x : F.Node)
     (c : FpCoord p (F.rank x)) : ℕ := by

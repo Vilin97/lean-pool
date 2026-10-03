@@ -38,7 +38,7 @@ NOT the relaxed iid Rademacher approach. This is the structurally correct argume
 that avoids introducing unnecessary independence assumptions.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -704,7 +704,7 @@ theorem finite_exchangeability_bound
 
 /-- A concept class is well-behaved if the ghost gap event is null-measurable.
     This is the minimal regularity assumption for the symmetrization proof. -/
-def WellBehavedVC (X : Type u) [MeasurableSpace X] (C : ConceptClass X Bool) : Prop :=
+@[expose] def WellBehavedVC (X : Type u) [MeasurableSpace X] (C : ConceptClass X Bool) : Prop :=
   ∀ (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
     (c : Concept X Bool) (m : ℕ) (ε : ℝ),
     MeasureTheory.NullMeasurableSet

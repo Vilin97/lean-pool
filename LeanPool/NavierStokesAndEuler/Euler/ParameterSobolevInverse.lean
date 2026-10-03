@@ -19,7 +19,7 @@ ordinary inverse norm and the finite coefficient-jet bound. It does not
 depend on any external derivative order or factorial shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open ContinuousLinearMap Finset
 open scoped ContDiff
 
 /-- A fixed finite recursion of polynomial base-order inverse constants. -/
-def sobolevInverseCost (I B : ℝ) : ℕ → ℝ
+@[expose] def sobolevInverseCost (I B : ℝ) : ℕ → ℝ
   | 0 => I
   | q+1 => I+sobolevInverseCost I B q+(2 : ℝ)^q*B*(sobolevInverseCost I B q)^2
 

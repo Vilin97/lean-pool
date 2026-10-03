@@ -15,7 +15,7 @@ shifted forward. The quantitative potential estimate is independent of this
 enlargement, so its numerical coefficient is unchanged.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

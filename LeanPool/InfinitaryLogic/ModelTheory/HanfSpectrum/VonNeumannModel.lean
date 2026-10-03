@@ -25,7 +25,7 @@ The upper-bound half (every ladder model has size `≤ ℶ_{α+1}`) is `LadderBo
 per-stage endpoint and the supremum assembly are `BethLadder.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -77,7 +77,7 @@ private theorem omegaEnumZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel 0)
 variable (α : Ordinal.{0})
 
 /-- The model carrier: the members of `V_{ω+α+1}`, shrunk to `Type 0`. -/
-noncomputable def VCarrier : Type := Shrink.{0} ↥(ladderLevel (α + 1))
+@[expose] noncomputable def VCarrier : Type := Shrink.{0} ↥(ladderLevel (α + 1))
 
 /-- The underlying `ZFSet` of a carrier element. -/
 noncomputable def toZ (x : VCarrier α) : ZFSet.{0} :=

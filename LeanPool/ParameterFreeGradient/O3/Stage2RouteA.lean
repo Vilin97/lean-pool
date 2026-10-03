@@ -18,18 +18,18 @@ It deliberately does not export the frozen theorem until the singular-line
 integration argument is complete.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace O3.Stage2RouteA
 
 /-- The power sum along an affine line. -/
-noncomputable def linePower (p : ℝ) {d : ℕ} (x h : Point d) (t : ℝ) : ℝ :=
+@[expose] noncomputable def linePower (p : ℝ) {d : ℕ} (x h : Point d) (t : ℝ) : ℝ :=
   lpPower p (x + t • h)
 
 /-- The directional pairing with the unnormalised power-duality map. -/
-noncomputable def linePowerDerivative (p : ℝ) {d : ℕ}
+@[expose] noncomputable def linePowerDerivative (p : ℝ) {d : ℕ}
     (x h : Point d) (t : ℝ) : ℝ :=
   p * pairing (powerDualityMap p (x + t • h)) h
 
@@ -66,7 +66,7 @@ lemma lpNorm_sq_eq_lpPower_rpow {p : ℝ} (hp : p ≠ 0) {d : ℕ} (z : Point d)
   field_simp
 
 /-- The one-variable restriction of `x ↦ (1/2)‖x‖_p²`. -/
-noncomputable def lineEnergy (p : ℝ) {d : ℕ} (x h : Point d) (t : ℝ) : ℝ :=
+@[expose] noncomputable def lineEnergy (p : ℝ) {d : ℕ} (x h : Point d) (t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * (linePower p x h t) ^ (2 / p)
 
 lemma lineEnergy_eq_quadraticRegularizer {p : ℝ} (hp : p ≠ 0) {d : ℕ}
@@ -199,12 +199,12 @@ lemma hasDerivAt_scalarJ_above_two {q u : ℝ} (hq : 2 < q) :
   · exact hasDerivAt_scalarJ_of_ne_zero hu
 
 /-- The weighted quadratic form that appears in the Hessian. -/
-noncomputable def weightedSquareSum (p : ℝ) {d : ℕ}
+@[expose] noncomputable def weightedSquareSum (p : ℝ) {d : ℕ}
     (x h : Point d) (t : ℝ) : ℝ :=
   ∑ i : Fin d, |(x + t • h) i| ^ (p - 2) * (h i) ^ (2 : ℕ)
 
 /-- The unnormalised duality pairing along a line. -/
-noncomputable def linePowerPair (p : ℝ) {d : ℕ}
+@[expose] noncomputable def linePowerPair (p : ℝ) {d : ℕ}
     (x h : Point d) (t : ℝ) : ℝ :=
   pairing (powerDualityMap p (x + t • h)) h
 

@@ -22,7 +22,7 @@ actual angular mean. The remaining terms use only the already supported
 prefix high fields, correctors and physical pressure gradients.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -110,7 +110,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ open Set MeasureTheory EulerSmoothLimit EulerPacketPointJets EulerPacketProfileR
 variable {P T : ℝ} [Fact (0 < P)]
 
 /-- Change time, given by `h ▸ G`. -/
-def Field.changeTime {raw : VectorField} {T' : ℝ} (G : Field P T raw) (h : T = T') :
+@[expose] def Field.changeTime {raw : VectorField} {T' : ℝ} (G : Field P T raw) (h : T = T') :
     Field P T' raw := h ▸ G
 
 theorem Field.changeTime_derivative {raw raw_t : VectorField} {T' : ℝ}

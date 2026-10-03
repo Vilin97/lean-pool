@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 /-! Constants and bounded bilinear operations on actual smooth bounded
 coefficient paths, with the spatial product rule at every order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ omit [CompactSpace K] [NormedSpace ℝ E] in
 @[simp] theorem mapPath_apply {V W : Type u}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
     (L : V →L[ℝ] W) (A : C(K, E →ᵇ V)) (t : K) (x : E) :
-    mapPath L A t x = L (A t x) := rfl
+    mapPath L A t x = L (A t x) := by rfl
 
 section Constant
 
@@ -43,7 +43,7 @@ variable {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Bound constant, bundling `field`, `smooth`, `jet`, `jet_eq` and the required compatibility
 proofs. -/
-def boundConstant (v : V) : SmoothTimeField K E V where
+@[expose] def boundConstant (v : V) : SmoothTimeField K E V where
   field := ContinuousMap.const K (BoundedContinuousFunction.const E v)
   smooth _ := contDiff_const
   jet n := ContinuousMap.const K (BoundedContinuousFunction.const E
@@ -55,7 +55,7 @@ def boundConstant (v : V) : SmoothTimeField K E V where
     | succ n => simp only [iteratedFDeriv_succ_const, Pi.zero_apply]
 
 @[simp] theorem constant_apply (v : V) (t : K) (x : E) :
-    (boundConstant (K := K) (E := E) v).field t x = v := rfl
+    (boundConstant (K := K) (E := E) v).field t x = v := by rfl
 
 end Constant
 
@@ -101,14 +101,14 @@ local instance instSmoothTimeFieldBilinear10 (n : ℕ) : NormedSpace ℝ (E →�
     Z))) := inferInstance
 
 /-- Bilinear path as an element of `C(K,E →ᵇ Z)`. -/
-def bilinearPath (B : V →L[ℝ] W →L[ℝ] Z)
+@[expose] def bilinearPath (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) : C(K,E →ᵇ Z) :=
   ⟨fun t => bilinearMap B (A.field t) (C.field t),
     ((bilinearMap (α := E) B).continuous.comp A.field.continuous).clm_apply C.field.continuous⟩
 
 @[simp] theorem bilinearPath_apply (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) (t : K) (x : E) :
-    bilinearPath B A C t x = B (A.field t x) (C.field t x) := rfl
+    bilinearPath B A C t x = B (A.field t x) (C.field t x) := by rfl
 
 /-- Uncurry right path, given by `mapPath (continuousMultilinearCurryRightEquiv' ℝ n E
 Z).symm.toContinuousLinearEquiv.toContinuousLinearMap J`. -/
@@ -120,7 +120,8 @@ def uncurryRightPath (n : ℕ) (J : C(K, E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ]
 omit [CompactSpace K] in
 @[simp] theorem uncurryRightPath_apply (n : ℕ)
     (J : C(K, E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] Z)))) (t : K) (x : E) :
-    uncurryRightPath n J t x = (continuousMultilinearCurryRightEquiv' ℝ n E Z).symm (J t x) := rfl
+    uncurryRightPath n J t x =
+      (continuousMultilinearCurryRightEquiv' ℝ n E Z).symm (J t x) := by rfl
 
 theorem exists_bilinear_jet (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) (n : ℕ) :
@@ -149,7 +150,7 @@ theorem exists_bilinear_jet (B : V →L[ℝ] W →L[ℝ] Z)
       funext y
       rw [B.fderiv_of_bilinear ((A.smooth t).differentiable (by simp) y)
         ((C.smooth t).differentiable (by simp) y)]
-      simp only [derivative, derivativeField_eq]
+      simp only [derivative_apply]
     rw [hd]
     exact (fun_iteratedFDeriv_add_apply
       ((((B.precompR E).contDiff.comp (A.smooth t)).clm_apply (C.derivative.smooth
@@ -160,7 +161,7 @@ theorem exists_bilinear_jet (B : V →L[ℝ] W →L[ℝ] Z)
           simp))).symm
 
 /-- Bilinear, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
-def bilinear (B : V →L[ℝ] W →L[ℝ] Z)
+@[expose] def bilinear (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) : SmoothTimeField K E Z where
   field := bilinearPath B A C
   smooth t := (B.contDiff.comp (A.smooth t)).clm_apply (C.smooth t)
@@ -169,6 +170,6 @@ def bilinear (B : V →L[ℝ] W →L[ℝ] Z)
 
 @[simp] theorem bilinear_apply (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) (t : K) (x : E) :
-    (bilinear B A C).field t x = B (A.field t x) (C.field t x) := rfl
+    (bilinear B A C).field t x = B (A.field t x) (C.field t x) := by rfl
 
 end SmoothTimeField

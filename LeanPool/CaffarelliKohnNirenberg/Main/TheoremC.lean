@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Main.TheoremB
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 section
 

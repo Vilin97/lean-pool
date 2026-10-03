@@ -24,7 +24,7 @@ same `k`-inversion.  The interval between those representatives then supplies
 at least `2k - 1` distinct `k`-inversions, contradicting the defining bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -32,10 +32,12 @@ open Utilities
 
 /-- Normalize an ordinary inversion by moving its first coordinate into the
 fundamental interval `[0,k)`. -/
+@[expose]
 def normalizeFirstInversion (k : ℕ) (p : ℤ × ℤ) : ℤ × ℤ :=
   (p.1 % k, p.2 - (p.1 / k) * k)
 
 /-- The rectangular family of inversions crossing both coordinate axes. -/
+@[expose]
 def crossingInversions (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   northwestSet τ 1 0 ×ˢ southeastSet τ 1 0
 

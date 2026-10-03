@@ -16,7 +16,7 @@ and shows some obvious properties of this identification.
 
 -/
 
-@[expose] public section
+public section
 
 
 namespace Matrix
@@ -27,15 +27,15 @@ variable {R I J : Type _} [Semiring R]
 
 /-- identifies matrices $M_{I\times J}(R)$ with $R^{I \times J}$,
   this is given by $\varrho (x)_{(i,j)} = x_{ij}$ -/
-def reshape : Matrix I J R ≃ₗ[R] I × J → R :=
+@[expose] def reshape : Matrix I J R ≃ₗ[R] I × J → R :=
   (LinearEquiv.curry R _ _ _).symm
 
 theorem reshape_apply (x : Matrix I J R) (ij : I × J) : reshape x ij = x ij.1 ij.2 :=
-  rfl
+  by rfl
 
 theorem reshape_symm_apply (x : I × J → R) (i : I) (j : J) :
     (reshape : Matrix I J R ≃ₗ[R] I × J → R).symm x i j = x (i, j) :=
-  rfl
+  by rfl
 
 theorem reshape_symm_apply' (x : I × J → R) (ij : I × J) :
     (reshape : Matrix I J R ≃ₗ[R] I × J → R).symm x ij.1 ij.2 = x ij := by

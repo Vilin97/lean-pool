@@ -17,7 +17,7 @@ file derives the group-theoretic consequence used throughout the paper: its
 period divides every other annihilating period.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

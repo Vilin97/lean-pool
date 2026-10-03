@@ -17,7 +17,7 @@ The input inverse bound is derived from determinant-one deformation data;
 no inverse solver norm or forcing-dependent constant appears in the final
 radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,9 +30,10 @@ open EulerParameterWordGevrey EulerTransverseGevreyInverse
   EulerSourceCylinderForwardSobolev EulerLinearDuhamel EulerPacketParentMeanCoercivity
 
 /-- Curvature amplitude, given by `27*C^2*C₂`. -/
-def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
+@[expose] def curvatureAmplitude (C C₂ : ℝ) : ℝ := 27*C^2*C₂
 
 /-- History cost, constructed using `inverseBlockCost`. -/
+@[expose]
 def historyCost (q : ℕ) (T R C C₁ C₂ : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) q (inverseEnvelope C C₁) R
     (formCost T C C₁ (curvatureAmplitude C C₂))
@@ -40,22 +41,24 @@ def historyCost (q : ℕ) (T R C C₁ C₂ : ℝ) : ℝ :=
 
 /-- Acceleration cost, given by `inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
 (accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)`. -/
+@[expose]
 def accelerationCost (q : ℕ) (R C C₁ V : ℝ) : ℝ :=
   inverseBlockCost (Fin 4) q (gramInverseEnvelope C) R (3*C^2)
     (accelerationBlockAmplitude (Fin 4) q R C C₁ 1 V)
 
 /-- Inverse radius, given by `2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)`. -/
-def inverseRadius (R C : ℝ) : ℝ :=
+@[expose] def inverseRadius (R C : ℝ) : ℝ :=
   2*(1+gramInverseEnvelope C*(3*C^2+2))*(R+1)
 
 /-- Forward cost, constructed using `forwardSobolevCost`. -/
+@[expose]
 def forwardCost (q : ℕ) (S Ti R C C₁ Cp : ℝ) : ℝ :=
   forwardSobolevCost (Fin 4) q S Cp (Ti+2)
     (EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) q (inverseRadius R C) C)
     (18*inverseRadius R C*C*C₁) (4*inverseRadius R C)
 
 /-- Radius as an element of `ℝ`. -/
-def radius (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ) : ℝ :=
+@[expose] def radius (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ) : ℝ :=
   1+2*(historyCost q T R C C₁ C₂+accelerationCost q R C C₁ 1 +
     accelerationCost q R C C₁ (Ti+2))*(sobolevCoefficientRadius (Fin 4) R+1) +
     sobolevCoefficientRadius (Fin 4) (4*inverseRadius R C) +

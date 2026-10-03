@@ -22,7 +22,7 @@ section
 /-! Euler's spatial/amplitude rescaling, proved for the actual first
 derivatives and scalar pressure. Time is unchanged. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,6 +34,7 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 
 /-- Coordinates, given by `(fst ℝ ℝ E).prod ((ell⁻¹ • ContinuousLinearMap.id ℝ E).comp (snd ℝ ℝ
 E))`. -/
+@[expose]
 def coordinates (ell : ℝ) : (ℝ × E) →L[ℝ] (ℝ × E) :=
   (fst ℝ ℝ E).prod ((ell⁻¹ • ContinuousLinearMap.id ℝ E).comp (snd ℝ ℝ E))
 
@@ -42,10 +43,12 @@ omit [CompleteSpace E] in
     coordinates ell q=(q.1,ell⁻¹ • q.2) := rfl
 
 /-- Velocity, given by `ell • u (coordinates ell q)`. -/
+@[expose]
 def velocity (ell : ℝ) (u : ℝ × E → E) (q : ℝ × E) : E :=
   ell • u (coordinates ell q)
 
 /-- Pressure, given by `ell^2*p (coordinates ell q)`. -/
+@[expose]
 def pressure (ell : ℝ) (p : ℝ × E → ℝ) (q : ℝ × E) : ℝ :=
   ell^2*p (coordinates ell q)
 
@@ -119,7 +122,7 @@ section
 /-! Normalizing the actual parent Euler velocity and pressure preserves
 Euler and supplies the true time law of the normalized particle map. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,10 +134,12 @@ open scoped Topology
 variable (A : EulerParentPacketFrames.Parent)
 
 /-- Normalized velocity, given by `EulerSpatialRescaling.velocity A.ell⁻¹ u`. -/
+@[expose]
 def normalizedVelocity (u : ℝ × Space → Space) : ℝ × Space → Space :=
   EulerSpatialRescaling.velocity A.ell⁻¹ u
 
 /-- Normalized pressure, given by `EulerSpatialRescaling.pressure A.ell⁻¹ p`. -/
+@[expose]
 def normalizedPressure (p : ℝ × Space → ℝ) : ℝ × Space → ℝ :=
   EulerSpatialRescaling.pressure A.ell⁻¹ p
 
@@ -208,7 +213,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -222,6 +227,7 @@ open scoped ContDiff Topology
 variable (A : EulerParentPacketFrames.Parent)
 
 /-- Packet frame, given by `A.frame.realField A.T A.T_pos.le q.1 q.2`. -/
+@[expose]
 def packetFrame (q : ℝ × Space) : Space →L[ℝ] Space :=
   A.frame.realField A.T A.T_pos.le q.1 q.2
 
@@ -253,6 +259,7 @@ variable {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1}
       hSupport) P κ hκ Z R))
 
 /-- Normalized exact velocity, constructed using `A.normalizedVelocity`. -/
+@[expose]
 def normalizedExactVelocity (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space)
     (u : ℝ × Space → Space) (q : ℝ × Space) : Space :=
   A.normalizedVelocity u q + physicalVelocity κ k m A.packetFrame ((exactPacketOfResidual P B
@@ -260,6 +267,7 @@ def normalizedExactVelocity (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space
 
 /-- Normalized exact pressure, given by `A.normalizedPressure p q + physicalPressure
 (((exactPacketOfResidual P B residual)).rawGraphPotential k) (A.packetInverse Y) q`. -/
+@[expose]
 def normalizedExactPressure (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space)
     (p : ℝ × Space → ℝ) (q : ℝ × Space) : ℝ :=
   A.normalizedPressure p q + physicalPressure (((exactPacketOfResidual P B
@@ -267,6 +275,7 @@ def normalizedExactPressure (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space
 
 /-- Exact packet velocity, given by `EulerSpatialRescaling.velocity A.ell
 (A.normalizedExactVelocity m hm J support hSupport B residual k Y u)`. -/
+@[expose]
 def exactPacketVelocity (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space) (u : ℝ × Space → Space) :
     ℝ × Space → Space :=
   EulerSpatialRescaling.velocity A.ell
@@ -274,6 +283,7 @@ def exactPacketVelocity (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space) (u
 
 /-- Exact packet pressure, given by `EulerSpatialRescaling.pressure A.ell
 (A.normalizedExactPressure m hm J support hSupport B residual k Y p)`. -/
+@[expose]
 def exactPacketPressure (k : ℝ) (Y : Icc (0 : ℝ) A.T → Space → Space) (p : ℝ × Space → ℝ) :
     ℝ × Space → ℝ :=
   EulerSpatialRescaling.pressure A.ell

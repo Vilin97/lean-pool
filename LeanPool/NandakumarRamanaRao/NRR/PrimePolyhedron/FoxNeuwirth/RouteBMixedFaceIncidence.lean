@@ -16,7 +16,7 @@ coefficient is positive.  The next stages will prove that each resulting bad
 parameter set is null.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -77,6 +77,7 @@ noncomputable instance mixedFaceCaseDecidableEq : DecidableEq (MixedFaceCase hp 
   Classical.decEq _
 
 /-- The bad set attached to one distinguished positive movable vertex. -/
+@[expose]
 def mixedFaceBadSet
     (base : Assignment hp C) (κ : MixedFaceCase hp C) :
     Set (MovableParameterSpace hp C) :=
@@ -97,6 +98,7 @@ def mixedFaceBadSet
 /-- A positive-ray incidence on a codimension-two face has a positive movable
 witness when at least one retained vertex with positive barycentric weight has a
 movable local scalar parameter. -/
+@[expose]
 def HasPositiveMovableWitness
     (q : C.Cell) (w : StandardSimplex p)
     (i j : Fin (p + 1)) : Prop :=

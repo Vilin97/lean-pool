@@ -25,7 +25,7 @@ sentence, read a branch off it, and land the base reduct back in `B` — **the o
   `codeReduct '' ModelsOf (pcSentence side T) = B`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -66,8 +66,13 @@ private theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace 
   have hM : @Sentenceω.Realize (MidLang L) (functionalTheta L T) ℕ Mstar := by
     have h1 := reconstruct_realizes_functionalPCSentence side T hAx hrel
     rw [functionalPCSentence] at h1
-    exact (BoundedFormulaω.realize_mapLanguage (sideEmb L side) (functionalTheta L T)
-      (Empty.elim : Empty → ℕ) Fin.elim0).mp h1
+    cases side with
+    | left =>
+      exact (BoundedFormulaω.realize_mapLanguage (sideEmb L .left) (functionalTheta L T)
+        (Empty.elim : Empty → ℕ) Fin.elim0).mp h1
+    | right =>
+      exact (BoundedFormulaω.realize_mapLanguage (sideEmb L .right) (functionalTheta L T)
+        (Empty.elim : Empty → ℕ) Fin.elim0).mp h1
   obtain ⟨homega, hbitR, hcode, hdef, htreeR, hpathR⟩ := (realize_functionalTheta T).mp hM
   have hbit := (realize_bitAxiom (L := L)).mp hbitR
   have htree := (realize_treeDiagram (L := L) T).mp htreeR

@@ -11,7 +11,7 @@ public import LeanPool.DomainTheory.ContinuousLattice.Specialization
 # Scott-continuous maps (Scott 1972, §2.5–2.7)
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -20,6 +20,7 @@ open Set Topology
 variable {D D' D'' : Type*} [CompleteLattice D] [CompleteLattice D'] [CompleteLattice D'']
 
 /-- A function preserves suprema of nonempty directed subsets. -/
+@[expose]
 def PreservesDirectedSup (f : D → D') : Prop :=
   ∀ ⦃S : Set D⦄, S.Nonempty → DirectedOn (· ≤ ·) S → f (sSup S) = sSup (f '' S)
 

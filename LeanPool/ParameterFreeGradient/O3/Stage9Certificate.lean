@@ -24,7 +24,7 @@ special equation `theta_0^2-theta_0=2 theta_1^2` is used exactly.  The actual
 vector recurrence supplies the pairing-balance premise in `Stage9Pairing`.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 namespace Stage9Certificate
@@ -33,27 +33,27 @@ namespace Stage9Certificate
 `psi_i = f_i - f^* - ||g_i||^2/(2M)`.  The squared gradient is an explicit
 scalar input so that the coefficient algebra is independent of a particular
 vector representation. -/
-noncomputable def ogmgPsi (M fstar : ℝ) (fval gradSq : ℕ → ℝ) (i : ℕ) : ℝ :=
+@[expose] noncomputable def ogmgPsi (M fstar : ℝ) (fval gradSq : ℕ → ℝ) (i : ℕ) : ℝ :=
   fval i - fstar - gradSq i / (2 * M)
 
 /-- The source interpolation remainder
 `I_ij = psi_i - psi_j - <g_j,v_i-v_j>`. -/
-def ogmgI (psi : ℕ → ℝ) (pairTerm : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ :=
+@[expose] def ogmgI (psi : ℕ → ℝ) (pairTerm : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ :=
   psi i - psi j - pairTerm i j
 
 /-- `delta_i = kappa_(i+1) - kappa_i`. -/
-def ogmgDelta (kappa : ℕ → ℝ) (i : ℕ) : ℝ :=
+@[expose] def ogmgDelta (kappa : ℕ → ℝ) (i : ℕ) : ℝ :=
   kappa (i + 1) - kappa i
 
 /-- The literal right side of the frozen OGM-G certificate. -/
-def ogmgCertificateRhs (n : ℕ) (kappa psi : ℕ → ℝ)
+@[expose] def ogmgCertificateRhs (n : ℕ) (kappa psi : ℕ → ℝ)
     (pairTerm : ℕ → ℕ → ℝ) : ℝ :=
   (∑ i ∈ Finset.range n, kappa (i + 1) * ogmgI psi pairTerm i (i + 1)) +
     (∑ i ∈ Finset.range n,
       ogmgDelta kappa i * ogmgI psi pairTerm n i) + psi n
 
 /-- The unsigned collection of pairing terms subtracted by the certificate. -/
-def ogmgPairingAggregate (n : ℕ) (kappa : ℕ → ℝ)
+@[expose] def ogmgPairingAggregate (n : ℕ) (kappa : ℕ → ℝ)
     (pairTerm : ℕ → ℕ → ℝ) : ℝ :=
   (∑ i ∈ Finset.range n, kappa (i + 1) * pairTerm i (i + 1)) +
     ∑ i ∈ Finset.range n, ogmgDelta kappa i * pairTerm n i

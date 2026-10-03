@@ -19,7 +19,7 @@ from Section 8.2.  No error field is set to zero: local vanishing on the plateau
 the Gaussian bound off that plateau, and higher Leibniz estimates are used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,6 +40,7 @@ noncomputable def profileBump : ContDiffBump (1 / 2 : ℝ) where
   rIn_lt_rOut := by norm_num
 
 /-- Profile, given by `profileBump`. -/
+@[expose]
 noncomputable def profile : ℝ → ℝ := profileBump
 
 theorem profile_contDiff : ContDiff ℝ ∞ profile := profileBump.contDiff
@@ -97,7 +98,7 @@ theorem profile_jet_bounded (m : ℕ) :
   exact (hC v).trans (le_max_left _ _)
 
 /-- Slot cutoff, given by `profile (v / L)`. -/
-noncomputable def slotCutoff (L : ℝ) (v : ℝ) : ℝ := profile (v / L)
+@[expose] noncomputable def slotCutoff (L : ℝ) (v : ℝ) : ℝ := profile (v / L)
 
 theorem slotCutoff_contDiff (L : ℝ) : ContDiff ℝ ∞ (slotCutoff L) :=
   profile_contDiff.comp (contDiff_id.div_const L)
@@ -397,7 +398,7 @@ theorem affine_profile_memClass (s : StripData D) {g : ℝ → ℝ}
 
 /-- The two excluded errors, retained as actual functions. `θ` is the
 normalized slot coordinate `v/L`. -/
-noncomputable def cutoffError (L : ℝ) (θ : D → ℝ) (u f : D → E) (x : D) : E :=
+@[expose] noncomputable def cutoffError (L : ℝ) (θ : D → ℝ) (u f : D → E) (x : D) : E :=
   (L⁻¹ * deriv profile (θ x)) • u x + (1 - profile (θ x)) • f x
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -515,15 +516,15 @@ structure SlotFamily (s : StripData D) where
 namespace SlotFamily
 
 /-- Coordinate, given by `g.offset n + g.linear n x`. -/
-noncomputable def coordinate {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
+@[expose] noncomputable def coordinate {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   g.offset n + g.linear n x
 
 /-- Cutoff, given by `profile (g.coordinate n x)`. -/
-noncomputable def cutoff {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
+@[expose] noncomputable def cutoff {s : StripData D} (g : SlotFamily s) (n : ℕ) (x : D) : ℝ :=
   profile (g.coordinate n x)
 
 /-- Error, given by `cutoffError (g.length n) (g.coordinate n) (u n) (f n)`. -/
-noncomputable def error {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
+@[expose] noncomputable def error {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
     (n : ℕ) : D → E := cutoffError (g.length n) (g.coordinate n) (u n) (f n)
 
 theorem coordinate_contDiff {s : StripData D} (g : SlotFamily s) (n : ℕ) :
@@ -740,7 +741,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
 
 @[simp] theorem actualSlotFamily_length (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) :
-    (actualSlotFamily s r0 h hr0 hh η center).length n = ChartScales.slotLength r0 h n := rfl
+    (actualSlotFamily s r0 h hr0 hh η center).length n = ChartScales.slotLength r0 h n := by rfl
 
 theorem actualSlotFamily_coordinate (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) (x : D) :
@@ -762,7 +763,7 @@ theorem actualSlotFamily_cutoff (s : StripData D) (r0 h : ℝ)
 
 /-- The reference Gaussian envelope, extended by zero away from its slot.
 This is a weight, not a redefinition of either retained error. -/
-noncomputable def referenceSlotEnvelope (lam u L θ : ℝ) : ℝ :=
+@[expose] noncomputable def referenceSlotEnvelope (lam u L θ : ℝ) : ℝ :=
   if θ ∈ Icc (0 : ℝ) 1 then
     GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L / 2) (L * θ)
   else 0
@@ -969,7 +970,7 @@ noncomputable def omittedSource {s : StripData D} (g : SlotFamily s)
 
 theorem error_eq_sum {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
     (n : ℕ) (x : D) :
-    g.error u f n x = g.derivativeError u n x + g.omittedSource f n x := rfl
+    g.error u f n x = g.derivativeError u n x + g.omittedSource f n x := by rfl
 
 private theorem jet_eq_zero_of_eventually {u : D → E} {x : D}
     (he : u =ᶠ[𝓝 x] fun _ => 0) (j : ℕ) : iteratedFDeriv ℝ j u x = 0 := by

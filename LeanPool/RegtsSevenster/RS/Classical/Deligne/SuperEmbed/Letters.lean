@@ -33,7 +33,7 @@ that transports; the two systems it is applied to are built in
   tensor power exactly when its colour sums vanish.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -79,6 +79,7 @@ namespace MixedLetters
 
 /-- **The inclusion of a colouring**: the fold of the letterwise
 inclusions into the tensor power, in slot order. -/
+@[expose]
 noncomputable def colourInto
     [Category.{v} A] [MonoidalCategory A] [Preadditive A] {K : Type}
     [Fintype K] {par : K → Bool} {U : A} {M : A}
@@ -296,6 +297,7 @@ variable {A : Type u}
 
 /-- Absorbing one letter into a power of `U`: a `U`-letter extends
 the power, a unit letter is stripped by the right unitor. -/
+@[expose]
 noncomputable def tailIso [Category.{v} A] [MonoidalCategory A]
     (U : A) (k : ℕ) : (b : Bool) →
     (tensorPow A U k ⊗ (bif b then U else 𝟙_ A) ≅

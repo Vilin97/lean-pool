@@ -31,7 +31,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapRegularCove
 
 /-! # CoreGapReducedPair -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -102,7 +102,7 @@ end
 
 /-! # CoreGapBlockShape -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -113,6 +113,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 /-- **One sub-triple of the grid construction**: blocks `A ⊆ U`, `B ⊆ W`, `C ⊆ X` of a good cluster
 triple, each of relative size at least `α` in its cluster, with sizes proportional to the density of
 the *opposite* pair at the common scale `τ`. -/
+@[expose]
 def IsGridSubTriple (G : SimpleGraph V) [DecidableRel G.Adj]
     (P : Finpartition (univ : Finset V)) (ep de α τ : ℝ) (U W X A B C : Finset V) : Prop :=
   GoodTriple G P ep de U W X ∧ A ⊆ U ∧ B ⊆ W ∧ C ⊆ X ∧

@@ -23,14 +23,14 @@ In particular, the conclusion below is deliberately a `Tendsto` statement:
 `Summable` for real series would assert unconditional (absolute) convergence.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Topology
 
 namespace NonMRR
 
 /-- The partial sum of a series in the order specified by a permutation. -/
-def rearrangedPartialSum (a : ℕ → ℝ) (π : Equiv.Perm ℕ) (j : ℕ) : ℝ :=
+@[expose] def rearrangedPartialSum (a : ℕ → ℝ) (π : Equiv.Perm ℕ) (j : ℕ) : ℝ :=
   ∑ i ∈ range j, a (π i)
 
 /-- A coordinate belongs to at most one member of a disjoint block family. -/

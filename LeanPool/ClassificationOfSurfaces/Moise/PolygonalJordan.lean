@@ -25,7 +25,7 @@ with adjacent segments meeting exactly at their shared vertex and non-adjacent s
 A junk witness cannot satisfy these fields: they force the carrier to be a topological circle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -60,7 +60,7 @@ instance : NeZero J.n :=
   ⟨by have := J.three_le; omega⟩
 
 /-- The edge from vertex `i` to vertex `i + 1`. -/
-def edgeSegment (i : ZMod J.n) : Set Plane :=
+@[expose] def edgeSegment (i : ZMod J.n) : Set Plane :=
   segment ℝ (J.vertex i) (J.vertex (i + 1))
 
 /-- Two edge indices are nonadjacent when the corresponding edges share no endpoint. -/
@@ -68,7 +68,7 @@ def NonAdjacentEdges (i j : ZMod J.n) : Prop :=
   i ≠ j ∧ i ≠ j + 1 ∧ j ≠ i + 1
 
 /-- The carrier of the polygon: the union of its edges. -/
-def carrier : Set Plane :=
+@[expose] def carrier : Set Plane :=
   ⋃ i, J.edgeSegment i
 
 theorem vertex_mem_carrier (i : ZMod J.n) : J.vertex i ∈ J.carrier :=
@@ -93,7 +93,7 @@ theorem isClosed_edgeSegment (i : ZMod J.n) : IsClosed (J.edgeSegment i) :=
 
 /-- Transport a polygon through a function which is injective on its carrier and straight on
 each edge.  No extension to an ambient homeomorphism is needed. -/
-noncomputable def mapEmbedding (f : Plane → Plane)
+@[expose] noncomputable def mapEmbedding (f : Plane → Plane)
     (hinj : Set.InjOn f J.carrier)
     (hedge : ∀ i : ZMod J.n,
       f '' J.edgeSegment i = segment ℝ (f (J.vertex i)) (f (J.vertex (i + 1)))) :
@@ -160,7 +160,7 @@ theorem mapEmbedding_carrier (f : Plane → Plane) (hinj : Set.InjOn f J.carrier
       exact ⟨q, hqi, rfl⟩⟩
 
 /-- Transport a polygon through a homeomorphism which is straight on each polygon edge. -/
-noncomputable def mapHomeomorph (h : Plane ≃ₜ Plane)
+@[expose] noncomputable def mapHomeomorph (h : Plane ≃ₜ Plane)
     (hedge : ∀ i : ZMod J.n,
       h '' J.edgeSegment i = segment ℝ (h (J.vertex i)) (h (J.vertex (i + 1)))) :
     PolygonalCircle where
@@ -541,7 +541,7 @@ noncomputable def complexDirection (z : ℂ) (hz : z ≠ 0) : Circle :=
       abs_of_pos (norm_pos_iff.mpr hz), div_self (norm_ne_zero_iff.mpr hz)]⟩
 
 @[simp] theorem coe_complexDirection (z : ℂ) (hz : z ≠ 0) :
-    (complexDirection z hz : ℂ) = z / ‖z‖ := rfl
+    (complexDirection z hz : ℂ) = z / ‖z‖ := by rfl
 
 /-- Polar reconstruction from norm and unit direction. -/
 theorem norm_mul_complexDirection (z : ℂ) (hz : z ≠ 0) :
@@ -1431,7 +1431,7 @@ theorem edgeSegment_inter_subset_endpoints {i j : ZMod J.n} (hij : i ≠ j) :
     exact (Set.disjoint_left.1 hdisj hx.1 hx.2).elim
 
 /-- The union of all polygon edges other than edge `i`. -/
-def otherEdges (i : ZMod J.n) : Set Plane :=
+@[expose] def otherEdges (i : ZMod J.n) : Set Plane :=
   ⋃ (j : ZMod J.n) (_ : j ≠ i), J.edgeSegment j
 
 theorem isCompact_otherEdges (i : ZMod J.n) : IsCompact (J.otherEdges i) := by
@@ -2447,12 +2447,12 @@ Horizontal edges are never crossed. -/
 
 /-- The x-coordinate at height `y` of the line through `v` and `w` (meaningful when the heights
 of `v` and `w` differ, which the crossing condition guarantees at use sites). -/
-noncomputable def crossingX (v w : Plane) (y : ℝ) : ℝ :=
+@[expose] noncomputable def crossingX (v w : Plane) (y : ℝ) : ℝ :=
   v 0 + (y - v 1) / (w 1 - v 1) * (w 0 - v 0)
 
 /-- The leftward horizontal ray from `P` crosses edge `i`, with the half-open height
 convention. -/
-def EdgeCrossed (i : ZMod J.n) (P : Plane) : Prop :=
+@[expose] def EdgeCrossed (i : ZMod J.n) (P : Plane) : Prop :=
   ((J.vertex i) 1 ≤ P 1 ∧ P 1 < (J.vertex (i + 1)) 1 ∨
     (J.vertex (i + 1)) 1 ≤ P 1 ∧ P 1 < (J.vertex i) 1) ∧
   crossingX (J.vertex i) (J.vertex (i + 1)) (P 1) < P 0
@@ -2460,7 +2460,7 @@ def EdgeCrossed (i : ZMod J.n) (P : Plane) : Prop :=
 open scoped Classical in
 /-- The Moise index of a point: the parity of the number of edges crossed by its leftward
 horizontal ray. -/
-noncomputable def index (P : Plane) : ℕ :=
+@[expose] noncomputable def index (P : Plane) : ℕ :=
   (Finset.univ.filter fun i : ZMod J.n => J.EdgeCrossed i P).card % 2
 
 theorem index_lt_two (P : Plane) : J.index P < 2 :=
@@ -3446,7 +3446,7 @@ theorem exists_index_eq_one : ∃ P : Plane, P ∉ J.carrier ∧ J.index P = 1 :
 
 /-- The part of the polygon complement having crossing index `k`.  Only `k = 0, 1` are
 nonempty. -/
-def indexRegion (k : ℕ) : Set Plane :=
+@[expose] def indexRegion (k : ℕ) : Set Plane :=
   {P | P ∉ J.carrier ∧ J.index P = k}
 
 /-- Every index region is open, since the carrier is closed and the index is locally constant on
@@ -4010,7 +4010,7 @@ theorem polygonal_jordan :
   exact J.polygonal_jordan_of_twoGateStrip J.exists_twoGateStrip.some
 
 /-- The interior region of a polygon (the bounded complementary component). -/
-noncomputable def interiorRegion : Set Plane :=
+@[expose] noncomputable def interiorRegion : Set Plane :=
   J.polygonal_jordan.choose
 
 /-- The exterior region of a polygon (the unbounded complementary component). -/
@@ -4099,7 +4099,7 @@ theorem interiorRegion_eq_indexRegion_one : J.interiorRegion = J.indexRegion 1 :
       exact (Set.disjoint_left.mp J.disjoint_indexRegion_zero_one hxExterior hx).elim
 
 /-- The closed region bounded by a polygon: the closure of its interior region. -/
-noncomputable def closedRegion : Set Plane :=
+@[expose] noncomputable def closedRegion : Set Plane :=
   closure J.interiorRegion
 
 theorem closedRegion_eq_union : J.closedRegion = J.interiorRegion ∪ J.carrier := by

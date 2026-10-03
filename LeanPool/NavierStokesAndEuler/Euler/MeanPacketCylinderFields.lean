@@ -19,7 +19,7 @@ translation orbit, literal raw representative and true time derivative are
 preserved by the same bounded linear embedding.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,7 +52,7 @@ local instance instMeanPacketCylinderFields4 : NormedSpace ℝ C(Icc (0 : ℝ) T
 
 /-- Spatial embedding path, given by `(embedding (V := Space) P).compLeftContinuous ℝ (Icc (0 :
 ℝ) T)`. -/
-def spatialEmbeddingPath : C(Icc (0 : ℝ) T,L2) →L[ℝ] C(Icc (0 : ℝ) T,LiftL2 P) :=
+@[expose] def spatialEmbeddingPath : C(Icc (0 : ℝ) T,L2) →L[ℝ] C(Icc (0 : ℝ) T,LiftL2 P) :=
   (embedding (V := Space) P).compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
 @[simp] theorem spatialEmbeddingPath_apply (p : C(Icc (0 : ℝ) T, L2))
@@ -85,7 +85,7 @@ namespace Forcing
 variable {T} {D : Data} {raw : VectorField} (G : Forcing D raw)
 
 /-- Literal smooth mean forcing becomes an actual cylinder witness with no angular dependence. -/
-def toCylinderField : Field P D.T raw :=
+@[expose] def toCylinderField : Field P D.T raw :=
   Field.ofLifted (spatialEmbeddingPath P D.T G.path)
     (spatialEmbeddingPath_orbit P D.T G.path G.path_orbit)
     (fun t z => (G.slices t).field z.1)
@@ -104,10 +104,10 @@ def toCylinderField : Field P D.T raw :=
     (G.toCylinderField P).path = spatialEmbeddingPath P D.T G.path := rfl
 
 /-- Vector cylinder field, given by `G.vectorForcing.toCylinderField P`. -/
-def vectorCylinderField : Field P D.T G.vector := G.vectorForcing.toCylinderField P
+@[expose] def vectorCylinderField : Field P D.T G.vector := G.vectorForcing.toCylinderField P
 
 /-- Vector derivative cylinder field, given by `G.vectorDerivativeForcing.toCylinderField P`. -/
-def vectorDerivativeCylinderField : Field P D.T G.vectorDerivative :=
+@[expose] def vectorDerivativeCylinderField : Field P D.T G.vectorDerivative :=
   G.vectorDerivativeForcing.toCylinderField P
 
 theorem vectorCylinderField_time :

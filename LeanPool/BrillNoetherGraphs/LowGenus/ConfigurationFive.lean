@@ -34,7 +34,7 @@ spelled out directly.  A row supplies its lookup tables and the five
 height equations; nothing else.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationFive
 
@@ -47,11 +47,13 @@ open Certificate.DegenerateSpec
 /-! ## One-edge arithmetic used by configuration 5 -/
 
 /-- The contribution at the tail of a subdivided edge with the prescribed endpoint heights. -/
+@[expose]
 def tailContribution (L hu hv : ℕ) : ℤ :=
   if L = 0 then 0
   else SubdivisionArithmetic.step L ((hu : ℤ) - (hv : ℤ)) 0
 
 /-- The contribution at the head of a subdivided edge with the prescribed endpoint heights. -/
+@[expose]
 def headContribution (L hu hv : ℕ) : ℤ :=
   if L = 0 then 0
   else -SubdivisionArithmetic.step L ((hu : ℤ) - (hv : ℤ)) (L - 1)
@@ -138,8 +140,10 @@ theorem headContribution_eq_one_of_full {L hu hv : ℕ}
     ConfigurationCommon.lastStep_neg_full_eq_neg_one hL]
 
 /-- One chip when the edge length is positive, and zero for a collapsed edge. -/
+@[expose]
 def positiveChip (L : ℕ) : ℤ := if L = 0 then 0 else 1
 /-- One chip for a collapsed edge, and zero when the edge length is positive. -/
+@[expose]
 def zeroChip (L : ℕ) : ℤ := if L = 0 then 1 else 0
 
 theorem positiveChip_nonneg (L : ℕ) : 0 ≤ positiveChip L := by

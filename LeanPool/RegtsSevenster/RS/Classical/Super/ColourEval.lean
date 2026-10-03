@@ -16,7 +16,7 @@ the colouring of a product index splits into its two factors — the
 computation rules the standard super model's coordinates use.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

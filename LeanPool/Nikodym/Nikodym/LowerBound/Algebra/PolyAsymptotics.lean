@@ -33,7 +33,7 @@ Main declarations (all in the `Polynomial` namespace, as named in the design doc
   `Polynomial.eval_comp_X_sub_C`, `Polynomial.eval_comp_X_sub_C_natCast`.
 -/
 
-@[expose] public section
+public section
 
 namespace Polynomial
 

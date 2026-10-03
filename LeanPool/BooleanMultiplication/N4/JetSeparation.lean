@@ -17,7 +17,7 @@ kills `C`; the four remaining outside slices force `A = B = 0` unless the
 auxiliary two-plane is exactly the anchor plane.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -25,21 +25,23 @@ namespace N4
 noncomputable section
 
 /-- The plane spanned by the constant-coefficient inputs of the two polynomials. -/
+@[expose]
 def anchorPlane : Submodule F₂ LinearForm :=
   Submodule.span F₂ (Set.range ![aLinear 0, bLinear 0])
 
 /-- The target subspace spanned by the first two coefficients, the last, and evaluation at one. -/
+@[expose]
 def feedbackCoeffSpace : Submodule F₂ TargetCoeff :=
   Submodule.span F₂
     (Set.range ![targetBasis 0, targetBasis 1,
       targetBasis 6, rOneCoeff])
 
 /-- The second coefficient relative to the evaluation-at-one component. -/
-def jetA (c : TargetCoeff) : F₂ := c 2 + c 5
+@[expose] def jetA (c : TargetCoeff) : F₂ := c 2 + c 5
 /-- The third coefficient relative to the evaluation-at-one component. -/
-def jetB (c : TargetCoeff) : F₂ := c 3 + c 5
+@[expose] def jetB (c : TargetCoeff) : F₂ := c 3 + c 5
 /-- The fourth coefficient relative to the evaluation-at-one component. -/
-def jetC (c : TargetCoeff) : F₂ := c 4 + c 5
+@[expose] def jetC (c : TargetCoeff) : F₂ := c 4 + c 5
 
 /-- The feedback-subspace component in the chosen target decomposition. -/
 def feedbackBasePart (c : TargetCoeff) : TargetCoeff :=
@@ -49,6 +51,7 @@ def feedbackBasePart (c : TargetCoeff) : TargetCoeff :=
     c 5 • rOneCoeff
 
 /-- The three remaining target coordinates after removing the feedback component. -/
+@[expose]
 def jetResidualCoeff (c : TargetCoeff) : TargetCoeff :=
   jetA c • targetBasis 2 + jetB c • targetBasis 3 +
     jetC c • targetBasis 4
@@ -110,19 +113,19 @@ theorem submodule_eq_anchorPlane_of_generators_mem
   exact (Submodule.eq_of_le_of_finrank_le hle hdim).symm
 
 /-- The second first-input slice of the residual jet coefficients. -/
-def jetSliceA2 (c : TargetCoeff) : LinearForm :=
+@[expose] def jetSliceA2 (c : TargetCoeff) : LinearForm :=
   jetA c • bLinear 0 + jetB c • bLinear 1
 
 /-- The third first-input slice of the residual jet coefficients. -/
-def jetSliceA3 (c : TargetCoeff) : LinearForm :=
+@[expose] def jetSliceA3 (c : TargetCoeff) : LinearForm :=
   jetB c • bLinear 0
 
 /-- The second second-input slice of the residual jet coefficients. -/
-def jetSliceB2 (c : TargetCoeff) : LinearForm :=
+@[expose] def jetSliceB2 (c : TargetCoeff) : LinearForm :=
   jetA c • aLinear 0 + jetB c • aLinear 1
 
 /-- The third second-input slice of the residual jet coefficients. -/
-def jetSliceB3 (c : TargetCoeff) : LinearForm :=
+@[expose] def jetSliceB3 (c : TargetCoeff) : LinearForm :=
   jetB c • aLinear 0
 
 /-- Jet separation in the exact algebraic interface used later: the

@@ -13,4 +13,4 @@ public import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
 Import-only index for the `L1Space` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

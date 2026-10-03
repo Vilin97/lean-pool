@@ -16,7 +16,7 @@ validated-numerics proof therefore only has to bound a second derivative and che
 trapezoidal inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

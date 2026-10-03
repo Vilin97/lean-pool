@@ -21,7 +21,7 @@ measurable two-point mixing, and normalization to coordinatewise means at
 most one.
 -/
 
-@[expose] public section
+public section
 
 namespace VlassisThomas
 

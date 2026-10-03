@@ -22,7 +22,7 @@ closed carrier.  `ConvexRungeIntegral` approximates each radialized function,
 and a diagonal selection removes the radial contraction.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Metric Set
 open scoped Interval Real Topology

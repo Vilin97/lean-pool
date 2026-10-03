@@ -20,7 +20,7 @@ imports this file) so that the bridgeless genus-two classification does not
 depend on the once-marked census.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

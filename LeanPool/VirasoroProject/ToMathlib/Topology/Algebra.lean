@@ -17,4 +17,4 @@ Import-only index for topological algebra support modules used by the Virasoro
 Project.
 -/
 
-@[expose] public section
+public section

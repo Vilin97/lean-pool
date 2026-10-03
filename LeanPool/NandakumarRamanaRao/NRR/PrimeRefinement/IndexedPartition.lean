@@ -16,7 +16,7 @@ an index-polymorphic version of `ConvexPartition` and a canonical conversion bac
 `Fin n`-indexed structure.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

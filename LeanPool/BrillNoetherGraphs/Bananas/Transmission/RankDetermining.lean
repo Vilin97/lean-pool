@@ -17,7 +17,7 @@ for restricted rank, which is the literal quantified content of `r_A(D) ≥ k`
 and avoids making a second noncomputable choice of an integer rank.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

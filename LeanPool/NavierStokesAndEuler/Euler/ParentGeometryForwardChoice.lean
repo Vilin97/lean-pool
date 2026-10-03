@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentUniformForwardChild
 /-! The actual zero-history geometry constructs the forward packet and
 its new smooth Euler state at the uniformly chosen frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -82,7 +82,7 @@ abbrev agreement : SourceCoefficientAgreement I.meanData I.data :=
   I.parent.sourceAgreement I.normal I.normal_unit I.coordinates I.support I.support_compact I.low
 
 /-- Parameter size, constructed using `I.label.geometryForwardParameterSize`. -/
-def parameterSize : ℝ := I.label.geometryForwardParameterSize I.low I.normal I.normal_unit
+@[expose] def parameterSize : ℝ := I.label.geometryForwardParameterSize I.low I.normal I.normal_unit
     I.coordinates
   I.support I.support_compact I.frame I.geometry I.parent.T⁻¹ I.geometry.initialCoordinate
 
@@ -93,6 +93,7 @@ theorem alpha_pos : 0 < I.alpha := I.geometry.primaryAmplitude_pos I.halfBall I.
     I.child_pos
 
 /-- Frequency guard, given by `frequencyConstant*I.parameterSize^frequencyPower ≤ smallPower k`. -/
+@[expose]
 def frequencyGuard (k : ℝ) : Prop := frequencyConstant*I.parameterSize^frequencyPower ≤ smallPower k
 
 /-- Correction budget type used in parent geometry forward choice. -/
@@ -173,10 +174,10 @@ namespace GeometryForwardChoice
 variable (F : GeometryForwardChoice I S k hk nextEll hnext hnext1)
 
 /-- Parent, given by `I.parent.child F.flow k I.normal F.graph nextEll hnext hnext1`. -/
-def parent : Parent := I.parent.child F.flow k I.normal F.graph nextEll hnext hnext1
+@[expose] def parent : Parent := I.parent.child F.flow k I.normal F.graph nextEll hnext hnext1
 
 /-- State, constructed using `S.forwardChild`. -/
-def state (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support) : SmoothState F.parent :=
+@[expose] def state (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support) : SmoothState F.parent :=
   S.forwardChild I.low I.normal I.normal_unit I.coordinates I.support I.support_compact hSym
     I.geometry.δ I.delta_pos I.geometry.initialCoordinate I.cutoff_support I.alpha
     (truncation k) F.hn k hk.four F.Q F.flow F.coefficient F.graph nextEll hnext hnext1 F.labels

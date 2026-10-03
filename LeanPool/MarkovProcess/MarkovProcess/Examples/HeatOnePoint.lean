@@ -28,7 +28,7 @@ process started at a live point almost surely never reaches the added point
 (`ae_exitTime_eq_top_heatResolvent`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

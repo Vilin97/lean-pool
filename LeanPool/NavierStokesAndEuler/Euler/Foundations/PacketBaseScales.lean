@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 # Packet Base Scales
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -35,7 +35,7 @@ its original torus while the primary wave uses native fast coordinates.
 Freezing the band index preserves every actual derivative and average.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -56,6 +56,7 @@ section Freeze
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Freeze strip as an element of `StripData D`. -/
+@[expose]
 noncomputable def freezeStrip (s : StripData D) (m : ℕ) : StripData D :=
   { s with
     epsilon := fun _ => s.epsilon m
@@ -65,12 +66,14 @@ noncomputable def freezeStrip (s : StripData D) (m : ℕ) : StripData D :=
     one_le_slow := fun _ => s.one_le_slow m }
 
 /-- Freeze triple, given by `⟨fun _ => v.radial m, fun _ => v.angular m, fun _ => v.axial m⟩`. -/
+@[expose]
 noncomputable def freezeTriple (v : MeanIncrementBounds.Triple D) (m : ℕ) :
     MeanIncrementBounds.Triple D :=
   ⟨fun _ => v.radial m, fun _ => v.angular m, fun _ => v.axial m⟩
 
 /-- Freeze context, bundling `operators`, `epsilon`, `radialFrequency`, `fastCoefficient` and
 the required compatibility proofs. -/
+@[expose]
 noncomputable def freezeContext (c : Context D) (m : ℕ) : Context D where
   operators := { c.operators with
     epsilon := fun _ => c.operators.epsilon m
@@ -82,6 +85,7 @@ noncomputable def freezeContext (c : Context D) (m : ℕ) : Context D where
 
 /-- Freeze state, bundling `mean`, `pressure`, `oscillation`, `oscillatoryPressure` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def freezeState (u : State D) (m : ℕ) : State D where
   mean := freezeTriple u.mean m
   pressure := fun _ => u.pressure m
@@ -92,6 +96,7 @@ noncomputable def freezeState (u : State D) (m : ℕ) : State D where
 
 /-- Freeze wave, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def freezeWave (a : LinearWaveBounds.WaveCoefficients D) (m : ℕ) :
     LinearWaveBounds.WaveCoefficients D where
   radius := fun _ => a.radius m
@@ -179,7 +184,8 @@ theorem stateRequest_freeze (s sr : StripData Cylinder) (P : SignedStressPrimiti
     (hepsilon : sr.epsilon n = s.epsilon m) (x : Cylinder) :
     PhysicalSignedWave.stateRequest sr P h (freezeContext c m) (freezeState u m) n x =
       PhysicalSignedWave.stateRequest s P h c u m x := by
-  change (sr.epsilon n)⁻¹ • _ = (s.epsilon m)⁻¹ • _
+  change (sr.epsilon n)⁻¹ • (_ : SignedWaveUpdate.Vec2) =
+    (s.epsilon m)⁻¹ • (_ : SignedWaveUpdate.Vec2)
   rw [hepsilon]
   rfl
 
@@ -188,7 +194,8 @@ theorem stateRequest_freeze_full (s : StripData Point) (sr : StripData Cylinder)
     (hepsilon : sr.epsilon n = s.epsilon m) (x : Cylinder) :
     PhysicalSignedWave.stateRequest sr P h (freezeContext c m) (freezeState u m) n x =
       LocalSignedRequest.fullRequest s P (2 * h) c u m (PhysicalResidualTZ.swapCylinder x) := by
-  change (sr.epsilon n)⁻¹ • _ = (s.epsilon m)⁻¹ • _
+  change (sr.epsilon n)⁻¹ • (_ : SignedWaveUpdate.Vec2) =
+    (s.epsilon m)⁻¹ • (_ : SignedWaveUpdate.Vec2)
   rw [hepsilon]
   rfl
 
@@ -219,6 +226,7 @@ variable {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
 
 /-- The dummy band index repeats one physical scale and one native cover.
 Every coordinate change is the identity; the supplied primary is retained. -/
+@[expose]
 noncomputable def identityViews (B : PhysicalSignedWave.PrimaryData U) (m : ℕ)
     (h Q : ℝ) (cover : ℕ) (hQ : 0 < Q) (hfrequency : B.base.frequency m ≠ 0) : B.Views m where
   exponent := h
@@ -263,6 +271,7 @@ variable (B : PhysicalSignedWave.PrimaryData U) (m : ℕ)
 /-- Both stored states and both contexts are the same frozen common objects.
 Only their dummy band index is changed. The native primary is left intact.
 Residual regularity and periodicity are derived from the primitive data. -/
+@[expose]
 noncomputable def stateData : (identityViews B m h Q cover hQ hfrequency).StateData where
   patch := P
   context := freezeContext c m
@@ -344,7 +353,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -372,16 +381,18 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 variable {B N0 : ℕ}
 
 /-- Reference, given by `BaseChartJets.cellBand l.1`. -/
+@[expose]
 noncomputable def reference (l : Label B N0) : ℕ := BaseChartJets.cellBand l.1
 
 /-- Domain, given by `ActualParticularStageControls.reindexDomain
 (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)`. -/
-noncomputable def domain (l : Label B N0) : PhaseJetBounds.Domain ℕ Slow :=
+@[expose] noncomputable def domain (l : Label B N0) : PhaseJetBounds.Domain ℕ Slow :=
   ActualParticularStageControls.reindexDomain
     (PrimaryGeometryAssembly.domain nominal (choice B N0).prepared.N) (fun _ => l.1)
 
 /-- Pulse, given by `ActualParticularStageControls.reindexConstruction (phases B N0 j) (fun _ =>
 l.1)`. -/
+@[expose]
 noncomputable def pulse (l : Label B N0) (j : Fin 2) :
     PrimaryPulseBounds.PhaseConstruction (domain l) :=
   ActualParticularStageControls.reindexConstruction (phases B N0 j) (fun _ => l.1)
@@ -391,10 +402,11 @@ noncomputable def pulse (l : Label B N0) (j : Fin 2) :
 
 /-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
 nominal l.1) l.2`. -/
-noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
+@[expose] noncomputable def spatialLabel (l : Label B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
 /-- Geometry, given by `ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0`. -/
+@[expose]
 noncomputable def geometry (l : Label B N0) : CommonCoverSolve.Geometry :=
   ActualSignedGeometry.slotGeometry slots vectors_det (spatialLabel l) 0
 
@@ -404,6 +416,7 @@ noncomputable def nativeClock (l : Label B N0) (Y : Plane) : ℝ :=
   PeriodicPhaseAssembly.periodicClock (geometry l) (clockWindow l.1).cutoff Y
 
 /-- Native free coordinates mapped to the actual common reference lift. -/
+@[expose]
 noncomputable def toCommon (l : Label B N0) : Point ≃L[ℝ] Point :=
   (CorrectionStep.cycleAssoc.toContinuousLinearEquiv.trans
     (ActualReferenceRebase.inverseCover
@@ -412,6 +425,7 @@ noncomputable def toCommon (l : Label B N0) : Point ≃L[ℝ] Point :=
 
 /-- To common cylinder, given by `PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.trans
 ((toCommon l).prodCongr (ContinuousLinearEquiv.refl ℝ ℝ))`. -/
+@[expose]
 noncomputable def toCommonCylinder (l : Label B N0) : Cylinder ≃L[ℝ] Cylinder :=
   PhysicalResidualTZ.swapCylinder.toContinuousLinearEquiv.trans
     ((toCommon l).prodCongr (ContinuousLinearEquiv.refl ℝ ℝ))
@@ -435,6 +449,7 @@ noncomputable def toCommonCylinder (l : Label B N0) : Cylinder ≃L[ℝ] Cylinde
   simp only [ContinuousLinearEquiv.symm_apply_apply]
 
 /-- Strip, constructed using `freezeStrip`. -/
+@[expose]
 noncomputable def strip (l : Label B N0) : StripData Cylinder :=
   freezeStrip (ParticularWaveBounds.reindexStrip PhysicalResidualTZ.swapCylinder
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal standardRegion)))
@@ -442,6 +457,7 @@ noncomputable def strip (l : Label B N0) : StripData Cylinder :=
 
 /-- Base, given by `freezeWave (ActualReferenceRebase.pullWave (toCommonCylinder l)
 (chartCoefficients l.2 l.1)) (reference l)`. -/
+@[expose]
 noncomputable def base (l : Label B N0) : LinearWaveBounds.WaveCoefficients Cylinder :=
   freezeWave (ActualReferenceRebase.pullWave (toCommonCylinder l)
     (chartCoefficients l.2 l.1)) (reference l)
@@ -452,6 +468,7 @@ noncomputable def directions (l : Label B N0) : LinearWaveBounds.GraphDirections
     (PrimaryResidualClass.directions (commonContext B))) (reference l)
 
 /-- Actual selected primary data. Only the dummy index is repeated. -/
+@[expose]
 noncomputable def primary (l : Label B N0) : PhysicalSignedWave.PrimaryData (domain l) where
   strip := strip l
   base := base l
@@ -468,6 +485,7 @@ noncomputable def primary (l : Label B N0) : PhysicalSignedWave.PrimaryData (dom
     ((phases B N0 l.2).phase.shear l.1 ((x.1.1, x.1.2.1), nativeClock l x.1.2.2))
 
 /-- All dummy bands describe this one native physical reference. -/
+@[expose]
 noncomputable def nativeViews (l : Label B N0) : (primary l).Views (reference l) :=
   identityViews (primary l) (reference l) h (ChartScales.Q (reference l))
     (ChartScales.nativeIndex h (reference l)) (ChartScales.Q_pos _)
@@ -614,6 +632,7 @@ theorem primary_chart (l : Label B N0) (n : ℕ) :
 
 /-- The actual current common state supplies the torus-mean request. The
 primitive hypotheses concern only the real local incoming fields. -/
+@[expose]
 noncomputable def nativeStateData (l : Label B N0) (P : SignedStressPrimitive.Patch)
     (u : State Point)
     (H : MeanStateRegularity.PrimitiveData standardRegion P.a P.b (commonContext B) u)
@@ -688,7 +707,7 @@ theorem label_large (l : Label B N0) : 4 ≤ (spatialLabel l).1 :=
 
 /-- Layout, given by `ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel
 l) (label_large l) 0`. -/
-noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.Layout :=
+@[expose] noncomputable def layout (l : Label B N0) : ActualPeriodizedSignedRealization.Layout :=
   ActualSignedPhysicalData.layout slots outgoing.data.h_pos.le (spatialLabel l) (label_large l) 0
 
 @[simp] theorem layout_geometry (l : Label B N0) (n : ℕ) :
@@ -915,7 +934,7 @@ theorem nativeView_target (l : Label B N0) :
   rfl
 
 /-- Native coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
-noncomputable def nativeCoefficients (l : Label B N0)
+@[expose] noncomputable def nativeCoefficients (l : Label B N0)
     (R : ℕ → Cylinder → SignedWaveUpdate.Vec2) (k : TorusInverse.Frequency) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   SignedWaveUpdate.coefficients (primary l).base (primary l).strip (primary l).directions
@@ -925,12 +944,14 @@ noncomputable def nativeCoefficients (l : Label B N0)
 
 /-- The scalar and the reference copy family are definable before proving
 their regularity. No proof or independently chosen request is stored. -/
+@[expose]
 noncomputable def nativeRequest (l : Label B N0) (P : SignedStressPrimitive.Patch)
     (u : State Point) : ℕ → Cylinder → SignedWaveUpdate.Vec2 :=
   PhysicalSignedWave.stateRequest (primary l).strip P h
     (freezeContext (commonContext B) (reference l)) (freezeState u (reference l))
 
 /-- Native copies, constructed using `ActualSignedPhysicalData.dynamicCopyData`. -/
+@[expose]
 noncomputable def nativeCopies (l : Label B N0) (P : SignedStressPrimitive.Patch)
     (u : State Point) : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   ActualSignedPhysicalData.dynamicCopyData slots outgoing.data.h_pos.le (spatialLabel l)
@@ -973,12 +994,14 @@ variable (l : Label B N0) (P : SignedStressPrimitive.Patch) (u : State Point)
     (hp : GaugeMomentBalances.MovingField standardRegion P.a P.b u.pressure)
 
 /-- Reference copies, constructed using `ActualSignedPhysicalData.dynamicCopyData`. -/
+@[expose]
 noncomputable def referenceCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   ActualSignedPhysicalData.dynamicCopyData slots outgoing.data.h_pos.le (spatialLabel l)
     (label_large l) 0 (primary l) (nativeViews l) (nativeStateData l P u H hp).referenceRequest l.2
 
 /-- Common copies as an element of `PeriodizedWaveBounds.CopyData Cylinder
 TorusInverse.Frequency`. -/
+@[expose]
 noncomputable def commonCopies : PeriodizedWaveBounds.CopyData Cylinder TorusInverse.Frequency :=
   (ActualSignedStageControls.parameters l).copyData
     (BaseContextAssembly.nativeStrip nominal standardRegion)
@@ -1175,6 +1198,7 @@ end LocalizedComparison
 
 /-- After particular, given by `(ActualCycleParameters.fixedParameters B N0).afterParticular
 x.coefficients (commonContext B) x.state`. -/
+@[expose]
 noncomputable def afterParticular (x : CorrectionStep.CycleState (Label B N0)) : State Point :=
   (ActualCycleParameters.fixedParameters B N0).afterParticular x.coefficients (commonContext B)
       x.state

@@ -30,7 +30,7 @@ Tags: linear-programming, optimization, farkas-lemma
 MSC: 90C05, 90C46
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

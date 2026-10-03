@@ -18,7 +18,7 @@ import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the directed version of the Van Kampen Theorem.
@@ -240,7 +240,7 @@ lemma functorOnHomOfCoveredAux_equal {γ : Dipath x y} (hγ₁ : range γ ⊆ X�
   have hγ₀ : range γ ⊆ X₁ ∩ X₂ := subset_inter hγ₁ hγ₂
   apply (eqToHom_comp_iff _ _ _).mpr
   apply (comp_eqToHom_iff _ _ _).mpr
-  simp only [dTopCat.coe_of, eqToHom_trans_assoc, Category.assoc, eqToHom_trans]
+  simp only [eqToHom_trans_assoc, Category.assoc, eqToHom_trans]
   exact map_eq_map_of_eq h_comm ⟦SubtypeDipath γ hγ₀⟧
 /-
 - ### Define the mapping behaviour on covered paths
@@ -389,7 +389,7 @@ lemma functorOnHomOfCovered_dihomotopic {x y : X} {γ γ' : Dipath x y} {F : Dih
 -  ### Define the behaviour on partwise covered paths
 -/
 /-- Recursive map on paths split into finitely many covered pieces. -/
-def FunctorOnHomOfCoveredPartwiseAux {n : ℕ} :
+@[expose] def FunctorOnHomOfCoveredPartwiseAux {n : ℕ} :
     ∀ (x y : X) (γ : Dipath x y) (_ : coveredPartwise hX γ n),
       F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
   Nat.recOn n
@@ -629,13 +629,11 @@ lemma functorOnHomOfCoveredPartwise_trans {n : ℕ} :
         focus
           intro t
           rw [SplitProperties.firstPart_cast]
-          simp only [Dipath.cast_apply]
           exact SplitProperties.trans_first_part_of_second_part γ₁ γ₂ n t
         simp
       · apply functorOnHomOfCovered_heq_of_ext hX h_comm
         intro t
         rw [SplitProperties.secondPart_cast]
-        simp only [Dipath.cast_apply]
         exact SplitProperties.trans_second_part_second_part γ₁ γ₂ n t
 lemma functorOnHomOfCoveredPartwise_unique {n m : ℕ} {γ : Dipath x y}
   (hγ_n : coveredPartwise hX γ n) (hγ_m : coveredPartwise hX γ m) :
@@ -949,7 +947,7 @@ lemma functorOnHomAux_of_dihomotopic (γ γ' : Dipath x y) (h : γ.Dihomotopic �
 -  ### Define the behaviour on quotient of paths
 -/
 /-- Map on morphisms of the directed fundamental category. -/
-def FunctorOnHom {x y : dπₓ X} (γ : x ⟶ y) : F_obj x ⟶ F_obj y :=
+@[expose] def FunctorOnHom {x y : dπₓ X} (γ : x ⟶ y) : F_obj x ⟶ F_obj y :=
  Quotient.liftOn γ Fh_aux (functorOnHomAux_of_dihomotopic hX X₁_open X₂_open h_comm)
 local notation "F_hom" => FunctorOnHom hX X₁_open X₂_open h_comm
 lemma functorOnHom_apply (γ : Dipath x y) :
@@ -977,7 +975,7 @@ lemma functorOnHom_comp {x y z : dπₓ X} (γ₁ : x ⟶ y) (γ₂ : y ⟶ z) :
   ## Define the functor F : (dπₓ X) ⟶ C
 -/
 /-- The pushout functor from the directed fundamental category of `X` to `C`. -/
-def Functor : (dπₓ X) ⥤ C where
+@[expose] def Functor : (dπₓ X) ⥤ C where
   obj := F_obj
   map γ := F_hom γ
   map_id x := functorOnHom_id hX X₁_open X₂_open h_comm x

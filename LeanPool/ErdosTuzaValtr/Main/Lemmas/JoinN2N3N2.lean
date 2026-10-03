@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2`.
 -/
 
-@[expose] public section
+public section
 
 open OrderDual
 

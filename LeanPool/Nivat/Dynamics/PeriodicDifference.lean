@@ -55,7 +55,7 @@ The main results are `exists_tangent_period_of_nonzero_annihilator` and
 period with Lemma 3.1 and the pattern inheritance of Section 1.1.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Dynamics
 
@@ -152,7 +152,7 @@ theorem act_eq_zero_of_origin_language (c x : Configuration ℚ)
 
 /-- The Laurent product of directional difference factors appearing in Proposition 3.5
 (`prop:tangent-period`), including any repeated directions. -/
-noncomputable def differenceProduct (hs : List Lattice) : Laurent :=
+@[expose] noncomputable def differenceProduct (hs : List Lattice) : Laurent :=
   (hs.map (fun h => monomial h - 1)).prod
 
 /-- The empty product of difference factors is the identity, so cancelling every factor forces the

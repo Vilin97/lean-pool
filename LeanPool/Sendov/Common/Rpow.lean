@@ -26,7 +26,7 @@ In particular:
   the large-degree reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

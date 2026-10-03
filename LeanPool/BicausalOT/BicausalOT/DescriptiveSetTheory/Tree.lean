@@ -21,7 +21,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSigmaA
 
 /-! ## Part I: Fibers (generic domain X, codomain ℕᴺ) -/
 
-@[expose] public section
+public section
 
 open Set Topology MeasureTheory
 

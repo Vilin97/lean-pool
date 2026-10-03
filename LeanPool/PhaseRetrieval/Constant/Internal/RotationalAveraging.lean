@@ -21,7 +21,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # RotationalAveraging -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Real Complex Finset

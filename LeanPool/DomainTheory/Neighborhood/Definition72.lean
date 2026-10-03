@@ -70,7 +70,7 @@ the choice-free
 deciders of Definition 7.1 and the choice-free r.e. layer of `Recursive.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -83,7 +83,7 @@ computable presentations
 `P` of `V` and `Q` of `W`, an approximable map `f : V → W` is *computable* iff its
 neighbourhood
 relation `Xₙ f Yₘ`, transported to the integer indices, is recursively enumerable. -/
-def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
+@[expose] def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
     (P : ComputablePresentation V) (Q : ComputablePresentation W) (f : ApproximableMap V W) :
       Prop :=
   REPred₂ (fun n m => f.rel (P.X n) (Q.X m))
@@ -93,7 +93,7 @@ def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
 condition becomes: the index set `{m ∣ Yₘ ∈ y}` of the element `y ∈ |W|` is
 recursively enumerable.
 We take this as the definition of a *computable element*. -/
-def IsComputableElement {W : NeighborhoodSystem β} (Q : ComputablePresentation W)
+@[expose] def IsComputableElement {W : NeighborhoodSystem β} (Q : ComputablePresentation W)
     (y : W.Element) : Prop :=
   REPred (fun m => y.mem (Q.X m))
 

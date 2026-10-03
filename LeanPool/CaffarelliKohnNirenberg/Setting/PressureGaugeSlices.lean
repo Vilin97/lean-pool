@@ -35,7 +35,7 @@ supremum of the slice energies in `def:sws` together with `x ≤ 1 + x²`; no
 Gagliardo-Nirenberg input is needed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology

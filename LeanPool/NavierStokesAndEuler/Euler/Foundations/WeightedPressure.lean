@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Weighted Pressure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

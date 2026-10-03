@@ -80,7 +80,7 @@ lemmas of this module, and all three are statements about `Γ`, never about the 
 Neither is a restatement of a goal of this module, and both are true.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -422,7 +422,7 @@ graph is a `def` and every clause is a theorem about it. -/
 become vertices whatever else happens. Enlarging the list produced by `exists_cut_points` is
 harmless (`EndsAreCut.mono`, `MeetsAreCut.mono`) and is what makes the two common vertices of
 `lem:union-two-connected` available. -/
-noncomputable def attachPoints (pieces : List Piece) (extra : List Plane) : List Plane :=
+@[expose] noncomputable def attachPoints (pieces : List Piece) (extra : List Plane) : List Plane :=
   extra ++ (exists_cut_points pieces).choose
 
 theorem mem_attachPoints_of_mem {pieces : List Piece} {extra : List Plane} {x : Plane}
@@ -439,6 +439,7 @@ theorem attachPoints_meetsAreCut (pieces : List Piece) (extra : List Plane) :
 /-- **The overlay of `lem:polygonal-overlay`, with the convention of
 `rem:polygonal-overlay-convention`**: every intersection of the listed segments is a vertex, and
 so is every prescribed extra point. -/
+@[expose]
 noncomputable def attachGraph (pieces : List Piece) (extra : List Plane) : Graph Plane Piece :=
   overlayGraph pieces (attachPoints pieces extra)
 

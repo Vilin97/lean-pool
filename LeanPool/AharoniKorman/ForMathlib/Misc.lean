@@ -16,7 +16,7 @@ A collection of results for the disproof of the Aharoni–Korman conjecture whic
 mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AharoniKorman
 

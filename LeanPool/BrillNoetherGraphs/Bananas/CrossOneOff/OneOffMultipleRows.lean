@@ -18,7 +18,7 @@ prefix firing reduces the marked twist of `g • rightEndpoint` to
 `tau(b)=m`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

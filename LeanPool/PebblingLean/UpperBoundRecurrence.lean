@@ -20,7 +20,7 @@ annulus estimates; once those are instantiated, this theorem is the formal
 recursion step used in the upper bound.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 
@@ -29,6 +29,7 @@ namespace Hypercube
 /-- Ordinary upper-bound target for optimal pebbling of hypercubes: for each
 dimension `n`, there is a solvable distribution on `Q_n` of size at most
 `costBound n`. -/
+@[expose]
 def HasHypercubePebblingUpperBound (costBound : ℕ → ℕ) : Prop :=
   ∀ n : ℕ, Pebbling.HasSolvableAtMostSize (graph n) 1 (costBound n)
 

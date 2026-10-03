@@ -39,7 +39,7 @@ predicates (D7); `exists_dbar_solution_chart_ball` transports Forster 13.2 (`Sol
 through a chart.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold
@@ -54,6 +54,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Real-smooth `ℂ`-valued functions on `X`, as a private subtype (D6). -/
+@[expose]
 def SmoothC (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X] :
     Type _ :=
   {f : X → ℂ // ContMDiff 𝓘(ℝ, ℂ) 𝓘(ℝ, ℂ) ∞ f}
@@ -119,11 +120,11 @@ instance : SMul ℂ (SmoothC X) where
     (ContinuousLinearMap.mul ℝ ℂ c).contDiff.contDiffAt.comp _
       (f.contDiffAt_comp_chartAt_symm_self x))⟩
 
-@[simp] theorem coe_add (f g : SmoothC X) (x : X) : (f + g) x = f x + g x := rfl
-@[simp] theorem coe_neg (f : SmoothC X) (x : X) : (-f) x = -f x := rfl
-@[simp] theorem coe_sub (f g : SmoothC X) (x : X) : (f - g) x = f x - g x := rfl
-@[simp] theorem coe_zero (x : X) : (0 : SmoothC X) x = 0 := rfl
-@[simp] theorem coe_smul (c : ℂ) (f : SmoothC X) (x : X) : (c • f) x = c * f x := rfl
+@[simp] theorem coe_add (f g : SmoothC X) (x : X) : (f + g) x = f x + g x := by rfl
+@[simp] theorem coe_neg (f : SmoothC X) (x : X) : (-f) x = -f x := by rfl
+@[simp] theorem coe_sub (f g : SmoothC X) (x : X) : (f - g) x = f x - g x := by rfl
+@[simp] theorem coe_zero (x : X) : (0 : SmoothC X) x = 0 := by rfl
+@[simp] theorem coe_smul (c : ℂ) (f : SmoothC X) (x : X) : (c • f) x = c * f x := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem ext' {f g : SmoothC X} (h : ∀ x, f x = g x) : f = g :=
@@ -235,10 +236,12 @@ theorem coeffAt_dbar (f : SmoothC X) (x : X) {z : ℂ} (hz : z ∈ (chartAt ℂ 
 /-! ### `IsDbarAt` / `IsDbarOn` (D7): chart-free local `dbar`-equations -/
 
 /-- `u` solves `dbaru = η` at `x`, evaluated in `x`'s own preferred chart. -/
+@[expose]
 def IsDbarAt (u : X → ℂ) (η : Form01 X) (x : X) : Prop :=
   wirtingerDbar (u ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) = η.coeffAt x (chartAt ℂ x x)
 
 /-- `u` solves `dbaru = η` at every point of `s`. -/
+@[expose]
 def IsDbarOn (u : X → ℂ) (η : Form01 X) (s : Set X) : Prop := ∀ x ∈ s, IsDbarAt u η x
 
 theorem isDbarOn_dbar (f : SmoothC X) : IsDbarOn (⇑f) (dbar f) Set.univ := by

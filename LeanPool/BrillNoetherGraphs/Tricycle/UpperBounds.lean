@@ -37,7 +37,7 @@ is a single explicit firing set, checked by `decide`.
 The firing sets and residual divisors are checked directly by the Lean kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Tricycle
 
@@ -66,9 +66,11 @@ theorem winnable_of_effective_add_prin {G : CFGraph} (D : CFDiv G)
 /-! ## The two concrete subdivisions -/
 
 /-- The minimal tricycle `T_m` itself. -/
+@[expose]
 def Tm : Spec 7 15 := tricycleSpec (fun _ => 1) (fun _ => Nat.one_pos)
 
 /-- Its `2`-subdivision `σ₂(T_m)`. -/
+@[expose]
 def Tm2 : Spec 7 15 := tricycleSpec (fun _ => 2) (fun _ => by omega)
 
 theorem Tm_connected : graphConnected Tm.graph :=

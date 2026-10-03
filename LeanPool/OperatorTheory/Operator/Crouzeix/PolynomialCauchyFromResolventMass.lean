@@ -29,7 +29,7 @@ polynomial representation required by the Crouzeix--Palencia assembly.
   resolvent mass implies the normalized polynomial operator Cauchy formula.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

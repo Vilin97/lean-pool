@@ -23,7 +23,7 @@ section
 
 /-! Every actual spatial derivative tensor remains a smooth L² field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -57,7 +57,7 @@ def jetField (n : ℕ) {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : SmoothL2Field V) :
     jetField 0 A = mapField (V := V) (W := Space [×0]→L[ℝ] V)
       (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-          A := rfl
+          A := by rfl
 
 @[simp] theorem jetField_succ {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : SmoothL2Field V) (n : ℕ) :
@@ -65,7 +65,7 @@ def jetField (n : ℕ) {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
       (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
       (continuousMultilinearCurryRightEquiv' ℝ n Space
           V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-      (jetField n A.derivative) := rfl
+      (jetField n A.derivative) := by rfl
 
 private theorem jetField_field_aux (n : ℕ) :
     ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] (A : SmoothL2Field V) (x : Space),
@@ -145,7 +145,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

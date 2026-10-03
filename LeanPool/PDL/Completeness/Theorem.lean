@@ -11,7 +11,7 @@ public import LeanPool.PDL.Completeness.BuildTreeExistence
 
 /-! # Completeness Proof (Section 6.4) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

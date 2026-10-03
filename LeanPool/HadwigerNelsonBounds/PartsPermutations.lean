@@ -19,12 +19,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! The six exact automorphisms of the normalized Parts root. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Apply one of the six stored automorphisms of the exact base graph. -/
-def partsPermuteVertex (symmetry : Fin 6) (vertex : Fin 481) : Fin 481 :=
+@[expose] def partsPermuteVertex (symmetry : Fin 6) (vertex : Fin 481) : Fin 481 :=
   match symmetry.val with
   | 0 => partsVertexPermutation0 vertex
   | 1 => partsVertexPermutation1 vertex

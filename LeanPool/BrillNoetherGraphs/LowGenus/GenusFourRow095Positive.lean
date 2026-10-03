@@ -20,7 +20,7 @@ involution.  The result is a kernel-checked degree-three rank-one divisor for
 every positive integral subdivision of the public row-095 core.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate

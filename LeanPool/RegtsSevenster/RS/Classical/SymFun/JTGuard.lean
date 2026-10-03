@@ -17,7 +17,7 @@ margins match the shifted compositions, and sorted shapes have
 injective staircase exponents.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

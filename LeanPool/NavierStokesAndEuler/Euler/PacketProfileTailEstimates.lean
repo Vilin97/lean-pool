@@ -23,7 +23,7 @@ section
 
 /-! The actual finite residual tail inherits the geometric-series word bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -81,7 +81,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

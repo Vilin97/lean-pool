@@ -31,7 +31,7 @@ locates the clean terminal switch and the second reserved compensation patch.
 No heat edit is applied in this module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,37 +83,41 @@ theorem integrable_dilate_Ioi_iff (f : ℝ → ℝ) (R X : ℝ) (hR : 0 < R) :
   simpa only [div_eq_mul_inv] using integrableOn_Ioi_comp_mul_right_iff f X (inv_pos.mpr hR)
 
 /-- E, given by `F.E (p.1 / XR, p.2)`. -/
-def E (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.E (p.1 / XR, p.2)
+@[expose] def E (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.E (p.1 / XR, p.2)
 /-- U, given by `F.U (p.1 / XR, p.2)`. -/
-def U (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.U (p.1 / XR, p.2)
+@[expose] def U (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.U (p.1 / XR, p.2)
 /-- H, given by `Real.sqrt (2 * p.1) * E F XR p`. -/
-def H (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * E F XR p
+@[expose] def H (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := Real.sqrt (2 * p.1) * E F XR p
 /-- Pi, given by `F.Pi (p.1 / XR, p.2)`. -/
-def Pi (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.Pi (p.1 / XR, p.2)
+@[expose] def Pi (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ := F.Pi (p.1 / XR, p.2)
 
 /-- Power E, given by `F.powerE (X / XR)`. -/
 def powerE (F : Profile) (XR X : ℝ) : ℝ := F.powerE (X / XR)
 /-- Power H, given by `Real.sqrt (2 * X) * powerE F XR X`. -/
-def powerH (F : Profile) (XR X : ℝ) : ℝ := Real.sqrt (2 * X) * powerE F XR X
+@[expose] def powerH (F : Profile) (XR X : ℝ) : ℝ := Real.sqrt (2 * X) * powerE F XR X
 
 /-- Energy density, given by `U F XR (X, eta) ^ 2 - E F XR (X, eta) ^ 2 / 2`. -/
+@[expose]
 def energyDensity (F : Profile) (XR eta X : ℝ) : ℝ := U F XR (X, eta) ^ 2 - E F XR (X, eta) ^ 2 / 2
 /-- Canonical kernel, given by `E F XR (X, eta) ^ 2 / X`. -/
-def canonicalKernel (F : Profile) (XR eta X : ℝ) : ℝ := E F XR (X, eta) ^ 2 / X
+@[expose] def canonicalKernel (F : Profile) (XR eta X : ℝ) : ℝ := E F XR (X, eta) ^ 2 / X
 
 /-- M, given by `∫ u in Ioc 0 X, U F XR (u, eta)`. -/
-def M (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, U F XR (u, eta)
+@[expose] def M (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, U F XR (u, eta)
 /-- I, given by `∫ u in Ioc 0 X, H F XR (u, eta)`. -/
 def I (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, H F XR (u, eta)
 /-- J, given by `∫ u in Ioc 0 X, H F XR (u, eta) * U F XR (u, eta)`. -/
+@[expose]
 def J (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, H F XR (u, eta) * U F XR (u, eta)
 /-- S, given by `∫ u in Ioc 0 X, energyDensity F XR eta u`. -/
 def S (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, energyDensity F XR eta u
 /-- Total S, given by `∫ u in Ioi 0, energyDensity F XR eta u`. -/
-def totalS (F : Profile) (XR eta : ℝ) : ℝ := ∫ u in Ioi 0, energyDensity F XR eta u
+@[expose] def totalS (F : Profile) (XR eta : ℝ) : ℝ := ∫ u in Ioi 0, energyDensity F XR eta u
 /-- Renormalized I, given by `∫ u in Ioi 0, H F XR (u, eta) - powerH F XR u`. -/
+@[expose]
 def renormalizedI (F : Profile) (XR eta : ℝ) : ℝ := ∫ u in Ioi 0, H F XR (u, eta) - powerH F XR u
 /-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ u in Ioi 0, canonicalKernel F XR eta u`. -/
+@[expose]
 def axisDatum (F : Profile) (XR eta : ℝ) : ℝ := -(1 / 2 : ℝ) * ∫ u in Ioi 0, canonicalKernel F XR
     eta u
 
@@ -132,7 +136,7 @@ theorem powerH_scaling (F : Profile) (XR X : ℝ) (hXR : 0 < XR) :
   field_simp
 
 theorem energyDensity_scaling (F : Profile) (XR eta X : ℝ) :
-    energyDensity F XR eta X = F.energyDensity eta (X / XR) := rfl
+    energyDensity F XR eta X = F.energyDensity eta (X / XR) := by rfl
 
 theorem canonicalKernel_scaling (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR) :
     canonicalKernel F XR eta X = XR⁻¹ * F.canonicalKernel eta (X / XR) := by
@@ -338,9 +342,9 @@ theorem Pi_tendsto_axis (F : Profile) (XR eta : ℝ) (hXR : 0 < XR) :
     exact div_pos hX hXR
 
 /-- Clock, given by `Real.log (X / XR)`. -/
-def clock (XR X : ℝ) : ℝ := Real.log (X / XR)
+@[expose] def clock (XR X : ℝ) : ℝ := Real.log (X / XR)
 /-- Radius, given by `XR * Real.exp y`. -/
-def radius (XR y : ℝ) : ℝ := XR * Real.exp y
+@[expose] def radius (XR y : ℝ) : ℝ := XR * Real.exp y
 
 theorem radius_pos (XR y : ℝ) (hXR : 0 < XR) : 0 < radius XR y := mul_pos hXR (Real.exp_pos y)
 
@@ -370,13 +374,13 @@ theorem radius_lt_iff (XR X y : ℝ) (hXR : 0 < XR) (hX : 0 < X) :
   simp only [radius, mul_comm]
 
 /-- Pulse end radius, given by `radius XR F.data.core.endpoint`. -/
-def pulseEndRadius (F : Profile) (XR : ℝ) : ℝ := radius XR F.data.core.endpoint
+@[expose] def pulseEndRadius (F : Profile) (XR : ℝ) : ℝ := radius XR F.data.core.endpoint
 /-- Tail radius, given by `radius XR (tailEnd F.data)`. -/
 def tailRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (tailEnd F.data)
 /-- Switch radius, given by `radius XR (HeatTailEdit.switchStart F.data)`. -/
-def switchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (HeatTailEdit.switchStart F.data)
+@[expose] def switchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (HeatTailEdit.switchStart F.data)
 /-- Carrier amplitude, given by `HeatTailEdit.outgoingAmplitude F.data`. -/
-def carrierAmplitude (F : Profile) : ℝ := HeatTailEdit.outgoingAmplitude F.data
+@[expose] def carrierAmplitude (F : Profile) : ℝ := HeatTailEdit.outgoingAmplitude F.data
 
 theorem switchRadius_eq (F : Profile) (XR : ℝ) :
     switchRadius F XR = XR * Real.exp (tailStart F.data + 1 / 5) := rfl
@@ -459,9 +463,9 @@ theorem switchRadius_tendsto (F : Profile) : Tendsto (switchRadius F) atTop atTo
 /-! ## The actual second reserved shaped-wait patch -/
 
 /-- Patch clock, given by `F.data.core.pulseStart - 20`. -/
-def patchClock (F : Profile) : ℝ := F.data.core.pulseStart - 20
+@[expose] def patchClock (F : Profile) : ℝ := F.data.core.pulseStart - 20
 /-- Patch radius, given by `radius XR (patchClock F)`. -/
-def patchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (patchClock F)
+@[expose] def patchRadius (F : Profile) (XR : ℝ) : ℝ := radius XR (patchClock F)
 /-- Patch ratio, given by `Real.exp (patchClock F - HeatTailEdit.switchStart F.data)`. -/
 def patchRatio (F : Profile) : ℝ := Real.exp (patchClock F - HeatTailEdit.switchStart F.data)
 /-- Patch amplitude, given by `OutgoingSchedule.radialAmplitude F.data.core.P
@@ -475,7 +479,7 @@ def shapedPatchAmplitude (F : Profile) (eta : ℝ) : ℝ := patchAmplitude F * O
 
 /-- In the coordinate `x = X / patchRadius`, the second reserved patch is
 the fixed interval `(1, exp 5)`. -/
-def compensationPatch : TerminalCompensation.Patch where
+@[expose] def compensationPatch : TerminalCompensation.Patch where
   left := 1
   right := Real.exp 5
   left_pos := by norm_num
@@ -728,7 +732,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -744,9 +748,9 @@ namespace NavierStokes.HeatedOutgoing
 abbrev Coeff := TerminalCompensation.Coeff
 
 /-- Parameter domain, given by `Icc (-1) 1`. -/
-def parameterDomain : Set ℝ := Icc (-1) 1
+@[expose] def parameterDomain : Set ℝ := Icc (-1) 1
 /-- Domain, given by `Ioi 0 ×ˢ parameterDomain`. -/
-def domain : Set (ℝ × ℝ) := Ioi 0 ×ˢ parameterDomain
+@[expose] def domain : Set (ℝ × ℝ) := Ioi 0 ×ˢ parameterDomain
 
 /-- Heat E, given by `OutgoingDilation.E F XR p * HeatTailEdit.multiplier F.data.h
 (ParametricHeatTail.diffusion p.2) (switchRadius F XR) p.1`. -/
@@ -756,43 +760,44 @@ noncomputable def heatE (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
 
 /-- Patch increment, given by `shapedPatchAmplitude F p.2 * TerminalCompensation.correction
 compensationPatch (c p.2) (p.1 / patchRadius F XR)`. -/
-noncomputable def patchIncrement (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def patchIncrement (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   shapedPatchAmplitude F p.2 * TerminalCompensation.correction compensationPatch (c p.2)
     (p.1 / patchRadius F XR)
 
 /-- E, given by `heatE F XR p + patchIncrement F XR c p`. -/
-noncomputable def E (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def E (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   heatE F XR p + patchIncrement F XR c p
 
 /-- U, given by `OutgoingDilation.U F XR`. -/
-noncomputable def U (F : Profile) (XR : ℝ) : ℝ × ℝ → ℝ := OutgoingDilation.U F XR
+@[expose] noncomputable def U (F : Profile) (XR : ℝ) : ℝ × ℝ → ℝ := OutgoingDilation.U F XR
 /-- H, given by `Real.sqrt (2 * p.1) * E F XR c p`. -/
-noncomputable def H (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def H (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   Real.sqrt (2 * p.1) * E F XR c p
 
 /-- Canonical kernel, given by `E F XR c (X, eta) ^ 2 / X`. -/
+@[expose]
 noncomputable def canonicalKernel (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   E F XR c (X, eta) ^ 2 / X
 /-- Pi, given by `-(1 / 2 : ℝ) * ∫ X in Ioi p.1, canonicalKernel F XR c p.2 X`. -/
-noncomputable def Pi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def Pi (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : ℝ × ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ X in Ioi p.1, canonicalKernel F XR c p.2 X
 /-- Axis datum, given by `-(1 / 2 : ℝ) * ∫ X in Ioi 0, canonicalKernel F XR c eta X`. -/
-noncomputable def axisDatum (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def axisDatum (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ X in Ioi 0, canonicalKernel F XR c eta X
 /-- Energy density, given by `U F XR (X, eta) ^ 2 - E F XR c (X, eta) ^ 2 / 2`. -/
-noncomputable def energyDensity (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
+@[expose] noncomputable def energyDensity (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   U F XR (X, eta) ^ 2 - E F XR c (X, eta) ^ 2 / 2
 /-- Total S, given by `∫ X in Ioi 0, energyDensity F XR c eta X`. -/
-noncomputable def totalS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def totalS (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) : ℝ :=
   ∫ X in Ioi 0, energyDensity F XR c eta X
 /-- M, given by `∫ u in Ioc 0 X, U F XR (u, eta)`. -/
 noncomputable def M (F : Profile) (XR eta X : ℝ) : ℝ := ∫ u in Ioc 0 X, U F XR (u, eta)
 /-- J, given by `∫ u in Ioc 0 X, H F XR c (u, eta) * U F XR (u, eta)`. -/
-noncomputable def J (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
+@[expose] noncomputable def J (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) : ℝ :=
   ∫ u in Ioc 0 X, H F XR c (u, eta) * U F XR (u, eta)
 
 /-- Only the already proved smooth extension is used off the physical band. -/
-noncomputable def extendedHeatE (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
+@[expose] noncomputable def extendedHeatE (F : Profile) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingDilation.E F XR p * (1 + HeatTailEdit.switch (switchRadius F XR) p.1 *
     (HeatProfileExtension.physicalProfile (1 + F.data.h) p.1 p.2 - 1))
 
@@ -918,6 +923,7 @@ noncomputable def heatRow (F : Profile) (XR eta : ℝ) (i : Fin 3) (X : ℝ) : �
       F.data.h (ParametricHeatTail.diffusion eta) (switchRadius F XR) X] i
 
 /-- Patch row as an element of `ℝ`. -/
+@[expose]
 noncomputable def patchRow (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) (i : Fin 3) (X : ℝ) : ℝ
     :=
   let A := TerminalCompensation.physicalProfile compensationPatch F.data.core.lam
@@ -927,6 +933,7 @@ noncomputable def patchRow (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : �
   ![(A ^ 2 - B ^ 2) / X, A ^ 2 - B ^ 2, Real.sqrt (2 * X) * (A - B)] i
 
 /-- Change row as an element of `ℝ`. -/
+@[expose]
 noncomputable def changeRow (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta : ℝ) (i : Fin 3) (X : ℝ) :
     ℝ :=
   ![(E F XR c (X, eta) ^ 2 - OutgoingDilation.E F XR (X, eta) ^ 2) / X,
@@ -1212,8 +1219,9 @@ theorem J_integrand_eq (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ
   simpa only [H, OutgoingDilation.H, U, mul_assoc] using
     congrArg (fun z => Real.sqrt (2 * X) * z) (E_times_U F XR c eta X hXR hX)
 
-theorem M_unchanged (F : Profile) (XR eta X : ℝ) : M F XR eta X = OutgoingDilation.M F XR eta X :=
-    rfl
+theorem M_unchanged (F : Profile) (XR eta X : ℝ) :
+    M F XR eta X = OutgoingDilation.M F XR eta X := by
+  rfl
 
 theorem J_unchanged (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ) (hXR : 0 < XR) :
     J F XR c eta X = OutgoingDilation.J F XR eta X :=
@@ -1343,7 +1351,7 @@ end CompensationWitness
 coefficients, then composing with the constructed relative smooth branch. -/
 
 /-- Free log E, constructed using `extendedHeatE`. -/
-noncomputable def freeLogE (F : Profile) (XR : ℝ) (z : (Coeff × ℝ) × ℝ) : ℝ :=
+@[expose] noncomputable def freeLogE (F : Profile) (XR : ℝ) (z : (Coeff × ℝ) × ℝ) : ℝ :=
   extendedHeatE F XR (Real.exp z.2, z.1.2) + shapedPatchAmplitude F z.1.2 *
     TerminalCompensation.correction compensationPatch z.1.1 (Real.exp z.2 / patchRadius F XR)
 

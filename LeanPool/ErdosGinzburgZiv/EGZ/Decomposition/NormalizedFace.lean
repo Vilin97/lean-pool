@@ -17,7 +17,7 @@ keeps the upper anchor for every proper selected face of a reduced old node.
 This gives a normalized operation with unchanged mass and uniform bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Rechart
 
@@ -65,6 +65,7 @@ noncomputable abbrev normalizedTargetNode (hΓ : Γ ≠ ⊤) (hred : Φ.IsReduce
     minimalized_upperAnchor_isReduced Φ anchor Γ hp C hmod hcenter hΓ hred⟩
 
 /-- The face corresponding to the original target face in normalized coordinates. -/
+@[expose]
 noncomputable def normalizedTargetFace (hΓ : Γ ≠ ⊤) (hred : Φ.IsReducedElement anchor) :
     ((normalized Φ anchor Γ hp C hmod hcenter).flag.polytope
       (normalizedTargetNode Φ anchor Γ hp C hmod hcenter hΓ hred)).Face :=
@@ -111,7 +112,7 @@ theorem normalized_isKBounded {K B : ℕ} (hK : Φ.IsKBounded (fun _ ↦ K))
       (isKBounded Φ anchor (Φ.faceSelector anchor Γ) hp hK) hC)
 
 /-- The subdivision map from the original decomposition to the normalized face refinement. -/
-noncomputable def normalizedSubdivisionMap :
+@[expose] noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (normalized Φ anchor Γ hp C hmod hcenter) :=
   (subdivisionMap Φ anchor (Φ.faceSelector anchor Γ) hp).comp
     ((Rechart.subdivisionMap (decomposition Φ anchor (Φ.faceSelector anchor Γ) hp)

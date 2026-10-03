@@ -13,21 +13,24 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Machine
 The above-two trial coefficients satisfy recurrence, support, and row-sum assumptions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace V7.Stage4AboveTwoFinalTrial
 
 /-- The terminal-plateau weight sequence used by the above-two trial. -/
+@[expose]
 noncomputable def weight (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   Stage4AboveTwoDualPhase.plateauU p eta n
 
 /-- The increments of the above-two trial's weight sequence. -/
+@[expose]
 noncomputable def increment (p eta : ℝ) (n : ℕ) : ScalarSeq :=
   Stage4AboveTwoDualPhase.plateauDw p eta n
 
 /-- The subdiagonal matrix selecting weighted gradient increments in an above-two phase. -/
+@[expose]
 noncomputable def alpha (p eta : ℝ) (n : ℕ) : ScalarMatrix := fun row i =>
   if 0 < row ∧ row ≤ n then
     if i = row - 1 then increment p eta n (row - 1) else 0

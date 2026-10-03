@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Measure.Map
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.PFR.ForMathlib.FiniteRange.Defs`.
 -/
 
-@[expose] public section
+public section
 
 /-- The property of having a finite range. -/
 class FiniteRange {Ω G : Type*} (X : Ω → G) : Prop where
@@ -25,7 +25,7 @@ noncomputable abbrev FiniteRange.fintype {Ω G : Type*} (X : Ω → G) [hX : Fin
     Fintype (Set.range X) := hX.finite.fintype
 
 /-- The range of a finite range map, as a finset. -/
-noncomputable def FiniteRange.toFinset {Ω G : Type*} (X : Ω
+@[expose] noncomputable def FiniteRange.toFinset {Ω G : Type*} (X : Ω
   → G) [hX : FiniteRange X] : Finset G :=
     @Set.toFinset _ _ hX.fintype
 

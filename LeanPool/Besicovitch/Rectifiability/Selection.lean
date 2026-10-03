@@ -16,7 +16,7 @@ This file extracts a countable disjoint subfamily of uniformly bounded open sets
 set meets a selected set whose diameter is more than half as large.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 

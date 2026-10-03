@@ -56,7 +56,7 @@ public import LeanPool.LiCriterion.FunctionsOfOneComplexVariable.BorelCaratheodo
 
 /-! ### Maximum modulus definition -/
 
-@[expose] public section
+public section
 
 open Complex Real Filter Topology MeasureTheory
 open scoped BigOperators ComplexConjugate
@@ -85,6 +85,7 @@ lemma summable_sigma_inv_norm_pow_of_weighted
 
 /-- The maximum modulus of f on the circle of radius r.
     M(f,r) = sup {|f(z)| : |z| = r} -/
+@[expose]
 noncomputable def maxModulus (f : ℂ → ℂ) (r : ℝ) : ℝ :=
   sSup {y : ℝ | ∃ z : ℂ, ‖z‖ = r ∧ y = ‖f z‖}
 
@@ -203,6 +204,7 @@ Lemma 1.2. Let f be an entire function of finite order.
   ρ(f) = lim sup_{r≥R→∞} (log log M(f,r)) / log(r)
 where M(f,r) = max_{|z|=r} |f(z)|
 -/
+@[expose]
 noncomputable def order (f : ℂ → ℂ) : ℝ :=
   Filter.limsup (fun r : ℝ =>
     if r > 0 ∧ maxModulus f r > 1 then
@@ -315,6 +317,7 @@ The order of an entire function f is defined as:
 
 /-- An entire function has finite order if there exist ρ₀, R₀ such that
     |f(z)| < exp(|z|^ρ₀) whenever |z| ≥ R₀ -/
+@[expose]
 def hasFiniteOrder (f : ℂ → ℂ) : Prop :=
   Differentiable ℂ f ∧ ∃ (ρ₀ R₀ : ℝ), ∀ z : ℂ, R₀ ≤ ‖z‖ → ‖f z‖ < Real.exp (‖z‖ ^ ρ₀)
 
@@ -400,6 +403,7 @@ Weierstrass elementary factors where:
   E_p(w) = (1-w)exp(w + w²/2 + ... + w^p/p)
 These appear in the canonical product representation.
 -/
+@[expose]
 noncomputable def weierstrassE (p : ℕ) (w : ℂ) : ℂ :=
   (1 - w) * Complex.exp (∑ k ∈ Finset.range p, w^(k+1) / (k+1))
 

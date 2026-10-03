@@ -16,7 +16,7 @@ This file defines cyclotomic integers using `AdjoinRoot` and relates them to the
 integers of the corresponding rational cyclotomic field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ local instance : IsCyclotomicExtension {p} ℚ (CyclotomicField p ℚ) :=
   CyclotomicField.isCyclotomicExtension p ℚ
 
 /-- The cyclotomic integers of conductor `p`, defined as an `AdjoinRoot`. -/
-def CyclotomicIntegers : Type := AdjoinRoot (cyclotomic p ℤ)
+@[expose] def CyclotomicIntegers : Type := AdjoinRoot (cyclotomic p ℤ)
 
 instance : CommRing (CyclotomicIntegers p) := by
   delta CyclotomicIntegers
@@ -48,8 +48,7 @@ namespace CyclotomicIntegers
 
 /-- The canonical equivalence between `CyclotomicIntegers p` and the ring of integers of the
 `p`-th cyclotomic field. -/
-@[simps! -isSimp]
-def equiv :
+@[expose, simps! -isSimp] def equiv :
     CyclotomicIntegers p ≃+* 𝓞 (CyclotomicField p ℚ) := by
   have H := IsCyclotomicExtension.zeta_spec p ℚ (CyclotomicField p ℚ)
   have hH : minpoly ℤ H.integralPowerBasis.gen = cyclotomic p ℤ :=
@@ -63,7 +62,7 @@ instance : IsDomain (CyclotomicIntegers p) :=
     (cyclotomic.irreducible hpri.out.pos))
 
 /-- The tautological primitive root of unity in `CyclotomicIntegers p`. -/
-def zeta : CyclotomicIntegers p := AdjoinRoot.root _
+@[expose] def zeta : CyclotomicIntegers p := AdjoinRoot.root _
 
 lemma equiv_zeta : equiv p (zeta p) = (IsCyclotomicExtension.zeta_spec
     p ℚ (CyclotomicField p ℚ)).toInteger := by

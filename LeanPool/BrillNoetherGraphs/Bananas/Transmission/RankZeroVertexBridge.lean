@@ -18,7 +18,7 @@ than an arbitrary divisor.  This file records that passage in the precise
 form needed before applying the banana cut calculation.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -20,7 +20,7 @@ stage maps and dinaturality, the mapping property, and
 functoriality in both arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,7 +32,7 @@ variable {A : Type u}
 
 /-- The Λ diagram of a pair of functors: `(X, Y) ↦ α(Xᘁ) ⊗ β(Y)`,
 contravariant in `X` through the adjoint mate. -/
-@[simps!]
+@[expose, simps!]
 def lambdaDiagram [Category.{v} A] [MonoidalCategory A] [RightRigidCategory A]
     {D : Type u'} [Category.{v'} D] [MonoidalCategory D]
     (α β : A ⥤ D) : Aᵒᵖ ⥤ A ⥤ D where
@@ -132,7 +132,7 @@ section
 
 /-- Natural transformations in both arguments induce a map of Λ
 diagrams. -/
-@[simps]
+@[expose, simps]
 def lambdaDiagramMap
     [Category.{v} A] [MonoidalCategory A] [RightRigidCategory A]
     {D : Type u'} [Category.{v'} D] [MonoidalCategory D] {α : A ⥤ D}
@@ -214,7 +214,7 @@ open Functor.LaxMonoidal
 /-- The right dual of the monoidal unit supplied by the rigid
 structure — the instance the Λ stages use, which need not be the
 unit-specific instance. -/
-noncomputable def unitRigidDual
+@[expose] noncomputable def unitRigidDual
     [Category.{v} A] [MonoidalCategory A] [RightRigidCategory A] : A :=
   @HasRightDual.rightDual A _ _ (𝟙_ A)
     (RightRigidCategory.rightDual (𝟙_ A))
@@ -352,7 +352,7 @@ section
 
 /-- The cocone under the whiskered multispan carried by a
 dinatural family. -/
-@[simps]
+@[expose, simps]
 def tensorLeftCoendCocone
     {D : Type u'} [Category.{v'} D] [MonoidalCategory D] {J : Type u}
     [Category.{v} J] (F : Jᵒᵖ ⥤ J ⥤ D) (W : D) {Z : D}
@@ -425,7 +425,7 @@ section
 
 /-- The cocone under the right-whiskered multispan carried by a
 dinatural family. -/
-@[simps]
+@[expose, simps]
 def tensorRightCoendCocone
     {D : Type u'} [Category.{v'} D] [MonoidalCategory D] {J : Type u}
     [Category.{v} J] (F : Jᵒᵖ ⥤ J ⥤ D) (W : D) {Z : D}

@@ -17,7 +17,7 @@ Stein identities and assembles the probability relations and density
 identifications.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

@@ -28,7 +28,7 @@ No continuity, modification, Markov-property, or path-regularity statement is pr
 the two-point law and the moment estimate it transports.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

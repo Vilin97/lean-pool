@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.V5.CostBounds
 
 /-! # Trajectory Bounds -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.ContinuousProcess
 
@@ -90,6 +90,7 @@ theorem trajectoryExpectedSquaredCost_le_refreshedEnvelope
 
 /-- Per-period RMS cost of the parameterized policy from a fixed arbitrary
 initial inventory. -/
+@[expose]
 def trajectoryRMSCostFromState
     (m : ℕ) (hm : 1 ≤ m) (s₀ : SpatialState m) (t : ℕ) : ℝ :=
   Real.sqrt

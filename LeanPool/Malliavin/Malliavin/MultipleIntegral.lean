@@ -26,7 +26,7 @@ operators with genuine multiple Wiener--Itô integrals additionally requires the
 ordered-box property; that property is not part of `IteratedIntegralFamily` itself.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -84,6 +84,7 @@ theorem integral_inner_symmetrizeL_eq_factorial_smul_setIntegral (n : ℕ)
       exact integral_congr_ae hinner.restrict.symm
 
 /-- The selected law-level order-`n` multiple operator `Iₙ = n! Jₙ ∘ symmetrizeL`. -/
+@[expose]
 noncomputable def multipleIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel n →L[ℝ] RandomL2 P :=
   (n.factorial : ℝ) • (iteratedIntegralCLM hB n).comp

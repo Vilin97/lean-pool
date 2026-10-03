@@ -77,7 +77,7 @@ normalisation, and
 definite form rather than a normalised one, so `traceForm` is admissible there as it stands.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -141,6 +141,7 @@ variable {J : Type*} [NonUnitalNonAssocCommRing J] [IsCommJordan J] [Module ℝ 
 /-- `EuclideanJordan/Peirce.lean`'s `mulL`, bundled as a linear map in the multiplier — which is
 what makes
 `jtr` linear. -/
+@[expose]
 def mulLₗ : J →ₗ[ℝ] J →ₗ[ℝ] J where
   toFun := mulL
   map_add' a b := by ext y; simp only [mulL_apply, LinearMap.add_apply, add_mul]
@@ -167,6 +168,7 @@ It is not normalised — see the module docstring.  ★ The carrier here has no 
 (`NonUnitalNonAssocCommRing`), so the normalisation cannot even be *stated* at this generality;
 where a unit `e` is available it is `L_e = id`, so `jtr e` would be `finrank ℝ J` rather than the
 rank.  That is a remark, not a lemma: nothing below proves it and nothing needs it. -/
+@[expose]
 def jtr : J →ₗ[ℝ] ℝ := (LinearMap.trace ℝ J).comp mulLₗ
 
 omit [IsCommJordan J] in
@@ -250,6 +252,7 @@ variable {J : Type*} [NonUnitalNonAssocCommRing J] [IsCommJordan J] [Module ℝ 
   [IsScalarTower ℝ J J]
 
 /-- **The Jordan trace form** `τ(x, y) = tr(L_{x ∘ y})`. -/
+@[expose]
 def traceForm : J →ₗ[ℝ] J →ₗ[ℝ] ℝ :=
   LinearMap.mk₂ ℝ (fun x y => jtr (x * y))
     (fun x x' y => by rw [add_mul, map_add])

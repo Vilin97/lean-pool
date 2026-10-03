@@ -52,7 +52,7 @@ s-number sequence `s`).
     sequence `s` — the approximation numbers are the largest.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -70,11 +70,13 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 
 /-- The set of approximation residuals `‖S - L‖` over operators `L` of rank
 at most `n`. -/
+@[expose]
 def approximationSet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
   {r | ∃ L : X →L[𝕜] Y, L.rank ≤ (n : Cardinal) ∧ r = ‖S - L‖}
 
 /-- The `n`-th **approximation number** of a continuous linear map: the
 infimum of `‖S - L‖` over operators `L` of rank at most `n`. -/
+@[expose]
 noncomputable def approximationNumber (S : X →L[𝕜] Y) (n : ℕ) : ℝ :=
   sInf (approximationSet S n)
 
@@ -357,6 +359,7 @@ lemma approximationNumber_id_euclidean (n : ℕ) :
 /-! ### Summary: approximation numbers form a strict s-number sequence -/
 
 /-- The approximation-numbers family. -/
+@[expose]
 noncomputable def approximationFamily : Family 𝕜 :=
   fun {_X _Y} _ _ _ _ S n => approximationNumber S n
 

@@ -18,7 +18,7 @@ observing that the `tensorCongr`-conjugation of a whisker is
 `tensorHom` of the inner conjugation.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

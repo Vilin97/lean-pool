@@ -23,7 +23,7 @@ and target coverage in one induction. The paper's existential Lemma 2 is the
 immediate corollary `safe_extend`.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
@@ -56,7 +56,7 @@ theorem parityWord_max_lt {P : List ℕ} {p : ℕ} (hp : p < 2)
 /-- An insertion-sort implementation of the reverse listing in Lemma 1.
 It is extensionally identical to `reverseWord`; using structural insertion
 sort also allows the displayed numerical example to reduce in Lean's kernel. -/
-def reverseWordExecutable (T : Finset ℕ) : List ℕ :=
+@[expose] def reverseWordExecutable (T : Finset ℕ) : List ℕ :=
   Quot.liftOn T.val (List.insertionSort reverseBitsLE) fun l₁ l₂ h =>
     ((List.perm_insertionSort reverseBitsLE l₁).trans
       (h.trans (List.perm_insertionSort reverseBitsLE l₂).symm)).eq_of_pairwise'
@@ -94,7 +94,7 @@ decreasing_by
 /-- The specification asserted in Lemma 2: a safe extension, preserving the
 old prefix and containing every prescribed target. This predicate packages
 the three conclusions without hiding the actual output word. -/
-def ExtensionResult (P : List ℕ) (T : Finset ℕ) (Q : List ℕ) : Prop :=
+@[expose] def ExtensionResult (P : List ℕ) (T : Finset ℕ) (Q : List ℕ) : Prop :=
   Safe bits Q ∧ P.IsPrefix Q ∧ ∀ t ∈ T, t ∈ Q
 
 /-- Splitting off the newly appended suffix recovers the entire extension.

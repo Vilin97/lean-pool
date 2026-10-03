@@ -27,7 +27,7 @@ Tools for the numerical verification of the potential inequality (6.2) (Lemma 6.
 * `sqrt_le_of_sq_le`, `le_sqrt_of_sq_le` : rational enclosures of square roots.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology
 

@@ -35,7 +35,7 @@ Main declarations:
   the private subfamily `P.restrict s` of `#s` lines lying on `J`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

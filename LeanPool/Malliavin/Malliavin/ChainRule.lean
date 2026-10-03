@@ -41,7 +41,7 @@ by dominated convergence (`tendsto_toLp_of_dominated`, bound `(2K)² ‖D_cl F�
 everywhere convergent subsequence.  Closedness of the graph (`mem_domD12_of_tendsto`) concludes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -252,6 +252,7 @@ theorem norm_mderivClosure_comp_le (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖der
   exact mul_le_mul_of_nonneg_right h1 (norm_nonneg _)
 
 /-- `φ ∘ F` as an element of the submodule `D12 μ`. -/
+@[expose]
 noncomputable def D12.comp (hφ : ContDiff ℝ 1 φ) (hK : ∀ x, ‖deriv φ x‖₊ ≤ K) (F : D12 μ) :
     D12 μ :=
   ⟨(memLp_comp_of_deriv_le μ hφ hK F).toLp _, (comp_mem_domD12 μ hφ hK F.2).1⟩
@@ -460,6 +461,7 @@ theorem norm_mderivClosure_mul_le (hG : IsSmoothBounded G) {F : Lp ℝ 2 μ} (hF
     exact mul_le_mul_of_nonneg_right (hD' x) (norm_nonneg _)
 
 /-- `F · G` as an element of the submodule `D12 μ`. -/
+@[expose]
 noncomputable def D12.mulSmooth (hG : IsSmoothBounded G) (F : D12 μ) : D12 μ :=
   ⟨(memLp_mul_smoothBounded μ hG F).toLp _, (mul_mem_domD12 μ hG F.2).1⟩
 
@@ -889,6 +891,7 @@ theorem norm_mderivClosure_comp_pi_le {n : ℕ} {f : (Fin n → ℝ) → ℝ} (h
   rw [ENNReal.toReal_mul, toReal_enorm, Real.norm_eq_abs, abs_of_nonneg hK0, Lp.norm_def]
 
 /-- `f (F₁, …, Fₙ)` as an element of the submodule `D12 μ`. -/
+@[expose]
 noncomputable def D12.compPi {n : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : ContDiff ℝ 1 f) {K : ℝ}
     (hK : ∀ y, ‖fderiv ℝ f y‖ ≤ K) (F : Fin n → D12 μ) : D12 μ :=
   ⟨(memLp_comp_pi μ hf hK fun i ↦ (F i : Lp ℝ 2 μ)).toLp _,

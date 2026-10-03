@@ -29,7 +29,7 @@ smoothness and parameter differentiation of those integrals then give the
 mixed identities on the open physical parameter band.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -327,7 +327,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -447,15 +447,17 @@ theorem transport_histories_zero_after_switch {F : Profile} {XR C : ℝ}
 
 /-- Normalization, given by `TerminalPressure.releasedNormalization F.data
 (OutgoingDilation.switchRadius F XR)`. -/
+@[expose]
 noncomputable def normalization (F : Profile) (XR : ℝ) : ℝ :=
   TerminalPressure.releasedNormalization F.data (OutgoingDilation.switchRadius F XR)
 
 /-- Shift, given by `Real.log (OutgoingDilation.switchRadius F XR) - 1/5`. -/
-noncomputable def shift (F : Profile) (XR : ℝ) : ℝ :=
+@[expose] noncomputable def shift (F : Profile) (XR : ℝ) : ℝ :=
   Real.log (OutgoingDilation.switchRadius F XR) - 1/5
 
 /-- Physical angular, given by `SimilarityProfile.pullback F.data.h
 (-TerminalPressure.amplitudeExponent F.data.h) (HeatedOutgoing.E F XR c)`. -/
+@[expose]
 noncomputable def physicalAngular (F : Profile) (XR : ℝ) (c : ℝ → Coeff) :
     SimilarityProfile.PhysicalProfile :=
   SimilarityProfile.pullback F.data.h (-TerminalPressure.amplitudeExponent F.data.h)
@@ -543,6 +545,7 @@ theorem physicalPressure_eq_terminal (F : Profile) {XR : ℝ} (hXR : 0 < XR)
 /-! ## The actual forward stress on the switched tail -/
 
 /-- Forward theta, constructed using `HeatSwitchCone.logE`. -/
+@[expose]
 noncomputable def forwardTheta (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (p : ℝ × ℝ) : ℝ :=
   HeatSwitchCone.logE F XR c p / Real.sqrt (2 * XR * Real.exp p.1) *
@@ -551,7 +554,7 @@ noncomputable def forwardTheta (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
 
 /-- Forward axial, given by `XR * Real.exp p.1 * HeatSwitchCone.Ns F XR c p /
 (CoordinateAlgebra.L F.data.h p.2 * Real.sqrt (2 * XR * Real.exp p.1))`. -/
-noncomputable def forwardAxial (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
+@[expose] noncomputable def forwardAxial (F : Profile) (XR : ℝ) (c : ℝ → Coeff)
     (p : ℝ × ℝ) : ℝ :=
   XR * Real.exp p.1 * HeatSwitchCone.Ns F XR c p /
     (CoordinateAlgebra.L F.data.h p.2 * Real.sqrt (2 * XR * Real.exp p.1))
@@ -723,6 +726,7 @@ open ProfileHistories (radialPartial parameterPartial)
 
 /-- Eta derivative, given by `derivWithin (fun η => G (p.1,η)) HeatedOutgoing.parameterDomain
 p.2`. -/
+@[expose]
 noncomputable def etaDerivative (G : (ℝ × ℝ) → ℝ) (p : ℝ × ℝ) : ℝ :=
   derivWithin (fun η => G (p.1,η)) HeatedOutgoing.parameterDomain p.2
 

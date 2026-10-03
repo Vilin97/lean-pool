@@ -22,7 +22,7 @@ For centres in the closed origin cylinder, this construction is admissible
 through radius `(1 - R₁) / 2`, twice the origin margin scale.
 -/
 
-@[expose] public section
+public section
 
 section
 

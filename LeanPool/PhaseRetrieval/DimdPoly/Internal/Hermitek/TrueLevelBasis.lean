@@ -23,7 +23,7 @@ import Mathlib.MeasureTheory.Integral.Gamma
 
 /-! # TrueLevelBasis -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset
@@ -92,7 +92,7 @@ finite `z`/`conj z` expansion used downstream.
 The raising/lowering-operator derivation is only bookkeeping motivation; the
 public API stays explicit and finitary.
 -/
-noncomputable def Phi : ℕ → ℕ → ℂ → ℂ := fun k n z =>
+@[expose] noncomputable def Phi : ℕ → ℕ → ℂ → ℂ := fun k n z =>
   ((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℂ) *
     Finset.sum (Finset.range (min k n + 1)) (fun j =>
       ((-1 : ℂ) ^ j) * (Nat.choose k j : ℂ) *
@@ -100,7 +100,7 @@ noncomputable def Phi : ℕ → ℕ → ℂ → ℂ := fun k n z =>
         z ^ (n - j) * (star z) ^ (k - j))
 
 /-- The distinguished lowest vector in level `k`. -/
-def phi0 (k : ℕ) : ℂ → ℂ := Phi k 0
+@[expose] def phi0 (k : ℕ) : ℂ → ℂ := Phi k 0
 
 /-- The closed span of the true Hermite level-`k` basis.
 
@@ -113,11 +113,11 @@ def Hk (k : ℕ) : Set (ℂ → ℂ) :=
       ∀ z, HasSum (fun n => weightedInner G (Phi k n) * Phi k n z) (G z)}
 
 /-- A finite Hermite sum `sum_{n < D} a_n Phi_{k,n}`. -/
-def finiteHermiteSum (k : ℕ) {D : ℕ} (a : Fin D → ℂ) : ℂ → ℂ :=
+@[expose] def finiteHermiteSum (k : ℕ) {D : ℕ} (a : Fin D → ℂ) : ℂ → ℂ :=
   fun z => ∑ n : Fin D, a n * Phi k n.1 z
 
 /-- The top coefficient of a degree-`d` finite Hermite sum. -/
-def topCoeff {d : ℕ} (a : Fin (d + 1) → ℂ) : ℂ :=
+@[expose] def topCoeff {d : ℕ} (a : Fin (d + 1) → ℂ) : ℂ :=
   a ⟨d, Nat.lt_succ_self d⟩
 
 /-- The canonical coefficient extractor for the true level basis. -/
@@ -137,15 +137,15 @@ noncomputable def qkn : ℕ → ℕ → ℝ → ℝ := fun k n r =>
         r ^ ((n : ℤ) - 2 * (j : ℤ)))
 
 /-- The scalar front factor in the polar representation. -/
-def circleLeadingFactor (k : ℕ) (r : ℝ) : ℂ :=
+@[expose] def circleLeadingFactor (k : ℕ) (r : ℝ) : ℂ :=
   ((((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) : ℝ) : ℂ)
 
 /-- The finitely supported circle coefficient map attached to finite Hermite data. -/
-def finiteCircleCoeff (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : ℕ → ℂ :=
+@[expose] def finiteCircleCoeff (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : ℕ → ℂ :=
   fun n => if h : n < D then a ⟨n, h⟩ * (qkn k n r : ℂ) else 0
 
 /-- The finite Fourier polynomial on the circle attached to a finite Hermite sum. -/
-def finiteCirclePoly (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : Circle → ℂ :=
+@[expose] def finiteCirclePoly (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : Circle → ℂ :=
   positiveTrigonometricPolynomial (frequencyBand 0 D) (finiteCircleCoeff k r a)
 
 /-- The finite circle polynomial built from the truncated coefficient vector of `G`. -/
@@ -2336,7 +2336,7 @@ private lemma phi_norm_le_majorant {k n : ℕ} {R : ℝ} (hR : 1 ≤ R) {z : ℂ
 /-! ## Basis Bridge -/
 
 /-- The formal Hermite expansion attached to a coefficient sequence. -/
-def hermiteSeries (k : ℕ) (g : ℕ → ℂ) : ℂ → ℂ :=
+@[expose] def hermiteSeries (k : ℕ) (g : ℕ → ℂ) : ℂ → ℂ :=
   fun z => ∑' n : ℕ, g n * Phi k n z
 
 /-- The circle series associated to Hermite coefficients at radius `r`. -/

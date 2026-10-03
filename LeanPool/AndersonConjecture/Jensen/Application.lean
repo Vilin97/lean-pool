@@ -26,7 +26,7 @@ hypotheses (Corollary 2.4 with P = (0)) and apply the construction
 to produce a local UFD whose completion is T.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

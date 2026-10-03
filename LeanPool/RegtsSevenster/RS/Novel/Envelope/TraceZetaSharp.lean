@@ -39,7 +39,7 @@ degree bound,
 and the threshold is stated in the growth constant itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -90,7 +90,7 @@ definitions below therefore declare `σ ≼ σ` for every new cell; that is the 
 this module adds a pair the blueprint's prose does not list.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -114,7 +114,7 @@ two new edges `e₁ : x — v`, `e₂ : v — y`.
 The three guards `f ≠ e`, `f ≠ e₁`, `f ≠ e₂` on the surviving links make the three disjuncts
 mutually exclusive with no hypotheses, and `hne` does the same for the last two. The freshness
 hypotheses `h₁`, `h₂` are what make `edgeSet` right. -/
-def subdivGraph (H : Graph γ γ) (e x y v e₁ e₂ : γ) (hne : e₁ ≠ e₂)
+@[expose] def subdivGraph (H : Graph γ γ) (e x y v e₁ e₂ : γ) (hne : e₁ ≠ e₂)
     (h₁ : e₁ ∉ E(H)) (h₂ : e₂ ∉ E(H)) : Graph γ γ where
   vertexSet := V(H) ∪ {z | z = v ∧ H.IsLink e x y}
   edgeSet := (E(H) \ {e}) ∪ {f | (f = e₁ ∨ f = e₂) ∧ H.IsLink e x y}
@@ -238,7 +238,7 @@ theorem faces_ne_edgeSet {z w : γ} (hz : z ∈ S.faces) (hw : w ∈ E(S.skel)) 
 
 /-- The cells of a walk: its edges, and the vertices it visits. This is what the blueprint
 calls "the cells of the boundary walk `Bᵢ`". -/
-def pathCells (u : γ) (W : List γ) : Set γ := {c | c ∈ W} ∪ S.skel.walkVertices u W
+@[expose] def pathCells (u : γ) (W : List γ) : Set γ := {c | c ∈ W} ∪ S.skel.walkVertices u W
 
 variable {S}
 
@@ -331,7 +331,7 @@ abbrev SubstWalk : γ → List γ → List γ → Prop :=
   CellStructure.SubstWalk S d.edge d.left d.right d.newEdge₁ d.newEdge₂
 
 /-- The three cells the subdivision creates. -/
-def newCells : Set γ := {d.newVertex, d.newEdge₁, d.newEdge₂}
+@[expose] def newCells : Set γ := {d.newVertex, d.newEdge₁, d.newEdge₂}
 
 variable {d}
 
@@ -365,13 +365,13 @@ theorem newEdge₂_notMem_outer : d.newEdge₂ ∉ E(S.outerGraph) := fun h =>
   d.newEdge₂_notMem_edgeSet (S.outerGraph_le.edgeSet_mono h)
 
 /-- The subdivided skeleton. -/
-def skeleton : Graph γ γ :=
+@[expose] def skeleton : Graph γ γ :=
   subdivGraph S.skel d.edge d.left d.right d.newVertex d.newEdge₁ d.newEdge₂
     d.newEdge_ne d.newEdge₁_notMem_edgeSet d.newEdge₂_notMem_edgeSet
 
 /-- The subdivided outer cycle. When the subdivided edge is not an outer edge this is the old
 outer cycle unchanged (`SubdivData.outer_eq`). -/
-def outer : Graph γ γ :=
+@[expose] def outer : Graph γ γ :=
   subdivGraph S.outerGraph d.edge d.left d.right d.newVertex d.newEdge₁ d.newEdge₂
     d.newEdge_ne d.newEdge₁_notMem_outer d.newEdge₂_notMem_outer
 
@@ -418,6 +418,7 @@ update list, in order: the old pairs that involve neither `e` nor a new cell; th
 pairs of the new cells (see the fidelity note in the module docstring); `v ≼ e₁, e₂`; each old
 endpoint below its adjacent new edge; and the new cells below exactly the old *strict*
 supercells of `e`. -/
+@[expose]
 def subRel : γ → γ → Prop := fun σ τ =>
   (σ ∉ d.newCells ∧ τ ∉ d.newCells ∧ σ ≠ d.edge ∧ τ ≠ d.edge ∧ S.sub σ τ) ∨
     (σ = τ ∧ σ ∈ d.newCells) ∨
@@ -435,6 +436,7 @@ open scoped Classical in
 The boundary walks are the orientation-aware replacements carried by `SubdivData`.  They must
 arrive as data because an edge list does not determine the direction in which its walk crosses
 the subdivided edge; the two incident face boundaries can traverse it in opposite directions. -/
+@[expose]
 noncomputable def subdivideEdge (S : CellStructure γ) (d : S.SubdivData) : CellStructure γ where
   skel := d.skeleton
   faces := S.faces
@@ -619,18 +621,19 @@ theorem paths_disjoint ⦃f : γ⦄ (h₁ : f ∈ d.path₁) (h₂ : f ∈ d.pat
     S.disjoint_vertexSet_edgeSet.ne_of_mem d.isPath₁.right_mem hfE rfl]
 
 /-- All cells of the ear: its vertices, including its two old ends, and its edges. -/
-def earCells : Set γ := V(d.ear) ∪ E(d.ear)
+@[expose] def earCells : Set γ := V(d.ear) ∪ E(d.ear)
 
 /-- The cells the split creates: the interior cells of the ear, its edges, and the two new
 2-cells. The ear's two ends are *not* new — they are old vertices, and the blueprint is
 explicit that they are their own parents. -/
+@[expose]
 def newCells : Set γ := (V(d.ear) \ {d.source, d.target}) ∪ E(d.ear) ∪ {d.face₁, d.face₂}
 
 /-- The cells of the first boundary path. -/
-def cells₁ : Set γ := S.pathCells d.source d.path₁
+@[expose] def cells₁ : Set γ := S.pathCells d.source d.path₁
 
 /-- The cells of the second boundary path. -/
-def cells₂ : Set γ := S.pathCells d.source d.path₂
+@[expose] def cells₂ : Set γ := S.pathCells d.source d.path₂
 
 theorem source_mem_skel : d.source ∈ V(S.skel) := d.isPath₁.left_mem
 
@@ -682,7 +685,7 @@ theorem compatible : S.skel.Compatible d.ear :=
   Graph.Compatible.of_disjoint_edgeSet d.disjoint_edgeSet
 
 /-- The skeleton after the split: the old skeleton with the ear glued in along its two ends. -/
-def skeleton : Graph γ γ := S.skel.union d.ear
+@[expose] def skeleton : Graph γ γ := S.skel.union d.ear
 
 @[simp] theorem skeleton_vertexSet : V(d.skeleton) = V(S.skel) ∪ V(d.ear) := rfl
 
@@ -703,6 +706,7 @@ list, in order: the old pairs involving neither `R` nor a new cell; the reflexiv
 new cells (see the fidelity note in the module docstring); the incidences along the ear; and
 the cells of `P` and of `Bᵢ`, together with `Rᵢ` itself, below `Rᵢ`. No 2-cell is below
 another. -/
+@[expose]
 def subRel : γ → γ → Prop := fun σ τ =>
   (σ ∉ d.newCells ∧ τ ∉ d.newCells ∧ σ ≠ d.face ∧ τ ≠ d.face ∧ S.sub σ τ) ∨
     (σ = τ ∧ σ ∈ d.newCells) ∨
@@ -719,6 +723,7 @@ open scoped Classical in
 As with `CellStructure.subdivideEdge`, the boundary walks are a raw datum: the two new 2-cells
 get the concatenation of their boundary path with the reversed ear, and nothing below reads
 the orientation. -/
+@[expose]
 noncomputable def splitFace (S : CellStructure γ) (d : S.SplitData) : CellStructure γ where
   skel := d.skeleton
   faces := insert d.face₁ (insert d.face₂ (S.faces \ {d.face}))

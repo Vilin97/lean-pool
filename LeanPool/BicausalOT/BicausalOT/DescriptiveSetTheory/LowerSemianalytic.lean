@@ -32,7 +32,7 @@ universal measurability (`MeasureTheory.AnalyticSet.nullMeasurableSet`)
 and the parametrized kernel version
 (`MeasureTheory.AnalyticSet.kernel_section_gt`). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 
@@ -42,7 +42,7 @@ variable {X : Type*} [TopologicalSpace X]
 
 /-- A function f : X → ℝ≥0∞ is lower semianalytic if its strict sublevel
     sets {f < c} are analytic for all c. (BS, Definition 7.21) -/
-def IsLowerSemianalytic (f : X → ENNReal) : Prop :=
+@[expose] def IsLowerSemianalytic (f : X → ENNReal) : Prop :=
   ∀ c : ENNReal, AnalyticSet {x | f x < c}
 
 /-- l.s.c. functions are lower semianalytic.

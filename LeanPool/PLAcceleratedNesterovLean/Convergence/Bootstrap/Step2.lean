@@ -23,7 +23,7 @@ Assuming all iterates up to n stay in Ω with Lyapunov ≤ R²:
   So x_{n+1} ∈ Ω
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

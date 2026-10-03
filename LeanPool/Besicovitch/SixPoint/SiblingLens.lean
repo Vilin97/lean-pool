@@ -17,7 +17,7 @@ preserve the correlation between its cross distances. A rational two-by-two Gram
 separates the two colors, leaving a convex quadratic on the three radial vertices.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

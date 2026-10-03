@@ -18,7 +18,7 @@ every Young diagram that occurs has size at most the genus.  The paper calls
 that property a once-marked Brill--Noether general graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -32,6 +32,7 @@ divisor census has size at most the genus.  `OnceMarkedCensusContains` is an
 all-row, degree-independent encoding of membership in that
 census, so this is a literal formalization of the paper's definition rather
 than the differently directed `OnceMarkedBNExistence` predicate. -/
+@[expose]
 def OnceMarkedBrillNoetherGeneral (G : CFGraph) (v : G.V) : Prop :=
   ∀ lambda : YoungDiagram,
     OnceMarkedCensusContains G v lambda → (lambda.card : ℤ) ≤ CFGraph.genus G

@@ -21,7 +21,7 @@ only genericity input needed by the S6 subdivision argument: the perturbation di
 globally, so face compatibility and prime equivariance are preserved automatically.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FiniteGenericPerturbation

@@ -13,7 +13,7 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 
-@[expose] public section
+public section
 
 
 instance [Zero α] : Nonempty α := ⟨0⟩
@@ -185,7 +185,7 @@ namespace Polarity
 variable {α : Type*} [SigmaSymbol α] [PiSymbol α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def coe : Polarity → α
+@[expose] protected def coe : Polarity → α
  | Sg => Sg
  | Pg => Pg
 

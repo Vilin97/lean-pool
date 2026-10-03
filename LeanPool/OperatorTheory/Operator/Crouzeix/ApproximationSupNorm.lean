@@ -36,7 +36,7 @@ and nested, hence would have a point in their common intersection.
   `SmoothApprox.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial Set
 

@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
 /-! Concrete data required of compact solenoidal velocity truncations.
 The actual radial-potential construction supplies this record separately. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

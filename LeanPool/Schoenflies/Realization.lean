@@ -80,7 +80,7 @@ needs to cut at a straight point has to change the curve — bend it there — w
 theorem, and is exactly the freedom `Graph.IsK33Config.not_isDrawing` reserves for itself.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 
@@ -112,10 +112,10 @@ namespace PrePolygon
 variable {m : ℕ} (P : PrePolygon m)
 
 /-- The edge leaving vertex `i`. -/
-def edge (i : ZMod (m + 3)) : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
+@[expose] def edge (i : ZMod (m + 3)) : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
 
 /-- The carrier: the union of the edges. -/
-def carrier : Set Plane := ⋃ i, P.edge i
+@[expose] def carrier : Set Plane := ⋃ i, P.edge i
 
 variable {P}
 
@@ -130,7 +130,7 @@ theorem vertex_ne_succ (i : ZMod (m + 3)) : P.vertex i ≠ P.vertex (i + 1) := f
 end PrePolygon
 
 /-- A `ClosedPolygon` read as a `PrePolygon`: forget the `corner` field. -/
-def ClosedPolygon.toPre {m : ℕ} (P : ClosedPolygon m) : PrePolygon m :=
+@[expose] def ClosedPolygon.toPre {m : ℕ} (P : ClosedPolygon m) : PrePolygon m :=
   ⟨P.vertex, P.vertex_inj, P.edges_meet⟩
 
 @[simp] theorem ClosedPolygon.carrier_toPre {m : ℕ} (P : ClosedPolygon m) :
@@ -173,7 +173,7 @@ Reading the same cyclic list from a different starting vertex. It is used once, 
 vertex that is about to be deleted to the end of the list. -/
 
 /-- The same closed polygon, read from vertex `a` onwards. -/
-def rotate (P : PrePolygon m) (a : ZMod (m + 3)) : PrePolygon m where
+@[expose] def rotate (P : PrePolygon m) (a : ZMod (m + 3)) : PrePolygon m where
   vertex j := P.vertex (a + j)
   vertex_inj i j h := add_left_cancel (P.vertex_inj h)
   edges_meet i j hij := by
@@ -207,7 +207,8 @@ section Delete
 variable {m : ℕ}
 
 /-- An index of the shortened list, read in the original one: the same numeral. -/
-def emb (j : ZMod (m + 3)) : ZMod (m + 1 + 3) := ((j.val : ℕ) : ZMod (m + 1 + 3))
+@[expose] def emb (j : ZMod (m + 3)) : ZMod (m + 1 + 3) :=
+  ((j.val : ℕ) : ZMod (m + 1 + 3))
 
 theorem neg_one_eq_cast : (-1 : ZMod (m + 1 + 3)) = ((m + 3 : ℕ) : ZMod (m + 1 + 3)) := by
   have h0 : ((m + 1 + 3 : ℕ) : ZMod (m + 1 + 3)) = 0 := ZMod.natCast_self _
@@ -732,11 +733,11 @@ section Gaps
 variable {n : ℕ} {T : Finset ℝ} (hcard : T.card = n)
 
 /-- The `i`-th parameter, in increasing order. -/
-noncomputable def par (T : Finset ℝ) (hcard : T.card = n) (i : Fin n) : ℝ :=
+@[expose] noncomputable def par (T : Finset ℝ) (hcard : T.card = n) (i : Fin n) : ℝ :=
   T.orderEmbOfFin hcard i
 
 /-- The right end of the `i`-th gap: the next parameter, or `1` for the last gap. -/
-noncomputable def parNext (T : Finset ℝ) (hcard : T.card = n) (i : Fin n) : ℝ :=
+@[expose] noncomputable def parNext (T : Finset ℝ) (hcard : T.card = n) (i : Fin n) : ℝ :=
   if h : (i : ℕ) + 1 < n then T.orderEmbOfFin hcard ⟨(i : ℕ) + 1, h⟩ else 1
 
 theorem par_mem (i : Fin n) : par T hcard i ∈ T := T.orderEmbOfFin_mem hcard i
@@ -1362,7 +1363,7 @@ namespace ClosedPolygon
 variable {m : ℕ}
 
 /-- The same closed polygon, read from vertex `a` onwards. -/
-def rotate (P : ClosedPolygon m) (a : ZMod (m + 3)) : ClosedPolygon m where
+@[expose] def rotate (P : ClosedPolygon m) (a : ZMod (m + 3)) : ClosedPolygon m where
   vertex j := P.vertex (a + j)
   vertex_inj i j h := add_left_cancel (P.vertex_inj h)
   edges_meet i j hij := by

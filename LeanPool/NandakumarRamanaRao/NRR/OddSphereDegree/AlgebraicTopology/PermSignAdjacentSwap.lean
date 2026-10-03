@@ -21,7 +21,7 @@ coefficient-ring sign convention used by `permSignCoeff` in
 `BarycentricSubdivisionOperator.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace SphereOddDegree
 namespace AffineBarycentricSubdivision

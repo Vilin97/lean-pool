@@ -19,7 +19,7 @@ restrictions have the same orbit count, whence the circuit count
 out-restriction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ variable {β : Type}
 
 /-- The orbit count of a permutation: number of non-trivial cycles
 plus number of fixed points. -/
+@[expose]
 noncomputable def orbitCount [Fintype β] [DecidableEq β]
     (π : Perm β) : ℕ :=
   π.cycleType.card + Fintype.card (Function.fixedPoints π)
@@ -177,6 +178,7 @@ theorem walkPerm_isOut_iff (κ : F.TransitionSystem) (o : κ.Orientation)
   rw [κ.walkPerm_val, κ.walk_isOut o x.val x.prop]
 
 /-- The out-flag restriction of the walk permutation. -/
+@[expose]
 noncomputable def outPerm (κ : F.TransitionSystem) (o : κ.Orientation) :
     Perm {f : {g : W.Flag // g ∈ F.flags} // o.isOut f.val = true} :=
   κ.walkPerm.subtypePerm (fun x => κ.walkPerm_isOut_iff o x)

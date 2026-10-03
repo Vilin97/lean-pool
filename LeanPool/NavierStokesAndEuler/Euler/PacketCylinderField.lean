@@ -19,7 +19,7 @@ translation orbit, and equality with the raw field on the time interval.
 Time derivatives are an actual L² evolution identity, stated separately.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ structure Field (P T : ℝ) [Fact (0 < P)] (raw : VectorField) where
 variable {P T : ℝ} [Fact (0 < P)] {raw raw_t : VectorField}
 
 /-- The derivative witness is an actual within-interval derivative in the Hilbert L² space. -/
-def TimeDerivative (hT : 0 ≤ T) (G : Field P T raw) (H : Field P T raw_t) : Prop :=
+@[expose] def TimeDerivative (hT : 0 ≤ T) (G : Field P T raw) (H : Field P T raw_t) : Prop :=
   ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT G.path)
     (H.path t) (Icc (0 : ℝ) T) t
 

@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Pow
 sums `S_j`, and the energy `I(ρ)` by formula (A.2).
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -33,7 +33,7 @@ noncomputable abbrev alph : ℝ :=
   3 / 40
 
 /-- The constant `C*` of (6.3). -/
-noncomputable def Cstar : ℝ :=
+@[expose] noncomputable def Cstar : ℝ :=
   -2 * lam + 12 * alph * lam * (1 - Real.log alph) + 3 * lam ^ 2 -
     2 * lam ^ 2 * Real.log (2 * lam)
 
@@ -42,7 +42,7 @@ noncomputable abbrev M0 : ℝ :=
   -1329 / 200
 
 /-- Table 1: `10¹² a_j`, `10¹² b_j`, `10¹² c_j`. -/
-def table1 : List (ℕ × ℕ × ℕ) :=
+@[expose] def table1 : List (ℕ × ℕ × ℕ) :=
   [(3906748086, 8992695531, 10515596180), (2312248264, 15340997855, 29471737793),
     (1402286665, 25730180724, 42934365099), (881725356, 41909578246, 58204231966),
     (578197906, 65851089563, 69037621310), (396324613, 99481037884, 78873099189),
@@ -53,23 +53,23 @@ def table1 : List (ℕ × ℕ × ℕ) :=
     (74129565, 716160577112, 30462865791), (71741310, 746637295669, 5959622577)]
 
 /-- `a_j`, `b_j`, `c_j` (1-indexed; `0` outside the table). -/
-noncomputable def aρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def aρ (j : ℕ) : ℝ :=
   ((table1.getD (j - 1) (0, 0, 0)).1 : ℝ) / 10 ^ 12
 
 /-- Right endpoint of the `j`th arcsine component, read from the exact rational table. -/
-noncomputable def bρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def bρ (j : ℕ) : ℝ :=
   ((table1.getD (j - 1) (0, 0, 0)).2.1 : ℝ) / 10 ^ 12
 
 /-- Mass of the `j`th arcsine component, read from the exact rational table. -/
-noncomputable def cρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def cρ (j : ℕ) : ℝ :=
   ((table1.getD (j - 1) (0, 0, 0)).2.2 : ℝ) / 10 ^ 12
 
 /-- Partial sums `S_j = ∑_{i ≤ j} c_i`. -/
-noncomputable def Sρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def Sρ (j : ℕ) : ℝ :=
   ∑ i ∈ Icc 1 j, cρ i
 
 /-- The logarithmic energy `I(ρ)` of the measure `ρ`, formula (A.2). -/
-noncomputable def Irho : ℝ :=
+@[expose] noncomputable def Irho : ℝ :=
   ∑ j ∈ Icc 1 16, (Sρ j ^ 2 - Sρ (j - 1) ^ 2) * Real.log ((bρ j - aρ j) / 4)
 
 /-- The total mass of `ρ` is `λ` (Appendix A.1). -/

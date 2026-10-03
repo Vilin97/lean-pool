@@ -24,7 +24,7 @@ Public declarations:
 No comparison for indicators of arbitrary measurable sets is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

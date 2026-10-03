@@ -26,7 +26,7 @@ with its dual), so the blocks are pinned to the standard
 copairing elements, which satisfy the same identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ from summability of `1 / ‖z i‖^2` (and a nonzero hypothesis), we get that on
 indices have `‖z i‖ ≤ R` for any fixed `R > 0`.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 

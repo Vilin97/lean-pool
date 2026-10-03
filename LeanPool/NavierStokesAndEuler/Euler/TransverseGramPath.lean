@@ -19,7 +19,7 @@ its quantitative lower bound. These are coefficient theorems, independent of
 any chosen variational solution.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -79,12 +79,12 @@ variable (T : ℝ)
   (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^ 2)
 
 /-- Continuous Gram coefficient, constructed by the actual adjoint and composition. -/
-def gramPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def gramPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => gram (Q t),
     ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp Q.continuous⟩
 
 /-- Continuous derivative coefficient of the Gram matrix. -/
-def gramDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def gramDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => (Q₁ t).adjoint.comp (Q t) + (Q t).adjoint.comp (Q₁ t),
     (((realAdjoint (U := U) (E := E)).continuous.comp Q₁.continuous).clm_comp
       Q.continuous).add
@@ -92,7 +92,7 @@ def gramDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
         Q₁.continuous)⟩
 
 /-- The genuinely constructed Gram inverse varies continuously on the interval. -/
-def gramInversePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) where
+@[expose] def gramInversePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) where
   toFun t := gramInverse (Q t) c hc (hQ t)
   continuous_toFun := by
     have heq : (fun t => gramInverse (Q t) c hc (hQ t)) =
@@ -110,7 +110,7 @@ def gramInversePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) where
     exact hcont.comp (x := t) (gramPath T Q).continuous.continuousAt
 
 /-- Explicit continuous coefficient of the inverse derivative `-K⁻¹ K' K⁻¹`. -/
-def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => -(gramInversePath T Q c hc hQ t).comp
       ((gramDerivativePath T Q Q₁ t).comp (gramInversePath T Q c hc hQ t)),
     ((gramInversePath T Q c hc hQ).continuous.clm_comp
@@ -118,13 +118,13 @@ def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
         (gramInversePath T Q c hc hQ).continuous)).neg⟩
 
 /-- The canonical left-inverse coefficient is continuous. -/
-def frameLeftInversePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
+@[expose] def frameLeftInversePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
   ⟨fun t => (gramInversePath T Q c hc hQ t).comp (Q t).adjoint,
     (gramInversePath T Q c hc hQ).continuous.clm_comp
       ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous)⟩
 
 /-- The continuous coefficient of the derivative of the frame left inverse. -/
-def frameLeftInverseDerivativePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
+@[expose] def frameLeftInverseDerivativePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
   ⟨fun t => (gramInverseDerivativePath T Q Q₁ c hc hQ t).comp (Q t).adjoint +
       (gramInversePath T Q c hc hQ t).comp (Q₁ t).adjoint,
     ((gramInverseDerivativePath T Q Q₁ c hc hQ).continuous.clm_comp

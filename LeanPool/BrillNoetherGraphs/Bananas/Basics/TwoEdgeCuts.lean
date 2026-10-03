@@ -18,7 +18,7 @@ same side.  The remaining interval classification is deliberately kept
 separate from this cardinality fact.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

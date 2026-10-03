@@ -33,7 +33,7 @@ coordinate bound follows from normalization `∑ j, w j = 0` and the triangle in
 sum `(n : ℝ) * w i = ∑ j, (w i - w j)`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.PowerDiagram
 

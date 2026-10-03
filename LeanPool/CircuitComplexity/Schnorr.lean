@@ -48,7 +48,7 @@ When `Basis.andOr2` is known to be complete, this yields a
 `sizeComplexity` bound via `schnorr_size_complexity`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

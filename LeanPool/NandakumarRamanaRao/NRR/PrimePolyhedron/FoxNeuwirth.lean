@@ -114,4 +114,4 @@ boundary relations, the order-complex skeleton, modulo-prime orbit cancellation,
 reference-zero orbit count.
 -/
 
-@[expose] public section
+public section

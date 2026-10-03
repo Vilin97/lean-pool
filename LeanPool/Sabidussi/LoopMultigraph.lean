@@ -21,7 +21,7 @@ are represented without quotienting or special cases.  Degree and parity always 
 incidences; consequently a loop contributes two incidences at its vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 
@@ -150,6 +150,14 @@ def occurrenceSideEquivHalfEdgesAt (v : V) : T.Occurrence v × Fin 2 ≃ G.halfE
       change T.vertexAt p.1 = v ↔ G.vertex (T.positionSideToHalfEdge p) = v
       rw [T.vertex_positionSideToHalfEdge p])
 
+omit [DecidableEq V] in
+/-- The edge underlying an occurrence side is the current or preceding tour edge. -/
+theorem occurrenceSideEquivHalfEdgesAt_edge (v : V) (os : T.Occurrence v × Fin 2) :
+    (T.occurrenceSideEquivHalfEdgesAt v os).1.1 =
+      if os.2 = 0 then T.edge os.1.1 else T.edge (T.prev os.1.1) := by
+  rcases os with ⟨o, s⟩
+  fin_cases s <;> rfl
+
 /-- The degree at `v` is twice its number of occurrences in the transition word. -/
 theorem degree_eq_two_mul_card_occurrence (v : V) :
     G.degree v = 2 * Fintype.card (T.Occurrence v) := by
@@ -162,11 +170,12 @@ variable {V E : Type*} [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
   (G : LoopMultigraph V E)
 
 /-- The incidence indicator of an edge at a vertex, with both edge ends counted. -/
-def edgeIncidence (v : V) (e : E) : F₂ :=
+@[expose] def edgeIncidence (v : V) (e : E) : F₂ :=
   (if G.endAt e 0 = v then 1 else 0) +
     (if G.endAt e 1 = v then 1 else 0)
 
 /-- An edge set is even when every vertex has even degree in the induced multigraph. -/
+@[expose]
 def IsEvenEdgeSet (F : Finset E) : Prop :=
   ∀ v : V, ∑ e ∈ F, G.edgeIncidence v e = 0
 
@@ -268,6 +277,7 @@ structure CircuitDecomposition where
 
 /-- A circuit decomposition is compatible with an Euler tour when no one circuit contains both
 edge objects of a transition. -/
+@[expose]
 def CircuitDecomposition.Compatible {G : LoopMultigraph V E}
     (S : G.CircuitDecomposition) (T : G.EulerTour) : Prop :=
   ∀ (i : T.Pos) (C : G.Cycle), C ∈ S.circuits →

@@ -19,7 +19,7 @@ radii are then divided into a small rational cover.  On every rectangle, an expl
 Gram majorant, corrected by elementary two-vector squares, proves the required strict bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

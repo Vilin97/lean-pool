@@ -18,7 +18,7 @@ coordinates over the degree blocks: the merge coordinate product
 rule threaded through the sum casts and the block enumeration.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

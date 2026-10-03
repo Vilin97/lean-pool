@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Literal scalar multiplication of smooth ordinary L² fields and all
 of their genuine spatial derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,8 @@ def scaleField (c : ℝ) (A : SmoothL2Field V) : SmoothL2Field V :=
   mapField (c • ContinuousLinearMap.id ℝ V) A
 
 @[simp] theorem scaleField_field (c : ℝ) (A : SmoothL2Field V) (x : Space) :
-    (scaleField c A).field x=c • A.field x := rfl
+    (scaleField c A).field x=c • A.field x := by
+  rfl
 
 theorem scaleField_toLp (c : ℝ) (A : SmoothL2Field V) :
     (scaleField c A).toLp=c • A.toLp := by

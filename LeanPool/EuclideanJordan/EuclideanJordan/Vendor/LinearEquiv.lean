@@ -33,7 +33,7 @@ together with lemmas relating them to `Matrix.reindex`.
 
 -/
 
-@[expose] public section
+public section
 
 variable {d d₁ d₂ d₃ R 𝕜 : Type*} [RCLike 𝕜]
 
@@ -51,7 +51,7 @@ variable (R) in
 /-- The `R`-linear equivalence `(d₂ → R) ≃ₗ[R] (d → R)` that relabels the coordinates of a
 function along an index equivalence `e : d ≃ d₂`. This is the linear-equivalence packaging of
 `Equiv.piCongrLeft`. -/
-@[simps]
+@[simps, expose]
 def ofRelabel (e : d ≃ d₂) : (d₂ → R) ≃ₗ[R] (d → R) := by
   refine { e.symm.piCongrLeft (fun _ ↦ R) with map_add' := ?_, map_smul' := ?_ }
   <;> (intros; ext; simp [Equiv.piCongrLeft_apply])
@@ -63,7 +63,7 @@ variable (𝕜) in
 coordinates of a vector along an index equivalence `e : d ≃ d₂`. This is the `EuclideanSpace`
 analogue of `LinearEquiv.ofRelabel`, obtained by transporting it across the `WithLp`
 identifications. -/
-@[simps!]
+@[simps!, expose]
 def euclideanOfRelabel (e : d ≃ d₂) : EuclideanSpace 𝕜 d₂ ≃ₗ[𝕜] EuclideanSpace 𝕜 d :=
   (WithLp.linearEquiv 2 𝕜 _).trans ((ofRelabel _ e).trans (WithLp.linearEquiv 2 𝕜 _).symm)
 

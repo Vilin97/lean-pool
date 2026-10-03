@@ -14,7 +14,7 @@ The absolute scalar factor is retained in the bound, including when the
 scalar vanishes or the unscaled seminorm is infinite.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

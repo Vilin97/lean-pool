@@ -26,7 +26,7 @@ public import Mathlib.Topology.Instances.Real.Lemmas
 * `GerverSofa.Foundation.Batch001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ Authors: Dawid Trela
 * `ExactReplay`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ This file fixes the exact hallway convention used by the manuscript.
 The inner quadrant is open, so contact with an inner wall is allowed.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
@@ -68,22 +68,27 @@ namespace GerverSofa
 abbrev Point := ℝ × ℝ
 
 /-- Horizontal unit-width arm `(-∞,1] × [0,1]`. -/
+@[expose]
 def horizontalArm : Set Point :=
   {p | p.1 ≤ 1 ∧ 0 ≤ p.2 ∧ p.2 ≤ 1}
 
 /-- Vertical unit-width arm `[0,1] × (-∞,1]`. -/
+@[expose]
 def verticalArm : Set Point :=
   {p | 0 ≤ p.1 ∧ p.1 ≤ 1 ∧ p.2 ≤ 1}
 
 /-- Closed outer quarter-plane `(-∞,1]²`. -/
+@[expose]
 def outerQuarter : Set Point :=
   {p | p.1 ≤ 1 ∧ p.2 ≤ 1}
 
 /-- Open inner quarter-plane `(-∞,0)²`. -/
+@[expose]
 def innerQuarter : Set Point :=
   {p | p.1 < 0 ∧ p.2 < 0}
 
 /-- The standard unit right-angled hallway. -/
+@[expose]
 def hallway : Set Point := horizontalArm ∪ verticalArm
 
 /-- Quarter-plane presentation of the standard hallway. -/
@@ -133,7 +138,7 @@ Taylor bounds for `sin`/`cos`, a certified interval Jacobian and the general
 Krawczyk theorem.  No global axiom is introduced here.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
@@ -154,6 +159,7 @@ theorem CertifiedUniqueSolution.unique {α : Type*} {P : α → Prop} {X : Set �
 abbrev Vec (n : Nat) := Fin n → ℝ
 
 /-- A unique zero of a vector-valued function in a set. -/
+@[expose]
 def CertifiedUniqueZero {n : Nat} (F : Vec n → Vec n) (X : Set (Vec n)) :=
   CertifiedUniqueSolution (fun x => F x = 0) X
 
@@ -174,7 +180,7 @@ transcendental expression is enclosed; that analytic soundness is a distinct
 proof obligation.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
@@ -184,7 +190,17 @@ structure RatInterval where
   lo : ℚ
   /-- Upper endpoint of the interval. -/
   hi : ℚ
-  deriving Repr, DecidableEq
+  deriving Repr
+
+@[expose, instance_reducible, instance]
+def instDecidableEqRatInterval : DecidableEq RatInterval := fun a b =>
+  if hlo : a.lo = b.lo then
+    if hhi : a.hi = b.hi then
+      isTrue (by cases a; cases b; cases hlo; cases hhi; rfl)
+    else
+      isFalse (by intro hab; exact hhi (congrArg RatInterval.hi hab))
+  else
+    isFalse (by intro hab; exact hlo (congrArg RatInterval.lo hab))
 
 namespace RatInterval
 
@@ -193,20 +209,25 @@ def strictInsideB (x outer : RatInterval) : Bool :=
   decide (outer.lo < x.lo ∧ x.hi < outer.hi)
 
 /-- Point interval. -/
+@[expose]
 def point (x : ℚ) : RatInterval := ⟨x, x⟩
 
 /-- Exact interval addition. -/
+@[expose]
 def add (x y : RatInterval) : RatInterval :=
   ⟨x.lo + y.lo, x.hi + y.hi⟩
 
 /-- Exact interval negation. -/
+@[expose]
 def neg (x : RatInterval) : RatInterval :=
   ⟨-x.hi, -x.lo⟩
 
 /-- Exact interval subtraction. -/
+@[expose]
 def sub (x y : RatInterval) : RatInterval := add x (neg y)
 
 /-- Product hull of two rational intervals. -/
+@[expose]
 def mul (x y : RatInterval) : RatInterval :=
   let p₁ := x.lo * y.lo
   let p₂ := x.lo * y.hi
@@ -217,6 +238,7 @@ def mul (x y : RatInterval) : RatInterval :=
 /-! ## Real semantics -/
 
 /-- Semantic membership of a real number in a rational interval. -/
+@[expose]
 def Contains (z : RatInterval) (x : ℝ) : Prop :=
   (z.lo : ℝ) ≤ x ∧ x ≤ (z.hi : ℝ)
 
@@ -403,24 +425,28 @@ those proof obligations are represented separately in `KrawczykSpec.lean` and
 `GerverCertificate.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.CertificateManifest
 
 open GerverSofa
 
 /-- Reconstruct a natural number from base-10³⁵ chunks to share decimal elaboration. -/
+@[expose]
 def naturalFromChunks (chunks : List ℕ) : ℕ :=
   chunks.foldl (fun n part ↦ n * 10 ^ 35 + part) 0
 
 /-- Construct an exact rational number from its integer numerator and natural denominator. -/
+@[expose]
 def q (n : Int) (d : Nat) : ℚ := (n : ℚ) / (d : ℚ)
 /-- The frozen rational enclosure of π used by the certificate manifest. -/
+@[expose]
 def declaredPi : RatInterval := ⟨q 31415926535897932384626433832795028841971693993751
   10000000000000000000000000000000000000000000000000, q
   39269908169872415480783042290993786052464617492189
   12500000000000000000000000000000000000000000000000⟩
 /-- The frozen interval obtained from the manifest’s Machin-formula computation. -/
+@[expose]
 def machinPi : RatInterval := ⟨q (naturalFromChunks [295505634309898,
   38894826843310944618692683285957161, 54840908697424127783146795390704820,
   62285304765520132090285996624652812, 88395258878959894304877191976978068]) (naturalFromChunks
@@ -431,6 +457,7 @@ def machinPi : RatInterval := ⟨q (naturalFromChunks [295505634309898,
   [1074587268220657145, 16687904540832335376340782508534865, 44974883186326861534485086372601111,
   18916938440811867648599426576863646, 86497881848481483757495880126953125])⟩
 /-- The four rational intervals specifying the reduced parameter box. -/
+@[expose]
 def x4 : List RatInterval := [
     ⟨q 1888531216873 20000000000000, q 4721328042183 50000000000000⟩,
     ⟨q 69960186366677 50000000000000, q 34980093183339 25000000000000⟩,
@@ -438,6 +465,7 @@ def x4 : List RatInterval := [
     ⟨q 2129067216821 3125000000000, q 68130150938273 100000000000000⟩
   ]
 /-- The twenty-two rational intervals specifying the full Romik parameter box. -/
+@[expose]
 def z22 : List RatInterval := [
     ⟨q (-21032242207268875141628571849) 100000000000000000000000000000, q
       (-21032242207268875141608571849) 100000000000000000000000000000⟩,
@@ -493,6 +521,7 @@ hours.  Here the proof path uses the already frozen rational certificate and
 checks it in bounded, independent chunks.  The expensive executable replay is
 still retained in `ExactReplay.lean` as a diagnostic cross-check, but it is not
 recomputed while building the trusted certificate. -/
+@[expose]
 def piCheck : Bool :=
   RatInterval.strictInsideB machinPi declaredPi
 theorem piCheck_eq_true : piCheck = true := by
@@ -516,7 +545,7 @@ intervals enclose the real `sin` and `cos`, and the abstract Krawczyk theorem,
 remain separate proof obligations; the arithmetic replay itself is decidable.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.ExactReplay
 
@@ -525,56 +554,56 @@ open RatInterval
 open scoped BigOperators
 
 /-- Construct an exact rational number from its integer numerator and natural denominator. -/
-def q (n : Int) (d : Nat := 1) : ℚ := (n : ℚ) / (d : ℚ)
+@[expose] def q (n : Int) (d : Nat := 1) : ℚ := (n : ℚ) / (d : ℚ)
 
 /-- The singleton rational interval at zero. -/
-def zeroI : RatInterval := point 0
+@[expose] def zeroI : RatInterval := point 0
 /-- The singleton rational interval at one. -/
-def oneI : RatInterval := point 1
+@[expose] def oneI : RatInterval := point 1
 
 private def midpoint (x : RatInterval) : ℚ := (x.lo + x.hi) / 2
 
 /-- Multiply an interval by a rational singleton using exact interval arithmetic. -/
-def scale (a : ℚ) (x : RatInterval) : RatInterval :=
+@[expose] def scale (a : ℚ) (x : RatInterval) : RatInterval :=
   mul (point a) x
 
 /-- A factorial interpreted as an exact rational number. -/
-def factorialQ (n : Nat) : ℚ := (Nat.factorial n : ℚ)
+@[expose] def factorialQ (n : Nat) : ℚ := (Nat.factorial n : ℚ)
 
 /-- An alternating Taylor term with the specified power and factorial denominator. -/
-def signedTerm (k : Nat) (x : ℚ) (power : Nat) : ℚ :=
+@[expose] def signedTerm (k : Nat) (x : ℚ) (power : Nat) : ℚ :=
   let z := x ^ power / factorialQ power
   if k % 2 = 0 then z else -z
 
 /-- The finite odd-power Taylor sum for sine at a rational argument. -/
-def sinPartial (x : ℚ) (terms : Nat) : ℚ :=
+@[expose] def sinPartial (x : ℚ) (terms : Nat) : ℚ :=
   Finset.sum (Finset.range terms) (fun k => signedTerm k x (2 * k + 1))
 
 /-- The finite even-power Taylor sum for cosine at a rational argument. -/
-def cosPartial (x : ℚ) (terms : Nat) : ℚ :=
+@[expose] def cosPartial (x : ℚ) (terms : Nat) : ℚ :=
   Finset.sum (Finset.range terms) (fun k => signedTerm k x (2 * k))
 
 /-- The interval between the nineteen- and twenty-term sine Taylor sums. -/
-def sinBound (x : ℚ) : RatInterval :=
+@[expose] def sinBound (x : ℚ) : RatInterval :=
   let a := sinPartial x 19
   let b := sinPartial x 20
   ⟨min a b, max a b⟩
 
 /-- The interval between the nineteen- and twenty-term cosine Taylor sums. -/
-def cosBound (x : ℚ) : RatInterval :=
+@[expose] def cosBound (x : ℚ) : RatInterval :=
   let a := cosPartial x 19
   let b := cosPartial x 20
   ⟨min a b, max a b⟩
 
 /-- The rational π enclosure used for trigonometric argument reduction. -/
-def piI : RatInterval :=
+@[expose] def piI : RatInterval :=
   ⟨q 157079632679489661923132169163975144209858469968755
     50000000000000000000000000000000000000000000000000,
    q 78539816339744830961566084581987572104929234984378
      25000000000000000000000000000000000000000000000000⟩
 
 /-- A finite alternating rational Taylor sum for arctangent. -/
-def atanPartial (x : ℚ) (terms : Nat) : ℚ :=
+@[expose] def atanPartial (x : ℚ) (terms : Nat) : ℚ :=
   Finset.sum (Finset.range terms) (fun k =>
     if k % 2 = 0 then
       x ^ (2 * k + 1) / ((2 * k + 1 : Nat) : ℚ)
@@ -582,58 +611,58 @@ def atanPartial (x : ℚ) (terms : Nat) : ℚ :=
       -(x ^ (2 * k + 1) / ((2 * k + 1 : Nat) : ℚ)))
 
 /-- The interval between two specified arctangent Taylor sums. -/
-def atanBound (x : ℚ) (lowTerms highTerms : Nat) : RatInterval :=
+@[expose] def atanBound (x : ℚ) (lowTerms highTerms : Nat) : RatInterval :=
   let a := atanPartial x lowTerms
   let b := atanPartial x highTerms
   ⟨min a b, max a b⟩
 
 /-- Evaluate the Machin expression `16 atan(1/5) - 4 atan(1/239)` by rational intervals. -/
-def machinPi : RatInterval :=
+@[expose] def machinPi : RatInterval :=
   sub (scale 16 (atanBound (1 / 5) 43 44))
       (scale 4 (atanBound (1 / 239) 13 14))
 
 /-- Exact downward rounding to a fixed number of decimal places. -/
-def floorDecimal (x : ℚ) (digits : Nat := 60) : ℚ :=
+@[expose] def floorDecimal (x : ℚ) (digits : Nat := 60) : ℚ :=
   let scale : ℚ := (10 : ℚ) ^ digits
   ((⌊x * scale⌋ : ℤ) : ℚ) / scale
 
 /-- Exact upward rounding to a fixed number of decimal places. -/
-def ceilDecimal (x : ℚ) (digits : Nat := 60) : ℚ :=
+@[expose] def ceilDecimal (x : ℚ) (digits : Nat := 60) : ℚ :=
   let scale : ℚ := (10 : ℚ) ^ digits
   ((⌈x * scale⌉ : ℤ) : ℚ) / scale
 
 /-- The same 60-decimal outward rounding used by the submitted verifier. -/
-def outwardDecimal (z : RatInterval) : RatInterval :=
+@[expose] def outwardDecimal (z : RatInterval) : RatInterval :=
   ⟨floorDecimal z.lo, ceilDecimal z.hi⟩
 
 /-- Evaluate the small-argument sine enclosure with outward decimal rounding. -/
-def sinSmall (x : RatInterval) : RatInterval :=
+@[expose] def sinSmall (x : RatInterval) : RatInterval :=
   outwardDecimal ⟨(sinBound x.lo).lo, (sinBound x.hi).hi⟩
 
 /-- Evaluate the small-argument cosine enclosure with outward decimal rounding. -/
-def cosSmall (x : RatInterval) : RatInterval :=
+@[expose] def cosSmall (x : RatInterval) : RatInterval :=
   outwardDecimal ⟨(cosBound x.hi).lo, (cosBound x.lo).hi⟩
 
 /-- Clamp an interval to the physical angular range used by the Gerver
 certificate.  If `x ∈ [0, π/2]` and `x` is enclosed by the input interval,
 then `x` is still enclosed after clamping once `piI` has been proved to
 contain `Real.pi`. -/
-def physicalClamp (x : RatInterval) : RatInterval :=
+@[expose] def physicalClamp (x : RatInterval) : RatInterval :=
   ⟨max 0 x.lo, min (piI.hi / 2) x.hi⟩
 
 /-- A fail-closed enclosure used only when an externally supplied interval is
 too wide for the small-argument Taylor/range-reduction evaluator.  Every
 certified Gerver call remains in one of the two sharp branches below, so this
 fallback does not alter the frozen replay. -/
-def universalTrigInterval : RatInterval := ⟨-1, 1⟩
+@[expose] def universalTrigInterval : RatInterval := ⟨-1, 1⟩
 
 /-- Complementary interval for the identity `sin x = cos (π/2-x)` and
 `cos x = sin (π/2-x)`. -/
-def complementInterval (x : RatInterval) : RatInterval :=
+@[expose] def complementInterval (x : RatInterval) : RatInterval :=
   ⟨max 0 (piI.lo / 2 - x.hi), piI.hi / 2 - x.lo⟩
 
 /-- Evaluate sine by small-argument bounds and complementary-angle reduction. -/
-def sinI (x : RatInterval) : RatInterval :=
+@[expose] def sinI (x : RatInterval) : RatInterval :=
   let z := physicalClamp x
   if z.hi ≤ 9 / 10 then sinSmall z
   else
@@ -641,7 +670,7 @@ def sinI (x : RatInterval) : RatInterval :=
     if y.hi ≤ 9 / 10 then cosSmall y else universalTrigInterval
 
 /-- Evaluate cosine by small-argument bounds and complementary-angle reduction. -/
-def cosI (x : RatInterval) : RatInterval :=
+@[expose] def cosI (x : RatInterval) : RatInterval :=
   let z := physicalClamp x
   if z.hi ≤ 9 / 10 then cosSmall z
   else
@@ -659,44 +688,44 @@ structure D where
 namespace D
 
 /-- A constant interval with zero partial derivatives in every coordinate. -/
-def const (v : RatInterval) (n : Nat) : D :=
+@[expose] def const (v : RatInterval) (n : Nat) : D :=
   ⟨v, List.replicate n zeroI⟩
 
 /-- A rational singleton with zero partial derivatives. -/
-def pointConst (v : ℚ) (n : Nat) : D := const (point v) n
+@[expose] def pointConst (v : ℚ) (n : Nat) : D := const (point v) n
 
 /-- An interval variable with the selected coordinate derivative equal to one. -/
-def varD (v : RatInterval) (j n : Nat) : D :=
+@[expose] def varD (v : RatInterval) (j n : Nat) : D :=
   ⟨v, (List.range n).map (fun k => point (if k = j then 1 else 0))⟩
 
 /-- Addition with interval propagation of all coordinate derivatives. -/
-def addD (x y : D) : D :=
+@[expose] def addD (x y : D) : D :=
   ⟨add x.val y.val, List.zipWith add x.der y.der⟩
 
 /-- Negation with interval propagation of all coordinate derivatives. -/
-def negD (x : D) : D :=
+@[expose] def negD (x : D) : D :=
   ⟨neg x.val, x.der.map neg⟩
 
 /-- Subtraction with interval propagation of all coordinate derivatives. -/
-def subD (x y : D) : D := addD x (negD y)
+@[expose] def subD (x y : D) : D := addD x (negD y)
 
 /-- Multiplication with interval propagation of all coordinate derivatives. -/
-def mulD (x y : D) : D :=
+@[expose] def mulD (x y : D) : D :=
   ⟨mul x.val y.val,
    List.zipWith (fun dx dy => add (mul dx y.val) (mul x.val dy)) x.der y.der⟩
 
 /-- Rational scaling with interval propagation of all coordinate derivatives. -/
-def scaleD (a : ℚ) (x : D) : D :=
+@[expose] def scaleD (a : ℚ) (x : D) : D :=
   ⟨scale a x.val, x.der.map (scale a)⟩
 
 /-- Sine with interval propagation of all coordinate derivatives. -/
-def sinD (x : D) : D :=
+@[expose] def sinD (x : D) : D :=
   let sv := sinI x.val
   let cv := cosI x.val
   ⟨sv, x.der.map (mul cv)⟩
 
 /-- Cosine with interval propagation of all coordinate derivatives. -/
-def cosD (x : D) : D :=
+@[expose] def cosD (x : D) : D :=
   let sv := sinI x.val
   let cv := cosI x.val
   ⟨cv, x.der.map (fun z => neg (mul sv z))⟩
@@ -710,13 +739,13 @@ instance : HMul ℚ D D := ⟨scaleD⟩
 end D
 
 /-- Read an interval coordinate, returning the zero interval outside the list. -/
-def getI (xs : List RatInterval) (i : Nat) : RatInterval :=
+@[expose] def getI (xs : List RatInterval) (i : Nat) : RatInterval :=
   xs.getD i zeroI
 
 /-- Read a rational coordinate, returning zero outside the list. -/
-def getQ (xs : List ℚ) (i : Nat) : ℚ := xs.getD i 0
+@[expose] def getQ (xs : List ℚ) (i : Nat) : ℚ := xs.getD i 0
 /-- Read a rational matrix row, returning the empty row outside the list. -/
-def getRow (m : List (List ℚ)) (i : Nat) : List ℚ := m.getD i []
+@[expose] def getRow (m : List (List ℚ)) (i : Nat) : List ℚ := m.getD i []
 
 /-! ## Reduced 4D system -/
 
@@ -792,16 +821,16 @@ cross-checking and provenance. -/
 def declaredPiInterval : RatInterval := piI
 
 /-- Public wrapper around the executable sine enclosure. -/
-def sineInterval (x : RatInterval) : RatInterval := sinI x
+@[expose] def sineInterval (x : RatInterval) : RatInterval := sinI x
 
 /-- Public wrapper around the executable cosine enclosure. -/
-def cosineInterval (x : RatInterval) : RatInterval := cosI x
+@[expose] def cosineInterval (x : RatInterval) : RatInterval := cosI x
 
 /-- Frozen reduced input box used by the trusted certificate. -/
-def reducedInputBox : List RatInterval := CertificateManifest.x4
+@[expose] def reducedInputBox : List RatInterval := CertificateManifest.x4
 
 /-- Frozen direct-system input box used by the trusted certificate. -/
-def fullInputBox : List RatInterval := CertificateManifest.z22
+@[expose] def fullInputBox : List RatInterval := CertificateManifest.z22
 
 end GerverSofa.ExactReplay
 

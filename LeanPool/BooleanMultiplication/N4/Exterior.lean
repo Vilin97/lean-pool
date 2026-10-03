@@ -18,7 +18,7 @@ explicit bilinear maps avoid constructing or deciding equality in a large
 general-purpose exterior algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -37,11 +37,11 @@ abbrev FourForm := Fin 8 → Fin 8 → Fin 8 → Fin 8 → F₂
 abbrev FiveForm := Fin 8 → Fin 8 → Fin 8 → Fin 8 → Fin 8 → F₂
 
 /-- Dimension-polymorphic versions used for quotient and tail arguments. -/
-def vectorWedgeN {n : Nat} (u v : Fin n → F₂) : Fin n → Fin n → F₂ :=
+@[expose] def vectorWedgeN {n : Nat} (u v : Fin n → F₂) : Fin n → Fin n → F₂ :=
   fun i j => u i * v j + u j * v i
 
 /-- Coordinates of a vector wedged with a two-form, in arbitrary finite dimension. -/
-def vectorWedgeTwoN {n : Nat} (u : Fin n → F₂)
+@[expose] def vectorWedgeTwoN {n : Nat} (u : Fin n → F₂)
     (q : Fin n → Fin n → F₂) : Fin n → Fin n → Fin n → F₂ :=
   fun i j k => u i * q j k + u j * q i k + u k * q i j
 
@@ -69,11 +69,11 @@ theorem decomposable_of_vectorWedgeTwoN_zero {n : Nat}
   simpa [add_assoc] using hij
 
 /-- Exterior product of two vectors. -/
-def vectorWedge (u v : LinearForm) : TwoForm :=
+@[expose] def vectorWedge (u v : LinearForm) : TwoForm :=
   fun i j => u i * v j + u j * v i
 
 /-- Exterior product of a vector and a two-form. -/
-def vectorWedgeTwo (u : LinearForm) (q : TwoForm) : ThreeForm :=
+@[expose] def vectorWedgeTwo (u : LinearForm) (q : TwoForm) : ThreeForm :=
   fun i j k => u i * q j k + u j * q i k + u k * q i j
 
 theorem vectorWedgeTwo_repeated_left (x y : LinearForm) :
@@ -131,13 +131,13 @@ theorem mem_support_of_vectorWedgeTwo_zero
 
 /-- Exterior product of two two-forms.  The six terms remember which of the
 two input forms receives each pair. -/
-def wedgeTwo (q c : TwoForm) : FourForm :=
+@[expose] def wedgeTwo (q c : TwoForm) : FourForm :=
   fun i j k l =>
     q i j * c k l + q i k * c j l + q i l * c j k +
     c i j * q k l + c i k * q j l + c i l * q j k
 
 /-- Exterior product of a cubic and a two-form. -/
-def wedgeThreeTwo (h : ThreeForm) (q : TwoForm) : FiveForm :=
+@[expose] def wedgeThreeTwo (h : ThreeForm) (q : TwoForm) : FiveForm :=
   fun i j k l m =>
     h i j k * q l m + h i j l * q k m + h i j m * q k l +
     h i k l * q j m + h i k m * q j l + h i l m * q j k +
@@ -145,7 +145,7 @@ def wedgeThreeTwo (h : ThreeForm) (q : TwoForm) : FiveForm :=
     h k l m * q i j
 
 /-- Exterior product of a vector and a four-form. -/
-def vectorWedgeFour (u : LinearForm) (w : FourForm) : FiveForm :=
+@[expose] def vectorWedgeFour (u : LinearForm) (w : FourForm) : FiveForm :=
   fun i j k l m =>
     u i * w j k l m + u j * w i k l m + u k * w i j l m +
     u l * w i j k m + u m * w i j k l
@@ -208,23 +208,23 @@ theorem wedge_place_firstJet_zero (x u y v : LinearForm) :
   simp [N3Certificate.two_eq_zero_f2]
 
 /-- The three rational `A`-side place vectors: zero, one, infinity. -/
-def placeA : Fin 3 → LinearForm :=
+@[expose] def placeA : Fin 3 → LinearForm :=
   ![![1, 0, 0, 0, 0, 0, 0, 0],
     ![1, 1, 1, 1, 0, 0, 0, 0],
     ![0, 0, 0, 1, 0, 0, 0, 0]]
 
 /-- The three rational `B`-side place vectors: zero, one, infinity. -/
-def placeB : Fin 3 → LinearForm :=
+@[expose] def placeB : Fin 3 → LinearForm :=
   ![![0, 0, 0, 0, 1, 0, 0, 0],
     ![0, 0, 0, 0, 1, 1, 1, 1],
     ![0, 0, 0, 0, 0, 0, 0, 1]]
 
 /-- Exterior product of the two input evaluations at a rational place. -/
-def rationalPlaceTwo (θ : Fin 3) : TwoForm :=
+@[expose] def rationalPlaceTwo (θ : Fin 3) : TwoForm :=
   vectorWedge (placeA θ) (placeB θ)
 
 /-- Linear combination of the two-forms of the three rational places. -/
-def rationalTwo (α : Fin 3 → F₂) : TwoForm :=
+@[expose] def rationalTwo (α : Fin 3 → F₂) : TwoForm :=
   ∑ θ : Fin 3, α θ • rationalPlaceTwo θ
 
 /-- Ordinary vector dependence over `F₂`, derived algebraically from the

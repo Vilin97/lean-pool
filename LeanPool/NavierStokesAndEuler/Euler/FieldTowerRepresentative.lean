@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevJointEvaluation
 /-! Canonical smooth pointwise representatives of any genuine all-order
 field tower. All spatial regularity follows from its actual Sobolev jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ def spatialJet (q : ℕ) (t : Icc (0 : ℝ) T) :
   A.value_eq q t ▸ toJet P (A.realization q t)
 
 /-- Point field, given by `pointEvaluation P x (A.realization 3 t)`. -/
-def pointField (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
+@[expose] def pointField (t : Icc (0 : ℝ) T) (x : LiftDomain P) : Vector3 :=
   pointEvaluation P x (A.realization 3 t)
 
 theorem pointField_ae (t : Icc (0 : ℝ) T) :

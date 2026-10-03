@@ -19,7 +19,7 @@ support has rank at most twice the ambient dimension and lies in the last
 selected width box.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EGZ.FlagDecomposition.CompletePreparation

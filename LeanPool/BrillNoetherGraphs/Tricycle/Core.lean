@@ -42,7 +42,7 @@ positive length vector; `σ_k(T_m)` is `length ≡ k`; and a *tricycle graph* is
 one with `IsTricycle length`, i.e. the three transition slots have length one.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Tricycle
 
@@ -55,6 +55,7 @@ open Utilities.Certificate.SubdivisionGraph
 
 /-- The minimal tricycle `T_m` as an ordered core: six spokes, three bananas,
 three transition slots. -/
+@[expose]
 def tricycleCore : ExplicitPotential.Core 7 15 where
   tail := ![0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 5, 5, 2, 4, 6]
   head := ![1, 2, 3, 4, 5, 6, 2, 2, 4, 4, 6, 6, 3, 5, 1]
@@ -69,24 +70,31 @@ theorem tricycleCore_connected : tricycleCore.Connected := by
 /-! ## Named vertices and slots -/
 
 /-- The central vertex `v₀`. -/
+@[expose]
 def centre : Fin 7 := 0
 
 /-- The transition vertices `vᵢ⁻`. -/
+@[expose]
 def vMinus : Fin 3 → Fin 7 := ![1, 3, 5]
 
 /-- The transition vertices `vᵢ⁺`. -/
+@[expose]
 def vPlus : Fin 3 → Fin 7 := ![2, 4, 6]
 
 /-- The spoke slot `v₀ — vᵢ⁻`. -/
+@[expose]
 def spokeMinus : Fin 3 → Fin 15 := ![0, 2, 4]
 
 /-- The spoke slot `v₀ — vᵢ⁺`. -/
+@[expose]
 def spokePlus : Fin 3 → Fin 15 := ![1, 3, 5]
 
 /-- The two parallel slots of the cycle `Cᵢ`. -/
+@[expose]
 def cycleSlot : Fin 3 → Fin 2 → Fin 15 := ![![6, 7], ![8, 9], ![10, 11]]
 
 /-- The transition slot leaving `vᵢ⁺`. -/
+@[expose]
 def transitionSlot : Fin 3 → Fin 15 := ![12, 13, 14]
 
 /-- The six spoke slots. -/
@@ -131,6 +139,7 @@ theorem slot_classification (e : Fin 15) :
 
 /-- A subdivision `H` of the minimal tricycle, at an arbitrary positive length
 vector. -/
+@[expose]
 def tricycleSpec (length : Fin 15 → ℕ) (hpos : ∀ e, 0 < length e) : Spec 7 15 :=
   Spec.ofCore tricycleCore (by omega) tricycleCore_loopless length hpos
 
@@ -153,6 +162,7 @@ theorem tricycleSpec_genus (length : Fin 15 → ℕ) (hpos : ∀ e, 0 < length e
 
 /-- **A tricycle graph**: the transition slots are not subdivided.  This is the
 characterisation at line 537 of the source's TeX, not Definition 3.1. -/
+@[expose]
 def IsTricycle (length : Fin 15 → ℕ) : Prop := ∀ i : Fin 3, length (transitionSlot i) = 1
 
 end Utilities.Tricycle

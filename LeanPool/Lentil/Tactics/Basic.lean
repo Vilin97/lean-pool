@@ -12,7 +12,7 @@ public import Lean.Meta.Tactic.Replace
 public import Std.Do.Triple.SpecLemmas
 import LeanPool.Lentil.Util
 
-@[expose] public section
+public section
 
 open Lean Meta Elab Tactic
 

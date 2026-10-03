@@ -9,14 +9,14 @@ module
 public import LeanPool.NandakumarRamanaRao.NRR.PrimeModel.ZeroSumAlgebra
 /-! # Mean/deviation decomposition -/
 
-@[expose] public section
+public section
 namespace NRR
 open scoped BigOperators
 variable {n : ℕ}
 
 /-- The linear functional taking the mean of a coordinate vector, with value zero in dimension zero.
 -/
-noncomputable def coordinateMean (n : ℕ) :
+@[expose] noncomputable def coordinateMean (n : ℕ) :
     (Fin n → ℝ) →ₗ[ℝ] ℝ where
   toFun v := (∑ i, v i) / (n : ℝ)
   map_add' u v := by
@@ -31,6 +31,7 @@ noncomputable def coordinateMean (n : ℕ) :
     coordinateMean n v = (∑ i, v i) / (n : ℝ) := rfl
 
 /-- Subtract the coordinate mean to obtain a vector in the zero-sum representation. -/
+@[expose]
 noncomputable def coordinateDeviation (hn : 0 < n) :
     (Fin n → ℝ) →ₗ[ℝ] ZeroSum n where
   toFun v := ⟨fun i => v i - coordinateMean n v, by
@@ -62,6 +63,7 @@ noncomputable def coordinateDeviation (hn : 0 < n) :
       rfl
 
 /-- Reconstruct coordinates from a zero-sum vector and a constant. -/
+@[expose]
 def reconstructCoordinates (n : ℕ) :
     ZeroSum n × ℝ →ₗ[ℝ] (Fin n → ℝ) where
   toFun z i := z.1 i + z.2

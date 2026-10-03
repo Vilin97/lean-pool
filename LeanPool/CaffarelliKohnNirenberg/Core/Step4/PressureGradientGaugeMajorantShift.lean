@@ -16,7 +16,7 @@ the pressure slice unchanged, so a slice estimate proved for the shifted
 pressure is an estimate for the original pressure gradient.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

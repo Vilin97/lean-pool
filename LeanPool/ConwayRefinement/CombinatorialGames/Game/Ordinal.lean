@@ -34,7 +34,7 @@ universe u
 
 open Set IGame
 
-@[expose] public noncomputable section
+public noncomputable section
 
 /-! ### Lemmas to upstream -/
 
@@ -75,7 +75,6 @@ private theorem toIGame'_strictMono : StrictMono toIGame' := by
 termination_by a => a
 
 /-- The canonical map from `NatOrdinal` to `IGame`, sending `o` to `{Iio o | ∅}`. -/
-@[no_expose]
 def toIGame : NatOrdinal.{u} ↪o IGame.{u} :=
   .ofStrictMono NatOrdinal.toIGame' toIGame'_strictMono
 
@@ -139,7 +138,7 @@ theorem toIGame_nonneg (a : NatOrdinal) : 0 ≤ a.toIGame := by
 /-! ### `NatOrdinal` to `ConwayGame` -/
 
 /-- Converts an ordinal into the corresponding game. -/
-noncomputable def toGame : NatOrdinal.{u} ↪o ConwayGame.{u} :=
+@[expose] noncomputable def toGame : NatOrdinal.{u} ↪o ConwayGame.{u} :=
   .ofStrictMono (fun o ↦ .mk o.toIGame) fun _ _ h ↦ toIGame.strictMono h
 
 instance : Coe NatOrdinal ConwayGame where
@@ -205,7 +204,7 @@ theorem toGame_mul (a b : NatOrdinal) : (a * b).toGame = .mk (a.toIGame * b.toIG
   ConwayGame.mk_eq (toIGame_mul a b)
 
 /-- `NatOrdinal.toGame` as an `OrderAddMonoidHom`. -/
-@[simps]
+@[expose, simps]
 def toGameAddHom : NatOrdinal →+o ConwayGame where
   toFun := toGame
   map_zero' := toGame_zero

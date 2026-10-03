@@ -15,7 +15,7 @@ import Mathlib.Data.Int.Star
 /-! # Cauchylems -/
 
 
-@[expose] public section
+public section
 
 
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral

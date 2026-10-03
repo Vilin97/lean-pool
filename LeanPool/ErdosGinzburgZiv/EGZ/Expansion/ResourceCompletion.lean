@@ -15,7 +15,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.PrescribedCounts
 # Converting exchange coverage to multiplicity bounds
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

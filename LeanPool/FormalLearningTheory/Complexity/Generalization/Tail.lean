@@ -15,7 +15,7 @@ import Mathlib.Probability.ProductMeasure
 # LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -24,11 +24,11 @@ section FinBlockInfrastructure
 
 open Equiv in
 /-- Extract block j from a flat array of k*m elements, using finProdFinEquiv. -/
-def blockExtract {α : Type*} (k m : ℕ) (S : Fin (k * m) → α) (j : Fin k) : Fin m → α :=
+@[expose] def blockExtract {α : Type*} (k m : ℕ) (S : Fin (k * m) → α) (j : Fin k) : Fin m → α :=
   fun i => S (finProdFinEquiv (j, i))
 
 /-- Boolean majority vote: returns true iff strictly more than half the votes are true. -/
-def majorityVote (k : ℕ) (votes : Fin k → Bool) : Bool :=
+@[expose] def majorityVote (k : ℕ) (votes : Fin k → Bool) : Bool :=
   decide (2 * (Finset.univ.filter (fun j => votes j = true)).card > k)
 
 /-- Block index sets are disjoint for distinct blocks. -/

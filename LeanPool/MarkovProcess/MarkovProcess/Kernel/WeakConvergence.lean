@@ -29,7 +29,7 @@ Nothing is asserted for families that are not probability measures: for sub-prob
 the conclusion is false, since mass may escape to infinity.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory Topology
 open scoped BoundedContinuousFunction CompactlySupported

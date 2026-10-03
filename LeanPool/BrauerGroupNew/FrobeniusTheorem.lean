@@ -25,7 +25,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.FrobeniusTheorem`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

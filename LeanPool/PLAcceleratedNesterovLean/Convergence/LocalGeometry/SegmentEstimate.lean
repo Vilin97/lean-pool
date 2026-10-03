@@ -18,7 +18,7 @@ Provides a generalized strong aiming lemma (no φ'(0) = 0 requirement)
 and the fiber-path Hessian-to-second-derivative connection.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

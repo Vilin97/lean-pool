@@ -59,7 +59,7 @@ uses the whole-library `import Mathlib`. The concrete dependencies are lightweig
 (`Convex`, `IsCompact`, `interior`, `Set` membership/extensionality).
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

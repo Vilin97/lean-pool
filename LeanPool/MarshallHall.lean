@@ -44,4 +44,4 @@ Tags: group-theory
 MSC: 20E07, 20F65, 05C25
 -/
 
-@[expose] public section
+public section

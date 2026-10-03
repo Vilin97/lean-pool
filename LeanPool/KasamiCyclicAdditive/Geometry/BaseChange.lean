@@ -22,7 +22,7 @@ on points of the Fermat cubic, built the same way as `frobPt` (via
 the `G`-preimage identity from `E(K)` to `E(F) = E(AlgebraicClosure K)`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.PointFrobenius
 

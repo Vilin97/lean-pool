@@ -28,7 +28,7 @@ Times are read from the real line at `Real.toNNReal`, as elsewhere in the librar
 asserted about the two-sided derivative, which for a general curve fails at `s = 0`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped NNReal

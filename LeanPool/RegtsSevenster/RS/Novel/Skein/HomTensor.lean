@@ -17,13 +17,14 @@ Hom spaces — the monoidal product of the skein category.  On
 fragment classes it is the tensor of fragments.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The tensor into the quotient, for a fixed left factor. -/
+@[expose]
 noncomputable def homTensorAux (s t u v : ℕ)
     (x : Fragment (Fin (s + t)) →₀ ℂ) :
     HomSpace f.val (u + v) →ₗ[ℂ]
@@ -51,6 +52,7 @@ theorem homTensorAux_mk (s t u v : ℕ)
         (tensorFinsupp s t u v x y) := rfl
 
 /-- **The descended monoidal product** of the skein category. -/
+@[expose]
 noncomputable def HomSpace.tensor (s t u v : ℕ) :
     HomSpace f.val (s + t) →ₗ[ℂ]
       HomSpace f.val (u + v) →ₗ[ℂ]

@@ -22,7 +22,7 @@ Only the middle statement is row specific.  This file packages the other three
 once, so that a row's closing theorem is a single application.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.Configurations
 

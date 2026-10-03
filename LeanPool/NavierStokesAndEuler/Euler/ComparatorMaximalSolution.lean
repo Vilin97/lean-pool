@@ -28,7 +28,7 @@ section
 /-! The extended spatial suprema in the independent challenge agree with the
 ordinary development's bounded-function norms on every smooth Sobolev slice. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -76,7 +76,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -208,7 +208,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

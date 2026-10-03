@@ -19,7 +19,7 @@ Definition 5 per-flag values: outgoing flags carry the partner of
 their colour, incoming flags the colour itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -20,7 +20,7 @@ that the latter can expose the paper-facing names without becoming an
 implementation dependency for later symmetry arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -20,7 +20,7 @@ Summing that pointwise identification proves exact transport for every weight
 bounded by the cumulative weight, including the local summand.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,7 +30,7 @@ namespace FlagDecompositionRaw
 
 open Classical in
 /-- The centered lift of a weight through one coordinate map. -/
-noncomputable def centeredFibreMass {p d n : ℕ} [NeZero p]
+@[expose] noncomputable def centeredFibreMass {p d n : ℕ} [NeZero p]
     (w : FpCoord p d → ℕ) (φ : FpCoord p d → FpCoord p n)
     (q : IntCoord n) : ℕ := by
   classical
@@ -52,6 +52,7 @@ namespace IntegerLatticeChart
 
 open Classical in
 /-- Express a finite-field representation map in the chart coordinates. -/
+@[expose]
 noncomputable def rechartMap {p d n : ℕ} [Fact p.Prime]
     {S : Finset (IntCoord n)} (C : IntegerLatticeChart S)
     (φ : FpCoord p d →ᵃ[ZMod p] FpCoord p n) :

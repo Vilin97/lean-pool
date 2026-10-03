@@ -28,7 +28,7 @@ The killed kernels are monotone in the open set (`killedKernel_mono`); no other 
 used.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal

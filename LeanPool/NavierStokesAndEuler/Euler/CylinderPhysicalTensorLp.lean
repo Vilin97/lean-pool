@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Ordinary derivative tensors of the actual graph field lie in spatial
 L², with explicit frequency loss and the genuine graph-word norms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

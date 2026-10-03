@@ -23,7 +23,7 @@ occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence iden
 `relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -65,7 +65,8 @@ private theorem graphValue_unique (hAx : Sentenceω.Realize (graphAxioms F) M) {
     xs y (graphValue hAx f xs) hy (graphValue_spec hAx f h xs)
 
 /-- **The reconstructed `L`-structure**: functions from `graphValue`, base relations copied. -/
-@[reducible] noncomputable def reconstructStructure (F : Set (Σ n, L.Functions n)) [Countable ↥F]
+@[expose, reducible] noncomputable def reconstructStructure
+    (F : Set (Σ n, L.Functions n)) [Countable ↥F]
     (hAx : Sentenceω.Realize (graphAxioms F) M) : L.Structure M where
   funMap f xs := graphValue hAx f xs
   RelMap R xs := RelMap (L := graphLanguage L) (GraphRelation.base R) xs

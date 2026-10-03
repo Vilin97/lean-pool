@@ -38,7 +38,7 @@ public import Mathlib.Topology.MetricSpace.Contracting
 * `LeanCert.Engine.RootFinding.Krawczyk`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -73,7 +73,7 @@ constraints (nonzero for inv, positive for log) are satisfied.
 
 /-! ### Correctness of partial dual evaluator -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -1027,7 +1027,7 @@ gaining the performance benefits of Dyadic for polynomial operations.
 
 /-! ### Configuration -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -1408,6 +1408,7 @@ structure PreparedContext where
   deriving Repr
 
 /-- Deterministically prepare all configuration-dependent numerical data. -/
+@[expose]
 def prepareContext (cfg : DyadicConfig) : PreparedContext :=
   { cfg
     ln2 := IntervalRat.ln2Computable cfg.taylorDepth
@@ -2044,7 +2045,7 @@ logarithm domains, and positive rounding precisions return `EvalError` rather
 than a finite interval.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -2769,7 +2770,7 @@ expressions
 All theorems are FULLY PROVED with no sorry or axioms.
 -/
 
-@[expose] public section
+public section
 
 end
 
@@ -2810,7 +2811,7 @@ for out-of-bounds indices.
 
 /-! ### Box type and basic operations -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine.Optimization
 
@@ -3117,7 +3118,7 @@ Branch-and-bound with the following pruning rules:
 
 /-! ### Optimization result -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 
@@ -3175,6 +3176,7 @@ Returns an interval [lo, hi] such that:
 - lo ≤ min_{x ∈ I} f(x)
 - hi ≥ min_{x ∈ I} f(x)
 -/
+@[expose]
 noncomputable def minimizeInterval (e : Expr) (I : IntervalRat) (varIdx : Nat)
     (maxDepth : ℕ) : OptResult :=
   go I maxDepth
@@ -3628,6 +3630,7 @@ Returns an interval [lo, hi] such that for any ρ_real with ρ_real i ∈ ρ i:
 - lo ≤ min_{t ∈ ρ idx} evalAlong e ρ_real idx t
 - hi ≥ min_{t ∈ ρ idx} evalAlong e ρ_real idx t
 -/
+@[expose]
 noncomputable def minimizeIntervalIdx (e : Expr) (ρ : IntervalEnv) (idx : Nat)
     (maxDepth : ℕ) : OptResult :=
   go (ρ idx) maxDepth
@@ -3956,7 +3959,7 @@ when xᵢ = B[i].lo. We can shrink the box in that dimension to a point.
 
 /-! ### Gradient computation -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine.Optimization
 
@@ -3976,16 +3979,19 @@ noncomputable def gradientIntervalN (e : Expr) (B : Box) (n : Nat) : List Interv
 
 /-- Create dual environment for differentiating with respect to variable `idx` (computable).
     Active variable gets der = 1, passive variables get der = 0. -/
+@[expose]
 def mkDualEnvCore (ρ : IntervalEnv) (idx : Nat) : DualEnv :=
   fun i => if i = idx then DualInterval.varActive (ρ i) else DualInterval.varPassive (ρ i)
 
 /-- Evaluate with derivative with respect to variable `idx` (computable version) -/
+@[expose]
 def evalWithDerivCore (e : Expr) (ρ : IntervalEnv) (idx : Nat) (cfg : EvalConfig := {}) :
   DualInterval :=
   LeanCert.Internal.AD.evalTotalCore e (mkDualEnvCore ρ idx) cfg
 
 /-- Computable derivative interval for multi-variable expressions.
     Computes the interval containing ∂f/∂xᵢ over the box. -/
+@[expose]
 def derivIntervalCoreN (e : Expr) (ρ : IntervalEnv) (idx : Nat) (cfg : EvalConfig := {}) :
   IntervalRat :=
   (evalWithDerivCore e ρ idx cfg).der
@@ -4826,7 +4832,7 @@ The golden theorem `krawczykCheck_sound` turns a successful Boolean check into
 existence and uniqueness of a real root in the supplied box.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanCert.Engine
 open LeanCert.Core
@@ -4857,10 +4863,12 @@ local instance : AddCommMonoid IntervalRat :=
     rfl (fun _ _ => rfl) (fun _ _ => rfl)
 
 /-- Extend a finite real coordinate vector to an expression environment with zero defaults. -/
+@[expose]
 noncomputable def finEnv {n : Nat} (x : Fin n → ℝ) : Nat → ℝ :=
   fun i => if h : i < n then x ⟨i, h⟩ else 0
 
 /-- Evaluate an expression in the environment of a finite real coordinate vector. -/
+@[expose]
 noncomputable def evalFin {n : Nat} (e : Expr) (x : Fin n → ℝ) : ℝ :=
   Expr.eval (finEnv x) e
 
@@ -4930,6 +4938,7 @@ theorem fderiv_single_eq_deriv_evalAlong {n : Nat} (e : Expr) (h : ADSupported e
   exact hcomp.deriv.symm
 
 /-- Evaluate all coordinate expressions of a finite system. -/
+@[expose]
 noncomputable def systemEval {n : Nat} (F : Fin n → Expr) (x : Fin n → ℝ) : Fin n → ℝ :=
   fun i => evalFin (F i) x
 
@@ -4940,6 +4949,7 @@ theorem systemEval_differentiable {n : Nat} (F : Fin n → Expr)
   exact evalFin_differentiable (F i) (h i)
 
 /-- The matrix of coordinate partial derivatives of an expression system. -/
+@[expose]
 noncomputable def jacobianAt {n : Nat} (F : Fin n → Expr) (x : Fin n → ℝ) :
     Matrix (Fin n) (Fin n) ℝ :=
   LinearMap.toMatrix' (fderiv ℝ (systemEval F) x).toLinearMap
@@ -4957,14 +4967,17 @@ theorem jacobianAt_apply {n : Nat} (F : Fin n → Expr) (h : ∀ i, ADSupported 
   exact fderiv_single_eq_deriv_evalAlong (F i) (h i) x j
 
 /-- Extend a finite interval box to the evaluator’s indexed environment. -/
+@[expose]
 def finBoxEnv {n : Nat} (X : Fin n → IntervalRat) : IntervalEnv :=
   fun i => if h : i < n then X ⟨i, h⟩ else IntervalRat.singleton 0
 
 /-- Coordinatewise membership of a real vector in a rational interval box. -/
+@[expose]
 def FinBoxMem {n : Nat} (x : Fin n → ℝ) (X : Fin n → IntervalRat) : Prop :=
   ∀ i, x i ∈ X i
 
 /-- Enclose the Jacobian entries by interval automatic differentiation. -/
+@[expose]
 def intervalJacobian {n : Nat} (F : Fin n → Expr) (X : Fin n → IntervalRat)
     (cfg : EvalConfig := {}) : Matrix (Fin n) (Fin n) IntervalRat :=
   fun i j => Optimization.derivIntervalCoreN (F i) (finBoxEnv X) j.val cfg
@@ -4986,11 +4999,13 @@ theorem jacobianAt_mem_intervalJacobian {n : Nat} (F : Fin n → Expr)
       simpa only [finBoxEnv, j.isLt, dite_true] using hx j) cfg
 
 /-- Interpret a real matrix as a continuous linear map on finite coordinate vectors. -/
+@[expose]
 noncomputable def matrixCLM {n : Nat} (A : Matrix (Fin n) (Fin n) ℝ) :
     (Fin n → ℝ) →L[ℝ] (Fin n → ℝ) :=
   ContinuousLinearMap.mk (Matrix.mulVecLin A)
 
 /-- The preconditioned Newton map `x ↦ x - Y (F x)`. -/
+@[expose]
 noncomputable def newtonMap {n : Nat} (Y : Matrix (Fin n) (Fin n) ℝ)
     (F : Fin n → Expr) (x : Fin n → ℝ) : Fin n → ℝ :=
   x - Matrix.mulVec Y (systemEval F x)
@@ -5030,6 +5045,7 @@ theorem newtonMap_fderiv_matrix {n : Nat} (Y : Matrix (Fin n) (Fin n) ℝ)
   rfl
 
 /-- The set of real vectors lying coordinatewise in the interval box. -/
+@[expose]
 def finBoxSet {n : Nat} (X : Fin n → IntervalRat) : Set (Fin n → ℝ) :=
   {x | FinBoxMem x X}
 
@@ -5100,15 +5116,18 @@ theorem contraction_unique_fixedPoint_in_finBox {n : Nat}
 open scoped Matrix.Norms.Operator
 
 /-- The identity matrix represented by singleton rational intervals. -/
+@[expose]
 def intervalIdentity {n : Nat} : Matrix (Fin n) (Fin n) IntervalRat :=
   fun i j => IntervalRat.singleton (if i = j then 1 else 0)
 
 /-- Multiply a rational matrix by an interval matrix using interval sums. -/
+@[expose]
 def ratMulInterval {n : Nat} (Y : Matrix (Fin n) (Fin n) ℚ)
     (J : Matrix (Fin n) (Fin n) IntervalRat) : Matrix (Fin n) (Fin n) IntervalRat :=
   fun i j => ∑ k, IntervalRat.scale (Y i k) (J k j)
 
 /-- The interval matrix `I - Y J` enclosing the Newton-map derivative. -/
+@[expose]
 def preconditionedJacobian {n : Nat} (Y : Matrix (Fin n) (Fin n) ℚ)
     (J : Matrix (Fin n) (Fin n) IntervalRat) : Matrix (Fin n) (Fin n) IntervalRat :=
   fun i j => IntervalRat.sub (intervalIdentity i j) (ratMulInterval Y J i j)
@@ -5152,13 +5171,16 @@ theorem mem_preconditionedJacobian {n : Nat} (Y : Matrix (Fin n) (Fin n) ℚ)
   · exact mem_ratMulInterval Y Jreal J hJ i j
 
 /-- The larger absolute endpoint, bounding absolute values in the interval. -/
+@[expose]
 def intervalAbsBound (I : IntervalRat) : ℚ := max |I.lo| |I.hi|
 
 /-- The sum of absolute interval bounds in a selected matrix row. -/
+@[expose]
 def intervalMatrixRowBound {n : Nat} (A : Matrix (Fin n) (Fin n) IntervalRat)
     (i : Fin n) : ℚ := ∑ j, intervalAbsBound (A i j)
 
 /-- The maximum interval row sum, bounding the matrix’s sup-norm operator norm. -/
+@[expose]
 def intervalMatrixBound {n : Nat} (A : Matrix (Fin n) (Fin n) IntervalRat) : ℚ :=
   (List.ofFn fun i => intervalMatrixRowBound A i).foldl max 0
 
@@ -5241,6 +5263,7 @@ theorem newtonMap_fderiv_norm_le {n : Nat} (Y : Matrix (Fin n) (Fin n) ℚ)
     (jacobianAt_mem_intervalJacobian F h X x hx cfg)
 
 /-- Represent a rational center by singleton intervals in the evaluation environment. -/
+@[expose]
 def pointIntervalEnv {n : Nat} (m : Fin n → ℚ) : IntervalEnv :=
   fun i => if h : i < n then IntervalRat.singleton (m ⟨i, h⟩) else IntervalRat.singleton 0
 
@@ -5289,10 +5312,12 @@ theorem newtonMap_center_mem {n : Nat} (F : Fin n → Expr)
         (systemEval_mem_pointEvalIntervals F h m cfg j))
 
 /-- The greater endpoint distance from the center in a selected coordinate. -/
+@[expose]
 def coordinateRadius {n : Nat} (X : Fin n → IntervalRat) (m : Fin n → ℚ)
     (i : Fin n) : ℚ := max (m i - (X i).lo) ((X i).hi - m i)
 
 /-- The maximum coordinate radius of the box around the chosen center. -/
+@[expose]
 def boxRadius {n : Nat} (X : Fin n → IntervalRat) (m : Fin n → ℚ) : ℚ :=
   (List.ofFn fun i => coordinateRadius X m i).foldl max 0
 
@@ -5333,6 +5358,7 @@ theorem norm_sub_center_le_boxRadius {n : Nat} {X : Fin n → IntervalRat}
   · exact_mod_cast boxRadius_nonneg X m
 
 /-- The rational interval with endpoints `-d` and `d`. -/
+@[expose]
 def symmetricInterval (d : ℚ) : IntervalRat :=
   { lo := -|d|
     hi := |d|
@@ -5347,6 +5373,7 @@ def newtonImageEnclosure {n : Nat} (F : Fin n → Expr) (X : Fin n → IntervalR
   fun i => IntervalRat.add (newtonCenterInterval F m Y cfg i) (symmetricInterval (q * r))
 
 /-- Test whether both endpoints lie strictly inside another interval. -/
+@[expose]
 def intervalStrictInside (I X : IntervalRat) : Bool := X.lo < I.lo && I.hi < X.hi
 
 theorem intervalStrictInside_sound {I X : IntervalRat} (h : intervalStrictInside I X = true) :
@@ -5407,6 +5434,7 @@ structure KrawczykCert (n : Nat) where
   preconditioner : Matrix (Fin n) (Fin n) ℚ
 
 /-- Coordinatewise containment of the rational center in the interval box. -/
+@[expose]
 def centerInside {n : Nat} (X : Fin n → IntervalRat) (m : Fin n → ℚ) : Prop :=
   ∀ i, (X i).lo ≤ m i ∧ m i ≤ (X i).hi
 
@@ -5428,6 +5456,7 @@ def krawczykCheck {n : Nat} (F : Fin n → Expr) (X : Fin n → IntervalRat)
     (newtonImageEnclosure F X cert.center cert.preconditioner cfg i) (X i) = true)
 
 /-- Every expression in the finite system evaluates to zero at the given point. -/
+@[expose]
 def SystemZero {n : Nat} (F : Fin n → Expr) (x : Fin n → ℝ) : Prop :=
   ∀ i, evalFin (F i) x = 0
 

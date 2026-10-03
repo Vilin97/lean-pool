@@ -19,7 +19,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 # LeanPool.FormalizationOfBoundedArithmetic.IDelta0
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder Language BoundedFormula
 

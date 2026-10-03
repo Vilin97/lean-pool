@@ -24,7 +24,7 @@ and prime invariance of the quotient-facet characteristic weight lets
 `orbit_boundary_pairing_eq_zero` apply.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -274,6 +274,7 @@ theorem facetIncidence_eq_localBase
   rw [NRR.FoxNeuwirthOrderComplex.RelativeSubdivisionCylinderBoundary.fullBoundaryPairing_eq_base]
 
 /-- Quotient-facet Kronecker delta. -/
+@[expose]
 noncomputable def quotientIndicator {hp : Nat.Prime p}
     (s t : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) : ZMod p :=
   if t = s then 1 else 0
@@ -854,13 +855,13 @@ theorem sideBasePairing_eq_zero
 /-! ## Pointwise collar boundary -/
 
 /-- Lower boundary coefficient of one quotient facet. -/
-noncomputable def lowerBoundaryCoefficient
+@[expose] noncomputable def lowerBoundaryCoefficient
     (hp : Nat.Prime p) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) : ZMod p :=
   RelativeSubdivisionOneStepBoundaryBase.lowerEndpointPairing hp N (quotientIndicator s)
 
 /-- Upper boundary coefficient of one quotient facet. -/
-noncomputable def upperBoundaryCoefficient
+@[expose] noncomputable def upperBoundaryCoefficient
     (hp : Nat.Prime p) (N : Nat)
     (s : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet) : ZMod p :=
   RelativeSubdivisionOneStepBoundaryBase.upperEndpointPairing hp N (quotientIndicator s)

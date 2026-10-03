@@ -23,7 +23,7 @@ certificate available for every suitable weak solution, it produces the
 solution-uniform `ext:CZ` estimate with the exact binder consumed downstream.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Tree -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -29,6 +29,7 @@ hypotheses; no policy-specific algebra is hidden here.
 abbrev DyadicNode (d : ℕ) := Fin (2 ^ d)
 
 /-- The unique node at depth zero. -/
+@[expose]
 def dyadicRoot : DyadicNode 0 := 0
 
 /-- Splitting a level into the two children of every node. -/
@@ -36,10 +37,12 @@ def childrenEquiv (d : ℕ) : DyadicNode d × Fin 2 ≃ DyadicNode (d + 1) :=
   finProdFinEquiv.trans (finCongr (by simp [pow_succ]))
 
 /-- The left child of a dyadic node. -/
+@[expose]
 def leftChild {d : ℕ} (v : DyadicNode d) : DyadicNode (d + 1) :=
   childrenEquiv d (v, 0)
 
 /-- The right child of a dyadic node. -/
+@[expose]
 def rightChild {d : ℕ} (v : DyadicNode d) : DyadicNode (d + 1) :=
   childrenEquiv d (v, 1)
 
@@ -215,6 +218,7 @@ theorem leafBlock_children {d L : ℕ} (hdL : d < L)
   omega
 
 /-- Interval mass of every node at depth `d`. -/
+@[expose]
 def nodeMass (d : ℕ) (_ : DyadicNode d) : ℝ :=
   ((2 : ℝ) ^ d)⁻¹
 
@@ -275,6 +279,7 @@ structure AggregatedInventory (L m : ℕ) where
 namespace LeafInventory
 
 /-- Concrete aggregate of a leaf inventory over one descendant block. -/
+@[expose]
 def nodeCount {L m d : ℕ} (I : LeafInventory L m) (hdL : d ≤ L)
     (v : DyadicNode d) : ℕ :=
   ∑ w ∈ leafBlock hdL v, I.count w
@@ -314,6 +319,7 @@ theorem nodeCount_children {L m d : ℕ} (I : LeafInventory L m)
       (leftChild_ne_rightChild v))
 
 /-- Every fixed-total leaf vector has canonical coherent aggregate counts. -/
+@[expose]
 def aggregate {L m : ℕ} (I : LeafInventory L m) :
     AggregatedInventory L m where
   leaf := I
@@ -342,6 +348,7 @@ structure CoherentTreeLabel (L : ℕ) (A : Type*) [AddCommMonoid A] where
       value (d + 1) (rightChild v)
 
 /-- Sum of a depth-indexed label over one complete level. -/
+@[expose]
 def levelSum {A : Type*} [AddCommMonoid A]
     (f : ∀ d, DyadicNode d → A) (d : ℕ) : A :=
   ∑ v, f d v
@@ -382,6 +389,7 @@ theorem AggregatedInventory.leaf_count_eq_total
 /-! ## Weighted telescopes -/
 
 /-- Mass-weighted sum of a real label over one complete level. -/
+@[expose]
 def weightedLevel (f : ∀ d, DyadicNode d → ℝ) (d : ℕ) : ℝ :=
   ∑ v, nodeMass d v * f d v
 
@@ -393,6 +401,7 @@ def weightedLevel (f : ∀ d, DyadicNode d → ℝ) (d : ℕ) : ℝ :=
   simp [nodeMass, dyadicRoot]
 
 /-- Arithmetic mean of a real label over the two children of `v`. -/
+@[expose]
 def childAverage (f : ∀ d, DyadicNode d → ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   (f (d + 1) (leftChild v) + f (d + 1) (rightChild v)) / 2
@@ -432,14 +441,17 @@ theorem weighted_tree_telescope
   rw [weightedLevel_zero]
 
 /-- Sum of a mass-weighted label over all nonroot levels through `L`. -/
+@[expose]
 def nonrootWeightedSum (f : ∀ d, DyadicNode d → ℝ) (L : ℕ) : ℝ :=
   ∑ d ∈ Finset.range L, weightedLevel f (d + 1)
 
 /-- Sum of a mass-weighted label over all internal levels before `L`. -/
+@[expose]
 def internalWeightedSum (f : ∀ d, DyadicNode d → ℝ) (L : ℕ) : ℝ :=
   ∑ d ∈ Finset.range L, weightedLevel f d
 
 /-- The hazard energy `H_d = ∑_{depth(v)=d} p_v h_v²`. -/
+@[expose]
 def hazardEnergy (h : ∀ d, DyadicNode d → ℝ) (d : ℕ) : ℝ :=
   weightedLevel (fun d v => (h d v) ^ 2) d
 
@@ -626,6 +638,7 @@ theorem bellman_global_bound
       linarith
 
 /-- The drift quantity `D` from equation (9). -/
+@[expose]
 def bellmanDrift
     (L : ℕ) (a : ℝ)
     (N q : ∀ d, DyadicNode d → ℝ) : ℝ :=
@@ -706,6 +719,7 @@ theorem sum_nodeMass_sq (d : ℕ) :
   field_simp
 
 /-- Sum of `p_v²` over every nonroot node through depth `L`. -/
+@[expose]
 def nonrootMassSqSum (L : ℕ) : ℝ :=
   ∑ d ∈ Finset.range L,
     ∑ v : DyadicNode (d + 1), (nodeMass (d + 1) v) ^ 2

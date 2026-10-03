@@ -20,7 +20,7 @@ This file proves the first case of Fermat's Last Theorem for regular primes, red
 statement to a normalized version and establishing the required cyclotomic ideal factorization.
 -/
 
-@[expose] public section
+public section
 
 open Finset Nat IsCyclotomicExtension Ideal Polynomial Int Basis FltRegular.CaseI
 
@@ -164,7 +164,7 @@ local instance : IsCyclotomicExtension {p} ℤ R :=
 theorem exists_ideal {a b c : ℤ} (h5p : 5 ≤ p) (H : a ^ p + b ^ p = c ^ p)
     (hgcd : ({a, b, c} : Finset ℤ).gcd id = 1)
     (caseI : ¬↑p ∣ a * b * c) {ζ : R} (hζ : ζ ∈ nthRootsFinset p 1) :
-    ∃ I, span ({a + ζ * b} : Set R) = I ^ p := by
+    ∃ I : Ideal R, span ({a + ζ * b} : Set R) = I ^ p := by
   classical
   have H₁ := congr_arg (@Int.cast R _) H
   simp only [Int.cast_add, Int.cast_pow] at H₁

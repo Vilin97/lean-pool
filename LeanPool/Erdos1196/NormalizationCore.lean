@@ -27,14 +27,14 @@ the two separate estimate files.
 * `normalizationFirstEntryPart`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators Topology
 
 namespace PrimitiveSetsAboveX
 
 /-- The common prefactor `1 / (n log^2 n)` in the entry weights. -/
-noncomputable def entryWeightFactor (n : ℕ) : ℝ :=
+@[expose] noncomputable def entryWeightFactor (n : ℕ) : ℝ :=
   1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)
 
 /-- The small-prime-power divisor sum appearing in `b_x(n)`. -/
@@ -54,7 +54,7 @@ noncomputable def firstEntryEntryWeight (x Y n : ℕ) : ℝ :=
   entryWeightFactor n * firstEntryDivisorSum x Y n
 
 /-- The small-prime-power summand in the normalization constant `B_x`. -/
-noncomputable def normalizationSmallPrimePart (x Y n : ℕ) : ℝ :=
+@[expose] noncomputable def normalizationSmallPrimePart (x Y n : ℕ) : ℝ :=
   if x ≤ n then smallPrimeEntryWeight Y n else 0
 
 /-- The first-entry summand in the normalization constant `B_x`. -/

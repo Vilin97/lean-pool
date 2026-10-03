@@ -17,7 +17,7 @@ The initial velocity exponent supplies the linear velocity terms, while
 a cutoff of absolute value at most one preserves pressure-gradient bounds.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

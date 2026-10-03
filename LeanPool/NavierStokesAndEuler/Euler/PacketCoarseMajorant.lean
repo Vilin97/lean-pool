@@ -15,7 +15,7 @@ import Mathlib.Tactic.Bound
 /-! A polynomial base controls every surviving finite packet grade after the final factorial split.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EulerPacketCoarseMajorant
@@ -24,7 +24,7 @@ open EulerGevrey
 
 
 /-- Its N-degree is 220, leaving room in the source's exponent 300 for finite sums. -/
-def gradeBase (R : ℝ) (N : ℕ) : ℝ := (4*R*(550*(N : ℝ))^2)^110
+@[expose] def gradeBase (R : ℝ) (N : ℕ) : ℝ := (4*R*(550*(N : ℝ))^2)^110
 
 theorem gradeBase_nonneg (R : ℝ) (N : ℕ) : 0 ≤ gradeBase R N := by
   unfold gradeBase

@@ -12,7 +12,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Tree
 
 /-! # Spatial -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -49,6 +49,7 @@ theorem dyadicLeafSumEquiv_inr_val {L : ℕ} (i : DyadicNode L) :
 namespace DyadicMass
 
 /-- The mass of a specified leaf, indexed from left to right. -/
+@[expose]
 def leafMass : {L : ℕ} → DyadicMass L → DyadicNode L → ℝ
   | 0, leaf mass, _ => mass
   | L + 1, branch left right, i =>
@@ -302,10 +303,12 @@ theorem selectedIndex_eq_iff_mem_massInterval {L : ℕ} (q : DyadicMass L)
           simp [selectedIndex, huRight, hlocal]
 
 /-- Lebesgue-uniform demand on the unit interval. -/
+@[expose]
 def uniformDemand : Measure ℝ :=
   volume.restrict (Icc (0 : ℝ) 1)
 
 /-- Raw singleton mass of the finite pushforward by `selectedIndex`. -/
+@[expose]
 def selectedIndexPushforwardMass {L : ℕ} (q : DyadicMass L)
     (i : DyadicNode L) : ℝ :=
   ((Measure.map q.selectedIndex uniformDemand) {i}).toReal
@@ -378,6 +381,7 @@ end DyadicMass
 /-! ## Exact spatial configurations -/
 
 /-- Width of one depth-`L` dyadic cell. -/
+@[expose]
 def dyadicCellWidth (L : ℕ) : ℝ :=
   1 / ((2 ^ L : ℕ) : ℝ)
 
@@ -386,6 +390,7 @@ def dyadicCellLeft {L : ℕ} (i : DyadicNode L) : ℝ :=
   i.val / ((2 ^ L : ℕ) : ℝ)
 
 /-- The closed cell certified for a labeled supply point. -/
+@[expose]
 def dyadicCell {L : ℕ} (i : DyadicNode L) : Set ℝ :=
   Icc (dyadicCellLeft i) (dyadicCellLeft i + dyadicCellWidth L)
 
@@ -431,6 +436,7 @@ namespace SupplyConfiguration
 variable {L m : ℕ}
 
 /-- Number of configured supply points carrying one leaf label. -/
+@[expose]
 def leafCount (C : SupplyConfiguration L m) (i : DyadicNode L) : ℕ :=
   (Finset.univ.filter fun j => C.leaf j = i).card
 
@@ -442,6 +448,7 @@ theorem sum_leafCount (C : SupplyConfiguration L m) :
   simp
 
 /-- Count projection from exact locations to the finite inventory chain. -/
+@[expose]
 def countState (C : SupplyConfiguration L m) :
     InventoryState (DyadicNode L) m :=
   ⟨C.leafCount, C.sum_leafCount⟩
@@ -456,6 +463,7 @@ A total representative of a leaf. If the leaf is empty, the supplied
 fallback is returned; the later a.e. feasibility theorem proves that this
 case occurs only on the null exceptional demand set.
 -/
+@[expose]
 def representative (C : SupplyConfiguration L m) (fallback : Fin m)
     (i : DyadicNode L) : Fin m :=
   if h : ∃ j, C.leaf j = i then Classical.choose h else fallback
@@ -483,11 +491,13 @@ theorem supports_of_emptyMass (C : SupplyConfiguration L m)
   exact ⟨j, (Finset.mem_filter.mp hj).2⟩
 
 /-- The supply label selected by a uniform demand coordinate. -/
+@[expose]
 def selectedSupplyIndex (C : SupplyConfiguration L m) (q : DyadicMass L)
     (fallback : Fin m) (u : ℝ) : Fin m :=
   C.representative fallback (q.selectedIndex u)
 
 /-- The actual configured supply location selected by the policy. -/
+@[expose]
 def selectedSupplyPoint (C : SupplyConfiguration L m) (q : DyadicMass L)
     (fallback : Fin m) (u : ℝ) : ℝ :=
   C.location (C.selectedSupplyIndex q fallback u)
@@ -602,6 +612,7 @@ theorem selectedSupplyPoint_sub_quantile_le_ae
     q hq hsupport fallback hu hu0
 
 /-- Expected distance from a uniform demand to the actual selected supply point. -/
+@[expose]
 def expectedActualDistance (C : SupplyConfiguration L m)
     (q : DyadicMass L) (fallback : Fin m) : ℝ :=
   ∫ u in Icc (0 : ℝ) 1, |C.selectedSupplyPoint q fallback u - u|
@@ -748,6 +759,7 @@ theorem expectedActualDistance_le_one_cell_of_deletionRule
 end SupplyConfiguration
 
 /-- Prefix a relative dyadic node by an absolute node. -/
+@[expose]
 def appendDyadicNode {d r : ℕ}
     (v : DyadicNode d) (w : DyadicNode r) :
     DyadicNode (d + r) :=

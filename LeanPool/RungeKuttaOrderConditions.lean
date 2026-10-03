@@ -24,4 +24,4 @@ Tags: numerical-analysis, runge-kutta, rooted-trees, order-conditions
 MSC: 65L06, 65L05, 05C05
 -/
 
-@[expose] public section
+public section

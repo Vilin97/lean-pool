@@ -14,7 +14,7 @@ Physical rescaling preserves convexity, gradients, smoothness, and the prescribe
 distance.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

@@ -17,7 +17,7 @@ continuous-path space is integrating the composed test against the measure itsel
 change-of-variables identity with no probabilistic content.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped CompactlySupported

@@ -23,7 +23,7 @@ permutations (equivalences) of the underlying finite type.
 This is a technical step towards the finite Čencov uniqueness theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -40,7 +40,7 @@ abbrev V (n : ℕ) : Type := tangentSpace (α := Fin n)
 namespace Basis
 
 /-- The coordinate basis vector on `Fin n`. -/
-noncomputable def e (i : Fin n) : Fin n → ℝ := Pi.single i (1 : ℝ)
+@[expose] noncomputable def e (i : Fin n) : Fin n → ℝ := Pi.single i (1 : ℝ)
 
 lemma sum_e (i : Fin n) : (∑ k : Fin n, e (n := n) i k) = 1 := by
   classical
@@ -51,7 +51,7 @@ lemma sum_sub_e (i j : Fin n) : (∑ k : Fin n, (e (n := n) i k - e (n := n) j k
   simp [e]
 
 /-- The tangent vector `e_i - e_j` (sum-zero). -/
-noncomputable def dij (i j : Fin n) : V n :=
+@[expose] noncomputable def dij (i j : Fin n) : V n :=
   ⟨fun k => e (n := n) i k - e (n := n) j k, by
     -- Membership in `tangentSpace` is `∑ = 0`.
     exact (tangentSpace.mem_iff (α := Fin n)

@@ -19,7 +19,7 @@ machine.  In particular, a method can obtain objective information only by a
 and an optimizer are not fields of `MethodInput`.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -43,7 +43,7 @@ structure Observation (d : ℕ) where
   gradient : Vec d
 
 /-- Package a query point with its exact objective value and gradient. -/
-def PairOracle.observe {d : ℕ} (oracle : PairOracle d) (x : Vec d) : Observation d :=
+@[expose] def PairOracle.observe {d : ℕ} (oracle : PairOracle d) (x : Vec d) : Observation d :=
   ⟨x, oracle.value x, oracle.gradient x⟩
 
 /-- The only numerical/problem data supplied to the O3 state machine. -/
@@ -85,7 +85,7 @@ structure RunResult (d : ℕ) where
   queries : List (Observation d)
 
 /-- Execute at most the given number of machine steps while accumulating query responses. -/
-def FirstOrderMethod.runFuel {d : ℕ} (method : FirstOrderMethod d)
+@[expose] def FirstOrderMethod.runFuel {d : ℕ} (method : FirstOrderMethod d)
     (oracle : PairOracle d) : ℕ → method.State → List (Observation d) → Option (RunResult d)
   | 0, _, _ => none
   | fuel + 1, state, history =>
@@ -96,43 +96,43 @@ def FirstOrderMethod.runFuel {d : ℕ} (method : FirstOrderMethod d)
           method.runFuel oracle fuel (next obs) (history ++ [obs])
 
 /-- Run a first-order method from its initial state with an empty query history. -/
-def FirstOrderMethod.run {d : ℕ} (method : FirstOrderMethod d)
+@[expose] def FirstOrderMethod.run {d : ℕ} (method : FirstOrderMethod d)
     (oracle : PairOracle d) (input : MethodInput d) (fuel : ℕ) : Option (RunResult d) :=
   method.runFuel oracle fuel (method.initial input) []
 
 /-- The number of oracle responses in a completed run. -/
-def RunResult.callCount {d : ℕ} (result : RunResult d) : ℕ := result.queries.length
+@[expose] def RunResult.callCount {d : ℕ} (result : RunResult d) : ℕ := result.queries.length
 
 /-- The returned point really was queried; a bare unobserved terminal point is
 not enough for the frozen theorem. -/
-def RunResult.returnedWasQueried {d : ℕ} (result : RunResult d) : Prop :=
+@[expose] def RunResult.returnedWasQueried {d : ℕ} (result : RunResult d) : Prop :=
   result.returned ∈ result.queries.map Observation.point
 
 /-- The coordinate gradient represents the Frechet derivative.  The ambient
 norm used by Mathlib for differentiability is immaterial in finite dimension. -/
-def IsCoordinateGradient {d : ℕ} (f : Vec d → ℝ) (grad : Vec d → Vec d) : Prop :=
+@[expose] def IsCoordinateGradient {d : ℕ} (f : Vec d → ℝ) (grad : Vec d → Vec d) : Prop :=
   ∀ x, DifferentiableAt ℝ f x ∧ ∀ h, fderiv ℝ f x h = pairing (grad x) h
 
 /-- The set of global minimizers of the objective function. -/
-def MinimizerSet {d : ℕ} (f : Vec d → ℝ) : Set (Vec d) :=
+@[expose] def MinimizerSet {d : ℕ} (f : Vec d → ℝ) : Set (Vec d) :=
   {x | ∀ y, f x ≤ f y}
 
 /-- The exact source-level `ℓ_p` distance to the nonempty minimizer set. -/
-noncomputable def minimizerDistance {d : ℕ} (p : ℝ) (f : Vec d → ℝ) (x0 : Vec d) : ℝ :=
+@[expose] noncomputable def minimizerDistance {d : ℕ} (p : ℝ) (f : Vec d → ℝ) (x0 : Vec d) : ℝ :=
   sInf ((fun x => lpNorm p (x - x0)) '' MinimizerSet f)
 
 /-- The gradient is Lipschitz from the primal `ℓ_p` norm to the specified dual norm. -/
-def IsLpSmooth {d : ℕ} (p q L : ℝ) (grad : Vec d → Vec d) : Prop :=
+@[expose] def IsLpSmooth {d : ℕ} (p q L : ℝ) (grad : Vec d → Vec d) : Prop :=
   ∀ x y, lpNorm q (grad x - grad y) ≤ L * lpNorm p (x - y)
 
 /-- Exact nondegenerate secant initialization and its observable scale. -/
-def SecantWitness {d : ℕ} (p q M0 : ℝ) (grad : Vec d → Vec d)
+@[expose] def SecantWitness {d : ℕ} (p q M0 : ℝ) (grad : Vec d → Vec d)
     (x0 z0 : Vec d) : Prop :=
   z0 ≠ x0 ∧ grad z0 ≠ grad x0 ∧
     M0 = lpNorm q (grad z0 - grad x0) / lpNorm p (z0 - x0) ∧ 0 < M0
 
 /-- Exact convexity hypothesis from the frozen source. -/
-def IsConvexObjective {d : ℕ} (f : Vec d → ℝ) : Prop := ConvexOn ℝ Set.univ f
+@[expose] def IsConvexObjective {d : ℕ} (f : Vec d → ℝ) : Prop := ConvexOn ℝ Set.univ f
 
 /-- One complete admissible instance.  The algorithm never receives this
 structure; it is used only by the correctness theorem. -/
@@ -161,23 +161,26 @@ structure AdmissibleInstance (d : ℕ) (p : ℝ) where
   secant : SecantWitness p (conjugateExponent p) M0 grad x0 z0
 
 /-- The exact value-gradient oracle associated with an admissible instance. -/
+@[expose]
 def AdmissibleInstance.oracle {d : ℕ} {p : ℝ} (P : AdmissibleInstance d p) : PairOracle d :=
   ⟨P.f, P.grad⟩
 
 /-- Extract the observable numerical inputs supplied to the method. -/
+@[expose]
 def AdmissibleInstance.methodInput {d : ℕ} {p : ℝ} (P : AdmissibleInstance d p) : MethodInput d :=
   ⟨p, P.eps, P.x0, P.z0, P.M0⟩
 
 /-- The primal-norm distance from the initial point to the minimizer set. -/
+@[expose]
 noncomputable def AdmissibleInstance.radius {d : ℕ} {p : ℝ} (P : AdmissibleInstance d p) : ℝ :=
   minimizerDistance p P.f P.x0
 
 /-- The dimensionless quantity `L R / ε` governing the complexity bounds. -/
-noncomputable def AdmissibleInstance.condition {d : ℕ} {p : ℝ}
+@[expose] noncomputable def AdmissibleInstance.condition {d : ℕ} {p : ℝ}
     (P : AdmissibleInstance d p) : ℝ := P.L * P.radius / P.eps
 
 /-- The condition quantity truncated below at one. -/
-noncomputable def AdmissibleInstance.conditionBar {d : ℕ} {p : ℝ}
+@[expose] noncomputable def AdmissibleInstance.conditionBar {d : ℕ} {p : ℝ}
     (P : AdmissibleInstance d p) : ℝ := max 1 P.condition
 
 /-- The returned point's gradient satisfies the prescribed dual-norm tolerance. -/

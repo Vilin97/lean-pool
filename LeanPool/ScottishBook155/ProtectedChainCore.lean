@@ -15,7 +15,7 @@ The uniform recovery law is stable when one more active or idle successor is
 attached. This is the successor induction step used by the transfinite chain.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -42,6 +42,7 @@ structure ProtectedLink {r : ℝ}
     targetProjection (S.map z) = A.map (sourceProjection z)
 
 /-- The identity link. -/
+@[expose]
 noncomputable def ProtectedLink.refl {r L : ℝ} (S : ProtectedStage.{u} r) :
     ProtectedLink S S L where
   sourceEmbedding := LinearIsometry.id
@@ -71,6 +72,7 @@ noncomputable def ProtectedTransition.toLink
   recovers := fun z hz => T.recovers z hz.le
 
 /-- Append one successor transition to an existing coherent link. -/
+@[expose]
 noncomputable def ProtectedLink.extend
     {r L : ℝ} {A S : ProtectedStage.{u} r}
     (P : ProtectedLink A S L) (T : ProtectedTransition S L) :

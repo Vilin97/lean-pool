@@ -18,13 +18,13 @@ arithmetic; inversion and the comparison `Decidable` instances go through the
 classical `ComputableℝSeq.sign` and are `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence
   relation of having the same converged value. This is similar to how reals are quotients of Cauchy
   sequence (without any guarantees on lower/upper bounds). -/
-def Computableℝ :=
+@[expose] def Computableℝ :=
   @Quotient ComputableℝSeq ComputableℝSeq.equiv
 
 attribute [local implicit_reducible] Computableℝ ComputableℝSeq.nzSeq
@@ -32,11 +32,11 @@ attribute [local implicit_reducible] Computableℝ ComputableℝSeq.nzSeq
 namespace Computableℝ
 
 /-- Definition of `mk`. -/
-def mk : ComputableℝSeq → Computableℝ :=
+@[expose] def mk : ComputableℝSeq → Computableℝ :=
   Quotient.mk ComputableℝSeq.equiv
 
 /-- Definition of `val`. -/
-def val : Computableℝ → ℝ := Quotient.lift ComputableℝSeq.val (fun _ _ h ↦ h)
+@[expose] def val : Computableℝ → ℝ := Quotient.lift ComputableℝSeq.val (fun _ _ h ↦ h)
 
 @[simp]
 theorem val_mk_eq_val : (mk x).val = x.val :=
@@ -61,12 +61,14 @@ theorem eq_iff_eq_val (x y : Computableℝ) : x.val = y.val ↔ x = y :=
 
 /-- Alternate version of mapℝ that doesn't directly refer to f₂, so it stays
   computable even if f₂ isn't. -/
-def mapℝ' (f : ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ, ∀ x, (f x).val = f₂ x.val) :
+@[expose] def mapℝ' (f : ComputableℝSeq → ComputableℝSeq)
+    (h : ∃ f₂ : ℝ → ℝ, ∀ x, (f x).val = f₂ x.val) :
     Computableℝ → Computableℝ :=
   Quotient.map f (fun a b h₂ ↦ h.elim fun _ h ↦ (h₂ ▸ h a).trans (h b).symm)
 
 /-- Given a unary function on sequences that clearly matches function on reals, lift it. -/
-def mapℝ (f : ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ} (h : ∀ x, (f x).val = f₂ x.val) :
+@[expose] def mapℝ (f : ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ}
+    (h : ∀ x, (f x).val = f₂ x.val) :
     Computableℝ → Computableℝ :=
   mapℝ' f ⟨f₂, h⟩
 
@@ -75,12 +77,13 @@ theorem mapℝ'_eq_mapℝ : mapℝ' f h = mapℝ f h₂ := by
 
 /-- Alternate version of map₂ℝ that doesn't directly refer to f₂, so it stays
   computable even if f₂ isn't. -/
-def map₂ℝ' (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ → ℝ, ∀ x y,
+@[expose] def map₂ℝ' (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
+    (h : ∃ f₂ : ℝ → ℝ → ℝ, ∀ x y,
     (f x y).val = f₂ x.val y.val) : Computableℝ → Computableℝ → Computableℝ :=
   Quotient.map₂ f (fun a b h₂ y z h₃ ↦ h.elim fun _ h ↦ (h₂ ▸ h₃ ▸ h a y).trans (h b z).symm)
 
 /-- Given a binary function that clearly mimics a standard real function, lift that. -/
-def map₂ℝ (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ → ℝ}
+@[expose] def map₂ℝ (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ → ℝ}
     (h : ∀ x y, (f x y).val = f₂ x.val y.val) :
     Computableℝ → Computableℝ → Computableℝ :=
   map₂ℝ' f ⟨f₂, h⟩
@@ -164,6 +167,14 @@ theorem neg_mk (x : ComputableℝSeq) : -mk x = mk (-x) :=
 instance instCommRing : CommRing Computableℝ := by
   refine { natCast := fun n => mk n
            intCast := fun z => mk z
+           intCast_negSucc := by
+             intro n
+             rw [← eq_iff_eq_val]
+             simp only [val_mk_eq_val, val_neg, ComputableℝSeq.val_intCast,
+               Int.cast_negSucc]
+             change -(↑(n + 1) : ℝ) =
+               -((mk ((n + 1 : ℕ) : ComputableℝSeq)).val)
+             simp only [val_mk_eq_val, ComputableℝSeq.val_natCast]
            zero := 0
            one := 1
            mul := (· * ·)
@@ -287,7 +298,7 @@ instance instLT : LT Computableℝ :=
   ⟨lt⟩
 
 /-- Definition of `le`. -/
-def le : Prop := by
+@[expose] def le : Prop := by
   apply Quotient.lift (fun z ↦ SignType.zero ≤ z.sign) ?_ (y - x)
   intro a b h
   dsimp

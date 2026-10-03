@@ -16,18 +16,18 @@ belong to the affine span enlarged by the outputs of gates with index below
 but makes the unrestricted nature of nonlinear feedback explicit.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 
 noncomputable section
 
 /-- Outputs of gates whose index is strictly before `j`. -/
-def prefixGates {m r : Nat} (g : Fin r → ANF m) (j : Nat) : Set (ANF m) :=
+@[expose] def prefixGates {m r : Nat} (g : Fin r → ANF m) (j : Nat) : Set (ANF m) :=
   {p | ∃ i : Fin r, i.val < j ∧ g i = p}
 
 /-- The functions available for free immediately before gate `j`. -/
-def wireSpace {m r : Nat} (g : Fin r → ANF m) (j : Nat) : Submodule F₂ (ANF m) :=
+@[expose] def wireSpace {m r : Nat} (g : Fin r → ANF m) (j : Nat) : Submodule F₂ (ANF m) :=
   affine m ⊔ Submodule.span F₂ (prefixGates g j)
 
 theorem affine_le_wireSpace {m r j : Nat} (g : Fin r → ANF m) :
@@ -46,7 +46,7 @@ structure Circuit (m r : Nat) where
   gate_eq : ∀ j, gate j = left j * right j
 
 /-- A circuit all of whose AND inputs are affine in the original inputs. -/
-def Circuit.ofAffineProducts {m r : Nat} (left right : Fin r → ANF m)
+@[expose] def Circuit.ofAffineProducts {m r : Nat} (left right : Fin r → ANF m)
     (left_affine : ∀ i, left i ∈ affine m)
     (right_affine : ∀ i, right i ∈ affine m) : Circuit m r where
   gate i := left i * right i
@@ -60,7 +60,8 @@ def Circuit.ofAffineProducts {m r : Nat} (left right : Fin r → ANF m)
 theorem Circuit.ofAffineProducts_gate {m r : Nat} (left right : Fin r → ANF m)
     (left_affine : ∀ i, left i ∈ affine m)
     (right_affine : ∀ i, right i ∈ affine m) (i : Fin r) :
-    (Circuit.ofAffineProducts left right left_affine right_affine).gate i = left i * right i := rfl
+    (Circuit.ofAffineProducts left right left_affine right_affine).gate i = left i * right i := by
+  rfl
 
 /-- The circuit with no AND gates. -/
 def Circuit.empty (m : Nat) : Circuit m 0 :=
@@ -68,15 +69,15 @@ def Circuit.empty (m : Nat) : Circuit m 0 :=
     (fun i => Fin.elim0 i) (fun i => Fin.elim0 i)
 
 /-- The final free-XOR wire space of a circuit. -/
-def Circuit.finalWire {m r : Nat} (C : Circuit m r) : Submodule F₂ (ANF m) :=
+@[expose] def Circuit.finalWire {m r : Nat} (C : Circuit m r) : Submodule F₂ (ANF m) :=
   wireSpace C.gate r
 
 /-- A circuit computes a vector-valued target when every coordinate is in its final span. -/
-def Circuit.Computes {m r o : Nat} (C : Circuit m r) (target : Fin o → ANF m) : Prop :=
+@[expose] def Circuit.Computes {m r o : Nat} (C : Circuit m r) (target : Fin o → ANF m) : Prop :=
   ∀ i, target i ∈ C.finalWire
 
 /-- There is an unrestricted circuit with `r` AND gates computing `target`. -/
-def HasCircuit {m o : Nat} (target : Fin o → ANF m) (r : Nat) : Prop :=
+@[expose] def HasCircuit {m o : Nat} (target : Fin o → ANF m) (r : Nat) : Prop :=
   Nonempty {C : Circuit m r // C.Computes target}
 
 /-- Unrestricted Boolean multiplicative complexity (zero for an uncomputable target). -/

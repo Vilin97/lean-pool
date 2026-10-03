@@ -21,7 +21,7 @@ the mass of `X ⊙ X` off those edges equals `1`. The feasible set is nonempty
 and compact, so the supremum is attained.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -43,7 +43,7 @@ def offEdgeMatrix (G : SimpleGraph V) [DecidableRel G.Adj] : Matrix V V ℝ :=
 
 omit [Fintype V] [DecidableEq V] in
 lemma onesMatrix_apply (i j : V) : onesMatrix i j = 1 :=
-  rfl
+  by rfl
 
 omit [Fintype V] in
 lemma offEdgeMatrix_apply (i j : V) :
@@ -388,7 +388,7 @@ noncomputable def cliqueGram (s : Finset V) : Matrix V V ℝ :=
 omit [Fintype V] in
 lemma cliqueIndicator_apply (s : Finset V) (i : V) :
     cliqueIndicator s i = if i ∈ s then (1 : ℝ) else 0 :=
-  rfl
+  by rfl
 
 omit [Fintype V] in
 lemma cliqueGram_apply (s : Finset V) (i j : V) :

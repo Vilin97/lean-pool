@@ -14,4 +14,4 @@ public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
 
-@[expose] public section
+public section

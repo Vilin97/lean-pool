@@ -18,7 +18,7 @@ braid is needed at the fold level.  The zag composite inserts a
 copairing's image on the right and contracts the leading pair.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -54,6 +54,7 @@ section Contract3L
 /-- The fold-level three-window contraction of a leading pair: pair
 off the leading window, act on the head of the remainder with the
 resulting scalar from the left. -/
+@[expose]
 noncomputable def contract3LFold
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] (A : D)
@@ -266,6 +267,7 @@ section ZagCore
 insert the copairing on the right, concatenate, and contract the
 leading pair.  The zagzig law of a duality datum states that this
 composite is the identity. -/
+@[expose]
 noncomputable def zagComposite
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

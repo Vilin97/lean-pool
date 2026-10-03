@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.Arith.Local.Val
 `v_p(B'_k) ≥ -1` always, `v_p(B'_k) ≥ 0` unless `k > 0` and `(p - 1) ∣ k`, and the resulting
 bounds on the local moments `locMoment s e = e B'_{e-1} + 2 s B'_e` for `v_p(s) ≥ 1`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

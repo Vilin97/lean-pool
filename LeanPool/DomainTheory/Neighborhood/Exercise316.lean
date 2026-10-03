@@ -52,7 +52,7 @@ inherited from the
 project's `Element.ext`/`prodEquiv` machinery, as elsewhere in §3.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -63,6 +63,7 @@ variable {α : Type*}
 /-! ### Fibers of a set of `(copy index, token)` pairs. -/
 
 /-- The `i`-th *fiber* of a set `W ⊆ ℕ × α`: the tokens appearing in copy `i`. -/
+@[expose]
 def fiber (W : Set (ℕ × α)) (i : ℕ) : Set α := {a | (i, a) ∈ W}
 
 @[simp] theorem mem_fiber {W : Set (ℕ × α)} {i : ℕ} {a : α} : a ∈ fiber W i ↔ (i, a) ∈ W := Iff.rfl
@@ -71,7 +72,7 @@ theorem fiber_mono {W W' : Set (ℕ × α)} (h : W ⊆ W') (i : ℕ) : fiber W i
   fun _ ha => h ha
 
 theorem fiber_inter (W W' : Set (ℕ × α)) (i : ℕ) :
-    fiber (W ∩ W') i = fiber W i ∩ fiber W' i := rfl
+    fiber (W ∩ W') i = fiber W i ∩ fiber W' i := by rfl
 
 theorem eq_of_fiber_eq {W W' : Set (ℕ × α)} (h : ∀ i, fiber W i = fiber W' i) : W = W' := by
   ext ⟨i, a⟩
@@ -119,6 +120,7 @@ theorem single_inter {n : ℕ} (X X' : Set α) :
 ℕ × Δ`:
 `W ∈ 𝒟^∞` iff every fiber is a neighbourhood of `𝒟` and all but finitely many
 fibers equal `Δ`. -/
+@[expose]
 def iterSys (V : NeighborhoodSystem α) : NeighborhoodSystem (ℕ × α) where
   mem W := (∀ i, V.mem (fiber W i)) ∧ ∃ N, ∀ i, N ≤ i → fiber W i = V.master
   master := {p | p.2 ∈ V.master}
@@ -134,9 +136,9 @@ def iterSys (V : NeighborhoodSystem α) : NeighborhoodSystem (ℕ × α) where
     rintro W ⟨hWf, _⟩ ⟨i, a⟩ ha
     exact V.sub_master (hWf i) ha
 
-@[simp] theorem iterSys_master : (iterSys V).master = {p : ℕ × α | p.2 ∈ V.master} := rfl
+@[simp] theorem iterSys_master : (iterSys V).master = {p : ℕ × α | p.2 ∈ V.master} := by rfl
 
-theorem fiber_iterSys_master (i : ℕ) : fiber ((iterSys V).master) i = V.master := rfl
+theorem fiber_iterSys_master (i : ℕ) : fiber ((iterSys V).master) i = V.master := by rfl
 
 @[simp] theorem mem_iterSys {W : Set (ℕ × α)} :
     (iterSys V).mem W ↔ (∀ i, V.mem (fiber W i)) ∧ ∃ N, ∀ i, N ≤ i → fiber W i = V.master := Iff.rfl
@@ -191,7 +193,7 @@ theorem reconstruct_subset {W : Set (ℕ × α)} (_hW : (iterSys V).mem W) {N : 
 
 /-- The `n`-th component `xₙ ∈ |𝒟|` of a `𝒟^∞`-element `z` (Scott's coordinate at
 copy `n`). -/
-def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
+@[expose] def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
   mem X := V.mem X ∧ z.mem (single V n X)
   sub h := h.1
   master_mem := ⟨V.master_mem, by rw [single_master]; exact z.master_mem⟩
@@ -211,6 +213,7 @@ def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
 /-- The `𝒟^∞`-element determined by an infinite sequence `⟨xₙ⟩` of `𝒟`-elements:
 the neighbourhoods
 `W` whose every fiber lies in the corresponding `xᵢ`. -/
+@[expose]
 def ofSeq (seq : ℕ → V.Element) : (iterSys V).Element where
   mem W := (iterSys V).mem W ∧ ∀ i, (seq i).mem (fiber W i)
   sub h := h.1
@@ -279,6 +282,7 @@ theorem le_of_component_le {z z' : (iterSys V).Element}
 one-one,
 order-preserving correspondence with infinite sequences `⟨xₙ⟩` of elements of
 `|𝒟|`. -/
+@[expose]
 def iterSeqEquiv (V : NeighborhoodSystem α) : (iterSys V).Element ≃o (∀ _ : ℕ, V.Element) where
   toFun z := fun n => component z n
   invFun seq := ofSeq seq
@@ -293,7 +297,7 @@ def iterSeqEquiv (V : NeighborhoodSystem α) : (iterSys V).Element ≃o (∀ _ :
       exact ⟨hX.1, h (single V n X) hX.2⟩
 
 /-- The shift order-isomorphism `(ℕ → E) ≃o E × (ℕ → E)`, `f ↦ (f 0, f ∘ succ)`. -/
-def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) where
+@[expose] def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) where
   toFun f := (f 0, fun n => f (n + 1))
   invFun p := fun n => Nat.casesOn n p.1 (fun m => p.2 m)
   left_inv f := by funext n; cases n <;> rfl
@@ -312,6 +316,7 @@ def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) w
 /-- **Exercise 3.16 (Scott 1981, PRG-19).** The isomorphism `|𝒟^∞| ≃o |𝒟 × 𝒟^∞|`,
 obtained from the
 sequence correspondence and the shift. -/
+@[expose]
 def iterProdIso (V : NeighborhoodSystem α) :
     (iterSys V).Element ≃o (prod V (iterSys V)).Element :=
   (iterSeqEquiv V).trans <|

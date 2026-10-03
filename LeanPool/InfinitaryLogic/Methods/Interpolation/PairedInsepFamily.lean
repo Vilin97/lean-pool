@@ -34,7 +34,7 @@ pair `(Γ, Δ)` with `Γ ⊆ SentBnd F₁ R₁`, `Δ ⊆ SentBnd F₂ R₂`, ins
   `M ⊨ r₁ ∧ ¬ M ⊨ r₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -45,7 +45,7 @@ variable {L : Language.{0, 0}}
 /-! ## The side vocabulary predicate `SentBnd` -/
 
 /-- **Side vocabulary bound.** A sentence whose base function/relation symbols lie in `(F, R)`. -/
-def SentBnd (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) :
+@[expose] def SentBnd (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) :
     Set L[[ℕ]].Sentenceω :=
   {σ | σ.baseFunctionsIn ⊆ F ∧ σ.baseRelationsIn ⊆ R}
 

@@ -25,7 +25,7 @@ to a positive linear operator when the codomain is Archimedean. Finally, every p
 operator from a Banach lattice to a normed vector lattice is automatically continuous.
 -/
 
-@[expose] public section
+public section
 
 /-! ## Definition and basic properties -/
 
@@ -265,6 +265,7 @@ variable
 /-- **Extension Lemma**: an additive map on the positive cone of a vector lattice
 extends to a unique positive linear operator when the codomain is Archimedean.
 The extension satisfies `T x = τ x⁺ − τ x⁻`. -/
+@[expose]
 noncomputable def extension : X →ₗ[ℝ] Y :=
   { toFun := fun x => τ x⁺ - τ x⁻
     map_add' := extFun_add hτ_add

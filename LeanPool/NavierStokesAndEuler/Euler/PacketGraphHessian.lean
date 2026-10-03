@@ -19,7 +19,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 inverse flow. The principal Hessian is the angular second derivative
 times the square of the transported normal. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,11 +31,11 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerGraphPullba
 open scoped ContDiff
 
 /-- Spatial gradient, given by `(toDual ℝ Space).symm ((fderiv ℝ q z).comp (inl ℝ Space ℝ))`. -/
-def spatialGradient (q : LiftTangent → ℝ) (z : LiftTangent) : Space :=
+@[expose] def spatialGradient (q : LiftTangent → ℝ) (z : LiftTangent) : Space :=
   (toDual ℝ Space).symm ((fderiv ℝ q z).comp (inl ℝ Space ℝ))
 
 /-- Angular derivative, given by `fderiv ℝ q z (0,1)`. -/
-def angularDerivative (q : LiftTangent → ℝ) (z : LiftTangent) : ℝ :=
+@[expose] def angularDerivative (q : LiftTangent → ℝ) (z : LiftTangent) : ℝ :=
   fderiv ℝ q z (0,1)
 
 theorem spatialGradient_contDiff {q : LiftTangent → ℝ} (hq : ContDiff ℝ ∞ q) :
@@ -100,7 +100,7 @@ theorem gradient_physical {q : LiftTangent → ℝ} (k : ℝ) (m : Space)
   ring
 
 /-- Transported normal, given by `(J x).adjoint m`. -/
-def transportedNormal (m : Space) (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
+@[expose] def transportedNormal (m : Space) (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
   (J x).adjoint m
 
 /-- Slow force, given by `(J x).adjoint (spatialGradient q (graphMap k m (Y x)))`. -/

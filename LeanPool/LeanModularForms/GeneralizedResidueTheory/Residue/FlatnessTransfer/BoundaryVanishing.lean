@@ -27,7 +27,7 @@ angle conditions with flatness rate (L3).
 * `cutoff_zpow_infrastructure`: full infrastructure for cutoff zpow integrals
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

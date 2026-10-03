@@ -19,7 +19,7 @@ rational Hamel dimension of `ℝ`, then transports the fully constructed charact
 than merely asserting that a suitable topology can be transferred.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Module
 

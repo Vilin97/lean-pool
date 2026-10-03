@@ -14,7 +14,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Averaging
 
 /-! # Invariant Transport -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 

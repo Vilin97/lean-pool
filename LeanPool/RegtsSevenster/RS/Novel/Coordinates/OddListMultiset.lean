@@ -18,7 +18,7 @@ order forgotten — the form in which two orientations' lists can be
 compared, since only the order distinguishes them.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

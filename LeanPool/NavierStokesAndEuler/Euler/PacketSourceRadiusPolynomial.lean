@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedRadiusPolynomial
 canonical primary/common enlargement. The boundary coefficient L is an
 explicit primitive input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,6 +47,7 @@ def primitiveLift (W : ℝ) : ℝ :=
 
 /-- Source radius envelope, given by `let V := primitiveLift W 1+V+6*weakEnvelope
 V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)`. -/
+@[expose]
 def sourceRadiusEnvelope (W : ℝ) : ℝ :=
   let V := primitiveLift W
   1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)

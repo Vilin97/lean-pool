@@ -15,7 +15,7 @@ All selections are made in natural multiplicities, so coincident vector
 values are still allowed to occupy distinct positions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

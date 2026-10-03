@@ -22,7 +22,7 @@ under the basic operations on real numbers. The instances that branch on a compa
 (`Real.sign`, `max`, `min`, `abs`) inherit its classical sign test and are `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 namespace IsComputable
 

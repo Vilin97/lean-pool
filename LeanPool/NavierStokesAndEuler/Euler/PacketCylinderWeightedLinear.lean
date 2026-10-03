@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevLinear
 
 /-! Linear operations and spatial derivatives of actual profile-normalized packet fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

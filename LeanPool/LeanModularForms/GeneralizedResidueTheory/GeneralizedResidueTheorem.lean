@@ -40,7 +40,7 @@ All proofs delegate to the machinery in `HomologicalCauchy.lean` and
   Theorem 3.3.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

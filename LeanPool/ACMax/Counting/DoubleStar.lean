@@ -45,7 +45,7 @@ private to it / shared with `h`), `intDeg g` (non-degree-3 neighbours of `g`),
   master arithmetic, used in the rich-sea regime.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 
@@ -55,7 +55,7 @@ variable {V : Type*} [Fintype V]
 
 open Classical in
 /-- The degree-3 set `D`. -/
-noncomputable def deg3Set (G : SimpleGraph V) : Finset V :=
+@[expose] noncomputable def deg3Set (G : SimpleGraph V) : Finset V :=
   Finset.univ.filter (fun v => G.degree v = 3)
 
 open Classical in
@@ -65,41 +65,41 @@ theorem mem_deg3Set {G : SimpleGraph V} {v : V} : v ∈ deg3Set G ↔ G.degree v
 
 open Classical in
 /-- The degree-3 twins of a hub: `D3(g) = N(g) ∩ D`. -/
-noncomputable def hubTwins (G : SimpleGraph V) (g : V) : Finset V :=
+@[expose] noncomputable def hubTwins (G : SimpleGraph V) (g : V) : Finset V :=
   G.neighborFinset g ∩ deg3Set G
 
 open Classical in
 /-- The **private** twins of `g` against `h`: `D3(g) \ D3(h)` — the `P`-side block body
 of the double open star. -/
-noncomputable def privTwins (G : SimpleGraph V) (g h : V) : Finset V :=
+@[expose] noncomputable def privTwins (G : SimpleGraph V) (g h : V) : Finset V :=
   hubTwins G g \ hubTwins G h
 
 open Classical in
 /-- The **shared** twins `s(g,h) = D3(g) ∩ D3(h)`. -/
-noncomputable def sharedTwins (G : SimpleGraph V) (g h : V) : Finset V :=
+@[expose] noncomputable def sharedTwins (G : SimpleGraph V) (g h : V) : Finset V :=
   hubTwins G g ∩ hubTwins G h
 
 open Classical in
 /-- The **internal degree** `i(g) = deg g − |D3(g)|` — the number of non-degree-3
 neighbours (the design's `intdeg`). -/
-noncomputable def intDeg (G : SimpleGraph V) (g : V) : ℕ :=
+@[expose] noncomputable def intDeg (G : SimpleGraph V) (g : V) : ℕ :=
   (G.neighborFinset g \ deg3Set G).card
 
 open Classical in
 /-- The **`M`-cross count**: the number of edges between the two private sides (each such
 edge is a `D`–`D` edge, i.e. an `M`-edge; in the residual world `e(M) ≤ 1` forces
 `mCross ≤ 1`, so this count coincides with the design's `[M-cross]` indicator). -/
-noncomputable def mCross (G : SimpleGraph V) (g h : V) : ℕ :=
+@[expose] noncomputable def mCross (G : SimpleGraph V) (g h : V) : ℕ :=
   ∑ t ∈ privTwins G g h, (G.neighborFinset t ∩ privTwins G h g).card
 
 open Classical in
 /-- The adjacency indicator `[g ~ h]`. -/
-noncomputable def adjInd (G : SimpleGraph V) (g h : V) : ℕ :=
+@[expose] noncomputable def adjInd (G : SimpleGraph V) (g h : V) : ℕ :=
   if G.Adj g h then 1 else 0
 
 open Classical in
 /-- The `D`–`D` incidence sum `∑_{v∈D} |N(v) ∩ D| = 2·e(M)`. -/
-noncomputable def mIncidence (G : SimpleGraph V) : ℕ :=
+@[expose] noncomputable def mIncidence (G : SimpleGraph V) : ℕ :=
   ∑ v ∈ deg3Set G, (G.neighborFinset v ∩ deg3Set G).card
 
 /-! ### Vocabulary lemmas -/
@@ -417,12 +417,12 @@ no-`M`-edge worlds, and the `SeaFatBoundary` resource gate. -/
 open Classical in
 /-- **C0 — the cherry world**: `e(M) ≥ 2` (incidence form).  Routed to the per-`n`
 cherry constructions (SingleVertex / TwoTwin / HubTriangle). -/
-def CaseCherry (G : SimpleGraph V) : Prop := 4 ≤ mIncidence G
+@[expose] def CaseCherry (G : SimpleGraph V) : Prop := 4 ≤ mIncidence G
 
 open Classical in
 /-- **C5 — the `e(M) = 0` world.**  Closing counting: NEEDS-NEW-COUNTING (L5.7; the
 MaxHub-style extremal counting survives only `n ≤ 20`). -/
-def CaseMZero (G : SimpleGraph V) : Prop := mIncidence G = 0
+@[expose] def CaseMZero (G : SimpleGraph V) : Prop := mIncidence G = 0
 
 open Classical in
 /-- The `e(M)` **dispatch gate**: the `D`–`D` incidence sum is even (each `M`-edge is
@@ -438,7 +438,7 @@ theorem eM_trichotomy (G : SimpleGraph V) :
 open Classical in
 /-- **The DS value of a hub pair** — the design's master-arithmetic left-hand side, with
 the gap in `ℕ`-symmetric form `(p_g − p_h) + (p_h − p_g) = |p_g − p_h|`. -/
-noncomputable def dsValue (G : SimpleGraph V) (g h : V) : ℕ :=
+@[expose] noncomputable def dsValue (G : SimpleGraph V) (g h : V) : ℕ :=
   ((privTwins G g h).card - (privTwins G h g).card)
     + ((privTwins G h g).card - (privTwins G g h).card)
     + intDeg G g + intDeg G h + 2 * (sharedTwins G g h).card
@@ -448,7 +448,7 @@ open Classical in
 /-- **C2 — the ¬W1-resource boundary predicate** (design §2a): every hub pair is
 DS-blocked (`value ≥ 5`).  The output of the (open) C2 resource LP: `≤ 1` clean deg-4
 hub, `O(√n)` unburied hubs, `e_H ≥ (3/2)(|Hub| − O(√n))` — NEEDS-C2-COUNTING. -/
-def SeaFatBoundary (G : SimpleGraph V) : Prop :=
+@[expose] def SeaFatBoundary (G : SimpleGraph V) : Prop :=
   ∀ g h : V, 4 ≤ G.degree g → 4 ≤ G.degree h → g ≠ h → 5 ≤ dsValue G g h
 
 open Classical in
@@ -514,7 +514,7 @@ theorem classical_sdiff_eq {α : Type*} [inst : DecidableEq α] (s t : Finset α
 
 open Classical in
 /-- The hub set: vertices of degree `≥ 4`. -/
-noncomputable def hubSet (G : SimpleGraph V) : Finset V :=
+@[expose] noncomputable def hubSet (G : SimpleGraph V) : Finset V :=
   Finset.univ.filter (fun v => 4 ≤ G.degree v)
 
 open Classical in

@@ -26,7 +26,7 @@ Concrete witness checks for `NashEmbedding/Torus/RealizableMetrics.lean` and
 - **TN4** — `convex_combination_approx` invocation on the flat metric.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding NashEmbedding.Sobolev Matrix

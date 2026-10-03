@@ -20,7 +20,7 @@ surface.  Consequently its southeast and northwest quadrant cardinalities
 are exactly the two Riemann--Roch rank terms (paper Lemma `lem:tauChars`).
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -29,6 +29,7 @@ open Utilities
 /-! ## Concrete degree-twist representatives -/
 
 /-- The degree-`d` representative at an integer marked-difference index. -/
+@[expose]
 noncomputable def degreeTwistInt
     (M : TwiceMarked) (D : CFDiv M.graph) (d b : ℤ) : CFDiv M.graph :=
   D + (d - CFDiv.degree D + b) • oneChip M.u - b • oneChip M.v
@@ -67,6 +68,7 @@ theorem degreeTwistInt_add_torsion_linearEquiv
 
 /-- The paper's nonrecurrence condition, formulated on concrete torsion
 residues instead of Picard-group quotient classes. -/
+@[expose]
 def NonRecurrent (M : TwiceMarked) (k : ℕ) : Prop :=
   ∀ (w : M.graph.V) (n m : Fin k), n.val ≠ 0 → m.val ≠ 0 →
     0 ≤ rank M.graph

@@ -13,7 +13,7 @@ public import LeanPool.PDL.Local.Rules
 
 /-! # Model Graphs (Section 7.1) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -28,7 +28,7 @@ namespace Modelgraphs
 /-- Definition 6.3: Given relations for all atomic programs over model graph states
 (i.e. sets of formulas), define relations for all PDL programs inductively as usual,
 but using membership to interpret the test operator. -/
-def Q {W : Finset (Finset Formula)} (R : Nat → W → W → Prop)
+@[expose] def Q {W : Finset (Finset Formula)} (R : Nat → W → W → Prop)
   : Program → W → W → Prop
 | ·c     => R c
 | ?'τ    => fun v w => v = w ∧ τ ∈ v.1
@@ -44,7 +44,7 @@ open Modelgraphs
 the conditions (a) to (b). See also [MB1988] Def 19 on page 31 where (a)-(b) are named (i)-(iv).
 Note: In MB item (b) aka (ii) only has `→`. We use `↔` similar to [BRV2001] Def 4.18 and 4.84.
 Note: In item (c) `a` is atomic, but in item (d) `α` is any program. -/
-def ModelGraph (W : Finset (Finset Formula)) :=
+@[expose] def ModelGraph (W : Finset (Finset Formula)) :=
   let a := ∀ X : W, saturated X.val ∧ locallyConsistent X
   let b M := ∀ X p, (·p : Formula) ∈ X.val ↔ M.val X p
   let c M := ∀ X Y a P, M.Rel a X Y → (⌈·a⌉P) ∈ X.val → P ∈ Y.val
@@ -443,10 +443,12 @@ theorem truthLemma {Worlds} (MG : ModelGraph Worlds) :
 /-! ## Additional Q relations for the completeness proof -/
 
 /-- Q_F - for a list `F` of tests (instead of a set in the notes). -/
+@[expose]
 def Qtests {W : Finset (Finset Formula)} (R : Nat → W → W → Prop) (F : List Formula) : W → W → Prop
 | v, w => v == w ∧ ∀ τ ∈ F, Q R (?' τ) v w
 
 /-- Q_δ for a list `δ` of programs. -/
+@[expose]
 def Qsteps {W : Finset (Finset Formula)} (R : Nat → W → W → Prop) : List Program → W → W → Prop
 | [], v, w => v == w
 | (α :: δ), v, w => Relation.Comp (Q R α) (Qsteps R δ) v w
@@ -467,7 +469,7 @@ theorem Qsteps_append : Qsteps R (δ1 ++ δ2) v w ↔ ∃ u, Qsteps R δ1 v u �
     · aesop
 
 /-- Q_Fδ for a list of tests F and a list or programs δ. -/
-def Qcombo {W : Finset (Finset Formula)} (R : Nat → W → W → Prop)
+@[expose] def Qcombo {W : Finset (Finset Formula)} (R : Nat → W → W → Prop)
     (F : List Formula) (δ : List Program) : W → W → Prop
   := Relation.Comp (Qtests R F) (Qsteps R δ)
 

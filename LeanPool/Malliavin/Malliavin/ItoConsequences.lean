@@ -24,7 +24,7 @@ isometry. Under that hypothesis, predictable processes and centered terminal ran
 are linearly isometrically equivalent.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -80,6 +80,7 @@ theorem elementaryBrownianValue_adaptedOne_zero
 
 /-- Restriction of the constructed natural-filtration Itô integral to deterministic predictable
 processes. -/
+@[expose]
 noncomputable def naturalItoDeterministicIntegral
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -269,6 +270,7 @@ theorem inner_naturalItoIntegral_brownianLp
 /-! ## Martingale representation as surjectivity -/
 
 /-- The martingale-representation property for the constructed natural Itô integral. -/
+@[expose]
 def NaturalMartingaleRepresentation
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -322,6 +324,7 @@ theorem naturalMartingaleRepresentation_iff_surjective
 
 /-- Under martingale representation, predictable processes and centered terminal variables are
 linearly isometrically equivalent. -/
+@[expose]
 noncomputable def centeredNaturalItoEquiv
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓅 : Filtration ℝ≥0 ‹MeasurableSpace W›}

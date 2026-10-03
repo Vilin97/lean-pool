@@ -32,7 +32,7 @@ standard-model extraction `(e, e')`, then feeds the sector traces
 * `squareSectorBound_of_detPos` — the last gap of the quantitative theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

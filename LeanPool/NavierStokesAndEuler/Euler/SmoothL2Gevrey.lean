@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 Sobolev word bounds. The finite Sobolev order contributes only a fixed
 polynomial amplitude and one fixed enlargement of the radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open scoped ContDiff
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Has jet bound, given by `∀ n, ‖A.jetLp n‖ ≤ C*R^n*(n.factorial : ℝ)^2`. -/
-def HasJetBound (A : SmoothL2Field V) (C R : ℝ) : Prop :=
+@[expose] def HasJetBound (A : SmoothL2Field V) (C R : ℝ) : Prop :=
   ∀ n, ‖A.jetLp n‖ ≤ C*R^n*(n.factorial : ℝ)^2
 
 theorem norm_jetLp (A : SmoothL2Field V) (n : ℕ) :

@@ -16,7 +16,7 @@ structure records only compact topological and equivariant data; it does not pos
 or separation theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

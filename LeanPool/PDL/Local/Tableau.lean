@@ -15,7 +15,7 @@ public import LeanPool.PDL.Local.Rules
 
 /-! # Local Tableaux (Section 3) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -79,8 +79,7 @@ open LocalTableau
 /-- The local measure which together with D-M can be used to show that LocalTableau are finite.
 Note that different from the paper here we also add `lmOfFormula (~φ)` in the `~⌈α⌉φ` case.
 This is needed to get `lmOfFormula_lt_dia_of_nonAtom`. -/
-@[simp]
-def lmOfFormula : (f : Formula) → Nat
+@[expose, simp] def lmOfFormula : (f : Formula) → Nat
 | ⊥ => 0
 | ~⊥ => 0
 | ·_ => 0
@@ -417,8 +416,7 @@ lemma measureProp {α : Program} {φ φ₁ φ₂ : Formula} :
       linarith
 
 /-- The end sequents of a local tableau. -/
-@[simp]
-def endNodesOf : {X : _} → LocalTableau X → Finset Sequent
+@[expose, simp] def endNodesOf : {X : _} → LocalTableau X → Finset Sequent
   | .(_), (@byLocalRule X lra _ next) =>
       (lra.C.attach.image (fun ⟨Y, h⟩ => endNodesOf (next Y h))).sup id
   | .(_), (@sim X _) => {X}
@@ -429,7 +427,7 @@ def endNodesOf : {X : _} → LocalTableau X → Finset Sequent
 --   apply localRuleApp.decreases_DM lra Y h
 
 /-- An open local tableau has at least one end node. -/
-def OpenLocalTableau (X : Sequent) : Type := {lt : LocalTableau X // endNodesOf lt ≠ {}}
+@[expose] def OpenLocalTableau (X : Sequent) : Type := {lt : LocalTableau X // endNodesOf lt ≠ {}}
 deriving DecidableEq
 
 /-! ## The Dershowitz-Manna ordering on sequents -/

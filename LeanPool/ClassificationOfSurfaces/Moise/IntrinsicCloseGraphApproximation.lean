@@ -18,7 +18,7 @@ embedding to this model and applying the plane graph approximation theorem gives
 arbitrarily close second replacement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -106,7 +106,7 @@ structure CloseGraphApproximation (ε : ℝ) where
 namespace CloseGraphApproximation
 
 /-- The final graph map on the intrinsic realization. -/
-noncomputable def intrinsicMap {ε : ℝ} (A : K.CloseGraphApproximation
+@[expose] noncomputable def intrinsicMap {ε : ℝ} (A : K.CloseGraphApproximation
     (hcont := hcont) (hinj := hinj) (D := D) (C := C) ε) :
     K.realization → Plane :=
   A.planeMap ∘ K.graphReplacementMap hcont hinj D C

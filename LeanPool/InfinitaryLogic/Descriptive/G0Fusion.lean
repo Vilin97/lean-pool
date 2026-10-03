@@ -40,7 +40,7 @@ extraction `exists_gsGraph_hom` — the classical `G₀`-dichotomy construction 
 Silver's theorem.
 -/
 
-@[expose] public section
+public section
 
 open Set Function MeasureTheory
 

@@ -20,14 +20,14 @@ when doubled.  The theorem below uses the subtraction-free parameterization
 `m = n + 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
 open scoped BigOperators
 
 /-- Convert a fixed-length word over `Fin 3` to a list of natural digits. -/
-def ternaryWordDigits {length : ℕ}
+@[expose] def ternaryWordDigits {length : ℕ}
     (word : List.Vector (Fin 3) length) : List ℕ :=
   word.toList.map Fin.val
 

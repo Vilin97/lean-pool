@@ -25,7 +25,7 @@ the later files of the construction.  Here we prove the elementary finite-field
 facts and the two-point support calculation needed there.
 -/
 
-@[expose] public section
+public section
 
 namespace SaxlCounterexamples.EveryBase
 

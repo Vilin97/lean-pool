@@ -41,7 +41,7 @@ This is the deterministic convergence mechanism into which the per-round coverin
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -151,7 +151,7 @@ uncovered vertices, and the uncovered count after `T` rounds is controlled by th
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -298,7 +298,7 @@ matching.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -522,7 +522,7 @@ currently covered set) which
   still-uncovered vertices and re-establishes the invariant.
 
 This is the per-round (non-iterated) content of the nibble outer loop. -/
-def HasRoundOracle (H : Finset (Finset V)) (c β : ℝ) : Prop :=
+@[expose] def HasRoundOracle (H : Finset (Finset V)) (c β : ℝ) : Prop :=
   ∃ Inv : Finset (Finset V) → Finset V → Prop,
     Inv H ∅ ∧
     ∀ (H' : Finset (Finset V)) (S : Finset V), Inv H' S →
@@ -792,7 +792,7 @@ tight-band nibble proof.  It deliberately contains no historical majority-only
 or round-oracle development: the global degree ceiling is part of every input.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -830,7 +830,7 @@ theorem nibbleTheoremMostCeil_of_adaptiveOracleCeil (h : AdaptiveOracleExistsCei
   exact exists_matching_of_oracle_seq_lt hSubset hUniform hrOne hNonnegative T hProduct hRound
 
 /-- A one-round ceiling oracle which can be iterated into the adaptive oracle. -/
-def RoundOracleExistsCeil : Prop :=
+@[expose] def RoundOracleExistsCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β →
     ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧ ∃ c : ℝ,
       0 < c ∧ c ≤ 1 ∧
@@ -909,7 +909,7 @@ The three mechanisms of the assembly are:
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -1454,7 +1454,7 @@ The two per-round band inequalities reduce to the polynomial cores
 Must be sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

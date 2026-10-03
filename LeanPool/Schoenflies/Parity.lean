@@ -68,7 +68,7 @@ zero over the list". `edgesOf` builds a closed chain from a cyclic vertex list, 
   supply from a cyclic vertex list, and its survival of subdivision.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -80,7 +80,7 @@ variable {u a b c p q z w : Plane} {s t : ℝ} {L : List Piece}
 
 /-- How far across the direction `u` the point `z` lies. Edges on which this is constant are
 the blueprint's horizontal edges. -/
-def hgt (u z : Plane) : ℝ := Plane.det u z
+@[expose] def hgt (u z : Plane) : ℝ := Plane.det u z
 
 /-- How far along the direction `u` the point `z` lies. The ray from `q` is the set of points
 of the same `hgt` and larger `fwd`. -/
@@ -227,7 +227,7 @@ theorem meet_swap (h : hgt u a ≠ hgt u b) (t : ℝ) : meet u b a t = meet u a 
 The height test is half-open at the bottom: an edge whose lower end is exactly at the height
 of `q` counts, one whose upper end is counts not. That convention is what makes the count
 well defined at every `q` off the polygon, with no genericity assumption. -/
-def Crosses (u : Plane) (P : Piece) (q : Plane) : Prop :=
+@[expose] def Crosses (u : Plane) (P : Piece) (q : Plane) : Prop :=
   min (hgt u P.1) (hgt u P.2) ≤ hgt u q ∧ hgt u q < max (hgt u P.1) (hgt u P.2) ∧
     fwd u q < fwd u (meet u P.1 P.2 (hgt u q))
 
@@ -240,15 +240,15 @@ theorem crosses_swap (h : hgt u a ≠ hgt u b) (q : Plane) :
   simp only [Crosses, meet_swap h, min_comm (hgt u b) (hgt u a), max_comm (hgt u b) (hgt u a)]
 
 /-- How many edges of `L` the ray from `q` crosses. -/
-noncomputable def crossings (u : Plane) (L : List Piece) (q : Plane) : ℕ :=
+@[expose] noncomputable def crossings (u : Plane) (L : List Piece) (q : Plane) : ℕ :=
   (L.map (fun P => if Crosses u P q then 1 else 0)).sum
 
 /-- The contribution of one edge to the parity. -/
-noncomputable def mark (u : Plane) (P : Piece) (q : Plane) : ZMod 2 :=
+@[expose] noncomputable def mark (u : Plane) (P : Piece) (q : Plane) : ZMod 2 :=
   if Crosses u P q then 1 else 0
 
 /-- The crossing parity `π_C(q)`. -/
-noncomputable def parity (u : Plane) (L : List Piece) (q : Plane) : ZMod 2 :=
+@[expose] noncomputable def parity (u : Plane) (L : List Piece) (q : Plane) : ZMod 2 :=
   (L.map (fun P => mark u P q)).sum
 
 @[simp] theorem crossings_nil (u q : Plane) : crossings u [] q = 0 := rfl
@@ -472,7 +472,7 @@ theorem add_self_zmod_two (x : ZMod 2) : x + x = 0 := by
 every `ZMod 2`-valued function of the ends sums to zero over the list — which is exactly what
 the parity argument consumes, and which `isClosedChain_edgesOf` supplies for a cyclic vertex
 list. -/
-def IsClosedChain (L : List Piece) : Prop :=
+@[expose] def IsClosedChain (L : List Piece) : Prop :=
   ∀ f : Plane → ZMod 2, (L.map (fun P => f P.1 + f P.2)).sum = 0
 
 theorem isClosedChain_nil : IsClosedChain [] := fun _ => by simp

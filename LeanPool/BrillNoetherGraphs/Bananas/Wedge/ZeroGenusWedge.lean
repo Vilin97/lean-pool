@@ -22,7 +22,7 @@ This is the zero-genus reduction needed at the endpoints of the balancing
 argument in Corollary 6.16(2) of the banana-graph paper.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

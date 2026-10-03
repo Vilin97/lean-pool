@@ -21,7 +21,7 @@ rational polytope whose vertices are exactly a given rational family in
 convex position.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -29,7 +29,7 @@ namespace EGZ
 
 /-- The paper's finite-family notion of convex position, in the operational
 form needed by Definition 3.7. -/
-def IsInConvexPosition {d n : ℕ} (points : Fin n → RealCoord d) : Prop :=
+@[expose] def IsInConvexPosition {d n : ℕ} (points : Fin n → RealCoord d) : Prop :=
   ∀ (i : Fin n) (weight : Fin n → ℝ),
     (∀ j, 0 ≤ weight j) →
     (∑ j, weight j) = 1 →

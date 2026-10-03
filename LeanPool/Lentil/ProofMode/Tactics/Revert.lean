@@ -12,7 +12,7 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.String
 import LeanPool.Lentil.ProofMode.Tactics.Intro
 import LeanPool.Lentil.Rules.Basic
 
-@[expose] public section
+public section
 
 namespace TLA.ProofMode
 

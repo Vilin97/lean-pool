@@ -26,7 +26,7 @@ divergence-form characterization of the slice source `V` and the
 distributional divergence-freedom of the force in space-time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

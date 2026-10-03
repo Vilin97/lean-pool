@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.ParabolicHolderVecOn
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

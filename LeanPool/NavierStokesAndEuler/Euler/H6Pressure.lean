@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.FiniteSum
 
 /-! External derivative blocks with a fixed Sobolev index. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -84,12 +84,12 @@ theorem sobolevSize_eq {q : ℕ} {f : LiftL2 period}
   exact SpatialJet.norm_unique _ J rfl
 
 /-- The external order-n block with a fixed base Sobolev index q. -/
-def blockNorm {s : ℕ} {f : LiftL2 period}
+@[expose] def blockNorm {s : ℕ} {f : LiftL2 period}
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) (q n : ℕ) : ℝ :=
   Finset.sum (Finset.range (q + 1)) (fun r => levelNorm period J (n + r))
 
 /-- Fixed-order coefficient multiplier blocks; the factor 2^q bounds the base Leibniz sums. -/
-def coefficientBlock {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def coefficientBlock {s : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period directions s A) (q n : ℕ) : ℝ :=
   2 ^ q * Finset.sum (Finset.range (q + 1)) (fun r => boundLevel period K (n + r))
 
@@ -98,6 +98,7 @@ variable {period}
 namespace CoefficientJet
 
 /-- Retain the prescribed base order of an actual coefficient derivative tree. -/
+@[expose]
 def restrict {s : ℕ} {A : SmoothCoefficient period} (K : EulerSpatialSobolevInverse.CoefficientJet
     period directions s A)
     (q : ℕ) (hq : q ≤ s) : EulerSpatialSobolevInverse.CoefficientJet period directions q A :=

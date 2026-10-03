@@ -22,7 +22,7 @@ killed by some Schur functor is locally a mixed sum of the unit
 and the odd line.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

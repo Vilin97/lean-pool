@@ -17,7 +17,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 THIS FILE IS NOT USED FOR THE MAIN RESULT
 -/
 
-@[expose] public section
+public section
 
 open Finset Set Filter
 

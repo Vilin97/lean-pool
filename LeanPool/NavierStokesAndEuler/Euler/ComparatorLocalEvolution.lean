@@ -51,7 +51,7 @@ therefore gives a finite constant converting the sum of the scalar coordinate
 energies into a bound for the literal tensor norm.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,7 +108,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -263,7 +263,7 @@ section
 /-! Joint spatial coordinate derivatives and uniform energy bounds for
 families supported in a fixed compact set. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -385,7 +385,7 @@ vorticity stays in one compact set on a finite time interval. Ordinary joint
 smoothness supplies the compact source bounds, and elliptic recovery supplies
 the velocity derivative bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -480,7 +480,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -494,6 +494,7 @@ variable {u₀ : Space → Space} {v : Space → ℝ → Space} {p : Space → �
 
 /-- Actual ordinary smooth-L² velocity slices recovered from a common compact
 vorticity support. The fields are definitionally the Comparator velocity. -/
+@[expose]
 def recoveredVelocity (h : EulerExistenceAndSmoothnessR3 u₀ v p)
     (T : ℝ) (K : Set Space) (hK : IsCompact K)
     (hsupport : ∀ t ∈ Icc (0 : ℝ) T, tsupport (vectorCurl (v · t)) ⊆ K) :
@@ -508,7 +509,7 @@ def recoveredVelocity (h : EulerExistenceAndSmoothnessR3 u₀ v p)
     (T : ℝ) (K : Set Space) (hK : IsCompact K)
     (hsupport : ∀ t ∈ Icc (0 : ℝ) T, tsupport (vectorCurl (v · t)) ⊆ K)
     (t : Icc (0 : ℝ) T) :
-    (recoveredVelocity h T K hK hsupport t).field = (v · (t : ℝ)) := rfl
+    (recoveredVelocity h T K hK hsupport t).field = (v · (t : ℝ)) := by rfl
 
 /-- All genuine spatial L² tensor norms are uniformly bounded on the common
 compact-vorticity interval. No time regularity of these norms is assumed. -/

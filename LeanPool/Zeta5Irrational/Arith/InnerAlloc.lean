@@ -26,14 +26,14 @@ remaining rows into the zero class. Then
 * `Φ(kf) ≥ Φ(k) - (k - klo) L0min/2` for every `k ∈ [klo, ktop]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
 namespace Zeta5Irrational
 
 /-- The number of rows of offset `β` below the level `k`: `⌈(k - β)/2⌉⁺`. -/
-def lrow (k β : ℤ) : ℕ :=
+@[expose] def lrow (k β : ℤ) : ℕ :=
   ((k - β + 1) / 2).toNat
 
 lemma lrow_ge (k β : ℤ) : ((k : ℚ) - β) / 2 ≤ lrow k β := by
@@ -70,7 +70,7 @@ lemma lrow_succ (k β : ℤ) :
   unfold lrow; omega
 
 /-- `ψ(k, β) = ∑_{i < lrow} (k/2 - i - β/2)`. -/
-noncomputable def psiR (k β : ℤ) : ℚ :=
+@[expose] noncomputable def psiR (k β : ℤ) : ℚ :=
   ∑ i ∈ range (lrow k β), (((k : ℚ) - 2 * i - β) / 2)
 
 lemma psiR_succ (k β : ℤ) : psiR (k + 1) β = psiR k β + (lrow (k + 1) β : ℚ) / 2 := by
@@ -95,11 +95,11 @@ lemma psiR_succ (k β : ℤ) : psiR (k + 1) β = psiR k β + (lrow (k + 1) β : 
 variable {m : ℕ}
 
 /-- Rows used at level `k`. -/
-def rowsK (β : Fin (m + 1) → ℤ) (k : ℤ) : ℕ :=
+@[expose] def rowsK (β : Fin (m + 1) → ℤ) (k : ℤ) : ℕ :=
   ∑ c ∈ univ.erase (0 : Fin (m + 1)), lrow k (β c)
 
 /-- `Φ(k) = h k / 2 - ∑ ψ`. -/
-noncomputable def PhiK (β : Fin (m + 1) → ℤ) (h : ℕ) (k : ℤ) : ℚ :=
+@[expose] noncomputable def PhiK (β : Fin (m + 1) → ℤ) (h : ℕ) (k : ℤ) : ℚ :=
   (h : ℚ) * k / 2 - ∑ c ∈ univ.erase (0 : Fin (m + 1)), psiR k (β c)
 
 lemma PhiK_succ (β : Fin (m + 1) → ℤ) (h : ℕ) (k : ℤ) :
@@ -196,7 +196,7 @@ theorem PhiK_le_kf (hlo : rowsK β klo + L0min ≤ h) {k : ℤ} (hk1 : klo ≤ k
 end
 
 /-- The allocation. -/
-noncomputable def allocK (β : Fin (m + 1) → ℤ) (h : ℕ) (kf : ℤ) (c : Fin (m + 1)) : ℕ :=
+@[expose] noncomputable def allocK (β : Fin (m + 1) → ℤ) (h : ℕ) (kf : ℤ) (c : Fin (m + 1)) : ℕ :=
   if c = 0 then h - rowsK β kf else lrow kf (β c)
 
 lemma sum_allocK (β : Fin (m + 1) → ℤ) (h : ℕ) (kf : ℤ) (hkf : rowsK β kf ≤ h) :

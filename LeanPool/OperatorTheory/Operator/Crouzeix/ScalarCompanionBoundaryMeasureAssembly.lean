@@ -45,7 +45,7 @@ frontier-sup normalization.
   normalization, so no separate winding premise remains.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

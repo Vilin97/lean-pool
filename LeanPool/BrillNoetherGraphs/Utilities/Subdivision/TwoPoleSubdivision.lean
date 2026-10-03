@@ -17,7 +17,7 @@ hypotheses. The first connector is oriented from the left factor to the
 right; the second may be stored in either orientation.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.TwoPoleSubdivision
 
@@ -100,6 +100,7 @@ variable (s : Spec n p) (d : Data s.core nA pA nB pB)
 
 /-- The left factor retains its own vertices and its five (in the application)
 internal slots, with the original subdivision lengths. -/
+@[expose]
 def leftSpec : Spec nA pA where
   core := d.leftCore
   length e := s.length (d.slots (.inl (.inl e)))
@@ -109,6 +110,7 @@ def leftSpec : Spec nA pA where
   length_pos e := s.length_pos _
 
 /-- The corresponding right factor. -/
+@[expose]
 def rightSpec : Spec nB pB where
   core := d.rightCore
   length e := s.length (d.slots (.inl (.inr e)))
@@ -126,12 +128,14 @@ def rightSpec : Spec nB pB where
 
 /-- Embed the left factor's subdivision vertices into the full subdivision, preserving core
 vertices and interior slot coordinates. -/
+@[expose]
 def left : (d.leftSpec s).Vertex → s.Vertex
   | .inl a => s.coreVertex (d.vertices (.inl a))
   | .inr ⟨e, k⟩ => s.interiorVertex (d.slots (.inl (.inl e))) k
 
 /-- Embed the right factor's subdivision vertices into the full subdivision, preserving core
 vertices and interior slot coordinates. -/
+@[expose]
 def right : (d.rightSpec s).Vertex → s.Vertex
   | .inl b => s.coreVertex (d.vertices (.inr b))
   | .inr ⟨e, k⟩ => s.interiorVertex (d.slots (.inl (.inr e))) k
@@ -219,6 +223,7 @@ def potential (f : firingScript (d.leftSpec s).graph)
 
 /-- Slot values assembled from the two factor scripts, the supplied first-connector profile, and
 a constant value at the second left pole on the other connector. -/
+@[expose]
 def values (f : firingScript (d.leftSpec s).graph)
     (g : firingScript (d.rightSpec s).graph) (h : ℕ → ℤ) (e : Fin p) (k : ℕ) : ℤ :=
   match d.slots.symm e with

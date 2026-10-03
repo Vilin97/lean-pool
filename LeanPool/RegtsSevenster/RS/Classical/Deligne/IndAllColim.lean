@@ -20,7 +20,7 @@ which the coend presentations of §3 pass through the tensor
 product.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

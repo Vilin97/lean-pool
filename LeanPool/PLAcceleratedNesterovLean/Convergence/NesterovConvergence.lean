@@ -36,7 +36,7 @@ The main specialization sets μ' = μ·(1−θ), η = 1/L, and chooses
   local specialized theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

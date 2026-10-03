@@ -14,7 +14,7 @@ public import Mathlib.Analysis.SpecialFunctions.Sqrt
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

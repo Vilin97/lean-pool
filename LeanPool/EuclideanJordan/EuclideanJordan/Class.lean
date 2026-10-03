@@ -105,7 +105,7 @@ if one is ever declared, that scoped instance and this class's `toMul` will both
 inside `open HermMul` sections and one of them has to give way.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,6 +211,7 @@ and the five lemmas after it are exactly that hypothesis tuple, so a consumer of
 rebuilding them. -/
 
 /-- The Jordan product of a `EuclideanJordanAlgebra` as a bundled bilinear map. -/
+@[expose]
 def jmulₗ (J : Type*) [NormedAddCommGroup J] [InnerProductSpace ℝ J]
     [EuclideanJordanAlgebra J] : J →ₗ[ℝ] J →ₗ[ℝ] J :=
   LinearMap.mk₂ ℝ (· * ·) EuclideanJordanAlgebra.add_mul EuclideanJordanAlgebra.smul_mul

@@ -18,7 +18,7 @@ reduction argument.  In particular, the reduced-word object below is tied to
 the actual inclusions `Monoid.Coprod.inl` and `Monoid.Coprod.inr`.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -197,6 +197,7 @@ theorem binaryToIndexed_factorWordProd (u : List (Sum G H)) :
 /-! Reversing an oriented labelled path reverses the order and inverts every
 label.  This is the algebraic operation used by the graph-fold bookkeeping. -/
 /-- Inverts a letter while retaining its factor tag. -/
+@[expose]
 def factorWordInv : Sum G H → Sum G H
   | Sum.inl g => Sum.inl g⁻¹
   | Sum.inr h => Sum.inr h⁻¹
@@ -286,6 +287,7 @@ theorem word_length_mul_left_le {b : Bool} (a : binaryFamily G H b)
     (Nat.add_le_add_right htail' 1)
 
 /-- The number of letters in the reduced free-product normal form. -/
+@[expose]
 def binaryReducedLength (x : G ∗ H) : ℕ :=
   (binaryReducedWord (G := G) (H := H) x).toList.length
 
@@ -334,6 +336,7 @@ theorem binaryReducedLength_factorWordProd_le (u : List (Sum G H)) :
             (Nat.succ_le_succ ih)
 
 /-- Converts a Boolean-indexed factor element to a disjoint-union label. -/
+@[expose]
 def binarySigmaToSum : Sigma (binaryFamily G H) → Sum G H
   | ⟨false, g⟩ => Sum.inl g
   | ⟨true, h⟩ => Sum.inr h
@@ -347,6 +350,7 @@ theorem binaryLetterToIndexed_sigma (z : Sigma (binaryFamily G H)) :
       cases b <;> rfl
 
 /-- The reduced normal form as a list of factor-tagged letters. -/
+@[expose]
 def binaryReducedLetters (x : G ∗ H) : List (Sum G H) :=
   (binaryReducedWord (G := G) (H := H) x).toList.map binarySigmaToSum
 
@@ -408,6 +412,7 @@ theorem factorWordLength_eq_binaryReducedLength (x : G ∗ H) :
 
 /-- The factor index of a binary letter, expressed in the index type used by
 the indexed free-product normal form. -/
+@[expose]
 def binarySumIndex : Sum G H → Bool
   | Sum.inl _ => false
   | Sum.inr _ => true
@@ -685,6 +690,7 @@ theorem word_length_factor_mul_eq_tail_add_one_of_mul_ne_one {b : Bool}
   simp [Monoid.CoprodI.Word.cons]
 
 /-- Converts a disjoint-union label to a Boolean-indexed factor element. -/
+@[expose]
 def sumToSigma : Sum G H → Sigma (binaryFamily G H)
   | Sum.inl g => ⟨false, g⟩
   | Sum.inr h => ⟨true, h⟩

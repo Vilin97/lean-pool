@@ -24,7 +24,7 @@ If the Riemann--Roch term does not already give rank one, the right endpoint
 test forces the bounded right coefficient to be positive as well.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

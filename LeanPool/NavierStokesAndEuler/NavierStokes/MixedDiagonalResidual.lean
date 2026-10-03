@@ -32,7 +32,7 @@ logarithmic factors are combined before applying the proved cutoff estimates.
 The initial stage is retained explicitly in every resulting full sum.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -56,7 +56,7 @@ noncomputable def pressure : Component := 2
 end Component
 
 /-- Component space, with branches according to `c = 2`. -/
-@[reducible] noncomputable def ComponentSpace (c : Component) : Type :=
+@[expose, reducible] noncomputable def ComponentSpace (c : Component) : Type :=
   if c = 2 then ℝ else Space
 
 noncomputable instance (c : Component) : NormedAddCommGroup (ComponentSpace c) :=
@@ -398,7 +398,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -409,22 +409,26 @@ open scoped Topology ContDiff BigOperators
 
 /-- Velocity, defined pointwise by `SolenoidalDiagonal.velocitySum a q A z +
 SolenoidalDiagonal.potentialSum a q B z`. -/
+@[expose]
 def velocity (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A B : ℕ → VelocityField) :
     VelocityField :=
   fun z => SolenoidalDiagonal.velocitySum a q A z +
     SolenoidalDiagonal.potentialSum a q B z
 
 /-- Stage zero remains in every nonempty uncut prefix. -/
+@[expose]
 def uncutVelocity (A B : ℕ → VelocityField) (J : ℕ) : VelocityField :=
   fun z => SpatialCurl.spatialCurl (DiagonalJetBounds.uncutPrefix A (J + 1)) z +
     DiagonalJetBounds.uncutPrefix B (J + 1) z
 
 /-- Pressure, given by `SolenoidalDiagonal.potentialSum a q P`. -/
+@[expose]
 def pressure (a : ℕ → ℝ) (q : SpaceTime → ℝ) (P : ℕ → PressureField) :
     PressureField := SolenoidalDiagonal.potentialSum a q P
 
 /-- Residual, defined pointwise by `navierStokesResidual (velocity a q A B) (pressure a q P) z.1
 z.2`. -/
+@[expose]
 def residual (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (A B : ℕ → VelocityField) (P : ℕ → PressureField) : VelocityField :=
   fun z => navierStokesResidual (velocity a q A B) (pressure a q P) z.1 z.2

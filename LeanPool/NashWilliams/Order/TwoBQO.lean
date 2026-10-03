@@ -52,7 +52,7 @@ embedding relation (`TwoBQO.embedForAll_wqo`).
 * `TwoBQO.embedForAll_wqo`: `EmbedForAll r` is WQO on `ℕ → Q` whenever `r` is 2-BQO on `Q`.
 -/
 
-@[expose] public section
+public section
 
 open Set Preorder
 

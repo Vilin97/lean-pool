@@ -18,7 +18,7 @@ polynomial shear and frequency.  Comparison with the normal-form costs is
 proved here, rather than imposed at the two exceptional starting stages.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,18 +33,18 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
 open scoped Topology
 
 /-- Epsilon, given by `sqrt (a/previousShear J X n)`. -/
-def epsilon (J : ℕ) (X a : ℝ) (n : ℕ) : ℝ := sqrt (a/previousShear J X n)
+@[expose] def epsilon (J : ℕ) (X a : ℝ) (n : ℕ) : ℝ := sqrt (a/previousShear J X n)
 
 /-- Prior error, given by `previousFrequency J D X n ^ (-(1/4 : ℝ))`. -/
-def priorError (J D : ℕ) (X : ℝ) (n : ℕ) : ℝ := previousFrequency J D X n ^ (-(1/4 : ℝ))
+@[expose] def priorError (J D : ℕ) (X : ℝ) (n : ℕ) : ℝ := previousFrequency J D X n ^ (-(1/4 : ℝ))
 
 /-- Neighbor error, given by `supportScale J X n * previousFrequency J D X n^c * previousShear J
 X n^c`. -/
-def neighborError (J D : ℕ) (X c : ℝ) (n : ℕ) : ℝ :=
+@[expose] def neighborError (J D : ℕ) (X c : ℝ) (n : ℕ) : ℝ :=
   supportScale J X n * previousFrequency J D X n^c * previousShear J X n^c
 
 /-- Geometry error as an element of `ℝ`. -/
-def geometryError (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def geometryError (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
   16*(epsilon J X (a n) n*sourceTheta J C (scaleSequence J X) n*(4*(1+olderShear J X n))^2 +
     priorError J D X n+neighborError J D X c n)
 
@@ -56,7 +56,7 @@ def baseErrorCost (J D : ℕ) (C X : ℝ) : ℝ :=
 
 /-- Geometry error cost, given by `geometryError J D C c X a n * sourceTheta J C (scaleSequence
 J X) n^60`. -/
-def geometryErrorCost (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
+@[expose] def geometryErrorCost (J D : ℕ) (C c X : ℝ) (a : ℕ → ℝ) (n : ℕ) : ℝ :=
   geometryError J D C c X a n * sourceTheta J C (scaleSequence J X) n^60
 
 theorem epsilon_succ_le (J : ℕ) (hJ : 1 ≤ J) (X a : ℝ)

@@ -22,7 +22,7 @@ section
 jets, so a parent satisfying (21) supplies every outer L² input needed
 by the volume-preserving composition estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -84,7 +84,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,16 +133,18 @@ namespace Data
 variable (G : Data)
 
 /-- Inner, given by `x+G.displacement.field x`. -/
-def inner (x : Space) : Space := x+G.displacement.field x
+@[expose] def inner (x : Space) : Space := x+G.displacement.field x
 /-- Composition radius, given by `(1+G.rad)*((1+G.amp)*s+2)`. -/
-def compositionRadius (s : ℝ) : ℝ := (1+G.rad)*((1+G.amp)*s+2)
+@[expose] def compositionRadius (s : ℝ) : ℝ := (1+G.rad)*((1+G.amp)*s+2)
 /-- Radius, given by `G.compositionRadius (16*G.K)+G.rad`. -/
+@[expose]
 def radius : ℝ := G.compositionRadius (16*G.K)+G.rad
 /-- First amplitude, given by `(embeddingCost*G.K)*G.K`. -/
-def firstAmplitude : ℝ := (embeddingCost*G.K)*G.K
+@[expose] def firstAmplitude : ℝ := (embeddingCost*G.K)*G.K
 /-- Second amplitude, given by `G.firstAmplitude*(4*G.K)`. -/
-def secondAmplitude : ℝ := G.firstAmplitude*(4*G.K)
+@[expose] def secondAmplitude : ℝ := G.firstAmplitude*(4*G.K)
 /-- Amplitude, given by `G.K+G.amp+9*G.firstAmplitude*G.amp+9*G.secondAmplitude*G.amp^2`. -/
+@[expose]
 def amplitude : ℝ := G.K+G.amp+9*G.firstAmplitude*G.amp+9*G.secondAmplitude*G.amp^2
 
 theorem K_nonneg : 0 ≤ G.K := le_trans zero_le_one G.K_one
@@ -312,13 +314,16 @@ theorem accelerationTerm_bound :
 
 /-- Child displacement, given by `addField (G.parentComposed G.parentDisplacement
 G.parentDisplacement_bound) G.displacement`. -/
+@[expose]
 def childDisplacement : SmoothL2Field Space :=
   addField (G.parentComposed G.parentDisplacement G.parentDisplacement_bound) G.displacement
 /-- Child velocity, constructed using `addField`. -/
+@[expose]
 def childVelocity : SmoothL2Field Space :=
   addField (addField (G.parentComposed G.parentVelocity G.parentVelocity_bound) G.velocity)
     (G.firstTerm G.parentDisplacement G.parentDisplacement_bound)
 /-- Child acceleration, constructed using `addField`. -/
+@[expose]
 def childAcceleration : SmoothL2Field Space :=
   addField (addField (addField (addField (addField
     (G.parentComposed G.parentAcceleration G.parentAcceleration_bound)
@@ -358,12 +363,14 @@ theorem childAcceleration_bound : G.childAcceleration.HasJetBound G.amplitude G.
   exact h
 
 theorem childDisplacement_apply (x : Space) :
-    G.childDisplacement.field x = G.parentDisplacement.field (G.inner x)+G.displacement.field x :=
-        rfl
+    G.childDisplacement.field x =
+      G.parentDisplacement.field (G.inner x)+G.displacement.field x := by
+  rfl
 
 theorem childVelocity_apply (x : Space) :
     G.childVelocity.field x = G.parentVelocity.field (G.inner x)+G.velocity.field x +
-      fderiv ℝ G.parentDisplacement.field (G.inner x) (G.velocity.field x) := rfl
+      fderiv ℝ G.parentDisplacement.field (G.inner x) (G.velocity.field x) := by
+  rfl
 
 theorem childAcceleration_apply (x : Space) :
     G.childAcceleration.field x = G.parentAcceleration.field (G.inner x) +
@@ -372,7 +379,8 @@ theorem childAcceleration_apply (x : Space) :
       fderiv ℝ (fderiv ℝ G.parentDisplacement.field) (G.inner x) (G.velocity.field x)
           (G.velocity.field x) +
       G.acceleration.field x+fderiv ℝ G.parentDisplacement.field (G.inner x) (G.acceleration.field
-          x) := rfl
+          x) := by
+  rfl
 
 theorem child_label_bounds (K : ℝ)
     (ha : EulerParameterWordGevrey.sobolevCoefficientAmplitude (Fin 3) 6 G.radius G.amplitude ≤ K)

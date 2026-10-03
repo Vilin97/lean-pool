@@ -19,7 +19,7 @@ bridging the combinatorial Pieri chain to the representation-theoretic
 branching sandwich.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

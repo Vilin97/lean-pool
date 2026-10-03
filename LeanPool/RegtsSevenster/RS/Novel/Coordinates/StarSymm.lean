@@ -17,7 +17,7 @@ the S_d-invariance that makes the vertex coordinates well
 defined on multiset data.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

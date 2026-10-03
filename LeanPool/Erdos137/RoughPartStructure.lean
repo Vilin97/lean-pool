@@ -23,7 +23,7 @@ anatomy behind Tao's "very bad interval" language. No abc, no radical lower boun
 number theory.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

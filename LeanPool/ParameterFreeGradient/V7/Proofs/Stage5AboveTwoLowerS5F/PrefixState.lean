@@ -14,7 +14,7 @@ The recursive state construction of the resisting coordinates, signs, and partia
 oracles.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 
@@ -50,20 +50,23 @@ structure ResistingPrefixState (d : ℕ) where
   obsPrefix : List (Observation d)
 
 /-- The empty state before any resisting coordinate or observation is chosen. -/
+@[expose]
 def initialState (d : ℕ) : ResistingPrefixState d := ⟨[], [], []⟩
 
 /-- A previously selected coordinate, with zero as the out-of-range default. -/
+@[expose]
 def priorSigma (P : PrefixParameters p d T) (state : ResistingPrefixState d)
     (s : ℕ) : Fin d :=
   state.sigmaPrefix.getD s (firstCoordinate P)
 
 /-- The next algorithm query, with the first query fixed at the origin. -/
+@[expose]
 noncomputable def stepQuery (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) : Point d :=
   if t = 0 then 0 else P.algorithm.nextQuery 0 state.obsPrefix
 
 /-- An unused coordinate maximizing the current query magnitude, chosen before the horizon. -/
-noncomputable def stepSigma (P : PrefixParameters p d T) (t : ℕ)
+@[expose] noncomputable def stepSigma (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) : Fin d :=
   if ht : t < T then
     Classical.choose
@@ -72,11 +75,12 @@ noncomputable def stepSigma (P : PrefixParameters p d T) (t : ℕ)
   else firstCoordinate P
 
 /-- The sign aligned with the current query at the newly selected coordinate. -/
-noncomputable def stepXi (P : PrefixParameters p d T) (t : ℕ)
+@[expose] noncomputable def stepXi (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) : ℝ :=
   resistingSign ((stepQuery P t state) (stepSigma P t state))
 
 /-- An indexed signed-coordinate affine piece after appending the current resisting choice. -/
+@[expose]
 noncomputable def piece (P : PrefixParameters p d T) (state : ResistingPrefixState d)
     (t i : ℕ) (x : Point d) : ℝ :=
   let sigmas := state.sigmaPrefix ++ [stepSigma P t state]
@@ -84,6 +88,7 @@ noncomputable def piece (P : PrefixParameters p d T) (state : ResistingPrefixSta
   xis.getD i 0 * x (sigmas.getD i (firstCoordinate P)) - (i : ℝ) * P.delta
 
 /-- The maximum of the affine pieces selected through the current step. -/
+@[expose]
 noncomputable def stepG (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) (x : Point d) : ℝ :=
   let values := (Finset.range (t + 1)).image (fun i => piece P state t i x)
@@ -92,17 +97,20 @@ noncomputable def stepG (P : PrefixParameters p d T) (t : ℕ)
     exact ⟨0, Finset.mem_range.mpr (Nat.zero_lt_succ t), rfl⟩)
 
 /-- The resisting maximum combined with a radial term to ensure coercivity. -/
+@[expose]
 noncomputable def stepH (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) (x : Point d) : ℝ :=
   max (stepG P t state x / 2) (lpNorm p x - 3 / 2)
 
 /-- The scaled smooth oracle associated with the current regularized resisting objective. -/
+@[expose]
 noncomputable def stepOracle (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) : PairOracle d :=
   { value := fun x => P.beta * (P.kernel.smooth P.chi (stepH P t state)).value x
     gradient := fun x => P.beta • (P.kernel.smooth P.chi (stepH P t state)).gradient x }
 
 /-- The prefix state after appending the selected coordinate, sign, and oracle observation. -/
+@[expose]
 noncomputable def advance (P : PrefixParameters p d T) (t : ℕ)
     (state : ResistingPrefixState d) : ResistingPrefixState d :=
   { sigmaPrefix := state.sigmaPrefix ++ [stepSigma P t state]
@@ -111,32 +119,36 @@ noncomputable def advance (P : PrefixParameters p d T) (t : ℕ)
       [(stepOracle P t state).observe (stepQuery P t state)] }
 
 /-- The recursively generated resisting prefix state. -/
+@[expose]
 noncomputable def prefixState (P : PrefixParameters p d T) :
     ℕ → ResistingPrefixState d
   | 0 => initialState d
   | t + 1 => advance P t (prefixState P t)
 
 /-- The query made at step `t` of the recursively generated resisting construction. -/
-noncomputable def query (P : PrefixParameters p d T) (t : ℕ) : Point d :=
+@[expose] noncomputable def query (P : PrefixParameters p d T) (t : ℕ) : Point d :=
   stepQuery P t (prefixState P t)
 
 /-- The coordinate selected at step `t` of the resisting construction. -/
-noncomputable def sigma (P : PrefixParameters p d T) (t : ℕ) : Fin d :=
+@[expose] noncomputable def sigma (P : PrefixParameters p d T) (t : ℕ) : Fin d :=
   stepSigma P t (prefixState P t)
 
 /-- The sign selected at step `t` of the resisting construction. -/
-noncomputable def xi (P : PrefixParameters p d T) (t : ℕ) : ℝ :=
+@[expose] noncomputable def xi (P : PrefixParameters p d T) (t : ℕ) : ℝ :=
   stepXi P t (prefixState P t)
 
 /-- The resisting affine maximum at prefix length `t + 1`. -/
+@[expose]
 noncomputable def partialG (P : PrefixParameters p d T) (t : ℕ) : Point d → ℝ :=
   stepG P t (prefixState P t)
 
 /-- The regularized nonsmooth objective at prefix length `t + 1`. -/
+@[expose]
 noncomputable def partialH (P : PrefixParameters p d T) (t : ℕ) : Point d → ℝ :=
   stepH P t (prefixState P t)
 
 /-- The scaled smoothed oracle at prefix length `t + 1`. -/
+@[expose]
 noncomputable def partialOracle (P : PrefixParameters p d T) (t : ℕ) : PairOracle d :=
   stepOracle P t (prefixState P t)
 

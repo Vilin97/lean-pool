@@ -43,7 +43,7 @@ field; everything else is the pointwise rank-one identity `|U| = |u| |v|`,
 Hölder's inequality, and the volume of `B_ρ`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology
@@ -57,6 +57,7 @@ noncomputable section
 /-- The `j`-th component of `u(·,t)` with its spatial average over
 `B_ρ = vec3Ball x₀ ρ` subtracted, the mean-free component appearing in
 equation `eq:Uij` of `paper/ckn.tex`. -/
+@[expose]
 def meanFreeComponent (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t : ℝ)
     (j : Fin 3) (y : Vec3) : ℝ :=
   u (y, t) j - MeasureTheory.average
@@ -64,18 +65,20 @@ def meanFreeComponent (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t 
 
 /-- The mean-free velocity `v = u(·,t) - ⨍_{B_ρ} u(·,t)` of equation
 `eq:Uij` in `paper/ckn.tex`. -/
-def meanFreeVec (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t : ℝ)
+@[expose] def meanFreeVec (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) (t : ℝ)
     (y : Vec3) : Vec3 :=
   fun j => meanFreeComponent u x₀ ρ t j y
 
 /-- The rank-one tensor `U_ij = -u_i (u_j - ⨍_{B_ρ} u_j)` of equation
 `eq:Uij` in `paper/ckn.tex`. -/
+@[expose]
 def utensor (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ t : ℝ) (i j : Fin 3)
     (y : Vec3) : ℝ :=
   - u (y, t) i * meanFreeComponent u x₀ ρ t j y
 
 /-- The pointwise norm `|U| = (∑_{i,j} U_ij²)^{1/2}` of the tensor of
 equation `eq:Uij` in `paper/ckn.tex`. -/
+@[expose]
 def utensorNorm (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ t : ℝ) (y : Vec3) : ℝ :=
   Real.sqrt (∑ i : Fin 3, ∑ j : Fin 3, (utensor u x₀ ρ t i j y) ^ (2 : ℕ))
 

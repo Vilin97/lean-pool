@@ -16,7 +16,7 @@ module objects over a fixed commutative monoid object: the
 realization of a module map is postcomposition.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,6 +27,7 @@ universe v u
 variable {D : Type u}
 
 /-- **Realization, as a functor on module objects.** -/
+@[expose]
 noncomputable def gammaModuleFunctor
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]

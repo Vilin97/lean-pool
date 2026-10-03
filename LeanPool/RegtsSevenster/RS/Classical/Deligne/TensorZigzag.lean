@@ -21,7 +21,7 @@ of carriers is the tensor of the component contractions; nesting
 the two component triangles closes the tensor triangle.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

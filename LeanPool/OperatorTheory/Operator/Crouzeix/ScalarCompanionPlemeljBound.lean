@@ -40,7 +40,7 @@ divided-difference term that a sharp boundary argument must control.
   quantitative bound for the explicit Plemelj boundary value.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped Interval Real

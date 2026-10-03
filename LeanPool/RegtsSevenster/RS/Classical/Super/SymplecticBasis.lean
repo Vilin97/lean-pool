@@ -31,7 +31,7 @@ through `Basis.prod`, `Submodule.prodEquivOfIsCompl` and the
 reindexing `symplecticReindexEquiv` on `Fin (2 * ℓ)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

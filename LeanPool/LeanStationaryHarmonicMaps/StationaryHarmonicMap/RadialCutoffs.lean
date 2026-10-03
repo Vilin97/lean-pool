@@ -16,7 +16,7 @@ This module packages the scalar radial cutoffs used to test weak stationarity.
 It is deliberately independent of the later radial integral identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,7 +211,7 @@ theorem exists_deriv_bound_on_Icc_of_contDiff {phi : ℝ → ℝ}
 /-- A scalar cutoff is constant in a symmetric neighborhood of the origin.  This
 is the exact local regularity needed to make `x ↦ phi ‖x‖ • x` differentiable at
 the origin without proving the full general radial-extension theorem. -/
-def ConstNearOrigin (phi : ℝ → ℝ) : Prop :=
+@[expose] def ConstNearOrigin (phi : ℝ → ℝ) : Prop :=
   ∃ ε : ℝ, 0 < ε ∧ ∀ t : ℝ, |t| < ε → phi t = phi 0
 
 /-- A scalar `C¹` cutoff supported before `R0` and flat near the origin gives

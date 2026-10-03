@@ -35,7 +35,7 @@ every finite differentiability order.
 assert that it has a proof or supply a witness.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -68,7 +68,7 @@ def positiveTimeDomain : Set SpaceTime := Ioi 0 ×ˢ univ
 
 /-- The exact incompressible Navier--Stokes residual at viscosity `ν`.
 The viscosity multiplies only the spatial Laplacian. -/
-def navierStokesResidual (ν : ℝ) (u : VelocityField) (p : PressureField)
+@[expose] def navierStokesResidual (ν : ℝ) (u : VelocityField) (p : PressureField)
     (t : ℝ) (x : Space) : Space :=
   NavierStokes.ProblemStatement.temporalDerivative u t x +
     NavierStokes.ProblemStatement.advection u t x -
@@ -82,17 +82,17 @@ def CompactPositiveTimeSupport (f : VelocityField) : Prop :=
 
 /-- Square integrability with respect to ordinary Lebesgue volume on R³.
 This condition is explicit because the real Bochner integral is totalized. -/
-def SquareIntegrableAtTime (u : VelocityField) (t : ℝ) : Prop :=
+@[expose] def SquareIntegrableAtTime (u : VelocityField) (t : ℝ) : Prop :=
   Integrable (fun x : Space => ‖u (t, x)‖ ^ 2) (volume : Measure Space)
 
 /-- Kinetic energy at a time. It is used below only together with the explicit
 integrability condition `SquareIntegrableAtTime`. -/
-def kineticEnergy (u : VelocityField) (t : ℝ) : ℝ :=
+@[expose] def kineticEnergy (u : VelocityField) (t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * ∫ x : Space, ‖u (t, x)‖ ^ 2 ∂(volume : Measure Space)
 
 /-- One finite bound for the kinetic energy at every time in `times`, with
 square integrability required at every such time. -/
-def UniformFiniteEnergy (times : Set ℝ) (u : VelocityField) : Prop :=
+@[expose] def UniformFiniteEnergy (times : Set ℝ) (u : VelocityField) : Prop :=
   ∃ E : ℝ, 0 ≤ E ∧ ∀ t ∈ times,
     SquareIntegrableAtTime u t ∧ kineticEnergy u t ≤ E
 

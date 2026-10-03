@@ -19,7 +19,7 @@ section
 /-! The ordinary three-dimensional coefficient interface is a literal
 restriction of the generic smooth time-field interface. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,14 +31,15 @@ variable {K V : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- To smooth coefficient path, given by `⟨A.field,A.smooth,A.jet,A.jet_eq⟩`. -/
+@[expose]
 def toSmoothCoefficientPath (A : SmoothTimeField K Space V) : SmoothCoefficientPath K V :=
   ⟨A.field,A.smooth,A.jet,A.jet_eq⟩
 
 @[simp] theorem toSmoothCoefficientPath_field (A : SmoothTimeField K Space V) :
-    A.toSmoothCoefficientPath.field = A.field := rfl
+    A.toSmoothCoefficientPath.field = A.field := by rfl
 
 @[simp] theorem toSmoothCoefficientPath_jet (A : SmoothTimeField K Space V) (n : ℕ) :
-    A.toSmoothCoefficientPath.jet n = A.jet n := rfl
+    A.toSmoothCoefficientPath.jet n = A.jet n := by rfl
 
 end SmoothTimeField
 
@@ -47,7 +48,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,6 +102,7 @@ theorem first_within (t : ℝ) (ht : t ∈ Icc (0 : ℝ) G.T) (x : Space) :
     using G.first_time ⟨t,ht⟩ x
 
 /-- Mean data, bundling `T`, `T_pos`, `ℓ`, `ℓ_pos` and the required compatibility proofs. -/
+@[expose]
 def meanData (H : LowBounds G) : EulerMeanPacketProvider.Data where
   T := G.T
   T_pos := G.T_pos
@@ -144,6 +146,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Transverse data, bundling `T`, `T_pos`, `support`, `support_compact` and the required
 compatibility proofs. -/
+@[expose]
 def transverseData : EulerTransversePacketProvider.Data U where
   T := G.T
   T_pos := G.T_pos
@@ -181,6 +184,7 @@ theorem history_small (H : LowBounds G) : H.K*(G.T^2/2) ≤ 1/2 := by
 
 /-- History data, bundling `H`, `jacobi`, `have`, `potential` and the required compatibility
 proofs. -/
+@[expose]
 def historyData (H : LowBounds G) : EulerTransversePacketProvider.HistoryData (G.transverseData m
     hm R S hS) where
   H := G.curvature.toSmoothCoefficientPath

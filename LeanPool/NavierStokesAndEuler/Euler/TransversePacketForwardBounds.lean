@@ -40,7 +40,7 @@ section
 
 /-! The bounded time-right-side estimate applies to the actual PDE time derivative divided by g. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -61,7 +61,7 @@ variable (P : ℝ) [Fact (0 < P)]
 
 theorem velocityDerivative_eq_physicalRhs :
     velocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ =
-      physicalRhs P S hS Q Q₁ c hc hQ f (coordinates P S hS T hT Q Q₁ c hc hQ f a₀) := rfl
+      physicalRhs P S hS Q Q₁ c hc hQ f (coordinates P S hS T hT Q Q₁ c hc hQ f a₀) := by rfl
 
 variable (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
@@ -89,7 +89,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -197,7 +197,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

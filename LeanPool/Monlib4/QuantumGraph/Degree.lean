@@ -19,7 +19,7 @@ import LeanPool.Monlib4.Preq.RCLikeLe
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Degree`.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace ComplexOrder
 
@@ -137,7 +137,7 @@ theorem QuantumGraph.Real.innerOne_map_one_eq_norm_pow_four_iff
     simp_rw [← QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv, map_one]]
 
 /-- Out-degree operator of a quantum graph. -/
-@[simps]
+@[expose, simps]
 noncomputable def QuantumGraph.outDegree {A : Type*} [starAlgebra A] [QuantumSet A] :
     (A →ₗ[ℂ] A) →ₗ[ℂ] (A →ₗ[ℂ] A) where
   toFun f := LinearMap.mul' ℂ _ ∘ₗ (LinearMap.rTensor _ f)
@@ -156,7 +156,7 @@ theorem QuantumGraph.outDegree_eq {A : Type*} [starAlgebra A] [QuantumSet A] {f 
     lmul_apply, LinearMap.mul'_apply]
 
 /-- In-degree operator of a quantum graph. -/
-@[simps]
+@[expose, simps]
 noncomputable def QuantumGraph.inDegree {A : Type*} [starAlgebra A] [QuantumSet A] :
     (A →ₗ[ℂ] A) →ₗ⋆[ℂ] (A →ₗ[ℂ] A) where
   toFun f := LinearMap.mul' ℂ _ ∘ₗ (LinearMap.lTensor _ (LinearMap.adjoint f))

@@ -18,7 +18,7 @@ one-dimensional character equivalence recovers its finite-field linear
 functional.  This gives the exact normalization needed for geometric sums.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.Expansion
 
@@ -26,6 +26,7 @@ variable {p d : ℕ} [NeZero p]
 
 /-- The scalar additive character obtained by restricting a vector-space character to
 multiples of `a`. -/
+@[expose]
 noncomputable def scalarCharacter (χ : AddChar (FpCoord p d) ℂ) (a : FpCoord p d) :
     AddChar (ZMod p) ℂ :=
   χ.compAddMonoidHom (LinearMap.toSpanSingleton (ZMod p) (FpCoord p d) a).toAddMonoidHom

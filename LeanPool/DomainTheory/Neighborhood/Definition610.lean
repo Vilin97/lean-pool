@@ -47,7 +47,7 @@ a projection
 pair `i, j`) build on this relation and are formalized separately.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

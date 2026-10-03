@@ -24,7 +24,7 @@ the strict decrease of GCD complexity after dividing by a common
 prime factor.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

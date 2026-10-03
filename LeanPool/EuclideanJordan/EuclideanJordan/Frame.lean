@@ -59,7 +59,7 @@ facts needs it; it is what the *spectral* theorem produces and what the rank arg
 consumes. Keeping it out makes visible which results are independent of the spectral theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

@@ -16,7 +16,7 @@ This file transports a kernel on dense-time trajectories to ordinary continuous 
 explicit support-on-the-continuous-range hypothesis. It does not prove that support hypothesis.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -35,6 +35,7 @@ variable [StandardBorelSpace (ContinuousPath alpha)]
   [MeasurableSpace.CountablySeparated (DenseTime → alpha)]
 
 /-- A dense-time kernel is almost surely supported on restrictions of continuous paths. -/
+@[expose]
 def IsSupportedOnContinuousPaths (κ : Kernel β (DenseTime → alpha)) : Prop :=
   ∀ x, ∀ᵐ path ∂κ x, path ∈ Set.range (ContinuousPath.denseRestriction (alpha := alpha))
 

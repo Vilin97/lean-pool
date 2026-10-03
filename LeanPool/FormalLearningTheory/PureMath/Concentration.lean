@@ -29,7 +29,7 @@ No learning-theory types.
 - Boucheron, Lugosi, Massart, "Concentration Inequalities", Chapter 2
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

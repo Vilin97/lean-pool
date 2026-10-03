@@ -44,7 +44,7 @@ inequalities supply.  `GenusFiveRow10Symmetry.chamber_covers` and
 `ClosedOrbit.closedConstruction_of_chamber` then finish the closed orthant.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow10
 

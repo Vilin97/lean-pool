@@ -20,7 +20,7 @@ This file bundles the structure map as an isomorphism of modules
 over the new base and proves it natural in both slots.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ variable {D : Type u}
 
 /-- **The structure map of base change, as an isomorphism of
 modules over the new base.** -/
+@[expose]
 noncomputable def projFormulaMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

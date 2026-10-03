@@ -35,7 +35,7 @@ All powers here have natural exponents. Constants and neighborhoods may depend
 on the requested power, as they do in a flatness statement.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 
@@ -45,7 +45,7 @@ variable {α : Type*} {l : Filter α} {q f g : α → ℝ}
 
 /-- Along `l`, `f` is eventually bounded by a constant times every natural
 power of the absolute value of the scale `q`. -/
-def PowerFlat (l : Filter α) (q f : α → ℝ) : Prop :=
+@[expose] def PowerFlat (l : Filter α) (q f : α → ℝ) : Prop :=
   ∀ n : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ x in l, |f x| ≤ C * |q x| ^ n
 
 /-- An exact scalar estimate: `n + loss` powers of smallness absorb `loss`
@@ -158,7 +158,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,7 +211,7 @@ variable {D E F G : Type*}
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
 /-- Every actual derivative decays faster than each fixed natural power. -/
-def AllJetsFlat (l : Filter D) (q : D → ℝ) (f : D → E) : Prop :=
+@[expose] def AllJetsFlat (l : Filter D) (q : D → ℝ) (f : D → E) : Prop :=
   ∀ m : ℕ, Flatness.PowerFlat l q (fun x => ‖iteratedFDeriv ℝ m f x‖)
 
 /-- Each actual derivative has a fixed inverse-power bound. The power and
@@ -520,7 +520,7 @@ theorem residual_add_sub_on {u w : VelocityField} {p r : PressureField}
   abel
 
 /-- The difference of the two actual viscosity-one Navier--Stokes residuals. -/
-def residualDifference (u w : VelocityField) (p r : PressureField) : VelocityField :=
+@[expose] def residualDifference (u w : VelocityField) (p r : PressureField) : VelocityField :=
   fun z => navierStokesResidual (fun y => u y + w y) (fun y => p y + r y) z.1 z.2 -
     navierStokesResidual u p z.1 z.2
 

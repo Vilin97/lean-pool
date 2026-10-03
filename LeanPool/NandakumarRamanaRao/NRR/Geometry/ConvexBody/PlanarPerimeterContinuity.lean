@@ -58,7 +58,7 @@ reparameterisation `(a, θ) ↦ (a, circleVec θ)`), and holds for constant fami
 pull in `import Mathlib`, so no extra imports are required.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

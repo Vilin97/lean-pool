@@ -15,7 +15,7 @@ import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-! Sobolev embedding for general smooth fields on R³, without Schwartz assumptions. -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -29,7 +29,7 @@ open scoped SchwartzMap ENNReal NNReal ContDiff Topology LineDeriv
 variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℂ F] [CompleteSpace F]
 
 /-- Repeated directional derivatives of a vector-valued Schwartz function. -/
-noncomputable def pureDerivative (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, F)) :
+@[expose] noncomputable def pureDerivative (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, F)) :
     𝓢(Domain d, F) := schwartzIteratedDerivative (fun _ : Fin n => v) f
 
 omit [CompleteSpace F] in
@@ -210,7 +210,8 @@ noncomputable def unitBumpCoefficient (n : ℕ) : NNReal :=
   Finset.sum (Finset.range (n+1)) (fun j => (n.choose j : ℝ≥0) * unitBumpBound j)
 
 /-- An actual smooth compact localization of an arbitrary smooth function about `x`. -/
-noncomputable def localize (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f) (x : Domain 3) : 𝓢(Domain 3, F)
+@[expose] noncomputable def localize (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f) (x : Domain 3) :
+    𝓢(Domain 3, F)
     :=
   (unitBump.hasCompactSupport.smul_right (f' := fun z => f (x+z))).toSchwartzMap
     (unitBump.contDiff.smul (hf.comp (contDiff_const.add contDiff_id)))
@@ -421,7 +422,7 @@ theorem smooth_fderiv_le_H3 (f : Domain 3 → F) (hf : ContDiff ℝ ∞ f)
   exact hA.trans (hC.trans_eq (he _ _))
 
 /-- The physical tensor Sobolev norm for real Euclidean vector fields. -/
-noncomputable def realTensorSobolevNorm (q s : ℕ) (f : Domain 3 → Domain q) : ℝ :=
+@[expose] noncomputable def realTensorSobolevNorm (q s : ℕ) (f : Domain 3 → Domain q) : ℝ :=
   Finset.sum (Finset.range (s+1)) (fun j => (eLpNorm (iteratedFDeriv ℝ j f) 2 volume).toReal)
 
 theorem complexification_tensor_norm (q j : ℕ) (f : Domain 3 → Domain q)

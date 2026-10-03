@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Substitution -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -27,7 +27,7 @@ namespace Formula
 variable {φ ψ : Formula α} {s : Substitution α}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def subst (s : Substitution α) : Formula α → Formula α
+@[expose] def subst (s : Substitution α) : Formula α → Formula α
   | atom a  => (s a)
   | ⊥       => ⊥
   | φ ⋏ ψ   => φ.subst s ⋏ ψ.subst s

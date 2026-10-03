@@ -26,7 +26,7 @@ For compact manifolds, the resulting function has compact support and is `C^1` (
 the Euclidean `C1c` submodule used in the Euclidean Sobolev baseline).
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Geometry
@@ -65,12 +65,12 @@ abbrev chart (i : d.ι) : PartialEquiv M E :=
   extChartAt I (d.center i)
 
 /-- The localization of a scalar function `f : M → ℝ` to a chart `i`, as a function on `E`. -/
-noncomputable def localize (f : M → ℝ) (i : d.ι) : E → ℝ :=
+@[expose] noncomputable def localize (f : M → ℝ) (i : d.ι) : E → ℝ :=
   Set.indicator (chart (d := d) i).target fun y =>
     d.ρ i ((chart (d := d) i).symm y) * f ((chart (d := d) i).symm y)
 
 /-- The closed set `closure (support (ρ i))` used to control the support of localizations. -/
-def rhoSupportClosure (i : d.ι) : Set M :=
+@[expose] def rhoSupportClosure (i : d.ι) : Set M :=
   closure (Function.support (d.ρ i : M → ℝ))
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] [IsManifold I (1 : WithTop ℕ∞) M]
@@ -85,7 +85,7 @@ lemma isCompact_rhoSupportClosure (i : d.ι) : IsCompact (rhoSupportClosure (d :
   (isClosed_closure.isCompact)
 
 /-- A compact subset of the chart model space containing the supports of all localizations. -/
-def rhoSupportImage (i : d.ι) : Set E :=
+@[expose] def rhoSupportImage (i : d.ι) : Set E :=
   (chart (d := d) i) '' rhoSupportClosure (d := d) i
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] [IsManifold I (1 : WithTop ℕ∞) M] [I.Boundaryless]

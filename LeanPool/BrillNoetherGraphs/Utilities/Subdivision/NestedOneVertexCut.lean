@@ -18,7 +18,7 @@ needed to display successive wedge factors without making any assumptions on
 their origin.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -82,6 +82,7 @@ variable {K : CFGraph.{u}} (first second : OneVertexCut K)
 -- constructions no longer unfolds them; use the previous transparency locally.
 /-- The second cut may be viewed inside the right factor of the first when
 its left side is contained in that factor. -/
+@[expose]
 noncomputable def restrictRight
     (hLeft : second.left ⊆ first.right) : OneVertexCut first.rightGraph where
   left := Finset.univ.filter fun z => z.val ∈ second.left
@@ -127,6 +128,7 @@ theorem restrictRight_graph_connected_factors
     (first.graph_connected_right_of_connected hK)
 
 /-- Flatten the two subtype layers of the restricted left factor. -/
+@[expose]
 def restrictRightLeftVertex (hLeft : second.left ⊆ first.right)
     (vertex : (first.restrictRight second hLeft).leftGraph.V) :
     second.leftGraph.V :=
@@ -161,6 +163,7 @@ theorem restrictRightLeftVertex_bijective
 /-- Flatten the left factor of a restricted cut back to the second cut's
 original left factor.  This removes the two layers of induced-subgraph
 subtypes without changing any edge multiplicity. -/
+@[expose]
 noncomputable def restrictRightLeftIso
     (hLeft : second.left ⊆ first.right) :
     CFGraphIso (first.restrictRight second hLeft).leftGraph second.leftGraph where

@@ -24,7 +24,7 @@ restated and closed by transporting the library's theorems across that
 conversion.
 -/
 
-@[expose] public section
+public section
 
 open Function MeasureTheory
 

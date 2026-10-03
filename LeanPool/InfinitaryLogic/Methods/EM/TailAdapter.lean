@@ -46,7 +46,7 @@ The downstream consumer is `hasArbLargeModels_of_tail_extraction` in
 `InfinitaryLogic/Conditional/MorleyHanfTransfer.lean`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -80,7 +80,7 @@ theorem exists_strictMono_of_le (n N : ℕ) :
 /-- The **eventually-form template** of a sequence: a formula is true if all sufficiently
 deep strictly monotone tuples realize it. For a tail-indiscernible sequence this is
 well-defined in the sense of `tailTemplateOfSeq_truth_iff`. -/
-def tailTemplateOfSeq (a : ℕ → M) : Lomega1omegaTemplate L where
+@[expose] def tailTemplateOfSeq (a : ℕ → M) : Lomega1omegaTemplate L where
   truth {n} φ :=
     letI := ‹L.Structure M›
     ∃ N : ℕ, ∀ s : Fin n → ℕ, StrictMono s → (∀ k, N ≤ s k) →

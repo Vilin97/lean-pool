@@ -28,7 +28,7 @@ Part of the formalization of M. Stoll, *Galois groups over ℚ of some iterated 
 Arch. Math. **59** (1992), 239-244; see `QuadraticIterates.ArchMath1992`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -42,6 +42,7 @@ variable (a : ℤ)
 
 /-- The shifted root `β - a` of `f_n`, as an element of `K_n`: these are the radicands whose
 square roots generate `K_{n+1}` over `K_n`. -/
+@[expose]
 noncomputable def rootShift (a : ℤ) (n : ℕ) (β : (fℚ[a, n]).rootSet (AlgebraicClosure ℚ)) :
     ↥(splittingField a n) :=
   ⟨(β : AlgebraicClosure ℚ) - (a : AlgebraicClosure ℚ),

@@ -21,7 +21,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 The dual action conjugacy algebra component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualActionConjugacyAlgebra
@@ -72,7 +72,7 @@ theorem avDualEquiv_eval (F : Module.Dual k PaperKernel.AVStar) (a : A)
 /--
 The `qTensor` construction used in the Connes rigidity formalization.
 -/
-def qTensor (z : A →ₗ[k] PaperV) : PaperKernel.TensorAA →ₗ[k] k :=
+@[expose] def qTensor (z : A →ₗ[k] PaperV) : PaperKernel.TensorAA →ₗ[k] k :=
   PaperFactorIsomorphism.tensorFunctional
       (PaperFactorIsomorphism.coordinate z (Sum.inl 0))
       (PaperFactorIsomorphism.coordinate z (Sum.inr 0)) +
@@ -88,7 +88,7 @@ def zAction (h : H) (z : A →ₗ[k] PaperV) : A →ₗ[k] PaperV :=
 
 /-- The tensor form of the second-action correction. Paper: §3.
 -/
-def thetaTwoTermTensor (h : H) : PaperKernel.TensorAA →ₗ[k]
+@[expose] def thetaTwoTermTensor (h : H) : PaperKernel.TensorAA →ₗ[k]
     PaperKernel.AVStar :=
   ((TensorProduct.mk k A VStar).flip
       (OpenAIPort.quadraticDefectLinear (h⁻¹).2)).comp

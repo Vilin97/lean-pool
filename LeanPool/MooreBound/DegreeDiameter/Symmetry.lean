@@ -21,7 +21,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -52,7 +52,7 @@ noncomputable def map (e : V ≃ₗ[K] V) (F : CompleteFlag K V n) : CompleteFla
 
 @[simp]
 theorem map_apply (e : V ≃ₗ[K] V) (F : CompleteFlag K V n) (i : Fin (n + 1)) :
-    F.map e i = (Submodule.orderIsoMapComap e) (F i) := rfl
+    F.map e i = (Submodule.orderIsoMapComap e) (F i) := by rfl
 
 @[simp]
 theorem map_symm_map (e : V ≃ₗ[K] V) (F : CompleteFlag K V n) :
@@ -95,7 +95,7 @@ noncomputable def map {parity : ℕ} (e : V ≃ₗ[K] V)
 @[simp]
 theorem map_val {parity : ℕ} (e : V ≃ₗ[K] V)
     (P : PartialFlag (K := K) (V := V) (n := n) parity) (i : Fin (n + 1)) :
-    (P.map e).1 i = (Submodule.orderIsoMapComap e) (P.1 i) := rfl
+    (P.map e).1 i = (Submodule.orderIsoMapComap e) (P.1 i) := by rfl
 
 @[simp]
 theorem map_symm_map {parity : ℕ} (e : V ≃ₗ[K] V)
@@ -123,7 +123,7 @@ noncomputable def mapEquiv {parity : ℕ} (e : V ≃ₗ[K] V) :
 @[simp]
 theorem mapEquiv_apply {parity : ℕ} (e : V ≃ₗ[K] V)
     (P : PartialFlag (K := K) (V := V) (n := n) parity) :
-    mapEquiv e P = P.map e := rfl
+    mapEquiv e P = P.map e := by rfl
 
 @[simp]
 theorem map_ofComplete {parity : ℕ} (e : V ≃ₗ[K] V)
@@ -183,7 +183,7 @@ noncomputable def halvedFlagGraphIso (e : V ≃ₗ[K] V) :
 @[simp]
 theorem halvedFlagGraphIso_apply (e : V ≃ₗ[K] V)
     (P : EvenPartialFlag (K := K) (V := V) (n := n)) :
-    halvedFlagGraphIso e P = P.map e := rfl
+    halvedFlagGraphIso e P = P.map e := by rfl
 
 /-- Transitivity on even partial flags. -/
 theorem exists_halvedFlagGraphIso_map_eq

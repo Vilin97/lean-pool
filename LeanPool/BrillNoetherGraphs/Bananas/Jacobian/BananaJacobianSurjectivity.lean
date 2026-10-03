@@ -18,7 +18,7 @@ degree-zero divisor as a sum of these differences then gives a coordinate
 vector whose image is linearly equivalent to that divisor.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

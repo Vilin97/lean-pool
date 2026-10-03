@@ -34,7 +34,7 @@ principal geometric specialization.
   nondegenerate closed disk, including the zero sup-norm case.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial ContinuousLinearMap
 

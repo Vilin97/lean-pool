@@ -13,7 +13,7 @@ public import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 # LeanPool.FormalizationOfBoundedArithmetic.Syntax
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 namespace Language
@@ -37,10 +37,12 @@ end BoundedFormula
 namespace Formula
 
 /-- Computable finite universal closure over an explicitly enumerated type. -/
+@[expose]
 def iAlls' [enum : IsEnum β] (φ : L.Formula (α ⊕ β)) : L.Formula α :=
   (BoundedFormula.relabel (fun a => Sum.map id enum.toIdx a) φ).alls
 
 /-- Computable finite existential closure over an explicitly enumerated type. -/
+@[expose]
 def iExs' [enum : IsEnum β] (φ : L.Formula (α ⊕ β)) : L.Formula α :=
   (BoundedFormula.relabel (fun a => Sum.map id enum.toIdx a) φ).exs
 

@@ -40,7 +40,7 @@ the wreath-product algebra used to assemble factor towers.
 * [Eilenberg, *Automata, Languages, and Machines, Vol. B*, 1976]
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 
@@ -110,6 +110,7 @@ attribute [instance] KRFactor.mon KRFactor.fin
 namespace KRFactor
 
 /-- Build an aperiodic factor from a finite aperiodic monoid. -/
+@[expose]
 def ofAperiodic (A : Type u) [Monoid A] [Finite A]
     (hA : ∀ a : A, IsAperiodicElem a) : KRFactor.{u} where
   carrier := A
@@ -117,6 +118,7 @@ def ofAperiodic (A : Type u) [Monoid A] [Finite A]
   isKind := Or.inl ⟨rfl, hA⟩
 
 /-- Build a simple-group factor from a finite simple group. -/
+@[expose]
 def ofSimpleGroup (G : Type u) [g : Group G] [Finite G] [IsSimpleGroup G] :
     KRFactor.{u} where
   carrier := G
@@ -152,6 +154,7 @@ end KRFactor
 
     No action-lifting or equivalence with a single iterated transformation wreath product
     is asserted by this definition. The intermediate base at each step has its own tower. -/
+@[expose]
 def DivTowerWreath : (M : Type u) → [Monoid M] → [Finite M] → List KRFactor.{u} → Prop
   | M, _, _, [] => SgDiv M PUnit.{u + 1}
   | M, _, _, (F :: rest) =>
@@ -506,6 +509,7 @@ theorem quotientGroup_divides {G : Type u} [Group G] (N : Subgroup G) [N.Normal]
 /-! ### The subquotient-faithful factor tower -/
 
 /-- `SubFactorsDivide M factors` asserts every factor's carrier divides `M`. -/
+@[expose]
 def SubFactorsDivide (M : Type u) [Monoid M] (factors : List KRFactor.{u}) : Prop :=
   ∀ F ∈ factors, MonoidDivides F.carrier M
 

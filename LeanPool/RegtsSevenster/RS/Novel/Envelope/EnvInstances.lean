@@ -19,7 +19,7 @@ through the Karoubi and matrix layers entrywise, giving the full
 instance chain for the envelope.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

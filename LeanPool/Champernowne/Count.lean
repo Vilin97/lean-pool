@@ -22,7 +22,7 @@ The window convention is documented at `countOccurrences`. Statements assume
 and exact digit-counting results are in `LeanPool.Champernowne.CountExtras`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 

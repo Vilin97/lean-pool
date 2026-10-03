@@ -17,7 +17,7 @@ function germ at points away from the base point.  Only finite intersections
 are used; arbitrary intersections would not have a uniform neighborhood.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -32,7 +32,7 @@ abbrev LocalSetGerm (n : ℕ) :=
   Filter.Germ (𝓝 (0 : ComplexEuclidean n)) Prop
 
 /-- The local zero set of a holomorphic function germ. -/
-def germZeroLocus {n : ℕ} (f : HolomorphicGerm n) : LocalSetGerm n :=
+@[expose] def germZeroLocus {n : ℕ} (f : HolomorphicGerm n) : LocalSetGerm n :=
   Filter.Germ.map (fun z : ℂ ↦ z = 0) (f : FunctionGerm n)
 
 @[simp]
@@ -115,7 +115,7 @@ theorem germZeroLocus_eq_top_iff {n : ℕ} (f : HolomorphicGerm n) :
     exact germZeroLocus_zero n
 
 /-- Holomorphic germs vanishing on a fixed local set germ form an ideal. -/
-def vanishingIdeal {n : ℕ} (Z : LocalSetGerm n) : Ideal (HolomorphicGerm n) where
+@[expose] def vanishingIdeal {n : ℕ} (Z : LocalSetGerm n) : Ideal (HolomorphicGerm n) where
   carrier := {f | Z ≤ germZeroLocus f}
   zero_mem' := by simp
   add_mem' := by
@@ -140,13 +140,13 @@ theorem vanishingIdeal_top (n : ℕ) :
     germZeroLocus_eq_top_iff]
 
 /-- Common zero set of a finite family of germs. -/
-def finiteCommonZeroSet {n : ℕ} (S : Finset (HolomorphicGerm n)) :
+@[expose] def finiteCommonZeroSet {n : ℕ} (S : Finset (HolomorphicGerm n)) :
     LocalSetGerm n :=
   S.inf germZeroLocus
 
 /-- Common zero-set germ of a finite indexed family.  Unlike a `Finset` of
 germs, this retains the indices used by the comparator-facing certificate. -/
-def indexedCommonZeroSet {n s : ℕ}
+@[expose] def indexedCommonZeroSet {n s : ℕ}
     (f : Fin s → HolomorphicGerm n) : LocalSetGerm n :=
   Finset.univ.inf fun i ↦ germZeroLocus (f i)
 
@@ -292,7 +292,7 @@ theorem finiteCommonZeroSet_eq_of_span_eq {n : ℕ}
   · exact finiteCommonZeroSet_antitone_span S T h.le
 
 /-- A fixed finite generating set selected from Noetherianity. -/
-def idealGeneratorFinset {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
+@[expose] def idealGeneratorFinset {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) : Finset (HolomorphicGerm n) :=
   Classical.choose (Ideal.fg_of_isNoetherianRing I)
 
@@ -303,7 +303,7 @@ theorem span_idealGeneratorFinset {n : ℕ}
   Classical.choose_spec (Ideal.fg_of_isNoetherianRing I)
 
 /-- The zero-set germ of an ideal, defined through a finite generating set. -/
-def idealZeroSetGerm {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
+@[expose] def idealZeroSetGerm {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) : LocalSetGerm n :=
   finiteCommonZeroSet (idealGeneratorFinset I)
 

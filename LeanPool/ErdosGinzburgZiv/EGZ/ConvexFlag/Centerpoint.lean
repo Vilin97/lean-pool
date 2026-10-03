@@ -17,7 +17,7 @@ theory, exactly matching the finite weighted set in the paper and its later
 application to local lifted mass.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,7 +26,7 @@ namespace EGZ.ConvexFlag
 /-- The total weight of the input points that lie on or above `center` for a
 flag functional.  Points outside the functional's domain are omitted, as in
 equation `ceq` of the paper. -/
-noncomputable def upperWeight {F : ConvexFlag} {n : ℕ}
+@[expose] noncomputable def upperWeight {F : ConvexFlag} {n : ℕ}
     (points : Fin n → F.Point) (weight : Fin n → ℝ)
     (xi : F.LinearFunction) (center : F.Point)
     (hcenter : xi.EvaluableAt center) : ℝ := by

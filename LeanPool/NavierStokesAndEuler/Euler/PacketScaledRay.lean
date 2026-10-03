@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! The actual ray in the source time and coordinate scaling. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ namespace EulerPacketMovingFrame
 open Set EulerSmoothLimit EulerPacketNormalizedPrimary EulerPacketRay InnerProductSpace
 
 /-- Physical time, given by `t₀ + (ε/a)*τ`. -/
-def physicalTime (t₀ a ε τ : ℝ) : ℝ := t₀ + (ε/a)*τ
+@[expose] def physicalTime (t₀ a ε τ : ℝ) : ℝ := t₀ + (ε/a)*τ
 
 theorem physicalTime_hasDerivAt (t₀ a ε τ : ℝ) :
     HasDerivAt (physicalTime t₀ a ε) (ε/a) τ := by
@@ -48,7 +48,7 @@ theorem scaledRayRate_algebra {a ε s₀ : ℝ} (ha : a ≠ 0) (hε : ε ≠ 0) 
   field_simp [ha, hs₀, rayScale_ne_zero hε i, rayScale_ne_zero hε j]
 
 /-- Scaled ray, given by `movingRay m v r (physicalTime t₀ a ε τ) i / (s₀*rayScale ε i)`. -/
-def scaledRay (m v r : ℝ → Space) (s₀ t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
+@[expose] def scaledRay (m v r : ℝ → Space) (s₀ t₀ a ε τ : ℝ) (i : Fin 3) : ℝ :=
   movingRay m v r (physicalTime t₀ a ε τ) i / (s₀*rayScale ε i)
 
 /-- The physical ODE supplies exactly the scaled coefficient matrix whose

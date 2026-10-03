@@ -26,7 +26,7 @@ section
 one explicit polynomial-exponential envelope, including the base-sized
 boundary coefficient and both reciprocal time intervals. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ open Real EulerPacketSourceParameterScales EulerPacketUniformFrequencyScales
   EulerPacketSourceScales
 
 /-- Bound constant, given by `8+1120*(2*Cθ)^10+CB+Cξ`. -/
-def boundConstant (Cθ CB Cξ : ℝ) : ℝ := 8+1120*(2*Cθ)^10+CB+Cξ
+@[expose] def boundConstant (Cθ CB Cξ : ℝ) : ℝ := 8+1120*(2*Cθ)^10+CB+Cξ
 
 theorem constant_pos (Cθ CB Cξ : ℝ) (hB : 0 ≤ CB) (hξ : 0 ≤ Cξ) :
     0 < boundConstant Cθ CB Cξ := by
@@ -137,7 +137,7 @@ section
 parameter have fixed polynomial caps. They are inputs to the uniform
 normal-stage source envelope. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +228,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -242,7 +242,7 @@ open Real EulerPacketLowConstants EulerParentPacketParameterCaps
 def terminalCap : ℝ := 1+terminalConstant gradientConstant hessianConstant
 /-- Source constant, given by `EulerPacketParameterEnvelope.boundConstant C (boundaryConstant
 gradientConstant) terminalCap`. -/
-def sourceConstant (C : ℝ) : ℝ :=
+@[expose] def sourceConstant (C : ℝ) : ℝ :=
   EulerPacketParameterEnvelope.boundConstant C (boundaryConstant gradientConstant) terminalCap
 
 theorem terminalCap_one : 1 ≤ terminalCap := by
@@ -255,10 +255,11 @@ theorem sourceConstant_pos (C : ℝ) : 0 < sourceConstant C :=
     (boundaryConstant_pos gradientConstant gradient_nonneg).le (zero_le_one.trans terminalCap_one)
 
 /-- Envelope, given by `parameterEnvelope J (sourceConstant C) 320 20 1000 X n`. -/
-def envelope (J : ℕ) (C X : ℝ) (n : ℕ) : ℝ := parameterEnvelope J (sourceConstant C) 320 20 1000 X n
+@[expose] def envelope (J : ℕ) (C X : ℝ) (n : ℕ) : ℝ :=
+  parameterEnvelope J (sourceConstant C) 320 20 1000 X n
 
 /-- Frequency spec, constructed using `frequencyCostSpec`. -/
-def frequencySpec (C : ℝ) : CostSpec :=
+@[expose] def frequencySpec (C : ℝ) : CostSpec :=
   frequencyCostSpec (1+frequencyConstant) (sourceConstant C) 320
     (by have h := frequencyConstant_pos; linarith) (sourceConstant_pos C)
     20 1000 (frequencyPower+1) (theta/100) (by norm_num [theta])

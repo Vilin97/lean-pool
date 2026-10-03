@@ -21,7 +21,7 @@ to all `L²` test fields. No spatial derivative integrability or energy
 conservation assumption is used here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -59,6 +59,7 @@ theorem velocity_test_pairing_continuousOn
     simp [image_eq_zero_of_notMem_tsupport hx]
 
 /-- The natural velocity path in the Hilbert space `L²`. -/
+@[expose]
 def velocityLp (t : Ici (0 : ℝ)) : Lp ℝ³ 2 (volume : Measure ℝ³) :=
   (h.velocity_memLp t t.property).toLp (v · t)
 

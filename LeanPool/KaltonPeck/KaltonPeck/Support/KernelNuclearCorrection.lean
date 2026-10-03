@@ -20,7 +20,7 @@ This file extends summable errors on the canonical Hilbert-kernel basis to a com
 operator whose symplectic adjoint is also compact.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

@@ -77,7 +77,7 @@ realization a polygonal drawing and accepts *any* drawing back. This restriction
 interface that lets the two cut points be interior to edges of `C`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies unitInterval
 open scoped Graph
@@ -235,7 +235,8 @@ those segments.
 
 This is the one thing this module assumes and does not prove. See "The gap" in the module
 docstring. -/
-def IsHexRealization (drawing : β → ℝ → Plane) (e : Fin 3 → Fin 3 → β) (s : Fin 3) : Prop :=
+@[expose] def IsHexRealization (drawing : β → ℝ → Plane) (e : Fin 3 → Fin 3 → β)
+    (s : Fin 3) : Prop :=
   ∃ (m m₁ m₂ : ℕ) (C : ClosedPolygon m) (J₁ : ClosedPolygon m₁) (J₂ : ClosedPolygon m₂)
     (K : List Piece) (a : ZMod (m + 3)) (k : ℕ),
       k ≤ m + 3 ∧
@@ -364,7 +365,7 @@ structure IsArcK33 (x y : Fin 3 → Plane) (P : Fin 3 → Fin 3 → Set Plane) :
 /-- **The abstract `K(3,3)` on six named points of the plane.** Its edges are index pairs, and
 `(i, j)` links `x i` to `y j`. The edge set is all of `Fin 3 × Fin 3`, so no membership side
 condition ever has to be discharged. -/
-def k33Graph (x y : Fin 3 → Plane) : Graph Plane (Fin 3 × Fin 3) where
+@[expose] def k33Graph (x y : Fin 3 → Plane) : Graph Plane (Fin 3 × Fin 3) where
   vertexSet := Set.range x ∪ Set.range y
   edgeSet := Set.univ
   IsLink p u v := (u = x p.1 ∧ v = y p.2) ∨ (u = y p.2 ∧ v = x p.1)

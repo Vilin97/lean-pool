@@ -20,7 +20,7 @@ section
 summable scale costs. The physical parent-strain bound is CM times the
 previous shear, while the activation constants remain fixed low constants. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -174,7 +174,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -20,7 +20,7 @@ schedule, limit stages glue and complete the earlier prefixes, and the resulting
 scheduled chain supplies the unconditional witness for `Claim14`.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -270,6 +270,7 @@ end ProtectedPrefix
 open CategoryTheory Opposite
 
 /-- The inverse system of protected prefixes under restriction. -/
+@[expose]
 noncomputable def protectedPrefixFunctor : RIᵒᵖ ⥤ Type 1 where
   obj j := ProtectedPrefix j.unop
   map {X Y} f := ↾(fun P : ProtectedPrefix X.unop =>
@@ -345,6 +346,7 @@ noncomputable def protectedPrefixSection : protectedPrefixFunctor.sections :=
   protectedPrefixInductionData.sectionsMk seedPrefix
 
 /-- The canonical bounded prefix ending at `j`. -/
+@[expose]
 noncomputable def canonicalPrefix (j : RI) : ProtectedPrefix j :=
   protectedPrefixSection.val (op j)
 
@@ -387,7 +389,7 @@ structure CompatiblePrefixSequence where
     ((item _j).restriction hij).chain = (item _i).chain
 
 /-- The canonical transfinite section as a coherent prefix sequence. -/
-noncomputable def canonicalPrefixSequence : CompatiblePrefixSequence where
+@[expose] noncomputable def canonicalPrefixSequence : CompatiblePrefixSequence where
   item := canonicalPrefix
   coherent _ _ hij := congrArg ProtectedPrefix.chain
     (canonicalPrefix_restriction hij)
@@ -397,6 +399,7 @@ namespace CompatiblePrefixSequence
 variable (G : CompatiblePrefixSequence)
 
 /-- Restrict a global prefix sequence to indices below `j`. -/
+@[expose]
 noncomputable def below (j : RI) : CompatiblePrefixFamily j where
   item i := G.item i.1
   coherent i k hik := G.coherent i.1 k.1 hik
@@ -407,6 +410,7 @@ abbrev stage (i : RI) : ProtectedStage.{0} ((1 : ℝ) / 2) :=
 
 /-- The protected link between two stages, obtained from coherence of their closed
 prefixes. -/
+@[expose]
 noncomputable def link (i j : RI) (hij : i ≤ j) :
     ProtectedLink (G.stage i) (G.stage j) 1 :=
   (G.item i).linkOfRestriction (G.item j) hij (G.coherent i j hij)
@@ -521,6 +525,7 @@ theorem targetProjection_embed (a i j : RI) (hai : a ≤ i) (hij : i ≤ j)
 
 /-- Glue a coherent sequence of closed prefixes into one protected chain on
 the whole recursion order. -/
+@[expose]
 noncomputable def toProtectedChain :
     ProtectedChain (ι := RI) ((1 : ℝ) / 2) 1 where
   stage := G.stage
@@ -546,6 +551,7 @@ noncomputable def toProtectedChain :
 end CompatiblePrefixSequence
 
 /-- The global coherent protected chain produced by the transfinite section. -/
+@[expose]
 noncomputable def canonicalProtectedChain :
     ProtectedChain (ι := RI) ((1 : ℝ) / 2) 1 :=
   canonicalPrefixSequence.toProtectedChain

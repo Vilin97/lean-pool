@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
 
 /-! Joint continuity of evaluation of genuine cylinder Sobolev fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,8 @@ variable (period : ℝ) [Fact (0 < period)]
 theorem pointEvaluation_norm_le (x : LiftDomain period) :
     ‖pointEvaluation period x‖ ≤ sobolevEmbeddingConstant period 3 :=
   (pointEvaluation period x).opNorm_le_bound
-    (sobolevEmbeddingConstant_nonneg period 3) (fun u => representative_bound period u x)
+    (sobolevEmbeddingConstant_nonneg period 3) (fun u => by
+      simpa only [pointEvaluation_apply] using representative_bound period u x)
 
 /-- Evaluation is jointly continuous in a genuine H3 field and a cylinder point. -/
 theorem pointEvaluation_joint_continuous :
@@ -33,7 +34,8 @@ theorem pointEvaluation_joint_continuous :
       pointEvaluation period p.2 p.1) := by
   apply continuous_prod_of_continuous_lipschitzWith _
     ⟨sobolevEmbeddingConstant period 3, sobolevEmbeddingConstant_nonneg period 3⟩
-  · exact fun u => representative_continuous period u
+  · intro u
+    simpa only [pointEvaluation_apply] using representative_continuous period u
   · intro x
     exact ContinuousLinearMap.lipschitzWith_of_opNorm_le
       (f := pointEvaluation period x)

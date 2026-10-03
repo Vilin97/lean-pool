@@ -26,7 +26,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
   multiplicity).
 -/
 
-@[expose] public section
+public section
 
 open Filter Set OpenPartialHomeomorph Metric
 open scoped ContDiff Manifold Topology

@@ -41,7 +41,7 @@ that upstream statement is maintained here.
   `indexEquiv`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory
@@ -64,6 +64,7 @@ def Edge.left (e : Edge V) : V := e.val.out.1
 def Edge.right (e : Edge V) : V := e.val.out.2
 
 /-- The simple graph carried by a finite edge set. -/
+@[expose]
 def edgeGraph (S : Finset (Edge V)) : SimpleGraph V :=
   SimpleGraph.fromEdgeSet {x : Sym2 V | ∃ e : Edge V, e ∈ S ∧ e.val = x}
 
@@ -133,6 +134,7 @@ def cubeContribution (J : ForestIndex V) (ρ : (Edge V → ℝ) → ℝ) : ℝ :
   ∫ u in unitCube J, mixedPartial J ρ (standardInterp J u)
 
 /-- BKAR smoothness hypothesis (mirror of `BKARContDiff`). -/
+@[expose]
 def ContDiffHyp (ρ : (Edge V → ℝ) → ℝ) : Prop := ContDiff ℝ (∞ : WithTop ℕ∞) ρ
 
 /-! ## Q1 bridge: mirror graph acyclicity ↔ repository certificate -/

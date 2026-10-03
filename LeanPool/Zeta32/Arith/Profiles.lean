@@ -10,14 +10,16 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! Zeta32 — Arith — Profiles. -/
 
-@[expose] public section
+public section
 
 namespace Zeta32.ArithSum
 /-- The fractional-part profile controlling the arithmetic valuation bound. -/
+@[expose]
 noncomputable def psiL (x : ℝ) : ℝ :=
   let a := Int.fract (1/x); let b := Int.fract (5/x); let g := Int.fract (3/x)
   6 + x*g*(1-g) - 3*(4*a-b) + x/4*(16*a + b - 8*min a b - (4*a-b)^2)
 /-- The piecewise affine profile controlling the outer-prime contribution. -/
+@[expose]
 noncomputable def phiL (x : ℝ) : ℝ :=
   if x ≤ 5/2 then 6 - x else if x ≤ 3 then 24 - 7*x else if x ≤ 4 then 18 - 5*x else 2 - x
 

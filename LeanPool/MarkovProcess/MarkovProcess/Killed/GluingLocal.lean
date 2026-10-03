@@ -30,7 +30,7 @@ The regularity data are an explicit hypothesis: positivity, contractivity and th
 identity do not by themselves give the compactified semigroup a continuous-path process.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -75,7 +75,7 @@ namespace OnePointRegular
 variable {R : PositiveC0ContractiveResolvent X}
 
 /-- The metric on the compactification determined by the exhaustion function. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def metricSpace (h : R.OnePointRegular) : MetricSpace (OnePoint X) :=
   OnePoint.exhaustionMetricSpace h.rho h.continuous_rho h.rho_pos h.lipschitz_rho
     h.isCompact_superlevel
@@ -148,6 +148,7 @@ section Embedding
 variable {X₀ X₁ : Type*}
 
 /-- The embedding of a smaller live space into the compactification of a larger one. -/
+@[expose]
 def compactifiedEmbedding (iota : X₀ → X₁) (y : X₀) : OnePoint X₁ := ((iota y : X₁) : OnePoint X₁)
 
 /-- The embedding of a smaller live space into the compactification, unfolded. -/

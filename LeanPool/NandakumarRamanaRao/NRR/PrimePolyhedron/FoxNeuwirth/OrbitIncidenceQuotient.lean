@@ -22,7 +22,7 @@ The construction does not divide by the group order.  This is essential in chara
 where the prime symmetry group has order divisible by `p`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -62,20 +62,23 @@ noncomputable instance facetOrbitDecidableEq : DecidableEq (FacetOrbit (G := G) 
   Classical.decEq _
 
 /-- Canonical representative selected by `Quotient.out`. -/
+@[expose]
 noncomputable def topRepresentative (q : TopOrbit (G := G) C) : C.TopCell :=
   Quotient.out q
 
 /-- Canonical facet representative selected by `Quotient.out`. -/
+@[expose]
 noncomputable def facetRepresentative (q : FacetOrbit (G := G) C) : C.Facet :=
   Quotient.out q
 
 /-- One coefficient per top-cell orbit. -/
+@[expose]
 noncomputable def orbitCoefficient (q : TopOrbit (G := G) C) : R :=
   C.coefficient (topRepresentative (G := G) C q)
 
 /-- Incidence from a facet orbit to a top orbit, obtained by summing the covering incidences over
 that top orbit. -/
-noncomputable def orbitIncidence
+@[expose] noncomputable def orbitIncidence
     (qf : FacetOrbit (G := G) C) (qt : TopOrbit (G := G) C) : R := by
   classical
   exact ∑ c : qt.orbit, C.incidence (facetRepresentative (G := G) C qf) c
@@ -126,6 +129,7 @@ theorem orbitBoundary_eq_coveringBoundary
             rfl
 
 /-- Orbit quotient of an equivariant finite incidence cycle. -/
+@[expose]
 noncomputable def orbitQuotient
     (E : EquivariantData (G := G) C) : FiniteIncidenceCycle R where
   TopCell := TopOrbit (G := G) C

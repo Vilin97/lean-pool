@@ -15,7 +15,7 @@ public import LeanPool.FormalizationOfBoundedArithmetic.Order
 # LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder Language BoundedFormula Formula
 
@@ -31,6 +31,7 @@ open FirstOrder Language BoundedFormula Formula
 -- expect 1 displayed free variable (`x`), thus DisplayedFV1
 -- but we can have more free vars - we `forall` over them!
 /-- Build the universal closure of an induction axiom for a displayed variable. -/
+@[expose]
 def mkInductionSentence
   {a} [IsEnum a] {name}
   {L : Language}

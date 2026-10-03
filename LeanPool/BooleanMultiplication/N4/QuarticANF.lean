@@ -16,7 +16,7 @@ term, so it cancels before the cubic and quadratic projections are
 evaluated.  This is the circuit-facing version of the exterior theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,7 +24,7 @@ namespace N4
 noncomputable section
 
 /-- An affine factor together with a linear combination of rational-place targets. -/
-def representedLowFactor (a : F₂) (ell : LinearForm)
+@[expose] def representedLowFactor (a : F₂) (ell : LinearForm)
     (α : Fin 3 → F₂) : ANF 8 :=
   affineANF a ell + rationalANF α
 

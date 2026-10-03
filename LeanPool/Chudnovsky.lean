@@ -37,4 +37,4 @@ Tags: number-theory, pi, chudnovsky, modular-forms, complex-multiplication
 MSC: 11Y60, 11F03, 33C05
 -/
 
-@[expose] public section
+public section

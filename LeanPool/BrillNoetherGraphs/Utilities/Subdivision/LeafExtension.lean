@@ -22,7 +22,7 @@ The resulting rank-one interface shows that adjoining or pruning a leaf does
 not change divisorial gonality.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -191,11 +191,13 @@ theorem graph_connected_addLeaf (hH : graphConnected H) :
       exact ⟨none, hLeaf, some root, hRoot, by simp⟩
 
 /-- Extend an old divisor by zero at the new leaf. -/
+@[expose]
 def extendDiv (D : CFDiv H) : CFDiv (addLeaf H root)
   | none => 0
   | some x => D x
 
 /-- Extend a firing script constantly across the new leaf edge. -/
+@[expose]
 def extendScript (script : firingScript H) : firingScript (addLeaf H root)
   | none => script root
   | some x => script x
@@ -405,6 +407,7 @@ theorem bnExists_rank_one_addLeaf {d : ℤ} :
 /-! ## Retracting the added leaf -/
 
 /-- Move the coefficient at the new leaf into its old neighbour. -/
+@[expose]
 def retractDiv (E : CFDiv (addLeaf H root)) : CFDiv H :=
   fun x => E (some x) + if x = root then E none else 0
 

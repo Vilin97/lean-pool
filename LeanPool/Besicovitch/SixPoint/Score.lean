@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.SixPoint.Packing
 This file controls the score when its parameter or the underlying center distances change.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -58,7 +58,7 @@ theorem transport_totalRadius (packing : SixPointPacking configuration)
     (hdistance : ∀ i j : packing.support, i ≠ j → i.1.1 = j.1.1 →
       dist (configuration i.1.1 i.1.2) (configuration j.1.1 j.1.2) ≤
         dist (configuration' i.1.1 i.1.2) (configuration' j.1.1 j.1.2)) :
-    (packing.transport hdistance).totalRadius = packing.totalRadius := rfl
+    (packing.transport hdistance).totalRadius = packing.totalRadius := by rfl
 
 /-- An upper perturbation of all supported distances bounds the transported virtual diameter. -/
 theorem transport_virtualDiameter_le_add (packing : SixPointPacking configuration)

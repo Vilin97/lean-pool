@@ -16,7 +16,7 @@ public import Mathlib.RingTheory.FractionalIdeal.Operations
 Supporting ideal-theoretic and arithmetic lemmas used in the second case of Fermat's Last Theorem.
 -/
 
-@[expose] public section
+public section
 
 variable {K : Type*} {p : ℕ} [Field K] [CharZero K] {ζ : K}
 

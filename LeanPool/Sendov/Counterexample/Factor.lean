@@ -40,7 +40,7 @@ rewriting unfolds again.  An opaque local is what is wanted.
 * `Sendov.exists_crit_multiset`: the factorization of `p'` over the reciprocal coordinates `q`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

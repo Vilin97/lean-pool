@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.Arith.Local.Val
 the reduction `cost ≤ -(v_p(scale) + allocCost)`, and the real relaxation of the allocation cost
 (completed square + Cauchy–Schwarz). -/
 
-@[expose] public section
+public section
 namespace Zeta32.Arith.Relaxed
 open Zeta32
 

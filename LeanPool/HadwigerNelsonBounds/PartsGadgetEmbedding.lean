@@ -18,7 +18,7 @@ Every combinatorial edge is a unit segment and every hyperedge is a rigid copy
 of the canonical triangle ruled out by the checked 481-vertex certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

@@ -16,7 +16,7 @@ canonically equivalent to the full permutation group.  The prime symmetry action
 restriction of relabelling on this permutation torsor.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -25,11 +25,13 @@ variable {p : ℕ}
 namespace BarredPermutation
 
 /-- Top-dimensional dual Fox--Neuwirth symbols. -/
+@[expose]
 def TopCell (p : ℕ) := {c : BarredPermutation p // c.IsTop}
 
 namespace TopCell
 
 /-- A permutation determines the unique top symbol with that vertical order. -/
+@[expose]
 def ofPerm (σ : Equiv.Perm (Fin p)) : TopCell p :=
   ⟨⟨σ, ∅⟩, rfl⟩
 
@@ -42,6 +44,7 @@ def ofPerm (σ : Equiv.Perm (Fin p)) : TopCell p :=
   rfl
 
 /-- Top symbols are canonically the permutation torsor. -/
+@[expose]
 def equivPerm : TopCell p ≃ Equiv.Perm (Fin p) where
   toFun c := c.1.rank
   invFun := ofPerm

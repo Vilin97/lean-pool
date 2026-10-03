@@ -24,7 +24,7 @@ the seed.  Nonvanishing is the stage-detection argument of the
 balanced line.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

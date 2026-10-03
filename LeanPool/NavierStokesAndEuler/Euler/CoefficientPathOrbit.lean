@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! A genuinely smooth bounded-coefficient translation orbit supplies
 actual bounded spatial derivatives, continuously over the time parameter. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -71,7 +71,7 @@ theorem coefficientOrbit_fderiv_apply (A : C(K, Space →ᵇ V))
     coefficientOrbit_iteratedFDeriv_apply A hA 1 a t x (fun _ => v)
 
 /-- The derivative is itself an actual continuous path of bounded fields. -/
-def orbitDerivativePath (A : C(K, Space →ᵇ V)) (v : Space) : C(K, Space →ᵇ V) :=
+@[expose] def orbitDerivativePath (A : C(K, Space →ᵇ V)) (v : Space) : C(K, Space →ᵇ V) :=
   fderiv ℝ (translateCoefficientPath A) 0 v
 
 theorem orbitDerivativePath_apply (A : C(K, Space →ᵇ V))

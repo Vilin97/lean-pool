@@ -23,7 +23,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -77,7 +77,7 @@ def intersectionFactorInH {ι : Type v} (G : ι → Type u)
   (intersectionFactor G H i g).comap H.subtype
 
 /-- The subgroup factors and a free group, lifted to a common universe. -/
-def Component {ι : Type v} (G : ι → Type u)
+@[expose] def Component {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {J : Type (max u v)} (A : J → Subgroup H) (X : Type (max u v)) :
     (J ⊕ PUnit.{1}) → Type (max (u + 1) (v + 1)) :=

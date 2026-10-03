@@ -41,7 +41,7 @@ Unit: canonical-forms (`docs/design/canonical-forms.md` §2 D11–D13, §4.5, pr
   `Realizes.resAt_eq`: a thin `X`-level wrapper around residue-calculus's `PrincipalPartData`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold Filter Topology
@@ -100,7 +100,7 @@ theorem mem_omegaSpace_iff {D : Divisor X} {Θ : MForm X} :
     Θ ∈ OmegaSpace D ↔ ∀ x, ((-(D x) : ℤ) : WithTop ℤ) ≤ Θ.ord x := Iff.rfl
 
 /-- Index of speciality: `dim Ω(D)`. -/
-noncomputable def i (D : Divisor X) : ℕ := Module.finrank ℂ (OmegaSpace D)
+@[expose] noncomputable def i (D : Divisor X) : ℕ := Module.finrank ℂ (OmegaSpace D)
 
 end MForm
 

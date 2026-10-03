@@ -13,7 +13,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.GL.Soundne
 
 /-! # Completeness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

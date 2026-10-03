@@ -23,7 +23,7 @@ Tags: number-theory, analytic-number-theory, abc-conjecture
 MSC: 11D75, 11N37
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

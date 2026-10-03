@@ -27,7 +27,7 @@ Source: Liu, Arunachalam, Temme (2021), *A rigorous and robust quantum speed-up 
 machine learning*.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

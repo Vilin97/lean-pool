@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part04D
 
 /-! # GapCVP proof, part 04, continuation 05 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -583,11 +583,11 @@ open Computability Turing GapCVP.BinaryEncoding GapCVP.SourceTotalStructuralDeco
 open GapCVP.OutputBoundedDependentRecordFold GapCVP.CNFTypedRecordWorkerTM
 
 /-- GapCVP reduction support. -/
-def flatSignedLiteralDescriptor (literal : Literal) : List Bool :=
+@[expose] def flatSignedLiteralDescriptor (literal : Literal) : List Bool :=
   lengthPrefixedWord (literal.2 :: encodeNat literal.1)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def flatLiteralRecordStep (input : List Bool) : List Bool :=
+@[expose] def flatLiteralRecordStep (input : List Bool) : List Bool :=
   match readLengthPrefixedWord input with
   | some (sign :: payload, suffix) =>
       suffix ++ lengthPrefixedWord payload ++ [sign]
@@ -604,7 +604,7 @@ def flatLiteralRecordStep (input : List Bool) : List Bool :=
       List.append_assoc, encodeLiteral]
 
 /-- GapCVP reduction support. -/
-def flatSignedLiteralDescriptorStream
+@[expose] def flatSignedLiteralDescriptorStream
     (literals : List Literal) : List Bool :=
   literals.flatMap flatSignedLiteralDescriptor
 

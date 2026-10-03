@@ -16,7 +16,7 @@ are explicit Fréchet derivatives, so their public formulas do not depend on int
 by parts or the analytic estimates used to prove rapid decay.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,7 +28,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- The directional Fréchet derivative with its Schwartz smoothness and decay proofs. -/
-def schwartzDerivative (m : E) (f : 𝓢(E, F)) : 𝓢(E, F) where
+@[expose] def schwartzDerivative (m : E) (f : 𝓢(E, F)) : 𝓢(E, F) where
   toFun x := fderiv ℝ f x m
   smooth' := by
     have h : ContDiff ℝ ∞ (fun x => (∂_{m} f) x) := (∂_{m} f : 𝓢(E, F)).smooth'

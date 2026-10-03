@@ -19,7 +19,7 @@ boundary calibration is exact: circular side `i` at parameter `t` is sent to the
 parameter `t` on standard triangle edge `i`.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology
 

@@ -15,19 +15,19 @@ Calculus, convexity, minimizers, and growth of the scalar affine-quadratic-affin
 objective.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage6StrictDeterministic
 
 /-- The piecewise linear-quadratic hard objective in displacement coordinates. -/
-noncomputable def hardValue (eps H z : ℝ) : ℝ :=
+@[expose] noncomputable def hardValue (eps H z : ℝ) : ℝ :=
   let g := 2 * eps
   if z ≤ H then -g * z
   else if z ≤ 3 * H then -g * z + (g / (2 * H)) * (z - H) ^ 2
   else g * z - 4 * g * H
 
 /-- The continuous piecewise affine slope of the hard objective. -/
-noncomputable def hardSlope (eps H z : ℝ) : ℝ :=
+@[expose] noncomputable def hardSlope (eps H z : ℝ) : ℝ :=
   let g := 2 * eps
   if z ≤ H then -g else if z ≤ 3 * H then g * (z / H - 2) else g
 

@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Paper.Section4.PropertyT
 The finite extensions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFiniteExtensions

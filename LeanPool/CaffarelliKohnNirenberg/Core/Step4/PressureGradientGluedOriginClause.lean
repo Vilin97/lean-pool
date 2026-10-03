@@ -54,7 +54,7 @@ Nothing else in the estimate changes: the transfer, the carrier, the field and
 the conclusion are the established ones.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

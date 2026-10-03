@@ -37,7 +37,7 @@ product of `ModTensor.lean`.
   directions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

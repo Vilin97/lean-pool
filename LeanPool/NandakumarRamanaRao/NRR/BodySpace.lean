@@ -38,4 +38,4 @@ The metric is Mathlib's Hausdorff distance on nonempty compact planar sets, tran
 pointwise membership stability under Hausdorff convergence.
 -/
 
-@[expose] public section
+public section

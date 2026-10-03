@@ -21,12 +21,13 @@ results/lean-route-A.out; here the tail constant is `33/5 + 121/2000` (slightly 
 `33/5 + 28/500`,
 see `psiL_le_tail`). -/
 
-@[expose] public section
+public section
 
 namespace Zeta32.ArithSum
 noncomputable section
 
 /-- Exact integral of `pa i + pb i · x` over piece `i` in `x` (from `1/ub (i+1)` to `1/ub i`). -/
+@[expose]
 def pieceRat (i : ℕ) : ℚ :=
   pa i * (1 / ub i - 1 / ub (i + 1)) + pb i * ((1 / ub i ^ 2 - 1 / ub (i + 1) ^ 2) / 2)
 
@@ -130,6 +131,7 @@ theorem log_140_div_3_gt : (3842 / 1000 : ℝ) < Real.log (140 / 3) := by
   linarith
 
 /-- Tail constant: `psiL x ≤ tailConst` for `0 < x ≤ 1/20`. -/
+@[expose]
 def tailConst : ℚ := 33 / 5 + 121 / 2000
 
 theorem constant_lt :

@@ -17,7 +17,7 @@ the parent map is injective. Complete refinement additionally removes the
 upper anchor, so no such low node can have the selected anchor as parent.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

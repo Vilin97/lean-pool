@@ -35,7 +35,7 @@ ansatz of Theorem B. The dictionary between real maps `ℝⁿ → ℝᴺ` and ve
 (`vcoeff`, `vsynth`) is set up here as well.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix
@@ -50,13 +50,15 @@ variable {n N : ℕ}
 /-! ## Real maps ↔ vector sequences -/
 
 /-- Componentwise rapid decay. -/
-def VRapid (n N : ℕ) (v : VecSeq n N) : Prop := ∀ α, IsRapidDecay n (v α)
+@[expose] def VRapid (n N : ℕ) (v : VecSeq n N) : Prop :=
+  ∀ α, IsRapidDecay n (v α)
 
 /-- Componentwise `conjReflect`-fixed: the coefficients of a real-valued map. -/
-def VReal (v : VecSeq n N) : Prop := ∀ α, conjReflect (v α) = v α
+@[expose] def VReal (v : VecSeq n N) : Prop :=
+  ∀ α, conjReflect (v α) = v α
 
 /-- The coefficient sequences of a real map `u : ℝⁿ → ℝᴺ`. -/
-def vcoeff (n : ℕ) (u : (Fin n → ℝ) → (Fin N → ℝ)) : VecSeq n N :=
+@[expose] def vcoeff (n : ℕ) (u : (Fin n → ℝ) → (Fin N → ℝ)) : VecSeq n N :=
   fun α => stdFourierCoeff n (fun x => ((u x α : ℝ) : ℂ))
 
 /-- The (real) synthesis of a vector sequence. -/

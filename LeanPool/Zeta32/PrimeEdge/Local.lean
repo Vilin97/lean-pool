@@ -23,7 +23,7 @@ The local functional (the `X`-free part of `V_Y`, Corollary 2) on `S / ∏_{m �
 `V((u+m)^{-1}) = 2 H_m^{(3)} - 2 s H_m^{(2)}` (the `-2Y` part is dropped; `Y ∈ p³ ℤ_p[X]`).
 `s = r p` gives `V_Y` without `Y`; `s = 0` gives `V⁰`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators
@@ -54,15 +54,19 @@ def seriesPart (n p b : ℕ) (A : ℚ[X]) : ℚ[X] :=
     ((dissectNum p b A : PowerSeries ℚ) * (farProd n p b : PowerSeries ℚ)⁻¹)
 
 /-- `V(u^e) = e B_{e-1} + 2 s B_e`. -/
+@[expose]
 def locMoment (s : ℚ) (e : ℕ) : ℚ := (e : ℚ) * bernoulli' (e - 1) + 2 * s * bernoulli' e
 
 /-- Linear extension of the local moments to a polynomial. -/
+@[expose]
 def locPoly (s : ℚ) (P : ℚ[X]) : ℚ := P.sum fun e a => a * locMoment s e
 
 /-- `V((u+m)^{-1})` without the `-2Y` part. -/
+@[expose]
 def locPole (s : ℚ) (m : ℕ) : ℚ := 2 * Zeta32.H 3 m - 2 * s * Zeta32.H 2 m
 
 /-- The local functional on `S / ∏_{m ∈ M} (u + m)` (polynomial part plus Lagrange residues). -/
+@[expose]
 def locValue (s : ℚ) (S : ℚ[X]) (M : Finset ℕ) : ℚ :=
   locPoly s (S /ₘ ∏ m ∈ M, (X + C (m : ℚ))) +
     ∑ m ∈ M, S.eval (-(m : ℚ)) / (∏ m' ∈ M.erase m, ((m' : ℚ) - m)) * locPole s m
@@ -115,6 +119,7 @@ def discLocal (r : ℚ) (n p b : ℕ) (A : ℚ[X]) : ℚ :=
 
 /-- `V⁰(u^e r_type)` for the three class types of §6:
 zero `r_0 = u/((u+1)…(u+4))`, low `r_L = u³/((u+1)…(u+4))`, high `r_H = u³/((u+1)(u+2)(u+3))`. -/
+@[expose]
 def blockMoment (p b e : ℕ) : ℚ :=
   if b = 0 then locValue 0 (X ^ (e + 1)) {1, 2, 3, 4}
   else if b + 5 ≤ p then locValue 0 (X ^ (e + 3)) {1, 2, 3, 4}

@@ -22,7 +22,7 @@ import Mathlib.Tactic.Ring.Basic
 /-! # Growth: decomposition of `log m_K` and the small primes
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 

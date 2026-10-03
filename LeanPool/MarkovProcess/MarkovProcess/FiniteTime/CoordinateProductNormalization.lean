@@ -23,7 +23,7 @@ recursions that branch only over active coordinates.
 This is purely algebraic finite-product infrastructure: it involves no measure and no kernel.
 -/
 
-@[expose] public section
+public section
 
 open scoped CompactlySupported ZeroAtInfty BigOperators
 
@@ -44,6 +44,7 @@ def normalizedCoordinateFactors (factors : List (Fin n × C₀(alpha, ℝ))) :
     (fun _ ↦ none)
 
 /-- Scalar evaluation of an optional normalized factor; inactivity contributes scalar one. -/
+@[expose]
 def evalOptionalFactor (x : alpha) : Option C₀(alpha, ℝ) → ℝ
   | none => 1
   | some f => f x
@@ -98,6 +99,7 @@ theorem normalizedCoordinateFactors_evaluation
       rw [hEvalUpdate, prod_update_mul]
 
 /-- Active coordinates of a normalized coordinate product. -/
+@[expose]
 def activeCoordinates (factors : List (Fin n × C₀(alpha, ℝ))) : Finset (Fin n) :=
   Finset.univ.filter fun i ↦ (normalizedCoordinateFactors factors i).isSome
 

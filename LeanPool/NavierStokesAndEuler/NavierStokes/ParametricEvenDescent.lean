@@ -22,7 +22,7 @@ regularity is inferred. Separate smoothness is not used as a substitute for
 joint smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,7 +40,7 @@ abbrev Plane := ℝ × ℝ
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Even radial, given by `∀ p, Function.Even (fun r => F (p, r))`. -/
-noncomputable def EvenRadial (F : Plane → E) : Prop :=
+@[expose] noncomputable def EvenRadial (F : Plane → E) : Prop :=
   ∀ p, Function.Even (fun r => F (p, r))
 
 /-- Parameter partial, given by `deriv (fun p => F (p, q.2)) q.1`. -/
@@ -56,7 +56,7 @@ noncomputable def radialReduce (F : Plane → E) (q : Plane) : E :=
   EvenSmoothDescent.radialDerivative (fun r => F (q.1, r)) q.2
 
 /-- Descend, given by `F (q.1, Real.sqrt q.2)`. -/
-noncomputable def descend (F : Plane → E) (q : Plane) : E :=
+@[expose] noncomputable def descend (F : Plane → E) (q : Plane) : E :=
   F (q.1, Real.sqrt q.2)
 
 /-- Plane derivative, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).smulRight (parameterPartial F q)

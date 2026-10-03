@@ -34,7 +34,7 @@ The ambient type is the library alias `E2 = Geometry.Plane = EuclideanSpace ℝ 
 (this is the `Plane` referred to in the design).
 -/
 
-@[expose] public section
+public section
 
 open NRR MeasureTheory
 open scoped RealInnerProductSpace

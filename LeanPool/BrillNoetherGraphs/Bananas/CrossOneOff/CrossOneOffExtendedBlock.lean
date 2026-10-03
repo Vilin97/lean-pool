@@ -22,7 +22,7 @@ coordinate is one less than the final block coordinate, so
 `lo + length ≤ k` is enough.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

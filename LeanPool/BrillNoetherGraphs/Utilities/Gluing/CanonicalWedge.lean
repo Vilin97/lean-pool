@@ -26,7 +26,7 @@ This file is deliberately independent of genus two and of two-pole joins.  It
 is the reusable one-pole calculation underlying the genus-two/genus-two seed.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -79,6 +79,7 @@ theorem vertex_degree_vertexWedge_inr
   linarith
 
 /-- The sum of the two factor canonical divisors on their vertex wedge. -/
+@[expose]
 def wedgeCanonicalSum
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     CFDiv (vertexWedge G H x y) :=

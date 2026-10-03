@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketRemainderBounds
 
 /-! The transported primary has zero normal component, so the actual normal drift is small. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -31,7 +31,7 @@ and Langevin / Granville; this is a formalization of the deduction, not a new re
 The radical bound `RadLB` is the only nonelementary input and appears as a hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 
@@ -43,14 +43,14 @@ noncomputable section
 /-! ### Definitions -/
 
 /-- The radical of `m`: product of its distinct prime factors. rad(0) = rad(1) = 1 by convention. -/
-def rad (m : ℕ) : ℕ := ∏ p ∈ m.factorization.support, p
+@[expose] def rad (m : ℕ) : ℕ := ∏ p ∈ m.factorization.support, p
 
 /-- The 2-full (powerful) part of `m`: product of p^{a_p} over primes with a_p ≥ 2. -/
 def B2 (m : ℕ) : ℕ :=
   ∏ p ∈ m.factorization.support.filter (fun p => 2 ≤ m.factorization p), p ^ m.factorization p
 
 /-- Product of k consecutive integers starting at n. -/
-def F (k n : ℕ) : ℕ := ∏ i ∈ Finset.range k, (n + i)
+@[expose] def F (k n : ℕ) : ℕ := ∏ i ∈ Finset.range k, (n + i)
 
 /-! ### Auxiliary lemmas -/
 
@@ -147,7 +147,7 @@ def RadLB (k : ℕ) : Prop :=
 
 /-- `N` is **powerful** if every prime dividing `N` divides it with multiplicity at least two,
 i.e. `p ∣ N → p ^ 2 ∣ N` for all primes `p`. -/
-def Powerful (N : ℕ) : Prop := ∀ p : ℕ, p.Prime → p ∣ N → p ^ 2 ∣ N
+@[expose] def Powerful (N : ℕ) : Prop := ∀ p : ℕ, p.Prime → p ∣ N → p ^ 2 ∣ N
 
 /-- For powerful `N`, the 2-full part `B2 N` is all of `N`. -/
 theorem powerful_B2_eq {N : ℕ} (hN : N ≠ 0) (hP : Powerful N) : B2 N = N := by

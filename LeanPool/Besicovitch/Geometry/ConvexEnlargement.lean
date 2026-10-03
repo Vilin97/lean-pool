@@ -16,7 +16,7 @@ This file records the two elementary enlargements used in the continuum argument
 set by a multiple of its diameter, and replacing an open set by its open convex hull.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,6 +25,7 @@ open Bornology Set
 namespace LeanPool.Besicovitch
 
 /-- The `p`-diameter thickening of a set. -/
+@[expose]
 def diameterThickening (p : ℝ) (s : Set (EuclideanSpace ℝ (Fin 2))) :
     Set (EuclideanSpace ℝ (Fin 2)) :=
   Metric.thickening (p * Metric.diam s) s
@@ -72,6 +73,7 @@ theorem subset_diameterThickening_of_inter_nonempty
   exact ⟨y, hys, (Metric.dist_le_diam_of_mem hu hxu hyu).trans_lt hdiam⟩
 
 /-- The interior of the convex hull of a set. -/
+@[expose]
 def openConvexHull (s : Set (EuclideanSpace ℝ (Fin 2))) : Set (EuclideanSpace ℝ (Fin 2)) :=
   interior (convexHull ℝ s)
 

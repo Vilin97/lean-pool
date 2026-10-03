@@ -18,7 +18,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Canonical Laplacian and the quantitative local harmonic energy bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

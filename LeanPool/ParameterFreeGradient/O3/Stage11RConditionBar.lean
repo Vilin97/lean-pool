@@ -18,7 +18,7 @@ the executable controller amortization to `conditionBar = max 1 condition`.
 The constants are explicit and independent of the problem instance.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 

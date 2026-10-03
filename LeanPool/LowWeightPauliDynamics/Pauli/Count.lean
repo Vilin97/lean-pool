@@ -46,7 +46,7 @@ matters: an upper bound on the number of stored Paulis is what bounds the runtim
 * `card_lowSet_le_pow`: `(lowSet n w).card ≤ 4 ^ w * n ^ w` for `w ≤ n`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.PauliString
 open Finset
@@ -62,6 +62,7 @@ def lowSet (n w : ℕ) : Finset (PauliIndex n) := (highSet n w)ᶜ
 
 /-- A Pauli class read site by site: the pair of `x` and `z` bits at each qubit. The pair is `0`
 exactly when the class is the identity at that site. -/
+@[expose]
 def siteFun (p : PauliIndex n) : Fin n → ZMod 2 × ZMod 2 := fun i => (p.1 i, p.2 i)
 
 /-- `siteFun` as an equivalence between Pauli classes and functions from sites to bit pairs. -/
@@ -72,6 +73,7 @@ def siteEquiv : PauliIndex n ≃ (Fin n → ZMod 2 × ZMod 2) where
   right_inv _ := funext fun _ => rfl
 
 /-- The sites at which the class is not the identity. `wt` counts exactly these. -/
+@[expose]
 def psupp (p : PauliIndex n) : Finset (Fin n) := univ.filter fun i => siteFun p i ≠ 0
 
 lemma wt_eq_card_psupp (p : PauliIndex n) : wt p = (psupp p).card := rfl

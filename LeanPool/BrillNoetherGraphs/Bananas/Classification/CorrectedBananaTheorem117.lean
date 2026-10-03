@@ -24,7 +24,7 @@ assembly then combines the remaining `g ≤ k` branch with the banana
 Brill--Noether obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -56,4 +56,4 @@ the three `integral_wirtingerDbar_mul_inv_sub*`/`integrable_wirtingerDbar_mul_in
 above for its Lemma-20.3 step — see the build-log entry for this unit for the full account.
 -/
 
-@[expose] public section
+public section

@@ -19,7 +19,7 @@ satisfies, and the implication from it to Deligne's subquotient
 form.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ retract of a finite biproduct of tensor powers of `X` alone.  This
 is how the envelope generates, and it is stronger than Deligne's
 hypothesis in two ways at once — a retract rather than a
 subquotient, and no duals among the powers. -/
+@[expose]
 def RetractGeneratedBy [Category.{v} A] [MonoidalCategory A]
     [Preadditive A] [HasFiniteBiproducts A]
     (X : A) : Prop :=

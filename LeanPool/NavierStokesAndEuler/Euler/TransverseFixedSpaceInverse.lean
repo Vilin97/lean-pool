@@ -17,7 +17,7 @@ coercive inverse are constructed here and identified with the original physical
 transverse solve. This is the fixed-space starting point for parameter estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,15 +38,20 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- The actual physical derivative associated to a fixed zero-trace coordinate derivative. -/
-def fixedFrameDerivative : zeroTraceDerivatives (U := U) T hT →L[ℝ] TimeLp T E :=
+@[expose] def fixedFrameDerivative : zeroTraceDerivatives (U := U) T hT →L[ℝ] TimeLp T E :=
   (productDerivative T hT Q Q₁).comp (zeroTraceDerivatives (U := U) T hT).subtypeL
 
+omit [CompleteSpace U] [CompleteSpace E] in
+@[simp] theorem fixedFrameDerivative_apply (v : zeroTraceDerivatives (U := U) T hT) :
+    fixedFrameDerivative T hT Q Q₁ v = productDerivative T hT Q Q₁ (v : TimeLp T U) := by
+  rfl
+
 /-- The actual physical displacement associated to a fixed coordinate derivative. -/
-def fixedFramePrimitive : zeroTraceDerivatives (U := U) T hT →L[ℝ] TimeLp T E :=
+@[expose] def fixedFramePrimitive : zeroTraceDerivatives (U := U) T hT →L[ℝ] TimeLp T E :=
   (primitiveTimeLp T hT).comp (fixedFrameDerivative T hT Q Q₁)
 
 /-- The transported Dirichlet operator on the fixed coordinate Hilbert space. -/
-def fixedFrameOperator :
+@[expose] def fixedFrameOperator :
     zeroTraceDerivatives (U := U) T hT →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
   (fixedFrameDerivative T hT Q Q₁).adjoint.comp
     ((dirichletOperator (primitiveTimeLp T hT) (timeMultiplier T hT H)).comp
@@ -71,7 +76,7 @@ variable (c : ℝ) (hc : 0 < c) (hQ : ∀ t x, c * ‖x‖ ^ 2 ≤ ‖Q t x‖ ^
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- A polynomial quantitative coercivity constant on the fixed coordinate space. -/
-def fixedCoercivity : ℝ := (transportCost T Q Q₁ c)⁻¹ ^ 2 / 2
+@[expose] def fixedCoercivity : ℝ := (transportCost T Q Q₁ c)⁻¹ ^ 2 / 2
 
 omit [CompleteSpace U] [CompleteSpace E] in
 include hT hc in
@@ -103,7 +108,7 @@ theorem fixedFrameOperator_coercive (v : zeroTraceDerivatives (U := U) T hT) :
       exact hphys
 
 /-- The genuine fixed-space inverse, constructed from the transported coercive form. -/
-def fixedFrameSolver : TimeLp T E →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
+@[expose] def fixedFrameSolver : TimeLp T E →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
   (coerciveInverse (fixedFrameOperator T hT Q Q₁ H) (fixedCoercivity T Q Q₁ c)
     (fixedCoercivity_pos T hT Q Q₁ c hc)
     (fixedFrameOperator_coercive T hT Q Q₁ H c hc hQ hd K hK hH hsmall)).comp
@@ -156,6 +161,7 @@ theorem fixedFrameSolver_eq_transverse (m : Icc (0 : ℝ) T → E)
     (transverseForward T hT Q Q₁ hd m hTangent v)
   have hu := congrArg (fun z : transverseDerivatives T hT m => (z : TimeLp T E))
     (transverseForward_backward T hT Q Q₁ c hc hQ hd m hTangent hRange u)
+  simp only [transversePrimitive_apply, transverseForward_coe] at hu h
   change fixedFrameDerivative T hT Q Q₁ (transverseBackward T hT Q Q₁ c hc hQ hd m u) =
     (u : TimeLp T E) at hu
   change ⟪fixedFrameDerivative T hT Q Q₁ (transverseBackward T hT Q Q₁ c hc hQ hd m u),

@@ -17,7 +17,7 @@ pure-power inner-product formula gives the usual factorial isometry.  At order o
 operator is identified with the concrete Brownian Wick power of a finite step kernel.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -34,6 +34,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   {B : ℝ≥0 → W → ℝ}
 
 /-- The genuine order-`n` Brownian multiple integral of the pure power `f^{⊗n}`. -/
+@[expose]
 noncomputable def brownianPurePowerIntegral (hB : IsPreBrownianReal B P)
     (n : ℕ) (f : Lp ℝ 2 nonnegativeLebesgueMeasure) : RandomL2 P :=
   brownianMultipleIntegralCLM hB n (iteratedKernelPurePower n f)

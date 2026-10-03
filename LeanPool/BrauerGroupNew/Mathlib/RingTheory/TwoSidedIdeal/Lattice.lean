@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TwoSidedIdeal.Lattice
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Lattice`.
 -/
 
-@[expose] public section
+public section
 
 namespace TwoSidedIdeal
 variable {R : Type*} [NonUnitalNonAssocRing R] {I J : TwoSidedIdeal R} {x : R}

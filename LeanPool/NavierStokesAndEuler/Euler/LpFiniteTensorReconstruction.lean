@@ -16,7 +16,7 @@ L² derivatives. Quantitative Gevrey estimates continue to use the ordered-word
 norms directly, and do not pass through these coordinate norm equivalences.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,11 +57,12 @@ theorem tupleLp_ae (u : ι → Lp V 2 μ) :
 end Tuple
 
 /-- Coordinate directions in the ordinary spatial domain. -/
+@[expose]
 def direction (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 /-- Tensor coordinates, given by `ContinuousLinearMap.pi (fun w => (ContinuousLinearMap.id ℝ
 (Space [×n]→L[ℝ] V)).flipMultilinear (fun i => direction (w i)))`. -/
-def tensorCoordinates (n : ℕ) :
+@[expose] def tensorCoordinates (n : ℕ) :
     (Space [×n]→L[ℝ] V) →L[ℝ] ((Fin n → Fin 3) → V) :=
   ContinuousLinearMap.pi (fun w =>
     (ContinuousLinearMap.id ℝ (Space [×n]→L[ℝ] V)).flipMultilinear (fun i => direction (w i)))

@@ -18,7 +18,7 @@ at a cons: the vocabulary in which the assembled star vector's
 coordinates factor over the vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

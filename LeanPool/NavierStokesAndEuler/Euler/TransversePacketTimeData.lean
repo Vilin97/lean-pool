@@ -30,7 +30,7 @@ section
 
 /-! The vector-potential multiplier is a fixed linear contraction of the normal functional. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,14 +43,14 @@ Space) (E := ℝ))`. -/
 def normalVector : (Space →L[ℝ] ℝ) →L[ℝ] Space :=
   (ContinuousLinearMap.apply ℝ Space (1 : ℝ)).comp (realAdjoint (U := Space) (E := ℝ))
 
-@[simp] theorem normalVector_apply (N : Space →L[ℝ] ℝ) : normalVector N = N.adjoint 1 := rfl
+@[simp] theorem normalVector_apply (N : Space →L[ℝ] ℝ) : normalVector N = N.adjoint 1 := by rfl
 
 /-- Normal potential map, given by `-(crossOperator.comp normalVector)`. -/
 def normalPotentialMap : (Space →L[ℝ] ℝ) →L[ℝ] (Space →L[ℝ] Space) :=
   -(crossOperator.comp normalVector)
 
 @[simp] theorem normalPotentialMap_apply (N : Space →L[ℝ] ℝ) :
-    normalPotentialMap N = -crossLeft (N.adjoint 1) := rfl
+    normalPotentialMap N = -crossLeft (N.adjoint 1) := by rfl
 
 theorem normalPotentialMap_norm : ‖normalPotentialMap‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
@@ -88,7 +88,7 @@ section
 
 /-! The literal vector-potential multiplier inherits the source normal coefficient bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -135,7 +135,7 @@ def potentialPathMap : C(K,NormalField) →L[ℝ] C(K,PotentialField) :=
 
 omit [CompactSpace K] in
 @[simp] theorem potentialPathMap_apply (N : C(K, NormalField)) (t : K) (x : Space) :
-    potentialPathMap N t x = normalPotentialMap (N t x) := rfl
+    potentialPathMap N t x = normalPotentialMap (N t x) := by rfl
 
 theorem potentialPathMap_norm : ‖potentialPathMap (K := K)‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -208,7 +208,7 @@ section
 
 /-! An inverse-free polynomial formula for the actual normal multiplier's time derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -263,7 +263,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -368,7 +368,7 @@ def timeNormalPath (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[�
         (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) N Q₁) N
 
 theorem timeNormalPath_apply (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space))
-    (t : K) (y : Space) : timeNormalPath N Q₁ t y = normalTimeMap (N t y) (Q₁ t y) := rfl
+    (t : K) (y : Space) : timeNormalPath N Q₁ t y = normalTimeMap (N t y) (Q₁ t y) := by rfl
 
 theorem timeNormalPath_translation (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space))
     (a : Space) : translateCoefficientPath (timeNormalPath N Q₁) a =
@@ -523,7 +523,7 @@ section
 /-! The potential time coefficient from an actual continuous, translation-smooth normal derivative
 path. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -569,7 +569,7 @@ variable (m : SmoothCoefficientPath K Space) (m₁ : C(K, Space →ᵇ Space))
 
 /-- Potential time path, given by `potentialPathMap (timeNormalPath (normalFunctional m c hc hm)
 (columnPath m₁))`. -/
-def potentialTimePath : C(K,PotentialField) :=
+@[expose] def potentialTimePath : C(K,PotentialField) :=
   potentialPathMap (timeNormalPath (normalFunctional m c hc hm) (columnPath m₁))
 
 theorem potentialTimePath_apply (t : K) (y : Space) :
@@ -662,7 +662,7 @@ section
 
 /-! Genuine time derivatives of the inverse deformation and its transported normal. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -735,7 +735,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -788,7 +788,7 @@ local instance instTransversePacketTimeData10 : NormedSpace ℝ C(Icc (0 : ℝ) 
     inferInstance
 
 /-- The derivative of the inverse is constructed from the original fields. -/
-def inverseDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
+@[expose] def inverseDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) :=
   -pathCompositionMap (α := Space) (K := Icc (0 : ℝ) D.T)
     (E := Space) (F := Space) (U := Space) D.FInv.field D.M.field
 
@@ -797,7 +797,7 @@ def normalDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space) :=
   mapCoefficientPath (normalMap D.m₀) D.inverseDerivative
 
 @[simp] theorem inverseDerivative_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
-    D.inverseDerivative t x = -((D.FInv.field t x).comp (D.M.field t x)) := rfl
+    D.inverseDerivative t x = -((D.FInv.field t x).comp (D.M.field t x)) := by rfl
 
 @[simp] theorem normalDerivative_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     D.normalDerivative t x = -((D.M.field t x).adjoint (D.normal.field t x)) := by
@@ -912,7 +912,7 @@ theorem normalDerivative_bound (R CI CM : ℝ) (hR : 0 ≤ R) (hCI : 0 ≤ CI) (
     (D.inverseDerivative_bound R CI CM hR hCI hCM hI hM) n a
 
 /-- The actual time coefficient for the periodic-potential multiplier. -/
-def potentialDerivative : C(Icc (0 : ℝ) D.T,PotentialField) :=
+@[expose] def potentialDerivative : C(Icc (0 : ℝ) D.T,PotentialField) :=
   potentialTimePath D.normal D.normalDerivative D.normalLower D.normalLower_pos D.normal_lower
 
 theorem potentialDerivative_orbit : ContDiff ℝ ∞ (translateCoefficientPath D.potentialDerivative) :=

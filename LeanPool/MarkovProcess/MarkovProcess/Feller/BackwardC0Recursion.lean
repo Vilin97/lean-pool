@@ -22,7 +22,7 @@ integral against a finite-time kernel is in `Feller/BackwardC0Integral.lean`; no
 path space is proved here.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped NNReal ZeroAtInfty
@@ -34,6 +34,7 @@ variable {alpha : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha]
   [BorelSpace alpha] [LocallyCompactSpace alpha] [T2Space alpha]
 
 /-- Backward semigroup recursion for a nonempty ordered family of coordinatewise `C₀` factors. -/
+@[expose]
 noncomputable def IsFellerKernelSemigroup.backwardC0
     {P : SubMarkovKernelSemigroup alpha} (hP : P.IsFellerKernelSemigroup) :
     {n : ℕ} → FiniteOrderedTimes (n + 1) →

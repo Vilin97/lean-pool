@@ -27,7 +27,7 @@ via `Function.surjInv`. The component `n_g(q) := s(q)⁻¹ * g * s(π(g)⁻¹ * 
 because its image under `π` is `q⁻¹ * π(g) * π(g)⁻¹ * q = 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 
@@ -52,6 +52,7 @@ theorem section_apply (q : G ⧸ N) :
 
 /-- The "left component" of the Krasner-Kaloujnine homomorphism, before showing
 it lands in `N`. -/
+@[expose]
 noncomputable def krasnerLeftRaw (g : G) (q : G ⧸ N) : G :=
   (section_ N q)⁻¹ * g * section_ N ((QuotientGroup.mk' N g)⁻¹ * q)
 
@@ -67,10 +68,12 @@ theorem krasnerLeftRaw_mem (g : G) (q : G ⧸ N) :
   exact (QuotientGroup.eq_one_iff _).mp hone
 
 /-- The "left component" of the Krasner-Kaloujnine homomorphism, valued in `N`. -/
+@[expose]
 noncomputable def krasnerLeft (g : G) (q : G ⧸ N) : N :=
   ⟨krasnerLeftRaw N g q, krasnerLeftRaw_mem N g q⟩
 
 /-- The Krasner-Kaloujnine map `G → N ≀ᵣ (G ⧸ N)` (as bare data). -/
+@[expose]
 noncomputable def krasnerKaloujnineFun (g : G) : N ≀ᵣ (G ⧸ N) :=
   ⟨krasnerLeft N g, QuotientGroup.mk' N g⟩
 
@@ -125,6 +128,7 @@ theorem krasnerKaloujnine_map_one :
     exact map_one _
 
 /-- The Krasner-Kaloujnine universal embedding `G →* N ≀ᵣ (G ⧸ N)`. -/
+@[expose]
 noncomputable def krasnerKaloujnineHom :
     G →* (N ≀ᵣ (G ⧸ N)) where
   toFun := krasnerKaloujnineFun N

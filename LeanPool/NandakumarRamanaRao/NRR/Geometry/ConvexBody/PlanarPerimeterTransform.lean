@@ -46,7 +46,7 @@ all of Mathlib together with the perimeter, width and support-function APIs. No 
 required.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

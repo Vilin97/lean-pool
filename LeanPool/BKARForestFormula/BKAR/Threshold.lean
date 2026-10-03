@@ -15,7 +15,7 @@ BKAR interpolation points: threshold connectivity in a forest is equivalent to
 the path-min inequality along the unique forest path.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -37,6 +37,7 @@ theorem mem_thresholdEdges (F : Forest V) (u : F.EdgeParam → ℝ)
   simp [thresholdEdges]
 
 /-- The threshold edge set is again an acyclic forest index. -/
+@[expose]
 def thresholdIndex (F : Forest V) (u : F.EdgeParam → ℝ) (s : ℝ) :
     ForestIndex V where
   edges := F.thresholdEdges u s
@@ -48,6 +49,7 @@ def thresholdIndex (F : Forest V) (u : F.EdgeParam → ℝ) (s : ℝ) :
 Two vertices are threshold-connected when a simple forest path joins them using
 only edges whose parameter is at least `s`.
 -/
+@[expose]
 def thresholdConnected (F : Forest V) (u : F.EdgeParam → ℝ)
     (s : ℝ) (i j : V) : Prop :=
   ∃ γ : List (Edge V),

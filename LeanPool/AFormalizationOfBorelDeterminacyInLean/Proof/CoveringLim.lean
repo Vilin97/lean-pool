@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -45,7 +45,9 @@ include hF in lemma transition_fixing {m n} (h : m ≤ n) :
   · apply transition_fixing_full hF h
   · omega
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-abbrev limConePt : PTrees := ⟨(limCone (F ⋙ PTreeForget)).pt, by
+abbrev limConePt
+    (hF : ∀ k, Fixing (K + k) (F.map (homOfLE k.le_succ).op)) : PTrees :=
+  ⟨(limCone (F ⋙ PTreeForget)).pt, by
   constructor
   · apply lim_isPruned
     · intro n

@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.DualTra
 Finite causal query programs implementing the below-two primal and dual phases.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage3BelowTwoS3F
 
@@ -22,11 +22,12 @@ noncomputable local instance machinePropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
 /-- The observed physical gradient rescaled into normalized trial coordinates. -/
+@[expose]
 noncomputable def normalizedGradient (M D : ℝ) (obs : Observation d) : Point d :=
   (1 / (M * D)) • obs.gradient
 
 /-- The cocoercivity guard formed from consecutive observations. -/
-noncomputable def cocoCheck (before after : Observation d) :
+@[expose] noncomputable def cocoCheck (before after : Observation d) :
     ObservableGuardCheck d := ⟨.cocoercivity, before, after⟩
 
 /-- The cocoercivity inequality reconstructed from a guard's two recorded observations. -/
@@ -42,6 +43,7 @@ noncomputable def checkHolds (p M : ℝ) (check : ObservableGuardCheck d) : Prop
 
 /-- The form actually evaluated by the machine, written directly from the two
 returned exact pairs. -/
+@[expose]
 noncomputable def cocoPairHolds (p M : ℝ) (before after : Observation d) : Prop :=
   before.value - after.value -
       pairing after.gradient (before.point - after.point) ≥
@@ -55,6 +57,7 @@ export V7.CausalProgram.Program (query finish action eval runFuel_eq_eval)
 end Program
 
 /-- The below-two dual query program with early accuracy or guard-failure termination. -/
+@[expose]
 noncomputable def dualProgram (p eps M D : ℝ) (n k : ℕ)
     (center : Point d) (q r : Point d) (G : VectorSeq d)
     (previous : Observation d) (guards : List (ObservableGuardCheck d)) :
@@ -78,11 +81,13 @@ noncomputable def dualProgram (p eps M D : ℝ) (n k : ℕ)
           else .finish guardsNext (.scale check)
 
 /-- The remaining primal query budget plus the complete dual query budget. -/
+@[expose]
 def phaseOneBudget (n : ℕ) : ℕ → ℕ
   | 0 => n
   | fuel + 1 => phaseOneBudget n fuel + 1
 
 /-- The below-two primal query program that passes its endpoint to the dual phase. -/
+@[expose]
 noncomputable def phaseOneProgram (p eps M D : ℝ) (x0 : Point d) (n k : ℕ)
     (state : PrimalState d) (previous : Observation d)
     (guards : List (ObservableGuardCheck d)) :
@@ -112,6 +117,7 @@ noncomputable def phaseOneProgram (p eps M D : ℝ) (x0 : Point d) (n k : ℕ)
           else .finish guardsNext (.scale check)
 
 /-- The complete below-two local trial initialized with the cached starting observation. -/
+@[expose]
 noncomputable def belowLocalTrial (p eps : ℝ) (x0 : Point d) (n : ℕ) :
     LocalTrial d :=
   programTrial fun M D cached =>

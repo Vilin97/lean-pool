@@ -27,7 +27,7 @@ probabilities.
 * `visitProbabilityFormula`
 -/
 
-@[expose] public section
+public section
 
 /- ! Markov-chain identities and row-sum bounds used in the proof. -/
 open scoped ArithmeticFunction BigOperators

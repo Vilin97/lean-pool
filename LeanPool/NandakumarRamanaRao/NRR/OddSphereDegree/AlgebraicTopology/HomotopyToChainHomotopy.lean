@@ -18,7 +18,7 @@ functors. The theorem consumes an explicit chain homotopy; the prism-operator mo
 that chain homotopy from a topological homotopy.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

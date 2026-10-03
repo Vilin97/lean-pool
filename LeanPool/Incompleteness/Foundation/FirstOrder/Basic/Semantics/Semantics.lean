@@ -17,7 +17,7 @@ definition.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -52,7 +52,7 @@ instance [n : Nonempty M] : Nonempty (Structure L M) := by
   exact ⟨{ func := fun _ _ _ => x, rel := fun _ _ _ => True }⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
+@[reducible, expose]
 protected def lMap (φ : L₁ →ᵥ L₂) {M : Type w} (S : Structure L₂ M) : Structure L₁ M where
   func := fun _ f => S.func (φ.func f)
   rel := fun _ r => S.rel (φ.rel r)
@@ -67,8 +67,8 @@ variable (φ : L₁ →ᵥ L₂) {M : Type w} (s₂ : Structure L₂ M)
     {k} {r : L₁.Rel k} {v : Fin k → M} : (s₂.lMap φ).rel r v ↔ s₂.rel (φ.rel r) v := of_eq rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
-def ofEquiv {M : Type w} [Structure L M] {N : Type w'} (Θ : M ≃ N) : Structure L N where
+@[reducible, expose] def ofEquiv {M : Type w} [Structure L M] {N : Type w'}
+    (Θ : M ≃ N) : Structure L N where
   func := fun _ f v => Θ (func f (Θ.symm ∘ v))
   rel  := fun _ r v => rel r (Θ.symm ∘ v)
 
@@ -80,7 +80,7 @@ noncomputable instance [Structure L M] :
     Structure.Decidable L M := fun r v => Classical.dec (rel r v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible] def toStruc [i : Nonempty M] (s : Structure L M) : Struc L := ⟨M, i, s⟩
+@[reducible, expose] def toStruc [i : Nonempty M] (s : Structure L M) : Struc L := ⟨M, i, s⟩
 
 end Structure
 
@@ -100,7 +100,7 @@ variable
   {ε : ξ → M} {ε₁ : μ₁ → M} {ε₂ : μ₂ → M}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def val (s : Structure L M) (e : Fin n → M) (ε : ξ → M) : Semiterm L ξ n → M
+@[expose] def val (s : Structure L M) (e : Fin n → M) (ε : ξ → M) : Semiterm L ξ n → M
   | #x       => e x
   | &x       => ε x
   | func f v => s.func f (fun i => (v i).val s e ε)
@@ -279,6 +279,7 @@ variable {M : Type w} {s : Structure L M}
 variable {n : ℕ} {e : Fin n → M} {e₂ : Fin n₂ → M} {ε : ξ → M} {ε₂ : μ₂ → M}
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def EvalAux (s : Structure L M) (ε : ξ → M) : ∀ {n}, (Fin n → M) → Semiformula L ξ n → Prop
   | _, _, ⊤        => True
   | _, _, ⊥        => False
@@ -294,6 +295,7 @@ def EvalAux (s : Structure L M) (ε : ξ → M) : ∀ {n}, (Fin n → M) → Sem
   by induction φ using rec' <;> simp [*, EvalAux, or_iff_not_imp_left]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def Eval (s : Structure L M) (e : Fin n → M) (ε : ξ → M) : Semiformula L ξ n →ˡᶜ Prop where
   toTr := EvalAux s ε e
   map_top' := rfl

@@ -14,7 +14,7 @@ and local integrability of almost every slice. No time-integrability bound
 on the derivative is needed for this selection.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped Topology

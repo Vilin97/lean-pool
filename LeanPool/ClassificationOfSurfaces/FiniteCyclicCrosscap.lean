@@ -26,7 +26,7 @@ backwards, exactly as in Gallier--Xu's derivation. The broader
 ordinary signed edge relabeling.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -37,20 +37,21 @@ open SurfaceCellComplex
 namespace Crosscap
 
 /-- The source spelling with two equally oriented occurrences of `a`. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace (([.pos a] ++ X) ++ ([.pos a] ++ Y))
 
 /-- A cyclic spelling of the target cross-cap word `a a Y⁻¹ X`. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace ((X ++ [.pos a]) ++ ([.pos a] ++ inverseWord Y))
 
 /-- Split the source between the two occurrences of `a`. -/
+@[expose]
 def sourceCut {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     P2Cut (source a X Y) where
@@ -67,6 +68,7 @@ def sourceCut {n : ℕ} (a : Fin n)
 
 /-- Split the target along the edge used to merge the first source child with the reverse of the
 second. -/
+@[expose]
 def targetCut {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     P2Cut (target a X Y) where
@@ -155,6 +157,7 @@ theorem commonEdgeRelabeling_retainWord {n : ℕ} (a : Fin n)
             Equiv.swap_apply_of_ne_of_ne hcast (Fin.castSucc_ne_last e)]
 
 /-- Match the explicit face indices of the two canonical splits. -/
+@[expose]
 def commonFaceEquiv {n : ℕ} (a : Fin n)
     (X Y : List (SignedDart (Fin n))) :
     (P2.split (target a X Y) (targetCut a X Y)).Face ≃

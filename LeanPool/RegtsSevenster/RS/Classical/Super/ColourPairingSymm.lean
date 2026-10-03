@@ -29,13 +29,14 @@ the fibre functor is applied.  The lemma is kept because it is a
 numbered lemma of the paper.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 namespace MixedColouring
 
 /-- Permuting a colouring by a permutation of positions. -/
+@[expose]
 def perm {k ℓ d : ℕ} (c : MixedColouring k ℓ d)
     (π : Equiv.Perm (Fin d)) : MixedColouring k ℓ d :=
   fun i => c (π i)

@@ -25,7 +25,7 @@ Main exports: `RS.circleIntegral_eq_two_pi_I_mul_resAt`,
 `RS.MeromorphicAt.eventually_circleIntegral_eq_two_pi_I_mul_resAt`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function Real Complex
 

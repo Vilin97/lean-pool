@@ -18,7 +18,7 @@ Hermitian matrix be valued in `ℝ` instead of `ℂ`, reflecting that physical o
 self-adjoint and take real expectation values.
 -/
 
-@[expose] public section
+public section
 
 /-- `IsMaximalSelfAdjoint R α` witnesses that `R` is the maximal `TrivialStar` subring of the
 star ring `α`, via an additive map `selfadjMap : α →+ R` collecting the self-adjoint part of

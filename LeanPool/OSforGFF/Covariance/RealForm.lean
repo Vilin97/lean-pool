@@ -24,7 +24,7 @@ square root propagator embedding theorem.
 - `freeCovarianceFormR_pos`: Positivity of the quadratic form
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Matrix
 open scoped Real InnerProductSpace BigOperators ComplexConjugate
@@ -36,7 +36,7 @@ namespace QFT
 /-! ## Real Covariance Form -/
 
 /-- Real covariance bilinear form induced by the free covariance kernel. -/
-noncomputable def freeCovarianceFormR (m : ℝ) (f g : OSforGFF.TestFunction) : ℝ :=
+@[expose] noncomputable def freeCovarianceFormR (m : ℝ) (f g : OSforGFF.TestFunction) : ℝ :=
   ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume
 
 theorem freeCovarianceℂ_bilinear_agrees_on_reals
@@ -104,7 +104,7 @@ noncomputable def schwartzToL2CLMReal (_m : ℝ) :
 /-- The embedding T maps a test function to a weighted function in momentum space.
     Conceptually: T f = FourierTransform(f) * (‖k‖² + m²)^(-1/2).
 -/
-noncomputable def sqrtPropagatorMap (m : ℝ) (f : OSforGFF.TestFunction) : SpaceTime → ℂ :=
+@[expose] noncomputable def sqrtPropagatorMap (m : ℝ) (f : OSforGFF.TestFunction) : SpaceTime → ℂ :=
   fun k =>
     (SchwartzMap.fourierTransformCLM ℂ (toComplex f)) k
       * momentumWeightSqrtMathlib m k
@@ -383,7 +383,11 @@ lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : OSforGFF.TestFunction)
   classical
   set g := SchwartzMap.fourierTransformCLM ℂ (toComplex f) with hg
   set A := (SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)) g with hA
-  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := rfl
+  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := by
+    change momentumWeightSqrtMathlibMulCLM m
+      (SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)
+        (SchwartzMap.fourierTransformCLM ℂ (toComplexCLM f))) = _
+    rw [toComplexCLM_apply]
   have h_mul := momentumWeightSqrt_mathlib_mul_CLM_spec (m := m) A
   have h_mul' : embeddingMapCLM m f =ᵐ[volume]
       fun k => (momentumWeightSqrtMathlib m k : ℂ) * A k := by

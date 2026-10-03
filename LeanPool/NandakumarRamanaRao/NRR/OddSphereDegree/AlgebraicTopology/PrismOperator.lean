@@ -22,7 +22,7 @@ construction to the algebraic simplicial-homotopy and chain-homotopy machinery
 used by the singular-homology homotopy-invariance proof.
 -/
 
-@[expose] public section
+public section
 open CategoryTheory Limits AlgebraicTopology Simplicial
 
 namespace SphereOddDegree
@@ -51,7 +51,7 @@ noncomputable def edge : Δ[1] ⟶ TopCat.toSSet.obj unitI :=
     ((unitI.toSSetObjEquiv (Opposite.op (SimplexCategory.mk 1))).symm edgeCM)
 
 /-- The const-valued simplicial map onto the `j`-th vertex of `Δ[1]`. -/
-noncomputable def vtx (Z : SSet.{0}) (j : Fin 2) : Z ⟶ Δ[1] :=
+@[expose] noncomputable def vtx (Z : SSet.{0}) (j : Fin 2) : Z ⟶ Δ[1] :=
   SSet.const (SSet.stdSimplex.obj₀Equiv.symm j)
 
 /-- A `ContinuousMap.Homotopy` between `f.hom` and `g.hom`, repackaged as a
@@ -78,7 +78,7 @@ noncomputable def cylinder {X Y : TopCat.{0}} {f g : X ⟶ Y}
     TopCat.toSSet.map (homotopyMap H)
 
 /-- The `j`-th endpoint section `Sing X ⟶ Sing X × Δ[1]`. -/
-noncomputable def sect (X : TopCat.{0}) (j : Fin 2) :
+@[expose] noncomputable def sect (X : TopCat.{0}) (j : Fin 2) :
     TopCat.toSSet.obj X ⟶ TopCat.toSSet.obj X ⨯ Δ[1] :=
   Limits.prod.lift (𝟙 (TopCat.toSSet.obj X)) (vtx (TopCat.toSSet.obj X) j)
 

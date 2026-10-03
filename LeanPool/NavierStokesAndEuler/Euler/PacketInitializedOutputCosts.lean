@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedParameterBounds
 /-! One fixed polynomial controls both correction admissibility and every
 source multiplier in the same-Q shear/Hessian and graph-flow estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

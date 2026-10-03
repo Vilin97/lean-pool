@@ -22,7 +22,7 @@ We also provide `IsScalarTower ℝ ℂ ℂ` which was previously redeclared
 in several files with different proof terms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable instance instNormSMulClassRealComplex : NormSMulClass ℝ ℂ :=
   NormedSpace.toNormSMulClass

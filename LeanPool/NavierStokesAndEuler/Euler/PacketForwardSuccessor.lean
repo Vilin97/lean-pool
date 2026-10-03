@@ -123,23 +123,44 @@ theorem forwardPhysicalBounds (t : Icc (0 : ℝ) (F).parent.T) (x : Space) :
 
 /-- The forward choice's parent, state, low bounds, physical bounds and renewed
 frame, with the guards' shear, spike and `earlyRatio`. -/
-@[expose] def forwardStep : P.Step where
+@[expose] def forwardStep (hq : requiredExponent ≤ q)
+    (hB : commonThreshold gradientConstant hessianConstant ≤ B) : P.Step where
   parent := P.forwardParent hq hB
   state := P.forwardState hq hB
-  targetShear := (G).hchild
-  spikeAmplitude := (G).δ
-  errorRatio := (G).earlyRatio
-  errorRatio_nonneg := (G).earlyRatio_nonneg
+  targetShear := (P.forwardGuards hq hB).hchild
+  spikeAmplitude := (P.forwardGuards hq hB).δ
+  errorRatio := (P.forwardGuards hq hB).earlyRatio
+  errorRatio_nonneg := (P.forwardGuards hq hB).earlyRatio_nonneg
   targetShear_eq := P.forwardGuards_shear hq hB
   parent_horizon := rfl
   parent_scale := rfl
-  label_eq := (F).label_constant
+  label_eq := (P.chooseForward hq hB).label_constant
   low := P.forwardLow hq hB
-  low_exterior := rfl
-  low_core := rfl
-  low_pressure := rfl
-  low_boundary := rfl
-  low_radius := rfl
+  low_exterior := by
+    have h := (P.chooseForward hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.forward_smallness hq hB)
+    exact h.1
+  low_core := by
+    have h := (P.chooseForward hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.forward_smallness hq hB)
+    exact h.2.1
+  low_pressure := by
+    have h := (P.chooseForward hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.forward_smallness hq hB)
+    exact h.2.2.1
+  low_boundary := by
+    have h := (P.chooseForward hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.forward_smallness hq hB)
+    exact h.2.2.2.2
+  low_radius := by
+    have h := (P.chooseForward hq hB).lowBounds_values _ _
+      P.restricted_gradient_bound P.restricted_hessian_bound
+      (P.forward_smallness hq hB)
+    exact h.2.2.2.1.trans P.restrictedLow_radius
   physical_bounds := P.forwardPhysicalBounds hq hB
   bad_cost := P.forward_bad_cost hq hB
   pressure_cost := P.forward_pressure_cost hq hB
@@ -147,7 +168,7 @@ frame, with the guards' shear, spike and `earlyRatio`. -/
   geometry_targetTime := P.forwardGeometry_targetTime hq hB
   geometry_coupling := P.forwardFrame_a
   geometry_y := rfl
-  geometry_delta_pos := (I).delta_pos
+  geometry_delta_pos := (P.forwardInput hq hB).delta_pos
   geometry_shear := rfl
   renewal_errors := P.forward_renewal_errors hq hB
   renewal := P.forwardRenewal hq hB
@@ -156,7 +177,9 @@ frame, with the guards' shear, spike and `earlyRatio`. -/
   renewal_error := rfl
 
 /-- Assemble the forward packet using the shared successor invariant. -/
-@[expose] def forwardNext : Stage S 1 := P.next (P.forwardStep hq hB)
+@[expose] def forwardNext (hq : requiredExponent ≤ q)
+    (hB : commonThreshold gradientConstant hessianConstant ≤ B) : Stage S 1 :=
+  P.next (P.forwardStep hq hB)
 
 theorem forwardNext_time : (P.forwardNext hq hB).time=P.nextTime := rfl
 

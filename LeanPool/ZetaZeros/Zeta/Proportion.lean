@@ -17,7 +17,7 @@ Once the zero count and kernel energy have their required normalized limits, the
 inequalities turn into the claimed eventual proportion bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

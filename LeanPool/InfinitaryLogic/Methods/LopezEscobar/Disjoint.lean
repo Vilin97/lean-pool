@@ -28,7 +28,7 @@ Endpoints: `pcMem_disjoint` and `pcSentences_entails_not`, the latter being exac
 Unit 5 feeds to `craig_pcSeparation_relational`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -85,11 +85,14 @@ private theorem pcMem_disjoint {B : Set (StructureSpace L)}
   -- reconstruct the functional structure and make `N` infinite
   let Kstar : (KLang L).Structure N := reconstructStructure (sideFunsSet L .left) hAxN
   let Mstar : (MidLang L).Structure N := (sideEmb L .left).reduct N
+  have hExpansion : @LHom.IsExpansionOn (MidLang L) (KLang L)
+      (sideEmb L .left) N Mstar Kstar := LHom.isExpansionOn_reduct _ _
   have hM : @Sentenceω.Realize (MidLang L) (functionalTheta L T₀) N Mstar := by
     have h1 := reconstruct_realizes_functionalPCSentence .left T₀ hAxN hrelN
     rw [functionalPCSentence] at h1
-    exact (BoundedFormulaω.realize_mapLanguage (sideEmb L .left) (functionalTheta L T₀)
-      (Empty.elim : Empty → N) Fin.elim0).mp h1
+    exact (@BoundedFormulaω.realize_mapLanguage (MidLang L) Empty 0
+      (KLang L) (sideEmb L .left) N Mstar Kstar hExpansion
+      (functionalTheta L T₀) (Empty.elim : Empty → N) Fin.elim0).mp h1
   obtain ⟨homega, -⟩ := (realize_functionalTheta T₀).mp hM
   have hν := numMap_bijective homega
   have : Infinite N := Infinite.of_injective (numMap L N) hν.injective

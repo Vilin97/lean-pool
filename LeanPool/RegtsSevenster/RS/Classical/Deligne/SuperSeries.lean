@@ -27,7 +27,7 @@ the pure cases and, for `n > q`, a linear recurrence of order `p` —
 the input for hook-vanishing arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -38,6 +38,7 @@ open Finset PowerSeries
 /-- The power sums of the super vector space `ℂ^{p|q}`: `p` copies of
 `+1` and `q` copies of `−1` with the super sign, so
 `superPS p q 1 = p + q`, `superPS p q 2 = p − q`, and so on. -/
+@[expose]
 noncomputable def superPS (p q : ℕ) : ℕ → ℂ :=
   fun c => (p : ℂ) + (-1) ^ (c + 1) * (q : ℂ)
 

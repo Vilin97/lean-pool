@@ -12,7 +12,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Bellman
 
 /-! # Policy -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -34,10 +34,12 @@ open LocalHazard
 variable {L m : ℕ}
 
 /-- Select the appropriate extended child hazard. -/
+@[expose]
 def childHazard (a h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
   if side = 0 then hL a h x y else hR a h x y
 
 /-- The recursively propagated extended hazard, rooted at `1 / m`. -/
+@[expose]
 def hazard (I : AggregatedInventory L m) (a : ℝ) :
     ∀ d, DyadicNode d → ℝ
   | 0, _ => 1 / (m : ℝ)
@@ -48,37 +50,44 @@ def hazard (I : AggregatedInventory L m) (a : ℝ) :
         (I.count (d + 1) (rightChild z.1)) z.2
 
 /-- Inventory counts, coerced to reals. -/
+@[expose]
 def inventory (I : AggregatedInventory L m) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   I.count d v
 
 /-- Conditional left-child deletion probability at an internal node. -/
+@[expose]
 def splitLeft (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   dL a (I.count (d + 1) (leftChild v))
     (I.count (d + 1) (rightChild v))
 
 /-- Conditional right-child deletion probability at an internal node. -/
+@[expose]
 def splitRight (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   dR a (I.count (d + 1) (leftChild v))
     (I.count (d + 1) (rightChild v))
 
 /-- Deletion mass `q_v = N_v h_v`. -/
+@[expose]
 def deletionMass (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   inventory I d v * hazard I a d v
 
 /-- Interval mass `p_v`. -/
+@[expose]
 def intervalMass (d : ℕ) (v : DyadicNode d) : ℝ :=
   nodeMass d v
 
 /-- Discrepancy `t_v = (p_v - q_v) / a`. -/
+@[expose]
 def discrepancy (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   (intervalMass d v - deletionMass I a d v) / a
 
 /-- Reciprocal regularized count `Z_v = p_v / (N_v + a)`. -/
+@[expose]
 def regularizedMass (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   intervalMass d v / (inventory I d v + a)
@@ -436,6 +445,7 @@ theorem discrepancy_div_hazard_le_bellmanY
   exact div_le_div_of_nonneg_right hbase hh.le
 
 /-- The signed imbalance at an internal node. -/
+@[expose]
 def imbalance (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   deletionMass I a (d + 1) (leftChild v) -

@@ -10,7 +10,7 @@ public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasur
 
 /-! Strong measurability using second countability of the source. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory TopologicalSpace
 

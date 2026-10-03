@@ -19,7 +19,7 @@ comes free from `ContDiffBump.neg`, and the two radius conditions are what `0 < 
 supplies.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

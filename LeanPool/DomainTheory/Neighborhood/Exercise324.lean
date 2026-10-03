@@ -32,7 +32,7 @@ and Proposition 3.2's `prodEquiv` gives the domain isomorphism `funProdIso`.
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

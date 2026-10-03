@@ -20,7 +20,7 @@ This is the pointwise ingredient needed to upgrade the “simple zeros” quotie
 general multiplicity regime.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Topology
 open scoped Topology

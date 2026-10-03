@@ -49,7 +49,7 @@ This is the generic checker side only.  Application-specific datasets, leaf
 decoders, and classifier handoff theorems belong in their application layer.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.CubicMatrixReplay
 
@@ -64,6 +64,7 @@ open Utilities.Certificate.CubicMatrixReplay
 in order, with the `k`-th summand bounded by the `k`-th capacity.  This is the
 branch set of one vertex of the completion tree: the remaining degree of the
 current vertex is distributed over the vertices that come after it. -/
+@[expose]
 def boundedCompositions (total : ℕ) : List ℕ → List (List ℕ)
   | [] => if total = 0 then [[]] else []
   | capacity :: capacities =>
@@ -270,6 +271,7 @@ structure Conditions (n deg : ℕ) (M : ℕ → ℕ → ℕ) : Prop where
 /-- The strict-upper-triangular row list of `M`: `rowsOf M i len` lists the
 rows of vertices `i, …, i + len - 1`, each row recording the multiplicities to
 the strictly later vertices in that range. -/
+@[expose]
 def rowsOf (M : ℕ → ℕ → ℕ) : ℕ → ℕ → List (List ℕ)
   | _, 0 => []
   | i, len + 1 =>
@@ -419,6 +421,7 @@ theorem follows_capsOf_rowsOf {n deg : ℕ} {M : ℕ → ℕ → ℕ}
 
 /-- The entry of a symmetric matrix recovered from its strict-upper-triangular
 row list. -/
+@[expose]
 def entryOf (rows : List (List ℕ)) (i j : ℕ) : ℕ :=
   if i < j then (rows.getD i []).getD (j - i - 1) 0
   else if j < i then (rows.getD j []).getD (i - j - 1) 0
@@ -486,6 +489,7 @@ theorem entryOf_rowsOf {n deg : ℕ} {M : ℕ → ℕ → ℕ} (h : Conditions n
 
 /-- The unordered vertex-pair multiplicity table of an ordered core, as a
 total function on `ℕ`. -/
+@[expose]
 def matrixOf {n p : ℕ} (core : Core n p) (i j : ℕ) : ℕ :=
   if hi : i < n then
     if hj : j < n then core.pairMultiplicity ⟨i, hi⟩ ⟨j, hj⟩ else 0
@@ -529,6 +533,7 @@ required to fire on connected tables.  `MatrixConnected` is the cut form of
 over `(Finset.range size).powerset` rather than over all of `Finset ℕ`, so the
 predicate is decidable and a generated leaf record may discharge it by
 evaluation. -/
+@[expose]
 def MatrixConnected (size : ℕ) (M : ℕ → ℕ → ℕ) : Prop :=
   ∀ S ∈ (Finset.range size).powerset,
     (∃ v ∈ S, ∃ w ∈ Finset.range size, w ∉ S) →

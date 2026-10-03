@@ -17,7 +17,7 @@ linear parts of the other factor.  The remaining constant would put the
 nonzero seed cubic in the quadratic target ambient.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

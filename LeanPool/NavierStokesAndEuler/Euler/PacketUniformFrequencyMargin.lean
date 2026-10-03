@@ -16,7 +16,7 @@ section
 
 /-! The actual correction target absorbs every fixed power of the frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -86,7 +86,7 @@ section
 amplitude give the small lifted velocity required by the finite flow
 bootstrap. All source constants remain fixed as frequency increases. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ open Real Filter EulerPacketCorrectionScalar
 open scoped Topology
 
 /-- Lifted amplitude, given by `C/k + E*delta (expansion k)`. -/
-def liftedAmplitude (C E k : ℝ) : ℝ := C/k + E*delta (expansion k)
+@[expose] def liftedAmplitude (C E k : ℝ) : ℝ := C/k + E*delta (expansion k)
 
 theorem fixed_div_eventually_le_inverse_half (C : ℝ) :
     ∀ᶠ k : ℝ in atTop, C/k ≤ k^(-(1/2 : ℝ)) := by
@@ -149,7 +149,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

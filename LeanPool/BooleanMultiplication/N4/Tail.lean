@@ -16,7 +16,7 @@ rank-one classification is proved from minors, so the annihilator argument
 does not enumerate the 128 target words or build a large exterior basis.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

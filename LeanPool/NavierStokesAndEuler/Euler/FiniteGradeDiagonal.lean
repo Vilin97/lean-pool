@@ -19,7 +19,7 @@ import Mathlib.Tactic.Positivity.Finset
 
 /-! The finite residual convolution is exactly the source's sum over i+j=n. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

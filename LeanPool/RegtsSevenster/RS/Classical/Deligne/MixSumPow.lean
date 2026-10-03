@@ -21,7 +21,7 @@ nonvanishing of the mixed sum at every diagram avoiding the cell
 `(p + 1, q + 1)` then transports across the isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

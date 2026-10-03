@@ -16,7 +16,7 @@ the partial derivative along the interpolation family, when the extended
 forest has no active edges left.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,6 +33,7 @@ variable {F : Forest V} {e : Edge V}
 /--
 The one-edge ordered growth determined by a chosen active extension.
 -/
+@[expose]
 def singletonGrowth (h : ActiveExtension F e) :
     OrderedGrowth F [e] h.forest :=
   OrderedGrowth.cons h.extension (OrderedGrowth.nil h.forest)

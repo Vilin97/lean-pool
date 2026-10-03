@@ -32,7 +32,7 @@ section
 
 /-! Genuine first-order evolution paths glue through a matching interior trace. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,6 +44,7 @@ open scoped Topology
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Glue, with branches according to `t ≤ τ`. -/
+@[expose]
 def glue (τ : ℝ) (f g : ℝ → E) (t : ℝ) : E := if t ≤ τ then f t else g t
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -147,7 +148,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,6 +183,7 @@ theorem matching_values (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
   exact sub_eq_zero.mp h
 
 /-- Glue path as an element of `C(Icc (0 : ℝ) S,E)`. -/
+@[expose]
 def gluePath (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) : C(Icc (0 : ℝ) S,E) :=
   ⟨fun t => glue τ (fun r => u.val.1 (projIcc 0 τ hτ0 r))
@@ -248,7 +250,7 @@ section
 
 /-! Matching time paths glue without any external-word or fixed-Sobolev loss. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -264,7 +266,7 @@ attribute [local instance] compactInterval
 
 @[simp] theorem glueOperator_apply (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) :
-    glueOperator S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := rfl
+    glueOperator S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := by rfl
 
 theorem gluePath_left (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) (t : Icc (0 : ℝ) τ) :
@@ -325,7 +327,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -440,7 +442,7 @@ section
 
 /-! The actual affine time shift used by the forward transverse solve. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -464,8 +466,9 @@ def shiftPath (S τ : ℝ) : C(Icc (0 : ℝ) (S-τ), E) →L[ℝ] C(Icc τ S,E) 
   ContinuousMap.compCLM ℝ E (elapsedTime S τ)
 
 theorem shiftPath_apply (S τ : ℝ) (u : C(Icc (0 : ℝ) (S - τ), E)) (t : Icc τ S) :
-    shiftPath S τ u t = u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
-        rfl
+    shiftPath S τ u t =
+      u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ := by
+  rfl
 
 theorem shiftPath_norm_le_one (S τ : ℝ) : ‖shiftPath (E := E) S τ‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
@@ -494,7 +497,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -513,13 +516,14 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Pair, given by `⟨(u,shiftPath S τ v),by change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v
 ⟨τ,le_rfl,hτS⟩ = 0 rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩`. -/
+@[expose]
 def pair : Matching (E := E) S τ hτ0 hτS :=
   ⟨(u,shiftPath S τ v),by
     change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v ⟨τ,le_rfl,hτS⟩ = 0
     rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩
 
 /-- Join, given by `gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)`. -/
-def join : C(Icc (0 : ℝ) S,E) := gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)
+@[expose] def join : C(Icc (0 : ℝ) S,E) := gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)
 
 theorem join_eq_projection : join S τ hτ0 hτS u v hmatch =
     gluePath S τ hτ0 hτS (matchingProjection S τ hτ0 hτS (u,shiftPath S τ v)) := by

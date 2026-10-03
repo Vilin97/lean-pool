@@ -19,7 +19,7 @@ variants that are parameterised by `Γ.width ∣ h` rather than `h ∈ Γ.strict
 the rest of the project still uses.
 -/
 
-@[expose] public section
+public section
 
 open scoped Real NNReal MatrixGroups CongruenceSubgroup
 

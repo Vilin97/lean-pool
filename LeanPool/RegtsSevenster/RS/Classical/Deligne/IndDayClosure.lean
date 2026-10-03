@@ -36,7 +36,7 @@ two colimit steps are the same manoeuvre, factored out as
 `RS.isIndObject_obj_of_preservesColimits`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -51,6 +51,7 @@ variable {C : Type v}
 
 /-- Transport an isomorphism of plain presheaves to the Day synonym
 category. -/
+@[expose]
 def dayMkIso [SmallCategory C] [MonoidalCategory C]
     {A B : Cᵒᵖ ⥤ Type v} (e : A ≅ B) :
     (DayFunctor.mk A : Cᵒᵖ ⊛⥤ Type v) ≅ DayFunctor.mk B :=
@@ -68,6 +69,7 @@ presheaves at `x` and `y` is the yoneda presheaf at `x ⊗ y`.  This is
 `RS.dayCoyonedaIso` at the base `Cᵒᵖ`, transported along
 `Coyoneda.objOpOp`, using that `op x ⊗ op y = op (x ⊗ y)` holds
 definitionally in `Cᵒᵖ`. -/
+@[expose]
 def dayYonedaIso [SmallCategory C] [MonoidalCategory C]
     (x y : C) :
     (DayFunctor.mk (yoneda.obj x) : Cᵒᵖ ⊛⥤ Type v) ⊗

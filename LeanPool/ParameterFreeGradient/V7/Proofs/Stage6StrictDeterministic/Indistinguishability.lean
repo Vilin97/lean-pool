@@ -13,7 +13,7 @@ Finite affine transcripts are indistinguishable from a sufficiently distant hard
 instance.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage6StrictDeterministic
 

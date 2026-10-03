@@ -15,27 +15,31 @@ exactly `ω ^ ω`. It therefore lies exactly at the first limit excluded by the 
 finite-degree hypothesis. This statement makes no primality or nonprimality claim about it.
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz.OmegaOmegaBoundaryExample
 
 open Ordinal
 
 /-- An omnific integer is ordinary when its normal form is an integer constant. -/
+@[expose]
 def IsOrdinary (x : Oz.OmnificInteger.{0}) : Prop :=
   ∃ z : ℤ, x.1 = (z : SurrealHahnSeries)
 
 /-- Reducedness means that `x` is nonzero and the exponents shared by `x` and `x - 1` lie in one
 Archimedean class. -/
+@[expose]
 def IsReduced (x : Oz.OmnificInteger.{0}) : Prop :=
   x ≠ 0 ∧ ∃ c : ArchimedeanClass Surreal,
     x.1.support ∩ (x.1 - 1).support ⊆ {i | ArchimedeanClass.mk i = c}
 
 /-- Finite degree is the strict Conway-length bound below `ω ^ ω`. -/
+@[expose]
 def HasFiniteDegree (x : Oz.OmnificInteger.{0}) : Prop :=
   Ordinal.lift.{1, 0} x.1.length < (omega0 : Ordinal.{1}) ^ (omega0 : Ordinal.{1})
 
 /-- A reduced nonordinary omnific integer exists exactly at the `ω ^ ω` boundary. -/
+@[expose]
 def ExistsAtBoundary : Prop :=
   ∃ x : Oz.OmnificInteger.{0},
     ¬ IsOrdinary x ∧ IsReduced x ∧

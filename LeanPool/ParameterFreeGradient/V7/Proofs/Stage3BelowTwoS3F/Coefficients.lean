@@ -13,7 +13,7 @@ The explicit below-two coefficient matrices satisfy recurrence, support, and row
 conditions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,6 +30,7 @@ noncomputable def increment (n k : ℕ) : ℝ :=
   if k < n then weight n k - (if k = 0 then 0 else weight n (k - 1)) else 0
 
 /-- The subdiagonal coefficient matrix selecting each weighted gradient increment. -/
+@[expose]
 noncomputable def alpha (n : ℕ) : ScalarMatrix := fun row i =>
   if 0 < row ∧ row ≤ n then
     if i = row - 1 then increment n (row - 1) else 0

@@ -24,7 +24,7 @@ with the two glued labels removed, and the glued chord matching is
 the contraction of the lifted one at those two labels.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -86,6 +86,7 @@ local notation "Fl" =>
 
 /-- **The glued subset's used labels** are the lifted subset's, less
 the two glued ones. -/
+@[expose]
 noncomputable def usedLabelGlueEquiv
     (hbi : W.boundaryFlag i ∈ (Fl).boundaryFlags)
     (hbj : W.boundaryFlag j ∈ (Fl).boundaryFlags) :
@@ -429,6 +430,7 @@ subfamily of the base's, not to all of them.
 
 /-- **The base's subsets the glue reaches**: pairing-closed, and
 using the two glued boundary flags together. -/
+@[expose]
 def AgreeingSubset (i j : α) (s : Finset W.Flag) : Prop :=
   (∀ f ∈ s, W.pairing f ∈ s)
     ∧ (W.boundaryFlag i ∈ s ↔ W.boundaryFlag j ∈ s)
@@ -559,6 +561,7 @@ theorem chordInv_closed_pair
 
 /-- **The glued subset's used labels** across a closed glue whose
 edge lies in the subset: the lifted ones, less the two glued. -/
+@[expose]
 noncomputable def usedLabelGlueClosedEquiv
     (hbi : W.boundaryFlag i ∈ (FlT).boundaryFlags)
     (hbj : W.boundaryFlag j ∈ (FlT).boundaryFlags) :

@@ -37,7 +37,7 @@ gives the bound after the exact integer computation of Section 5 of the blueprin
 All arithmetic is in `ℕ`; no real roots enter.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

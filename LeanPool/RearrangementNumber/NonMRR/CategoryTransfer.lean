@@ -24,7 +24,7 @@ nonempty real interior. This suffices to preserve nonmeagreness of images;
 injectivity and an identification of the spaces are unnecessary.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Finset Cardinal Topology
 

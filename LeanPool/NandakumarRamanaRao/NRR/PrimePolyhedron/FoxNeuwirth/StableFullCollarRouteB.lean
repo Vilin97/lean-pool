@@ -23,7 +23,7 @@ The latter is converted internally into a genuine positive-radius facet-regular 
 `RouteB.exists_safePerturbationBall`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

@@ -21,7 +21,7 @@ Tags: extremal-combinatorics, intersecting-families, Fourier-analysis
 MSC: 05D05, 60E15
 -/
 
-@[expose] public section
+public section
 
 /-
 Upstream: https://github.com/boonsuan/chvatal

@@ -24,7 +24,7 @@ pushforward of `parWit`, and the obligations are inherited from `parWit_diag`,
 `parWit_injectable` and `parWit_ai`, which hold for every real `q`.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 

@@ -19,7 +19,7 @@ composition over which the pairing-resolved gluing decomposition
 lives.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

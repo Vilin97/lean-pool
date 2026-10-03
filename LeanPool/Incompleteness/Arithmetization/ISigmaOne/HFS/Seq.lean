@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -28,6 +28,7 @@ open FirstOrder FirstOrder.Arith
 variable {V : Type*} [ORingStruc V] [V ⊧ₘ* 𝐈Sg1]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def Seq (s : V) : Prop := IsMapping s ∧ ∃ l, domain s = under l
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -166,7 +167,7 @@ lemma _root_.LO.Arith.Seq.lt_lh_of_mem {s : V} (h : Seq s) {i x} (hix : ⟪i, x�
   h.lt_lh_iff.mpr (mem_domain_iff.mpr ⟨x, hix⟩)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def seqCons (s x : V) : V := insert ⟪lh s, x⟫ s
+@[expose] def seqCons (s x : V) : V := insert ⟪lh s, x⟫ s
 
 section «lp_section_2»
 

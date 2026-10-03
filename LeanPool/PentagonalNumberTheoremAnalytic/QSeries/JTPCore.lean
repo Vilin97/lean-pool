@@ -18,7 +18,7 @@ The proof strategy: Show $(q;q)_∞ (-z;q)_∞ (-q/z;q)_∞ = g(z)$ by:
 Key identity: $(q;q)_∞ / (q;q)_n = (q^{n+1};q)_∞$ (telescoping)
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology

@@ -28,4 +28,4 @@ Tags: algebraic-number-theory, quadratic-orders, legendre-symbol
 MSC: 11R11, 11R29, 11A15
 -/
 
-@[expose] public section
+public section

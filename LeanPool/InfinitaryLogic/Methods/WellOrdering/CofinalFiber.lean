@@ -24,7 +24,7 @@ Proof: if every fiber were bounded, the supremum of countably many bounds would 
 `ω₁` — contradicting the regularity of `ℵ₁` (via `Ordinal.iSup_lt_omega_one`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

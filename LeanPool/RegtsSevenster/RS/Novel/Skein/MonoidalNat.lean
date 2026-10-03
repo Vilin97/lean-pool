@@ -21,7 +21,7 @@ associativity and unit laws are relabellings by casts, and all
 casts collapse through the transport lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

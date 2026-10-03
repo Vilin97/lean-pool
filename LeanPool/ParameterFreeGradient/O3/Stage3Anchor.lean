@@ -17,7 +17,7 @@ acceptance at the first dyadic scale dominating `L`, the actual infimum
 distance to the minimizer set, and the displayed base-two ceiling count.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -25,7 +25,7 @@ open Stage3Anchor
 
 /-- The anchor loop configuration contains only data already observed at
 `x₀`; neither `L` nor a minimizer nor the solution radius is an input. -/
-noncomputable def AdmissibleInstance.anchorConfig {d : ℕ} {p : ℝ}
+@[expose] noncomputable def AdmissibleInstance.anchorConfig {d : ℕ} {p : ℝ}
     (P : AdmissibleInstance d p) : AnchorConfig d :=
   { q := conjugateExponent p
     x₀ := P.x0
@@ -155,7 +155,7 @@ theorem runAnchor_some_add_fuel {d : ℕ} (oracle : PairOracle d)
 /-- Transparent source-level carrier for the frozen gradient-ray anchor.  The
 only quantified algorithmic object is the admissible instance; `L`, the
 minimizer set, and its distance are used only in the correctness conclusion. -/
-def AnchorStatement : Prop :=
+@[expose] def AnchorStatement : Prop :=
   ∀ (p : ℝ) (d : ℕ) (P : AdmissibleInstance d p),
     let cfg := P.anchorConfig
     let N := Nat.ceil (Real.logb 2 (P.L / P.M0))

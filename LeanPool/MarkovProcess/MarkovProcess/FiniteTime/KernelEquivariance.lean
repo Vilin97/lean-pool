@@ -32,7 +32,7 @@ Kolmogorov moment criterion also transfers, with the constant multiplied by `c ^
 (`IsRescaledConjugate.hasKolmogorovMoments`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal ProbabilityTheory
@@ -43,6 +43,7 @@ namespace FiniteOrderedTimes
 
 /-- Multiply every time of a finite ordered family by a fixed positive factor.  Positivity of the
 factor is what keeps the family strictly increasing. -/
+@[expose]
 def rescale {n : ℕ} (c : NNReal) (hc : 0 < c) (times : FiniteOrderedTimes n) :
     FiniteOrderedTimes n :=
   OrderEmbedding.ofStrictMono (fun i ↦ c * times i) fun _ _ hij ↦
@@ -82,6 +83,7 @@ theorem relativeTail_rescale {n : ℕ} (c : NNReal) (hc : 0 < c)
   exact (mul_tsub c (times i.succ) (times 0)).symm
 
 /-- Apply a map of the state space to every coordinate of a coordinate path. -/
+@[expose]
 def mapPath {ι alpha beta : Type*} (e : alpha → beta) (path : ι → alpha) : ι → beta :=
   fun i ↦ e (path i)
 
@@ -177,6 +179,7 @@ variable {alpha beta : Type*} [TopologicalSpace alpha] [MeasurableSpace alpha] [
 /-- `P'` is the *rescaled conjugate* of `P` by the homeomorphism `e` and the time factor `c`:
 started at `x`, the state of `P'` at time `t` is the image under `e` of the state of `P` at the
 sped-up time `c * t` started at `e.symm x`. -/
+@[expose]
 def IsRescaledConjugate (P : SubMarkovKernelSemigroup alpha) (P' : SubMarkovKernelSemigroup beta)
     (e : alpha ≃ₜ beta)
     (c : NNReal) : Prop :=

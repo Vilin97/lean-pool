@@ -28,7 +28,7 @@ theorem gives the literal L4.2e bound for every polynomial.
   coupled scalar branch.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

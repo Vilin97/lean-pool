@@ -28,7 +28,7 @@ coefficient bounds.  The embedding constant is independent of the external
 order; only the one derivative from displacement to deformation enlarges
 the coefficient radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,7 +41,7 @@ open Set MeasureTheory Finset ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 /-- Direction, given by `EuclideanSpace.single i 1`. -/
-def direction (i : Fin 3) : Space := EuclideanSpace.single i 1
+@[expose] def direction (i : Fin 3) : Space := EuclideanSpace.single i 1
 
 /-- Embedding cost, given by `sobolevEmbeddingConstant 1 3`. -/
 def embeddingCost : ℝ := sobolevEmbeddingConstant 1 3
@@ -159,7 +159,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -171,11 +171,11 @@ open MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal
 open scoped ContDiff
 
 /-- Coefficient radius, given by `max 1024 (4*K)`. -/
-def coefficientRadius (K : ℝ) : ℝ := max 1024 (4*K)
+@[expose] def coefficientRadius (K : ℝ) : ℝ := max 1024 (4*K)
 /-- Gradient amplitude, given by `embeddingCost*K^2`. -/
-def gradientAmplitude (K : ℝ) : ℝ := embeddingCost*K^2
+@[expose] def gradientAmplitude (K : ℝ) : ℝ := embeddingCost*K^2
 /-- Frame amplitude, given by `1+gradientAmplitude K`. -/
-def frameAmplitude (K : ℝ) : ℝ := 1+gradientAmplitude K
+@[expose] def frameAmplitude (K : ℝ) : ℝ := 1+gradientAmplitude K
 
 theorem coefficientRadius_lower (K : ℝ) : 1024 ≤ coefficientRadius K := le_max_left _ _
 theorem coefficientRadius_nonneg (K : ℝ) : 0 ≤ coefficientRadius K :=

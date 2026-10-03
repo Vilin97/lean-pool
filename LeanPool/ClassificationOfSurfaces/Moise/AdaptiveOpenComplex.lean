@@ -17,7 +17,7 @@ Their edges need not yet form a conforming simplicial complex: a coarse edge may
 edges of finer adjacent tiles.  The next layer resolves precisely those hanging vertices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -34,7 +34,7 @@ variable (K : IntrinsicTwoComplex) (U : Set K.realization)
 abbrev LevelFace (n : ℕ) := (K.safeSubdivision n).refined.Face
 
 /-- The carrier of a level face, transported back to the original realization. -/
-def levelFaceCarrier {n : ℕ} (t : K.LevelFace n) : Set K.realization :=
+@[expose] def levelFaceCarrier {n : ℕ} (t : K.LevelFace n) : Set K.realization :=
   (K.safeSubdivision n).homeo ''
     (K.safeSubdivision n).refined.faceCarrier t.1
 
@@ -65,7 +65,7 @@ instance (priority := 100) defaultAdaptiveSafety : AdaptiveSafety K U where
   hereditary hts hs := hts.trans hs
 
 /-- The active safety predicate. -/
-def LevelFace.IsSafe [AdaptiveSafety K U] {n : ℕ} (t : K.LevelFace n) : Prop :=
+@[expose] def LevelFace.IsSafe [AdaptiveSafety K U] {n : ℕ} (t : K.LevelFace n) : Prop :=
   AdaptiveSafety.safe (K := K) (U := U) t
 
 theorem levelFace_isSafe_iff {n : ℕ} (t : K.LevelFace n) :
@@ -323,7 +323,7 @@ theorem LevelFace.IsSafe.child {n : ℕ} {t : K.LevelFace (n + 1)}
 
 /-- Relative interior of a transported level face, expressed by positive barycentric
 coordinates on all three face vertices. -/
-def levelFaceRelInterior {n : ℕ} (t : K.LevelFace n) : Set K.realization :=
+@[expose] def levelFaceRelInterior {n : ℕ} (t : K.LevelFace n) : Set K.realization :=
   (K.safeSubdivision n).homeo ''
     {x : (K.safeSubdivision n).refined.realization |
       x ∈ (K.safeSubdivision n).refined.faceCarrier t.1 ∧
@@ -378,11 +378,11 @@ noncomputable def levelAncestor (n : ℕ) :
   | k + 1, t => levelAncestor n k (K.levelParentFace (n + k) t)
 
 @[simp] theorem levelAncestor_zero (n : ℕ) (t : K.LevelFace n) :
-    K.levelAncestor n 0 t = t := rfl
+    K.levelAncestor n 0 t = t := by rfl
 
 @[simp] theorem levelAncestor_succ (n k : ℕ) (t : K.LevelFace (n + (k + 1))) :
     K.levelAncestor n (k + 1) t =
-      K.levelAncestor n k (K.levelParentFace (n + k) t) := rfl
+      K.levelAncestor n k (K.levelParentFace (n + k) t) := by rfl
 
 theorem levelFaceCarrier_subset_ancestor (n k : ℕ)
     (t : K.LevelFace (n + k)) :
@@ -409,7 +409,7 @@ theorem LevelFace.IsSafe.ancestor_child {n k : ℕ} {t : K.LevelFace (n + k)}
     (K.levelFaceCarrier_subset_ancestor n k t) ht
 
 /-- A first-safe face is safe, but at a positive level its chosen parent is not safe. -/
-def LevelFace.IsFirstSafe : {n : ℕ} → K.LevelFace n → Prop
+@[expose] def LevelFace.IsFirstSafe : {n : ℕ} → K.LevelFace n → Prop
   | 0, t => LevelFace.IsSafe K U t
   | n + 1, t => LevelFace.IsSafe K U t ∧
       ¬LevelFace.IsSafe K U (K.levelParentFace n t)
@@ -486,7 +486,7 @@ theorem adaptiveFace_level_le_commonLevel
   exact Finset.le_sup (f := fun u : K.AdaptiveFace U ↦ u.1) ht
 
 /-- Carrier of one adaptive triangle in the original realization. -/
-def adaptiveFaceCarrier (t : K.AdaptiveFace U) : Set K.realization :=
+@[expose] def adaptiveFaceCarrier (t : K.AdaptiveFace U) : Set K.realization :=
   K.levelFaceCarrier t.2.1
 
 /-- Every tile in a finite adaptive family is a union of faces of the family's common midpoint
@@ -510,7 +510,7 @@ theorem adaptiveFaceCarrier_subset (t : K.AdaptiveFace U) :
   · exact AdaptiveSafety.carrier_subset (K := K) (U := U) t.2.1
 
 /-- Relative interior of one adaptive face. -/
-def adaptiveFaceRelInterior (t : K.AdaptiveFace U) : Set K.realization :=
+@[expose] def adaptiveFaceRelInterior (t : K.AdaptiveFace U) : Set K.realization :=
   K.levelFaceRelInterior t.2.1
 
 /-- Distinct first-safe adaptive faces meet only on their relative boundaries. -/
@@ -652,7 +652,7 @@ theorem finite_adaptiveFace_level_lt (N : ℕ) :
     (show Finite {t : K.AdaptiveFace U // t.1 < N} from inferInstance)
 
 /-- Carrier of an adaptive face in the open subspace itself. -/
-def adaptiveFaceCarrierInOpen (t : K.AdaptiveFace U) : Set U :=
+@[expose] def adaptiveFaceCarrierInOpen (t : K.AdaptiveFace U) : Set U :=
   Subtype.val ⁻¹' K.adaptiveFaceCarrier U t
 
 /-- The first-safe adaptive triangle family is locally finite in the open set. -/
@@ -686,7 +686,7 @@ theorem locallyFinite_adaptiveFaceCarrierInOpen (hU : IsOpen U) :
 /-! ## Finite boundary data on each adaptive tile -/
 
 /-- The geometric point represented by one vertex of a level face. -/
-noncomputable def levelFaceVertexPoint {n : ℕ} (t : K.LevelFace n)
+@[expose] noncomputable def levelFaceVertexPoint {n : ℕ} (t : K.LevelFace n)
     (v : {v // v ∈ t.1}) : K.realization :=
   (K.safeSubdivision n).homeo
     ((K.safeSubdivision n).refined.facePoint t v)
@@ -704,7 +704,7 @@ abbrev AdaptiveVertexOccurrence (t : K.AdaptiveFace U) :=
   {v // v ∈ t.2.1.1}
 
 /-- The `adaptiveVertexPoint` declaration. -/
-noncomputable def adaptiveVertexPoint (t : K.AdaptiveFace U)
+@[expose] noncomputable def adaptiveVertexPoint (t : K.AdaptiveFace U)
     (v : K.AdaptiveVertexOccurrence U t) : K.realization :=
   K.levelFaceVertexPoint t.2.1 v
 
@@ -735,7 +735,7 @@ theorem isCompact_adaptiveFaceCarrierInOpen (t : K.AdaptiveFace U) :
   exact isCompact_range he
 
 /-- Adaptive tiles touching a fixed tile. -/
-def TouchingFace (t : K.AdaptiveFace U) :=
+@[expose] def TouchingFace (t : K.AdaptiveFace U) :=
   {u : K.AdaptiveFace U //
     (K.adaptiveFaceCarrierInOpen U u ∩ K.adaptiveFaceCarrierInOpen U t).Nonempty}
 
@@ -890,7 +890,7 @@ theorem adaptiveVertexPoint_mem_boundaryVertices (hU : IsOpen U)
   exact ⟨v, rfl⟩
 
 /-- Carrier of one cyclic edge of a level face. -/
-def levelFaceEdgeCarrier {n : ℕ} (t : K.LevelFace n) (i : ZMod 3) :
+@[expose] def levelFaceEdgeCarrier {n : ℕ} (t : K.LevelFace n) (i : ZMod 3) :
     Set K.realization :=
   (K.safeSubdivision n).homeo ''
     (K.safeSubdivision n).refined.faceCarrier
@@ -957,7 +957,7 @@ theorem mem_boundaryEdgeVertices_iff (hU : IsOpen U) (t : K.AdaptiveFace U)
   exact Finset.mem_filter
 
 /-- Barycentric parameter along a cyclic level-face edge, from vertex `i` to vertex `i+1`. -/
-noncomputable def levelFaceEdgeParameter {n : ℕ} (t : K.LevelFace n)
+@[expose] noncomputable def levelFaceEdgeParameter {n : ℕ} (t : K.LevelFace n)
     (i : ZMod 3) (p : K.realization) : ℝ :=
   ((K.safeSubdivision n).homeo.symm p).1
     ((K.safeSubdivision n).refined.faceVertex t (i + 1))
@@ -1348,7 +1348,7 @@ theorem boundaryEdgeVertexList_last_parameter (hU : IsOpen U)
   apply le_antisymm hupper hle
 
 /-- The equal-weight point of the standard simplex on an intrinsic face. -/
-noncomputable def faceCenterSimplex (t : K.Face) :
+@[expose] noncomputable def faceCenterSimplex (t : K.Face) :
     stdSimplex ℝ {v // v ∈ t.1} := by
   let x : {v // v ∈ t.1} → ℝ := fun _ ↦ 1 / 3
   refine ⟨x, ?_, ?_⟩
@@ -1361,7 +1361,7 @@ noncomputable def faceCenterSimplex (t : K.Face) :
     norm_num
 
 @[simp] theorem faceCenterSimplex_apply (t : K.Face) (v : {v // v ∈ t.1}) :
-    K.faceCenterSimplex t v = 1 / 3 := rfl
+    K.faceCenterSimplex t v = 1 / 3 := by rfl
 
 /-- The barycentric center of an arbitrary level face, transported to the original
 realization. -/
@@ -1489,7 +1489,7 @@ theorem adaptiveFace_edgeCarrier_subset_of_level_le_of_common_not_boundaryVertex
     exact K.adaptiveVertexPoint_mem_boundaryVertices U hU ⟨n + k, t⟩ v
 
 /-- The barycentric center of one adaptive tile, transported to the original realization. -/
-noncomputable def adaptiveFaceCenter (t : K.AdaptiveFace U) : K.realization :=
+@[expose] noncomputable def adaptiveFaceCenter (t : K.AdaptiveFace U) : K.realization :=
   (K.safeSubdivision t.1).homeo
     ((K.safeSubdivision t.1).refined.faceStandardMap t.2.1
       ((K.safeSubdivision t.1).refined.faceCenterSimplex t.2.1))
@@ -1527,7 +1527,7 @@ abbrev AdaptiveEdgeInterval (hU : IsOpen U) (t : K.AdaptiveFace U) (i : ZMod 3) 
   Fin ((K.boundaryEdgeVertexList U hU t i).length - 1)
 
 /-- First endpoint of a resolved adaptive-edge interval. -/
-noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
+@[expose] noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
     (t : K.AdaptiveFace U) (i : ZMod 3)
     (j : K.AdaptiveEdgeInterval U hU t i) : K.realization :=
   (K.boundaryEdgeVertexList U hU t i).get
@@ -1536,7 +1536,7 @@ noncomputable def adaptiveEdgeIntervalFirst (hU : IsOpen U)
       omega⟩
 
 /-- Second endpoint of a resolved adaptive-edge interval. -/
-noncomputable def adaptiveEdgeIntervalSecond (hU : IsOpen U)
+@[expose] noncomputable def adaptiveEdgeIntervalSecond (hU : IsOpen U)
     (t : K.AdaptiveFace U) (i : ZMod 3)
     (j : K.AdaptiveEdgeInterval U hU t i) : K.realization :=
   (K.boundaryEdgeVertexList U hU t i).get
@@ -1733,7 +1733,7 @@ theorem mem_adaptiveFanFacesOver_iff (hU : IsOpen U)
     exact ⟨f.2, by simp, rfl⟩
 
 /-- The `adaptiveFanFaceVertices` declaration. -/
-noncomputable def adaptiveFanFaceVertices (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanFaceVertices (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) : Finset K.realization :=
   {K.adaptiveFaceCenter U f.1,
     K.adaptiveEdgeIntervalFirst U hU f.1 f.2.1 f.2.2,

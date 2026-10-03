@@ -19,7 +19,7 @@ binomial coefficient with binary popcount.  Hence every positive non-power of
 two already satisfies the divisibility-by-four branch of GKP.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

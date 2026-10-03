@@ -41,7 +41,7 @@ for a general smooth convex boundary still require the Plemelj argument.
   -- the centered contraction.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

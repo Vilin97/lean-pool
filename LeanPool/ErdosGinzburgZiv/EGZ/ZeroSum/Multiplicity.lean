@@ -17,13 +17,14 @@ EGZ constant uses sequences with distinct selected positions.  This file
 supplies the bridge between these two models.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace EGZ
 
 /-- A submultiset of exactly `p` vectors whose sum vanishes. -/
+@[expose]
 def HasZeroSumMultiplicity {p d : ℕ} [NeZero p]
     (f : FpCoord p d → ℕ) : Prop :=
   ∃ a : FpCoord p d → ℕ,

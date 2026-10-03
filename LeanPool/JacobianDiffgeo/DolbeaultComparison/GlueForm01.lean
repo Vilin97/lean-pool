@@ -27,7 +27,7 @@ chart-subordinate cover determine a UNIQUE global `Form01` solving `dbaru_i = ω
 * `DbarGlueData.isDbarOn_form`, `DbarGlueData.form_unique`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold TopologicalSpace
@@ -110,9 +110,9 @@ theorem chart_source (i : Fin d.n) : (d.chart i).source = (d.V i : Set X) := by
   rw [chart, (chartAt ℂ (d.center i)).restr_source' (d.V i : Set X) (d.V i).isOpen,
     Set.inter_eq_right.2 (d.subChart i)]
 
-theorem coe_chart (i : Fin d.n) : ⇑(d.chart i) = ⇑(chartAt ℂ (d.center i)) := rfl
+theorem coe_chart (i : Fin d.n) : ⇑(d.chart i) = ⇑(chartAt ℂ (d.center i)) := by rfl
 
-theorem coe_chart_symm (i : Fin d.n) : ⇑(d.chart i).symm = ⇑(chartAt ℂ (d.center i)).symm := rfl
+theorem coe_chart_symm (i : Fin d.n) : ⇑(d.chart i).symm = ⇑(chartAt ℂ (d.center i)).symm := by rfl
 
 theorem mem_chart_source_of_mem_V {i : Fin d.n} {x : X} (hx : x ∈ d.V i) :
     x ∈ (d.chart i).source := by rw [chart_source]; exact hx

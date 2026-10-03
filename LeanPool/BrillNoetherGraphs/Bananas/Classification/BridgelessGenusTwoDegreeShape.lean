@@ -17,7 +17,7 @@ valence shapes.  It is deliberately independent of any bivalent-suppression
 construction: those shapes are invariants of the original graph as well.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

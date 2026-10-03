@@ -18,7 +18,7 @@ The source coordinate formula is identified with the normalized duality map,
 then its two norming identities are derived without adding them as hypotheses.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 namespace Stage3Anchor

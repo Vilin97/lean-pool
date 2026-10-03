@@ -26,21 +26,24 @@ The main definitions are `CKN.vecEuclideanNorm` and `CKN.classicalGradient`.
 The norm lemmas give positivity, scalar multiplication and component bounds.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace CKN
 
 /-- The Euclidean dot product on native coordinate vectors. -/
+@[expose]
 def vecDot {d : ℕ} (x y : Vec d) : ℝ :=
   ∑ i, x i * y i
 
 /-- The square of the Euclidean norm on native coordinate vectors. -/
+@[expose]
 def vecNormSq {d : ℕ} (x : Vec d) : ℝ :=
   vecDot x x
 
 /-- The Euclidean norm on native coordinate vectors. -/
+@[expose]
 noncomputable def vecEuclideanNorm {d : ℕ} (x : Vec d) : ℝ :=
   Real.sqrt (vecNormSq x)
 
@@ -113,6 +116,7 @@ theorem abs_apply_le_vecEuclideanNorm {d : ℕ}
   exact Real.abs_le_sqrt (sq_apply_le_vecNormSq x i)
 
 /-- The coordinate gradient of a scalar function in the native vector carrier. -/
+@[expose]
 noncomputable def classicalGradient {d : ℕ}
     (f : Vec d → ℝ) (x : Vec d) : Vec d :=
   fun i => (fderiv ℝ f x) (basisVec i)

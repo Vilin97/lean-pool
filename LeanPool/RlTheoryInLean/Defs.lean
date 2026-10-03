@@ -14,7 +14,7 @@ public import Mathlib.Probability.Kernel.Defs
 # LeanPool.RlTheoryInLean.Defs
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 

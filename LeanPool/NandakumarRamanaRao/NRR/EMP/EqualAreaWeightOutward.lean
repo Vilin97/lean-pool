@@ -22,7 +22,7 @@ body/site bound.  Consequently the scalar pairing of the weight vector with its 
 vector is at least `(M - C) * K.area`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 
@@ -105,7 +105,7 @@ lemma areaVec_nonneg
   simp [EMP.areaVec, PowerDiagram.areaVec, PowerDiagram.bodyCellArea]
 
 /-- Pairing of weights with the area-deviation vector. -/
-noncomputable def deviationPairing
+@[expose] noncomputable def deviationPairing
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → Real) : Real :=
   ∑ i, w i * EMP.areaDeviation K s w i
 

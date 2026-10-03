@@ -19,7 +19,7 @@ Provides the set-theoretic lower and upper halfspaces used throughout the cut an
 layers. Measure-theoretic and continuity results live in the dedicated halfspace-cut modules.
 -/
 
-@[expose] public section
+public section
 
 open NRR
 open scoped RealInnerProductSpace
@@ -29,7 +29,7 @@ namespace NRR.Halfspace
 /-- The public closed half‑space with inner normal `u` and offset `c`, defined as a direct
 wrapper around the implemented geometry half‑space `Geometry.lowerClosedHalfspace u c`, i.e.
 `{x : E2 | ⟪u, x⟫ ≤ c}`. (`E2` is a definitional alias of `Geometry.Plane`.) -/
-def of (u : E2) (c : ℝ) : Set E2 :=
+@[expose] def of (u : E2) (c : ℝ) : Set E2 :=
   Geometry.lowerClosedHalfspace u c
 
 @[simp] theorem of_eq_lowerClosedHalfspace (u : E2) (c : ℝ) :
@@ -95,7 +95,7 @@ a compact convex set; when it retains nonempty interior it is again a (solid) co
 This bundles the intersection as a `ConvexBody`, requiring the nonempty‑interior hypothesis
 `hInt` explicitly (solidity is not automatic). It is a thin wrapper around the geometry
 primitive `ConvexBody.cutLowerClosed`. -/
-noncomputable def interHalfspace
+@[expose] noncomputable def interHalfspace
     (K : ConvexBody Plane) (u : Plane) (c : ℝ)
     (hInt : (interior ((K : Set Plane) ∩ NRR.Halfspace.of u c)).Nonempty) :
     ConvexBody Plane :=

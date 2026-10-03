@@ -18,7 +18,7 @@ Proves convexity, closedness, and covering of the ambient space by power cells. 
 in `NRR.PowerDiagram.Defs`, and the halfspace representation is in `CellAlgebra`.
 -/
 
-@[expose] public section
+public section
 
 open NRR
 open scoped RealInnerProductSpace

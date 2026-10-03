@@ -21,7 +21,7 @@ implies harmonic, curl-div implies harmonic) and assembles the full `FlatTorus3`
 instance on `Fin 3 -> AddCircle 1`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 

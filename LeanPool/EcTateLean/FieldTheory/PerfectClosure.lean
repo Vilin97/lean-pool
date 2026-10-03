@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.EcTateLean.FieldTheory.PerfectClosure`.
 -/
 
-@[expose] public section
+public section
 
 namespace ECTate
 /-- A perfect ring is one where raising to the power of the ring characteristic is a bijection

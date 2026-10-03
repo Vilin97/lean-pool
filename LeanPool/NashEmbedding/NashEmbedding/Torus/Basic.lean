@@ -26,7 +26,7 @@ Periodicity, smooth periodic functions, smooth metrics, realizable metrics,
 injective embeddings, flat torus embedding.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev
@@ -80,19 +80,19 @@ lemma IsPosDefSmoothMetric.toIsSmoothMetric {n : ℕ}
 
 /-- The partial derivative of `u : ℝⁿ → ℝᴺ` with respect to the `i`-th coordinate,
   defined as the Fréchet derivative applied to the `i`-th standard basis vector. -/
-def partialDeriv {n N : ℕ} (i : Fin n) (u : (Fin n → ℝ) → (Fin N → ℝ))
+@[expose] def partialDeriv {n N : ℕ} (i : Fin n) (u : (Fin n → ℝ) → (Fin N → ℝ))
     (x : Fin n → ℝ) : Fin N → ℝ :=
   fderiv ℝ u x (Pi.single i 1)
 
 /-- `u` realizes `g` if `∂ᵢu(x) · ∂ⱼu(x) = g(x)ᵢⱼ` for all `x, i, j`. -/
-def Realizes {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ))
+@[expose] def Realizes {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ))
     (g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : Prop :=
   ∀ (x : Fin n → ℝ) (i j : Fin n),
     dotProduct (partialDeriv i u x) (partialDeriv j u x) = g x i j
 
 /-- A smooth metric `g` is realizable if there exist `N` and a smooth periodic
   `u : ℝⁿ → ℝᴺ` realizing it. -/
-def IsRealizable {n : ℕ} (g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : Prop :=
+@[expose] def IsRealizable {n : ℕ} (g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : Prop :=
   ∃ (N : ℕ) (u : (Fin n → ℝ) → (Fin N → ℝ)),
     SmoothPeriodic u ∧ Realizes u g
 
@@ -104,19 +104,19 @@ def concat {n N₁ N₂ : ℕ} (u₁ : (Fin n → ℝ) → (Fin N₁ → ℝ))
   fun x => Fin.append (u₁ x) (u₂ x)
 
 /-- Translation of a function: `(τ_y f)(x) = f(x - y)`. -/
-def translate {n : ℕ} {V : Type*} (y : Fin n → ℝ) (f : (Fin n → ℝ) → V) :
+@[expose] def translate {n : ℕ} {V : Type*} (y : Fin n → ℝ) (f : (Fin n → ℝ) → V) :
     (Fin n → ℝ) → V :=
   fun x => f (x - y)
 
 /-! ## Injective embeddings -/
 
 /-- Injectivity modulo `2πℤⁿ`: `u(x) = u(y)` implies `x - y ∈ 2πℤⁿ`. -/
-def IsInjectiveMod2Pi {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop :=
+@[expose] def IsInjectiveMod2Pi {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop :=
   ∀ (x y : Fin n → ℝ), u x = u y → ∃ k : Fin n → ℤ, x - y = periodicShift n k
 
 /-- Full-rank derivative: the partial derivatives `{∂ᵢu(x)}` are linearly independent
   in `ℝᴺ` at every `x`. -/
-def HasFullRankDeriv {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop :=
+@[expose] def HasFullRankDeriv {n N : ℕ} (u : (Fin n → ℝ) → (Fin N → ℝ)) : Prop :=
   ∀ (x : Fin n → ℝ), LinearIndependent ℝ (fun i : Fin n => partialDeriv i u x)
 
 /-- An injective embedding: smooth periodic, injective modulo `2πℤⁿ`,
@@ -129,7 +129,7 @@ structure IsInjectiveEmbedding {n N : ℕ}
 
 /-- A smooth metric `g` is injectively realizable if there exist `N` and an
   injective embedding `u` realizing it. -/
-def IsInjRealizable {n : ℕ}
+@[expose] def IsInjRealizable {n : ℕ}
     (g : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ) : Prop :=
   ∃ (N : ℕ) (u : (Fin n → ℝ) → (Fin N → ℝ)),
     IsInjectiveEmbedding u ∧ Realizes u g
@@ -147,18 +147,18 @@ lemma IsInjRealizable.toIsRealizable {n : ℕ}
   `u_flat(x) = (cos x₁, sin x₁, cos x₂, sin x₂, …, cos xₙ, sin xₙ)`.
   For `k : Fin (2n)`, the component is `cos(x_{k/2})` if `k` is even,
   and `sin(x_{k/2})` if `k` is odd. -/
-def flatTorusEmb (n : ℕ) : (Fin n → ℝ) → (Fin (2 * n) → ℝ) :=
+@[expose] def flatTorusEmb (n : ℕ) : (Fin n → ℝ) → (Fin (2 * n) → ℝ) :=
   fun x k =>
     let i : Fin n := ⟨k.val / 2, by omega⟩
     if k.val % 2 = 0 then Real.cos (x i) else Real.sin (x i)
 
 /-- The flat metric `g_flat = Iₙ` (the identity matrix). -/
-def flatMetric (n : ℕ) : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ :=
+@[expose] def flatMetric (n : ℕ) : (Fin n → ℝ) → Matrix (Fin n) (Fin n) ℝ :=
   fun _ => 1
 
 /-- The operator norm of a matrix, defined as the norm of the associated
   continuous linear map on `ℝⁿ` (with the sup norm on `Fin n → ℝ`). -/
-def matOpNorm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+@[expose] def matOpNorm {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   ‖A.toLin'.toContinuousLinearMap‖
 
 end NashEmbedding

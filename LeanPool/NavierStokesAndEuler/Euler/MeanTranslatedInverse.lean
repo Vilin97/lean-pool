@@ -26,7 +26,7 @@ spatial translation of the original solution. Thus regularity of known
 coefficient families yields genuine spatial regularity of the solved field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -68,12 +68,13 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hcoercive : ∀ v, c * ‖v‖ ^ 2 ≤ ⟪fixedMeanOperator T hT F F₁ H M0 A L v, v⟫_ℝ)
 
 /-- The genuine inverse of the translated fixed mean operator. -/
+@[expose]
 def translatedMeanInverse (a : Space) : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
   coerciveInverse (translatedMeanOperator T hT a F F₁ H M0 A L) c hc
     (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive)
 
 /-- The actual translated forcing-to-coordinate-derivative solver. -/
-def translatedMeanSolver (a : Space) : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def translatedMeanSolver (a : Space) : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
   (translatedMeanInverse T hT F F₁ H M0 A L c hc hcoercive a).comp
     (-(translatedMeanPrimitive T hT a F F₁).adjoint)
 
@@ -151,7 +152,7 @@ section
 
 /-! Actual derivatives and factorial bounds for the translated multiplication operators. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

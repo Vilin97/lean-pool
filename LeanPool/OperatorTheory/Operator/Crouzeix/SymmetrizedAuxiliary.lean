@@ -25,7 +25,7 @@ supply it without changing the algebraic interface.
   integral of the resolvent double-layer kernel.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

@@ -18,7 +18,7 @@ polygons containing the chord lie inside the first polygon.  This is the cutting
 the free-triangle induction of Chapter 3.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -659,7 +659,7 @@ def insertZero (J : PolygonalCircle) (p : Plane) (hp : p ∈ J.edgeSegment 0)
 
 @[simp] theorem insertZero_n (J : PolygonalCircle) (p : Plane)
     (hp : p ∈ J.edgeSegment 0) (hp0 : p ≠ J.vertex 0) (hp1 : p ≠ J.vertex 1) :
-    (J.insertZero p hp hp0 hp1).n = J.n + 1 := rfl
+    (J.insertZero p hp hp0 hp1).n = J.n + 1 := by rfl
 
 @[simp] theorem insertZero_vertex_zero (J : PolygonalCircle) (p : Plane)
     (hp : p ∈ J.edgeSegment 0) (hp0 : p ≠ J.vertex 0) (hp1 : p ≠ J.vertex 1) :
@@ -721,7 +721,7 @@ theorem insertZero_carrier (J : PolygonalCircle) (p : Plane) (hp : p ∈ J.edgeS
       rwa [ZMod.natCast_zmod_val i]
 
 /-- Cyclically reindex a polygon so that the old index `a` becomes the new index zero. -/
-def rotate (J : PolygonalCircle) (a : ZMod J.n) : PolygonalCircle where
+@[expose] def rotate (J : PolygonalCircle) (a : ZMod J.n) : PolygonalCircle where
   n := J.n
   three_le := J.three_le
   vertex i := J.vertex (i + a)
@@ -855,7 +855,7 @@ theorem insertZero_exteriorRegion (J : PolygonalCircle) (p : Plane)
   (regions_eq_of_carrier_eq (J.insertZero_carrier p hp hp0 hp1)).2
 
 /-- A point is a vertex of one of the cyclic presentations of a polygon. -/
-def IsVertexPoint (J : PolygonalCircle) (p : Plane) : Prop :=
+@[expose] def IsVertexPoint (J : PolygonalCircle) (p : Plane) : Prop :=
   ∃ i, J.vertex i = p
 
 /-- A point known to be a polygon vertex lies on an edge exactly when it is one of that edge's
@@ -1497,7 +1497,7 @@ theorem forwardCut_nonadjacent_disjoint {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < 
     rw [hv, Nat.cast_add, Nat.cast_one]
 
 /-- Close the forward boundary arc from vertex `0` to vertex `k` by a proper chord. -/
-def forwardCutCircle {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
+@[expose] def forwardCutCircle {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
     (hP : J.vertex 0 = C.P) (hQ : J.vertex (k : ZMod J.n) = C.Q) :
     PolygonalCircle where
   n := k + 1
@@ -2306,7 +2306,7 @@ theorem interior13_subset_interior12 :
     G.J12.disjoint_interior_exterior hsubsetUnion ⟨z, hz13, hz12⟩
 
 /-- Exchange the two boundary arcs of a theta graph. -/
-def swap12 : PolygonalTheta where
+@[expose] def swap12 : PolygonalTheta where
   P := G.P
   Q := G.Q
   B1 := G.B2
@@ -2582,7 +2582,7 @@ namespace MeshCrosscut
 variable {G : PolygonalTheta} {M : TriangleMesh} (C : G.MeshCrosscut M)
 
 /-- Exchange the two sides of a realized mesh crosscut. -/
-noncomputable def swap12 (C : G.MeshCrosscut M) : G.swap12.MeshCrosscut M where
+@[expose] noncomputable def swap12 (C : G.MeshCrosscut M) : G.swap12.MeshCrosscut M where
   support_eq := C.support_eq
   chordEdge := C.chordEdge
   chordEdge_mem := C.chordEdge_mem
@@ -2623,20 +2623,20 @@ theorem triangle_interior_side (C : G.MeshCrosscut M) (T : M.Triangle) :
         G.disjoint_interior13_interior23 hsplit ⟨p, hp, hp23⟩
 
 /-- Select the maximal triangles lying on the `J13` side of the crosscut. -/
-noncomputable def side13Mesh (_ : G.MeshCrosscut M) : TriangleMesh := by
+@[expose] noncomputable def side13Mesh (_ : G.MeshCrosscut M) : TriangleMesh := by
   classical
   exact M.restrictTriangles fun t =>
     (interior (M.triangleCarrier t) ∩ G.J13.interiorRegion).Nonempty
 
 /-- Select the maximal triangles lying on the `J23` side of the crosscut. -/
-noncomputable def side23Mesh (_ : G.MeshCrosscut M) : TriangleMesh := by
+@[expose] noncomputable def side23Mesh (_ : G.MeshCrosscut M) : TriangleMesh := by
   classical
   exact M.restrictTriangles fun t =>
     (interior (M.triangleCarrier t) ∩ G.J23.interiorRegion).Nonempty
 
-@[simp] theorem swap12_side13Mesh : C.swap12.side13Mesh = C.side23Mesh := rfl
+@[simp] theorem swap12_side13Mesh : C.swap12.side13Mesh = C.side23Mesh := by rfl
 
-@[simp] theorem swap12_side23Mesh : C.swap12.side23Mesh = C.side13Mesh := rfl
+@[simp] theorem swap12_side23Mesh : C.swap12.side23Mesh = C.side13Mesh := by rfl
 
 private theorem triangleCarrier_subset_side13 {t : Finset M.Vertex}
     (ht : t ∈ C.side13Mesh.triangles) :

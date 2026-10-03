@@ -74,7 +74,7 @@ value.
   -- the sharp phase inequality controls that extension on the closure.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

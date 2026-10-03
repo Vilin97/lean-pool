@@ -12,7 +12,7 @@ public import LeanPool.TuttePath.ContractionFlats
 
 /-! Connectivity background in additive-partition form. This verifies the
 needed conclusions without claiming to audit the source's cocircuit proof. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 open scoped Matroid

@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # TensorBasis -/
 
-@[expose] public section
+public section
 
 
 open scoped BigOperators

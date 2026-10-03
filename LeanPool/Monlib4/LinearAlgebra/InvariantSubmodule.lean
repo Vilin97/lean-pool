@@ -17,7 +17,7 @@ import Mathlib.Tactic.Continuity.Init
 This file defines and proves basic results on invariant submodules.
 -/
 
-@[expose] public section
+public section
 
 namespace Submodule
 

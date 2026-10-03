@@ -17,7 +17,7 @@ import LeanPool.Monlib4.Preq.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.PiMatFinTwo`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Functional MatrixOrder ComplexOrder TensorProduct Matrix
 
@@ -67,6 +67,7 @@ macro_rules
 
 /-- The algebra equivalence between a two-block product of matrix algebras and the matching
   `PiMat`. -/
+@[expose]
 def MatProdAlgEquivPiMat (n' : Fin 2 → Type*) [Π i, Fintype (n' i)] [Π i, DecidableEq (n' i)] :
   (Matrix (n' 0) (n' 0) ℂ × Matrix (n' 1) (n' 1) ℂ)
     ≃ₐ[ℂ]
@@ -90,7 +91,7 @@ fun i => by
   split_ifs <;> infer_instance
 
 /-- The swapped product-to-`PiMat` equivalence for two matrix blocks. -/
-def MatProdAlgEquivPiMatSwap (n' : Fin 2 → Type*) [Π i, Fintype (n' i)] [Π i,
+@[expose] def MatProdAlgEquivPiMatSwap (n' : Fin 2 → Type*) [Π i, Fintype (n' i)] [Π i,
   DecidableEq (n' i)] :
   (Matrix (n' 1) (n' 1) ℂ × Matrix (n' 0) (n' 0) ℂ)
     ≃ₐ[ℂ]
@@ -98,7 +99,7 @@ def MatProdAlgEquivPiMatSwap (n' : Fin 2 → Type*) [Π i, Fintype (n' i)] [Π i
 MatProdAlgEquivPiMat (PiFinTwo.swap n')
 
 /-- Swap the two factors of a product as an algebra equivalence. -/
-@[simps]
+@[expose, simps]
 def Prod.swapAlgEquiv
   (α β : Type*) [Semiring α] [Semiring β] [Algebra ℂ α] [Algebra ℂ β] :
     (α × β) ≃ₐ[ℂ] (β × α) where
@@ -111,7 +112,7 @@ def Prod.swapAlgEquiv
   commutes' _ := by simp
 
 /-- Swap the two blocks of a `PiMat` indexed by `Fin 2`. -/
-def PiMatFinTwoSwapAlgEquiv
+@[expose] def PiMatFinTwoSwapAlgEquiv
   {n' : Fin 2 → Type*} [Π i, Fintype (n' i)] [Π i, DecidableEq (n' i)] :
     PiMat ℂ (Fin 2) n' ≃ₐ[ℂ] PiMat ℂ (Fin 2) (PiFinTwo.swap n') :=
 (MatProdAlgEquivPiMat n').symm.trans ((Prod.swapAlgEquiv _ _).trans
@@ -141,7 +142,7 @@ lemma PiFinTwoSame_swap {n : Type*} :
 by ext; simp only [ite_self, Fin.isValue]
 
 /-- Swap the two identical matrix blocks of a `PiMat` indexed by `Fin 2`. -/
-def PiMatFinTwoSameSwapAlgEquiv
+@[expose] def PiMatFinTwoSameSwapAlgEquiv
   {n : Type*} [Fintype n] [DecidableEq n] :
     PiMat ℂ (Fin 2) (PiFinTwoSame n) ≃ₐ[ℂ] PiMat ℂ (Fin 2) (PiFinTwoSame n) :=
 (MatProdAlgEquivPiMat (PiFinTwoSame n)).symm.trans ((Prod.swapAlgEquiv _ _).trans
@@ -182,12 +183,10 @@ theorem AlgEquiv.toPiMat_finTwo_same_inner_of_matrix_prod_inner
   (MatProdAlgEquivPiMat (PiFinTwoSame n)))).IsInner := by
   obtain ⟨U, hU, rfl⟩ := hf
   use ((MatProdAlgEquivPiMat _) U), MatProdAlgEquivPiMatSameInvertibleOf hU
-  ext1
-  simp only [Fin.isValue, MatProdAlgEquivPiMat, symm_symm, trans_apply,
-    matrixPiFinTwoAlgEquivProd_apply, Algebra.autInner_apply, map_mul]
-  congr
-  simp only [PiMat.ext_iff, Fin.forall_fin_two]
-  trivial
+  ext1 x
+  simp only [AlgEquiv.trans_apply, Algebra.autInner_apply,
+    map_mul, AlgEquiv.apply_symm_apply]
+  rw [map_invOf (ifr := MatProdAlgEquivPiMatSameInvertibleOf hU)]
 
 theorem AlgEquiv.PiMat_finTwo_same
   (f : PiMat ℂ (Fin 2) (PiFinTwoSame n) ≃ₐ[ℂ] PiMat ℂ (Fin 2) (PiFinTwoSame n)) :
@@ -222,13 +221,22 @@ theorem AlgEquiv.PiMat_finTwo_same
       ((g₁.prodMap g₂).trans (MatProdAlgEquivPiMat (PiFinTwoSame n))), hg'
     rw [funext_iff] at hg
     simp only [Fin.isValue, AlgEquiv.coe_trans, Function.comp_apply,
-      AlgEquiv.prodMap_apply, Prod.swap, Prod.map_apply, f',
+      AlgEquiv.prodMap_apply, Prod.swap, f',
       AlgEquiv.symm_apply_eq] at hg
     ext1 x
     specialize hg ((MatProdAlgEquivPiMat _).symm x)
     simp only [AlgEquiv.apply_symm_apply] at hg
     rw [hg]
-    rfl
+    rcases hpair : (MatProdAlgEquivPiMat (PiFinTwoSame n)).symm x with ⟨a, b⟩
+    have hx : x = (MatProdAlgEquivPiMat (PiFinTwoSame n)) (a, b) := by
+      calc
+        x = (MatProdAlgEquivPiMat (PiFinTwoSame n))
+            ((MatProdAlgEquivPiMat (PiFinTwoSame n)).symm x) :=
+          ((MatProdAlgEquivPiMat (PiFinTwoSame n)).apply_symm_apply x).symm
+        _ = (MatProdAlgEquivPiMat (PiFinTwoSame n)) (a, b) := by rw [hpair]
+    rw [hx]
+    simp only [AlgEquiv.trans_apply, PiMatFinTwoSameSwapAlgEquiv_apply,
+      AlgEquiv.symm_apply_apply, AlgEquiv.prodMap_apply]
 
 variable {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
   [(i : ι) → Fintype (p i)] [(i : ι) → DecidableEq (p i)]
@@ -535,7 +543,7 @@ theorem QuantumGraph.Real.piFinTwo_same_exists_matrix_map_eq_map_of_adjoint_and_
   · exact Or.inr hf
 
 /-- Projection from a dependent product as an algebra homomorphism. -/
-def AlgHom.proj
+@[expose] def AlgHom.proj
   (R : Type*) {ι : Type*} [CommSemiring R] {φ : ι → Type*}
   [(i : ι) → Semiring (φ i)] [(i : ι) → Algebra R (φ i)] (i : ι) :
     (Π i, φ i) →ₐ[R] φ i where
@@ -560,7 +568,7 @@ theorem AlgHom.proj_toLinearMap
 rfl
 
 /-- Insert one component into a dependent product as a non-unital algebra homomorphism. -/
-def NonUnitalAlgHom.single (R : Type*) {ι : Type*} [CommSemiring R]
+@[expose] def NonUnitalAlgHom.single (R : Type*) {ι : Type*} [CommSemiring R]
   [DecidableEq ι]
   (φ : ι → Type*) [(i : ι) → Ring (φ i)]
   [(i : ι) → Module R (φ i)] (i : ι) :
@@ -960,7 +968,7 @@ theorem
   PiMat_finTwo_same_swap_swap (x : PiMat ℂ (Fin 2) (PiFinTwoSame n)) :
   PiMatFinTwoSameSwapAlgEquiv
     (PiMatFinTwoSameSwapAlgEquiv x) = x :=
-by simp [PiMatFinTwoSameSwapAlgEquiv]
+by simp [PiMatFinTwoSameSwapAlgEquiv, Prod.swapAlgEquiv]
 
 theorem PiMatFinTwoSameSwapAlgEquiv_apply_piSingle_zero (x : Matrix n n ℂ) :
   PiMatFinTwoSameSwapAlgEquiv (Pi.single 0 x) =

@@ -15,7 +15,7 @@ All contextual hypotheses are explicit. No structural existence theorem is
 assumed globally, and none of these results depends on the path theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

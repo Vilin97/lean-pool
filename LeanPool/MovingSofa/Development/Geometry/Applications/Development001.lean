@@ -35,7 +35,7 @@ public import LeanPool.MovingSofa.Development.Geometry.Foundations.Development00
 * `Polygon.Applications.Development001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,7 +53,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Middle`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ niche, because the roof point vertically above it exhibits a time whose open inw
 contains it.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -91,6 +91,7 @@ namespace MovingSofa
 
 /-- The middle area bound obtained from cap area, endpoint segments and the corner-path
 integral. -/
+@[expose]
 def upperBoundMiddle (K : SpecialCapSpace) : ℝ :=
   ClassicalResults.area (K.val.val : Set Point) +
     segmentArea (distinguishedCapSides K.val).2.fanPoint
@@ -645,7 +646,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Mamikon.Properties`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -661,7 +662,7 @@ Authors: Dean Cureton
 # Area / Mamikon / Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1260,7 +1261,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Mamikon.Tails`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1276,13 +1277,14 @@ Authors: Dean Cureton
 # Area / Mamikon / Tails
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The signed area between a convex boundary arc and its endpoint tangent segments. -/
+@[expose]
 def tangentMamikonValue (K : ConvexBody Point) (a b : ℝ) : ℝ :=
   segmentArea (edgeVertices K (a : Real.Angle)).1
       (supportingIntersection K (a : Real.Angle) (b : Real.Angle)) +
@@ -1290,10 +1292,12 @@ def tangentMamikonValue (K : ConvexBody Point) (a b : ℝ) : ℝ :=
       (edgeVertices K (b : Real.Angle)).2 - convexArcArea K a b
 
 /-- The Mamikon value of the right tail on its Gerver angle interval. -/
+@[expose]
 def rightTailMamikon (B : ConvexBody Point) : ℝ :=
   tangentMamikonValue B (Real.pi + paperGerverConstants.2.1) (3 * Real.pi / 2)
 
 /-- The Mamikon value of the left tail on its Gerver angle interval. -/
+@[expose]
 def leftTailMamikon (D : ConvexBody Point) : ℝ :=
   tangentMamikonValue D (3 * Real.pi / 2) (3 * Real.pi / 2 + paperGerverConstants.2.2)
 
@@ -1543,7 +1547,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.UpperBoundary.Polygon`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1559,7 +1563,7 @@ Authors: Dean Cureton
 # Cap / Polyline Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2381,7 +2385,7 @@ Authors: Dean Cureton
 # Cap / Polyline Definition
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2494,7 +2498,7 @@ Authors: Dean Cureton
 # Cap / Polyline
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2505,6 +2509,7 @@ def polygonCapPolyline {Θ : AngleSet} (K : PolygonCapSpace Θ) : XMonotonePolyl
   (polygonCap_polyline K).choose
 
 /-- Sum the lengths of polyline edges perpendicular to a prescribed wall direction. -/
+@[expose]
 def polygonCapPolylineLength {Θ : AngleSet} (K : PolygonCapSpace Θ)
     (t : angleDomain Θ) : ℝ := by
   classical
@@ -2515,6 +2520,7 @@ def polygonCapPolylineLength {Θ : AngleSet} (K : PolygonCapSpace Θ)
       dist (p.vertices i.castSucc) (p.vertices i.succ) else 0
 
 /-- The cap’s surface measure at each wall direction equals the corresponding polyline length. -/
+@[expose]
 def IsBalancedPolygonCap {Θ : AngleSet} (K : PolygonCapSpace Θ) : Prop :=
   ∀ t : angleDomain Θ, surfaceAreaMeasure K.val.val {(t.val : Real.Angle)} =
     ENNReal.ofReal (polygonCapPolylineLength K t)
@@ -2538,7 +2544,7 @@ Authors: Dean Cureton
 # Cap / Upper Boundary / Polygon
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2925,7 +2931,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.Area`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2953,7 +2959,7 @@ coordinate dictionary `fromPlane_paperGerverContacts`.  `contactZ_sound` and
 
 /-! ### The contact evaluator -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3480,7 +3486,7 @@ encloses that sum (`capDoubledZ_sound`), and its kernel-checked numeric conclusi
 
 /-! ### Elementary geometry of the outer cap -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3813,11 +3819,11 @@ theorem gerverOuterCap_area_certified_lower_bound :
   obtain ⟨hlo, -⟩ := capDoubledZ_sound
   rw [hS] at hfan
   rw [hS, hz] at hlo
-  have hOK : 2 * 28609 * M ≤ 10000 * capDoubledZ.lo := by
+  have hOK : 2 * 28609 * M ≤ 10000 * z := by
     have h := capOK_true
     unfold capOK at h
+    rw [hz] at h
     exact of_decide_eq_true h
-  rw [hz] at hOK
   have hOK' : (2 * 28609 * (M : ℝ)) ≤ 10000 * (z : ℝ) := by exact_mod_cast hOK
   have hM : (0 : ℝ) < (M : ℝ) := SI.Mpos
   have hkey : 2 * 28609 ≤ 10000 * S := by nlinarith only [hlo, hOK', hM]
@@ -3850,7 +3856,7 @@ niche by `7 * NN` coordinate rectangles whose widths and heights the certificate
 `GerverAreaCert.nicheOK_true` bounds the total rectangle area, hence `|N₀| ≤ 3301 / 5000`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4360,7 +4366,7 @@ certificate `MovingSofa.Gerver.AreaCertificate` through the fan bound of
 `11 / 5 ≤ |G|` (`gerver_area_lower_bound`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4557,7 +4563,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.VelocityAndCapArea`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4573,7 +4579,7 @@ Authors: Dean Cureton
 # Gerver / Cap Identification
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5231,7 +5237,7 @@ Authors: Dean Cureton
 # Gerver / Niche / Identification
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5364,7 +5370,7 @@ the certified parameters.
 
 /-! ### Coordinate transport of derivatives -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6339,7 +6345,7 @@ Authors: Dean Cureton
 # Gerver / Velocity And Cap Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6656,7 +6662,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Polygon.EdgeNormals`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6672,7 +6678,7 @@ Authors: Dean Cureton
 # Polygon / Balanced Containment
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6840,18 +6846,20 @@ Authors: Dean Cureton
 # Polygon / Polyline / Length / Basic
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Extend the directional polyline-length function by zero outside the angle domain. -/
+@[expose]
 def polygonPolylineLengthAt {Θ : AngleSet} (K : PolygonCapSpace Θ) (t : ℝ) : ℝ := by
   classical
   exact if ht : t ∈ angleDomain Θ then polygonCapPolylineLength K ⟨t, ht⟩ else 0
 
 /-- The one-dimensional Hausdorff measure of the niche frontier inside a specified set. -/
+@[expose]
 def nicheBoundaryLength {Θ : AngleSet} (K : PolygonCapSpace Θ) (S : Set Point) : ℝ :=
   (MeasureTheory.Measure.hausdorffMeasure 1 (frontier (polygonNiche Θ K.val) ∩ S)).toReal
 
@@ -6874,7 +6882,7 @@ Authors: Dean Cureton
 # Polygon / Polyline / Length / Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9106,7 +9114,7 @@ Authors: Dean Cureton
 # Polygon / Polyline / Length
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9235,7 +9243,7 @@ Authors: Dean Cureton
 # Polygon / Balancing / Coefficients
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -9370,7 +9378,7 @@ Authors: Dean Cureton
 # Polygon / Balancing / Estimate
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9769,7 +9777,7 @@ Authors: Dean Cureton
 # Polygon / Balancing
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9874,7 +9882,7 @@ both facts in the form used by the discrete estimates on polygon caps:
   polygon cap is carried by its proper edge normals.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

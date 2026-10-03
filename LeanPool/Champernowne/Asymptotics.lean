@@ -17,7 +17,7 @@ The natural-number prefix bounds give an error that is little-o of `n`, and
 therefore the frequency of each nonempty length-`k` word tends to `b⁻ᵏ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 

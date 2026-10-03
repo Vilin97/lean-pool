@@ -14,7 +14,7 @@ All counts use Mathlib's induced graphs and literal edge finsets. The edges
 in the overlap are counted twice by the pieces and once by the whole graph.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph.CliqueGluing
 

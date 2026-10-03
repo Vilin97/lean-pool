@@ -30,7 +30,7 @@ one obtains the required A-extension by applying prime avoidance
 (Heitmann, Lemma 4).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

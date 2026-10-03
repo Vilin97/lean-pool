@@ -27,7 +27,7 @@ public import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Pos
    nonpositive) eigenvalues.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace HermitianMat

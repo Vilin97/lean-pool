@@ -29,7 +29,7 @@ For a configuration `t : Fin h → ℝ` and a radius `ε > 0`, the atoms are the
 This file verifies the hypotheses of `energy_log_nonpos` for these atoms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral Filter Topology
 
@@ -46,11 +46,11 @@ lemma sum_Icc_eq_sum_range' (m : ℕ) (f : ℕ → ℝ) :
   rw [add_comm]
 
 /-- Midpoints and half-lengths of the intervals of Table 1. -/
-noncomputable def mρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def mρ (j : ℕ) : ℝ :=
   (aρ j + bρ j) / 2
 
 /-- Half-width of the support of the `j`th arcsine component. -/
-noncomputable def rρ (j : ℕ) : ℝ :=
+@[expose] noncomputable def rρ (j : ℕ) : ℝ :=
   (bρ j - aρ j) / 2
 
 lemma rρ_pos (j : Fin 16) : 0 < rρ (j + 1) := by
@@ -74,12 +74,12 @@ abbrev Idx (h : ℕ) :=
   Fin h ⊕ Fin 16
 
 /-- The weights. -/
-noncomputable def atomS (h : ℕ) (K : ℝ) : Idx h → ℝ
+@[expose] noncomputable def atomS (h : ℕ) (K : ℝ) : Idx h → ℝ
   | Sum.inl _ => 1 / K
   | Sum.inr j => -cρ (j + 1)
 
 /-- The curves. -/
-noncomputable def atomγ {h : ℕ} (t : Fin h → ℝ) (ε : ℝ) : Idx h → ℝ → ℂ
+@[expose] noncomputable def atomγ {h : ℕ} (t : Fin h → ℝ) (ε : ℝ) : Idx h → ℝ → ℂ
   | Sum.inl i => circleMap (t i) ε
   | Sum.inr j => arcCurve (mρ (j + 1)) (rρ (j + 1))
 

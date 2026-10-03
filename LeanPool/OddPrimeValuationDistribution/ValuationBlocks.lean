@@ -17,7 +17,7 @@ the word carry count into the exact value of `ν_p (centralBinom n)`, so the
 transfer recurrence becomes an arithmetic distribution theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace OddPrimeValuationDistribution
 

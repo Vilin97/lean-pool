@@ -35,11 +35,12 @@ each other: with `α = (n-1)(1-a²)/2` one has `A n α = a²` *exactly*, so the 
 * `Sendov.alpha_pos`, `Sendov.alpha_le_half`: the range of `α`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 /-- The integrand of the raw polar inequality `(1Q)`. -/
+@[expose]
 noncomputable def Ppolar (a x t : ℝ) : ℝ :=
   a ^ 2 + 2 * a * t * x * (1 - a ^ 2) + t ^ 2 * (1 - a ^ 2) ^ 2
 

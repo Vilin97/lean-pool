@@ -14,7 +14,7 @@ A real symmetric entrywise-nonnegative matrix has a nonnegative unit maximizer o
 Rayleigh quotient, and that maximizer is an eigenvector for `lambdaMax`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

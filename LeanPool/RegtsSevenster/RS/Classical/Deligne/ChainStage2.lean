@@ -20,7 +20,7 @@ seed transitions all restate the balanced machinery at two free
 indices; the substrate for the graded splitting algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -36,6 +36,7 @@ variable {D : Type u}
 /-- A two-index stage of the splitting chain: the module tensor
 product of independently sized symmetric powers of the dual
 pair. -/
+@[expose]
 noncomputable def chainStage2
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -61,6 +62,7 @@ theorem chainStage2_diag
 section Stage2Cast
 
 /-- Transport of a two-index stage along equalities of arities. -/
+@[expose]
 noncomputable def chainStage2Cast
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -129,6 +131,7 @@ end Stage2Cast
 
 /-- **The two-index chain multiplication**: two stages interchange
 and multiply into the stage of the slotwise summed arities. -/
+@[expose]
 noncomputable def chainMul2
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -1023,6 +1026,7 @@ section Chain2Delta
 
 /-- **The two-index chain transition**: multiplication by the
 seed, which raises both arities by one. -/
+@[expose]
 noncomputable def chainDelta2
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

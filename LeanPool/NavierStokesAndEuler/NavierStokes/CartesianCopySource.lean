@@ -16,7 +16,7 @@ the lift. Their derivatives are bounded on a fixed annulus, and the original
 flat weight is pulled back exactly.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,6 +46,7 @@ theorem cylindricalMap_continuous : Continuous cylindricalMap :=
 
 /-- Restriction to a padded annulus and the genuine native domain. The
 weight, edge distance, viscosity and slow scales are unchanged by pullback. -/
+@[expose]
 noncomputable def pullStrip (s : StripData Native) (a b : ℝ) (ha : 0 < a) : StripData LiftPoint
     where
   domain := cylindricalDomain a b ∩ cylindricalMap ⁻¹' s.domain
@@ -134,7 +135,7 @@ noncomputable def vertical : ComplexVector →L[ℝ] ComplexVector :=
 
 /-- Rotation map, given by `(y.1 / cartesianRadius y) • horizontal + (y.2 / cartesianRadius y) •
 connection + vertical`. -/
-noncomputable def rotationMap (y : Plane) : ComplexVector →L[ℝ] ComplexVector :=
+@[expose] noncomputable def rotationMap (y : Plane) : ComplexVector →L[ℝ] ComplexVector :=
   (y.1 / cartesianRadius y) • horizontal + (y.2 / cartesianRadius y) • connection + vertical
 
 theorem rotationMap_apply (y : Plane) (v : ComplexVector) :
@@ -185,7 +186,7 @@ theorem rotation_uniform {ι : Type*} (s : StripData Native) {a b : ℝ} (ha : 0
 
 /-- Rotated source, given by `rotationMap (PhysicalGraphBounds.liftXY x) (f l n (cylindricalMap
 x))`. -/
-noncomputable def rotatedSource {ι : Type*} (f : ι → ℕ → Native → ComplexVector)
+@[expose] noncomputable def rotatedSource {ι : Type*} (f : ι → ℕ → Native → ComplexVector)
     (l : ι) (n : ℕ) (x : LiftPoint) : ComplexVector :=
   rotationMap (PhysicalGraphBounds.liftXY x) (f l n (cylindricalMap x))
 

@@ -20,7 +20,7 @@ inequalities: each exponent is bounded by the log partition, and weighted
 Cauchy--Schwarz makes the velocity variance nonnegative.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped ContDiff
@@ -71,6 +71,7 @@ noncomputable def polytopeSoftSupportSecond
 
 /-- A strictly rounded support function, obtained by adding a positive
 constant to the soft support. -/
+@[expose]
 noncomputable def polytopeRoundedSupport
     (u : Finset ℂ) (delta rho theta : ℝ) : ℝ :=
   polytopeSoftSupport u delta theta + rho

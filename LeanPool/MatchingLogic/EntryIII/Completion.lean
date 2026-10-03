@@ -21,7 +21,7 @@ public import LeanPool.MatchingLogic.EntryIII.Generated
 # MatchingLogic.EntryIII.Completion
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -42,19 +42,19 @@ def Missing (root : CanonicalCarrier S) : Prop :=
 
 /-- The source's conditional completion: all generated worlds are present,
 while `none` is a legal point exactly when `Missing root` holds. -/
-def CompletedCarrier (root : CanonicalCarrier S) :=
+@[expose] def CompletedCarrier (root : CanonicalCarrier S) :=
   {o : Option (GeneratedCarrier root) // o = none → Missing root}
 
 namespace CompletedCarrier
 
 /-- A completed point is the added star precisely when its option is `none`. -/
-def isStar {root : CanonicalCarrier S} (point : CompletedCarrier root) : Prop :=
+@[expose] def isStar {root : CanonicalCarrier S} (point : CompletedCarrier root) : Prop :=
   point.val = none
 
 end CompletedCarrier
 
 /-- Embed a generated world into the completed carrier. -/
-def completedEmbed (root : CanonicalCarrier S) (world : GeneratedCarrier root) :
+@[expose] def completedEmbed (root : CanonicalCarrier S) (world : GeneratedCarrier root) :
     CompletedCarrier root :=
   ⟨some world, by simp⟩
 
@@ -113,7 +113,7 @@ theorem completedCarrier_cases {root : CanonicalCarrier S}
 three cases exact: a star input admits no tuple; real outputs are the generated
 interpretation; and star is an additional output exactly when some real input
 is the generated root. -/
-def completedInterp (root : CanonicalCarrier S) (sigma : S.Sym)
+@[expose] def completedInterp (root : CanonicalCarrier S) (sigma : S.Sym)
     (inputs : Fin (S.arity sigma) → CompletedCarrier root) :
     Set (CompletedCarrier root) :=
   {output | ∃ components : Fin (S.arity sigma) → GeneratedCarrier root,

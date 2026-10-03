@@ -9,7 +9,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.ExcessComparisonCore
 
 /-! Pressure-side comparisons for the Tsai excess quantities. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology BigOperators

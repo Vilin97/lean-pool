@@ -18,7 +18,7 @@ import LeanPool.ConnesRigidity.Paper.Section3.DualShearMeasure
 The fourier coordinates component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFourierCoordinates
@@ -70,7 +70,7 @@ local instance paperMultiplicativeDDecidableEq :
 /--
 The `characterCoordinatesMeasurableEquiv` construction used in the Connes rigidity formalization.
 -/
-def characterCoordinatesMeasurableEquiv : CharacterSpace ≃ᵐ Coordinates where
+@[expose] def characterCoordinatesMeasurableEquiv : CharacterSpace ≃ᵐ Coordinates where
   toEquiv := PaperDualHaar.characterCoordinatesEquiv.toEquiv
   measurable_toFun := characterCoordinatesHomeomorph.continuous.measurable
   measurable_invFun := characterCoordinatesHomeomorph.symm.continuous.measurable
@@ -103,7 +103,7 @@ theorem characterCoordinates_measurePreserving :
 /--
 The `characterCoordinatesLpEquiv` construction used in the Connes rigidity formalization.
 -/
-def characterCoordinatesLpEquiv : CharacterL2 ≃ₗᵢ[ℂ] CoordinateL2 where
+@[expose] def characterCoordinatesLpEquiv : CharacterL2 ≃ₗᵢ[ℂ] CoordinateL2 where
   toLinearEquiv :=
     { toFun := Lp.compMeasurePreserving
         (characterCoordinatesMeasurableEquiv.symm : Coordinates → CharacterSpace)
@@ -163,7 +163,7 @@ def paperFourierCoordinateUnitary :
 /--
 The `coordinateCharacterL2` construction used in the Connes rigidity formalization.
 -/
-def coordinateCharacterL2 (d : D) : CoordinateL2 :=
+@[expose] def coordinateCharacterL2 (d : D) : CoordinateL2 :=
   characterCoordinatesLpEquiv (characterL2 d)
 
 @[simp] theorem paperFourierCoordinateUnitary_single (d : D) :
@@ -175,7 +175,7 @@ def coordinateCharacterL2 (d : D) : CoordinateL2 :=
 
 /-- The transported kernel multiplier in raw coordinates. Paper: §3.
 -/
-def coordinateCharacterMultiplier (d : D) :
+@[expose] def coordinateCharacterMultiplier (d : D) :
     CoordinateL2 →L[ℂ] CoordinateL2 :=
   characterCoordinatesLpEquiv.conjStarAlgEquiv
     (characterMultiplier (complexCharacter d))

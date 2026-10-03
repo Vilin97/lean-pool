@@ -18,7 +18,7 @@ a multiplicative stage produce more than half of the group; two disjoint
 such families then cover the whole group.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 open Module
@@ -31,6 +31,7 @@ variable {E A G : Type*} [DecidableEq E] [DecidableEq A]
   [AddCommGroup G] [DecidableEq G]
 
 /-- All sums obtained by choosing any subfamily of a finite family. -/
+@[expose]
 def binarySums (shift : E → G) (F : Finset E) : Finset G :=
   F.powerset.image fun J ↦ ∑ e ∈ J, shift e
 
@@ -80,6 +81,7 @@ theorem exists_bool_choice_of_mem_binarySums (shift : E → G) (F : Finset E)
   exact fun h ↦ hJF h
 
 /-- Atoms reserved by a family of exchanges. -/
+@[expose]
 def usedAtoms (support : E → Finset A) (F : Finset E) : Finset A := F.biUnion support
 
 omit [DecidableEq E] in

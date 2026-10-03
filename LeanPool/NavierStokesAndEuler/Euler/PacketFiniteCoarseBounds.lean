@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Low packet grades retain fixed polynomial costs; higher grades use one common tail base. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,7 +26,7 @@ open EulerPacketProfileRecursion EulerPacketShiftArithmetic EulerPacketCoarseMaj
 
 /-- Fixed velocity grade cost, given by `(3*H^(2*n))*((4*R)^(highShift n)*((highShift
 n).factorial : ℝ)^2)`. -/
-def fixedVelocityGradeCost (R H : ℝ) (n : ℕ) : ℝ :=
+@[expose] def fixedVelocityGradeCost (R H : ℝ) (n : ℕ) : ℝ :=
   (3*H^(2*n))*((4*R)^(highShift n)*((highShift n).factorial : ℝ)^2)
 
 theorem fixedVelocityGradeCost_nonneg (R H : ℝ) (hR : 0 ≤ R) (n : ℕ) :

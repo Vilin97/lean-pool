@@ -18,7 +18,7 @@ other generators witnessing old reducedness still have active copies, so
 their join together with this upper generator is the old upper node.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EGZ.FlagDecomposition.FaceRefinement

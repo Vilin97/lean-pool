@@ -13,11 +13,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Dense identifiers for audited coverage summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Shallow PatternSummary group 0. -/
+@[expose]
 def densePatternSummaries00 : Array PatternSummary :=
   #[⟨0, 7196⟩, ⟨1, 1703962⟩, ⟨6, 6381824⟩, ⟨7, 6842368⟩, ⟨11, 10592512⟩, ⟨14, 12697856⟩,
   ⟨17, 14737408⟩, ⟨18, 369098774⟩, ⟨19, 589496320⟩, ⟨20, 620766464⟩, ⟨22, 825294848⟩,
@@ -35,6 +36,7 @@ def densePatternSummaries00 : Array PatternSummary :=
   ⟨89, 828941336576⟩, ⟨91, 833236369408⟩, ⟨92, 836478435328⟩, ⟨93, 841813640192⟩]
 
 /-- Shallow PatternSummary group 1. -/
+@[expose]
 def densePatternSummaries01 : Array PatternSummary :=
   #[⟨94, 845101924352⟩, ⟨96, 859006566400⟩, ⟨97, 962072731648⟩, ⟨98, 962087354368⟩,
   ⟨99, 965830770688⟩, ⟨100, 15393162788878⟩, ⟨101, 24189255811094⟩, ⟨102, 28587302322202⟩,
@@ -56,6 +58,7 @@ def densePatternSummaries01 : Array PatternSummary :=
   ⟨170, 38562660219879424⟩, ⟨171, 38712704902365184⟩, ⟨173, 40813871632547840⟩]
 
 /-- Shallow PatternSummary group 2. -/
+@[expose]
 def densePatternSummaries02 : Array PatternSummary :=
   #[⟨174, 40813874055741440⟩, ⟨175, 40973300809072640⟩, ⟨176, 45317471250456832⟩,
   ⟨177, 45317471260966912⟩, ⟨178, 45317473951547392⟩, ⟨179, 45318162740150272⟩,
@@ -79,6 +82,7 @@ def densePatternSummaries02 : Array PatternSummary :=
   ⟨261, 337182748⟩, ⟨262, 353435676⟩]
 
 /-- Shallow PatternSummary group 3. -/
+@[expose]
 def densePatternSummaries03 : Array PatternSummary :=
   #[⟨263, 353894428⟩, ⟨265, 606743552⟩, ⟨270, 1112165376⟩, ⟨282, 12886147094⟩, ⟨283, 13203669018⟩,
   ⟨285, 21827158044⟩, ⟨287, 25771048982⟩, ⟨288, 30064772374⟩, ⟨290, 30064967702⟩,
@@ -98,6 +102,7 @@ def densePatternSummaries03 : Array PatternSummary :=
   ⟨425, 145839921037312⟩, ⟨426, 147334566683648⟩, ⟨429, 147334568779776⟩]
 
 /-- Shallow PatternSummary group 4. -/
+@[expose]
 def densePatternSummaries04 : Array PatternSummary :=
   #[⟨431, 149536343851008⟩, ⟨432, 150258088673280⟩, ⟨436, 151735322583040⟩,
   ⟨437, 153933853491200⟩, ⟨438, 153934323253248⟩, ⟨439, 153934388264960⟩, ⟨440, 153934389837824⟩,
@@ -121,6 +126,7 @@ def densePatternSummaries04 : Array PatternSummary :=
   ⟨543, 13864158726455296⟩, ⟨549, 14074169742352384⟩, ⟨552, 14636853415116800⟩]
 
 /-- Shallow PatternSummary group 5. -/
+@[expose]
 def densePatternSummaries05 : Array PatternSummary :=
   #[⟨554, 14637128288829440⟩, ⟨556, 14711895076372480⟩, ⟨557, 14724659726516224⟩,
   ⟨558, 15762772373536768⟩, ⟨560, 15763046177701888⟩, ⟨562, 15842210209595392⟩,
@@ -146,6 +152,7 @@ def densePatternSummaries05 : Array PatternSummary :=
   ⟨637, 2449958197300208640⟩]
 
 /-- Shallow PatternSummary group 6. -/
+@[expose]
 def densePatternSummaries06 : Array PatternSummary :=
   #[⟨642, 2450119421771907072⟩, ⟨643, 2594073385376064512⟩, ⟨646, 2594220719923569664⟩,
   ⟨647, 2594227319744757760⟩, ⟨648, 2594236817460953088⟩, ⟨649, 2738188573443531776⟩,
@@ -171,6 +178,7 @@ def densePatternSummaries06 : Array PatternSummary :=
   ⟨733, 5514657743728279552⟩]
 
 /-- Shallow PatternSummary group 7. -/
+@[expose]
 def densePatternSummaries07 : Array PatternSummary :=
   #[⟨735, 5764608364861456384⟩, ⟨736, 5764608385517355008⟩, ⟨738, 5806265819601043456⟩,
   ⟨739, 5807391722983915520⟩, ⟨743, 5908723544333795328⟩, ⟨744, 5945315291306131456⟩,
@@ -192,6 +200,7 @@ def densePatternSummaries07 : Array PatternSummary :=
   ⟨832, 3299122094346⟩, ⟨833, 3299122096138⟩]
 
 /-- Shallow PatternSummary group 8. -/
+@[expose]
 def densePatternSummaries08 : Array PatternSummary :=
   #[⟨836, 3448858747154⟩, ⟨838, 5497560311046⟩, ⟨839, 5497560376582⟩, ⟨840, 5497560441094⟩,
   ⟨841, 5497560441862⟩, ⟨842, 5498114473996⟩, ⟨846, 5639295270932⟩, ⟨847, 5652180172820⟩,
@@ -211,6 +220,7 @@ def densePatternSummaries08 : Array PatternSummary :=
   ⟨977, 27527250706456⟩, ⟨978, 27629809827864⟩, ⟨979, 27630329921560⟩, ⟨981, 27660143034392⟩]
 
 /-- Shallow PatternSummary group 9. -/
+@[expose]
 def densePatternSummaries09 : Array PatternSummary :=
   #[⟨982, 844424934409478⟩, ⟨983, 844424934475014⟩, ⟨984, 844424934539526⟩,
   ⟨985, 844424934540294⟩, ⟨988, 844426054222090⟩, ⟨989, 844426054223882⟩, ⟨992, 844712692957458⟩,
@@ -235,6 +245,7 @@ def densePatternSummaries09 : Array PatternSummary :=
   ⟨1106, 4785389227212824⟩, ⟨1107, 4785389478871064⟩, ⟨1115, 5066850233762816⟩]
 
 /-- Shallow PatternSummary group 10. -/
+@[expose]
 def densePatternSummaries10 : Array PatternSummary :=
   #[⟨1119, 5066868750567424⟩, ⟨1127, 5154931417833472⟩, ⟨1128, 5348037442421010⟩,
   ⟨1133, 5348308025360658⟩, ⟨1137, 5629552421765120⟩, ⟨1138, 5629783007446016⟩,
@@ -260,6 +271,7 @@ def densePatternSummaries10 : Array PatternSummary :=
   ⟨1305, 11340364036202496⟩]
 
 /-- Shallow PatternSummary group 11. -/
+@[expose]
 def densePatternSummaries11 : Array PatternSummary :=
   #[⟨1307, 11342562562408448⟩, ⟨1316, 11356169213837312⟩, ⟨1317, 11356169750708224⟩,
   ⟨1321, 11901114429497344⟩, ⟨1322, 11901114966353920⟩, ⟨1323, 11901114966368256⟩,
@@ -282,6 +294,7 @@ def densePatternSummaries11 : Array PatternSummary :=
   ⟨1474, 14333178282012⟩, ⟨1485, 19954418066710⟩, ⟨1489, 19971597936922⟩]
 
 /-- Shallow PatternSummary group 12. -/
+@[expose]
 def densePatternSummaries12 : Array PatternSummary :=
   #[⟨1492, 20890724147478⟩, ⟨1494, 20891543019802⟩, ⟨1505, 22162034982940⟩,
   ⟨1506, 22166329884700⟩, ⟨1507, 22179213803548⟩, ⟨1508, 22183508705308⟩, ⟨1511, 23089831739420⟩,
@@ -304,6 +317,7 @@ def densePatternSummaries12 : Array PatternSummary :=
   ⟨1732, 3377701151834140⟩, ⟨1736, 3659175787775246⟩, ⟨1739, 3659196177842204⟩]
 
 /-- Shallow PatternSummary group 13. -/
+@[expose]
 def densePatternSummaries13 : Array PatternSummary :=
   #[⟨1740, 3659214761230364⟩, ⟨1751, 5066850228520214⟩, ⟨1756, 5066871703357466⟩,
   ⟨1758, 5348024562827542⟩, ⟨1760, 5348025916473626⟩, ⟨1768, 5629787302395926⟩,
@@ -329,6 +343,7 @@ def densePatternSummaries13 : Array PatternSummary :=
   ⟨2108, 1369094879711330330⟩]
 
 /-- Shallow PatternSummary group 14. -/
+@[expose]
 def densePatternSummaries14 : Array PatternSummary :=
   #[⟨2110, 1441152443408842774⟩, ⟨2111, 1441152456292761622⟩, ⟨2114, 1441152469179039772⟩,
   ⟨2120, 1729382822000459802⟩, ⟨2122, 1729382830623948828⟩, ⟨2123, 1729382851813572634⟩,
@@ -352,6 +367,7 @@ def densePatternSummaries14 : Array PatternSummary :=
   ⟨2467, 5497610710030⟩, ⟨2470, 5497644786702⟩, ⟨2502, 6597122729230⟩, ⟨2503, 6597122731022⟩]
 
 /-- Shallow PatternSummary group 15. -/
+@[expose]
 def densePatternSummaries15 : Array PatternSummary :=
   #[⟨2512, 6609957823766⟩, ⟨2546, 9896175283214⟩, ⟨2554, 9896211456262⟩, ⟨2582, 10995670526990⟩,
   ⟨2612, 12095234516230⟩, ⟨2635, 13216423346204⟩, ⟨2654, 14294207046670⟩, ⟨2673, 18833433830678⟩,
@@ -375,6 +391,7 @@ def densePatternSummaries15 : Array PatternSummary :=
   ⟨3968, 433752939123884294⟩, ⟨3997, 720585838701879562⟩]
 
 /-- Shallow PatternSummary group 16. -/
+@[expose]
 def densePatternSummaries16 : Array PatternSummary :=
   #[⟨4003, 723109218424504586⟩, ⟨4009, 731914107002871808⟩, ⟨4010, 731914107539742720⟩,
   ⟨4041, 936748724665877518⟩, ⟨4060, 1297056080165118226⟩, ⟨4066, 1301822600510488850⟩,
@@ -400,6 +417,7 @@ def densePatternSummaries16 : Array PatternSummary :=
   ⟨4331, 5233756715295467520⟩]
 
 /-- Shallow PatternSummary group 17. -/
+@[expose]
 def densePatternSummaries17 : Array PatternSummary :=
   #[⟨4332, 5234321864278933504⟩, ⟨4333, 5235507137270016000⟩, ⟨4335, 5235522977109377024⟩,
   ⟨4342, 5802985736688893952⟩, ⟨4344, 5803170454122266648⟩, ⟨4355, 5805140522122608640⟩,
@@ -423,6 +441,7 @@ def densePatternSummaries17 : Array PatternSummary :=
   ⟨5238, 9570150835776524⟩]
 
 /-- Shallow PatternSummary group 18. -/
+@[expose]
 def densePatternSummaries18 : Array PatternSummary :=
   #[⟨5242, 9570170690494738⟩, ⟨5263, 9649314666138638⟩, ⟨5291, 9663629171376406⟩,
   ⟨5301, 10133099218299916⟩, ⟨5315, 10205666933812238⟩, ⟨5410, 11259000696040460⟩,
@@ -446,6 +465,7 @@ def densePatternSummaries18 : Array PatternSummary :=
   ⟨6659, 7036875513660702⟩]
 
 /-- Shallow PatternSummary group 19. -/
+@[expose]
 def densePatternSummaries19 : Array PatternSummary :=
   #[⟨6662, 7037153590856734⟩, ⟨6697, 9646015560838158⟩, ⟨6732, 9654812157174798⟩,
   ⟨6760, 9663749430469654⟩, ⟨6884, 10224358634037526⟩, ⟨6907, 10696050746731786⟩,
@@ -470,6 +490,7 @@ def densePatternSummaries19 : Array PatternSummary :=
   ⟨8450, 13583693067657502⟩, ⟨8533, 14637008314066186⟩, ⟨8561, 432345603193340190⟩]
 
 /-- Shallow PatternSummary group 20. -/
+@[expose]
 def densePatternSummaries20 : Array PatternSummary :=
   #[⟨8563, 432345607472054558⟩, ⟨8578, 720575964103475486⟩, ⟨8603, 1297037268292895006⟩,
   ⟨8613, 1441172359171615758⟩, ⟨8622, 2450103333113331998⟩, ⟨8654, 2603854640815098894⟩,
@@ -495,6 +516,7 @@ def densePatternSummaries20 : Array PatternSummary :=
   ⟨10716, 5233270876129132574⟩]
 
 /-- Shallow PatternSummary group 21. -/
+@[expose]
 def densePatternSummaries21 : Array PatternSummary :=
   #[⟨10746, 5809716641126755358⟩, ⟨10772, 6954279246022396958⟩, ⟨10773, 6954279246105693214⟩,
   ⟨10786, 6958204639972502558⟩, ⟨10787, 6958204640055798814⟩, ⟨10924, 2885263662928446486⟩,
@@ -504,6 +526,7 @@ def densePatternSummaries21 : Array PatternSummary :=
   ⟨10982, 5809715571966682382⟩, ⟨10984, 5809716671493514510⟩]
 
 /-- Shallow HardSummary group 0. -/
+@[expose]
 def denseHardSummaries00 : Array HardSummary :=
   #[⟨0, 8697799730556775710⟩, ⟨1, 8697795349690133790⟩, ⟨2, 8410689778228604190⟩,
   ⟨3, 8693859081117707550⟩, ⟨4, 7397959300637994270⟩, ⟨5, 7684223732869704990⟩,
@@ -529,6 +552,7 @@ def denseHardSummaries00 : Array HardSummary :=
   ⟨63, 7395988974230580510⟩]
 
 /-- Shallow HardSummary group 1. -/
+@[expose]
 def denseHardSummaries01 : Array HardSummary :=
   #[⟨64, 8400275203023187230⟩, ⟨65, 6166495397074709790⟩, ⟨66, 5157689080778599710⟩,
   ⟨67, 5162203559574908190⟩, ⟨68, 5442550540468235550⟩, ⟨69, 5155446064223366430⟩,
@@ -554,6 +578,7 @@ def denseHardSummaries01 : Array HardSummary :=
   ⟨687, 6453032278568428830⟩]
 
 /-- Shallow HardSummary group 2. -/
+@[expose]
 def denseHardSummaries02 : Array HardSummary :=
   #[⟨688, 5446478027099301150⟩, ⟨689, 6020686714341254430⟩, ⟨690, 8695556580571833630⟩,
   ⟨691, 8262373201368802590⟩, ⟨692, 8693867756481373470⟩, ⟨693, 8694645099340719390⟩,
@@ -579,6 +604,7 @@ def denseHardSummaries02 : Array HardSummary :=
   ⟨751, 7680143312584008990⟩]
 
 /-- Shallow HardSummary group 3. -/
+@[expose]
 def denseHardSummaries03 : Array HardSummary :=
   #[⟨752, 4147201482135594270⟩, ⟨753, 8230831648747971870⟩, ⟨754, 8661485077465294110⟩,
   ⟨755, 3714723978626622750⟩, ⟨756, 8694980340888986910⟩, ⟨757, 6453032276462757150⟩,
@@ -604,6 +630,7 @@ def denseHardSummaries03 : Array HardSummary :=
   ⟨815, 4155289489154008350⟩]
 
 /-- Shallow HardSummary group 4. -/
+@[expose]
 def denseHardSummaries04 : Array HardSummary :=
   #[⟨816, 4147062961727366430⟩, ⟨817, 3714723994569565470⟩, ⟨818, 3714161053206078750⟩,
   ⟨819, 5420526133700486430⟩, ⟨820, 6427636857809429790⟩, ⟨821, 5996980143442126110⟩,
@@ -629,6 +656,7 @@ def denseHardSummaries04 : Array HardSummary :=
   ⟨1031, 3871062447718886430⟩]
 
 /-- Shallow HardSummary group 5. -/
+@[expose]
 def denseHardSummaries05 : Array HardSummary :=
   #[⟨1032, 5420594277881441310⟩, ⟨1033, 5419406806330076190⟩, ⟨1034, 3713174884401638430⟩,
   ⟨1035, 5446490936687815710⟩, ⟨1036, 5455147529172249630⟩, ⟨1037, 8189464194495114270⟩,
@@ -654,6 +682,7 @@ def denseHardSummaries05 : Array HardSummary :=
   ⟨1095, 5446477729664363550⟩]
 
 /-- Shallow HardSummary group 6. -/
+@[expose]
 def denseHardSummaries06 : Array HardSummary :=
   #[⟨1096, 5450925404522572830⟩, ⟨1097, 5162695045550730270⟩, ⟨1098, 5131229325436677150⟩,
   ⟨1099, 5131238018718919710⟩, ⟨1100, 8181864353213475870⟩, ⟨1101, 8184107220032056350⟩,
@@ -679,6 +708,7 @@ def denseHardSummaries06 : Array HardSummary :=
   ⟨1159, 6175166435649285150⟩]
 
 /-- Shallow HardSummary group 7. -/
+@[expose]
 def denseHardSummaries07 : Array HardSummary :=
   #[⟨1160, 3871005816665041950⟩, ⟨1161, 3726892827612441630⟩, ⟨1162, 4158040199043640350⟩,
   ⟨1163, 3866783692266040350⟩, ⟨1164, 3722670703213440030⟩, ⟨1165, 4153385690690841630⟩,
@@ -704,6 +734,7 @@ def denseHardSummaries07 : Array HardSummary :=
   ⟨1223, 2851717181477514270⟩]
 
 /-- Shallow HardSummary group 8. -/
+@[expose]
 def denseHardSummaries08 : Array HardSummary :=
   #[⟨1224, 6139399885039365150⟩, ⟨1225, 5995847646916930590⟩, ⟨1226, 5131169712601328670⟩,
   ⟨1227, 5991922390405770270⟩, ⟨1228, 5130608961671162910⟩, ⟨1229, 2860161297651624990⟩,
@@ -729,6 +760,7 @@ def denseHardSummaries08 : Array HardSummary :=
   ⟨1287, 2858261605449231390⟩]
 
 /-- Shallow HardSummary group 9. -/
+@[expose]
 def denseHardSummaries09 : Array HardSummary :=
   #[⟨1288, 3140075081450941470⟩, ⟨1289, 2851844722479098910⟩, ⟨1290, 5130667230218972190⟩,
   ⟨1291, 5130666135002311710⟩, ⟨1292, 2858189038789094430⟩, ⟨1293, 2857907568107351070⟩,
@@ -754,6 +786,7 @@ def denseHardSummaries09 : Array HardSummary :=
   ⟨5407, 3284630213168390430⟩]
 
 /-- Shallow HardSummary group 10. -/
+@[expose]
 def denseHardSummaries10 : Array HardSummary :=
   #[⟨5408, 6141095451432771870⟩, ⟨5409, 6425956923956977950⟩, ⟨5410, 5564643495222370590⟩,
   ⟨5411, 6137730945851777310⟩, ⟨5412, 5563521993362039070⟩, ⟨5413, 5132297956764606750⟩,
@@ -779,6 +812,7 @@ def denseHardSummaries10 : Array HardSummary :=
   ⟨5471, 5132289015213646110⟩]
 
 /-- Shallow HardSummary group 11. -/
+@[expose]
 def denseHardSummaries11 : Array HardSummary :=
   #[⟨5472, 6164806280117018910⟩, ⟨5473, 3867059112994464030⟩, ⟨5474, 5590605597368705310⟩,
   ⟨5475, 3858832585567822110⟩, ⟨5476, 5560702845549338910⟩, ⟨5477, 3292858430246150430⟩,
@@ -804,6 +838,7 @@ def denseHardSummaries11 : Array HardSummary :=
   ⟨5535, 6453036381428179230⟩]
 
 /-- Shallow HardSummary group 12. -/
+@[expose]
 def denseHardSummaries12 : Array HardSummary :=
   #[⟨5536, 5591722952693571870⟩, ⟨5537, 7825369142209470750⟩, ⟨5538, 4149447388533285150⟩,
   ⟨5539, 7797307423927230750⟩, ⟨5540, 3281954687505588510⟩, ⟨5541, 8659170591530737950⟩,
@@ -829,6 +864,7 @@ def denseHardSummaries12 : Array HardSummary :=
   ⟨5599, 3870928982686490910⟩]
 
 /-- Shallow HardSummary group 13. -/
+@[expose]
 def denseHardSummaries13 : Array HardSummary :=
   #[⟨5600, 8688942511618187550⟩, ⟨5601, 8373204691001729310⟩, ⟨5602, 8230703860873355550⟩,
   ⟨5603, 8229582359013024030⟩, ⟨5604, 8401831412735074590⟩, ⟨5605, 4149307735173423390⟩,
@@ -854,6 +890,7 @@ def denseHardSummaries13 : Array HardSummary :=
   ⟨5663, 3858262609255522590⟩]
 
 /-- Shallow HardSummary group 14. -/
+@[expose]
 def denseHardSummaries14 : Array HardSummary :=
   #[⟨5664, 6164798601768330270⟩, ⟨5665, 5590589649278592030⟩, ⟨5666, 6164798327964165150⟩,
   ⟨5667, 5590589375474426910⟩, ⟨5668, 3865088805855421470⟩, ⟨5669, 3288636849645020190⟩,
@@ -879,6 +916,7 @@ def denseHardSummaries14 : Array HardSummary :=
   ⟨5727, 5598408814949360670⟩]
 
 /-- Shallow HardSummary group 15. -/
+@[expose]
 def denseHardSummaries15 : Array HardSummary :=
   #[⟨5728, 3292495849308349470⟩, ⟨5729, 3858823622709273630⟩, ⟨5730, 3284614670219535390⟩,
   ⟨5731, 2852269131761771550⟩, ⟨5732, 7148705516495692830⟩, ⟨5733, 7146462512775029790⟩,
@@ -904,6 +942,7 @@ def denseHardSummaries15 : Array HardSummary :=
   ⟨5791, 8182278732413199390⟩]
 
 /-- Shallow HardSummary group 16. -/
+@[expose]
 def denseHardSummaries16 : Array HardSummary :=
   #[⟨5792, 8155327640832107550⟩, ⟨5793, 6137715128029209630⟩, ⟨5794, 5563506175539471390⟩,
   ⟨5795, 6136026303938749470⟩, ⟨5796, 8661431066944988190⟩, ⟨5797, 3726877582424663070⟩,
@@ -929,7 +968,7 @@ def denseHardSummaries16 : Array HardSummary :=
   ⟨5855, 3858256025070658590⟩]
 
 /-- Pattern summaries indexed by compact certificate identifier. -/
-def densePatternSummaryGroups : Array (Array PatternSummary) :=
+@[expose] def densePatternSummaryGroups : Array (Array PatternSummary) :=
   #[densePatternSummaries00, densePatternSummaries01, densePatternSummaries02,
   densePatternSummaries03, densePatternSummaries04, densePatternSummaries05,
   densePatternSummaries06, densePatternSummaries07, densePatternSummaries08,
@@ -940,7 +979,7 @@ def densePatternSummaryGroups : Array (Array PatternSummary) :=
   densePatternSummaries21]
 
 /-- Exact summaries indexed by compact certificate identifier. -/
-def denseHardSummaryGroups : Array (Array HardSummary) :=
+@[expose] def denseHardSummaryGroups : Array (Array HardSummary) :=
   #[denseHardSummaries00, denseHardSummaries01, denseHardSummaries02, denseHardSummaries03,
   denseHardSummaries04, denseHardSummaries05, denseHardSummaries06, denseHardSummaries07,
   denseHardSummaries08, denseHardSummaries09, denseHardSummaries10, denseHardSummaries11,

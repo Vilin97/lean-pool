@@ -19,7 +19,7 @@ This file bridges the Jensen/divisor-based counting lemma in
 product development.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -26,7 +26,7 @@ disk), which is why `spectrum_subset_closure_numericalRange` carries a closure; 
 `spectrum_subset_numericalRange` for the finite-dimensional statement without it.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

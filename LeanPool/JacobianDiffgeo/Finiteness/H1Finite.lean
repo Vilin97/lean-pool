@@ -30,7 +30,7 @@ Unit: finiteness-and-chi (`docs/design/finiteness-and-chi.md` §6.4/§6.5, §7).
   cech's six-term skyscraper fragment, NOT twisted norms).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold BoundedContinuousFunction
 open Set Filter Topology TopologicalSpace Metric RS.Cech

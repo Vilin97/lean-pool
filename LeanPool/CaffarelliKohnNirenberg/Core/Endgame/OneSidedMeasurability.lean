@@ -17,7 +17,7 @@ coefficient supported on a measurable set likewise localizes an a.e.
 measurable scalar field without requiring a global representative.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open CKN.Foundation.Parabolic

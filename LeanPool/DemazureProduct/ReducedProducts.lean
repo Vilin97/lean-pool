@@ -20,7 +20,7 @@ permutations. It corresponds roughly to Section 5 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 

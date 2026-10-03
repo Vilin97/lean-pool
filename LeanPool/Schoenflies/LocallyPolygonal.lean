@@ -53,7 +53,7 @@ point misses all the others outright, so `M` looks locally exactly like the one-
   pairwise disjoint closures is locally polygonally connected.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -143,11 +143,12 @@ theorem polyConnIn_union_of_convex {C D : Set Plane} (hC : Convex ℝ C) (hD : C
 `U ∩ S` is the relative neighbourhood; stating it through an ambient open set avoids carrying a
 subtype topology. Note the paths are required to lie in `S`, not in the neighbourhood — that is
 the form brick B6's clopen argument consumes. -/
-def IsLocallyPolyConnAt (S : Set Plane) (p : Plane) : Prop :=
+@[expose] def IsLocallyPolyConnAt (S : Set Plane) (p : Plane) : Prop :=
   ∃ U : Set Plane, IsOpen U ∧ p ∈ U ∧ ∀ x ∈ U ∩ S, ∀ y ∈ U ∩ S, PolyConnIn S x y
 
 /-- `S` is locally polygonally connected: polygonally connected near each of its points. -/
-def IsLocallyPolyConn (S : Set Plane) : Prop := ∀ p ∈ S, IsLocallyPolyConnAt S p
+@[expose] def IsLocallyPolyConn (S : Set Plane) : Prop :=
+  ∀ p ∈ S, IsLocallyPolyConnAt S p
 
 /-- If the relative neighbourhood is itself convex there is nothing to do. -/
 theorem isLocallyPolyConnAt_of_convex {U : Set Plane} {p : Plane} (hU : IsOpen U) (hpU : p ∈ U)

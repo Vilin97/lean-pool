@@ -19,7 +19,7 @@ the core construction uses; the generic Nielsen--Schreier instance instead
 uses the whole free group as a generator synonym.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup
@@ -35,7 +35,7 @@ abbrev CoverVertex (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :=
   ActionCategory (FreeGroup α) A
 
 /-- The generator-labelled covering quiver, supplied explicitly to preserve categorical arrows. -/
-@[instance_reducible]
+@[instance_reducible, expose]
 def coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
     Quiver (CoverVertex α A) where
   Hom x y := {e : α // FreeGroup.of e • x.back = y.back}
@@ -43,7 +43,7 @@ def coverQuiver (α : Type u) (A : Type u) [MulAction (FreeGroup α) A] :
 /-! The action groupoid is free for this explicit labelled generating quiver. -/
 
 /-- The free-group action groupoid is free on its generator-labelled covering quiver. -/
-@[reducible]
+@[reducible, expose]
 def freeActionGroupoidIsFree (α : Type u) (A : Type u)
     [MulAction (FreeGroup α) A] :
     IsFreeGroupoid (ActionCategory (FreeGroup α) A) where
@@ -110,6 +110,7 @@ but keeps the edge type explicit for later core-support statements.
 -/
 
 /-- The root of a spanning tree, viewed as an object of the underlying groupoid. -/
+@[expose]
 def spanningTreeRoot {G : Type u} [Groupoid.{u} G] [IsFreeGroupoid G]
     (T : WideSubquiver (Symmetrify (IsFreeGroupoid.Generators G))) [Arborescence T] : G :=
   root T

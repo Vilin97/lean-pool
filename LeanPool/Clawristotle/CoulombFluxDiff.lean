@@ -19,7 +19,7 @@ decomposition) and the IBP integrability condition for the flux derivative times
 Depends on differentiability and decomposition results from CoulombFluxConv.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

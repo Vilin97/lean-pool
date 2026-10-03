@@ -19,7 +19,7 @@ This file completes the chart-induction framework developed in `ChartInductionCo
 the crossing weld, packages the one-chart induction step, and assembles the final triangulation.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 
@@ -1792,7 +1792,56 @@ private theorem MixedLocalFanCertificate.hasLocalCommonCoordinates_iff
       (pushGeometricRealization C.oldCompactToCommon
           C.mixedOldComplex.compactIntrinsic.faces x).1 =
         (pushGeometricRealization M.targetToCommon M.localComplex.faces z).1 := by
-  rfl
+  classical
+  let defaultOldPush : M.CommonVertex → ℝ :=
+    (pushGeometricRealization C.oldCompactToCommon
+      C.mixedOldComplex.compactIntrinsic.faces x).1
+  let defaultTargetPush : M.CommonVertex → ℝ :=
+    (pushGeometricRealization M.targetToCommon M.localComplex.faces z).1
+  have hDefaultOldOutside (b : M.CommonVertex)
+      (hb : b ∉ Set.range C.oldCompactToCommon) :
+      defaultOldPush b = 0 := by
+    exact pushGeometricRealization_apply_of_notMem_range
+      C.oldCompactToCommon C.mixedOldComplex.compactIntrinsic.faces x hb
+  have hDefaultTargetOutside (b : M.CommonVertex)
+      (hb : b ∉ Set.range M.targetToCommon) :
+      defaultTargetPush b = 0 := by
+    exact pushGeometricRealization_apply_of_notMem_range
+      M.targetToCommon M.localComplex.faces z hb
+  let : Fintype M.UsedOldVertex :=
+    C.mixedOldComplex.compactIntrinsic.vertexFintype
+  let compactOldPush : M.CommonVertex → ℝ :=
+    (pushGeometricRealization C.oldCompactToCommon
+      C.mixedOldComplex.compactIntrinsic.faces x).1
+  let compactTargetPush : M.CommonVertex → ℝ :=
+    (pushGeometricRealization M.targetToCommon M.localComplex.faces z).1
+  have hCompactOldOutside (b : M.CommonVertex)
+      (hb : b ∉ Set.range C.oldCompactToCommon) :
+      compactOldPush b = 0 := by
+    exact pushGeometricRealization_apply_of_notMem_range
+      C.oldCompactToCommon C.mixedOldComplex.compactIntrinsic.faces x hb
+  have hCompactTargetOutside (b : M.CommonVertex)
+      (hb : b ∉ Set.range M.targetToCommon) :
+      compactTargetPush b = 0 := by
+    exact pushGeometricRealization_apply_of_notMem_range
+      M.targetToCommon M.localComplex.faces z hb
+  have hOldPush : compactOldPush = defaultOldPush := by
+    funext b
+    by_cases hb : b ∈ Set.range C.oldCompactToCommon
+    · obtain ⟨a, rfl⟩ := hb
+      simp only [compactOldPush, defaultOldPush, pushGeometricRealization_apply_embedding]
+    · exact (hCompactOldOutside b hb).trans (hDefaultOldOutside b hb).symm
+  have hTargetPush : compactTargetPush = defaultTargetPush := by
+    funext b
+    by_cases hb : b ∈ Set.range M.targetToCommon
+    · obtain ⟨a, rfl⟩ := hb
+      simp only [compactTargetPush, defaultTargetPush,
+        pushGeometricRealization_apply_embedding]
+    · exact (hCompactTargetOutside b hb).trans (hDefaultTargetOutside b hb).symm
+  simp only [MixedLocalFanCertificate.hasLocalCommonCoordinates]
+  change compactOldPush = compactTargetPush ↔
+    defaultOldPush = defaultTargetPush
+  simp only [hOldPush, hTargetPush]
 
 /-- A local realization lifts canonically to the compact mixed complex, with the same coordinates
 after amalgamating the local vertices. -/
@@ -2012,8 +2061,6 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_baseEdge_of_common
     C.mixedOldComplex.compactEval xb ∈ M.ambient.faceCarrier
       (M.ambient.faceEdge f.1.1 f.1.2.1).1 := by
   classical
-  let : Fintype M.UsedOldVertex :=
-    C.mixedOldComplex.compactIntrinsic.vertexFintype
   let fc := M.marking.fanCenterVertex f.1
   let gc : M.marking.FanVertex := M.marking.fanVertexEmbedding f.1 fc
   have hgc : gc ∈ M.marking.globalFanFaceVertices f.1 :=
@@ -2073,6 +2120,8 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_baseEdge_of_common
               (Sum.inl ⟨uc, hnotLocal⟩) :=
         congrFun hcoords (Sum.inl ⟨uc, hnotLocal⟩)
       _ = 0 := htargetZero
+  let : Fintype M.UsedOldVertex :=
+    C.mixedOldComplex.compactIntrinsic.vertexFintype
   let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
     C.mixedOldComplex.restrictToFace
       (M.mixedUsedFaceVertices (Sum.inr f)) ⟨xb.1, xb.2.1⟩ hxb
@@ -2110,8 +2159,6 @@ private theorem MixedLocalFanCertificate.positive_usedOld_isLocal_of_common
     (hv : 0 < xb.1 (C.compactVertexEquiv.symm v)) :
     ∃ u : M.localComplex.UsedVertex, M.localUsedOldEmbedding u = v := by
   classical
-  let : Fintype M.UsedOldVertex :=
-    C.mixedOldComplex.compactIntrinsic.vertexFintype
   apply exists_local_of_positive_of_amalgamated_coordinates
     M.localUsedOldEmbedding M.localUsedVertexEmbedding
     (fun w ↦ xb.1 (C.compactVertexEquiv.symm w))

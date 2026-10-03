@@ -82,7 +82,7 @@ One general lemma is stated here that does not belong here: `Schoenflies.exists_
 the destructor matching `Schoenflies.mem_cover`, whose home is `Schoenflies/Parity.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -149,7 +149,7 @@ private theorem det_rot₃ (a b c : Plane) : det (a - c) (b - a) = det (b - a) (
 /-- **A triangle is a simple closed polygon.** Any three points that are not collinear, taken
 in that cyclic order. `edges_meet` holds because two of the three edges always share exactly
 one endpoint, and `corner` because the orientation form is what nonzero says. -/
-def triangle (h : det (b - a) (c - a) ≠ 0) : ClosedPolygon 0 where
+@[expose] def triangle (h : det (b - a) (c - a) ≠ 0) : ClosedPolygon 0 where
   vertex := ![a, b, c]
   vertex_inj := by
     have hab : a ≠ b := by
@@ -332,7 +332,7 @@ the list occupies the polygon. -/
 
 /-- The `m + 3` edges of the polygon, as a list of pieces in cyclic order. This is the form
 the crossing count of §2 is defined on. -/
-def pieces (P : ClosedPolygon m) : List Piece :=
+@[expose] def pieces (P : ClosedPolygon m) : List Piece :=
   (List.range (m + 3)).map fun j : ℕ =>
     (P.vertex (j : ZMod (m + 3)), P.vertex ((j : ZMod (m + 3)) + 1))
 

@@ -21,7 +21,7 @@ on the signed radial variable.  They are genuine right derivatives at the
 axis and genuine ordinary derivatives at positive squared radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,11 +34,11 @@ namespace NavierStokes.BoundaryAxisJets
 variable {E P : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Radial jet, given by `EvenSmoothDescent.radialIterate (fun s => F (s, z)) k r`. -/
-noncomputable def radialJet (F : ℝ × P → E) (k : ℕ) (r : ℝ) (z : P) : E :=
+@[expose] noncomputable def radialJet (F : ℝ × P → E) (k : ℕ) (r : ℝ) (z : P) : E :=
   EvenSmoothDescent.radialIterate (fun s => F (s, z)) k r
 
 /-- Axis jet, given by `radialJet F k (Real.sqrt p.1) p.2`. -/
-noncomputable def axisJet (F : ℝ × P → E) (k : ℕ) (p : ℝ × P) : E :=
+@[expose] noncomputable def axisJet (F : ℝ × P → E) (k : ℕ) (p : ℝ × P) : E :=
   radialJet F k (Real.sqrt p.1) p.2
 
 omit [CompleteSpace E] in
@@ -531,7 +531,7 @@ theorem axisJet_pullback_holomorphic_local {R : ℝ} (hR : 0 < R) {U : Set ℂ} 
 /-! ## Actual mixed parameter jets -/
 
 /-- Complex partial, given by `deriv (fun z => F (p.1, z)) p.2`. -/
-noncomputable def complexPartial (F : ℝ × ℂ → B) (p : ℝ × ℂ) : B :=
+@[expose] noncomputable def complexPartial (F : ℝ × ℂ → B) (p : ℝ × ℂ) : B :=
   deriv (fun z => F (p.1, z)) p.2
 
 /-- Complex jet, given by `iteratedDeriv m (fun z => F (p.1, z)) p.2`. -/

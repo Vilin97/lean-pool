@@ -36,4 +36,4 @@ Tags: complexity, coding-theory, np-hardness
 MSC: 68Q17, 94B35
 -/
 
-@[expose] public section
+public section

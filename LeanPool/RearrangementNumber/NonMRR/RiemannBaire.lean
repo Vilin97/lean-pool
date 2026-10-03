@@ -21,7 +21,7 @@ space of injections. Simultaneously requiring each integer in the range
 turns the resulting injection into a permutation.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Set Topology
 

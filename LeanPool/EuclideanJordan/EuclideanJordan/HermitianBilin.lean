@@ -25,7 +25,7 @@ than 𝕜-linearity) is the right statement because `HermitianMat n 𝕜` is onl
 a 𝕜-multiple of a Hermitian matrix need not be Hermitian.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -52,6 +52,7 @@ theorem symmMul_smul_rightG (t : ℝ) (a b : HermitianMat n 𝕜) :
   rw [Matrix.mul_smul, Matrix.smul_mul, ← smul_add, smul_comm]
 
 /-- The Euclidean Jordan product `x ∘ y = ½(xy + yx)` on `H_n(𝕜)` as an ℝ-bilinear map. -/
+@[expose]
 def jordanBilinG (𝕜 : Type*) [RCLike 𝕜] :
     HermitianMat n 𝕜 →ₗ[ℝ] HermitianMat n 𝕜 →ₗ[ℝ] HermitianMat n 𝕜 :=
   LinearMap.mk₂ ℝ (fun a b => a.symmMul b)

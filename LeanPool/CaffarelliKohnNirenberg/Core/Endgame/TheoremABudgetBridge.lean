@@ -28,7 +28,7 @@ A uniform bound on the covering sums is a genuine quantitative input;
 finiteness of the local growth coefficients alone does not supply it.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped BigOperators ENNReal Topology

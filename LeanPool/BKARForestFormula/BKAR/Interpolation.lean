@@ -22,13 +22,14 @@ inductive proof, and one-edge extensions `EdgeExtension` with their
 parameter transport.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
 variable {V : Type*} [DecidableEq V]
 
 /-- The constant BKAR configuration. -/
+@[expose]
 def constantConfig (t : ℝ) : Edge V → ℝ :=
   fun _ => t
 
@@ -37,6 +38,7 @@ def zeroConfig : Edge V → ℝ :=
   constantConfig 0
 
 /-- The all-one BKAR configuration. -/
+@[expose]
 def oneConfig : Edge V → ℝ :=
   constantConfig 1
 
@@ -66,6 +68,7 @@ theorem emptyParam_unique (u : (Forest.empty V).EdgeParam → ℝ) :
     exact Finset.notMem_empty e.val he)
 
 /-- Look up the value of an edge parameter, with default value `1` off the forest. -/
+@[expose]
 def paramValue (F : Forest V) (u : F.EdgeParam → ℝ) (e : Edge V) : ℝ :=
   if he : e ∈ F.edges then u ⟨e, he⟩ else 1
 
@@ -76,12 +79,14 @@ theorem paramValue_of_mem (F : Forest V) (u : F.EdgeParam → ℝ)
   rw [paramValue, dite_eq_left he]
 
 /-- Auxiliary minimum, seeded by the first edge of a nonempty path. -/
+@[expose]
 def pathMinAux (F : Forest V) (u : F.EdgeParam → ℝ) :
     ℝ → List (Edge V) → ℝ
   | a, [] => a
   | a, e :: γ => F.pathMinAux u (min a (F.paramValue u e)) γ
 
 /-- Minimum of forest parameters along a path, with empty path convention `1`. -/
+@[expose]
 def pathMin (F : Forest V) (u : F.EdgeParam → ℝ) : List (Edge V) → ℝ
   | [] => 1
   | e :: γ => F.pathMinAux u (F.paramValue u e) γ
@@ -132,6 +137,7 @@ theorem pathMin_mem_Icc (F : Forest V) (u : F.EdgeParam → ℝ)
       exact F.pathMinAux_mem_Icc u hu (F.paramValue_mem_Icc u hu e) γ
 
 /-- The standard BKAR interpolation point `x^F(u)`. -/
+@[expose]
 noncomputable def standardInterp (F : Forest V) (u : F.EdgeParam → ℝ) :
     Edge V → ℝ :=
   fun e =>
@@ -141,6 +147,7 @@ noncomputable def standardInterp (F : Forest V) (u : F.EdgeParam → ℝ) :
       0
 
 /-- The one-parameter family `W^F(u; t)` used in the iterative proof. -/
+@[expose]
 noncomputable def interpWithFill (F : Forest V) (u : F.EdgeParam → ℝ)
     (t : ℝ) : Edge V → ℝ :=
   fun e =>
@@ -368,6 +375,7 @@ namespace EdgeExtension
 variable {F F' : Forest V} {e₀ : Edge V}
 
 /-- Extend forest-edge parameters to a one-edge extension. -/
+@[expose]
 def extendParam (h : EdgeExtension F F' e₀)
     (u : F.EdgeParam → ℝ) (s : ℝ) : F'.EdgeParam → ℝ :=
   fun e =>

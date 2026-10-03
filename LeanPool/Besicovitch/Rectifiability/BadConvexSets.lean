@@ -16,7 +16,7 @@ A bad convex set meets the compact density core but contains disproportionately 
 outside it. These are the holes used in the continuum construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,6 +26,7 @@ open scoped ENNReal MeasureTheory
 namespace LeanPool.Besicovitch
 
 /-- Open convex sets meeting `F` whose mass outside `F` exceeds `alpha` times their diameter. -/
+@[expose]
 def badConvexSets (mu : Measure (EuclideanSpace ℝ (Fin 2)))
     (F : Set (EuclideanSpace ℝ (Fin 2))) (alpha : ℝ) :
     Set (Set (EuclideanSpace ℝ (Fin 2))) :=

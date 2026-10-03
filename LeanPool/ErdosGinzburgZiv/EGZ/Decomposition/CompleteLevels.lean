@@ -18,7 +18,7 @@ the old fibre-constant functionals forces every lower level above the old
 anchor. In particular this applies to the reduced complete representative.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.CompletePreparation
 

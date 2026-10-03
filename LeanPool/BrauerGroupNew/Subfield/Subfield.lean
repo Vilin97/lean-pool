@@ -20,7 +20,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Subfield`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

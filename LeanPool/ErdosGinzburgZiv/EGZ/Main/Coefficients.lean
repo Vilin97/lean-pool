@@ -21,7 +21,7 @@ within their scope. The centrality identity then gives the reserve required
 by relative expansion.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

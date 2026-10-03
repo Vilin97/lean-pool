@@ -34,7 +34,7 @@ The remaining two terms `I₃`, `I₄` keep their proved bounds, so the conclusi
 of `eq:caccioppoli-gamma` follows by the normalisation lemmas recorded here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Metric
 open scoped ENNReal NNReal Topology

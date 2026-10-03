@@ -56,7 +56,7 @@ Continuity for an arbitrary topological domain `α` is then obtained by composin
 continuous offset map `c : α → ι → ℝ`, so no first-countability hypothesis on `α` is needed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped RealInnerProductSpace
@@ -67,12 +67,12 @@ variable {ι : Type*}
 
 /-- The intersection of a convex body `K` with the finitely many closed lower halfspaces with
 normals `u i` and offsets `c i`. Kept purely as a `Set Plane`. -/
-def finiteHalfspaceIntersection
+@[expose] def finiteHalfspaceIntersection
     (K : ConvexBody Plane) (u : ι → Plane) (c : ι → ℝ) : Set Plane :=
   (K : Set Plane) ∩ ⋂ i, Geometry.lowerClosedHalfspace (u i) (c i)
 
 /-- The real-valued Lebesgue area of a finite fixed-normal halfspace intersection. -/
-noncomputable def finiteHalfspaceIntersectionArea
+@[expose] noncomputable def finiteHalfspaceIntersectionArea
     (K : ConvexBody Plane) (u : ι → Plane) (c : ι → ℝ) : ℝ :=
   (volume (finiteHalfspaceIntersection K u c)).toReal
 

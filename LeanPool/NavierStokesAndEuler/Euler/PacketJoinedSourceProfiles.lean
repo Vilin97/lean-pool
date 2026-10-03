@@ -27,7 +27,7 @@ section
 
 /-! The complete history/forward high inverse preserves the actual recursive symmetries. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,7 +134,7 @@ section
 
 /-! All-grade admissibility for the actual history/forward packet recursion. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,7 +211,7 @@ section
 
 /-! Every grade constructed with the joined inverse has the prescribed joint parity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -262,7 +262,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -279,11 +279,12 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 
 /-- Joined source profiles, given by `profiles (joinedSourceOperators P M D τ hτ hτT B)
 primary`. -/
-def joinedSourceProfiles : ℕ → Profile :=
+@[expose] def joinedSourceProfiles : ℕ → Profile :=
   profiles (joinedSourceOperators P M D τ hτ hτT B) primary
 
 /-- Joined source profile witness, given by `joinedProfileWitness M D hT τ hτ hτT B
 (joinedSourceCoefficientData P M D τ hτ hτT B hT) rfl rfl rfl primary hprimary p`. -/
+@[expose]
 def joinedSourceProfileWitness (p : ℕ) :
     ProfileRegularity P M.T M.T_pos.le D.support (joinedSourceProfiles P M D τ hτ hτT B primary p)
         :=

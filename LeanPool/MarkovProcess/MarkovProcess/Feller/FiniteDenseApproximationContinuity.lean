@@ -22,7 +22,7 @@ This is finite-dimensional infrastructure. No path-space Markov property is asse
 Markov and strong Markov statements are in `MarkovProcess/Main.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal CompactlySupported

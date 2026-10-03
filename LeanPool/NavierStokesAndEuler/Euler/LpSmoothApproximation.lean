@@ -22,7 +22,7 @@ section
 
 /-! The genuine L² derivative of translations of compact smooth ordinary-space fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -206,7 +206,8 @@ theorem smooth_hasFDerivAt (f : Space → V) (hf : ContDiff ℝ ∞ f)
   · intro n
     exact compactField_hasFDerivAt _ _ _
   · exact cutoffLp_tendsto f hf hLp
-  · exact (EulerLpDerivative.derivativeBundling volume).continuous.continuousAt.tendsto.comp
-      (cutoffDerivativeLp_tendsto f hf hLp hDLp)
+  · simpa only [Function.comp_def, EulerLpDerivative.derivativeBundling_apply] using
+      (EulerLpDerivative.derivativeBundling volume).continuous.continuousAt.tendsto.comp
+        (cutoffDerivativeLp_tendsto f hf hLp hDLp)
 
 end EulerLpTranslation

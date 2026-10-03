@@ -10,7 +10,7 @@ public import LeanPool.TuttePath.Diamond
 -- Modified for Lean Pool: module integration, public visibility, and import paths.
 
 /-! `prop:indecomposable-complement`: minimal-rank crossing cover and corank induction. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 variable {α : Type*} {M : Matroid α} [M.Finite] {S T U : Set α}

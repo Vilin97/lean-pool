@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryShearIdentity
 Its matrix derivative is derived from the parent curvature, and its ray
 and primary velocity are the constructed source trajectories. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -72,6 +72,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 /-- Source velocity, given by `EulerPacketForwardFactorization.uncutVelocity (G.transverseData m
 hm R S hS) η t 0`. -/
+@[expose]
 def sourceVelocity (η : U) (t : ℝ) : Space :=
   EulerPacketForwardFactorization.uncutVelocity (G.transverseData m hm R S hS) η t 0
 
@@ -112,7 +113,7 @@ after inserting their constructed initial coordinate. -/
 theorem joined_sourceVelocity (s : ℝ) (hs : 0 < s) (hsT : s < G.T)
     (B : HistoryData ((G.transverseData m hm R S hS).initial s hs hsT.le)) (ξ : U) (t : ℝ) :
     G.sourceVelocity m hm R S hS (B.coefficients.labelCoordinate 0 ξ ⟨0,le_rfl,hs.le⟩) t =
-      EulerPacketPrimaryFactorization.uncutVelocity s hs hsT B ξ t 0 := rfl
+      EulerPacketPrimaryFactorization.uncutVelocity s hs hsT B ξ t 0 := by rfl
 
 theorem joined_initialCoordinate_ne_zero (s : ℝ) (hs : 0 < s) (hsT : s < G.T)
     (B : HistoryData ((G.transverseData m hm R S hS).initial s hs hsT.le)) (ξ : U) (hξ : ξ ≠ 0) :
@@ -133,7 +134,7 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 /-- The only error input is the literal center derivative estimate for
 the already constructed perturbation. No ray, velocity or matrix ODE
 is supplied as a hypothesis. -/
-def geometryFrameOfCenterExpansion (η : U) (hη : η ≠ 0)
+@[expose] def geometryFrameOfCenterExpansion (η : U) (hη : η ≠ 0)
     (w : ℝ → Space → Space) (c CM CH K error : ℝ)
     (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
     (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)

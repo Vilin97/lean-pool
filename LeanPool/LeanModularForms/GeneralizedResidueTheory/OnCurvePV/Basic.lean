@@ -23,7 +23,7 @@ measurability of cutout integrands, arc angle injectivity, CPV avoidance
 and concatenation lemmas. These results work for arbitrary curves and functions.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

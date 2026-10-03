@@ -16,7 +16,7 @@ import Mathlib.Analysis.Real.Pi.Bounds
 /-! # EisensteinAsymptotics -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Asymptotic Behavior of Eisenstein Series
@@ -145,7 +145,7 @@ lemma serre_DE₄_isBoundedAtImInfty : IsBoundedAtImInfty (serreD 4 E₄.toFun) 
 /-! ## Construction of ModularForm from serreD -/
 
 /-- serreD 4 E₄ is a weight-6 modular form. -/
-def serreDE₄ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 6 :=
+@[expose] def serreDE₄ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 6 :=
   serreDModularForm 4 E₄
 
 /-- serreD 6 E₆ is bounded at infinity. -/
@@ -153,7 +153,7 @@ lemma serre_DE₆_isBoundedAtImInfty : IsBoundedAtImInfty (serreD 6 E₆.toFun) 
   serre_D_isBoundedAtImInfty_of_bounded 6 E₆.holo' E₆_isBoundedAtImInfty
 
 /-- serreD 6 E₆ is a weight-8 modular form. -/
-def serreDE₆ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 8 :=
+@[expose] def serreDE₆ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 8 :=
   serreDModularForm 6 E₆
 
 /-! ## Limit of serreD at infinity (for determining scalar) -/
@@ -207,7 +207,7 @@ lemma serre_DE₆_tendsto_atImInfty :
 
 /-- serreD 1 E₂ is a weight-4 modular form.
 Note: E₂ itself is NOT a modular form, but serreD 1 E₂ IS. -/
-def serreDE₂ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 4 where
+@[expose] def serreDE₂ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 4 where
   toSlashInvariantForm := {
     toFun := serreD 1 E₂
     slash_action_eq' := fun γ hγ => by

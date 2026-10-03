@@ -42,7 +42,7 @@ section
 
 /-! Smooth parameter dependence in actual L² from square-integrable fiberwise jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -139,7 +139,8 @@ theorem hasFDerivAt_value (A : SmoothFamily μ P V) (a : P) :
 
 theorem fderiv_value (A : SmoothFamily μ P V) :
     fderiv ℝ A.value = fun a => derivativeBundling μ (A.derivative.value a) :=
-  funext (fun a => (A.hasFDerivAt_value a).fderiv)
+  funext (fun a => by
+    simpa only [derivativeBundling_apply] using (A.hasFDerivAt_value a).fderiv)
 
 end SmoothFamily
 
@@ -154,7 +155,7 @@ section
 
 /-! All-order L² parameter regularity with the original square-integrable derivative bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -228,7 +229,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -324,7 +325,7 @@ automatically square integrable. The continuous and Bochner orbit theorems
 therefore use the same concrete forcing data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -361,7 +362,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -407,7 +408,7 @@ namespace Forcing
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
 
 /-- The genuine Bochner L² class of the prescribed forcing. -/
-def lp : TimeLp D.T L2 := pathLp D.T D.T_pos.le G.path
+@[expose] def lp : TimeLp D.T L2 := pathLp D.T D.T_pos.le G.path
 
 theorem lp_rep : (G.lp : ℝ → L2) =ᵐ[timeMeasure D.T] extendPath D.T D.T_pos.le G.path :=
   pathLp_ae D.T D.T_pos.le G.path

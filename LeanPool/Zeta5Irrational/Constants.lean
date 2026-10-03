@@ -17,12 +17,12 @@ import Mathlib.Tactic.NormNum.Pow
 the identity (5.20) at `M = 200` and the margin (7.2), both checked by `norm_num`.
 -/
 
-@[expose] public section
+public section
 
 namespace Zeta5Irrational
 
 /-- The constant `U` of Lemma 6.1 / (6.4). -/
-def U : ℚ :=
+@[expose] def U : ℚ :=
   -2733991 / 2000000
 
 /-- The constant `A*` of (5.19). -/
@@ -45,7 +45,7 @@ lemma margin : (139 : ℚ) / 5 < -1600 * (A200 + U) := by unfold A200 U; norm_nu
 /--
 The normalisation constant proved here (`Zeta5Irrational.Growth`): `limsup K⁻² log m_K ≤ A_eff`.
 It is weaker than the paper's `A₂₀₀`, but still below `-U`. -/
-def Aeff : ℚ :=
+@[expose] def Aeff : ℚ :=
   136 / 100
 
 /-- The margin used for irrationality: `A_eff + U < 0`. -/

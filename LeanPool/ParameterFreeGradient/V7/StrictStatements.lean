@@ -14,7 +14,7 @@ Finite-horizon, expected-time, and scale-identification impossibility statements
 methods.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -22,7 +22,7 @@ namespace V7
 
 /-- U04--U07: `eps` is fixed before the method; the hard transition length
 and objective are existential only after the finite transcript/output map. -/
-noncomputable def DeterministicFiniteHorizonImpossibilityStatement : Prop :=
+@[expose] noncomputable def DeterministicFiniteHorizonImpossibilityStatement : Prop :=
   ∀ (p eps : ℝ), 1 < p → 0 < eps →
     ∀ (method : StrictLocalMethod), method.eps = eps →
     ∀ (N : ℕ), 0 < N →
@@ -39,6 +39,7 @@ noncomputable def DeterministicFiniteHorizonImpossibilityStatement : Prop :=
 
 /-- U08: a single deterministic `H` and hard instance is chosen after the
 whole seed-indexed method, never separately for each seed. -/
+@[expose]
 noncomputable def RandomizedFiniteHorizonImpossibilityStatement : Prop :=
   ∀ (p eps : ℝ), 1 < p → 0 < eps →
     ∀ (Ω : Type) [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
@@ -70,6 +71,7 @@ noncomputable def RandomizedFiniteHorizonImpossibilityStatement : Prop :=
 
 /-- U09: the supremum of the actual expected queried-or-returned hitting
 time over normalized strict instances is infinite. -/
+@[expose]
 noncomputable def InfiniteWorstCaseExpectedHittingTimeStatement : Prop :=
   ∀ (p eps : ℝ), 1 < p → 0 < eps →
     ∀ (Ω : Type) [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
@@ -87,6 +89,7 @@ noncomputable def InfiniteWorstCaseExpectedHittingTimeStatement : Prop :=
 
 /-- U10: the real-line obstruction applies for every fixed interior exponent
 because the one-dimensional `ell_p` and `ell_q` norms are absolute value. -/
+@[expose]
 noncomputable def OneDimensionalInteriorLpTransferStatement : Prop :=
   ∀ (p : ℝ), 1 < p →
     (∀ x : StrictPoint, lpNorm p x = |x 0|) ∧
@@ -94,6 +97,7 @@ noncomputable def OneDimensionalInteriorLpTransferStatement : Prop :=
 
 /-- Source carrier for `thm:impossibility`; its deterministic, randomized,
 expectation, and all-`p` clauses remain separate conjuncts. -/
+@[expose]
 noncomputable def ScaleIdentificationImpossibilityStatement : Prop :=
   DeterministicFiniteHorizonImpossibilityStatement ∧
   RandomizedFiniteHorizonImpossibilityStatement ∧

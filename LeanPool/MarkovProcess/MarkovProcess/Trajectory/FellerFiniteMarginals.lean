@@ -20,7 +20,7 @@ The theorem is stated for an arbitrary such semigroup; no particular semigroup i
 and no Hunt-process property is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

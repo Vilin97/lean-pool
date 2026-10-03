@@ -17,7 +17,7 @@ Tiling a structured insensitive intersection by subspaces and averaging over the
 structured correlation into a genuine density increment on a subspace.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics

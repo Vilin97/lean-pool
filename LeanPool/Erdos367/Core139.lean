@@ -34,7 +34,7 @@ The "prime supply" (the existence of infinitely many suitable pairs `(s, t₀)`)
 hypothesis and is *not* part of this development.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

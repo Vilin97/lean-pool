@@ -18,7 +18,7 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaryFacts07
 
 /-! # Global validity of dense certificate summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

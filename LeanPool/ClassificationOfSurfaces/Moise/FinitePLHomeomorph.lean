@@ -17,7 +17,7 @@ finite source complex on which an ambient homeomorphism is affine facewise.  Com
 and pullback make these witnesses closed under symmetry and composition.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -249,7 +249,7 @@ theorem inverseOn_injOn_target : Set.InjOn F.inverseOn P.target.support := by
 
 /-- The actual source complex obtained by mapping the common target refinement through the
 certified inverse.  It has the same vertex and simplex labels as the target refinement. -/
-noncomputable def source : PlaneComplex :=
+@[expose] noncomputable def source : PlaneComplex :=
   P.target.mapComplexOn F.inverseOn P.target_vertex_mem_support
     P.inverseOn_injOn_target P.inverseAffine
 

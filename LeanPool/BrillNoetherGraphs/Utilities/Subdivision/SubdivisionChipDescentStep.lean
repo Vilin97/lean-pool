@@ -22,7 +22,7 @@ costs, the same bounds hold for the coarse slopes of the rounded script.  See
 the overall argument.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

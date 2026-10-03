@@ -30,7 +30,7 @@ The set of observation times is fixed; nothing is asserted about joint convergen
 and the semigroups.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped BoundedContinuousFunction CompactlySupported NNReal ZeroAtInfty

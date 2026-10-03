@@ -19,7 +19,7 @@ the right endpoint, and every nonzero coordinate contributes one unit of debt
 at the left endpoint.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -29,6 +29,7 @@ open Utilities.Certificate SubdivisionGraph
 open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-- The decidable numerical form of being an interior normalized position. -/
+@[expose]
 def IsPaperInteriorCoordinate {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha)
     (alpha : Fin (g + 1)) : Prop :=
@@ -36,6 +37,7 @@ def IsPaperInteriorCoordinate {g : ℕ} (B : Banana g)
 
 /-- The storage-oriented semibreak chips encoded by a vector of normalized
 strand positions. -/
+@[expose]
 noncomputable def paperCoordinateChips {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha) :
     ∀ alpha : Fin (g + 1), Option (Fin (B.length alpha - 1)) :=
@@ -49,12 +51,14 @@ def paperCoordinateLeftCoefficient {g : ℕ} (B : Banana g)
   ∑ alpha : Fin (g + 1), if (p alpha).val = 0 then 0 else -1
 
 /-- One right-endpoint chip for every terminal coordinate. -/
+@[expose]
 def paperCoordinateRightCoefficient {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha) : ℤ :=
   ∑ alpha : Fin (g + 1),
     if (p alpha).val = B.length alpha then 1 else 0
 
 /-- The semibreak part of the paper coordinate divisor. -/
+@[expose]
 noncomputable def paperCoordinateSemibreak {g : ℕ} (B : Banana g)
     (p : ∀ alpha : Fin (g + 1), B.PathPosition alpha) : CFDiv B.graph :=
   semibreakDivisor B (paperCoordinateChips B p)

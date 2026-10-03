@@ -21,7 +21,7 @@ chains with zero intersection. We also define analytical
 irreducibility (the M-adic completion is a domain).
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 
@@ -32,7 +32,7 @@ ideals `A : ℕ → Ideal R` and each `k : ℕ`, there exists `s` such that
 `A s ≤ (⨅ n, A n) ⊔ (IsLocalRing.maximalIdeal R) ^ k`.
 
 This is Definition 1.1 of Anderson (2014). -/
-def IsQuasiComplete : Prop :=
+@[expose] def IsQuasiComplete : Prop :=
   ∀ (A : ℕ → Ideal R), Antitone A →
     ∀ (k : ℕ), ∃ s,
       A s ≤ (⨅ n, A n) ⊔ (IsLocalRing.maximalIdeal R) ^ k
@@ -43,14 +43,14 @@ there exists `s` such that `A s ≤ (IsLocalRing.maximalIdeal R) ^ k`.
 
 Equivalently, this is `IsQuasiComplete` restricted to sequences whose
 intersection is `⊥`. -/
-def IsWeaklyQuasiComplete : Prop :=
+@[expose] def IsWeaklyQuasiComplete : Prop :=
   ∀ (A : ℕ → Ideal R), Antitone A → (⨅ n, A n) = ⊥ →
     ∀ (k : ℕ), ∃ s, A s ≤ (IsLocalRing.maximalIdeal R) ^ k
 
 /-- A local ring `R` is **analytically irreducible** if its
 maximal-ideal-adic completion is a domain. (This notion is primarily of
 interest for Noetherian local rings.) -/
-def IsAnalyticallyIrreducible : Prop :=
+@[expose] def IsAnalyticallyIrreducible : Prop :=
   IsDomain (AdicCompletion (IsLocalRing.maximalIdeal R) R)
 
 /-- Quasi-completeness implies weak quasi-completeness. -/

@@ -77,14 +77,14 @@ aim of reaching a contradiction (as then, no such partition can exist). We may f
   we have a contradiction (`no_spinalMap`), and therefore show that no spinal map exists.
 -/
 
-@[expose] public section
+public section
 
 attribute [aesop 2 simp] Set.subset_def Finset.subset_iff
 
 namespace LeanPool.AharoniKorman
 
 /-- A type synonym on ℕ³ on which we will construct Hollom's partial order P_5. -/
-def Hollom : Type := ℕ × ℕ × ℕ
+@[expose] def Hollom : Type := ℕ × ℕ × ℕ
   deriving DecidableEq
 
 /--
@@ -92,13 +92,13 @@ The backward equivalence between ℕ³ and the underlying set in Hollom's partia
 Note that this equivalence does not respect the partial order relation, and therefore should be used
 explicitly to transfer between the two types, despite their being equal.
 -/
-def ofHollom : Hollom ≃ ℕ × ℕ × ℕ := Equiv.refl _
+@[expose] def ofHollom : Hollom ≃ ℕ × ℕ × ℕ := Equiv.refl _
 /--
 The forward equivalence between ℕ³ and the underlying set in Hollom's partial order.
 Note that this equivalence does not respect the partial order relation, and therefore should be used
 explicitly to transfer between the two types, despite their being equal.
 -/
-def toHollom : ℕ × ℕ × ℕ ≃ Hollom := Equiv.refl _
+@[expose] def toHollom : ℕ × ℕ × ℕ ≃ Hollom := Equiv.refl _
 
 @[simp] lemma ofHollom_symm_eq : ofHollom.symm = toHollom := rfl
 @[simp] lemma toHollom_symm_eq : toHollom.symm = ofHollom := rfl
@@ -211,7 +211,7 @@ private lemma embed_injective (n : ℕ) : Function.Injective fun x : ℕ × ℕ 
 For each `n`, there is an order embedding from ℕ × ℕ (which has the product order) to the Hollom
 partial order.
 -/
-def embed (n : ℕ) : ℕ × ℕ ↪o Hollom where
+@[expose] def embed (n : ℕ) : ℕ × ℕ ↪o Hollom where
   toFun x := h(x.1, x.2, n)
   inj' := private embed_injective n
   map_rel_iff' := by simp
@@ -250,7 +250,7 @@ lemma ordConnected_level {n : ℕ} : (level n).OrdConnected := by
   exact le_antisymm (le_of_toHollom_le_toHollom h1) (le_of_toHollom_le_toHollom h2)
 
 /-- The map from `(x, y, n)` to `x + y`. -/
-@[pp_nodot] def line (x : Hollom) : ℕ := (ofHollom x).1 + (ofHollom x).2.1
+@[pp_nodot, expose] def line (x : Hollom) : ℕ := (ofHollom x).1 + (ofHollom x).2.1
 
 @[simp] lemma line_toHollom (x : ℕ × ℕ × ℕ) : line (toHollom x) = x.1 + x.2.1 := rfl
 

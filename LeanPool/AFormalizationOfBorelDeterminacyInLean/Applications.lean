@@ -18,4 +18,4 @@ Import-only index for the application modules in the Borel determinacy
 formalization.
 -/
 
-@[expose] public section
+public section

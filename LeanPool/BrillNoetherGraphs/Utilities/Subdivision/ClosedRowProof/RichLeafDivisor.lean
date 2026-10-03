@@ -16,7 +16,7 @@ This module isolates the representation-independent divisor and degree
 calculation from the closed-face soundness assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -33,6 +33,7 @@ variable {m n p : ℕ}
 /-- The divisor denoted by a rich witness on a particular closed face: raw
 core coefficients are pushed to quotient classes and raw chip forms are
 evaluated at their physical subdivision positions. -/
+@[expose]
 def richDivisor
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) (w : RichWitness)
     (fallback : Fin n) (x : List ℤ) : CFDiv d.graph :=

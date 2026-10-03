@@ -21,7 +21,7 @@ public import Mathlib.Tactic.Ring
 
 open Finset
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1.BoxCount
 
@@ -339,7 +339,7 @@ end
 
 open Finset
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1
 
@@ -575,7 +575,7 @@ end
 
 /-! # Box placement hypergraph -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -612,6 +612,7 @@ theorem mem_placeFam {U : Finset (PlaceVtx ι κ P)} (hU : U ∈ placeFam P idx 
 
 
 /-- The contribution of one copy to the demand of the cluster pair `(S, T)`. -/
+@[expose]
 def boxDemandC (cl : κ → ZMod 3 → ι) (sz : κ → ZMod 3 → ℕ) (c : κ) (S T : ι) : ℝ :=
   ∑ a : ZMod 3, ∑ b : ZMod 3, if cl c a = S ∧ cl c b = T then (sz c a : ℝ) * (sz c b : ℝ) else 0
 
@@ -1282,7 +1283,7 @@ end
 
 /-! # Weighted nibble for box placement -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -1663,7 +1664,7 @@ end
 
 /-! # Unconditional AX1 -/
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1
 
@@ -1693,7 +1694,7 @@ The public statement records the finite near-regular hypergraph rounding interfa
 the nibble method. The underlying finite definitions are kept in the internal library.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 
@@ -1714,7 +1715,7 @@ The full development remains internal so that the public API is limited to stabl
 statements.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 
@@ -1733,7 +1734,7 @@ end
 Public entry point for the finite, ceiling-carrying near-regular hypergraph nibble theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.AsymptoticTrianglePacking
 

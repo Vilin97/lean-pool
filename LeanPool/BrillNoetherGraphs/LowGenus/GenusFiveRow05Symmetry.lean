@@ -36,7 +36,7 @@ transparent, the pattern of `GenusFiveRow04Symmetry` and
 `GenusFiveRow06Symmetry`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow05Symmetry
 

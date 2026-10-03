@@ -20,13 +20,14 @@ interleave value lemmas; the associator equivalence follows by
 pure relabel algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 variable (s₁ t₁ s₂ t₂ s₃ t₃ : ℕ)
 
 /-- The associativity cast of interleaved boundaries. -/
+@[expose]
 noncomputable def tensorAssocCast :
     Fin ((s₁ + (s₂ + s₃)) + (t₁ + (t₂ + t₃))) ≃
       Fin (((s₁ + s₂) + s₃) + ((t₁ + t₂) + t₃)) :=

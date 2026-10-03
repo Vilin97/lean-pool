@@ -18,7 +18,7 @@ graph.  In particular, the affine permutation is *not* changed: an
 isomorphism only transports the two marked vertices and the witness divisor.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

@@ -20,7 +20,7 @@ file records the standard norm inequality directly on the numerical range and
 specializes it to powers, centered operators, and the numerical radius.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped InnerProductSpace Polynomial

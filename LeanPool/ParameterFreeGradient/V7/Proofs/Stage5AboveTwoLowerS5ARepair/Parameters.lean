@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLower.Param
 Refined kernel parameters satisfying the required exponent and Hessian bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLower.S5ARepair
 

@@ -20,7 +20,7 @@ section
 /-! The time derivative of the actual inverse pressure metric, first as
 a bounded matrix field and then as its cylinder L² multiplier. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -52,20 +52,21 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Raw inverse metric time, given by `(rawFrameTime D z).adjoint.comp (rawFrame D z) +
 (rawFrame D z).adjoint.comp (rawFrameTime D z)`. -/
-def rawInverseMetricTime (z : Domain) : Space →L[ℝ] Space :=
+@[expose] def rawInverseMetricTime (z : Domain) : Space →L[ℝ] Space :=
   (rawFrameTime D z).adjoint.comp (rawFrame D z) +
     (rawFrame D z).adjoint.comp (rawFrameTime D z)
 
 /-- Inverse metric time coefficient, given by `((frameTimeCoefficient D).adjoint.comp
 (frameCoefficient D)).add ((frameCoefficient D).adjoint.comp (frameTimeCoefficient D))`. -/
-def inverseMetricTimeCoefficient : MatrixCoefficient D.T (rawInverseMetricTime D) :=
+@[expose] def inverseMetricTimeCoefficient : MatrixCoefficient D.T (rawInverseMetricTime D) :=
   ((frameTimeCoefficient D).adjoint.comp (frameCoefficient D)).add
     ((frameCoefficient D).adjoint.comp (frameTimeCoefficient D))
 
 @[simp] theorem inverseMetricTimeCoefficient_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (inverseMetricTimeCoefficient D).path t x =
       (D.F₁.field t x).adjoint.comp (D.F.field t x) +
-        (D.F.field t x).adjoint.comp (D.F₁.field t x) := rfl
+        (D.F.field t x).adjoint.comp (D.F₁.field t x) := by
+  rfl
 
 theorem inverseMetric_field_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T)
     (x : Space) :
@@ -119,7 +120,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -169,15 +170,15 @@ theorem inverseMetric_operator_hasDerivAt (t : ℝ) (ht : t ∈ Ioo 0 D.T) :
   simpa only [extendPath,projIcc_of_mem D.T_pos.le ⟨ht.1.le,ht.2.le⟩] using h
 
 /-- Inverse metric bound, given by `‖(inverseMetricCoefficient D).path‖`. -/
-def inverseMetricBound : ℝ := ‖(inverseMetricCoefficient D).path‖
+@[expose] def inverseMetricBound : ℝ := ‖(inverseMetricCoefficient D).path‖
 
 /-- Inverse metric first bound, given by `‖iteratedFDeriv ℝ 1 (translateCoefficientPath
 (inverseMetricCoefficient D).path) 0‖`. -/
-def inverseMetricFirstBound : ℝ :=
+@[expose] def inverseMetricFirstBound : ℝ :=
   ‖iteratedFDeriv ℝ 1 (translateCoefficientPath (inverseMetricCoefficient D).path) 0‖
 
 /-- Inverse metric time bound, given by `‖(inverseMetricTimeCoefficient D).path‖`. -/
-def inverseMetricTimeBound : ℝ := ‖(inverseMetricTimeCoefficient D).path‖
+@[expose] def inverseMetricTimeBound : ℝ := ‖(inverseMetricTimeCoefficient D).path‖
 
 theorem inverseMetricBound_le : inverseMetricBound D ≤ ‖D.F.field‖^2 := by
   apply (ContinuousMap.norm_le _ (sq_nonneg ‖D.F.field‖)).2
@@ -221,7 +222,7 @@ theorem inverseMetricTimeBound_le :
 
 /-- The actual source inverse metric supplies every field of the metric
 budget at every finite Sobolev order. -/
-def sourceMetricBudget (κ : ℝ) (hκ : |κ| ≤ 1)
+@[expose] def sourceMetricBudget (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (q : ℕ) :
     MetricBudget P D.T D.T_pos.le ((correctionData D P κ hκ Z G).atOrder P (q+1)) where
   metric := (inverseMetricTower D P).coefficient
@@ -245,6 +246,7 @@ def sourceMetricBudget (κ : ℝ) (hκ : |κ| ≤ 1)
 
 /-- Source metric budget of fields, given by `sourceMetricBudget D P κ hκ Z.toFieldTower
 G.toFieldTower q`. -/
+@[expose]
 def sourceMetricBudgetOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
     {z r : VectorField} (Z : Field P D.T z) (G : Field P D.T r) (q : ℕ) :
     MetricBudget P D.T D.T_pos.le
@@ -253,15 +255,18 @@ def sourceMetricBudgetOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
 
 @[simp] theorem sourceMetricBudget_metric (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (q : ℕ) :
-    (sourceMetricBudget D P κ hκ Z G q).metric = (inverseMetricTower D P).coefficient := rfl
+    (sourceMetricBudget D P κ hκ Z G q).metric = (inverseMetricTower D P).coefficient := by
+  rfl
 
 @[simp] theorem sourceMetricBudget_derivative (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (q : ℕ) :
-    (sourceMetricBudget D P κ hκ Z G q).derivative = inverseMetricDerivativePath D P := rfl
+    (sourceMetricBudget D P κ hκ Z G q).derivative = inverseMetricDerivativePath D P := by
+  rfl
 
 @[simp] theorem sourceMetricBudget_c (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (q : ℕ) :
-    (sourceMetricBudget D P κ hκ Z G q).c = D.inverseBound⁻¹ := rfl
+    (sourceMetricBudget D P κ hκ Z G q).c = D.inverseBound⁻¹ := by
+  rfl
 
 theorem sourceMetricBudget_bound_le (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (q : ℕ) :

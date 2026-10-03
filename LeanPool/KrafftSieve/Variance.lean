@@ -27,7 +27,7 @@ of the survivor distribution in the Krafft Sieve, and proves Parseval's identity
 to relate the variance to the Fourier coefficients.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 

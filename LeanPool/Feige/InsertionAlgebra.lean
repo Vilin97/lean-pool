@@ -17,7 +17,7 @@ step is kept separate: once that step supplies the sign of `η`, the results bel
 chain mixture as an upward transfer inside each pair `{Cⱼ, Hⱼ}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 
@@ -34,15 +34,15 @@ def insertedLowerMass (B w θ : ℕ → ℝ) (j : ℕ) : ℝ :=
   θ (j + 1) * (B j - B (j + 1)) + insertionWeight θ j * w j
 
 /-- Averaged mass placed at the upper state `Hⱼ`. -/
-def insertedUpperMass (A θ : ℕ → ℝ) (j : ℕ) : ℝ :=
+@[expose] def insertedUpperMass (A θ : ℕ → ℝ) (j : ℕ) : ℝ :=
   (1 - θ (j + 1)) * (A j - A (j + 1))
 
 /-- Mass at `Cⱼ` before replacing the independent Bernoulli reveal. -/
-def independentLowerMass (F : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
+@[expose] def independentLowerMass (F : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
   (1 - p) * (F j - F (j + 1))
 
 /-- Mass at `Hⱼ` before replacing the independent Bernoulli reveal. -/
-def independentUpperMass (F : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
+@[expose] def independentUpperMass (F : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
   p * (F j - F (j + 1))
 
 /-- Mass assigned to `Cⱼ` by the chain whose insertion rank is `J`.
@@ -66,7 +66,7 @@ noncomputable def insertionPairScore
 
 /-- The same inserted-chain score indexed by its consecutive chain level:
 levels through `J` are lower states and later levels are upper states. -/
-noncomputable def insertionLevelScore
+@[expose] noncomputable def insertionLevelScore
     (A B w gLower gUpper : ℕ → ℝ) (J r : ℕ) : ℝ :=
   if r ≤ J then
     lowerMassForInsertion B w J r * gLower r
@@ -138,7 +138,7 @@ theorem insertionPairScore_eq_levelScore
 /-- Statistic sequence along the chain with insertion rank `J`: the
 pre-insertion levels use `B`, and the post-insertion levels use `A` with
 their index shifted by one. -/
-def insertionStatisticSequence (A B : ℕ → ℝ) (J r : ℕ) : ℝ :=
+@[expose] def insertionStatisticSequence (A B : ℕ → ℝ) (J r : ℕ) : ℝ :=
   if r ≤ J then B r else A (r - 1)
 
 /-- At a lower state `Cⱼ` which is present in the rank-`J` chain, the
@@ -169,7 +169,7 @@ theorem chainMass_insertionStatisticSequence_upper
   congr 1
 
 /-- The upward mass-transfer coefficient. -/
-def insertionTransfer (A F θ : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
+@[expose] def insertionTransfer (A F θ : ℕ → ℝ) (p : ℝ) (j : ℕ) : ℝ :=
   insertedUpperMass A θ j - independentUpperMass F p j
 
 /-- The lower and upper mass formulas preserve the total mass of each pair

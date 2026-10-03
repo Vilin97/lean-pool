@@ -14,7 +14,7 @@ The shared iteration and partition assembly live in `Iteration`. This module ret
 model-independent public implication interface used by the obstruction proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

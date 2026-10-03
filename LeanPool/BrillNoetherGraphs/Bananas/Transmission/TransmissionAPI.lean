@@ -19,7 +19,7 @@ mechanical consequences of the present contracts, and separates those from
 the geometric/non-recurrence input used by the evenly-marked theta theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

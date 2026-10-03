@@ -218,4 +218,4 @@ public import LeanPool.BrillNoetherGraphs.Bananas.ChainOfLoops.Highlights
 
 /-! # Bananas -/
 
-@[expose] public section
+public section

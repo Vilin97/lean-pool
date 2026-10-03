@@ -24,7 +24,7 @@ coefficients `1/n!` yields a PD matrix. The PSD case follows by a continuity arg
 exponential.
 -/
 
-@[expose] public section
+public section
 
 
 open Complex
@@ -41,7 +41,7 @@ variable {ι : Type u}
 /-- Entrywise real exponential of a matrix: `(entrywiseExp R) i j = exp (R i j)`.
     Used for the OS3 proof (Glimm–Jaffe): if `R` is PSD, then `exp(R)` (entrywise) should be PSD.
 -/
-noncomputable def entrywiseExp (R : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
+@[expose] noncomputable def entrywiseExp (R : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
   fun i j => Real.exp (R i j)
 
 @[simp] lemma entrywiseExp_apply (R : Matrix ι ι ℝ) (i j : ι) :
@@ -74,7 +74,7 @@ private lemma isHermitian_entrywiseExp_real (R : Matrix ι ι ℝ)
 /-- n-fold Hadamard power of a matrix: `hadamardPow R n = R ∘ₕ ⋯ ∘ₕ R` (n times),
     with `hadamardPow R 0 = hadamardOne`.
 -/
-@[simp] def hadamardPow (R : Matrix ι ι ℝ) : ℕ → Matrix ι ι ℝ
+@[expose, simp] def hadamardPow (R : Matrix ι ι ℝ) : ℕ → Matrix ι ι ℝ
   | 0     => hadamardOne (ι := ι)
   | n+1   => hadamardPow R n ∘ₕ R
 

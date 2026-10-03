@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Stream'
@@ -37,7 +37,7 @@ namespace Discrete
   (y ++ₛ ·)⁻¹' ((x ++ₛ ·)⁻¹' T) = ((x ++ y) ++ₛ ·)⁻¹' T := by simp [← Set.preimage_comp]
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def principalOpen : Set (Stream' A) := Set.range (x ++ₛ ·)
+@[expose] def principalOpen : Set (Stream' A) := Set.range (x ++ₛ ·)
 @[simp] lemma principalOpen_nil : @principalOpen A [] = Set.univ := by simp [principalOpen]
 @[simp] lemma principalOpen_append :
   x ++ₛ a ∈ principalOpen (x ++ y) ↔ a ∈ principalOpen y := by simp [principalOpen]

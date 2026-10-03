@@ -14,7 +14,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaTorsionAPI
 
 /-! Exact torsion order for normalized evenly marked theta marks. -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -20,7 +20,7 @@ the straight matching in the star union restores the fragment —
 the shape the trace calculus closes against the strand bundle.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -113,11 +113,13 @@ noncomputable def starEnum :
 
 /-- **The star union**: the explosion at the full cut with the
 representatives-first boundary enumeration. -/
+@[expose]
 noncomputable def starUnion :
     Fragment (Fin (edgeCount W + edgeCount W)) :=
   (explodeAt W Finset.univ (fullCut_closed W)).relabel (starEnum W)
 
 /-- The straight matching pairs `i ↔ m + i`. -/
+@[expose]
 def matchPairs (m : ℕ) : List (Fin (m + m) × Fin (m + m)) :=
   (List.finRange m).map (fun j => (Fin.castAdd m j, Fin.natAdd m j))
 

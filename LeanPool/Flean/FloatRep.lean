@@ -22,7 +22,7 @@ interpretation `coeQ`, negation, validity predicates, and an ordering
 `floatrepLe` proved equivalent to the order on the underlying rationals.
 -/
 
-@[expose] public section
+public section
 
 /-- A sign/exponent/mantissa representation of a (normal) floating-point number
 in the format `α`. -/
@@ -46,10 +46,10 @@ def FloatRep.decEq (f1 f2 : FloatRep C) : Decidable (Eq f1 f2) := by
   exact instDecidableAnd
 
 /-- A representation has a valid mantissa when it is below the precision. -/
-def FloatRep.validM (f : FloatRep C) : Prop := f.m < C.prec
+@[expose] def FloatRep.validM (f : FloatRep C) : Prop := f.m < C.prec
 
 /-- The rational value represented by a `FloatRep`. -/
-def coeQ : FloatRep C → ℚ
+@[expose] def coeQ : FloatRep C → ℚ
 | ⟨b, e, m⟩ =>
   let s := if b then -1 else 1
   s * (m / C.prec + 1) * 2^e
@@ -64,7 +64,7 @@ lemma coe_q_false_pos {e : ℤ} {m : ℕ} :
     _ < m/C.prec + 1 := lt_add_one _
 
 /-- Negate a representation by flipping its sign bit. -/
-def FloatRep.neg {C : FloatCfg} : FloatRep C → FloatRep C
+@[expose] def FloatRep.neg {C : FloatCfg} : FloatRep C → FloatRep C
 | ⟨s, e, m⟩ => ⟨!s, e, m⟩
 
 lemma Flean.neg_neg : (@FloatRep.neg C) ∘ (@FloatRep.neg C) = id := by
@@ -133,7 +133,7 @@ lemma coe_q_of_Cprec (b : Bool) (e : ℤ) :
   exact Nat.cast_ne_zero.mpr (by linarith [C.prec_pos])
 
 /-- A representation has a valid exponent when it lies in `[emin, emax]`. -/
-def FloatRep.validE (f : FloatRep C) : Prop := C.emin ≤ f.e ∧ f.e ≤ C.emax
+@[expose] def FloatRep.validE (f : FloatRep C) : Prop := C.emin ≤ f.e ∧ f.e ≤ C.emax
 
 lemma neg_valid_e {f : FloatRep C} :
   (FloatRep.neg f).validE ↔ (f.validE) := by
@@ -211,10 +211,10 @@ lemma normal_range' (m : ℕ) (e : ℤ) (vm : m < C.prec) (ve2 : e ≤ C.emax) :
   simp_all
 
 /-- The largest finite rational representable in the format `C`. -/
-def maxFloatQ (C : FloatCfg) : ℚ := (2 - (1 : ℚ) / C.prec) * 2^C.emax
+@[expose] def maxFloatQ (C : FloatCfg) : ℚ := (2 - (1 : ℚ) / C.prec) * 2^C.emax
 
 /-- The representation of the largest finite float of the format `C`. -/
-def maxFloatRep (C : FloatCfg) : FloatRep C := ⟨false, C.emax, C.prec - 1⟩
+@[expose] def maxFloatRep (C : FloatCfg) : FloatRep C := ⟨false, C.emax, C.prec - 1⟩
 
 lemma coe_q_max_float_rep : coeQ (maxFloatRep C) = maxFloatQ C := by
   simp only [coeQ, maxFloatRep, Bool.false_eq_true, ↓reduceIte, one_mul, maxFloatQ, one_div,
@@ -228,11 +228,11 @@ lemma coe_q_max_float_rep : coeQ (maxFloatRep C) = maxFloatQ C := by
 
 /-- Ordering on positive representations: larger exponent, or equal exponent
 and larger-or-equal mantissa. -/
-def floatrepLePos (f1 f2 : FloatRep C) : Prop :=
+@[expose] def floatrepLePos (f1 f2 : FloatRep C) : Prop :=
   (f1.e < f2.e) ∨ (f1.e = f2.e ∧ f1.m ≤ f2.m)
 
 /-- An equivalent formulation of `floatrepLePos` as a conjunction. -/
-def floatrepLePos' (f1 f2 : FloatRep C) : Prop :=
+@[expose] def floatrepLePos' (f1 f2 : FloatRep C) : Prop :=
   (f1.e ≤ f2.e) ∧ (f1.e = f2.e → f1.m ≤ f2.m)
 
 lemma floatrep_pos_equiv (f1 f2 : FloatRep C) :
@@ -321,7 +321,7 @@ lemma floatrep_le_pos_iff_coe_q (f1 f2 : FloatRep C) (vm1 : f1.m ≤ C.prec) (vm
 
 
 /-- The full ordering on representations, accounting for signs. -/
-def floatrepLe (f1 f2 : FloatRep C) : Prop :=
+@[expose] def floatrepLe (f1 f2 : FloatRep C) : Prop :=
   match (f1.s, f2.s) with
   | (false, false) => floatrepLePos f1 f2
   | (false, true) => False

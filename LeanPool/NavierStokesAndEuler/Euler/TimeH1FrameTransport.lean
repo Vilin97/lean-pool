@@ -19,7 +19,7 @@ places parameter-dependent transverse variational problems on one fixed Hilbert
 space before coefficient differentiation or all-order estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,7 +61,7 @@ theorem coordinateDerivative_productDerivative (v : TimeLp T U) :
   exact frameLeftInverse_apply (Q t) c hc (hQ t) _
 
 /-- A strictly positive polynomial transport cost from the inverse-frame bounds. -/
-def transportCost : ℝ :=
+@[expose] def transportCost : ℝ :=
   1 + ((2 * (c⁻¹)^2 * ‖Q‖^2 * ‖Q₁‖ + c⁻¹ * ‖Q₁‖) * T + c⁻¹ * ‖Q‖)
 
 omit [CompleteSpace U] [CompleteSpace E] in
@@ -98,8 +98,12 @@ theorem productDerivative_norm_sq_lower (v : TimeLp T U) :
 
 /-- The fixed Hilbert space of coordinate derivatives with zero initial trace.
 Terminal zero is already supplied by the primitive. -/
-def zeroTraceDerivatives (T : ℝ) (hT : 0 ≤ T) : Submodule ℝ (TimeLp T U) :=
+@[expose] def zeroTraceDerivatives (T : ℝ) (hT : 0 ≤ T) : Submodule ℝ (TimeLp T U) :=
   LinearMap.ker (initialTrace T hT).toLinearMap
+
+omit [CompleteSpace U] in
+@[simp] theorem mem_zeroTraceDerivatives (T : ℝ) (hT : 0 ≤ T) (v : TimeLp T U) :
+    v ∈ zeroTraceDerivatives T hT ↔ initialTrace T hT v = 0 := by rfl
 
 /-- The fixed zero-trace coordinate space is complete. -/
 instance zeroTraceDerivatives_complete (T : ℝ) (hT : 0 ≤ T) :
@@ -118,6 +122,10 @@ def transverseForward : zeroTraceDerivatives (U := U) T hT →L[ℝ] transverseD
       EulerTransverseMomentumRegularity.productDerivative_mem_transverse T hT Q Q₁ hd m hTangent
         (v : TimeLp T U) v.property)
 
+@[simp] theorem transverseForward_coe (v : zeroTraceDerivatives (U := U) T hT) :
+    (transverseForward T hT Q Q₁ hd m hTangent v : TimeLp T E) =
+      productDerivative T hT Q Q₁ (v : TimeLp T U) := by rfl
+
 /-- Applying the constructed inverse-frame derivative transports back to the
 same fixed coordinate space. -/
 def transverseBackward : transverseDerivatives T hT m →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
@@ -129,7 +137,12 @@ def transverseBackward : transverseDerivatives T hT m →L[ℝ] zeroTraceDerivat
         (frameLeftInverseDerivativePath T Q Q₁ c hc hQ) (u : TimeLp T E)) = 0
       rw [initialTrace_productDerivative T hT (frameLeftInversePath T Q c hc hQ)
         (frameLeftInverseDerivativePath T Q Q₁ c hc hQ)
-        (frameLeftInversePath_hasDerivWithinAt T Q Q₁ c hc hQ hT hd), u.property.1, map_zero])
+        (frameLeftInversePath_hasDerivWithinAt T Q Q₁ c hc hQ hT hd),
+        ((mem_transverseDerivatives T hT m (u : TimeLp T E)).mp u.property).1, map_zero])
+
+@[simp] theorem transverseBackward_coe (u : transverseDerivatives T hT m) :
+    (transverseBackward T hT Q Q₁ c hc hQ hd m u : TimeLp T U) =
+      coordinateDerivative T hT Q Q₁ c hc hQ (u : TimeLp T E) := by rfl
 
 /-- The backward transport is the actual inverse on every fixed coordinate derivative. -/
 theorem transverseBackward_forward (v : zeroTraceDerivatives (U := U) T hT) :

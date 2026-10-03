@@ -17,7 +17,7 @@ correspondence with `Nat.Partition n` that reads off the row lengths.
 This is the tree's standard idiom for "sum over the partitions of `n`".
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -30,7 +30,7 @@ theorem rowLens_injective : Function.Injective YoungDiagram.rowLens :=
 /-! ### Shapes -/
 
 /-- The Young diagrams with `n` cells. -/
-def Shape (n : ℕ) : Type := {μ : YoungDiagram // μ.card = n}
+@[expose] def Shape (n : ℕ) : Type := {μ : YoungDiagram // μ.card = n}
 
 namespace Shape
 
@@ -54,6 +54,7 @@ instance (n : ℕ) : DecidableEq (Shape n) := fun μ ν =>
 
 /-- Young diagrams of size `n` correspond to partitions of `n`,
 by reading off the row lengths. -/
+@[expose]
 noncomputable def shapeEquivPartition (n : ℕ) :
     Shape n ≃ Nat.Partition n where
   toFun μ :=

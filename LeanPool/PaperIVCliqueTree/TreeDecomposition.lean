@@ -20,18 +20,20 @@ The target interface fixes its node universe to `Type`, so the adapter uses
 finite node types in that universe. Graph vertices may live in any universe.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph.CliqueTree
 
 variable {V : Type*} {ι : Type} {G : SimpleGraph V} (T : G.CliqueTree ι)
 
 /-- Extend the original bags by an empty bag at the connector. -/
+@[expose]
 def connectorBag : Option ι → Finset V
   | none => ∅
   | some i => T.bag i
 
 /-- The subtree induced by bags containing a fixed vertex. -/
+@[expose]
 def vertexBagGraph (v : V) : SimpleGraph {x : Option ι // v ∈ T.connectorBag x} :=
   T.connectorGraph.induce {x | v ∈ T.connectorBag x}
 
@@ -63,6 +65,7 @@ theorem vertexBagGraph_connected (v : V) : (T.vertexBagGraph v).Connected := by
 
 /-- Convert a finite rooted clique forest into the existing tree-decomposition
 interface, preserving original bags and adding only an empty connector bag. -/
+@[expose]
 noncomputable def toTreeDecomposition [Fintype ι] :
     Utilities.Treewidth.TreeDecomposition G := by
   classical

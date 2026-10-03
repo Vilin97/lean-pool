@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorOpera
 
 /-! Literal packet operators and coefficient witnesses from the given analytic source data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,11 +22,11 @@ namespace EulerPacketCylinderField
 open Set EulerSmoothLimit EulerMeanCoefficients EulerPacketPointJets EulerPacketProfileRecursion
 
 /-- Change time, given by `h ▸ G`. -/
-def MatrixCoefficient.changeTime {T T' : ℝ} {raw : Domain → Space →L[ℝ] Space}
+@[expose] def MatrixCoefficient.changeTime {T T' : ℝ} {raw : Domain → Space →L[ℝ] Space}
     (G : MatrixCoefficient T raw) (h : T = T') : MatrixCoefficient T' raw := h ▸ G
 
 /-- Change time, given by `h ▸ G`. -/
-def VectorCoefficient.changeTime {T T' : ℝ} {raw : VectorField}
+@[expose] def VectorCoefficient.changeTime {T T' : ℝ} {raw : VectorField}
     (G : VectorCoefficient T raw) (h : T = T') : VectorCoefficient T' raw := h ▸ G
 
 variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
@@ -34,7 +34,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (D : EulerTransversePacketProvider.Data U) (I : EulerTransversePacketProvider.InitialData P D)
 
 /-- Every linear solve and the curl corrector is the concrete source construction. -/
-def sourceOperators : Operators where
+@[expose] def sourceOperators : Operators where
   interval := Icc (0 : ℝ) M.T
   period := P
   inverseFrame z := D.FInv.field (D.clamp z.1) z.2.1
@@ -45,6 +45,7 @@ def sourceOperators : Operators where
   curlCorrector := D.curlCorrector P
 
 /-- No regularity of a solved field or abstract operator family is an input here. -/
+@[expose]
 def sourceCoefficientData (hT : M.T = D.T) : CoefficientData P M.T (sourceOperators P M D I) where
   period_eq := rfl
   interval_eq := rfl

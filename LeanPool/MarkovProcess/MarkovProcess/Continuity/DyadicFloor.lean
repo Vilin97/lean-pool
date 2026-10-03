@@ -27,7 +27,7 @@ This file merges the following former modules, one section each:
 * `DyadicFloorUnitModification`: A continuous modification on the unit interval
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -39,6 +39,7 @@ section DyadicFloorApproximation
 section
 
 /-- The index of the left endpoint of the level-`n` dyadic cell containing `t ∈ [0, 1]`. -/
+@[expose]
 def unitDyadicFloorIndex (n : ℕ) (t : Set.Icc (0 : ℝ) 1) : Fin (2 ^ n + 1) :=
   ⟨⌊(2 ^ n : ℝ) * t.1⌋₊, by
     have hnonneg : 0 ≤ (2 ^ n : ℝ) * t.1 :=
@@ -294,6 +295,7 @@ section DyadicFloorDenseTime
 section
 
 /-- A point of the level-`n` unit dyadic grid, regarded as a real time in `[0, 1]`. -/
+@[expose]
 def unitDyadicGridTime (n : ℕ) (i : Fin (2 ^ n + 1)) : Set.Icc (0 : ℝ) 1 :=
   ⟨(unitDyadicGrid n i : ℝ), by
     constructor
@@ -613,6 +615,7 @@ open scoped ENNReal NNReal
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [PseudoEMetricSpace E]
 
 /-- A nonnegative rational bounded by one, embedded in the real unit interval. -/
+@[expose]
 def unitIccOfNNRat (t : NNRat) (ht : t ≤ 1) : Set.Icc (0 : ℝ) 1 :=
   ⟨(t : ℝ), by positivity, by exact_mod_cast ht⟩
 

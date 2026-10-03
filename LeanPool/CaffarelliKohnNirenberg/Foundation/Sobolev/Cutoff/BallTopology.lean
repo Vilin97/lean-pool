@@ -17,7 +17,7 @@ public import Mathlib.MeasureTheory.Measure.Typeclasses.Finite
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

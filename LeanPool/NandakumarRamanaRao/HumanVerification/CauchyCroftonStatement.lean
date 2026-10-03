@@ -10,7 +10,7 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.InternalModel
 
 /-! # Cauchy Crofton Statement -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 
@@ -19,7 +19,7 @@ noncomputable section
 namespace HumanVerification
 
 /-- The exact general planar Cauchy--Crofton bridge needed by the wrapper. -/
-def CauchyCroftonStatement : Prop :=
+@[expose] def CauchyCroftonStatement : Prop :=
   ∀ K : NRR.Geometry.ConvexBody NRR.HumanExport.Plane,
     (μH[1] : Measure NRR.HumanExport.Plane)
         (frontier (K : Set NRR.HumanExport.Plane)) =

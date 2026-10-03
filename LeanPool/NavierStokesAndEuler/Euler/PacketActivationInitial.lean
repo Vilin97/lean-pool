@@ -35,7 +35,7 @@ existing zero-endpoint Hilbert space; the proved energy coercivity then
 identifies all constructions of the same weak solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -153,7 +153,7 @@ section
 /-! The stationary path selected by the actual activation argument is the
 same history used by the packet, after matching its physical terminal trace. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -256,7 +256,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -376,7 +376,7 @@ section
 strain error and compression bounds imply the compressed terminal-matrix
 hypotheses, so no abstract endpoint matrix or plane isometry is supplied. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -469,7 +469,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -533,7 +533,9 @@ theorem exists_activated_primary
       ⟪B.coefficients.labelVelocity 0 ξ ⟨τ,hτ.le,le_rfl⟩,unit (m τ)⟫_ℝ := by
     convert! hplo using 1
     ring
-  have hvinit := activation_scaled_velocity (a := a) hε hplo' hphi hpw hqw
+  have hvinit := activation_scaled_velocity
+    (m := m) (v := v) (w := fun s => uncutVelocity τ hτ hτT B ξ s 0)
+    (t₀ := τ) (a := a) hε hplo' hphi hpw hqw
   refine ⟨hvinit.1,hvinit.2.1,?_,hvinit.2.2.1,hvinit.2.2.2⟩
   apply hξnorm.trans
   apply div_le_div_of_nonneg_right _ hh.le

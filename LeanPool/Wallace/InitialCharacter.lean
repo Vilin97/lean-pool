@@ -17,7 +17,7 @@ circle.  Torsion-freeness makes this one-point prescription compatible with ever
 relation, and divisibility of the circle extends it to the ambient group.
 -/
 
-@[expose] public section
+public section
 
 namespace Wallace
 

@@ -21,7 +21,7 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 -- Base/OriginalFnLogBounds.lean (factorial_log_sum_bounds), Base/OriginalSnLogBounds.lean
 -- (pattern). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped BigOperators

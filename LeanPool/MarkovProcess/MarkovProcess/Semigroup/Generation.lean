@@ -18,7 +18,7 @@ as a strongly continuous contraction semigroup.  Strong continuity at zero is
 first proved on the range of one resolvent and then extended by density.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -82,6 +82,7 @@ theorem tendsto_yosidaStrongLimit_apply_zero
 
 /-- The strongly continuous contraction semigroup generated canonically by a
 contractive resolvent through its Yosida approximations. -/
+@[expose]
 def generatedSemigroup (R : ContractiveResolvent E) :
     StronglyContinuousContractionSemigroup E :=
   StronglyContinuousContractionSemigroup.ofTendstoZero

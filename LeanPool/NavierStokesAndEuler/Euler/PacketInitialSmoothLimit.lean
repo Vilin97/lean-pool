@@ -20,7 +20,7 @@ section
 Only the source parameter cap and literal scale identities are supplied;
 all field estimates and the geometric amplitude decay are derived. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -90,7 +90,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
 /-- Increment, given by `addField (A.highField k) (A.meanField k)`. -/
 def increment (k : ℝ) : SmoothL2Field Space := addField (A.highField k) (A.meanField k)
 
-theorem increment_field (k : ℝ) : (A.increment k).field=A.high k+A.mean k := rfl
+theorem increment_field (k : ℝ) : (A.increment k).field=A.high k+A.mean k := by rfl
 
 theorem increment_norm_le (k : ℝ) (s : ℕ) :
     tensorNorm s (A.increment k) ≤ derivativeSum s (A.high k)+derivativeSum s (A.mean k) := by
@@ -143,7 +143,7 @@ theorem actual_increment_summable (s : ℕ) :
 
 /-- Initial partial, defined pointwise by `∑ n ∈ range N, ((A n).high (frequency J X n) x+(A
 n).mean (frequency J X n) x)`. -/
-def initialPartial (N : ℕ) : Space → Space :=
+@[expose] def initialPartial (N : ℕ) : Space → Space :=
   fun x => ∑ n ∈ range N, ((A n).high (frequency J X n) x+(A n).mean (frequency J X n) x)
 
 theorem initialPartial_field (N : ℕ) :
@@ -175,7 +175,7 @@ theorem initialLimit_compact : HasCompactSupport (V).field :=
     (initialLimit_support A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
 
 /-- Full initial limit, given by `addField base V`. -/
-def fullInitialLimit (base : SmoothL2Field Space) : SmoothL2Field Space := addField base V
+@[expose] def fullInitialLimit (base : SmoothL2Field Space) : SmoothL2Field Space := addField base V
 
 theorem fullInitialLimit_Hm (base : SmoothL2Field Space) (s : ℕ) :
     Tendsto (fun N => derivativeSum s ((base.field+initialPartial A J X N) -

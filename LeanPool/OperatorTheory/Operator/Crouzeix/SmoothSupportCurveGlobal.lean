@@ -20,7 +20,7 @@ uniqueness of the supporting contact, and injectivity on every fundamental
 period.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff

@@ -19,7 +19,7 @@ band views use the same absolute-lift primary pulse and covariance
 matrix.  Compatibility is proved before restriction to a physical graph.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -78,7 +78,7 @@ theorem increment_square_scale (H : Mat2) (T R : Vec2) {a : ℝ} (ha : 0 < a) (j
 
 /-- Coefficient scale, given by `velocityScale * Real.sqrt referenceEpsilon / Real.sqrt
 epsilon`. -/
-noncomputable def coefficientScale (epsilon referenceEpsilon velocityScale : ℝ) : ℝ :=
+@[expose] noncomputable def coefficientScale (epsilon referenceEpsilon velocityScale : ℝ) : ℝ :=
   velocityScale * Real.sqrt referenceEpsilon / Real.sqrt epsilon
 
 theorem coefficientScale_pos {epsilon referenceEpsilon velocityScale : ℝ}
@@ -309,12 +309,14 @@ end ActualRequest
 /-! ## The actual current-state request on the full free lift -/
 
 /-- Slow change as an element of `LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane`. -/
+@[expose]
 noncomputable def slowChange (h Q Qr : ℝ) : LocalSignedRequest.Plane →L[ℝ] LocalSignedRequest.Plane
     :=
   ((PhysicalParticularWave.ratioPower Q Qr 1) • ContinuousLinearMap.id ℝ ℝ).prodMap
     ((PhysicalParticularWave.ratioPower Q Qr (CoordinateAlgebra.D h)) • ContinuousLinearMap.id ℝ ℝ)
 
 /-- Request chart as an element of `Point ≃L[ℝ] Point`. -/
+@[expose]
 noncomputable def requestChart (h : ℝ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
     (gap : ℕ) : Point ≃L[ℝ] Point :=
   (PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv.trans
@@ -353,12 +355,14 @@ theorem slowChange_length {h Q Qr : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- The strip and input coordinates are moved together. Its epsilon is
 definitionally the epsilon of the same full-angle wave strip. -/
+@[expose]
 noncomputable def stateStrip (s : StripData Cylinder) : StripData Point :=
   SignedWaveUpdate.sectionStrip (ParticularWaveBounds.reindexStrip PhysicalResidualTZ.swapCylinder
       s)
 
 /-- State request, defined pointwise by `LocalSignedRequest.fullRequest (stateStrip s) P (2 * h)
 c u n (PhysicalResidualTZ.swapCylinder x)`. -/
+@[expose]
 noncomputable def stateRequest (s : StripData Cylinder) (P : SignedStressPrimitive.Patch)
     (h : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) :
     ℕ → Cylinder → Vec2 :=
@@ -515,19 +519,21 @@ noncomputable def withReferencePhase (C : ReferencePhase) : PrimaryData U :=
   { B with base := C.base B.base }
 
 /-- Matrix, given by `SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate`. -/
-noncomputable def matrix : ℕ → Cylinder → Mat2 :=
+@[expose] noncomputable def matrix : ℕ → Cylinder → Mat2 :=
   SignedWaveUpdate.phaseMatrix B.pulse B.prefactor B.coordinate
 
 /-- Fundamental, given by `SignedWaveUpdate.phaseFundamental B.pulse B.coordinate j`. -/
+@[expose]
 noncomputable def fundamental (j : Fin 2) : ℕ → Cylinder → Space :=
   SignedWaveUpdate.phaseFundamental B.pulse B.coordinate j
 
 /-- The single Gaussian slot cutoff of this primary pulse. -/
+@[expose]
 noncomputable def cutoff (n : ℕ) (x : Cylinder) : ℝ :=
   GaussianTailFlat.profile (B.coordinate n x).2
 
 /-- Coefficients, constructed using `SignedWaveUpdate.coefficients`. -/
-noncomputable def coefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
+@[expose] noncomputable def coefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   SignedWaveUpdate.coefficients B.base B.strip B.directions B.matrix B.target request B.mask
     (B.fundamental j) B.normalMotion B.action j
@@ -574,6 +580,7 @@ theorem primary_cutoff_amplitude (j : Fin 2) (n : ℕ) (x : Cylinder) :
 
 /-- The same reference carrier is pulled back before multiplication by
 the target band's frequency. All other background fields remain inputs. -/
+@[expose]
 noncomputable def viewBase (background : LinearWaveBounds.WaveCoefficients Cylinder)
     (frequency : ℕ → ℝ) (view : ℕ → Cylinder → Cylinder) (reference : ℕ) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
@@ -584,18 +591,20 @@ noncomputable def viewBase (background : LinearWaveBounds.WaveCoefficients Cylin
 
 /-- View target, defined pointwise by `coefficientScale (s.epsilon n) (B.strip.epsilon
 reference) (velocity n) ^ 2 • B.target reference (view n x)`. -/
-noncomputable def viewTarget (s : StripData Cylinder) (velocity : ℕ → ℝ)
+@[expose] noncomputable def viewTarget (s : StripData Cylinder) (velocity : ℕ → ℝ)
     (view : ℕ → Cylinder → Cylinder) (reference : ℕ) : ℕ → Cylinder → Vec2 :=
   fun n x => coefficientScale (s.epsilon n) (B.strip.epsilon reference) (velocity n) ^ 2 •
     B.target reference (view n x)
 
 /-- View cutoff, defined pointwise by `B.cutoff reference (view n x)`. -/
+@[expose]
 noncomputable def viewCutoff (view : ℕ → Cylinder → Cylinder) (reference : ℕ) :
     ℕ → Cylinder → ℝ := fun n x => B.cutoff reference (view n x)
 
 /-- Each view calls the actual signed quotient constructor, with the same
 reference pulse and matrix. Its request may be the literal current-state
 request and is not replaced by an independently chosen signed wave. -/
+@[expose]
 noncomputable def viewCoefficients (s : StripData Cylinder)
     (d : LinearWaveBounds.GraphDirections Cylinder)
     (background : LinearWaveBounds.WaveCoefficients Cylinder)
@@ -904,11 +913,13 @@ noncomputable def periodicStateAngular (C : ReferencePhase) (P : SignedStressPri
       reference) hm hn ha
 
 /-- Raw, given by `((B.coefficients request j).withCutoff B.cutoff).amplitude reference`. -/
+@[expose]
 noncomputable def raw (request : ℕ → Cylinder → Vec2) (j : Fin 2) (reference : ℕ) :
     Cylinder → ComplexVector := ((B.coefficients request j).withCutoff B.cutoff).amplitude reference
 
 /-- Raw pressure, given by `((B.coefficients request j).withCutoff B.cutoff).pressure
 reference`. -/
+@[expose]
 noncomputable def rawPressure (request : ℕ → Cylinder → Vec2) (j : Fin 2) (reference : ℕ) :
     Cylinder → ℂ := ((B.coefficients request j).withCutoff B.cutoff).pressure reference
 
@@ -1027,37 +1038,43 @@ variable {B reference} (V : B.Views reference)
 
 /-- Map, given by `PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
 (V.referenceCover - V.cover n)`. -/
-noncomputable def map (n : ℕ) : Cylinder →L[ℝ] Cylinder :=
+@[expose] noncomputable def map (n : ℕ) : Cylinder →L[ℝ] Cylinder :=
   PhysicalParticularWave.cylinderChange V.exponent (V.scale n) V.referenceScale
     (V.referenceCover - V.cover n)
 
 /-- Velocity, given by `PhysicalParticularWave.velocityWeight V.exponent (V.scale n)
 V.referenceScale`. -/
+@[expose]
 noncomputable def velocity (n : ℕ) : ℝ :=
   PhysicalParticularWave.velocityWeight V.exponent (V.scale n) V.referenceScale
 
 /-- Clock, given by `PhysicalParticularWave.clockWeight V.exponent (V.scale n)
 V.referenceScale`. -/
+@[expose]
 noncomputable def clock (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight V.exponent (V.scale n) V.referenceScale
 
 /-- Normal, given by `PhysicalParticularWave.normalWeight (V.scale n) V.referenceScale
 (V.frequency n) (B.base.frequency reference)`. -/
+@[expose]
 noncomputable def normal (n : ℕ) : ℝ :=
   PhysicalParticularWave.normalWeight (V.scale n) V.referenceScale (V.frequency n)
       (B.base.frequency reference)
 
 /-- Coefficients, constructed using `B.viewCoefficients`. -/
+@[expose]
 noncomputable def coefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   B.viewCoefficients V.strip V.directions V.background V.frequency V.velocity V.clock V.normal
     (fun n => V.map n) reference request j
 
 /-- Cutoff, given by `B.viewCutoff (fun n => V.map n) reference`. -/
+@[expose]
 noncomputable def cutoff : ℕ → Cylinder → ℝ := B.viewCutoff (fun n => V.map n) reference
 
 /-- Exact coefficients, given by `(V.coefficients request j).corrected V.strip V.directions
 V.cutoff`. -/
+@[expose]
 noncomputable def exactCoefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     LinearWaveBounds.WaveCoefficients Cylinder :=
   (V.coefficients request j).corrected V.strip V.directions V.cutoff
@@ -1152,11 +1169,13 @@ theorem pressure_transport (request referenceRequest : ℕ → Cylinder → Vec2
 
 /-- Physical phase, defined pointwise by `B.base.phase reference
 ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)`. -/
+@[expose]
 noncomputable def physicalPhase : SpaceTime → ℝ :=
   fun z => B.base.phase reference
     ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z)
 
 /-- Physical raw as an element of `SpaceTime → ComplexVector`. -/
+@[expose]
 noncomputable def physicalRaw (referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2) :
     SpaceTime → ComplexVector :=
   fun z => V.referenceScale ^ (-CoordinateAlgebra.A V.exponent) • B.raw referenceRequest j reference
@@ -1164,6 +1183,7 @@ noncomputable def physicalRaw (referenceRequest : ℕ → Cylinder → Vec2) (j 
 
 /-- Reference potential, given by `PhysicalCurlCovariance.referencePotential (B.base.frequency
 reference) V.physicalPhase (V.physicalRaw referenceRequest j)`. -/
+@[expose]
 noncomputable def referencePotential (referenceRequest : ℕ → Cylinder → Vec2) (j : Fin 2) :
     SpaceTime → ComplexVector :=
   PhysicalCurlCovariance.referencePotential (B.base.frequency reference) V.physicalPhase
@@ -1171,12 +1191,14 @@ noncomputable def referencePotential (referenceRequest : ℕ → Cylinder → Ve
 
 /-- One Cartesian potential is chosen from the reference band and cover,
 and each actual band wave will be identified with its curl. -/
+@[expose]
 noncomputable def physicalPotential (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (delta : ℝ) : VelocityField :=
   PhysicalCurlCovariance.globalCartesianPotential delta (V.referencePotential referenceRequest j)
 
 /-- Physical velocity, given by `SpatialCurl.spatialCurl (V.physicalPotential referenceRequest j
 delta)`. -/
+@[expose]
 noncomputable def physicalVelocity (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (delta : ℝ) : VelocityField :=
   SpatialCurl.spatialCurl (V.physicalPotential referenceRequest j delta)
@@ -1220,6 +1242,7 @@ theorem referencePotential_periodic {referenceRequest : ℕ → Cylinder → Vec
     PhysicalParticularWave.angle_translate_pack] using he
 
 /-- Wave, constructed using `vectorMode`. -/
+@[expose]
 noncomputable def wave (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ) :
     Cylinder → ComplexVector :=
   vectorMode (V.frequency n) ((V.coefficients request j).phase n)
@@ -1401,7 +1424,7 @@ theorem physicalVelocity_divergence (referenceRequest : ℕ → Cylinder → Vec
 /-! ## Pressure is transported from the same reference coefficient -/
 
 /-- Physical pressure coefficient as an element of `SpaceTime → ℂ`. -/
-noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylinder → Vec2)
+@[expose] noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   fun z => V.referenceScale ^ (-(2 * CoordinateAlgebra.A V.exponent)) •
     B.rawPressure referenceRequest j reference
@@ -1409,12 +1432,13 @@ noncomputable def physicalPressureCoefficient (referenceRequest : ℕ → Cylind
 
 /-- Complex physical pressure, given by `mode (B.base.frequency reference) V.physicalPhase
 (V.physicalPressureCoefficient referenceRequest j)`. -/
-noncomputable def complexPhysicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
+@[expose] noncomputable def complexPhysicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) : SpaceTime → ℂ :=
   mode (B.base.frequency reference) V.physicalPhase (V.physicalPressureCoefficient referenceRequest
       j)
 
 /-- Physical pressure as an element of `PressureField`. -/
+@[expose]
 noncomputable def physicalPressure (referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (delta : ℝ) : PressureField :=
   fun z => PhysicalCurlCovariance.globalCartesianPotential delta
@@ -1422,6 +1446,7 @@ noncomputable def physicalPressure (referenceRequest : ℕ → Cylinder → Vec2
 
 /-- Pressure mode, given by `mode (V.frequency n) ((V.coefficients request j).phase n)
 (((V.coefficients request j).withCutoff V.cutoff).pressure n)`. -/
+@[expose]
 noncomputable def pressureMode (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ) :
     Cylinder → ℂ :=
   mode (V.frequency n) ((V.coefficients request j).phase n)
@@ -1708,11 +1733,13 @@ namespace StateData
 variable {V} (D : V.StateData)
 
 /-- Request, given by `stateRequest V.strip D.patch V.exponent D.context D.current`. -/
+@[expose]
 noncomputable def request : ℕ → Cylinder → Vec2 :=
   stateRequest V.strip D.patch V.exponent D.context D.current
 
 /-- Reference request, given by `stateRequest B.strip D.patch V.exponent D.referenceContext
 D.referenceState`. -/
+@[expose]
 noncomputable def referenceRequest : ℕ → Cylinder → Vec2 :=
   stateRequest B.strip D.patch V.exponent D.referenceContext D.referenceState
 

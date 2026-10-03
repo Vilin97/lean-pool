@@ -13,11 +13,12 @@ public import Mathlib.Order.Filter.AtTopBot.Basic
 
 /-! ## Consequences of the polynomial bound -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
 /-- The filter for a natural number tending to infinity through prime values. -/
+@[expose]
 def atTopAlongPrimes : Filter ℕ :=
   Filter.atTop ⊓ Filter.principal {p : ℕ | p.Prime}
 
@@ -26,6 +27,7 @@ elementary lower bound
 `hollowConstant p d * (p - 1) + 1 ≤ egzConstant p d` and a bound on
 `hollowConstant p d` that is uniform in `p` for fixed `d` (Proposition `thw`
 in the paper), this implies the little-`o` formulation of Theorem 1.2. -/
+@[expose]
 def MainUpperBound (d : ℕ) : Prop :=
   ∀ ε : ℝ, 0 < ε →
     ∀ᶠ p in atTopAlongPrimes,
@@ -33,6 +35,7 @@ def MainUpperBound (d : ℕ) : Prop :=
         ((hollowConstant p d : ℝ) + ε) * (p : ℝ)
 
 /-- The direct little-`o` formulation of Theorem 1.2. -/
+@[expose]
 def MainAsymptotic (d : ℕ) : Prop :=
   (fun p : ℕ =>
       (egzConstant p d : ℝ) -

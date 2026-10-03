@@ -30,7 +30,7 @@ a squeeze as `r ↓ 1` gives the Cauchy–Crofton identity
 for every planar compact convex body with nonempty interior.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

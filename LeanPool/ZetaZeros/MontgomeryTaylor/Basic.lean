@@ -24,7 +24,7 @@ The three preceding files supply the pieces: the functional is the integral of `
 `f_0` of total mass one, the integral collapses to the constant.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

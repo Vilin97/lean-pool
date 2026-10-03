@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 namespace N1000000WedderburnData
@@ -28,10 +28,12 @@ abbrev Q := ℚ
 
 -- The 7 Wedderburn block sizes are 1,1,1,2,3,3,3 (sorted by size).
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def blockSizes : Array Nat := #[1, 1, 1, 2, 3, 3, 3]
 
 -- Exact rational scaling factors (one per PSD block).
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def blockScales : Array Q :=
 #[
   (Rat.normalize (999997) (3000000)),
@@ -47,6 +49,7 @@ def blockScales : Array Q :=
 -- stored as integer numerators with a single common denominator per block:
 -- `moduleBasisQ r p k = moduleBasisNum[r][p][k] / moduleBasisDen[r]`.
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def moduleBasisDen : Array Nat := #[6000000,
   2999973000077999928,
   999997000002000000,
@@ -56,6 +59,7 @@ def moduleBasisDen : Array Nat := #[6000000,
   3999972000048000000]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def moduleBasisNum : Array (Array (Array Int)) :=
 #[
   #[

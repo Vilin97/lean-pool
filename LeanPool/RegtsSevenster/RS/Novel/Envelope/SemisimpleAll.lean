@@ -23,7 +23,7 @@ what `isSemisimpleRing_of_trace` consumes to make every skein
 endomorphism algebra semisimple.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

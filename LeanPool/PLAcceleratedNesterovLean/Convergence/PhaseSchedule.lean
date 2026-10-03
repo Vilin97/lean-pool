@@ -21,7 +21,7 @@ Key arithmetic facts:
 - θₖ ↓ 0 as k → ∞
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,10 +43,10 @@ def rhoOfPhase (L : ℝ) (μ : ℝ) (k : ℕ) : ℝ :=
   (1 - a) / (1 + a)
 
 /-- Directly retuned PL parameter: μθ = μ · (1 - θ). -/
-def muOfTheta (μ θ : ℝ) : ℝ := μ * (1 - θ)
+@[expose] def muOfTheta (μ θ : ℝ) : ℝ := μ * (1 - θ)
 
 /-- Directly retuned momentum parameter. -/
-def rhoOfTheta (L μ θ : ℝ) : ℝ :=
+@[expose] def rhoOfTheta (L μ θ : ℝ) : ℝ :=
   let a := Real.sqrt (muOfTheta μ θ * (1 / L))
   (1 - a) / (1 + a)
 

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPiolaData
 /-! The actual pointwise equation of the exact packet, expressed with the
 prescribed deformation and its genuine time and spatial derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

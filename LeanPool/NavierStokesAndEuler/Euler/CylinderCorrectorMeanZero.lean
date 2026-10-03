@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverage
 /-! The actual potential and slow curl preserve the zero angular mean required by the packet
 recursion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,7 +20,7 @@ automatic.  This small adapter presents the result in the exact form consumed
 by the deep-embedded closed-row checker.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

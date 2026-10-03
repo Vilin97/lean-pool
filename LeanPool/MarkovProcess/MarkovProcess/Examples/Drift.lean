@@ -22,7 +22,7 @@ theorem are satisfiable by a semigroup that genuinely moves.  Nothing here is cl
 semigroup with a nonzero diffusion part; for that see `MarkovProcess.Examples.HeatSemigroup`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -46,6 +46,7 @@ theorem measurable_driftTranslate (v : E) (t : NNReal) :
 
 /-- The deterministic drift semigroup with velocity `v`: at time `t` it moves every point by
 `t • v`. -/
+@[expose]
 def driftSemigroup (v : E) : SubMarkovKernelSemigroup E where
   kernel := fun t ↦ Kernel.deterministic (fun x ↦ x + (t : ℝ) • v) (measurable_driftTranslate v t)
   measurable_kernel := by
@@ -183,6 +184,7 @@ theorem existsUnique_continuousProcess_driftSemigroup (v : E) :
     (driftSemigroup v) (isConservative_driftSemigroup v) (hasKolmogorovMoments_driftSemigroup v)
 
 /-- The straight line started at `x` with velocity `v`, as a continuous path. -/
+@[expose]
 def driftPath (v : E) (x : E) : ContinuousPath E where
   toFun := fun t ↦ x + (t : ℝ) • v
   continuous_toFun := by fun_prop

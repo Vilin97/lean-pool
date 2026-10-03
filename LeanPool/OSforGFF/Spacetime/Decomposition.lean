@@ -27,7 +27,7 @@ time and spatial components: SpaceTime ≃ᵐ ℝ × SpatialCoords.
 * `spacetime_norm_sq_decompose` - Norm decomposition: ‖k‖² = k₀² + ‖k_sp‖²
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureSpace FiniteDimensional Real
 
@@ -50,7 +50,7 @@ def piLpMeasurableEquiv (n : ℕ) : PiLp 2 (fun _ : Fin n => ℝ) ≃ᵐ (Fin n 
     2. piFinSuccAbove 0 : (Fin 4 → ℝ) → ℝ × (Fin 3 → ℝ)
     3. id × piLpMeasurableEquiv.symm : ℝ × (Fin 3 → ℝ) → ℝ × SpatialCoords
 -/
-def spacetimeDecomp : SpaceTime ≃ᵐ ℝ × SpatialCoords :=
+@[expose] def spacetimeDecomp : SpaceTime ≃ᵐ ℝ × SpatialCoords :=
   (piLpMeasurableEquiv STDimension).trans
   ((MeasurableEquiv.piFinSuccAbove (fun _ => ℝ) 0).trans
   (MeasurableEquiv.prodCongr (MeasurableEquiv.refl ℝ)
@@ -88,7 +88,7 @@ theorem spacetimeDecomp_measurePreserving :
 
 /-- Spacetime decomposition maps k to (k 0, spatialPart k). -/
 theorem spacetimeDecomp_apply (k : SpaceTime) :
-    spacetimeDecomp k = (k 0, spatialPart k) := rfl
+    spacetimeDecomp k = (k 0, spatialPart k) := by rfl
 
 /-- `spacetimeDecomp.symm` equals `spacetimeOfTimeSpace` (from SchwartzProdIntegrable.lean).
     Both construct a SpaceTime point from time t and spatial coordinates v.

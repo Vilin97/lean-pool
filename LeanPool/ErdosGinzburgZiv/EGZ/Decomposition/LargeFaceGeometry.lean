@@ -17,7 +17,7 @@ containing that set have strictly decreasing dimension in a nested polytope
 sequence satisfying the no-repetition condition.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.RationalPolytope.Face
 
@@ -40,6 +40,7 @@ theorem mem_of_mem_affineSpan_subset {d : ℕ} {P : RationalPolytope d} (Γ : P.
   Γ.mem_of_mem_affineSpan hqP (affineSpan_mono ℝ hS hq)
 
 /-- Dimension of the affine hull of a face. -/
+@[expose]
 noncomputable def dimension {d : ℕ} {P : RationalPolytope d} (Γ : P.Face) : ℕ :=
   Module.finrank ℝ (affineSpan ℝ Γ.carrier).direction
 

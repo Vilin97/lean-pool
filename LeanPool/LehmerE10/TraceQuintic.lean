@@ -25,20 +25,20 @@ carried out here.
 Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
-@[expose] public section
+public section
 
 namespace LehmerE10
 
 
 /-- Lehmer's polynomial as a function on ℂ. -/
-noncomputable def lehmerC (z : ℂ) : ℂ :=
+@[expose] noncomputable def lehmerC (z : ℂ) : ℂ :=
   z ^ 10 + z ^ 9 - z ^ 7 - z ^ 6 - z ^ 5 - z ^ 4 - z ^ 3 + z + 1
 
 /-- The degree-5 TRACE polynomial over ℝ (for root location). -/
 def traceQ (y : ℝ) : ℝ := y ^ 5 + y ^ 4 - 5 * y ^ 3 - 5 * y ^ 2 + 4 * y + 3
 
 /-- Trace polynomial over ℂ. -/
-noncomputable def traceQC (y : ℂ) : ℂ := y ^ 5 + y ^ 4 - 5 * y ^ 3 - 5 * y ^ 2 + 4 * y + 3
+@[expose] noncomputable def traceQC (y : ℂ) : ℂ := y ^ 5 + y ^ 4 - 5 * y ^ 3 - 5 * y ^ 2 + 4 * y + 3
 
 @[simp] theorem traceQC_ofReal (y : ℝ) : traceQC (y : ℂ) = (traceQ y : ℂ) := by
   unfold traceQC traceQ; push_cast; ring

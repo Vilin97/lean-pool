@@ -18,12 +18,13 @@ of `t` disjoint strands, strand `k` joining incoming boundary label
 gives the strand bundle.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The permutation fragment of `σ`: strand `k` joins incoming
 label `k` to outgoing label `t + σ k`. -/
+@[expose]
 def permFragment {t : ℕ} (σ : Equiv.Perm (Fin t)) :
     Fragment (Fin (t + t)) where
   Flag := Fin t × Bool
@@ -77,6 +78,7 @@ theorem permFragment_one (t : ℕ) :
 
 /-- The label re-indexing that fixes incoming labels and permutes
 outgoing labels by `σ`. -/
+@[expose]
 def permHighEquiv {t : ℕ} (σ : Equiv.Perm (Fin t)) :
     Fin (t + t) ≃ Fin (t + t) where
   toFun ℓ :=

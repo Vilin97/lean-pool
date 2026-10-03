@@ -17,7 +17,7 @@ point increases a bounded rank, the number of sets containing a point is
 uniformly bounded. This is the counting induction used for large faces.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -28,7 +28,7 @@ attribute [local instance] Classical.propDecidable
 variable {α I : Type*} [Fintype α] [Fintype I]
 
 /-- Mass of a set for a finite real-valued weight. -/
-noncomputable def mass (w : α → ℝ) (S : Set α) : ℝ :=
+@[expose] noncomputable def mass (w : α → ℝ) (S : Set α) : ℝ :=
   ∑ a, if a ∈ S then w a else 0
 
 @[simp]

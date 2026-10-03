@@ -17,7 +17,7 @@ cycle-sum identity from realized power sums to arbitrary
 prospective ones.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

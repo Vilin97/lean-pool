@@ -23,4 +23,4 @@ import Mathlib.Tactic.NormNum.GCD
 Compatibility root corresponding to upstream `Monlib.lean`.
 -/
 
-@[expose] public section
+public section

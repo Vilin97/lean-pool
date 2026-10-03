@@ -53,7 +53,7 @@ they just stop being a Peirce decomposition. Callers wanting the FK reading shou
 in hand from `IsOrthIdemFamily`; the theorem simply does not need to be told.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

@@ -34,7 +34,7 @@ various properties and usual arithmetic operations on natural numbers.
 
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -207,7 +207,7 @@ theorem succ_mem_Nat' {n} (h : n ∈ Nat) : insert n n ∈ Nat := by
 The successor function `succ` is build from the insertion of a set into itself embedded into the
 `ZFNat` type.
 -/
-def succ (n : ZFNat) : ZFNat :=
+@[expose] def succ (n : ZFNat) : ZFNat :=
   let ⟨n, h⟩ := n
   have p : insert n n ∈ Nat := succ_mem_Nat' h
   ⟨insert n n, p⟩
@@ -543,7 +543,7 @@ theorem pred_in_Nat' ⦃x : ZFSet⦄ (h : x ∈ Nat) : (⋃₀ x : ZFSet) ∈ Na
     rw [sUnion_insert_nat] <;> assumption
 
 /-- The predecessor function on natural numbers, defined directly as the union of a set. -/
-def pred (x : ZFNat) : ZFNat := x.map sUnion pred_in_Nat'
+@[expose] def pred (x : ZFNat) : ZFNat := x.map sUnion pred_in_Nat'
 
 theorem pred_eq (n : ZFNat) : pred n = ⟨⋃₀ n.val, pred_in_Nat' n.property⟩ := rfl
 

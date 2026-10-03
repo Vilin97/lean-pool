@@ -35,7 +35,7 @@ omnific integer into irreducibles agree up to order and units.
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz
 
@@ -48,20 +48,24 @@ theorem mem_normalFormOmnificIntegers_iff (x : SurrealHahnSeries.{u}) :
 
 /-- A ring equivalence from surreal numbers to surreal Hahn series identifies Conway's
 cut-defined omnific integers with the normal-form subring `omnificIntegers`. -/
+@[expose]
 def NormalFormIdentifiesOmnificIntegers : Prop :=
   ∃ e : Surreal.{u} ≃+* SurrealHahnSeries.{u},
     ∀ x : Surreal.{u}, IsConwayOmnificInteger x ↔ e x ∈ omnificIntegers
 
 /-- Every omnific integer is primal. Equivalently, `Oz` is a pre-Schreier ring. -/
+@[expose]
 def EveryOmnificIntegerIsPrimal : Prop :=
   ∀ x : (omnificIntegers : Subring SurrealHahnSeries.{u}), IsPrimal x
 
 /-- Every irreducible omnific integer is prime. -/
+@[expose]
 def IrreducibleIsPrime : Prop :=
   ∀ x : (omnificIntegers : Subring SurrealHahnSeries.{u}), Irreducible x → Prime x
 
 /-- Unique factorisation: two products of irreducible omnific integers that agree up to a unit
 have the same factors up to order and association. -/
+@[expose]
 def IrreducibleFactorizationsAreUnique : Prop :=
   ∀ f g : Multiset (omnificIntegers : Subring SurrealHahnSeries.{u}),
     (∀ x ∈ f, Irreducible x) → (∀ x ∈ g, Irreducible x) →

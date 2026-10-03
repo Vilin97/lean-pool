@@ -16,7 +16,7 @@ that reduction independently of the edge-addition machinery and gives a
 certificate interface suited to explicit chip-firing arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

@@ -21,7 +21,7 @@ The theorem is a conditional API: it does not prove its restricted restart-law h
 not by itself associate a Markov or Hunt process with a transition semigroup.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

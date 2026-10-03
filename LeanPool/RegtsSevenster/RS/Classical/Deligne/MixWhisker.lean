@@ -31,7 +31,7 @@ odd line is killed by `W ⊗ −`; for `W` a monoid object with
 nonzero unit this is automatic, since the odd line is invertible.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

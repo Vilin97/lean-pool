@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Finite packet assembly commutes with the genuine time-within/spatial jets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,7 +26,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Slice differentiable, given by `DifferentiableWithinAt ℝ (fun t => f (t,z.2)) s z.1 ∧
 DifferentiableAt ℝ (fun y => f (z.1,y)) z.2`. -/
-def SliceDifferentiable (s : Set ℝ) (f : Domain → E) (z : Domain) : Prop :=
+@[expose] def SliceDifferentiable (s : Set ℝ) (f : Domain → E) (z : Domain) : Prop :=
   DifferentiableWithinAt ℝ (fun t => f (t,z.2)) s z.1 ∧
     DifferentiableAt ℝ (fun y => f (z.1,y)) z.2
 

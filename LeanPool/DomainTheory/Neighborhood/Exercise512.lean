@@ -62,7 +62,7 @@ Everything is choice-free in spirit; the only classical input is inherited from
 (Example 1.2) and the project's `Element.ext` / `ext_of_toElementMap` machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise512
 

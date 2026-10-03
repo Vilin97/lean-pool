@@ -21,4 +21,4 @@ This aggregator exposes the exact separator contract and the fully proved conver
 separator certificate to the next nice multivalued function and its canonical partition witness.
 -/
 
-@[expose] public section
+public section

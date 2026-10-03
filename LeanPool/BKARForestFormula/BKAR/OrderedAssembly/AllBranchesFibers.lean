@@ -18,7 +18,7 @@ support/order form of the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -260,6 +260,7 @@ support/order fibers not already killed by the structural zero lemmas: the
 target support is nonempty and the target order is strictly longer than the
 child prefix.
 -/
+@[expose]
 def boundarySupportOrderTreeFiberNontrivialIntegrable
     (choices : ActiveExtensionChoice V) :
     Nat → (F : Forest V) → List (Edge V) → List ℝ → ℝ →
@@ -542,6 +543,7 @@ theorem boundarySupportOrderTreeContribution_eq_sum_treeFiber_of_activeEdges_car
 The final root support/order contribution: the empty sector contributes
 `ρ zeroConfig`, and every nonempty sector is supplied by the folded tree fiber.
 -/
+@[expose]
 noncomputable def rootBoundarySupportOrderContribution
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ)

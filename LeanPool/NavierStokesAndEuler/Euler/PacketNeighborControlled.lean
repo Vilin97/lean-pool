@@ -28,7 +28,7 @@ the neighbor-data contribution in the Duhamel estimate rather than requiring
 the perturbed velocity to have exactly the center initial data.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -151,7 +151,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -297,7 +297,7 @@ theorem controlled_neighbor_relative_error_within
   exact hb.trans (mul_le_mul_of_nonneg_right hcoef hFp)
 
 /-- Neighbor stability constant, given by `1000000000*exp 6`. -/
-def neighborStabilityConstant : ℝ := 1000000000*exp 6
+@[expose] def neighborStabilityConstant : ℝ := 1000000000*exp 6
 
 theorem neighborStabilityConstant_ge : 1000000000 ≤ neighborStabilityConstant := by
   have h : 1 ≤ exp (6:ℝ) := one_le_exp_iff.mpr (by norm_num)

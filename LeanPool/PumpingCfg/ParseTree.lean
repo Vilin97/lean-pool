@@ -15,7 +15,7 @@ Defines `ChomskyNormalFormGrammar.parseTree`, binary parse trees for grammars in
 normal form, together with their yield and the subtree relation used by the pumping argument.
 -/
 
-@[expose] public section
+public section
 
 universe uN uT
 
@@ -48,7 +48,7 @@ def yield {n : g.NT} (p : parseTree n) : List T :=
   | node t₁ t₂ _ => yield t₁ ++ yield t₂
 
 /-- The `height` of a tree -/
-def height {n : g.NT} (p : parseTree n) : ℕ :=
+@[expose] def height {n : g.NT} (p : parseTree n) : ℕ :=
   match p with
   | leaf _ _ => 1
   | node t₁ t₂ _ => max (height t₁) (height t₂) + 1

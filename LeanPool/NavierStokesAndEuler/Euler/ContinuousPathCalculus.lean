@@ -21,7 +21,7 @@ derivatives, and factorial estimates therefore come directly from the
 coefficient, with no loss in the coefficient amplitude.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,7 +61,7 @@ synthesis. -/
 local instance instContinuousPathCalculus10 : NormedSpace ℝ (C(K,E) →L[ℝ] C(K,F)) := inferInstance
 
 /-- The actual coefficient-to-continuous-multiplier map is linear. -/
-def coefficientLinear : C(K,E →L[ℝ] F) →ₗ[ℝ] (C(K,E) →L[ℝ] C(K,F)) where
+@[expose] def coefficientLinear : C(K,E →L[ℝ] F) →ₗ[ℝ] (C(K,E) →L[ℝ] C(K,F)) where
   toFun := multiplier
   map_add' A B := by
     apply ContinuousLinearMap.ext
@@ -77,7 +77,7 @@ def coefficientLinear : C(K,E →L[ℝ] F) →ₗ[ℝ] (C(K,E) →L[ℝ] C(K,F))
     rfl
 
 /-- A bounded linear map in the actual uniform coefficient norm. -/
-def coefficientMap : C(K,E →L[ℝ] F) →L[ℝ] (C(K,E) →L[ℝ] C(K,F)) where
+@[expose] def coefficientMap : C(K,E →L[ℝ] F) →L[ℝ] (C(K,E) →L[ℝ] C(K,F)) where
   toLinearMap := coefficientLinear
   cont := AddMonoidHomClass.continuous_of_bound (coefficientLinear (K := K) (E := E) (F := F))
     1 (fun A => by

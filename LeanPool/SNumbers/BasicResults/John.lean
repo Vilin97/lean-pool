@@ -68,7 +68,7 @@ norm (`c‖x‖ ≤ p x ≤ C‖x‖`, `c > 0`). The ellipsoid `T (B₂)` lies i
   topological double dual).
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -268,6 +268,7 @@ lemma isCompact_contact (q : Seminorm 𝕜 (EuclideanSpace 𝕜 (Fin k))) :
 /-- The self-adjoint **rank-one operator** `u ⊗ u : x ↦ ⟪u, x⟫ • u`. The John
 decomposition of identity expresses `id` as a positive combination of these over
 contact points. -/
+@[expose]
 noncomputable def rankOneSA (u : EuclideanSpace 𝕜 (Fin k)) :
     EuclideanSpace 𝕜 (Fin k) →L[𝕜] EuclideanSpace 𝕜 (Fin k) :=
   (innerSL 𝕜 u).smulRight u

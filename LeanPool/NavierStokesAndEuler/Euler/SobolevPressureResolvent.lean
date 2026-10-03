@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevCoefficientPressure
 /-! Exact resolvent identities for the actual coercive pressure operators on complete Sobolev
 spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

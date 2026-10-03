@@ -18,7 +18,7 @@ This file constructs the derivative of a C¹ coefficient times any actual AC
 representative with Bochner L² value and derivative classes.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (A A' : C(Icc (0 : ℝ) T, E →L[ℝ] F))
 
 /-- The product derivative is constructed in the actual L² space. -/
-def fieldProductDerivative (p q : TimeLp T E) : TimeLp T F :=
+@[expose] def fieldProductDerivative (p q : TimeLp T E) : TimeLp T F :=
   timeMultiplier T hT A' p + timeMultiplier T hT A q
 
 /-- The constructed derivative is the pointwise Leibniz expression a.e. -/
@@ -113,6 +113,7 @@ theorem fieldProduct_h1 (p q : TimeLp T E) (η : ℝ → E)
 /-- The constructed derivative has the expected operator-norm bound. -/
 theorem fieldProductDerivative_norm_le (p q : TimeLp T E) :
     ‖fieldProductDerivative T hT A A' p q‖ ≤ ‖A'‖*‖p‖+‖A‖*‖q‖ :=
-  (norm_add_le _ _).trans (add_le_add (timeApply_bound T hT A' p) (timeApply_bound T hT A q))
+  (norm_add_le _ _).trans
+    (add_le_add (timeMultiplier_bound T hT A' p) (timeMultiplier_bound T hT A q))
 
 end EulerTimeH1FieldProduct

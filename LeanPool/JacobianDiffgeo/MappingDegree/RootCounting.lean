@@ -33,7 +33,7 @@ This file has zero project imports; `LocalConstancy.lean` bridges `analyticOrder
 `RS.multiplicity` via local-multiplicity's chart invariance.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Polynomial
 open scoped Topology

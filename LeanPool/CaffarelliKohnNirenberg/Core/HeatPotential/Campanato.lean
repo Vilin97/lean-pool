@@ -16,7 +16,7 @@ public import Mathlib.Analysis.Normed.Group.InfiniteSum
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -32,6 +32,7 @@ open CKN.Foundation.Heat CKN.Foundation.Parabolic
 
 
 /-- Contribution of scalar and divergence sources restricted to one integration shell. -/
+@[expose]
 def heatPotentialShellValue (F : ParabolicPoint → ℝ)
     (G : Fin 3 → ParabolicPoint → ℝ) (S : Set ParabolicPoint)
     (w : ParabolicPoint) : ℝ :=

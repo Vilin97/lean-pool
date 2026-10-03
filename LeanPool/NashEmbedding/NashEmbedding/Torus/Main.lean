@@ -44,7 +44,7 @@ The injective piece comes from adjoining a `√δ'`-scaled flat-torus embedding.
   `2πℤⁿ`-periodic metric is injectively realizable.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open NashEmbedding.Sobolev Matrix

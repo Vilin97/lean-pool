@@ -28,7 +28,7 @@ Its source Hessian need not satisfy a smallness condition on the full
 history-plus-forward time interval.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,14 +43,14 @@ variable {P : ℝ} [Fact (0 < P)]
   (B : HistoryData (D.initial τ hτ hτT.le)) {raw : VectorField} (G : Forcing P D raw)
 
 /-- The terminal coordinate of the actual local history, used as forward data. -/
-def forwardInitial : InitialData P (D.tail τ hτ.le hτT) where
+@[expose] def forwardInitial : InitialData P (D.tail τ hτ.le hτT) where
   value := (B.terminalInitial (G.initial τ hτ hτT.le)).value
   orbit := (B.terminalInitial (G.initial τ hτ hτT.le)).orbit
   mean_zero := (B.terminalInitial (G.initial τ hτ hτT.le)).mean_zero
 
 theorem forwardInitial_eq :
     ((forwardInitial τ hτ hτT B G).value : CylinderL2 P U) =
-      B.coordinatePath (G.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩ := rfl
+      B.coordinatePath (G.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩ := by rfl
 
 end EulerTransversePacketJoin
 
@@ -59,7 +59,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,31 +78,31 @@ variable {P : ℝ} [Fact (0 < P)]
   (B : HistoryData (D.initial τ hτ hτT.le)) {raw : VectorField} (G : Forcing P D raw)
 
 /-- Past velocity, given by `B.velocityPath (G.initial τ hτ hτT.le)`. -/
-def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
+@[expose] def pastVelocity : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   B.velocityPath (G.initial τ hτ hτT.le)
 
 /-- Future velocity, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
 hτT).velocityPath (forwardInitial τ hτ hτT B G))`. -/
-def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
+@[expose] def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).velocityPath (forwardInitial τ hτ hτT B G))
 
 /-- Past derivative, given by `B.derivativePath (G.initial τ hτ hτT.le)`. -/
-def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
+@[expose] def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
   B.derivativePath (G.initial τ hτ hτT.le)
 
 /-- Future derivative, given by `includePath P D.support D.support_measurable ((G.tail τ hτ.le
 hτT).derivativePath (forwardInitial τ hτ hτT B G))`. -/
-def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
+@[expose] def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
   includePath P D.support D.support_measurable
     ((G.tail τ hτ.le hτT).derivativePath (forwardInitial τ hτ hτT B G))
 
 /-- Past pressure, given by `B.pressurePath (G.initial τ hτ hτT.le)`. -/
-def pastPressure : C(Icc (0 : ℝ) τ,CylinderL2 P ℝ) :=
+@[expose] def pastPressure : C(Icc (0 : ℝ) τ,CylinderL2 P ℝ) :=
   B.pressurePath (G.initial τ hτ hτT.le)
 
 /-- Future pressure, given by `(G.tail τ hτ.le hτT).pressurePath (forwardInitial τ hτ hτT B G)`. -/
-def futurePressure : C(Icc (0 : ℝ) (D.T-τ),CylinderL2 P ℝ) :=
+@[expose] def futurePressure : C(Icc (0 : ℝ) (D.T-τ),CylinderL2 P ℝ) :=
   (G.tail τ hτ.le hτT).pressurePath (forwardInitial τ hτ hτT B G)
 
 theorem pastVelocity_orbit :
@@ -162,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

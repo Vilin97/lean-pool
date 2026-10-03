@@ -13,7 +13,7 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSubdiv
 
 /-! # Core automorphisms on closed subdivision faces -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.ClosedCoreSymmetry
 open Utilities
@@ -122,6 +122,7 @@ theorem rep_eq_iff (u v : Fin n) :
   rw [compFold_iff, compFold_iff, reach_map_iff symmetry length]
 
 /-- The core symmetry induces an equivalence of contracted vertex classes. -/
+@[expose]
 noncomputable def classEquiv :
     {v : Fin n // compFold core (zeroSet length) v = v} ≃
       {v : Fin n // compFold core (zeroSet (targetLength symmetry length)) v = v} :=
@@ -227,6 +228,7 @@ theorem isLoopy_iff :
         simpa [ht, hh] using htarget
 
 /-- Relabel the canonical forest contraction along a core symmetry. -/
+@[expose]
 noncomputable def relabeling (hn : 0 < n) (hForest : IsForest core (zeroSet length))
     (hNotLoopy : ¬ IsLoopy core (zeroSet length)) :
     (censusSpec core hn length hForest hNotLoopy).Relabeling

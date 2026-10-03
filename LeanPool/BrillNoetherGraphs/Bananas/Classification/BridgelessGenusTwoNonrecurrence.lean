@@ -19,7 +19,7 @@ unique vertex representative.  This module packages that argument with the
 library's `TwoEdgeCutCondition` as the no-bridge hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

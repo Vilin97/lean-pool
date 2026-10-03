@@ -35,7 +35,7 @@ Infrastructure lemmas needed to apply `generalizedResidueTheorem'` to
 * `residueSimplePole_logDeriv_eq_zero_at_nonzero` — residue = 0 at non-zeros
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -366,7 +366,7 @@ private lemma residueSimplePole_congr_local (F G : ℂ → ℂ) (z₀ : ℂ)
 
 omit f hf in
 /-- The logarithmic derivative of `F`, patched to a fixed value at the points of `S0`. -/
-noncomputable def logDerivPatched (F : ℂ → ℂ) (S0 : Finset ℂ)
+@[expose] noncomputable def logDerivPatched (F : ℂ → ℂ) (S0 : Finset ℂ)
     (hsp : ∀ s ∈ S0, HasSimplePoleAt F s) : ℂ → ℂ := fun z =>
   if h : z ∈ S0 then
     Classical.choose (Classical.choose_spec (hsp z h)) z

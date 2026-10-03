@@ -25,7 +25,7 @@ section
 /-! The actual lifted gradient and divergence constraints persist under every available strong
 derivative word. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -37,7 +37,7 @@ open EulerLiftedGradientSpace EulerCylinderSobolevSpace
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The genuine orthogonal lifted gradient projection acting on the complete Sobolev scale. -/
-def sobolevGradientProjection (q : ℕ) (κ : ℝ) (m : Vector3) :
+@[expose] def sobolevGradientProjection (q : ℕ) (κ : ℝ) (m : Vector3) :
     SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   liftOperator period q (gradientProjection period κ m)
     (fun a f => (gradientProjection_translation period κ m a f).symm)
@@ -103,7 +103,7 @@ section
 /-! Every energy-order word of the actual heat-regularized mild solution obeys its genuine L²
 differential equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -120,7 +120,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- A genuinely regularized derivative word as a bounded map from the source Sobolev space into H².
 -/
-def regularizedWordBlock {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4) :
+@[expose] def regularizedWordBlock {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4) :
     SobolevSpace period q →L[ℝ] SobolevSpace period 2 :=
   (boundedWordBlock period 2 m (by omega : 2+m ≤ q+3) w).comp (heatRegularizer period q n)
 
@@ -146,7 +146,7 @@ theorem regularizedWordBlock_value {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w :
   exact heatRegularizer_word period n hm w u
 
 /-- The actual regularized energy-order word path. -/
-def regularizedWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4)
+@[expose] def regularizedWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4)
     (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) :
     C(Icc (0 : ℝ) T, SobolevSpace period 2) :=
   mapPath period T ((regularizedWordBlock period hm n w).comp (truncateOperator period q)) u
@@ -216,7 +216,7 @@ section
 
 /-! Exact bounded observations of genuine higher-order Bochner representatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +255,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -283,7 +283,7 @@ theorem field_heat_timeLp_tendsto (T : ℝ) (u : TimeLp T (LiftL2 period)) :
 
 /-- An actual regularized energy-order derivative of a continuous low-order source, as an L² time
 path. -/
-def sourceWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4)
+@[expose] def sourceWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4)
     (T : ℝ) (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) : C(Icc (0 : ℝ) T, LiftL2 period) :=
   ((valueOperator period 2).comp (regularizedWordBlock period hm n w)).compLeftContinuous ℝ (Icc (0
       : ℝ) T) f
@@ -367,7 +367,7 @@ section
 
 /-! Continuous time-path application and its exact Bochner compatibility. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -380,7 +380,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- The actual pointwise action of a continuous operator path on a continuous field path. -/
-def timePathApply (T : ℝ) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F))
+@[expose] def timePathApply (T : ℝ) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F))
     (u : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T, F) :=
   ⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩
 
@@ -407,7 +407,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -421,7 +421,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual transport-pressure forcing in the regularized energy-word PDE. -/
-def forcingWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4) (T : ℝ)
+@[expose] def forcingWordPath {q m : ℕ} (hm : m ≤ q + 1) (n : ℕ) (w : Fin m → Fin 4) (T : ℝ)
     (A : C(Icc (0 : ℝ) T, SobolevSpace period 1 →L[ℝ] LiftL2 period))
     (G : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
     (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1)))
@@ -479,7 +479,7 @@ theorem regularized_word_hasDerivAt_clamped {q m : ℕ} (hm : m ≤ q + 1) (n : 
   exact h
 
 /-- The literal forcing obtained from full energy-order source, state, and pressure time fields. -/
-def forcingWordTime {q m : ℕ} (hm : m ≤ q + 1) (w : Fin m → Fin 4) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def forcingWordTime {q m : ℕ} (hm : m ≤ q + 1) (w : Fin m → Fin 4) (T : ℝ) (hT : 0 ≤ T)
     (A : C(Icc (0 : ℝ) T, SobolevSpace period 1 →L[ℝ] LiftL2 period))
     (G : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
     (U : TimeLp T (SobolevSpace period (2 + q))) (F P : TimeLp T (SobolevSpace period (q + 1))) :
@@ -525,7 +525,7 @@ section
 /-! The actual energy-order regularized words converge uniformly in time and preserve pressure
 closedness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -539,7 +539,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The unregularized energy-order word retained as an actual H⁰ time path. -/
-def energyWordPath {q m : ℕ} (hm : m ≤ q + 1) (w : Fin m → Fin 4)
+@[expose] def energyWordPath {q m : ℕ} (hm : m ≤ q + 1) (w : Fin m → Fin 4)
     (T : ℝ) (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) :
     C(Icc (0 : ℝ) T, SobolevSpace period 0) :=
   mapPath period T (boundedWordBlock period 0 m (by omega : 0+m ≤ q+1) w) u
@@ -611,7 +611,7 @@ section
 /-! Actual finite families of continuous and Bochner time fields, with exact norm-topology
 compatibility. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -623,7 +623,7 @@ open scoped Topology
 variable {I E : Type*} [Fintype I] [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- A finite family of continuous time paths as the actual continuous family-valued path. -/
-def familyPath (T : ℝ) (u : I → C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T, I → E) :=
+@[expose] def familyPath (T : ℝ) (u : I → C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T, I → E) :=
   ⟨fun t i => u i t, continuous_pi (fun i => (u i).continuous)⟩
 
 omit [Fintype I] [NormedSpace ℝ E] in
@@ -688,7 +688,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -712,7 +712,7 @@ def regularizedFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 
   familyPath T (fun j => regularizedWordPath period (hd i j) n (w i j) T u)
 
 /-- The genuine L² values of the regularized energy-word family. -/
-def regularizedValueFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
+@[expose] def regularizedValueFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
     (hd : ∀ i j, d i j ≤ q + 1) (n : ℕ) (T : ℝ)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (i : α) :
     C(Icc (0 : ℝ) T, β → LiftL2 period) :=
@@ -720,7 +720,7 @@ def regularizedValueFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) →
     (regularizedWordPath period (hd i j) n (w i j) T u))
 
 /-- The actual original energy-order derivative family as a continuous L² path. -/
-def energyValueFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
+@[expose] def energyValueFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
     (hd : ∀ i j, d i j ≤ q + 1) (T : ℝ)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (i : α) :
     C(Icc (0 : ℝ) T, β → LiftL2 period) :=
@@ -738,7 +738,7 @@ theorem regularizedValueFamily_tendsto (d : α → β → ℕ) (w : ∀ i j, Fin
   familyPath_tendsto T _ _ (fun j => regularizedWordPath_value_tendsto period (hd i j) (w i j) T u)
 
 /-- The actual finite family of regularized forcing words in the differentiated PDE. -/
-def regularizedForcingFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
+@[expose] def regularizedForcingFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
     (hd : ∀ i j, d i j ≤ q + 1) (n : ℕ) (T : ℝ)
     (A : C(Icc (0 : ℝ) T, SobolevSpace period 1 →L[ℝ] LiftL2 period))
     (G : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
@@ -748,7 +748,7 @@ def regularizedForcingFamily (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) �
   familyPath T (fun j => forcingWordPath period (hd i j) n (w i j) T A G u f p)
 
 /-- The limiting actual finite forcing family represented in Bochner L² time. -/
-def forcingFamilyTime (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
+@[expose] def forcingFamilyTime (d : α → β → ℕ) (w : ∀ i j, Fin (d i j) → Fin 4)
     (hd : ∀ i j, d i j ≤ q + 1) (T : ℝ) (hT : 0 ≤ T)
     (A : C(Icc (0 : ℝ) T, SobolevSpace period 1 →L[ℝ] LiftL2 period))
     (G : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))

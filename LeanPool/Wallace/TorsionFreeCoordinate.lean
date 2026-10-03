@@ -37,7 +37,7 @@ Abelian group of cardinality continuum embeds in the rational direct sum of cont
 way whose image contains every standard basis vector.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Module
 

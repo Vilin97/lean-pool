@@ -15,7 +15,7 @@ Steps: (i) `Relaxed.Basic.allocation_relaxation`; (ii) `Relaxed.Columns.sum_colV
 `Relaxed.Basic.padicValRat_scale_one_level`; (iii)–(iv) the identity (8.1)+(8.2) in the combined
 form `−norm_p − relax = n ψ(x) + E_p`, `E_p = (p − 12n − 8r₀ + 2s₀ − 1)/(4p)`; (v) `E_p < 3/4`. -/
 
-@[expose] public section
+public section
 namespace Zeta32.Arith.Relaxed
 open Zeta32
 

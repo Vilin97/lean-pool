@@ -21,7 +21,7 @@ The state here uses the same active primary labels, physical base error,
 common gauge, and actual temporal/rank constructors as initialization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ActualInitialCoherence
@@ -40,6 +40,7 @@ abbrev Point := PressureStream.Lift Plane
 
 /-- Pieces, defined pointwise by `CorrectionInitialization.ActualPrimary.piece
 CorrectionInitialization.ActualPrimary.standardRegion l.2 l.1`. -/
+@[expose]
 noncomputable def pieces (B N0 : ℕ) :
     CorrectionInitialization.ActualPrimary.Label B N0 × Fin 2 →
         CorrectionInitialization.PrimaryPiece (Point × ℝ) :=
@@ -47,18 +48,19 @@ noncomputable def pieces (B N0 : ℕ) :
       CorrectionInitialization.ActualPrimary.standardRegion l.2 l.1
 
 /-- Base error, constructed using `ActualBaseResidual.baseError`. -/
+@[expose]
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError CorrectionInitialization.ActualPrimary.certificate
       CorrectionInitialization.ActualPrimary.modulation
           CorrectionInitialization.ActualPrimary.upper B
 
 /-- Seed, constructed using `CorrectionInitialization.bandSeed`. -/
-noncomputable def seed (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def seed (B N0 : ℕ) : State Point :=
   CorrectionInitialization.bandSeed (CorrectionInitialization.ActualPrimary.activeLabels
       CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
 /-- Primary, constructed using `CorrectionInitialization.GaugeInitialization.primaryBands`. -/
-noncomputable def primary (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def primary (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.primaryBands
       CorrectionInitialization.ActualPrimary.commonGauge
           (CorrectionInitialization.ActualPrimary.commonContext B)
@@ -66,6 +68,7 @@ noncomputable def primary (B N0 : ℕ) : State Point :=
         CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
 /-- Temporal, constructed using `CorrectionInitialization.GaugeInitialization.temporalBands`. -/
+@[expose]
 noncomputable def temporal (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.temporalBands
       CorrectionInitialization.ActualPrimary.commonGauge CorrectionInitialization.ActualPrimary.h
@@ -75,6 +78,7 @@ noncomputable def temporal (B N0 : ℕ) : State Point :=
         CorrectionInitialization.ActualPrimary.standardRegion B N0) (pieces B N0) (baseError B)
 
 /-- Ranked, constructed using `CorrectionInitialization.GaugeInitialization.rankBands`. -/
+@[expose]
 noncomputable def ranked (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.rankBands
       CorrectionInitialization.ActualPrimary.commonGauge
@@ -87,6 +91,7 @@ noncomputable def ranked (B N0 : ℕ) : State Point :=
 
 /-- Initialized, constructed using
 `CorrectionInitialization.GaugeInitialization.initializedBands`. -/
+@[expose]
 noncomputable def initialized (B N0 : ℕ) : State Point :=
   CorrectionInitialization.GaugeInitialization.initializedBands
       CorrectionInitialization.ActualPrimary.commonGauge
@@ -644,19 +649,22 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary GaugeStateC
 variable {B N0 : ℕ}
 
 /-- Phase, given by `(pieces B N0 l).coefficients.phase n (x, 0)`. -/
+@[expose]
 noncomputable def phase (l : Label B N0 × Fin 2) (n : ℕ) (x : Point) : ℝ :=
   (pieces B N0 l).coefficients.phase n (x, 0)
 
 /-- Angular mode, given by `PrimaryGeometryAssembly.angularMode certificate modulation (choice B
 N0).prepared l.2 l.1`. -/
+@[expose]
 noncomputable def angularMode (l : Label B N0 × Fin 2) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1
 
 /-- Primary block, given by `(pieces B N0 l).harmonicBlock (phase l) (angularMode l)`. -/
-noncomputable def primaryBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
+@[expose] noncomputable def primaryBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
   (pieces B N0 l).harmonicBlock (phase l) (angularMode l)
 
 /-- Gaussian block, given by `(pieces B N0 l).excludedBlock (phase l) (angularMode l)`. -/
+@[expose]
 noncomputable def gaussianBlock (l : Label B N0 × Fin 2) : HarmonicBlock Point :=
   (pieces B N0 l).excludedBlock (phase l) (angularMode l)
 
@@ -875,6 +883,7 @@ theorem initialized_band (B N0 n m k : ℕ)
 
 /-- Overlap, given by `standardRegion.carrier ∩ (bandSlowEquiv h n m) ⁻¹'
 standardRegion.carrier`. -/
+@[expose]
 noncomputable def overlap (n m : ℕ) : Set Plane :=
   standardRegion.carrier ∩ (bandSlowEquiv h n m) ⁻¹' standardRegion.carrier
 

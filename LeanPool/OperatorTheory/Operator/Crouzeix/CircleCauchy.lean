@@ -48,7 +48,7 @@ needed for the full Crouzeix--Palencia capstone.
   operator Cauchy formula.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set spectrum TopologicalSpace
 open scoped Real Interval

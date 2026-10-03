@@ -19,7 +19,7 @@ resulting boundary maps agree literally on overlaps.  This is the compatibility 
 applying polygonal Schoenflies face by face.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -49,7 +49,7 @@ theorem facePlaneHomeomorph_symm_mem_faceSide (f : K.Face) (i : ZMod 3)
   rwa [heq]
 
 /-- The source-support point named by a standard face-boundary point. -/
-noncomputable def faceBoundarySupportPoint (f : K.Face)
+@[expose] noncomputable def faceBoundarySupportPoint (f : K.Face)
     (p : StandardFaceBoundary) : K.support :=
   faceToSupport (K := K) f
     ((K.facePlaneHomeomorph f).symm
@@ -74,7 +74,7 @@ theorem faceBoundarySupportPoint_mem_oneSkeleton (f : K.Face)
     ⟨K.faceEdge f i, K.faceBoundarySupportPoint_mem_edge f i p hi⟩
 
 /-- The canonical lift of a standard triangular frontier to the source one-skeleton. -/
-noncomputable def faceBoundaryLift (f : K.Face) :
+@[expose] noncomputable def faceBoundaryLift (f : K.Face) :
     StandardFaceBoundary → oneSkeletonInSupport (K := K) :=
   fun p ↦ ⟨K.faceBoundarySupportPoint f p,
     K.faceBoundarySupportPoint_mem_oneSkeleton f p⟩
@@ -334,14 +334,14 @@ theorem faceBoundarySubdivision_support (f : K.Face) :
 
 /-- The first globally oriented standard corner, typed as a vertex of the standard boundary
 graph. -/
-noncomputable def faceEdgeFirstBoundaryVertex (f : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def faceEdgeFirstBoundaryVertex (f : K.Face) (i : ZMod 3) :
     standardTrianglePlaneComplex.oneSkeleton.Vertex := by
   change Fin 3
   exact K.faceEdgeFirstIndex f i
 
 /-- The second globally oriented standard corner, typed as a vertex of the standard boundary
 graph. -/
-noncomputable def faceEdgeSecondBoundaryVertex (f : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def faceEdgeSecondBoundaryVertex (f : K.Face) (i : ZMod 3) :
     standardTrianglePlaneComplex.oneSkeleton.Vertex := by
   change Fin 3
   exact K.faceEdgeSecondIndex f i

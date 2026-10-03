@@ -15,7 +15,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -28,7 +28,7 @@ universe u v
 namespace GraphCoveringTheory.Kurosh
 
 /-- Recover the raw symmetrified Bass-Serre path from a path-category morphism. -/
-def catPathToRaw {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)]
+@[expose] def catPathToRaw {ι : Type v} (G : ι → Type u) [∀ i, Group (G i)]
     {a b : Quiver.Symmetrify (RawBassSerreVertex G)}
     (p : (CategoryTheory.Paths.of
       (Quiver.Symmetrify (RawBassSerreVertex G))).obj a ⟶

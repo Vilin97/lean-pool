@@ -18,7 +18,7 @@ the first layer of the multiplicativity of the corrected
 constrained value over `disjUnion`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

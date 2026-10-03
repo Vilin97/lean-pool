@@ -21,7 +21,7 @@ dyadic mass, identifies its integrated Haar coefficients with the v5
 deletion imbalances, and proves the exact invariant-law `L²` identity.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Transport
 
@@ -35,6 +35,7 @@ variable {L m : ℕ}
 /-! ## The concrete v5 dyadic mass -/
 
 /-- The v5 deletion-mass tree below `v`, with `k` levels left to descend. -/
+@[expose]
 def stateDyadicMassAt (a : ℝ)
     (x : InventoryState (DyadicNode L) m) :
     (d k : ℕ) → DyadicNode d → DyadicMass k
@@ -232,6 +233,7 @@ theorem stateDyadicMass_nodeCoefficient
     simp [appendDyadicNode, dyadicRoot]
 
 /-- The canonical v5 integrated-Haar coefficient family. -/
+@[expose]
 def stateHaarCoefficient (a : ℝ)
     (x : InventoryState (DyadicNode L) m)
     (i : CompleteHaarNode L) : ℝ :=

@@ -23,7 +23,7 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 # MatchingLogic.EntryIII.Truth
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

@@ -16,7 +16,7 @@ The graph over `[a, b)` is covered, at level `n`, by the graphs over the level-`
 The constant `2` is crude but is all that is needed: the sharp value `1` is never used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

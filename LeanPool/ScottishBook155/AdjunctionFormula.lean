@@ -19,7 +19,7 @@ short-scale property: an excursion through the old target cannot shorten a
 source pair of distance at most `r`.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -35,6 +35,7 @@ theorem oneSum_dist_eq
 
 /-- Length of the cheapest source--target--source excursion in the proposed
 metric adjunction. -/
+@[expose]
 noncomputable def attachmentExcursionCost
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) : ℝ :=
@@ -45,12 +46,14 @@ noncomputable def attachmentExcursionCost
 
 /-- The manuscript's source--source adjunction distance formula, before the
 ambient quotient space is constructed. -/
+@[expose]
 noncomputable def sourceAdjunctionDist
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x₀ x₁ : OneSum M) : ℝ :=
   min (dist x₀ x₁) (attachmentExcursionCost V a y H x₀ x₁)
 
 /-- Distance candidate from a source point to an old-target point. -/
+@[expose]
 noncomputable def attachmentTargetCost
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) (x : OneSum M) (n : N) : ℝ :=
@@ -60,6 +63,7 @@ noncomputable def attachmentTargetCost
 /-- The two-layer adjunction predistance on the disjoint union of the source
 and old target.  The remaining construction step is to prove its triangle
 inequality and take its metric separation quotient. -/
+@[expose]
 noncomputable def adjunctionPreDist
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ) :
@@ -658,7 +662,7 @@ theorem adjunctionPreDist_triangle
 
 /-- The gluing pseudometric on the disjoint union of the one-sum source and target, under
 the attachment distance bound. -/
-@[implicit_reducible]
+@[implicit_reducible, expose]
 noncomputable def adjunctionPseudoMetricSpace
     {M : Type u} [NormedAddCommGroup M]
     {N : Type v} [PseudoMetricSpace N]
@@ -813,6 +817,7 @@ theorem adjunctionPreDist_source_eq_of_short
 
 /-- The metric separation quotient realizing the asymmetric metric
 adjunction. -/
+@[expose]
 noncomputable def AdjunctionSpace
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
@@ -832,6 +837,7 @@ noncomputable instance
     (adjunctionPseudoMetricSpace V a y H hattach).toUniformSpace.toTopologicalSpace
 
 /-- The canonical map from the one-sum source into the metric adjunction space. -/
+@[expose]
 noncomputable def adjunctionSourceMk
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
@@ -849,6 +855,7 @@ noncomputable instance adjunctionSpaceNonempty
   ⟨adjunctionSourceMk V a y H hattach 0⟩
 
 /-- The canonical map from the target into the metric adjunction space. -/
+@[expose]
 noncomputable def adjunctionTargetMk
     {M : Type u} [NormedAddCommGroup M] {N : Type v} [PseudoMetricSpace N]
     (V : M → N) (a : M) (y : N) (H : ℝ)

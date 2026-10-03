@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Descriptive.Tree
@@ -34,7 +34,7 @@ variable {A A' : Type*} {n : ℕ}
 noncomputable section «Section1»
 variable {S : tree A} {T : tree A'}
 /-- The set of points in `body S` where the body map of f is defined -/
-def bodyDom (f : OrderHom S T) : Set (Stream' A) := { a | a ∈ body S ∧
+@[expose] def bodyDom (f : OrderHom S T) : Set (Stream' A) := { a | a ∈ body S ∧
   Set.Unbounded Nat.le ((fun (x : S) ↦ (f x).val.length) '' { x | a ∈ principalOpen x }) }
 lemma bodyMap_uniq (f : OrderHom S T) {a : Stream' A} {x y : List A}
   {ha : a ∈ body S} (hx : a ∈ principalOpen x) (hy : a ∈ principalOpen y)
@@ -65,7 +65,7 @@ lemma bodyMap_pspec (f : OrderHom S T) (a : bodyDom f) {x}
   rfl
 
 /-- The induced map on branches -/
-def bodyMap (f : OrderHom S T) (a : bodyDom f) : body T :=
+@[expose] def bodyMap (f : OrderHom S T) (a : bodyDom f) : body T :=
   ⟨bodyMapVal f a, by
     intro y hy; apply mem_of_prefix (y := bodyMapChooseSpec f a y.length) _ (SetLike.coe_mem _)
     rw [principalOpen_iff_restrict] at hy; nth_rw 1 [hy]; apply List.prefix_iff_eq_take.mpr
@@ -106,9 +106,11 @@ variable {S T : Trees}
   refine ⟨⟨x.take (n + 1), hx _ (extend_sub _ _)⟩, extend_sub _ _, ?_⟩
   simp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps obj] def bodyPre : Prefunctor Trees (Type*) where
+@[expose] def bodyPre : Prefunctor Trees (Type*) where
   obj S := body S.2
   map f := TypeCat.ofHom fun a ↦ bodyMap f.toOrderHom ⟨a, by simp⟩
+
+@[simp] theorem bodyPre_obj (S : Trees) : bodyPre.obj S = body S.2 := by rfl
 @[ext] lemma bodyPre_obj_ext {x y : bodyPre.obj S} (h : x.val = y.val) : x = y :=
   Subtype.ext h
 lemma LenHom.bodyMap_spec (f : S ⟶ T) (a : body S.2)
@@ -128,7 +130,7 @@ lemma LenHom.bodyPre_map_restrict (f : S ⟶ T) (a : body S.2) n :
   · intro m hm _
     simpa [bodyPre] using LenHom.bodyMap_spec_res_lt f a hm
 /-- the body of a tree is functorial -/
-@[simps! obj] def bodyFunctor : Trees ⥤ Type* where
+@[expose] def bodyFunctor : Trees ⥤ Type* where
   obj S := body S.2
   map f := bodyPre.map f
   map_id _ := by
@@ -146,6 +148,9 @@ lemma LenHom.bodyPre_map_restrict (f : S ⟶ T) (a : body S.2) n :
       apply tree_ext
       exact LenHom.bodyPre_map_restrict f x (n + 1)
     simp_all
+
+@[simp] theorem bodyFunctor_obj (S : Trees) : bodyFunctor.obj S = body S.2 := by rfl
+
 instance bodySpace : TopologicalSpace (Tree.bodyFunctor.obj S) :=
   inferInstanceAs (TopologicalSpace (body S.2))
 lemma bodyMap_spec' (f : S ⟶ T) (a : body S.2)

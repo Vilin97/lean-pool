@@ -17,7 +17,7 @@ Composition is symmetric difference, so pairing-returning
 accumulations cancel by parity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

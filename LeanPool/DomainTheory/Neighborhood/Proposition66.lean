@@ -28,7 +28,7 @@ realising it is the only one (`iso_hom_unique`).
 Choice-free (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

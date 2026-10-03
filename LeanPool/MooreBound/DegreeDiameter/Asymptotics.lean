@@ -21,7 +21,7 @@ Lean Pool port of wewantmoore commit d59bd80ea93fabb9faf769e790ab47692645e022.
 The port adds a namespace and adapts proofs to the current Mathlib APIs and repository style.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 
@@ -34,7 +34,7 @@ open SimpleGraph
 /-- The exact interface required from the halved flag-graph construction.  The intentionally
 slightly weaker degree estimate `(p+1)^(2*k)` is the estimate proved directly by the construction
 and is all that the limiting arguments need. -/
-noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
+@[expose] noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V) (Δ : ℕ),
     Finite V ∧
       p ^ (2 * k * k) ≤ Nat.card V ∧
@@ -43,7 +43,7 @@ noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
       G.ediam ≤ (k : ℕ∞)
 
 /-- A construction theorem in precisely the form consumed below. -/
-def AsymptoticHalvedWitnessHypothesis : Prop :=
+@[expose] def AsymptoticHalvedWitnessHypothesis : Prop :=
   ∀ k p : ℕ, 0 < k → Nat.Prime p → AsymptoticHalvedWitness k p
 
 lemma maxDegreeLE_of_regular {V : Type*} {G : SimpleGraph V} {Δ : ℕ}

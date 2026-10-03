@@ -18,7 +18,7 @@ Tags: linear-programming, interior-point-methods, optimization, homogeneous-self
 MSC: 90C05, 90C51
 -/
 
-@[expose] public section
+public section
 
 /-!
 Top-level import for the HSD interior-point LP proof.

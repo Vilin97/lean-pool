@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Integration.
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -30,6 +30,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- The spatial velocity mean used in the centred source at each time. -/
+@[expose]
 def sourceSliceCentredMean (x : Vec3) (ρ : ℝ)
     (u : ParabolicPoint → Vec3) : ℝ → Vec3 :=
   fun s j => average (volume.restrict (vec3Ball x ρ))

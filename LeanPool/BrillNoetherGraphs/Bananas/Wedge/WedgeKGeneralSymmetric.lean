@@ -21,7 +21,7 @@ commuting the vertex wedge and swapping the marked vertices in the other
 case.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

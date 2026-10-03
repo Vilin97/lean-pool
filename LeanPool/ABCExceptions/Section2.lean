@@ -21,7 +21,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # LeanPool.ABCExceptions.Section2
 -/
 
-@[expose] public section
+public section
 
 open Finset UniqueFactorizationMonoid
 

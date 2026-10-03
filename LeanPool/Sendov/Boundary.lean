@@ -46,7 +46,7 @@ interior argument.
 * `Sendov.boundary_reciprocal`: `(BR)`, in division-free form.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

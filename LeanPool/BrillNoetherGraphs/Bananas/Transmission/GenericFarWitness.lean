@@ -24,7 +24,7 @@ cross-strand ingredient; selecting that third position from a normalized
 "far" hypothesis is a separate orientation/mark-selection bridge.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

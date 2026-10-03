@@ -36,7 +36,7 @@ The finite field `F` enters only through the coordinate lift `Nikodym.LowerBound
 `liftPt v` passes through `liftPt x`, then `x = b + a • v` for some `a : F`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -104,6 +104,7 @@ end LineRes
 section LineIdeal
 
 /-- Blueprint F04: the line ideal `λ_{b,v} = ker (res_{b,v})`. -/
+@[expose]
 noncomputable def lineIdeal (b v : Fin d → K) : Ideal (MvPolynomial (Fin d) K) :=
   RingHom.ker (lineRes b v)
 
@@ -123,6 +124,7 @@ theorem lineIdeal_ne_top (b v : Fin d → K) : lineIdeal b v ≠ ⊤ :=
   RingHom.ker_ne_top (lineRes b v)
 
 /-- Blueprint F04: `P_d ⧸ λ_{b,v} ≃ K[T]` for `v ≠ 0`, induced by `res_{b,v}`. -/
+@[expose]
 noncomputable def lineQuotEquiv (b : Fin d → K) (hv : v ≠ 0) :
     (MvPolynomial (Fin d) K ⧸ lineIdeal b v) ≃ₐ[K] Polynomial K :=
   Ideal.quotientKerAlgEquivOfSurjective (lineRes_surjective b hv)
@@ -360,6 +362,7 @@ section Lift
 variable {F : Type*} [Field F] [Algebra F K]
 
 /-- Blueprint F04: the coordinatewise lift `ι : F^d → K^d` along `algebraMap F K`. -/
+@[expose]
 def liftPt (x : Fin d → F) : Fin d → K := fun i ↦ algebraMap F K (x i)
 
 variable (K)

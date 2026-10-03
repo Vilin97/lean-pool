@@ -34,7 +34,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapTripleDegre
 
 /-! # CoreGapPrune -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 

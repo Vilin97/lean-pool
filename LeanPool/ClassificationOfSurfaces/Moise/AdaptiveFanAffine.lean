@@ -18,7 +18,7 @@ relative Radó weld uses this formula after composing with the inverse-affine pi
 polygonal filling certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -171,7 +171,7 @@ noncomputable def adaptiveGlobalFanLinearPiece
         (K.adaptiveFanVertexSource U hU f p).1
 
 /-- The affine map describing one global adaptive fan face in standard coordinates. -/
-noncomputable def adaptiveGlobalFanMapStandardAffine
+@[expose] noncomputable def adaptiveGlobalFanMapStandardAffine
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU) :
     Plane →ᵃ[ℝ] (K.Vertex → ℝ) :=
   ((K.adaptiveGlobalFanAffinePiece hU f).comp
@@ -183,7 +183,7 @@ abbrev adaptiveGlobalFanSimplex (hU : IsOpen U) (f : K.AdaptiveFanFace U hU) :=
   stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f}
 
 /-- The intrinsic-coordinate value of a global adaptive fan face map. -/
-noncomputable def adaptiveGlobalFanFaceMapValue
+@[expose] noncomputable def adaptiveGlobalFanFaceMapValue
     (hU : IsOpen U) (f : K.AdaptiveFanFace U hU) :
     K.adaptiveGlobalFanSimplex hU f → (K.Vertex → ℝ) :=
   fun x ↦ (K.adaptiveGlobalFanFaceMap U hU f x).1.1

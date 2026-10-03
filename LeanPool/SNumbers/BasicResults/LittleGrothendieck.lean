@@ -51,7 +51,7 @@ makes `∑_j ‖w_j‖²` summable (`summable_norm_sq_row`), recorded at the end
 together with the `ℓ₂`-norm identity `norm_sq_eq_tsum_norm_sq`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

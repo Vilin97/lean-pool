@@ -21,7 +21,7 @@ does not require the family to be injective. Compatibility and centered
 integer transitions identify its upper masses with cumulative lifted mass.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -79,6 +79,7 @@ theorem localLift_centeredLift_ne_zero (hp : Odd p) (x : Φ.flag.Node)
 
 open Classical in
 /-- The flag point associated with a local atom through its centered integral lift. -/
+@[expose]
 def localAtomPoint (hp : Odd p) (a : Φ.LocalAtom) : Φ.flag.Point where
   base := a.1.1
   val := (FpCoord.centeredLift (Φ.representation.map a.1.1 a.1.2)).real

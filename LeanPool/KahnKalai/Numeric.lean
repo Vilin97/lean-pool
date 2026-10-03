@@ -14,14 +14,14 @@ import Mathlib.Tactic.Positivity.Finset
 Numeric inequalities for Tran–Vu’s covering induction (`L = 1000`).
 -/
 
-@[expose] public section
+public section
 
 namespace KahnKalai
 
 open Nat Finset
 
 /-- Least integer strictly larger than `0.9 ℓ`. -/
-noncomputable def kmin (ℓ : ℕ) : ℕ := ⌊((9 : ℝ) / 10) * ℓ⌋₊ + 1
+@[expose] noncomputable def kmin (ℓ : ℕ) : ℕ := ⌊((9 : ℝ) / 10) * ℓ⌋₊ + 1
 
 lemma kmin_pos (ℓ : ℕ) : 1 ≤ kmin ℓ := Nat.succ_le_succ (Nat.zero_le _)
 

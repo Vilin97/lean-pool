@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyStabilityBudget
 
 /-! One concrete stability budget compares every finite realization of the same prescribed data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

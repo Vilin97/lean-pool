@@ -17,7 +17,7 @@ grown-forest sector contributions agree with those of the canonical
 representative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

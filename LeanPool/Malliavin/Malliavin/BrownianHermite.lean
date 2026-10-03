@@ -18,7 +18,7 @@ real polynomial ring.  This is the finite-dimensional algebraic half of the stan
 route from polynomial Brownian cylinders to Wiener--Itô chaos.
 -/
 
-@[expose] public section
+public section
 
 noncomputable
 section
@@ -83,6 +83,7 @@ theorem span_range_hermiteReal :
 
 /-- The monic Hermite family with variance parameter `variance`, characterized by
 `H₀ = 1`, `H₁ = X`, and `Hₙ₊₂ = X Hₙ₊₁ - (n+1) variance Hₙ`. -/
+@[expose]
 noncomputable def varianceHermite (variance : ℝ) : ℕ → Polynomial ℝ
   | 0 => 1
   | 1 => Polynomial.X
@@ -147,6 +148,7 @@ theorem span_range_varianceHermite (variance : ℝ) :
 variable {M : Type*} [AddCommMonoid M] [Module ℝ M]
 
 /-- The linear map out of `ℝ[X]` prescribed by an arbitrary sequence on the monomial basis. -/
+@[expose]
 noncomputable def polynomialFamilyLinearMap (xpow : ℕ → M) :
     Polynomial ℝ →ₗ[ℝ] M :=
   (Polynomial.basisMonomials ℝ).constr ℝ xpow

@@ -17,7 +17,7 @@ stream construction, retained alias and recomputed pressure are the literal
 operators used by `VariableGaugeMean.temporalStageState`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.TemporalStateCoherence
@@ -463,6 +463,7 @@ theorem clock_band_transport (h : ℝ) (n m i ir k : ℕ) (hi : i + k = ir) :
   field_simp [(Real.rpow_pos_of_pos (ChartScales.Q_pos m) (1+h)).ne']
 
 /-- Axial direction, given by `((0,1),0)`. -/
+@[expose]
 noncomputable def axialDirection : Plane × Plane := ((0,1),0)
 
 theorem band_axial_scalar (h : ℝ) (n m : ℕ) :

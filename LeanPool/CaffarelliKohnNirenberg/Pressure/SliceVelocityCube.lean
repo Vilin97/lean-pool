@@ -22,7 +22,7 @@ unconditional Calderón--Zygmund estimate.  The nine-entry source bound retains
 its dimension factor by packaging it into the source energy.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

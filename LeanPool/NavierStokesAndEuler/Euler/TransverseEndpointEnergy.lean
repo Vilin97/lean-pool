@@ -26,7 +26,7 @@ extension is constructed by the inverse of the form on the closed zero-trace
 space.  No stationary extension or Dirichlet-to-Neumann map is an input.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,11 +47,12 @@ def correction : E →L[ℝ] S :=
   (projectedInverse S A c hc hA).comp (S.orthogonalProjectionOnto.comp A)
 
 /-- Subtract the solved zero-trace correction from any trial extension. -/
+@[expose]
 def stationaryPart : E →L[ℝ] E :=
   ContinuousLinearMap.id ℝ E - S.subtypeL.comp (correction S A c hc hA)
 
 theorem stationaryPart_eq (x : E) :
-    stationaryPart S A c hc hA x = x - (correction S A c hc hA x : E) := rfl
+    stationaryPart S A c hc hA x = x - (correction S A c hc hA x : E) := by rfl
 
 theorem correction_equation (x : E) (v : S) :
     ⟪A (correction S A c hc hA x : E), (v : E)⟫_ℝ = ⟪A x, (v : E)⟫_ℝ := by
@@ -117,6 +118,7 @@ theorem stationaryPart_minimizes (hAs : A.IsSymmetric) (x : E) :
 variable [CompleteSpace E]
 
 /-- A prescribed bounded trial lift followed by the actual stationary projection. -/
+@[expose]
 def endpointExtension (L : U →L[ℝ] E) : U →L[ℝ] E :=
   (stationaryPart S A c hc hA).comp L
 
@@ -174,7 +176,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -193,7 +195,7 @@ variable (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E)
   (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
 
 /-- The physical kinetic-minus-potential form on all initial-zero H¹ paths. -/
-def energyOperator : TimeLp T E →L[ℝ] TimeLp T E :=
+@[expose] def energyOperator : TimeLp T E →L[ℝ] TimeLp T E :=
   dirichletOperator (initialPrimitiveTimeLp T hT) (timeMultiplier T hT H)
 
 theorem energyOperator_inner (u v : TimeLp T E) :
@@ -244,11 +246,13 @@ theorem initialPrimitive_transverse (u : transverseDerivatives T hT m)
     (t : Icc (0 : ℝ) T) :
     initialPrimitive T hT (u : TimeLp T E) t =
       terminalPrimitive T hT (u : TimeLp T E) t := by
-  rw [initialPrimitive_eq_terminal_sub, u.property.1, sub_zero]
+  rw [initialPrimitive_eq_terminal_sub,
+    ((mem_transverseDerivatives T hT m (u : TimeLp T E)).mp u.property).1, sub_zero]
 
 omit [CompleteSpace E] in
 theorem initialPrimitiveTimeLp_transverse (u : transverseDerivatives T hT m) :
     initialPrimitiveTimeLp T hT (u : TimeLp T E) = transversePrimitive T hT m u := by
+  rw [transversePrimitive_apply]
   change pathLpOperator T hT (initialPrimitive T hT (u : TimeLp T E)) =
     pathLpOperator T hT (terminalPrimitive T hT (u : TimeLp T E))
   congr 1
@@ -260,12 +264,14 @@ variable (K : ℝ) (hK : 0 ≤ K)
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- Solve the zero-endpoint variation problem for an explicit terminal trial lift. -/
+@[expose]
 def endpointDerivative (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] TimeLp T E :=
   endpointExtension (transverseDerivatives T hT m) (energyOperator T hT H)
     (1 / 2) (by norm_num) (energyOperator_coercive T hT H K hK hH hsmall) L
 
 /-- The constructed physical stationary path. -/
-def endpointDisplacement (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
+@[expose] def endpointDisplacement (L : U →L[ℝ] TimeLp T E) :
+    U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
   (initialPrimitive T hT).comp (endpointDerivative T hT m H K hK hH hsmall L)
 
 /-- The genuine endpoint quadratic form represented by a bounded operator. -/
@@ -309,7 +315,7 @@ theorem endpointDisplacement_tangent (L : U →L[ℝ] TimeLp T E)
       endpointDerivative_sub_mem T hT m H K hK hH hsmall L Y⟩
   have hv : ⟪m t, initialPrimitive T hT (v : TimeLp T E) t⟫_ℝ = 0 := by
     rw [initialPrimitive_transverse]
-    exact v.property.2 t
+    exact ((mem_transverseDerivatives T hT m (v : TimeLp T E)).mp v.property).2 t
   change ⟪m t, initialPrimitive T hT
     (endpointDerivative T hT m H K hK hH hsmall L Y - L Y) t⟫_ℝ = 0 at hv
   rw [map_sub, ContinuousMap.sub_apply, inner_sub_right, hL, sub_zero] at hv

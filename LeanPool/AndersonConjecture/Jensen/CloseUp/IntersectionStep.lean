@@ -30,7 +30,7 @@ is obtained by passing to an A-extension where the intersection
 has been resolved.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

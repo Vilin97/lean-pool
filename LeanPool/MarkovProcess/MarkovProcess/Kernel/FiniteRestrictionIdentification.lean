@@ -17,7 +17,7 @@ pushforwards.  The proof applies uniqueness of finite projective limits pointwis
 parameter.  No topology, time order, path regularity, or Markov property is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInitializedCorrectionParity
 /-! Source budgets and the actual initialized residual construct exact
 corrected lifted packets at every sufficiently large frequency. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,6 +55,7 @@ variable {hT A}
 
 /-- Exact packet of residual, bundling `velocity`, `pressure`, `zero_initial_correction`,
 `divergence` and the required compatibility proofs. -/
+@[expose]
 def exactPacketOfResidual (B : Budget P hT A) (R : ApproximationResidual P hT A) :
     ExactLiftedPacket P hT A B where
   velocity := B.correctedFieldTower P
@@ -90,6 +91,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized exact packet, given by `exactPacketOfResidual period Q
 (initializedApproximationResidual M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk)`. -/
+@[expose]
 def initializedExactPacket (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
     (Q : Budget period D.T_pos

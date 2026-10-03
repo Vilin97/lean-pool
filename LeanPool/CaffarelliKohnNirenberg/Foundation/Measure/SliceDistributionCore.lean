@@ -38,7 +38,7 @@ testing one test function at a time is replaced by a single null set valid for
 every test function.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology Set
 

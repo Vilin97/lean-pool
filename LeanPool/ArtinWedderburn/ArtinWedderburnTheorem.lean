@@ -25,7 +25,7 @@ ring-isomorphic to a matrix ring over a division ring. Specialised to a simple
 ring it yields the same conclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

@@ -17,7 +17,7 @@ braiding acts on the colouring model as the Koszul-signed
 adjacent swap, positionwise and wordwise.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

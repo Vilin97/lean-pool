@@ -26,7 +26,7 @@ The underlying `NashEmbedding` development was substantially formalized by
 Aristotle (Harmonic); see the repository provenance record.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff
 open Bundle

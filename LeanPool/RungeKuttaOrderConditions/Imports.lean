@@ -8,3 +8,4 @@ module  -- shake: keep-all --deprecated_module: ignore
 -- Generated project imports; run `lake exe mk_all`.
 public import LeanPool.RungeKuttaOrderConditions
 public import LeanPool.RungeKuttaOrderConditions.ButcherOrder
+public import LeanPool.RungeKuttaOrderConditions.CheckerExamples

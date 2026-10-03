@@ -16,7 +16,7 @@ remaining seed-using type is recorded together with its two Boolean
 idempotence equations and the rational-annihilator certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -26,6 +26,7 @@ noncomputable section
 /-- The complete seed-using normal form, kept in `Prop` so that it can be
 obtained from the existential useful-child certificate without choosing
 data computationally. -/
+@[expose]
 def SeedUsingQuarticNormalForm (g : ANF 8) : Prop :=
   ∃ (correction factor target : ANF 8)
     (targetConst factorConst : F₂)

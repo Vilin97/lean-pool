@@ -14,7 +14,7 @@ public import LeanPool.RegtsSevenster.RS.Classical.SymFun.SubsetEH
 `hSub (insert j A) (m+1) = hSub A (m+1) + X j * hSub (insert j A) m`
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

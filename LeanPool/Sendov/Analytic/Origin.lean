@@ -53,7 +53,7 @@ splits that into the main term `(∑ⱼ qⱼ) F(t)` plus `a t` times the case `g
 the residual actually being estimated.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
@@ -277,6 +277,7 @@ lemma norm_sumEraseProdC_le (g f : ℂ → ℂ) : ∀ (s : Multiset ℂ), (∀ v
     nlinarith [ih ht, norm_nonneg (f v), norm_nonneg (sumEraseProdC t g f), h2, hv]
 
 /-- `F(t) = ∏ⱼ (1 - a t qⱼ)`. -/
+@[expose]
 noncomputable def Fprod (a : ℝ) (q : Multiset ℂ) (t : ℝ) : ℂ :=
   (q.map (fun v => 1 - (a : ℂ) * (t : ℂ) * v)).prod
 

@@ -16,7 +16,7 @@ character of a pair of colourings is the product of the two
 characters at the same permutation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

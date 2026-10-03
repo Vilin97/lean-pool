@@ -31,4 +31,4 @@ Tags: matching-logic, mathematical-logic, modal-logic, completeness, formal-meth
 MSC: 03B45, 03B70
 -/
 
-@[expose] public section
+public section

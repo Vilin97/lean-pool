@@ -26,7 +26,7 @@ Consumers: unitaries with `K` the closed unit disk (`Crouzeix/VonNeumann.lean`),
 operators on a Hilbert space with `K = closure W(A)` (`Crouzeix/Palencia.lean`).
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

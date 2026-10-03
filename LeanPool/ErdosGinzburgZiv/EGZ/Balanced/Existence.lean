@@ -17,7 +17,7 @@ Bounded integer correction then supplies every sufficiently large weight,
 with its lower fraction and threshold independent of centrality.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

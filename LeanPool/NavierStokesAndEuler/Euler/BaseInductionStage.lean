@@ -48,7 +48,7 @@ section
 /-! Exact low-order propagation for the first homogeneous packet, whose
 amplitude is delta times the desired initial shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ variable (δ hchild : ℝ) (ξ : U) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (hhchild : 
 /-- The exact source (20) errors, expressed on the same normalized
 packet that defines the physical child. These are precisely the two
 errors supplied by the same-Q packet choice. -/
-def HomogeneousSourceErrors (ev ep : ℝ) : Prop :=
+@[expose] def HomogeneousSourceErrors (ev ep : ℝ) : Prop :=
   ∀ (t : Icc (0 : ℝ) A.T) (x : Space),
     ‖fderiv ℝ (A.normalizedPacketVelocity m hm J support hSupport B residual k E.inverse t) x -
       shearTerm (δ*hchild) (deriv (profile δ) (k*⟪m,E.inverse.normalized t x⟫_ℝ))
@@ -174,7 +174,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -205,7 +205,7 @@ variable {A : Parent} (E : Evolution A) (H : LowBounds A)
 
 /-- First child low bounds as an element of `LowBounds (A.child G k m hgraph nextEll hnext
 hnext1)`. -/
-def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
+@[expose] def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
     (hSupportBall : support ⊆ Metric.closedBall 0 (1 / 2 : ℝ))
     (ev ep CM CH : ℝ)
     (herr : E.HomogeneousSourceErrors m hm J support hSupport Q
@@ -287,7 +287,7 @@ section
 /-! The first packet's size and sign hypotheses are proved for the
 concrete base solution on its actual restricted horizon. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -301,7 +301,7 @@ variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell
 
 /-- First packet data, given by `(packetBaseParent β hβ ell hell hell1 T hT hTB).transverseData
 firstNormal firstNormal_unit firstFrame support compact`. -/
-def firstPacketData : EulerTransversePacketProvider.Data FirstPlane :=
+@[expose] def firstPacketData : EulerTransversePacketProvider.Data FirstPlane :=
   (packetBaseParent β hβ ell hell hell1 T hT hTB).transverseData
     firstNormal firstNormal_unit firstFrame support compact
 
@@ -362,7 +362,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -382,14 +382,16 @@ theorem packetBaseParent_time :
     (packetBaseParent β hβ ell hell hell1 T hT hTB).T = T := rfl
 
 theorem packetBaseLowBounds_pressure :
-    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB).K = initialCoefficientCost := rfl
+    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB).K = initialCoefficientCost := by
+  change (initialLowBounds β hβ ell hell hell1).K = initialCoefficientCost
+  exact (initialLowBounds_values β hβ ell hell hell1).2.2.2.2
 
 -- Preserve the abstract parent while constructing the first packet data.
 attribute [local irreducible] initialParent
 
 /-- First packet mean data, given by `(packetBaseParent β hβ ell hell hell1 T hT hTB).meanData
 (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)`. -/
-def firstPacketMeanData : EulerMeanPacketProvider.Data :=
+@[expose] def firstPacketMeanData : EulerMeanPacketProvider.Data :=
   (packetBaseParent β hβ ell hell hell1 T hT hTB).meanData
     (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
 
@@ -417,7 +419,7 @@ variable (δ : ℝ) (hδ : 0 < δ) (hchild : ℝ)
 
 /-- First packet state as an element of `SmoothState ((packetBaseParent β hβ ell hell hell1 T hT
 hTB).child G k firstNormal hgraph nextEll hnext hnext1)`. -/
-def firstPacketState
+@[expose] def firstPacketState
     (labels : LabelData ((packetBaseParent β hβ ell hell hell1 T hT hTB).child
       G k firstNormal hgraph nextEll hnext hnext1)) :
     SmoothState ((packetBaseParent β hβ ell hell hell1 T hT hTB).child
@@ -430,7 +432,7 @@ def firstPacketState
 
 /-- First packet low bounds as an element of `LowBounds ((packetBaseParent β hβ ell hell hell1 T
 hT hTB).child G k firstNormal hgraph nextEll hnext hnext1)`. -/
-def firstPacketLowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hhchild : 0 ≤ hchild)
+@[expose] def firstPacketLowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hhchild : 0 ≤ hchild)
     (ev ep : ℝ)
     (herr : (packetBaseState β hβ ell hell hell1 T hT hTB).evolution.HomogeneousSourceErrors
       firstNormal firstNormal_unit firstFrame support compact Q
@@ -451,7 +453,8 @@ def firstPacketLowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hhchild :
     (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact δ hδ hδ1 hchild hhchild
     firstCoordinate (subset_refl _) N hN k hk Q G hcoefficient hgraph nextEll hnext hnext1
-    rfl (by simpa only [packetBaseParent_scale] using hquarter)
+    (packetBase_boundary_zero β hβ ell hell hell1 T hT hTB)
+    (by simpa only [packetBaseParent_scale] using hquarter)
     (subset_halfBall.trans Metric.ball_subset_closedBall)
     ev ep initialCoefficientCost initialCoefficientCost herrors
     (firstPacket_primary_size β hβ ell hell hell1 T hT hTB)
@@ -468,7 +471,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -533,13 +536,15 @@ theorem exists_firstPacketChoice (hδ1 : δ ≤ 1) (hh : 0 < hchild)
   let S := packetBaseState β hβ ell hell hell1 T hT hTB
   let H := packetBaseLowBounds β hβ ell hell hell1 T hT hTB
   let J := firstPacketInputs β hβ ell hell hell1 T hT hTB
+  have hSK : S.labels.K ≤ k := by
+    simpa only [S, packetBase_label_constant] using hKk
   have hp := firstPacket_uniform_primitives β hβ ell hell hell1 T hT hTB δ hδ hδ1 hchild hh.le
   obtain ⟨hn,Q,G,hgraph,hG,herror,hdisplacement,LC,hLC⟩ := S.labels.forward_uniform_child
       S.evolution.inverse H
     firstNormal firstNormal_unit firstFrame support compact J δ hδ hδ1 firstCoordinate (subset_refl
         _)
     (δ*hchild) (mul_pos hδ hh) (profileEnvelope (firstParameterSize T δ hchild)) hp.1 hp.2.1
-    k hk hfrequency hKk hinv nextEll hnext hnext1
+    k hk hfrequency hSK hinv nextEll hnext hnext1
   refine ⟨⟨hn,Q,G,hgraph,hG,LC,hLC,hdisplacement,?_⟩⟩
   intro t x
   dsimp only [firstPacketMeanData, firstPacketData]
@@ -564,18 +569,18 @@ variable (F : FirstPacketChoice β hβ ell hell hell1 T hT hTB δ hδ hchild k h
 
 /-- Parent, given by `(packetBaseParent β hβ ell hell hell1 T hT hTB).child F.G k firstNormal
 F.graph nextEll hnext hnext1`. -/
-def parent : Parent := (packetBaseParent β hβ ell hell hell1 T hT hTB).child
+@[expose] def parent : Parent := (packetBaseParent β hβ ell hell hell1 T hT hTB).child
   F.G k firstNormal F.graph nextEll hnext hnext1
 
 /-- State, constructed using `firstPacketState`. -/
-def state : SmoothState F.parent :=
+@[expose] def state : SmoothState F.parent :=
   firstPacketState β hβ ell hell hell1 T hT hTB δ hδ hchild (truncation k) F.hn k hk.four
     F.Q F.G F.coefficient F.graph nextEll hnext hnext1 F.labels
 
 theorem state_label_constant : F.state.labels.K=k^80 := F.label_constant
 
 /-- Low bounds, constructed using `firstPacketLowBounds`. -/
-def lowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
+@[expose] def lowBounds (hquarter : ell ≤ 1 / 4) (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     (hsmall : (initialCoefficientCost + 2 * initialCoefficientCost * δ * (hchild * firstRatio) +
         k ^ (-(1 / 4 : ℝ))) * (T ^ 2 / 2) + initialCoefficientCost * T +
         boundaryLocalizationC2 * (initialCoefficientCost + hchild * firstRatio + k ^ (-(1 /
@@ -604,7 +609,7 @@ section
 the normalized packet's gradient. At the fixed center this is the same
 quantity used by the source error bound and geometric renewal. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -675,7 +680,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -766,8 +771,10 @@ theorem physical_bounds (hδ1 : δ ≤ 1) (hh : 0 ≤ hchild)
     (firstPacket_primary_flux β hβ ell hell hell1 T hT hTB) t x
     (packetBase_physical_strain β hβ ell hell hell1 T hT hTB t x)
     (packetBase_physical_force β hβ ell hell hell1 T hT hTB t x)
-    (S.evolution.force_quadratic_upper_of_lowBounds (packetBaseLowBounds β hβ ell hell hell1 T hT
-        hTB) t x)
+    (by
+      have hq := S.evolution.force_quadratic_upper_of_lowBounds
+        (packetBaseLowBounds β hβ ell hell hell1 T hT hTB) t x
+      simpa only [packetBaseLowBounds_pressure] using hq)
   dsimp only [S, res, firstPacketMeanData, firstPacketData] at h
   constructor
   · dsimp only [state, firstPacketState, SmoothState.forwardChild,
@@ -820,7 +827,7 @@ section
 /-! Exact initial frame parameters for the first normal stage: its
 coupling is one, tilt is beta, and shear is the prescribed first shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -918,7 +925,7 @@ section
 /-! The literal base scale constructs the first actual smooth Euler
 packet state and its localized source bounds. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -971,20 +978,20 @@ def packet (hJ : 1 ≤ J) :
     H.source_frequency H.label_frequency H.radius_frequency)
 
 /-- Parent, given by `(H.packet hJ).parent`. -/
-def parent (hJ : 1 ≤ J) : Parent := (H.packet hJ).parent
+@[expose] def parent (hJ : 1 ≤ J) : Parent := (H.packet hJ).parent
 
 /-- State, given by `(H.packet hJ).state`. -/
-def state (hJ : 1 ≤ J) : SmoothState (H.parent hJ) := (H.packet hJ).state
+@[expose] def state (hJ : 1 ≤ J) : SmoothState (H.parent hJ) := (H.packet hJ).state
 
 theorem state_label (hJ : 1 ≤ J) : (H.state hJ).labels.K=(X^D)^80 :=
   (H.packet hJ).state_label_constant
 
-theorem parent_time (hJ : 1 ≤ J) : (H.parent hJ).T=baseHorizon J X := rfl
+theorem parent_time (hJ : 1 ≤ J) : (H.parent hJ).T=baseHorizon J X := by rfl
 
-theorem parent_scale (hJ : 1 ≤ J) : (H.parent hJ).ell=supportScale J X 0 := rfl
+theorem parent_scale (hJ : 1 ≤ J) : (H.parent hJ).ell=supportScale J X 0 := by rfl
 
 /-- Low bounds, constructed using `FirstPacketChoice.lowBounds`. -/
-def lowBounds (hJ : 1 ≤ J) : LowBounds (H.parent hJ) :=
+@[expose] def lowBounds (hJ : 1 ≤ J) : LowBounds (H.parent hJ) :=
   FirstPacketChoice.lowBounds (X^(-2 : ℝ)) H.tilt_bound (baseRadius X) H.core_pos H.core_one
     (baseHorizon J X) (H.time_pos hJ) H.local_time
     (X^(-1010 : ℝ)) H.spike_pos (X^1000) (X^D) H.frequency
@@ -998,8 +1005,11 @@ theorem lowBounds_values (hJ : 1 ≤ J) :
     (H.lowBounds hJ).r=baseRadius X ∧
     (H.lowBounds hJ).K=initialCoefficientCost+literalInitialPressureCost D X := by
   refine ⟨rfl,rfl,rfl,?_⟩
-  change initialCoefficientCost+2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio) +
+  change (packetBaseLowBounds (X^(-2 : ℝ)) H.tilt_bound (baseRadius X) H.core_pos
+    H.core_one (baseHorizon J X) (H.time_pos hJ) H.local_time).K +
+    2*initialCoefficientCost*X^(-1010 : ℝ)*(X^1000*firstRatio) +
     (X^D)^(-(1/4 : ℝ))=initialCoefficientCost+literalInitialPressureCost D X
+  rw [packetBaseLowBounds_pressure]
   unfold literalInitialPressureCost literalInitialError
   ring
 
@@ -1015,7 +1025,7 @@ section
 /-! The first actual packet has the precise initial frame parameters
 a=1, sigma=sqrt(beta), and the prescribed polynomial shear. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1076,7 +1086,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1094,7 +1104,7 @@ attribute [local irreducible] initialParent
 variable {c B : ℝ} (S : Scales c B)
 
 /-- First stage as an element of `Stage S 0`. -/
-def firstStage : Stage S 0 := by
+@[expose] def firstStage : Stage S 0 := by
   let F := S.first.packet S.j_one
   let P := F.initialFrame firstNormal firstNormal_unit firstFrame support compact
   have hparam := F.initialFrame_parameters firstNormal firstNormal_unit firstFrame support compact
@@ -1173,9 +1183,9 @@ def firstStage : Stage S 0 := by
     rw [htilt]
     norm_num
 
-theorem firstStage_time : S.firstStage.time=0 := rfl
+theorem firstStage_time : S.firstStage.time=0 := by rfl
 
-theorem firstStage_horizon : S.firstStage.parent.T=baseHorizon S.J S.X := rfl
+theorem firstStage_horizon : S.firstStage.parent.T=baseHorizon S.J S.X := by rfl
 
 theorem firstStage_coupling : S.firstStage.frame.a=1 :=
   ((S.first.packet S.j_one).initialFrame_parameters firstNormal firstNormal_unit firstFrame

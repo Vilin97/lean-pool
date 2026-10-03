@@ -25,7 +25,7 @@ import Mathlib.Data.Set.Lattice.Order
 # MatchingLogic.Boxes
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -37,17 +37,17 @@ coordinate has a constant as its first component. -/
 abbrev Coord (S : Signature) : Type := (σ : S.Sym) × Fin (S.arity σ)
 
 /-- `⟨e⟩ψ := σ(⊤, …, ψ, …, ⊤)` with `ψ` in position `i` (Definition 3). -/
-def dia (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
+@[expose] def dia (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
   .app e.1 (fun j => if j = e.2 then ψ else Pattern.tp)
 
 /-- `[e]ψ := ⟨e⟩(ψ → ⊥) → ⊥` (Definition 3). -/
-def box (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
+@[expose] def box (e : Coord S) (ψ : Pattern S Var) : Pattern S Var :=
   .imp (dia e (.imp ψ .bot)) .bot
 
 /-- `[p]ψ := [e₁]⋯[eₘ]ψ` for a word `p = e₁⋯eₘ`, with `[ε]ψ := ψ`
 (Definition 3).  Words are lists of coordinates; every word composes because
 there is only one sort. -/
-def boxes : List (Coord S) → Pattern S Var → Pattern S Var
+@[expose] def boxes : List (Coord S) → Pattern S Var → Pattern S Var
   | [], ψ => ψ
   | e :: p, ψ => box e (boxes p ψ)
 
@@ -58,7 +58,7 @@ def boxes : List (Coord S) → Pattern S Var → Pattern S Var
 namespace Model
 
 /-- One backward step along a single coordinate: `u ⇝_e v` (Definition 2). -/
-def stepAt (M : Model S) (e : Coord S) (u v : M.carrier) : Prop :=
+@[expose] def stepAt (M : Model S) (e : Coord S) (u v : M.carrier) : Prop :=
   ∃ a : Fin (S.arity e.1) → M.carrier, u ∈ M.interp e.1 a ∧ v = a e.2
 
 /-- `⇝_p` for a word `p`, the relational composite, with `⇝_ε = id`

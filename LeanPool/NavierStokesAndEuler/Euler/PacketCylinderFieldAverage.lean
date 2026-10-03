@@ -32,7 +32,7 @@ section
 
 /-! The bounded cylinder-to-space operator is the literal angular integral on smooth fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ section
 
 /-! The literal angular mean of a solved cylinder path is an actual smooth spatial L² path. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -173,7 +173,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -225,7 +225,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -240,6 +240,7 @@ open scoped ContDiff
 variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 
 /-- Its path is the genuine average operator, and its raw field is exactly the angular integral. -/
+@[expose]
 def angleMean (G : Field P T raw) : Field P T (EulerPacketProfileRecursion.angleMean P raw) :=
   ofLifted (pathAverage P G.path) (pathAverage_orbit_contDiff P G.path G.orbit)
     (fun t x => rawMean P (pointField P G.path G.orbit t) x.1)
@@ -264,11 +265,12 @@ def angleMean (G : Field P T raw) : Field P T (EulerPacketProfileRecursion.angle
       exact G.raw_eq t x s)
 
 /-- Subtracting the literal mean is an operation on the actual cylinder L² path. -/
+@[expose]
 def highPart (G : Field P T raw) : Field P T (raw-EulerPacketProfileRecursion.angleMean P raw) :=
   G.sub G.angleMean
 
 @[simp] theorem angleMean_path (G : Field P T raw) :
-    G.angleMean.path = pathAverage P G.path := rfl
+    G.angleMean.path = pathAverage P G.path := by rfl
 
 /-- The same actual angular integral is admissible for the constructed ordinary-space mean solver.
 -/

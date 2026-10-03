@@ -18,7 +18,7 @@ refined simplex its augmented difference matrix is the original augmented matrix
 barycentric vertex matrix of the subdivision chart.  Both factors have nonzero determinant.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

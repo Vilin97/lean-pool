@@ -27,7 +27,7 @@ isometry `ℓ²_(s) → ℓ²_(s+2)` and commutes with the formal derivatives
 fixed-point operator in Theorem B.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev
@@ -40,11 +40,11 @@ namespace NashEmbedding.Sobolev
 variable {n : ℕ}
 
 /-- The (positive) Laplacian on coefficients: `(Δa)ₘ = |m|² aₘ`. -/
-def laplacianCoeff (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
+@[expose] def laplacianCoeff (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
   ((∑ i : Fin n, ((m i : ℝ) ^ 2) : ℝ) : ℂ) * a m
 
 /-- The resolvent `(I + Δ)⁻¹` on coefficients: `aₘ / (1 + |m|²)`. -/
-def resolventCoeff (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
+@[expose] def resolventCoeff (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
   a m / ((1 + ∑ i : Fin n, ((m i : ℝ) ^ 2) : ℝ) : ℂ)
 
 lemma weight_one (m : Fin n → ℤ) : weight n 1 m = 1 + ∑ i : Fin n, ((m i : ℝ) ^ 2) := by

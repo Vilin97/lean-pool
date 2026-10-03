@@ -23,7 +23,7 @@ to the complementary side is assigned wholly to the complementary factor;
 there is no length-dependent case split and parallel slots are retained.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -48,12 +48,14 @@ namespace Data
 variable {n p : ℕ} {core : ExplicitPotential.Core n p}
 
 /-- The complementary core side, retaining the articulation in both sides. -/
+@[expose]
 def right (c : Data core) : Finset (Fin n) :=
   insert c.glue (univ \ c.left)
 
 /-- A core slot whose two non-articulation endpoints lie on opposite sides.
 Both orientations are included, since slots are stored as ordered pairs while
 the graph is undirected. -/
+@[expose]
 def Crosses (c : Data core) (edge : Fin p) : Prop :=
   (core.tail edge ∈ c.left ∧ core.tail edge ≠ c.glue ∧
     core.head edge ∉ c.left) ∨
@@ -66,10 +68,12 @@ instance crossesDecidable (c : Data core) (edge : Fin p) :
   infer_instance
 
 /-- Exact mathematical validity of passive core-cut data. -/
+@[expose]
 def Valid (c : Data core) : Prop :=
   c.glue ∈ c.left ∧ ∀ edge : Fin p, ¬ c.Crosses edge
 
 /-- Transparent finite replay of `Valid`. -/
+@[expose]
 def check (c : Data core) : Bool :=
   decide (c.glue ∈ c.left) &&
   ExplicitPotential.allFin (fun edge : Fin p => decide (¬ c.Crosses edge))
@@ -96,6 +100,7 @@ variable (spec : SubdivisionGraph.Spec n p)
 
 /-- The named factor in a subdivision.  An interior is admitted precisely
 when both endpoints of its original slot are admitted by the core cut. -/
+@[expose]
 noncomputable def leftVertices (c : Data spec.core) : Finset spec.Vertex := by
   classical
   exact Finset.univ.filter fun vertex =>
@@ -107,6 +112,7 @@ noncomputable def leftVertices (c : Data spec.core) : Finset spec.Vertex := by
 
 /-- The complementary subdivision factor.  It is literally the complement of
 `leftVertices`, with the embedded articulation reinserted. -/
+@[expose]
 noncomputable def rightVertices (c : Data spec.core) : Finset spec.Vertex :=
   insert (spec.coreVertex c.glue) (Finset.univ \ leftVertices spec c)
 
@@ -215,6 +221,7 @@ theorem stepRight_eq_glue_of_mem_not_mem (h : c.Valid)
 
 /-- Lift valid finite core data to a literal one-vertex cut of every positive
 subdivision of that core. -/
+@[expose]
 noncomputable def toOneVertexCut (h : c.Valid) : OneVertexCut spec.graph where
   left := leftVertices spec c
   right := rightVertices spec c
@@ -381,6 +388,7 @@ theorem satisfiesTransmission_map_wedgeAddDivisor_sameRight_of_profile
 
 /-- Accepted finite core data immediately yields a checked cut of any
 positive subdivision. -/
+@[expose]
 noncomputable def cutOfCheck (h : c.check = true) : OneVertexCut spec.graph :=
   c.toOneVertexCut spec (c.check_eq_true_iff.mp h)
 

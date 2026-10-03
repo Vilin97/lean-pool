@@ -42,7 +42,7 @@ This file deliberately does **not** prove smallness of barycentric subdivision;
 that belongs to downstream modules.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -72,7 +72,7 @@ noncomputable abbrev mvSimplexMap {X : TopCat.{0}} {n : ℕ} (σ : singularSimpl
 
 /-- A singular `n`-simplex `σ` is **small** with respect to an open cover `𝒰` if
 its image is contained in one of the open sets of the cover. -/
-def IsSmallSimplex {X : TopCat.{0}} (𝒰 : OpenCoverData X) {n : ℕ}
+@[expose] def IsSmallSimplex {X : TopCat.{0}} (𝒰 : OpenCoverData X) {n : ℕ}
     (σ : singularSimplices X n) : Prop :=
   ∃ U ∈ 𝒰.sets, Set.range (mvSimplexMap σ) ⊆ U
 

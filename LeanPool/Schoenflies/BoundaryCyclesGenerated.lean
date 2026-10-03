@@ -23,7 +23,7 @@ each new boundary is one old boundary arc followed by the reverse of the inserte
 * `Schoenflies.GeneratedStructure.boundaryCycles` — the closed induction.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

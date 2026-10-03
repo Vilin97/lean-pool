@@ -22,7 +22,7 @@ coordinate-polynomial approximants instead of adding that extra assumption. This
 finite-dimensional analytic infrastructure; no statement about path space is proved here.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators CompactlySupported

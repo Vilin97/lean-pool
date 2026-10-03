@@ -16,7 +16,7 @@ interval lemma into a uniform bound on operation-sequence length. The bound
 depends only on the number of colors and the capacity function.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -24,12 +24,14 @@ attribute [local instance] Classical.propDecidable
 
 /-- Every interval before `N` has at most `capacity a` occurrences of any
 color which is a lower bound for all colors on that interval. -/
+@[expose]
 def HasIntervalCapacity (χ capacity : ℕ → ℕ) (N : ℕ) : Prop :=
   ∀ a b l, a ≤ b → b < N → (∀ i ∈ Finset.Icc a b, l ≤ χ i) →
     ((Finset.Icc a b).filter fun i ↦ χ i = l).card ≤ capacity a
 
 /-- The first length at which the interval lemma forces a capacity violation.
 The requested occurrence threshold is exactly `capacity + 1`. -/
+@[expose]
 noncomputable def intervalCapacityBound (k : ℕ) (capacity : ℕ → ℕ) : ℕ :=
   Nat.find (exists_color_interval_bound k (fun a ↦ capacity a + 1))
 

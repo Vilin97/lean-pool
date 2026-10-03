@@ -18,4 +18,4 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Import aggregator for the `Bochner` directory.
 -/
 
-@[expose] public section
+public section

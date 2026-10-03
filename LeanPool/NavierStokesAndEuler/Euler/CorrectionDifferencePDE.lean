@@ -18,7 +18,7 @@ section
 /-! Every actual continued mild correction obeys the literal viscous PDE with its genuine coercive
 pressure. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -62,7 +62,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -86,7 +86,7 @@ local instance differenceSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace 
 
 /-- The literal right side of the viscosity-difference equation, including its genuine pressure
 difference. -/
-def differenceRhs {q : ℕ} {T : Type*} [TopologicalSpace T]
+@[expose] def differenceRhs {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (ν μ : ℝ) (t : T)
     (u v : SobolevSpace period (q + 1)) : LiftL2 period :=
   ν • laplacianEvaluation period (q+1) (by omega) (u-v) +

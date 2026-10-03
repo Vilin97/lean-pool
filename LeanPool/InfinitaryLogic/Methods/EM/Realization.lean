@@ -38,7 +38,7 @@ inherits the continuum size of the Lω₁ω formula syntax. Any future
 model-realizing tranche will need to restrict to a countable sub-theory.
 -/
 
-@[expose] public section
+public section
 
 universe u v w
 
@@ -58,7 +58,7 @@ variable {J : Type u} [LinearOrder J]
 interpreted as the constants `c_{t 0}, …, c_{t (n-1)}`". Built by lifting `φ`
 to `L[[J]]`, opening its bound variables, and substituting them with the
 closed terms for the constants `t 0, …, t (n-1)`. -/
-def templateSentence
+@[expose] def templateSentence
     {n : ℕ} (φ : L.BoundedFormulaω Empty n) (t : Fin n ↪o J) :
     L[[J]].Sentenceω :=
   let φ' : L[[J]].BoundedFormulaω Empty n := φ.mapLanguage (L.lhomWithConstants J)
@@ -107,7 +107,7 @@ sentences for formulas whose `(arity, φ)`-pair lies in the family `Γ`. When
 `Γ` and `J` are both countable, the resulting theory is countable (see
 `templateTheoryOn_countable`), making it a candidate input to
 `model_existence` — which the full `templateTheory` can never be. -/
-def templateTheoryOn
+@[expose] def templateTheoryOn
     (T : Lomega1omegaTemplate L)
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n))
     (J : Type u) [LinearOrder J] :
@@ -140,7 +140,7 @@ variable {J : Type u} [LinearOrder J]
 /-- Sequence-based restricted template theory: same content as
 `templateTheoryOn T (Set.range s) J`, with a dedicated name for callers that
 want to hand a sequence rather than a set. -/
-def templateTheoryOfSeq
+@[expose] def templateTheoryOfSeq
     (T : Lomega1omegaTemplate L)
     (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
     (J : Type u) [LinearOrder J] :

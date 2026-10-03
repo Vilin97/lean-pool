@@ -20,7 +20,7 @@ compose to the parameter value times the identity of the image
 of the unit object.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -17,7 +17,7 @@ The three results below separate translation continuity, the normalized-kernel
 estimate, and the compact-localization step used for interior convergence.
 -/
 
-@[expose] public section
+public section
 
 open Function Set Filter MeasureTheory Topology
 open scoped ENNReal Convolution Pointwise

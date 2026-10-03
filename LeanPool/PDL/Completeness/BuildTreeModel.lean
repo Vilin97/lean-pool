@@ -15,15 +15,14 @@ obtained from a `BuildTree` (Definition 6.17) and provide the infrastructure tha
 in `Pdl/BuildTreeExistence.lean` to prove the existence lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
 /-! ## Defining The Model Graph -/
 
 /-- Definition 6.17 to get model graph from strategy tree. -/
-@[simp]
-def BuildTree.toModel {X} (bt : BuildTree [] X) :
+@[expose, simp] def BuildTree.toModel {X} (bt : BuildTree [] X) :
     (Σ W : Finset (Finset Formula), KripkeModel W) :=
   ⟨ bt.collect.attach.image PreState.forms -- W -- NOTE .forms here, not .wforms
   , { val := fun X p => Formula.atom_prop p ∈ X.1 -- valuation V(p)
@@ -49,7 +48,7 @@ pre-state collected at the node we arrive at. The lemmas in this section provide
 for these steps. -/
 
 /-- The world of the model graph given by a pre-state. -/
-def PreState.toW {X} {bt : BuildTree [] X} (π : PreState bt) :
+@[expose] def PreState.toW {X} {bt : BuildTree [] X} (π : PreState bt) :
     { w : Finset Formula // w ∈ bt.toModel.1 } := ⟨π.forms, π.mem_toModel⟩
 
 @[simp]
@@ -86,7 +85,8 @@ lemma PreState.getLast_mem {H X} {bt : BuildTree H X} (π : PreState bt) :
   List.getLast_mem _
 
 /-- A pre-state "has" an `AnyNegFormula` if one of its sequents contains it. -/
-def PreState.hasAnf {H X} {bt : BuildTree H X} (π : PreState bt) (anf : AnyNegFormula) : Prop :=
+@[expose] def PreState.hasAnf {H X} {bt : BuildTree H X} (π : PreState bt)
+    (anf : AnyNegFormula) : Prop :=
   ∃ Z ∈ π.val, AnyNegFormula.memSequent Z anf
 
 /-- If a pre-state has `~''ξ` then the *unloaded* formula `~ξ.unload` is among its formulas. -/

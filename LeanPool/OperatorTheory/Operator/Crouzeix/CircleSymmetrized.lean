@@ -55,7 +55,7 @@ corollary, and the representation is the polynomial double-layer identity of
   `‖p(A)‖ ≤ (1 + √2) * sup_{|z| ≤ R} ‖p(z)‖` (auxiliary-operator value from `CircleAuxiliary.lean`).
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial spectrum
 open scoped InnerProductSpace

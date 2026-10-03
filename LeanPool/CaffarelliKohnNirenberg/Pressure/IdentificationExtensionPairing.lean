@@ -23,7 +23,7 @@ dependence, and the two facts below hold, for almost every time, simultaneously
 for every test function.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

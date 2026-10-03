@@ -36,7 +36,7 @@ design's routing warning; `proper-map-degree` needs the counting route, not a ge
 route).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Filter Set Function Topology

@@ -17,7 +17,7 @@ The heart of the computation: the modulus kernel differentiates twice to `2 f_0 
 `f_0'' = -2 f_0`, so `G'' = 0` and `G` is affine; being even, it is constant.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -25,7 +25,7 @@ namespace ZetaZeros
 
 /-- The auxiliary kernel `G(u) = f₀(u) + ∫_{-1/2}^{1/2} |u - v| f₀(v) dv`, which is constant on
 `[-1/2, 1/2]`. -/
-noncomputable def extremalG (u : ℝ) : ℝ :=
+@[expose] noncomputable def extremalG (u : ℝ) : ℝ :=
   extremalTest u + ∫ v in (-(1:ℝ)/2)..(1/2), |u - v| * extremalTest v
 
 /-!

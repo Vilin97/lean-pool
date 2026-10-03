@@ -13,7 +13,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -92,7 +92,7 @@ namespace Formula
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Satisfies (M : Kripke.Model) (w : M.World) : Formula ℕ → Prop
+@[expose] def Satisfies (M : Kripke.Model) (w : M.World) : Formula ℕ → Prop
   | atom a => M w a
   | ⊥      => False
   | φ ⋏ ψ  => Satisfies M w φ ∧ Satisfies M w ψ
@@ -194,6 +194,7 @@ end Satisfies
 open Satisfies
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ValidOnModel (M : Kripke.Model) (φ : Formula ℕ) := ∀ w : M.World, w ⊧ φ
 
 namespace ValidOnModel
@@ -304,7 +305,7 @@ end ValidOnModel
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFrame (F : Frame) (φ : Formula ℕ) := ∀ V, (⟨F, V⟩ : Kripke.Model) ⊧ φ
+@[expose] def ValidOnFrame (F : Frame) (φ : Formula ℕ) := ∀ V, (⟨F, V⟩ : Kripke.Model) ⊧ φ
 
 
 namespace ValidOnFrame
@@ -394,7 +395,7 @@ end ValidOnFrame
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ValidOnFrameClass (C : FrameClass) (φ : Formula ℕ) := ∀ F, F ∈ C → F ⊧ φ
+@[expose] def ValidOnFrameClass (C : FrameClass) (φ : Formula ℕ) := ∀ F, F ∈ C → F ⊧ φ
 
 namespace ValidOnFrameClass
 

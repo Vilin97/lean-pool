@@ -17,7 +17,7 @@ tensor space with all functions on colour words. The model permutation
 acts there by reindexing and its odd-inversion sign.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

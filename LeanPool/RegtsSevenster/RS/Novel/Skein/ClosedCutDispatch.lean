@@ -21,7 +21,7 @@ which flags are boundary after the glue, that the walk agrees step
 for step, and that the path matching is carried across unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

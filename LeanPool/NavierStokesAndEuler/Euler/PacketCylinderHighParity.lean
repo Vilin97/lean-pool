@@ -19,7 +19,7 @@ section
 
 /-! Literal angular averaging preserves the joint odd parity of a genuine periodic field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,7 +50,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

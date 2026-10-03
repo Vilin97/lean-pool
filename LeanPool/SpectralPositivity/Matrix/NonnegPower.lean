@@ -32,7 +32,7 @@ blocks for the Metzler matrix exponential theorem (in MetzlerExp.lean).
 - Berman and Plemmons, *Nonnegative Matrices*, SIAM, 1994
 -/
 
-@[expose] public section
+public section
 
 open Matrix BigOperators Finset
 
@@ -41,10 +41,12 @@ noncomputable section
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- A matrix has nonneg off-diagonal entries (Metzler condition). -/
+@[expose]
 def Matrix.NonnegOffDiag (L : Matrix n n ℝ) : Prop :=
   ∀ i j, i ≠ j → 0 ≤ L i j
 
 /-- A matrix has all nonneg entries. -/
+@[expose]
 def Matrix.Nonneg (M : Matrix n n ℝ) : Prop :=
   ∀ i j, 0 ≤ M i j
 

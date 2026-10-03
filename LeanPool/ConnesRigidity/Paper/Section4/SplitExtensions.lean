@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Foundation.GroupTheory.SplitAbelianExtensi
 The split extensions component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSplitExtensions
@@ -38,7 +38,7 @@ private theorem semidirectConjugation
   by simpa only [map_inv] using (SemidirectProduct.inl_aut g n).symm
 
 /-- The SL₃ semidirect product as a split abelian extension. Paper: §4. -/
-noncomputable def lambdaExtension
+@[expose] noncomputable def lambdaExtension
     (action : H →* MulAut (Multiplicative PaperKernel.D)) :
     SplitAbelianExtension PaperKernel.D
       (PaperPropertyT.lambdaOf action) SpecialLinear.sl3Group := {

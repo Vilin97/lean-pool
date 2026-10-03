@@ -37,7 +37,7 @@ production, with one rewrite direction fixed, by agent-alpha-2.
 Requires `[CompleteSpace E]` (adjoints and the spectrum of `E →L[ℂ] E`).
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 open ContinuousLinearMap

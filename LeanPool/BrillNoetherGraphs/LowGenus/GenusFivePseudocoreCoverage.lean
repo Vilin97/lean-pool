@@ -23,7 +23,7 @@ degree-four pencil on the original subdivision.  Thus the finite cubic atlas
 only has to handle the loopless pseudocore branch.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFivePseudocoreCoverage
 
 open Utilities

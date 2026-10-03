@@ -15,7 +15,7 @@ If the selected holes have finite total diameter, their compact attachments accu
 the compact core.  Consequently the core together with all attachments is compact.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,7 +25,7 @@ open scoped ENNReal Topology
 namespace LeanPool.Besicovitch
 
 /-- The compact core together with all convex pieces attached along selected holes. -/
-def compactAttachmentUnion (F : Set (EuclideanSpace ℝ (Fin 2)))
+@[expose] def compactAttachmentUnion (F : Set (EuclideanSpace ℝ (Fin 2)))
     (chosen : Set (Set (EuclideanSpace ℝ (Fin 2)))) :
     Set (EuclideanSpace ℝ (Fin 2)) :=
   F ∪ ⋃ V : chosen, convexAttachment F (V : Set (EuclideanSpace ℝ (Fin 2)))

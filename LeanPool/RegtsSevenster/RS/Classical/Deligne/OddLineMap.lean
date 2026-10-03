@@ -17,7 +17,7 @@ the self-braiding of the image is the image of the self-braiding,
 which is minus an identity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

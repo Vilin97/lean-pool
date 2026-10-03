@@ -26,7 +26,7 @@ its two halves `outPermEquiv_symm_low` and
 absorption run in either direction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -93,6 +93,7 @@ theorem out_ground (s t u : ℕ) (σ : Equiv.Perm (Fin u)) :
 /-! ### The outgoing relabel -/
 
 /-- The peeled pairs of the outgoing relabel. -/
+@[expose]
 noncomputable def outQs (s t u : ℕ) (σ : Equiv.Perm (Fin u)) :=
   Fragment.mapPairs
     (_root_.Equiv.sumCongr (_root_.Equiv.refl (Fin (s + t)))

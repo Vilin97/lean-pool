@@ -14,7 +14,7 @@ import Mathlib.Tactic.Bound.Init
 Small helper lemmas about `Finset` that are not specific to Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace Finset
 

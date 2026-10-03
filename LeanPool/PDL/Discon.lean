@@ -15,15 +15,14 @@ public import Mathlib.Data.Finset.Sort
 Here we define ⋀ and ⋁ on formulas and seveal helper lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
 /-! ## Conjunction -/
 
 /-- Conjunction of a list of formulas, with the empty conjunction equal to truth. -/
-@[simp]
-def con : List Formula → Formula
+@[expose, simp] def con : List Formula → Formula
   | [] => ⊤
   | [f] => f
   | f :: rest => f⋀con rest
@@ -93,8 +92,7 @@ theorem Finset.in_voc_con n (X : Finset Formula) :
 /-! ## Disjunction -/
 
 /-- Disjunction of a list of formulas, with the empty disjunction equal to falsity. -/
-@[simp]
-def dis : List Formula → Formula
+@[expose, simp] def dis : List Formula → Formula
   | [] => ⊥
   | [f] => f
   | f :: rest => f ⋁ dis rest

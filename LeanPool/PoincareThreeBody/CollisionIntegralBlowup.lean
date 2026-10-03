@@ -16,14 +16,14 @@ This file develops the real-variable estimate showing that the averaged Newtonia
 becomes unbounded when an aligned apoapsis approaches the unit primary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 open Filter MeasureTheory Set Topology
 
 /-- Reciprocal distance from the resonant position to the unit primary. -/
-noncomputable def resonantPrimaryInverse
+@[expose] noncomputable def resonantPrimaryInverse
     (p q : ℕ) (eccentricity orientation time : ℝ) : ℝ :=
   let position := orientedResonantEllipsePosition p q eccentricity orientation time
   1 / Real.sqrt ((position 0 - 1) ^ 2 + position 1 ^ 2)

@@ -33,7 +33,7 @@ Only the hard direction is new; the reverse of each is the easy direction, and t
 adds no mathematical content beyond the orbit = isomorphism identification.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

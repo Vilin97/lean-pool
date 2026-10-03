@@ -18,7 +18,7 @@ lies between zero and the word length, giving the polynomial bound
 `(n + 1) ^ (Fintype.card α ^ 2)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

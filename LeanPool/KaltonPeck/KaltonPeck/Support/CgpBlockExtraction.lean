@@ -23,7 +23,7 @@ This file extracts a successive normalized finite-support block family on which 
 that is not upper semi-Fredholm becomes compact.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.CgpBlockExtraction
@@ -123,6 +123,7 @@ theorem mem_l2Head_orthogonal_iff (N : ℕ) (x : CanonicalL2) :
       rw [inner_smul_left, hy, mul_zero]
 
 /-- Truncate a Hilbert vector after its first `m` coordinates. -/
+@[expose]
 def l2Trunc (m : ℕ) (x : CanonicalL2) : CanonicalL2 :=
   ∑ k ∈ Finset.range m, lp.single 2 k (x k)
 

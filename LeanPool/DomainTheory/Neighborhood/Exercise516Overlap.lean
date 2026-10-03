@@ -45,7 +45,7 @@ period `≥ 5` forces a
 run of three equal symbols.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise516
 

@@ -21,7 +21,7 @@ hulls can acquire new intersections.  We instead repeatedly merge intersecting c
 each finite stage and then take the increasing union of every eventual cluster.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

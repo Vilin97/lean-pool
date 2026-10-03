@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Basic
 /-! # The tail `t ≥ 2` of the potential inequality (6.2): the bound (6.8)
 -/
 
-@[expose] public section
+public section
 
 open Finset Set
 

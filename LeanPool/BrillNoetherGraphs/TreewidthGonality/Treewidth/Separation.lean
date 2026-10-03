@@ -28,7 +28,7 @@ Three independent ingredients of the Seymour--Thomas induction:
   time.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 
@@ -96,8 +96,8 @@ theorem separates_of_mem_anc {U : Finset V} (D : PartialDecomposition H U)
         refine huv.trans (ih (fun z hz => hU z (List.mem_cons_of_mem u hz))
           (fun z hz => hT z (List.mem_cons_of_mem u hz)))
   have hat : a ∉ D.bag t := hcon a p.start_mem_support
-  have hPa := mono a ha hat na hna h1
-  exact h2 ((step a b p hp hcon).mp hPa hnb)
+  have hPa := mono a ha hat na hna ((mem_below_iff D.isTree s t na).2 h1)
+  exact h2 ((mem_below_iff D.isTree s t nb).1 ((step a b p hp hcon).mp hPa hnb))
 
 /-! ### Lemma 4 -/
 
@@ -146,6 +146,7 @@ end Bramble
 
 /-- `H` with every vertex of `X` isolated.  Its connected components on `V \ X`
 are the components of `H − X`, but the construction never leaves the type `V`. -/
+@[expose]
 def awayGraph (H : SimpleGraph V) (X : Finset V) : SimpleGraph V where
   Adj a b := H.Adj a b ∧ a ∉ X ∧ b ∉ X
   symm := ⟨fun _ _ h => ⟨h.1.symm, h.2.2, h.2.1⟩⟩
@@ -186,7 +187,7 @@ theorem mem_compOf_self {H : SimpleGraph V} {X R : Finset V} {v : V} (hv : v ∈
   (mem_compOf_iff H X R v v).mpr ⟨hv, SimpleGraph.Reachable.refl v⟩
 
 /-- A set of vertices outside `X` closed under `awayGraph`-adjacency. -/
-def IsClosedAway (H : SimpleGraph V) (X R : Finset V) : Prop :=
+@[expose] def IsClosedAway (H : SimpleGraph V) (X R : Finset V) : Prop :=
   (∀ v ∈ R, v ∉ X) ∧ ∀ a ∈ R, ∀ b, (awayGraph H X).Adj a b → b ∈ R
 
 /-- Inside a closed set, `compOf` really is a component.

@@ -24,7 +24,7 @@ for sufficiently large `h`.
 The lower bound `s` for `primeChain` in `U` was originally `200 * Y F ^ 6`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GeneralCase
@@ -34,9 +34,11 @@ open Nat Fin Finset
 variable (n : ℕ) (F : Finset ℕ) (h : ℕ)
 
 /-- An optimised version of the paper's `y`. -/
+@[expose]
 def Y : ℕ := 33330 * (F.erase 0).prod id
 
 /-- `x` in the paper, but using the optimised `y`. -/
+@[expose]
 def X : ℕ := (Y F + 1) ^ h !
 
 lemma Y_lower_bound {F} : 33330 ≤ Y F := by
@@ -49,7 +51,7 @@ lemma Y_lt_X {F h} : Y F < X F h :=
   (lt_add_one _).trans_le (le_self_pow (factorial_ne_zero h) _)
 
 /-- The sum of `tup` over all indices save `n` and `n + 1`, i.e. the input `u` to `VWPair`. -/
-def U : ℕ := (100 * Y F - 2) * Y F ^ 5 + ∑ i ∈ range n, primeChain (100 * Y F ^ 6) i
+@[expose] def U : ℕ := (100 * Y F - 2) * Y F ^ 5 + ∑ i ∈ range n, primeChain (100 * Y F ^ 6) i
 
 lemma U_lower_bound {n F} : (100 * 33330 - 2) * 33330 ^ 5 ≤ U n F := by
   apply (Nat.le_add_right ..).trans'
@@ -58,11 +60,12 @@ lemma U_lower_bound {n F} : (100 * 33330 - 2) * 33330 ^ 5 ≤ U n F := by
 lemma U_pos {n F} : 0 < U n F := by grind [U_lower_bound]
 
 /-- The `VWPair` generated from the inputs `u = m = U n F`. -/
+@[expose]
 def VW : VWPair (U n F) (U n F) := .of ..
 
 /-- The sequence of `(n + 6)`-tuples whose tail is in `factorFreeTuples`
 and has quality tending to `5 / 4`. -/
-def tup (i : Fin (n + 6)) : ℤ :=
+@[expose] def tup (i : Fin (n + 6)) : ℤ :=
   i.addCases (primeChain (100 * Y F ^ 6) ·.1) fun
     | 0 => (VW n F).v
     | 1 => -(VW n F).w

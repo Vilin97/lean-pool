@@ -18,7 +18,7 @@ of `P`.  Unlike Mathlib's countable Kuratowski embedding, this construction
 does not require separability.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -27,6 +27,7 @@ open ENNReal lp
 universe u
 
 /-- The distance-difference Kuratowski coordinate based at `base`. -/
+@[expose]
 noncomputable def fullKuratowski {P : Type u} [MetricSpace P] (base z : P) :
     ℓ^∞(P, ℝ) :=
   ⟨fun u => dist z u - dist base u, by

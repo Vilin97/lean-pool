@@ -49,7 +49,7 @@ This file covers chapter 6 of Milla's proof of the Chudnovsky formula (arXiv:180
   `(₂F₁(1/12, 5/12; 1; z))² = ∑ (6n)!/((3n)!(n!)³) · zⁿ/12^(3n)` (paper Thm. `darst`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -937,6 +937,7 @@ namespace Chudnovsky
 /-! ## The specific instances used in the paper -/
 
 /-- The hypergeometric function `₂F₁(1/12, 5/12; 1; z)` (paper Thms. `darst`, `omegastrich`). -/
+@[expose]
 def hyp2F1 (z : ℂ) : ℂ := ₂F₁ (1 / 12 : ℂ) (5 / 12) 1 z
 
 /-- The generalized hypergeometric function `₃F₂(1/6, 5/6, 1/2; 1, 1; z)`, the right-hand side

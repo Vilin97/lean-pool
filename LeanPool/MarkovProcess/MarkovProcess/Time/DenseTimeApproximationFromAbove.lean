@@ -19,7 +19,7 @@ cuts.
 This is deterministic order-topological infrastructure and makes no stochastic-process claim.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped NNReal

@@ -23,7 +23,7 @@ This file constructs the canonical Kalton--Swanson symplectic form, transports i
 Kalton--Peck presentations, and develops the associated block-operator theory.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.Symplectic
@@ -713,6 +713,7 @@ def strongFormOfData (D : StrongPairingData) :
 
 /-- The standard unit vector in the real sequence space.
 Support definition for blueprint label `thm:ks-primary`. -/
+@[expose]
 def standardBasisSequence (n : ℕ) : ℕ → ℝ := by
   exact fun k ↦ if k = n then 1 else 0
 
@@ -733,6 +734,7 @@ def canonicalFirstBasisVector (n : ℕ) : CanonicalRealKaltonPeck := by
 
 /-- The canonical vector with coordinates `(0, eₙ)`.
 Support definition for blueprint labels `thm:ks-primary` and `thm:block-primary`. -/
+@[expose]
 def canonicalSecondBasisVector (n : ℕ) : CanonicalRealKaltonPeck := by
   refine ⟨(0, standardBasisSequence n), ?_⟩
   have hsquare : IsSquareSummable (standardBasisSequence n) := by
@@ -882,6 +884,7 @@ theorem transportedKaltonSwansonForm_apply {X : Type*} [NormedAddCommGroup X]
 
 /-- A successive normalized block sequence of finitely supported real `ℓ₂` vectors.
 Blueprint label: `thm:block-primary`; audit ID `RES-BLOCK-OPERATOR-IDENTITIES`. -/
+@[expose]
 def IsSuccessiveNormalizedBlockSequence (w : ℕ → ℕ → ℝ) : Prop := by
   exact (∀ n, Set.Finite {k | w n k ≠ 0} ∧ Set.Nonempty {k | w n k ≠ 0}) ∧
     (∀ n, l2Norm (w n) = 1) ∧
@@ -889,6 +892,7 @@ def IsSuccessiveNormalizedBlockSequence (w : ℕ → ℕ → ℝ) : Prop := by
 
 /-- Every support in one block family is disjoint from every support in the other.
 Blueprint labels: `thm:block-primary` and `thm:block-transport`. -/
+@[expose]
 def AreMutuallySupportDisjoint (w v : ℕ → ℕ → ℝ) : Prop := by
   exact ∀ n m, Disjoint {k | w n k ≠ 0} {k | v m k ≠ 0}
 

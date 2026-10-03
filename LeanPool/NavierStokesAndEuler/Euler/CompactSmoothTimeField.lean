@@ -14,7 +14,7 @@ import Mathlib.Topology.Algebra.Module.PerfectSpace
 The compact support is common to the time slices, so compact joint continuity
 upgrades to continuity in the uniform spatial norm at every derivative order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -83,10 +83,10 @@ def reparametrize (A : SmoothTimeField K E V) (r : C(L, K)) : SmoothTimeField L 
   jet_eq n t x := A.jet_eq n (r t) x
 
 @[simp] theorem reparametrize_apply (A : SmoothTimeField K E V) (r : C(L, K))
-    (t : L) (x : E) : (A.reparametrize r).field t x = A.field (r t) x := rfl
+    (t : L) (x : E) : (A.reparametrize r).field t x = A.field (r t) x := by rfl
 
 @[simp] theorem reparametrize_jet_apply (A : SmoothTimeField K E V) (r : C(L, K))
-    (n : ℕ) (t : L) (x : E) : (A.reparametrize r).jet n t x = A.jet n (r t) x := rfl
+    (n : ℕ) (t : L) (x : E) : (A.reparametrize r).jet n t x = A.jet n (r t) x := by rfl
 
 end SmoothTimeField
 
@@ -113,7 +113,7 @@ local instance instCompactSmoothTimeField4 (n : ℕ) : NormedSpace ℝ (E →ᵇ
 
 /-- Continuous spatial jets with one common compact support yield a bounded
 smooth coefficient path. The support condition on derivatives is derived. -/
-def ofCompactSupportJets (u : A × E → V) (hu : Continuous u)
+@[expose] def ofCompactSupportJets (u : A × E → V) (hu : Continuous u)
     (hsmooth : ∀ t, ContDiff ℝ ∞ (fun x => u (t, x)))
     (hjet : ∀ n : ℕ, Continuous
       (fun z : A × E => iteratedFDeriv ℝ n (fun x => u (z.1, x)) z.2))
@@ -131,7 +131,7 @@ def ofCompactSupportJets (u : A × E → V) (hu : Continuous u)
       (fun z : A × E => iteratedFDeriv ℝ n (fun x => u (z.1, x)) z.2))
     (K : Set E) (hK : IsCompact K)
     (hsupp : ∀ t, tsupport (fun x => u (t, x)) ⊆ K) (t : A) (x : E) :
-    (ofCompactSupportJets u hu hsmooth hjet K hK hsupp).field t x = u (t, x) := rfl
+    (ofCompactSupportJets u hu hsmooth hjet K hK hsupp).field t x = u (t, x) := by rfl
 
 end SmoothTimeField
 
@@ -143,7 +143,7 @@ variable {P E V : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- A jointly smooth family on a compact parameter set with common compact
 spatial support has all spatial jets continuous in the uniform norm. -/
-def ofContDiffOnCompactSupport (s : Set P) [CompactSpace s]
+@[expose] def ofContDiffOnCompactSupport (s : Set P) [CompactSpace s]
     (u : P × E → V) (hu : ContDiffOn ℝ ∞ u (s ×ˢ univ))
     (K : Set E) (hK : IsCompact K)
     (hsupp : ∀ t ∈ s, tsupport (fun x => u (t, x)) ⊆ K) :
@@ -166,7 +166,7 @@ def ofContDiffOnCompactSupport (s : Set P) [CompactSpace s]
     (u : P × E → V) (hu : ContDiffOn ℝ ∞ u (s ×ˢ univ))
     (K : Set E) (hK : IsCompact K)
     (hsupp : ∀ t ∈ s, tsupport (fun x => u (t, x)) ⊆ K) (t : s) (x : E) :
-    (ofContDiffOnCompactSupport s u hu K hK hsupp).field t x = u (t, x) := rfl
+    (ofContDiffOnCompactSupport s u hu K hK hsupp).field t x = u (t, x) := by rfl
 
 @[simp] theorem ofContDiffOnCompactSupport_jet_apply (s : Set P) [CompactSpace s]
     (u : P × E → V) (hu : ContDiffOn ℝ ∞ u (s ×ˢ univ))
@@ -174,6 +174,6 @@ def ofContDiffOnCompactSupport (s : Set P) [CompactSpace s]
     (hsupp : ∀ t ∈ s, tsupport (fun x => u (t, x)) ⊆ K)
     (n : ℕ) (t : s) (x : E) :
     (ofContDiffOnCompactSupport s u hu K hK hsupp).jet n t x =
-      iteratedFDeriv ℝ n (fun y => u (t, y)) x := rfl
+      iteratedFDeriv ℝ n (fun y => u (t, y)) x := by rfl
 
 end SmoothTimeField

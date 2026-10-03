@@ -15,7 +15,7 @@ import Mathlib.Data.List.Chain
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Lemmas`.
 -/
 
-@[expose] public section
+public section
 
 variable {α : Type _}
 

@@ -49,7 +49,7 @@ Averaging over a duplicate-free list exhausting `ι` turns `f` into the constant
 telescoping sum of the second bullet is exactly the statement.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -508,7 +508,7 @@ gives exactly `O_r(γΔ(1 + κ))`, the sharp bound — the arithmetic is recorde
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -718,7 +718,7 @@ inside `k ∪ ⋃ {f ∈ R : f meets k}`, so the safe degree at `v` moves by at 
 Squaring, taking expectations and summing over `k` produces exactly the three terms above.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph LeanPool.AsymptoticTrianglePacking.Internal.Cube
 
@@ -1161,7 +1161,7 @@ for the round to be iterated, and removing it requires a third-order Bonferroni 
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -1731,7 +1731,7 @@ which would turn `Vs ≈ 2γ³Δ²` into `Vs = O(γ⁴Δ²)`.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -1900,7 +1900,7 @@ for which
   (`LeanPool.AsymptoticTrianglePacking.Internal.cube_centred_sq_le`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset
 
@@ -2056,7 +2056,7 @@ safe-degree variance bound on the elementary Bernoulli cube.  Here it is transpo
 Chebyshev round `LeanPool.AsymptoticTrianglePacking.Internal.exists_safe_round_cheb` consumes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable
@@ -2430,7 +2430,7 @@ the sharp upper bound `(1−p)^{rΔ} ≤ 1 − γ + γ²/2`
 the `(1−γ)` factor carried by the ceiling drop that `SharpRoundFor` requests.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset Hypergraph
 attribute [local instance] Classical.propDecidable

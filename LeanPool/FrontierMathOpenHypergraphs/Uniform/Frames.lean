@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.Pow
 # Finite frame bank
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

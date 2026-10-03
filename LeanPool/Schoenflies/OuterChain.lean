@@ -101,7 +101,7 @@ assumed.
   statement with nothing assumed.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -119,7 +119,7 @@ variable {α β : Type*} {Γ : ℕ → Graph α β} {G K : Graph α β} {i m p :
 Indexed by the **length** `m` of the block rather than by its right endpoint: the blueprint
 minimises `j - i`, and with this indexing that is a strong induction on the second argument
 with no subtraction anywhere. -/
-def chainUnion (Γ : ℕ → Graph α β) (i : ℕ) : ℕ → Graph α β
+@[expose] def chainUnion (Γ : ℕ → Graph α β) (i : ℕ) : ℕ → Graph α β
   | 0 => Γ i
   | m + 1 => (chainUnion Γ i m).union (Γ (i + m + 1))
 
@@ -594,6 +594,7 @@ It is a statement about a single descent step, not about outer faces, and it doe
 `n` except to keep the block inside the chain. A discharging module has
 `Graph.IsCycleThrough.split_at`, `Graph.exists_spliced_cycle`, `Graph.IsDrawing.arcs_of_split`
 and `Schoenflies.crosscutSplitsRegion` available. -/
+@[expose]
 def Descent (Γ : ℕ → Graph Plane β) (drawing : β → ℝ → Plane) (n : ℕ) (x : Plane) : Prop :=
   ∀ (i m : ℕ), i + (m + 2) ≤ n →
     ∀ (e : β) (u v : Plane) (D : List β),
@@ -624,7 +625,7 @@ member and an edge of the earlier chain outside `Γ (j-1)`, build a crosscut of 
 
 The hypothesis that `x` is enclosed is carried along because it costs nothing and a discharger
 may want it; the construction in the blueprint does not use it. -/
-def CrosscutExists (Γ : ℕ → Graph Plane β) (drawing : β → ℝ → Plane) (n : ℕ) (x : Plane) :
+@[expose] def CrosscutExists (Γ : ℕ → Graph Plane β) (drawing : β → ℝ → Plane) (n : ℕ) (x : Plane) :
     Prop :=
   ∀ (i m : ℕ), i + (m + 2) ≤ n →
     ∀ (e : β) (u v : Plane) (D : List β),
@@ -656,6 +657,7 @@ counterexample, instead of as a `sorry` nobody revisited. -/
 `Γ p ∪ Γ (p+1)` — off its drawing, with an unbounded face through it. A consumer proves the
 second clause with `Graph.beyondSquare_subset_face`, and `Graph.unbounded_face_unique` is what
 makes "an unbounded face" *the* outer face. -/
+@[expose]
 def OuterOnPairs (Γ : ℕ → Graph Plane β) (drawing : β → ℝ → Plane) (n : ℕ) (x : Plane) : Prop :=
   ∀ p, p + 1 ≤ n → x ∈ exterior (chainUnion Γ p 1) drawing ∧
     ¬ Bornology.IsBounded (face (chainUnion Γ p 1) drawing x)

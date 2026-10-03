@@ -15,14 +15,14 @@ order-theoretic consequences of defining `cStar` as an infimum. The strict
 lower bound for `sStar` requires uniqueness of the isolated first coordinate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace LeanPool.Besicovitch
 
 /-- The polynomial residual obtained by squaring the endpoint balance equation. -/
-def endpointBalanceResidual (c B : ℝ) : ℝ :=
+@[expose] def endpointBalanceResidual (c B : ℝ) : ℝ :=
   let D := 4 * c ^ 2 - 2 * c - B
   let b := (2 * B - 3 * c ^ 2 + 2 * c - 1) / (c + 1)
   let A2 := (B ^ 2 - 1) / 2
@@ -31,7 +31,7 @@ def endpointBalanceResidual (c B : ℝ) : ℝ :=
   (R ^ 2 - A2 - C2) ^ 2 - 4 * A2 * C2
 
 /-- The residual of the endpoint Gram equation. -/
-def endpointGramResidual (c B : ℝ) : ℝ :=
+@[expose] def endpointGramResidual (c B : ℝ) : ℝ :=
   let D := 4 * c ^ 2 - 2 * c - B
   let b := (2 * B - 3 * c ^ 2 + 2 * c - 1) / (c + 1)
   let x := (5 - B ^ 2) / 4
@@ -40,7 +40,7 @@ def endpointGramResidual (c B : ℝ) : ℝ :=
   (k - x * z) ^ 2 - (1 - x ^ 2) * (b ^ 2 - z ^ 2)
 
 /-- The signed polynomial system used to isolate the exact endpoint pair. -/
-def IsEndpointPolynomialPair (c B : ℝ) : Prop :=
+@[expose] def IsEndpointPolynomialPair (c B : ℝ) : Prop :=
   let D := 4 * c ^ 2 - 2 * c - B
   let b := (2 * B - 3 * c ^ 2 + 2 * c - 1) / (c + 1)
   let A2 := (B ^ 2 - 1) / 2

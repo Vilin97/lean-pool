@@ -15,7 +15,7 @@ import Mathlib.Analysis.Normed.Operator.Prod
 /-! Genuine bounded smooth cylinder coefficients and all their derivative
 jets are constructed from the actual coefficient translation orbit. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -104,6 +104,7 @@ variable (P : ℝ) [Fact (0 < P)]
 
 /-- Smooth coefficient, bundling `coefficient`, `smooth`, `bound`, `norm_bound` and the required
 compatibility proofs. -/
+@[expose]
 def smoothCoefficient (t : K) : SmoothCoefficient P where
   coefficient x := A t x.1
   smooth x := (coefficientOrbit_smooth A hA t).comp (contDiff_const.add contDiff_fst)
@@ -120,13 +121,13 @@ def smoothCoefficient (t : K) : SmoothCoefficient P where
 
 omit [Fact (0 < P)] in
 @[simp] theorem smoothCoefficient_apply (t : K) (x : LiftDomain P) :
-    (smoothCoefficient P A hA t).coefficient x = A t x.1 := rfl
+    (smoothCoefficient P A hA t).coefficient x = A t x.1 := by rfl
 
 end Basic
 
 /-- Coefficient jet as an element of `CoefficientJet P standardDirection q (smoothCoefficient P
 A hA t)`. -/
-def coefficientJet (P : ℝ) [Fact (0 < P)]
+@[expose] def coefficientJet (P : ℝ) [Fact (0 < P)]
     (A : C(K, Space →ᵇ Space →L[ℝ] Space))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A)) (q : ℕ) (t : K) :
     CoefficientJet P standardDirection q (smoothCoefficient P A hA t) :=
@@ -137,7 +138,13 @@ def coefficientJet (P : ℝ) [Fact (0 < P)]
         (orbitDerivativePath_orbit A hA (standardDirection i).1) t)
       (fun i => coefficientJet P (orbitDerivativePath A (standardDirection i).1)
         (orbitDerivativePath_orbit A hA (standardDirection i).1) n t)
-      (fun i x => (cylinder_fieldDerivative P A hA t (standardDirection i) x).symm)
+      (fun i x => by
+        have hcoefficient : (smoothCoefficient P A hA t).coefficient =
+            fun z => A t z.1 := by
+          funext z
+          exact smoothCoefficient_apply P A hA t z
+        rw [hcoefficient]
+        exact (cylinder_fieldDerivative P A hA t (standardDirection i) x).symm)
 
 variable (P : ℝ) [Fact (0 < P)]
   (A : C(K, Space →ᵇ Space →L[ℝ] Space))
@@ -151,7 +158,8 @@ theorem smoothCoefficient_operator (t : K) :
   filter_upwards [(smoothCoefficient P A hA t).operator_ae f,
     EulerLpOperatorField.full_ae (liftMeasure P) (EulerLpCylinderTranslation.fieldLift P (A t)) f]
     with x h₁ h₂
-  exact h₁.trans h₂.symm
+  simp only [smoothCoefficient_apply, EulerLpCylinderTranslation.fieldLift_apply] at h₁ h₂
+  simpa only [fullOperatorMap_apply] using h₁.trans h₂.symm
 
 theorem smoothCoefficient_operator_continuous :
     Continuous (fun t => (smoothCoefficient P A hA t).operator) := by

@@ -61,7 +61,7 @@ Laplacian, so the conservative bound is still conservative.  That inequality
 is `Valid`'s third conjunct, unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 open Utilities.Certificate
@@ -89,6 +89,7 @@ variable {m n p : ℕ}
 /-- The closed-orthant segment row.  The first two disjuncts are exactly
 `Valid`'s row (`ℓ_e ≥ 1`); the last two are the relaxation (`ℓ_e ≥ 0`).
 Any one of the four delivers `0 ≤ (segment e).eval point` at a cone point. -/
+@[expose]
 def SegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) : Prop :=
   AffineForm.positive (certificate.segment edge) = 0 ∨
     AffineForm.positive (certificate.segment edge) ∈ certificate.cone ∨
@@ -97,6 +98,7 @@ def SegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) : Prop
 
 /-- Point-independent validity on the **closed** length orthant.  Identical to
 `Valid` except that the segment row is `SegmentRowClosed`. -/
+@[expose]
 def ValidClosed (certificate : CertificateData m n p) (degree : ℤ) : Prop :=
   (∀ edge : Fin p, certificate.core.tail edge ≠ certificate.core.head edge) ∧
   (∑ vertex : Fin n, certificate.divisor vertex) = degree ∧
@@ -146,6 +148,7 @@ theorem validClosed_iff_valid_of_strict {certificate : CertificateData m n p}
 /-! ## Executable checker -/
 
 /-- Proof-free check of the relaxed segment row. -/
+@[expose]
 def checkSegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) :
     Bool :=
   AffineCover.AffineForm.equal
@@ -162,6 +165,7 @@ def checkSegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) :
   simp [checkSegmentRowClosed, SegmentRowClosed, or_assoc]
 
 /-- Executable closed-orthant validity checker. -/
+@[expose]
 def checkClosed (certificate : CertificateData m n p) (degree : ℤ) : Bool :=
   (allFin fun edge : Fin p =>
     decide (certificate.core.tail edge ≠ certificate.core.head edge)) &&
@@ -350,6 +354,7 @@ obligation beyond the census data. -/
 /-- Turn evaluated affine segment lengths and a checked idempotent contraction representative
 into a degenerate subdivision specification, retaining the supplied looplessness and
 forest-count guarantees. -/
+@[expose]
 def degenerateSpec (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     (rep : Fin n → Fin n)

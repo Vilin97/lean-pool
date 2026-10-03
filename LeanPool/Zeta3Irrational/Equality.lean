@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 # LeanPool.Zeta3Irrational.Equality
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Zeta3Irrational
 

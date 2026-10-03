@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Bounded coverage-certificate computation facts -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

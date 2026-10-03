@@ -24,7 +24,7 @@ The set-level argument is elementary: a point of `interior D` lies outside the c
 inside `D` and misses `C`, contributing strictly positive extra area.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric
 

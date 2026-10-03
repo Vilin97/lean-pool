@@ -19,7 +19,7 @@ Lemma 1.4 after scaling the vectors by `1 / 6`. The resulting signed sum has sup
 at most `36`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

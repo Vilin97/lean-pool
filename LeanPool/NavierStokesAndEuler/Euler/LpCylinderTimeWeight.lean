@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ContinuousTimeWeight
 /-! Actual scalar time weighting commutes with cylinder inclusion, translations, and rectangular
 multiplication. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,8 @@ theorem supportedMultiplier_weight (A : C(K, Space →ᵇ E →L[ℝ] F))
       weight g (supportedMultiplierMap period S hS A u) := by
   apply ContinuousMap.ext
   intro t
-  exact (supportedOperatorMap period S hS (A t)).map_smul (g t) (u t)
+  simpa only [supportedMultiplierMap_apply, weight_apply] using
+    (supportedOperatorMap period S hS (A t)).map_smul (g t) (u t)
 
 theorem supportedMultiplier_normalize (hg : ∀ t, 0 < g t)
     (A : C(K, Space →ᵇ E →L[ℝ] F)) (u : C(K, Supported period E S hS)) :
@@ -44,10 +45,15 @@ theorem supportedMultiplier_normalize (hg : ∀ t, 0 < g t)
   supportedMultiplier_weight period S hS (reciprocal g hg) A u
 
 theorem include_weight (u : C(K, Supported period E S hS)) :
-    includePath period S hS (weight g u) = weight g (includePath period S hS u) := rfl
+    includePath period S hS (weight g u) = weight g (includePath period S hS u) := by
+  apply ContinuousMap.ext
+  intro t
+  simp only [includePath_apply, weight_apply]
+  rfl
 
 theorem include_normalize (hg : ∀ t, 0 < g t) (u : C(K, Supported period E S hS)) :
-    includePath period S hS (normalize g hg u) = normalize g hg (includePath period S hS u) := rfl
+    includePath period S hS (normalize g hg u) = normalize g hg (includePath period S hS u) :=
+  include_weight period S hS (reciprocal g hg) u
 
 theorem translate_weight (a : LiftTangent) (u : C(K, CylinderL2 period E)) :
     pathTranslate period a (weight g u) = weight g (pathTranslate period a u) := by

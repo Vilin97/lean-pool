@@ -33,7 +33,7 @@ action level by level, mirroring `Colimit.lean`'s `H1Incl` construction verbatim
 epimorphism statement `mulH1_surjective`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech Module
@@ -48,7 +48,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-- The pointwise order bound making multiplication by `f` carry `O_D`-cochains to
 `O_E`-cochains: `D x - E x ≤ ord_x f` for every `x` (in `WithTop ℤ`; for `f = 0` the order is
 `⊤` everywhere, so `MulBound 0 D E` always holds — multiplication by `0` is the zero map). -/
-def MulBound (f : ℳ X) (D E : RS.Divisor X) : Prop :=
+@[expose] def MulBound (f : ℳ X) (D E : RS.Divisor X) : Prop :=
   ∀ x : X, ((D x - E x : ℤ) : WithTop ℤ) ≤ f.ord x
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -158,7 +158,7 @@ noncomputable def mulC0 (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) (
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem mulC0_apply (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) {𝒰 : FinCover Ω}
-    (g : C0 D 𝒰) (i : Fin 𝒰.n) : mulC0 f hf 𝒰 g i = mulOn f hf (𝒰.U i) (g i) := rfl
+    (g : C0 D 𝒰) (i : Fin 𝒰.n) : mulC0 f hf 𝒰 g i = mulOn f hf (𝒰.U i) (g i) := by rfl
 
 /-- Multiplication by `f` on `1`-cochains (componentwise `mulOn`). -/
 noncomputable def mulC1 (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) (𝒰 : FinCover Ω) :
@@ -169,7 +169,7 @@ noncomputable def mulC1 (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) (
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem mulC1_apply (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) {𝒰 : FinCover Ω}
     (c : C1 D 𝒰) (p : Fin 𝒰.n × Fin 𝒰.n) :
-    mulC1 f hf 𝒰 c p = mulOn f hf (𝒰.U p.1 ⊓ 𝒰.U p.2) (c p) := rfl
+    mulC1 f hf 𝒰 c p = mulOn f hf (𝒰.U p.1 ⊓ 𝒰.U p.2) (c p) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Multiplication commutes with the coboundary `d0`. -/
@@ -207,7 +207,7 @@ noncomputable def mulZ1 (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) (
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem mulZ1_apply_coe (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E) {𝒰 : FinCover Ω}
-    (c : Z1 D 𝒰) : (mulZ1 f hf 𝒰 c : C1 E 𝒰) = mulC1 f hf 𝒰 (c : C1 D 𝒰) := rfl
+    (c : Z1 D 𝒰) : (mulZ1 f hf 𝒰 c : C1 E 𝒰) = mulC1 f hf 𝒰 (c : C1 D 𝒰) := by rfl
 
 /-- Multiplication on cover-level `H¹`. -/
 noncomputable def mulH1Cover (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E)
@@ -239,7 +239,9 @@ theorem mulH1Cover_resH1 (f : ℳ X) {D E : RS.Divisor X} (hf : MulBound f D E)
   obtain ⟨c, rfl⟩ := H1Cover.mk_surjective D 𝒰 ξ
   simp only [resH1_mk, mulH1Cover_mk]
   congr 1
-  exact Subtype.ext (mulC1_resC1 f hf τ hτ (c : C1 D 𝒰))
+  apply Subtype.ext
+  simpa only [mulZ1_apply_coe, resZ1_apply_coe] using
+    mulC1_resC1 f hf τ hτ (c : C1 D 𝒰)
 
 /-! ### The colimit map `mulH1` -/
 

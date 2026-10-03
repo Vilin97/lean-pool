@@ -29,7 +29,7 @@ vice versa.
   `two_pow_two_mul_sub_one`: elementary arithmetic of `2 ^ k`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive
 

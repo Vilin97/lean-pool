@@ -19,7 +19,7 @@ companion is the constant `star (p(c))`, so constant polynomials give exact
 approximation at every stage.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Metric Set
 open scoped InnerProductSpace Interval Real

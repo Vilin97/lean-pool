@@ -36,7 +36,7 @@ No equal‑area existence, no normalization, and no variation of sites is used: 
 are held fixed throughout and every result is a pure algebraic cancellation of the constant.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.PowerDiagram
 
@@ -47,7 +47,7 @@ variable {n : ℕ}
 namespace EMP
 
 /-- **Constant shift of a weight vector**: add the fixed constant `c` to every weight. -/
-def addConstWeight (w : Fin n → ℝ) (c : ℝ) : Fin n → ℝ :=
+@[expose] def addConstWeight (w : Fin n → ℝ) (c : ℝ) : Fin n → ℝ :=
   fun i => w i + c
 
 @[simp] theorem addConstWeight_apply (w : Fin n → ℝ) (c : ℝ) (i : Fin n) :

@@ -14,7 +14,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.BasicDefinitions`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -30,30 +30,31 @@ open Finset
   The closedHulls of the polygons cover X.
 -/
 /-- `X` equals the union of the closed hulls of the polygons in `S`. -/
-def isCover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
+@[expose] def isCover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
   (X = ⋃ (P ∈ S), closedHull P)
 
 /-
   The openHulls of the polygons do not intersect.
 -/
 /-- The open hulls of distinct polygons in `S` are pairwise disjoint. -/
-def isDisjointPolygonSet {n : ℕ} (S : Set (Fin n → ℝ²)) : Prop :=
+@[expose] def isDisjointPolygonSet {n : ℕ} (S : Set (Fin n → ℝ²)) : Prop :=
     (∀ T₁ ∈ S, ∀ T₂ ∈ S, T₁ ≠ T₂ → Disjoint (openHull T₁) (openHull T₂))
 
 
 /-- `isDisjointCover X S` states that `S` covers `X` and its open hulls are pairwise disjoint. -/
-def isDisjointCover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
+@[expose] def isDisjointCover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
   isCover X S ∧ isDisjointPolygonSet S
 
 
 
 /- For now we use this formula as the definition of the area.-/
 /-- The area of a triangle, given by half the absolute value of its determinant. -/
-noncomputable def triangleArea (T : Triangle) : ℝ :=
+@[expose] noncomputable def triangleArea (T : Triangle) : ℝ :=
   abs (det T) / 2
 
 /- -/
 /-- A disjoint cover of `X` by triangles all having the same area. -/
+@[expose]
 def isEqualAreaCover (X : Set ℝ²) (S : Set Triangle) : Prop :=
   isDisjointCover X S ∧
   (∃ (area : ℝ), ∀ T, (T ∈ S) → triangleArea T = area)

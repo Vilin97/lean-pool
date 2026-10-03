@@ -21,7 +21,7 @@ the bits each subset itself determines, and the tensor side of that
 sum is `EdgeSubset.base_sum_eq_superForm_pairing_bitsOf`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

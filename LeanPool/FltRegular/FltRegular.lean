@@ -19,7 +19,7 @@ This file combines the first and second cases to prove Fermat's Last Theorem at 
 prime exponent.
 -/
 
-@[expose] public section
+public section
 
 open FltRegular
 

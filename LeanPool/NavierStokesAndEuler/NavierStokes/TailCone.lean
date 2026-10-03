@@ -32,7 +32,7 @@ integral.  Bounds use the first angular coefficient jet supplied by the proved
 reset witness; no parity or second-jet estimate is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -730,7 +730,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2251,11 +2251,12 @@ theorem actual_finite_ratio_bound {d : TailData} {K : ℝ} (w : ResetWitness d K
 /-! ## Cone quantities of the actual corrected profile -/
 
 /-- Actual A, given by `1 - 2 * deriv (fun t => Real.log (OutgoingHistories.E w (t, eta))) y`. -/
-noncomputable def actualA {d : TailData} {K : ℝ} (w : ResetWitness d K) (y eta : ℝ) : ℝ :=
+@[expose] noncomputable def actualA {d : TailData} {K : ℝ} (w : ResetWitness d K) (y eta : ℝ) : ℝ :=
   1 - 2 * deriv (fun t => Real.log (OutgoingHistories.E w (t, eta))) y
 
 /-- Actual bs, given by `2 * deriv (fun t => OutgoingHistories.U d Amp (t, eta)) y /
 OutgoingHistories.E w (y, eta)`. -/
+@[expose]
 noncomputable def actualBs {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (y eta : ℝ) : ℝ :=
   2 * deriv (fun t => OutgoingHistories.U d Amp (t, eta)) y / OutgoingHistories.E w (y, eta)

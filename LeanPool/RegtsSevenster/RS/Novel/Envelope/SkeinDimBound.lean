@@ -27,7 +27,7 @@ the sector traces of `SectorIntertwine.lean` and the binomial
 determinant of `SymFun/LGVStrict.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

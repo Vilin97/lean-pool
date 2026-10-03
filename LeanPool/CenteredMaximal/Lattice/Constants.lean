@@ -26,7 +26,7 @@ four open slots, each of width `slotW` and height `slotH`, and
 All numerical facts are proved from rational enclosures of `√2` and `√22`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -54,10 +54,10 @@ def sideLH2 : ℝ := √2 * root
 def sideLHL2 : ℝ := √(2 * (2 + heavy))
 
 /-- Width of a slot excluded from the witnessed region: `2h - √(2(2 + w))/2 - u/2`. -/
-def slotW : ℝ := 2 * hgap - sideLHL2 / 2 - root / 2
+@[expose] def slotW : ℝ := 2 * hgap - sideLHL2 / 2 - root / 2
 
 /-- Height of a slot excluded from the witnessed region: `V - √(2(1 + w))/2 - √w/2`. -/
-def slotH : ℝ := vgap - sideLH2 / 2 - sideH1 / 2
+@[expose] def slotH : ℝ := vgap - sideLH2 / 2 - sideH1 / 2
 
 /-! ### Square roots -/
 
@@ -93,7 +93,7 @@ theorem one_add_heavy : 1 + heavy = root ^ 2 := by
   ring
 
 /-- `V = h + 1`. -/
-theorem vgap_eq : vgap = hgap + 1 := rfl
+theorem vgap_eq : vgap = hgap + 1 := by rfl
 
 /-- `w = (17 + 4√22)/9`. -/
 theorem heavy_eq : heavy = (17 + 4 * √22) / 9 := by

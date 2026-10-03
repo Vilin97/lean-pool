@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DTop
 # LeanPool.DirectedTopologyLean4.DihomotopyFlip
 -/
 
-@[expose] public section
+public section
 
 /-
   If we have a dihomotopy `F` from `f : D(I,X)` to `g : D(I,X)`:
@@ -69,7 +69,7 @@ namespace Dihomotopy
 variable {X : dTopCat} {f g : D(I,X)}
 
 /-- Flip a dihomotopy by swapping its two coordinates. -/
-def flip (F : Dihomotopy f g)
+@[expose] def flip (F : Dihomotopy f g)
     : Dihomotopy (F.evalAtRight 0).toDirectedMap (F.evalAtRight 1).toDirectedMap :=
 {
   toFun := fun t => F (t.2, t.1)

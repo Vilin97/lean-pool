@@ -30,7 +30,7 @@ Fréchet derivative applied to a coordinate basis vector, matching the
 convention of `CKN.spatialPartial`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic
@@ -43,18 +43,22 @@ noncomputable section
 
 /-- The `i`th spatial partial derivative `∂_i f`, as the Fréchet derivative applied
 to the `i`th coordinate basis vector. -/
+@[expose]
 def spatialDeriv (f : Vec3 → ℝ) (i : Fin 3) : Vec3 → ℝ :=
   fun x => (fderiv ℝ f x) (basisVec i)
 
 /-- The spatial Laplacian `Δ f = ∑_i ∂_i ∂_i f`. -/
+@[expose]
 def spatialLaplacian (f : Vec3 → ℝ) : Vec3 → ℝ :=
   fun x => ∑ i : Fin 3, spatialDeriv (spatialDeriv f i) i x
 
 /-- The Euclidean gradient pairing `∇f · ∇g = ∑_i ∂_i f ∂_i g`. -/
+@[expose]
 def spatialGradDot (f g : Vec3 → ℝ) : Vec3 → ℝ :=
   fun x => ∑ i : Fin 3, spatialDeriv f i x * spatialDeriv g i x
 
 /-- The mixed second derivative `∂_i ∂_j f`. -/
+@[expose]
 def mixedSecond (f : Vec3 → ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun x => spatialDeriv (spatialDeriv f j) i x
 

@@ -47,7 +47,7 @@ section
 
 /-! Actual unnormalized forward solutions have smooth mixed translation orbits. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -100,7 +100,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -185,7 +185,7 @@ L² solution. It is jointly continuous, spatially and angularly smooth,
 compactly supported, and has the true pointwise within-time derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -206,12 +206,12 @@ variable (period : ℝ) [Fact (0 < period)]
   (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)))
 
 /-- The actual physical field, reconstructed from the solved L² class. -/
-def field (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
+@[expose] def field (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
   pointField period (includePath period S hS (velocity period S hS T hT Q Q₁ c hc hQ f a₀))
     (velocity_contDiff period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀) t x
 
 /-- The reconstructed actual product-rule time derivative. -/
-def derivativeField (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
+@[expose] def derivativeField (t : Icc (0 : ℝ) T) (x : LiftDomain period) : Space :=
   pointField period (includePath period S hS (velocityDerivative period S hS T hT Q Q₁ c hc hQ f
       a₀))
     (velocityDerivative_contDiff period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀) t x
@@ -297,7 +297,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,7 +321,7 @@ variable (period : ℝ) [Fact (0 < period)]
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
 
 /-- The source's literal scalar normal pressure residual. -/
-def normalResidual (t : Icc (0 : ℝ) T) (x : LiftDomain period) : ℝ :=
+@[expose] def normalResidual (t : Icc (0 : ℝ) T) (x : LiftDomain period) : ℝ :=
   (⟪m.field t x.1,pointField period (includePath period S hS f) hf t x⟫_ℝ -
     2*⟪m.field t x.1,M.field t x.1 (field period S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ t x)⟫_ℝ) /
       ‖m.field t x.1‖^2
@@ -442,7 +442,7 @@ matrix. Applying it to f−2MA gives a genuine scalar L² path, with the literal
 normal residual as representative and genuine smooth mixed translation orbit.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -465,7 +465,7 @@ variable (period : ℝ) [Fact (0 < period)]
   (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 /-- A genuine supported scalar path representing the right side of ∂θπ in (11). -/
-def pressureSource : C(Icc (0 : ℝ) T,Supported period ℝ S hS) :=
+@[expose] def pressureSource : C(Icc (0 : ℝ) T,Supported period ℝ S hS) :=
   supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := ℝ) period S hS
     (normalFunctional m cm hcm hm)
     (f - (2 : ℝ) • supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := Space)
@@ -533,7 +533,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -643,7 +643,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -665,7 +665,7 @@ variable (P : ℝ) [Fact (0 < P)]
   (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
 
 /-- The actual bounded angular inverse applied to the solved scalar source. -/
-def pressurePath : C(Icc (0 : ℝ) T,CylinderL2 P ℝ) :=
+@[expose] def pressurePath : C(Icc (0 : ℝ) T,CylinderL2 P ℝ) :=
   pathPrimitive P (includePath P S hS
     (pressureSource P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm))
 
@@ -702,6 +702,7 @@ variable (P : ℝ) [Fact (0 < P)]
   (ha₀zero : average P (a₀ : CylinderL2 P U) = 0)
 
 /-- The literal normalized periodic pressure for the actual forward solution. -/
+@[expose]
 def pressureField (t : Icc (0 : ℝ) T) : LiftDomain P → ℝ :=
   classicalPrimitive P
     (normalResidual P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m t)

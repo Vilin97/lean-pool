@@ -44,7 +44,7 @@ space-time, has to transport it, and that transport is legal only once the
 integrability is in hand - which is exactly what these lemmas supply.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

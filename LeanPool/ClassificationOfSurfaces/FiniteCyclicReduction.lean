@@ -20,7 +20,7 @@ a genuinely adjacent pair, and either occurrence of their common edge can be pla
 of a suitably oriented cyclic boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -628,6 +628,7 @@ theorem NegativeOccurrence.edge_not_mem_tail
   simpa [positive, map_edgeOfDart_inverseWord] using hpositive
 
 /-- The lowered left word used by the canonical contextual merge. -/
+@[expose]
 def mergeLeftWord
     {P : FiniteCyclicPresentation} {f : P.Face} {e : P.Edge}
     (occurrence : PositiveOccurrence P f e) :
@@ -635,6 +636,7 @@ def mergeLeftWord
   lowerTail P e occurrence.tail
 
 /-- The lowered right word used by the canonical contextual merge. -/
+@[expose]
 def mergeRightWord
     {P : FiniteCyclicPresentation} {g : P.Face} {e : P.Edge}
     (occurrence : NegativeOccurrence P g e) :
@@ -642,6 +644,7 @@ def mergeRightWord
   lowerTail P e occurrence.tail
 
 /-- Lower and enumerate all faces not selected for a merge. -/
+@[expose]
 def mergeMiddleWords
     (P : FiniteCyclicPresentation) (e : P.Edge)
     (f g : P.Face) (hfg : f ≠ g) :
@@ -681,7 +684,7 @@ theorem faceCountBetween_add_two
   omega
 
 /-- The canonical contextual P2 source associated to two oppositely displayed adjacent faces. -/
-@[reducible]
+@[expose, reducible]
 def mergeSource
     {P : FiniteCyclicPresentation} {f g : P.Face} {e : P.Edge}
     (left : PositiveOccurrence P f e)

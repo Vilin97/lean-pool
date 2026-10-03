@@ -25,4 +25,4 @@ Tags: infinitary-combinatorics, ramsey-theory, better-quasi-orders, well-quasi-o
 MSC: 03E05, 05D10, 06A07
 -/
 
-@[expose] public section
+public section

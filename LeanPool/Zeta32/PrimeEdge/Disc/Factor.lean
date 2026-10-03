@@ -14,7 +14,7 @@ public import LeanPool.Zeta32.PrimeEdge.Basis
   depending only on `b`.
 Also: `farProd` is scaled with unit constant term, and the near sets for `n = p - 1`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

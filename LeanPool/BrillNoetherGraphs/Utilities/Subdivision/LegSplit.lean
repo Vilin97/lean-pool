@@ -29,7 +29,7 @@ are exactly bivalent in the edge graph (their leg supplies the third
 incidence) and every other vertex is exactly trivalent.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.ExplicitPotential
 
@@ -41,6 +41,7 @@ variable {n p : ℕ}
 slot keeps the tail and is redirected into the fresh vertex; the fresh last
 slot runs from the fresh vertex to the old head.  Definitionally the core of
 `OneEdgeSplitRefinement.splitCore` (see `legSplit_eq_splitCore`). -/
+@[expose]
 def legSplit (core : Core n p) (slot : Fin p) : Core (n + 1) (p + 1) where
   tail := Fin.lastCases (Fin.last n) (fun edge => (core.tail edge).castSucc)
   head := Fin.lastCases ((core.head slot).castSucc)

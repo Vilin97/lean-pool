@@ -21,7 +21,7 @@ the building blocks for the `perm`/`perma`/`linperm` tactics defined in
 `PermTactics`.
 -/
 
-@[expose] public section
+public section
 
 namespace SyntheticEuclid4
 

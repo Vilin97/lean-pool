@@ -12,7 +12,7 @@ import Mathlib.Tactic.TypeStar
 # LeanPool.BruhatTits.Utils.List
 -/
 
-@[expose] public section
+public section
 
 theorem List.zipWith₃_map {α α' β β' γ γ' δ : Type*} (f : α' → β' → γ' → δ)
     (fa : α → α') (fb : β → β') (fc : γ → γ')

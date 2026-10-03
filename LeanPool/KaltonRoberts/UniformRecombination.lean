@@ -30,7 +30,7 @@ Finite-uniform version of the one-sided recombination theorem, producing a
 target weighted collection via expander recombination.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

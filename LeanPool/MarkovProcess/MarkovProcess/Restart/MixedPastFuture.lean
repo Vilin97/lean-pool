@@ -23,7 +23,7 @@ This file merges the following former modules, one section each:
     rational cut
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -39,11 +39,13 @@ section
 namespace MixedPastFuture
 
 /-- Past labels occurring in a finite mixed-coordinate set, viewed as dense absolute times. -/
+@[expose]
 def pastFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset DenseTime :=
   I.toLeft.map
     ⟨(fun r ↦ r.1), fun _ _ h ↦ Subtype.ext h⟩
 
 /-- Future labels occurring in a finite mixed-coordinate set. -/
+@[expose]
 def futureFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset DenseTime :=
   I.toRight
 
@@ -66,6 +68,7 @@ theorem mem_futureFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) 
   exact Finset.mem_toRight
 
 /-- The finite set of absolute dense times observed by a mixed past/future coordinate set. -/
+@[expose]
 def absoluteFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) :
     Finset DenseTime :=
   pastFinset S I ∪ DenseTime.addFinset S (futureFinset S I)
@@ -80,6 +83,7 @@ theorem mem_absoluteFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)
 
 /-- Send a mixed label to the absolute dense time which it observes.  This map need not be
 injective: the terminal past label and future zero both map to `S`. -/
+@[expose]
 def absoluteTime (S : DenseTime) : Set.Iic S ⊕ DenseTime → DenseTime
   | Sum.inl r => r.1
   | Sum.inr t => S + t
@@ -99,6 +103,7 @@ theorem absoluteTime_terminal_eq_zeroFuture (S : DenseTime) :
   simp only [absoluteTime_inl, absoluteTime_inr, add_zero]
 
 /-- Every label in `I` has its absolute time in `absoluteFinset S I`. -/
+@[expose]
 def absoluteIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) (i : I) :
     absoluteFinset S I := by
   refine ⟨absoluteTime S i, ?_⟩
@@ -120,11 +125,13 @@ theorem absoluteIndex_val (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
     (absoluteIndex S I i : DenseTime) = absoluteTime S i := rfl
 
 /-- The physical nonnegative-real times corresponding to a finite mixed-coordinate set. -/
+@[expose]
 def absolutePhysicalFinset (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) :
     Finset NNReal :=
   SubMarkovKernelSemigroup.denseTimePhysicalSet (absoluteFinset S I)
 
 /-- The physical-time coordinate selected by a mixed label. -/
+@[expose]
 def absolutePhysicalIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) (i : I) :
     absolutePhysicalFinset S I :=
   DenseTime.physicalSetEquiv (absoluteFinset S I) (absoluteIndex S I i)
@@ -137,6 +144,7 @@ theorem absolutePhysicalIndex_val (S : DenseTime)
 
 /-- Pull physical absolute-time coordinates back to their mixed labels.  This merely duplicates a
 coordinate when past terminal time and future zero both occur. -/
+@[expose]
 def pullbackAbsolutePhysical {alpha : Type*} (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime))
     (path : absolutePhysicalFinset S I → alpha) : I → alpha :=
@@ -166,6 +174,7 @@ variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- The rational past through `S` and the rational coordinates of the future shifted at `S`,
 combined into a single sum-indexed path. -/
+@[expose]
 def mixedPastShiftedCoordinates (S : DenseTime) (omega : ContinuousPath alpha) :
     Set.Iic S ⊕ DenseTime → alpha
   | Sum.inl r => omega (DenseTime.castOrderEmbedding r)
@@ -263,6 +272,7 @@ private theorem sort_union_eq_append {beta : Type*} [LinearOrder beta]
     simp only [Finset.mem_sort, Finset.mem_union, List.mem_append]
 
 /-- Past observation times with the cut inserted, whether or not the mixed labels observe it. -/
+@[expose]
 def pastWithTerminalFinset (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset DenseTime :=
   pastFinset S I ∪ {S}
@@ -277,6 +287,7 @@ theorem mem_pastWithTerminalFinset (S : DenseTime)
 
 /-- Strictly positive elapsed future times.  Future zero is represented by the terminal past
 coordinate instead of a second coordinate in the ordered concatenation. -/
+@[expose]
 def positiveFutureFinset (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset DenseTime :=
   (futureFinset S I).filter (0 < ·)
@@ -288,6 +299,7 @@ theorem mem_positiveFutureFinset (S : DenseTime)
   simp only [positiveFutureFinset, Finset.mem_filter, mem_futureFinset]
 
 /-- The absolute observation set after inserting the cut. -/
+@[expose]
 def absoluteFinsetWithTerminal (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset DenseTime :=
   absoluteFinset S I ∪ {S}
@@ -363,16 +375,19 @@ theorem card_pastWithTerminalFinset (S : DenseTime)
       Finset.mem_union_right _ (Finset.mem_singleton_self S)⟩)
 
 /-- Physical-time version of the cut-augmented absolute set. -/
+@[expose]
 def absolutePhysicalFinsetWithTerminal (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset NNReal :=
   SubMarkovKernelSemigroup.denseTimePhysicalSet (absoluteFinsetWithTerminal S I)
 
 /-- Physical coordinates of the cut-augmented past. -/
+@[expose]
 def pastPhysicalFinsetWithTerminal (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset NNReal :=
   SubMarkovKernelSemigroup.denseTimePhysicalSet (pastWithTerminalFinset S I)
 
 /-- Absolute physical coordinates of the strictly positive future. -/
+@[expose]
 def positiveFutureAbsolutePhysicalFinset (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) : Finset NNReal :=
   SubMarkovKernelSemigroup.denseTimePhysicalSet
@@ -410,6 +425,7 @@ theorem card_absolutePhysicalFinsetWithTerminal (S : DenseTime)
     card_absoluteFinsetWithTerminal, card_pastWithTerminalFinset]
 
 /-- Reindex the cut cardinality by the cardinality of the augmented absolute physical set. -/
+@[expose]
 def cutOrderEmbedding (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) :
     Fin ((positiveFutureFinset S I).card + (pastPredecessorCard S I + 1)) ↪o
@@ -418,6 +434,7 @@ def cutOrderEmbedding (S : DenseTime)
 
 /-- Increasing physical times of the cut-augmented mixed set, cast to the cardinal convention
 expected by finite-time concatenation. -/
+@[expose]
 def cutOrderedPhysicalTimes (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) :
     FiniteOrderedTimes
@@ -427,6 +444,7 @@ def cutOrderedPhysicalTimes (S : DenseTime)
 
 /-- Sorted physical coordinates of the augmented past, with its cardinality written as a
 successor. -/
+@[expose]
 def cutPastOrderedPhysicalTimes (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) :
     FiniteOrderedTimes (pastPredecessorCard S I + 1) :=
@@ -437,6 +455,7 @@ def cutPastOrderedPhysicalTimes (S : DenseTime)
     (SubMarkovKernelSemigroup.finiteSetTimes (pastPhysicalFinsetWithTerminal S I))
 
 /-- Sorted physical elapsed times of the strictly positive future. -/
+@[expose]
 def positiveFutureOrderedPhysicalTimes (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime)) :
     FiniteOrderedTimes (positiveFutureFinset S I).card :=
@@ -595,6 +614,7 @@ theorem cutOrderedPhysicalTimes_relativeFinalSegment (S : DenseTime)
   rw [DenseTime.castOrderEmbedding_add, add_tsub_cancel_left]
 
 /-- Position of an augmented-past coordinate in the initial ordered block. -/
+@[expose]
 def pastCutOrderIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
     (r : pastWithTerminalFinset S I) : Fin (pastPredecessorCard S I + 1) :=
   Fin.cast (by
@@ -605,6 +625,7 @@ def pastCutOrderIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
       (DenseTime.physicalSetEquiv (pastWithTerminalFinset S I) r))
 
 /-- Position of a positive relative-future coordinate in the final ordered block. -/
+@[expose]
 def positiveFutureOrderIndex (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime))
     (t : positiveFutureFinset S I) : Fin (positiveFutureFinset S I).card :=
@@ -651,6 +672,7 @@ theorem positiveFutureOrderedPhysicalTimes_positiveFutureOrderIndex
     DenseTime.physicalSetEquiv_apply] using! hx
 
 /-- Reindex a split ordered path by augmented-past and positive-future dense labels. -/
+@[expose]
 def orderedSplitToCutCoordinates {alpha : Type*} (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime))
     (z : (Fin (pastPredecessorCard S I + 1) → alpha) ×
@@ -671,6 +693,7 @@ theorem measurable_orderedSplitToCutCoordinates {alpha : Type*} [MeasurableSpace
     exact (measurable_pi_apply (positiveFutureOrderIndex S I t)).comp measurable_snd
 
 /-- A past label as a coordinate of the cut-augmented past set. -/
+@[expose]
 def pastCutIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
     (r : I.toLeft) : pastWithTerminalFinset S I :=
   ⟨r.1.1, (mem_pastWithTerminalFinset S I r).mpr
@@ -698,6 +721,7 @@ theorem futureCutIndex_eq_none_iff (S : DenseTime)
 variable {alpha : Type*}
 
 /-- Select the augmented-past or strict-future coordinate represented by a mixed label. -/
+@[expose]
 def cutCoordinateIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) (i : I) :
     pastWithTerminalFinset S I ⊕ positiveFutureFinset S I := by
   cases hi : i.1 with
@@ -713,6 +737,7 @@ def cutCoordinateIndex (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime)) (i
 
 /-- Pull coordinates indexed by the augmented past and the strictly positive relative future
 back to the original mixed labels. -/
+@[expose]
 def pullbackCutCoordinates (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
     (z : (pastWithTerminalFinset S I → alpha) × (positiveFutureFinset S I → alpha)) :
     I → alpha := fun i ↦ Sum.elim z.1 z.2 (cutCoordinateIndex S I i)
@@ -733,6 +758,7 @@ theorem measurable_pullbackCutCoordinates (S : DenseTime)
         ((measurable_pi_apply t).comp measurable_snd)
 
 /-- Include an original absolute physical coordinate into the cut-augmented set. -/
+@[expose]
 def includeAbsolutePhysical (S : DenseTime) (I : Finset (Set.Iic S ⊕ DenseTime))
     (t : absolutePhysicalFinset S I) : absolutePhysicalFinsetWithTerminal S I :=
   ⟨t, by
@@ -747,6 +773,7 @@ def restrictAugmentedAbsolute {alpha : Type*} (S : DenseTime)
 
 /-- Read the augmented absolute path as an augmented past and a strictly positive relative
 future. -/
+@[expose]
 def splitAugmentedAbsolute {alpha : Type*} (S : DenseTime)
     (I : Finset (Set.Iic S ⊕ DenseTime))
     (path : absolutePhysicalFinsetWithTerminal S I → alpha) :

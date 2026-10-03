@@ -31,7 +31,7 @@ At `τ₁₆₃` : `41 − τ + τ² = 0`, i.e. `A = 41, B = −1, C = 1`, `D = 
 `√D = 2τ − 1 = i√163`, `AC = 41` — the specialization used in `Coefficients.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

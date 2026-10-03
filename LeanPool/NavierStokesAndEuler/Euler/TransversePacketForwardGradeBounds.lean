@@ -37,7 +37,7 @@ section
 /-! Homogeneity restores a common arbitrary envelope for genuine forcing
 and initial data, without adding either envelope to the radius guards. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -235,7 +235,7 @@ section
 
 /-! Same-radius estimates for the actual corrector, divided by the prescribed time profile. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -342,7 +342,7 @@ section
 
 /-! Bounds for the actual high-pressure gradient from the normalized forcing and solved velocity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -415,7 +415,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -436,15 +436,15 @@ variable {P : ℝ} [Fact (0 < P)]
   (N : EulerTransversePacketJoin.NormalBudget D q L.R)
 
 /-- Pressure amplitude, given by `P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost`. -/
-def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
+@[expose] def pressureAmplitude : ℝ := P*pressureCost (Fin 4) q N.Ri N.C N.C 1 L.commonCost
 /-- Potential amplitude, given by `3*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialAmplitude : ℝ := 3*N.blockAmplitude*(P*L.commonCost)
 /-- Potential time amplitude, given by `6*N.blockAmplitude*(P*L.commonCost)`. -/
 def potentialTimeAmplitude : ℝ := 6*N.blockAmplitude*(P*L.commonCost)
 /-- Corrector amplitude, given by `27*N.blockAmplitude^2*(P*L.commonCost)`. -/
-def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
+@[expose] def correctorAmplitude : ℝ := 27*N.blockAmplitude^2*(P*L.commonCost)
 /-- Corrector time amplitude, given by `108*N.blockAmplitude^2*(P*L.commonCost)`. -/
-def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
+@[expose] def correctorTimeAmplitude : ℝ := 108*N.blockAmplitude^2*(P*L.commonCost)
 
 variable {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
   (A : ℝ) (hA : 0 ≤ A) (d : ℕ)
@@ -546,7 +546,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

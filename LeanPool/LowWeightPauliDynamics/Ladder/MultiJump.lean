@@ -86,7 +86,7 @@ plausible one.
 * `MultiLadder.majorant_mono`: the majorant is monotone in the number of layers.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -102,7 +102,7 @@ reservoir once and climb to rung `m` through exactly `k` jumps at strictly incre
 The recursion is on the number of jumps `k`, not on the rung `m`, so it is structural. The sum
 over `Finset.Ico 1 m` keeps `1 ≤ j < m`, hence `1 ≤ m - j`: no `ℕ` truncated subtraction is ever
 evaluated outside its intended range. -/
-def chain (eps : ℕ → ℕ → ℝ) (E : ℕ → ℝ) : ℕ → ℕ → ℝ
+@[expose] def chain (eps : ℕ → ℕ → ℝ) (E : ℕ → ℝ) : ℕ → ℕ → ℝ
   | 0, _ => 0
   | 1, m => E m
   | (k + 2), m => ∑ j ∈ Ico 1 m, eps j m * chain eps E (k + 1) (m - j)
@@ -212,7 +212,7 @@ number of layers `T`:
 In `apd:eq:composition_majorant` the outer sum is `∑_{k=1}^{min(m,T)}`; the extra terms here
 vanish, at `k = 0` by definition and at `k > m` by `chain_eq_zero_of_lt`. Summing to `T` rather
 than to `min(m,T)` is what makes the Pascal step below a two-line rewrite. -/
-noncomputable def majorant (eps : ℕ → ℕ → ℝ) (E : ℕ → ℝ) (M : ℝ) (m T : ℕ) : ℝ :=
+@[expose] noncomputable def majorant (eps : ℕ → ℕ → ℝ) (E : ℕ → ℝ) (M : ℝ) (m T : ℕ) : ℝ :=
   M * ∑ k ∈ range (T + 1), (T.choose k : ℝ) * chain eps E k m
 
 variable {eps : ℕ → ℕ → ℝ} {E : ℕ → ℝ}

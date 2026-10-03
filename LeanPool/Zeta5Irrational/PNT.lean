@@ -16,7 +16,7 @@ form `θ(x) ~ x` for Chebyshev's function `θ`. Mathlib does not contain it; the
 `PrimeNumberTheoremAnd` development already preserved in `LeanPool.MooreBound` does.
 -/
 
-@[expose] public section
+public section
 
 open Filter Asymptotics
 

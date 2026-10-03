@@ -17,7 +17,7 @@ ring homomorphism, so it is a ring isomorphism, which is the form
 in which the ℂ-linear structure of the Ind-completion consumes it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -29,6 +29,7 @@ variable (A : Type u)
 
 /-- Scaling the identity of the tensor unit, as a ring
 homomorphism. -/
+@[expose]
 def scalarUnitRingHom
     [Category.{v} A] [Preadditive A] [CategoryTheory.Linear ℂ A]
     [MonoidalCategory A] : ℂ →+* End (𝟙_ A) where
@@ -44,6 +45,7 @@ def scalarUnitRingHom
 variable {A}
 
 /-- **The scalar unit as a ring isomorphism.** -/
+@[expose]
 noncomputable def scalarUnitEquiv
     [Category.{v} A] [Preadditive A] [CategoryTheory.Linear ℂ A]
     [MonoidalCategory A]

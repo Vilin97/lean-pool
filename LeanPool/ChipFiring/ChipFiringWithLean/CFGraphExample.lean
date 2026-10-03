@@ -15,7 +15,7 @@ public import Mathlib.LinearAlgebra.Matrix.Symmetric
 Chip firing, graph divisors, and their combinatorial properties.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 
@@ -57,7 +57,7 @@ def edgesWithLoop : Multiset (Person × Person) :=
 private theorem loopless_test_edges_with_loop : ¬ (∀ v, (v, v) ∉ edgesWithLoop) := by decide
 
 /-- Four-vertex loopless multigraph used to test firing and borrowing operations. -/
-def exampleGraph : CFGraph := {
+@[expose] def exampleGraph : CFGraph := {
   V := Person,
   edges := Multiset.ofList [
     (Person.A, Person.B), (Person.B, Person.C),

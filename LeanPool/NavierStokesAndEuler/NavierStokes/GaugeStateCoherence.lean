@@ -17,7 +17,7 @@ whole radial/torus fibers.  The recomputed pressure and retained cutoff alias
 are obtained from their genuine integral definitions.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.GaugeStateCoherence
@@ -35,6 +35,7 @@ variable {S T : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
   [NormedAddCommGroup T] [NormedSpace ℝ T]
 
 /-- The actual invertible map on the universal cover. -/
+@[expose]
 noncomputable def chartEquiv (l : ℝ) (hl : l ≠ 0) (P : S ≃L[ℝ] T) (k : ℕ) :
     PressureStream.Lift S ≃L[ℝ] PressureStream.Lift T :=
   (PhysicalResidualNaturality.scalarEquiv ℝ l hl).prodCongr
@@ -354,17 +355,18 @@ theorem pressureAliasState_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : 
 /-! ## The actual similarity gauge in two bands -/
 
 /-- Band scale, given by `(ChartScales.Q n / ChartScales.Q m) ^ (1 / 2 : ℝ)`. -/
-noncomputable def bandScale (n m : ℕ) : ℝ :=
+@[expose] noncomputable def bandScale (n m : ℕ) : ℝ :=
   (ChartScales.Q n / ChartScales.Q m) ^ (1 / 2 : ℝ)
 
 theorem bandScale_pos (n m : ℕ) : 0 < bandScale n m :=
   Real.rpow_pos_of_pos (div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)) _
 
 /-- Band velocity scale, given by `(ChartScales.Q n / ChartScales.Q m) ^ CoordinateAlgebra.A h`. -/
-noncomputable def bandVelocityScale (h : ℝ) (n m : ℕ) : ℝ :=
+@[expose] noncomputable def bandVelocityScale (h : ℝ) (n m : ℕ) : ℝ :=
   (ChartScales.Q n / ChartScales.Q m) ^ CoordinateAlgebra.A h
 
 /-- The slow coordinates are ordered `(T,Z)`, as in the moving mean gauge. -/
+@[expose]
 noncomputable def bandSlowEquiv (h : ℝ) (n m : ℕ) : Plane ≃L[ℝ] Plane :=
   (PhysicalResidualNaturality.scalarEquiv ℝ (ChartScales.Q n / ChartScales.Q m)
     (div_pos (ChartScales.Q_pos n) (ChartScales.Q_pos m)).ne').prodCongr
@@ -379,6 +381,7 @@ noncomputable def bandSlowEquiv (h : ℝ) (n m : ℕ) : Plane ≃L[ℝ] Plane :=
 
 /-- Band chart equiv, given by `chartEquiv (bandScale n m) (bandScale_pos n m).ne'
 (bandSlowEquiv h n m) k`. -/
+@[expose]
 noncomputable def bandChartEquiv (h : ℝ) (n m k : ℕ) : PressureStream.Lift Plane ≃L[ℝ]
     PressureStream.Lift Plane :=
   chartEquiv (bandScale n m) (bandScale_pos n m).ne' (bandSlowEquiv h n m) k

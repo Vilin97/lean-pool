@@ -31,7 +31,7 @@ form `continuousProcess_map_eval_zero'`), `continuousProcess_map_finiteEvaluatio
 `continuousProcess_condExp_shift_countableStoppingTime`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal

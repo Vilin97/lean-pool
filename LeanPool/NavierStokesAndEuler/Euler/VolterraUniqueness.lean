@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Uniqueness, initial traces, and genuine positive time budgets for the Volterra construction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

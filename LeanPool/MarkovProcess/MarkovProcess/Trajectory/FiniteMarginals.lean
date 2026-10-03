@@ -19,7 +19,7 @@ No assertion is made at irrational times or about a Markov, strong Markov, or Hu
 the continuous-path law.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -32,6 +32,7 @@ namespace SubMarkovKernelSemigroup
 section
 
 /-- The finite set of physical nonnegative-real times represented by rational times in `I`. -/
+@[expose]
 def denseTimePhysicalSet (I : Finset DenseTime) : Finset NNReal :=
   I.map DenseTime.castOrderEmbedding.toEmbedding
 

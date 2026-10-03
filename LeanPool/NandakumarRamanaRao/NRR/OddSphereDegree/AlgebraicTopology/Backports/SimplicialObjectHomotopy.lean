@@ -10,4 +10,4 @@ public import Mathlib.AlgebraicTopology.SimplicialObject.Homotopy
 
 /-! # Simplicial Object Homotopy -/
 
-@[expose] public section
+public section

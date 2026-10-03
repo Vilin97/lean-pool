@@ -15,4 +15,4 @@ import Mathlib.Algebra.Order.Field.Basic
 Import-only index for the `Order` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

@@ -34,7 +34,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSet
 
 /-! ## Part I: Bounded branch sets in Baire space -/
 
-@[expose] public section
+public section
 
 open Set Topology MeasureTheory Filter
 open scoped ENNReal

@@ -19,7 +19,7 @@ open regions required by `TopBottomComplement`.
 This construction avoids any local path-connectedness assumption on the base hyperspace.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

@@ -21,7 +21,7 @@ unblocked color branch.  Certificate soundness remains a theorem of Lean,
 while each small tree is independently reduced by the kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -33,7 +33,7 @@ inductive PartsGadgetCaseNode (certificateCount : Nat) where
 namespace PartsGadgetCaseNode
 
 /-- Decode zero as no child and `n + 1` as child index `n`. -/
-def child {certificateCount : Nat}
+@[expose] def child {certificateCount : Nat}
     (node : PartsGadgetCaseNode certificateCount)
     (color : Fin 4) : Option Nat :=
   match node with
@@ -55,7 +55,7 @@ structure PartsGadgetCaseTree (certificateCount : Nat) where
   nodes : Array (PartsGadgetCaseNode certificateCount)
 
 /-- Check routing, but leave each selected certificate proof as a separate fact. -/
-def PartsGadgetCaseVerifiesNodeB {certificateCount : Nat}
+@[expose] def PartsGadgetCaseVerifiesNodeB {certificateCount : Nat}
     (certificates : Fin certificateCount → PartsGadgetCertificate)
     (nodes : Array (PartsGadgetCaseNode certificateCount)) :
     Nat → List PartsGadgetAssignment → Nat → Bool
@@ -75,7 +75,7 @@ def PartsGadgetCaseVerifiesNodeB {certificateCount : Nat}
                     (path ++ [⟨vertex, color⟩]) child
 
 /-- The root-routing check for a case tree. -/
-def PartsGadgetCaseTree.VerifiesRouting {certificateCount : Nat}
+@[expose] def PartsGadgetCaseTree.VerifiesRouting {certificateCount : Nat}
     (tree : PartsGadgetCaseTree certificateCount)
     (certificates : Fin certificateCount → PartsGadgetCertificate) : Prop :=
   PartsGadgetCaseVerifiesNodeB certificates tree.nodes (tree.nodeCount + 1)

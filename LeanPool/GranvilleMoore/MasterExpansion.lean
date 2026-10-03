@@ -77,7 +77,7 @@ into the monic `∏_{s<p}(X - (1 + s(p-1)))`, whose sub-leading coefficient is m
 roots, and that sum is divisible by `p` because twice it is `p(2 + (p-1)^2)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

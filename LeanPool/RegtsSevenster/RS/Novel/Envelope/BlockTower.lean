@@ -22,7 +22,7 @@ so the recursive block constructions live at the same indices as
 the tensor structure.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -52,6 +52,7 @@ theorem blockPerm_mul (n : ℕ) {k : ℕ}
   simp [blockPerm]
 
 /-- The block-permutation monoid homomorphism. -/
+@[expose]
 noncomputable def blockPermHom (n k : ℕ) :
     Equiv.Perm (Fin k) →* Equiv.Perm (Fin (n * k)) where
   toFun := blockPerm n
@@ -112,6 +113,7 @@ theorem blockRep_of (n k : ℕ) (σ : Equiv.Perm (Fin k)) :
 /-! ### The block-diagonal power -/
 
 /-- The End-typed tensor at block arities. -/
+@[expose]
 noncomputable def blockTensorEnd {a b : ℕ}
     (u : skeinEnd f a) (v : skeinEnd f b) :
     skeinEnd f (a + b) :=
@@ -123,6 +125,7 @@ noncomputable def blockTensorEnd {a b : ℕ}
 /-- The block-diagonal tensor power: `k` copies of an `n`-strand
 endomorphism.  The index arithmetic is definitional:
 `n * (k + 1) ≡ n * k + n`. -/
+@[expose]
 noncomputable def blockPow (n : ℕ) (g : skeinEnd f n) :
     (k : ℕ) → skeinEnd f (n * k)
   | 0 => 1
@@ -304,6 +307,7 @@ theorem blockRep_compat (n : ℕ) {j k : ℕ} (h : j ≤ k)
 /-- **The block permutation tower**: `S_k` acting by block
 permutations on the `n·k`-strand endomorphism algebras, of growth
 `(R ^ n) ^ 2`. -/
+@[expose]
 noncomputable def blockPermTower (n : ℕ) :
     PermTower (fun k => skeinEnd f (n * k)) (((R : ℝ) ^ n) ^ 2) where
   rep k := blockRep f n k

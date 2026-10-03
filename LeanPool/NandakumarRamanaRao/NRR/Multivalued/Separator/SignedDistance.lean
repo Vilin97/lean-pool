@@ -28,7 +28,7 @@ by the separator structure; these two facts drive the sign laws through the `Met
 wrappers.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -154,6 +154,7 @@ theorem continuous_signedDistance
         (by simpa [S.signedDistance_eq_zero_of_mem hzc] using h_abs)
 
 /-- The signed distance packaged as a bundled continuous map. -/
+@[expose]
 noncomputable def signedDistanceMap
     (S : TopBottomSeparator X) :
     C(X × SignedInterval, ℝ) :=

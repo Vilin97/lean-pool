@@ -32,7 +32,7 @@ the prime number theorem;
 total `≈ 1.3480 K² + o(K²)`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset
 

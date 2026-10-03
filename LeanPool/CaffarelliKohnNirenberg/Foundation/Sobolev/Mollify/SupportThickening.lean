@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.KernelAllOrde
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

@@ -26,7 +26,7 @@ and the nonhorizontal part. The endpoint module proves vanishing of the nonhoriz
 and identifies the horizontal sums with the endpoint refined counts.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -53,7 +53,7 @@ variable {p : Nat}
 
 /-- Positive-ray index of an oriented facet before multiplication by its alternating boundary
 sign. -/
-noncomputable def unsignedFacetIndex
+@[expose] noncomputable def unsignedFacetIndex
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) : ZMod p :=
   if FacetHasPositiveRayIntersection hp V k then
     FoxNeuwirthOrderComplex.AffineVertexMap.determinantIndex
@@ -61,6 +61,7 @@ noncomputable def unsignedFacetIndex
   else 0
 
 /-- Transport an omitted facet vertex to the face-index type used by the simplicial boundary. -/
+@[expose]
 def facetFaceIndex
     (hp : Nat.Prime p) (k : Fin (p + 1)) : Fin ((p - 1) + 2) :=
   Fin.cast (by have := hp.two_le; omega) k
@@ -129,6 +130,7 @@ theorem unsignedFacetIndex_eq_of_facetValue_eq
     rw [ite_eq_right hV, ite_eq_right hW]
 
 /-- Relabel every output coordinate vector of a local affine simplex by a prime symmetry. -/
+@[expose]
 noncomputable def primeSmulVertexMap
     (p : Nat) (g : PrimeSymmetry p) (V : VertexMap p) : VertexMap p where
   value i := g • V.value i
@@ -491,6 +493,7 @@ noncomputable instance (hp : Nat.Prime p) (N L : Nat) :
 
 /-- Ordered global vertices of one induced prism facet.  Equality of signatures means equality as
 an ordered sampled facet, which is the correct relation for oriented boundary cancellation. -/
+@[expose]
 noncomputable def facetSignature
     (hp : Nat.Prime p) (N L : Nat)
     (o : FacetOccurrence hp N L) : Fin p → GlobalVertex hp N L :=
@@ -564,6 +567,7 @@ theorem signatureWeight_facetSignature
 /-- Coefficient of one fully refined prism simplex.  It combines the original orbit-cycle
 coefficient, the spatial barycentric-subdivision sign, the staircase sign, and the further prism
 subdivision sign. -/
+@[expose]
 noncomputable def prismCoefficient
     (hp : Nat.Prime p) (N L : Nat)
     (q : PrismCell hp N L) : ZMod p :=
@@ -572,6 +576,7 @@ noncomputable def prismCoefficient
       (prismSign q : ZMod p)
 
 /-- Signed incidence coefficient of one facet occurrence in the global refined prism chain. -/
+@[expose]
 noncomputable def occurrenceCoefficient
     (hp : Nat.Prime p) (N L : Nat)
     (o : FacetOccurrence hp N L) : ZMod p :=
@@ -579,14 +584,14 @@ noncomputable def occurrenceCoefficient
     SimplicialChain.faceSign (R := ZMod p) (d := p - 1) (facetFaceIndex hp o.2)
 
 /-- Total signed boundary coefficient of one ordered global facet signature. -/
-noncomputable def signatureBoundaryCoefficient
+@[expose] noncomputable def signatureBoundaryCoefficient
     (hp : Nat.Prime p) (N L : Nat)
     (s : FacetSignature hp N L) : ZMod p :=
   ∑ o : FacetOccurrence hp N L,
     if facetSignature hp N L o = s then occurrenceCoefficient hp N L o else 0
 
 /-- Expanded global signed positive-ray boundary sum over all local facet occurrences. -/
-noncomputable def globalSignedFacetSum
+@[expose] noncomputable def globalSignedFacetSum
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ o : FacetOccurrence hp N L,
@@ -716,18 +721,21 @@ theorem Result.signature_weighted_boundary_sum_eq_zero
 /-! ## Horizontal and nonhorizontal decomposition -/
 
 /-- Time coordinate of one vertex in an ordered global facet signature. -/
+@[expose]
 noncomputable def signatureTime
     (hp : Nat.Prime p) (N L : Nat)
     (s : FacetSignature hp N L) (i : Fin p) : Real :=
   (globalPoint hp N L (s i)).time.1
 
 /-- A facet signature lies in the lower horizontal layer. -/
+@[expose]
 def IsLowerHorizontal
     (hp : Nat.Prime p) (N L : Nat)
     (s : FacetSignature hp N L) : Prop :=
   ∀ i : Fin p, signatureTime hp N L s i = 0
 
 /-- A facet signature lies in the upper horizontal layer. -/
+@[expose]
 def IsUpperHorizontal
     (hp : Nat.Prime p) (N L : Nat)
     (s : FacetSignature hp N L) : Prop :=
@@ -744,7 +752,7 @@ noncomputable instance isUpperHorizontalDecidable
   Classical.propDecidable _
 
 /-- Lower horizontal contribution to the global signed facet sum. -/
-noncomputable def lowerHorizontalContribution
+@[expose] noncomputable def lowerHorizontalContribution
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ s : FacetSignature hp N L,
@@ -753,7 +761,7 @@ noncomputable def lowerHorizontalContribution
     else 0
 
 /-- Upper horizontal contribution to the global signed facet sum. -/
-noncomputable def upperHorizontalContribution
+@[expose] noncomputable def upperHorizontalContribution
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ s : FacetSignature hp N L,
@@ -762,7 +770,7 @@ noncomputable def upperHorizontalContribution
     else 0
 
 /-- Contribution of every signature not wholly contained in either horizontal layer. -/
-noncomputable def nonhorizontalContribution
+@[expose] noncomputable def nonhorizontalContribution
     (hp : Nat.Prime p) (N L : Nat)
     (a : Assignment hp N L) : ZMod p :=
   ∑ s : FacetSignature hp N L,

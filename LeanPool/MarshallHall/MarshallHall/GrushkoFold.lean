@@ -18,7 +18,7 @@ argument.  The proof is deliberately phrased using `List.splitBy`, so the
 maximality and the alternating boundary conditions are explicit.
 -/
 
-@[expose] public section
+public section
 
 open Function Monoid.Coprod
 

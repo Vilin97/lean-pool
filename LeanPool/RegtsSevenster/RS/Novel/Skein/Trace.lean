@@ -20,12 +20,13 @@ the pairing kernel by construction and so descends to the Hom
 spaces of the skein category.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The trace of a `(t + t)`-fragment under a parameter: the value
 of its strand closure. -/
+@[expose]
 noncomputable def fragTrace (f : ClosedFragment → ℂ) {t : ℕ}
     (F : Fragment (Fin (t + t))) : ℂ :=
   f (pairClose F (strandBundle t))
@@ -51,6 +52,7 @@ theorem ker_le_ker_traceFunctional (f : ClosedFragment → ℂ) (t : ℕ) :
   rfl
 
 /-- The trace descends to the Hom space. -/
+@[expose]
 noncomputable def HomSpace.traceMap (f : ClosedFragment → ℂ) (t : ℕ) :
     HomSpace f (t + t) →ₗ[ℂ] ℂ :=
   Submodule.liftQ _ (traceFunctional f t)

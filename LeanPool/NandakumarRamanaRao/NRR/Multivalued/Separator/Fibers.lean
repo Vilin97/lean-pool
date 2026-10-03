@@ -22,7 +22,7 @@ the vertical path through any point meets the carrier. Nonemptiness of the carri
 derived rather than assumed, so no separate nonemptiness field is needed.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

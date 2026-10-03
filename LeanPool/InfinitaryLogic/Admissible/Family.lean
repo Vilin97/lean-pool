@@ -35,7 +35,7 @@ on.
 - `CodedFamily`, `codedIInf`, `codedISup`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -136,7 +136,7 @@ presentation definitionally (`hfAmbient_toFamilyPresentation`). -/
 
 /-- **The HF family view.**  No code names an infinitary family; the remaining fields are
 discharged by the empty code subdomain. -/
-def hfFamily (L : Language.{u, v}) : FamilyPresentation.{u, v, 0, 0} L where
+@[expose] def hfFamily (L : Language.{u, v}) : FamilyPresentation.{u, v, 0, 0} L where
   Element := ℕ
   IsFamilyCode _ := False
   Index c := c.2.elim

@@ -47,7 +47,7 @@ the ambient category; for `Ind C` it is supplied by
 counterpart.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

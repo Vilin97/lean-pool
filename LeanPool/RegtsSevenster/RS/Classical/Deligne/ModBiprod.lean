@@ -19,7 +19,7 @@ and morphisms out of the biproduct module are determined by the
 two components.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ universe v u
 variable {D : Type u}
 
 /-- The componentwise action on the biproduct of the carriers. -/
+@[expose]
 noncomputable def modBiprodAct
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A) :
@@ -76,7 +77,7 @@ theorem modBiprodAct_mul [Category.{v} D] [MonoidalCategory D] [Preadditive D]
       associator_naturality_right_assoc]
 
 /-- The module structure on the biproduct of the carriers. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def modBiprodModObj
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A) :
@@ -86,6 +87,7 @@ noncomputable def modBiprodModObj
   mul_smul := modBiprodAct_mul A M N
 
 /-- **The biproduct of modules**, bundled. -/
+@[expose]
 noncomputable def modBiprod
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A) :
@@ -152,6 +154,7 @@ theorem modBiprodAct_snd [Category.{v} D] [MonoidalCategory D] [Preadditive D]
   rw [modBiprodAct, biprod.lift_snd]
 
 /-- The first injection is a module map. -/
+@[expose]
 noncomputable def modBiprodInl
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasBinaryBiproducts D] (A : D) [MonObj A]
@@ -160,6 +163,7 @@ noncomputable def modBiprodInl
     (by exact actLeft_modBiprodInl A M N)
 
 /-- The second injection is a module map. -/
+@[expose]
 noncomputable def modBiprodInr
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasBinaryBiproducts D] (A : D) [MonObj A]
@@ -168,6 +172,7 @@ noncomputable def modBiprodInr
     (by exact actLeft_modBiprodInr A M N)
 
 /-- The first projection is a module map. -/
+@[expose]
 noncomputable def modBiprodFst
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A) :
@@ -176,6 +181,7 @@ noncomputable def modBiprodFst
     (by exact modBiprodAct_fst A M N)
 
 /-- The second projection is a module map. -/
+@[expose]
 noncomputable def modBiprodSnd
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A) :
@@ -220,6 +226,7 @@ theorem modBiprodAct_map [Category.{v} D] [MonoidalCategory D] [Preadditive D]
       biprod.map_snd]
 
 /-- **Functoriality of the module biproduct.** -/
+@[expose]
 noncomputable def modBiprodMap
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] (A : D) [MonObj A] (M : Mod D A) (N : Mod D A)

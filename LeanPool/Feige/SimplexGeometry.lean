@@ -23,7 +23,7 @@ halfspace argument: the simplex, its centroid, and the value at that centroid
 of the linear functional determined by a coefficient vector.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 
@@ -35,7 +35,7 @@ variable {ι : Type*} [Fintype ι]
 
 /-- The full-dimensional standard simplex in `ι → ℝ`, obtained by deleting
 one coordinate from the standard simplex on `Option ι`. -/
-def fullSimplex (ι : Type*) [Fintype ι] : Set (ι → ℝ) :=
+@[expose] def fullSimplex (ι : Type*) [Fintype ι] : Set (ι → ℝ) :=
   {x | (∀ i, 0 ≤ x i) ∧ ∑ i, x i ≤ 1}
 
 theorem mem_fullSimplex_iff {x : ι → ℝ} :
@@ -92,6 +92,7 @@ theorem volume_fullSimplex_lt_top :
 /-- The centroid of the full-dimensional standard simplex.  Its `ι`
 coordinates, as well as the deleted coordinate, all equal
 `1 / (card ι + 1)`. -/
+@[expose]
 noncomputable def simplexCentroid (ι : Type*) [Fintype ι] : ι → ℝ :=
   fun _ ↦ ((Fintype.card ι : ℝ) + 1)⁻¹
 
@@ -144,7 +145,7 @@ theorem volume_fullSimplex_pos :
 
 /-- The linear functional cutting out the simplex halfspace associated to
 the coefficient vector `y`. -/
-def simplexLinearForm (y x : ι → ℝ) : ℝ :=
+@[expose] def simplexLinearForm (y x : ι → ℝ) : ℝ :=
   ∑ i, y i * x i
 
 theorem simplexLinearForm_apply (y x : ι → ℝ) :

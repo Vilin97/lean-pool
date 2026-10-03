@@ -13,7 +13,7 @@ import Mathlib.Analysis.Complex.RemovableSingularity
 # LeanPool.RiemannMappingTheorem.DerivInj
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric circleIntegral Topology Filter Set
 

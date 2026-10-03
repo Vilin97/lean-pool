@@ -21,7 +21,7 @@ two-sided ideal (accompanying paper, Lemma 3.3(a)), so composition
 descends to the Hom spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

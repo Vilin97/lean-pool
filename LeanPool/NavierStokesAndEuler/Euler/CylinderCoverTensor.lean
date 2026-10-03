@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Exact coordinate words and tensor norm bounds for the real periodic
 cover of a smooth cylinder field. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

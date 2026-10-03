@@ -16,7 +16,7 @@ import LeanPool.Monlib4.RepTheory.AutMat
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances`.
 -/
 
-@[expose] public section
+public section
 -- import LeanPool.Monlib4.LinearAlgebra.Ips.Frob
 
 variable {n : Type*} [Fintype n] [DecidableEq n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
@@ -339,7 +339,7 @@ theorem Module.Dual.pi_isTracial_iff {k : Type*} [Fintype k]
     simp [h _ _]
 
 /-- The modular star-algebra structure on matrices induced by a faithful positive functional. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def Matrix.isStarAlgebra [hφ : φ.IsFaithfulPosMap] :
     starAlgebra (Matrix n n ℂ) where
   modAut := sig hφ
@@ -349,7 +349,7 @@ noncomputable def Matrix.isStarAlgebra [hφ : φ.IsFaithfulPosMap] :
       neg_neg, (Matrix.PosDef.rpow.isPosDef _ _).1.eq,
       mul_assoc]
 
-@[reducible, instance]
+@[reducible, instance, expose]
 noncomputable def Module.Dual.IsFaithfulPosMap.innerProductAlgebra [hφ : φ.IsFaithfulPosMap] :
     @InnerProductAlgebra (Matrix n n ℂ) (Matrix.isStarAlgebra (φ := φ)) := by
   letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
@@ -365,7 +365,7 @@ noncomputable def Module.Dual.IsFaithfulPosMap.innerProductAlgebra [hφ : φ.IsF
   add_left := inner_add_left
   smul_left := inner_smul_left }
 
-@[reducible, instance]
+@[reducible, instance, expose]
 noncomputable
 def Module.Dual.IsFaithfulPosMap.quantumSet [hφ : φ.IsFaithfulPosMap] :
     @QuantumSet (Matrix n n ℂ) (Matrix.isStarAlgebra (φ := φ)) := by
@@ -419,6 +419,7 @@ variable {p : Type*} [Fintype p] [DecidableEq p]
   {ψ : Module.Dual ℂ (Matrix p p ℂ)}
 
 /-- Matrix-specialized `Psi` equivalence for faithful positive functionals. -/
+@[expose]
 noncomputable def Module.Dual.IsFaithfulPosMap.psi
     (hφ : φ.IsFaithfulPosMap) [hψ : ψ.IsFaithfulPosMap] (t r : ℝ) :
     (Matrix n n ℂ →ₗ[ℂ] Matrix p p ℂ) ≃ₗ[ℂ]
@@ -440,6 +441,7 @@ variable {k : Type*} [Fintype k] [DecidableEq k] {s : k → Type*} [Π i, Fintyp
 
 
 /-- Apply the modular automorphism to each matrix block in a family. -/
+@[expose]
 noncomputable def piSig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     (z : ℝ) : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s where
   toFun x i := sig (hψ i) z (x i)
@@ -487,7 +489,7 @@ private theorem piSig_star (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     mul_assoc]
 
 /-- The modular star-algebra structure on a finite product of matrix blocks. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def PiMat.isStarAlgebra [_hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
     starAlgebra (PiMat ℂ k s) where
   modAut := piSig _hψ
@@ -496,7 +498,7 @@ noncomputable def PiMat.isStarAlgebra [_hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
 
 
 -- attribute [-instance] Pi.module.Dual.isNormedAddCommGroupOfRing
-@[reducible, instance]
+@[reducible, instance, expose]
 noncomputable
 def Module.Dual.pi.IsFaithfulPosMap.innerProductAlgebra
   [∀ i, (ψ i).IsFaithfulPosMap] :
@@ -670,7 +672,7 @@ theorem Pi.Qam.Nontracial.delta_ne_zero [Nonempty k] [∀ i, Nontrivial (s i)] {
   exact Qam.Nontracial.delta_pos
 
 /-- The delta-form quantum-set structure for a single matrix algebra. -/
-@[reducible]
+@[reducible, expose]
 noncomputable
 def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
     [hφ : φ.IsFaithfulPosMap] :
@@ -695,7 +697,7 @@ def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n �
       mul_comp_comul_eq := LinearMap.mul'_comp_mul'_adjoint_of_delta_form (φ := φ) }
 
 /-- The delta-form quantum-set structure for a finite product of matrix algebras. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def PiMat.quantumSetDeltaForm [Nonempty k] [∀ i, Nontrivial (s i)] {d : ℂ}
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
   [hφ : ∀ i, (φ i).IsFaithfulPosMap] [hφ₂ : Fact (∀ i, (φ i).matrix⁻¹.trace = d)] :

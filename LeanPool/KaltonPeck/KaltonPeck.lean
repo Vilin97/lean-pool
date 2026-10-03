@@ -29,7 +29,7 @@ This file exposes the project-level definitions and the main rank-parity and hyp
 obstruction theorems.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck
 

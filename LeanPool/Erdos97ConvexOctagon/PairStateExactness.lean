@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Exactness of packed pair-occurrence states -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

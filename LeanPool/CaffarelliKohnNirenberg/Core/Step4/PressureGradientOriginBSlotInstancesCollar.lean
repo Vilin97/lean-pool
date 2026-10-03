@@ -27,7 +27,7 @@ on the component index.
 No velocity or gradient Morrey datum enters any estimate in this file.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology BigOperators
@@ -306,6 +306,7 @@ theorem time_mass_of_three_slice_bounds
 of the harmonic remainder constant; none depends on the force exponent, on the
 Morrey exponent, on the radii of the carrier, on the data size, or on the
 solution. -/
+@[expose]
 def bslotCollarConstant (C ρ : ℝ) : ℝ≥0∞ :=
   4 * ((3 * ENNReal.ofReal
           (czGradientComponentConstant rieszSecondWeakTypeConstant 1)) ^ (6 / 5 : ℝ) *

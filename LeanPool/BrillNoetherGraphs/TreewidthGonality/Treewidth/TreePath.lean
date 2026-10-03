@@ -31,7 +31,7 @@ the set of ancestors of `n`, and `Below hT s t = {n | t ∈ Anc hT s n}` is the
 subtree hanging below `t`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 

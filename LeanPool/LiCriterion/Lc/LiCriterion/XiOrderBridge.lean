@@ -44,7 +44,7 @@ Mellin integral against the two exponentials gives `‖ξ(s)‖ ≤ exp (O (‖s
 with no case split on the strip and no appeal to Stirling.  See the module docstring there.
 -/
 
-@[expose] public section
+public section
 
 namespace LiCriterion
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentPacketStrainEvolution
 normal and the actual homogeneous transverse velocity. Initial plateau
 data are the only geometric inputs; all time equations are constructed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -82,11 +82,11 @@ theorem source_numerator_pos_on (T : ℝ) (hT : 0 < T) (hTG : T ≤ G.T)
     exact h0
   · have hh := (mul_le_mul_of_nonneg_left hguard (coefficientCost_nonneg L.K)).trans
       (guardTime_small G.T L.K).1
-    exact hh.trans (by norm_num)
+    exact hh.trans (show (1 / 4 : ℝ) ≤ 1 / 2 by norm_num)
   · have hr : 0 ≤ firstSignRate (coefficientCost L.K) (coefficientCost L.K) := by
       unfold firstSignRate
       positivity [coefficientCost_nonneg L.K]
     have hh := (mul_le_mul_of_nonneg_left hguard hr).trans (guardTime_small G.T L.K).2
-    exact hh.trans (by norm_num)
+    exact hh.trans (show (1 / 4 : ℝ) ≤ 1 / 2 by norm_num)
 
 end EulerBaseEulerGuards

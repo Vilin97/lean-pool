@@ -23,7 +23,7 @@ in `Trajectory/FellerStoppingConditional.lean`, and a stopping time that may be 
 `Trajectory/StoppingLtTop.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

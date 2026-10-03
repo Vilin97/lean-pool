@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.HarmonicAnalysis
 General spectral bounds, localization, compactification, and strict hierarchy estimates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -7345,7 +7345,7 @@ theorem sphericalCodeRate_le_of_eventually_exponential
   exact hcomparison.trans_eq hconstant.limsup_eq
 
 /-- The fixed level hierarchy code bound used in the spherical-code argument. -/
-def FixedLevelHierarchyCodeBound : Prop :=
+@[expose] def FixedLevelHierarchyCodeBound : Prop :=
   ∀ {r : ℕ} {s R : ℝ},
     0 < s → s < 1 →
     ∀ (a : Fin (r + 1) → ℝ) (b : Fin r → ℝ),

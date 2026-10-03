@@ -31,7 +31,7 @@ integers, the degree identity is one more, and `linarith` finishes.  No `Finset`
 union, no inclusion–exclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Tricycle
 
@@ -47,11 +47,13 @@ variable {spec : Spec 7 15}
 /-! ## Aggregates -/
 
 /-- The chips on the closed transition path `i`, from `vᵢ⁺` to `vᵢ₊₁⁻`. -/
+@[expose]
 def transitionPathChips (spec : Spec 7 15) (D : CFDiv spec.graph) (i : Fin 3) : ℤ :=
   D (spec.coreVertex (vPlus i)) + spec.slotInteriorChips D (transitionSlot i)
     + D (spec.coreVertex (vMinus (i + 1)))
 
 /-- The chips on the cycle `Cᵢ`. -/
+@[expose]
 def cycleChips (spec : Spec 7 15) (D : CFDiv spec.graph) (i : Fin 3) : ℤ :=
   D (spec.coreVertex (vMinus i)) + D (spec.coreVertex (vPlus i))
     + spec.slotInteriorChips D (cycleSlot i 0) + spec.slotInteriorChips D (cycleSlot i 1)

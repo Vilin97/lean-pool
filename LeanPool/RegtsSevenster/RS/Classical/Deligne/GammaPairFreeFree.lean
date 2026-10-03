@@ -19,7 +19,7 @@ any pair of free modules whose objects become mixed sums after base
 change.  Every case but the odd line against itself is a unitor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

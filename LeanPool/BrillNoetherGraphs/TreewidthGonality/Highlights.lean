@@ -30,7 +30,7 @@ are unconditional; `#print axioms` on either reports exactly
 Bellenbaum–Diestel proof.
 -/
 
-@[expose] public section
+public section
 
 namespace TreewidthGonality.Highlights
 

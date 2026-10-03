@@ -12,7 +12,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.Refin
 # Prime-equivariant coordinate maps
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -20,6 +20,7 @@ namespace FoxNeuwirthOrderComplex
 variable {p : Nat}
 
 /-- Prime-equivariance of a continuous full-coordinate map. -/
+@[expose]
 def IsEquivariantCoordinateMap
     (p : Nat)
     (F : RefinedAffineMap.ContinuousCoordinateMap p) : Prop :=

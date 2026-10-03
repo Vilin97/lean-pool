@@ -17,7 +17,7 @@ Morrey control. Intersecting the time window and spatial ball with carriers
 preserves the estimate, with the explicit radius power `5 * (1 - (6/5)/κ)`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

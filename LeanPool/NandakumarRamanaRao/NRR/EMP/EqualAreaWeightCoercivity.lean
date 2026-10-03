@@ -21,7 +21,7 @@ A continuous homogeneous gauge detects both components.  Its restriction to the
 Euclidean unit sphere has a positive minimum, giving a uniform outward radius.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -159,7 +159,7 @@ theorem exists_positive_gauge_lower_bound_on_sphere
     exact hx0.2 (by simpa [Metric.mem_sphere, dist_eq_norm] using hx)
 
 /-- The augmented deviation field on the full Euclidean weight space. -/
-noncomputable def augmentedAreaDeviation
+@[expose] noncomputable def augmentedAreaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (w : WeightE n) : WeightE n :=
   (WithLp.equiv 2 (Fin n → Real)).symm fun i =>

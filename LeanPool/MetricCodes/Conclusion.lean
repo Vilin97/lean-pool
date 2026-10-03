@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.SpectralDecomposition
 The unconditional characteristic-minor argument and the final headline theorems.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -1318,7 +1318,7 @@ theorem gtTransverseEuclideanIsometry_orthogonal_last
 
 /-- The tensor isometry combining the transverse Euclidean inclusion with a canonical
 Gelfand–Tsetlin fibre. -/
-def gtTransverseTensorEmbedding
+@[expose] def gtTransverseTensorEmbedding
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (nu : Fin (r + 1) → ℕ)
     (h : Interlaces lam nu)
@@ -1900,7 +1900,7 @@ theorem gtTransverseNegativeSector_gram_pos
 
 /-- The transverse negative-sector map normalized by its positive Gram scalar to a linear
 isometry. -/
-def normalizedGTTransverseNegativeSector
+@[expose] def normalizedGTTransverseNegativeSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (kappa : Fin r → ℕ)
     (row : Fin (r + 1))
@@ -1993,7 +1993,7 @@ theorem gtTransversePositiveSector_gram_pos
 
 /-- The transverse positive-sector map normalized by its positive Gram scalar to a linear
 isometry. -/
-def normalizedGTTransversePositiveSector
+@[expose] def normalizedGTTransversePositiveSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu nu : Fin (r + 1) → ℕ) (row : Fin (r + 1))
     (hmunu : mu = raiseWeight nu row)
@@ -3514,7 +3514,7 @@ open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungMixedGapAxisProbability
 
 /-- The transverse wall-sector map normalized by its positive Gram scalar to a linear isometry. -/
-def normalizedGTTransverseWallSector
+@[expose] def normalizedGTTransverseWallSector
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hn : 2 * (r + 1) + 5 ≤ n + 1)
@@ -3824,7 +3824,7 @@ open MetricCodes.Spherical.HigherYoungAllRankCanonicalGelfandTsetlinCompleteness
 
 /-- The tensor isometry induced by a canonical full-branch fibre while retaining the Euclidean
 tensor factor. -/
-def gtFullTransverseInternalEmbedding {r n : ℕ}
+@[expose] def gtFullTransverseInternalEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (hn : 2 * r + 5 ≤ n + 1)
     (mu : FullBranchWeight lam) :
     (SpherePacking.Euclidean n ⊗[ℝ]
@@ -4041,7 +4041,7 @@ theorem euclidean_eq_gtTransverse_add_last_axis {n : ℕ}
                 mul_zero, add_zero]
 
 /-- The isometry sending a harmonic Young vector to its tensor with the last coordinate axis. -/
-def gtFullAxisAmbientInclusion {r n : ℕ}
+@[expose] def gtFullAxisAmbientInclusion {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n + 1) lam →ₗᵢ[ℝ]
       (SpherePacking.Euclidean (n + 1) ⊗[ℝ]
@@ -4092,7 +4092,7 @@ theorem gtFullAxisAmbientInclusion_sup_transverse_range_eq_top
 
 /-- The isometry obtained by embedding a full-branch fibre and tensoring with the last
 coordinate axis. -/
-def gtFullAxisEmbedding {r n : ℕ}
+@[expose] def gtFullAxisEmbedding {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (hn : 2 * r + 5 ≤ n + 1)
     (mu : FullBranchWeight lam) :
     HarmonicYoungSpace (n := n) (fullBranchSignature mu) →ₗᵢ[ℝ]

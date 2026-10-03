@@ -30,7 +30,7 @@ naming the general statements at the shape in which they are
 consumed.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

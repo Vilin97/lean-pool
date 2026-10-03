@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketLabelData
 the complete joined-packet input at one common radius. The history
 Jacobi law, inverse coefficients and all coefficient matches are proved. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -45,12 +45,14 @@ variable (G : Parent) (H : LowBounds G)
   (S : Set Space) (hS : IsCompact S) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < G.T)
 
 /-- History on, given by `(G.historyData m hm R S hS H).initial τ hτ hτT.le`. -/
+@[expose]
 def historyOn : HistoryData ((G.transverseData m hm R S hS).initial τ hτ hτT.le) :=
   (G.historyData m hm R S hS H).initial τ hτ hτT.le
 
 omit [CompleteSpace U] in
 /-- Second initial, given by `G.second.toSmoothCoefficientPath.comp (initialInclusion G.T τ
 hτT.le)`. -/
+@[expose]
 def secondInitial : SmoothCoefficientPath (Icc (0 : ℝ) τ) (Space →L[ℝ] Space) :=
   G.second.toSmoothCoefficientPath.comp (initialInclusion G.T τ hτT.le)
 
@@ -80,6 +82,7 @@ variable {G : Parent} (L : LabelData G) (H : LowBounds G)
     EulerPacketParentPhysicalBudgets.halfBall g Cp)
 
 /-- Joined raw, constructed using `EulerPacketParentPhysicalBudgets.joinedBudget`. -/
+@[expose]
 def joinedRaw : EulerTransversePacketJoin.Budget (G.transverseData m hm R S hS) τ hτ hτT
     (G.historyOn H m hm R S hS τ hτ hτT) (Fin 4) 6 :=
   EulerPacketParentPhysicalBudgets.joinedBudget (G.transverseData m hm R S hS) τ hτ hτT
@@ -94,6 +97,7 @@ def joinedRaw : EulerTransversePacketJoin.Budget (G.transverseData m hm R S hS) 
 
 /-- Joined inputs as an element of `JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ
 hτ hτT (G.historyOn H m hm R S hS τ hτ hτT)`. -/
+@[expose]
 def joinedInputs (TiTotal : ℝ) (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal) :
     JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ hτ hτT
       (G.historyOn H m hm R S hS τ hτ hτT) := by

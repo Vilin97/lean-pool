@@ -20,7 +20,7 @@ The construction `A = [M,2M] ∪ [4M,8M]` is triple-free of size `5M + 2`, so fo
 one has `8·|A| = 5·N + 16`, showing the constant `5/8` is optimal.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

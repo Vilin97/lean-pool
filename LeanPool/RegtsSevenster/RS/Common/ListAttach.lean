@@ -18,7 +18,7 @@ list product is the finset product of the finset the list
 enumerates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -19,7 +19,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Quantitative calculus for concrete smooth L² fields, with the outer
 factor in L² and the inner coordinate change preserving volume. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ variable {E V W : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Has sup bound, given by `∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*R^n*(n.factorial : ℝ)^2`. -/
-def HasSupBound (f : E → V) (C R : ℝ) : Prop :=
+@[expose] def HasSupBound (f : E → V) (C R : ℝ) : Prop :=
   ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ C*R^n*(n.factorial : ℝ)^2
 
 theorem HasSupBound.mono {f : E → V} {C R D S : ℝ}
@@ -112,7 +112,7 @@ theorem compose_memLp_and_bound (n : ℕ) :
     (fun j _ => by simpa only [← norm_jetLp] using ha j) (fun j hj _ => hfb j hj)
 
 /-- Compose field, bundling `field`, `smooth`, `integrable`. -/
-def composeField : SmoothL2Field V where
+@[expose] def composeField : SmoothL2Field V where
   field := A.field ∘ f
   smooth := A.smooth.comp hf
   integrable n := (compose_memLp_and_bound f hf hmp B R hB hR hfb A C S hC hS ha n).1
@@ -125,7 +125,7 @@ theorem composeField_bound :
 
 omit f hf hmp B R hB hR hfb A C S hC hS ha in
 /-- Product field, bundling `field`, `smooth`, `integrable`. -/
-def productField (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ g) (A : SmoothL2Field V)
+@[expose] def productField (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ g) (A : SmoothL2Field V)
     (B C R : ℝ) (hB : 0 ≤ B) (hC : 0 ≤ C) (hR : 0 ≤ R)
     (hgb : HasSupBound g B R) (hab : A.HasJetBound C R) : SmoothL2Field W where
   field x := g x (A.field x)

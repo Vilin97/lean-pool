@@ -34,7 +34,7 @@ import Mathlib.Data.Set.Insert
 # MatchingLogic.SetVariables
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace SetVariables

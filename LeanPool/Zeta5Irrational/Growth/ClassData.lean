@@ -22,7 +22,7 @@ import Mathlib.Tactic.Ring.Basic
 * `-v_p(S_K) ≤ -2h⌊K/p⌋ + 12h⌊N/p⌋ + 2 ∑_{j ≥ 1} (h - jp/2)⁺` when `p² > max(2h, N)`, `p` odd.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -108,7 +108,7 @@ lemma padicValNat_factorial_small {k : ℕ} (hk : k < p ^ 2) : padicValNat p k.f
     · exact Nat.log_lt_of_lt_pow h0.ne' hk
 
 /-- The layer-cake function `T(t) = ∑_{j ≤ J} (t - j p/2)⁺`. -/
-noncomputable def layer (p J : ℕ) (t : ℝ) : ℝ :=
+@[expose] noncomputable def layer (p J : ℕ) (t : ℝ) : ℝ :=
   ∑ j ∈ Icc 1 J, max 0 (t - j * p / 2)
 
 lemma layer_step (J : ℕ) (i : ℕ) (hJ : 2 * i / p ≤ J) :

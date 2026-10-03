@@ -22,7 +22,7 @@ The key input is the Jensen/divisor bound upgraded to multiplicities
 bound in `TailEstimates.sum_multiplicity_zeros_le_rpow`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

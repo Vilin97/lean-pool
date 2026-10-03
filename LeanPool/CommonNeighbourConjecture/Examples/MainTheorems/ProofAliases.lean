@@ -23,4 +23,4 @@ The definitions and internal proof now share one API. This module remains as
 a compatibility import for downstream users of the original file layout.
 -/
 
-@[expose] public section
+public section

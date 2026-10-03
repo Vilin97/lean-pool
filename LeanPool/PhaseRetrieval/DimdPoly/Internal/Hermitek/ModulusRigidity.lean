@@ -19,7 +19,7 @@ import Mathlib.Combinatorics.Matroid.Init
 
 /-! # ModulusRigidity -/
 
-@[expose] public section
+public section
 
 
 open Complex MeasureTheory Real Finset

@@ -40,7 +40,7 @@ remaining orders `10 ≤ n ≤ 15` have rigid excess profiles; the same ledgers,
 triangle and decorated-`C₄` certificates at the tight corners, close them directly.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

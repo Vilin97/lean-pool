@@ -22,7 +22,7 @@ identity at each index.
 When `C` is moreover braided, `Mat_ C` is rigid.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -39,7 +39,7 @@ The assembly is Craig's, reused verbatim wherever polarity is irrelevant:
 * both entailments are Craig's graph-expansion arguments, unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

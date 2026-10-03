@@ -18,7 +18,7 @@ into the strand-bundle cap yields the cap of the permuted
 matching.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

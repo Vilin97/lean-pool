@@ -15,7 +15,7 @@ The proof removes a leaf. Unless one member is that singleton, every member
 survives removal; two members meeting only at the leaf also contain its neighbour.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

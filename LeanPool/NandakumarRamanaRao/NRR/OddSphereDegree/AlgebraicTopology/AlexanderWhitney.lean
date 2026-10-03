@@ -74,7 +74,7 @@ of the diagonal.
  space (`awPair_naturality`).
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 
@@ -85,14 +85,14 @@ namespace SphereOddDegree.AlexanderWhitney
 /-- The **front `p`-face inclusion** `⦋p⦌ ⟶ ⦋p+q⦌` in `SimplexCategory`,
 sending vertex `i` to `i` — the inclusion of the initial segment `{0,…,p}`
 of `{0,…,p+q}`. -/
-def frontFace (p q : ℕ) : (⦋p⦌ : SimplexCategory) ⟶ ⦋p + q⦌ :=
+@[expose] def frontFace (p q : ℕ) : (⦋p⦌ : SimplexCategory) ⟶ ⦋p + q⦌ :=
   SimplexCategory.mkHom ⟨fun i => Fin.castLE (by lia) i, fun a b h => by
     simpa [Fin.castLE] using h⟩
 
 /-- The **back `q`-face inclusion** `⦋q⦌ ⟶ ⦋p+q⦌` in `SimplexCategory`,
 sending vertex `i` to `i + p` — the inclusion of the final segment `{p,…,p+q}`
 of `{0,…,p+q}`. -/
-def backFace (p q : ℕ) : (⦋q⦌ : SimplexCategory) ⟶ ⦋p + q⦌ :=
+@[expose] def backFace (p q : ℕ) : (⦋q⦌ : SimplexCategory) ⟶ ⦋p + q⦌ :=
   SimplexCategory.mkHom ⟨fun i => ⟨i.val + p, by have := i.isLt; lia⟩, fun a b h => by
     simp only [Fin.mk_le_mk]; exact Nat.add_le_add_right h p⟩
 
@@ -183,14 +183,14 @@ maps yields its front `p`-face and back `q`-face, the two tensor factors of the
 
 /-- The **front `p`-face of a singular `(p+q)`-simplex** `σ`, obtained by
 restricting `σ` along `frontFace p q`. -/
-noncomputable def frontSimplex (X : TopCat.{0}) (p q : ℕ)
+@[expose] noncomputable def frontSimplex (X : TopCat.{0}) (p q : ℕ)
     (σ : (TopCat.toSSet.obj X).obj (Opposite.op (⦋p + q⦌ : SimplexCategory))) :
     (TopCat.toSSet.obj X).obj (Opposite.op (⦋p⦌ : SimplexCategory)) :=
   (TopCat.toSSet.obj X).map (frontFace p q).op σ
 
 /-- The **back `q`-face of a singular `(p+q)`-simplex** `σ`, obtained by
 restricting `σ` along `backFace p q`. -/
-noncomputable def backSimplex (X : TopCat.{0}) (p q : ℕ)
+@[expose] noncomputable def backSimplex (X : TopCat.{0}) (p q : ℕ)
     (σ : (TopCat.toSSet.obj X).obj (Opposite.op (⦋p + q⦌ : SimplexCategory))) :
     (TopCat.toSSet.obj X).obj (Opposite.op (⦋q⦌ : SimplexCategory)) :=
   (TopCat.toSSet.obj X).map (backFace p q).op σ

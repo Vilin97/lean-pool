@@ -17,7 +17,7 @@ hypothesis.  Combining the two identifies the canonical inverse-Itô integrand w
 predictable Malliavin derivative and yields the concrete Clark--Ocone formula.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -105,6 +105,7 @@ theorem sub_expectationL2_eq_naturalItoIntegral_of_hermiteMultipleIntegralIdenti
 
 /-- The Hermite/multiple-integral identity constructs the concrete natural Brownian
 Clark--Ocone family. -/
+@[expose]
 noncomputable def ClarkOconeFamily.ofHermiteMultipleIntegralIdentity
     (hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)

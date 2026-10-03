@@ -25,7 +25,7 @@ The generic commutativity isomorphism is recorded here; associativity is in
 `VertexWedgeAssociativity`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -44,6 +44,7 @@ universe u v
 /-! ## Commuting a vertex wedge -/
 /-- The wedge with its two factors exchanged, presented by the original
 ordered pair of factors. -/
+@[expose]
 noncomputable def vertexWedgeCommPresentation
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     VertexWedgePresentation (vertexWedge H G y x) G H x y where
@@ -79,6 +80,7 @@ noncomputable def vertexWedgeCommPresentation
       simp [hb]
 
 /-- Vertex wedges are commutative up to graph isomorphism. -/
+@[expose]
 noncomputable def vertexWedgeComm
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V) :
     CFGraphIso (vertexWedge G H x y) (vertexWedge H G y x) :=

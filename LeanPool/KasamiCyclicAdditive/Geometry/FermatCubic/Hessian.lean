@@ -31,20 +31,20 @@ This file records the three polynomial identities behind the formula; they are a
 consequences of the two Fermat equations and of `2 = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace KasamiCyclicAdditive.FermatCubic
 
 variable {K : Type*} [Field K] [CharP K 2]
 
 /-- The denominator `D0` of the Hessian addition formula. -/
-def hessD (w1 t1 w2 t2 : K) : K := w1 * t1 + w2 * t2
+@[expose] def hessD (w1 t1 w2 t2 : K) : K := w1 * t1 + w2 * t2
 
 /-- The first numerator `N_x` of the Hessian addition formula. -/
-def hessX (w1 t1 w2 t2 : K) : K := t1 ^ 2 * w2 + t2 ^ 2 * w1
+@[expose] def hessX (w1 t1 w2 t2 : K) : K := t1 ^ 2 * w2 + t2 ^ 2 * w1
 
 /-- The second numerator `N_y` of the Hessian addition formula. -/
-def hessY (w1 t1 w2 t2 : K) : K := w1 ^ 2 * t2 + w2 ^ 2 * t1
+@[expose] def hessY (w1 t1 w2 t2 : K) : K := w1 ^ 2 * t2 + w2 ^ 2 * t1
 
 variable {w1 t1 w2 t2 : K}
 

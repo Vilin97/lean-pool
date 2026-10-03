@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaLattice
 
 /-! # Theta Moment -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -21,6 +21,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 /-! Interior path moments in normalized strand coordinates.  Endpoints are
 omitted; this is the coordinate part of the theta Jacobian invariant. -/
 /-- The position-weighted sum of divisor coefficients at the interior vertices of one strand. -/
+@[expose]
 def interiorMoment (B : Banana 2) (α : Fin 3) (D : CFDiv B.graph) : ℤ :=
   Finset.sum (Finset.range (B.length α - 1))
     (fun r => if h : r + 1 < B.length α then
@@ -46,6 +47,7 @@ def thetaCoordinate (B : Banana 2) (D : CFDiv B.graph) : ℤ × ℤ × ℤ :=
 /-! The two-coordinate projection used by the paper's theta presentation. -/
 /-- The two Jacobian coordinates obtained by subtracting the third moment from the
 endpoint-corrected first and second moments. -/
+@[expose]
 def thetaJacobianMoment (B : Banana 2) (D : CFDiv B.graph) : ℤ × ℤ :=
   (interiorMoment B 0 D + (B.length 0 : ℤ) * D (rightEndpoint B) -
       interiorMoment B 2 D,

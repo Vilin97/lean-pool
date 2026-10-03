@@ -19,7 +19,7 @@ is the block decomposition `c-U = |0><0| ⊗ 1 + |1><1| ⊗ U`.
 The projectors `proj0` and `proj1` are `HilbertOperator`s, not gates.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

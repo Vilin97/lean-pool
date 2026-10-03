@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.GeometryExperimental
 Elementary positivity, normalization, and norm-power identities for the smoothing kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLower
 

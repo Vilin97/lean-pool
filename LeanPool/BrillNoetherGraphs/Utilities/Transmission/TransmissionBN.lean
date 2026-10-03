@@ -19,7 +19,7 @@ This is the generic core needed later for the Grassmannian-transmission ⇒
 `W^r_d` implication.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

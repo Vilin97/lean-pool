@@ -59,7 +59,7 @@ as an `AtanasovRanganathan.Guarding.GuardingSet` and
 independent machine-generated chamber-cover proof of the same theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow06
 

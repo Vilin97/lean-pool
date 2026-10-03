@@ -23,14 +23,14 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 this gives `∑_{K/d < p ≤ K/c} p log p = K² (1/c² - 1/d²)/2 + o(K²)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology MeasureTheory Set Real Asymptotics
 
 namespace Zeta5Irrational
 
 /-- `c p = log p` for primes, `0` otherwise. -/
-noncomputable def cPrime (k : ℕ) : ℝ :=
+@[expose] noncomputable def cPrime (k : ℕ) : ℝ :=
   if k.Prime then Real.log k else 0
 
 lemma theta_eq_sum_cPrime (t : ℝ) : Chebyshev.theta t = ∑ k ∈ Icc 0 ⌊t⌋₊, cPrime k := by
@@ -39,7 +39,7 @@ lemma theta_eq_sum_cPrime (t : ℝ) : Chebyshev.theta t = ∑ k ∈ Icc 0 ⌊t�
 
 /-- The weighted prime sum `∑_{a < p ≤ b} p log p` (as a sum over integers `k` with
 `⌊a⌋₊ < k ≤ ⌊b⌋₊`). -/
-noncomputable def wsum (a b : ℝ) : ℝ :=
+@[expose] noncomputable def wsum (a b : ℝ) : ℝ :=
   ∑ k ∈ Ioc ⌊a⌋₊ ⌊b⌋₊, (k : ℝ) * cPrime k
 
 /-- Abel summation for the weighted prime sum. -/

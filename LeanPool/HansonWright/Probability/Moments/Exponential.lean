@@ -27,7 +27,7 @@ This module introduces no new definitions.
   summands without requiring independence.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

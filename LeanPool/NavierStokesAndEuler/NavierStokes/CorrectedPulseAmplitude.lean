@@ -31,7 +31,7 @@ the actual energy difference, proves its parameter regularity, and uses the
 constructed reset's small coefficients to bound that difference.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -505,7 +505,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -518,11 +518,11 @@ namespace NavierStokes.CorrectedPulseAmplitude
 
 /-- Energy integrand, given by `Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 -
 correctedAngular d c (y, eta) ^ 2 / 2)`. -/
-def energyIntegrand (d : TailData) (c : ℝ → Coeff) (A eta y : ℝ) : ℝ :=
+@[expose] def energyIntegrand (d : TailData) (c : ℝ → Coeff) (A eta y : ℝ) : ℝ :=
   Real.exp y * (axial d.core (fun _ => A) (y, eta) ^ 2 - correctedAngular d c (y, eta) ^ 2 / 2)
 
 /-- Total energy, given by `∫ y, energyIntegrand d c A eta y`. -/
-def totalEnergy (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) : ℝ :=
+@[expose] def totalEnergy (d : TailData) (c : ℝ → Coeff) (A eta : ℝ) : ℝ :=
   ∫ y, energyIntegrand d c A eta y
 
 theorem energyIntegrand_eq (d : TailData) (c : ℝ → Coeff) (A eta y : ℝ) :
@@ -647,7 +647,7 @@ theorem amplitude_totalEnergy_zero (d : TailData) (c : ℝ → Coeff) (eta : ℝ
 def combinedConstant (P m K : ℝ) : ℝ := PulseAmplitude.errorConstant P m + 36 * K + 1
 /-- Combined scale, given by `combinedConstant d.core.P d.core.m K *
 PulseAmplitude.logarithmicRate d.core.lam`. -/
-def combinedScale (d : TailData) (K : ℝ) : ℝ :=
+@[expose] def combinedScale (d : TailData) (K : ℝ) : ℝ :=
   combinedConstant d.core.P d.core.m K * PulseAmplitude.logarithmicRate d.core.lam
 
 theorem combinedConstant_pos {P : ℝ} (hP : 0 < P) (m K : ℝ) (hK : 0 < K) :
@@ -867,6 +867,7 @@ theorem realized_energy_eq (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
 
 /-- Radial energy integrand, given by `axial d.core amp (Real.log (X / XR), eta) ^ 2 -
 correctedAngular d c (Real.log (X / XR), eta) ^ 2 / 2`. -/
+@[expose]
 def radialEnergyIntegrand (d : TailData) (c : ℝ → Coeff) (amp : ℝ → ℝ) (eta XR X : ℝ) : ℝ :=
   axial d.core amp (Real.log (X / XR), eta) ^ 2 - correctedAngular d c (Real.log (X / XR), eta) ^ 2
       / 2

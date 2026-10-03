@@ -20,7 +20,7 @@ be differentiable. The inverse itself is the actual operator inverse, so its
 regularity depends only on the operator coefficients.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

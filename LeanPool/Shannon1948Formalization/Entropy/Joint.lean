@@ -36,7 +36,7 @@ the infrastructure for multi-variable entropy identities.
 - `marginalFst_prodDist`, `marginalSnd_prodDist`: marginals of product distributions
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section
@@ -45,21 +45,21 @@ open Finset Real
 /-! ## Marginals and product distributions -/
 
 /-- First marginal: `(marginalFst p)(a) = ∑_b p(a, b)`. -/
-def marginalFst {α β : Type} [Fintype α] [Fintype β]
+@[expose] def marginalFst {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) : ProbDist α :=
   ⟨fun a => ∑ b, p (a, b),
     fun a => Finset.sum_nonneg fun b _ => prob_nonneg p (a, b),
     by simp_rw [← Fintype.sum_prod_type, prob_sum_eq_one p]⟩
 
 /-- Second marginal: `(marginalSnd p)(b) = ∑_a p(a, b)`. -/
-def marginalSnd {α β : Type} [Fintype α] [Fintype β]
+@[expose] def marginalSnd {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) : ProbDist β :=
   ⟨fun b => ∑ a, p (a, b),
     fun b => Finset.sum_nonneg fun a _ => prob_nonneg p (a, b),
     by simp_rw [← Fintype.sum_prod_type_right, prob_sum_eq_one p]⟩
 
 /-- Product distribution: `(prodDist p q)(a, b) = p(a) * q(b)`. -/
-def prodDist {α β : Type} [Fintype α] [Fintype β]
+@[expose] def prodDist {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist α) (q : ProbDist β) : ProbDist (α × β) :=
   ⟨fun ab => p ab.1 * q ab.2,
     fun ab => mul_nonneg (prob_nonneg p ab.1) (prob_nonneg q ab.2),
@@ -78,7 +78,7 @@ def IsIndependent {α β : Type} [Fintype α] [Fintype β]
 This measures the average remaining uncertainty in `Y` once `X` is known.
 The formula uses Lean's `0 / 0 = 0` and `log 0 = 0` conventions: when
 `p_X(x) = 0` we also have `p(x,y) = 0`, so the term vanishes. -/
-def condEntropy {α β : Type} [Fintype α] [Fintype β]
+@[expose] def condEntropy {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) : ℝ :=
   -∑ ab : α × β, p ab * Real.log (p ab / marginalFst p ab.1)
 

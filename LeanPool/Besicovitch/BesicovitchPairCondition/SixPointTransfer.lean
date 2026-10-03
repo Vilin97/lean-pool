@@ -20,7 +20,7 @@ public import LeanPool.Besicovitch.SixPoint.Scaling
 This file turns a finite two-color packing theorem into the Besicovitch pair condition.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

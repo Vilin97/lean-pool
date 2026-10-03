@@ -45,7 +45,7 @@ rigid, so the pullback taken in `C` has a right dual there, and
 comparison isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

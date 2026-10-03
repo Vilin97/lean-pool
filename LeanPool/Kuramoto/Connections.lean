@@ -17,7 +17,7 @@ Relations between the weighted Kuramoto potential and the Hebbian Lyapunov funct
 zero weight regularisation they coincide, and the Hebbian penalty is convex in each weight.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 

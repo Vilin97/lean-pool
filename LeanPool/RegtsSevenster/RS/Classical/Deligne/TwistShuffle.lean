@@ -21,7 +21,7 @@ general, and the sign phenomena of the odd line enter only at the
 symmetriser conjugation downstream.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ universe v u
 variable {D : Type u}
 
 /-- The twist of a module by an object on the left, bundled. -/
+@[expose]
 noncomputable def tensorLeftMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -50,6 +51,7 @@ noncomputable def tensorLeftMod
 
 /-- The cover map of the twist shuffle: the middle-four
 interchange followed by the projection under the twists. -/
+@[expose]
 noncomputable def twistShuffleCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] (V : D) (W : D) (R : Mod D A)
@@ -448,6 +450,7 @@ theorem twistShuffleHom_act
 
 /-- **The twist shuffle as a module map**: the shuffled pair maps
 to the twist of the relative tensor. -/
+@[expose]
 noncomputable def twistShuffleModHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -486,6 +489,7 @@ theorem twistShuffleInv_act
     MonoidalCategory.whiskerLeft_id, Category.id_comp]
 
 /-- The inverse twist shuffle as a module map. -/
+@[expose]
 noncomputable def twistShuffleModInv
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -498,6 +502,7 @@ noncomputable def twistShuffleModInv
     (twistShuffleInv_act A V W R S)
 
 /-- The module-level twist shuffle is an isomorphism. -/
+@[expose]
 noncomputable def twistShuffleModIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -515,6 +520,7 @@ noncomputable def twistShuffleModIso
 
 /-- An object map in the twist slot, as a module map: the twist
 action carries past the context naturally. -/
+@[expose]
 noncomputable def tensorLeftModContextHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -528,6 +534,7 @@ noncomputable def tensorLeftModContextHom
       exact (actAcross_natural A f M.X).symm)
 
 /-- A module map under the twist, as a module map. -/
+@[expose]
 noncomputable def tensorLeftModWhiskerHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -546,6 +553,7 @@ noncomputable def tensorLeftModWhiskerHom
         ← braidPast_natural_tail, Category.assoc])
 
 /-- The twist-slot transport of an object isomorphism. -/
+@[expose]
 noncomputable def tensorLeftModContextIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -564,6 +572,7 @@ noncomputable def tensorLeftModContextIso
       MonoidalCategory.id_whiskerRight])
 
 /-- The twist of a module isomorphism. -/
+@[expose]
 noncomputable def tensorLeftModWhiskerIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]

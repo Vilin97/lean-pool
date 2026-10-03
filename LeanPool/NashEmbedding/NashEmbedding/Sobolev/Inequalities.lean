@@ -26,7 +26,7 @@ not specific to any particular construction (mollifier, Riemann sum,
 etc.).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Complex Real MeasureTheory

@@ -52,7 +52,7 @@ transport to
 `H^*(RPⁿ; F₂)`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 
@@ -65,7 +65,7 @@ This is the right-hand side of the classical isomorphism
 `H^*(RPⁿ; F₂) ≅ F₂[α]/(αⁿ⁺¹)`. The isomorphism itself to topological cohomology
 is *not* asserted here (it remains open); only the model and its internal
 structure are built. -/
-noncomputable def RPnCohomologyRingModel (n : ℕ) : Type :=
+@[expose] noncomputable def RPnCohomologyRingModel (n : ℕ) : Type :=
   (ZMod 2)[X] ⧸ (Ideal.span {(X : (ZMod 2)[X]) ^ (n + 1)})
 
 noncomputable instance (n : ℕ) : CommRing (RPnCohomologyRingModel n) := by

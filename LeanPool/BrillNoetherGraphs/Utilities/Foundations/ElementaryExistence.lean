@@ -17,7 +17,7 @@ only effective divisors, the degree bound for winnability, and graph
 Riemann--Roch.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

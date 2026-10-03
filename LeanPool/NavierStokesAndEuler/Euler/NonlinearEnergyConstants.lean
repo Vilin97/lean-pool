@@ -25,7 +25,7 @@ section
 
 /-! The actual complete Euler forcing estimate in metric-energy variables. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -127,7 +127,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -153,6 +153,7 @@ local instance boundTimeGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace perio
 local instance boundTimeSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The explicit scalar majorant for the genuine seven-term nonlinear metric forcing. -/
+@[expose]
 def forcingPolynomial (B M B0 B1 A0 A2 residual cM Rc ρ X Y : ℝ) : ℝ :=
   sourceConstant B M*residual +
     ((sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
@@ -208,6 +209,7 @@ theorem correctionArray_bound {q : ℕ} (hq : 6 ≤ q + 1) {T : ℝ}
 
 /-- The literal polynomial majorant is continuous along the positive radius and actual continuous
 metric energies. -/
+@[expose]
 def forcingBoundPath {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ)
     (R : C(Icc (0 : ℝ) T, ℝ)) (hR : ∀ t, 0 < R t)
     (K : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
@@ -270,7 +272,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -282,21 +284,21 @@ open EulerCorrectionEnergyBound EulerGevreyCorrectionBound EulerGevreyMetricEsti
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The fixed coefficient of the metric-linear part of the actual nonlinear forcing. -/
-def linearCoefficient (B M B0 B1 A0 A2 c : ℝ) : ℝ :=
+@[expose] def linearCoefficient (B M B0 B1 A0 A2 c : ℝ) : ℝ :=
   (sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period 3*B0) +
     transportConstant period B M*B0)*metricAmplification c
 
 /-- The fixed coefficient of the metric-quadratic part of the actual nonlinear forcing. -/
-def quadraticCoefficient (B M A2 c : ℝ) : ℝ :=
+@[expose] def quadraticCoefficient (B M A2 c : ℝ) : ℝ :=
   (sourceConstant B M*A2*productConstant period 3+transportConstant period B
       M)*(metricAmplification c)^2
 
 /-- The fixed coefficient of the single derivative-loss factor in the actual nonlinear forcing. -/
-def lossCoefficient (M c : ℝ) : ℝ := lossConstant period M*(metricAmplification c)^2
+@[expose] def lossCoefficient (M c : ℝ) : ℝ := lossConstant period M*(metricAmplification c)^2
 
 /-- One explicit constant independent of the external cutoff controls all actual scalar energy
 coefficients. -/
-def energyConstant (g0 g1 k B M B0 B1 A0 A2 c : ℝ) : ℝ :=
+@[expose] def energyConstant (g0 g1 k B M B0 B1 A0 A2 c : ℝ) : ℝ :=
   1+g0+g1+k*sourceConstant B M+k*linearCoefficient period B M B0 B1 A0 A2 c +
     k*quadraticCoefficient period B M A2 c+k*lossCoefficient period M c
 

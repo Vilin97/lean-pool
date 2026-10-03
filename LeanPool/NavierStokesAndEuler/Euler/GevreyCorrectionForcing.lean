@@ -30,7 +30,7 @@ section
 
 /-! The fixed-base transport commutator estimate with only H⁶ velocity norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,7 +134,7 @@ section
 /-! Genuine transport as a bounded bilinear map from Sobolev velocity and an H¹ transported field
 into L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -213,7 +213,7 @@ section
 /-! Transfer of continuous real inequalities from actual smooth H∞ representatives to finite Sobolev
 fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -265,7 +265,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -288,7 +288,7 @@ synthesis. -/
 local instance baseCommSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual base derivative commutator, evaluated in L² on its genuine H⁷ domain. -/
-def baseCommutator (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
+@[expose] def baseCommutator (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) :
     SobolevSpace period 7 →L[ℝ] SobolevSpace period 7 →L[ℝ] LiftL2 period :=
   ((ContinuousLinearMap.compL ℝ (SobolevSpace period 7) (SobolevSpace period 6) (LiftL2 period)
@@ -306,7 +306,7 @@ theorem baseCommutator_apply (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
       value period (wordAtLevel period 0 r w (by
           omega : r+0 ≤ 6) (transportBilinear period (by norm_num : 6 ≤ 6) L hL u v)) -
         transportL2Bilinear period (by
-            norm_num : 3 ≤ 7) L u (wordAtLevel period 1 r w (by omega : r+1 ≤ 7) v) := rfl
+            norm_num : 3 ≤ 7) L u (wordAtLevel period 1 r w (by omega : r+1 ≤ 7) v) := by rfl
 
 /-- Its actual L² representative is the literal classical base derivative commutator. -/
 theorem baseCommutator_ae (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
@@ -399,7 +399,7 @@ section
 
 /-! Summation of the actual base transport commutators with no external-cutoff constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -452,7 +452,7 @@ theorem weighted_word_sums {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (
   rw [sumNorm_wordAtLevel]
 
 /-- The literal base transport forcing at every external and base derivative word. -/
-def baseTransportForcing {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
+@[expose] def baseTransportForcing {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) : ExternalWord N → BaseWord 6 → LiftL2 period := fun I a =>
   baseCommutator period a.1.val (by have := a.1.isLt; omega) a.2 L hL
@@ -520,7 +520,7 @@ section
 
 /-! Literal differentiated forcing arrays and their actual finite Gevrey norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -570,7 +570,7 @@ theorem sourceForcing_weighted_bound {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (ρ 
   exact h.trans_eq (he.trans (weighted_word_sums period 6 N hN ρ f))
 
 /-- The literal base derivatives of the external transport commutator. -/
-def externalTransportForcing {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s)
+@[expose] def externalTransportForcing {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) : ExternalWord N → BaseWord 6 → LiftL2 period := fun I =>
   baseWordValues period (toJet period (externalCommutator period hs I.1.val I.2 (by
@@ -590,7 +590,7 @@ theorem externalTransportForcing_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : 
   exact h.trans_eq (by simp only [Fintype.sum_sigma, weightedCommutatorNorm, Finset.mul_sum])
 
 /-- The literal base derivatives of the actual external coefficient-pressure commutator. -/
-def externalPressureForcing {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def externalPressureForcing {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (N : ℕ) (hN : N + 6 ≤ s) (p : SobolevSpace period s) : ExternalWord N → BaseWord 6 → LiftL2
         period := fun I =>
@@ -623,7 +623,7 @@ theorem sobolevSize_order_zero (f : LiftL2 period) :
   exact sobolevSize_eq period (EulerSpatialSobolevInverse.SpatialJet.zero f)
 
 /-- The literal base derivative commutator of G with each external pressure derivative. -/
-def basePressureForcing {s : ℕ} {A : SmoothCoefficient period}
+@[expose] def basePressureForcing {s : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (N : ℕ) (hN : N + 6 ≤ s) (p : SobolevSpace period s) : ExternalWord N → BaseWord 6 → LiftL2
         period := fun I a =>
@@ -668,7 +668,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -690,7 +690,7 @@ variable (period : ℝ) [Fact (0 < period)]
 (17).
 The two pressure arguments are the positive projected inverses; the PDE pressure has the opposite
 sign. -/
-def correctionForcing {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
+@[expose] def correctionForcing {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (K0 : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (N : ℕ) (hN : N + 6 ≤ s) (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)

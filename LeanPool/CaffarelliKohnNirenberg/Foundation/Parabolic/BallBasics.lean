@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Sobolev.Cutoff.Ball
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 

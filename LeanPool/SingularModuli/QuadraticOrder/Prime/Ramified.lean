@@ -34,7 +34,7 @@ reverse direction reduces to *squarefreeness of `polyMod d p`* and transports
 thesis's hand computation. Mathematically the same as Prop 3.2.1.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

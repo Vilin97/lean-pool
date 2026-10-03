@@ -19,7 +19,7 @@ The branching field and the factorial bound enter as parameters,
 discharged in `PairingPos.lean` and `Common/FactorialBound.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -54,6 +54,7 @@ theorem charIdempotent_jtSimple (μ : YoungDiagram) :
 
 /-- **The Schur package**, given the branching fact and the
 factorial bound. -/
+@[expose]
 noncomputable def schurPackageOf
     (H3 : ∀ n : ℕ, n ^ n ≤ 3 ^ n * n.factorial)
     (Hbranch : ∀ (lam mu : YoungDiagram), lam ≤ mu →

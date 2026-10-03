@@ -37,7 +37,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Ver
 
 /-! # WellKnown -/
 
-@[expose] public section
+public section
 
 
 namespace LO

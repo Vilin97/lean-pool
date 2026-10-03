@@ -24,7 +24,7 @@ prime-refinement theorem that constructs such a certificate. Once a certificate 
 conversion to a new nice multivalued function is formal and is proved here directly.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

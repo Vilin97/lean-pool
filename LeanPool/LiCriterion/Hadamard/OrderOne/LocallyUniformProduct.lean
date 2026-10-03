@@ -15,7 +15,7 @@ Local-uniform convergence (and hence holomorphy) of the genus‑1 Weierstrass pr
 and a nonzero condition on the `z i`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter
 open scoped BigOperators

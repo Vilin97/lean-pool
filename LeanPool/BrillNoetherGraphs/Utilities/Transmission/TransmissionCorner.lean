@@ -32,7 +32,7 @@ condition `BNExists G r d`; the length of `τ` is exactly `(r+1) * (g - d + r)`,
 so `ℓ(τ) ≤ g` is the Brill--Noether inequality `ρ ≥ 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -143,12 +143,14 @@ theorem rank_transmissionTwist_ge_of_corner
 abbrev Corner := ℤ × ℤ × ℤ
 
 /-- The rank bound that a corner transports to the lattice point `(a, b)`. -/
+@[expose]
 def cornerBound (c : Corner) (a b : ℤ) : ℤ :=
   c.2.2 - max 0 (c.1 - a) - max 0 (b - c.2.1)
 
 /-- A corner list dominates `τ` when every transmission threshold is met by one
 of three things: the trivial bound `rank ≥ -1`, the Riemann line, or transport
 from one of the corners. -/
+@[expose]
 def CornersDominate (τ : AspPerm) (C : List Corner) : Prop :=
   ∀ a b : ℤ,
     τ.s (a + 1) b - 1 < 0 ∨

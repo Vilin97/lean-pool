@@ -16,7 +16,7 @@ degrees, and the guarded range-`k` form of the resolvent — the
 entry form of the bialternant matrices.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

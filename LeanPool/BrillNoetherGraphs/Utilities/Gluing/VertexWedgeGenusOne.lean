@@ -17,7 +17,7 @@ winnability convolution.  The rigidity condition is deliberately explicit:
 it is *not* asserted for every genus-one graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

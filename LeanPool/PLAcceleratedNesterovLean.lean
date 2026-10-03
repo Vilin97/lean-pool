@@ -21,7 +21,7 @@ Tags: optimization, numerical-analysis, gradient-methods, polyak-lojasiewicz, di
 MSC: 49M37, 65K05, 58C15
 -/
 
-@[expose] public section
+public section
 
 /-!
 This project formalizes accelerated Nesterov convergence under a local

@@ -19,7 +19,7 @@ Integration by parts and the kernel of its initial trace identify the strong
 momentum representative used by the mean and transverse variational inverses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

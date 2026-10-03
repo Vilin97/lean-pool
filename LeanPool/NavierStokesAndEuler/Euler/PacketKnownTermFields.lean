@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderPrefixLocality
 
 /-! Genuine cylinder-path witnesses for each of the fifteen known-force families. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -124,10 +124,12 @@ theorem angleMean_eq_of_angleIndependent {raw : VectorField}
 namespace KnownTerm
 
 /-- Mean raw, with branches according to `k.zeroMean`. -/
+@[expose]
 def meanRaw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile) (i j : ℕ) : VectorField :=
   if k.zeroMean then 0 else angleMean O.period (k.raw O p a i j)
 
 /-- High raw, with branches according to `k.meanOnly`. -/
+@[expose]
 def highRaw (k : KnownTerm) (O : Operators) (p : ℕ) (a : ℕ → Profile) (i j : ℕ) : VectorField :=
   if k.meanOnly then 0 else if k.zeroMean then k.raw O p a i j else
     k.raw O p a i j-angleMean O.period (k.raw O p a i j)

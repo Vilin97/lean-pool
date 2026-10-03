@@ -39,7 +39,7 @@ matrix `∫ ∂ᵢψ ∂ⱼψ` (diagonal, explicit).
   `∫ dil β · (dil β)' = 0`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open MeasureTheory Real
@@ -270,7 +270,7 @@ lemma fderiv_prodBump_single (β : Fin n → ℝ) (y : Fin n → ℝ) (i : Fin n
 /-! ## The Gram matrix -/
 
 /-- The Gram matrix `∫ ∂ᵢχ ∂ⱼχ` of a real function on `ℝⁿ`. -/
-def gram (χ : (Fin n → ℝ) → ℝ) (i j : Fin n) : ℝ :=
+@[expose] def gram (χ : (Fin n → ℝ) → ℝ) (i j : Fin n) : ℝ :=
   ∫ x, fderiv ℝ χ x (Pi.single i 1) * fderiv ℝ χ x (Pi.single j 1)
 
 /-- The Gram matrix of the product bump is diagonal with explicit entries. -/

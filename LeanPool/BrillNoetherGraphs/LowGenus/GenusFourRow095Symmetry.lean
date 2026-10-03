@@ -25,7 +25,7 @@ involution as an occurrence-preserving subdivision relabeling, so a proof in
 the normalized chamber transports to all positive length assignments.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow095
 open Utilities.Certificate
@@ -41,6 +41,7 @@ theorem slotSwapFun_bijective : Function.Bijective slotSwapFun := by decide
 
 /-- The involutive permutation of the nine slots induced by the row-095 core symmetry, packaged
 as an equivalence for transporting lengths. -/
+@[expose]
 def slotSwap : Fin 9 ≃ Fin 9 where
   toFun := slotSwapFun
   invFun := slotSwapFun

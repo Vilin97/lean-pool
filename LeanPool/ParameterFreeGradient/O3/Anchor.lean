@@ -16,16 +16,16 @@ finite-dimensional `ell_p/ell_q` Hölder geometry.  It deliberately does not
 postulate termination or an accepted trace as data.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
 /-- The exact `ell_p → ell_q` Lipschitz-gradient hypothesis. -/
-def LipschitzGradient {d : ℕ} (p q L : ℝ) (grad : Point d → Point d) : Prop :=
+@[expose] def LipschitzGradient {d : ℕ} (p q L : ℝ) (grad : Point d → Point d) : Prop :=
   ∀ x y, lpNorm q (grad x - grad y) ≤ L * lpNorm p (x - y)
 
 /-- The supplied nondegenerate secant scale. -/
-noncomputable def secantScale {d : ℕ} (p q : ℝ) (grad : Point d → Point d)
+@[expose] noncomputable def secantScale {d : ℕ} (p q : ℝ) (grad : Point d → Point d)
     (x₀ z₀ : Point d) : ℝ :=
   lpNorm q (grad z₀ - grad x₀) / lpNorm p (z₀ - x₀)
 
@@ -49,11 +49,11 @@ theorem secantScale_le {d : ℕ} {p q L : ℝ}
 
 /-- A first-order convexity inequality, kept explicit so that no ambient
 Euclidean norm silently replaces the frozen `ell_p` geometry. -/
-def FirstOrderConvex {d : ℕ} (f : Point d → ℝ) (grad : Point d → Point d) : Prop :=
+@[expose] def FirstOrderConvex {d : ℕ} (f : Point d → ℝ) (grad : Point d → Point d) : Prop :=
   ∀ x y, f x + pairing (grad x) (y - x) ≤ f y
 
 /-- The observable anchor test at distance `D`. -/
-def AnchorTest {d : ℕ} (f : Point d → ℝ) (x₀ : Point d) (G D : ℝ)
+@[expose] def AnchorTest {d : ℕ} (f : Point d → ℝ) (x₀ : Point d) (G D : ℝ)
     (y : Point d) : Prop :=
   f y ≤ f x₀ - G * D / 2
 
@@ -89,21 +89,21 @@ theorem anchorAccepted_radius {d : ℕ} {p : ℝ} (hp : 1 < p)
   nlinarith
 
 /-- The explicit coordinate norming direction used by the frozen anchor. -/
-noncomputable def anchorNormingVector {d : ℕ} (q : ℝ) (g : Vec d) : Vec d :=
+@[expose] noncomputable def anchorNormingVector {d : ℕ} (q : ℝ) (g : Vec d) : Vec d :=
   fun i =>
     ((SignType.sign (g i) : ℝ) * |g i| ^ (q - 1)) /
       (lpNorm q g) ^ (q - 1)
 
 /-- Dyadic curvature scale `2^epoch M₀`. -/
-noncomputable def anchorScale (M₀ : ℝ) (epoch : ℕ) : ℝ :=
+@[expose] noncomputable def anchorScale (M₀ : ℝ) (epoch : ℕ) : ℝ :=
   (2 : ℝ) ^ epoch * M₀
 
 /-- Exact radius tested at one dyadic scale. -/
-noncomputable def anchorRadius (G M₀ : ℝ) (epoch : ℕ) : ℝ :=
+@[expose] noncomputable def anchorRadius (G M₀ : ℝ) (epoch : ℕ) : ℝ :=
   G / anchorScale M₀ epoch
 
 /-- Exact gradient-ray point queried at one dyadic scale. -/
-noncomputable def anchorProbePoint {d : ℕ} (q : ℝ) (x₀ g₀ : Vec d)
+@[expose] noncomputable def anchorProbePoint {d : ℕ} (q : ℝ) (x₀ g₀ : Vec d)
     (G M₀ : ℝ) (epoch : ℕ) : Vec d :=
   x₀ - anchorRadius G M₀ epoch • anchorNormingVector q g₀
 
@@ -140,7 +140,7 @@ The actual fuel-bounded dyadic anchor loop.  Every iteration makes exactly one
 pair-oracle query, tests its returned value, and either stops or doubles the
 scale by incrementing `epoch`.
 -/
-noncomputable def runAnchor {d : ℕ} (oracle : PairOracle d) (cfg : AnchorConfig d) :
+@[expose] noncomputable def runAnchor {d : ℕ} (oracle : PairOracle d) (cfg : AnchorConfig d) :
     ℕ → ℕ → OracleTrace d → Option (AnchorResult d)
   | 0, _, _ => none
   | fuel + 1, epoch, history =>
@@ -176,7 +176,7 @@ theorem exists_anchor_scale_ge {M₀ L : ℝ} (hM₀ : 0 < M₀) :
   exact hepoch.le
 
 /-- First dyadic scale which dominates `L`; this is proof-side, not method input. -/
-noncomputable def anchorScaleCap (M₀ L : ℝ) (hM₀ : 0 < M₀) : ℕ :=
+@[expose] noncomputable def anchorScaleCap (M₀ L : ℝ) (hM₀ : 0 < M₀) : ℕ :=
   Nat.find (exists_anchor_scale_ge (L := L) hM₀)
 
 theorem anchorScaleCap_dominates {M₀ L : ℝ} (hM₀ : 0 < M₀) :

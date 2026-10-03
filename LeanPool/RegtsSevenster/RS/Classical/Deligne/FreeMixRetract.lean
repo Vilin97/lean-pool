@@ -19,7 +19,7 @@ additivity argument without ever forming a biproduct in the
 category of module objects.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

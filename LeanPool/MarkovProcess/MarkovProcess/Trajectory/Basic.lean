@@ -21,7 +21,7 @@ No continuous-time Markov property, strong Markov property, Hunt-process asserti
 increment estimate is claimed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -40,6 +40,7 @@ variable {alpha : Type*} [MetricSpace alpha] [CompleteSpace alpha]
 
 /-- The canonical dense-time trajectory transported through the measurable continuous-extension
 map.  Under the Kolmogorov hypothesis used below, its law is independent of `default`. -/
+@[expose]
 def continuousPathTrajectory (P : SubMarkovKernelSemigroup alpha)
     (hP : P.IsConservative) (default : ContinuousPath alpha) :
     Kernel alpha (ContinuousPath alpha) :=

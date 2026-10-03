@@ -15,7 +15,7 @@ This file provides measurable coordinate equivalences for histories indexed by a
 segment of the natural numbers. It makes no probability-law, kernel, or stochastic-process claim.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 
@@ -27,6 +27,7 @@ namespace DenseTimeHistory
 variable {α : Type*} [MeasurableSpace α]
 
 /-- The value-preserving equivalence from natural numbers at most `n` to `Fin (n + 1)`. -/
+@[expose]
 def iicEquivFin (n : ℕ) : Set.Iic n ≃ Fin (n + 1) where
   toFun i := ⟨i, Nat.lt_succ_iff.mpr i.property⟩
   invFun i := ⟨i, Nat.le_of_lt_succ i.isLt⟩
@@ -43,6 +44,7 @@ theorem iicEquivFin_symm_apply_val (n : ℕ) (i : Fin (n + 1)) :
   rfl
 
 /-- Split a history into its time-zero value and its positive-time coordinates. -/
+@[expose]
 def historyEquiv (n : ℕ) : DenseTimeHistory α n ≃ᵐ α × (Fin n → α) :=
   (MeasurableEquiv.piCongrLeft (fun _ : Fin (n + 1) ↦ α) (iicEquivFin n)).trans
     (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) ↦ α) 0)
@@ -67,6 +69,7 @@ theorem historyEquiv_symm_apply_succ (n : ℕ) (x : α) (path : Fin n → α) (i
   rfl
 
 /-- Split a finite path into its proper prefix and its last coordinate. -/
+@[expose]
 def splitLast (n : ℕ) : (Fin (n + 1) → α) ≃ᵐ (Fin n → α) × α :=
   (MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) ↦ α) (Fin.last n)).trans
     MeasurableEquiv.prodComm

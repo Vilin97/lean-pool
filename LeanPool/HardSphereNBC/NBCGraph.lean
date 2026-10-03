@@ -22,7 +22,7 @@ public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
   presentations.
  -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -56,6 +56,7 @@ lemma coe_graphEdgeFinset (G : SimpleGraph V) :
   simp
 
 /-- The finite edge set traversed by a closed walk. -/
+@[expose]
 def cycleEdgeFinset {G : SimpleGraph V} {v : V} (c : G.Walk v v) : Finset (Sym2 V) :=
   c.edges.toFinset
 
@@ -115,7 +116,7 @@ variable [LinearOrder (Sym2 V)]
    graph-side comparison use the supplied linear edge order, just as the
    generic NBC definitions do. -/
 /-- The chosen non-strict comparison of graph edges. -/
-def graphEdgeLE (a b : Sym2 V) : Prop :=
+@[expose] def graphEdgeLE (a b : Sym2 V) : Prop :=
   @LE.le (Sym2 V)
     ((inferInstance : LinearOrder (Sym2 V)).toPartialOrder.toPreorder.toLE) a b
 
@@ -302,7 +303,7 @@ lemma graph_candidate_toggle_of_generic
 /-! ### Graph-side signed cancellation -/
 
 /-- The edge set induces the same reachability relation as the ambient graph. -/
-def IsGraphSpanning (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
+@[expose] def IsGraphSpanning (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).Reachable = G.Reachable
 
 /-- There exists an edge witnessing a broken circuit in the given edge set. -/
@@ -310,7 +311,7 @@ def IsGraphNBCBad (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   ∃ e, IsGraphNBCandidate G A e
 
 /-- Enumerate edge subsets preserving the graph's connected components. -/
-noncomputable def graphSpanningSubsets (G : SimpleGraph V) :
+@[expose] noncomputable def graphSpanningSubsets (G : SimpleGraph V) :
     Finset (Finset (Sym2 V)) := by
   classical
   exact (graphEdgeFinset G).powerset.filter (IsGraphSpanning G)

@@ -24,14 +24,14 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 /-! # Vorspiel -/
 
-@[expose] public section
+public section
 
 
 namespace Nat
 variable {α : ℕ → Sort u}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def cases (hzero : α 0) (hsucc : ∀ n, α (n + 1)) : ∀ n, α n
+@[expose] def cases (hzero : α 0) (hsucc : ∀ n, α (n + 1)) : ∀ n, α n
   | 0     => hzero
   | n + 1 => hsucc n
 
@@ -227,7 +227,7 @@ end «lp_section_1»
 variable {α : Type _}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toList : {n : ℕ} → (Fin n → α) → List α
+@[expose] def toList : {n : ℕ} → (Fin n → α) → List α
   | 0,     _ => []
   | _ + 1, v => v 0 :: toList (v ∘ Fin.succ)
 
@@ -266,7 +266,7 @@ lemma getM_pure [LawfulMonad m] {n} {β : Fin n → Type u} (v : (i : Fin n) →
     getM (fun i => (some (v i) : Option (β i))) = some v := getM_pure v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
+@[expose] def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
   Matrix.vecAppend (add_comm m n) v w
 
 @[simp] lemma appendr_nil {m} (w : Fin m → α) : appendr ![] w = w := by funext i; simp [appendr]
@@ -278,7 +278,7 @@ def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
 section «lp_section_3»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
+@[expose] def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
   | 0,     _ => 0
   | _ + 1, v => Nat.pair (v 0) (vecToNat <| v ∘ Fin.succ) + 1
 
@@ -303,7 +303,7 @@ def vecEmpty : Fin 0 → α :=
 variable {n} {α : Fin (n + 1) → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i :=
+@[expose] def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i :=
   Fin.cons h t
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -464,7 +464,7 @@ namespace Function
 variable {α : Type u} {β : Type v}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def funEqOn (φ : α → Prop) (f g : α → β) : Prop := ∀ a, φ a → f a = g a
+@[expose] def funEqOn (φ : α → Prop) (f g : α → β) : Prop := ∀ a, φ a → f a = g a
 
 lemma _root_.Function.funEqOn.of_subset {φ ψ : α → Prop} {f g : α → β} (e : funEqOn φ f g) (h :
     ∀ a, ψ a → φ a) :
@@ -483,7 +483,7 @@ lemma inductionOnVec {φ : (Fin n → Quotient s) → Prop} (v : Fin n → Quoti
   Quotient.induction_on_pi v h
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def liftVec : ∀ {n} (f : (Fin n → α) → β),
+@[expose] def liftVec : ∀ {n} (f : (Fin n → α) → β),
   (∀ v₁ v₂ : Fin n → α, (∀ n, v₁ n ≈ v₂ n) → f v₁ = f v₂) → (Fin n → Quotient s) → β
 | 0,     f, _, _ => f ![]
 | n + 1, f, h, v =>
@@ -531,7 +531,7 @@ def subsetSet (l : List α) (s : Set α) [DecidablePred s] : Bool :=
   l.foldr (fun a ih => s a && ih) true
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def upper : List ℕ → ℕ
+@[expose] def upper : List ℕ → ℕ
   | []      => 0
   | n :: ns => max (n + 1) ns.upper
 
@@ -565,7 +565,7 @@ section «lp_section_6»
 variable [SemilatticeSup α] [OrderBot α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sup : List α → α
+@[expose] def sup : List α → α
   |      [] => ⊥
   | a :: as => a ⊔ as.sup
 

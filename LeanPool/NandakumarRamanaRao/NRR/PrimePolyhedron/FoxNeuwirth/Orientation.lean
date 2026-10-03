@@ -21,7 +21,7 @@ under an arbitrary change of chosen cell orientations; it is covariant by the pr
 transport signs.  This is the correct datum needed by the later cellular mod-`p` argument.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -66,7 +66,7 @@ theorem orientationSign_eq_one_or_neg_one (c : BarredPermutation p) :
   · simp [h]
 
 /-- Sign comparing the chosen orientation before and after relabelling. -/
-def orientationTransport
+@[expose] def orientationTransport
     (sigma : Equiv.Perm (Fin p)) (c : BarredPermutation p) : Int :=
   (c.relabel sigma).orientationSign * c.orientationSign
 

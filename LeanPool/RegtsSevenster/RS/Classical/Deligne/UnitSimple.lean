@@ -28,7 +28,7 @@ idempotents besides `0` and `1`: the value `1` would force `i = 0`,
 so the idempotent vanishes, `V = 0`, and `i` is an isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

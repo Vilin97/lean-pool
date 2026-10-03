@@ -11,7 +11,7 @@ public import Mathlib.GroupTheory.Finiteness
 
 /-! The finite state set used in the separation argument. -/
 
-@[expose] public section
+public section
 
 open Set Function
 
@@ -26,6 +26,7 @@ variable {α : Type u}
 
 
 /-- The finite-core points viewed as states in the subgroup's left-coset space. -/
+@[expose]
 def coreStateSet [DecidableEq α] (H : Subgroup (FreeGroup α))
     (S : Finset (FreeGroup α)) (g : FreeGroup α) :
     Set (LeftCosetQuotient H) :=

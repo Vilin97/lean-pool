@@ -46,7 +46,7 @@ Substituting:
        = (1/2) s(s-1) Λ(s)
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped BigOperators
@@ -54,10 +54,12 @@ open scoped BigOperators
 namespace XiZeros
 
 /-- Nontrivial zeros of ζ: zeros in the critical strip 0 < Re(s) < 1 -/
+@[expose]
 def NontrivialZero : Type :=
   {ρ : ℂ // riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1}
 
 /-- Definition of ξ (matching LiCriterion.lean) -/
+@[expose]
 noncomputable def riemannXi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta₀ s + (1 / 2 : ℂ)
 

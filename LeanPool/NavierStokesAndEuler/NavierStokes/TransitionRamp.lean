@@ -19,7 +19,7 @@ control is turned off first; the angular control is then interpolated to
 joins.  No cone inequality is assumed here.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -85,17 +85,17 @@ theorem integrate_congr (initial : ℝ → ℝ) (slope₁ slope₂ : Field) (p :
 
 /-- The ordinary ACT control continues to multiply the REF lag stock,
 even when the REF derivative has already become zero. -/
-noncomputable def baseSlope (T κ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def baseSlope (T κ : ℝ) (stock : Field) : Field :=
   fun p => -(damping T κ p.1 * stock p) / 2
 
 /-- Angular slope, defined pointwise by `(1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p - (2
 / 5 : ℝ) * step (b + w₁) w₂ p.1`. -/
-noncomputable def angularSlope (T κ b w₁ w₂ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def angularSlope (T κ b w₁ w₂ : ℝ) (stock : Field) : Field :=
   fun p => (1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p -
     (2 / 5 : ℝ) * step (b + w₁) w₂ p.1
 
 /-- Axial slope, defined pointwise by `(1 - step b w₁ p.1) * baseSlope T κ stock p`. -/
-noncomputable def axialSlope (T κ b w₁ : ℝ) (stock : Field) : Field :=
+@[expose] noncomputable def axialSlope (T κ b w₁ : ℝ) (stock : Field) : Field :=
   fun p => (1 - step b w₁ p.1) * baseSlope T κ stock p
 
 theorem baseSlope_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
@@ -225,6 +225,7 @@ namespace StockReference
 variable {J : Set ℝ} (R : StockReference J)
 
 /-- Chart, given by `(radius R.radius0 p.1, p.2)`. -/
+@[expose]
 noncomputable def chart (p : Point) : Point := (radius R.radius0 p.1, p.2)
 
 theorem chart_smooth : ContDiff ℝ ∞ R.chart :=
@@ -235,17 +236,21 @@ theorem chart_radius_pos (p : Point) : 0 < (R.chart p).1 :=
 
 /-- Angular stock, defined pointwise by `ActivationStocks.profileStockOne R.profiles R.exponent
 (R.chart p)`. -/
+@[expose]
 noncomputable def angularStock : Field := fun p =>
   ActivationStocks.profileStockOne R.profiles R.exponent (R.chart p)
 
 /-- This is `X * ns_REF`, including the radial factor in the axial ODE. -/
+@[expose]
 noncomputable def axialStock : Field := fun p =>
   (R.chart p).1 * R.profiles.axialLag R.exponent (R.chart p) /
     NaturalAxisData.L R.exponent p.2
 
 /-- Initial log, given by `Real.log (R.profiles.f (R.radius0, η))`. -/
+@[expose]
 noncomputable def initialLog (η : ℝ) : ℝ := Real.log (R.profiles.f (R.radius0, η))
 /-- Initial U, given by `R.profiles.U (R.radius0, η)`. -/
+@[expose]
 noncomputable def initialU (η : ℝ) : ℝ := R.profiles.U (R.radius0, η)
 
 theorem angularStock_smooth (hJ : IsOpen J) :
@@ -290,15 +295,17 @@ theorem initialU_smooth (_hJ : IsOpen J) : ContDiffOn ℝ ∞ R.initialU J := by
     (contDiffAt_const.prodMk contDiffAt_id)).contDiffWithinAt
 
 /-- Big time, given by `Real.log (100 / R.radius0)`. -/
-noncomputable def bigTime : ℝ := Real.log (100 / R.radius0)
+@[expose] noncomputable def bigTime : ℝ := Real.log (100 / R.radius0)
 /-- Final time, given by `Real.log (110 / R.radius0)`. -/
-noncomputable def finalTime : ℝ := Real.log (110 / R.radius0)
+@[expose] noncomputable def finalTime : ℝ := Real.log (110 / R.radius0)
 
 /-- Log amplitude, given by `logField T κ R.bigTime w₁ w₂ R.initialLog R.angularStock`. -/
+@[expose]
 noncomputable def logAmplitude (T κ w₁ w₂ : ℝ) : Field :=
   logField T κ R.bigTime w₁ w₂ R.initialLog R.angularStock
 
 /-- Axial velocity, given by `axialField T κ R.bigTime w₁ R.initialU R.axialStock`. -/
+@[expose]
 noncomputable def axialVelocity (T κ w₁ : ℝ) : Field :=
   axialField T κ R.bigTime w₁ R.initialU R.axialStock
 
@@ -713,9 +720,9 @@ namespace StockReference
 variable {J : Set ℝ} (R : StockReference J)
 
 /-- Log time, given by `Real.log (X / R.radius0)`. -/
-noncomputable def logTime (X : ℝ) : ℝ := Real.log (X / R.radius0)
+@[expose] noncomputable def logTime (X : ℝ) : ℝ := Real.log (X / R.radius0)
 /-- Log point, given by `(R.logTime p.1, p.2)`. -/
-noncomputable def logPoint (p : Point) : Point := (R.logTime p.1, p.2)
+@[expose] noncomputable def logPoint (p : Point) : Point := (R.logTime p.1, p.2)
 
 theorem logPoint_smoothAt {p : Point} (hX : 0 < p.1) : ContDiffAt ℝ ∞ R.logPoint p :=
   ((contDiffAt_fst.div_const R.radius0).log (div_ne_zero hX.ne' R.radius0_pos.ne')).prodMk
@@ -732,12 +739,12 @@ theorem chart_logTime {X η : ℝ} (hX : 0 < X) : R.chart (R.logTime X, η) = (X
 
 /-- Physical F, defined pointwise by `if p.1 ≤ R.radius0 then R.profiles.f p else Real.exp
 (R.logAmplitude T κ w₁ w₂ (R.logPoint p))`. -/
-noncomputable def physicalF (T κ w₁ w₂ : ℝ) : Field := fun p =>
+@[expose] noncomputable def physicalF (T κ w₁ w₂ : ℝ) : Field := fun p =>
   if p.1 ≤ R.radius0 then R.profiles.f p else Real.exp (R.logAmplitude T κ w₁ w₂ (R.logPoint p))
 
 /-- Physical U, defined pointwise by `if p.1 ≤ R.radius0 then R.profiles.U p else
 R.axialVelocity T κ w₁ (R.logPoint p)`. -/
-noncomputable def physicalU (T κ w₁ : ℝ) : Field := fun p =>
+@[expose] noncomputable def physicalU (T κ w₁ : ℝ) : Field := fun p =>
   if p.1 ≤ R.radius0 then R.profiles.U p else R.axialVelocity T κ w₁ (R.logPoint p)
 
 theorem physicalF_before (T κ w₁ w₂ : ℝ) {p : Point} (hp : p.1 ≤ R.radius0) :
@@ -747,12 +754,13 @@ theorem physicalU_before (T κ w₁ : ℝ) {p : Point} (hp : p.1 ≤ R.radius0) 
     R.physicalU T κ w₁ p = R.profiles.U p := ite_eq_left hp
 
 /-- Endpoint U, given by `R.axialVelocity T κ w₁ (R.finalTime, η)`. -/
+@[expose]
 noncomputable def endpointU (T κ w₁ : ℝ) (η : ℝ) : ℝ :=
   R.axialVelocity T κ w₁ (R.finalTime, η)
 
 /-- Endpoint log, given by `Real.log C + Real.log 220 / 2 + R.logAmplitude T κ w₁ w₂
 (R.finalTime, η)`. -/
-noncomputable def endpointLog (T κ w₁ w₂ C : ℝ) (η : ℝ) : ℝ :=
+@[expose] noncomputable def endpointLog (T κ w₁ w₂ C : ℝ) (η : ℝ) : ℝ :=
   Real.log C + Real.log 220 / 2 + R.logAmplitude T κ w₁ w₂ (R.finalTime, η)
 
 theorem endpointU_smooth (hJ : IsOpen J) (T κ w₁ : ℝ) :
@@ -788,7 +796,7 @@ theorem L_pos_parameterInterval {h j η : ℝ} (hs : NaturalAxisData.SmallParame
 
 /-- No stock or differential equation is postulated in this constructor:
 the underlying profiles and all five histories are the completed REF path. -/
-noncomputable def ofNatural : StockReference parameterInterval where
+@[expose] noncomputable def ofNatural : StockReference parameterInterval where
   exponent := h
   radius0 := (Input.ofNatural hΛ F).endpoint
   radius0_pos := (Input.ofNatural hΛ F).endpoint_pos
@@ -820,7 +828,7 @@ theorem natural_stock_identity (y : ℝ) (hy : y ≤ δ) {η : ℝ} (hη : η �
   have hX : 0 < p.1 := mul_pos N.endpoint_pos (Real.exp_pos _)
   have hupper : p.1 ≤ N.endpoint * Real.exp δ :=
     mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr hy) N.endpoint_pos.le
-  have hfp : 0 < Q.f p := N.fromLog_f_pos ⟨hyT, hη⟩
+  have hfp : 0 < Q.f p := N.fromLog_f_pos (p := (y, η)) ⟨hyT, hη⟩
   have hfields : P.f p = Q.f p := N.refF_eq_natural hδ hδT hη hupper
   have hUfields : P.U p = Q.U p := N.refU_eq_natural hδ hδT hη hupper
   have hrows : ∀ r ξ, ξ ∈ parameterInterval →
@@ -1107,7 +1115,7 @@ theorem physicalF_positive (T κ w₁ w₂ : ℝ) {p : Point}
 
 /-- The pressure and all moments are recomputed from these exact physical
 fields.  This is the object used by the later cone and matching modules. -/
-noncomputable def physicalProfiles {T κ w₁ w₂ : ℝ} (hT : 0 < T)
+@[expose] noncomputable def physicalProfiles {T κ w₁ w₂ : ℝ} (hT : 0 < T)
     (hb : δ ≤ (ofNatural F hΛ hsmall hδ hδT hP0).bigTime)
     (hw₁ : 0 < w₁) (hw₂ : 0 < w₂) : Profiles (Input.ofNatural hΛ F).radialDomain where
   f := (ofNatural F hΛ hsmall hδ hδT hP0).physicalF T κ w₁ w₂

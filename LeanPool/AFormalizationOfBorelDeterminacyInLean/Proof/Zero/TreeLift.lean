@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.Zero
@@ -33,7 +33,7 @@ variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 noncomputable section «Section1»
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.zero lvl) :
+@[expose] noncomputable def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.zero lvl) :
   ResStrategy (oldAsTrees hyp) Player.zero lvl := by
   classical
   exact fun x hp hlen ↦
@@ -56,7 +56,7 @@ noncomputable def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player
           omega) hpL).extension hp (R.res hlen)
       else Classical.choice (hyp.pruned x)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def stratMap' (R : Strategy (gameTree hyp) Player.zero) : Strategy G.tree Player.zero :=
+@[expose] def stratMap' (R : Strategy (gameTree hyp) Player.zero) : Strategy G.tree Player.zero :=
   fun x hp ↦ stratMap x.val.length ((strategyEquivSystem R).str _) x hp le_rfl
 lemma stratMap'_short R x hp (hx : x.val.length ≤ 2 * k) :
   stratMap' R x hp = (ResStrategy.fromMap (treeHom hyp))
@@ -84,7 +84,7 @@ attribute [simp] hlvl
 lemma hlvl_le : 2 * k + 1 ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
 @[simp] lemma hlvl' : 2 * k ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps!] def preLift : PreLift hyp := ⟨subtreeIncl _ H.x,
+@[expose, simps!] def preLift : PreLift hyp := ⟨subtreeIncl _ H.x,
   H.hlvl, (strategyEquivSystem H.R).str (2 * k)⟩
 attribute [simp_lengths] preLift_x_coe
 lemma pInv_fixing (h : n ≤ 2 * k) :
@@ -118,7 +118,7 @@ lemma pInv_isPosition_short :
       simp_all
     · simp [take_coe]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def take (n : ℕ) (hk : 2 * k < n) : TreeLift hyp where
+@[expose, simps] def take (n : ℕ) (hk : 2 * k < n) : TreeLift hyp where
   R := H.R
   x := Tree.take n H.x
   hlvl := by simp [hk]
@@ -186,13 +186,13 @@ lemma conShort : H.preLift.ConShort := by
       exact List.length_take_le (2 * k) H.x.val
   simp [stratMap', stratMap, ResStrategy.fromMap, harg]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps toPreLift] def lift (h : 2 * k + 2 ≤ H.x.val.length) : Lift hyp where
+@[expose, simps toPreLift] def lift (h : 2 * k + 2 ≤ H.x.val.length) : Lift hyp where
   toPreLift := H.preLift
   h'lvl := h
   conShort := H.conShort
 attribute [simp_lengths] lift_toPreLift
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extension (hp : IsPosition H.x.val Player.zero) :=
+@[expose] def extension (hp : IsPosition H.x.val Player.zero) :=
   (H.lift (by have := H.hlvl; synthIsPosition)).extension hp ((strategyEquivSystem H.R).str _)
 @[congr] lemma extension_val_congr {H H' : TreeLift hyp} (h : H = H') {hp} :
   (H.extension hp).val = (H'.extension (by subst h; exact hp)).val := by
@@ -211,7 +211,8 @@ lemma stratMap'_extend : stratMap' H.R (subtreeIncl _ H.x) = H.extension := by
   · rfl
   · cases h' H.conShort
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps!] def dropLast (h : 2 * k + 2 ≤ H.x.val.length) := H.take (H.x.val.length - 1) (by omega)
+@[expose, simps!] def dropLast (h : 2 * k + 2 ≤ H.x.val.length) :=
+  H.take (H.x.val.length - 1) (by omega)
 attribute [simp_lengths] dropLast_x_coe
 
 lemma x_mem_tree h (hp : IsPosition H.x.val Player.one) :
@@ -396,7 +397,7 @@ lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Pl
           (H.pInv_fixing h)).val.length := hlen.symm)]
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def WinnableOrLost := ∃ h, (H.lift h).Winnable ∨ (H.lift h).Lost
+@[expose] def WinnableOrLost := ∃ h, (H.lift h).Winnable ∨ (H.lift h).Lost
 variable (hWL : H.WinnableOrLost)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 noncomputable def wLLift' : WLLift' hyp := by

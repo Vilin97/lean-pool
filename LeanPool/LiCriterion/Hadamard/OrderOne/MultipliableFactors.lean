@@ -17,7 +17,7 @@ This isolates the analytic input used repeatedly when building canonical product
 for fixed `s`, the family `i ↦ weierstrassE 1 (s / z i)` is an infinite product that converges.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter
 open scoped BigOperators

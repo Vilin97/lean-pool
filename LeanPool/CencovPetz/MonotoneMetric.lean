@@ -35,7 +35,7 @@ needed for that proof.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -66,7 +66,7 @@ structure MonotoneMetricFamily : Type _ where
         g (α := α) p u u
 
 /-- The Fisher metric family is a monotone metric family. -/
-noncomputable def fisherMetricFamily : MonotoneMetricFamily where
+@[expose] noncomputable def fisherMetricFamily : MonotoneMetricFamily where
   g := fun {α} _ => fisherBilin
   symm := by
     intro α _ p u v

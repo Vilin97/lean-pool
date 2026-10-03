@@ -15,7 +15,7 @@ A square-root node carries rational lower and upper witnesses. The evaluator che
 squares exactly, so every successful enclosure has a kernel-checked real-number semantics.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -34,7 +34,7 @@ inductive RadicalExpression (n : ℕ) where
 namespace RadicalExpression
 
 /-- Evaluate a radical expression in a real environment. -/
-noncomputable def eval {n : ℕ} : RadicalExpression n → (Fin n → ℝ) → ℝ
+@[expose] noncomputable def eval {n : ℕ} : RadicalExpression n → (Fin n → ℝ) → ℝ
   | .var i, x => x i
   | .literal q, _ => q
   | .add f g, x => f.eval x + g.eval x
@@ -44,7 +44,7 @@ noncomputable def eval {n : ℕ} : RadicalExpression n → (Fin n → ℝ) → �
   | .sqrt f _ _, x => Real.sqrt (f.eval x)
 
 /-- Evaluate by exact rational intervals, rejecting unsafe inverses or square-root witnesses. -/
-def enclosure {n : ℕ} : RadicalExpression n → (Fin n → RationalInterval) →
+@[expose] def enclosure {n : ℕ} : RadicalExpression n → (Fin n → RationalInterval) →
     Option RationalInterval
   | .var i, X => some (X i)
   | .literal q, _ => some (.singleton q)
@@ -76,7 +76,7 @@ def enclosureWithin {n : ℕ} (f : RadicalExpression n) (X : Fin n → RationalI
   if target.lower ≤ I.lower ∧ I.upper ≤ target.upper then some target else none
 
 /-- Decide whether the computed enclosure lies in a given rational target interval. -/
-def certifiesWithin {n : ℕ} (f : RadicalExpression n) (X : Fin n → RationalInterval)
+@[expose] def certifiesWithin {n : ℕ} (f : RadicalExpression n) (X : Fin n → RationalInterval)
     (target : RationalInterval) : Bool :=
   match f.enclosure X with
   | none => false

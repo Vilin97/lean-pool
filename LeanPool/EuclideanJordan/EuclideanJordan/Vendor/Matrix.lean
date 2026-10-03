@@ -26,7 +26,7 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Misc
 
 /-! Matrix order, partial traces, spectra, and block constructions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -637,10 +637,12 @@ section partial_trace
 variable [AddCommMonoid R] [Fintype d]
 
 /-- The partial trace obtained by summing diagonal entries in the left index factor. -/
+@[expose]
 def traceLeft (m : Matrix (d × d₁) (d × d₂) R) : Matrix d₁ d₂ R :=
   Matrix.of fun i₁ j₁ ↦ ∑ i₂, m (i₂, i₁) (i₂, j₁)
 
 /-- The partial trace obtained by summing diagonal entries in the right index factor. -/
+@[expose]
 def traceRight (m : Matrix (d₁ × d) (d₂ × d) R) : Matrix d₁ d₂ R :=
   Matrix.of fun i₂ j₂ ↦ ∑ i₁, m (i₂, i₁) (j₂, i₁)
 

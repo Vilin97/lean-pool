@@ -14,7 +14,7 @@ These maps are converted from
 -/
 module
 
-@[expose] public section
+public section
 
 /--
 Total map as recursive type with a key type α and value of type β.
@@ -42,7 +42,7 @@ namespace TMap
     Let k ∈ α and v, d ∈ β.
     The function TMap.get(k) returns either the value v assigned to k or d as the default value if no assignment to k.
   -/
-  def get {α : Type} [BEq α] [LawfulBEq α] {β : Type} (map : TMap α β) (k : α):=
+  @[expose] def get {α : Type} [BEq α] [LawfulBEq α] {β : Type} (map : TMap α β) (k : α):=
     match map with
     | TMap.empty d => d
     | TMap.put k' v t => if k == k' then v else TMap.get t k

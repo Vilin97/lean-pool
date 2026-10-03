@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGeometryGuards
 input used by the source packet budgets.  The only bridge hypotheses are
 literal interval, strain, and normal identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,6 +30,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   {F F₁ Z Z₁ : ℝ → ℝ} (H : PhysicalGeometryConclusion G F F₁ Z Z₁)
 
 /-- Growth profile, bundling `toFun`, `continuous_toFun`. -/
+@[expose]
 def growthProfile : C(Icc (0 : ℝ) D.T,ℝ) where
   toFun t := Z ((G.a/G.ε)*t)
   continuous_toFun := (continuous_iff_continuousAt.mpr
@@ -52,6 +53,7 @@ theorem growthProfile_pos (hhorizon : G.time G.H = G.t₀ + D.T)
   exact ⟨by linarith [t.property.1],by linarith [t.property.2]⟩
 
 /-- Growth constant, given by `560*G.Θ^10/G.ε`. -/
+@[expose]
 def growthConstant : ℝ := 560*G.Θ^10/G.ε
 
 theorem growthConstant_pos : 0 < growthConstant G := by

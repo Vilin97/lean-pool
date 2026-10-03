@@ -18,7 +18,7 @@ binary labelling format.  This is the marking-preserving contraction used in
 the unsafe source-unfold branch of the Grushko proof.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -213,7 +213,7 @@ def removeEdgeTarget {v : V} (e₀ : AllArrow (V := V))
   removeEndpoint (removeAnchorTarget e₀ hn) (allArrowTarget e.1)
 
 /-- The quiver obtained by deleting a vertex and its anchor edge and redirecting incident edges. -/
-@[reducible]
+@[reducible, expose]
 def removeQuiver {v : V} (e₀ : AllArrow (V := V))
      (hn : allArrowTarget e₀ ≠ v) :
     Quiver (RemovedVertex v) where
@@ -269,7 +269,7 @@ def removeReverseArrow {v : V} (e₀ : AllArrow (V := V))
     exact e.2.1
 
 /-- The involutive reversal inherited by the quiver after vertex removal. -/
-@[instance_reducible]
+@[instance_reducible, expose]
 def removeHasReverse {v : V} (e₀ : AllArrow (V := V))
      (hn : allArrowTarget e₀ ≠ v) :
     @Quiver.HasInvolutiveReverse (RemovedVertex v)
@@ -364,6 +364,7 @@ theorem removedVertex_card_add_one (v : V) :
 /-! ### The marking-preserving label slide -/
 
 /-- Every edge incident to the vertex has its label in the specified factor. -/
+@[expose]
 def MonochromaticVertex (L : BinaryLabelling (G := G) (H := H) (V := V))
     (v : V) (color : Bool) : Prop :=
   ∀ e : AllArrow (V := V),

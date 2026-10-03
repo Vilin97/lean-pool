@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ElapsedTimePathWeight
 /-! The actual grade scale is controlled by the source bound on `alpha*g`.
 No reciprocal of alpha or extremum ratio of g enters this estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

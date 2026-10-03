@@ -31,7 +31,7 @@ permutation/equivalence invariance consequences for monotone metric families in 
   any monotone metric family is invariant under equivalences (permutations) of finite types.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

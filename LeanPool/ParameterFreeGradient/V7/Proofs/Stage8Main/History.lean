@@ -14,7 +14,7 @@ The controller preserves valid reports, chronological paths, and terminal correc
 certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 
@@ -89,6 +89,7 @@ theorem controllerPath_append (G Ma Da : ℝ)
       exact hlast current report hcOld hrOld
 
 /-- A report has complete guards, valid trial certificates, and the required local cost bound. -/
+@[expose]
 def ValidReport (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (visit : ControllerVisit) (report : TrialReport d) : Prop :=

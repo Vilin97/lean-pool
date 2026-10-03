@@ -28,7 +28,7 @@ The lower and upper relative subdivision stacks require their separate endpoint-
 that assembly is intentionally not hidden in the middle-prism theorem below.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

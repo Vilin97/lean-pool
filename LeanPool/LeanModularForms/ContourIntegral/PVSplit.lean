@@ -28,7 +28,7 @@ On the far segments, the cutoff condition is satisfied so the integrand equals
   right integrals of `(γ t - s)⁻¹ * deriv γ t`, where the middle part is zero.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Complex Filter intervalIntegral
 

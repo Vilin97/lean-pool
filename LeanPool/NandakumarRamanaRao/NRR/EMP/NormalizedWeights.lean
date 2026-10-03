@@ -38,7 +38,7 @@ exist.
  existence theorem `EMP.exists_equalArea_weights` with the two facts above.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -50,7 +50,7 @@ namespace EMP
 
 /-- **Normalized equal‑area weight.** A weight vector that is both equal‑area for the sites `s`
 in `K` and normalized (`∑ i, w i = 0`). -/
-def NormalizedEqualAreaWeight
+@[expose] def NormalizedEqualAreaWeight
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) :=
   {w : Fin n → ℝ // EMP.IsEqualAreaWeight K s w ∧ EMP.WeightNormalized w}
 

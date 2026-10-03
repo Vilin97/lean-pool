@@ -16,7 +16,7 @@ radius is constant across every generating identification, so it descends to bot
 families and distinguishes the disk center from its boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace Complex
 

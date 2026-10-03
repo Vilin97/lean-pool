@@ -49,7 +49,7 @@ public import Mathlib.Tactic.NormNum
 
 /-! # CellBoxAllocation -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -119,7 +119,7 @@ end
 
 /-! # BoxAllocationSpec -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -127,7 +127,7 @@ namespace Nibble.AX1
 
 /-- **The area demanded in the ordered cluster pair `(S, T)`**: every copy through both clusters
 contributes the product of its two prescribed sizes there. -/
-def boxDemand {ι κ : Type*} [Fintype κ] [DecidableEq ι]
+@[expose] def boxDemand {ι κ : Type*} [Fintype κ] [DecidableEq ι]
     (cl : κ → ZMod 3 → ι) (sz : κ → ZMod 3 → ℕ) (S T : ι) : ℝ :=
   ∑ c : κ, ∑ a : ZMod 3, ∑ b : ZMod 3,
     if cl c a = S ∧ cl c b = T then (sz c a : ℝ) * (sz c b : ℝ) else 0
@@ -145,7 +145,7 @@ block-cover residual, while the number `P` of cells per cluster is driven to inf
 and it is what a nibble proof needs: the placement hypergraph has uniformity of order `s₀²`, and the
 codegree threshold of `Nibble.fracNibbleWeighted_nearPerfect` degrades with the uniformity, so `θ`
 cannot be chosen before `s₀` is known. -/
-def BoxAllocationResidual : Prop :=
+@[expose] def BoxAllocationResidual : Prop :=
   ∀ ε : ℝ, 0 < ε → ∀ s₀ : ℕ, ∃ θ : ℝ, 0 < θ ∧ θ ≤ 1 ∧
     ∀ P : ℕ, 0 < P → (s₀ : ℝ) ≤ θ * (P : ℝ) →
     ∀ (ι κ : Type) [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]

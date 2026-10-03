@@ -62,7 +62,7 @@ Splitting the inner face index `i` into internal faces `i = castSucc i'`
  sum onto `sd (∂ σ)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -90,7 +90,7 @@ theorem toSSetObjEquiv_map_op_naturality (X : TopCat.{0}) (n m : ℕ)
 
 /-- The topological coface map `Δⁿ → Δⁿ⁺¹` deleting the `k`-th vertex, as the
 affine inclusion sending vertex `t` to vertex `k.succAbove t`. -/
-noncomputable def cofaceTop (n : ℕ) (k : Fin (n + 2)) : C(Delta n, Delta (n + 1)) :=
+@[expose] noncomputable def cofaceTop (n : ℕ) (k : Fin (n + 2)) : C(Delta n, Delta (n + 1)) :=
   ⟨SphereOddDegree.FiniteSimplex.map (S := ℝ) (Fin.succAbove k),
     SphereOddDegree.FiniteSimplex.continuous_map _⟩
 
@@ -259,7 +259,7 @@ theorem faceSimplex_last_eq_subdiv_faceData (X : TopCat.{0}) (n : ℕ)
 
 /-- The map underlying the last-face decomposition equivalence:
 `(j, ρ) ↦ (extendLastPerm ρ).trans (insertLastPerm j)`. -/
-noncomputable def lastFaceMap (n : ℕ) :
+@[expose] noncomputable def lastFaceMap (n : ℕ) :
     (Fin (n + 2) × Equiv.Perm (Fin (n + 1))) → Equiv.Perm (Fin (n + 2)) :=
   fun p => (extendLastPerm p.2).trans (insertLastPerm p.1)
 
@@ -283,6 +283,7 @@ theorem lastFaceMap_injective (n : ℕ) : Function.Injective (lastFaceMap n) := 
 
 /-- The last-face decomposition equivalence
 `(Fin (n+2) × Perm (Fin (n+1))) ≃ Perm (Fin (n+2))`. -/
+@[expose]
 noncomputable def lastFaceEquiv (n : ℕ) :
     (Fin (n + 2) × Equiv.Perm (Fin (n + 1))) ≃ Equiv.Perm (Fin (n + 2)) :=
   Equiv.ofBijective (lastFaceMap n) (by

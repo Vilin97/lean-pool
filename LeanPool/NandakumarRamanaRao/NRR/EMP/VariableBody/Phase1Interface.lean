@@ -35,7 +35,7 @@ Continuity results are stated over a compact metric parameter space `X` carrying
 family `sites : C(X, Config n)`. The configuration space `Config n` itself is not assumed compact.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 

@@ -13,7 +13,7 @@ public import LeanPool.ScottishBook155.ProtectedChainSuccessor
 # Appending a completed limit stage to a coherent chain
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -35,12 +35,14 @@ noncomputable local instance appendLimitTargetDirectedSystem :
   CoherentBiSystem.directedSystem _ C.targetSystem
 
 /-- The family obtained by placing the completed limit stage at a new top. -/
+@[expose]
 noncomputable def appendLimitStage (hr : 0 < r) (hL : 0 < L) :
     WithTop ι → ProtectedStage.{u} r
   | ⊤ => C.limitStage hr hL
   | (i : ι) => C.stage i
 
 /-- The old links and the canonical links into the completed limit. -/
+@[expose]
 noncomputable def appendLimitLink (hr : 0 < r) (hL : 0 < L)
     (i j : WithTop ι) (hij : i ≤ j) :
     ProtectedLink (C.appendLimitStage hr hL i)
@@ -56,6 +58,7 @@ noncomputable def appendLimitLink (hr : 0 < r) (hL : 0 < L)
       | coe i => exact C.link i j (by simpa using hij)
 
 /-- Adjoin the completed direct limit as one new top stage. -/
+@[expose]
 noncomputable def appendLimit (hr : 0 < r) (hL : 0 < L) :
     ProtectedChain (ι := WithTop ι) r L where
   stage := C.appendLimitStage hr hL

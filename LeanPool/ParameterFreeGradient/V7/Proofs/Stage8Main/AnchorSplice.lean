@@ -13,12 +13,12 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
 Initialization and anchor search splice into the causal controller execution.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 
 /-- The runtime data assembled from valid primitive inputs and an accepted anchor search. -/
-def runtimeDataFromAnchor (input : MethodInput d) (hp : 1 < input.p)
+@[expose] def runtimeDataFromAnchor (input : MethodInput d) (hp : 1 < input.p)
     (heps : 0 < input.eps) (hM0 : 0 < input.M0) (cached : CachedPair d)
     (G : ℝ) (hGdef : G = lpNorm (conjugateExponent input.p)
       cached.observation.gradient) (hG : 0 < G)

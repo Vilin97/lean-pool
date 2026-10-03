@@ -41,7 +41,7 @@ what finite measure additivity needs and what power/Voronoi partitions actually 
 Area additivity itself is intentionally *not* proved here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -65,7 +65,7 @@ structure ConvexPartition (K : Body) (n : ℕ) where
 namespace ConvexPartition
 
 /-- All pieces have equal area. -/
-def IsEqualArea {K : Body} {n : ℕ} (P : ConvexPartition K n) : Prop :=
+@[expose] def IsEqualArea {K : Body} {n : ℕ} (P : ConvexPartition K n) : Prop :=
   ∀ i j, (P.piece i).area = (P.piece j).area
 
 /-- The pieces of a convex partition union (as sets) to the whole body `K`. -/

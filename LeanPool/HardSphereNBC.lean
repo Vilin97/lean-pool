@@ -35,4 +35,4 @@ Tags: mathematical-physics
 MSC: 05C15, 82B05
 -/
 
-@[expose] public section
+public section

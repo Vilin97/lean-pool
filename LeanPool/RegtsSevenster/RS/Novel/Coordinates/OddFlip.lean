@@ -16,7 +16,7 @@ colourings, so summing a value over the colourings is invariant
 under it — the reindexing the circuit-sign computation uses.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

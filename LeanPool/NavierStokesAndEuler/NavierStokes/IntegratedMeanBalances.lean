@@ -17,7 +17,7 @@ the boundary cancellations, and parameter derivatives pass under integrals by
 the dominated differentiation theorem in `TransportPrimitive`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open Set Function MeasureTheory Filter
 open scoped ContDiff Topology Interval
 
 /-- Moment, given by `∫ r, r ^ n * f r`. -/
-noncomputable def moment (n : ℕ) (f : ℝ → ℝ) : ℝ := ∫ r, r ^ n * f r
+@[expose] noncomputable def moment (n : ℕ) (f : ℝ → ℝ) : ℝ := ∫ r, r ^ n * f r
 
 theorem weighted_integrable {f : ℝ → ℝ} (hf : Continuous f)
     (hs : HasCompactSupport f) (n : ℕ) : Integrable (fun r => r ^ n * f r) :=
@@ -90,15 +90,15 @@ theorem moment_deriv_succ {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
   simpa only [moment, Pi.mul_apply, mul_assoc, integral_const_mul, neg_mul] using hi
 
 /-- Radial divergence, given by `deriv f r + c / r * f r`. -/
-noncomputable def radialDivergence (c : ℝ) (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def radialDivergence (c : ℝ) (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv f r + c / r * f r
 
 /-- Angular radial viscosity, given by `deriv (deriv f) r + deriv f r / r - f r / r ^ 2`. -/
-noncomputable def angularRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def angularRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r - f r / r ^ 2
 
 /-- Axial radial viscosity, given by `deriv (deriv f) r + deriv f r / r`. -/
-noncomputable def axialRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def axialRadialViscosity (f : ℝ → ℝ) (r : ℝ) : ℝ :=
   deriv (deriv f) r + deriv f r / r
 
 theorem weighted_angular_divergence_ae (f : ℝ → ℝ) :
@@ -247,11 +247,11 @@ section Families
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Radial moment, given by `moment n (fun r => F (r, p))`. -/
-noncomputable def radialMoment (n : ℕ) (F : ℝ × P → ℝ) (p : P) : ℝ :=
+@[expose] noncomputable def radialMoment (n : ℕ) (F : ℝ × P → ℝ) (p : P) : ℝ :=
   moment n (fun r => F (r, p))
 
 /-- Parameter partial, given by `fderiv ℝ F x (0, v)`. -/
-noncomputable def parameterPartial (v : P) (F : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
+@[expose] noncomputable def parameterPartial (v : P) (F : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
   fderiv ℝ F x (0, v)
 
 theorem parameterPartial_smooth (v : P) {F : ℝ × P → ℝ}
@@ -357,22 +357,27 @@ section Torus
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Torus inner, given by `∫ x in (0 : ℝ)..1, F (q, x)`. -/
+@[expose]
 noncomputable def torusInner (F : (P × ℝ) × ℝ → ℝ) (q : P × ℝ) : ℝ :=
   ∫ x in (0 : ℝ)..1, F (q, x)
 
 /-- Torus average, given by `∫ y in (0 : ℝ)..1, torusInner F (p, y)`. -/
+@[expose]
 noncomputable def torusAverage (F : (P × ℝ) × ℝ → ℝ) (p : P) : ℝ :=
   ∫ y in (0 : ℝ)..1, torusInner F (p, y)
 
 /-- Fixed partial, given by `fderiv ℝ F q v`. -/
+@[expose]
 noncomputable def fixedPartial (v : (P × ℝ) × ℝ) (F : (P × ℝ) × ℝ → ℝ)
     (q : (P × ℝ) × ℝ) : ℝ := fderiv ℝ F q v
 
 /-- Slow partial, given by `fixedPartial ((v, 0), 0) F`. -/
+@[expose]
 noncomputable def slowPartial (v : P) (F : (P × ℝ) × ℝ → ℝ) : (P × ℝ) × ℝ → ℝ :=
   fixedPartial ((v, 0), 0) F
 
 /-- Torus partial, given by `fixedPartial ((0, v.2), v.1) F`. -/
+@[expose]
 noncomputable def torusPartial (v : ℝ × ℝ) (F : (P × ℝ) × ℝ → ℝ) : (P × ℝ) × ℝ → ℝ :=
   fixedPartial ((0, v.2), v.1) F
 
@@ -641,6 +646,7 @@ theorem SmoothShell.weighted_integrable {a b : ℝ} {F : MeanField} (hF : Smooth
 /-- The angular line of (32), after the actual torus average. Coordinates are
 `(R,(T,Z))`; `ε` is constant on a chart. The supplied fluxes are full averages
 of the pointwise products in (32), and the last radial divergence is the virtual stress. -/
+@[expose]
 noncomputable def angularBalance (ε : ℝ) (v radialFlux axialFlux virtualFlux : MeanField)
     (x : MeanPoint) : ℝ :=
   (-ε) * parameterPartial (1, 0) v x +
@@ -651,6 +657,7 @@ noncomputable def angularBalance (ε : ℝ) (v radialFlux axialFlux virtualFlux 
     radialDivergence 2 (fun r => virtualFlux (r, x.2)) x.1
 
 /-- The axial line of (32), with pressure retained inside the axial flux. -/
+@[expose]
 noncomputable def axialBalance (ε : ℝ) (γ radialFlux axialFlux pressure virtualFlux : MeanField)
     (x : MeanPoint) : ℝ :=
   (-ε) * parameterPartial (1, 0) γ x +
@@ -738,14 +745,15 @@ theorem integrated_axial_balance {a b : ℝ} (ε : ℝ)
   ring
 
 /-- Pressure total, given by `radialMoment 0 gr`. -/
-noncomputable def pressureTotal (gr : MeanField) : MeanParameter → ℝ := radialMoment 0 gr
+@[expose] noncomputable def pressureTotal (gr : MeanField) : MeanParameter → ℝ :=
+  radialMoment 0 gr
 
 /-- Pressure coefficient, given by `radialMoment 2 ρ p / 2`. -/
-noncomputable def pressureCoefficient (ρ : MeanField) (p : MeanParameter) : ℝ :=
+@[expose] noncomputable def pressureCoefficient (ρ : MeanField) (p : MeanParameter) : ℝ :=
   radialMoment 2 ρ p / 2
 
 /-- Axial defect, given by `radialMoment 1 axialFlux p - (1 / 2 : ℝ) * radialMoment 2 gr p`. -/
-noncomputable def axialDefect (axialFlux gr : MeanField) (p : MeanParameter) : ℝ :=
+@[expose] noncomputable def axialDefect (axialFlux gr : MeanField) (p : MeanParameter) : ℝ :=
   radialMoment 1 axialFlux p - (1 / 2 : ℝ) * radialMoment 2 gr p
 
 theorem flux_pressure_moment {a b : ℝ} {axialFlux pressure gr ρ : MeanField}

@@ -27,4 +27,4 @@ The imported development contains:
   frozen-support safety, and facet-neighborhood inputs.
 -/
 
-@[expose] public section
+public section

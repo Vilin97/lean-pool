@@ -38,7 +38,7 @@ public import Mathlib.ModelTheory.Semantics
 
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 open FirstOrder.Language
@@ -57,7 +57,7 @@ deriving DecidableEq
 namespace Language
 
 /-- Language of Set Theory. -/
-def LZFC : Language :=
+@[expose] def LZFC : Language :=
 {
   Functions := fun _ => Empty
   Relations := LSetRel
@@ -113,7 +113,7 @@ class ModelSets (V : Type u) extends LZFC.Structure V, Inhabited V where
 variable {V : Type u}
 
 /-- The negation of `ModelSets.isEltOf`. -/
-def notIsEltOf [ModelSets V] (a b : V) : Prop :=
+@[expose] def notIsEltOf [ModelSets V] (a b : V) : Prop :=
   ¬ (ModelSets.isEltOf a b)
 
 @[inherit_doc ModelSets.isEltOf] infix : 120 " ∈ " => ModelSets.isEltOf
@@ -154,11 +154,13 @@ theorem realize_neq [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
   simp [intNotEqual]
 
 /-- Make a free variable in LSet with n implicit. -/
-def fv' {n : ℕ} (k : ℕ) : Language.LZFC.Term (ℕ ⊕ Fin n) := Language.Term.var (Sum.inl k)
+@[expose] def fv' {n : ℕ} (k : ℕ) : Language.LZFC.Term (ℕ ⊕ Fin n) :=
+  Language.Term.var (Sum.inl k)
 
 /-- Make a to-be bounded variable indexed by (k : Fin n),
   in which free variables are indexed by ℕ with n implicit. -/
-def bv' {n : ℕ} (k : Fin n) : Language.LZFC.Term (ℕ ⊕ Fin n) := Language.Term.var (Sum.inr k)
+@[expose] def bv' {n : ℕ} (k : Fin n) : Language.LZFC.Term (ℕ ⊕ Fin n) :=
+  Language.Term.var (Sum.inr k)
 
 /-- Make a to-be bounded variable indexed by (k : ℕ),
   in which free variables are indexed by ℕ with n implicit. -/

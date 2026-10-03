@@ -29,7 +29,7 @@ section
 /-! Strong ordinary L² spatial derivatives are the classical derivatives of the reconstructed field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -103,7 +103,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,7 +117,7 @@ open scoped ContDiff
 variable {ι : Type*}
 
 /-- The actual strong L² spatial derivative for an ordered word. -/
-def ordinaryWord (directions : ι → Space) (u : L2) {n : ℕ} (w : Fin n → ι) : L2 :=
+@[expose] def ordinaryWord (directions : ι → Space) (u : L2) {n : ℕ} (w : Fin n → ι) : L2 :=
   wordDerivative directions (fun a : Space => translation a u) w 0
 
 @[simp] theorem ordinaryWord_zero (directions : ι → Space) (u : L2) (w : Fin 0 → ι) :
@@ -224,6 +224,7 @@ def classicalWordLp (directions : ι → Space) (u : L2) (hu : SmoothOrbit u)
 variable [Fintype ι]
 
 /-- The finite sum definition of the actual classical Hq seminorms. -/
+@[expose]
 def classicalBaseSize (directions : ι → Space) (q : ℕ) (u : L2) (hu : SmoothOrbit u) : ℝ :=
   ∑ k ∈ range (q+1), ∑ w : Fin k → ι, ‖classicalWordLp directions u hu w‖
 
@@ -234,6 +235,7 @@ theorem classicalBaseSize_eq (directions : ι → Space) (q : ℕ) (u : L2) (hu 
 
 /-- Sum of actual classical Hq sizes of the external derivative fields.
 `representative_word` identifies those fields with derivatives of the original representative. -/
+@[expose]
 def classicalBlockSize (directions : ι → Space) (q : ℕ) (u : L2) (hu : SmoothOrbit u) (n : ℕ) : ℝ :=
   ∑ w : Fin n → ι, classicalBaseSize directions q (ordinaryWord directions u w)
     (ordinaryWord_smooth directions u hu w)

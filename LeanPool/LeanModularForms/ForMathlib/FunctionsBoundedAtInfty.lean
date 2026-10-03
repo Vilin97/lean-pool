@@ -9,7 +9,7 @@ public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 
 /-! # FunctionsBoundedAtInfty -/
 
-@[expose] public section
+public section
 
 
 open UpperHalfPlane

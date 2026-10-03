@@ -17,7 +17,7 @@ complex harmonic use the same `PairData` as the covariance calculation.
 The exact curl correction remains a separate field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,10 +37,10 @@ noncomputable def pulseVector (P : Pulse) (r : ℝ) (z : Plane) : Vector :=
   Fin.cases (P.radialProfile r z) (fun i => P.tangentProfile r i z)
 
 @[simp] theorem pulseVector_zero (P : Pulse) (r : ℝ) (z : Plane) :
-    pulseVector P r z 0 = P.radialProfile r z := rfl
+    pulseVector P r z 0 = P.radialProfile r z := by rfl
 
 @[simp] theorem pulseVector_succ (P : Pulse) (r : ℝ) (z : Plane) (i : Fin 2) :
-    pulseVector P r z i.succ = P.tangentProfile r i z := rfl
+    pulseVector P r z i.succ = P.tangentProfile r i z := by rfl
 
 private theorem compact_vector {f : Plane → Vector}
     (hf : ∀ i, HasCompactSupport (fun z => f z i)) : HasCompactSupport f := by
@@ -64,11 +64,11 @@ noncomputable def nativeVector {U : UnsignedLabel} (P : PairData sys U)
 
 @[simp] theorem nativeVector_zero {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) (Y : Plane) :
-    nativeVector P hdet j Y 0 = P.rawRadial hdet j Y := rfl
+    nativeVector P hdet j Y 0 = P.rawRadial hdet j Y := by rfl
 
 @[simp] theorem nativeVector_succ {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) (Y : Plane) (i : Fin 2) :
-    nativeVector P hdet j Y i.succ = P.rawTangent hdet j i Y := rfl
+    nativeVector P hdet j Y i.succ = P.rawTangent hdet j i Y := by rfl
 
 theorem nativeVector_compact {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) :
@@ -123,13 +123,14 @@ noncomputable def coveredVector {U : UnsignedLabel} (P : PairData sys U)
 
 /-- The square roots, signed-label mask, and physical outer factor are
 literal; no fresh choice of amplitudes is made when assembling the field. -/
-noncomputable def slotAmplitude {U : UnsignedLabel} (P : PairData sys U)
+@[expose] noncomputable def slotAmplitude {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : ℝ) (T : Vec2)
     (q : ℝ) (x : SlotColoring.Position) (j : Fin 2) (Y : Plane) : ComplexVector :=
   fun i => ((outer * amplitude ε (mask D U q x) P.matrix T j *
     coveredVector P hdet j Y i : ℝ) : ℂ)
 
 /-- Slot phase, given by `(P.modes j : ℝ) * z.2 + P.phases j z.1`. -/
+@[expose]
 noncomputable def slotPhase {U : UnsignedLabel} (P : PairData sys U)
     (j : Fin 2) (z : Plane × ℝ) : ℝ := (P.modes j : ℝ) * z.2 + P.phases j z.1
 
@@ -533,6 +534,7 @@ namespace SourcePair
 variable {U : UnsignedLabel} (A : SourcePair Q sys U)
 
 /-- Pair data, bundling `pulses`, `ci`, `ci_pos`, `fits` and the required compatibility proofs. -/
+@[expose]
 noncomputable def pairData : PairData sys U where
   pulses := fun j => canonicalPrimaryPulse (A.frame j) (A.lam j) (A.rate j)
     (A.length_pos j) A.domain (A.coefficient_continuous j) A.point A.point_mem (A.kinematics j)
@@ -550,6 +552,7 @@ noncomputable def pairData : PairData sys U where
 
 /-- The matrix is computed directly from the normalized ODE fundamentals,
 with the exact determinant, transverse scale, and slot-length prefactor. -/
+@[expose]
 noncomputable def sourceMatrix : Mat2 :=
   primaryCovariance
     (fun j (_ : Unit) => nativePrefactor vr vt sys.radius * A.stretch j * A.length j)
@@ -575,7 +578,7 @@ theorem pulseVector_eq (j : Fin 2) (z : Plane) :
 
 /-- The source vector is evaluated from `cutoffPulse`, rather than from
 arbitrarily supplied radial and tangent component functions. -/
-noncomputable def nativeSource (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def nativeSource (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (j : Fin 2) : Plane → Vector :=
   TorusAverages.nativeField (TorusAverages.slotChart vr vt hdet)
     (slotCenter h (signedLabel U j))
@@ -591,7 +594,7 @@ theorem nativeSource_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (j : Fin 2) :
 
 /-- The native complex coefficient has the literal inverse-square-root
 amplitude and a single local Gaussian cutoff. -/
-noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) : ComplexVector :=
   fun i => ((outer * amplitude ε (mask D U q x) A.sourceMatrix T j *
@@ -599,7 +602,7 @@ noncomputable def nativeCoefficient (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Actual amplitude, given by `TorusAverages.periodize (A.nativeCoefficient hdet outer ε T q x
 j) ((SlotGeometry.cover ^ SlotColoring.nativeIndex h U.1) Y)`. -/
-noncomputable def actualAmplitude (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def actualAmplitude (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) : ComplexVector :=
   TorusAverages.periodize (A.nativeCoefficient hdet outer ε T q x j)
@@ -640,7 +643,7 @@ theorem actualAmplitude_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
 
 /-- Actual velocity, defined pointwise by `(vectorMode 1 (slotPhase A.pairData j) (fun z =>
 A.actualAmplitude hdet outer ε T q x j z.1) (Y, θ) i).re`. -/
-noncomputable def actualVelocity (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
+@[expose] noncomputable def actualVelocity (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
     (outer ε : ℝ) (T : Vec2) (q : ℝ) (x : SlotColoring.Position)
     (j : Fin 2) (Y : Plane) (θ : ℝ) : Vector :=
   fun i => (vectorMode 1 (slotPhase A.pairData j)
@@ -909,8 +912,10 @@ theorem principal_torus_average {N : ℕ} (hN : 1 ≤ N)
     intro Y k
     exact congrArg Complex.ofReal (hp Y k)
   let g := SmoothFourierData.descendContinuous (fun Y => (f Y : ℂ)) hcc hpc
-  refine ⟨g, fun _ => rfl, ?_⟩
-  rw [← TorusAverages.squareAverage_torusLift g]
+  have hg : SmoothFourierData.torusLift g = fun Y => (f Y : ℂ) :=
+    SmoothFourierData.torusLift_descendContinuous _ hcc hpc
+  refine ⟨g, fun Y => congrFun hg Y, ?_⟩
+  rw [← TorusAverages.squareAverage_torusLift g, hg]
   change TorusAverages.squareAverage (fun Y => (f Y : ℂ)) =
     ((TorusAverages.squareAverage f : ℝ) : ℂ)
   simp only [TorusAverages.squareAverage, ← intervalIntegral.integral_ofReal]

@@ -55,7 +55,7 @@ at all: `deg (d • oneChip u) = d ≥ genus G + r` makes Riemann's inequality
 below case-splits exactly on this sign.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

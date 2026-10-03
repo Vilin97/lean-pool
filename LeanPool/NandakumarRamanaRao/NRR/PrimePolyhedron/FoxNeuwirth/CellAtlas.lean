@@ -16,7 +16,7 @@ records the closed and open cell components, their compactness, and the explicit
 The later mod-`p` cycle construction replaces this disjoint atlas by the invariant glued chain.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -35,6 +35,7 @@ def cellInterior (c : FoxNeuwirthTopCell p) :
   {z | z.1 = c ∧ ∀ i, 0 < z.2 i}
 
 /-- Standard simplex chart for one component. -/
+@[expose]
 def cellParam (c : FoxNeuwirthTopCell p) :
     FoxNeuwirthWeights p → FoxNeuwirthTopCellModelPoint p :=
   fun w => (c, w)
@@ -95,6 +96,7 @@ theorem cellCarrier_cover :
   simp [cellCarrier]
 
 /-- The declared dimension of every maximal component. -/
+@[expose]
 def cellDimension (p : Nat)
     (_c : FoxNeuwirthTopCell p) : ℕ :=
   p - 1

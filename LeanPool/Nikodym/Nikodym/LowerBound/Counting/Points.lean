@@ -36,7 +36,7 @@ The blueprint suggests comparing leading coefficients of polynomials in `r`; we 
 the limit `r → ∞` of `N ≤ Δ (q + (d q + k) / r) ^ k`, which is shorter in Mathlib.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

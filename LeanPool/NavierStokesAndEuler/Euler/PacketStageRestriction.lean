@@ -22,7 +22,7 @@ section
 /-! Restricting the actual parent frame to the next packet horizon,
 and identifying its physical and scaled times with the literal scales. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,6 +39,7 @@ variable {A : Parent} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U
   (S : ℝ) (hS : 0 < S) (hST : S ≤ A.T) (hτ : 0 ≤ τ)
 
 /-- Restrict time, bundling `B`, `B₁`, `m`, `v` and the required compatibility proofs. -/
+@[expose]
 def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R support hSupport) τ
     where
   B := P.B
@@ -73,14 +74,14 @@ def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R 
       A.restrictTime_strain S hS hST ts 0]
     exact h
 
-@[simp] theorem restrictTime_a : (P.restrictTime S hS hST hτ).a=P.a := rfl
-@[simp] theorem restrictTime_sigma : (P.restrictTime S hS hST hτ).sigma=P.sigma := rfl
-@[simp] theorem restrictTime_shear : (P.restrictTime S hS hST hτ).shear=P.shear := rfl
-@[simp] theorem restrictTime_epsilon : (P.restrictTime S hS hST hτ).epsilon=P.epsilon := rfl
-@[simp] theorem restrictTime_G : (P.restrictTime S hS hST hτ).G=P.G := rfl
-@[simp] theorem restrictTime_error : (P.restrictTime S hS hST hτ).error=P.error := rfl
+@[simp] theorem restrictTime_a : (P.restrictTime S hS hST hτ).a=P.a := by rfl
+@[simp] theorem restrictTime_sigma : (P.restrictTime S hS hST hτ).sigma=P.sigma := by rfl
+@[simp] theorem restrictTime_shear : (P.restrictTime S hS hST hτ).shear=P.shear := by rfl
+@[simp] theorem restrictTime_epsilon : (P.restrictTime S hS hST hτ).epsilon=P.epsilon := by rfl
+@[simp] theorem restrictTime_G : (P.restrictTime S hS hST hτ).G=P.G := by rfl
+@[simp] theorem restrictTime_error : (P.restrictTime S hS hST hτ).error=P.error := by rfl
 @[simp] theorem restrictTime_horizon :
-    (P.restrictTime S hS hST hτ).horizon=P.a*(S-τ)/P.epsilon := rfl
+    (P.restrictTime S hS hST hτ).horizon=P.a*(S-τ)/P.epsilon := by rfl
 
 end EulerPacketSourceGeometry.ParentFrame
 
@@ -161,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,7 +183,7 @@ def step : ℝ :=
 def nextTime : ℝ := P.time+P.step
 
 /-- Next horizon, given by `P.nextTime+2*timeWidth S.J S.X (n+1)`. -/
-def nextHorizon : ℝ := P.nextTime+2*timeWidth S.J S.X (n+1)
+@[expose] def nextHorizon : ℝ := P.nextTime+2*timeWidth S.J S.X (n+1)
 
 theorem step_bounds : timeWidth S.J S.X n/6 ≤ P.step ∧
     P.step ≤ 2*timeWidth S.J S.X n/3 :=
@@ -243,40 +244,40 @@ theorem physical_target_eq_nextTime :
 
 /-- Restricted parent, given by `P.parent.restrictTime P.nextHorizon P.nextHorizon_pos
 P.nextHorizon_le`. -/
-def restrictedParent : Parent :=
+@[expose] def restrictedParent : Parent :=
   P.parent.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
 /-- Restricted state, given by `P.state.restrictTime P.nextHorizon P.nextHorizon_pos
 P.nextHorizon_le`. -/
-def restrictedState : SmoothState P.restrictedParent :=
+@[expose] def restrictedState : SmoothState P.restrictedParent :=
   P.state.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
 /-- Restricted low, given by `P.low.restrictTime P.nextHorizon P.nextHorizon_pos
 P.nextHorizon_le`. -/
-def restrictedLow : LowBounds P.restrictedParent :=
+@[expose] def restrictedLow : LowBounds P.restrictedParent :=
   P.low.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le
 
 /-- Restricted frame, given by `P.frame.restrictTime P.nextHorizon P.nextHorizon_pos
 P.nextHorizon_le P.time_nonneg`. -/
-def restrictedFrame : ParentFrame (frameData P.restrictedParent) P.time :=
+@[expose] def restrictedFrame : ParentFrame (frameData P.restrictedParent) P.time :=
   P.frame.restrictTime P.nextHorizon P.nextHorizon_pos P.nextHorizon_le P.time_nonneg
 
-@[simp] theorem restrictedParent_time : P.restrictedParent.T=P.nextHorizon := rfl
-@[simp] theorem restrictedParent_scale : P.restrictedParent.ell=P.parent.ell := rfl
-@[simp] theorem restrictedState_label : P.restrictedState.labels.K=P.state.labels.K := rfl
-@[simp] theorem restrictedLow_exterior : P.restrictedLow.Be=P.low.Be := rfl
-@[simp] theorem restrictedLow_core : P.restrictedLow.Bc=P.low.Bc := rfl
-@[simp] theorem restrictedLow_pressure : P.restrictedLow.K=P.low.K := rfl
-@[simp] theorem restrictedLow_boundary : P.restrictedLow.L=P.low.L := rfl
-@[simp] theorem restrictedLow_radius : P.restrictedLow.r=P.low.r := rfl
-@[simp] theorem restrictedFrame_a : P.restrictedFrame.a=P.frame.a := rfl
-@[simp] theorem restrictedFrame_sigma : P.restrictedFrame.sigma=P.frame.sigma := rfl
-@[simp] theorem restrictedFrame_shear : P.restrictedFrame.shear=P.frame.shear := rfl
-@[simp] theorem restrictedFrame_G : P.restrictedFrame.G=P.frame.G := rfl
-@[simp] theorem restrictedFrame_error : P.restrictedFrame.error=P.frame.error := rfl
-@[simp] theorem restrictedFrame_B : P.restrictedFrame.B=P.frame.B := rfl
-@[simp] theorem restrictedFrame_m : P.restrictedFrame.m=P.frame.m := rfl
-@[simp] theorem restrictedFrame_v : P.restrictedFrame.v=P.frame.v := rfl
+@[simp] theorem restrictedParent_time : P.restrictedParent.T=P.nextHorizon := by rfl
+@[simp] theorem restrictedParent_scale : P.restrictedParent.ell=P.parent.ell := by rfl
+@[simp] theorem restrictedState_label : P.restrictedState.labels.K=P.state.labels.K := by rfl
+@[simp] theorem restrictedLow_exterior : P.restrictedLow.Be=P.low.Be := by rfl
+@[simp] theorem restrictedLow_core : P.restrictedLow.Bc=P.low.Bc := by rfl
+@[simp] theorem restrictedLow_pressure : P.restrictedLow.K=P.low.K := by rfl
+@[simp] theorem restrictedLow_boundary : P.restrictedLow.L=P.low.L := by rfl
+@[simp] theorem restrictedLow_radius : P.restrictedLow.r=P.low.r := by rfl
+@[simp] theorem restrictedFrame_a : P.restrictedFrame.a=P.frame.a := by rfl
+@[simp] theorem restrictedFrame_sigma : P.restrictedFrame.sigma=P.frame.sigma := by rfl
+@[simp] theorem restrictedFrame_shear : P.restrictedFrame.shear=P.frame.shear := by rfl
+@[simp] theorem restrictedFrame_G : P.restrictedFrame.G=P.frame.G := by rfl
+@[simp] theorem restrictedFrame_error : P.restrictedFrame.error=P.frame.error := by rfl
+@[simp] theorem restrictedFrame_B : P.restrictedFrame.B=P.frame.B := by rfl
+@[simp] theorem restrictedFrame_m : P.restrictedFrame.m=P.frame.m := by rfl
+@[simp] theorem restrictedFrame_v : P.restrictedFrame.v=P.frame.v := by rfl
 
 theorem restrictedFrame_horizon :
     P.restrictedFrame.horizon=EulerPacketSourceScaleGuards.horizon S.J S.X

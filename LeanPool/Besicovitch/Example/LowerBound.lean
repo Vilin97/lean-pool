@@ -25,7 +25,7 @@ impossible (`LeanPool.Besicovitch.Example.Zero`).  On the other hand its lower o
 So no threshold below `1/2` forces one-rectifiability in the plane, and `sigmaOne ℝ² ≥ 1/2`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

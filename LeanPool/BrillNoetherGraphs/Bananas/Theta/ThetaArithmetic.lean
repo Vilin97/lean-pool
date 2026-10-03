@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Basics.Definitions
 
 /-! # Theta Arithmetic -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

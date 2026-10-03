@@ -20,7 +20,7 @@ operators used inside a block encoding, not themselves declared as unitary
 `Gate`s in this file.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

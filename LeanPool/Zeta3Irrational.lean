@@ -27,7 +27,7 @@ Tags: number-theory, analysis, zeta-functions
 MSC: 11M06, 11J72
 -/
 
-@[expose] public section
+public section
 
 /-!
 This project formalizes the integral identities and denominator/positivity/

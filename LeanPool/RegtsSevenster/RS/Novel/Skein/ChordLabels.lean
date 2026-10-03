@@ -18,7 +18,7 @@ concrete bridge from `chordCrossingCount` to the abstract chord
 parity layer.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

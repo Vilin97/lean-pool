@@ -31,7 +31,7 @@ bound proves that its derivative at the edge is zero, using
 `δ ≤ ‖(p,δ) - (p₀,0)‖`. No pointwise-to-joint limit inference is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -269,7 +269,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -407,6 +407,7 @@ theorem norm_jet_const_mul {f : E → ℝ} {x : E} (hf : ContDiffAt ℝ ∞ f x)
   exact norm_smul c (iteratedFDeriv ℝ n f x)
 
 /-- The multiplier here is a fixed scalar at the point being estimated. -/
+@[expose]
 def normalizeAt (w : ℝ) (f : E → ℝ) : E → ℝ := fun y => w⁻¹ * f y
 
 theorem normalized_jet_bound {g : E → ℝ} {s : Set E} (hs : IsOpen s)
@@ -518,6 +519,7 @@ theorem rpow_comp_jets_bound {f : E → ℝ} {s : Set E} (hs : IsOpen s)
     (orderBound_nonneg p n)
 
 /-- Choose sum, given by `∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ)`. -/
+@[expose]
 def chooseSum (n : ℕ) : ℝ := ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ)
 
 theorem chooseSum_nonneg (n : ℕ) : 0 ≤ chooseSum n := by
@@ -830,7 +832,7 @@ abbrev edgeStrip (U : Set E) : Set (E × ℝ) := U ×ˢ Ioo 0 1
 
 /-- All full derivative tensors satisfy an exponential weight times fixed
 powers of the allowed scale and inverse edge distance. -/
-def WeightedJets (c : ℝ) (U : Set E) (S : E × ℝ → ℝ) (f : E × ℝ → ℝ) : Prop :=
+@[expose] def WeightedJets (c : ℝ) (U : Set E) (S : E × ℝ → ℝ) (f : E × ℝ → ℝ) : Prop :=
   ∀ n : ℕ, PolyBound (edgeStrip U) S (fun p => p.2⁻¹)
     (fun p => ‖iteratedFDeriv ℝ n f p‖ / FlatCutoff.edge c p.2)
 

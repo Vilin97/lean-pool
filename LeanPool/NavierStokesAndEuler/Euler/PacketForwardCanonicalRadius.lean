@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketTerminalEnvelope
 
 /-! Named direct-forward budgets at the literal canonical source radius. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,12 +42,14 @@ theorem mean_le_forwardInitializedRadius : Rm ≤ forwardInitializedRadius LM L 
 
 /-- Forward initialized linear budget, given by `L.enlargeRadius (forwardInitializedRadius LM L
 NB BC δ ξ) (forward_le_initializedRadius LM L NB BC δ ξ)`. -/
+@[expose]
 def forwardInitializedLinearBudget : EulerTransversePacketForward.Budget D (Fin 4) 6 :=
   L.enlargeRadius (forwardInitializedRadius LM L NB BC δ ξ)
     (forward_le_initializedRadius LM L NB BC δ ξ)
 
 /-- Forward initialized normal budget, given by `NB.enlargeRadius (forwardInitializedRadius LM L
 NB BC δ ξ) (forward_le_initializedRadius LM L NB BC δ ξ)`. -/
+@[expose]
 def forwardInitializedNormalBudget : EulerTransversePacketJoin.NormalBudget D 6
     (forwardInitializedRadius LM L NB BC δ ξ) :=
   NB.enlargeRadius (forwardInitializedRadius LM L NB BC δ ξ)

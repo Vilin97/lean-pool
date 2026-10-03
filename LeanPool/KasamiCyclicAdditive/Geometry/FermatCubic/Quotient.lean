@@ -27,7 +27,7 @@ Frobenius endomorphism, or algebraic closure is involved.  Note the direction â€
 chosen afterwards.
 -/
 
-@[expose] public section
+public section
 
 open KasamiCyclicAdditive.FermatCubic
 

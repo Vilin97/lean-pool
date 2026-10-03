@@ -16,7 +16,7 @@ distinct-strand theorem.  It is kept separate from the dependent semibreak
 update API in `LengthTwoCross`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

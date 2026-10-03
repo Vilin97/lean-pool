@@ -10,7 +10,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Coding -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -25,6 +25,7 @@ open Encodable
 namespace Semiterm
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def toNat {n : ℕ} : Semiterm L ξ n → ℕ
   | #z                        => Nat.pair 0 z + 1
   | &x                        => Nat.pair 1 (encode x) + 1
@@ -80,6 +81,7 @@ namespace Semiformula
 variable [(k : ℕ) → Encodable (L.Rel k)]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def toNat : {n : ℕ} → Semiformula L ξ n → ℕ
   | _, rel (arity := arity) R v  =>
     (Nat.pair 0 <| arity.pair <| (encode R).pair <| Matrix.vecToNat fun i ↦ encode (v i)) + 1

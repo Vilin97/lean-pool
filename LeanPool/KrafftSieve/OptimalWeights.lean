@@ -31,7 +31,7 @@ This module constructs the truly multidimensional optimal weights $\lambda$ for 
 and explores the properties of the resulting polynomial $P(x)$ and weight $W_\lambda(x)$.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 

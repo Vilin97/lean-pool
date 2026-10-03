@@ -36,7 +36,7 @@ The tensor product s(ℕ) ⊗̂ s(ℕ) ≅ s(ℕ²) ≅ s(ℕ) via Cantor pairin
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,6 +144,9 @@ def rapidDecaySeminorm (k : ℕ) : Seminorm ℝ RapidDecaySeq where
     change ∑' m, |r * a.val m| * (1 + ↑m) ^ k = ‖r‖ * ∑' m, |a.val m| * (1 + ↑m) ^ k
     simp_rw [abs_mul, Real.norm_eq_abs, mul_assoc]
     exact tsum_mul_left
+
+@[simp] theorem rapidDecaySeminorm_apply (k : ℕ) (a : RapidDecaySeq) :
+    rapidDecaySeminorm k a = ∑' m, |a.val m| * (1 + (m : ℝ)) ^ k := by rfl
 
 /-! ### Topology from seminorms -/
 
@@ -392,6 +395,9 @@ def coeffCLM (m : ℕ) : RapidDecaySeq →L[ℝ] ℝ where
           (a.rapid_decay 0).le_tsum m
             (fun j _ => mul_nonneg (abs_nonneg _) (weight_nonneg j 0))
 
+@[simp] theorem coeffCLM_apply (m : ℕ) (a : RapidDecaySeq) :
+    coeffCLM m a = a.val m := by rfl
+
 /-! ### DyninMityaginSpace instance -/
 
 /-- The partial sums `∑_{m∈s} a.val(m) • basisVec(m)` converge to `a`.
@@ -494,7 +500,9 @@ instance rapidDecayDyninMityaginSpace : DyninMityaginSpace RapidDecaySeq where
   h_completeSpace := instCompleteSpace
   basis := basisVec
   coeff := coeffCLM
-  expansion := rapidDecay_expansion
+  expansion := by
+    intro φ a
+    simpa only [coeffCLM_apply] using rapidDecay_expansion φ a
   basis_growth k := ⟨1, one_pos, k, fun m => by
     rw [rapidDecaySeminorm_basisVec]; linarith⟩
   coeff_decay k := ⟨1, one_pos, {k}, fun a m => by
@@ -661,7 +669,7 @@ sequence space of rapidly decreasing sequences. The product basis indices
 Mathematically, if `E₁ ≅ s(ℕ)` and `E₂ ≅ s(ℕ)` as nuclear Fréchet spaces,
 then `E₁ ⊗̂ E₂ ≅ s(ℕ × ℕ) ≅ s(ℕ)` via the Cantor pairing.
 -/
-def NuclearTensorProduct (_E₁ _E₂ : Type*) :=
+@[expose] def NuclearTensorProduct (_E₁ _E₂ : Type*) :=
   let _ := _E₁
   let _ := _E₂
   RapidDecaySeq
@@ -878,7 +886,7 @@ variable [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
 @[simp] theorem pure_val (e₁ : E₁) (e₂ : E₂) (m : ℕ) :
     (pure e₁ e₂).val m =
       DyninMityaginSpace.coeff (Nat.unpair m).1 e₁ *
-      DyninMityaginSpace.coeff (Nat.unpair m).2 e₂ := rfl
+      DyninMityaginSpace.coeff (Nat.unpair m).2 e₂ := by rfl
 
 /-- Seminorm bound for the pure tensor: for each target seminorm index `k`,
 there exist constants `C`, source seminorm index sets `s₁, s₂` such that

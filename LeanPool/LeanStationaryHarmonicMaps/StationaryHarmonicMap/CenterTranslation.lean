@@ -17,7 +17,7 @@ This module starts the passage from the origin-centered theorem to arbitrary
 centers by isolating the translation identities needed for `weakTheta`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

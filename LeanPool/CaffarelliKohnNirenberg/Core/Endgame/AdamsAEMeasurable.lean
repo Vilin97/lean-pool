@@ -15,7 +15,7 @@ potential at every evaluation point. Thus the scalar Adams estimate does not
 require pointwise measurability of the original source.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

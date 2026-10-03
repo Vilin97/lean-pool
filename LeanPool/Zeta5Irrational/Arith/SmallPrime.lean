@@ -25,7 +25,7 @@ import Mathlib.Tactic.Ring.Basic
 * `v_p(H^{(5)}_m) ≥ -5 log_p m`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

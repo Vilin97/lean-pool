@@ -24,7 +24,7 @@ required pointwise incidence formula.  The resulting object is a genuine
 `FoxNeuwirthRelativeAffineCollar` at the common endpoint level `N + L`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -61,6 +61,7 @@ def mapVertexSignature
     ((AffinePositiveRayBoundary.VertexMap.facetIndexEquiv hp).symm i)))
 
 /-- Prime translation of an affine facet map. -/
+@[expose]
 def translateFacetMap
     (p : Nat) (g : PrimeSymmetry p)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
@@ -235,19 +236,20 @@ theorem lower_add_upper_add_side
     · simp [hl, hu]
 
 /-- Expanded occurrence pairing for an arbitrary facet-map weight. -/
+@[expose]
 noncomputable def occurrencePairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   weightedOccurrencePairing hp N L W
 
 /-- Lower endpoint pairing at the combined spatial level. -/
-noncomputable def lowerEndpointPairing
+@[expose] noncomputable def lowerEndpointPairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   weightedLowerEndpointPairing hp N L W
 
 /-- Upper endpoint pairing at the combined spatial level. -/
-noncomputable def upperEndpointPairing
+@[expose] noncomputable def upperEndpointPairing
     (hp : Nat.Prime p) (N L : Nat)
     (W : (Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) → ZMod p) : ZMod p :=
   weightedUpperEndpointPairing hp N L W
@@ -663,13 +665,13 @@ theorem occurrencePairing_eq_upper_sub_lower
 /-! ## Pointwise middle-prism collar -/
 
 /-- Lower boundary coefficient of one middle-prism facet orbit. -/
-noncomputable def lowerBoundaryCoefficient
+@[expose] noncomputable def lowerBoundaryCoefficient
     (hp : Nat.Prime p) (N L : Nat)
     (s : (Cells hp N L).Facet) : ZMod p :=
   lowerEndpointPairing hp N L (facetOrbitIndicator hp N L s)
 
 /-- Upper boundary coefficient of one middle-prism facet orbit. -/
-noncomputable def upperBoundaryCoefficient
+@[expose] noncomputable def upperBoundaryCoefficient
     (hp : Nat.Prime p) (N L : Nat)
     (s : (Cells hp N L).Facet) : ZMod p :=
   upperEndpointPairing hp N L (facetOrbitIndicator hp N L s)
@@ -811,6 +813,7 @@ theorem upperBoundaryCoefficient_zero_of_not_upper
 
 /-- The common-level staircase prism, with its boundary understood pointwise on prime-orbit facets.
 -/
+@[expose]
 noncomputable def collar
     (hp : Nat.Prime p) (N L : Nat) :
     FoxNeuwirthRelativeAffineCollar hp (N + L) (N + L) (N + L) L where

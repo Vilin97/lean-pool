@@ -12,7 +12,7 @@ public import Mathlib.Data.Fintype.Basic
 # Maximum absolute value of a tuple of integers
 -/
 
-@[expose] public section
+public section
 
 
 open Finset

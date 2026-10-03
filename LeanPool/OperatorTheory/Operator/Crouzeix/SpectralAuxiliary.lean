@@ -29,7 +29,7 @@ boundary transform rather than a disk von Neumann inequality.
   scalar form of the symmetrized estimate when the circle encloses the numerical range.
 -/
 
-@[expose] public section
+public section
 
 open Complex ComplexConjugate Polynomial Set spectrum
 open scoped InnerProductSpace Interval Real

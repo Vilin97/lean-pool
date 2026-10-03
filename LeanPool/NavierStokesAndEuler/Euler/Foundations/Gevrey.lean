@@ -19,7 +19,7 @@ Euler construction. These lemmas prove combinatorial implications; they do not
 assert the analytic estimates needed to apply the implications to Euler.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -123,7 +123,7 @@ theorem shifted_factorial_kernel_le (n k d₁ d₂ : ℕ) (hkn : k ≤ n) :
     _ = _ := by ring
 
 /-- The Gevrey-two factorial majorant with a nonnegative integer shift. -/
-def majorant (R : ℝ) (d n : ℕ) : ℝ :=
+@[expose] def majorant (R : ℝ) (d n : ℕ) : ℝ :=
   R ^ (n + d) * ((n + d).factorial : ℝ) ^ 2
 
 theorem majorant_nonneg (R : ℝ) (hR : 0 ≤ R) (d n : ℕ) :

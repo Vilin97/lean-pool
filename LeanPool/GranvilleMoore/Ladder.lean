@@ -52,7 +52,7 @@ is genuinely needed, to divide in the recursion for `iteratedFermatQuot`.
   Fermat quotients*.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix
 

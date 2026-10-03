@@ -127,7 +127,7 @@ public import LeanPool.Zeta5Irrational.Table.Tail
 
 /-! # Intervals: certified bounds for the zeta(5) proof -/
 
-@[expose] public section
+public section
 
 open Finset
 

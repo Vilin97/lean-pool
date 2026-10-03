@@ -22,7 +22,7 @@ the divergence-form and multiplication-form upgrades used for the slice
 identities.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology Set
 open CKN.Foundation.Parabolic

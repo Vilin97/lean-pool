@@ -40,7 +40,7 @@ tries to do straightforward recursion on expressions, along with some basic norm
 of ring operations.
 -/
 
-@[expose] public section
+public section
 
 /-- A tactic for proving goals of the `Commute` relation.
 

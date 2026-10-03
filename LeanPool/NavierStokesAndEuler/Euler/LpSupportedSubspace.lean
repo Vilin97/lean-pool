@@ -17,7 +17,7 @@ identity minus measurable-set projection. This gives a complete Hilbert space
 for localized propagators and keeps the support restriction explicit.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ variable {α V : Type*} [MeasurableSpace α] (μ : Measure α)
   (S : Set α) (hS : MeasurableSet S)
 
 /-- The actual measurable-set cutoff on a Bochner L² function. -/
-def cutoff (u : Lp V 2 μ) : Lp V 2 μ :=
+@[expose] def cutoff (u : Lp V 2 μ) : Lp V 2 μ :=
   ((Lp.memLp u).indicator hS).toLp (S.indicator u)
 
 omit [InnerProductSpace ℝ V] in
@@ -52,7 +52,7 @@ theorem cutoff_norm (u : Lp V 2 μ) : ‖cutoff μ S hS u‖ ≤ ‖u‖ := by
     exact norm_nonneg _
 
 /-- The actual cutoff is linear. -/
-def cutoffLinear : Lp V 2 μ →ₗ[ℝ] Lp V 2 μ where
+@[expose] def cutoffLinear : Lp V 2 μ →ₗ[ℝ] Lp V 2 μ where
   toFun := cutoff μ S hS
   map_add' u v := by
     apply Lp.ext
@@ -75,13 +75,17 @@ def cutoffLinear : Lp V 2 μ →ₗ[ℝ] Lp V 2 μ where
     · simp only [indicator_of_notMem hs, smul_zero]
 
 /-- The supported-set projection as a genuine bounded linear map. -/
-def cutoffOperator : Lp V 2 μ →L[ℝ] Lp V 2 μ :=
+@[expose] def cutoffOperator : Lp V 2 μ →L[ℝ] Lp V 2 μ :=
   (cutoffLinear μ S hS).mkContinuous 1 (fun u => by
     change ‖cutoff μ S hS u‖ ≤ (1 : ℝ)*‖u‖
     simpa only [one_mul] using cutoff_norm μ S hS u)
 
+@[simp] theorem cutoffOperator_apply (u : Lp V 2 μ) :
+    cutoffOperator μ S hS u = cutoff μ S hS u := by
+  rfl
+
 /-- The localized Hilbert subspace is a closed kernel. -/
-def supportedSpace : Submodule ℝ (Lp V 2 μ) :=
+@[expose] def supportedSpace : Submodule ℝ (Lp V 2 μ) :=
   (ContinuousLinearMap.id ℝ (Lp V 2 μ) - cutoffOperator μ S hS).ker
 
 /-- Membership is fixedness under actual measurable-set projection. -/

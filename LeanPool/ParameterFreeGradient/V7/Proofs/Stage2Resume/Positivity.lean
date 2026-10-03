@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Controller
 Positive constants and endpoint estimates for geometric trial amortization.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2Resume

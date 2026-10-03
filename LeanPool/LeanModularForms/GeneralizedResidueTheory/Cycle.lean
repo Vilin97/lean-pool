@@ -42,7 +42,7 @@ contour integration and winding numbers extended by linearity.
 * `windingNumberCycle_isInt` -- winding number integrality.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Interval

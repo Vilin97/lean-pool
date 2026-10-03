@@ -46,7 +46,7 @@ maximal: any `W`
 
 The construction is `[propext, Quot.sound]` given the supplied `DecidablePred`. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -99,15 +99,15 @@ prefix `Y₀,…,Yₙ`?
 An `abbrev` so the `[DecidablePred V.mem]` instance is found through it. -/
 abbrev cond (n : ℕ) : Prop := V.mem (acc V enum n ∩ enum (n + 1))
 
-@[simp] theorem Y_zero : Y V enum 0 = enum 0 := rfl
+@[simp] theorem Y_zero : Y V enum 0 = enum 0 := by rfl
 
-@[simp] theorem acc_zero : acc V enum 0 = V.master ∩ enum 0 := rfl
+@[simp] theorem acc_zero : acc V enum 0 = V.master ∩ enum 0 := by rfl
 
 /-- The defining equation of `state` at a successor, written with the named
 `cond`/`acc`. -/
 theorem state_succ (n : ℕ) :
     state V enum (n + 1) =
-      if cond V enum n then (enum (n + 1), acc V enum n ∩ enum (n + 1)) else state V enum n :=
+      if cond V enum n then (enum (n + 1), acc V enum n ∩ enum (n + 1)) else state V enum n := by
   rfl
 
 theorem Y_succ_pos {n : ℕ} (h : cond V enum n) : Y V enum (n + 1) = enum (n + 1) := by

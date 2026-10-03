@@ -31,7 +31,7 @@ imports are required here; the metric lemmas used (`mem_interior_iff_mem_nhds`,
 `interior_mono`) are all available transitively.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

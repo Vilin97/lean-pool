@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 Axioms of synthetic geometry
 -/
 
-@[expose] public section
+public section
 
 /-! Universes for points lines and circles-/
 universe u
@@ -222,25 +222,25 @@ variable [i : IncidenceGeometry]
 open IncidenceGeometry
 -------------------------------------------------- Definitions -----------------------------------
 /-- Points being on different sides of a line -/
-def diffside a b L := ¬OnLine a L ∧ ¬OnLine b L ∧ ¬SameSide a b L
+@[expose] def diffside a b L := ¬OnLine a L ∧ ¬OnLine b L ∧ ¬SameSide a b L
 /-- A point being outside a circle -/
-def outCircle a α := ¬OnCircle a α ∧ ¬InCircle a α
+@[expose] def outCircle a α := ¬OnCircle a α ∧ ¬InCircle a α
 /-- Points being colinear -/
-def colinear a b c := ∃ L : Line, OnLine a L ∧ OnLine b L ∧ OnLine c L
+@[expose] def colinear a b c := ∃ L : Line, OnLine a L ∧ OnLine b L ∧ OnLine c L
 /-- Definition of a triangle -/
-def triangle a b c := ¬colinear a b c
+@[expose] def triangle a b c := ¬colinear a b c
 /-- Definition of an equilateral triangle -/
-def eqTri a b c := triangle a b c ∧ length a b = length a c ∧ length b a = length b c
+@[expose] def eqTri a b c := triangle a b c ∧ length a b = length a c ∧ length b a = length b c
   ∧ length c a = length c b
 /-- Definition of an isosoles triangle -/
-def isoTri a b c := triangle a b c ∧ length a b = length a c
+@[expose] def isoTri a b c := triangle a b c ∧ length a b = length a c
 /-- Definition of parallel -/
-def para M N := ∀ e, ¬OnLine e M ∨ ¬OnLine e N
+@[expose] def para M N := ∀ e, ¬OnLine e M ∨ ¬OnLine e N
 /-- Definition of parallelogram -/
-def paragram a b c d L M N O := OnLine a L ∧ OnLine b L ∧ OnLine b M ∧
+@[expose] def paragram a b c d L M N O := OnLine a L ∧ OnLine b L ∧ OnLine b M ∧
     OnLine c M ∧ OnLine c N ∧ OnLine d N ∧ OnLine d O ∧ OnLine a O ∧ para L N ∧ para M O
 /-- Definition of a square -/
-def square a b c d := length a b = length b c ∧ length a b = length c d ∧
+@[expose] def square a b c d := length a b = length b c ∧ length a b = length c d ∧
     length a b = length d a ∧ angle a b c = rightangle ∧ angle b c d = rightangle ∧
     angle c d a = rightangle ∧ angle d a b = rightangle
 

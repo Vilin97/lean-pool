@@ -30,7 +30,7 @@ multiple of the same null sequence.
   -- its conjugate-polynomial specialization.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped InnerProductSpace Interval Real

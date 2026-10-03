@@ -17,7 +17,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth
 This file derives the functional prime-refinement consequences from that proposition.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

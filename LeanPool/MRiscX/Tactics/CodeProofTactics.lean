@@ -30,7 +30,7 @@ import Mathlib.Tactic.Finiteness.Attr
 This module provides tactics for discharging MRiscX code-proof goals.
 -/
 
-@[expose] public section
+public section
 
 open Lean Meta Elab Parser Tactic RCases
 

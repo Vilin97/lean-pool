@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCommonRadius
 label fields and its short-time low strain bound. The growth profile is
 the constant one, proved by the actual tangent equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,6 +46,7 @@ variable {G : Parent} (L : LabelData G) (H : LowBounds G)
   (hshort : CM * G.T ≤ 1 / 2)
 
 /-- Forward raw, constructed using `shortPhysicalForwardBudget`. -/
+@[expose]
 def forwardRaw : EulerTransversePacketForward.Budget (G.transverseData m hm R S hS) (Fin 4) 6 :=
   shortPhysicalForwardBudget (G.transverseData m hm R S hS) 6 L.scaledRadius
     (frameAmplitude L.K) (gradientAmplitude L.K) CM L.scaledRadius_nonneg
@@ -54,6 +55,7 @@ def forwardRaw : EulerTransversePacketForward.Budget (G.transverseData m hm R S 
 
 /-- Forward inputs as an element of `ForwardInputs (G.meanData H) (G.transverseData m hm R S
 hS)`. -/
+@[expose]
 def forwardInputs (Ti : ℝ) (hT1 : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti) :
     ForwardInputs (G.meanData H) (G.transverseData m hm R S hS) := by
   let A := L.forwardRaw m hm R S hS CM hCM hM Ω hΩ hΩo hsub hΩball hshort
@@ -71,7 +73,7 @@ def forwardInputs (Ti : ℝ) (hT1 : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti) :
 
 theorem forwardInputs_growth (Ti : ℝ) (hT1 : G.T ≤ 1) (hTi : G.T⁻¹ ≤ Ti) :
     (L.forwardInputs H m hm R S hS CM hCM hM Ω hΩ hΩo hsub hΩball hshort Ti hT1 hTi).linear.g=1 :=
-        rfl
+  by rfl
 
 end LabelData
 end EulerParentPacketFrames

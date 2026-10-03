@@ -20,7 +20,7 @@ Tags: probability, game-theory, epistemic-logic
 MSC: 60A10, 91A40
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

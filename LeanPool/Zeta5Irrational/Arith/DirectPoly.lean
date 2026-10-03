@@ -28,7 +28,7 @@ For every integer `m`, `v_p(P(m)) ≥ β` where `P` is the polynomial part of
 `κ ∏ (x - ζ) / ∏ (x - r)` and `β ≤ e_c - ℓ_c` for every class `c`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

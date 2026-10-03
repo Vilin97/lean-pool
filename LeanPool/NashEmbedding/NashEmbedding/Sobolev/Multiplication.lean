@@ -36,7 +36,7 @@ coefficient sequences).
 * `sobolev_mul_dist` — First multiplication theorem (distribution side)
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex Real NashEmbedding.Sobolev

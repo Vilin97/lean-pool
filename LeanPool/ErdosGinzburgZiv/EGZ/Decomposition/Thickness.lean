@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.Mass
 # Thickness
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

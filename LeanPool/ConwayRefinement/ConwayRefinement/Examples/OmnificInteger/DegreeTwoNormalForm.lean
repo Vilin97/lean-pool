@@ -25,13 +25,14 @@ every universe `u`. Its support order type and primeness are stated in `DegreeTw
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace Surreal.OmnificInteger.DegreeTwoExample
 
 open Set
 
 /-- The positive Conway exponent in row `m` and column `n`. -/
+@[expose]
 def exponent (m n : ℕ) : ℝ :=
   1 / (m + 1 : ℝ) +
     1 / ((m + 1 : ℝ) * (m + 2 : ℝ) * (n + 1 : ℝ))
@@ -98,6 +99,7 @@ private theorem exponent_strictAnti_lex :
 abbrev Index := WithTop (Lex (ℕ × ℕ))
 
 /-- The exponent sequence of the concrete Conway normal form. -/
+@[expose]
 def exponentAtIndex : Index → Surreal.{u}
   | ⊤ => 0
   | (p : Lex (ℕ × ℕ)) => (exponent (ofLex p).1 (ofLex p).2 : ℝ)
@@ -121,6 +123,7 @@ private theorem exponentAtIndex_strictAnti : StrictAnti exponentAtIndex.{u} := b
           exact_mod_cast exponent_strictAnti_lex (WithTop.coe_lt_coe.mp hpq)
 
 /-- The coefficient function of the explicit normal form. -/
+@[expose]
 def coefficient (i : Surreal.{u}) : ℝ :=
   by
     classical
@@ -148,6 +151,7 @@ theorem wellFoundedOn_support_coefficient :
   exact exponentAtIndex_strictAnti.lt_iff_gt
 
 /-- The explicit Conway normal form with all coefficients equal to one. -/
+@[expose]
 def normalForm : SurrealHahnSeries.{u} :=
   SurrealHahnSeries.mk coefficient small_support_coefficient
     wellFoundedOn_support_coefficient

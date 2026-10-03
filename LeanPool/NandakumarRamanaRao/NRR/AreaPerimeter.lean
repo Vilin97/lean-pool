@@ -24,7 +24,7 @@ for explicitly parameterized convex-body families with jointly continuous angle-
 No topology on the type of all convex bodies is assumed.
 -/
 
-@[expose] public section
+public section
 
 open NRR
 open scoped RealInnerProductSpace
@@ -33,7 +33,7 @@ namespace NRR.Geometry.ConvexBody
 
 /-- **Perimeter** of a planar convex body, defined by Cauchy's mean-width formula: an alias of
 the implemented `NRR.Geometry.planarPerimeter`. -/
-noncomputable def perimeter (K : ConvexBody Plane) : ℝ :=
+@[expose] noncomputable def perimeter (K : ConvexBody Plane) : ℝ :=
   NRR.Geometry.planarPerimeter K
 
 /-- Definitional unfolding of `perimeter`. -/

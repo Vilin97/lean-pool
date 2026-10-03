@@ -19,7 +19,7 @@ This file proves the positive-piece form of Delaware's straight-set theorem for 
 one-measure in the Euclidean plane.  It also records the elementary restriction API used later.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

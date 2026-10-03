@@ -33,7 +33,7 @@ Finite-dimensionality of `restrictTotalDegree (Fin d) K t` is already a Mathlib 
 restate it as `Nikodym.LowerBound.instModuleFiniteRestrictTotalDegree` for discoverability.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

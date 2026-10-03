@@ -25,4 +25,4 @@ Tags: number-theory, combinatorics, partitions, power-series, pentagonal-number-
 MSC: 11P81, 05A17
 -/
 
-@[expose] public section
+public section

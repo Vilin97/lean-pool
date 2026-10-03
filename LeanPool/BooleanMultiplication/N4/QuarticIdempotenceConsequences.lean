@@ -16,7 +16,7 @@ Every summand except target times rational has degree at most three, so the
 quartic equation is exactly the rational-annihilator probe.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

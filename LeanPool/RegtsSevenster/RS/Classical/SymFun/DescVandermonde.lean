@@ -21,7 +21,7 @@ the descending Pochhammer polynomials (which are monic of the
 correct degree) combined with `det_vandermonde`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Matrix Finset
 

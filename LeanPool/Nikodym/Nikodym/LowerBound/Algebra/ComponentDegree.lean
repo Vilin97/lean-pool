@@ -37,7 +37,7 @@ inclusion–exclusion identity B02(i) `homHilbert_inf_add_homHilbert_sup` lives 
   (degree `≤ n`), then `∑_{Q ∈ 𝒬} (p Q).coeff n ≤ e * (n + 1) * p₀.coeff (n + 1)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

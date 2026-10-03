@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Packet Frame Quantitative
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

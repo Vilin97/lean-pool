@@ -47,7 +47,7 @@ solution `⟨a, b⟩` one derives `!x.τ(x,b) ⊑ a`, hence `outerOp(b) ⊑ b`, 
 universal properties of `fixElement`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

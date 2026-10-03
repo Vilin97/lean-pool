@@ -16,7 +16,7 @@ coordinate is positive.  Hence the straight-line segments to the corresponding s
 reference lifts remain in the negative and positive orthants, respectively.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

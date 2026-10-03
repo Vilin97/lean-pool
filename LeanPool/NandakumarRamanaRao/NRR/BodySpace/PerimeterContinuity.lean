@@ -24,7 +24,7 @@ composed with `Geometry.ConvexBody.area`) and perimeter both vary continuously o
 lower-area hyperspace `BodySpace K A`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

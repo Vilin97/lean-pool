@@ -34,7 +34,7 @@ The two internal pairings act transparently on this model:
 Consequently the paired maximal flags have literally equal deleted faces.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -46,10 +46,12 @@ namespace FoxNeuwirthOrderComplex
 namespace MaximalFlagCode
 
 /-- Bars already removed before stage `j`. -/
+@[expose]
 def removedBefore (z : Code p) (j : Fin p) : Finset (Fin (p - 1)) :=
   Finset.univ.filter fun r => (z.removal.symm r).1 < j.1
 
 /-- Bars still present at stage `j`. -/
+@[expose]
 def retainedBars (z : Code p) (j : Fin p) : Finset (Fin (p - 1)) :=
   Finset.univ \ removedBefore z j
 
@@ -59,10 +61,11 @@ def retainedBars (z : Code p) (j : Fin p) : Finset (Fin (p - 1)) :=
   simp [retainedBars, removedBefore]
 
 /-- Zero-based block number at one stage, computed in the bottom singleton order. -/
-def stageBlock (z : Code p) (j : Fin p) (x : Fin p) : Nat :=
+@[expose] def stageBlock (z : Code p) (j : Fin p) (x : Fin p) : Nat :=
   ((retainedBars z j).filter fun r => r.1 < (z.bottom x).1).card
 
 /-- Lexicographic key used to order labels at a stage. -/
+@[expose]
 def stageKey (z : Code p) (j : Fin p) (x : Fin p) : Nat ×ₗ Nat :=
   toLex (stageBlock z j x, (z.top x).1)
 
@@ -92,6 +95,7 @@ theorem ordinalRankNat_lt (key : Fin p → Nat ×ₗ Nat) (x : Fin p) :
   simpa [ordinalRankNat] using Finset.card_lt_card hssub
 
 /-- Fin-valued ordinal rank. -/
+@[expose]
 def ordinalRankFin (key : Fin p → Nat ×ₗ Nat) (x : Fin p) : Fin p :=
   ⟨ordinalRankNat key x, ordinalRankNat_lt key x⟩
 
@@ -130,6 +134,7 @@ theorem ordinalRankFin_injective
   · exact (Fin.ne_of_lt (ordinalRankFin_lt_of_lt hgt)) hxy.symm
 
 /-- The ordinal-rank permutation associated with a code stage. -/
+@[expose]
 noncomputable def stageRank (z : Code p) (j : Fin p) : Equiv.Perm (Fin p) :=
   Equiv.ofBijective (ordinalRankFin (stageKey z j)) (by
     rw [Fintype.bijective_iff_injective_and_card]
@@ -258,7 +263,7 @@ theorem retainedCut_lt_stageRank_iff
     omega
 
 /-- The stage cell represented by a maximal-flag code. -/
-noncomputable def stageCell (z : Code p) (j : Fin p) : BarredPermutation p where
+@[expose] noncomputable def stageCell (z : Code p) (j : Fin p) : BarredPermutation p where
   rank := stageRank z j
   bars := retainedBars z j
 
@@ -394,10 +399,12 @@ theorem stageCell_properFace
     omega
 
 /-- Cast a maximal-simplex vertex index to the stage index `Fin p`. -/
+@[expose]
 def stageIndex (hp : Nat.Prime p) (i : Fin (p - 1 + 1)) : Fin p :=
   FoxNeuwirthChain.maximalIndexCast hp i
 
 /-- Explicit strict flag associated with a maximal-flag code. -/
+@[expose]
 noncomputable def toSimplex (hp : Nat.Prime p) (z : Code p) : Simplex p (p - 1) :=
   ⟨fun i => stageCell z (stageIndex hp i), by
     intro i j hij

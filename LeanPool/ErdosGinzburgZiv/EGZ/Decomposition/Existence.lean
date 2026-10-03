@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.FinalConstruction
 # Existence
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

@@ -19,7 +19,7 @@ section
 /-! Fixed source constants in the smaller-radius estimates for the actual
 initialized all-order correction. They do not depend on the cutoff or frequency. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,17 +33,20 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (Kc : CorrectionCoefficientBudget D P)
 
 /-- Correction base, given by `metricAmplification D.inverseBound⁻¹/2`. -/
-def correctionBase : ℝ := metricAmplification D.inverseBound⁻¹/2
+@[expose] def correctionBase : ℝ := metricAmplification D.inverseBound⁻¹/2
 
 /-- Correction source cost, constructed using `sourceBound`. -/
+@[expose]
 def correctionSourceCost (R H C : ℝ) : ℝ :=
   sourceBound P (2*velocity R H C) (12*velocity R H C*(4*R)) Kc.A0 Kc.A2 1
     (correctionBase D) ((8/initialRadius R Kc.M Kc.Rc)*correctionBase D)
 
 /-- Correction pressure cost, given by `2*Kc.M*correctionSourceCost D P Kc R H C`. -/
+@[expose]
 def correctionPressureCost (R H C : ℝ) : ℝ := 2*Kc.M*correctionSourceCost D P Kc R H C
 
 /-- Correction time cost, given by `(1+2*Kc.M*(448*Kc.B+1))*correctionSourceCost D P Kc R H C`. -/
+@[expose]
 def correctionTimeCost (R H C : ℝ) : ℝ :=
   (1+2*Kc.M*(448*Kc.B+1))*correctionSourceCost D P Kc R H C
 
@@ -54,7 +57,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -77,6 +80,7 @@ def sourceEnvelope (X : ℝ) : ℝ :=
 
 /-- Output envelope, given by `1+baseEnvelope X+2*X*sourceEnvelope P
 X+(1+2*X*(448*X+1))*sourceEnvelope P X`. -/
+@[expose]
 def outputEnvelope (X : ℝ) : ℝ :=
   1+baseEnvelope X+2*X*sourceEnvelope P X+(1+2*X*(448*X+1))*sourceEnvelope P X
 

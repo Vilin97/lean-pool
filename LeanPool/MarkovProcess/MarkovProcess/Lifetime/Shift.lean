@@ -15,7 +15,7 @@ This file shifts a lifetime path forward by a fixed finite time. A shift beyond 
 lifetime produces a path with zero lifetime, hence with cemetery state at every coordinate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -29,6 +29,7 @@ section
 variable {α : Type*} [TopologicalSpace α]
 
 /-- Shift a lifetime path forward by the deterministic time `S`. -/
+@[expose]
 def shift (S : NNReal) (ω : LifetimePath α) : LifetimePath α where
   lifetime := ω.lifetime - (S : ENNReal)
   livePath := fun t ↦ ω.livePath ⟨S + t, by

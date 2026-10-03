@@ -17,7 +17,7 @@ product has no cubic or quartic part, then any target quadratic shadow of that
 product is again in the rational-place space.  No circuit enumeration is used.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

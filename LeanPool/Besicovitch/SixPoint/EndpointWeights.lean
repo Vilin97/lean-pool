@@ -17,7 +17,7 @@ Small exact radical certificates prove the numerical inequalities; the stationar
 proved symbolically from Cramer's rule.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -15,7 +15,7 @@ Generated cell chunk 0 of 2 for the AR row-04 chamber cover
 (cells 0-97).  Split across modules because the kernel cost of
 replaying a cell is cumulative within one Lean process. -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow04CoverCells0
 

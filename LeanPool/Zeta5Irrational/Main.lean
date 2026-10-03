@@ -20,7 +20,7 @@ public import Mathlib.NumberTheory.Real.Irrational
 `Classical.choice` and `Quot.sound`.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology
 

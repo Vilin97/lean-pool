@@ -14,7 +14,7 @@ Algebraic part of Zhou §3 for the concrete tensor kernel, including the
 quadratic fiber shear and its characteristic-two involutivity.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFactorIsomorphism
@@ -55,12 +55,14 @@ abbrev DualCoordinates :=
   (A →ₗ[k] PaperV) × (C →ₗ[k] k)
 
 /-- One finite coordinate of a map `A → V`. Paper: §3. -/
+@[expose]
 def coordinate (z : A →ₗ[k] PaperV) (i : SymplecticIndex) : A →ₗ[k] k where
   toFun a := z a i
   map_add' a b := by simp
   map_smul' r a := by simp
 
 /-- Bilinear evaluation on a pure tensor. Paper: §3. -/
+@[expose]
 def tensorFunctional (f g : A →ₗ[k] k) : TensorAA →ₗ[k] k :=
   TensorProduct.lift
     { toFun := fun a =>
@@ -84,7 +86,7 @@ def tensorFunctional (f g : A →ₗ[k] k) : TensorAA →ₗ[k] k :=
         simp [smul_eq_mul, mul_assoc] }
 
 /-- Restriction of tensor evaluation to the flip-fixed carrier. Paper: §3. -/
-def tensorFunctionalOnC (f g : A →ₗ[k] k) : C →ₗ[k] k :=
+@[expose] def tensorFunctionalOnC (f g : A →ₗ[k] k) : C →ₗ[k] k :=
   (tensorFunctional f g).domRestrict C
 
 @[simp] theorem tensorFunctionalOnC_diagonal
@@ -95,7 +97,7 @@ def tensorFunctionalOnC (f g : A →ₗ[k] k) : C →ₗ[k] k :=
     Construction.PaperKernel.diagonal]
 
 /-- Zhou's quadratic functional on the symmetric tensor dual. Paper: §3. -/
-def quadraticMap (z : A →ₗ[k] PaperV) : C →ₗ[k] k :=
+@[expose] def quadraticMap (z : A →ₗ[k] PaperV) : C →ₗ[k] k :=
   tensorFunctionalOnC (coordinate z (Sum.inl 0)) (coordinate z (Sum.inr 0)) +
     tensorFunctionalOnC (coordinate z (Sum.inl 1)) (coordinate z (Sum.inr 1))
 
@@ -105,7 +107,7 @@ def quadraticMap (z : A →ₗ[k] PaperV) : C →ₗ[k] k :=
   simp [quadraticMap, coordinate, OpenAIPort.standardQuadraticForm]
 
 /-- The nontrivial fiber shear from Zhou Proposition 3.2. Paper: §3. -/
-def fiberShear : DualCoordinates → DualCoordinates := fun p =>
+@[expose] def fiberShear : DualCoordinates → DualCoordinates := fun p =>
   (p.1, p.2 + quadraticMap p.1)
 
 /-- The characteristic-two cancellation behind the fiber shear. Paper: §3. -/

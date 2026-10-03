@@ -16,7 +16,7 @@ torsion residues at which the same degree-one vertex twist is effective.
 This small generic lemma packages that final finite-residue step.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

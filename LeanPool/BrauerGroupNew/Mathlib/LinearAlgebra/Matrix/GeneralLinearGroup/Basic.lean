@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Totient
 This file restores a similarity invariance lemma for matrix characteristic polynomials.
 -/
 
-@[expose] public section
+public section
 
 variable {F : Type*} [Field F]
 

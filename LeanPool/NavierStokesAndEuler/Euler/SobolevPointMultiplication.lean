@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevRestriction
 /-! Pointwise evaluation of actual smooth coefficient multiplication in finite cylinder Sobolev
 spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,11 +35,13 @@ theorem pointEvaluation_coefficient {q : ℕ} (hq : 3 ≤ q) (G : SmoothCoeffici
       G.coefficient x (pointEvaluation period x (restrictOperator period hq u)) := by
   apply pointEvaluation_eq period x _
     (fun y => G.coefficient y (pointEvaluation period y (restrictOperator period hq u)))
-  · exact (smoothField_continuous period G.coefficient G.smooth).clm_apply
-      (representative_continuous period (restrictOperator period hq u))
+  · simpa only [pointEvaluation_apply] using
+      (smoothField_continuous period G.coefficient G.smooth).clm_apply
+        (representative_continuous period (restrictOperator period hq u))
   · simp only [value_restrictOperator, coefficientSobolevOperator_value]
     filter_upwards [G.operator_ae (value period u),
       representative_ae period (restrictOperator period hq u)] with y hG hu
-    exact hG.trans (congrArg (G.coefficient y) hu)
+    simp only [value_restrictOperator] at hu
+    simpa only [pointEvaluation_apply] using hG.trans (congrArg (G.coefficient y) hu)
 
 end EulerSobolevPointMultiplication

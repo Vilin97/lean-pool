@@ -28,7 +28,7 @@ not obvious (they sit between `GroupTheory.PGroup`, `RepresentationTheory`, and 
 `Module` files); they are grouped here for now and will be placed during upstreaming.
 -/
 
-@[expose] public section
+public section
 
 /-- A `2`-group acting `ZMod 2`-linearly on a nontrivial finite `𝔽₂`-module fixes some nonzero
 vector. -/

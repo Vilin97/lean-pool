@@ -20,7 +20,7 @@ The ring construction includes work by Arnaud Mayeux and Jujian Zhang from
 `ProjConstruction/Proj` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -59,6 +59,7 @@ variable {A' : Type u} [CommRing A']
 /-- An ideal of `A'`, regarded as a sieve over the unique object of `SingleObj A'`: ideals absorb
 multiplication by arbitrary ring elements, which is exactly a sieve's stability under
 precomposition, since composition in `SingleObj A'` *is* ring multiplication. -/
+@[expose]
 def Sieve.ofIdeal (I : Ideal A') : Sieve (CategoryTheory.SingleObj.star A') where
   arrows {_} f := (f : A') ∈ I
   downward_closed {_ _ f} hf g := by
@@ -83,7 +84,7 @@ variable (M : Multicenter A')
 /-- The functor `SingleObj A' ⥤ SingleObj A'[M]` induced by the canonical ring map `A' → A'[M]`
 (`CategoryTheory.SingleObj.mapHom` turns any monoid hom into a functor between the attached
 one-object categories). This plays the role of `Θ` on the "attached-to-a-ring" side. -/
-def toDilatationFunctor : CategoryTheory.SingleObj A' ⥤ CategoryTheory.SingleObj A'[M] :=
+@[expose] def toDilatationFunctor : CategoryTheory.SingleObj A' ⥤ CategoryTheory.SingleObj A'[M] :=
   CategoryTheory.SingleObj.mapHom A' A'[M] (algebraMap A' A'[M]).toMonoidHom
 
 /-- **General fact**: in the one-object category `SingleObj R` attached to a monoid `R`, a
@@ -544,7 +545,7 @@ noncomputable def Phi51Equiv :
 
 lemma Phi51Equiv_apply (x : CategoryTheory.End
     ((CatToDila (centerOfMulticenter M)).obj (CategoryTheory.SingleObj.star A'))) :
-    Phi51Equiv M x = (Phi51 M).map x := rfl
+    Phi51Equiv M x = (Phi51 M).map x := by rfl
 
 lemma Phi51Equiv_one : Phi51Equiv M 1 = 1 := by
   change (Phi51 M).map (1 : CategoryTheory.End _) = (1 : A'[M])

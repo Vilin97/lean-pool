@@ -27,27 +27,31 @@ LM24, Example 9.2.8.
   integers*, Adv. Math. 442 (2024) 109513, cited as [LM24].
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz.OneRowExample
 
 open Ordinal
 
 /-- The exponents displayed in the normal form: zero and `1/(n+1)` for `n ≥ 0`. -/
+@[expose]
 def IsDisplayedExponent (i : Surreal) : Prop :=
   i = 0 ∨ ∃ n : ℕ, i = ((1 / (n + 1 : ℝ) : ℝ) : Surreal)
 
 /-- The named omnific integer is exactly the normal form displayed above: its coefficients are
 one at zero and at the exponents `1/(n+1)`, and zero everywhere else. -/
+@[expose]
 def HasDisplayedCoefficients : Prop :=
   (∀ i : Surreal, IsDisplayedExponent i → oneRowOz.1.coeff i = 1) ∧
     ∀ i : Surreal, ¬ IsDisplayedExponent i → oneRowOz.1.coeff i = 0
 
 /-- The displayed normal form has exact support order type `ω + 1`. -/
+@[expose]
 def HasExactSupportOrderType : Prop :=
   oneRowOz.1.length = omega0 + 1
 
 /-- Conway's displayed one-row omnific integer is prime. -/
+@[expose]
 def IsPrime : Prop :=
   Prime oneRowOz
 

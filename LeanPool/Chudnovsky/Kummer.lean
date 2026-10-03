@@ -54,7 +54,7 @@ what chapter 9 consumes after the PLAN A7 reformulation. TODO: if the final asse
 only through `F` and `dF/dJ`), add it here with an explicit principal-branch bookkeeping.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

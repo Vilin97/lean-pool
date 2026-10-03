@@ -27,7 +27,7 @@ This separately certifies that the strengthened terminal/bottom-margin invariant
 that is consumed.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

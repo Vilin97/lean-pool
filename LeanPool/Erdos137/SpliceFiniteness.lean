@@ -66,7 +66,7 @@ faithful instantiation would carry a finite-exception clause.
   abc remain open.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

@@ -19,7 +19,7 @@ against the dual insertion supplies a coevaluation; the section
 identity of the data makes the pair a retract.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -94,6 +94,7 @@ section Coeval
 
 /-- A base-linear insertion, bundled as a module morphism into
 the restricted regular module. -/
+@[expose]
 noncomputable def insHom
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] {M' : Mod D A}
     (B : D) [MonObj B] (φ : A ⟶ B) [IsMonHom φ] (w : M'.X ⟶ B)
@@ -223,6 +224,7 @@ theorem baseChangeAct_splitEval
 /-- **The coevaluation**: the copair element with its dual
 factor pushed into the algebra, multiplied against the
 algebra. -/
+@[expose]
 noncomputable def splitCoeval
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A] {M : Mod D A}

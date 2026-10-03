@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 /-! Genuine within-time derivatives inherit the raw field's joint parity, including at the
 endpoints. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

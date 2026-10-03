@@ -26,7 +26,7 @@ not yet available in Mathlib. Used as building blocks in the SchwartzNuclear pro
   the result is C^∞ and derivatives commute with the integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory SchwartzMap
 open scoped ContDiff

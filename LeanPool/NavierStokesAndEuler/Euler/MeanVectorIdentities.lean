@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Ordinary smooth vector-calculus identities with the canonical Mathlib Laplacian. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalcu
 open scoped ContDiff
 
 /-- Vector partial, given by `fderiv ℝ f x (EuclideanSpace.single i 1)`. -/
-def vectorPartial (f : Space → Space) (i : Fin 3) (x : Space) : Space :=
+@[expose] def vectorPartial (f : Space → Space) (i : Fin 3) (x : Space) : Space :=
   fderiv ℝ f x (EuclideanSpace.single i 1)
 
 theorem vectorPartial_smooth (f : Space → Space) (hf : ContDiff ℝ ∞ f) (i : Fin 3) :
@@ -90,12 +90,12 @@ theorem vectorCurl_compact (f : Space → Space) (hc : HasCompactSupport f) :
 
 /-- Curl test, given by `⟨vectorCurl (f : Space → Space), vectorCurl_smooth f f.smooth,
 vectorCurl_compact f f.compact⟩`. -/
-def curlTest (f : Test) : Test :=
+@[expose] def curlTest (f : Test) : Test :=
   ⟨vectorCurl (f : Space → Space), vectorCurl_smooth f f.smooth, vectorCurl_compact f f.compact⟩
 
 /-- Laplacian test, given by `⟨Δ (f : Space → Space), vector_laplacian_smooth f f.smooth,
 vector_laplacian_compact f f.smooth f.compact⟩`. -/
-def laplacianTest (f : Test) : Test :=
+@[expose] def laplacianTest (f : Test) : Test :=
   ⟨Δ (f : Space → Space), vector_laplacian_smooth f f.smooth,
     vector_laplacian_compact f f.smooth f.compact⟩
 

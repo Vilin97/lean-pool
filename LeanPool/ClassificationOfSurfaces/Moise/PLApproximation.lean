@@ -38,7 +38,7 @@ broken-line connectivity (Ch. 1), and Thm. 6.3 needs the polygonal theorems of C
 the combinatorial Schoenflies theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

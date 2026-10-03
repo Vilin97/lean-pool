@@ -32,7 +32,7 @@ The transform factor the move contributes to the summand is pinned
 in `TransposeLedger.lean`, on top of this count invariance.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

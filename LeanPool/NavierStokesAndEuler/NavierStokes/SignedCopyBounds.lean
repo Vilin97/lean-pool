@@ -19,7 +19,7 @@ The matrix inverse, signed square-root quotient and projected pressure are
 computed from the primitive input functions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

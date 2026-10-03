@@ -11,7 +11,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! The source's exponential tail follows quantitatively from its polynomial grade base. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

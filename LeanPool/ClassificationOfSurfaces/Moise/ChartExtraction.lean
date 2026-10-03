@@ -31,7 +31,7 @@ boundary-faithfulness: manifold-boundary points in the chart land on the frontie
 target, hence on the model edge line.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 open Topology
@@ -44,7 +44,7 @@ namespace Moise
 open InvarianceOfDomain
 
 /-- The closed right half-plane, the ambient model for `EuclideanHalfSpace 2`. -/
-def HalfPlaneSet : Set Plane :=
+@[expose] def HalfPlaneSet : Set Plane :=
   {v : Plane | 0 ≤ v 0}
 
 theorem continuous_coordZero : Continuous fun v : Plane => v 0 :=
@@ -63,7 +63,7 @@ noncomputable def recenter (p : Plane) (ε : ℝ) (hε : ε ≠ 0) : Plane ≃�
 variable {p : Plane} {ε : ℝ}
 
 theorem recenter_apply (hε : ε ≠ 0) (v : Plane) :
-    recenter p ε hε v = ε⁻¹ • (v + -p) := rfl
+    recenter p ε hε v = ε⁻¹ • (v + -p) := by rfl
 
 theorem recenter_symm_apply (hε : ε ≠ 0) (w : Plane) :
     (recenter p ε hε).symm w = ε • w + p := by
@@ -136,13 +136,13 @@ inductive ChartKind where
 deriving DecidableEq, Repr
 
 /-- The model region of a chart kind: the open unit disk, or its closed-right half. -/
-def ChartKind.modelRegion : ChartKind → Set Plane
+@[expose] def ChartKind.modelRegion : ChartKind → Set Plane
   | .disk => Metric.ball 0 1
   | .halfDisk => {x ∈ Metric.ball 0 1 | 0 ≤ x 0}
 
 /-- The model core of a chart kind: the closed disk of radius one half, or its right half.  Cores
 are compact and their union over a chart cover is what the Radó induction absorbs. -/
-def ChartKind.modelCore : ChartKind → Set Plane
+@[expose] def ChartKind.modelCore : ChartKind → Set Plane
   | .disk => Metric.closedBall 0 (1 / 2)
   | .halfDisk => {x ∈ Metric.closedBall 0 (1 / 2) | 0 ≤ x 0}
 
@@ -170,7 +170,7 @@ def halfDiskModelToHalfSpace :
 
 @[simp] theorem halfDiskModelToHalfSpace_val
     (p : ChartKind.halfDisk.modelRegion) :
-    (halfDiskModelToHalfSpace p).1 = p.1 :=
+    (halfDiskModelToHalfSpace p).1 = p.1 := by
   rfl
 
 /-- The half-disk model is an open subset of the Euclidean half-space. -/
@@ -416,7 +416,7 @@ manifold-boundary stratum is exactly the model edge line.
 The forward half-disk implication is `ChartBoundaryInvariant`.  The reverse implication follows
 from the same invariance-of-domain layer: chart independence identifies a zero normal coordinate
 with the frontier of the half-space model. -/
-def MoiseChart.BoundaryFaithful {S : Type*} [TopologicalSpace S]
+@[expose] def MoiseChart.BoundaryFaithful {S : Type*} [TopologicalSpace S]
     [ChartedSpace (EuclideanHalfSpace 2) S] (c : MoiseChart S) : Prop :=
   (c.kind = ChartKind.disk →
     ∀ y ∈ c.domain, y ∉ (modelWithCornersEuclideanHalfSpace 2).boundary S) ∧

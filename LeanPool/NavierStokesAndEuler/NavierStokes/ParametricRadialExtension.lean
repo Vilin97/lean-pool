@@ -25,7 +25,7 @@ global smooth function of `(X, eta)` with exactly the original physical
 values.  No constant continuation at negative `X` is differentiated.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -134,6 +134,7 @@ end ParameterWindow
 
 /-- A smooth global parameter substitution, equal to the original one on
 the target window.  Its values remain inside the input parameter domain. -/
+@[expose]
 noncomputable def regularize {S : Set ℝ} (w : ParameterWindow S)
     (F : Plane → E) (p : Plane) : E := F (p.1, w.parameterMap p.2)
 
@@ -150,6 +151,7 @@ theorem regularize_even {S : Set ℝ} (w : ParameterWindow S) {F : Plane → E}
   he _ (w.parameterMap_mem eta) r
 
 /-- Descent, given by `F (Real.sqrt (2 * p.1), p.2)`. -/
+@[expose]
 noncomputable def descent (F : Plane → E) (p : Plane) : E :=
   F (Real.sqrt (2 * p.1), p.2)
 
@@ -187,6 +189,7 @@ theorem halfPlaneLift_contDiffOn {g : Plane → E}
   · exact mem_univ _
 
 /-- Half plane extension, constructed using `SpacetimeGluing.smoothExtension`. -/
+@[expose]
 noncomputable def halfPlaneExtension (g : Plane → E)
     (hg : ContDiffOn ℝ ∞ g (Ici 0 ×ˢ (univ : Set ℝ))) (p : Plane) : E :=
   SpacetimeGluing.smoothExtension 0 (halfPlaneLift g) (halfPlaneLift_contDiffOn hg)
@@ -217,7 +220,7 @@ theorem halfPlaneExtension_zero {g : Plane → E}
 
 /-- The global smooth extension.  The outer parameter cutoff and the
 negative radial support bound are independent of the input profile. -/
-noncomputable def extension {S : Set ℝ} (w : ParameterWindow S) (F : Plane → E)
+@[expose] noncomputable def extension {S : Set ℝ} (w : ParameterWindow S) (F : Plane → E)
     (hF : ContDiffOn ℝ ∞ F (univ ×ˢ S))
     (he : ∀ eta ∈ S, ∀ r, F (-r, eta) = F (r, eta)) (p : Plane) : E :=
   w.bump p.2 • halfPlaneExtension (descent (regularize w F))

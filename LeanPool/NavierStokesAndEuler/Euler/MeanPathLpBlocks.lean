@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TimeLpMap
 
 /-! Uniform-time spatial word bounds imply the genuine Bochner word bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

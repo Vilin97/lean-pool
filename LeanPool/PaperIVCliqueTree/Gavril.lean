@@ -20,7 +20,7 @@ in trees are exactly the chordal graphs", JCT B 16 (1974), 47–56,
 doi:10.1016/0095-8956(74)90094-X. No recognition algorithm or runtime bound is claimed.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

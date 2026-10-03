@@ -24,7 +24,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.LemmasAboutSimpleRing`.
 -/
 
-@[expose] public section
+public section
 universe u
 variable (K : Type u) [Field K]
 open TensorProduct in

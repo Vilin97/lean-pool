@@ -32,7 +32,7 @@ the formula to `D = w` for a vertex `w` and read the bound `inv_k ≤ g = 2`
 backwards.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -193,6 +193,7 @@ open Classical in
 `0 ∈ T⁰_D` says some degree-zero twist of `D` is principal; the second
 conjunct is the failure of the paper's rigidity condition (in genus two,
 `r(u+v) = 0` is equivalent to `u + v ≁ K_G`). -/
+@[expose]
 noncomputable def invTauCorrection (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
   if (∃ b : ℤ, linearEquiv M.graph (degreeTwistInt M D 0 b) 0) ∧
       linearEquiv M.graph (oneChip M.u + oneChip M.v)

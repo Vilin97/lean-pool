@@ -15,15 +15,15 @@ The 73 descriptors encode two radius-three triangular-lattice patches with a
 common center.  The second patch is rotated through cosine `7/8`.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- The integral quadratic norm of an axial lattice vector. -/
-def partsAxialNormSq (q r : ℤ) : ℤ := q ^ 2 + q * r + r ^ 2
+@[expose] def partsAxialNormSq (q r : ℤ) : ℤ := q ^ 2 + q * r + r ^ 2
 
 /-- Whether a descriptor is the common center of both patches. -/
-def PartsGadgetVertex.IsCenter (vertex : PartsGadgetVertex) : Prop :=
+@[expose] def PartsGadgetVertex.IsCenter (vertex : PartsGadgetVertex) : Prop :=
   vertex.q = 0 ∧ vertex.r = 0
 
 instance (vertex : PartsGadgetVertex) : Decidable vertex.IsCenter := by
@@ -31,7 +31,7 @@ instance (vertex : PartsGadgetVertex) : Decidable vertex.IsCenter := by
   infer_instance
 
 /-- Arithmetic classification of every unit edge in the gadget. -/
-def PartsGadgetEdgeCase (left right : Fin 73) : Prop :=
+@[expose] def PartsGadgetEdgeCase (left right : Fin 73) : Prop :=
   let leftData := partsGadgetVertex left
   let rightData := partsGadgetVertex right
   ((leftData.rotated = rightData.rotated ∨
@@ -47,7 +47,7 @@ instance (left right : Fin 73) : Decidable (PartsGadgetEdgeCase left right) := b
   infer_instance
 
 /-- Explicit point of the doubled triangular-lattice patch. -/
-noncomputable def partsGadgetPoint (vertex : Fin 73) : R2 :=
+@[expose] noncomputable def partsGadgetPoint (vertex : Fin 73) : R2 :=
   let descriptor := partsGadgetVertex vertex
   partsApplyPatch descriptor.rotated
     (partsAxialPoint descriptor.q descriptor.r)

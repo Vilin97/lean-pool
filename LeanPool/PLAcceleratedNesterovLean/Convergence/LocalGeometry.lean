@@ -15,4 +15,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.LocalGeometry.Step2
 # Local geometry estimates
 -/
 
-@[expose] public section
+public section

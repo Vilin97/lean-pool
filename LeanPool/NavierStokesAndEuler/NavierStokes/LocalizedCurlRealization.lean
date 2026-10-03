@@ -18,7 +18,7 @@ copy cell. The actual common potential and corrected wave inherit the
 local curl and divergence identities through those germs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

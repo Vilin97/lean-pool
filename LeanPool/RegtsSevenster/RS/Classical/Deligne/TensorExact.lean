@@ -20,7 +20,7 @@ zero objects, and a tensor power of a nonzero object detects
 nothing (`X ^ ⊗ n = 0` forces `X = 0`, Deligne 1.17).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

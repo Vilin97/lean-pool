@@ -38,7 +38,7 @@ is also the hypothesis under which the chip pays for the kink; see
 `Utilities/Subdivision/SplitRampArithmetic.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedCommon
 

@@ -16,7 +16,7 @@ This module packages the elementary resolvent identity, the Hille--Yosida
 bound, and dense range, then derives normalization at large positive shifts.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 
@@ -41,6 +41,7 @@ namespace ContractiveResolvent
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The normalized resolvent `α R_α`. -/
+@[expose]
 def scaledOperator (R : ContractiveResolvent E) (α : PositiveShift) : E →L[ℝ] E :=
   (α : ℝ) • R.operator α
 

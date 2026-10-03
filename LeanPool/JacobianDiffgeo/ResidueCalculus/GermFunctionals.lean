@@ -24,7 +24,7 @@ Main exports: `RS.MeromorphicGerm`, `RS.meromorphicGermsAt`, `RS.laurentCoeffL`,
 `RS.laurentCoeffL_mk`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -33,13 +33,14 @@ namespace RS
 variable {z₀ : ℂ}
 
 /-- Meromorphy is a property of the punctured germ. -/
-def MeromorphicGerm (z₀ : ℂ) (γ : Filter.Germ (𝓝[≠] z₀) ℂ) : Prop :=
+@[expose] def MeromorphicGerm (z₀ : ℂ) (γ : Filter.Germ (𝓝[≠] z₀) ℂ) : Prop :=
   γ.liftOn (MeromorphicAt · z₀) fun _ _ hfg => propext (MeromorphicAt.meromorphicAt_congr hfg)
 
 @[simp] theorem meromorphicGerm_coe {f : ℂ → ℂ} :
     MeromorphicGerm z₀ (f : Filter.Germ (𝓝[≠] z₀) ℂ) ↔ MeromorphicAt f z₀ := Iff.rfl
 
 /-- The ℂ-space of meromorphic germs at `z₀` (a submodule of the full germ module). -/
+@[expose]
 def meromorphicGermsAt (z₀ : ℂ) : Submodule ℂ (Filter.Germ (𝓝[≠] z₀) ℂ) where
   carrier := {γ | MeromorphicGerm z₀ γ}
   zero_mem' := analyticAt_const.meromorphicAt
@@ -91,6 +92,6 @@ noncomputable def laurentCoeffL (z₀ : ℂ) (k : ℤ) : meromorphicGermsAt z₀
 noncomputable def resL (z₀ : ℂ) : meromorphicGermsAt z₀ →ₗ[ℂ] ℂ := laurentCoeffL z₀ (-1)
 
 @[simp] theorem laurentCoeffL_mk {f : ℂ → ℂ} (hf : MeromorphicAt f z₀) (k : ℤ) :
-    laurentCoeffL z₀ k ⟨(f : Filter.Germ (𝓝[≠] z₀) ℂ), hf⟩ = laurentCoeffAt f z₀ k := rfl
+    laurentCoeffL z₀ k ⟨(f : Filter.Germ (𝓝[≠] z₀) ℂ), hf⟩ = laurentCoeffAt f z₀ k := by rfl
 
 end RS

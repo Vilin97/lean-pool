@@ -28,7 +28,7 @@ Equal area means each cell carries exactly the average area `K.area / n`; the co
 `n : ℕ ↦ (n : ℝ)` is via `Nat.cast`, so positivity follows from `0 < K.area` and `0 < n`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 

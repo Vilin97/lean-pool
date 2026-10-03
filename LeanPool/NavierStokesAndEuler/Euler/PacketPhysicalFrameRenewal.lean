@@ -21,7 +21,7 @@ section
 
 /-! Exact scaled cross and pressure algebra used by physical frame renewal. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -66,7 +66,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

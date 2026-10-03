@@ -16,7 +16,7 @@ killing time itself is the cemetery state, so this operation is distinct from en
 stopping.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -30,6 +30,7 @@ section
 variable {α : Type*} [TopologicalSpace α]
 
 /-- Kill a lifetime path at the deterministic time `T`. -/
+@[expose]
 def killAt (T : NNReal) (ω : LifetimePath α) : LifetimePath α where
   lifetime := min ω.lifetime (T : ENNReal)
   livePath := fun t ↦ ω.livePath ⟨t, lt_of_lt_of_le t.property (min_le_left _ _)⟩

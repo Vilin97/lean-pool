@@ -28,7 +28,7 @@ Our script convention agrees with `ChipFiringWithLean.prin`: the checked
 residual is `D - q + prin G sigma`, equivalently `D - q - L sigma`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -78,6 +78,7 @@ namespace RankOne
 variable {G : CFGraph}
 
 /-- The result of removing the chip at `q` and applying its certificate script. -/
+@[expose]
 def residual (certificate : RankOne G) (q : G.V) : CFDiv G :=
   certificate.divisor - oneChip q + prin G (certificate.scripts q)
 

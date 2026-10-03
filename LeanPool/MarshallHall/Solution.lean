@@ -16,7 +16,7 @@ Its proof is supplied by the finite labelled-graph reduction in
 `MarshallHall.GrushkoFull`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

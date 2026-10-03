@@ -24,7 +24,7 @@ Two results feed the gluing construction:
   overlap would accumulate at two distinct points of `M` at once, contradicting `T2`.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

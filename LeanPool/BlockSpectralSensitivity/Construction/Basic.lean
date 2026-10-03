@@ -34,7 +34,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -67,6 +67,7 @@ lemma block_disjoint {i j : ι} (h : i ≠ j) :
 /-! ### Gate coordinates -/
 
 /-- The gate coordinate `(j, γ(i,j))` selected by the arc `i → j` (Section 3.1). -/
+@[expose]
 def gateCoord (γ : ι → ι → Fin r) (i j : ι) : Coord ι r := (j, γ i j)
 
 @[simp] lemma gateCoord_fst (γ : ι → ι → Fin r) (i j : ι) : (gateCoord γ i j).1 = j := rfl
@@ -87,6 +88,7 @@ variable [DecidableEq ι]
 /-- The partial assignment `P_i` cutting out the certificate `C_i` (Section 3.2):
 the owner block `B_i` is fixed to `true`, and every outgoing gate coordinate is
 fixed to `false`. -/
+@[expose]
 def cert (Arc : ι → ι → Bool) (γ : ι → ι → Fin r) (i : ι) : PartialAssign (Coord ι r) :=
   fun v ↦ if v.1 = i then some true
     else if Arc i v.1 ∧ v.2 = γ i v.1 then some false else none
@@ -200,6 +202,7 @@ latter do not fire on it; the three lemmas below restate them for `ind`.
 
 /-- The Boolean function `f`: the indicator of the union of the certificate subcubes
 `C_i` (Section 3.3). -/
+@[expose]
 def ind (Arc : ι → ι → Bool) (γ : ι → ι → Fin r) : Input (Coord ι r) → Bool :=
   PartialAssign.indUnion (cert Arc γ)
 

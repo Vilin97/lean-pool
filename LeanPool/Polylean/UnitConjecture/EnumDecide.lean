@@ -5,7 +5,7 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 module
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -59,7 +59,7 @@ def decideBelow (p : Nat → Prop) [DecidablePred p] (bound : Nat) :
 It is possible to check whether a decidable predicate on `Fin m` holds below a
 given natural-number bound.
 -/
-def decideBelowFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] (bound : Nat) :
+@[expose] def decideBelowFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] (bound : Nat) :
     Decidable (∀ n : Fin m, n < bound → p n) :=
     match bound with
     | 0 => .isTrue (fun _ bd => absurd bd (Nat.not_lt_zero _))
@@ -82,7 +82,7 @@ def decideBelowFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] (bound : Nat
         .isFalse (fun contra => hyp (fun n bd => contra n (Nat.le_succ_of_le bd)))
 
 /-- It is possible to decide whether a predicate holds for all elements of `Fin n`. -/
-def decideFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] :
+@[expose] def decideFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] :
     Decidable (∀ n : Fin m, p n) :=
   match decideBelowFin p m with
   | .isTrue hyp => .isTrue (fun ⟨n, ineq⟩ => hyp ⟨n, ineq⟩ ineq)
@@ -111,7 +111,7 @@ example : ∀ x y : Fin 3, x + y = y + x := by decide
 
 example : ∀ x y z : Fin 3, (x + y) + z = x + (y + z) := by decide
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def decideProd {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β]
     (p : α × β → Prop) [DecidablePred p] : Decidable (∀ xy : α × β, p xy) :=
     if c: (∀ x: α, ∀ y : β, p (x, y)) then
@@ -123,7 +123,7 @@ instance {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β] :
   DecideForall (α × β) :=
   ⟨by apply decideProd⟩
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def decideUnit (p : Unit → Prop) [DecidablePred p] : Decidable (∀ x : Unit, p x) :=
   if c : p () then
     .isTrue (fun x => by cases x; exact c)
@@ -133,7 +133,7 @@ def decideUnit (p : Unit → Prop) [DecidablePred p] : Decidable (∀ x : Unit, 
 instance : DecideForall Unit :=
   ⟨by apply decideUnit⟩
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def decideSum {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β]
     (p : α ⊕ β → Prop) [DecidablePred p] : Decidable (∀ x : α ⊕ β, p x) :=
     if c: ∀x: α, p (Sum.inl x) then

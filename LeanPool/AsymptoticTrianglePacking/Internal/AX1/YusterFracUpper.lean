@@ -23,7 +23,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.YusterEdgeType
 
 /-! # YusterFracUpper -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 

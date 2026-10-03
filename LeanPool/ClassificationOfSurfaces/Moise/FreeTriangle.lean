@@ -17,7 +17,7 @@ Schoenflies induction.  A finite planar triangle mesh with infinite frontier has
 to exactly one triangle, hence a free triangle that can be removed by a supported ambient move.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,29 +29,30 @@ namespace TriangleMesh
 variable (M : TriangleMesh)
 
 /-- The geometric carrier of a maximal triangle. -/
-def triangleCarrier (t : Finset M.Vertex) : Set Plane :=
+@[expose] def triangleCarrier (t : Finset M.Vertex) : Set Plane :=
   convexHull ℝ (M.position '' (t : Set M.Vertex))
 
 /-- The two-element faces occurring in maximal triangles. -/
-def edges : Finset (Finset M.Vertex) :=
+@[expose] def edges : Finset (Finset M.Vertex) :=
   M.triangles.biUnion fun t => t.powersetCard 2
 
 /-- Maximal triangles incident to an edge. -/
+@[expose]
 def incidentTriangles (e : Finset M.Vertex) : Finset (Finset M.Vertex) :=
   M.triangles.filter fun t => e ⊆ t
 
 /-- A boundary edge is incident to exactly one maximal triangle. -/
-def IsBoundaryEdge (e : Finset M.Vertex) : Prop :=
+@[expose] def IsBoundaryEdge (e : Finset M.Vertex) : Prop :=
   e ∈ M.edges ∧ (M.incidentTriangles e).card = 1
 
 /-- A weakly free triangle contains an incidence-one edge.  This is the boundary-edge precursor
 used to find Moise's geometrically free triangles; by itself it does not exclude an additional
 isolated boundary vertex. -/
-def IsFreeTriangle (t : Finset M.Vertex) : Prop :=
+@[expose] def IsFreeTriangle (t : Finset M.Vertex) : Prop :=
   t ∈ M.triangles ∧ ∃ e, M.IsBoundaryEdge e ∧ e ⊆ t
 
 /-- The three abstract edges of a maximal triangle. -/
-def triangleEdges (t : Finset M.Vertex) : Finset (Finset M.Vertex) :=
+@[expose] def triangleEdges (t : Finset M.Vertex) : Finset (Finset M.Vertex) :=
   t.powersetCard 2
 
 /-- The boundary edges belonging to a maximal triangle. -/
@@ -71,7 +72,7 @@ theorem mem_allBoundaryEdges_iff {e : Finset M.Vertex} :
   simp [allBoundaryEdges, IsBoundaryEdge]
 
 /-- The finite union of the geometric carriers of all incidence-one mesh edges. -/
-noncomputable def boundaryCarrier : Set Plane :=
+@[expose] noncomputable def boundaryCarrier : Set Plane :=
   ⋃ e ∈ M.allBoundaryEdges, convexHull ℝ (M.position '' (e : Set M.Vertex))
 
 theorem isCompact_boundaryCarrier : IsCompact M.boundaryCarrier := by
@@ -1253,7 +1254,7 @@ theorem card_incidentTriangles_eq_two_of_not_boundary {e t : Finset M.Vertex}
   omega
 
 /-- Two maximal triangles are edge-neighbors if they contain a common two-vertex face. -/
-def AreEdgeNeighbors (t u : Finset M.Vertex) : Prop :=
+@[expose] def AreEdgeNeighbors (t u : Finset M.Vertex) : Prop :=
   ∃ e : Finset M.Vertex, e.card = 2 ∧ e ⊆ t ∧ e ⊆ u
 
 /-- A triangle with an edge-neighbor cannot have all three edges on the boundary. -/
@@ -1531,7 +1532,7 @@ theorem frontier_inter_triangleCarrier_diff_vertices {t : Finset M.Vertex}
     exact convexHull_mono (Set.image_mono heData.1) hpEdge
 
 /-- No mesh vertex contributes an isolated point to this triangle's frontier trace. -/
-def HasNoIsolatedFrontierVertex (t : Finset M.Vertex) : Prop :=
+@[expose] def HasNoIsolatedFrontierVertex (t : Finset M.Vertex) : Prop :=
   ∀ v : M.Vertex, M.position v ∈ frontier M.toPlaneComplex.support →
     M.position v ∈ M.triangleCarrier t →
       ∃ e ∈ M.boundaryEdges t,

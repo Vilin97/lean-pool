@@ -29,7 +29,7 @@ generalizing the specific computations used in winding number calculations.
   Common.lean version)
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory Complex
 open scoped Interval

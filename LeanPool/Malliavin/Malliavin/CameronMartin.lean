@@ -32,7 +32,7 @@ equivalent to `μ`; using that characterization as the definition here would be 
 * `CameronMartin.logDensity`: the log Radon--Nikodym derivative used by the next rung.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal Real Topology
@@ -180,9 +180,11 @@ section Translations
 variable {W : Type*} [NormedAddCommGroup W] [MeasurableSpace W]
 
 /-- Translation of the ambient space by `h`. -/
+@[expose]
 def translate (h : W) : W → W := fun x ↦ x + h
 
 /-- The law obtained by translating `μ` by `h`. -/
+@[expose]
 noncomputable def translatedMeasure (μ : Measure W) (h : W) : Measure W :=
   μ.map (translate h)
 
@@ -212,6 +214,7 @@ def IsAdmissibleShift (μ : Measure W) (h : W) : Prop :=
   translatedMeasure μ h ≪ μ
 
 /-- A shift is quasi-invariant when translation preserves the measure class. -/
+@[expose]
 def IsQuasiInvariantShift (μ : Measure W) (h : W) : Prop :=
   translatedMeasure μ h ≪ μ ∧ μ ≪ translatedMeasure μ h
 
@@ -225,9 +228,11 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   (μ : Measure W) [IsGaussian μ]
 
 /-- The Bochner mean of a Gaussian measure. -/
+@[expose]
 noncomputable def mean : W := ∫ x, x ∂μ
 
 /-- The centered identity random variable. -/
+@[expose]
 noncomputable def centeredId : W → W := id - fun _ ↦ mean μ
 
 /-- Gaussian measures have a square-integrable centered identity. -/
@@ -237,10 +242,12 @@ theorem memLp_centeredId : MemLp (centeredId μ) 2 μ := by
   exact h_id.sub h_const
 
 /-- The centered identity as an element of `L²(μ; W)`. -/
+@[expose]
 noncomputable def centeredIdLp : Lp W 2 μ :=
   (memLp_centeredId μ).toLp (centeredId μ)
 
 /-- The continuous map taking a continuous linear functional to its centered `L²(μ)` class. -/
+@[expose]
 noncomputable def centeredDualToLp : StrongDual ℝ W →L[ℝ] Lp ℝ 2 μ :=
   StrongDual.toLp μ 2 -
     (Lp.constL 2 μ ℝ).comp (ContinuousLinearMap.apply ℝ ℝ (mean μ))
@@ -266,6 +273,7 @@ theorem centeredDualToLp_ae_eq (L : StrongDual ℝ W) :
   simpa [hL, hc, Function.const_apply] using hsub
 
 /-- The first Gaussian chaos: the closed span of centered continuous linear functionals. -/
+@[expose]
 noncomputable def firstChaos : Submodule ℝ (Lp ℝ 2 μ) :=
   (centeredDualToLp μ).range.topologicalClosure
 
@@ -273,6 +281,7 @@ noncomputable def firstChaos : Submodule ℝ (Lp ℝ 2 μ) :=
 noncomputable abbrev Space := firstChaos μ
 
 /-- Continuous linear functionals give a dense family of Cameron--Martin vectors. -/
+@[expose]
 noncomputable def ofDual : StrongDual ℝ W →L[ℝ] Space μ :=
   (centeredDualToLp μ).codRestrict (firstChaos μ) fun L ↦
     Submodule.le_topologicalClosure _ ⟨L, rfl⟩
@@ -333,6 +342,7 @@ noncomputable def covarianceLinearMap : Lp ℝ 2 μ →ₗ[ℝ] W where
 
 /-- The covariance map is the Hölder pairing of a scalar `L²` random variable with the
 centered identity.  Its continuity is supplied by the `L²` pairing. -/
+@[expose]
 noncomputable def covarianceMap : Lp ℝ 2 μ →L[ℝ] W :=
   ((ContinuousLinearMap.lsmul ℝ ℝ (E := W)).lpPairing μ 2 2).flip (centeredIdLp μ)
 
@@ -348,6 +358,7 @@ theorem covarianceMap_apply (f : Lp ℝ 2 μ) :
   rw [hx]
 
 /-- The covariance, or RKHS, embedding of the Cameron--Martin space into `W`. -/
+@[expose]
 noncomputable def inclusion : Space μ →L[ℝ] W :=
   (covarianceMap μ).domRestrict (firstChaos μ)
 
@@ -407,11 +418,13 @@ theorem exists_integrable_exp_sq :
   exact h_fernique
 
 /-- The translated law along a Cameron--Martin vector. -/
+@[expose]
 noncomputable def translated (h : Space μ) : Measure W :=
   translatedMeasure μ (inclusion μ h)
 
 /-- Its log Radon--Nikodym derivative with respect to `μ`.  The Cameron--Martin theorem will
 identify this almost everywhere with `h - ‖h‖² / 2`. -/
+@[expose]
 noncomputable def logDensity (h : Space μ) : W → ℝ :=
   llr (translated μ h) μ
 

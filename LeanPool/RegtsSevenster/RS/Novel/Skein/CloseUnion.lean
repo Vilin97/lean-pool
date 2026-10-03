@@ -24,7 +24,7 @@ the multiplicativity of the parameter (Lemma 3.2), this yields the
 trace multiplicativity (Lemma 3.5(b)).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

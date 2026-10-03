@@ -26,7 +26,7 @@ of `Contrib.BennettBernstein`, with kernel-level tower additivity of the varianc
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real Contrib.Bennett
 open scoped ENNReal NNReal Topology

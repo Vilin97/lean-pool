@@ -17,7 +17,7 @@ of the middle PL segment model between its two last-exit parameters.  Marking th
 in the source arrangement makes the closed subsegment an exact finite subcomplex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -130,7 +130,7 @@ theorem edgeReplacementMap_eq_right {x : K.realization}
   ring
 
 /-- The second barycentric coordinate of an intrinsic edge, as an ambient affine map. -/
-noncomputable def edgeCoordinateAffine (K : IntrinsicTwoComplex) (e : K.Edge) :
+@[expose] noncomputable def edgeCoordinateAffine (K : IntrinsicTwoComplex) (e : K.Edge) :
     (K.Vertex → ℝ) →ᵃ[ℝ] ℝ :=
   (LinearMap.proj (K.edgeSecond e)).toAffineMap
 
@@ -242,7 +242,7 @@ abbrev EdgeBreakpoint (A : K.CentralPolygonalArc hcont hinj D C e) :=
   Option (Option A.parameterization.source.Vertex)
 
 /-- The `edgeBreakpointParameter` declaration. -/
-noncomputable def edgeBreakpointParameter
+@[expose] noncomputable def edgeBreakpointParameter
     (A : K.CentralPolygonalArc hcont hinj D C e) (b : EdgeBreakpoint A) : ℝ :=
   match b with
   | none => 1 / 2
@@ -406,7 +406,7 @@ theorem leftSourcePoint_zero_lt_right :
   nlinarith [A.exitData.left_lt_right]
 
 /-- The two source points at which the middle polygonal path exits the endpoint disks. -/
-noncomputable def trimMark : Fin 2 → Plane
+@[expose] noncomputable def trimMark : Fin 2 → Plane
   | ⟨0, _⟩ => A.leftSourcePoint
   | ⟨1, _⟩ => A.rightSourcePoint
 
@@ -577,7 +577,7 @@ theorem trimSource_support :
       exact ⟨u, hu, hxu, huSegment⟩
 
 /-- Remove the unused vertices retained by `restrictedTo`. -/
-noncomputable def trimActive : PlaneComplex :=
+@[expose] noncomputable def trimActive : PlaneComplex :=
   PlaneComplex.active A.trimSource
 
 theorem trimActive_support :
@@ -644,7 +644,7 @@ theorem trimActive_map_affine :
   exact hx'
 
 /-- The finite target graph carried by the trimmed polygonal middle. -/
-noncomputable def trimTarget : PlaneComplex :=
+@[expose] noncomputable def trimTarget : PlaneComplex :=
   A.trimActive.mapGraph A.parameterization.map A.trimActive_vertex_mem_support
     A.trimActive_map_injective A.trimActive_card_le_two A.trimActive_map_affine
 
@@ -835,7 +835,7 @@ theorem completeChain_vertex_finish :
   simp [completeChain]
 
 /-- The finite plane complex carried by one complete replacement edge. -/
-noncomputable def completeTarget : PlaneComplex :=
+@[expose] noncomputable def completeTarget : PlaneComplex :=
   A.completeChain.arrangementMesh.toPlaneComplex.restrictedTo A.completeCarrier
 
 /-- Every point of a complete replacement edge lies in a one-dimensional arrangement face

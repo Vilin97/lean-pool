@@ -20,4 +20,4 @@ public import LeanPool.OrderClosures.WeaklyFatou.FinalSpace
 Compatibility umbrella for the paper-ordered weakly Fatou construction.
 -/
 
-@[expose] public section
+public section

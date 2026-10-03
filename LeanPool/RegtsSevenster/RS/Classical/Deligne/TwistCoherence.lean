@@ -17,7 +17,7 @@ back into the middle equals associating it into the second factor
 and interchanging.  Two crossings cancel by symmetry.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

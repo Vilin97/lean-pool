@@ -10,7 +10,7 @@ public import Mathlib.Order.CompletePartialOrder
 
 /-! Auxiliary finite-dimensional linear algebra and functional calculus lemmas. -/
 
-@[expose] public section
+public section
 
 --Can this be rewritten more generally? For `finiteness` to work, I don't know how.
 --PR'ed in #33105

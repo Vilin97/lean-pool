@@ -20,7 +20,7 @@ The result is pure finite-dimensional Chapman--Kolmogorov algebra.  In particula
 continuity, density, path-space, or Feller hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 

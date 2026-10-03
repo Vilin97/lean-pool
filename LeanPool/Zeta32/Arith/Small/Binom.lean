@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.Polynomial.Pochhammer
 arbitrary centre, derivatives at integers (`v_p ≥ β - ⌊log_p e⌋`), `D_m = m!·binom(t+m,m)`, and the
 residue scale `K!/∏_{l≠j}(l-j) ∈ ℤ`. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 
@@ -290,6 +290,7 @@ lemma inv_choose_VG (p : ℕ) [hp : Fact p.Prime] {k K N : ℕ} (hk : K ≤ k) (
 /-! ### Residue denominators -/
 
 /-- Product of the differences from `j` to all other indices in `1`, …, `K`. -/
+@[expose]
 def eraseProd (K j : ℕ) : ℚ := ∏ l ∈ (Finset.Icc 1 K).erase j, ((l:ℚ) - (j:ℚ))
 
 lemma D_eval_eq_prod (m : ℕ) (x : ℚ) : (D m).eval x = ∏ l ∈ Finset.Icc 1 m, (x + l) := by

@@ -23,7 +23,7 @@ current endpoint becomes an additional parameter, so the weighted ODE jet
 estimate controls actual joint parameter and slot derivatives.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,10 +44,10 @@ variable [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Time linear, given by `(ContinuousLinearMap.fst ℝ Q ℝ).prod (σ • ContinuousLinearMap.snd ℝ Q
 ℝ)`. -/
-noncomputable def timeLinear (σ : ℝ) : (Q × ℝ) →L[ℝ] (Q × ℝ) :=
+@[expose] noncomputable def timeLinear (σ : ℝ) : (Q × ℝ) →L[ℝ] (Q × ℝ) :=
   (ContinuousLinearMap.fst ℝ Q ℝ).prod (σ • ContinuousLinearMap.snd ℝ Q ℝ)
 
-@[simp] theorem timeLinear_apply (σ : ℝ) (z : Q × ℝ) : timeLinear σ z = (z.1, σ * z.2) := rfl
+@[simp] theorem timeLinear_apply (σ : ℝ) (z : Q × ℝ) : timeLinear σ z = (z.1, σ * z.2) := by rfl
 
 theorem timeLinear_norm_le {σ : ℝ} (hσ : |σ| ≤ 1) : ‖timeLinear (Q := Q) σ‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
@@ -154,7 +154,7 @@ theorem rescale_jet_bound {A : Q × ℝ → E} {U : Set (Q × ℝ)}
 end TimeRescaling
 
 /-- Rescale constant, given by `2 ^ N * K ^ 2 + K + 1`. -/
-noncomputable def rescaleConstant (N : ℕ) (K : ℝ) : ℝ := 2 ^ N * K ^ 2 + K + 1
+@[expose] noncomputable def rescaleConstant (N : ℕ) (K : ℝ) : ℝ := 2 ^ N * K ^ 2 + K + 1
 
 theorem le_rescaleConstant (N : ℕ) (K : ℝ) : K ≤ rescaleConstant N K := by
   unfold rescaleConstant
@@ -292,7 +292,7 @@ structure EnvelopeJets {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ 
     ∀ j ≤ N, ‖iteratedFDeriv ℝ j (f i) x‖ ≤ C * D.scale i ^ m * w i x
 
 /-- Product domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def productDomain {ι E : Type*} [NormedAddCommGroup E]
+@[expose] noncomputable def productDomain {ι E : Type*} [NormedAddCommGroup E]
     (D : PhaseJetBounds.Domain ι E) (V : ι → Set ℝ) (hV : ∀ i, IsOpen (V i)) :
     PhaseJetBounds.Domain ι (E × ℝ) where
   scale := D.scale
@@ -415,7 +415,7 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Phase domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def phaseDomain (s : StripData E) : PhaseJetBounds.Domain ℕ E where
+@[expose] noncomputable def phaseDomain (s : StripData E) : PhaseJetBounds.Domain ℕ E where
   scale := s.slow
   carrier _ := s.domain
   isOpen _ := s.isOpen_domain
@@ -552,8 +552,9 @@ theorem intervalIntegral_polynomial (D : PhaseJetBounds.Domain ι Q)
     PhaseJetBounds.PolynomialJets D (fun i p => ∫ t in a..b, F i (p, t)) := by
   apply ((pathFamily_polynomial D V hV hI hF).clm (intervalIntegralCLM (H := H) hab)).congr
   intro i p hp
-  change (∫ t in a..b, ParametricODE.extend hab
-    (SmoothPathFamily.pathFamily (F i) p) t) = ∫ t in a..b, F i (p, t)
+  change ParametricODE.integrator hab (SmoothPathFamily.pathFamily (F i) p)
+    (⟨b, hab, le_rfl⟩ : Icc a b) = ∫ t in a..b, F i (p, t)
+  rw [ParametricODE.integrator_apply]
   apply intervalIntegral.integral_congr
   intro t ht
   have ht' : t ∈ Icc a b := by simpa only [uIcc_of_le hab] using ht
@@ -582,7 +583,7 @@ theorem positiveSeed_norm : ‖positiveSeed‖ = 1 := by
 
 /-- Reference P, given by `GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L
 / 2) t`. -/
-noncomputable def referenceP (lam u L t : ℝ) : ℝ :=
+@[expose] noncomputable def referenceP (lam u L t : ℝ) : ℝ :=
   GaussianEnvelope.envelope (GaussianEnvelope.referenceRate lam u L) (L / 2) t
 
 theorem referenceP_pos (lam u L t : ℝ) : 0 < referenceP lam u L t :=
@@ -608,6 +609,7 @@ variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- Fundamental, given by `JointODE.reparamSolution 0 (d.coefficient 1) (fun _ => referenceP lam
 u L 0 • positiveSeed) (fun _ => 0)`. -/
+@[expose]
 noncomputable def fundamental (d : PrimaryODE.FrameData Q) (lam u L : ℝ) : Q × ℝ → State :=
   JointODE.reparamSolution 0 (d.coefficient 1)
     (fun _ => referenceP lam u L 0 • positiveSeed) (fun _ => 0)
@@ -733,6 +735,7 @@ variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- Synthesis column, given by `MovingFrameODE.pack 1 ((-d.rho z) • d.frame z 0 + (if j = 0 then
 d.eigenvector z else -d.eigenvector z) • d.frame z 1)`. -/
+@[expose]
 noncomputable def synthesisColumn (d : PrimaryODE.FrameData Q) (j : Fin 2) (z : Q × ℝ) : Space :=
   MovingFrameODE.pack 1 ((-d.rho z) • d.frame z 0 +
     (if j = 0 then d.eigenvector z else -d.eigenvector z) • d.frame z 1)
@@ -813,6 +816,7 @@ variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- The two actual normalized-slot integrals making up each covariance
 column. The prefactor includes the native Haar factor and ci times L. -/
+@[expose]
 noncomputable def covarianceMatrix (a b : ℝ) (pref : Fin 2 → ι → ℝ)
     (ψ : Fin 2 → ι → Q × ℝ → ℝ) (v : Fin 2 → ι → Q × ℝ → Space)
     (n : ι) (p : Q) : SmoothCovariance.Mat2 :=
@@ -859,7 +863,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {s : StripData E}
 
 /-- Normalized matrix, defined pointwise by `r * H i j`. -/
-noncomputable def normalizedMatrix (r : ℝ) (H : SmoothCovariance.Mat2) :
+@[expose] noncomputable def normalizedMatrix (r : ℝ) (H : SmoothCovariance.Mat2) :
     SmoothCovariance.Mat2 := fun i j => r * H i j
 
 theorem normalizedMatrix_det (r : ℝ) (H : SmoothCovariance.Mat2) :
@@ -976,7 +980,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The stripped coefficient uses exactly the positive inverse-weight
 amplitude of the physical covariance construction. -/
-noncomputable def primaryCoefficient (s : StripData E)
+@[expose] noncomputable def primaryCoefficient (s : StripData E)
     (H : ℕ → E → SmoothCovariance.Mat2) (T : ℕ → E → SmoothCovariance.Vec2)
     (mask : ℕ → E → ℝ) (v : ℕ → E → Space) (j : Fin 2) :
     ℕ → E → HarmonicCalculus.ComplexVector := fun n x =>
@@ -1167,7 +1171,7 @@ theorem ambient_envelope_jets {D : PhaseJetBounds.Domain ι (Q × ℝ)}
 
 /-- Normalized pulse, given by `d.ambient (z.1, L * z.2) (fundamental d lam u L (z.1, L *
 z.2))`. -/
-noncomputable def normalizedPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
+@[expose] noncomputable def normalizedPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
     (z : Q × ℝ) : Space :=
   d.ambient (z.1, L * z.2) (fundamental d lam u L (z.1, L * z.2))
 
@@ -1220,7 +1224,7 @@ variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- The covariance matrix is made from the two constructed ambient pulses,
 with the fixed smooth middle cutoff. -/
-noncomputable def primaryCovariance (pref : Fin 2 → ι → ℝ)
+@[expose] noncomputable def primaryCovariance (pref : Fin 2 → ι → ℝ)
     (d : Fin 2 → ι → PrimaryODE.FrameData Q) (lam u L : Fin 2 → ι → ℝ) :
     ι → Q → SmoothCovariance.Mat2 :=
   covarianceMatrix (1 / 10) (9 / 10) pref
@@ -1419,7 +1423,7 @@ section CutoffPulse
 variable {ι : Type*} {Q : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- Cutoff pulse, given by `GaussianTailFlat.profile z.2 • normalizedPulse d lam u L z`. -/
-noncomputable def cutoffPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
+@[expose] noncomputable def cutoffPulse (d : PrimaryODE.FrameData Q) (lam u L : ℝ)
     (z : Q × ℝ) : Space :=
   GaussianTailFlat.profile z.2 • normalizedPulse d lam u L z
 
@@ -1534,12 +1538,13 @@ variable {Q E : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Chart covariance, defined pointwise by `primaryCovariance pref d lam u L n (χ n x).1`. -/
-noncomputable def chartCovariance
+@[expose] noncomputable def chartCovariance
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ) :
     ℕ → E → SmoothCovariance.Mat2 := fun n x => primaryCovariance pref d lam u L n (χ n x).1
 
 /-- Primary wave, constructed using `primaryCoefficient`. -/
+@[expose]
 noncomputable def primaryWave (s : StripData E)
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ)
@@ -1674,7 +1679,7 @@ structure PhaseConstruction (D : Domain ι Slow) where
     |(phase.frameData lam c0 u L viscosity i).error22 (p, v)| ≤ C / D.scale i
 
 /-- Frame, given by `p.phase.frameData p.lam p.c0 p.u p.L p.viscosity`. -/
-noncomputable def PhaseConstruction.frame {D : Domain ι Slow} (p : PhaseConstruction D) :
+@[expose] noncomputable def PhaseConstruction.frame {D : Domain ι Slow} (p : PhaseConstruction D) :
     ι → PrimaryODE.FrameData Slow := p.phase.frameData p.lam p.c0 p.u p.L p.viscosity
 
 theorem PhaseConstruction.pulse_jets {D : Domain ι Slow} (p : PhaseConstruction D) :
@@ -1704,6 +1709,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Phase covariance, given by `primaryCovariance pref (fun c => (F c).frame) (fun c => (F
 c).lam) (fun c => (F c).u) (fun c => (F c).L)`. -/
+@[expose]
 noncomputable def phaseCovariance {D : Domain ℕ Slow} (F : Fin 2 → PhaseConstruction D)
     (pref : Fin 2 → ℕ → ℝ) : ℕ → Slow → SmoothCovariance.Mat2 :=
   primaryCovariance pref (fun c => (F c).frame) (fun c => (F c).lam)
@@ -1711,6 +1717,7 @@ noncomputable def phaseCovariance {D : Domain ℕ Slow} (F : Fin 2 → PhaseCons
 
 /-- Phase wave, given by `primaryWave s pref (fun c => (F c).frame) (fun c => (F c).lam) (fun c
 => (F c).u) (fun c => (F c).L) χ T mask c`. -/
+@[expose]
 noncomputable def phaseWave (s : StripData E) {D : Domain ℕ Slow}
     (F : Fin 2 → PhaseConstruction D) (pref : Fin 2 → ℕ → ℝ)
     (χ : ℕ → E → Slow × ℝ) (T : ℕ → E → SmoothCovariance.Vec2)
@@ -1772,7 +1779,7 @@ theorem cutoffPulse_eq_ambient_primary
 
 /-- Local primary profile, given by `PartitionedCovariance.cutoff radius z.1 • cutoffPulse d lam
 u L (p, z.2 / L)`. -/
-noncomputable def localPrimaryProfile (d : PrimaryODE.FrameData Q) (lam u L radius : ℝ)
+@[expose] noncomputable def localPrimaryProfile (d : PrimaryODE.FrameData Q) (lam u L radius : ℝ)
     (p : Q) (z : TorusInverse.Plane) : Space :=
   PartitionedCovariance.cutoff radius z.1 • cutoffPulse d lam u L (p, z.2 / L)
 
@@ -1910,7 +1917,7 @@ noncomputable def canonicalPrimaryPath
 /-- A literal `PartitionedCovariance.Pulse` made from this same primary
 solution. Only its uncut components are continuously clamped; the cutoff
 has compact support strictly inside the interval. -/
-noncomputable def canonicalPrimaryPulse
+@[expose] noncomputable def canonicalPrimaryPulse
     (d : PrimaryODE.FrameData Q) (lam u : ℝ) {L : ℝ} (hL : 0 < L)
     (U : Set Q) (hA : ContinuousOn (d.coefficient 1) (U ×ˢ Icc 0 L))
     (p : Q) (hp : p ∈ U) (hk : d.Kinematics p (Icc 0 L)) : PartitionedCovariance.Pulse where
@@ -2069,7 +2076,7 @@ variable {Q E : Type} [NormedAddCommGroup Q] [NormedSpace ℝ Q]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Uncut primary wave, constructed using `primaryCoefficient`. -/
-noncomputable def uncutPrimaryWave (s : StripData E)
+@[expose] noncomputable def uncutPrimaryWave (s : StripData E)
     (pref : Fin 2 → ℕ → ℝ) (d : Fin 2 → ℕ → PrimaryODE.FrameData Q)
     (lam u L : Fin 2 → ℕ → ℝ) (χ : ℕ → E → Q × ℝ)
     (T : ℕ → E → SmoothCovariance.Vec2) (mask : ℕ → E → ℝ) (c : Fin 2) :

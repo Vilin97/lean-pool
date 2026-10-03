@@ -15,7 +15,7 @@ For a strictly increasing grid `t 0 < t 1 < … < t m`, `pieceIdx t m x` is the 
 `[t i, t (i+1))` containing `x ∈ [t 0, t m)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Zeta5Irrational
 

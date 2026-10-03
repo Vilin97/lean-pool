@@ -16,7 +16,7 @@ Ported from the corresponding upstream modules listed by the source sections bel
 References beginning with `Source` name these retained sections.
 -/
 
-@[expose] public section
+public section
 
 section SourceDefs
 
@@ -58,6 +58,7 @@ variable {O : Type*}
 
 /-- The difference matrix `D_i` (HLŠ §2, BL Definition 6): `(advD i) x y = 1`
 if `x i ≠ y i` and `0` otherwise. -/
+@[expose]
 def advD (i : ι) : Matrix (ι → σ) (ι → σ) ℝ :=
   Matrix.of fun x y => if x i = y i then 0 else 1
 
@@ -81,6 +82,7 @@ lemma hadamard_advD_apply (Γ : Matrix (ι → σ) (ι → σ) ℝ) (i : ι)
 /-- An adversary matrix for `f` (HLŠ §2): a real symmetric matrix supported on
 pairs of inputs with different `f`-values.  Taking `x = y` shows the diagonal
 vanishes. -/
+@[expose]
 def IsAdvMatrix (f : (ι → σ) → O)
     (Γ : Matrix (ι → σ) (ι → σ) ℝ) : Prop :=
   Γ.IsHermitian ∧ ∀ x y, f x = f y → Γ x y = 0
@@ -113,6 +115,7 @@ lemma isAdvMatrix_zero (f : (ι → σ) → O) : IsAdvMatrix f 0 :=
 
 /-- The negative-weight adversary bound `ADV±(f)` (HLŠ Definition 2, in the
 division-free form of BL Definition 6). -/
+@[expose]
 noncomputable def advPM (f : (ι → σ) → O) : ℝ :=
   sSup {r : ℝ | ∃ Γ, IsAdvMatrix f Γ ∧ (∀ i, ‖Γ ⊙ advD i‖ ≤ 1) ∧ r = ‖Γ‖}
 
@@ -892,6 +895,7 @@ open Matrix
 variable {U : Type*} [Fintype U]
 
 /-- Restriction of a vector to a color class of the coloring `χ`. -/
+@[expose]
 def brestrict (χ : U → Bool) (b : Bool) (w : U → ℝ) : U → ℝ :=
   fun u => if χ u = b then w u else 0
 
@@ -1198,9 +1202,11 @@ variable {α Y Z : Type*} [Fintype α] [DecidableEq α]
 variable [Fintype Y] [DecidableEq Y] [Fintype Z] [DecidableEq Z]
 
 /-- The `i`-th block of a composed input. -/
+@[expose]
 def sliceE (e : Z ≃ (α → Y)) (z : Z) (i : α) : Y := e z i
 
 /-- The vector of inner-function values of a composed input. -/
+@[expose]
 def tildeE (e : Z ≃ (α → Y)) (g : α → Y → Bool) (z : Z) : α → Bool :=
   fun i => g i (sliceE e z i)
 
@@ -1213,6 +1219,7 @@ omit [DecidableEq Y] [DecidableEq Z] [DecidableEq α] [Fintype Y] [Fintype Z] [F
     (i : α) : tildeE e g z i = g i (sliceE e z i) := rfl
 
 /-- BL Definition 19 over an abstract block decomposition. -/
+@[expose]
 noncomputable def composeE (e : Z ≃ (α → Y)) (g : α → Y → Bool)
     (Γf : Matrix (α → Bool) (α → Bool) ℝ) (M : α → Matrix Y Y ℝ) :
     Matrix Z Z ℝ :=
@@ -1249,13 +1256,16 @@ currying equivalence. -/
 variable {α β : Type*} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
 
 /-- The block decomposition of a Boolean cube into `α` blocks of shape `β`. -/
+@[expose]
 def cubeBlocks (α β : Type*) : ((α × β) → Bool) ≃ (α → (β → Bool)) :=
   Equiv.curry α β Bool
 
 /-- The `i`-th block of a composed input. -/
+@[expose]
 def slice (x : (α × β) → Bool) (i : α) : β → Bool := sliceE (cubeBlocks α β) x i
 
 /-- The vector of inner-function values of a composed input. -/
+@[expose]
 def tilde (g : α → (β → Bool) → Bool) (x : (α × β) → Bool) : α → Bool :=
   tildeE (cubeBlocks α β) g x
 
@@ -1271,6 +1281,7 @@ omit [DecidableEq α] [DecidableEq β] [Fintype α] [Fintype β] in
     (i : α) : tilde g x i = g i (slice x i) := rfl
 
 /-- BL Definition 19, uniform-alphabet form: the composed matrix. -/
+@[expose]
 noncomputable def compose (g : α → (β → Bool) → Bool)
     (Γf : Matrix (α → Bool) (α → Bool) ℝ)
     (M : α → Matrix (β → Bool) (β → Bool) ℝ) :
@@ -1866,6 +1877,7 @@ lemma posSemidef_prod_eval {F : α → Matrix Bool Bool ℝ}
 
 /-- The outer auxiliary matrix of HLŠ Lemma 16 (denoted `A_c` there, with
 `lamv i` the eigenvalue selected in slot `i`). -/
+@[expose]
 noncomputable def Emat (R lamv : α → ℝ) : Matrix (α → Bool) (α → Bool) ℝ :=
   Matrix.of fun a b => ∏ i, if a i = b i then R i else lamv i
 
@@ -2002,6 +2014,7 @@ variable {O : Type*}
 
 /-- The difference matrix of a promise domain: `1` exactly when a query at `i`
 distinguishes the two promise inputs. -/
+@[expose]
 def advDOn (read : X → ι → σ) (i : ι) : Matrix X X ℝ :=
   Matrix.of fun x y => if read x i = read y i then 0 else 1
 
@@ -2025,6 +2038,7 @@ lemma hadamard_advDOn_apply (read : X → ι → σ) (Γ : Matrix X X ℝ) (i : 
   by_cases h : read x i = read y i <;> simp [h]
 
 /-- An adversary matrix on a promise domain. -/
+@[expose]
 def IsAdvMatrixOn (f : X → O) (Γ : Matrix X X ℝ) : Prop :=
   Γ.IsHermitian ∧ ∀ x y, f x = f y → Γ x y = 0
 
@@ -2033,6 +2047,7 @@ lemma isAdvMatrixOn_zero (f : X → O) : IsAdvMatrixOn f (0 : Matrix X X ℝ) :=
   ⟨Matrix.isHermitian_zero, fun _ _ _ => rfl⟩
 
 /-- **The adversary bound of a function on a promise domain.** -/
+@[expose]
 noncomputable def advPMOn (read : X → ι → σ) (f : X → O) : ℝ :=
   sSup {r : ℝ | ∃ Γ, IsAdvMatrixOn f Γ ∧ (∀ i, ‖Γ ⊙ advDOn read i‖ ≤ 1) ∧ r = ‖Γ‖}
 
@@ -2076,6 +2091,7 @@ namespace DualPairOn
 variable {K : Type*} [Fintype K] {read : X → ι → σ} {f : X → O}
 
 /-- The cost of a dual solution on a promise domain. -/
+@[expose]
 def IsCostLe (P : DualPairOn read K f) (c : ℝ) : Prop :=
   (∀ x, ∑ i, ∑ k, P.u x i k * P.u x i k ≤ c) ∧
   (∀ x, ∑ i, ∑ k, P.v x i k * P.v x i k ≤ c)
@@ -2205,6 +2221,7 @@ abbrev GramIdxOn (X ι : Type*) : Type _ := X × ι × Bool
 
 /-- The right-hand side of the dual feasibility constraint on the promise
 domain: `1` on pairs with distinct values, `0` otherwise. -/
+@[expose]
 def dualTargetOn (f : X → O) : Matrix X X ℝ :=
   Matrix.of fun x y => if f x = f y then 0 else 1
 
@@ -2219,6 +2236,7 @@ lemma dualTargetOn_comm (f : X → O) (x y : X) :
 
 /-- The left-hand side of the dual feasibility constraint, as a function of
 the Gram matrix, with the mask read through `read`. -/
+@[expose]
 def gramROn (read : X → ι → σ) (G : Matrix (GramIdxOn X ι) (GramIdxOn X ι) ℝ) :
     Matrix X X ℝ :=
   Matrix.of fun x y =>
@@ -2413,6 +2431,7 @@ abbrev GramIdx (ι σ : Type*) : Type _ := GramIdxOn (ι → σ) ι
 
 /-- The right-hand side of the dual feasibility constraint:
 `dualTarget g x y = 1` if `g x ≠ g y` and `0` otherwise. -/
+@[expose]
 def dualTarget (g : (ι → σ) → O) : Matrix (ι → σ) (ι → σ) ℝ := dualTargetOn g
 
 omit [DecidableEq ι] [DecidableEq σ] [Fintype ι] [Fintype σ] in
@@ -2425,6 +2444,7 @@ lemma dualTarget_comm (g : (ι → σ) → O) (x y : ι → σ) :
 
 /-- The left-hand side of the dual feasibility constraint, as a function of the
 Gram matrix. -/
+@[expose]
 def gramR (G : Matrix (GramIdx ι σ) (GramIdx ι σ) ℝ) :
     Matrix (ι → σ) (ι → σ) ℝ := gramROn id G
 
@@ -2436,6 +2456,7 @@ omit [DecidableEq ι] [Fintype σ] in
 
 /-- The dual objective, as a function of the Gram matrix: `gramCost G false x`
 is `∑ i, ‖u x i‖²` and `gramCost G true x` is `∑ i, ‖v x i‖²`. -/
+@[expose]
 def gramCost (G : Matrix (GramIdx ι σ) (GramIdx ι σ) ℝ) (b : Bool)
     (x : ι → σ) : ℝ := gramCostOn G b x
 
@@ -2501,6 +2522,7 @@ variable {K : Type*} [Fintype K] {g : (ι → σ) → O}
 
 /-- The two vector families of a dual solution, packed into a single matrix
 whose rows are indexed by `GramIdx ι σ`. -/
+@[expose]
 def dualVec (P : DualPair K g) : Matrix (GramIdx ι σ) K ℝ :=
   Matrix.of fun z k => if z.2.2 then P.v z.1 z.2.1 k else P.u z.1 z.2.1 k
 
@@ -2606,6 +2628,7 @@ variable {σ : Type*} [DecidableEq σ]
 variable {O : Type*} [DecidableEq O]
 
 /-- Restricting a function to a block of coordinates. -/
+@[expose]
 def pullbackFun (e : κ → ι) (f : (κ → σ) → O) : (ι → σ) → O :=
   fun x => f fun j => x (e j)
 
@@ -2819,6 +2842,7 @@ end DualPair
 variable {σ' : Type*} [DecidableEq σ']
 
 /-- Recoding the input alphabet along a map `m`. -/
+@[expose]
 def alphaFun (m : σ → σ') (f : (ι → σ') → O) : (ι → σ) → O :=
   fun x => f fun i => m (x i)
 
@@ -3085,6 +3109,7 @@ lemma sum_prod_sliceE (F : α → (Y) → ℝ) :
     (fun y => ∏ i, F i (sliceE e y i)) (fun p => ∏ i, F i (p i)) fun y => rfl
 
 /-- The tensor eigenvector of the composed matrix. -/
+@[expose]
 noncomputable def tensorVecE (g : α → (Y) → Bool)
     (v : α → (Y) → ℝ) (w : (α → Bool) → ℝ) :
     (Z) → ℝ :=
@@ -3218,6 +3243,7 @@ lemma sum_prod_slice (F : α → (β → Bool) → ℝ) :
   sum_prod_sliceE (cubeBlocks α β) F
 
 /-- The tensor eigenvector of the composed matrix. -/
+@[expose]
 noncomputable def tensorVec (g : α → (β → Bool) → Bool)
     (v : α → (β → Bool) → ℝ) (w : (α → Bool) → ℝ) :
     ((α × β) → Bool) → ℝ :=
@@ -3353,6 +3379,7 @@ each constraint, and an input with a side tag for each cost variable. -/
 abbrev DualOmegaOn (X : Type*) : Type _ := (X × X) ⊕ (X × Bool)
 
 /-- The affine data of the promise dual program, read off a Gram matrix. -/
+@[expose]
 def gramLOn (read : X → ι → σ)
     (G : Matrix (GramIdxOn X ι) (GramIdxOn X ι) ℝ) : DualOmegaOn X → ℝ :=
   Sum.elim (fun q => gramROn read G q.1 q.2) (fun q => gramCostOn G q.2 q.1)
@@ -3368,6 +3395,7 @@ omit [DecidableEq X] [DecidableEq ι] [Fintype X] [Fintype σ] in
     gramLOn read G (Sum.inr (x, b)) = gramCostOn G b x := rfl
 
 /-- `gramLOn` as a linear map. -/
+@[expose]
 def gramLOnₗ (read : X → ι → σ) :
     Matrix (GramIdxOn X ι) (GramIdxOn X ι) ℝ →ₗ[ℝ] (DualOmegaOn X → ℝ) where
   toFun := gramLOn read
@@ -3615,6 +3643,7 @@ variable. -/
 abbrev DualOmega (ι σ : Type*) : Type _ := DualOmegaOn (ι → σ)
 
 /-- The affine data of the dual program, read off a Gram matrix. -/
+@[expose]
 def gramL (G : Matrix (GramIdx ι σ) (GramIdx ι σ) ℝ) : DualOmega ι σ → ℝ := gramLOn id G
 
 omit [DecidableEq ι] [Fintype σ] in
@@ -3626,6 +3655,7 @@ omit [DecidableEq ι] [Fintype σ] in
     (x : ι → σ) (b : Bool) : gramL G (Sum.inr (x, b)) = gramCost G b x := rfl
 
 /-- `gramL` as a linear map. -/
+@[expose]
 def gramLₗ : Matrix (GramIdx ι σ) (GramIdx ι σ) ℝ →ₗ[ℝ] (DualOmega ι σ → ℝ) := gramLOnₗ id
 
 omit [DecidableEq ι] [Fintype σ] in
@@ -5610,6 +5640,7 @@ theorem advPM_mul_le_advPM_composeFun (f : (α → Bool) → Bool)
 /-! ## The iterated corollary -/
 
 /-- Index types for iterated composition: `α`, `α × α`, `α × (α × α)`, … -/
+@[expose]
 def iterIdx (α : Type*) : ℕ → Type _
   | 0 => α
   | d + 1 => α × iterIdx α d
@@ -5629,6 +5660,7 @@ instance iterIdx.decEq (α : Type*) [DecidableEq α] :
       inferInstanceAs (DecidableEq (α × iterIdx α d))
 
 /-- Iterated composition `f^{∘(d+1)}`. -/
+@[expose]
 def iterFun (f : (α → Bool) → Bool) : (d : ℕ) → ((iterIdx α d → Bool) → Bool)
   | 0 => f
   | d + 1 => composeFun f (iterFun f d)
@@ -6309,6 +6341,7 @@ theorem advDual_not (f : (ι → Bool) → Bool) :
   simpa using h
 
 /-- Negating every input bit. -/
+@[expose]
 def flipAll : (ι → Bool) ≃ (ι → Bool) where
   toFun x := fun i => !(x i)
   invFun x := fun i => !(x i)
@@ -7050,9 +7083,11 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 /-! ## The `n`-bit OR function -/
 
 /-- The all-zero input. -/
+@[expose]
 def zeroVec : ι → Bool := fun _ => false
 
 /-- The input with a single `true` in position `i`. -/
+@[expose]
 def unitVec (i : ι) : ι → Bool := fun j => decide (j = i)
 
 /-- The `n`-bit OR function. -/
@@ -7916,6 +7951,7 @@ variable {K K' : Type*} [Fintype K] [Fintype K']
 variable {h : (P → V) → O} {g : P → (ι → σ) → V}
 
 /-- **Shared-input dual composition.** -/
+@[expose]
 noncomputable def composeShared (Q : DualPair K h) (R : ∀ p, DualPair K' (g p)) :
     DualPair (P × K × K') (sharedFun h g) where
   u x i := fun c => Q.u (fun p => g p x) c.1 c.2.1 * (R c.1).u x i c.2.2
@@ -9703,6 +9739,7 @@ variable {O : Type} [DecidableEq O]
 /-! ## The two predicates -/
 
 /-- `f` has a feasible dual solution of cost at most `c`. -/
+@[expose]
 def HasDual {ι : Type} [Fintype ι] {σ : Type} [DecidableEq σ] {O : Type}
     [DecidableEq O] (f : (ι → σ) → O) (c : ℝ) : Prop :=
   ∃ (K : Type) (_ : Fintype K) (P : DualPair K f), P.IsCostLe c
@@ -10291,6 +10328,7 @@ variable {K : Type} [Fintype K] {read : X → ι → σ} {f : X → O} {f' : X �
 
 /-- **Output recoding.**  A dual solution for `f` is a dual solution for any
 `f'` with the same kernel on the promise — same vectors, same cost. -/
+@[expose]
 def ofKer (P : DualPairOn read K f) (h : ∀ x y, f x = f y ↔ f' x = f' y) :
     DualPairOn read K f' where
   u := P.u
@@ -10343,6 +10381,7 @@ end DualPairOn
 
 /-- `f` has a feasible dual solution of cost at most `c` on the promise
 domain `read`. -/
+@[expose]
 def HasDualOn {ι : Type} [Fintype ι] {σ : Type} [DecidableEq σ] {X : Type}
     [Fintype X] {O : Type} [DecidableEq O] (read : X → ι → σ) (f : X → O)
     (c : ℝ) : Prop :=

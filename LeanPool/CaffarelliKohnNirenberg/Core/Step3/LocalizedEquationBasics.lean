@@ -17,7 +17,7 @@ public import Mathlib.MeasureTheory.Function.L2Space
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter
@@ -27,6 +27,7 @@ open CKN.Foundation.Heat CKN.Foundation.Parabolic
 open CKN.Core.HeatPotential
 /-! These are the divergence-form sources obtained directly from the tested equation. -/
 /-- Non-divergence source in the localized momentum equation, including pressure and forcing. -/
+@[expose]
 def localizedDivergenceG (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3)
     (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
@@ -35,6 +36,7 @@ def localizedDivergenceG (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3
     - ∑ j, Du z i j * spatialPartial (show ParabolicPoint → ℝ from φ) j z
     + p z * spatialPartial (show ParabolicPoint → ℝ from φ) i z + f z i * φ z
 /-- Tensor divergence source in the localized momentum equation. -/
+@[expose]
 def localizedDivergenceH (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3)
     (p : ParabolicPoint → ℝ) : Fin 3 → ParabolicPoint → Vec3 :=
   fun j z i => φ z * u z i * u z j + u z i * spatialPartial φ j z

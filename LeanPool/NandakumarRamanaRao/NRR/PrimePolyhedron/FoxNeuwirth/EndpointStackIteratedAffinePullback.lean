@@ -22,7 +22,7 @@ approximation.  Reversing an upper stack therefore supplies the exact upper hori
 the final collar.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -52,6 +52,7 @@ theorem chartMap_refine_zero
   rfl
 
 /-- A nonempty forward stack with `k+1` one-step layers. -/
+@[expose]
 noncomputable def positiveWitness
     (hp : Nat.Prime p) (N : Nat) :
     (k : Nat) → Witness hp N (N + (k + 1))
@@ -144,6 +145,7 @@ structure Data
 
 open ExplicitAffineRelativeCollarComposeDescribed in
 /-- Construct the full positive stack by induction on the number of additional layers. -/
+@[expose]
 noncomputable def build
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}

@@ -16,7 +16,7 @@ force
 `n ≥ 1`, `p ≥ 3`, `p > 2n`, `p² > 5n`); `outer_per_prime_bound` is the eventual form used by
 `Arith.arith_of_parts`. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 namespace Zeta32.Outer

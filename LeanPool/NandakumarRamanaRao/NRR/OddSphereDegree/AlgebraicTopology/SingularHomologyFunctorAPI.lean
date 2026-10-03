@@ -45,7 +45,7 @@ defined in `HomotopyToChainHomotopy.lean`.
  `HomotopyToChainHomotopy.lean`).
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

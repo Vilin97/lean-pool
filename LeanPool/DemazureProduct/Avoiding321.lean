@@ -24,13 +24,14 @@ permutations (not necessarily of finite length), which are all automatically in 
 This material is not present in [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
 
 /-- The 321-avoidance condition used in this file: every triple `i < j < k`
 has either `τ i < τ j` or `τ j < τ k`. -/
+@[expose]
 def is321a (τ : ℤ → ℤ) : Prop :=
   ∀ (i j k : ℤ), i < j → j < k → τ i < τ j ∨ τ j < τ k
 
@@ -150,6 +151,7 @@ theorem is_321a_iff_set_321a_prop (τ : ℤ → ℤ) (hperm : Function.Bijective
     exact ⟨ ⟨i_lt_j, h1⟩, ⟨j_lt_k, h2⟩ ⟩
 
 /-- The triangle-free abstract ASP set associated to a 321-avoiding ASP permutation. -/
+@[expose]
 def tfasOfPerm {τ : AspPerm} (h_321a : is321a τ) : tfas := ⟨AspSet.ofAspPerm τ, by
   constructor
   · exact AspSet.AspSet_InvSet_of_AspPerm τ
@@ -694,6 +696,7 @@ lemma between_inv_lel
       · simp_all
 
 /-- The interval-subordination relation on inversion boxes. -/
+@[expose]
 def intervalSub (i₁ i₂ : (ℤ × ℤ)) : Prop :=
   i₂.1 ≤ i₁.1 ∧ i₁.2 ≤ i₂.2
 /-- Infix notation for interval-subordination of inversion boxes. -/
@@ -1361,6 +1364,7 @@ theorem dprod_ge_iff_union :
 
 /-- A set of boxes is isolated if it contains no two distinct comparable
 elements. -/
+@[expose]
 def isolated (S : Set (ℤ × ℤ)) : Prop := ∀ I ∈ S, ∀ J ∈ S, I ≼ J → I = J
 
 /-- In the 321-avoiding setting, the inequality `α ⋆ β ≤ τ` is equivalent to

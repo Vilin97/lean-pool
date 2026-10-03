@@ -14,7 +14,7 @@ of a representative to the indicated original function. The representative
 need not vanish outside the carrier.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

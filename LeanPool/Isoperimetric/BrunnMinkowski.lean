@@ -19,7 +19,7 @@ inequality, both for the standard product measure on `ℝⁿ` and for the
 Euclidean structure `EuclideanSpace ℝ (Fin n)`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped Pointwise

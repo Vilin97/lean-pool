@@ -39,7 +39,7 @@ top of them.
   [NullPoint.lean](NullPoint.lean).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

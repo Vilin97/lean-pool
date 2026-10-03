@@ -26,7 +26,7 @@ Hence S(Ef) = ∫∫ f*(x) C(x,y) f(y) dx dy = S(f).
 - `CovarianceEuclideanInvariantℂ_μ_GFF`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real Filter
 open scoped Real BigOperators

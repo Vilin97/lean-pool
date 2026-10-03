@@ -27,7 +27,7 @@ section
 /-! One complete quantitative recursion step, using the actual mean and joined transverse solvers.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -179,7 +179,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

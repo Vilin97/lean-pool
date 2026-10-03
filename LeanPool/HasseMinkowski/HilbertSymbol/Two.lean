@@ -30,7 +30,7 @@ Note that the "two units have symbol `1`" statement that holds for odd `p` is **
 at `p = 2`: `(3,3)_2 = -1`.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 
@@ -390,6 +390,7 @@ private lemma two_padic_ne_zero : (2 : ℚ_[2]) ≠ 0 := by
   norm_num at hnorm
 
 /-- The unit part of a nonzero `2`-adic number: `a = 2 ^ a.valuation * twoAdicUnit a ha`. -/
+@[expose]
 noncomputable def twoAdicUnit (a : ℚ_[2]) (ha : a ≠ 0) : ℤ_[2]ˣ :=
   padicUnit (p := 2) a ha
 
@@ -534,9 +535,11 @@ private lemma parityPow_neg_one_of_odd {n : ℤ} (h : ¬ Even n) : parityPow (-1
   rw [parityPow, ite_eq_right h]
 
 /-- Serre's `ε` character: `ε(u) = 0` iff `u ≡ 1 (mod 4)`. -/
+@[expose]
 noncomputable def eps (u : ℤ_[2]ˣ) : ℤ := if (u : ℤ_[2]).toZModPow 2 = 1 then 0 else 1
 
 /-- Serre's `ω` character: `ω(u) = 0` iff `u ≡ ±1 (mod 8)`. -/
+@[expose]
 noncomputable def omg (u : ℤ_[2]ˣ) : ℤ :=
   if (u : ℤ_[2]).toZModPow 3 = 1 ∨ (u : ℤ_[2]).toZModPow 3 = 7 then 0 else 1
 

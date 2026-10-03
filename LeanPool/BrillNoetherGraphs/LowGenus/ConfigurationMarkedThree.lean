@@ -53,7 +53,7 @@ the two centres merge, and the chip may have to be charged to the partner.  That
 is the `targetOwner` device every finished row already uses.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedThree
 
@@ -356,6 +356,7 @@ the chip collapses, `mark = length` on the chamber wall where the figure's
 inequality is an equality. -/
 
 /-- Where the chip at the mark of `e` sits, as a weight on core vertices. -/
+@[expose]
 def markChipWeight (mark : Fin 12 → ℕ) (e : Fin 12) (v : Fin 8) : ℤ :=
   if mark e = 0 then (if v = d.core.tail e then 1 else 0)
   else if d.length e ≤ mark e then (if v = d.core.head e then 1 else 0)

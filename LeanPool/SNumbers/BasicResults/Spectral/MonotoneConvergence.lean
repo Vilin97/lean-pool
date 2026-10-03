@@ -21,7 +21,7 @@ The key inequality is, for a positive operator `A` on a complex Hilbert space,
 with `‖A x‖² = re⟪A² x, x⟫`.
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap RCLike
 open scoped InnerProductSpace

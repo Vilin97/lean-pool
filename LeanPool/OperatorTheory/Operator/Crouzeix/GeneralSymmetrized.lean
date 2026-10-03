@@ -55,7 +55,7 @@ Cauchy or Plemelj theorem is hidden here.
   -- the corresponding accretive quadratic-form statement.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

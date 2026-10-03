@@ -16,7 +16,7 @@ an arity cast; the permutation feeds the braiding-word transport
 and the cast transports as an equality of powers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -24,6 +24,7 @@ open CategoryTheory MonoidalCategory
 open Functor.LaxMonoidal Functor.OplaxMonoidal
 
 /-- The peel rotation as a permutation of the source arity. -/
+@[expose]
 def capPeelPerm (m : ℕ) :
     _root_.Equiv.Perm (Fin ((m + 1) + (m + 1))) :=
   (capPeelRotation m).trans (finCongr

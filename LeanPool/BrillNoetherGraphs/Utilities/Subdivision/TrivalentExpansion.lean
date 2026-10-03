@@ -33,7 +33,7 @@ actual topological contraction certificate from a positive subdivision of the
 expanded cubic core onto any positive subdivision of the given core.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Subdivision.TrivalentExpansion
 open Utilities.Certificate
 
@@ -131,11 +131,13 @@ def headEnd (j : Fin p) : slotEnds C (C.head j) :=
   ⟨(j, true), by simp [mem_slotEnds]⟩
 
 /-- Tail endpoint of an expansion slot. -/
+@[expose]
 noncomputable def bigTail : BigE C → BigV C
   | Sum.inl x => ⟨x.1, ⟨x.2.val, by have := x.2.isLt; omega⟩⟩
   | Sum.inr j => ⟨C.tail j, legOf C hDeg (C.tail j) (tailEnd C j)⟩
 
 /-- Head endpoint of an expansion slot. -/
+@[expose]
 noncomputable def bigHead : BigE C → BigV C
   | Sum.inl x => ⟨x.1, ⟨x.2.val + 1, by have := x.2.isLt; omega⟩⟩
   | Sum.inr j => ⟨C.head j, legOf C hDeg (C.head j) (headEnd C j)⟩
@@ -200,6 +202,7 @@ noncomputable def eEquiv : BigE C ≃ Fin (3 * (p - n)) :=
   Fintype.equivFinOfCardEq (card_bigE C hDeg)
 
 /-- The centipede expansion datum. -/
+@[expose]
 noncomputable def data : ExpansionData n p (2 * (p - n)) (3 * (p - n)) where
   bigCore :=
     { tail := fun e => vEquiv C hDeg (bigTail C hDeg ((eEquiv C hDeg).symm e))

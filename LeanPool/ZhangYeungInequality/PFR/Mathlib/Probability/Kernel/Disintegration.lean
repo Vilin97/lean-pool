@@ -20,7 +20,7 @@ where
 
 -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Measure ProbabilityTheory
 open scoped ENNReal NNReal Topology ProbabilityTheory
@@ -583,14 +583,14 @@ lemma compProd_congr_ae {μ} [SFinite μ] {κ κ' :
   rw [hb]
 
 /-- The analogue of FiniteSupport for probability kernels. -/
-noncomputable def FiniteKernelSupport (κ : Kernel T S) : Prop :=
+@[expose] noncomputable def FiniteKernelSupport (κ : Kernel T S) : Prop :=
   ∀ t, ∃ A : Finset S, κ t Aᶜ = 0
 
 /-- A kernel `κ` has almost everywhere finite support wrt a measure `μ` if, for almost
 every
 point `t`, then `κ t` has finite support. Note that we don't require any uniformity wrt
 `t`. -/
-noncomputable def AEFiniteKernelSupport (κ : Kernel T S) (μ : Measure T) : Prop :=
+@[expose] noncomputable def AEFiniteKernelSupport (κ : Kernel T S) (μ : Measure T) : Prop :=
   ∀ᵐ t ∂μ, ∃ A : Finset S, κ t Aᶜ = 0
 
 lemma _root_.ProbabilityTheory.Kernel.FiniteKernelSupport.aefiniteKernelSupport

@@ -17,7 +17,7 @@ The four-child minimax has two matching branches. Swapping only the blue childre
 anti-diagonal branch with the diagonal one and preserves admissibility and every packing score.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

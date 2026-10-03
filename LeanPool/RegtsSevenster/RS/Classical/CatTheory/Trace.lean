@@ -21,7 +21,7 @@ dimension; the trace is additive and ℂ-homogeneous; it is cyclic;
 and it is multiplicative over the tensor product.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,7 +34,7 @@ variable {C : Type u}
 
 /-- The categorical trace of an endomorphism: coevaluate, act, cross
 the strand over the right dual, and evaluate. -/
-def catTrace [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
+@[expose] def catTrace [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     [RigidCategory C]
     {X : C} (f : X ⟶ X) : End (𝟙_ C) :=
   η_ X Xᘁ ≫ f ▷ Xᘁ ≫ (β_ X Xᘁ).hom ≫ ε_ X Xᘁ
@@ -104,7 +104,7 @@ theorem catTrace_eq_loop
   rw [braiding_naturality_left_assoc]
 
 /-- The trace computed against a chosen exact pairing. -/
-def pairTrace [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
+@[expose] def pairTrace [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     {X D : C} (p : ExactPairing X D) (f : X ⟶ X) :
     End (𝟙_ C) :=
   letI := p
@@ -381,6 +381,7 @@ theorem catDim_unit [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
   monoidal
 
 /-- **The trace as a ℂ-linear map** into the scalar monoid. -/
+@[expose]
 def catTraceLin [Category.{v} C] [MonoidalCategory C] [SymmetricCategory C]
     [Preadditive C] [Linear ℂ C] [MonoidalPreadditive C]
     [MonoidalLinear ℂ C] [RigidCategory C]

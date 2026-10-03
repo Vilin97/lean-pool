@@ -24,7 +24,7 @@ sides — the unglued orientation's chain directions at the two glued
 labels are opposite.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

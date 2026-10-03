@@ -27,7 +27,7 @@ partial-product convergence.
 * `QSeries.qPochhammerInf_eq_one_sub_mul` — telescoping $(z;q)_\infty = (1-z)(zq;q)_\infty$.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology
@@ -38,7 +38,7 @@ namespace QSeries
 
 Defined unconditionally as a `tprod`; convergence (under $\|q\| < 1$) is provided
 by `multipliable_one_sub_mul_pow`. -/
-noncomputable def qPochhammerInf (a q : ℂ) : ℂ := ∏' k : ℕ, (1 - a * q ^ k)
+@[expose] noncomputable def qPochhammerInf (a q : ℂ) : ℂ := ∏' k : ℕ, (1 - a * q ^ k)
 
 /-- For $\|q\| < 1$ the sequence $n \mapsto \|{-}(a q^n)\|$ is summable: it is the
 geometric series $\|a\| \cdot \|q\|^n$. -/

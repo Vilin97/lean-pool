@@ -22,7 +22,7 @@ section
 /-! The four-dimensional transport velocity associated with a lifted
 solenoidal field has zero ordinary trace on the real covering space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,11 +34,11 @@ open scoped ContDiff
 
 /-- Transport linear, given by `(κ • ContinuousLinearMap.id ℝ Vector3).prod (toDual ℝ Vector3
 m)`. -/
-def transportLinear (κ : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
+@[expose] def transportLinear (κ : ℝ) (m : Vector3) : Vector3 →L[ℝ] LiftTangent :=
   (κ • ContinuousLinearMap.id ℝ Vector3).prod (toDual ℝ Vector3 m)
 
 @[simp] theorem transportLinear_apply (κ : ℝ) (m v : Vector3) :
-    transportLinear κ m v = transportDirection κ m v := rfl
+    transportLinear κ m v = transportDirection κ m v := by rfl
 
 theorem transportLinear_single (κ : ℝ) (m : Vector3) (i : Fin 3) :
     transportLinear κ m (EuclideanSpace.single i 1) = coordinateDirection κ m i := by
@@ -60,6 +60,7 @@ theorem trace_transportLinear (κ : ℝ) (m : Vector3) (L : LiftTangent →L[ℝ
 variable (P κ : ℝ) (m : Vector3) (g : LiftDomain P → Vector3)
 
 /-- Cover velocity, given by `transportDirection κ m (g (coveringMap P z))`. -/
+@[expose]
 def coverVelocity (z : LiftTangent) : LiftTangent :=
   transportDirection κ m (g (coveringMap P z))
 
@@ -98,7 +99,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -199,11 +200,12 @@ local instance instLiftedSmoothTimeField8 (n : ℕ) : NormedSpace ℝ (E →ᵇ 
     := inferInstance
 
 /-- Lift, given by `A.map (transportLinear κ m)`. -/
-def lift (A : SmoothTimeField K E Space) (κ : ℝ) (m : Space) : SmoothTimeField K E LiftTangent :=
+@[expose] def lift (A : SmoothTimeField K E Space) (κ : ℝ) (m : Space) :
+    SmoothTimeField K E LiftTangent :=
   A.map (transportLinear κ m)
 
 @[simp] theorem lift_apply (A : SmoothTimeField K E Space) (κ : ℝ) (m : Space) (t : K) (x : E) :
-    (lift A κ m).field t x = (κ • A.field t x, inner ℝ m (A.field t x)) := rfl
+    (lift A κ m).field t x = (κ • A.field t x, inner ℝ m (A.field t x)) := by rfl
 
 theorem lift_jet_norm_le (A : SmoothTimeField K E Space) (κ : ℝ) (m : Space) (n : ℕ) :
     ‖(lift A κ m).jet n‖ ≤ |κ| * ‖A.jet n‖ + ‖(A.map (normalComponentMap m)).jet n‖ := by

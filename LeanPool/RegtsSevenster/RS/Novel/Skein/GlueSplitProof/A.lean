@@ -28,7 +28,7 @@ two ends with `i = 1, j = 0` gives `k + 2ℓ` instead of `k − 2ℓ`.
 All cuts in the development are therefore ordered.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

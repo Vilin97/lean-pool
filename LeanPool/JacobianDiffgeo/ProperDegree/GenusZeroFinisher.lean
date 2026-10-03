@@ -30,7 +30,7 @@ itself, cheaper than the general codiscrete-nonconstancy argument.
 Main declaration: `RS.homeoSphere_of_exists_simple_pole`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold OnePoint
 open Set Filter

@@ -22,7 +22,7 @@ first-neighbor form of firing the left endpoint; that finite Laplacian identity
 is kept separate from the pairwise path-prefix calculation below.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -33,6 +33,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-- The degree-zero divisor representing one unit of the `alpha`th coordinate
 in the paper's presentation. -/
+@[expose]
 def bananaCoordinateStep {g : ℕ} (B : Banana g) (alpha : Fin (g + 1)) :
     CFDiv B.graph :=
   oneChip (strandVertex B alpha ⟨1, by
@@ -40,6 +41,7 @@ def bananaCoordinateStep {g : ℕ} (B : Banana g) (alpha : Fin (g + 1)) :
     omega⟩) - oneChip (leftEndpoint B)
 
 /-- The free coordinate-vector map `tphi` in the proof of Proposition 2.14. -/
+@[expose]
 def bananaCoordinateDivisorHom {g : ℕ} (B : Banana g) :
     (Fin (g + 1) → ℤ) →+ CFDiv B.graph where
   toFun a := ∑ alpha : Fin (g + 1), a alpha • bananaCoordinateStep B alpha
@@ -63,6 +65,7 @@ def bananaCoordinateDivisorHom {g : ℕ} (B : Banana g) :
 is the additive quotient by principal divisors, i.e. the graph-level Picard
 group model used here.  The preceding degree lemma shows that its image lies
 in the degree-zero (Jacobian) component. -/
+@[expose]
 def bananaCoordinateClassHom {g : ℕ} (B : Banana g) :
     (Fin (g + 1) → ℤ) →+
       (CFDiv B.graph ⧸ principalDivisors B.graph) :=
@@ -72,6 +75,7 @@ def bananaCoordinateClassHom {g : ℕ} (B : Banana g) :
 /-- The exact relation subgroup of the graph-level coordinate map.  Showing
 that this kernel equals the paper's displayed lattice is the injectivity half
 of Proposition 2.14. -/
+@[expose]
 def bananaCoordinateRelations {g : ℕ} (B : Banana g) :
     AddSubgroup (Fin (g + 1) → ℤ) :=
   (bananaCoordinateClassHom B).ker
@@ -87,6 +91,7 @@ def bananaPresentedClassHom {g : ℕ} (B : Banana g) :
       exact ha)
 
 /-- The standard coordinate vector `e_alpha`. -/
+@[expose]
 def bananaCoordinateBasis {g : ℕ} (alpha : Fin (g + 1)) :
     Fin (g + 1) → ℤ := fun beta => if beta = alpha then 1 else 0
 
@@ -98,12 +103,14 @@ def bananaCoordinateBasis {g : ℕ} (alpha : Fin (g + 1)) :
   simp [bananaCoordinateDivisorHom, bananaCoordinateBasis]
 
 /-- The displayed relation `n_0 e_0 - n_beta e_beta`. -/
+@[expose]
 def bananaStrandLengthRelation {g : ℕ} (B : Banana g)
     (beta : Fin (g + 1)) : Fin (g + 1) → ℤ :=
   (B.length 0 : ℤ) • bananaCoordinateBasis (0 : Fin (g + 1)) -
     (B.length beta : ℤ) • bananaCoordinateBasis beta
 
 /-- The other displayed relation vector, `(1, ..., 1)`. -/
+@[expose]
 def bananaDiagonalRelation {g : ℕ} : Fin (g + 1) → ℤ := fun _ => 1
 
 @[simp] theorem bananaCoordinateDivisorHom_diagonalRelation

@@ -59,7 +59,7 @@ Both halves of the §4.3 valence theory (`j_injective_mod_Γ` and `j_surjective`
 `sorry`-free.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

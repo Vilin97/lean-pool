@@ -21,7 +21,7 @@ basis growth estimate needed in relative expansion without using
 Loomis--Whitney.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Module

@@ -32,7 +32,7 @@ Every digit string below has been verified by exact rational arithmetic
 * `e^{-π√163} = 3.80898093700765233822623151647 80054376196293193806…e-18`
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -331,7 +331,7 @@ theorem norm_q_τ₁₆₃ : ‖q τ₁₆₃‖ = Real.exp (-(π * Real.sqrt 16
 `q τ₁₆₃ = e^{2πi(1/2 + i√163/2)} = e^{πi}·e^{-π√163} = -e^{-π√163}`. -/
 theorem q_τ₁₆₃_eq : q τ₁₆₃ = -Complex.exp (-(π * Real.sqrt 163) : ℝ) := by
   rw [q_eq]
-  have hre : τ₁₆₃.re = 1 / 2 := rfl
+  have hre : τ₁₆₃.re = 1 / 2 := τ₁₆₃_re
   have hτ : (τ₁₆₃ : ℂ) = ((1 / 2 : ℝ) : ℂ) + ((Real.sqrt 163 / 2 : ℝ) : ℂ) * Complex.I := by
     apply Complex.ext <;> simp [hre]
   have harg : 2 * (π : ℂ) * Complex.I * (τ₁₆₃ : ℂ)

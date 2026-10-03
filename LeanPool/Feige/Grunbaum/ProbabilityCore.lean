@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.Layercake
 # Probability lemmas for Grünbaum's inequality
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal Topology
@@ -315,11 +315,11 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [Measure.IsAddHaarMeasure (volume : Measure E)]
 
 /-- Lebesgue volume restricted to `K` and normalized to total mass one. -/
-def uniformVolume (K : Set E) : Measure E :=
+@[expose] def uniformVolume (K : Set E) : Measure E :=
   (volume K)⁻¹ • volume.restrict K
 
 /-- The centroid of `K` defined by its set average. -/
-def volumeCentroid (K : Set E) : E :=
+@[expose] def volumeCentroid (K : Set E) : E :=
   ⨍ x in K, x
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]

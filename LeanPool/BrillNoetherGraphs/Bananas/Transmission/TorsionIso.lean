@@ -16,7 +16,7 @@ The paper's torsion order is intrinsic to a marked graph.  This file supplies
 the raw-divisor transport needed to use certified subdivision relabelings.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

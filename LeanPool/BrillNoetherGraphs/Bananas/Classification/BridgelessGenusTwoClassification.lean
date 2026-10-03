@@ -38,7 +38,7 @@ in `Bananas/MarkedIso.lean`; `twoEdgeCutCondition_map_iff` in
 `Bananas/GraphIsoCuts.lean`), so no new transport lemma is needed here.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -19,7 +19,7 @@ conservative, passive. These are `Prop` predicates, not separate types.
 Also includes probabilistic and team learner variants.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

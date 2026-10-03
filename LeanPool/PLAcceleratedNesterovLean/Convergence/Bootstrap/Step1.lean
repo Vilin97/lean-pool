@@ -20,7 +20,7 @@ S_a = Σ_{k=0}^∞ (1-a/2)^{k/2} = 1/(1-√(1-a/2)) is finite for a > 0.
 Σ_{k=1}^n ‖h_k‖ ≤ C_h √η Σ_{k=1}^n √L_k ≤ C_h √η · R · S_a
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

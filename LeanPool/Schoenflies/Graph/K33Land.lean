@@ -96,7 +96,7 @@ With this module in place `Graph.IsHexRealization`, `Graph.IsHexCrosscut`, `Grap
 and `Graph.Bendable` have no consumers left.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set unitInterval
 open scoped Graph
@@ -306,7 +306,7 @@ Needed only to pin the *direction* in which a realization traverses a prescribed
 same construction with the `corner` field dropped. -/
 
 /-- **The same closed polygon, traversed the other way.** -/
-def reverse {m : ℕ} (P : PrePolygon m) : PrePolygon m where
+@[expose] def reverse {m : ℕ} (P : PrePolygon m) : PrePolygon m where
   vertex j := P.vertex (-j)
   vertex_inj _ _ h := neg_injective (P.vertex_inj h)
   edges_meet i j hij := by

@@ -23,7 +23,7 @@ summable hit series to the logarithmic-series bound.
 * `summable_indicatorLogSeries_and_tsum_le_of_hitMass`
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

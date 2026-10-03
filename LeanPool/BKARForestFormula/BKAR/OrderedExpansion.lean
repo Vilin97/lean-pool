@@ -20,7 +20,7 @@ derivative and integrability lemmas consumed by the recursion behind the
 BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 

@@ -22,7 +22,7 @@ The construction follows Capdevila, *Besicovitch's example in higher dimensions*
 arXiv:2607.05206, §2, which in turn follows Besicovitch (1938) and Dickinson (1939).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,19 +31,22 @@ open Finset
 namespace LeanPool.Besicovitch.Example
 
 /-- The length `2^(-n²)` of a level-`n` cell. -/
-def cellLength (n : ℕ) : ℝ := (1 / 2) ^ (n ^ 2)
+@[expose] def cellLength (n : ℕ) : ℝ := (1 / 2) ^ (n ^ 2)
 
 /-- The amplitude `2^(-n²) / n` of the level-`n` square wave. -/
 def jumpHeight (n : ℕ) : ℝ := cellLength n / n
 
 /-- The index of the level-`n` cell `[i * cellLength n, (i + 1) * cellLength n)` containing `x`. -/
+@[expose]
 def cellIndex (n : ℕ) (x : ℝ) : ℤ := ⌊x / cellLength n⌋
 
 /-- The level-`n` square wave: `-jumpHeight n` on even cells, `+jumpHeight n` on odd cells. -/
+@[expose]
 def squareWave (n : ℕ) (x : ℝ) : ℝ :=
   if Even (cellIndex n x) then -jumpHeight n else jumpHeight n
 
 /-- Besicovitch's function, the sum of the square waves of every level `n ≥ 1`. -/
+@[expose]
 def besicovitchFun (x : ℝ) : ℝ := ∑' n : ℕ, squareWave (n + 1) x
 
 /-! ### The cell lengths -/

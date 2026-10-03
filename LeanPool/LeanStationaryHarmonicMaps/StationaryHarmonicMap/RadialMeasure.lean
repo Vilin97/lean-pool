@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.VectorMeasure.Decomposition.RadonNikodym
 # Radial Measure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,7 +25,7 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The one-dimensional measure on the radius interval `(0, R0)`. -/
-def radiusIntervalMeasure (R0 : ℝ) : Measure ℝ :=
+@[expose] def radiusIntervalMeasure (R0 : ℝ) : Measure ℝ :=
   volume.restrict (Ioo (0 : ℝ) R0)
 
 instance sigmaFinite_radiusIntervalMeasure (R0 : ℝ) :
@@ -195,7 +195,7 @@ theorem radialVectorMeasure_absolutelyContinuous_euclidean {n : ℕ} [NeZero n]
 
 /-- The Radon-Nikodym density of the radial signed pushforward of `f dx` on
 `B_R0`, with respect to the radius interval measure. -/
-noncomputable def radialRNDensity {n : ℕ} (f : Domain n → ℝ) (R0 : ℝ) : ℝ → ℝ :=
+@[expose] noncomputable def radialRNDensity {n : ℕ} (f : Domain n → ℝ) (R0 : ℝ) : ℝ → ℝ :=
   SignedMeasure.rnDeriv
     (((volume.restrict (Metric.ball (0 : Domain n) R0)).withDensityᵥ f).map
       (fun x : Domain n => norm x))

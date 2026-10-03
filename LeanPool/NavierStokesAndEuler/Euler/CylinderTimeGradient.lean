@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 /-! Time regularity of the full genuine covering derivative, reconstructed from its four directions.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -71,7 +71,9 @@ theorem pointField_fderiv_joint_continuous {K : Type*} [TopologicalSpace K] [Com
       fun i : Fin 4 => fieldFDeriv P (pointField P p hp z.1) z.2 (standardDirection i)) := by
     apply continuous_pi
     intro i
-    exact pointField_word_joint_continuous P p hp 1 (fun _ => i)
+    simpa only [iteratedFieldDerivative_succ, Fin.cons_zero, Fin.tail_cons,
+      iteratedFieldDerivative_zero, fieldDerivative, fieldFDeriv] using
+      pointField_word_joint_continuous P p hp 1 (fun _ => i)
   simpa only [Function.comp_def, fromCoordinates_eq] using fromCoordinates.continuous.comp hc
 
 variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
@@ -93,7 +95,9 @@ theorem pointField_fderiv_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain
       (Icc (0 : ℝ) T) t := by
     apply hasDerivWithinAt_pi.mpr
     intro i
-    exact pointField_word_hasDerivWithinAt P T hT p f hp hf hd 1 (fun _ => i) t x
+    simpa only [iteratedFieldDerivative_succ, Fin.cons_zero, Fin.tail_cons,
+      iteratedFieldDerivative_zero, fieldDerivative, fieldFDeriv] using
+      pointField_word_hasDerivWithinAt P T hT p f hp hf hd 1 (fun _ => i) t x
   have h := fromCoordinates.hasFDerivAt.comp_hasDerivWithinAt (t : ℝ) hD
   simpa only [Function.comp_def, fromCoordinates_eq] using h
 

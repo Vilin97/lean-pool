@@ -12,7 +12,7 @@ import Mathlib.Analysis.InnerProductSpace.Continuous
 
 /-! Uniform convergence of actual finite metric energies along continuous Hilbert-space paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,6 +57,7 @@ theorem metricPath_tendsto (T : ℝ) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H))
   (metricPath_continuous T K).continuousAt.tendsto.comp hu
 
 /-- A finite weighted sum of actual metric-root paths. -/
+@[expose]
 def weightedMetricPath {A : Type*} [Fintype A] (T : ℝ)
     (w : A → C(Icc (0 : ℝ) T, ℝ)) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H))
     (u : A → C(Icc (0 : ℝ) T, I → H)) : C(Icc (0 : ℝ) T, ℝ) :=

@@ -22,7 +22,7 @@ of its sensitivity.
 * `LeanPoolSensitivity.degree_le_sensitivity_sq` — `f.degree ≤ f.sensitivity^2`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPoolSensitivity
 

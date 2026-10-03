@@ -20,7 +20,7 @@ lift at its base in the finite integer-coordinate language used by balanced
 combinations. The bounds retain the selected node's own radius.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

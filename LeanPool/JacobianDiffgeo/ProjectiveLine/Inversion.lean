@@ -23,7 +23,7 @@ Main declarations: `inversion`, `inversion_involutive`, `inversion_eq_infty_iff`
 `inversionHomeomorph`.
 -/
 
-@[expose] public section
+public section
 
 open scoped OnePoint
 open Set Filter Topology OnePoint
@@ -31,6 +31,7 @@ open Set Filter Topology OnePoint
 namespace RS.P1
 
 /-- Inversion `z ↦ z⁻¹` on the Riemann sphere, with `∞ ↦ 0` and `0 ↦ ∞`. -/
+@[expose]
 noncomputable def inversion : OnePoint ℂ → OnePoint ℂ :=
   fun p => p.elim ((0 : ℂ) : OnePoint ℂ)
     fun z => if z = 0 then (∞ : OnePoint ℂ) else ((z⁻¹ : ℂ) : OnePoint ℂ)
@@ -123,6 +124,7 @@ theorem continuous_inversion : Continuous inversion := by
       exact (continuous_coe.continuousAt.comp (continuousAt_inv₀ hz)).congr heq
 
 /-- Inversion as a self-inverse homeomorphism of the Riemann sphere. -/
+@[expose]
 noncomputable def inversionHomeomorph : OnePoint ℂ ≃ₜ OnePoint ℂ where
   toFun := inversion
   invFun := inversion

@@ -18,7 +18,7 @@ recursion proving the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,6 +38,7 @@ Derivative order accumulated by following a growth list from left to right.
 The one-step recursion conses each new derivative onto the front, so the final
 mixed-partial list is the reverse of the growth order.
 -/
+@[expose]
 def derivativeOrder (_h : OrderedGrowth F order G) : List (Edge V) :=
   order.reverse
 
@@ -45,6 +46,7 @@ def derivativeOrder (_h : OrderedGrowth F order G) : List (Edge V) :=
 The terminal BKAR interpolation point attached to one ordered branch and a
 list of simplex parameters.
 -/
+@[expose]
 def branchPoint (h : OrderedGrowth F order G)
     (u : F.EdgeParam → ℝ) (ts : List ℝ) : Edge V → ℝ :=
   G.standardInterp (h.params u ts)
@@ -52,6 +54,7 @@ def branchPoint (h : OrderedGrowth F order G)
 /--
 The terminal integrand attached to one ordered forest-growth branch.
 -/
+@[expose]
 def branchIntegrand (h : OrderedGrowth F order G)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) :
     List ℝ → ℝ :=
@@ -61,6 +64,7 @@ def branchIntegrand (h : OrderedGrowth F order G)
 The ordered-simplex integral with an explicit outer bound attached to one
 ordered forest-growth branch.
 -/
+@[expose]
 def branchIntegralAux (top : ℝ) (h : OrderedGrowth F order G)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   orderedSimplexIntegralAux top order (h.branchIntegrand u ρ)
@@ -68,6 +72,7 @@ def branchIntegralAux (top : ℝ) (h : OrderedGrowth F order G)
 /--
 The ordered-simplex integral attached to one ordered forest-growth branch.
 -/
+@[expose]
 def branchIntegral (h : OrderedGrowth F order G)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   h.branchIntegralAux 1 u ρ

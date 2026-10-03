@@ -26,7 +26,7 @@ deleting a finite set.  That theorem, in turn, rules out multiple dual component
 surface triangulation.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology
 

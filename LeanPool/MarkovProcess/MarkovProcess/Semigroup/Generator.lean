@@ -37,7 +37,7 @@ Times are `NNReal` throughout the library; the real-variable statements read the
 `Real.toNNReal s`.  The fundamental identity is what Dynkin's formula consumes.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -54,6 +54,7 @@ variable (S : StronglyContinuousContractionSemigroup E)
 section DifferenceQuotient
 
 /-- The difference quotient `t⁻¹ • (S t f - f)` of the orbit of `f` at time zero. -/
+@[expose]
 def differenceQuotient (f : E) (t : NNReal) : E := (t : ℝ)⁻¹ • (S t f - f)
 
 /-- The difference quotient, unfolded. -/
@@ -393,6 +394,7 @@ private theorem tendsto_slope_add_of_hasDerivAt {F : ℝ → E} {F' : E} {u : �
 
 /-- The orbit integral `∫₀ᵘ S s f ds` of a vector `f`, as a function of the real upper limit
 `u` (the semigroup is read at `Real.toNNReal s`). -/
+@[expose]
 def orbitIntegral (f : E) (u : ℝ) : E := ∫ s in (0 : ℝ)..u, S (Real.toNNReal s) f
 
 /-- The orbit integral, unfolded. -/

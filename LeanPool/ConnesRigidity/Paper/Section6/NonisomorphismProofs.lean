@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section6.Nonisomorphism
 The nonisomorphism proofs component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism
@@ -36,7 +36,7 @@ abbrev PaperEll := PaperKernel.VStar × k
 /--
 The `paperEllMap` construction used in the Connes rigidity formalization.
 -/
-def paperEllMap (q : PaperKernel.Q) : PaperEll →ₗ[k] PaperEll where
+@[expose] def paperEllMap (q : PaperKernel.Q) : PaperEll →ₗ[k] PaperEll where
   toFun p :=
     (qVStarActionHom q p.1 + p.2 • OpenAIPort.quadraticDefectLinear q, p.2)
   map_add' p r := by
@@ -52,7 +52,7 @@ def paperEllMap (q : PaperKernel.Q) : PaperEll →ₗ[k] PaperEll where
 /--
 The `paperEllRepresentation` construction used in the Connes rigidity formalization.
 -/
-def paperEllRepresentation : Representation k PaperKernel.Q PaperEll where
+@[expose] def paperEllRepresentation : Representation k PaperKernel.Q PaperEll where
   toFun := paperEllMap
   map_one' := by
     have hq : OpenAIPort.quadraticDefectLinear (1 : PaperKernel.Q) = 0 := by
@@ -81,7 +81,7 @@ def paperEllRepresentation : Representation k PaperKernel.Q PaperEll where
 /--
 The `paperEllVStarRepresentation` construction used in the Connes rigidity formalization.
 -/
-def paperEllVStarRepresentation : Representation k PaperKernel.Q PaperKernel.VStar :=
+@[expose] def paperEllVStarRepresentation : Representation k PaperKernel.Q PaperKernel.VStar :=
   { toFun := fun q => (qVStarActionHom q).toLinearMap
     map_one' := by
       apply LinearMap.ext
@@ -98,13 +98,13 @@ def paperEllVStarRepresentation : Representation k PaperKernel.Q PaperKernel.VSt
 /--
 The `paperEllScalarRepresentation` construction used in the Connes rigidity formalization.
 -/
-def paperEllScalarRepresentation : Representation k PaperKernel.Q k :=
+@[expose] def paperEllScalarRepresentation : Representation k PaperKernel.Q k :=
   Representation.trivial k PaperKernel.Q k
 
 /--
 The `paperEllInclusionLinear` construction used in the Connes rigidity formalization.
 -/
-def paperEllInclusionLinear : PaperKernel.VStar →ₗ[k] PaperEll where
+@[expose] def paperEllInclusionLinear : PaperKernel.VStar →ₗ[k] PaperEll where
   toFun f := (f, 0)
   map_add' f g := by simp
   map_smul' a f := by simp
@@ -112,7 +112,7 @@ def paperEllInclusionLinear : PaperKernel.VStar →ₗ[k] PaperEll where
 /--
 The `paperEllInclusionIntertwining` construction used in the Connes rigidity formalization.
 -/
-def paperEllInclusionIntertwining :
+@[expose] def paperEllInclusionIntertwining :
     Representation.IntertwiningMap paperEllVStarRepresentation paperEllRepresentation :=
   paperEllInclusionLinear.intertwiningMap_of_isIntertwiningMap
     paperEllVStarRepresentation paperEllRepresentation (by
@@ -125,7 +125,7 @@ def paperEllInclusionIntertwining :
 /--
 The `paperEllProjectionLinear` construction used in the Connes rigidity formalization.
 -/
-def paperEllProjectionLinear : PaperEll →ₗ[k] k where
+@[expose] def paperEllProjectionLinear : PaperEll →ₗ[k] k where
   toFun p := p.2
   map_add' p q := by simp
   map_smul' a p := by simp
@@ -133,7 +133,7 @@ def paperEllProjectionLinear : PaperEll →ₗ[k] k where
 /--
 The `paperEllProjectionIntertwining` construction used in the Connes rigidity formalization.
 -/
-def paperEllProjectionIntertwining :
+@[expose] def paperEllProjectionIntertwining :
     Representation.IntertwiningMap paperEllRepresentation paperEllScalarRepresentation :=
   paperEllProjectionLinear.intertwiningMap_of_isIntertwiningMap
     paperEllRepresentation paperEllScalarRepresentation (by

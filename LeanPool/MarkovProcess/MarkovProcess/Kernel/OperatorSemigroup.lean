@@ -15,7 +15,7 @@ This file proves only the algebraic zero- and add-time laws for the canonical
 real `Lᵖ` operator families.  It makes no strong-continuity claim.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

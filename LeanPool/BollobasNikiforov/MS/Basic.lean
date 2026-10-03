@@ -19,7 +19,7 @@ nonnegative orthant by the Turán factor `1 - 1/ω(G)`, and the same bound
 passes to the Frobenius pairing against a completely positive matrix.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

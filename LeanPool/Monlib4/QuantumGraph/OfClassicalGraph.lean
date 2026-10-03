@@ -17,7 +17,7 @@ import LeanPool.Monlib4.Preq.Ites
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.OfClassicalGraph`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable instance {n : Type*} :
   starAlgebra (PiQ (fun _ : n => ℂ)) :=

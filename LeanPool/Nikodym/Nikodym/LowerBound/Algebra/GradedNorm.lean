@@ -38,7 +38,7 @@ instance arguments `[Algebra (FractionRing S) (FractionRing R)]` and
   by `IsFractionRing.ringEquivOfRingEquiv`, and `Algebra.norm_eq_of_equiv_equiv`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -73,6 +73,7 @@ section ScaleEquiv
 variable {K : Type*} [CommSemiring K] {σ : Type*}
 
 /-- Node A07′: the scaling automorphism `X i ↦ C u * X i` of `MvPolynomial σ K`, for a unit `u`. -/
+@[expose]
 noncomputable def scaleEquiv (u : Kˣ) : MvPolynomial σ K ≃ₐ[K] MvPolynomial σ K :=
   AlgEquiv.ofAlgHom (aeval fun i ↦ C (u : K) * X i) (aeval fun i ↦ C ((u⁻¹ : Kˣ) : K) * X i)
     (by ext i; simp [algebraMap_eq, ← mul_assoc, ← C_mul])
@@ -197,6 +198,7 @@ variable {K : Type*} [Field K] {n s : ℕ} {J : Ideal (MvPolynomial (Fin n) K)}
 
 /-- Node A07′: the scaling automorphism `σ_u` of `R = Q ⧸ J` induced by `scaleEquiv u` on `Q`, for
 a homogeneous ideal `J`. -/
+@[expose]
 noncomputable def scaleQuotEquiv (hJh : J.IsHomogeneous (homogeneousSubmodule (Fin n) K)) (u : Kˣ) :
     (MvPolynomial (Fin n) K ⧸ J) ≃ₐ[K] MvPolynomial (Fin n) K ⧸ J :=
   Ideal.quotientEquivAlg J J (scaleEquiv u) (scaleEquiv_map_eq_of_isHomogeneous u hJh).symm

@@ -17,7 +17,7 @@ is.  This is the last field of `RS.DeligneFibreFunctor` that the
 fibre construction does not supply on its own.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

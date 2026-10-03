@@ -29,7 +29,7 @@ Tags: dimensionality-reduction, random-projection, johnson-lindenstrauss, gaussi
 MSC: 68W20, 60G15, 68P05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

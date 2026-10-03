@@ -44,7 +44,7 @@ chamber and is discharged by `GenusFiveRow08Symmetry.chamber_covers` together
 with `ClosedOrbit.closedConstruction_of_chamber`; there is no chamber-4 file.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow08ChamberThree
 

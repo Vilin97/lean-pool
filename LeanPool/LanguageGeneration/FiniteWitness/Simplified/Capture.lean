@@ -10,7 +10,7 @@ public import Mathlib.Order.Interval.Finset.Nat
 public import Mathlib.Tactic.Choose
 
 /-! Direct diagonal bounded capture, without a sunflower extraction. -/
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 variable {α : Type*}

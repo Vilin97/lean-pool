@@ -54,7 +54,7 @@ Scott's "compare with
 Exercise 2.22 and from the `graph`-inversion.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise327
 

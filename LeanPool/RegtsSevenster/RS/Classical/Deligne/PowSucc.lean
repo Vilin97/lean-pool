@@ -19,7 +19,7 @@ extension principle reduces the comparison to the unit elements,
 where the chain recursion is definitional.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

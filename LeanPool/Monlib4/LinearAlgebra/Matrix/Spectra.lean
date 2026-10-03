@@ -14,7 +14,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 Spectral helpers for Hermitian and almost-Hermitian matrices.
 -/
 
-@[expose] public section
+public section
 
 instance multisetCoe {α β : Type _} [Coe α β] : Coe (Multiset α) (Multiset β)
     where coe s := s.map (Coe.coe : α → β)
@@ -71,13 +71,14 @@ theorem _root_.Matrix.IsAlmostHermitian.matrix_isHermitian {n : Type _} {x : Mat
   simp_all
 
 /-- Eigenvalues of the Hermitian factor, rescaled by the almost-Hermitian scalar. -/
+@[expose]
 noncomputable def _root_.Matrix.IsAlmostHermitian.eigenvalues {x : Matrix n n 𝕜}
     (hx : x.IsAlmostHermitian) :
     n → 𝕜 :=
   fun i => hx.scalar • hx.matrix_isHermitian.eigenvalues i
 
 /-- Multiset of eigenvalues for an almost-Hermitian matrix. -/
-noncomputable def _root_.Matrix.IsAlmostHermitian.spectra {A : Matrix n n 𝕜}
+@[expose] noncomputable def _root_.Matrix.IsAlmostHermitian.spectra {A : Matrix n n 𝕜}
     (hA : A.IsAlmostHermitian) :
     Multiset 𝕜 :=
   Finset.univ.val.map fun i => hA.eigenvalues i

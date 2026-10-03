@@ -34,7 +34,7 @@ This file develops the canonical partition tree and extracts a live node of leng
 - **Consumer interface**: `exists_live_node_ge`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

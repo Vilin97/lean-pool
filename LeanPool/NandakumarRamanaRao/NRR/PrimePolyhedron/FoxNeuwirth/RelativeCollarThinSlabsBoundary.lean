@@ -19,7 +19,7 @@ prism.  The upper endpoint term of slab `r` is literally the lower endpoint term
 the finite sum telescopes.  Only time zero and time one remain.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -54,6 +54,7 @@ noncomputable abbrev StackCells (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m) :=
   RelativeCollarThinSlabs.cellSystem hp N m hm
 
 /-- Apply the affine time rescaling of slab `r` to an arbitrary facet map. -/
+@[expose]
 noncomputable def slabFacetMap
     (m : Nat) (hm : 0 < m) (r : Fin m)
     (tau : Delta (p - 1) → Realization p × Set.Icc (0 : Real) 1) :
@@ -86,6 +87,7 @@ theorem slabFacetMap_translate
   rfl
 
 /-- Embed one base-prism facet occurrence into slab `r`. -/
+@[expose]
 def stackOccurrence
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (r : Fin m) (o : (BaseCells hp N).FacetOccurrence) :
@@ -306,6 +308,7 @@ theorem facetIncidence_eq_sum_slabOccurrencePairing
 /-! ## Mesh endpoint terms and telescoping -/
 
 /-- The `k`-th time node of the uniform `m`-slab mesh. -/
+@[expose]
 noncomputable def meshTime
     (m : Nat) (hm : 0 < m) (k : Fin (m + 1)) : Set.Icc (0 : Real) 1 := by
   refine ⟨(k.1 : Real) / (m : Real), ?_, ?_⟩
@@ -320,6 +323,7 @@ noncomputable def meshTime
   rfl
 
 /-- Place a spatial facet map on one node of the uniform time mesh. -/
+@[expose]
 noncomputable def meshEndpointMap
     (m : Nat) (hm : 0 < m) (k : Fin (m + 1))
     (sigma : Delta (p - 1) → Realization p) :
@@ -352,7 +356,7 @@ theorem slabFacetMap_upperEndpointMap
 
 /-- Pair the spatial Fox--Neuwirth chain at level `N` with one stack quotient facet on a fixed mesh
 node. -/
-noncomputable def meshEndpointPairing
+@[expose] noncomputable def meshEndpointPairing
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet) (k : Fin (m + 1)) : ZMod p :=
   ∑ q : TopCell hp N,
@@ -479,12 +483,14 @@ theorem facetIncidence_eq_last_sub_first_mesh
   exact sum_fin_succ_sub m (meshEndpointPairing hp N m hm s)
 
 /-- External lower boundary coefficient of a thin stack. -/
+@[expose]
 noncomputable def lowerBoundaryCoefficient
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet) : ZMod p :=
   meshEndpointPairing hp N m hm s 0
 
 /-- External upper boundary coefficient of a thin stack. -/
+@[expose]
 noncomputable def upperBoundaryCoefficient
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (s : (StackCells hp N m hm).Facet) : ZMod p :=
@@ -571,6 +577,7 @@ theorem upperBoundaryCoefficient_zero_of_not_upper
   rw [hindicator, mul_zero]
 
 /-- The complete thin-time stack as a pointwise Fox--Neuwirth relative affine collar. -/
+@[expose]
 noncomputable def collar
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m) :
     FoxNeuwirthRelativeAffineCollar hp N N N m where

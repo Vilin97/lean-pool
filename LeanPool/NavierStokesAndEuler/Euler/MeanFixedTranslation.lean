@@ -17,7 +17,7 @@ ordinary spatial translation. Consequently its coercivity persists with the
 same constant throughout the translated coefficient family.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,12 +56,12 @@ variable (T : ℝ) (hT : 0 ≤ T) (a : Space)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L : ℝ)
 
 /-- The fixed mean operator with genuinely translated spatial coefficients. -/
-def translatedMeanOperator : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
+@[expose] def translatedMeanOperator : TimeLp T solenoidalSpace →L[ℝ] TimeLp T solenoidalSpace :=
   fixedMeanOperator T hT (translatePath T a F) (translatePath T a F₁) (translatePath T a H)
     (translateOperator a M0) (translateOperator a A) L
 
 /-- The physical primitive map with genuinely translated coefficients. -/
-def translatedMeanPrimitive : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
+@[expose] def translatedMeanPrimitive : TimeLp T solenoidalSpace →L[ℝ] TimeLp T L2 :=
   fixedMeanPrimitive T hT (translatePath T a F) (translatePath T a F₁)
 
 /-- Covariance of the actual physical derivative. -/

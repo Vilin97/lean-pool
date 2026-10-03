@@ -20,7 +20,7 @@ import Mathlib.RingTheory.PicardGroup
 The module semisimple component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperModuleSemisimple
@@ -115,7 +115,7 @@ theorem qVStar_transitive_on_nonzero_test :
 /--
 The `qVStarRepresentation` construction used in the Connes rigidity formalization.
 -/
-def qVStarRepresentation : Representation k Q W where
+@[expose] def qVStarRepresentation : Representation k Q W where
   toFun q := (qVStarActionHom q).toLinearMap
   map_one' := by
     apply LinearMap.ext
@@ -179,18 +179,18 @@ abbrev DS := DirectSum I (fun _ => W)
 /--
 The `avStarActionQEquivHom` construction used in the Connes rigidity formalization.
 -/
-def avStarActionQEquivHom : Q →* (AV ≃ₗ[k] AV) :=
+@[expose] def avStarActionQEquivHom : Q →* (AV ≃ₗ[k] AV) :=
   PaperKernel.avStarActionHom.comp qToH
 
 /-- The tensor summand carries the actual quotient action. Paper: §6.
 -/
-def avStarRepresentation : Representation k Q AV :=
+@[expose] def avStarRepresentation : Representation k Q AV :=
   LinearEquiv.automorphismGroup.toLinearMapMonoidHom.comp
     avStarActionQEquivHom
 
 /-- The direct sum of copies of the finite dual representation is explicit. Paper: §6.
 -/
-def directSumRepresentation : Representation k Q DS :=
+@[expose] def directSumRepresentation : Representation k Q DS :=
   Representation.directSum (fun _ : I => qVStarRepresentation)
 
 /-- The direct sum is identified with its finitely supported coordinate model. Paper: §6.
@@ -204,7 +204,7 @@ noncomputable def directSumFinsuppEquiv :
 
 /-- The ordered tensor basis identifies `AVStar` with the direct sum coordinates. Paper: §6.
 -/
-def tensorDirectSumEquiv : AV ≃ₗ[k] DS :=
+@[expose] def tensorDirectSumEquiv : AV ≃ₗ[k] DS :=
   (TensorProduct.equivFinsuppOfBasisLeft
       (M := Construction.A) (N := PaperKernel.VStar) PaperKernel.orderedBasis).trans
     (finsuppLequivDFinsupp k)
@@ -384,7 +384,7 @@ noncomputable def cBasis : Module.Basis CI k PaperKernel.C :=
 
 /-- The quotient action on `C` is trivial in the first module. Paper: §6.
 -/
-def cRepresentation : Representation k Q PaperKernel.C :=
+@[expose] def cRepresentation : Representation k Q PaperKernel.C :=
   Representation.trivial k Q PaperKernel.C
 
 /-- The coordinate representation on the `C` basis is trivial. Paper: §6.
@@ -476,12 +476,12 @@ theorem cRepresentation_semisimple :
 /--
 The `firstProductRepresentation` construction used in the Connes rigidity formalization.
 -/
-def firstProductRepresentation : Representation k Q (AV × PaperKernel.C) :=
+@[expose] def firstProductRepresentation : Representation k Q (AV × PaperKernel.C) :=
   avStarRepresentation.prod cRepresentation
 
 /-- The tensor summand embeds as a group-algebra submodule of the product. Paper: §6.
 -/
-def firstProductInl : avStarRepresentation.asModule →ₗ[Ring]
+@[expose] def firstProductInl : avStarRepresentation.asModule →ₗ[Ring]
     firstProductRepresentation.asModule :=
   (Representation.IntertwiningMap.equivLinearMapAsModule
     avStarRepresentation firstProductRepresentation).toFun
@@ -489,7 +489,7 @@ def firstProductInl : avStarRepresentation.asModule →ₗ[Ring]
 
 /-- The `C` summand embeds as a group-algebra submodule of the product. Paper: §6.
 -/
-def firstProductInr : cRepresentation.asModule →ₗ[Ring]
+@[expose] def firstProductInr : cRepresentation.asModule →ₗ[Ring]
     firstProductRepresentation.asModule :=
   (Representation.IntertwiningMap.equivLinearMapAsModule
     cRepresentation firstProductRepresentation).toFun

@@ -27,7 +27,7 @@ far coefficient vanishes.
   `subdivide_inside`.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

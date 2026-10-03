@@ -21,7 +21,7 @@ algebra map, so idempotence and products transport; an injective
 one, so nonvanishing transports too.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ theorem symCast_injective {m n : ℕ} (h : m ≤ n) :
 
 /-- The central idempotent of a shape of size `n`, recast into the
 group algebra of `S_n`. -/
+@[expose]
 noncomputable def Shape.e (P : SchurPackage.{u}) {n : ℕ}
     (μ : Shape n) : SymGroupAlgebra n :=
   symCast (le_of_eq μ.prop) (P.e μ.val)

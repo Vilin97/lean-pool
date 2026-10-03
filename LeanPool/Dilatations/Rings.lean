@@ -18,7 +18,7 @@ The ring construction includes work by Arnaud Mayeux and Jujian Zhang from
 `ProjConstruction/Proj` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,11 +63,10 @@ section
 variable {A' G : Type*} [CommMonoid A'] [Zero G] [Pow A' G]
 variable {ι : Type*}
 /-- The finite product of a family raised to finitely supported exponents. -/
-def familyPow (f : ι → A') (v : ι →₀ G) : A' := v.prod fun i k ↦ f i ^ k
+@[expose] def familyPow (f : ι → A') (v : ι →₀ G) : A' := v.prod fun i k ↦ f i ^ k
 
 /-- Scoped exponent notation for finite products of a family. -/
-@[instance_reducible]
-def instFamilyPow : HPow (ι → A') (ι →₀ G) A' where
+@[expose, instance_reducible] def instFamilyPow : HPow (ι → A') (ι →₀ G) A' where
   hPow f v := familyPow f v
 
 scoped[CategoryTheory.Dilatations.Family] attribute [instance]
@@ -160,7 +159,7 @@ variable {A' : Type*} [CommSemiring A'] (M : Multicenter A')
 scoped notation : max M"^ℕ"  => Multicenter.index M  →₀ ℕ
 
 /-- Enlarge the numerator ideal by the principal ideal of its denominator. -/
-def LargeIdeal (i : M.index) : Ideal A' := M.ideal i + Ideal.span {M.elem i}
+@[expose] def LargeIdeal (i : M.index) : Ideal A' := M.ideal i + Ideal.span {M.elem i}
 
 lemma elem_mem_LargeIdeal (i : M.index) : M.elem i ∈ M.LargeIdeal i := by
   suffices inequality : Ideal.span {M.elem i} ≤ M.LargeIdeal i by
@@ -178,7 +177,7 @@ lemma elem_pow_mem_LargeIdealPow (ν : M^ℕ) : M.elem ^ ν ∈ M.LargeIdeal ^ �
 /-- The `ν`-indexed reindexing of `M`: index type `M^ℕ` (exponent profiles), ideal `L ^ ν` at `ν`,
 element `a ^ ν` at `ν`. Dilating by this center gives back the same ring as dilating by `M`
 directly (`reindexRingEquiv` below, inside `Dilatation`). -/
-@[reducible] def reindex : Multicenter A' where
+@[expose, reducible] def reindex : Multicenter A' where
   index := M^ℕ
   ideal := M.prodLargeIdealPower
   elem := fun ν => M.elem ^ ν
@@ -231,6 +230,7 @@ structure PreDil where
   num_mem : num ∈ M.LargeIdeal ^pow
 
 /-- Equality after cross-multiplication and multiplication by another denominator. -/
+@[expose]
 def r : M.PreDil → M.PreDil → Prop := fun x y =>
   ∃ β : M^ℕ, x.num * M.elem ^ (β + y.pow) = y.num * M.elem ^ (β + x.pow)
 
@@ -256,6 +256,7 @@ lemma r_trans (x y z : M.PreDil) : M.r x y → M.r y z → M.r x z := by
   abel
 
 /-- The equivalence relation on fraction representatives. -/
+@[expose]
 def setoid : Setoid (M.PreDil) where
   r := M.r
   iseqv :=
@@ -265,14 +266,14 @@ def setoid : Setoid (M.PreDil) where
 
 variable (M) in
 /-- The quotient of permitted fraction representatives by cross-multiplication. -/
-def Dilatation := _root_.Quotient M.setoid
+@[expose] def Dilatation := _root_.Quotient M.setoid
 
 /-- The dilatation of a commutative semiring at a multicenter. -/
 scoped notation : max ring"["multicenter"]" => Dilatation (A' := ring) multicenter
 namespace Dilatation
 
 /-- Map a fraction representative to its class in the dilatation. -/
-def mk (x : M.PreDil) : A'[M] := _root_.Quotient.mk _ x
+@[expose] def mk (x : M.PreDil) : A'[M] := _root_.Quotient.mk _ x
 
 lemma mk_eq_mk (x y : M.PreDil) : mk x = mk y ↔ M.r x y := by
   erw [_root_.Quotient.eq]
@@ -284,11 +285,12 @@ lemma induction_on {P : A'[M] → Prop} (x : A'[M]) (h : ∀ x : M.PreDil, P (mk
   exact h a
 
 /-- Descend a relation-respecting function on representatives to the quotient. -/
+@[expose]
 def descFun {B' : Type*} (f : M.PreDil → B') (hf : ∀ x y, M.r x y → f x = f y) : A'[M] → B' :=
   _root_.Quotient.lift f hf
 
 /-- Descend a binary function that respects equality of representatives. -/
-def descFun₂ {B' : Type*} (f : M.PreDil → M.PreDil → B')
+@[expose] def descFun₂ {B' : Type*} (f : M.PreDil → M.PreDil → B')
     (hf : ∀ a b x y, M.r a b → M.r x y → f a x = f b y) :
     A'[M] → A'[M] → B' :=
   _root_.Quotient.lift₂ f <| fun a x b y ↦ hf a b x y
@@ -304,8 +306,7 @@ lemma descFun₂_mk_mk {B' : Type*} (f : M.PreDil → M.PreDil → B')
     descFun₂ f hf (mk x) (mk y) = f x y := rfl
 
 /-- Addition of representatives using a common denominator. -/
-@[simps]
-def add' (x y : M.PreDil) : M.PreDil where
+@[expose, simps] def add' (x y : M.PreDil) : M.PreDil where
  pow := x.pow + y.pow
  num := M.elem ^ y.pow * x.num + M.elem ^ x.pow * y.num
  num_mem := Ideal.add_mem _
@@ -346,8 +347,7 @@ instance : Add A'[M] where
 lemma mk_add_mk (x y : M.PreDil) : mk x + mk y = mk (add' x y) := rfl
 
 /-- Multiplication of representatives by multiplying their numerators. -/
-@[simps]
-def mul' (x y : M.PreDil) : M.PreDil where
+@[expose, simps] def mul' (x y : M.PreDil) : M.PreDil where
   pow := x.pow + y.pow
   num := x.num * y.num
   num_mem := Ideal.mem_familyPow_add x.num_mem y.num_mem
@@ -498,7 +498,7 @@ instance instCommSemiring : CommSemiring A'[M] where
 
 variable (M) in
 /-- The canonical ring homomorphism sending a base element to denominator one. -/
-@[simps]
+@[expose, simps]
 def fromBaseRing : A' →+* A'[M] where
   toFun x := .mk
         { pow := 0
@@ -757,8 +757,7 @@ namespace Dilatation
 variable {A' : Type*} [CommRing A'] {M : Multicenter A'}
 
 /-- Negation of a representative by negating its numerator. -/
-@[simps]
-def neg' (x : M.PreDil) : M.PreDil where
+@[expose, simps] def neg' (x : M.PreDil) : M.PreDil where
   pow := x.pow
   num := -x.num
   num_mem := neg_mem x.num_mem

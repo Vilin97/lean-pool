@@ -18,7 +18,7 @@ bound by the supremum of the weight times the volume of the ball would only give
 sum by a single change of variables.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology

@@ -28,7 +28,7 @@ assembly.
   open-stage frontier lies in the compact control set at the same radius.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -44,7 +44,7 @@ private theorem smoothApproxRadius_antitone : Antitone smoothApproxRadius := by
   · exact_mod_cast Nat.add_le_add_right hmn 1
 
 /-- The closed metric thickening of `K` at radius `1 / (n + 1)`. -/
-noncomputable def compactThickeningApprox (K : Set ℂ) (n : ℕ) : Set ℂ :=
+@[expose] noncomputable def compactThickeningApprox (K : Set ℂ) (n : ℕ) : Set ℂ :=
   Metric.cthickening (smoothApproxRadius n) K
 
 /-- A closed thickening of a nonempty planar set at the positive approximation

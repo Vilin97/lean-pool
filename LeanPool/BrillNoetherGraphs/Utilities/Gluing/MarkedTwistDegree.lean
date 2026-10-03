@@ -17,7 +17,7 @@ degree identities so later formalizations do not repeatedly unfold `CFDiv.degree
 fight integer casts.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

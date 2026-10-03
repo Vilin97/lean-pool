@@ -22,7 +22,7 @@ The checker is deliberately small.  Generated search code is untrusted; only
 the Boolean replay and the theorem below enter the proof.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.AffineCover
 open Utilities.Certificate
@@ -53,6 +53,7 @@ def ValidActive {m : ℕ}
         ValidActive cones (active ++ [form.violation]) fails
 
 /-- Check active affine constraints at each decision-tree node using Boolean arithmetic. -/
+@[expose]
 def checkActive {m : ℕ}
     (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : DecisionTreeData m → Bool
@@ -71,6 +72,7 @@ def Valid {m : ℕ} (data : DecisionTreeData m)
   ValidActive cones base data
 
 /-- Executable exact replay of wall-decision data. -/
+@[expose]
 def check {m : ℕ} (data : DecisionTreeData m)
     (base : List (AffineForm m))
     (cones : List (List (AffineForm m))) : Bool :=

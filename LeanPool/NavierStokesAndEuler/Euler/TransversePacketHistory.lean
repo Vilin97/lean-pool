@@ -35,7 +35,7 @@ The adjoint multiplier identity turns it into the pointwise matrix equation
 almost everywhere. Its normal residual is exactly the scalar source in (11).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -152,7 +152,7 @@ abbrev forcingPath := includePath P D.support D.support_measurable G.path
 
 /-- Coordinate path, given by `B.coefficients.velocityPath P (pathLp D.T D.T_pos.le (forcingPath
 G))`. -/
-def coordinatePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
+@[expose] def coordinatePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.velocityPath P (pathLp D.T D.T_pos.le (forcingPath G))
 
 /-- Coordinate derivative path, given by `B.coefficients.accelerationPath P (forcingPath G)`. -/
@@ -160,16 +160,16 @@ def coordinateDerivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P U) :=
   B.coefficients.accelerationPath P (forcingPath G)
 
 /-- Velocity path, given by `B.coefficients.physicalVelocity P (forcingPath G)`. -/
-def velocityPath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
+@[expose] def velocityPath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.physicalVelocity P (forcingPath G)
 
 /-- Derivative path, given by `B.coefficients.physicalDerivative P (forcingPath G)`. -/
-def derivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
+@[expose] def derivativePath : C(Icc (0 : ℝ) D.T,CylinderL2 P Space) :=
   B.coefficients.physicalDerivative P (forcingPath G)
 
 /-- Pressure path, given by `sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
 D.normal_lower (forcingPath G) (B.velocityPath G)`. -/
-def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
+@[expose] def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G)
 
@@ -229,11 +229,11 @@ theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) : average P (B.derivati
   B.coefficients.physicalDerivative_mean_zero P (forcingPath G) G.mean_zero t
 
 /-- Field, given by `pointField P (B.velocityPath G) (B.velocityPath_orbit G) t`. -/
-def field (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
+@[expose] def field (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
   pointField P (B.velocityPath G) (B.velocityPath_orbit G) t
 
 /-- Derivative field, given by `pointField P (B.derivativePath G) (B.derivativePath_orbit G) t`. -/
-def derivativeField (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
+@[expose] def derivativeField (t : Icc (0 : ℝ) D.T) : LiftDomain P → Space :=
   pointField P (B.derivativePath G) (B.derivativePath_orbit G) t
 
 theorem field_smooth (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :

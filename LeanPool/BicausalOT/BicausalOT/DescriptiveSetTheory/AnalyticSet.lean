@@ -30,7 +30,7 @@ public import Mathlib.MeasureTheory.Constructions.Polish.Basic
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section
 
 -- Re-export for downstream modules
 open MeasureTheory

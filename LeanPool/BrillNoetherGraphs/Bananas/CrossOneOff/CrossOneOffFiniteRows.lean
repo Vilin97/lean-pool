@@ -18,7 +18,7 @@ finite-row injection precise and then specializes it to the corrected
 cross-one-off row function.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -26,6 +26,7 @@ open Utilities
 
 /-- Ordered pairs of rows in `[lo, hi]` on which a finite row function is
 strictly decreasing. -/
+@[expose]
 def finiteRowInversionPairs (lo hi : ℕ) (row : ℕ → ℕ) :
     Finset (ℕ × ℕ) :=
   ((Finset.Icc lo hi).product (Finset.Icc lo hi)).filter fun ij =>
@@ -84,6 +85,7 @@ theorem finiteRowInversionPairs_card_le_kInversionCount
 
 /-- The finite set of all ordinary inversions forced by the corrected common
 block `2 ≤ b ≤ crossOneOffCutoff g n`. -/
+@[expose]
 def crossOneOffForcedInversionPairs (g n : ℕ) : Finset (ℕ × ℕ) :=
   finiteRowInversionPairs 2 (crossOneOffCutoff g n) (crossOneOffRow g n)
 
@@ -117,6 +119,7 @@ theorem crossOneOff_forcedInversionPairs_card_le
 /-- The corrected numerical target from Corollary 4.31.  Its `n = 2` branch
 accounts for the corrected block beginning at row `2`; for `n ≥ 3` the
 target is `choose (g-1) 2 + floor(g/(n-1))`. -/
+@[expose]
 def correctedCrossOneOffForcedCount (g n : ℕ) : ℕ :=
   if n = 2 then Nat.choose g 2
   else Nat.choose (g - 1) 2 + g / (n - 1)

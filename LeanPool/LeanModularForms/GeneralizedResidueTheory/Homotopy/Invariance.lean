@@ -31,7 +31,7 @@ smooth), plus the classical winding number formula for curves avoiding a point.
     homotopy for holomorphic integrands
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

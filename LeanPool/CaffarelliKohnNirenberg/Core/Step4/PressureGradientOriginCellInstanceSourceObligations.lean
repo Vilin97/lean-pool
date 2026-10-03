@@ -17,7 +17,7 @@ contribution to the time obligations in `prop:bootstrap`; the pressure and
 force-potential contributions are separate.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -111,6 +111,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- The two-term bound for the sum of the centered tensor-source norms. -/
+@[expose]
 def originCenteredSourceMajorant (x : Vec3) (ρ : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3) (s : ℝ) : ℝ≥0∞ :=
   let U := eLpNorm (fun y => vec3EuclideanNorm (u (y, s)))

@@ -21,7 +21,7 @@ This file contains small helper lemmas. These are all generic -- they are not sp
 repository's main objects, so they are collected separately here.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 

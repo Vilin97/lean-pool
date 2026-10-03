@@ -46,7 +46,7 @@ degree and `+1` in odd degree.
 * `RS.SuperCommAlgebra.Mod.shiftUnitTensor`: the isomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -165,6 +165,7 @@ noncomputable def shiftUnitHom :
 /-- The inverse of the shift-unit isomorphism: tensor with the
 algebra unit, which is odd in the shifted unit module.  The even
 component carries a sign, forced by the odd-odd Koszul relator. -/
+@[expose]
 noncomputable def shiftUnitInv :
     shift M ⟶ (shift S.unitMod).tensor M where
   evenMap := -tmulOO (shift S.unitMod) M S.one
@@ -208,6 +209,7 @@ noncomputable def shiftUnitInv :
 
 /-- **The parity shift of the unit is invertible**: tensoring with
 the shifted unit module shifts the parity. -/
+@[expose]
 noncomputable def shiftUnitTensor :
     (shift S.unitMod).tensor M ≅ shift M where
   hom := shiftUnitHom M

@@ -23,7 +23,7 @@ the rank-two cancellation theorem, and proves that the top-flag subdivision chai
 mod-`p` simplicial cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

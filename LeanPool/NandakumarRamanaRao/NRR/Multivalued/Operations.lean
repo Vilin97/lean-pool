@@ -26,13 +26,14 @@ and continuity lemmas. Each operation records its evaluation law and the corresp
 zero-set/zero relation identity.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
 namespace SignedInterval
 
 /-- Negation on the signed interval: reflection `t ↦ -t` through the center `0`. -/
+@[expose]
 def neg (t : SignedInterval) : SignedInterval :=
   ⟨-(t : ℝ), by
     constructor
@@ -61,6 +62,7 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 
 /-- Pull back a nice multivalued function `φ` on `X` along a continuous map `f : Y → X`, giving a
 nice multivalued function on `Y` evaluated by `(φ.pullback f).eval y t = φ.eval (f y) t`. -/
+@[expose]
 def pullback
     (φ : NiceMV X) (f : C(Y, X)) :
     NiceMV Y :=
@@ -83,6 +85,7 @@ theorem pullback_zeroSet
 
 /-- The canonical nice multivalued function attached to a bounded continuous observable `f` with
 `|f x| < 1`: it evaluates by `(t : ℝ) - f x`, so its zero set is the graph `t = f x`. -/
+@[expose]
 def ofObservable
     (f : C(X, ℝ))
     (hbound : ∀ x, |f x| < 1) :
@@ -109,6 +112,7 @@ theorem ofObservable_zero_iff
 
 /-- Rescale a nice multivalued function by a strictly positive constant `c`; scaling preserves the
 strict endpoint signs, hence yields a nice multivalued function evaluated by `c * φ.eval x t`. -/
+@[expose]
 def scale
     (φ : NiceMV X) (c : ℝ) (hc : 0 < c) :
     NiceMV X :=
@@ -131,6 +135,7 @@ theorem scale_zeroSet
 /-- Reflect a nice multivalued function through interval negation: `reflect` negates both the
 observable and the interval coordinate. It preserves the zero relation under `SignedInterval.neg`,
 so it reverses the sign convention without changing the represented zero relation. -/
+@[expose]
 def reflect
     (φ : NiceMV X) :
     NiceMV X :=

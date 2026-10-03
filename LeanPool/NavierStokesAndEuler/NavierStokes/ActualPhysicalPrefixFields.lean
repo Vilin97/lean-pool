@@ -30,7 +30,7 @@ pointwise identities into the germs needed by the spatial curl. No global
 support condition or final velocity identity is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -40,6 +40,7 @@ open Set Filter ProblemStatement PhysicalWaveSum CorrectionInitialization
 open scoped Topology BigOperators
 
 /-- The open physical exterior on which the raw stages are constructed. -/
+@[expose]
 noncomputable def exteriorDomain (Nr : ℕ) : Set SpaceTime :=
   {w | w ∈ preterminal ∧ w ∉ ActualPolarCoverage.active} ∩
     CutStageEstimates.physicalSublevel ActualPrimary.h (ChartScales.Q Nr)
@@ -195,7 +196,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -463,11 +464,13 @@ open CorrectionInitialization.ActualPrimary
 
 /-- Source, given by `PhysicalResidualTZ.graphSourceTZ
 (ActualCycleResidualBounds.actualBandGraph n) ActualPolarCoverage.nativeDomain`. -/
+@[expose]
 noncomputable def source (n : ℕ) : Set SpaceTime :=
   PhysicalResidualTZ.graphSourceTZ (ActualCycleResidualBounds.actualBandGraph n)
     ActualPolarCoverage.nativeDomain
 
 /-- Cartesian chart domain, constructed using `CutStageEstimates.physicalSublevel`. -/
+@[expose]
 noncomputable def cartesianChartDomain (qbig : ℝ) (n : ℕ) (a : ℝ) (i : PolarCharts.Index) : Set
     SpaceTime :=
   CutStageEstimates.physicalSublevel h qbig ∩

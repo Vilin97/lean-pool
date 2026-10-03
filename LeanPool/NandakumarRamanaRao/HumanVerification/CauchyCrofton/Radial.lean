@@ -26,7 +26,7 @@ We also record the planar cross product and the trigonometric identity expressin
 lying between two others as a nonnegative combination of them.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise
@@ -38,7 +38,7 @@ namespace HumanVerification.CauchyCrofton
 /-! ### Planar cross product -/
 
 /-- The planar cross product. -/
-def cross (x y : Point2) : ℝ := x 0 * y 1 - x 1 * y 0
+@[expose] def cross (x y : Point2) : ℝ := x 0 * y 1 - x 1 * y 0
 
 /-- Rotation by a quarter turn. -/
 def rot (x : Point2) : Point2 := !₂[-x 1, x 0]
@@ -219,7 +219,7 @@ def radSet (K : Body) (θ : ℝ) : Set ℝ :=
 def rad (K : Body) (θ : ℝ) : ℝ := sSup (radSet K θ)
 
 /-- The radial boundary point of `K` in direction `circleVec θ`. -/
-def radPt (K : Body) (θ : ℝ) : Point2 := rad K θ • circleVec θ
+@[expose] def radPt (K : Body) (θ : ℝ) : Point2 := rad K θ • circleVec θ
 
 theorem radPt_eq (K : Body) (θ : ℝ) : radPt K θ = rad K θ • circleVec θ := rfl
 

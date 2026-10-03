@@ -18,7 +18,7 @@ adjacent transpositions, where the two lists differ by one swap and
 the sorting signs by one factor of `−1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

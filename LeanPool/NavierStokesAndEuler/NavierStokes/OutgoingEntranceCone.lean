@@ -18,7 +18,7 @@ All lags below include the ideal incoming history. The scalar averages are
 integrals of the constructed schedule, and no cone estimate is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,7 +41,7 @@ theorem integral_exp_mul_real {a : ℝ} (ha : a ≠ 0) (y : ℝ) :
   simpa only [mul_zero, Real.exp_zero, sub_div] using hi
 
 /-- Exponential averaging with the actual incoming history at clock zero. -/
-noncomputable def historyAverage (b : ℝ → ℝ) (b₀ y : ℝ) : ℝ :=
+@[expose] noncomputable def historyAverage (b : ℝ → ℝ) (b₀ y : ℝ) : ℝ :=
   linearLag (fun _ => 1) b b₀ y
 
 theorem historyAverage_formula (b : ℝ → ℝ) (b₀ y : ℝ) :
@@ -116,7 +116,7 @@ theorem historyAverage_late {b : ℝ → ℝ} (hbc : Continuous b) {b₀ a y : �
   rw [← mul_assoc, he]
 
 /-- The actual average axial coefficient; the incoming value integrates `k=4`. -/
-noncomputable def averagedDrop (c : Parameters) : ℝ → ℝ :=
+@[expose] noncomputable def averagedDrop (c : Parameters) : ℝ → ℝ :=
   historyAverage (dropCoefficient c.m) 4
 
 /-- The squared axial history; the incoming value integrates `k²=16`. -/
@@ -182,7 +182,7 @@ theorem averagedDrop_small_on_second_ramp (c : Parameters) {y : ℝ}
   nlinarith [Real.exp_pos (-(y - Real.exp c.m))]
 
 /-- Shape gradient, given by `2 * η / (1 + η ^ 2)`. -/
-noncomputable def shapeGradient (η : ℝ) : ℝ := 2 * η / (1 + η ^ 2)
+@[expose] noncomputable def shapeGradient (η : ℝ) : ℝ := 2 * η / (1 + η ^ 2)
 
 theorem shapeGradient_contDiff : ContDiff ℝ ∞ shapeGradient :=
   (contDiff_const.mul contDiff_id).div (contDiff_const.add (contDiff_id.pow 2))
@@ -252,15 +252,15 @@ theorem exists_small_dropSpeed {e : ℝ} (he : 0 < e) :
 /-! ## The actual angular source and its ideal incoming lag -/
 
 /-- Transport W, given by `1 - L h η * averagedDrop c y`. -/
-noncomputable def transportW (c : Parameters) (h y η : ℝ) : ℝ :=
+@[expose] noncomputable def transportW (c : Parameters) (h y η : ℝ) : ℝ :=
   1 - L h η * averagedDrop c y
 
 /-- Angular rate, given by `1 + slope c.dropLength c.lam y`. -/
-noncomputable def angularRate (c : Parameters) (y : ℝ) : ℝ :=
+@[expose] noncomputable def angularRate (c : Parameters) (y : ℝ) : ℝ :=
   1 + slope c.dropLength c.lam y
 
 /-- Angular source as an element of `ℝ`. -/
-noncomputable def angularSource (c : Parameters) (h η y : ℝ) : ℝ :=
+@[expose] noncomputable def angularSource (c : Parameters) (h η y : ℝ) : ℝ :=
   -slope c.dropLength c.lam y * transportW c h y η -
     h * (1 - 2 * dropCoefficient c.m y * η ^ 2) +
       (D h + d η * dropCoefficient c.m y) * η * shapeGradient η
@@ -272,11 +272,11 @@ noncomputable def idealAngularSource (h η : ℝ) : ℝ :=
     (D h + 4 * d η) * η * shapeGradient η
 
 /-- Ideal angular lag, given by `idealAngularSource h η / (8 / 5)`. -/
-noncomputable def idealAngularLag (h η : ℝ) : ℝ := idealAngularSource h η / (8 / 5)
+@[expose] noncomputable def idealAngularLag (h η : ℝ) : ℝ := idealAngularSource h η / (8 / 5)
 
 /-- Angular lag, given by `linearLag (angularRate c) (angularSource c h η) (idealAngularLag h
 η)`. -/
-noncomputable def angularLag (c : Parameters) (h η : ℝ) : ℝ → ℝ :=
+@[expose] noncomputable def angularLag (c : Parameters) (h η : ℝ) : ℝ → ℝ :=
   linearLag (angularRate c) (angularSource c h η) (idealAngularLag h η)
 
 theorem angularRate_contDiff (c : Parameters) : ContDiff ℝ ∞ (angularRate c) :=
@@ -577,7 +577,7 @@ noncomputable def averagedClockEnergy (c : Parameters) : ℝ → ℝ :=
   historyAverage (clockEnergy c) ((5 / 6) * c.P ^ 2)
 
 /-- Averaged energy, given by `shape η ^ 2 * averagedClockEnergy c y`. -/
-noncomputable def averagedEnergy (c : Parameters) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def averagedEnergy (c : Parameters) (y η : ℝ) : ℝ :=
   shape η ^ 2 * averagedClockEnergy c y
 
 theorem clockEnergy_contDiff (c : Parameters) : ContDiff ℝ ∞ (clockEnergy c) :=
@@ -702,17 +702,17 @@ theorem averagedClockEnergy_ideal (c : Parameters) {y : ℝ} (hy : y ≤ 0) :
 
 /-- Pressure clock, given by `(5 / 2) * c.P ^ 2 + (1 / 2) * OutgoingSchedule.primitive
 (clockEnergy c) y`. -/
-noncomputable def pressureClock (c : Parameters) (y : ℝ) : ℝ :=
+@[expose] noncomputable def pressureClock (c : Parameters) (y : ℝ) : ℝ :=
   (5 / 2) * c.P ^ 2 + (1 / 2) * OutgoingSchedule.primitive (clockEnergy c) y
 
 /-- Entrance pressure, given by `SchedulePressure.axisPressure v η + shape η ^ 2 * pressureClock
 v.core y`. -/
-noncomputable def entrancePressure (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def entrancePressure (v : TailData) (y η : ℝ) : ℝ :=
   SchedulePressure.axisPressure v η + shape η ^ 2 * pressureClock v.core y
 
 /-- Pressure gradient, given by `deriv (SchedulePressure.axisPressure v) η - 2 * shapeGradient η
 * shape η ^ 2 * pressureClock v.core y`. -/
-noncomputable def pressureGradient (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def pressureGradient (v : TailData) (y η : ℝ) : ℝ :=
   deriv (SchedulePressure.axisPressure v) η -
     2 * shapeGradient η * shape η ^ 2 * pressureClock v.core y
 
@@ -805,32 +805,32 @@ theorem transportW_hasDerivAt (c : Parameters) (h y η : ℝ) :
   ring
 
 /-- The part of the axial lag arising from the actual mass and squared-axial histories. -/
-noncomputable def geometricAxialLag (c : Parameters) (h y η : ℝ) : ℝ :=
+@[expose] noncomputable def geometricAxialLag (c : Parameters) (h y η : ℝ) : ℝ :=
   -transportW c h y η * dropCoefficient c.m y * η +
     (4 * h * η ^ 3 - 2 * d η * η) * averagedDropSquare c y
 
 /-- The pressure and angular-energy part of the integrated axial lag. -/
-noncomputable def pressureAxialLag (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def pressureAxialLag (v : TailData) (y η : ℝ) : ℝ :=
   -(2 * v.h * η + d η * shapeGradient η) * averagedEnergy v.core y η +
     4 * A v.h * η * entrancePressure v y η - d η * pressureGradient v y η
 
 /-- Axial lag, given by `geometricAxialLag v.core v.h y η + pressureAxialLag v y η`. -/
-noncomputable def axialLag (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def axialLag (v : TailData) (y η : ℝ) : ℝ :=
   geometricAxialLag v.core v.h y η + pressureAxialLag v y η
 
 /-- Geometric axial source as an element of `ℝ`. -/
-noncomputable def geometricAxialSource (c : Parameters) (h y η : ℝ) : ℝ :=
+@[expose] noncomputable def geometricAxialSource (c : Parameters) (h y η : ℝ) : ℝ :=
   -transportW c h y η * deriv (dropCoefficient c.m) y * η -
     A h * (1 - 2 * dropCoefficient c.m y * η ^ 2) * (dropCoefficient c.m y * η) -
       (D h + d η * dropCoefficient c.m y) * η * dropCoefficient c.m y
 
 /-- Pressure axial source as an element of `ℝ`. -/
-noncomputable def pressureAxialSource (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def pressureAxialSource (v : TailData) (y η : ℝ) : ℝ :=
   -d η * pressureGradient v y η + 4 * A v.h * η * entrancePressure v y η +
     η * angular v.core.P v.core.dropLength v.core.lam (y, η) ^ 2
 
 /-- Axial source, given by `geometricAxialSource v.core v.h y η + pressureAxialSource v y η`. -/
-noncomputable def axialSource (v : TailData) (y η : ℝ) : ℝ :=
+@[expose] noncomputable def axialSource (v : TailData) (y η : ℝ) : ℝ :=
   geometricAxialSource v.core v.h y η + pressureAxialSource v y η
 
 theorem geometricAxialLag_hasDerivAt (c : Parameters) (h y η : ℝ) :
@@ -1078,7 +1078,7 @@ noncomputable def directionRatio (v : TailData) (y η : ℝ) : ℝ :=
     (angular v.core.P v.core.dropLength v.core.lam (y, η) * angularLag v.core v.h η y)
 
 /-- Radial A, given by `2 - 2 * slope c.dropLength c.lam y`. -/
-noncomputable def radialA (c : Parameters) (y : ℝ) : ℝ :=
+@[expose] noncomputable def radialA (c : Parameters) (y : ℝ) : ℝ :=
   2 - 2 * slope c.dropLength c.lam y
 
 theorem shear_is_actual (c : Parameters) (amp : ℝ → ℝ) {y : ℝ}
@@ -1286,14 +1286,14 @@ theorem shape_interval {η : ℝ} (hη : |η| ≤ 1) : (1 / 2 : ℝ) ≤ shape �
   · exact div_le_self (by norm_num) (by linarith [sq_nonneg η])
 
 /-- Entrance time, given by `Real.exp m + 12`. -/
-noncomputable def entranceTime (m : ℝ) : ℝ := Real.exp m + 12
+@[expose] noncomputable def entranceTime (m : ℝ) : ℝ := Real.exp m + 12
 
 theorem holdStart_eq_entranceTime (c : Parameters) : c.holdStart = entranceTime c.m := by
   unfold Parameters.holdStart Parameters.dropLength entranceTime
   ring
 
 /-- Energy envelope, given by `P ^ 2 * Real.exp (2 * T)`. -/
-noncomputable def energyEnvelope (P T : ℝ) : ℝ := P ^ 2 * Real.exp (2 * T)
+@[expose] noncomputable def energyEnvelope (P T : ℝ) : ℝ := P ^ 2 * Real.exp (2 * T)
 
 theorem clockEnergy_le_envelope (c : Parameters) {y T : ℝ} (hy : 0 ≤ y) (hyT : y ≤ T) :
     clockEnergy c y ≤ energyEnvelope c.P T := by
@@ -1479,6 +1479,7 @@ theorem linearLag_eq_of_solution {r b f : ℝ → ℝ} (hr : Continuous r)
 theorem canonical_Ubar_before (v : TailData) (Amp : ℝ → ℝ) {y : ℝ}
     (hy : y ≤ v.core.pulseStart) (η : ℝ) :
     OutgoingHistories.Ubar v Amp (y, η) = averagedDrop v.core y * η := by
+  rw [OutgoingHistories.Ubar, OutgoingHistories.M_eq_massMoment, OutgoingHistories.X]
   exact averagedDrop_is_mass_history v.core Amp η hy
 
 theorem canonical_Ubar_parameter_before (v : TailData) {Amp : ℝ → ℝ}
@@ -1972,23 +1973,25 @@ theorem exists_ordered_preliminary_bounds :
 
 /-- Cone A, given by `2 - 2 * (OutgoingHistories.dY (OutgoingHistories.H w) p /
 OutgoingHistories.H w p)`. -/
+@[expose]
 noncomputable def coneA {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (p : ℝ × ℝ) : ℝ :=
   2 - 2 * (OutgoingHistories.dY (OutgoingHistories.H w) p / OutgoingHistories.H w p)
 
 /-- Cone B, given by `2 * OutgoingHistories.dY (OutgoingHistories.U v Amp) p /
 OutgoingHistories.E w p`. -/
-noncomputable def coneB {v : TailData} {K : ℝ}
+@[expose] noncomputable def coneB {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   2 * OutgoingHistories.dY (OutgoingHistories.U v Amp) p / OutgoingHistories.E w p
 
 /-- Cone ratio, given by `OutgoingHistories.Ns w Amp p / (OutgoingHistories.E w p *
 OutgoingHistories.Qs w Amp p)`. -/
-noncomputable def coneRatio {v : TailData} {K : ℝ}
+@[expose] noncomputable def coneRatio {v : TailData} {K : ℝ}
     (w : UniformAngularReset.ResetWitness v K) (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.Ns w Amp p / (OutgoingHistories.E w p * OutgoingHistories.Qs w Amp p)
 
 /-- Preliminary window, given by `Icc 0 v.core.holdStart ×ˢ Icc (-1) 1`. -/
+@[expose]
 noncomputable def preliminaryWindow (v : TailData) : Set (ℝ × ℝ) :=
   Icc 0 v.core.holdStart ×ˢ Icc (-1) 1
 

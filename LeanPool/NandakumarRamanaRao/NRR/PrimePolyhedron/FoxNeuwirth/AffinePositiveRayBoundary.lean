@@ -28,7 +28,7 @@ endpoints with the alternating facet determinants.  The full-origin avoidance hy
 coordinate mean have a constant sign along the interval.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -46,55 +46,61 @@ structure VertexMap (p : Nat) where
 namespace VertexMap
 
 /-- Full affine interpolation. -/
-noncomputable def affineValue
+@[expose] noncomputable def affineValue
     (V : VertexMap p) (w : StandardSimplex p) : Fin p → Real :=
   fun r => ∑ i : Fin (p + 1), w i * V.value i r
 
 /-- Fixed difference coordinate. -/
+@[expose]
 noncomputable def deviation
     (hp : Nat.Prime p) (y : Fin p → Real) (r : Fin (p - 1)) : Real :=
   y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.coordinateLabel hp r) -
     y (FoxNeuwirthOrderComplex.ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- Mean coordinate. -/
+@[expose]
 noncomputable def mean (p : Nat) (y : Fin p → Real) : Real :=
   coordinateMean p y
 
 /-- Restriction to the facet omitting vertex `k`. -/
+@[expose]
 noncomputable def facetValue
     (V : VertexMap p) (k : Fin (p + 1)) (i : Fin p) : Fin p → Real :=
   V.value (k.succAbove i)
 
 /-- Reindex the `p` augmented rows as the `p - 1` deviation rows followed by the
 constant row. -/
+@[expose]
 def augmentedRowEquiv (hp : Nat.Prime p) : Fin p ≃ Fin (p - 1 + 1) :=
   (Fin.castOrderIso (Nat.sub_add_cancel hp.pos).symm).toEquiv
 
 /-- Augmented deviation matrix of an oriented facet. -/
-noncomputable def facetMatrix
+@[expose] noncomputable def facetMatrix
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) :
     Matrix (Fin p) (Fin p) Real :=
   fun r i => Fin.lastCases (1 : Real)
     (fun q => deviation hp (facetValue V k i) q) (augmentedRowEquiv hp r)
 
 /-- Facet determinant. -/
-noncomputable def facetDeterminant
+@[expose] noncomputable def facetDeterminant
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) : Real :=
   Matrix.det (facetMatrix hp V k)
 
 /-- Canonical embedding of the `p` facet-vertex indices into the coordinate type of
 `StandardSimplex (p - 1)`.  For positive `p` this is an equivalence; the inclusion form keeps
 `facetAffineValue` meaningful without adding a positivity hypothesis to its public API. -/
+@[expose]
 def facetCoordinateIndex (i : Fin p) : Fin ((p - 1) + 1) :=
   Fin.castLE (by omega) i
 
 /-- Full-coordinate affine interpolation on a facet. -/
-noncomputable def facetAffineValue
+@[expose] noncomputable def facetAffineValue
     (V : VertexMap p) (k : Fin (p + 1))
     (w : StandardSimplex (p - 1)) : Fin p → Real :=
   fun r => ∑ i : Fin p, w (facetCoordinateIndex i) * facetValue V k i r
 
 /-- A relative-interior intersection of a facet with the positive diagonal ray. -/
+@[expose]
 def FacetHasPositiveRayIntersection
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) : Prop :=
   ∃ w : StandardSimplex (p - 1),
@@ -108,6 +114,7 @@ noncomputable instance facetHasPositiveRayIntersectionDecidable
   Classical.propDecidable _
 
 /-- Signed positive-ray intersection number of one oriented facet. -/
+@[expose]
 noncomputable def facetIndex
     (hp : Nat.Prime p) (V : VertexMap p) (k : Fin (p + 1)) : ZMod p :=
   if FacetHasPositiveRayIntersection hp V k then
@@ -117,16 +124,19 @@ noncomputable def facetIndex
   else 0
 
 /-- The affine simplex avoids the full origin. -/
+@[expose]
 def AvoidsOrigin (V : VertexMap p) : Prop :=
   ∀ w : StandardSimplex p, affineValue V w ≠ 0
 
 /-- Facet transversality. -/
+@[expose]
 def FacetRegular (hp : Nat.Prime p) (V : VertexMap p) : Prop :=
   ∀ k : Fin (p + 1), facetDeterminant hp V k ≠ 0
 
 /-- The deviation-zero affine line does not meet a codimension-two face of the simplex.  This is
 the general-position condition needed to rule out a ray endpoint at the intersection of
 two facets.  Facet regularity alone does not imply this condition. -/
+@[expose]
 def AvoidsCodimTwoDeviationZero (hp : Nat.Prime p) (V : VertexMap p) : Prop :=
   ∀ (w : StandardSimplex p) (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1), deviation hp (affineValue V w) r = 0) →
@@ -134,6 +144,7 @@ def AvoidsCodimTwoDeviationZero (hp : Nat.Prime p) (V : VertexMap p) : Prop :=
 
 /-- Positive-ray-relative codimension-two avoidance.  Degenerate deviation-zero points with
 negative mean are irrelevant to the open positive ray and are intentionally permitted. -/
+@[expose]
 def AvoidsPositiveRayCodimTwo (hp : Nat.Prime p) (V : VertexMap p) : Prop :=
   ∀ (w : StandardSimplex p) (i j : Fin (p + 1)), i ≠ j →
     (∀ r : Fin (p - 1), deviation hp (affineValue V w) r = 0) →
@@ -514,6 +525,7 @@ noncomputable def lineCoordinate
 /-- Parameters for which the cofactor line remains in the standard simplex.  The barycentric sum
 is automatic because the cofactor direction has coordinate sum zero, so feasibility consists only
 of the coordinatewise nonnegativity inequalities. -/
+@[expose]
 def LineFeasible
     (hp : Nat.Prime p) (V : VertexMap p)
     (w : StandardSimplex p) (t : Real) : Prop :=
@@ -863,6 +875,7 @@ theorem upperEndpoint_coordinate_eq_zero
   field_simp [hc]; ring
 
 /-- A feasible line parameter gives a barycentric point of the standard simplex. -/
+@[expose]
 noncomputable def lineSimplexPoint
     (hp : Nat.Prime p) (V : VertexMap p) (w : StandardSimplex p)
     (t : Real) (ht : LineFeasible hp V w t) : StandardSimplex p :=
@@ -1452,6 +1465,7 @@ def facetIndexEquiv (hp : Nat.Prime p) : Fin ((p - 1) + 1) ≃ Fin p :=
 
 /-- Restrict a simplex point whose `k`-th coordinate vanishes to barycentric coordinates on the
 facet omitting vertex `k`. -/
+@[expose]
 noncomputable def facetCoordinates
     (hp : Nat.Prime p) (w : StandardSimplex p)
     (k : Fin (p + 1)) (hk : w k = 0) : StandardSimplex (p - 1) :=
@@ -1692,6 +1706,7 @@ theorem fullSimplexOfFacet_positiveRayData
     fullSimplexOfFacet_mean_pos hp V k u hmean⟩
 
 /-- The simplex point at the lower feasible parameter. -/
+@[expose]
 noncomputable def lowerEndpointSimplexPoint
     (hp : Nat.Prime p) (V : VertexMap p)
     (hregular : FacetRegular hp V) (w : StandardSimplex p) : StandardSimplex p :=
@@ -1699,6 +1714,7 @@ noncomputable def lowerEndpointSimplexPoint
     (lowerParameter_feasible hp V hregular w)
 
 /-- The simplex point at the upper feasible parameter. -/
+@[expose]
 noncomputable def upperEndpointSimplexPoint
     (hp : Nat.Prime p) (V : VertexMap p)
     (hregular : FacetRegular hp V) (w : StandardSimplex p) : StandardSimplex p :=

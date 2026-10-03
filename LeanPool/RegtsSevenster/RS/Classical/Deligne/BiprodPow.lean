@@ -36,7 +36,7 @@ power of a rigid object, so the word-indexed power here is called
 `wordPow` instead.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -50,6 +50,7 @@ variable {A : Type u}
 
 /-- **The word power**: tensor an `X` for each `true` letter of `w`
 and a `Y` for each `false` one, by the recursion of `tensorPow`. -/
+@[expose]
 def wordPow [Category.{v} A] [MonoidalCategory A]
     (X Y : A) : (n : ℕ) → (Fin n → Bool) → A
   | 0, _ => 𝟙_ A
@@ -297,6 +298,7 @@ end Biprod
 /-! ## Counting letters and the sorted words -/
 
 /-- The number of `true` letters of a word. -/
+@[expose]
 def popCount {n : ℕ} (w : Fin n → Bool) : ℕ :=
   (Finset.univ.filter fun i => w i = true).card
 
@@ -330,6 +332,7 @@ below the tail — to the top of the `X` block when its letter is
 `true`, and kept in place when it is `false` — and the rest is
 sorted recursively.  This is the `ofSplit` decomposition the
 tensor-power action recurses on. -/
+@[expose]
 noncomputable def sortPerm :
     {n : ℕ} → (Fin n → Bool) → Equiv.Perm (Fin n)
   | 0, _ => 1
@@ -353,6 +356,7 @@ theorem sortPerm_succ {n : ℕ} (w : Fin (n + 1) → Bool) :
 
 /-- **The sorted word**: `true` on the first block of `p` slots and
 `false` on the last `q`. -/
+@[expose]
 def standardWord (p q : ℕ) : Fin (p + q) → Bool :=
   fun i => decide ((i : ℕ) < p)
 
@@ -410,6 +414,7 @@ theorem wordPow_standard_succ [Category.{v} A] [MonoidalCategory A]
 with all `X`s below all `Y`s, the word power reassociates to
 `X ^ ⊗ p ⊗ Y ^ ⊗ q`.  Built by the recursion of the word, so that
 consumers can compose with it stage by stage. -/
+@[expose]
 noncomputable def standardMixedIso [Category.{v} A] [MonoidalCategory A]
     (X Y : A) (p : ℕ) : (q : ℕ) →
     (wordPow X Y (p + q) (standardWord p q) ≅

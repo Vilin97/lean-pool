@@ -22,7 +22,7 @@ Tags: descriptive-set-theory, game-theory, determinacy
 MSC: 03E15, 54H05, 91A44
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

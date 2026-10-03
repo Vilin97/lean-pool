@@ -15,7 +15,7 @@ import Mathlib.Analysis.PSeries
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,7 +26,7 @@ open Complex MeasureTheory Real Set
 namespace NumberField.Odlyzko
 
 /-- A gauss digamma integrand used in the Odlyzko-bound argument. -/
-noncomputable def gaussDigammaIntegrand (s : ℂ) (x : ℝ) : ℂ :=
+@[expose] noncomputable def gaussDigammaIntegrand (s : ℂ) (x : ℝ) : ℂ :=
   (Complex.exp (-x) - Complex.exp (-s * x)) /
     (1 - Complex.exp (-x))
 
@@ -298,7 +298,7 @@ open Complex MeasureTheory Real Set
 namespace NumberField.Odlyzko
 
 /-- A gauss digamma used in the Odlyzko-bound argument. -/
-noncomputable def gaussDigamma (s : ℂ) : ℂ :=
+@[expose] noncomputable def gaussDigamma (s : ℂ) : ℂ :=
   -Real.eulerMascheroniConstant +
     ∫ x : ℝ in Ioi 0, gaussDigammaIntegrand s x
 

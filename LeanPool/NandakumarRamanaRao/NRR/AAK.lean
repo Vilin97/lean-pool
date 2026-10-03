@@ -12,4 +12,4 @@ public import LeanPool.NandakumarRamanaRao.NRR.AAK.SimplestRouteS6Refined
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
 
-@[expose] public section
+public section

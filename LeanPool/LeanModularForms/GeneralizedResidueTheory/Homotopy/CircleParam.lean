@@ -25,7 +25,7 @@ their winding number computations.
 * `circleParamCW_winding_eq_neg_one` — winding number = -1
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

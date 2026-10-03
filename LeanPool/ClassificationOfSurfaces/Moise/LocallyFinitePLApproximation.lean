@@ -17,7 +17,7 @@ deliberately pointwise: on a noncompact open complex no uniform positive toleran
 strongly positive tolerance has a positive lower bound on every compact face.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -56,7 +56,7 @@ theorem vertexSupportPoint_mem_faceInSupport_iff (f : K.Face) (v : K.Vertex) :
 
 /-- The original plane embedding, written in the standard coordinates of one face.  Values
 outside the standard closed triangle are irrelevant. -/
-noncomputable def faceOriginalMap (G : K.PlaneGraphRealization) (f : K.Face)
+@[expose] noncomputable def faceOriginalMap (G : K.PlaneGraphRealization) (f : K.Face)
     (p : Plane) : Plane := by
   classical
   exact if hp : p ∈ standardFaceRegion then
@@ -88,7 +88,7 @@ theorem faceOriginalMap_mem_face_image (f : K.Face) (p : standardFaceRegion) :
 /-- The replacement graph is close to the original embedding on each face boundary, with a
 radius allowed to depend on the face.  This is the quantitative hypothesis actually used in
 Moise's side-preservation argument. -/
-def FaceBoundariesClose (G : K.PlaneGraphRealization) (r : K.Face → ℝ) : Prop :=
+@[expose] def FaceBoundariesClose (G : K.PlaneGraphRealization) (r : K.Face → ℝ) : Prop :=
   ∀ (f : K.Face) (q : StandardFaceBoundary),
     dist (G.graphReplacementMap (K.faceBoundaryLift f q))
       (faceOriginalMap G f q.1) < r f
@@ -96,7 +96,7 @@ def FaceBoundariesClose (G : K.PlaneGraphRealization) (r : K.Face → ℝ) : Pro
 /-- A face-indexed radius separates every nonincident vertex from the original embedded face.
 The closed-ball/closed-thickening formulation is exactly what the bounded Tietze extension
 argument consumes. -/
-def FaceVertexThickeningsSeparated (G : K.PlaneGraphRealization)
+@[expose] def FaceVertexThickeningsSeparated (G : K.PlaneGraphRealization)
     (r : K.Face → ℝ) : Prop :=
   ∀ (f : K.Face) (v : K.Vertex), v ∉ K.faceVertices f →
     Disjoint (Metric.closedBall (G.vertexImage v) (r f))
@@ -190,7 +190,7 @@ theorem exists_faceVertexSeparationRadius (f : K.Face) :
   · exact Set.Subset.rfl
 
 /-- A canonical positive side-separation radius for every face. -/
-noncomputable def faceVertexSeparationRadius (G : K.PlaneGraphRealization)
+@[expose] noncomputable def faceVertexSeparationRadius (G : K.PlaneGraphRealization)
     (f : K.Face) : ℝ :=
   Classical.choose (exists_faceVertexSeparationRadius (G := G) f)
 
@@ -305,7 +305,7 @@ theorem faceBoundariesClose_of_edgeFaceSeparation_control
 /-- The exact facewise estimate needed to control a Schoenflies filling.  Every point of a
 replacement boundary is compared first with its original boundary point and then with an
 arbitrary point of the same source face. -/
-def FaceBoundariesControlled (G : K.PlaneGraphRealization)
+@[expose] def FaceBoundariesControlled (G : K.PlaneGraphRealization)
     (phi : K.support → ℝ) : Prop :=
   ∀ (f : K.Face) (p : K.support),
     p ∈ faceInSupport (K := K) f → ∀ q : StandardFaceBoundary,
@@ -487,7 +487,7 @@ theorem stronglyPositiveOn_vertexSeparationControl :
       ⟨p, mem_facesContaining.mp hfp, hp⟩
 
 /-- The vertex-side compatibility condition used in Moise's side-preservation argument. -/
-def FaceFillingsVerticesAvoidClosedRegions (G : K.PlaneGraphRealization) : Prop :=
+@[expose] def FaceFillingsVerticesAvoidClosedRegions (G : K.PlaneGraphRealization) : Prop :=
   ∀ (f : K.Face) (v : K.Vertex), v ∉ K.faceVertices f →
     G.vertexImage v ∉ (K.facePolygonalCircle (G := G) f).closedRegion
 

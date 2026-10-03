@@ -16,7 +16,7 @@ https://arxiv.org/abs/2608.09305, and `rndmx/DilCat` at commit
 `604559654c948566675da3f7709b8ad3126bd487` (Apache-2.0).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ def FSep : Obj ⥤ D0 where
 /-- `Γ = {b}` as a `MorphismProperty Obj`. -/
 def Gamma : MorphismProperty Obj := fun P Q f => (⟨P, Q, f⟩ : Σ P Q : Obj, CHom P Q) = ⟨.X, .Y, .b⟩
 
-lemma Gamma_b : Gamma (CHom.b) := rfl
+lemma Gamma_b : Gamma (CHom.b) := by rfl
 
 /-- `F` inverts `Γ`, trivially — `D0` is a groupoid, so *every* morphism is invertible. -/
 lemma FSep_inverts_Gamma : Gamma.IsInvertedBy FSep := by

@@ -18,7 +18,7 @@ This module constructs the weak radius integration and one-dimensional calculus
 packages from local L2, coarea, and annulus inputs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -18,7 +18,7 @@ file develops that construction from its local primitive: when an affine functio
 signs at the endpoints of an edge, its zero gives the new subdivision vertex on that edge.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -26,7 +26,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- Three affinely independent points form an affine basis of the plane. -/
-noncomputable def affineBasisOfTriangle (p : Fin 3 → Plane) (hp : AffineIndependent ℝ p) :
+@[expose] noncomputable def affineBasisOfTriangle (p : Fin 3 → Plane) (hp : AffineIndependent ℝ p) :
     AffineBasis (Fin 3) ℝ Plane where
   toFun := p
   ind' := hp
@@ -312,7 +312,7 @@ theorem convexHull_image_inter_of_affine_separation {V : Type*} [DecidableEq V]
 /-! ## The reference split of a triangle -/
 
 /-- A point of the Euclidean plane with the displayed Cartesian coordinates. -/
-def planePoint (x y : ℝ) : Plane :=
+@[expose] def planePoint (x y : ℝ) : Plane :=
   WithLp.toLp 2 ![x, y]
 
 @[simp] theorem planePoint_apply_zero (x y : ℝ) : planePoint x y 0 = x := rfl
@@ -362,17 +362,17 @@ theorem referenceSplit_triangle2_affineIndependent {a b : ℝ} (ha0 : 0 < a)
   nlinarith
 
 /-- The first Cartesian coordinate, regarded as an affine functional. -/
-noncomputable def cartesianX : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def cartesianX : Plane →ᵃ[ℝ] ℝ :=
   ((LinearMap.proj (R := ℝ) (φ := fun _ : Fin 2 => ℝ) 0).comp
     (WithLp.linearEquiv 2 ℝ (Fin 2 → ℝ)).toLinearMap).toAffineMap
 
 /-- The second Cartesian coordinate, regarded as an affine functional. -/
-noncomputable def cartesianY : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def cartesianY : Plane →ᵃ[ℝ] ℝ :=
   ((LinearMap.proj (R := ℝ) (φ := fun _ : Fin 2 => ℝ) 1).comp
     (WithLp.linearEquiv 2 ℝ (Fin 2 → ℝ)).toLinearMap).toAffineMap
 
-@[simp] theorem cartesianX_apply (p : Plane) : cartesianX p = p 0 := rfl
-@[simp] theorem cartesianY_apply (p : Plane) : cartesianY p = p 1 := rfl
+@[simp] theorem cartesianX_apply (p : Plane) : cartesianX p = p 0 := by rfl
+@[simp] theorem cartesianY_apply (p : Plane) : cartesianY p = p 1 := by rfl
 
 /-- The affine line through the two new edge points in the reference split. -/
 noncomputable def referenceOuterAffine (a b : ℝ) : Plane →ᵃ[ℝ] ℝ :=
@@ -388,14 +388,14 @@ noncomputable def referenceVertexAffine (a b : ℝ) : Plane →ᵃ[ℝ] ℝ :=
   cartesianX + (a * (1 + b) / (2 * b)) • cartesianY - AffineMap.const ℝ Plane a
 
 @[simp] theorem referenceOuterAffine_planePoint (a b x y : ℝ) :
-    referenceOuterAffine a b (planePoint x y) = a⁻¹ * x + b⁻¹ * y - 1 := rfl
+    referenceOuterAffine a b (planePoint x y) = a⁻¹ * x + b⁻¹ * y - 1 := by rfl
 
 @[simp] theorem referenceDiagonalAffine_planePoint (a x y : ℝ) :
-    referenceDiagonalAffine a (planePoint x y) = x + a * y - a := rfl
+    referenceDiagonalAffine a (planePoint x y) = x + a * y - a := by rfl
 
 @[simp] theorem referenceVertexAffine_planePoint (a b x y : ℝ) :
     referenceVertexAffine a b (planePoint x y) =
-      x + (a * (1 + b) / (2 * b)) * y - a := rfl
+      x + (a * (1 + b) / (2 * b)) * y - a := by rfl
 
 private theorem affineIndependent_referenceTriangle0 {a b : ℝ} (ha0 : 0 < a)
     (hb0 : 0 < b) :
@@ -448,7 +448,7 @@ private theorem affineIndependent_referenceTriangle2 {a b : ℝ} (ha0 : 0 < a)
 
 /-- The three triangles produced when a line meets the two edges issuing from the origin of the
 standard triangle. -/
-noncomputable def referenceSplitMesh (a b : ℝ) (ha0 : 0 < a) (ha1 : a < 1)
+@[expose] noncomputable def referenceSplitMesh (a b : ℝ) (ha0 : 0 < a) (ha1 : a < 1)
     (hb0 : 0 < b) (hb1 : b < 1) : TriangleMesh where
   Vertex := Fin 5
   position := referenceSplitPosition a b
@@ -793,11 +793,11 @@ theorem referenceSplitMesh_support (a b : ℝ) (ha0 : 0 < a) (ha1 : a < 1)
 /-! ## The reference split through one vertex -/
 
 /-- The `referenceEdgeSplitPosition` declaration. -/
-def referenceEdgeSplitPosition (c : ℝ) : Fin 4 → Plane :=
+@[expose] def referenceEdgeSplitPosition (c : ℝ) : Fin 4 → Plane :=
   ![planePoint 0 0, planePoint 1 0, planePoint 0 1, planePoint c 0]
 
 /-- The `referenceEdgeSplitTriangles` declaration. -/
-def referenceEdgeSplitTriangles : Finset (Finset (Fin 4)) :=
+@[expose] def referenceEdgeSplitTriangles : Finset (Finset (Fin 4)) :=
   {{0, 2, 3}, {1, 2, 3}}
 
 theorem referenceEdgeSplitPosition_injective {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) :
@@ -849,7 +849,7 @@ private theorem affineIndependent_referenceEdgeTriangle1 {c : ℝ} (hc1 : c < 1)
   exact h
 
 /-- The two-triangle reference mesh used when the cutting line passes through vertex `2`. -/
-noncomputable def referenceEdgeSplitMesh (c : ℝ) (hc0 : 0 < c) (hc1 : c < 1) :
+@[expose] noncomputable def referenceEdgeSplitMesh (c : ℝ) (hc0 : 0 < c) (hc1 : c < 1) :
     TriangleMesh where
   Vertex := Fin 4
   position := referenceEdgeSplitPosition c
@@ -1084,7 +1084,7 @@ end affineCutPoint
 /-! ## The transported split of an arbitrary triangle -/
 
 /-- The ordered vertices of the standard triangle. -/
-def standardTrianglePosition : Fin 3 → Plane :=
+@[expose] def standardTrianglePosition : Fin 3 → Plane :=
   ![planePoint 0 0, planePoint 1 0, planePoint 0 1]
 
 theorem standardTrianglePosition_affineIndependent :
@@ -1093,7 +1093,7 @@ theorem standardTrianglePosition_affineIndependent :
   norm_num [standardTrianglePosition, planePoint_apply_zero, planePoint_apply_one, PiLp.sub_apply]
 
 /-- The parameter at which a line cuts the edge from the positive vertex to a negative vertex. -/
-noncomputable def triangleCutParameter (f : Plane →ᵃ[ℝ] ℝ) (p q : Plane) : ℝ :=
+@[expose] noncomputable def triangleCutParameter (f : Plane →ᵃ[ℝ] ℝ) (p q : Plane) : ℝ :=
   f p / (f p - f q)
 
 /-- The reference split transported to an arbitrary ordered triangle.  The first vertex is on
@@ -1142,12 +1142,12 @@ variable (M : TriangleMesh) (f : Plane →ᵃ[ℝ] ℝ)
 abbrev Triangle := {t : Finset M.Vertex // t ∈ M.triangles}
 
 /-- A proof-independent ordering of the three vertices of a maximal triangle. -/
-noncomputable def triangleEquiv (t : M.Triangle) : t.1 ≃ Fin 3 :=
+@[expose] noncomputable def triangleEquiv (t : M.Triangle) : t.1 ≃ Fin 3 :=
   Fintype.equivFinOfCardEq (by
     rw [Fintype.card_coe, M.card_triangle t.1 t.2])
 
 /-- A proof-independent ordering of the three vertices of a maximal triangle. -/
-noncomputable def orderedVertex (t : M.Triangle) : Fin 3 → M.Vertex :=
+@[expose] noncomputable def orderedVertex (t : M.Triangle) : Fin 3 → M.Vertex :=
   fun i => ((M.triangleEquiv t).symm i).1
 
 theorem orderedVertex_injective (t : M.Triangle) :
@@ -1219,11 +1219,11 @@ noncomputable def cutRefinedVertex (u v : M.Vertex)
       ⟨Finset.mem_product.mpr ⟨Finset.mem_univ _, Finset.mem_univ _⟩, huv⟩, rfl⟩⟩
 
 @[simp] theorem oldRefinedVertex_val (v : M.Vertex) :
-    (M.oldRefinedVertex f v : Plane) = M.position v := rfl
+    (M.oldRefinedVertex f v : Plane) = M.position v := by rfl
 
 @[simp] theorem cutRefinedVertex_val (u v : M.Vertex)
     (huv : f (M.position u) * f (M.position v) < 0) :
-    (M.cutRefinedVertex f u v huv : Plane) = M.pairCutPosition f u v := rfl
+    (M.cutRefinedVertex f u v huv : Plane) = M.pairCutPosition f u v := by rfl
 
 theorem pairCutPosition_eq_reverse (u v : M.Vertex)
     (huv : f (M.position u) * f (M.position v) < 0) :
@@ -1258,14 +1258,14 @@ theorem refinementPoints_neg : M.refinementPoints (-f) = M.refinementPoints f :=
   exact affineCutPoint.neg f (M.position uv.1) (M.position uv.2)
 
 /-- Identifying the coherent vertex pools for `f` and `-f`; geometrically this is the identity. -/
-noncomputable def refinedVertexNegEquiv : M.RefinedVertex (-f) ≃ M.RefinedVertex f where
+@[expose] noncomputable def refinedVertexNegEquiv : M.RefinedVertex (-f) ≃ M.RefinedVertex f where
   toFun v := ⟨v.1, by rw [← M.refinementPoints_neg f]; exact v.2⟩
   invFun v := ⟨v.1, by rw [M.refinementPoints_neg f]; exact v.2⟩
   left_inv v := Subtype.ext rfl
   right_inv v := Subtype.ext rfl
 
 @[simp] theorem refinedVertexNegEquiv_val (v : M.RefinedVertex (-f)) :
-    (M.refinedVertexNegEquiv f v : Plane) = v := rfl
+    (M.refinedVertexNegEquiv f v : Plane) = v := by rfl
 
 /-- The five vertices of the strict `+--` model in the coherent global vertex pool. -/
 noncomputable def strictModelVertex (t : M.Triangle)
@@ -1495,7 +1495,7 @@ noncomputable def strictVerticesEmbedding (v : Fin 3 → M.Vertex)
       standardTrianglePosition_affineIndependent hv).injective hpos
 
 /-- The `strictMeshFor` declaration. -/
-noncomputable def strictMeshFor (v : Fin 3 → M.Vertex)
+@[expose] noncomputable def strictMeshFor (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
     (h0 : 0 < f (M.position (v 0))) (h1 : f (M.position (v 1)) < 0)
     (h2 : f (M.position (v 2)) < 0) : TriangleMesh :=
@@ -1556,7 +1556,7 @@ theorem strictMeshFor_support (v : Fin 3 → M.Vertex)
         standardTrianglePosition_affineIndependent hv
 
 /-- The `strictNegativeMeshFor` declaration. -/
-noncomputable def strictNegativeMeshFor (v : Fin 3 → M.Vertex)
+@[expose] noncomputable def strictNegativeMeshFor (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
     (h0 : f (M.position (v 0)) < 0) (h1 : 0 < f (M.position (v 1)))
     (h2 : 0 < f (M.position (v 2))) : TriangleMesh :=
@@ -1647,7 +1647,7 @@ noncomputable def edgeVerticesEmbedding (v : Fin 3 → M.Vertex)
       standardTrianglePosition_affineIndependent hv).injective hpos
 
 /-- The `edgeMeshFor` declaration. -/
-noncomputable def edgeMeshFor (v : Fin 3 → M.Vertex)
+@[expose] noncomputable def edgeMeshFor (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
     (h0 : 0 < f (M.position (v 0))) (h1 : f (M.position (v 1)) < 0) : TriangleMesh :=
   let c := triangleCutParameter f (M.position (v 0)) (M.position (v 1))
@@ -1699,7 +1699,7 @@ theorem edgeMeshFor_support (v : Fin 3 → M.Vertex)
         standardTrianglePosition_affineIndependent hv
 
 /-- The `edgeNegativeMeshFor` declaration. -/
-noncomputable def edgeNegativeMeshFor (v : Fin 3 → M.Vertex)
+@[expose] noncomputable def edgeNegativeMeshFor (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
     (h0 : f (M.position (v 0)) < 0) (h1 : 0 < f (M.position (v 1))) : TriangleMesh :=
   let N := M.edgeMeshFor (-f) v hv (by simpa) (by simpa)
@@ -1853,7 +1853,7 @@ theorem localRefinementMesh_support (t : M.Triangle) :
     rw [Set.range_comp, M.range_orderedVertex t]
 
 /-- Every maximal triangle lies wholly on one closed side of the cutting line. -/
-def IsMonochromatic (N : TriangleMesh) (f : Plane →ᵃ[ℝ] ℝ) : Prop :=
+@[expose] def IsMonochromatic (N : TriangleMesh) (f : Plane →ᵃ[ℝ] ℝ) : Prop :=
   ∀ s ∈ N.triangles,
     (∀ v ∈ s, 0 ≤ f (N.position v)) ∨ (∀ v ∈ s, f (N.position v) ≤ 0)
 
@@ -2067,6 +2067,7 @@ theorem strictMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [strictMeshFor, strictPatternTriangles, referenceSplitMesh,
     referenceSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     strictVerticesEmbedding]
+  rfl
 
 theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
@@ -2076,6 +2077,7 @@ theorem edgeMeshFor_triangles (v : Fin 3 → M.Vertex)
   simp [edgeMeshFor, edgePatternTriangles, referenceEdgeSplitMesh,
     referenceEdgeSplitTriangles, TriangleMesh.reindex, TriangleMesh.mapAffineEquiv,
     edgeVerticesEmbedding]
+  rfl
 
 theorem strictNegativeMeshFor_monochromatic (v : Fin 3 → M.Vertex)
     (hv : AffineIndependent ℝ (M.position ∘ v))
@@ -2266,7 +2268,7 @@ noncomputable def localCutVertex (t : M.Triangle) (i j : Fin 3)
   M.cutRefinedVertex f (M.orderedVertex t i) (M.orderedVertex t j) hij
 
 @[simp] theorem localOldVertex_val (t : M.Triangle) (i : Fin 3) :
-    (M.localOldVertex f t i : Plane) = M.position (M.orderedVertex t i) := rfl
+    (M.localOldVertex f t i : Plane) = M.position (M.orderedVertex t i) := by rfl
 
 theorem localCutVertex_apply_eq_zero (t : M.Triangle) (i j : Fin 3)
     (hij : f (M.position (M.orderedVertex t i)) *
@@ -2838,7 +2840,7 @@ theorem child_vertex_mem_parent (t : M.Triangle)
 /-! ## Barycentric traces on old parent edges -/
 
 /-- The barycentric coordinate opposite the `k`-th edge of an old triangle. -/
-noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ] ℝ :=
   (affineBasisOfTriangle (M.position ∘ M.orderedVertex t)
     (M.orderedVertex_affineIndependent t)).coord k
 
@@ -2847,7 +2849,7 @@ noncomputable def oppositeCoord (t : M.Triangle) (k : Fin 3) : Plane →ᵃ[ℝ]
   exact AffineBasis.coord_apply _ _ _
 
 /-- The two old geometric vertices of the edge opposite `k`. -/
-noncomputable def oppositeEdgePoints (t : M.Triangle) (k : Fin 3) : Finset Plane :=
+@[expose] noncomputable def oppositeEdgePoints (t : M.Triangle) (k : Fin 3) : Finset Plane :=
   (Finset.univ.erase k).image (M.position ∘ M.orderedVertex t)
 
 theorem oppositeEdgePoints_subset_parentPoints (t : M.Triangle) (k : Fin 3) :
@@ -4009,7 +4011,7 @@ theorem lineRefinementMesh_preserves_monochromatic (g : Plane →ᵃ[ℝ] ℝ)
     exact ht w hw
 
 /-- Successively subdivide a mesh by a finite list of affine lines. -/
-noncomputable def refineByLines : TriangleMesh → List (Plane →ᵃ[ℝ] ℝ) → TriangleMesh
+@[expose] noncomputable def refineByLines : TriangleMesh → List (Plane →ᵃ[ℝ] ℝ) → TriangleMesh
   | M, [] => M
   | M, g :: gs => refineByLines (M.lineRefinementMesh g) gs
 

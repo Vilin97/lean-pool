@@ -19,7 +19,7 @@ through every interval. The true additional inequality starts at the shaped
 hold; the early outgoing region only requires the relaxed cone.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -228,18 +228,20 @@ theorem hold_source_criterion {d : TailData} {K : ℝ} (w : ResetWitness d K)
 /-! ## Common actual cone coordinates and source tests -/
 
 /-- Normal V, given by `coneA w p * (1 + (coneB w Amp p / coneA w p) ^ 2)`. -/
+@[expose]
 noncomputable def normalV {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   coneA w p * (1 + (coneB w Amp p / coneA w p) ^ 2)
 
 /-- Normal P, given by `OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p
 / coneA w p)`. -/
-noncomputable def normalP {d : TailData} {K : ℝ} (w : ResetWitness d K)
+@[expose] noncomputable def normalP {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.p1 XR w Amp p * (1 - coneB w Amp p * coneRatio w Amp p / coneA w p)
 
 /-- Normal J, given by `OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p /
 coneA w p)`. -/
+@[expose]
 noncomputable def normalJ {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (XR : ℝ) (p : ℝ × ℝ) : ℝ :=
   OutgoingHistories.p1 XR w Amp p * (coneRatio w Amp p + coneB w Amp p / coneA w p)
@@ -411,13 +413,15 @@ theorem relaxed_of_zero_shear {d : TailData} {K : ℝ} (w : ResetWitness d K)
       sub_zero, add_zero, mul_one] using hroot
 
 /-- Clean end, given by `tailStart d + 1 / 2`. -/
-noncomputable def cleanEnd (d : TailData) : ℝ := tailStart d + 1 / 2
+@[expose] noncomputable def cleanEnd (d : TailData) : ℝ := tailStart d + 1 / 2
 
 /-- Clean window, given by `Icc left (cleanEnd d) ×ˢ Icc (-1) 1`. -/
+@[expose]
 noncomputable def cleanWindow (d : TailData) (left : ℝ) : Set (ℝ × ℝ) :=
   Icc left (cleanEnd d) ×ˢ Icc (-1) 1
 
 /-- True window, given by `Icc d.core.holdStart (cleanEnd d) ×ˢ Icc (-1) 1`. -/
+@[expose]
 noncomputable def trueWindow (d : TailData) : Set (ℝ × ℝ) :=
   Icc d.core.holdStart (cleanEnd d) ×ˢ Icc (-1) 1
 
@@ -536,7 +540,7 @@ theorem exists_ordered_clean_cone :
 /-! ## The existing profile object and compact margins -/
 
 /-- Profile clean cone, given by `CleanOutgoingCone F.reset XR left`. -/
-noncomputable def ProfileCleanCone (F : OutgoingProfile.Profile) (XR left : ℝ) : Prop :=
+@[expose] noncomputable def ProfileCleanCone (F : OutgoingProfile.Profile) (XR left : ℝ) : Prop :=
   CleanOutgoingCone F.reset XR left
 
 /-- The profile wrapper retains the input profile, its reset, and its
@@ -667,17 +671,20 @@ theorem clean_true_stable {d : TailData} {K : ℝ} (w : ResetWitness d K)
 /-! ## Margins independent of the later entrance radius -/
 
 /-- Source C, given by `1 - coneB w Amp p * coneRatio w Amp p / coneA w p`. -/
+@[expose]
 noncomputable def sourceC {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   1 - coneB w Amp p * coneRatio w Amp p / coneA w p
 
 /-- Source J, given by `coneRatio w Amp p + coneB w Amp p / coneA w p`. -/
+@[expose]
 noncomputable def sourceJ {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   coneRatio w Amp p + coneB w Amp p / coneA w p
 
 /-- Leading gap, given by `2 * sourceC w Amp p ^ 2 - (normalV w Amp p - 2) * sourceJ w Amp p ^
 2`. -/
+@[expose]
 noncomputable def leadingGap {d : TailData} {K : ℝ} (w : ResetWitness d K)
     (Amp : ℝ → ℝ) (p : ℝ × ℝ) : ℝ :=
   2 * sourceC w Amp p ^ 2 - (normalV w Amp p - 2) * sourceJ w Amp p ^ 2

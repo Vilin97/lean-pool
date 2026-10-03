@@ -20,7 +20,7 @@ every block of one size acts as zero, the completeness of the
 blocks collapses the whole power.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {D : Type u}
 
 /-- **Module-level Schur vanishing**: the block of the shape acts
 as zero on the relative tensor power of the module. -/
+@[expose]
 def ModSchurKilled [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] [Linear ℂ D]
     (A : D) [MonObj A] (X : D) [ModObj A X]

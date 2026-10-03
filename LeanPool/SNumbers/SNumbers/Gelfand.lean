@@ -36,7 +36,7 @@ particular, the strict-normalisation proof needs no `[CompleteSpace 𝕜]`
 hypothesis.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -55,12 +55,14 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 /-! ### Definitions -/
 
 /-- The norm of `S` restricted to a (closed) subspace `M` of `X`. -/
+@[expose]
 noncomputable def deviationFromRestriction (S : X →L[𝕜] Y) (M : Submodule 𝕜 X) : ℝ :=
   ‖S.comp M.subtypeL‖
 
 /-- The set of admissible deviations at stage `n`: the numbers `‖S|_M‖` for
 closed subspaces `M ⊆ X` of codimension at most `n`. The `n`-th Gelfand
 number is its infimum. -/
+@[expose]
 def gelfandSet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
   {r | ∃ M : Submodule 𝕜 X,
       IsClosed (M : Set X) ∧
@@ -70,6 +72,7 @@ def gelfandSet (S : X →L[𝕜] Y) (n : ℕ) : Set ℝ :=
 /-- The `n`-th **Gelfand number** of a continuous linear map.
 
 `c_n S = inf_{M ⊆ X closed, codim M ≤ n} ‖S|_M‖`. -/
+@[expose]
 noncomputable def gelfandNumber (S : X →L[𝕜] Y) (n : ℕ) : ℝ :=
   sInf (gelfandSet S n)
 

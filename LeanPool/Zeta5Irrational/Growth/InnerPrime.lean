@@ -28,7 +28,7 @@ with `q = ⌊K/p⌋`, `q' = ⌊N/p⌋`, `B = 12q' - 2q - 4`, the class counts `a
 `ClassSum`, and the layer-cake function `T`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -84,7 +84,7 @@ lemma neg_vSK_le {n : ℕ} (hn : 1 ≤ n) (_hp3 : 3 ≤ p) (hN : 3 * n < p ^ 2)
     mul_nonneg (show (0 : ℝ) ≤ 37 * n - 1 by linarith) hB]
 
 /-- The zero-class deficit bound. -/
-noncomputable def Bmax (n p : ℕ) : ℝ :=
+@[expose] noncomputable def Bmax (n p : ℕ) : ℝ :=
   max 0
       ((ktopI n p : ℝ) / 2 -
         ((5 + 12 * ((3 * n / p : ℕ) : ℝ) - 2 * ((40 * n / p : ℕ) : ℝ)) - 4) / 2) *
@@ -95,7 +95,7 @@ noncomputable def Bmax (n p : ℕ) : ℝ :=
       1)
 
 /-- The class function of the inner range. -/
-noncomputable def hIn (n p : ℕ) (k : ℤ) (a a' : ℕ) : ℝ :=
+@[expose] noncomputable def hIn (n p : ℕ) (k : ℤ) (a a' : ℕ) : ℝ :=
   (psiR k (12 * ((3 * n / p : ℕ) : ℤ) - 2 * ((40 * n / p : ℕ) : ℤ) - 4 + 6 * (a' : ℤ) - a) : ℝ)
 
 section

@@ -21,7 +21,7 @@ This is finite-dimensional analytic infrastructure; no statement about path spac
 here.  The continuous-path process is built in `Trajectory/`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal CompactlySupported ZeroAtInfty

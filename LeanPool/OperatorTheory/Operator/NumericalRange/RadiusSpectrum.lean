@@ -19,7 +19,7 @@ Equivalently, every spectral value has modulus at most the numerical radius,
 and the spectral radius is bounded by the numerical radius.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped ENNReal InnerProductSpace NNReal

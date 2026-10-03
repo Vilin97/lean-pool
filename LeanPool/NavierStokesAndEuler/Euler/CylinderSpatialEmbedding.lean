@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 
 /-! The genuine constant-angle embedding of ordinary spatial L² into cylinder L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ theorem lifted_memLp (u : SpatialL2 V) :
   (Lp.memLp u).comp_fst (volume : Measure (AddCircle P))
 
 /-- Lift, given by `(lifted_memLp P u).toLp (fun z : LiftDomain P => u z.1)`. -/
-def lift (u : SpatialL2 V) : CylinderL2 P V :=
+@[expose] def lift (u : SpatialL2 V) : CylinderL2 P V :=
   (lifted_memLp P u).toLp (fun z : LiftDomain P => u z.1)
 
 omit [NormedSpace ℝ V] in
@@ -95,16 +95,16 @@ theorem lift_norm_le (u : SpatialL2 V) : ‖lift P u‖ ≤ Real.sqrt P*‖u‖ 
   exact le_of_eq (lift_norm_sq P u)
 
 /-- Embedding linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def embeddingLinear : SpatialL2 V →ₗ[ℝ] CylinderL2 P V where
+@[expose] def embeddingLinear : SpatialL2 V →ₗ[ℝ] CylinderL2 P V where
   toFun := lift P
   map_add' := lift_add P
   map_smul' := lift_smul P
 
 /-- Embedding, given by `(embeddingLinear P).mkContinuous (Real.sqrt P) (lift_norm_le P)`. -/
-def embedding : SpatialL2 V →L[ℝ] CylinderL2 P V :=
+@[expose] def embedding : SpatialL2 V →L[ℝ] CylinderL2 P V :=
   (embeddingLinear P).mkContinuous (Real.sqrt P) (lift_norm_le P)
 
-@[simp] theorem embedding_apply (u : SpatialL2 V) : embedding P u = lift P u := rfl
+@[simp] theorem embedding_apply (u : SpatialL2 V) : embedding P u = lift P u := by rfl
 
 theorem embedding_norm : ‖embedding (V := V) P‖ ≤ Real.sqrt P :=
   opNorm_le_bound _ (Real.sqrt_nonneg P) (lift_norm_le P)

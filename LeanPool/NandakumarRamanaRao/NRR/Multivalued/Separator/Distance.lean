@@ -21,7 +21,7 @@ All results are stated for a general metric space; no compactness is assumed. Po
 both closedness and nonemptiness of the set.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.MetricTools
 

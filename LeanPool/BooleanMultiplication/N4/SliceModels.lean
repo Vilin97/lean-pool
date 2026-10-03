@@ -17,7 +17,7 @@ lets the homogeneous projections already used by the exterior argument apply
 without introducing a second ANF type or enumerating Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -33,46 +33,46 @@ def sliceAnchorValue (ell : LinearForm) (x y : F₂) : F₂ :=
   ell 0 * x + ell 4 * y
 
 /-- The ANF product of the two complementary evaluation-at-one directions. -/
-def sliceQuadraticAANF : ANF 8 :=
+@[expose] def sliceQuadraticAANF : ANF 8 :=
   linearANF sliceABar * linearANF sliceBBar
 
 /-- The product of the two leading input coefficients. -/
-def sliceInfinityQuadraticANF : ANF 8 :=
+@[expose] def sliceInfinityQuadraticANF : ANF 8 :=
   linearANF (placeA 2) * linearANF (placeB 2)
 
 /-- The sum of the complementary evaluation-at-one and infinity products. -/
-def sliceQuadraticBANF : ANF 8 :=
+@[expose] def sliceQuadraticBANF : ANF 8 :=
   sliceQuadraticAANF + sliceInfinityQuadraticANF
 
 /-- Restrict an affine factor plus the zero-place product to an anchor slice. -/
-def sliceZeroFactorModel
+@[expose] def sliceZeroFactorModel
     (a : F₂) (ell : LinearForm) (x y : F₂) : ANF 8 :=
   affineANF (a + sliceAnchorValue ell x y + x * y)
     (sliceComplementLinear ell)
 
 /-- Restrict an affine factor plus the evaluation-at-one product to an anchor slice. -/
-def sliceOneFactorModel
+@[expose] def sliceOneFactorModel
     (a : F₂) (ell : LinearForm) (x y : F₂) : ANF 8 :=
   affineANF (a + sliceAnchorValue ell x y + x * y)
       (sliceComplementLinear ell + sliceVaryingLinear x y) +
     sliceQuadraticAANF
 
 /-- Restrict an affine factor plus the infinity-place product to an anchor slice. -/
-def sliceInfinityFactorModel
+@[expose] def sliceInfinityFactorModel
     (a : F₂) (ell : LinearForm) (x y : F₂) : ANF 8 :=
   affineANF (a + sliceAnchorValue ell x y)
       (sliceComplementLinear ell) +
     sliceInfinityQuadraticANF
 
 /-- Restrict an affine factor with type-B quadratic part to an anchor slice. -/
-def sliceTypeBFactorModel
+@[expose] def sliceTypeBFactorModel
     (a : F₂) (ell : LinearForm) (x y : F₂) : ANF 8 :=
   affineANF (a + sliceAnchorValue ell x y + x * y)
       (sliceComplementLinear ell + sliceVaryingLinear x y) +
     sliceQuadraticBANF
 
 /-- Restrict an affine-plus-rational-target correction to an anchor slice. -/
-def sliceCorrectionModel
+@[expose] def sliceCorrectionModel
     (a : F₂) (ell : LinearForm) (alpha : Fin 3 → F₂)
     (x y : F₂) : ANF 8 :=
   affineANF
@@ -82,7 +82,7 @@ def sliceCorrectionModel
     alpha 2 • sliceInfinityQuadraticANF
 
 /-- Restrict an affine perturbation of a first-jet tangent target to an anchor slice. -/
-def sliceTangentModel
+@[expose] def sliceTangentModel
     (a : F₂) (ell : LinearForm) (eps x y : F₂) : ANF 8 :=
   affineANF (a + sliceAnchorValue ell x y + eps * x * y)
     (sliceComplementLinear ell + y • sliceU + x • sliceV)

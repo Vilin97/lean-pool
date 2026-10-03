@@ -26,7 +26,7 @@ The quantity `outdegS G S v` counts edges from $v$ to vertices outside $S$, and 
 relevant threshold for the superstability condition.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 
@@ -57,12 +57,12 @@ $$
 \deg(c) = \sum_{v \in V(G)\setminus\{q\}} c(v).
 $$
 Since $c(q)=0$, this is implemented as the degree of the underlying divisor. -/
-def configDegree {G : CFGraph} {q : G.V} (c : Config G q) : ℤ :=
+@[expose] def configDegree {G : CFGraph} {q : G.V} (c : Config G q) : ℤ :=
   deg (c.chips)
 
 /-- Converts a configuration $c$ to a divisor of prescribed degree $d$ by placing
 $d-\deg(c)$ chips at $q$. -/
-def toDiv {G : CFGraph} {q : G.V} (d : ℤ) (c : Config G q) : CFDiv G :=
+@[expose] def toDiv {G : CFGraph} {q : G.V} (d : ℤ) (c : Config G q) : CFDiv G :=
   c.chips + (d - configDegree c) • (oneChip q)
 
 /-- Two configurations are equal if their chip counts agree at every vertex. -/
@@ -112,7 +112,7 @@ def toQed {q : G.V} (d : ℤ) (c : Config G q) : qEffDiv G q :=
       exact c.non_negative v
   }
 /-- Converts a $q$-effective divisor to a configuration by zeroing out the chip count at $q$. -/
-def toConfig {q : G.V} (D : qEffDiv G q) : Config G q := {
+@[expose] def toConfig {q : G.V} (D : qEffDiv G q) : Config G q := {
   chips := D.D - (D.D q) • (oneChip q)
   q_zero := by
     rw [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
@@ -388,7 +388,7 @@ lemma q_reduced_superstable_correspondence (G : CFGraph) (q : G.V) (D : CFDiv G)
 
 /-- A maximal superstable configuration is not strictly dominated by any other superstable
 configuration. -/
-def maximalSuperstable (G : CFGraph) {q : G.V} (c : Config G q) : Prop :=
+@[expose] def maximalSuperstable (G : CFGraph) {q : G.V} (c : Config G q) : Prop :=
   superstable G q c ∧ ∀ c' : Config G q, superstable G q c' → c ≤ c' → c' = c
 
 
@@ -615,6 +615,7 @@ lemma superstable_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : sup
 (i.e. assign nonzero flow) if $u$ appears in the list and $v$ appears before $u$. In other
 words, the orientation indicates the direction of the spreading fire in Dhar's burning
 algorithm. -/
+@[expose]
 def burnFlow {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) : (G.V × G.V) → ℕ :=
   fun e => if (e.1 ∈ L.list) ∧ (L.list.idxOf e.2 < L.list.idxOf e.1) then numEdges G e.1 e.2 else 0
 

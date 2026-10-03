@@ -22,7 +22,7 @@ section
 polynomial in the parent labels and reciprocal history length. The good
 interval keeps its absolute size constant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -271,7 +271,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -284,6 +284,7 @@ open Real Filter EulerScale EulerPacketSourceScales EulerPacketSourceTime
 open scoped Topology
 
 /-- Bad coefficient, given by `1+2*CM*badConstant*(4+CMn+CHn)^degree*(2*Cθ)^5`. -/
+@[expose]
 def badCoefficient (Cθ CM CMn CHn : ℝ) : ℝ :=
   1+2*CM*badConstant*(4+CMn+CHn)^degree*(2*Cθ)^5
 
@@ -294,11 +295,13 @@ theorem badCoefficient_pos (Cθ CM CMn CHn : ℝ) (hθ : 0 ≤ Cθ)
 
 /-- Bad cost, given by `monomialCost J 1 4 0 (1/8) ((degree : ℝ)*c+2) (badCoefficient Cθ CM CMn
 CHn) 10 10 x n`. -/
+@[expose]
 def badCost (J : ℕ) (Cθ CM CMn CHn c : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   monomialCost J 1 4 0 (1/8) ((degree : ℝ)*c+2)
     (badCoefficient Cθ CM CMn CHn) 10 10 x n
 
 /-- Bad cost spec, bundling `d`, `B`, `N`, `a` and the required compatibility proofs. -/
+@[expose]
 def badCostSpec (Cθ CM CMn CHn c : ℝ) (hθ : 0 ≤ Cθ)
     (hM : 0 ≤ CM) (hMn : 0 ≤ CMn) (hHn : 0 ≤ CHn) : CostSpec where
   d := 1

@@ -17,7 +17,7 @@ set from every sample space retains positive mass and preserves thickness
 provided one component witnesses escape from each central slab.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

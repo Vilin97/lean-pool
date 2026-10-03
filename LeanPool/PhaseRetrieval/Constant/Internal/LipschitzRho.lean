@@ -24,7 +24,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 
 /-! # LipschitzRho -/
 
-@[expose] public section
+public section
 
 
 open Complex Real

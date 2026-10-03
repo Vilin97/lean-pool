@@ -33,7 +33,7 @@ So `IsomorphismInvariant` is consumed exactly where Unit 3b/Unit 4 already consu
 inside `pcSentences_entails_not`; this unit adds no further use of it.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

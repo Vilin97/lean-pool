@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 /-! Fixed bounded linear maps preserve the actual spatial and time jets of
 smooth bounded coefficient paths. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -60,7 +60,7 @@ local instance instSmoothTimeFieldLinear8 (n : ℕ) : NormedSpace ℝ (E →ᵇ 
     inferInstance
 
 /-- Map, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
-def map (L : V →L[ℝ] W) (A : SmoothTimeField K E V) : SmoothTimeField K E W where
+@[expose] def map (L : V →L[ℝ] W) (A : SmoothTimeField K E V) : SmoothTimeField K E W where
   field := mapPath L A.field
   smooth t := L.contDiff.comp (A.smooth t)
   jet n := mapPath

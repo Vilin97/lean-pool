@@ -15,7 +15,7 @@ near-source term and the annular tail. The resulting bound is independent
 of the centre, radius, and number of source annuli.
 -/
 
-@[expose] public section
+public section
 
 section
 

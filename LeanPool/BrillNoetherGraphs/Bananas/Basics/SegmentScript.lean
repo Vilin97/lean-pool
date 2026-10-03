@@ -23,7 +23,7 @@ consumes the chips at path positions `lo` and `hi` and produces chips at
 `target` and its mirror `lo + hi - target`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

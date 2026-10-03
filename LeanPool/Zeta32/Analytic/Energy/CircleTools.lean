@@ -23,7 +23,7 @@ namespace changed:
 -- Base/FiniteSignedEnergyBound.lean,
 --   Positive/Packed/P197.lean (complex_signed_energy_log_bound). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real intervalIntegral
 open scoped BigOperators

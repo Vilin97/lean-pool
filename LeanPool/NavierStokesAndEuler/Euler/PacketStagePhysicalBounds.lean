@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketInductionScaleBounds
 
 /-! Physical estimates on the actual shortened parent state. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

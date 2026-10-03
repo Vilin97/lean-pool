@@ -17,7 +17,7 @@ arithmetic count.  It is Corollary 4.31 with the corrected row block and its
 explicit period-separation hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

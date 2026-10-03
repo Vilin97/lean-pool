@@ -16,7 +16,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.InducedMaps`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory
@@ -172,7 +172,7 @@ end Pointed
 namespace GenLoop
 
 /-- The map of `GenLoop`s induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
-def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
+@[expose] def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     Ω^ (Fin n) X.as X.point → Ω^ (Fin n) Y.as Y.point :=
   fun α ↦ ⟨f.right.hom.comp α.val, fun i hi ↦ by
     rw [ContinuousMap.comp_apply, ← PointedTopCat.w f]
@@ -207,7 +207,7 @@ private theorem inducedMap'_respects (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ 
 
 /-- The map between homotopy groups (as sets)
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
-def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
+@[expose] def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
   Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦ by
     exact inducedMap'_respects n f (α := α) (β := β) hαβ
@@ -245,7 +245,7 @@ end inducedMap
 
 /-- `π_n` is a functor sending a based topological space `(X, x₀)`
 to its `n`-th homotopy group (as a type, ignoring its group structure) based at `x₀`. -/
-noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
+@[expose] noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
   obj X := π_ n X.as X.point
   map {X Y} f := TypeCat.ofHom (inducedMap' n f)
   map_id X := by
@@ -266,7 +266,7 @@ noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
 to its `n`-th homotopy group
 (as a pointed type whose base point is the contant map, ignoring its group structure)
 based at `x₀`. -/
-noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u} where
+@[expose] noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u} where
   obj X := Pointed.of (default : π_ n X.as X.point)
   map {X Y} f :=
     { toFun := (functorToType n).map f

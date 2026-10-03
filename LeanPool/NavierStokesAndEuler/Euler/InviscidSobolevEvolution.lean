@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.QuadraticSourceLimit
 
 /-! Actual finite-order Sobolev time regularity of the inviscid cylinder correction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

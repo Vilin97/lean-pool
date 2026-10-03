@@ -23,19 +23,22 @@ bounded-difference material from Section 7, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 /-- The inversion set $\operatorname{Inv} \tau = \{(u,v) \in \mathbb{Z}^2 : u < v \text{ and }
 \tau(u) > \tau(v)\}$.
 *Definition 2.5 (`defn:Inv`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def invSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   {(i,j) : ℤ × ℤ | i < j ∧ τ j < τ i}
 
 /-- The indices at least `n` whose images lie strictly below `m`. -/
+@[expose]
 def southeastSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
 
 /-- The indices strictly below `n` whose images lie at least at `m`. -/
+@[expose]
 def northwestSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
 
 /-- Conjugation of an integer-valued function by the reflection `k ↦ -1-k`. -/
@@ -111,6 +114,7 @@ private lemma nw_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
 $\{ n \in \mathbb{Z} : n \tau(n) < 0 \}$ is finite.
 
 Equivalently, only finitely many integers change sign under `τ`. -/
+@[expose]
 def isAsp (τ : ℤ → ℤ) : Prop :=
   { n : ℤ | n * (τ n) < 0 }.Finite
 
@@ -212,6 +216,7 @@ lemma ext {σ τ : AspPerm} : σ = τ ↔ σ.func = τ.func := by
   · intro h; cases σ; cases τ; congr
 
 /-- Composition of almost sign-preserving permutations, applying the right factor first. -/
+@[expose]
 def mul (σ τ : AspPerm) : AspPerm where
   func := Function.comp σ.func τ.func
   bijective :=
@@ -257,6 +262,7 @@ def mul (σ τ : AspPerm) : AspPerm where
     exact Set.Finite.union (Set.Finite.union τ.asp h_pre) h_zero
 
 /-- The inverse permutation, with its inherited almost sign-preserving property. -/
+@[expose]
 noncomputable def inv (τ : AspPerm) : AspPerm where
   func := Function.invFun τ.func
   bijective := by
@@ -275,6 +281,7 @@ noncomputable def inv (τ : AspPerm) : AspPerm where
     simp only [Set.preimage_ofPred_eq, Set.mem_ofPred_eq, this, mul_comm]
 
 /-- The identity almost sign-preserving permutation. -/
+@[expose]
 def id : AspPerm where
   func := _root_.id
   bijective := ⟨Function.injective_id, Function.surjective_id⟩
@@ -341,6 +348,7 @@ lemma inv_set_inverse (u v : ℤ) :
     exact ⟨u_lt_v, τv_lt_τu⟩
 
 /-- The map sending an inversion pair `(i,j)` to the reversed image pair `(τ j,τ i)`. -/
+@[expose]
 def revMap : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
 
 /-- The slipface associated to an ASP permutation is defined by
@@ -756,6 +764,7 @@ private lemma s_noninc_raw (a : ℤ) {b b' : ℤ} (b_le_b' : b ≤ b') :
 [An extended Demazure product](https://arxiv.org/abs/2206.14227) writes its values as
 $s_\tau(a,b)$; in Lean the corresponding value
 is `τ.sRaw a b`, and `τ.s` packages the same data as a `SlipFace`. -/
+@[expose]
 noncomputable def s : SlipFace := {
   func := τ.sRaw
   χ := τ.χ
@@ -1102,6 +1111,7 @@ lemma a_step_eq_iff' (u b : ℤ) : τ.s (τ u + 1) b = τ.s (τ u) b ↔ u < b :
   simpa [τ.mul_inv_cancel_eval] using this
 
 /-- The incoming inversion indices at `v`. -/
+@[expose]
 def inset (v : ℤ) : Set ℤ := {u | ⟨u, v⟩ ∈ invSet τ}
 
 lemma inset_eq_nw (v : ℤ) : τ.inset v = northwestSet τ (τ v) v := by
@@ -1127,6 +1137,7 @@ lemma inset_finite (v : ℤ) : (τ.inset v).Finite := by
   apply τ.nw_finite
 
 /-- The outgoing inversion indices at `u`. -/
+@[expose]
 def outset (u : ℤ) : Set ℤ := {v | ⟨u, v⟩ ∈ invSet τ}
 
 lemma outset_eq_se (u : ℤ) : τ.outset u = southeastSet τ (τ u) u := by
@@ -1606,12 +1617,14 @@ $\operatorname{Inv}(\alpha) \cap \operatorname{Inv}(\beta^{-1})$ is empty.
 
 *Definition 2.7 (`defn:reducedProduct`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def ReducedProduct (α β : AspPerm) : Prop :=
   Disjoint (invSet α) (invSet (β⁻¹).func)
 
 /-- The left weak order: `σ ≤L τ` if and only if $\operatorname{Inv} \sigma \subseteq
 \operatorname{Inv} \tau$. *Definition 2.6 (`defn:weakOrders`), part 1/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def leWeakL (σ τ : AspPerm) : Prop := invSet σ ⊆ invSet τ
 /-- Notation for the left weak order on almost sign-preserving permutations. -/
 infix:50 " ≤L " => leWeakL
@@ -1620,6 +1633,7 @@ infix:50 " ≤L " => leWeakL
 $\operatorname{Inv}(\sigma^{-1}) \subseteq \operatorname{Inv}(\tau^{-1})$.
 *Definition 2.6 (`defn:weakOrders`), part 2/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def leWeakR (σ τ : AspPerm) : Prop := invSet (σ⁻¹).func ⊆ invSet (τ⁻¹).func
 /-- Notation for the right weak order on almost sign-preserving permutations. -/
 infix:50 " ≤R " => leWeakR
@@ -1746,25 +1760,30 @@ lemma sr_subset (τ α : AspPerm) (h_R : α ≤R τ) : (τ.sr α) '' invSet α �
   exact ⟨u_lt_v, τu_gt_τv⟩
 
 /-- Every intermediate-index sum of the two slipfaces is at least `n`. -/
+@[expose]
 def dprodValGe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∀ l : ℤ, α.s a l + β.s l b ≥ n
 
 /-- The slipface of `τ` lies below every intermediate-index sum defining the Demazure product of
 `α` and `β`. -/
+@[expose]
 def leDprod (τ α β : AspPerm) : Prop :=
   ∀ a b : ℤ, dprodValGe α β a b (τ.s a b)
 
 /-- Some intermediate-index sum of the two slipfaces is at most `n`. -/
+@[expose]
 def dprodValLe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∃ l : ℤ, α.s a l + β.s l b ≤ n
 
 /-- At each pair of coordinates, an intermediate-index sum for `α` and `β` lies below the
 slipface of `τ`. -/
+@[expose]
 def geDprod (τ α β : AspPerm) : Prop :=
   ∀ a b : ℤ, dprodValLe α β a b (τ.s a b)
 
 /-- The lower and upper slipface inequalities characterizing `τ` as the Demazure product of `α`
 and `β`. -/
+@[expose]
 def eqDprod (τ α β : AspPerm) : Prop :=
   τ.leDprod α β ∧ τ.geDprod α β
 

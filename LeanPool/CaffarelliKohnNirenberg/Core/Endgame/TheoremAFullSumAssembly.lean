@@ -19,7 +19,7 @@ the `6/5` power and its radius-weighted multiple. They are distinct from
 bounds on individual clipped cell integrals or the actual total time mass.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

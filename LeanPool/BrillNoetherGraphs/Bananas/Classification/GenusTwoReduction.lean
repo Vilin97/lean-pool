@@ -20,7 +20,7 @@ a negative marked second difference on a genus-two graph with inequivalent
 marks is necessarily represented in degree two.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

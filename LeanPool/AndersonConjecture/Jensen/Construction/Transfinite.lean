@@ -26,7 +26,7 @@ Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Theorem 2.2.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -94,8 +94,6 @@ private noncomputable def mk_union_nsub_aux
         hprimes hβ₁ hβ₂ hle r ((hmono hβ₁ hβ₂ hle) r.2) hr }
   set U := lc.unionSubring with hU_def
   have hU_le := lc.le_union
-  have hU_mem : ∀ x : ↥U, ∃ β : {β : ι // β < α},
-      (x : T) ∈ (lc.ring β).carrier := fun x => lc.mem_union_iff.mp x.2
   have h_tight : Cardinal.mk ↥U ≤
       max Cardinal.aleph0 (Cardinal.mk {γ : ι // γ < α}) := by
     set n := Cardinal.mk {γ : ι // γ < α}
@@ -133,9 +131,13 @@ private noncomputable def mk_union_nsub_aux
   have hU_card : Cardinal.mk ↥U ≤
       max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) :=
     hU_lt.le.trans (hcard.le.trans (le_max_right ..))
-  refine ⟨lc.unionNSubring hU_card, hU_lt, h_tight, fun β hβ => hU_le ⟨β, hβ⟩, ?_⟩
-  intro β hβ r hr hmem
-  exact transfinite_union_primes_preserved lc U hU_le hU_mem ⟨β, hβ⟩ r hr
+  refine ⟨lc.unionNSubring hU_card, ?_, ?_, ?_, ?_⟩
+  · simpa only [NSubringChain.unionNSubring_carrier] using hU_lt
+  · simpa only [NSubringChain.unionNSubring_carrier] using h_tight
+  · intro β hβ
+    simpa only [NSubringChain.unionNSubring_carrier] using hU_le ⟨β, hβ⟩
+  · intro β hβ r hr hmem
+    exact lc.prime_unionNSubring hU_card ⟨β, hβ⟩ r hr hmem
 
 /-- The transfinite construction via ordinal recursion: iterate `combined_step`
 over all (prime, residue) pairs indexed by ordinals, building an N-subring A
@@ -553,7 +555,11 @@ private def transfinite_construction_proof
       _ ≤ max κ' κ' := Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
       _ = κ' := max_self κ'
   let A : NSubring T := chain.unionNSubring hU_card_le
-  refine ⟨chain, A, chain.le_union, fun x => chain.mem_union_iff.mp x.2, ?_, ?_, ?_⟩
+  refine ⟨chain, A, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa only [A, NSubringChain.unionNSubring_carrier] using chain.le_union
+  · intro x
+    apply chain.mem_union_iff.mp
+    simpa only [A, NSubringChain.unionNSubring_carrier] using x.2
   · intro α I hI c hc
     exact (data α).2.2.2.2.1 I hI c hc
   · -- Surjectivity: use enum to find α covering each residue class ℓ

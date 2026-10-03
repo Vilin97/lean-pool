@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Measure.HolderTriplePr
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -31,6 +31,7 @@ namespace CKN.Core.Step4
 /-- The product-rule source obtained after inserting a spatial cutoff into the
 quadratic tensor.  The field `dη j` is the j-th spatial derivative of the
 cutoff; its analytic derivative estimate is passed at the use site. -/
+@[expose]
 def pressureDivergenceCutoffSource
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3) (f : Vec3 → Vec3) : Vec3 → Vec3 :=

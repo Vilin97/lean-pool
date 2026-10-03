@@ -30,7 +30,7 @@ of `GlueCircuitDelta.lean` reads), and prove that
 edge's flags do not participate.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -119,6 +119,7 @@ theorem internal_surviving (i j : α) {F : EdgeSubset W}
 /-- Extend a surviving-flag self-map to all of `W.Flag`:
 apply it through the subtype on surviving flags, identity
 elsewhere. -/
+@[expose]
 noncomputable def unglueMatch
     (m : SurvivingFlag W i j → SurvivingFlag W i j)
     (f : W.Flag) : W.Flag :=
@@ -168,6 +169,7 @@ theorem glueMatch_val_of_mem (m : W.Flag → W.Flag)
 
 /-- Extend a surviving-flag orientation to all of `W.Flag`:
 through the subtype on surviving flags, `false` elsewhere. -/
+@[expose]
 noncomputable def unglueIsOut
     (b : SurvivingFlag W i j → Bool) (f : W.Flag) : Bool :=
   if h : f ≠ W.boundaryFlag i ∧ f ≠ W.boundaryFlag j then
@@ -392,6 +394,7 @@ theorem unglueOpen_glueOpen_match
 surviving flags, `false` junk at the two glued boundary flags
 (which are never internal, so the structure fields do not
 constrain them). -/
+@[expose]
 noncomputable def unglueOrientationOpen
     (κ' : (Fg).RelTransitionSystem) (o' : κ'.Orientation) :
     (RelTransitionSystem.unglueOpen hij hopen s' hc' hc
@@ -1006,6 +1009,7 @@ theorem unglueClosed_glueClosed_match
 
 /-- **Unglue an orientation (closed case)**: through the subtype,
 `false` junk at the two glued boundary flags. -/
+@[expose]
 noncomputable def unglueOrientationClosed
     (κ' : (Fg).RelTransitionSystem) (o' : κ'.Orientation) :
     (RelTransitionSystem.unglueClosed hclosed b s' hc' hc
@@ -1041,6 +1045,7 @@ noncomputable def unglueOrientationClosed
 /-- **Glue an orientation (closed case)**: through `Subtype.val`.
 Unconditional: the closed glued pairing agrees with the
 `W`-pairing on surviving flags. -/
+@[expose]
 noncomputable def glueOrientationClosed
     (κ : (Fl).RelTransitionSystem) (o : κ.Orientation) :
     (RelTransitionSystem.glueClosed hclosed b s' hc' hc

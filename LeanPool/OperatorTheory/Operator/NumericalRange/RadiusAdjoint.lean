@@ -17,7 +17,7 @@ radius is unchanged.  Likewise, unitary changes of orthonormal coordinates
 preserve the entire numerical range and hence the numerical radius.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open ContinuousLinearMap

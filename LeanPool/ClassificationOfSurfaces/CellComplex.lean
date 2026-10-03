@@ -19,7 +19,7 @@ Gallier-Xu normal-form route. The definitions are still intentionally light, but
 and theorem boundaries match the Moise/PL blueprint.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -59,10 +59,12 @@ attribute [instance] SurfaceCellComplex.vertexFintype
 namespace SurfaceCellComplex
 
 /-- The number of faces in a finite surface cell complex. -/
+@[expose]
 def numFaces (K : SurfaceCellComplex) : ℕ :=
   Fintype.card K.Face
 
 /-- The number of oriented darts in a finite surface cell complex. -/
+@[expose]
 def numDarts (K : SurfaceCellComplex) : ℕ :=
   Fintype.card K.Dart
 
@@ -82,28 +84,29 @@ instance boundaryOccurrenceFintype (K : SurfaceCellComplex) : Fintype K.Boundary
   inferInstance
 
 /-- The dart stored at a boundary occurrence. -/
+@[expose]
 def BoundaryOccurrence.dart {K : SurfaceCellComplex} (o : K.BoundaryOccurrence) : K.Dart :=
   (K.boundary o.1).get o.2
 
 /-- Two darts name the same unoriented edge. -/
-def SameEdge (K : SurfaceCellComplex) (d e : K.Dart) : Prop :=
+@[expose] def SameEdge (K : SurfaceCellComplex) (d e : K.Dart) : Prop :=
   e = d ∨ e = K.inv d
 
 /-- A boundary position belongs to the unoriented edge named by `d`. -/
-def Occurs (K : SurfaceCellComplex) (d : K.Dart) (o : K.BoundaryOccurrence) : Prop :=
+@[expose] def Occurs (K : SurfaceCellComplex) (d : K.Dart) (o : K.BoundaryOccurrence) : Prop :=
   K.SameEdge d o.dart
 
 /-- The unoriented edge named by `d` occurs at exactly one boundary position. -/
-def OccursExactlyOnce (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
+@[expose] def OccursExactlyOnce (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
   ∃ o, K.Occurs d o ∧ ∀ o', K.Occurs d o' → o' = o
 
 /-- The unoriented edge named by `d` occurs at exactly two boundary positions. -/
-def OccursExactlyTwice (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
+@[expose] def OccursExactlyTwice (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
   ∃ o₁ o₂, o₁ ≠ o₂ ∧ K.Occurs d o₁ ∧ K.Occurs d o₂ ∧
     ∀ o, K.Occurs d o → o = o₁ ∨ o = o₂
 
 /-- Boundary status derived from incidence: the edge orbit of `d` occurs exactly once. -/
-def IsBoundaryDart (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
+@[expose] def IsBoundaryDart (K : SurfaceCellComplex) (d : K.Dart) : Prop :=
   K.OccursExactlyOnce d
 
 /-- Incidence validity for the stored face-boundary system.
@@ -113,7 +116,7 @@ distinct, and every unoriented edge occurs either once (a boundary edge) or twic
 Boundary status and occurrence counts are derived from explicit boundary positions, so repeated
 darts such as the projective-plane word `a a` are retained. The stored vertex endpoints are an
 enrichment of Gallier--Xu's boundary-word data and are deliberately not part of this predicate. -/
-def IsSurfaceValid (K : SurfaceCellComplex) : Prop :=
+@[expose] def IsSurfaceValid (K : SurfaceCellComplex) : Prop :=
   Nonempty K.Face ∧
     (∀ f g, (K.boundary f).IsRotated (K.boundary g) → f = g) ∧
     (∀ d, K.inv d ≠ d) ∧
@@ -153,11 +156,11 @@ theorem occurs_twice_of_not_boundary {K : SurfaceCellComplex} (h : K.IsSurfaceVa
 end IsSurfaceValid
 
 /-- Two faces are adjacent when their boundaries use the same unoriented edge. -/
-def FaceAdjacent (K : SurfaceCellComplex) (f g : K.Face) : Prop :=
+@[expose] def FaceAdjacent (K : SurfaceCellComplex) (f g : K.Face) : Prop :=
   ∃ d ∈ K.boundary f, ∃ e ∈ K.boundary g, K.SameEdge d e
 
 /-- Gallier-Xu connectivity of the face-edge incidence system. -/
-def IsConnected (K : SurfaceCellComplex) : Prop :=
+@[expose] def IsConnected (K : SurfaceCellComplex) : Prop :=
   Nonempty K.Face ∧ ∀ f g, Relation.ReflTransGen K.FaceAdjacent f g
 
 /-- A signed occurrence of a named edge in a polygonal boundary word. -/
@@ -174,7 +177,7 @@ def edge {α : Type*} : SignedDart α → α
   | neg a => a
 
 /-- Reverse the orientation of a signed dart. -/
-def flip {α : Type*} : SignedDart α → SignedDart α
+@[expose] def flip {α : Type*} : SignedDart α → SignedDart α
   | pos a => neg a
   | neg a => pos a
 
@@ -185,7 +188,7 @@ def flip {α : Type*} : SignedDart α → SignedDart α
   cases d <;> rfl
 
 /-- Orientation reversal as an equivalence. -/
-def flipEquiv (α : Type*) : SignedDart α ≃ SignedDart α where
+@[expose] def flipEquiv (α : Type*) : SignedDart α ≃ SignedDart α where
   toFun := flip
   invFun := flip
   left_inv := flip_flip
@@ -233,7 +236,7 @@ theorem oneFacePresentation_isConnected (Edge : Type) [Fintype Edge]
   exact Relation.ReflTransGen.refl
 
 /-- Convert an oriented triangulation edge occurrence to a cell-complex signed dart. -/
-def signedDartOfOrientedEdge {Edge : Type*} :
+@[expose] def signedDartOfOrientedEdge {Edge : Type*} :
     OrientedEdge Edge → SignedDart Edge
   | OrientedEdge.pos e => SignedDart.pos e
   | OrientedEdge.neg e => SignedDart.neg e
@@ -253,7 +256,7 @@ theorem signedDartOfOrientedEdge_edge {Edge : Type*} (d : OrientedEdge Edge) :
 
 The nonempty boundary presentation is equivalent to Gallier--Xu's empty-word sphere and is
 directly compatible with the polygonal occurrence adapter. -/
-def sphere : SurfaceCellComplex where
+@[expose] def sphere : SurfaceCellComplex where
   Face := Bool
   Dart := SignedDart PUnit
   Vertex := PUnit
@@ -392,7 +395,7 @@ variable {S : Type*} [TopologicalSpace S]
 
 /-- Triangle-boundary positions are canonically the boundary occurrences of the converted cell
 complex. -/
-def boundaryPositionEquivCellOccurrence (T : FiniteSurfaceTriangulation S) :
+@[expose] def boundaryPositionEquivCellOccurrence (T : FiniteSurfaceTriangulation S) :
     T.BoundaryPosition ≃ T.toCellComplex.BoundaryOccurrence :=
   Equiv.sigmaCongrRight fun _ =>
     (Fin.castOrderIso (by simp [toCellComplex])).toEquiv

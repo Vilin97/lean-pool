@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.StrongSmoothJet
 /-! Actual derivative words at any lower Sobolev level, with exact representative and norm
 identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped ContDiff Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- A genuine derivative word followed by restriction to its prescribed target Sobolev level. -/
-def wordAtLevel {s : ℕ} (q n : ℕ) (w : Fin n → Fin 4) (h : n + q ≤ s) :
+@[expose] def wordAtLevel {s : ℕ} (q n : ℕ) (w : Fin n → Fin 4) (h : n + q ≤ s) :
     SobolevSpace period s →L[ℝ] SobolevSpace period q :=
   (wordBlock period q n w).comp (restrictOperator period (by omega : q+n ≤ s))
 
@@ -39,7 +39,7 @@ theorem wordAtLevel_value {s : ℕ} (q n : ℕ) (w : Fin n → Fin 4) (h : n + q
     value period (wordAtLevel period q n w h u) = (toJet period u).word w := by
   change value period (wordBlock period q n w (restrictOperator period (by omega : q+n ≤ s) u)) = _
   rw [wordBlock_value, toJet_word period u (by omega)]
-  rfl
+  rw [word_restrictOperator]
 
 /-- Every actual smooth representative has the expected classical word after this operation. -/
 theorem wordAtLevel_ae {s : ℕ} (q n : ℕ) (w : Fin n → Fin 4) (h : n + q ≤ s)

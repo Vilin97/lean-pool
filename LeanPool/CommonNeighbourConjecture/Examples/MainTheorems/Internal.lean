@@ -19,7 +19,7 @@ Construction parameters, bridge lemmas, and proof machinery used by the
 minimal public module `Examples.MainTheorems`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

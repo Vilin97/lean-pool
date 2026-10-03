@@ -20,7 +20,7 @@ the coherence lemmas provable without the interchange law
 bundle-map calculus.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -29,6 +29,7 @@ open CategoryTheory
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The cast isomorphism between equal-arity objects. -/
+@[expose]
 noncomputable def castIso {n m : ℕ} (h : n = m) :
     (SkeinObj.mk n : SkeinObj f) ≅ SkeinObj.mk m where
   hom := bundleMapClass f (finCongr h)
@@ -152,6 +153,7 @@ theorem transposeEquiv_trans_self (a b : ℕ) :
 
 /-- **The braiding isomorphism** of the skein category: the
 block-transpose bundle map. -/
+@[expose]
 noncomputable def skeinBraiding (X Y : SkeinObj f) :
     MonoidalCategoryStruct.tensorObj X Y ≅
       MonoidalCategoryStruct.tensorObj Y X where

@@ -46,7 +46,7 @@ A configuration and its window are transported together. The affine map `s`
 acts on sites, while its additive part `t` acts on translation and period vectors.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 

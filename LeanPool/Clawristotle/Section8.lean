@@ -18,7 +18,7 @@ derives E = 0 from the Poisson-Boltzmann equation, and assembles the abstract
 `ConcreteTheorem42` combining all sections.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

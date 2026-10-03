@@ -43,7 +43,7 @@ STATUS: unconditional.  The two order inputs of `LiCriterion.li_criterion_rh_iff
 both compared theorems report `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open LiChallenge
 

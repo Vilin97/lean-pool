@@ -27,7 +27,7 @@ This file implements blueprint nodes D01 and D02 of
 Throughout, `n` denotes `Fintype.card ι`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 
@@ -94,6 +94,7 @@ section Weights
 
 /-- Blueprint D01: the mixed-radix weight `D Q i = ∏_{j < i} Q j` of the radices
 `Q : Fin k → ℕ`; so `D Q 0 = 1` and `D Q (i + 1) = D Q i * Q i`. -/
+@[expose]
 def D {k : ℕ} (Q : Fin k → ℕ) (i : Fin k) : ℕ := ∏ j ∈ Finset.univ.filter (· < i), Q j
 
 variable {k : ℕ}

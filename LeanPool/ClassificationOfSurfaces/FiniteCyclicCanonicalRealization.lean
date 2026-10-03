@@ -23,7 +23,7 @@ already-certified canonical polygonal quotients; in particular, it does not rest
 Lean-Eval relation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -60,6 +60,7 @@ noncomputable def ofOneFaceWordFaceHomeomorph
 
 /-- Enumerating the edge names and the unique face leaves the polygonal pre-realization
 homeomorphic to the original typed one-face pre-realization. -/
+@[expose]
 noncomputable def ofOneFaceWordPreHomeomorph
     (word : List (SignedDart Edge)) :
     (ofOneFaceWord word).PolygonalPreRealization ≃ₜ
@@ -86,6 +87,7 @@ theorem ofOneFaceWordPreHomeomorph_apply_snd
 
 /-- A boundary position of the enumerated word, read as the same position of the original typed
 word. -/
+@[expose]
 noncomputable def ofOneFaceWordMapOccurrence
     (word : List (SignedDart Edge)) :
     (ofOneFaceWord word).BoundaryOccurrence →
@@ -169,6 +171,7 @@ noncomputable def ofOneFaceWordComapOccurrence
           exact i)⟩
 
 /-- Boundary positions are unchanged by enumeration. -/
+@[expose]
 noncomputable def ofOneFaceWordOccurrenceEquiv
     (word : List (SignedDart Edge)) :
     (ofOneFaceWord word).BoundaryOccurrence ≃
@@ -240,6 +243,7 @@ theorem IsSurfaceValid.not_isBoundaryEdge_of_distinct_occurrences
   exact hne (hs.trans ht.symm)
 
 /-- Transport a finite-cyclic pairing back to the original typed one-face word. -/
+@[expose]
 noncomputable def ofOneFaceWordMapPairing
     (word : List (SignedDart Edge))
     (pairing : (ofOneFaceWord word).BoundaryPairing) :
@@ -313,6 +317,7 @@ noncomputable def ofOneFaceWordMapPairing
       compatible := hcompatible }
 
 /-- Pull a typed one-face pairing forward to the enumerated finite-cyclic word. -/
+@[expose]
 noncomputable def ofOneFaceWordComapPairing
     (word : List (SignedDart Edge))
     (valid : (ofOneFaceWord word).IsSurfaceValid)

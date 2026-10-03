@@ -16,7 +16,7 @@ monoidal, additive, ℂ-linear functor: compose the fibre functor
 with the embedding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

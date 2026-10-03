@@ -21,7 +21,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 Imported Lean Pool material for `LeanPool.Monsky.MainStatement`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 

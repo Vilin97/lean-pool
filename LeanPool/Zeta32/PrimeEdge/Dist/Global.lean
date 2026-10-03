@@ -9,7 +9,7 @@ public import LeanPool.Zeta32.PrimeEdge.Dist.Basic
 /-! The global side of S2b-1: the `X`-free part of `U_r(A / D_{5n})` is
 the functional `locValue r` (same formulas, global constants) on `t A / D_{5n}`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

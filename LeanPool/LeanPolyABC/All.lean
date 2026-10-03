@@ -31,4 +31,4 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.LeanPolyABC.All`.
 -/
 
-@[expose] public section
+public section

@@ -18,7 +18,7 @@ section
 
 /-! Exact time-profile normalization of the actual slow curl and its time derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -137,7 +137,7 @@ section
 /-! Same-radius bounds and literal profile normalization for the constructed potential time
 derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

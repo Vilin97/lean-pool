@@ -28,7 +28,7 @@ finite harmonic sum, conjugate pairing, and coordinate reindexing.  The
 particular source assumption is made on full native parameter fibers.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,10 +48,12 @@ abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 abbrev Frequency := TorusInverse.Frequency
 
 /-- Point deck, given by `(0, (0, TorusAverages.latticePoint k))`. -/
+@[expose]
 noncomputable def pointDeck (k : Frequency) : Point :=
   (0, (0, TorusAverages.latticePoint k))
 
 /-- Native section, given by `ActualWaveRegularity.particularChart (x, 0)`. -/
+@[expose]
 noncomputable def nativeSection (x : Point) : ActualWaveRegularity.ParticularSpace :=
   ActualWaveRegularity.particularChart (x, 0)
 
@@ -270,7 +272,7 @@ cover. Under this ordering, the actual exact-curl velocity, pressure, and
 retained Gaussian coefficients are invariant under every torus deck shift.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -285,6 +287,7 @@ variable {B N0 : ℕ}
 
 /-- The deck shift on the full free lift, leaving radius and slow variables
 unchanged. This is definitionally the shift used by the seed continuation. -/
+@[expose]
 noncomputable def pointDeck (k : TorusInverse.Frequency) : Point :=
   (ActualPrimaryCoherence.chartDeck k).1
 
@@ -386,7 +389,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -410,6 +413,7 @@ section TranslationCalculus
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Coefficients translation, given by `∀ j, TranslationOn U v (a j)`. -/
+@[expose]
 def CoefficientsTranslation (U : Set D) (v : D) (a : HarmonicFields.Coefficients D) : Prop :=
   ∀ j, TranslationOn U v (a j)
 
@@ -801,6 +805,7 @@ end CurrentSource
 /-! The literal source, with the associator used by the particular solver. -/
 
 /-- Copies, constructed using `ActualWaveRegularityData.particularCopies`. -/
+@[expose]
 noncomputable def copies {B N0 : ℕ} (x : CycleState (Index B N0))
     (l : Index B N0) (j : ℤ) :=
   ActualWaveRegularityData.particularCopies (l.2, l.1)

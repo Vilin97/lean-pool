@@ -31,7 +31,7 @@ a clique tree with repeated maximal bags, and
 graph.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

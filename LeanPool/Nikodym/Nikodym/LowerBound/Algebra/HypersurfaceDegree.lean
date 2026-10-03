@@ -29,7 +29,7 @@ for the factor map restricted to `V_t` then gives the identity.
 * `Nikodym.LowerBound.homHilbert_sup_span_singleton_add`: the identity above (blueprint B01).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

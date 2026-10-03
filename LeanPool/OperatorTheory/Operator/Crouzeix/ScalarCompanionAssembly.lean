@@ -32,7 +32,7 @@ of the original auxiliary contour.
   feeds those packages through the smooth-thickening fourth-power capstone.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Set
 open scoped InnerProductSpace Interval Real

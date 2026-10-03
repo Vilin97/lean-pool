@@ -94,7 +94,7 @@ One lemma here strengthens one on `main`: `mark_swap'` drops the non-levelness h
 under either name. Its home is `Schoenflies/Parity.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -184,7 +184,8 @@ theorem chainSum_map_orientPiece (f : Plane → ZMod 2) (L : List Piece) :
 to be named by either of its two ends first. This is the relation under which "the edge list of
 `Jᵢ` is that of `Aᵢ` together with that of `P`" is true — a `ClosedPolygon` built on `Aᵢ ∪ P`
 lists its edges in its own cyclic order, and traverses one of the two pieces backwards. -/
-def SameEdges (L₁ L₂ : List Piece) : Prop := (L₁.map orientPiece).Perm (L₂.map orientPiece)
+@[expose] def SameEdges (L₁ L₂ : List Piece) : Prop :=
+  (L₁.map orientPiece).Perm (L₂.map orientPiece)
 
 @[refl] theorem SameEdges.refl (L : List Piece) : SameEdges L L := List.Perm.refl _
 
@@ -260,7 +261,7 @@ the two definitions compose with nothing but `List.sum_append`. -/
 
 /-- `L` is a **chain from `p` to `q`**: its mod-`2` boundary is `p` together with `q`. Stated by
 duality, exactly as `Schoenflies.IsClosedChain` is. -/
-def IsChainFrom (L : List Piece) (p q : Plane) : Prop :=
+@[expose] def IsChainFrom (L : List Piece) (p q : Plane) : Prop :=
   ∀ f : Plane → ZMod 2, (L.map fun P => f P.1 + f P.2).sum = f p + f q
 
 /-- A chain whose two ends coincide is a closed chain, and conversely. -/
@@ -305,7 +306,7 @@ How a crosscut is normally presented: a list of points. `pathPieces` reads off i
 `isChainFrom_pathPieces` says its boundary is the two ends of the list. -/
 
 /-- The edges of the polyline `v₀, v₁, …, v_k`. -/
-def pathPieces : List Plane → List Piece
+@[expose] def pathPieces : List Plane → List Piece
   | [] => []
   | [_] => []
   | v :: w :: rest => (v, w) :: pathPieces (w :: rest)
@@ -356,7 +357,7 @@ variable {C : ClosedPolygon m} {a : ZMod (m + 3)} {k : ℕ}
 /-- The edge list of the arc of `C` that leaves vertex `a` and runs forward through `k` edges.
 For `k ≤ m + 3` this is one of the two arcs a crosscut with endpoints `C.vertex a` and
 `C.vertex (a + k)` cuts `C` into; the other is `arcPieces C (a + k) (m + 3 - k)`. -/
-def arcPieces (C : ClosedPolygon m) (a : ZMod (m + 3)) (k : ℕ) : List Piece :=
+@[expose] def arcPieces (C : ClosedPolygon m) (a : ZMod (m + 3)) (k : ℕ) : List Piece :=
   (List.range k).map fun t : ℕ => (C.vertex (a + t), C.vertex (a + t + 1))
 
 @[simp] theorem arcPieces_zero (C : ClosedPolygon m) (a : ZMod (m + 3)) :

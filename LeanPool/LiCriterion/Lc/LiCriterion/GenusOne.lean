@@ -31,7 +31,7 @@ The core term `2 - (wᵐ + w⁻ᵐ)` and the identity pairing a zero `ρ` with `
 makes the sum over zeros converge at genus 1.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -43,6 +43,7 @@ noncomputable section
 def core (m : ℕ) (w : ℂ) : ℂ := (2 : ℂ) - (w ^ m + (w ^ m)⁻¹)
 
 /-- The basic Li summand written as `1 - w^{-m}` (with the exponent as a `ℤ`). -/
+@[expose]
 def liTerm (m : ℕ) (w : ℂ) : ℂ := (1 : ℂ) - w ^ (-(m : ℤ))
 
 lemma liTerm_add_liTerm_inv (m : ℕ) (w : ℂ) :

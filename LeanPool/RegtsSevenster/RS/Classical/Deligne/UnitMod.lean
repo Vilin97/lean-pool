@@ -20,7 +20,7 @@ multiplication law inherited — the substrate of the local
 splitting algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

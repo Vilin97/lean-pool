@@ -17,7 +17,7 @@ This file contains the transfinite Ulm filtration `ulmSubgroup` and its basic
 structural lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -28,7 +28,7 @@ variable (p : ℕ)
 /-- `p^α·G` by transfinite recursion:
 `p^0·G = G`, `p^(α+1)·G = {p•x | x ∈ p^α·G}`, and
 `p^λ·G = ⋂_{β<λ} p^β·G`. -/
-noncomputable def ulmSubgroup {G : Type*} [AddCommGroup G] (α : Ordinal) :
+@[expose] noncomputable def ulmSubgroup {G : Type*} [AddCommGroup G] (α : Ordinal) :
     AddSubgroup G :=
   α.limitRecOn
     ⊤
@@ -89,7 +89,7 @@ lemma ulmSubgroup_antitone : Antitone (fun α ↦ ulmSubgroup p α (G := G)) := 
         have hs : ulmSubgroup p (β + 1) (G := G) ≤ ulmSubgroup p β := by
           rw [ulmSubgroup_add_one]
           intro x hx
-          rcases hx with ⟨y, hy, rfl⟩
+          rcases (mem_pImage p _ _).mp hx with ⟨y, hy, rfl⟩
           simpa using (ulmSubgroup p β (G := G)).nsmul_mem hy p
         rcases lt_or_eq_of_le hαβ with hlt | rfl
         · exact hs.trans (ih α (Order.le_of_lt_succ hlt))
@@ -147,7 +147,8 @@ lemma map_ulmSubgroup_le {H : Type*} [AddCommGroup H] (φ : G →+ H) (α : Ordi
   | add_one α ih =>
       intro y hy
       rcases hy with ⟨x, hx, rfl⟩
-      rw [ulmSubgroup_add_one] at hx ⊢
+      change x ∈ ulmSubgroup p (α + 1) at hx
+      rw [ulmSubgroup_add_one, mem_pImage] at hx ⊢
       rcases hx with ⟨z, hz, rfl⟩
       exact ⟨φ z, ih ⟨z, hz, rfl⟩, by simp⟩
   | limit o ho IH =>

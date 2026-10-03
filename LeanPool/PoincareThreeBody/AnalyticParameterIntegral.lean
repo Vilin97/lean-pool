@@ -18,7 +18,7 @@ compactness argument used later supplies a common radius and the summable integr
 coefficients.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

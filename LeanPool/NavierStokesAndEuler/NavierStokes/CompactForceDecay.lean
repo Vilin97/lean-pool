@@ -17,7 +17,7 @@ bounded on a compact time interval after reduction to a fundamental cube.
 Beyond the time support it is zero by locality of differentiation.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.CompactForceDecay

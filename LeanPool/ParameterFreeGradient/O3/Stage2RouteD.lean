@@ -15,7 +15,7 @@ This probe-local module develops native identities needed by a direct Bregman
 proof.  It contains no target-shaped hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

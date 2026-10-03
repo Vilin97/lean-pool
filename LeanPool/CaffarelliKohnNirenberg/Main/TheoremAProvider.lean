@@ -21,7 +21,7 @@ and the final closed-cylinder estimate. Every remaining analytic input is
 displayed explicitly; no regularity conclusion is assumed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

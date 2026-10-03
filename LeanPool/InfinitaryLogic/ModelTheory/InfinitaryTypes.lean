@@ -22,7 +22,7 @@ image); it does NOT ascend through arbitrary expansions, which is why the arbitr
 endpoint of issue #11 must go through a canonical uniform expansion rather than this lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -32,18 +32,18 @@ variable {L : Language.{u, v}}
 
 /-- The complete infinitary type of a tuple over the empty set: all `L_{ω₁ω}`-formulas (in `n`
 free variables) it realizes. -/
-def infinitaryType (M : Type w) [L.Structure M] {n : ℕ} (a : Fin n → M) :
+@[expose] def infinitaryType (M : Type w) [L.Structure M] {n : ℕ} (a : Fin n → M) :
     Set (L.BoundedFormulaω Empty n) :=
   { ψ | ψ.Realize Empty.elim a }
 
 /-- The realized complete types of `M` at arity `n`. -/
-def RealizedInfinitaryTypes (M : Type w) [L.Structure M] (n : ℕ) :
+@[expose] def RealizedInfinitaryTypes (M : Type w) [L.Structure M] (n : ℕ) :
     Set (Set (L.BoundedFormulaω Empty n)) :=
   Set.range fun a : Fin n → M => infinitaryType M a
 
 /-- **Smallness**: `M` realizes only countably many complete `L_{ω₁ω}`-types, across all finite
 arities. -/
-def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
+@[expose] def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
   ∀ n, (RealizedInfinitaryTypes (L := L) M n).Countable
 
 /-- **Isomorphism transport for types**: an `L`-isomorphism carries the complete type of a

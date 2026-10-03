@@ -37,7 +37,7 @@ Also here: the inverse-derivative units `deriv_trans_mul_deriv_trans_symm` /
 `Form01.coeffAt_finsetSum`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory

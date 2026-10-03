@@ -12,7 +12,7 @@ public import Mathlib.Analysis.Real.Pi.Bounds
 /-! the proof notes (11′), (14′), (15′): tail margin, integration of the configuration bound,
 and the constant `F* = 9(3/2 − log 3) + (9/2)(ℓ − W) ≤ −6`. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Polynomial Filter Topology
 

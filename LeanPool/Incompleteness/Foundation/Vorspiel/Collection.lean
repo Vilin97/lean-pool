@@ -13,7 +13,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Collection -/
 
-@[expose] public section
+public section
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -66,7 +66,7 @@ namespace Collection
 variable {β α : Type*} [Collection β α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def set : α → Set β := fun a ↦ {x | x ∈ a}
+@[expose] def set : α → Set β := fun a ↦ {x | x ∈ a}
 
 @[simp] lemma mem_set_iff {x : β} {a : α} : x ∈ (set a : Set β) ↔ x ∈ a := by simp [set]
 
@@ -93,7 +93,7 @@ lemma subset_antisymm {a b : α} (ha : a ⊆ b) (hb : b ⊆ a) : set a = set b :
 @[simp] lemma set_cons (z : β) (a : α) : set (cons z a) = insert z (set a) := by ext; simp [set]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Finite (a : α) : Prop := (set a).Finite
+@[expose] def Finite (a : α) : Prop := (set a).Finite
 
 @[simp] lemma empty_finite : Finite (∅ : α) := by simp [Finite]
 

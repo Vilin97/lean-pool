@@ -26,7 +26,7 @@ Jensen, "Completions of UFDs with semi-local formal fibers",
 2006, Theorem 2.2.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

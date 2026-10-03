@@ -15,7 +15,7 @@ polygonal circle.  The exact segment-intersection axioms follow from the complex
 law and the fact that a simple cycle has no repeated cyclic vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -47,13 +47,13 @@ noncomputable def walkGeometricPath {u w : K.Vertex}
 
 @[simp] theorem walkGeometricPath_nil (u : K.Vertex) :
     K.walkGeometricPath (SimpleGraph.Walk.nil : K.vertexGraph.Walk u u) =
-      Path.refl (K.position u) := rfl
+      Path.refl (K.position u) := by rfl
 
 @[simp] theorem walkGeometricPath_cons {u w z : K.Vertex}
     (h : K.vertexGraph.Adj u w) (p : K.vertexGraph.Walk w z) :
     K.walkGeometricPath (SimpleGraph.Walk.cons h p) =
       (Path.segment (K.position u) (K.position w)).trans
-        (K.walkGeometricPath p) := rfl
+        (K.walkGeometricPath p) := by rfl
 
 /-- The geometric path of a walk stays in the support of the complex, provided its final vertex
 is an actual zero-face. -/
@@ -193,7 +193,7 @@ end PlaneComplex
 
 /-- Change only the endpoint witnesses of a path.  Its underlying function, and hence its range
 and injectivity, are unchanged. -/
-def Path.copy {X : Type*} [TopologicalSpace X] {a b a' b' : X}
+@[expose] def Path.copy {X : Type*} [TopologicalSpace X] {a b a' b' : X}
     (p : Path a b) (ha : a = a') (hb : b = b') : Path a' b' where
   toFun := p
   continuous_toFun := p.continuous
@@ -202,11 +202,11 @@ def Path.copy {X : Type*} [TopologicalSpace X] {a b a' b' : X}
 
 @[simp] theorem Path.copy_apply {X : Type*} [TopologicalSpace X] {a b a' b' : X}
     (p : Path a b) (ha : a = a') (hb : b = b') (t : unitInterval) :
-    Path.copy p ha hb t = p t := rfl
+    Path.copy p ha hb t = p t := by rfl
 
 @[simp] theorem Path.copy_range {X : Type*} [TopologicalSpace X] {a b a' b' : X}
     (p : Path a b) (ha : a = a') (hb : b = b') :
-    Set.range (Path.copy p ha hb) = Set.range p := rfl
+    Set.range (Path.copy p ha hb) = Set.range p := by rfl
 
 /-- A path contained in an embedded arc and joining the same endpoints covers that entire arc.
 This is the order-convexity of connected subsets of the unit interval, transported through the

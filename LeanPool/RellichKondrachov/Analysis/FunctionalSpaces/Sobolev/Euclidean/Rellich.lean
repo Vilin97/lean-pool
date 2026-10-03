@@ -42,7 +42,7 @@ The proof uses:
 Tracking: Beads `lean-103.5.2.26.5.3.2.1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -77,7 +77,7 @@ local instance instFactOneLeTwoSobolevEuclideanRellich : Fact (1 ≤ (2 : ℝ≥
 
 We model “supported in `K`” as belonging to the closed range of the extension-by-zero map
 `Lp(volume.restrict K) →ₗᵢ Lp(volume)`. -/
-noncomputable def h1On (K : Set E) (hKm : MeasurableSet K) :
+@[expose] noncomputable def h1On (K : Set E) (hKm : MeasurableSet K) :
     Submodule ℝ (↥(h1 (μ := (volume : Measure E)) (E := E))) :=
   Submodule.comap
     (h1ToL2 (μ := (volume : Measure E)) (E := E)).toLinearMap
@@ -86,7 +86,7 @@ noncomputable def h1On (K : Set E) (hKm : MeasurableSet K) :
           (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K) hKm).toLinearMap))
 
 /-- The inclusion `h1On K → L²(volume)` as a continuous linear map. -/
-noncomputable def h1OnToL2 (K : Set E) (hKm : MeasurableSet K) :
+@[expose] noncomputable def h1OnToL2 (K : Set E) (hKm : MeasurableSet K) :
     ↥(h1On K hKm) →L[ℝ] (E →₂[(volume : Measure E)] ℝ) :=
   (h1ToL2 (μ := (volume : Measure E)) (E := E)).comp (h1On K hKm).subtypeL
 

@@ -44,7 +44,7 @@ have norm at most one.
 * `Sendov.sendov_interior_real`: the two combined, `0 ≤ a < 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

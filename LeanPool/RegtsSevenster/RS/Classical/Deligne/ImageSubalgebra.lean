@@ -49,7 +49,7 @@ cancels, so each reduces to the corresponding law in `A`.  This is
 and, over a symmetric `C`, `IsCommMonObj` of the same.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -129,7 +129,7 @@ theorem mul_comm_of_mono
     IsCommMonObj.mul_comm]
 
 /-- **A subobject closed under the operations is an algebra.** -/
-@[reducible] def monObjOfMono
+@[expose, reducible] def monObjOfMono
     [Category.{w} D] [MonoidalCategory D] {S : D} {A : D} [MonObj A]
     (k : S ⟶ A) [Mono k] (m : S ⊗ S ⟶ S) (e : 𝟙_ D ⟶ S)
     (hm : m ≫ k = (k ⊗ₘ k) ≫ μ[A])
@@ -233,7 +233,7 @@ variable {C : Type v}
 
 /-- The image tower, read as a diagram over the ambient-universe copy
 of the natural numbers. -/
-@[reducible] noncomputable def imageDiagram
+@[expose, reducible] noncomputable def imageDiagram
     [SmallCategory C] [MonoidalCategory C] [Abelian C] (A : Ind C)
     [MonObj A] (i₀ : A.presentation.I) : Tower.{v} ⥤ Ind C :=
   AsSmall.down ⋙ imageSeq A i₀

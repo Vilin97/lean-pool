@@ -23,7 +23,7 @@ name the row's lookup tables, check the incidence facts that file asks for,
 and re-export the reach statement in the shape row 12 consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow12Tripod
 

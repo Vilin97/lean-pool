@@ -32,7 +32,7 @@ at each finite depth may acquire carries later; this theorem neither decides
 them nor proves the universal GKP conjecture.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

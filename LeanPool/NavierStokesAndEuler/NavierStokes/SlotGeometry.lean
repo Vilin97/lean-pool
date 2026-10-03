@@ -23,7 +23,7 @@ Finite-dimensional continuity then gives a single positive rectangle radius,
 including padding and injectivity modulo the integer lattice.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -146,10 +146,11 @@ theorem center_injective (m D : ℕ) : Function.Injective (center m D) := by
   exact_mod_cast (add_right_cancel hnum)
 
 /-- Lattice, given by `(Set.range (Int.cast : ℤ → ℝ)) ×ˢ (Set.range (Int.cast : ℤ → ℝ))`. -/
-def lattice : Set Plane := (Set.range (Int.cast : ℤ → ℝ)) ×ˢ (Set.range (Int.cast : ℤ → ℝ))
+@[expose] def lattice : Set Plane :=
+  (Set.range (Int.cast : ℤ → ℝ)) ×ˢ (Set.range (Int.cast : ℤ → ℝ))
 
 /-- Equality on the torus, stated on its universal cover. -/
-def torusEq (x y : Plane) : Prop := x - y ∈ lattice
+@[expose] def torusEq (x y : Plane) : Prop := x - y ∈ lattice
 
 theorem isClosed_lattice : IsClosed lattice :=
   Int.isClosedEmbedding_coe_real.isClosed_range.prod Int.isClosedEmbedding_coe_real.isClosed_range
@@ -366,7 +367,7 @@ theorem cover_pow_torusEq (n : ℕ) {x y : Plane} (h : torusEq x y) :
       exact cover_torusEq ih
 
 /-- All periodically reindexed copies of a native slot, on the absolute lift. -/
-def liftedSupport (level : ℕ) (slot : Set Plane) : Set Plane :=
+@[expose] def liftedSupport (level : ℕ) (slot : Set Plane) : Set Plane :=
   {Y | ∃ x ∈ slot, torusEq ((cover ^ level) Y) x}
 
 theorem liftedSupport_disjoint_of_separation (level n : ℕ) (S T : Set Plane)
@@ -395,7 +396,7 @@ theorem exists_disjoint_lifted_slots (m D : ℕ) :
   exact liftedSupport_disjoint_of_separation level n _ _ (hsep n hn i j hij)
 
 /-- A rectangle in any two prescribed auxiliary directions. -/
-def orientedRectangle (c a b : Plane) (r : ℝ) : Set Plane :=
+@[expose] def orientedRectangle (c a b : Plane) (r : ℝ) : Set Plane :=
   {x | ∃ ξ η : ℝ, |ξ| ≤ r ∧ |η| ≤ r ∧ x = c + ξ • a + η • b}
 
 theorem orientedRectangle_subset (c a b : Plane) (r : ℝ) (hr : 0 ≤ r) :

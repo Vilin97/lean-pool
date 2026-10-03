@@ -54,7 +54,7 @@ concrete planar Stokes/residue computations — the shape `DolbeaultBridge.lean`
 residue-pairing hypothesis does not directly offer.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory
@@ -667,7 +667,7 @@ def pairingH01 (PU : SurfPoU X) (θ : RS.Form1 X) : RS.H01 X →ₗ[ℂ] ℂ :=
 
 omit [T2Space X] in
 @[simp] theorem pairingH01_mk (PU : SurfPoU X) (θ : RS.Form1 X) (σ : RS.Form01 X) :
-    pairingH01 PU θ (RS.H01.mk σ) = pairing PU σ θ := rfl
+    pairingH01 PU θ (RS.H01.mk σ) = pairing PU σ θ := by rfl
 
 /-- The Serre functional `θ ↦ ∫∫ · ∧ θ`, as a linear map into the dual of `H01 X`. -/
 def pairingDual (PU : SurfPoU X) : RS.Form1 X →ₗ[ℂ] Module.Dual ℂ (RS.H01 X) where
@@ -748,7 +748,10 @@ theorem tailToH1_zero_surjective_iff_finrank_le :
       (LinearMap.finrank_le_finrank_of_injective hinj).antisymm (hle.trans_eq hgen.symm)
     have hsurj' : Function.Surjective (RS.LaurentTail.H1Tail.toH1 (0 : RS.Divisor X)) :=
       (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hfr).mp hinj
-    exact hsurj'.comp (RS.LaurentTail.H1Tail.mk_surjective (0 : RS.Divisor X))
+    intro y
+    obtain ⟨ξ, rfl⟩ := hsurj' y
+    obtain ⟨τ, rfl⟩ := RS.LaurentTail.H1Tail.mk_surjective (0 : RS.Divisor X) ξ
+    exact ⟨τ, (RS.LaurentTail.H1Tail.toH1_mk (0 : RS.Divisor X) τ).symm⟩
 
 end RS.Abel
 

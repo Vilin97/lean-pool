@@ -16,13 +16,14 @@ intersection. The subfamilies here are arbitrary sets of languages.
 This file extends, and does not alter, the previously checked characterization.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
 variable {α : Type*}
 
 /-- Every finite-core subfamily contains a witness point missing from a member. -/
+@[expose]
 def Separates (H : Generic.LanguageClass α)
     (T : Generic.Language α → Finset α) : Prop :=
   ∀ F : Set (Set α), F ⊆ H → F.Nonempty → (⋂₀ F).Finite →

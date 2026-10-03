@@ -15,7 +15,7 @@ An almost-everywhere strict lower-density bound can be made uniform on a compact
 while losing arbitrarily little Hausdorff measure.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

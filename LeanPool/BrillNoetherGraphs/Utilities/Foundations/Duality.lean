@@ -17,7 +17,7 @@ dual rank condition for `K_G - D`.  This module records both the pointwise
 rank equivalence and the induced symmetry of `BNExists`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

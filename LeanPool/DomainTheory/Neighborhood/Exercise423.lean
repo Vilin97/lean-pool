@@ -56,7 +56,7 @@ The argument uses
 only the project's permitted element-extensionality through `Theorem41`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

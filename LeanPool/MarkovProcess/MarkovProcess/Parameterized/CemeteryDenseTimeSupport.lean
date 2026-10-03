@@ -18,7 +18,7 @@ This is only a statement about the countable trajectory. It makes no continuous-
 lifetime-path, or spatial support claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

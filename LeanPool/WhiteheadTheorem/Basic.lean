@@ -16,7 +16,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Basic`.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory

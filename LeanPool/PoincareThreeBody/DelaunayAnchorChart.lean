@@ -24,7 +24,7 @@ four-dimensional chart.  Its derivative at the rational anchor is nonsingular, s
 contains a phase-space neighborhood of the anchor.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -33,15 +33,15 @@ namespace LeanPool.PoincareThreeBody
 abbrev DelaunayAnchorParameters := ActionSpace × (ℝ × ℝ)
 
 /-- The action pair at the rational energy `-2` anchor. -/
-noncomputable def delaunayAnchorAction : ActionSpace :=
+@[expose] noncomputable def delaunayAnchorAction : ActionSpace :=
   ![1 / Real.sqrt 3, (1 / 2 : ℝ)]
 
 /-- Parameters corresponding to the rational phase point `(0, 1/6, -3, 0)`. -/
-noncomputable def delaunayAnchorParameters : DelaunayAnchorParameters :=
+@[expose] noncomputable def delaunayAnchorParameters : DelaunayAnchorParameters :=
   (delaunayAnchorAction, 0, Real.pi / 2)
 
 /-- Full local Delaunay chart using eccentric anomaly as its first angle. -/
-noncomputable def delaunayAnchorChart
+@[expose] noncomputable def delaunayAnchorChart
     (parameters : DelaunayAnchorParameters) : PhaseSpace :=
   delaunayActionSectionAtAnomaly parameters.2.1 parameters.2.2 parameters.1
 

@@ -19,7 +19,7 @@ composites defining the base-changed pairing and copairing are
 linear too.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -126,6 +126,7 @@ theorem baseChangeCopair_linear
   exact Category.assoc _ _ _
 
 /-- **The base change of a duality datum.** -/
+@[expose]
 noncomputable def baseChangeDatum
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -145,6 +146,7 @@ section Unit
 
 /-- **The unit of the base-change structure**: the base change of
 the regular module is the regular module over the new base. -/
+@[expose]
 noncomputable def baseChangeUnitIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

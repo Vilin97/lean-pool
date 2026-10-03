@@ -17,16 +17,18 @@ minimum-valence-two hypothesis is essential for bounding their number in terms
 of the genus.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The vertices of valence at least three. -/
+@[expose]
 def topologicalVertices (G : CFGraph) : Finset G.V :=
   Finset.univ.filter fun v => 3 ≤ vertexDegree G v
 
 /-- Every vertex has valence at least two. This is the structural condition
 obtained after pruning grafted trees. -/
+@[expose]
 def HasMinimumValenceTwo (G : CFGraph) : Prop :=
   ∀ v : G.V, 2 ≤ vertexDegree G v
 

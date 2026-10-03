@@ -16,7 +16,7 @@ type and adds one edge between specified vertices in the two factors. The
 construction is useful for reducing divisor questions across separating edges.
 -/
 
-@[expose] public section
+public section
 
 open Multiset Finset
 

@@ -21,7 +21,7 @@ import Mathlib.Tactic.Abel
 # LeanPool.Duality.FarkasBartl
 -/
 
-@[expose] public section
+public section
 
 private def withoutLastMap {m : ℕ} {R W : Type*} [Semiring R] [AddCommMonoid W] [Module R W]
     (A : W →ₗ[R] Fin m.succ → R) :

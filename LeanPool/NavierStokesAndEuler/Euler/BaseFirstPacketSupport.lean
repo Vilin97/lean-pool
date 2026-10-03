@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 supported: it is the compact smooth datum plus its first packet's
 literal compact initial increment. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,8 @@ theorem initial_support :
   have hd := A.exactForwardPacket_initial_increment_support H
     firstNormal firstNormal_unit firstFrame support compact δ hδ firstCoordinate
     (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q S.evolution.inverse
-    rfl (subset_halfBall.trans Metric.ball_subset_closedBall) S.evolution.velocity
+    (packetBase_boundary_zero β hβ ell hell hell1 T hT hTB)
+    (subset_halfBall.trans Metric.ball_subset_closedBall) S.evolution.velocity
   change tsupport ((fun x => F.state.evolution.velocity (0,x)) -
     (fun x => S.evolution.velocity (0,x))) ⊆ Metric.closedBall 0 (ell/2) at hd
   exact support_of_difference (fun x => S.evolution.velocity (0,x))

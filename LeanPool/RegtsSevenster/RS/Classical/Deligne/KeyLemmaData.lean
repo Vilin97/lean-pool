@@ -28,7 +28,7 @@ nonvanishing argument is unaffected; the insertions live in
 degrees `±1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -103,6 +103,7 @@ section Statement
 consumed direction): a duality datum with the zigzag laws, over
 a nonzero base whose symmetric powers of the module never
 vanish, admits splitting data. -/
+@[expose]
 def KeyLemmaDataStatement
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

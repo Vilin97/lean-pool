@@ -27,7 +27,7 @@ Exact rational-arithmetic verifications for the parameter choices used in the
 final bound.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

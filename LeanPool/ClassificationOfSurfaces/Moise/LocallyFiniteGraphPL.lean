@@ -19,7 +19,7 @@ replacement edge as support. It is the edge-level input for assembling polygonal
 boundaries in a common arrangement.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -124,7 +124,7 @@ noncomputable def rawEdgeMiddleBreakpoint
       (A.exitData.right - A.exitData.left) + 2) / 4
 
 /-- The `edgeMiddleBreakpoint` declaration. -/
-noncomputable def edgeMiddleBreakpoint
+@[expose] noncomputable def edgeMiddleBreakpoint
     (A : G.CentralPolygonalArc e) (v : A.parameterization.source.Vertex) : ℝ :=
   max (1 / 2 : ℝ) (min (3 / 4 : ℝ) (rawEdgeMiddleBreakpoint A v))
 
@@ -183,7 +183,7 @@ abbrev EdgeBreakpoint (A : G.CentralPolygonalArc e) :=
   Option (Option A.parameterization.source.Vertex)
 
 /-- The `edgeBreakpointParameter` declaration. -/
-noncomputable def edgeBreakpointParameter
+@[expose] noncomputable def edgeBreakpointParameter
     (A : G.CentralPolygonalArc e) (b : EdgeBreakpoint A) : ℝ :=
   match b with
   | none => 1 / 2
@@ -245,7 +245,7 @@ theorem leftSourcePoint_zero_lt_right :
   nlinarith [A.exitData.left_lt_right]
 
 /-- The two source points at which the middle polygonal path exits the endpoint disks. -/
-noncomputable def trimMark : Fin 2 → Plane
+@[expose] noncomputable def trimMark : Fin 2 → Plane
   | ⟨0, _⟩ => A.leftSourcePoint
   | ⟨1, _⟩ => A.rightSourcePoint
 
@@ -416,7 +416,7 @@ theorem trimSource_support :
       exact ⟨u, hu, hxu, huSegment⟩
 
 /-- Remove the unused vertices retained by `restrictedTo`. -/
-noncomputable def trimActive : PlaneComplex :=
+@[expose] noncomputable def trimActive : PlaneComplex :=
   PlaneComplex.active A.trimSource
 
 theorem trimActive_support :
@@ -483,7 +483,7 @@ theorem trimActive_map_affine :
   exact hx'
 
 /-- The finite target graph carried by the trimmed polygonal middle. -/
-noncomputable def trimTarget : PlaneComplex :=
+@[expose] noncomputable def trimTarget : PlaneComplex :=
   A.trimActive.mapGraph A.parameterization.map A.trimActive_vertex_mem_support
     A.trimActive_map_injective A.trimActive_card_le_two A.trimActive_map_affine
 

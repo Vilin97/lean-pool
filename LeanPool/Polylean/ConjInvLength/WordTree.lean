@@ -11,7 +11,7 @@ public import LeanPool.Polylean.ConjInvLength.ProvedBound
 # LeanPool.Polylean.ConjInvLength.WordTree
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

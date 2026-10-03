@@ -17,7 +17,7 @@ cardinalities) used throughout the ordered expansion of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -50,6 +50,7 @@ structure ConsData (F : Forest V) (e : Edge V) (order : List (Edge V))
   tail : OrderedGrowth forest order G
 
 /-- Decompose a nonempty ordered growth into its first step and tail growth. -/
+@[expose]
 def consData (h : OrderedGrowth F (e :: order) G) :
     ConsData F e order G := by
   cases h with
@@ -57,6 +58,7 @@ def consData (h : OrderedGrowth F (e :: order) G) :
       exact ⟨_, step, tail⟩
 
 /-- The intermediate forest after the first step of a nonempty ordered growth. -/
+@[expose]
 def tailForest (h : OrderedGrowth F (e :: order) G) : Forest V :=
   h.consData.forest
 
@@ -66,11 +68,13 @@ theorem firstStep (h : OrderedGrowth F (e :: order) G) :
   h.consData.step
 
 /-- The remaining ordered growth after the first step. -/
+@[expose]
 def tailGrowth (h : OrderedGrowth F (e :: order) G) :
     OrderedGrowth h.tailForest order G :=
   h.consData.tail
 
 /-- The first edge of a nonempty ordered growth is active for the starting forest. -/
+@[expose]
 def firstActiveExtension (h : OrderedGrowth F (e :: order) G) :
     ActiveExtension F e :=
   ⟨h.tailForest, h.firstStep⟩
@@ -108,6 +112,7 @@ theorem tailGrowth_edges_eq_toFinset_union
   h.tailGrowth.edges_eq_toFinset_union
 
 /-- The finite forest index grown by an ordered growth. -/
+@[expose]
 def support (_h : OrderedGrowth F order G) : ForestIndex V :=
   G.support
 

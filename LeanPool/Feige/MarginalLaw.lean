@@ -17,7 +17,7 @@ random variables by their product of marginal distributions: integrability,
 the first moment, and nonnegative support.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

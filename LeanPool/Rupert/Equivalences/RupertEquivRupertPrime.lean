@@ -14,7 +14,7 @@ import LeanPool.Rupert.Equivalences.Util
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.RupertEquivRupertPrime`.
 -/
 
-@[expose] public section
+public section
 open Matrix
 
 theorem rupert'_imp_rupert {ι : Type} (v : ι → ℝ³) : IsRupert' v → IsRupert v := by

@@ -13,7 +13,7 @@ import LeanPool.FormalizationOfBoundedArithmetic.Register
 # LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -44,7 +44,7 @@ inductive PeanoRel : Nat -> Type*
   deriving DecidableEq
 
 /-- The first-order language of Peano arithmetic used by the formalization. -/
-def peano : Language :=
+@[expose] def peano : Language :=
 { Functions := PeanoFunc,
   Relations := PeanoRel
 }
@@ -77,7 +77,7 @@ instance : Language.IsOrdered peano where
 @[inherit_doc] scoped[FirstOrder.Language] infixl:89 " <' " => Term.lt
 
 /-- The not-equal relation of two terms as a bounded formula -/
-@[delta0_simps]
+@[expose, delta0_simps]
 def _root_.FirstOrder.Term.neq
     {a : Type u} {n} {L : Language} (t1 t2 : L.Term (a ⊕ Fin n)) :
     L.BoundedFormula a n :=
@@ -105,6 +105,7 @@ instance {M} [h : Language.peano.Structure M] : LT M :=
   ⟨fun x y => x <= y ∧ ¬ y <= x⟩
 
 /-- Interpret natural-number literals in a structure for the Peano language. -/
+@[expose]
 def natToM {M} [h : Language.peano.Structure M] : Nat -> M
 | 0 => 0
 | 1 => 1

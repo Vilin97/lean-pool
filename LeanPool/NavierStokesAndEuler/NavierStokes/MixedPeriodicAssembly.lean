@@ -26,7 +26,7 @@ the periodic fields and their residual limits.  They do not establish the
 correction iteration or the existence of singular incoming fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,6 +37,7 @@ open ProblemStatement Set Filter
 open scoped Topology ContDiff BigOperators
 
 /-- The direct field is added after taking the curl. -/
+@[expose]
 def velocity (A v : VelocityField) : VelocityField :=
   fun z => SpatialCurl.spatialCurl A z + v z
 
@@ -45,11 +46,13 @@ def cutVelocity (A v : VelocityField) : VelocityField :=
   fun z => SpatialLocalization.cutVelocity A z + SpatialLocalization.cutPotential v z
 
 /-- Periodize the cut potential and the cut direct field separately. -/
+@[expose]
 def periodicVelocity (A v : VelocityField) : VelocityField :=
   fun z => SpatialLocalization.periodicVelocity A z +
     PeriodicLocalization.periodize (SpatialLocalization.cutPotential v) z
 
 /-- Original residual, defined pointwise by `navierStokesResidual (velocity A v) p z.1 z.2`. -/
+@[expose]
 def originalResidual (A v : VelocityField) (p : PressureField) : VelocityField :=
   fun z => navierStokesResidual (velocity A v) p z.1 z.2
 

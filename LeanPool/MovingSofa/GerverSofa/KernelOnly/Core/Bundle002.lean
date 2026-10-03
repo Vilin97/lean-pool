@@ -40,7 +40,7 @@ public import Mathlib.Topology.Instances.Real.Lemmas
 * `GerverSofa.KernelOnly.PartF.Semantics.Batch001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -61,7 +61,7 @@ Authors: Dawid Trela
 * `Geometry`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,7 @@ part is the rotation matrix `[[c,-s],[s,c]]`, hence every value is an element
 of `SE(2)` and not an arbitrary affine equivalence.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
@@ -94,11 +94,13 @@ structure SE2 where
 namespace SE2
 
 /-- Action of an orientation-preserving rigid motion on the plane. -/
+@[expose]
 def act (g : SE2) (p : Point) : Point :=
   (g.c * p.1 - g.s * p.2 + g.tx,
    g.s * p.1 + g.c * p.2 + g.ty)
 
 /-- Identity element. -/
+@[expose]
 def one : SE2 where
   c := 1
   s := 0
@@ -107,6 +109,7 @@ def one : SE2 where
   unit := by norm_num
 
 /-- Inverse orientation-preserving rigid motion. -/
+@[expose]
 def inv (g : SE2) : SE2 where
   c := g.c
   s := -g.s
@@ -138,6 +141,7 @@ def inv (g : SE2) : SE2 where
 
 /-- Componentwise continuity is the topology-free representation of a path
 in `SE(2)` used by the formal moving-sofa definition. -/
+@[expose]
 def ContinuousPath (g : ℝ → SE2) : Prop :=
   Continuous (fun t => (g t).c) ∧
   Continuous (fun t => (g t).s) ∧
@@ -165,11 +169,12 @@ section
 # Supporting hallway and inverse motion
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
 /-- World-frame hallway obtained from the standard hallway by `frame`. -/
+@[expose]
 def supportingHallway (frame : SE2) : Set Point :=
   frame.act '' hallway
 
@@ -207,7 +212,7 @@ These are direct Lean transcriptions of equations (F1)--(F4) and of the
 independent equations (27)--(39), (41), (43) used by the companion verifier.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 
@@ -227,6 +232,7 @@ structure Params where
   theta : ℝ
 
 /-- Four-dimensional reduced switching system. -/
+@[expose]
 def system (p : Params) : Fin 4 → ℝ :=
   let cp := Real.cos p.phi
   let sp := Real.sin p.phi
@@ -242,6 +248,7 @@ def system (p : Params) : Fin 4 → ℝ :=
   ]
 
 /-- The proposition that all four reduced equations vanish. -/
+@[expose]
 def Equations (p : Params) : Prop := system p = 0
 
 end Reduced
@@ -296,14 +303,17 @@ structure Params where
   theta : ℝ
 
 /-- Rotation of a body-frame vector into the world frame. -/
+@[expose]
 def rot (t : ℝ) (z : Point) : Point :=
   (Real.cos t * z.1 - Real.sin t * z.2,
    Real.sin t * z.1 + Real.cos t * z.2)
 
 /-- Translate a point by the two specified coordinate offsets. -/
+@[expose]
 def addK (r : Point) (kx ky : ℝ) : Point := (r.1 + kx, r.2 + ky)
 
 /-- Phase 1 of the five-phase Gerver path. -/
+@[expose]
 def path1 (p : Params) (t : ℝ) : Point :=
   let z : Point :=
     (p.a1 * Real.cos t + p.a2 * Real.sin t - 1,
@@ -311,6 +321,7 @@ def path1 (p : Params) (t : ℝ) : Point :=
   addK (rot t z) p.k11 p.k12
 
 /-- Phase 2 of the five-phase Gerver path. -/
+@[expose]
 def path2 (p : Params) (t : ℝ) : Point :=
   let z : Point :=
     (-(1 / 4 : ℝ) * t * t + p.b1 * t + p.b2,
@@ -318,10 +329,12 @@ def path2 (p : Params) (t : ℝ) : Point :=
   addK (rot t z) p.k21 p.k22
 
 /-- Phase 3 of the five-phase Gerver path. -/
+@[expose]
 def path3 (p : Params) (t : ℝ) : Point :=
   addK (rot t (p.c1 - t, p.c2 + t)) p.k31 p.k32
 
 /-- Phase 4 of the five-phase Gerver path. -/
+@[expose]
 def path4 (p : Params) (t : ℝ) : Point :=
   let z : Point :=
     (-(1 / 2 : ℝ) * t + p.d1 - 1,
@@ -329,6 +342,7 @@ def path4 (p : Params) (t : ℝ) : Point :=
   addK (rot t z) p.k41 p.k42
 
 /-- Phase 5 of the five-phase Gerver path. -/
+@[expose]
 def path5 (p : Params) (t : ℝ) : Point :=
   let z : Point :=
     (p.e1 * Real.cos t + p.e2 * Real.sin t - 1 / 2,
@@ -336,40 +350,50 @@ def path5 (p : Params) (t : ℝ) : Point :=
   addK (rot t z) p.k51 p.k52
 
 /-- Body-frame derivative coefficients `(alpha,beta)` on phase 1. -/
+@[expose]
 def alphaBeta1 (p : Params) (t : ℝ) : Point :=
   (-2 * p.a1 * Real.sin t + 2 * p.a2 * Real.cos t + 1 / 2,
    2 * p.a1 * Real.cos t + 2 * p.a2 * Real.sin t - 1)
 
 /-- Body-frame velocity coordinates for phase 2. -/
+@[expose]
 def alphaBeta2 (p : Params) (t : ℝ) : Point :=
   (1 + 2 * p.b1 - t,
    -(1 / 4 : ℝ) * t * t + p.b1 * t + p.b2 + 1 / 2)
 
 /-- Body-frame velocity coordinates for phase 3. -/
+@[expose]
 def alphaBeta3 (p : Params) (t : ℝ) : Point :=
   (-1 - p.c2 - t, 1 + p.c1 - t)
 
 /-- Body-frame velocity coordinates for phase 4. -/
+@[expose]
 def alphaBeta4 (p : Params) (t : ℝ) : Point :=
   ((1 / 4 : ℝ) * t * t - p.d1 * t - p.d2 - 1 / 2,
    2 * p.d1 - 1 - t)
 
 /-- Body-frame velocity coordinates for phase 5. -/
+@[expose]
 def alphaBeta5 (p : Params) (t : ℝ) : Point :=
   (1 - 2 * p.e1 * Real.sin t + 2 * p.e2 * Real.cos t,
    2 * p.e1 * Real.cos t + 2 * p.e2 * Real.sin t - 1 / 2)
 
 /-- Rotate body-frame velocity coordinates into the world frame. -/
+@[expose]
 def pathPrimeFromAB (t : ℝ) (ab : Point) : Point := rot t ab
 
 /-- World-frame velocity formula for phase 1. -/
+@[expose]
 def pathPrime1 (p : Params) (t : ℝ) : Point := pathPrimeFromAB t (alphaBeta1 p t)
 /-- World-frame velocity formula for phase 2. -/
+@[expose]
 def pathPrime2 (p : Params) (t : ℝ) : Point := pathPrimeFromAB t (alphaBeta2 p t)
 /-- World-frame velocity formula for phase 3. -/
+@[expose]
 def pathPrime3 (p : Params) (t : ℝ) : Point := pathPrimeFromAB t (alphaBeta3 p t)
 
 /-- Romik's 22 independent scalar equations. -/
+@[expose]
 def system (p : Params) : Fin 22 → ℝ :=
   let halfPi := Real.pi / 2
   let quarterPi := Real.pi / 4
@@ -417,11 +441,13 @@ def system (p : Params) : Fin 22 → ℝ :=
   ]
 
 /-- The proposition that all 22 independent equations vanish. -/
+@[expose]
 def Equations (p : Params) : Prop := system p = 0
 
 /-- The physical five-phase path on `[0,π/2]`.  At a switching angle either
 adjacent formula may be chosen; the certified matching equations prove they
 coincide. -/
+@[expose]
 def path (p : Params) (t : ℝ) : Point :=
   let eta := Real.pi / 2 - p.theta
   let tau := Real.pi / 2 - p.phi
@@ -432,9 +458,11 @@ def path (p : Params) (t : ℝ) : Point :=
   else path5 p t
 
 /-- Linear normalization from unit time to physical rotation angle. -/
+@[expose]
 def angle (u : ℝ) : ℝ := u * (Real.pi / 2)
 
 /-- Standard-to-world frame `q ↦ x(t)+R_t q` for normalized time. -/
+@[expose]
 def frame (p : Params) (u : ℝ) : SE2 :=
   let t := angle u
   let x := path p t
@@ -607,18 +635,20 @@ Every endpoint is written as an exact integer quotient.  There are no binary
 floating-point constants in these definitions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace GerverSofa
 
 /-- Interpret an integer numerator and natural denominator as a real quotient. -/
+@[expose]
 def qR (n : Int) (d : Nat) : ℝ := (n : ℝ) / (d : ℝ)
 
 namespace Reduced
 
 /-- Input box `X_a × X_b × X_phi × X_theta`. -/
+@[expose]
 def box : Set Params :=
   {p |
     qR 1888531216873 20000000000000 ≤ p.a ∧ p.a ≤ qR 4721328042183 50000000000000 ∧
@@ -631,6 +661,7 @@ end Reduced
 namespace Romik
 
 /-- The direct 22-dimensional box `Y × Phi × Theta`. -/
+@[expose]
 def box : Set Params :=
   {p |
     qR (-21032242207268875141628571849) 100000000000000000000000000000 ≤ p.k11 ∧ p.k11 ≤ qR
@@ -777,56 +808,68 @@ half-plane definitions; it does not use the numerical certificate or Baek's
 cap theory.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace GerverSofa
 
 /-- Euclidean scalar product in the fixed coordinate representation. -/
+@[expose]
 def dot (p q : Point) : ℝ := p.1 * q.1 + p.2 * q.2
 
 /-- Rotating outer-wall normals. -/
+@[expose]
 def u (t : ℝ) : Point := (Real.cos t, Real.sin t)
 /-- The vertical unit vector rotated counterclockwise through angle `t`. -/
+@[expose]
 def v (t : ℝ) : Point := (-Real.sin t, Real.cos t)
 
 /-- The lower fan in the manuscript normalisation. -/
+@[expose]
 def capFan : Set Point := {q | 0 ≤ q.2}
 
 /-- First rotating supporting half-plane. -/
+@[expose]
 def supportHalfU (p : Romik.Params) (t : ℝ) : Set Point :=
   {q | dot q (u t) ≤ dot (Romik.path p t) (u t) + 1}
 
 /-- Second rotating supporting half-plane. -/
+@[expose]
 def supportHalfV (p : Romik.Params) (t : ℝ) : Set Point :=
   {q | dot q (v t) ≤ dot (Romik.path p t) (v t) + 1}
 
 /-- The cap `K₀` reconstructed from the five-phase path. -/
+@[expose]
 def Romik.K0 (p : Romik.Params) : Set Point :=
   {q | 0 ≤ q.2 ∧
     ∀ t ∈ Set.Icc (0 : ℝ) (Real.pi / 2),
       q ∈ supportHalfU p t ∩ supportHalfV p t}
 
 /-- Open inner quadrant of the supporting hallway at physical angle `t`. -/
+@[expose]
 def Romik.innerQuadrantAt (p : Romik.Params) (t : ℝ) : Set Point :=
   let x := Romik.path p t
   {q | dot (q.1 - x.1, q.2 - x.2) (u t) < 0 ∧
        dot (q.1 - x.1, q.2 - x.2) (v t) < 0}
 
 /-- Union of all forbidden inner quadrants at interior rotation times. -/
+@[expose]
 def Romik.innerUnion (p : Romik.Params) : Set Point :=
   {q | ∃ t ∈ Set.Ioo (0 : ℝ) (Real.pi / 2), q ∈ Romik.innerQuadrantAt p t}
 
 /-- The niche removed from the cap. -/
+@[expose]
 def Romik.niche (p : Romik.Params) : Set Point :=
   capFan ∩ Romik.innerUnion p
 
 /-- The fixed Gerver candidate `G = K₀ \ N(K₀)`. -/
+@[expose]
 def Romik.sofa (p : Romik.Params) : Set Point :=
   Romik.K0 p \ Romik.niche p
 
 /-- Physical supporting hallway at normalized time `s`. -/
+@[expose]
 def Romik.hallwayAt (p : Romik.Params) (s : ℝ) : Set Point :=
   supportingHallway (Romik.frame p s)
 
@@ -1165,7 +1208,7 @@ Authors: Dawid Trela
 * `KernelOnly.FullADSoundness`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1180,7 +1223,7 @@ used only on arguments in `[0, 1]`; the range-reduction layer proves this
 precondition before calling these results.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1190,10 +1233,12 @@ open scoped BigOperators
 open Filter Finset
 
 /-- Real magnitude of the `n`th sine-series term. -/
+@[expose]
 def sinMagnitude (x : ℝ) (n : ℕ) : ℝ :=
   x ^ (2 * n + 1) / (Nat.factorial (2 * n + 1) : ℝ)
 
 /-- Real magnitude of the `n`th cosine-series term. -/
+@[expose]
 def cosMagnitude (x : ℝ) (n : ℕ) : ℝ :=
   x ^ (2 * n) / (Nat.factorial (2 * n) : ℝ)
 
@@ -1368,7 +1413,7 @@ layer uses named parameter records.  These equivalences are the explicit,
 kernel-checked bridge between the two representations.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1430,6 +1475,7 @@ end Reduced
 namespace Romik
 
 /-- Named Romik parameters as a 22-vector in verifier order. -/
+@[expose]
 def coordEquiv : Params ≃ Vec 22 where
   toFun p := ![
     p.k11, p.k12, p.k21, p.k22, p.k31, p.k32, p.k41, p.k42, p.k51, p.k52,
@@ -1467,10 +1513,12 @@ def coordEquiv : Params ≃ Vec 22 where
     fin_cases i <;> rfl
 
 /-- Direct Romik system expressed in finite-vector coordinates. -/
+@[expose]
 def vectorSystem (x : Vec 22) : Vec 22 :=
   system (coordEquiv.symm x)
 
 /-- The direct Romik box expressed in finite-vector coordinates. -/
+@[expose]
 def vectorBox : Set (Vec 22) :=
   {x | coordEquiv.symm x ∈ box}
 
@@ -1528,7 +1576,7 @@ one large proof term.
 
 /-! ## Exact parameter consequences of equations 27--34 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1798,7 +1846,7 @@ literal definitions and the two endpoint normalisations; the eighteen-piece
 boundary statement remains a separate field of `FullArticleCertificate`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1806,6 +1854,7 @@ namespace GerverSofa.Romik
 
 /-- Romik's fixed-frame reconstruction: initial arm, every supporting hallway,
 and the final transported vertical arm. -/
+@[expose]
 def reconstructedSet (p : Params) : Set Point :=
   {q | q ∈ horizontalArm ∧
     (∀ s ∈ Set.Icc (0 : ℝ) 1, q ∈ hallwayAt p s) ∧
@@ -1934,7 +1983,7 @@ The latter remains available under `ExactReplay.executable*` for independent
 diagnostic comparison.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.CertificateManifest
 theorem machin_inside_declared :
@@ -1959,7 +2008,7 @@ for these interfaces are the remaining analytic part of the end-to-end
 certificate; no axiom is declared here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1968,6 +2017,7 @@ namespace GerverSofa
 open RatInterval
 
 /-- A rational interval list encloses a finite real vector coordinatewise. -/
+@[expose]
 def EnclosesVec {n : Nat} (box : List RatInterval) (x : Vec n) : Prop :=
   box.length = n ∧
     ∀ i : Fin n, Contains (box.getD i.1 (point 0)) (x i)
@@ -2027,7 +2077,7 @@ No project axiom and no floating-point literal occurs in this file.
 
 /-! ## Partial-sum interval consequences -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2363,7 +2413,7 @@ constructor theorems.
 
 /-! ## Smooth scalar models -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2388,6 +2438,7 @@ structure ScalarModel (n : Nat) where
 namespace ScalarModel
 
 /-- Constant scalar model. -/
+@[expose]
 def const (n : Nat) (c : ℝ) : ScalarModel n where
   value := fun _ => c
   gradient := fun _ _ => 0
@@ -2397,6 +2448,7 @@ def const (n : Nat) (c : ℝ) : ScalarModel n where
       (hasDerivAt_const (x j) c).tendsto_slope_zero
 
 /-- Coordinate projection. -/
+@[expose]
 def var (n : Nat) (k : Fin n) : ScalarModel n where
   value := fun x => x k
   gradient := fun _ j => if j = k then 1 else 0
@@ -2413,6 +2465,7 @@ def var (n : Nat) (k : Fin n) : ScalarModel n where
         smul_eq_mul] using (hasDerivAt_const (x j) (x k)).tendsto_slope_zero
 
 /-- Pointwise addition. -/
+@[expose]
 def add {n : Nat} (f g : ScalarModel n) : ScalarModel n where
   value := fun x => f.value x + g.value x
   gradient := fun x j => f.gradient x j + g.gradient x j
@@ -2434,6 +2487,7 @@ def add {n : Nat} (f g : ScalarModel n) : ScalarModel n where
       (hfh.fun_add hgh).tendsto_slope_zero
 
 /-- Pointwise negation. -/
+@[expose]
 def neg {n : Nat} (f : ScalarModel n) : ScalarModel n where
   value := fun x => -f.value x
   gradient := fun x j => -f.gradient x j
@@ -2449,10 +2503,12 @@ def neg {n : Nat} (f : ScalarModel n) : ScalarModel n where
       hfh.fun_neg.tendsto_slope_zero
 
 /-- Pointwise subtraction. -/
+@[expose]
 def sub {n : Nat} (f g : ScalarModel n) : ScalarModel n :=
   add f (neg g)
 
 /-- Pointwise multiplication. -/
+@[expose]
 def mul {n : Nat} (f g : ScalarModel n) : ScalarModel n where
   value := fun x => f.value x * g.value x
   gradient := fun x j =>
@@ -2477,6 +2533,7 @@ def mul {n : Nat} (f g : ScalarModel n) : ScalarModel n where
       (hfh.fun_mul hgh).tendsto_slope_zero
 
 /-- Rational scaling. -/
+@[expose]
 def scale {n : Nat} (a : ℚ) (f : ScalarModel n) : ScalarModel n where
   value := fun x => (a : ℝ) * f.value x
   gradient := fun x j => (a : ℝ) * f.gradient x j
@@ -2492,6 +2549,7 @@ def scale {n : Nat} (a : ℚ) (f : ScalarModel n) : ScalarModel n where
     simpa only [RealDerivativeAt, smul_eq_mul] using hs.tendsto_slope_zero
 
 /-- Sine composition. -/
+@[expose]
 def sin {n : Nat} (f : ScalarModel n) : ScalarModel n where
   value := fun x => Real.sin (f.value x)
   gradient := fun x j => Real.cos (f.value x) * f.gradient x j
@@ -2509,6 +2567,7 @@ def sin {n : Nat} (f : ScalarModel n) : ScalarModel n where
       hfh.sin.tendsto_slope_zero
 
 /-- Cosine composition. -/
+@[expose]
 def cos {n : Nat} (f : ScalarModel n) : ScalarModel n where
   value := fun x => Real.cos (f.value x)
   gradient := fun x j => -Real.sin (f.value x) * f.gradient x j
@@ -2837,7 +2896,7 @@ This module instantiates the constructor-level AD theorem with equations
 and identifies the four smooth scalar models with `Reduced.vectorSystem`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2873,6 +2932,7 @@ theorem inputBox_exact (x : Vec 4) :
     aesop
 
 /-- Scalar models matching the four reduced equations. -/
+@[expose]
 def models : Fin 4 → ScalarModel 4 :=
   let a := ScalarModel.var 4 (0 : Fin 4)
   let b := ScalarModel.var 4 (1 : Fin 4)
@@ -2936,7 +2996,7 @@ chunked: expanding all 44 rational endpoint inequalities in one `simp` call
 exhausts the default heartbeat budget even though every coordinate identity is
 individually trivial. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3192,51 +3252,61 @@ namespace SoundDual
 variable {n : Nat} {X : Set (Vec n)}
 
 /-- A constant scalar model with a certified interval enclosure. -/
+@[expose]
 def const (z : RatInterval) (c : ℝ) (h : Contains z c) : SoundDual n X :=
   ⟨ExactReplay.D.const z n, ScalarModel.const n c, DSoundOn.const h⟩
 
 /-- A rational constant represented by a singleton interval and zero gradient. -/
+@[expose]
 def pointConst (q : ℚ) : SoundDual n X :=
   ⟨ExactReplay.D.pointConst q n, ScalarModel.const n (q : ℝ),
     DSoundOn.pointConst q⟩
 
 /-- A coordinate projection with its certified input interval. -/
+@[expose]
 def var (input : RatInterval) (k : Fin n)
     (h : ∀ x ∈ X, Contains input (x k)) : SoundDual n X :=
   ⟨ExactReplay.D.varD input k.1 n, ScalarModel.var n k,
     DSoundOn.varD input k h⟩
 
 /-- Addition with certified interval value and gradient enclosures. -/
+@[expose]
 def add (a b : SoundDual n X) : SoundDual n X :=
   ⟨ExactReplay.D.addD a.d b.d, ScalarModel.add a.model b.model,
     a.sound.add b.sound⟩
 
 /-- Negation with certified interval value and gradient enclosures. -/
+@[expose]
 def neg (a : SoundDual n X) : SoundDual n X :=
   ⟨ExactReplay.D.negD a.d, ScalarModel.neg a.model, a.sound.neg⟩
 
 /-- Subtraction with certified interval value and gradient enclosures. -/
+@[expose]
 def sub (a b : SoundDual n X) : SoundDual n X :=
   ⟨ExactReplay.D.subD a.d b.d, ScalarModel.sub a.model b.model,
     a.sound.sub b.sound⟩
 
 /-- Multiplication with certified interval value and gradient enclosures. -/
+@[expose]
 def mul (a b : SoundDual n X) : SoundDual n X :=
   ⟨ExactReplay.D.mulD a.d b.d, ScalarModel.mul a.model b.model,
     a.sound.mul b.sound⟩
 
 /-- Rational scaling with certified interval value and gradient enclosures. -/
+@[expose]
 def scale (q : ℚ) (a : SoundDual n X) : SoundDual n X :=
   ⟨ExactReplay.D.scaleD q a.d, ScalarModel.scale q a.model,
     DSoundOn.scale q a.sound⟩
 
 /-- Sine with certified interval value and gradient enclosures. -/
+@[expose]
 def sin (a : SoundDual n X)
     (h : ∀ x ∈ X, 0 ≤ a.model.value x ∧
       a.model.value x ≤ Real.pi / 2) : SoundDual n X :=
   ⟨ExactReplay.D.sinD a.d, ScalarModel.sin a.model, a.sound.sin h⟩
 
 /-- Cosine with certified interval value and gradient enclosures. -/
+@[expose]
 def cos (a : SoundDual n X)
     (h : ∀ x ∈ X, 0 ≤ a.model.value x ∧
       a.model.value x ≤ Real.pi / 2) : SoundDual n X :=
@@ -3300,10 +3370,12 @@ namespace AngleDual
 variable {n : Nat} {X : Set (Vec n)}
 
 /-- Sine with certified interval value and gradient enclosures. -/
+@[expose]
 def sin (t : AngleDual n X) : SoundDual n X :=
   SoundDual.sin t.dual t.physical
 
 /-- Cosine with certified interval value and gradient enclosures. -/
+@[expose]
 def cos (t : AngleDual n X) : SoundDual n X :=
   SoundDual.cos t.dual t.physical
 
@@ -3359,6 +3431,7 @@ structure FullVars (X : Set (Vec 22)) where
   e2 : SoundDual 22 X
 
 /-- The 22 coordinate variables equipped with their input-enclosure proofs. -/
+@[expose]
 def inputDual (i : Fin 22) : SoundDual 22 vectorBox :=
   SoundDual.var (ExactReplay.getI ExactReplay.fullInputBox i.1) i (by
     intro x hx
@@ -3368,6 +3441,7 @@ def inputDual (i : Fin 22) : SoundDual 22 vectorBox :=
     (inputDual i).model.value x = x i := rfl
 
 /-- Named first twenty variables in verifier order. -/
+@[expose]
 def fullVars : FullVars vectorBox where
   k11 := inputDual 0
   k12 := inputDual 1
@@ -3391,6 +3465,7 @@ def fullVars : FullVars vectorBox where
   e2 := inputDual 19
 
 /-- Exact proof-carrying π constant. -/
+@[expose]
 def piDual : SoundDual 22 vectorBox :=
   SoundDual.const ExactReplay.piI Real.pi ExactReplay.piI_contains_pi
 
@@ -3398,6 +3473,7 @@ def piDual : SoundDual 22 vectorBox :=
     piDual.model.value x = Real.pi := rfl
 
 /-- First switching angle. -/
+@[expose]
 def phiDual : AngleDual 22 vectorBox where
   dual := inputDual 20
   physical := by
@@ -3409,6 +3485,7 @@ def phiDual : AngleDual 22 vectorBox where
     phiDual.dual.model.value x = x 20 := rfl
 
 /-- Second switching angle. -/
+@[expose]
 def thetaDual : AngleDual 22 vectorBox where
   dual := inputDual 21
   physical := by
@@ -3425,6 +3502,7 @@ private theorem eta_raw_model_value (x : Vec 22) :
   simp; ring
 
 /-- Reflected third switching angle `π/2-θ`. -/
+@[expose]
 def etaDual : AngleDual 22 vectorBox where
   dual := (1 / 2 : ℚ) * piDual - thetaDual.dual
   physical := by
@@ -3442,6 +3520,7 @@ private theorem tau_raw_model_value (x : Vec 22) :
   simp; ring
 
 /-- Reflected fourth switching angle `π/2-φ`. -/
+@[expose]
 def tauDual : AngleDual 22 vectorBox where
   dual := (1 / 2 : ℚ) * piDual - phiDual.dual
   physical := by
@@ -3454,6 +3533,7 @@ def tauDual : AngleDual 22 vectorBox where
   exact tau_raw_model_value x
 
 /-- Rotation of a proof-carrying body-frame vector. -/
+@[expose]
 def rotDual (t : AngleDual 22 vectorBox)
     (z1 z2 : SoundDual 22 vectorBox) :
     SoundDual 22 vectorBox × SoundDual 22 vectorBox :=
@@ -3462,6 +3542,7 @@ def rotDual (t : AngleDual 22 vectorBox)
   (ct * z1 - st * z2, st * z1 + ct * z2)
 
 /-- One proof-carrying path piece. -/
+@[expose]
 def pathPieceDual (j : Nat) (t : AngleDual 22 vectorBox)
     (p : FullVars vectorBox := fullVars) :
     SoundDual 22 vectorBox × SoundDual 22 vectorBox :=
@@ -3494,6 +3575,7 @@ def pathPieceDual (j : Nat) (t : AngleDual 22 vectorBox)
   (rr.1 + data.2.2.1, rr.2 + data.2.2.2)
 
 /-- Body-frame derivative coefficients for one phase. -/
+@[expose]
 def alphaBetaDual (j : Nat) (t : AngleDual 22 vectorBox)
     (p : FullVars vectorBox := fullVars) :
     SoundDual 22 vectorBox × SoundDual 22 vectorBox :=
@@ -3518,6 +3600,7 @@ def alphaBetaDual (j : Nat) (t : AngleDual 22 vectorBox)
      (2 : ℚ) * p.e1 * ct + (2 : ℚ) * p.e2 * st - half)
 
 /-- World-frame derivative piece. -/
+@[expose]
 def pathPrimeDual (j : Nat) (t : AngleDual 22 vectorBox)
     (p : FullVars vectorBox := fullVars) :
     SoundDual 22 vectorBox × SoundDual 22 vectorBox :=
@@ -3525,6 +3608,7 @@ def pathPrimeDual (j : Nat) (t : AngleDual 22 vectorBox)
   rotDual t ab.1 ab.2
 
 /-- The complete proof-carrying direct system in manuscript order. -/
+@[expose]
 def fullDualOutput : List (SoundDual 22 vectorBox) :=
   let p := fullVars
   let halfPi := (1 / 2 : ℚ) * piDual
@@ -3822,7 +3906,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartF.F06FullReconstruction`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3837,7 +3921,7 @@ is used. Both application conventions and the conversion between them are
 proved for an arbitrary linear isometry equivalence.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3863,10 +3947,12 @@ instance rigidTopology : TopologicalSpace Rigid :=
   .induced (fun e => e.toAffineIsometry.toContinuousAffineMap) inferInstance
 
 /-- The composition currently implemented upstream: `q ↦ R q + p`. -/
+@[expose]
 def rotateThenTranslate (R : Plane ≃ₗᵢ[ℝ] Plane) (p : Plane) : Rigid :=
   R.toAffineIsometryEquiv.trans (AffineIsometryEquiv.vaddConst ℝ p)
 
 /-- The documented composition: `q ↦ R (q + p)`. -/
+@[expose]
 def translateThenRotate (R : Plane ≃ₗᵢ[ℝ] Plane) (p : Plane) : Rigid :=
   (AffineIsometryEquiv.vaddConst ℝ p).trans R.toAffineIsometryEquiv
 
@@ -3886,14 +3972,17 @@ theorem translateThenRotate_eq_rotateThenTranslate
   simp only [translateThenRotate_apply, rotateThenTranslate_apply, map_add]
 
 /-- Counterclockwise rotation of the oriented plane through angle `t`. -/
+@[expose]
 def rotation (t : ℝ) : Plane ≃ₗᵢ[ℝ] Plane :=
   EuclideanGeometry.o.rotation (t : Real.Angle)
 
 /-- Translate by the body-frame offset and then rotate through `t`. -/
+@[expose]
 def bodyFrame (t : ℝ) (p : Plane) : Rigid :=
   translateThenRotate (rotation t) p
 
 /-- Rotate through `t` and then translate by the world position. -/
+@[expose]
 def worldFrame (t : ℝ) (x : Plane) : Rigid :=
   rotateThenTranslate (rotation t) x
 
@@ -3925,12 +4014,13 @@ equals it, and identifying `dictionary d` with the certified 22D tuple,
 remain separate obligations. No such equality is assumed here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Phases
 
 /-- The terminal rotation angle π/2. -/
+@[expose]
 def T : ℝ := Real.pi / 2
 /-- The auxiliary height parameter `(a + θ - φ - 1) / 2`. -/
 def hStar (d : Reduced.Params) : ℝ := (d.a + d.theta - d.phi - 1) / 2
@@ -3947,6 +4037,7 @@ def U3 (d : Reduced.Params) : ℝ :=
 def V3 (d : Reduced.Params) : ℝ :=
   V4 d + 1 / 2 * Real.cos d.theta + hStar d * Real.sin d.theta
 /-- Phase 2 integration constant for the vertical primitive. -/
+@[expose]
 def U2 (d : Reduced.Params) : ℝ := U4 d
 /-- Phase 2 integration constant for the horizontal primitive. -/
 def V2 (d : Reduced.Params) : ℝ :=
@@ -3958,6 +4049,7 @@ def U1 (d : Reduced.Params) : ℝ :=
 def V1 (d : Reduced.Params) : ℝ :=
   V2 d + d.a / 2 * Real.sin d.phi + 1 / 2 * Real.cos d.phi
 /-- The first-phase offset determined by `4 V1 - 2`. -/
+@[expose]
 def ell (d : Reduced.Params) : ℝ := 4 * V1 d - 2
 
 theorem U1_eq_half (d : Reduced.Params) (hd : Reduced.Equations d) :
@@ -3987,6 +4079,7 @@ theorem ell_eq_two_V3 (d : Reduced.Params) (hd : Reduced.Equations d) :
   ring
 
 /-- Express all twenty-two Romik parameters in terms of the four reduced parameters. -/
+@[expose]
 def dictionary (d : Reduced.Params) : Romik.Params where
   k11 := 1 - 3 / 2 * (1 - V1 d)
   k12 := 1 / 4
@@ -4015,34 +4108,41 @@ def dictionary (d : Reduced.Params) : Romik.Params where
 @[simp] theorem dictionary_theta (d : Reduced.Params) : (dictionary d).theta = d.theta := rfl
 
 /-- The polynomial profile for phase 2 of the path. -/
+@[expose]
 def g2 (d : Reduced.Params) (t : ℝ) : ℝ := (1 + d.a + t - d.phi) / 2
 /-- The polynomial profile for phase 3 of the path. -/
+@[expose]
 def g3 (d : Reduced.Params) (t : ℝ) : ℝ := d.a + t - d.phi
 /-- The polynomial profile for phase 4 of the path. -/
 def g4 (d : Reduced.Params) (t : ℝ) : ℝ :=
   d.b + 1 / 2 - (T - d.phi - t) * (1 + d.a) / 2 - (T - d.phi - t)^2 / 4
 
 /-- The closed rotation-path formula for phase 1. -/
+@[expose]
 def closed1 (d : Reduced.Params) (t : ℝ) : Point :=
   (Real.cos t - 1,
     -1 / 2 + 1 / 2 * Real.cos t + (V1 d - ell d) * Real.sin t)
 
 /-- The closed rotation-path formula for phase 2. -/
+@[expose]
 def closed2 (d : Reduced.Params) (t : ℝ) : Point :=
   (g4 d (T - t) + U4 d * Real.sin t + V4 d * Real.cos t - 1,
     g2 d t + U4 d * Real.cos t + (V2 d - ell d) * Real.sin t - 1)
 
 /-- The closed rotation-path formula for phase 3. -/
+@[expose]
 def closed3 (d : Reduced.Params) (t : ℝ) : Point :=
   (g3 d (T - t) + U3 d * Real.sin t + V3 d * Real.cos t - 1,
     g3 d t + U3 d * Real.cos t + (V3 d - ell d) * Real.sin t - 1)
 
 /-- The closed rotation-path formula for phase 4. -/
+@[expose]
 def closed4 (d : Reduced.Params) (t : ℝ) : Point :=
   (g2 d (T - t) + U4 d * Real.sin t + V2 d * Real.cos t - 1,
     g4 d t + U4 d * Real.cos t + (V4 d - ell d) * Real.sin t - 1)
 
 /-- The closed rotation-path formula for phase 5. -/
+@[expose]
 def closed5 (d : Reduced.Params) (t : ℝ) : Point :=
   (-1 / 2 + V1 d * Real.cos t + 1 / 2 * Real.sin t,
     (1 - ell d) * Real.sin t - 1)
@@ -4094,6 +4194,7 @@ theorem phase5 (d : Reduced.Params) (t : ℝ) :
     linear_combination (1 / 4 : ℝ) * Real.sin_sq_add_cos_sq t
 
 /-- The five-branch closed formula for the rotation path. -/
+@[expose]
 def closedPath (d : Reduced.Params) (t : ℝ) : Point :=
   if t ≤ d.phi then closed1 d t
   else if t ≤ d.theta then closed2 d t
@@ -4149,7 +4250,7 @@ importing upstream conjectures with unfinished proof terms. Its concrete
 instantiation for the integral Gerver path still needs the analytic bridge.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open scoped unitInterval
@@ -4157,19 +4258,23 @@ open scoped unitInterval
 namespace GerverSofa.PartF
 
 /-- Intersect the endpoint hallway arms and all intermediate moving hallways. -/
+@[expose]
 def frameIntersection (F : I → Rigid) (H V L : Set Plane) : Set Plane :=
   F 0 '' H ∩ F 1 '' V ∩ ⋂ s, F s '' L
 
 /-- The hallway intersection parametrized by angles from zero to π/2. -/
+@[expose]
 def angleIntersection (F : ℝ → Rigid) (H V L : Set Plane) : Set Plane :=
   F 0 '' H ∩ F (Real.pi / 2) '' V ∩
     ⋂ t ∈ Set.Icc 0 (Real.pi / 2), F t '' L
 
 /-- The hallway intersection generated by a path in body-frame coordinates. -/
+@[expose]
 def bodySofa (p : ℝ → Plane) (H V L : Set Plane) : Set Plane :=
   angleIntersection (fun t => bodyFrame t (p t)) H V L
 
 /-- The hallway intersection generated by a path in world-frame coordinates. -/
+@[expose]
 def worldSofa (x : ℝ → Plane) (H V L : Set Plane) : Set Plane :=
   angleIntersection (fun t => worldFrame t (x t)) H V L
 
@@ -4225,10 +4330,13 @@ theorem angleIntersection_eq_frameIntersection
 namespace Model
 
 /-- The horizontal unit-width hallway arm extending to the left. -/
+@[expose]
 def horizontalHallway : Set Plane := {q | q 0 ≤ 1 ∧ 0 ≤ q 1 ∧ q 1 ≤ 1}
 /-- The vertical unit-width hallway arm extending downwards. -/
+@[expose]
 def verticalHallway : Set Plane := {q | 0 ≤ q 0 ∧ q 0 ≤ 1 ∧ q 1 ≤ 1}
 /-- The union of the two perpendicular unit-width hallway arms. -/
+@[expose]
 def hallway : Set Plane := horizontalHallway ∪ verticalHallway
 
 /-- A nonempty closed connected set moving continuously between the hallway arms. -/
@@ -4262,16 +4370,18 @@ the coordinate identification below is a linear equivalence and a
 homeomorphism. Euclidean isometries are constructed separately.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace GerverSofa.PartF.Coordinates
 
 /-- Convert a pair of real coordinates to a Euclidean vector. -/
+@[expose]
 def toPlane (q : Point) : Plane := WithLp.toLp 2 ![q.1, q.2]
 
 /-- Extract the two real coordinates of a Euclidean vector. -/
+@[expose]
 def fromPlane (q : Plane) : Point := (q 0, q 1)
 
 @[simp] theorem toPlane_zero_coord (q : Point) : toPlane q 0 = q.1 := rfl
@@ -4295,6 +4405,7 @@ theorem toPlane_smul (c : ℝ) (q : Point) : toPlane (c • q) = c • toPlane q
   exact plane_ext rfl rfl
 
 /-- The coordinate equivalence, without any assertion that the two norms agree. -/
+@[expose]
 def linearEquiv : Point ≃ₗ[ℝ] Plane where
   toFun := toPlane
   invFun := fromPlane
@@ -4367,7 +4478,7 @@ The phase boundaries are preserved. Integrating across the jumps will use
 equality on open intervals, not an incorrect global continuity assertion for r.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory
@@ -4376,10 +4487,13 @@ namespace GerverSofa.PartF.Integrals
 open Phases
 
 /-- The reflected second switching angle `π/2 - θ`. -/
+@[expose]
 def eta (d : Reduced.Params) : ℝ := T - d.theta
 /-- The reflected first switching angle `π/2 - φ`. -/
+@[expose]
 def tau (d : Reduced.Params) : ℝ := T - d.phi
 /-- The switching-angle condition `0 ≤ φ ≤ θ ≤ π/4`. -/
+@[expose]
 def Ordered (d : Reduced.Params) : Prop :=
   0 ≤ d.phi ∧ d.phi ≤ d.theta ∧ d.theta ≤ Real.pi / 4
 
@@ -4391,16 +4505,21 @@ theorem ordered_knots (d : Reduced.Params) (ho : Ordered d) :
   exact ⟨h0, h1, by linarith, by linarith, by linarith⟩
 
 /-- The integrand profile on phase 1. -/
+@[expose]
 def r1 (_d : Reduced.Params) (_t : ℝ) : ℝ := 1 / 2
 /-- The integrand profile on phase 2. -/
+@[expose]
 def r2 (d : Reduced.Params) (t : ℝ) : ℝ := g2 d t
 /-- The integrand profile on phase 3. -/
+@[expose]
 def r3 (d : Reduced.Params) (t : ℝ) : ℝ := g3 d t
 /-- The integrand profile on phase 4. -/
+@[expose]
 def r4 (d : Reduced.Params) (t : ℝ) : ℝ :=
   d.b - (T - t - d.phi) * (1 + d.a) / 2 - (T - t - d.phi) ^ 2 / 4
 
 /-- The piecewise phase profile used in the integral representation. -/
+@[expose]
 def r (d : Reduced.Params) (t : ℝ) : ℝ :=
   if t ≤ d.phi then r1 d t
   else if t ≤ d.theta then r2 d t
@@ -4409,13 +4528,16 @@ def r (d : Reduced.Params) (t : ℝ) : ℝ :=
   else 0
 
 /-- One minus the cosine-weighted profile integral from `t` to the last switching angle. -/
+@[expose]
 def xi (d : Reduced.Params) (t : ℝ) : ℝ :=
   1 - ∫ s in t..tau d, r d s * Real.cos s
 /-- The sine-weighted profile integral from `t` to the last switching angle. -/
+@[expose]
 def zeta (d : Reduced.Params) (t : ℝ) : ℝ :=
   ∫ s in t..tau d, r d s * Real.sin s
 
 /-- The rotation path expressed using the two profile integrals. -/
+@[expose]
 def path (d : Reduced.Params) (t : ℝ) : Point :=
   (if t ≤ d.phi then Real.cos t - 1
    else xi d (T - t) * Real.cos t + zeta d (T - t) * Real.sin t - 1,
@@ -4641,7 +4763,7 @@ the discontinuous integrand is required only on the open interval. Adjacent
 integrals are then added, using the proved matching values at every switch.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MeasureTheory
@@ -4865,6 +4987,7 @@ theorem xi_zero (d : Reduced.Params) (ho : Ordered d)
   simpa [X1, primitiveX] using h
 
 /-- The projection `ξ sin t + ζ cos t` used in the integral identities. -/
+@[expose]
 def W (d : Reduced.Params) (t : ℝ) : ℝ :=
   xi d t * Real.sin t + zeta d t * Real.cos t
 
@@ -4925,7 +5048,7 @@ They do not identify the dictionary with the independently certified 22D root.
 The module is independent of the F04 integral evaluation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Phases
@@ -5109,6 +5232,7 @@ theorem dictionary_equations (d : Reduced.Params) (hd : Reduced.Equations d) :
       ((d.b) * (Real.sin d.phi) + (Real.sin d.phi) + (1 / 4 : ℝ)) * hcphi
 
 /-- Read back the four free parameters from the 22D representation. -/
+@[expose]
 def undictionary (p : Romik.Params) : Reduced.Params where
   a := p.phi - 1 - 2 * p.b1
   b := p.b2 + 1 / 2 - (1 + (p.phi - 1 - 2 * p.b1)) * p.phi / 2 + p.phi ^ 2 / 4
@@ -5138,7 +5262,7 @@ This direction uses velocity matching and the two contact equations. It does
 not assume membership in either numerical box or any strict angle inequality.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Phases
@@ -5309,7 +5433,7 @@ Velocity matching determines the shape coefficients. Positional matching
 then determines each successive translation. No numerical enclosure is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GerverSofa.PartF.Phases

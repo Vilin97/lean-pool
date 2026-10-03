@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.H6PressureCommutator
 
 /-! The actual base-order pressure commutator needs only one fewer pressure derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,7 +26,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Sum of the strictly positive coefficient derivative bounds at the fixed base index six. -/
-def baseCoefficientSum {A : SmoothCoefficient period}
+@[expose] def baseCoefficientSum {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A) : ℝ :=
   ∑ l ∈ Finset.range 6, boundLevel period K (l+1)
 
@@ -86,7 +86,7 @@ theorem base_sum_bound {A : SmoothCoefficient period} {p : LiftL2 period}
   exact h.trans_eq (by simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul]; ring)
 
 /-- The actual base pressure commutators after an external derivative word. -/
-def basePressureBlock {s : ℕ} {A : SmoothCoefficient period} {p : LiftL2 period}
+@[expose] def basePressureBlock {s : ℕ} {A : SmoothCoefficient period} {p : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection 6 A)
     (J : EulerSpatialSobolevInverse.SpatialJet period standardDirection s p) (n : ℕ) (hn : n + 6 ≤
         s)

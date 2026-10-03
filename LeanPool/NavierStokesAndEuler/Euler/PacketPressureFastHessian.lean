@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 /-! The leading angular pressure force gives its actual rank-one Hessian.
 Only first slow derivatives occur in the remainder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerGraphPullba
 open scoped ContDiff
 
 /-- Fast force, given by `k⁻¹ • (a (graphMap k m (Y x)) • transportedNormal m J x)`. -/
-def fastForce (a : LiftTangent → ℝ) (k : ℝ) (m : Space) (Y : Space → Space)
+@[expose] def fastForce (a : LiftTangent → ℝ) (k : ℝ) (m : Space) (Y : Space → Space)
     (J : Space → Space →L[ℝ] Space) (x : Space) : Space :=
   k⁻¹ • (a (graphMap k m (Y x)) • transportedNormal m J x)
 

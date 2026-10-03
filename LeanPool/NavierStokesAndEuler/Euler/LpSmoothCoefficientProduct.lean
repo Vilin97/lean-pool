@@ -21,7 +21,7 @@ derivatives are actual Fréchet derivatives, proved square integrable by the
 Leibniz estimate. The derivative identity remains a literal function equality.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -64,14 +64,14 @@ theorem product_memLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
       _)
 
 /-- Product, bundling `field`, `smooth`, `integrable`. -/
-def product (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
+@[expose] def product (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     (f : SmoothL2Field V) : SmoothL2Field W where
   field x := A.field t x (f.field x)
   smooth := (A.smooth t).clm_apply f.smooth
   integrable := product_memLp A t f
 
 @[simp] theorem product_field (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
-    (f : SmoothL2Field V) (x : Space) : (product A t f).field x = A.field t x (f.field x) := rfl
+    (f : SmoothL2Field V) (x : Space) : (product A t f).field x = A.field t x (f.field x) := by rfl
 
 theorem product_toLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     (f : SmoothL2Field V) :
@@ -108,7 +108,7 @@ theorem product_derivative_field (A : SmoothCoefficientPath K (V →L[ℝ] W)) (
       (flipₗᵢ ℝ Space V W).toContinuousLinearEquiv.toContinuousLinearMap D v a = D a v := rfl
   simpa only [product, addField_field, SmoothL2Field.derivative,
     leftDerivative, rightDerivative, SmoothCoefficientPath.map_apply,
-    SmoothCoefficientPath.derivative, SmoothCoefficientPath.derivativeField_eq,
+    SmoothCoefficientPath.derivative_apply,
     hflip, flip_apply, compL_apply, comp_apply, add_apply] using he
 
 theorem jetLp_congr (f g : SmoothL2Field V) (h : f.field = g.field) (n : ℕ) :

@@ -18,7 +18,7 @@ extension at every time turns any sub-Markov kernel semigroup into a
 conservative semigroup on the cemetery state space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -167,6 +167,7 @@ end Kernel
 namespace SubMarkovKernelSemigroup
 
 /-- The conservative cemetery extension of a sub-Markov kernel semigroup. -/
+@[expose]
 noncomputable def cemeterySemigroup (P : SubMarkovKernelSemigroup α) :
     SubMarkovKernelSemigroup (Cemetery α) where
   kernel t := Kernel.cemeteryExtension (P t)

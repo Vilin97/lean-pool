@@ -19,7 +19,7 @@ integrability of ||z||^{-1} against Schwartz functions, the key estimates for
 handling the Coulomb singularity in collision integrals.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

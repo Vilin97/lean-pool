@@ -17,7 +17,7 @@ strict skein unitor eliminated.  Its even and odd evaluations on
 unit-padded vectors are the strand identification itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

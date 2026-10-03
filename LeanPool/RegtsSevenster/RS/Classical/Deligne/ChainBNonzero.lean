@@ -18,7 +18,7 @@ unit stage, and the power zigzag induction keeps every stage
 alive.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

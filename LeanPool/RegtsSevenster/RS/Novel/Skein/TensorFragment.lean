@@ -20,13 +20,14 @@ the interleaving, and `tensorFragmentCongr` shows the tensor
 respects fragment equivalence in both slots.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The interleaving of two `(low, high)` boundaries: low block
 of the first, low block of the second, high block of the first,
 high block of the second. -/
+@[expose]
 def interleaveEquiv (s t u v : ℕ) :
     (Fin (s + t) ⊕ Fin (u + v)) ≃ Fin ((s + u) + (t + v)) :=
   ((_root_.Equiv.sumCongr finSumFinEquiv.symm
@@ -103,6 +104,7 @@ theorem interleaveEquiv_symm_high_right (s t u v : ℕ) (l : Fin v) :
 
 /-- The tensor product of fragments: disjoint union with
 interleaved boundary. -/
+@[expose]
 noncomputable def tensorFragment {s t u v : ℕ}
     (x : Fragment (Fin (s + t))) (z : Fragment (Fin (u + v))) :
     Fragment (Fin ((s + u) + (t + v))) :=

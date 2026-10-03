@@ -32,7 +32,7 @@ the moduli space of these automorphisms is uncountable or countable by the same 
 lemma records the *ergodicity* half — provable now — not the entropy value.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

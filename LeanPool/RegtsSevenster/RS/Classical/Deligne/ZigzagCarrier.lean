@@ -36,7 +36,7 @@ conversely.
   the multi-level laws from the carrier-level identities.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

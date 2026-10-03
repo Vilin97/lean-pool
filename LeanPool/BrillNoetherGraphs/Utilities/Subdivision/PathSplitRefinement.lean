@@ -24,7 +24,7 @@ external certificate generally orders its bivalent vertices and edge
 occurrences differently from this canonical append-at-the-end convention.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.IteratedSplitRefinement
 

@@ -20,7 +20,7 @@ theorem `ANR_polynomial_method` giving a non-vanishing-coefficient criterion
 for lower-bounding restricted sumsets.
 -/
 
-@[expose] public section
+public section
 
 open scoped Finset
 

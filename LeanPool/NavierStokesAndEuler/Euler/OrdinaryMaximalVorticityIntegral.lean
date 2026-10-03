@@ -21,7 +21,7 @@ section
 half-open maximal Euler interval. All quantities agree exactly with
 the genuine smooth solutions on every shorter closed interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -59,7 +59,7 @@ theorem vorticityIntegral_agrees_at (S T : ℝ) (hS : 0 < S) (hT : 0 < T)
   · exact (L.vorticityIntegral_agrees T S hT hS hTL hSL hTS ⟨t,ht0,htT⟩).symm
 
 /-- Maximal vorticity norm, given by `vorticityNorm (L.maximalField t)`. -/
-def maximalVorticityNorm (t : L.Time) : ℝ := vorticityNorm (L.maximalField t)
+@[expose] def maximalVorticityNorm (t : L.Time) : ℝ := vorticityNorm (L.maximalField t)
 
 theorem maximalVorticityNorm_nonneg (t : L.Time) : 0 ≤ L.maximalVorticityNorm t :=
   vorticityNorm_nonneg _
@@ -165,7 +165,7 @@ its extended integral on the half-open interval to be infinite. Local
 integrability is explicit, so no totalized real integral is used as a
 substitute for an improper integral. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -204,7 +204,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

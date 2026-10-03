@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
 This is the easy half of the inverse function theorem; no differentiability
 of the inverse is an independent assumption. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

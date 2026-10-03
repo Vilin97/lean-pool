@@ -45,7 +45,7 @@ section
 physical frame and its scalar parameters unchanged. The source strain
 and time interval are the actual fields of the same parent. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -62,7 +62,7 @@ variable {A : Parent} {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ 
   (m' : Space) (hm' : ‖m'‖ = 1) (R' : V ≃ₗᵢ[ℝ] referencePlane m')
 
 /-- Reframe, bundling `B`, `B₁`, `m`, `v` and the required compatibility proofs. -/
-def reframe : ParentFrame (A.transverseData m' hm' R' S hS) τ where
+@[expose] def reframe : ParentFrame (A.transverseData m' hm' R' S hS) τ where
   B := P.B
   B₁ := P.B₁
   m := P.m
@@ -128,7 +128,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ variable {A : Parent} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U
   (P : ParentFrame (A.transverseData m hm R S hS) τ)
 
 /-- Cross direction, given by `cross (unit (P.m τ)) (unit (P.v τ))`. -/
-def crossDirection : Space := cross (unit (P.m τ)) (unit (P.v τ))
+@[expose] def crossDirection : Space := cross (unit (P.m τ)) (unit (P.v τ))
 
 theorem crossDirection_unit (hτT : τ ≤ A.T) : ‖P.crossDirection‖=1 := by
   exact (frame_orthonormal (unit (P.m τ)) (unit (P.v τ))
@@ -162,7 +162,7 @@ variable (hτ : 0 < τ) (hτT : τ < A.T)
 
 /-- Activation normal, given by `activationDirection ((A.transverseData m hm R S
 hS).deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0) P.crossDirection`. -/
-def activationNormal : Space :=
+@[expose] def activationNormal : Space :=
   activationDirection ((A.transverseData m hm R S hS).deformationEquiv ⟨τ,hτ.le,hτT.le⟩ 0)
     P.crossDirection
 
@@ -170,12 +170,12 @@ theorem activationNormal_unit : ‖P.activationNormal hτ hτT‖=1 :=
   activationDirection_unit _ (P.crossDirection_ne_zero hτT.le)
 
 /-- Activation data, constructed using `A.transverseData`. -/
-def activationData : Data (referencePlane (P.activationNormal hτ hτT)) :=
+@[expose] def activationData : Data (referencePlane (P.activationNormal hτ hτT)) :=
   A.transverseData (P.activationNormal hτ hτT) (P.activationNormal_unit hτ hτT)
     (LinearIsometryEquiv.refl ℝ (referencePlane (P.activationNormal hτ hτT))) S hS
 
 /-- Activation frame, constructed using `P.reframe`. -/
-def activationFrame : ParentFrame (P.activationData hτ hτT) τ :=
+@[expose] def activationFrame : ParentFrame (P.activationData hτ hτT) τ :=
   P.reframe (P.activationNormal hτ hτT) (P.activationNormal_unit hτ hτT)
     (LinearIsometryEquiv.refl ℝ (referencePlane (P.activationNormal hτ hτT)))
 
@@ -210,7 +210,7 @@ theorem activation_scaled_ray :
     (P.tangent τ ⟨le_rfl,hτT.le⟩) (P.activation_normal_choice hτ hτT)
 
 /-- Activation history, constructed using `A.historyOn`. -/
-def activationHistory (H : LowBounds A) :
+@[expose] def activationHistory (H : LowBounds A) :
     HistoryData ((P.activationData hτ hτT).initial τ hτ hτT.le) :=
   A.historyOn H (P.activationNormal hτ hτT) (P.activationNormal_unit hτ hτT)
     (LinearIsometryEquiv.refl ℝ (referencePlane (P.activationNormal hτ hτT))) S hS τ hτ hτT
@@ -234,13 +234,13 @@ variable {A : Parent} {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U
   (P : ParentFrame (A.transverseData m hm R S hS) 0)
 
 /-- Forward data, constructed using `A.transverseData`. -/
-def forwardData : Data (referencePlane P.crossDirection) :=
+@[expose] def forwardData : Data (referencePlane P.crossDirection) :=
   A.transverseData P.crossDirection (P.crossDirection_unit A.T_pos.le)
     (LinearIsometryEquiv.refl ℝ (referencePlane P.crossDirection)) S hS
 
 /-- Forward frame, given by `P.reframe P.crossDirection (P.crossDirection_unit A.T_pos.le)
 (LinearIsometryEquiv.refl ℝ (referencePlane P.crossDirection))`. -/
-def forwardFrame : ParentFrame P.forwardData 0 :=
+@[expose] def forwardFrame : ParentFrame P.forwardData 0 :=
   P.reframe P.crossDirection (P.crossDirection_unit A.T_pos.le)
     (LinearIsometryEquiv.refl ℝ (referencePlane P.crossDirection))
 
@@ -273,7 +273,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -368,7 +368,7 @@ theorem history_layer (hn : n ≠ 0) : 1 ≤ previousShear S.J S.X n*P.time := b
 
 /-- Joined normal, given by `P.restrictedFrame.activationNormal (P.time_pos hn)
 P.time_lt_nextHorizon`. -/
-def joinedNormal (hn : n ≠ 0) : Space :=
+@[expose] def joinedNormal (hn : n ≠ 0) : Space :=
   P.restrictedFrame.activationNormal (P.time_pos hn) P.time_lt_nextHorizon
 
 theorem joinedNormal_unit (hn : n ≠ 0) : ‖P.joinedNormal hn‖=1 :=
@@ -376,17 +376,17 @@ theorem joinedNormal_unit (hn : n ≠ 0) : ‖P.joinedNormal hn‖=1 :=
 
 /-- Joined data, given by `P.restrictedFrame.activationData (P.time_pos hn)
 P.time_lt_nextHorizon`. -/
-def joinedData (hn : n ≠ 0) : Data (referencePlane (P.joinedNormal hn)) :=
+@[expose] def joinedData (hn : n ≠ 0) : Data (referencePlane (P.joinedNormal hn)) :=
   P.restrictedFrame.activationData (P.time_pos hn) P.time_lt_nextHorizon
 
 /-- Joined frame, given by `P.restrictedFrame.activationFrame (P.time_pos hn)
 P.time_lt_nextHorizon`. -/
-def joinedFrame (hn : n ≠ 0) : ParentFrame (P.joinedData hn) P.time :=
+@[expose] def joinedFrame (hn : n ≠ 0) : ParentFrame (P.joinedData hn) P.time :=
   P.restrictedFrame.activationFrame (P.time_pos hn) P.time_lt_nextHorizon
 
 /-- Joined history, given by `P.restrictedFrame.activationHistory (P.time_pos hn)
 P.time_lt_nextHorizon P.restrictedLow`. -/
-def joinedHistory (hn : n ≠ 0) :
+@[expose] def joinedHistory (hn : n ≠ 0) :
     HistoryData ((P.joinedData hn).initial P.time (P.time_pos hn) P.time_lt_nextHorizon.le) :=
   P.restrictedFrame.activationHistory (P.time_pos hn) P.time_lt_nextHorizon P.restrictedLow
 
@@ -441,20 +441,20 @@ section ForwardData
 variable {c B : ℝ} {S : Scales c B} (P : Stage S 0)
 
 /-- Zero frame, given by `P.restrictedFrame.changeActivation (P.time_zero rfl)`. -/
-def zeroFrame : ParentFrame (frameData P.restrictedParent) 0 :=
+@[expose] def zeroFrame : ParentFrame (frameData P.restrictedParent) 0 :=
   P.restrictedFrame.changeActivation (P.time_zero rfl)
 
 /-- Forward normal, given by `P.zeroFrame.crossDirection`. -/
-def forwardNormal : Space := P.zeroFrame.crossDirection
+@[expose] def forwardNormal : Space := P.zeroFrame.crossDirection
 
 theorem forwardNormal_unit : ‖P.forwardNormal‖=1 :=
   P.zeroFrame.crossDirection_unit P.restrictedParent.T_pos.le
 
 /-- Forward data, given by `P.zeroFrame.forwardData`. -/
-def forwardData : Data (referencePlane P.forwardNormal) := P.zeroFrame.forwardData
+@[expose] def forwardData : Data (referencePlane P.forwardNormal) := P.zeroFrame.forwardData
 
 /-- Forward frame, given by `P.zeroFrame.forwardFrame`. -/
-def forwardFrame : ParentFrame P.forwardData 0 := P.zeroFrame.forwardFrame
+@[expose] def forwardFrame : ParentFrame P.forwardData 0 := P.zeroFrame.forwardFrame
 
 @[simp] theorem forwardFrame_a : P.forwardFrame.a=P.frame.a :=
   P.zeroFrame.forward_parameters.1.trans
@@ -495,7 +495,7 @@ section
 Only the first geometric step needs coupling and tilt bounds. All later
 step lengths are nonnegative independently of any future frame invariant. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -645,7 +645,7 @@ section
 amplification stage. Its new ray and velocity start exactly in the old
 frame, so only the actual strain's spatial variation enters the error. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -671,7 +671,7 @@ theorem forwardError_bound (ρ E N : ℝ) (hρ : 0 ≤ ρ) (hE : P.error ≤ E)
         hρ).trans hN)
 
 /-- Forward geometry guards of stage as an element of `ForwardGuards P`. -/
-def forwardGeometryGuardsOfStage
+@[expose] def forwardGeometryGuardsOfStage
     (J D : ℕ) (C c X : ℝ) (a β : ℕ → ℝ) (n : ℕ)
     (CF : ℝ) (hCF : 1 ≤ CF)
     (stage : StageGuards J D C c X (neighborStabilityConstant * CF ^ 2) a β n)
@@ -783,7 +783,7 @@ section
 majorant under fixed degree and constant guards. Thus the small support
 scale discharges the literal neighbor comparison in the geometry step. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -884,7 +884,7 @@ section
 The history reciprocal is derived from the initial geometric step, and
 the only parent size input is the already constructed parent's label bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1027,7 +1027,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1070,6 +1070,7 @@ theorem joined_neighbor :
     P.label_eq.le htime hcost hq (degree_le_requiredExponent.trans hq) P.scale_eq.le
 
 /-- Joined guards, constructed using `P.restrictedState.labels.geometryGuardsOfStage`. -/
+@[expose]
 def joinedGuards : Guards (P.time_pos hn) P.time_lt_nextHorizon (P.joinedFrame hn) (P.joinedHistory
     hn) :=
   P.restrictedState.labels.geometryGuardsOfStage
@@ -1116,7 +1117,7 @@ theorem joined_source_neighbor :
 
 /-- Joined geometry, given by `(P.joinedGuards hn hq hB).lowGeometry (by rw
 [P.joinedGuards_radius]; norm_num)`. -/
-def joinedGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
+@[expose] def joinedGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   (P.joinedGuards hn hq hB).lowGeometry (by rw [P.joinedGuards_radius]; norm_num)
 
 theorem joinedGeometry_targetTime : (P.joinedGeometry hn hq hB).targetTime=P.nextTime := by
@@ -1142,7 +1143,7 @@ theorem forward_neighbor : P.restrictedState.labels.strainDifferenceCost*P.restr
     ((forwardThreshold_le_common _ _).trans (hB.trans (S.previous_floor 0))) hq P.scale_eq.le
 
 /-- Forward guards, constructed using `P.restrictedState.labels.forwardGeometryGuardsOfStage`. -/
-def forwardGuards : ForwardGuards P.forwardFrame :=
+@[expose] def forwardGuards : ForwardGuards P.forwardFrame :=
   P.restrictedState.labels.forwardGeometryGuardsOfStage P.forwardNormal P.forwardNormal_unit
     (LinearIsometryEquiv.refl ℝ (referencePlane P.forwardNormal)) support compact P.forwardFrame
     S.J S.D 4 (q : ℝ) S.X (fun _ => P.frame.a) (fun _ => P.frame.sigma^2) 0
@@ -1169,7 +1170,7 @@ theorem forward_source_neighbor :
 
 /-- Forward geometry, given by `(P.forwardGuards hq hB).lowGeometry (by rw
 [P.forwardGuards_radius]; norm_num)`. -/
-def forwardGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
+@[expose] def forwardGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   (P.forwardGuards hq hB).lowGeometry (by rw [P.forwardGuards_radius]; norm_num)
 
 theorem forwardGeometry_targetTime : (P.forwardGeometry hq hB).targetTime=P.nextTime := by

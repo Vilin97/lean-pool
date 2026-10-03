@@ -20,13 +20,14 @@ block is symmetric; the odd block is antisymmetric, and the Koszul
 sign of the braiding on the odd⊗odd summand exactly compensates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 open scoped TensorProduct
 
 /-- The even form as a bilinear map. -/
+@[expose]
 noncomputable def stdFormEvenBilin (k : ℕ) :
     (Fin k → ℂ) →ₗ[ℂ] (Fin k → ℂ) →ₗ[ℂ] ℂ :=
   LinearMap.mk₂ ℂ (stdFormEven k)
@@ -56,6 +57,7 @@ noncomputable def stdFormEvenBilin (k : ℕ) :
         ring))
 
 /-- The odd form as a bilinear map. -/
+@[expose]
 noncomputable def stdFormOddBilin (ℓ : ℕ) :
     (Fin (2 * ℓ) → ℂ) →ₗ[ℂ] (Fin (2 * ℓ) → ℂ) →ₗ[ℂ] ℂ :=
   LinearMap.mk₂ ℂ (stdFormOdd ℓ)
@@ -88,6 +90,7 @@ noncomputable def stdFormOddBilin (ℓ : ℕ) :
 
 /-- The standard form as an even morphism
 `stdSuperPair ⊗ stdSuperPair ⟶ 𝟙` of super vector spaces. -/
+@[expose]
 noncomputable def stdForm (k ℓ : ℕ) :
     SuperVect.Hom
       (SuperVect.tensorObj (stdSuperPair k ℓ) (stdSuperPair k ℓ))

@@ -40,7 +40,7 @@ public import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-! # CoreGapUniformCodegree -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -339,7 +339,7 @@ end
 
 /-! # CoreGapTripleDegrees -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -427,6 +427,7 @@ theorem edgeTriangleDegree_pair (G : SimpleGraph V) [DecidableRel G.Adj] {x y : 
 /-! ### The tripartite graph carried by a triple of parts -/
 
 /-- The (symmetric) predicate "`x` and `y` lie in two different parts of the triple". -/
+@[expose]
 def crossAdj (U W X : Finset V) (x y : V) : Prop :=
   (x ∈ U ∧ y ∈ W) ∨ (x ∈ W ∧ y ∈ U) ∨ (x ∈ U ∧ y ∈ X) ∨ (x ∈ X ∧ y ∈ U) ∨
     (x ∈ W ∧ y ∈ X) ∨ (x ∈ X ∧ y ∈ W)
@@ -438,6 +439,7 @@ theorem crossAdj_symm {U W X : Finset V} {x y : V} (h : crossAdj U W X x y) :
 
 /-- **The tripartite subgraph carried by a triple of parts**: the edges of `G` joining two
 different parts of `(U, W, X)`. -/
+@[expose]
 def tripleGraph (G : SimpleGraph V) (U W X : Finset V) : SimpleGraph V where
   Adj x y := G.Adj x y ∧ crossAdj U W X x y
   symm := ⟨by

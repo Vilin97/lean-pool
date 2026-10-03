@@ -24,7 +24,7 @@ uniform replenishment. The path measure below is the homogeneous Markov law
 driven by iid uniform demand/replenishment pairs.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Palomar
 
@@ -40,6 +40,7 @@ abbrev Inventory (m : ℕ) := Fin m → unitInterval
 abbrev Noise := unitInterval × unitInterval
 
 /-- The law of an independent uniform demand/replenishment pair. -/
+@[expose]
 def noiseLaw : Measure Noise :=
   (volume : Measure unitInterval).prod volume
 
@@ -63,6 +64,7 @@ structure OnlinePolicy (m : ℕ) where
       Function.update p.1 (select p.1 p.2.1) p.2.2)
 
 /-- Replace the selected supply by the replenishment coordinate. -/
+@[expose]
 def step (P : OnlinePolicy m) (s : Inventory m) (z : Noise) :
     Inventory m :=
   Function.update s (P.select s z.1) z.2
@@ -71,6 +73,7 @@ def step (P : OnlinePolicy m) (s : Inventory m) (z : Noise) :
 abbrev ProcessState (m : ℕ) := Inventory m × Noise
 
 /-- Apply the current noise and attach fresh noise for the next period. -/
+@[expose]
 def processAdvance (P : OnlinePolicy m)
     (p : ProcessState m × Noise) : ProcessState m :=
   (step P p.1.1 p.1.2, p.2)
@@ -80,6 +83,7 @@ theorem processAdvance_measurable (P : OnlinePolicy m) :
   exact (P.stepMeasurable.comp measurable_fst).prodMk measurable_snd
 
 /-- The homogeneous one-period kernel of an online policy. -/
+@[expose]
 def processKernel (P : OnlinePolicy m) :
     Kernel (ProcessState m) (ProcessState m) :=
   (Kernel.id ×ₖ Kernel.const (ProcessState m) noiseLaw).map
@@ -91,6 +95,7 @@ instance processKernel_isMarkovKernel (P : OnlinePolicy m) :
   exact Kernel.IsMarkovKernel.map _ (processAdvance_measurable P)
 
 /-- Attach an independent first demand/replenishment pair to an inventory law. -/
+@[expose]
 def initialProcessLaw (μ₀ : Measure (Inventory m)) :
     Measure (ProcessState m) :=
   μ₀.prod noiseLaw
@@ -102,6 +107,7 @@ instance initialProcessLaw_isProbabilityMeasure
   infer_instance
 
 /-- A homogeneous kernel viewed as a history-dependent kernel. -/
+@[expose]
 def historyKernel (P : OnlinePolicy m) (n : ℕ) :
     Kernel ((i : Finset.Iic n) → ProcessState m) (ProcessState m) :=
   (processKernel P).comap
@@ -113,6 +119,7 @@ instance historyKernel_isMarkovKernel (P : OnlinePolicy m) (n : ℕ) :
   infer_instance
 
 /-- The path-space law generated from an arbitrary initial inventory law. -/
+@[expose]
 def trajectoryFrom (P : OnlinePolicy m)
     (μ₀ : Measure (Inventory m)) :
     Measure (ℕ → ProcessState m) :=
@@ -120,11 +127,13 @@ def trajectoryFrom (P : OnlinePolicy m)
     (initialProcessLaw μ₀) (historyKernel P)
 
 /-- The trajectory law from a fixed initial inventory. -/
+@[expose]
 def trajectoryFromState (P : OnlinePolicy m) (s₀ : Inventory m) :
     Measure (ℕ → ProcessState m) :=
   trajectoryFrom P (Measure.dirac s₀)
 
 /-- The iid uniform law of the inventory produced by scheduled replacement. -/
+@[expose]
 def uniformInventoryLaw (m : ℕ) : Measure (Inventory m) :=
   Measure.pi fun _ : Fin m => (volume : Measure unitInterval)
 
@@ -134,15 +143,18 @@ instance uniformInventoryLaw_isProbabilityMeasure :
   infer_instance
 
 /-- The policy trajectory after iid uniform initialization. -/
+@[expose]
 def uniformTrajectory (P : OnlinePolicy m) :
     Measure (ℕ → ProcessState m) :=
   trajectoryFrom P (uniformInventoryLaw m)
 
 /-- The distance paid in one period. -/
+@[expose]
 def processCost (P : OnlinePolicy m) (z : ProcessState m) : ℝ :=
   |(z.1 (P.select z.1 z.2.1) : ℝ) - (z.2.1 : ℝ)|
 
 /-- Root mean square one-period cost from a fixed initial inventory. -/
+@[expose]
 def trajectoryRMSCostFromState
     (P : OnlinePolicy m) (s₀ : Inventory m) (t : ℕ) : ℝ :=
   Real.sqrt
@@ -153,6 +165,7 @@ def trajectoryRMSCostFromState
 The total cost of matching once to every original labeled supply during the
 first `m` periods.
 -/
+@[expose]
 def initializationCost (initial demand : Inventory m) : ℝ :=
   ∑ j, |(demand j : ℝ) - (initial j : ℝ)|
 
@@ -160,6 +173,7 @@ def initializationCost (initial demand : Inventory m) : ℝ :=
 Average cost over `N` periods: scheduled replacement first, followed by the
 online policy on the resulting iid uniform inventory.
 -/
+@[expose]
 def initializedAverageCost
     (P : OnlinePolicy m) (initial demand : Inventory m) (N : ℕ)
     (path : ℕ → ProcessState m) : ℝ :=
@@ -187,6 +201,7 @@ def memoryCount (m : ℕ) : ℕ :=
   m + 4 * leafCount m
 
 /-- One explicit universal constant for both cost bounds. -/
+@[expose]
 def universalConstant : ℝ :=
   72000 / Real.log 2
 

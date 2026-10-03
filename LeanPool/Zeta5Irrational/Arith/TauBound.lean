@@ -22,7 +22,7 @@ If `deg P ≤ d` and `v_p(P(m)) ≥ β` for `m = 0, …, d`, then
 `v_p(τ(P)) ≥ β - 4 ⌊log_p (d+1)⌋ - v_p(24)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -31,11 +31,11 @@ namespace Zeta5Irrational
 variable {p : ℕ} [hp : Fact p.Prime]
 
 /-- `τ(P) = L(P''')/24`. -/
-noncomputable def tau (P : ℚ[X]) : ℚ :=
+@[expose] noncomputable def tau (P : ℚ[X]) : ℚ :=
   Lb (derivative^[3] P) / 24
 
 /-- `Q` is a combination of `bin 0, …, bin k` with coefficients of valuation `≥ r`. -/
-def BinRep (p : ℕ) (k : ℕ) (r : ℚ) (Q : ℚ[X]) : Prop :=
+@[expose] def BinRep (p : ℕ) (k : ℕ) (r : ℚ) (Q : ℚ[X]) : Prop :=
   ∃ e : ℕ → ℚ, Q = ∑ m ∈ range (k + 1), C (e m) * bin m ∧ ∀ m ≤ k, VG p (e m) r
 
 lemma derivative_bin' {k m : ℕ} (hm : m ≤ k) :

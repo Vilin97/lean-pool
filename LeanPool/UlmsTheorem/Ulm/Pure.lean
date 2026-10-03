@@ -20,7 +20,7 @@ This file contains the basic hard-direction infrastructure for Ulm's theorem:
 ordinal height, p-order, purity, and height-preserving maps on subgroups.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -37,6 +37,7 @@ noncomputable def ulmHeight (x : G) : WithTop Ordinal.{0} :=
   ⨆ (α : Ordinal.{0}) (_ : x ∈ ulmSubgroup p α (G := G)), (α : WithTop Ordinal.{0})
 
 /-- `x` is proper with respect to `S` when its height is maximal in the coset `x + S`. -/
+@[expose]
 def IsProper (S : AddSubgroup G) (x : G) : Prop :=
   ∀ s : S, ulmHeight p x ≥ ulmHeight p (x + s)
 
@@ -163,6 +164,7 @@ def IsHeightPreserving (φ : G →+ H) : Prop :=
     x ∈ ulmSubgroup p α (G := G) ↔ φ x ∈ ulmSubgroup p α (G := H)
 
 /-- Height-preserving map between subgroups `A ≤ G` and `B ≤ H`. -/
+@[expose]
 def IsHeightPresOn {A : AddSubgroup G} {B : AddSubgroup H} (φ : A →+ B) : Prop :=
   ∀ (a : A) (α : Ordinal.{0}),
     (a : G) ∈ ulmSubgroup p α (G := G) ↔ (φ a : H) ∈ ulmSubgroup p α (G := H)
@@ -269,11 +271,15 @@ def IsIsotype (A : AddSubgroup G) : Prop :=
   ∀ (x : A) (α : Ordinal.{0}),
     (x : G) ∈ ulmSubgroup p α (G := G) ↔ x ∈ ulmSubgroup p α (G := A)
 
-lemma IsPure_bot : IsPure p (⊥ : AddSubgroup G) :=
-  fun _ _ _ ↦ ⟨0, Subsingleton.elim _ _⟩
+lemma IsPure_bot : IsPure p (⊥ : AddSubgroup G) := by
+  intro n x _
+  apply (pPow_mem_iff p x n).mpr
+  exact ⟨0, Subsingleton.elim _ _⟩
 
-lemma IsPure_top : IsPure p (⊤ : AddSubgroup G) := fun _ _ hx ↦ by
-  obtain ⟨y, hy⟩ := hx
+lemma IsPure_top : IsPure p (⊤ : AddSubgroup G) := by
+  intro n x hx
+  obtain ⟨y, hy⟩ := (pPow_mem_iff p (x : G) n).mp hx
+  apply (pPow_mem_iff p x n).mpr
   exact ⟨⟨y, by simp⟩, Subtype.ext hy⟩
 
 lemma IsIsotype.isPure {A : AddSubgroup G} (hA : IsIsotype p A) :
@@ -415,7 +421,8 @@ lemma IsPure.map_of_heightPres {A : AddSubgroup G} (hA : IsPure p A)
   have ha_pow : a ∈ pPow p n (G := G) := by
     rw [← ulmSubgroup_nat (p := p) n]
     exact (hφ a n).mpr hx'
-  rcases hA n ⟨a, haA⟩ ha_pow with ⟨b, hb⟩
+  rcases (pPow_mem_iff p _ n).mp (hA n ⟨a, haA⟩ ha_pow) with ⟨b, hb⟩
+  apply (pPow_mem_iff p x n).mpr
   refine ⟨⟨φ b, ⟨b, b.property, rfl⟩⟩, ?_⟩
   ext
   have hb' : p ^ n • (b : G) = a := congrArg (fun z : A ↦ (z : G)) hb
@@ -433,7 +440,8 @@ lemma IsPure.range_of_heightPresOn {A : AddSubgroup G} {B : AddSubgroup H}
   have ha_pow : (a : G) ∈ pPow p n (G := G) := by
     rw [← ulmSubgroup_nat (p := p) (G := G) n]
     exact (hφ a n).mpr hx'
-  rcases hA n a ha_pow with ⟨b, hb⟩
+  rcases (pPow_mem_iff p _ n).mp (hA n a ha_pow) with ⟨b, hb⟩
+  apply (pPow_mem_iff p x n).mpr
   refine ⟨⟨(B.subtype.comp φ) b, ⟨b, by simp, rfl⟩⟩, ?_⟩
   apply Subtype.ext
   calc

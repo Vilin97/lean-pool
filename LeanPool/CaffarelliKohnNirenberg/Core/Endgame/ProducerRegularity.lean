@@ -22,7 +22,7 @@ The velocity improvement and pressure-gradient construction are used on
 nested balls before localizing the equation and applying the heat estimate.
 -/
 
-@[expose] public section
+public section
 
 section
 

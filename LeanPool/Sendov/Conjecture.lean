@@ -35,7 +35,7 @@ Three cases, by the position of `a`:
 * `Sendov.sendov`: Sendov's conjecture.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

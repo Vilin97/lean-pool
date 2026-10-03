@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Drift
 
 /-! # Potential -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -32,6 +32,7 @@ open scoped BigOperators
 /-! ## One-node deletion/arrival experiment -/
 
 /-- Probability mass of a Bernoulli outcome. -/
+@[expose]
 def bernoulliMass (r : ℝ) (outcome : Bool) : ℝ :=
   if outcome then r else 1 - r
 
@@ -39,6 +40,7 @@ def bernoulliMass (r : ℝ) (outcome : Bool) : ℝ :=
 The new count after a deletion followed by an arrival. The hypotheses used
 below ensure that deletion has probability zero when the old count is zero.
 -/
+@[expose]
 def updateCount (N : ℕ) (deleted arrived : Bool) : ℕ :=
   if deleted then
     if arrived then N else N - 1
@@ -46,6 +48,7 @@ def updateCount (N : ℕ) (deleted arrived : Bool) : ℕ :=
     if arrived then N + 1 else N
 
 /-- Expected change of one harmonic potential under independent Bernoulli events. -/
+@[expose]
 def expectedNodePotentialChange
     (a : ℝ) (N : ℕ) (p q : ℝ) : ℝ :=
   ∑ deleted : Bool, ∑ arrived : Bool,
@@ -70,18 +73,21 @@ theorem expectedNodePotentialChange_eq
 /-! ## Global potential, drift, and remainder -/
 
 /-- `Phi = sum_{v ≠ root} p_v² phi(N_v)`. -/
+@[expose]
 def globalHarmonicPotential
     (L : ℕ) (a : ℝ) (N : ∀ d, DyadicNode d → ℕ) : ℝ :=
   ∑ d ∈ Finset.range L, ∑ v : DyadicNode (d + 1),
     (nodeMass (d + 1) v) ^ 2 * harmonicPotential a (N (d + 1) v)
 
 /-- `D`, with natural inventory counts coerced to reals. -/
+@[expose]
 def potentialDrift
     (L : ℕ) (a : ℝ) (N : ∀ d, DyadicNode d → ℕ)
     (q : ∀ d, DyadicNode d → ℝ) : ℝ :=
   bellmanDrift L a (fun d v => N d v) q
 
 /-- The nonnegative remainder `R` in the exact harmonic-potential drift. -/
+@[expose]
 def potentialRemainder
     (L : ℕ) (a : ℝ) (N : ∀ d, DyadicNode d → ℕ)
     (q : ∀ d, DyadicNode d → ℝ) : ℝ :=
@@ -95,6 +101,7 @@ The conditional expected global change, obtained by summing the independent
 one-node deletion/arrival experiment. Correlations between distinct nodes
 do not enter this expression.
 -/
+@[expose]
 def expectedGlobalPotentialChange
     (L : ℕ) (a : ℝ) (N : ∀ d, DyadicNode d → ℕ)
     (q : ∀ d, DyadicNode d → ℝ) : ℝ :=

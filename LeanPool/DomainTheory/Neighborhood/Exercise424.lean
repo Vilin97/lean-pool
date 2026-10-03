@@ -48,7 +48,7 @@ inherently classical; the construction of `h` uses `Classical.choice` (the
 the statement demands.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise424
 

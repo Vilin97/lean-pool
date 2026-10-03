@@ -33,7 +33,7 @@ section
 as smooth bounded coefficient paths. Every spatial jet is continuous in
 the sup norm; no third time derivative is used for the acceleration. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,6 +109,7 @@ def accelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E E :=
 
 /-- Deformation coefficient, given by `(SmoothTimeField.boundConstant (ContinuousLinearMap.id ℝ
 E)).add (displacementCoefficient T hT A B R hB hR hsmall hb).derivative`. -/
+@[expose]
 def deformationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) E (E →L[ℝ] E) :=
   (SmoothTimeField.boundConstant (ContinuousLinearMap.id ℝ E)).add
     (displacementCoefficient T hT A B R hB hR hsmall hb).derivative
@@ -179,7 +180,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -205,7 +206,8 @@ def coverAccelerationCoefficient : SmoothTimeField (Icc (0 : ℝ) T) LiftTangent
   accelerationCoefficient T G.time_nonneg G.A G.B G.R G.B_nonneg G.R_pos G.small G.sup_bound G.A₁
 
 @[simp] theorem coverDisplacementCoefficient_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
-    G.coverDisplacementCoefficient.field t x = (flowData T G.time_nonneg G.A).forward t x-x := rfl
+    G.coverDisplacementCoefficient.field t x = (flowData T G.time_nonneg G.A).forward t x-x := by
+  rfl
 
 @[simp] theorem coverVelocityCoefficient_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     G.coverVelocityCoefficient.field t x = velocityFamily T G.time_nonneg G.A x t := by
@@ -241,6 +243,7 @@ theorem coverVelocityCoefficient_time : SmoothTimeField.TimeDerivative T G.time_
 
 /-- Physical displacement coefficient, given by `physicalCoefficient k m T
 G.coverDisplacementCoefficient ell`. -/
+@[expose]
 def physicalDisplacementCoefficient (k : ℝ) (m : Vector3) (ell : ℝ) :
     SmoothTimeField (Icc (0 : ℝ) T) Vector3 Vector3 :=
   physicalCoefficient k m T G.coverDisplacementCoefficient ell
@@ -309,7 +312,7 @@ section
 /-! The literal child map X(t,Y(t,a)), its actual velocity, and its
 actual acceleration, as continuous smooth coefficient paths. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -332,6 +335,7 @@ def secondTerm (P D V : SmoothTimeField K E E) : SmoothTimeField K E E :=
   applyField (applyField (P.derivative.derivative.compDisplacement D) V) V
 
 /-- Displacement, given by `(P.compDisplacement D).add D`. -/
+@[expose]
 def displacement (P D : SmoothTimeField K E E) : SmoothTimeField K E E :=
   (P.compDisplacement D).add D
 
@@ -359,7 +363,8 @@ def acceleration (P P₁ P₂ D D₁ D₂ : SmoothTimeField K E E) : SmoothTimeF
   rw [he]
 
 @[simp] theorem displacement_apply (P D : SmoothTimeField K E E) (t : K) (x : E) :
-    (displacement P D).field t x = P.field t (x+D.field t x)+D.field t x := rfl
+    (displacement P D).field t x = P.field t (x+D.field t x)+D.field t x := by
+  rfl
 
 @[simp] theorem velocity_apply (P P₁ D D₁ : SmoothTimeField K E E) (t : K) (x : E) :
     (velocity P P₁ D D₁).field t x = P₁.field t (x+D.field t x)+D₁.field t x +
@@ -426,7 +431,7 @@ section
 
 /-! Exact Jacobian composition for the child displacement. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -471,7 +476,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -545,7 +550,7 @@ section
 /-! The L² child fields used in the estimates are exactly the actual
 first and second time derivatives of the composed particle map. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -655,7 +660,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -679,6 +684,7 @@ variable {P : ℝ} [Fact (0 < P)] (G : EulerPhysicalGraphFlowBounds.Data P A.T)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
 
 /-- Child, bundling `T`, `T_pos`, `ell`, `ell_pos` and the required compatibility proofs. -/
+@[expose]
 def child : EulerParentPacketFrames.Parent where
   T := A.T
   T_pos := A.T_pos

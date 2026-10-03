@@ -54,7 +54,7 @@ not by itself a reduction to two attainable norm estimates.
   -- the corresponding two-term norm reduction.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Interval Real

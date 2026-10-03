@@ -26,7 +26,7 @@ functions by a monotone-limit construction, giving the partial operator
 `E_pvm.unboundedIntegral f hf` for a PVM `E_pvm` and measurable `f`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open Function
@@ -35,7 +35,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The nonnegative scalar set function induced by a PVM and a vector. -/
-def PVM.scalarContent (E_pvm : PVM E) (x : E) (S : Set ℝ) : ℝ :=
+@[expose] def PVM.scalarContent (E_pvm : PVM E) (x : E) (S : Set ℝ) : ℝ :=
   (@inner ℂ E _ (E_pvm.proj S x) x).re
 
 /-- Scalar PVM content is nonnegative for measurable sets. -/

@@ -134,4 +134,4 @@ tightened `Builds on:` line (§2.5) plus the `ChartChain` dependency the general
 needed. No file here imports `Jacobian.Monodromy`, `Jacobian.FormTrace`, or `Jacobian.Meromorphic`.
 -/
 
-@[expose] public section
+public section

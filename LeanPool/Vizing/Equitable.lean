@@ -18,7 +18,7 @@ preserves properness and decreases the square-energy. Finite descent
 therefore produces an equitable colouring on the original palette.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Vizing.Equitable
 

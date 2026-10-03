@@ -32,7 +32,7 @@ import Mathlib.Tactic.Ring.Basic
 basis `q_0 = 1`, `q_i(t) = (-1)^i 2t D_{i-1}(t)/(2i)!` with `q_i(-z²) = C(z+i, 2i) + C(z+i-1, 2i)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

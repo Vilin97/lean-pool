@@ -13,7 +13,7 @@ public import LeanPool.Zeta32.Arith.Small.Entry
 at most
 `3n` times the entry bound (`det_GV`). Here `D = 2h + sn + 2 = 10n + 2`. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 namespace Zeta32.Arith

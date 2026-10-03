@@ -19,7 +19,7 @@ argument, including the cardinality bound needed to pad a terminal marking
 back to its original length.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -41,6 +41,7 @@ variable {G H : Type u} [Group G] [Group H]
 /-- Reversal has no fixed oriented edge.  Rose and fold constructions will
 provide this property explicitly; keeping it as a hypothesis avoids silently
 identifying a self-reversing quiver arrow with a geometric edge pair. -/
+@[expose]
 def ReverseFree : Prop :=
   ∀ e : AllArrow (V := V), allArrowReverse e ≠ e
 
@@ -60,6 +61,7 @@ noncomputable def allArrowIndex (e : AllArrow (V := V)) :
   Fintype.equivFin (AllArrow (V := V)) e
 
 /-- The orientation of each edge with the smaller index than its reverse. -/
+@[expose]
 def EdgeRepresentative :=
   {e : AllArrow (V := V) //
     (allArrowIndex e).val <

@@ -45,7 +45,7 @@ chamber and is carried for free by
 `GenusFiveRow10Symmetry.chamber_covers`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow10ChamberTwo
 

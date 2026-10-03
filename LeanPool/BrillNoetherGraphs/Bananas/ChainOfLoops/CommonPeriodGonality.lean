@@ -19,7 +19,7 @@ the vertex-wedge chain, where common-period `k`-general transmission composes;
 contracting every displayed bridge preserves degree and rank.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

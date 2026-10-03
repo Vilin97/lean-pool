@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! # V19: certified bounds for the zeta(5) proof -/
 
-@[expose] public section
+public section
 
 open Finset
 

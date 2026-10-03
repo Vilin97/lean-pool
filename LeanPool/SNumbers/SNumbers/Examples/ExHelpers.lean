@@ -35,7 +35,7 @@ saturating a prescribed coordinate bound on many coordinates. The proof is an
 extreme-point argument (Krein–Milman) combined with the pigeonhole lemma.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

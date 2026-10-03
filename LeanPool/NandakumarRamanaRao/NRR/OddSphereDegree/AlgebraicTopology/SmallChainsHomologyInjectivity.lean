@@ -14,7 +14,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
 public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology.SmallChainsHomologySurjectivity
 /-! # Small Chains Homology Injectivity -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Limits AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision

@@ -16,7 +16,7 @@ development; this neutral module keeps the active proof independent of that
 historical assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

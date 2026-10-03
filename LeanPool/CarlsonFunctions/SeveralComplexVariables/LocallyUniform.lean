@@ -39,7 +39,7 @@ Derivative convergence uses a one-variable Cauchy estimate on compact thickening
 by finite sums, currying, and transport along a continuous linear choice of coordinates.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set
 

@@ -16,7 +16,7 @@ elements reachable in at least one step. Because `reachStep` only grows sets, af
 `Fintype.card α` iterations we must have reached a fixed point, which then is exactly
 the set of `Relation.TransGen`-successors. -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

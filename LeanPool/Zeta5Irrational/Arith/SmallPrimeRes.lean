@@ -23,7 +23,7 @@ import Mathlib.Tactic.Ring.Basic
   `v_p((K!)² / ∏_{s ≠ r} (r - s)) ≥ -log_p (2K)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

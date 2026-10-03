@@ -19,7 +19,7 @@ instances; like their real counterparts, these comparison instances are classica
 `noncomputable`.
 -/
 
-@[expose] public section
+public section
 
 /-- Type class stating that `x : ℂ` has a `ComputableℝSeq` for its real and imaginary parts.
 Note that we can't define this as `IsComputable x.re` + `IsComputable x.im`, because then

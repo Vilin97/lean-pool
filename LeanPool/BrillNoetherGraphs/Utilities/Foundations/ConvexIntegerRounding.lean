@@ -17,13 +17,14 @@ therefore gives a coarse edge slope between those same slopes. Consecutive
 coarse slopes remain nondecreasing.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.ConvexIntegerRounding
 
 open Finset CommonOffsetRounding
 
 /-- The forward slope on an integer path. -/
+@[expose]
 def slope (v : ℕ → ℤ) (i : ℕ) : ℤ := v (i + 1) - v i
 
 /-- Successive slope comparisons give all slope comparisons before `L`. -/

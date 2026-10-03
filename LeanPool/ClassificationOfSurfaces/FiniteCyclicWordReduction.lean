@@ -19,7 +19,7 @@ This file completes the recursive reduction developed in
 normalization and the connected-presentation result.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -3092,6 +3092,7 @@ def toBoundaryClosure {n : ℕ}
 
 /-- A lifted residual pair whose protected interval begins with a completed boundary loop exposes
 the exact boundary-block commute transition. -/
+@[expose]
 def toBoundaryBlockCommute {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3207,6 +3208,7 @@ theorem boundaryBlockCommuteConditions_of_valid {n : ℕ}
 
 /-- Surface multiplicity supplies all freshness conditions needed to commute a completed
 boundary-loop atom at the head of a lifted residual-pair interval. -/
+@[expose]
 noncomputable def toBoundaryBlockCommuteOfValid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3256,6 +3258,7 @@ theorem toBoundaryBlockCommuteOfValid_outsideTokens {n : ℕ}
 
 /-- A lifted residual pair whose protected interval begins with a completed crosscap exposes the
 exact contextual crosscap transition. -/
+@[expose]
 def toCrosscapBlockCommute {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3379,6 +3382,7 @@ theorem crosscapBlockCommuteConditions_of_valid {n : ℕ}
 
 /-- Surface multiplicity supplies every freshness condition needed for a contextual crosscap
 transition at the head of a lifted residual-pair interval. -/
+@[expose]
 noncomputable def toCrosscapBlockCommuteOfValid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3427,6 +3431,7 @@ theorem toCrosscapBlockCommuteOfValid_outsideTokens {n : ℕ}
 
 /-- A lifted residual pair whose protected interval begins with a completed handle exposes the
 exact contextual handle transition. -/
+@[expose]
 def toHandleBlockCommute {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -3585,6 +3590,7 @@ theorem handleBlockCommuteConditions_of_valid {n : ℕ}
 
 /-- Surface multiplicity supplies every distinction and freshness condition needed for a
 contextual handle transition. -/
+@[expose]
 noncomputable def toHandleBlockCommuteOfValid {n : ℕ}
     {tokens : List (ReductionToken (n + 1))}
     (pair : MarkedResidualCancellablePair tokens)
@@ -7469,6 +7475,7 @@ namespace MarkedExecutionState
 
 /-- Forget the marked-token implementation of a residual-empty state and retain its exact
 terminal protected-atom word. -/
+@[expose]
 noncomputable def toTerminalProtectedWord {n : ℕ}
     {tokens : List (ReductionToken n)}
     (state : MarkedExecutionState tokens)
@@ -7526,14 +7533,14 @@ structure TerminalCompletedWord where
 namespace TerminalCompletedWord
 
 /-- Validity-bundled finite-cyclic presentation displayed by a terminal completed-block word. -/
-def validPresentation (terminal : TerminalCompletedWord) :
+@[expose] def validPresentation (terminal : TerminalCompletedWord) :
     ValidPresentation :=
   ⟨Dyck.oneFace
       (CompletedBlock.sequenceWord terminal.blocks),
     terminal.valid⟩
 
 /-- Exact canonical normal form selected by the completed block counts. -/
-def normalForm (terminal : TerminalCompletedWord) :
+@[expose] def normalForm (terminal : TerminalCompletedWord) :
     NormalForm :=
   CompletedBlock.normalForm terminal.blocks
 

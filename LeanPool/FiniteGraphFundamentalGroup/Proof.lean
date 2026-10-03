@@ -16,7 +16,7 @@ Mathlib's free groupoid and identifies a basis indexed by the edges outside a ge
 tree.
 -/
 
-@[expose] public section
+public section
 
 attribute [local implicit_reducible]
   Quiver.Symmetrify IsFreeGroupoid.Generators
@@ -450,10 +450,10 @@ noncomputable instance freeGroupoidGeneratorHomFintype {V : Type u}
   exact FiniteQuiver.finiteHom (V := V) a.as b.as
 
 /-- The number of vertices in a finite graph. -/
-def vertexCount {V : Type u} [Fintype V] : ℕ := Fintype.card V
+@[expose] def vertexCount {V : Type u} [Fintype V] : ℕ := Fintype.card V
 
 /-- The total number of directed edges in a finite quiver. -/
-def edgeCount {V : Type u} [Quiver.{u} V] [Fintype V] [FiniteQuiver V] : ℕ :=
+@[expose] def edgeCount {V : Type u} [Quiver.{u} V] [Fintype V] [FiniteQuiver V] : ℕ :=
   Fintype.card (Quiver.Total V)
 
 /-- The graph cycle rank, written to account for truncated subtraction in `ℕ`.
@@ -496,7 +496,7 @@ def generatorTotalEquiv {V : Type u} [Quiver.{u} V] :
   right_inv e := by cases e; rfl
 
 /-- The complement of the geodesic tree, indexed by the actual non-tree generator arrows. -/
-noncomputable def graphGeneratorSet {V : Type u} [Quiver.{u} V]
+@[expose] noncomputable def graphGeneratorSet {V : Type u} [Quiver.{u} V]
     [WeaklyConnected V] (root : V) :
     Set (Quiver.Total (IsFreeGroupoid.Generators (Quiver.FreeGroupoid V))) :=
   (wideSubquiverEquivSetTotal

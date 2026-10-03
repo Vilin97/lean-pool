@@ -17,7 +17,7 @@ which agrees with the usual `L^p` norm when the latter is finite and keeps the
 statements valid without an extra integrability hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

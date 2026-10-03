@@ -14,7 +14,7 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 General lemmas not specific to analysis of Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanBooleanfun.BooleanFun
 

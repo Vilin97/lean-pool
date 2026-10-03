@@ -17,7 +17,7 @@ The estimates retain the moving edge weight and the actual pulse envelope.
 Constants precede the orientation, spatial label, band, and lattice copy.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,15 +36,18 @@ abbrev Point := LocalSignedRequest.Point
 
 /-- Region, given by `ActualSignedGeometry.standardSlowRegion ActualPrimary.outgoing.data.h_pos
 ActualPrimary.outgoing.data.h_lt_half`. -/
+@[expose]
 noncomputable def region : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h) :=
   ActualSignedGeometry.standardSlowRegion ActualPrimary.outgoing.data.h_pos
       ActualPrimary.outgoing.data.h_lt_half
 
 /-- Strip, given by `BaseContextAssembly.nativeStrip ActualPrimary.nominal region`. -/
+@[expose]
 noncomputable def strip : StripData Point := BaseContextAssembly.nativeStrip ActualPrimary.nominal
     region
 
 /-- Native strip, given by `ActualSignedGeometry.viewStrip ActualPrimary.nominal region id`. -/
+@[expose]
 noncomputable def nativeStrip : StripData Native := ActualSignedGeometry.viewStrip
     ActualPrimary.nominal region id
 
@@ -147,6 +150,7 @@ variable {B N0 : ℕ}
 
 /-- Spatial label, given by `PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label
 ActualPrimary.nominal l.2) l.1`. -/
+@[expose]
 noncomputable def spatialLabel (l : SignedLabel B N0) : SlotColoring.Label :=
   PartitionedCovariance.signedLabel (PrimaryGeometryAssembly.label ActualPrimary.nominal l.2) l.1
 
@@ -154,6 +158,7 @@ theorem label_large (l : SignedLabel B N0) : 4 ≤ (spatialLabel l).1 :=
   ((ActualPrimary.choice B N0).prepared.large _ l.2.property).four_le
 
 /-- Near, given by `1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n`. -/
+@[expose]
 noncomputable def near (l : SignedLabel B N0) (n : ℕ) : Prop :=
   1 ≤ n ∧ BaseChartJets.cellBand l.2 ∈ CommonWindow.levels n
 
@@ -174,6 +179,7 @@ theorem clock_eq (l : SignedLabel B N0) :
       (BaseChartJets.cellBand l.2) := rfl
 
 /-- Copy point, constructed using `ActualSignedGeometry.copyPoint`. -/
+@[expose]
 noncomputable def copyPoint (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency) : Native →
     Native :=
   ActualSignedGeometry.copyPoint ActualPrimary.slots ActualPrimary.vectors_det (spatialLabel l)
@@ -220,6 +226,7 @@ theorem copyLinear_bound {l : SignedLabel B N0} {n : ℕ} (hn : near l n) :
     hn.1 (label_large l) (near_distance hn).1 (near_distance hn).2
 
 /-- Copy cells, constructed using `PeriodizedWaveBounds.nativeCells`. -/
+@[expose]
 noncomputable def copyCells (l : SignedLabel B N0) :
     PeriodizedWaveBounds.Cells Native TorusInverse.Frequency :=
   PeriodizedWaveBounds.nativeCells (fun n => ActualPrimary.chartGeometry n l.1 l.2)
@@ -234,11 +241,13 @@ noncomputable def copyCells (l : SignedLabel B N0) :
               _).core_subset_outer))
 
 /-- Pulse envelope, constructed using `PrimaryPulseBounds.referenceP`. -/
+@[expose]
 noncomputable def pulseEnvelope (l : SignedLabel B N0) : ℝ → ℝ :=
   PrimaryPulseBounds.referenceP ((ActualPrimary.phases B N0 l.1).lam l.2)
     ((ActualPrimary.phases B N0 l.1).u l.2) ((ActualPrimary.phases B N0 l.1).L l.2)
 
 /-- Envelope, constructed using `WaveEnvelopeTransport.copyEnvelope`. -/
+@[expose]
 noncomputable def envelope (l : SignedLabel B N0) (n : ℕ) (x : Native) : ℝ :=
   WaveEnvelopeTransport.copyEnvelope (ActualPrimary.chartGeometry n l.1 l.2)
       ActualPrimary.slots.radius
@@ -359,6 +368,7 @@ noncomputable def nativeWeight (α : ℝ) (l : SignedLabel B N0) (x : Native) : 
 
 /-- Coefficient scale, given by `PhysicalParticularWave.ratioPower (ChartScales.Q n)
 (ChartScales.Q (BaseChartJets.cellBand l.2)) a`. -/
+@[expose]
 noncomputable def coefficientScale (a : ℝ) (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.ratioPower (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2)) a
 
@@ -367,7 +377,7 @@ theorem coefficientScale_pos (a : ℝ) (l : SignedLabel B N0) (n : ℕ) :
         (ChartScales.Q_pos _) _
 
 /-- Copied as an element of `E`. -/
-noncomputable def copied {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] noncomputable def copied {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (a : ℝ) (f : SignedLabel B N0 → Native → E) (l : SignedLabel B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : Native) : E := by
   classical
@@ -547,7 +557,7 @@ theorem pressure_native_jets :
   exact attached_pressure_signed_jets B N0
 
 /-- Periodized, given by `PeriodizedWaveBounds.copySum (copied a f l n)`. -/
-noncomputable def periodized {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] noncomputable def periodized {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (a : ℝ) (f : SignedLabel B N0 → Native → E) (l : SignedLabel B N0) (n : ℕ) : Native → E :=
   PeriodizedWaveBounds.copySum (copied a f l n)
 
@@ -754,6 +764,7 @@ theorem uniform_lift {D E ι : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
         hj)
 
 /-- Full envelope, given by `envelope l n (ActualSignedGeometry.meanEquiv.symm x.1)`. -/
+@[expose]
 noncomputable def fullEnvelope (l : SignedLabel B N0) (n : ℕ) (x : ActualPrimary.FullPoint) : ℝ :=
   envelope l n (ActualSignedGeometry.meanEquiv.symm x.1)
 
@@ -796,6 +807,7 @@ section GaussianCutoff
 variable {B N0 : ℕ}
 
 /-- Time projection as an element of `Native →L[ℝ] ℝ`. -/
+@[expose]
 noncomputable def timeProjection (L : ActualPrimary.Label B N0) : Native →L[ℝ] ℝ :=
   (((ActualPrimary.phases B N0 0).L L)⁻¹) •
     ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ PhaseCalculus.Slow
@@ -841,14 +853,14 @@ theorem gaussian_polynomial :
 
 /-- Cut native velocity, given by `ActualPrimary.gaussian l.2 x • CurlClassBounds.complexify
 (ActualPrimary.attachedRawVelocity l.1 l.2 x)`. -/
-noncomputable def cutNativeVelocity (l : SignedLabel B N0) (x : Native) :
+@[expose] noncomputable def cutNativeVelocity (l : SignedLabel B N0) (x : Native) :
     HarmonicCalculus.ComplexVector :=
   ActualPrimary.gaussian l.2 x • CurlClassBounds.complexify (ActualPrimary.attachedRawVelocity l.1
       l.2 x)
 
 /-- Cut native pressure, given by `ActualPrimary.gaussian l.2 x •
 ActualPrimary.attachedRawPressure l.1 l.2 x`. -/
-noncomputable def cutNativePressure (l : SignedLabel B N0) (x : Native) : ℂ :=
+@[expose] noncomputable def cutNativePressure (l : SignedLabel B N0) (x : Native) : ℂ :=
   ActualPrimary.gaussian l.2 x • ActualPrimary.attachedRawPressure l.1 l.2 x
 
 theorem cut_native_velocity_jets :
@@ -1014,16 +1026,17 @@ theorem fullEnvelope_le_one (l : SignedLabel B N0) (n : ℕ) (x : ActualPrimary.
     fullEnvelope l n x ≤ 1 := envelope_le_one l n _
 
 /-- Mean envelope, given by `fullEnvelope l n (x, 0)`. -/
+@[expose]
 noncomputable def meanEnvelope (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
   fullEnvelope l n (x, 0)
 
 /-- Angular frequency, constructed using `PrimaryGeometryAssembly.angularMode`. -/
-noncomputable def angularFrequency (l : SignedLabel B N0) (_n : ℕ) : ℤ :=
+@[expose] noncomputable def angularFrequency (l : SignedLabel B N0) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
     (ActualPrimary.choice B N0).prepared l.1 l.2
 
 /-- Phase, given by `(ActualPrimary.chartCoefficients l.1 l.2).phase n (x, 0)`. -/
-noncomputable def phase (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def phase (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
   (ActualPrimary.chartCoefficients l.1 l.2).phase n (x, 0)
 
 theorem tangent_block_uniform :
@@ -1050,11 +1063,12 @@ variable {B N0 : ℕ}
 abbrev CopyIndex (B N0 : ℕ) := SignedLabel B N0 × TorusInverse.Frequency
 
 /-- Full copy, given by `copyPoint l n k (ActualSignedGeometry.meanEquiv.symm x.1)`. -/
-noncomputable def fullCopy (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
+@[expose] noncomputable def fullCopy (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency)
     (x : ActualPrimary.FullPoint) : Native := copyPoint l n k (ActualSignedGeometry.meanEquiv.symm
         x.1)
 
 /-- Control cell as an element of `Set ActualPrimary.FullPoint`. -/
+@[expose]
 noncomputable def controlCell (n : ℕ) (i : CopyIndex B N0) : Set ActualPrimary.FullPoint :=
   {x | near i.1 n ∧
     (fullCopy i.1 n i.2 x).1 ∈
@@ -1064,12 +1078,14 @@ noncomputable def controlCell (n : ℕ) (i : CopyIndex B N0) : Set ActualPrimary
     SimilarityHomogeneity.chartQ ActualPrimary.h (fullCopy i.1 n i.2 x).1 ∈ Icc (1 / 2 : ℝ) 2}
 
 /-- Full strip, given by `HarmonicWaveInteraction.productStrip strip`. -/
+@[expose]
 noncomputable def fullStrip : StripData ActualPrimary.FullPoint :=
     HarmonicWaveInteraction.productStrip strip
 
 /-- Native of full, given by
 `ActualSignedGeometry.meanEquiv.symm.toContinuousLinearEquiv.toContinuousLinearMap.comp
 (ContinuousLinearMap.fst ℝ Point ℝ)`. -/
+@[expose]
 noncomputable def nativeOfFull : ActualPrimary.FullPoint →L[ℝ] Native :=
   ActualSignedGeometry.meanEquiv.symm.toContinuousLinearEquiv.toContinuousLinearMap.comp
     (ContinuousLinearMap.fst ℝ Point ℝ)
@@ -1082,6 +1098,7 @@ theorem nativeOfFull_norm : ‖nativeOfFull‖ ≤ 1 := by
   exact norm_fst_le x
 
 /-- Slot of native as an element of `Native →L[ℝ] (PhaseCalculus.Slow × ℝ)`. -/
+@[expose]
 noncomputable def slotOfNative : Native →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow TorusInverse.Plane).prod
     ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ PhaseCalculus.Slow
@@ -1095,6 +1112,7 @@ theorem slotOfNative_norm : ‖slotOfNative‖ ≤ 1 := by
   exact max_le (norm_fst_le x) ((norm_snd_le x.2).trans (norm_snd_le x))
 
 /-- Slot linear, given by `slotOfNative.comp ((copyLinear l n).comp nativeOfFull)`. -/
+@[expose]
 noncomputable def slotLinear (l : SignedLabel B N0) (n : ℕ) :
     ActualPrimary.FullPoint →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   slotOfNative.comp ((copyLinear l n).comp nativeOfFull)
@@ -1180,6 +1198,7 @@ theorem polynomial_on_control {E : Type*} [NormedAddCommGroup E] [NormedSpace �
         ring
 
 /-- Joint phase, bundling `epsilon`, `p`, `pz`, `x0` and the required compatibility proofs. -/
+@[expose]
 noncomputable def jointPhase : PhaseFamily (SignedLabel B N0) where
   epsilon l := (ActualPrimary.phases B N0 l.1).phase.epsilon l.2
   p l := (ActualPrimary.phases B N0 l.1).phase.p l.2
@@ -1270,6 +1289,7 @@ theorem context_normal_swap
   rfl
 
 /-- Normal scale, constructed using `PhysicalParticularWave.normalWeight`. -/
+@[expose]
 noncomputable def normalScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.normalWeight (ChartScales.Q n) (ChartScales.Q (BaseChartJets.cellBand l.2))
     (ChartScales.carrier ActualPrimary.h n) (ChartScales.carrier ActualPrimary.h
@@ -1277,7 +1297,7 @@ noncomputable def normalScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
 
 /-- Chart normal, given by `(ActualPrimary.chartCoefficients l.1 l.2).normal fullStrip
 (PrimaryResidualClass.directions (ActualPrimary.commonContext B)) n`. -/
-noncomputable def chartNormal (l : SignedLabel B N0) (n : ℕ) : ActualPrimary.FullPoint →
+@[expose] noncomputable def chartNormal (l : SignedLabel B N0) (n : ℕ) : ActualPrimary.FullPoint →
     ProblemStatement.Space :=
   (ActualPrimary.chartCoefficients l.1 l.2).normal fullStrip
     (PrimaryResidualClass.directions (ActualPrimary.commonContext B)) n
@@ -1419,10 +1439,12 @@ theorem chart_normal_local : LocalizedWaveBounds.LocalUnweighted fullStrip (cont
 
 /-- Normal floor, given by `normalLower * min (ActualPrimary.phases B N0 0).b
 (ActualPrimary.phases B N0 1).b`. -/
+@[expose]
 noncomputable def normalFloor (B N0 : ℕ) : ℝ :=
   normalLower * min (ActualPrimary.phases B N0 0).b (ActualPrimary.phases B N0 1).b
 
 /-- Normal ceiling, constructed using `normalUpper`. -/
+@[expose]
 noncomputable def normalCeiling (B N0 : ℕ) : ℝ :=
   normalUpper * max ((ActualPrimary.phases B N0 0).M ^ 2 + 3 * (ActualPrimary.phases B N0 0).M)
     ((ActualPrimary.phases B N0 1).M ^ 2 + 3 * (ActualPrimary.phases B N0 1).M)
@@ -1503,17 +1525,19 @@ variable {B N0 : ℕ}
 
 /-- Cut coefficients, given by `(ActualPrimary.chartCoefficients l.1 l.2).withCutoff
 (ActualPrimary.chartCutoff l.1 l.2)`. -/
-noncomputable def cutCoefficients (l : SignedLabel B N0) :
+@[expose] noncomputable def cutCoefficients (l : SignedLabel B N0) :
     LinearWaveBounds.WaveCoefficients ActualPrimary.FullPoint :=
   (ActualPrimary.chartCoefficients l.1 l.2).withCutoff (ActualPrimary.chartCutoff l.1 l.2)
 
 /-- Actual family, given by `LocalizedWaveBounds.WaveFamily.ofCoefficients (fun i =>
 cutCoefficients i.1)`. -/
+@[expose]
 noncomputable def actualFamily : LocalizedWaveBounds.WaveFamily ActualPrimary.FullPoint (CopyIndex
     B N0) :=
   LocalizedWaveBounds.WaveFamily.ofCoefficients (fun i => cutCoefficients i.1)
 
 /-- Directions, given by `PrimaryResidualClass.directions (ActualPrimary.commonContext B)`. -/
+@[expose]
 noncomputable def directions (B : ℕ) := PrimaryResidualClass.directions
     (ActualPrimary.commonContext B)
 

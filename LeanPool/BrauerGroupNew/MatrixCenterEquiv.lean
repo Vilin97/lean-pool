@@ -15,7 +15,7 @@ import Mathlib.LinearAlgebra.Matrix.IsDiag
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.MatrixCenterEquiv`.
 -/
 
-@[expose] public section
+public section
 
 local notation "M[" ι "," R "]" => Matrix ι ι R
 

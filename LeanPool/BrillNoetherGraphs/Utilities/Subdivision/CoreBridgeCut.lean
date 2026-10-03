@@ -21,7 +21,7 @@ an interior point, and no assumption that a bridge has length one, is hidden
 in a generated core row.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
@@ -247,6 +247,7 @@ theorem not_step_right_left (h : c.Valid)
 
 /-- Lift valid core bridge data to an occurrence-safe separating bridge cut
 of every positive subdivision. -/
+@[expose]
 noncomputable def toOneBridgeCut (h : c.Valid) : OneBridgeCut spec.graph where
   left := leftVertices spec c
   right := rightVertices spec c

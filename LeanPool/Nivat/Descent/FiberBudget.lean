@@ -49,7 +49,7 @@ The argument uses an arbitrary function between sets of vectors. The application
 to a Laurent filter is in `Nivat.Descent.ExactDescent`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Descent
 
@@ -57,7 +57,7 @@ variable {K V W : Type*} [Field K] [AddCommGroup V] [Module K V]
 
 /-- Differences between members of one fiber.
 This is the generating set in the counting step of Theorem 2.2 (`thm:descent`). -/
-def fiberDifferences (F : V → W) (P : Set V) : Set V :=
+@[expose] def fiberDifferences (F : V → W) (P : Set V) : Set V :=
   {d | ∃ x ∈ P, ∃ y ∈ P, F x = F y ∧ d = x - y}
 
 /-- One chosen input for each occurring output, in the proof of Theorem 2.2 (`thm:descent`). -/

@@ -14,7 +14,7 @@ by Alex Kontorovich and Terence Tao:
 `ResidueCalcOnRectangles.lean` and `RectangleArgumentPrinciple.lean`, commit
 `be5e07e04cde20c5ceabf63759bd097a9c88173f` (Apache-2.0). -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

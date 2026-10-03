@@ -17,12 +17,13 @@ by an assignment map.  This is the bridge between the explosion
 machinery and the vertex-star factorization.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- A multi-star: `n` pendant edges with a vertex assignment and
 a free-circle count. -/
+@[expose]
 def multiStar {V : Type} [Fintype V] {n : ℕ}
     (assign : Fin n → V) (c : ℕ) : Fragment (Fin n) where
   Flag := Fin n ⊕ Fin n
@@ -45,6 +46,7 @@ def multiStar {V : Type} [Fintype V] {n : ℕ}
 
 /-- The inner-flag enumeration of the star union: original flags
 through the star enumeration. -/
+@[expose]
 noncomputable def starFlagEnum (W : ClosedFragment) :
     W.Flag ≃ Fin (edgeCount W + edgeCount W) :=
   (_root_.Equiv.subtypeUnivEquiv

@@ -56,7 +56,7 @@ Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib
 imports are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -65,11 +65,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-! ### Closed halfspaces -/
 
 /-- The closed **lower** halfspace with normal `u` and threshold `t`: `{x | inner ℝ u x ≤ t}`. -/
-def lowerClosedHalfspace (u : E) (t : ℝ) : Set E :=
+@[expose] def lowerClosedHalfspace (u : E) (t : ℝ) : Set E :=
   {x | inner ℝ u x ≤ t}
 
 /-- The closed **upper** halfspace with normal `u` and threshold `t`: `{x | t ≤ inner ℝ u x}`. -/
-def upperClosedHalfspace (u : E) (t : ℝ) : Set E :=
+@[expose] def upperClosedHalfspace (u : E) (t : ℝ) : Set E :=
   {x | t ≤ inner ℝ u x}
 
 @[simp] theorem mem_lowerClosedHalfspace (u : E) (t : ℝ) (x : E) :
@@ -127,6 +127,7 @@ theorem inter_upperClosedHalfspace_isCompact
 /-- The cut of a convex body `K` by the closed lower halfspace `{x | inner ℝ u x ≤ t}`, as a
 `ConvexBody`. Solidity is **not** automatic, so the nonempty-interior hypothesis `hInt` is
 required explicitly. -/
+@[expose]
 def cutLowerClosed
     (K : ConvexBody E) (u : E) (t : ℝ)
     (hInt : (interior ((K : Set E) ∩ lowerClosedHalfspace u t)).Nonempty) :
@@ -139,6 +140,7 @@ def cutLowerClosed
 /-- The cut of a convex body `K` by the closed upper halfspace `{x | t ≤ inner ℝ u x}`, as a
 `ConvexBody`. Solidity is **not** automatic, so the nonempty-interior hypothesis `hInt` is
 required explicitly. -/
+@[expose]
 def cutUpperClosed
     (K : ConvexBody E) (u : E) (t : ℝ)
     (hInt : (interior ((K : Set E) ∩ upperClosedHalfspace u t)).Nonempty) :

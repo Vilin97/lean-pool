@@ -18,4 +18,4 @@ Tags: algebraic-number-theory, fermats-last-theorem, cyclotomic-fields, class-gr
 MSC: 11D41, 11R18, 11R29
 -/
 
-@[expose] public section
+public section

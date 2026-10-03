@@ -22,7 +22,7 @@ original face produces a strictly smaller exposed face through the point,
 contradicting leastness.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.RationalPolytope.Face
 

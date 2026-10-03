@@ -40,7 +40,7 @@ arbitrary slot-value function, `interpolatedScript` being merely the instance
 whose value is one ramp.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionArithmetic
 
@@ -61,6 +61,7 @@ def splitPotential (L t : ℕ) (first second : ℤ) (i : ℕ) : ℤ :=
   if i < t then potential t first i else first + potential (L - t) second (i - t)
 
 /-- The slope on the unit step from offset `i` to offset `i + 1`. -/
+@[expose]
 def splitStep (L t : ℕ) (first second : ℤ) (i : ℕ) : ℤ :=
   splitPotential L t first second (i + 1) - splitPotential L t first second i
 

@@ -27,7 +27,7 @@ This supplies the global propagation step needed for uniqueness of equal-area we
 introducing a separate adjacency graph for the power diagram.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry MeasureTheory
 

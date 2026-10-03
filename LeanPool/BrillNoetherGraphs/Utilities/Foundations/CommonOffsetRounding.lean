@@ -24,7 +24,7 @@ The endpoint-slope bounds used in finite graph specialization are preserved
 by this same rounding, including negative heights and negative slopes.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.CommonOffsetRounding
 

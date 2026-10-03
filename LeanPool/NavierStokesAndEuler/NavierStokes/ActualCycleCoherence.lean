@@ -33,7 +33,7 @@ used throughout.  The final field is the actual conjugate-pair Gaussian
 block, with its full angular variable.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -299,7 +299,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,6 +321,7 @@ abbrev overlap := ActualInitialCoherence.overlap
 
 /-- Every comparison is on the intersection of the two actual normalized
 slow charts; the radial and torus fibers are unrestricted. -/
+@[expose]
 def StateCoherent (u : State Point) : Prop :=
   ∀ n m k, CommonWindow.index h n + k = CommonWindow.index h m →
     StateOn (PhysicalMeanDomain.slowDomain (overlap n m))
@@ -547,6 +548,7 @@ theorem signed_wave_on {B N0 : ℕ} (l : Index B N0) (u : State Point)
     ActualSignedGaussianCoherence.gaussianBlock_transport l u H hfixed n m k hi HS⟩
 
 /-- Particular point, given by `ParticularWaveAssembly.angleShuffle (cycleAssoc z, 0)`. -/
+@[expose]
 noncomputable def particularPoint (z : Point) : PhysicalParticularWave.WaveSpace :=
   ParticularWaveAssembly.angleShuffle (cycleAssoc z, 0)
 
@@ -1115,6 +1117,7 @@ end Step
 /-! ## The fixed actual recurrence and the mean atlas input -/
 
 /-- State, constructed using `CycleState.iterate`. -/
+@[expose]
 noncomputable def state (B N0 : ℕ) : ℕ → CycleState (Index B N0) :=
   CycleState.iterate (fun _ => ActualCycleParameters.fixedParameters B N0)
     (commonContext B) (ActualInitialization.initialCycleState B N0)

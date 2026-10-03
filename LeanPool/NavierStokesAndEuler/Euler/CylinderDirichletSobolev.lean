@@ -27,7 +27,7 @@ section
 
 /-! Actual mixed coefficient jets in the uniform-time L² operator norm. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

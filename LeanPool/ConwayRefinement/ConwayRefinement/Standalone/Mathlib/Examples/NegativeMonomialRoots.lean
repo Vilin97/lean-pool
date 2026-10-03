@@ -16,7 +16,7 @@ primality theorems impose no bound on factorisation length. This example by itse
 atomicity claim.
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Hahn.NegativeMonomialExample
 
@@ -28,20 +28,20 @@ theorem mem_ring_iff (x : HahnSeries ℝ ℚ) :
     x ∈ Ring ↔ x.support ⊆ Set.Iic 0 := (Iff.rfl)
 
 /-- The monomial `tˣ`, for `x ≤ 0`, as an element of `ℚ((ℝ^{≤0}))`. -/
-def monomial (x : ℝ) (hx : x ≤ 0) : Ring :=
+@[expose] def monomial (x : ℝ) (hx : x ≤ 0) : Ring :=
   ⟨HahnSeries.single x 1, fun y hy ↦ by
     rw [HahnSeries.eq_of_mem_support_single hy]
     exact hx⟩
 
 /-- The monomial `t⁻¹⁄ⁿ`. -/
-def nthRoot (n : ℕ) : Ring :=
+@[expose] def nthRoot (n : ℕ) : Ring :=
   monomial (-(n : ℝ)⁻¹) (neg_nonpos.mpr (inv_nonneg.mpr (Nat.cast_nonneg n)))
 
 /-- The monomial `t⁻¹`. -/
-def negativeOne : Ring := monomial (-1) (by norm_num)
+@[expose] def negativeOne : Ring := monomial (-1) (by norm_num)
 
 /-- For every `n > 0`, `t⁻¹⁄ⁿ` is a nonunit and `(t⁻¹⁄ⁿ)ⁿ = t⁻¹`. -/
-def NegativeMonomialHasAllRoots : Prop :=
+@[expose] def NegativeMonomialHasAllRoots : Prop :=
   ∀ (n : ℕ), 0 < n → ¬ IsUnit (nthRoot n) ∧ nthRoot n ^ n = negativeOne
 
 end ConwayRefinement.Standalone.Hahn.NegativeMonomialExample

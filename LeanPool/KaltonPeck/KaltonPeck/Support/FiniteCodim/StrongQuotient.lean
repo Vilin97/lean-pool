@@ -20,7 +20,7 @@ public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteParity
 The corresponding construction from the complete finite-codimensional symplectic reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.FiniteCodim
 
@@ -38,6 +38,7 @@ structure FredholmQuotientStrongData {X : Type*} [NormedAddCommGroup X]
 /-- A Fredholm alternating form descends to a strong form on its radical quotient.
 
 Blueprint: `lem:fredholm-quotient-strong`; audit: `AUX-FREDHOLM-QUOTIENT-STRONG`. -/
+@[expose]
 def fredholmQuotientStrong {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [CompleteSpace X] (eta : ContinuousAlternatingForm X)
     (hReflexive : Function.Surjective (NormedSpace.inclusionInDoubleDual ℝ X))

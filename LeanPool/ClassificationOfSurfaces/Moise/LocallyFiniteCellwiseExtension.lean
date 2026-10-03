@@ -18,7 +18,7 @@ the family of filled closed regions is locally finite.  Under these conditions t
 maps form a genuine locally finite triangle complex in the plane.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -35,7 +35,7 @@ variable {S : Type*} [TopologicalSpace S] {K : LocallyFiniteTriangleComplex S}
 namespace FacePLFilling
 
 /-- A standard-triangle filling transported back to the native simplex of its source face. -/
-noncomputable def faceMap {f : K.Face} (F : K.FacePLFilling (G := G) f) :
+@[expose] noncomputable def faceMap {f : K.Face} (F : K.FacePLFilling (G := G) f) :
     K.ClosedFace f → Plane :=
   fun x ↦ F.map (K.facePlaneHomeomorph f x).1
 
@@ -452,7 +452,7 @@ theorem locallyFinite_faceInSupport :
   exact K.faceInSupport_eq_preimage f
 
 /-- The image of one source face, regarded as a subset of the permitted open plane region. -/
-def PlaneGraphRealization.faceImageInRegion (G : K.PlaneGraphRealization)
+@[expose] def PlaneGraphRealization.faceImageInRegion (G : K.PlaneGraphRealization)
     (f : K.Face) : Set G.region :=
   {q | q.1 ∈ G.map '' faceInSupport (K := K) f}
 
@@ -496,7 +496,7 @@ theorem isEmbedding_faceToSupport [T2Space S] (f : K.Face) :
     (fun x ↦ Set.mem_iUnion.mpr ⟨f, Set.mem_range_self x⟩)
 
 /-- A closed abstract face is homeomorphic to its carrier inside the whole support. -/
-noncomputable def faceToSupportHomeomorph [T2Space S] (f : K.Face) :
+@[expose] noncomputable def faceToSupportHomeomorph [T2Space S] (f : K.Face) :
     K.ClosedFace f ≃ₜ faceInSupport (K := K) f :=
   (K.isEmbedding_faceToSupport f).toHomeomorph
 
@@ -507,7 +507,7 @@ noncomputable def faceToSupportHomeomorph [T2Space S] (f : K.Face) :
 variable [T2Space S]
 
 /-- The coherent cellwise filling as a map into the support of the assembled plane complex. -/
-noncomputable def polygonalReplacementMap (H : K.CellwiseCompatibility G) :
+@[expose] noncomputable def polygonalReplacementMap (H : K.CellwiseCompatibility G) :
     K.support → (K.polygonalReplacementComplex H).support :=
   fun p ↦ ⟨⟨(K.facePLFilling (G := G) (K.supportFace p)).faceMap
       (K.supportFacePoint p), H.closedRegions_mem_region (K.supportFace p) <|
@@ -659,7 +659,7 @@ theorem polygonalReplacementMap_apply_inverse
     K.polygonalReplacementMap_faceToSupport H f x]
 
 /-- The source support and its coherent polygonal replacement are canonically homeomorphic. -/
-noncomputable def polygonalReplacementHomeomorph (H : K.CellwiseCompatibility G) :
+@[expose] noncomputable def polygonalReplacementHomeomorph (H : K.CellwiseCompatibility G) :
     K.support ≃ₜ (K.polygonalReplacementComplex H).support where
   toFun := K.polygonalReplacementMap H
   invFun := K.polygonalReplacementInverse H

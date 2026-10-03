@@ -30,7 +30,7 @@ direct integrand identification
 whose final input is this textbook statement instead of an inner-product duality axiom.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace

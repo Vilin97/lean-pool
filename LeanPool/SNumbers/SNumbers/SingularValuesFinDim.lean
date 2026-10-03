@@ -47,7 +47,7 @@ s S n  =  aₙ(S)            (Pietsch uniqueness on Hilbert spaces)
   gives `aₙ = σₙ`, so no separate statement is needed.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

@@ -18,7 +18,7 @@ triangular facet witness.  Reversal gives upper-relative targets.  A final lower
 then produces targets respecting the exact frozen-parameter predicate.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 open FoxNeuwirthOrderComplex

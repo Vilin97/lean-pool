@@ -20,7 +20,7 @@ The remaining parameter is the `α = 0` centroid-halfspace bound used by the
 `δ = 1` specialization of the geometric argument in §2.2.
 -/
 
-@[expose] public section
+public section
 
 namespace Feige
 

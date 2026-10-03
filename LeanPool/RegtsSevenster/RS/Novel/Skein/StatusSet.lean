@@ -20,7 +20,7 @@ high-status difference of the endpoint pairings — empty exactly
 when the pairing returns.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

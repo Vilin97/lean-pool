@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentRenewalPrefix
 /-! The summable scalar budgets propagate the genuine low source
 guards and absorb the absolute geometric errors. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -34,11 +34,12 @@ the numerical parameters `β` and `τ` have to be chosen, one per degree.
 * `Sendov.pevZ_rowZ_qrow`: the recurrence as one integer exponentiation.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 /-- The row with each coefficient polynomial packed at the base `β`. -/
+@[expose]
 def rowZ (r : List (List ℤ)) (β : ℤ) : List ℤ := r.map (fun p => pevZ p β)
 
 @[simp] lemma rowZ_nil (β : ℤ) : rowZ [] β = [] := rfl
@@ -95,6 +96,7 @@ theorem rowZ_qrow_eq (g₀ g₁ g₂ : List ℤ) (k : ℕ) (β τ : ℤ) (hτ : 
 denominators clears them, turning the moment into one `ℤ`-polynomial in `α`. -/
 
 /-- `∑ⱼ (L/(i+j+4)) • rⱼ`: the moment numerator, scaled by `L` to clear denominators. -/
+@[expose]
 def wsum (L : ℤ) : ℕ → List (List ℤ) → List ℤ
   | _, [] => []
   | i, p :: r => padd (p.map (fun c => (L / ((i : ℤ) + 4)) * c)) (wsum L (i + 1) r)
@@ -143,6 +145,7 @@ proved rather than checked.  The `L¹` norm does it: it is submultiplicative, so
 of the `k`-th power is at most `(l1 g₀ + l1 g₁ + l1 g₂) ^ k`. -/
 
 /-- Sum of absolute values of the coefficients. -/
+@[expose]
 def l1 : List ℤ → ℤ
   | [] => 0
   | a :: p => |a| + l1 p
@@ -199,6 +202,7 @@ lemma l1_pmul (p q : List ℤ) : l1 (pmul p q) ≤ l1 p * l1 q := by
     nlinarith [ih, hq, hstep]
 
 /-- The `L¹` norm of a row: the total of its coefficients' absolute values. -/
+@[expose]
 def l1row : List (List ℤ) → ℤ
   | [] => 0
   | p :: r => l1 p + l1row r
@@ -362,6 +366,7 @@ theorem unpackZ_pevZ_le (β : ℤ) (hβ : 0 < β) :
       simp
 
 /-- The weighted sum computed directly on the α-packed row. -/
+@[expose]
 def wsumZ (L : ℤ) : ℕ → List ℤ → ℤ
   | _, [] => 0
   | i, a :: s => (L / ((i : ℤ) + 4)) * a + wsumZ L (i + 1) s

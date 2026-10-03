@@ -20,7 +20,7 @@ as f being a Maxwellian, and Corollary 1: if entropy dissipation vanishes then
 f is a local Maxwellian at each spatial point.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

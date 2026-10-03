@@ -20,7 +20,7 @@ a comparable native band; no physical support property is an input.
 The zeroth support assertion concerns the finite initialization increment.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -86,6 +86,7 @@ theorem support_finset_sum {ι : Type*} {h C qbig : ℝ} {f : ι → SpaceTime �
 end SupportAlgebra
 
 /-- This constant is shared by the entire stage sequence. -/
+@[expose]
 noncomputable def outerConstant (R : ℝ) : ℝ := 4 * R * Real.sqrt 2
 
 theorem outerConstant_pos {R : ℝ} (hR : 0 < R) : 0 < outerConstant R := by
@@ -389,6 +390,7 @@ end InitializedSequences
 section FixedPatch
 
 /-- Geometry outer constant, given by `outerConstant G.patch.b`. -/
+@[expose]
 noncomputable def geometryOuterConstant (G : SignedMeanGain.Geometry) : ℝ :=
   outerConstant G.patch.b
 
@@ -396,6 +398,7 @@ theorem geometryOuterConstant_pos (G : SignedMeanGain.Geometry) : 0 < geometryOu
   outerConstant_pos (G.patch.a_pos.trans G.patch.a_lt_b)
 
 /-- The concrete common constant for the manuscript's fixed actual patch. -/
+@[expose]
 noncomputable def actualOuterConstant : ℝ := geometryOuterConstant ActualInitialization.geometry
 
 theorem actualOuterConstant_pos : 0 < actualOuterConstant :=

@@ -23,7 +23,7 @@ contain no rank or length hypotheses.  The source slots are exactly those in
 `GenusFiveCoreAtlas`, including the reversed connector in rows 02 and 04.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveTwoPoleData
 

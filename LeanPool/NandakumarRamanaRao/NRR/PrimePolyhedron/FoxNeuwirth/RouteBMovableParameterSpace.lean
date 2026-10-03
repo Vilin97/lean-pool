@@ -18,7 +18,7 @@ coordinate-replacement and reconstruction lemmas needed by the incidence
 argument.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -38,12 +38,14 @@ variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 abbrev MovableParameterSpace := MovableParameter hp C → Real
 
 /-- Movable coordinates extracted from a full assignment. -/
+@[expose]
 noncomputable def baseMovableParameters
     (base : Assignment hp C) : MovableParameterSpace hp C :=
   movableRestriction hp C base
 
 /-- Reconstruct the full equivariant assignment while retaining every frozen
 horizontal coordinate literally. -/
+@[expose]
 noncomputable def assignmentOfMovableParameters
     (base : Assignment hp C) (x : MovableParameterSpace hp C) : Assignment hp C :=
   replaceMovable hp C base x
@@ -66,6 +68,7 @@ noncomputable def assignmentOfMovableParameters
   replaceMovable_movableRestriction hp C base
 
 /-- Replace one movable scalar orbit and leave every other movable orbit fixed. -/
+@[expose]
 noncomputable def replaceCoordinate
     (x : MovableParameterSpace hp C) (q : MovableParameter hp C) (r : Real) :
     MovableParameterSpace hp C :=

@@ -26,7 +26,7 @@ Itô integration side no longer needs to be stipulated by `ClarkOconeFamily`; th
 contract concerns martingale representation and Malliavin--Itô duality.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -43,6 +43,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   {B : ℝ≥0 → W → ℝ}
 
 /-- Promote an adapted coefficient to a later sigma-algebra of the filtration. -/
+@[expose]
 noncomputable def adaptedMono
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) {a c : ℝ≥0} (hac : a ≤ c)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) : lpMeas ℝ ℝ (𝓕 c) 2 P :=
@@ -409,6 +410,7 @@ theorem denseRange_elementaryFinsuppToPredictable
 
 /-- The natural-filtration Itô integral, obtained by norm-controlled extension from formal
 elementary combinations. -/
+@[expose]
 noncomputable def naturalItoIntegral
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -481,6 +483,7 @@ theorem norm_naturalItoIntegral
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h
 
 /-- The constructed natural-filtration Itô integral as a linear isometry. -/
+@[expose]
 noncomputable def naturalItoIntegralIsometry
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -545,6 +548,7 @@ theorem integral_naturalItoIntegral
 
 /-- The constructed natural-filtration Itô integral with codomain restricted to centered random
 variables. -/
+@[expose]
 noncomputable def centeredNaturalItoIntegralIsometry
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t))
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
@@ -590,6 +594,7 @@ theorem ClarkOconeFamily.IsBrownianOnElementary.itoIntegral_eq_naturalItoIntegra
 
 /-- Build a full `ClarkOconeFamily` using the constructed Itô integral. The only remaining
 analytic inputs are martingale representation and Malliavin--Itô duality. -/
+@[expose]
 noncomputable def ClarkOconeFamily.ofNaturalIto
     (hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)

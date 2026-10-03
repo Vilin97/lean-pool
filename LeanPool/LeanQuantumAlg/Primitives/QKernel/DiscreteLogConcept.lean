@@ -18,7 +18,7 @@ for one secret breaks every secret (and hence the discrete-log problem). Pure fi
 theory; no Haar / complexity assumptions.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -80,7 +80,7 @@ theorem dlogConcept_reduction (s : ZMod (Nat.card G)) (y : G) :
   rw [dlogConcept_shift, show s - (s - 1) = 1 from by ring]
 
 /-- Uniform (counting) accuracy of a Boolean predictor `p` against the concept `f_s`. -/
-noncomputable def acc (p : G → Bool) (s : ZMod (Nat.card G)) : ℝ :=
+@[expose] noncomputable def acc (p : G → Bool) (s : ZMod (Nat.card G)) : ℝ :=
   ((Finset.univ.filter (fun x => p x = dlogConcept g hg s x)).card : ℝ) / (Nat.card G : ℝ)
 
 omit [IsCyclic G] in

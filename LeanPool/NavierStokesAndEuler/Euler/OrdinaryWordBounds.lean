@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Fixed finite-order bounds for genuine ordinary L² derivative words. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Calculus.UniformLimitsDeriv
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology Convolution
 open MeasureTheory MeasureTheory.Measure Set Filter
@@ -28,6 +28,7 @@ namespace CKN.Foundation.Heat
 
 /-- Interior representative constructed from a weakly harmonic function by Newtonian integration.
 -/
+@[expose]
 noncomputable def weakHarmonicInteriorRepresentative
     (h : Vec3 → ℝ) (x₀ : Vec3) {ρ : ℝ} (hρ : 0 < ρ) (x : Vec3) : ℝ :=
   (-∫ y : Vec3, newtonianKernel (x - y) *
@@ -54,6 +55,7 @@ noncomputable def weakHarmonicInteriorSourceXGradientConstant : ℝ :=
   (4 * Real.pi)⁻¹ * (1200 * cutoffSecondDerivativeConstant)
 
 /-- Supremum coefficient for the weakly harmonic interior representative. -/
+@[expose]
 noncomputable def weakHarmonicInteriorSupConstant : ℝ :=
   (Real.pi * 4 / 3) ^ (1 / (3 : ℝ)) *
     (weakHarmonicInteriorSourceConstant +

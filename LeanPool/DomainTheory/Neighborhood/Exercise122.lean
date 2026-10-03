@@ -58,7 +58,7 @@ questions of the
 exercise need Definition 1.7 (`↑X`) and are deferred.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -71,7 +71,7 @@ of the domain
 `|𝒟|` that contain the neighbourhood `X`. These sets are the basic opens of the
 topology of
 Exercise 1.22. -/
-def basicOpen (X : Set α) : Set V.Element := {x | x.mem X}
+@[expose] def basicOpen (X : Set α) : Set V.Element := {x | x.mem X}
 
 @[simp] theorem mem_basicOpen {X : Set α} {x : V.Element} :
     x ∈ V.basicOpen X ↔ x.mem X := Iff.rfl
@@ -93,6 +93,7 @@ theorem basicOpen_inter_subset_right {X Y : Set α} (hY : V.mem Y) :
 /-- A set `𝒰 ⊆ |𝒟|` is *open* (Exercise 1.22, condition (ii)) when every point `x
 ∈ 𝒰` has a
 basic neighbourhood `[X]` with `X ∈ x` contained in `𝒰`. -/
+@[expose]
 def IsOpenFilter (U : Set V.Element) : Prop :=
   ∀ x ∈ U, ∃ X, x.mem X ∧ V.basicOpen X ⊆ U
 

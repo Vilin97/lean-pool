@@ -14,7 +14,7 @@ public import Mathlib.SetTheory.Ordinal.Principal
 # The Cantor-normal-form extension order
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 
@@ -26,6 +26,7 @@ section OrdinalConstruction
 
 /-- The relation `≺` from the proof of Theorem `thm:solid-iterations`, expressed
 directly using Mathlib's Cantor normal form at base `ω`. -/
+@[expose]
 def cnfExtensionLT (ζ ζ' : Ordinal.{u}) : Prop :=
   ∃ (pre tail : List (Ordinal.{u} × Ordinal.{u})) (β c γ d : Ordinal.{u}),
     Ordinal.CNF Ordinal.omega0 ζ = pre ++ (β, c) :: tail ∧
@@ -35,6 +36,7 @@ def cnfExtensionLT (ζ ζ' : Ordinal.{u}) : Prop :=
           (pre = [] ∨ ∃ δ e, pre.getLast? = some (δ, e) ∧ γ < δ)))
 
 /-- Reflexive closure of the paper's relation `≺`. -/
+@[expose]
 def cnfExtensionLE (ζ ζ' : Ordinal.{u}) : Prop := ζ = ζ' ∨ cnfExtensionLT ζ ζ'
 
 /-- One strict extension after a fixed CNF prefix; introduced separately so
@@ -47,6 +49,7 @@ def CNFStep (pre : List (Ordinal.{u} × Ordinal.{u}))
 
 /-- The transitive closure of one-step CNF extensions; used as a tractable list
 model of `cnfExtensionLT`. -/
+@[expose]
 def CNFListLT (l l' : List (Ordinal.{u} × Ordinal.{u})) : Prop :=
   ∃ (pre tail : List (Ordinal.{u} × Ordinal.{u}))
     (x y : Ordinal.{u} × Ordinal.{u}),
@@ -54,6 +57,7 @@ def CNFListLT (l l' : List (Ordinal.{u} × Ordinal.{u})) : Prop :=
 
 /-- Evaluates a list of exponent-coefficient pairs as an ordinal CNF sum; used
 to compare list extensions with ordinal inequalities. -/
+@[expose]
 noncomputable def cnfValue
     (l : List (Ordinal.{u} × Ordinal.{u})) : Ordinal.{u} :=
   l.foldr (fun p r ↦ Ordinal.omega0 ^ p.1 * p.2 + r) 0

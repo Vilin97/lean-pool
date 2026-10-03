@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwoFinalTrial.
 The above-two dual trajectory satisfies its dynamics and exact observation requirements.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage4AboveTwoFinalTrial
 
@@ -69,6 +69,7 @@ noncomputable def dualTrace (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
   (List.range (n + 1)).map fun k => oracle.observe (dualQ p eta n oracle k)
 
 /-- The concrete dual trajectories and coefficients packaged as above-two phase data. -/
+@[expose]
 noncomputable def dualData (p eta : ℝ) (n : ℕ) (oracle : PairOracle d) :
     AboveDualPhaseData p d n where
   oracle := oracle

@@ -14,7 +14,7 @@ public import Mathlib.Analysis.InnerProductSpace.Laplacian
 /-! Scalar components of genuine smooth velocity and vorticity fields,
 their exact elliptic identity, and a fixed coordinate operator bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ def componentField (A : SmoothL2Field Space) (j : Fin 3) : SmoothL2Field ℝ :=
   mapField (EuclideanSpace.proj j) A
 
 @[simp] theorem componentField_apply (A : SmoothL2Field Space) (j : Fin 3) (x : Space) :
-    (componentField A j).field x=A.field x j := rfl
+    (componentField A j).field x=A.field x j := by rfl
 
 theorem componentField_toLp_norm (A : SmoothL2Field Space) (j : Fin 3) :
     ‖(componentField A j).toLp‖ ≤ ‖A.toLp‖ :=

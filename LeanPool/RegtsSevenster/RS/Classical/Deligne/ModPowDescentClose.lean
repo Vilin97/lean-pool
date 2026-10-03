@@ -17,7 +17,7 @@ iterates up the tower, and the tower reassembles into a power
 pair whose first factor is the vanishing power.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

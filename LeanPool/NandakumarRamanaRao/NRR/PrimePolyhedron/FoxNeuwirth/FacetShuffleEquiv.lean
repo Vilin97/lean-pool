@@ -18,7 +18,7 @@ proves the resulting equivalence with `ShuffleIndex`, and closes the genuine cel
 calculation modulo a prime.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

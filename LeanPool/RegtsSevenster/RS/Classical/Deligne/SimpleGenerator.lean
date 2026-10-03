@@ -24,7 +24,7 @@ carry the splitting from the tensor generator to every subquotient,
 and with it to the whole category.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -34,7 +34,7 @@ sub-ball is inherited by the glued field there.  That is the mechanism that
 makes a bound available at *every* cell scale rather than at one scale only.
 -/
 
-@[expose] public section
+public section
 
 section
 

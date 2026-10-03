@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CoefficientPathOrbit
 /-! Literal composition, scaling and spatial differentiation of the
 actual matrix-coefficient witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ local instance instPacketMatrixCoefficientAlgebra4 : NormedSpace ℝ (Space →�
 variable {T : ℝ} {a b : Domain → Space →L[ℝ] Space}
 
 /-- Comp, bundling `path`, `orbit`, `fun`, `B` and the required compatibility proofs. -/
-def comp (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
+@[expose] def comp (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     MatrixCoefficient T (fun z => (a z).comp (b z)) where
   path := pathCompositionMap A.path B.path
   orbit := by
@@ -61,7 +61,7 @@ def comp (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
   raw_eq t x θ := by rw [A.raw_eq,B.raw_eq]; rfl
 
 /-- Add, bundling `path`, `orbit`, `raw_eq`. -/
-def add (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
+@[expose] def add (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
     MatrixCoefficient T (a+b) where
   path := A.path+B.path
   orbit := by
@@ -75,7 +75,7 @@ def add (A : MatrixCoefficient T a) (B : MatrixCoefficient T b) :
   raw_eq t x θ := by change a (t,(x,θ))+b (t,(x,θ)) = _; rw [A.raw_eq,B.raw_eq]; rfl
 
 /-- Smul, bundling `path`, `orbit`, `raw_eq`. -/
-def smul (A : MatrixCoefficient T a) (c : ℝ) : MatrixCoefficient T (c • a) where
+@[expose] def smul (A : MatrixCoefficient T a) (c : ℝ) : MatrixCoefficient T (c • a) where
   path := c • A.path
   orbit := by
     convert A.orbit.const_smul c using 1
@@ -89,7 +89,7 @@ def smul (A : MatrixCoefficient T a) (c : ℝ) : MatrixCoefficient T (c • a) w
 
 /-- Spatial derivative, bundling `path`, `orbit`, `raw_eq`, `have` and the required
 compatibility proofs. -/
-def spatialDerivative (A : MatrixCoefficient T a) (v : Space) :
+@[expose] def spatialDerivative (A : MatrixCoefficient T a) (v : Space) :
     MatrixCoefficient T (fun z => fderiv ℝ (fun x => a (z.1,(x,z.2.2))) z.2.1 v) where
   path := orbitDerivativePath A.path v
   orbit := orbitDerivativePath_orbit A.path A.orbit v

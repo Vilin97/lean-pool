@@ -19,7 +19,7 @@ Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
 
-@[expose] public section
+public section
 
 open UniqueFactorizationMonoid in
 /-- If `σ` is a multiplicative automorphism of a normalization UFD and `σ p` is associated to

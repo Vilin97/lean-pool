@@ -38,7 +38,7 @@ boundary-safe *as a statement*; what is not boundary-safe is concluding
 "interior" from `0 < coordinate`.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate
@@ -105,6 +105,7 @@ variable (certificate : ExplicitPotential.CertificateData m n p) (code : Code m 
 
 /-- Typed path position on the contracted subdivision, decoded from a
 cone-certified affine position. -/
+@[expose]
 def decodeDegeneratePosition {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hBounds : code.BoundsCertified certificate)

@@ -27,7 +27,7 @@ obligations below suffice.  In particular, the Helly bound is derived from
 the three-case check in `FaceFlagHellyBound`, rather than stored as a field.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

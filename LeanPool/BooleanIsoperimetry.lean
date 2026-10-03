@@ -27,7 +27,7 @@ Tags: additive-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-
 MSC: 05D05, 05C35
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

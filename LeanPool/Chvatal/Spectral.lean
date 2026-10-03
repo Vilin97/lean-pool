@@ -47,7 +47,7 @@ comparison (16) from Lemma 3.3. It also records the variance argument in
 Corollary 1.3. The parameter optimization is in `Chvatal.Optimization`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 

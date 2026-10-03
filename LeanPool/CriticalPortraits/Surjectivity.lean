@@ -51,7 +51,7 @@ NOW FULLY PROVED (no remaining `sorry`):
   Axioms: `{propext, Classical.choice, Quot.sound}` (no `sorryAx`, no `native_decide`).
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits
 

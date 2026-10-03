@@ -18,7 +18,7 @@ packages those operators as a strongly continuous contraction semigroup. Spatial
 No stochastic process or Hunt process is constructed here.
 -/
 
-@[expose] public section
+public section
 
 open Topology
 open scoped ZeroAtInfty
@@ -31,12 +31,14 @@ variable {α : Type*} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
 
 /-- The `C₀` kernel operators have continuous time orbits in the `C₀` norm. This is an
 additional hypothesis beyond the spatial `MapsC0` property. -/
+@[expose]
 def HasContinuousC0Orbits (P : SubMarkovKernelSemigroup α) (hC0 : P.MapsC0) : Prop :=
   ∀ f : C₀(α, ℝ), Continuous fun t : NNReal ↦ P.c0Operator hC0 t f
 
 /-- A sub-Markov kernel semigroup on a locally compact Hausdorff space has the `C₀`
 Feller-semigroup properties when it maps `C₀` into itself and its resulting `C₀` operator orbits
 are continuous in time. Conservativity is not part of this predicate. -/
+@[expose]
 def IsFellerKernelSemigroup (P : SubMarkovKernelSemigroup α)
       : Prop :=
   ∃ hC0 : P.MapsC0, P.HasContinuousC0Orbits hC0
@@ -44,6 +46,7 @@ def IsFellerKernelSemigroup (P : SubMarkovKernelSemigroup α)
 variable (P : SubMarkovKernelSemigroup α) (hC0 : P.MapsC0)
 
 /-- Package the kernel action on `C₀` as a strongly continuous contraction semigroup. -/
+@[expose]
 noncomputable def c0Semigroup (hTime : P.HasContinuousC0Orbits hC0) :
     Semigroup.StronglyContinuousContractionSemigroup C₀(α, ℝ) where
   operator := P.c0Operator hC0
@@ -86,6 +89,7 @@ theorem IsFellerKernelSemigroup.hasContinuousC0Orbits {P : SubMarkovKernelSemigr
   hP.choose_spec
 
 /-- The strongly continuous contraction semigroup selected by the combined Feller predicate. -/
+@[expose]
 noncomputable def IsFellerKernelSemigroup.c0Semigroup {P : SubMarkovKernelSemigroup α}
     (hP : P.IsFellerKernelSemigroup) :
     Semigroup.StronglyContinuousContractionSemigroup C₀(α, ℝ) :=

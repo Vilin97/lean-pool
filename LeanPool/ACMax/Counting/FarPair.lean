@@ -45,7 +45,7 @@ All three are direct instances of `algConn_le_two_of_testvector`; no new spectra
 machinery is introduced.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

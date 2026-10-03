@@ -16,7 +16,7 @@ import Mathlib.Analysis.Matrix.PosDef
 One-sided barrier machinery for the BSS coloring argument.
 -/
 
-@[expose] public section
+public section
 
 open Finset Matrix BigOperators
 

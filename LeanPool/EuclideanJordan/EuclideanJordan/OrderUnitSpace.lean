@@ -33,7 +33,7 @@ structure, not derived here as the order-unit norm.
 * van de Wetering, arXiv:1803.11139
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,6 +107,7 @@ theorem le_add_of_nonneg_right {a b : V} (h : (0 : V) ≤ b) : a ≤ a + b := by
 -- Effect space
 
 /-- An effect is an element `a` with `0 ≤ a ≤ 𝟙`. -/
+@[expose]
 def IsEffect (a : V) : Prop := (0 : V) ≤ a ∧ a ≤ 𝟙
 
 /-- The converse of `sub_nonneg_of_le`: a nonnegative difference gives an inequality. -/
@@ -264,6 +265,7 @@ difference is what a homogeneity argument consumes at its last step.
 needing it says so in its own statement.  Nothing is given up by that: the Archimedean property
 *is* part of the standard definition of an order unit space — not a stand-in for a cited
 result — so a theorem proved under it is proved at the standard generality. -/
+@[expose]
 def IsArchimedean (V : Type*) [OrderUnitSpace V] : Prop :=
   ∀ x : V, (∀ ε : ℝ, 0 < ε → x ≤ ε • ousUnit) → x ≤ 0
 

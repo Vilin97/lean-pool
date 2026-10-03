@@ -35,7 +35,7 @@ explicit hypotheses, giving the intermediate milestone `chudnovsky_of_singular_m
 (PLAN Phase C).
 -/
 
-@[expose] public section
+public section
 
 /-
 Candidate proof routes, summarized from PLAN.md (Phase C):

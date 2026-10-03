@@ -200,4 +200,4 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Transmission.TransmissionWed
 
 /-! # Utilities -/
 
-@[expose] public section
+public section

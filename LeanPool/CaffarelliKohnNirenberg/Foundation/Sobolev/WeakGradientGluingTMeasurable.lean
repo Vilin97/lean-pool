@@ -19,7 +19,7 @@ every spatial slice, so uniqueness identifies it with every derivative on
 an open subdomain of the carrier.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open CKN.Foundation.Parabolic

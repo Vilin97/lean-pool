@@ -22,12 +22,13 @@ It has the degree prescribed by `τ⁻¹`, and its rows are exactly those requir
 for `τ⁻¹` at the swapped marks.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The marked normalization of the canonical complement appropriate to
 transmission duality. -/
+@[expose]
 def transmissionDualDivisor {G : CFGraph} (u v : G.V) (D : CFDiv G) : CFDiv G :=
   canonicalDivisor G - D + oneChip u + oneChip v
 

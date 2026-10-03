@@ -74,7 +74,7 @@ all of them realised in this file:
 
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

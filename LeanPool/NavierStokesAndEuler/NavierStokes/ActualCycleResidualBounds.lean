@@ -37,7 +37,7 @@ The field estimated here is `FinalSlowBase.error`, which is the actual
 Navier--Stokes residual minus its virtual stress force.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,6 +182,7 @@ end FixedSchedule
 /-! ## The joint past filter at the physical origin -/
 
 /-- Origin past, given by `𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))`. -/
+@[expose]
 noncomputable def originPast : Filter SpaceTime :=
   𝓝[SpacetimeEndpoint.openPast 1] ((1 : ℝ), (0 : Space))
 
@@ -274,7 +275,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -293,7 +294,7 @@ abbrev Cylinder := Point × ℝ
 abbrev Index := ActualInitialization.Index
 
 /-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2, l.1) n`. -/
-noncomputable def labelCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
+@[expose] noncomputable def labelCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2, l.1) n
 
 theorem labelCarrier_closed {B N0 : ℕ} (l : Index B N0) (n : ℕ) : IsClosed (labelCarrier l n) :=
@@ -790,6 +791,7 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
 /-! ## The fixed exterior base and the full physical endpoint -/
 
 /-- Active as an element of `Set ProblemStatement.SpaceTime`. -/
+@[expose]
 noncomputable def active : Set ProblemStatement.SpaceTime :=
   {w | (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 ∈
     Icc (NominalConeAssembly.activeLeft ActualPrimary.nominal)
@@ -1327,11 +1329,13 @@ theorem selected_residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {gap : ℕ 
 
 /-- Actual gap, given by `ChartScales.nativeIndex ActualPrimary.h n - CommonWindow.index
 ActualPrimary.h n`. -/
+@[expose]
 noncomputable def actualGap (n : ℕ) : ℕ :=
   ChartScales.nativeIndex ActualPrimary.h n - CommonWindow.index ActualPrimary.h n
 
 /-- Actual band graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n)
 ActualPrimary.h (CommonWindow.index ActualPrimary.h n)`. -/
+@[expose]
 noncomputable def actualBandGraph (n : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) ActualPrimary.h (CommonWindow.index
       ActualPrimary.h n)
@@ -1354,6 +1358,7 @@ theorem actual_bandGraph (n : ℕ) : bandGraph ActualPrimary.h n (actualGap n) =
 
 /-- Actual base pressure, given by `ActualBaseResidual.basePressure ActualPrimary.certificate
 ActualPrimary.modulation ActualPrimary.upper B n`. -/
+@[expose]
 noncomputable def actualBasePressure (B n : ℕ) : Cylinder → ℝ :=
   ActualBaseResidual.basePressure ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B n
@@ -1504,6 +1509,7 @@ abbrev PhysicalData (B N : ℕ) (s : State Point) (u : VelocityField) (P : Press
   PhysicalFields B N ActualPolarCoverage.nativeDomain s u P
 
 /-- Fixed loss, given by `physicalLoss ActualPrimary.h (2 * ActualPrimary.h) m`. -/
+@[expose]
 noncomputable def fixedLoss (m : ℕ) : ℝ := physicalLoss ActualPrimary.h (2 * ActualPrimary.h) m
 
 theorem fixedLoss_eq_ledger (m : ℕ) :

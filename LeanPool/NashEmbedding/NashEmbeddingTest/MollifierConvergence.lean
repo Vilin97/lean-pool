@@ -26,7 +26,7 @@ momentum-space delta `δ_{m₀}`:
 - **W3** — `mollifier_convergence` invoked on `δ_{m₀}`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev MeasureTheory

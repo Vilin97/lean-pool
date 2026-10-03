@@ -21,7 +21,7 @@ needed by public applications: the fossil remains connected, has the same
 cyclomatic genus and divisorial gonality, and has no one-edge cuts or leaves.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

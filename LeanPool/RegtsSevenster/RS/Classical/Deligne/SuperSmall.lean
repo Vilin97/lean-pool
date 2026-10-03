@@ -60,7 +60,7 @@ all reachable through the funnel; `isBilimitOfTotal` lives in the
 root `CategoryTheory.Limits` namespace, not on `Bicone`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -76,6 +76,7 @@ namespace SuperVect
 `Fin p → ℂ` in even degree and `Fin q → ℂ` in odd degree.  Every
 super vector space is isomorphic to exactly one standard object,
 which is the entire content of the small model below. -/
+@[expose]
 def stdObj (pq : ℕ × ℕ) : SuperVect where
   even := Fin pq.1 → ℂ
   odd := Fin pq.2 → ℂ
@@ -92,6 +93,7 @@ theorem stdObj_odd (pq : ℕ × ℕ) :
 
 /-- Componentwise linear equivalences assemble to an isomorphism
 of super vector spaces. -/
+@[expose]
 def isoOfEquivs {V W : SuperVect} (e : V.even ≃ₗ[ℂ] W.even)
     (o : V.odd ≃ₗ[ℂ] W.odd) : V ≅ W where
   hom := ⟨e.toLinearMap, o.toLinearMap⟩
@@ -479,6 +481,7 @@ instance : smallSuperInclusion.IsEquivalence := {}
 
 /-- **The small-model equivalence**: the small model is equivalent
 to `SuperVect`. -/
+@[expose]
 def smallSuperEquiv : SmallSuperVect ≌ SuperVect :=
   smallSuperInclusion.asEquivalence
 
@@ -503,6 +506,7 @@ def sEven : SmallSuperVect := (1, 0)
 
 /-- The odd generator of the small model: the odd line
 `(0, 1)`. -/
+@[expose]
 def sOdd : SmallSuperVect := (0, 1)
 
 /-- Any two subsingleton ℂ-modules are linearly equivalent by the

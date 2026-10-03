@@ -13,7 +13,7 @@ public import LeanPool.MRiscX.AbstractSyntax.MState
 This module provides the operational `run` semantics of MRiscX.
 -/
 
-@[expose] public section
+public section
 
 open Nat
 
@@ -27,7 +27,7 @@ namespace MState
 
   /-- Conditional jump on one register: jump to `lbl` if `cond` holds of register
   `reg`, otherwise advance the program counter. -/
-  def jif (ms: MState) (reg : UInt64) (lbl : String) (cond : UInt64 → Bool) :=
+  @[expose] def jif (ms: MState) (reg : UInt64) (lbl : String) (cond : UInt64 → Bool) :=
       let regCont := ms.getRegisterAt reg
       if cond regCont then
         ms.jump lbl
@@ -36,6 +36,7 @@ namespace MState
 
   /-- Conditional jump on two registers: jump to `lbl` if `cond` holds of registers
   `reg1` and `reg2`, otherwise advance the program counter. -/
+  @[expose]
   def jif' (ms: MState) (reg1 reg2 :UInt64) (lbl:String) (cond : UInt64 → UInt64 → Bool) :=
       let reg1Cont := ms.getRegisterAt reg1
       let reg2Cont := ms.getRegisterAt reg2
@@ -58,7 +59,7 @@ namespace MState
   When the instruction is not legal (e.g. jmp s, there is no label `s`),
   `terminated` is set to `true`.
   -/
-  def runOneStep (ms:MState) : MState :=
+  @[expose] def runOneStep (ms:MState) : MState :=
     if ms.terminated then ms
     else
       let instr := ms.currInstruction
@@ -115,7 +116,7 @@ namespace MState
   In: International Conference on Software Engineering and Formal Methods.
   Cham: Springer International Publishing, 2020. S. 193-213.`
   -/
-  def runNSteps (ms:MState) (n:Nat) : MState :=
+  @[expose] def runNSteps (ms:MState) (n:Nat) : MState :=
     match n with
     | zero => ms
     | succ n' => ms.runOneStep.runNSteps n'

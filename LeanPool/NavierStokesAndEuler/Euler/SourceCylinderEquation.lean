@@ -20,7 +20,7 @@ derivative. The projected equation and normal pressure balance are derived
 on the actual L² representatives, not assumed as properties of a solver.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -62,20 +62,20 @@ local instance instSourceCylinderEquation4 : NormedSpace ℝ (Supported period E
     inferInstance
 
 /-- The actual unnormalized coordinate solution; no regularity of a profile g is needed. -/
-def coordinates : C(Icc (0 : ℝ) T,Supported period U S hS) :=
+@[expose] def coordinates : C(Icc (0 : ℝ) T,Supported period U S hS) :=
   (evolution period T hT Q Q₁ c hc hQ S hS).solution (projectedForcing period S hS Q c hc hQ f) a₀
 
 /-- Its actual ordinary right side. -/
-def coordinateDerivative : C(Icc (0 : ℝ) T,Supported period U S hS) :=
+@[expose] def coordinateDerivative : C(Icc (0 : ℝ) T,Supported period U S hS) :=
   supportedMultiplierMap period S hS (sourceGenerator Q Q₁ c hc hQ)
     (coordinates period S hS T hT Q Q₁ c hc hQ f a₀) + projectedForcing period S hS Q c hc hQ f
 
 /-- The physical transverse velocity A=Q a. -/
-def velocity : C(Icc (0 : ℝ) T,Supported period E S hS) :=
+@[expose] def velocity : C(Icc (0 : ℝ) T,Supported period E S hS) :=
   physicalVelocity period S hS Q (coordinates period S hS T hT Q Q₁ c hc hQ f a₀)
 
 /-- Its literal product-rule expression, proved below to be the time derivative. -/
-def velocityDerivative : C(Icc (0 : ℝ) T,Supported period E S hS) :=
+@[expose] def velocityDerivative : C(Icc (0 : ℝ) T,Supported period E S hS) :=
   supportedMultiplierMap period S hS Q₁.field (coordinates period S hS T hT Q Q₁ c hc hQ f a₀) +
     supportedMultiplierMap period S hS Q.field (coordinateDerivative period S hS T hT Q Q₁ c hc hQ
         f a₀)
@@ -140,6 +140,9 @@ theorem coordinate_equation_ae (t : Icc (0 : ℝ) T) :
   rw [hs]
   simp only [Pi.add_apply,fullOperatorMap_apply]
   rw [hB,hP]
+  simp only [fieldLift_apply, B, P, sourceGenerator, sourceForcing,
+    EulerBoundedFieldForwardGenerator.generatorPath_apply,
+    EulerBoundedFieldForwardGenerator.leftInversePath_apply, smul_apply, comp_apply]
   change gram (Q.field t x.1) ((-2 : ℝ) • gramInverse (Q.field t x.1) c hc (hQ t x.1)
       ((Q.field t x.1).adjoint (Q₁.field t x.1 ((u : CylinderL2 period U) x))) +
     gramInverse (Q.field t x.1) c hc (hQ t x.1) ((Q.field t x.1).adjoint ((f t : CylinderL2 period

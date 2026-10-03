@@ -28,7 +28,7 @@ is intrinsic to the general Banach setting
 `SNumbers.Inequalities` recover the sharp constant by letting `ε → 0`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

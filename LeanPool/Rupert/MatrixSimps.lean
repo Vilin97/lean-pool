@@ -15,7 +15,7 @@ import LeanPool.Rupert.Attr
 Imported Lean Pool material for `LeanPool.Rupert.MatrixSimps`.
 -/
 
-@[expose] public section
+public section
 
 /-- Reduce natural additions in concrete matrix expressions. -/
 dsimproc_decl matrixReduceNatAdd ((_ + _ : Nat)) := Nat.reduceAdd

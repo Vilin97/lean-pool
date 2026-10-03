@@ -28,7 +28,7 @@ automatically derives the full `Functor.Monoidal` structure including
 the `OplaxMonoidal` fields.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

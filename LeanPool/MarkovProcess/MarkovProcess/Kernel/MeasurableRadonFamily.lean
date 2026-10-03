@@ -22,7 +22,7 @@ supremum of measurable test integrals, then applies Mathlib's Giry
 The compact exhaustion and cutoff choices are private implementation details.
 -/
 
-@[expose] public section
+public section
 
 open scoped CompactlySupported ENNReal NNReal Topology
 open Set MeasureTheory TopologicalSpace

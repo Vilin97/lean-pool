@@ -17,7 +17,7 @@ time derivative follows by restriction or by the affine change t = τ+s;
 spatial derivatives are retained literally by continuous precomposition.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ namespace Data
 variable (D : Data U)
 
 /-- The prescribed source fields on [0,τ]. -/
-def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Data U where
+@[expose] def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Data U where
   T := τ
   T_pos := hτ
   support := D.support
@@ -74,7 +74,7 @@ def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Data U where
   strain_equation t x v := D.strain_equation (initialInclusion D.T τ hτT t) x v
 
 /-- The prescribed source fields on [τ,T], with elapsed time starting at zero. -/
-def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) : Data U where
+@[expose] def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) : Data U where
   T := D.T-τ
   T_pos := sub_pos.mpr hτT
   support := D.support
@@ -121,6 +121,7 @@ namespace HistoryData
 variable {D : Data U} (B : HistoryData D)
 
 /-- The source Jacobi law and positivity remain valid on the actual history interval. -/
+@[expose]
 def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : HistoryData (D.initial τ hτ hτT) where
   H := B.H.comp (initialInclusion D.T τ hτT)
   jacobi t ht x :=

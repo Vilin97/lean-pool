@@ -40,12 +40,12 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData31
 
 /-! # Aggregated lightweight coverage summaries -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 
 /-- The 32 groups containing all lightweight pattern summaries. -/
-def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
+@[expose] def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
   patternSummaryBuckets00,
   patternSummaryBuckets01,
   patternSummaryBuckets02,
@@ -81,7 +81,7 @@ def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
 ]
 
 /-- The 32 groups containing all lightweight exact-table summaries. -/
-def hardSummaryBucketGroups : Array (Array (List HardSummary)) := #[
+@[expose] def hardSummaryBucketGroups : Array (Array (List HardSummary)) := #[
   hardSummaryBuckets00,
   hardSummaryBuckets01,
   hardSummaryBuckets02,
@@ -117,6 +117,7 @@ def hardSummaryBucketGroups : Array (Array (List HardSummary)) := #[
 ]
 
 /-- Check that a pattern summary occurs in the unique generated summary data. -/
+@[expose]
 def PatternSummary.memberB (summary : PatternSummary) : Bool :=
   let group := patternSummaryBucketGroups.getD (summary.origin % 256 / 8) #[]
   match (group.getD (summary.origin % 8) []).find?
@@ -125,6 +126,7 @@ def PatternSummary.memberB (summary : PatternSummary) : Bool :=
   | none => false
 
 /-- Check that a hard summary occurs in the unique generated summary data. -/
+@[expose]
 def HardSummary.memberB (summary : HardSummary) : Bool :=
   let group := hardSummaryBucketGroups.getD (summary.origin % 256 / 8) #[]
   match (group.getD (summary.origin % 8) []).find?

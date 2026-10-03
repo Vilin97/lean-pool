@@ -16,7 +16,7 @@ public import Mathlib.Topology.Order.IntermediateValue
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric
 

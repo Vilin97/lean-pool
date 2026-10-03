@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.SourceData
 The finite Euclidean query programs evaluate to the literal source reports.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage1E03
@@ -22,13 +22,13 @@ noncomputable local instance refinementPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
 /-- A report with earlier observations and checked guards prepended. -/
-def prependReport (history : List (Observation d))
+@[expose] def prependReport (history : List (Observation d))
     (guards : List (ObservableGuardCheck d)) (tail : TrialReport d) :
     TrialReport d :=
   ⟨history ++ tail.trace, guards ++ tail.checkedGuards, tail.outcome⟩
 
 /-- The source terminal-query report, determined by the descent guard and gradient accuracy. -/
-noncomputable def sourceTerminalReport (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def sourceTerminalReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
   let on := inst.oracle.observe (O3.ogmgState cfg n).current
@@ -41,7 +41,7 @@ noncomputable def sourceTerminalReport (inst : PositiveInstance 2 d x0)
   else ⟨[ov], [terminal], .scale terminal⟩
 
 /-- The source phase-B suffix that checks interpolation before terminal descent. -/
-noncomputable def sourcePhaseBSuffix (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def sourcePhaseBSuffix (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
   let checks := allInterpolationChecks n fun i =>
@@ -51,7 +51,7 @@ noncomputable def sourcePhaseBSuffix (inst : PositiveInstance 2 d x0)
   | .ok passed => prependReport [] passed (sourceTerminalReport inst eps M n U)
 
 /-- The source OGM-G report with its new observations and concluding checks. -/
-noncomputable def sourcePhaseBReport (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def sourcePhaseBReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) (U : Point d) : TrialReport d :=
   let cfg := O3.stage9ExecutionConfig n inst.oracle M U
   let newTrace := (List.range n).map fun j =>
@@ -59,7 +59,7 @@ noncomputable def sourcePhaseBReport (inst : PositiveInstance 2 d x0)
   prependReport newTrace [] (sourcePhaseBSuffix inst eps M n U)
 
 /-- The recursively assembled source report for the remaining estimate phase and OGM-G. -/
-noncomputable def sourcePhaseAReport (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def sourcePhaseAReport (inst : PositiveInstance 2 d x0)
     (eps M : ℝ) (n : ℕ) : ℕ → ℕ → TrialReport d
   | _, 0 => sourcePhaseBReport inst eps M n
       (sourceEstimateState inst.oracle M x0 n).accelerated

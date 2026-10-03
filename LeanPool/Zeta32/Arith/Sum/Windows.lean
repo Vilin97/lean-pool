@@ -17,7 +17,7 @@ and the resulting limit of one "piece" `∑ (A n + B p + C n²/p) log p`, plus t
 window
 into consecutive pieces. -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology MeasureTheory Set Real Asymptotics
 
@@ -171,6 +171,7 @@ def pieceSum (A B C u₁ u₂ : ℝ) (n : ℕ) : ℝ :=
     (A * n + B * k + C * (n : ℝ) ^ 2 / k) * cPrime k
 
 /-- The normalised limit of one piece. -/
+@[expose]
 def pieceLim (A B C u₁ u₂ : ℝ) : ℝ :=
   A * (1 / u₁ - 1 / u₂) + B * ((1 / u₁ ^ 2 - 1 / u₂ ^ 2) / 2) + C * Real.log (u₂ / u₁)
 

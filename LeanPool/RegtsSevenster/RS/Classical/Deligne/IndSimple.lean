@@ -45,7 +45,7 @@ epimorphism in an abelian category is an isomorphism.
   monomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

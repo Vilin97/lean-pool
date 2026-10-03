@@ -20,7 +20,7 @@ Box integral machinery, integration by parts on T³, curl integral vanishing,
 and the energy method proof that harmonic functions on T³ are constant.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real Filter
 

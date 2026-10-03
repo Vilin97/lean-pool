@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpCylinderTimeWeight
 
 /-! Exact profile normalization of spatial derivative paths and the vector potential. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

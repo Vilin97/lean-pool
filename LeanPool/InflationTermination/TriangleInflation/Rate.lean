@@ -22,7 +22,7 @@ The general correlation-scenario result and the rejecting-order bounds expressed
 the infimum distance to the compatible set are beyond the scope of this module.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 
@@ -32,6 +32,7 @@ noncomputable
 section
 
 /-- The squared Euclidean norm of a weight function on three bits. -/
+@[expose]
 def sqNorm (w : ThreeBit → ℝ) : ℝ := ∑ x : ThreeBit, w x ^ 2
 
 /-! ## Auxiliary facts
@@ -262,6 +263,7 @@ theorem marg_two {n : ℕ} {P : ThreeBit → ℝ} (hP : IsLaw P)
 /-! ### The empirical law of a random copied triangle -/
 
 /-- The number of copied triangles that a deterministic assignment reads as `w`. -/
+@[expose]
 def triCount {n : ℕ} (ω : Assign n) (w : ThreeBit) : ℝ :=
   ∑ c : Cell n, if readTriangle c.1 c.2.1 c.2.2 ω = w then (1:ℝ) else 0
 
@@ -269,6 +271,7 @@ def triCount {n : ℕ} (ω : Assign n) (w : ThreeBit) : ℝ :=
 three copy indices uniformly and independently, and output the three bits that the
 assignment gives to the corresponding copied triangle. This is the law `q_ω` of the proof of
 paper Corollary 6.1. -/
+@[expose]
 def qLaw (n : ℕ) (ω : Assign n) : ThreeBit → ℝ := fun w => triCount ω w / (n : ℝ) ^ 3
 
 private theorem triCount_nonneg {n : ℕ} (ω : Assign n) (w : ThreeBit) : 0 ≤ triCount ω w :=

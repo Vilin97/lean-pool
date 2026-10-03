@@ -11,7 +11,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # SubLanguage -/
 
-@[expose] public section
+public section
 
 namespace LO
 
@@ -22,6 +22,7 @@ variable {L : Language.{u}} {L₁ : Language.{u}} {L₂ : Language.{u}}
 namespace Language
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def subLanguage (L : Language) (pfunc : ∀ k, L.Func k → Prop) (prel : ∀ k, L.Rel k → Prop) :
     Language where
   Func := fun k => Subtype (pfunc k)
@@ -34,7 +35,7 @@ variable (L)
 variable {pf : (k : ℕ) → L.Func k → Prop} {pr : (k : ℕ) → L.Rel k → Prop}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ofSubLanguage : subLanguage L pf pr →ᵥ L where
+@[expose] def ofSubLanguage : subLanguage L pf pr →ᵥ L where
   func := Subtype.val
   rel  := Subtype.val
 

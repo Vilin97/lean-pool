@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
 
 /-! # KP -/
 
-@[expose] public section
+public section
 
 
 namespace LO

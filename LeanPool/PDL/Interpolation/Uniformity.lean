@@ -53,7 +53,7 @@ proved there. The section `Uniformity` below therefore repeats those that are ne
 under different names.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -67,11 +67,11 @@ def Sequent.leftOnly (X : Sequent) : Sequent := ⟨X.1, ∅, X.2.2⟩
 is on the right, i.e. in the situation of a `LoadedCluster`, this is the *unloaded*
 component `Λ₁` of the node, and `Sequent.leftFree X |>.basic` says that no local rule is
 applicable to it. -/
-def Sequent.leftFree (X : Sequent) : Sequent := ⟨X.1, ∅, none⟩
+@[expose] def Sequent.leftFree (X : Sequent) : Sequent := ⟨X.1, ∅, none⟩
 
 /-- The right component of a sequent, without any loaded formula. When the loaded formula
 is on the left this is the *unloaded* component `Λ₂` of the node. -/
-def Sequent.rightFree (X : Sequent) : Sequent := ⟨∅, X.2.1, none⟩
+@[expose] def Sequent.rightFree (X : Sequent) : Sequent := ⟨∅, X.2.1, none⟩
 
 /-- Two local rule applications use the same rule with the same principal formulas.
 The fields `Lcond`, `Rcond` and `Ocond` are the principal formulas and `ress` is the list
@@ -136,7 +136,7 @@ thing. Asking for both here only spares us the purely technical work of transpor
 and U2 along `Tableau.flip`, which would need a `flip` operation on `FinePathIn`.
 What it buys us is `Tableau.isUniform.flip` below, which is needed because the
 interpolation proof flips the tableau when the loaded formula is on the left. -/
-def Tableau.isUniform {H : History} {X : Sequent} (tab : Tableau H X) : Prop :=
+@[expose] def Tableau.isUniform {H : History} {X : Sequent} (tab : Tableau H X) : Prop :=
   tab.UniCore ∧ tab.flip.UniCore
 
 /-- Transporting `Tableau.UniCore` along an equality of tableaux. -/
@@ -347,7 +347,7 @@ def LocalTableau.IsUni : {X : Sequent} → LocalTableau X → Prop
       lra.IsUniChoice ∧ ∀ Y, ∀ h : Y ∈ lra.C, (next Y h).IsUni
 
 /-- All local rule applications inside a tableau are uniform choices. -/
-def Tableau.IsUni : {H : History} → {X : Sequent} → Tableau H X → Prop
+@[expose] def Tableau.IsUni : {H : History} → {X : Sequent} → Tableau H X → Prop
   | _, _, .loc _ _ lt next => lt.IsUni ∧ ∀ Y, ∀ h : Y ∈ endNodesOf lt, (next Y h).IsUni
   | _, _, .pdl _ _ _ next => next.IsUni
   | _, _, .lrep _ => True
@@ -1561,7 +1561,7 @@ lemma lra_or_basic_of_usesRightRule : ∀ {H : History} {Z : Sequent}
 /-- The right component of the child obtained by applying the modal rule `(M)` to a sequent
 whose loaded formula `~⌊·A⌋ξ` is on the right.
 Same as `modRChildRightOnly` in `Pdl.ClusterInterpolation`. -/
-def modRChildRight (A : Nat) (ξ : AnyFormula) (R : Finset Formula) : Sequent :=
+@[expose] def modRChildRight (A : Nat) (ξ : AnyFormula) (R : Finset Formula) : Sequent :=
   match ξ with
   | .normal φ => ⟨∅, {~φ} ∪ R.pdlProjection A, none⟩
   | .loaded χ => ⟨∅, R.pdlProjection A, some (Sum.inr (~'χ))⟩

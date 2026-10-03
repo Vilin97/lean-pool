@@ -41,7 +41,7 @@ gate of the project was reduced to. This file records the ungated finals:
   with no remaining hypotheses (the challenge's `ofCurve_inj`, ungated).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

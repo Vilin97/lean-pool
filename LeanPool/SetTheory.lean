@@ -18,7 +18,7 @@ Tags: set-theory, large-cardinals, elementary-embedding, kunen-inconsistency, mo
 MSC: 03E55, 03C90
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Overview

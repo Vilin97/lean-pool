@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch032`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2454,7 +2454,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC6R4Subtree7ae79e99a9b79eaf`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2462,7 +2462,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3077,7 +3077,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3124,7 +3124,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3171,7 +3171,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3830,7 +3830,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4129,7 +4129,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4176,7 +4176,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4580,7 +4580,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5239,7 +5239,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5322,7 +5322,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5401,7 +5401,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5452,7 +5452,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6111,7 +6111,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6158,7 +6158,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6237,7 +6237,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6918,7 +6918,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7001,7 +7001,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7084,7 +7084,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7135,7 +7135,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7378,7 +7378,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7517,7 +7517,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7600,7 +7600,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7647,7 +7647,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7730,7 +7730,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8368,7 +8368,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8857,7 +8857,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9126,7 +9126,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9599,7 +9599,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9678,7 +9678,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9757,7 +9757,7 @@ section
 
 /-! KC6R4 explicit terminal-certificate subtree. No adaptive search. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

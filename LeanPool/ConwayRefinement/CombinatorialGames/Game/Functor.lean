@@ -40,7 +40,7 @@ functor.
 
 universe u
 
-@[expose] public section
+public section
 
 /-! ### ConwayGame Functor -/
 
@@ -61,7 +61,7 @@ coinductive LGame : Type (u + 1)
   | ofSets (st : Player → Set IGame) [∀ p, Small.{u} (st p)] : LGame.{u}
 ```
 -/
-def GameFunctor (α : Type (u + 1)) : Type (u + 1) :=
+@[expose] def GameFunctor (α : Type (u + 1)) : Type (u + 1) :=
   {s : Player → Set α // ∀ p, Small.{u} (s p)}
 
 namespace GameFunctor

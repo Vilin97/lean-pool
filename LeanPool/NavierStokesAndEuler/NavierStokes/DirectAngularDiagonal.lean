@@ -19,7 +19,7 @@ an axial primitive. Axisymmetry proves its divergence equation, and an
 annular zero germ removes the coordinate singularity on the axis.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,22 +37,24 @@ abbrev CylPoint := ℝ × (ℝ × ℝ)
 abbrev Coefficient := CylPoint → ℝ
 
 /-- Radius, given by `PolarCharts.radius (PhysicalGraphBounds.radialProjection w)`. -/
-noncomputable def radius (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def radius (w : SpaceTime) : ℝ :=
   PolarCharts.radius (PhysicalGraphBounds.radialProjection w)
 
 /-- Slow point, given by `(w.1, w.2 2)`. -/
-noncomputable def slowPoint (w : SpaceTime) : Slow := (w.1, w.2 2)
+@[expose] noncomputable def slowPoint (w : SpaceTime) : Slow := (w.1, w.2 2)
 
 /-- Cyl point, given by `(w.1, (radius w, w.2 2))`. -/
-noncomputable def cylPoint (w : SpaceTime) : CylPoint := (w.1, (radius w, w.2 2))
+@[expose] noncomputable def cylPoint (w : SpaceTime) : CylPoint := (w.1, (radius w, w.2 2))
 
 /-- Slow of cyl, given by `(p.1, p.2.2)`. -/
-noncomputable def slowOfCyl (p : CylPoint) : Slow := (p.1, p.2.2)
+@[expose] noncomputable def slowOfCyl (p : CylPoint) : Slow := (p.1, p.2.2)
 
 /-- Physical domain, given by `slowPoint ⁻¹' U`. -/
+@[expose]
 noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := slowPoint ⁻¹' U
 
 /-- Positive domain, given by `{p | slowOfCyl p ∈ U ∧ 0 < p.2.1}`. -/
+@[expose]
 noncomputable def positiveDomain (U : Set Slow) : Set CylPoint :=
   {p | slowOfCyl p ∈ U ∧ 0 < p.2.1}
 
@@ -80,7 +82,7 @@ noncomputable def rate (b : Coefficient) (p : AxisymmetricFields.ProfilePoint) :
   b (profileToCyl p) / Real.sqrt (2 * p.2.1)
 
 /-- Literal angular velocity with physical tangential magnitude `b`. -/
-noncomputable def angularField (b : Coefficient) (w : SpaceTime) : Space :=
+@[expose] noncomputable def angularField (b : Coefficient) (w : SpaceTime) : Space :=
   (-w.2 1 / radius w * b (cylPoint w)) • coordinateVector 0 +
     (w.2 0 / radius w * b (cylPoint w)) • coordinateVector 1
 
@@ -260,6 +262,7 @@ theorem divergence_cut_angular {U : Set Slow} (hU : IsOpen U) (D : AngularData U
 /-! ## Locally finite direct angular sums -/
 
 /-- Angular sum, given by `SolenoidalDiagonal.potentialSum a q (fun j => angularField (b j))`. -/
+@[expose]
 noncomputable def angularSum (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (b : ℕ → Coefficient) : VelocityField :=
   SolenoidalDiagonal.potentialSum a q (fun j => angularField (b j))
@@ -373,6 +376,7 @@ theorem angularSum_axis_zero_germ {U : Set Slow} (hU : IsOpen U) (D : ℕ → An
 
 /-- Mixed velocity, defined pointwise by `SolenoidalDiagonal.velocitySum a q A x + angularSum a
 q b x`. -/
+@[expose]
 noncomputable def mixedVelocity (a : ℕ → ℝ) (q : SpaceTime → ℝ)
     (A : ℕ → VelocityField) (b : ℕ → Coefficient) : VelocityField :=
   fun x => SolenoidalDiagonal.velocitySum a q A x + angularSum a q b x
@@ -413,11 +417,13 @@ theorem mixedVelocity_axis (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ �
 /-! ## The actual similarity cutoff -/
 
 /-- Preterminal slow, given by `{s | s.1 < 1}`. -/
+@[expose]
 noncomputable def preterminalSlow : Set Slow := {s | s.1 < 1}
 
 theorem preterminalSlow_open : IsOpen preterminalSlow := isOpen_lt continuous_fst continuous_const
 
 /-- Q coefficient, given by `SimilarityProfile.q h`. -/
+@[expose]
 noncomputable def qCoefficient (h : ℝ) : Coefficient := SimilarityProfile.q h
 
 theorem qCoefficient_physical (h : ℝ) (w : SpaceTime) :

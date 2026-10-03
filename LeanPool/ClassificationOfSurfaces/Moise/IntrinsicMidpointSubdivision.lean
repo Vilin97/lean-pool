@@ -17,7 +17,7 @@ indexed by the old edge itself, the construction is automatically coherent acros
 faces.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -53,21 +53,21 @@ variable (K : IntrinsicTwoComplex)
 abbrev MidpointVertex := K.Vertex ⊕ K.Edge
 
 /-- The corner triangle at the `i`-th vertex of an old face. -/
-noncomputable def midpointCornerFace (t : K.Face) (i : ZMod 3) :
+@[expose] noncomputable def midpointCornerFace (t : K.Face) (i : ZMod 3) :
     Finset K.MidpointVertex :=
   {Sum.inl (K.faceVertex t i), Sum.inr (K.faceEdge t i),
     Sum.inr (K.faceEdge t (i + 2))}
 
 /-- The central triangle of the midpoint subdivision of an old face. -/
-noncomputable def midpointCentralFace (t : K.Face) : Finset K.MidpointVertex :=
+@[expose] noncomputable def midpointCentralFace (t : K.Face) : Finset K.MidpointVertex :=
   Finset.univ.image (fun i : ZMod 3 => Sum.inr (K.faceEdge t i))
 
 /-- The four midpoint triangles belonging to one old face. -/
-noncomputable def midpointFacesOver (t : K.Face) : Finset (Finset K.MidpointVertex) :=
+@[expose] noncomputable def midpointFacesOver (t : K.Face) : Finset (Finset K.MidpointVertex) :=
   (Finset.univ.image (K.midpointCornerFace t)) ∪ {K.midpointCentralFace t}
 
 /-- All maximal faces in the midpoint subdivision. -/
-noncomputable def midpointFaces : Finset (Finset K.MidpointVertex) :=
+@[expose] noncomputable def midpointFaces : Finset (Finset K.MidpointVertex) :=
   K.faces.attach.biUnion K.midpointFacesOver
 
 theorem faceEdge_ne_add_two (t : K.Face) (i : ZMod 3) :
@@ -113,7 +113,7 @@ theorem midpointFacesOver_card (t : K.Face) {s : Finset K.MidpointVertex}
     exact K.midpointCentralFace_card t
 
 /-- The finite abstract complex underlying midpoint subdivision. -/
-noncomputable def midpointComplex : IntrinsicTwoComplex where
+@[expose] noncomputable def midpointComplex : IntrinsicTwoComplex where
   Vertex := K.MidpointVertex
   faces := K.midpointFaces
   faces_card := by
@@ -133,7 +133,7 @@ theorem exists_parentFace_of_mem_midpointFaces
 /-- A chosen parent of a midpoint-subdivision face.  Geometric arguments use only
 `midpointFace_mem_parent`; uniqueness is not needed for the adaptive open-complex
 construction. -/
-noncomputable def midpointParentFace (s : K.midpointComplex.Face) : K.Face :=
+@[expose] noncomputable def midpointParentFace (s : K.midpointComplex.Face) : K.Face :=
   Classical.choose (K.exists_parentFace_of_mem_midpointFaces s.2)
 
 theorem midpointFace_mem_parent (s : K.midpointComplex.Face) :
@@ -141,7 +141,7 @@ theorem midpointFace_mem_parent (s : K.midpointComplex.Face) :
   Classical.choose_spec (K.exists_parentFace_of_mem_midpointFaces s.2)
 
 /-- Canonical old barycentric position of a midpoint-subdivision vertex. -/
-noncomputable def midpointPosition : K.MidpointVertex → (K.Vertex → ℝ)
+@[expose] noncomputable def midpointPosition : K.MidpointVertex → (K.Vertex → ℝ)
   | Sum.inl v => Pi.single v 1
   | Sum.inr e => fun v => if v ∈ e.1 then (2 : ℝ)⁻¹ else 0
 
@@ -168,7 +168,7 @@ theorem sum_midpointPosition (w : K.MidpointVertex) :
   · simp [midpointPosition, K.card_of_mem_edges e.2]
 
 /-- Affine barycentric evaluation from midpoint coordinates to old coordinates. -/
-noncomputable def midpointEvalAffine :
+@[expose] noncomputable def midpointEvalAffine :
     (K.MidpointVertex → ℝ) →ᵃ[ℝ] (K.Vertex → ℝ) :=
   (∑ w, (LinearMap.proj w).smulRight (K.midpointPosition w)).toAffineMap
 
@@ -1332,7 +1332,7 @@ theorem sum_midpointEvalAffine (x : K.midpointComplex.realization) :
     _ = 1 := x.2.1.2
 
 /-- Canonical affine map from the midpoint realization into the old realization. -/
-noncomputable def midpointEval (x : K.midpointComplex.realization) : K.realization := by
+@[expose] noncomputable def midpointEval (x : K.midpointComplex.realization) : K.realization := by
   refine ⟨K.midpointEvalAffine x.1,
     ⟨K.midpointEvalAffine_nonneg x, K.sum_midpointEvalAffine x⟩, ?_⟩
   obtain ⟨s, hs, hxs⟩ := x.2.2
@@ -1340,7 +1340,7 @@ noncomputable def midpointEval (x : K.midpointComplex.realization) : K.realizati
   exact ⟨t.1, t.2, fun v hv => K.midpointEvalAffine_support t hst hxs hv⟩
 
 @[simp] theorem midpointEval_val (x : K.midpointComplex.realization) :
-    (K.midpointEval x).1 = K.midpointEvalAffine x.1 := rfl
+    (K.midpointEval x).1 = K.midpointEvalAffine x.1 := by rfl
 
 theorem continuous_midpointEval : Continuous K.midpointEval := by
   apply Continuous.subtype_mk
@@ -1371,7 +1371,7 @@ theorem surjective_midpointEval : Function.Surjective K.midpointEval := by
   exact ⟨x, Subtype.ext hx⟩
 
 /-- The canonical midpoint realization map is a homeomorphism. -/
-noncomputable def midpointHomeomorph :
+@[expose] noncomputable def midpointHomeomorph :
     K.midpointComplex.realization ≃ₜ K.realization :=
   Continuous.homeoOfEquivCompactToT2
     (f := Equiv.ofBijective K.midpointEval
@@ -1379,10 +1379,10 @@ noncomputable def midpointHomeomorph :
     K.continuous_midpointEval
 
 @[simp] theorem midpointHomeomorph_apply (x : K.midpointComplex.realization) :
-    K.midpointHomeomorph x = K.midpointEval x := rfl
+    K.midpointHomeomorph x = K.midpointEval x := by rfl
 
 /-- The intrinsic 1-to-4 midpoint subdivision, with its canonical faithful realization map. -/
-noncomputable def midpointSubdivision : K.Subdivision where
+@[expose] noncomputable def midpointSubdivision : K.Subdivision where
   refined := K.midpointComplex
   homeo := K.midpointHomeomorph
   affineOnFace := by
@@ -1397,7 +1397,7 @@ noncomputable def midpointSubdivision : K.Subdivision where
     K.midpointSubdivision.refined = K.midpointComplex := rfl
 
 theorem midpointSubdivision_homeo_apply (x : K.midpointComplex.realization) :
-    K.midpointSubdivision.homeo x = K.midpointEval x := rfl
+    K.midpointSubdivision.homeo x = K.midpointEval x := by rfl
 
 end IntrinsicTwoComplex
 

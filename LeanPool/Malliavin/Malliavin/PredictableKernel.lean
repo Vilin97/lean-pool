@@ -26,7 +26,7 @@ natural Brownian filtration that identification — almost every time, almost ev
 measures — is `predictableSectionKernel_ae_eq_condExpKernel` in `KernelIdentification.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
@@ -39,6 +39,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
   {P : Measure W} [IsGaussian P]
 
 /-- Lebesgue measure restricted to the finite time interval `Set.Iic T`. -/
+@[expose]
 noncomputable def finiteHorizonTimeMeasure (T : ℝ≥0) : Measure ℝ≥0 :=
   nonnegativeLebesgueMeasure.restrict (Set.Iic T)
 
@@ -55,6 +56,7 @@ theorem ae_pos_finiteHorizonTimeMeasure (T : ℝ≥0) :
   exact pos_iff_ne_zero.mpr ht
 
 /-- The finite measure obtained by restricting the time coordinate of the product measure. -/
+@[expose]
 noncomputable def finiteHorizonProductMeasure (P : Measure W) (T : ℝ≥0) :
     Measure (ℝ≥0 × W) :=
   (finiteHorizonTimeMeasure T).prod P
@@ -126,6 +128,7 @@ theorem condExpKernel_predictable_map_fst_ae
 
 This is a jointly predictable kernel indexed by `(t, ω)`.  It is not definitionally the varying
 fixed-time kernel `condExpKernel P (𝓕 t)`. -/
+@[expose]
 noncomputable def predictableSectionKernel
     (μ : Measure (ℝ≥0 × S)) [IsFiniteMeasure μ]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace S›) :

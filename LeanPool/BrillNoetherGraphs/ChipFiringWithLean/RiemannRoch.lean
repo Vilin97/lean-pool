@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.RRGHelpers
 
 /-! # Riemann Roch -/
 
-@[expose] public section
+public section
 universe u
 
 open Multiset Finset
@@ -225,6 +225,7 @@ of a graph.
 
 /-- The relation $\operatorname{gon}(G) \le k$: there exists a divisor of degree $k$
 with rank at least $1$. -/
+@[expose]
 def gonalityLeq (G : CFGraph) (k : ℤ) : Prop := ∃ D : CFDiv G, rank G D ≥ 1 ∧ CFDiv.degree D = k
 
 /-- The relation $\operatorname{gon}(G) \ge k$: no divisor of degree less than $k$
@@ -260,6 +261,7 @@ private theorem one_le_of_gonality_leq {G : CFGraph} {k : ℤ} (h_gon : gonality
 
 /-- The *(divisorial) gonality* of a connected graph is the smallest degree of a divisor
 of rank at least one. -/
+@[expose]
 noncomputable def gonality {G : CFGraph} (_h_conn : graphConnected G) : ℤ :=
   sInf {k : ℤ | gonalityLeq G k}
 
@@ -358,6 +360,7 @@ at most $\lfloor (g+3)/2 \rfloor$.
 This is an open problem, posed by Baker in
 [Specialization of linear systems from curves to graphs](https://doi.org/10.2140/ant.2008.2.613),
 Conjecture 3.10(1). -/
+@[expose]
 def gonalityConjecture {G : CFGraph} (h_conn : graphConnected G) : Prop :=
   gonality h_conn ≤ (CFGraph.genus G + 3) / 2
 
@@ -371,6 +374,7 @@ there exists a divisor of degree $d$ and rank at least $r$.
 This is an open problem, posed in slightly different form by Baker in
 [Specialization of linear systems from curves to graphs](https://doi.org/10.2140/ant.2008.2.613),
 Conjecture 3.9(1). -/
+@[expose]
 def brillNoetherConjecture {G : CFGraph} (_h_conn : graphConnected G) (r d : ℤ) : Prop :=
   let g := CFGraph.genus G
   let ρ := g - (r + 1) * (g - d + r)

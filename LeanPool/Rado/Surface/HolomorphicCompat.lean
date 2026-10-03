@@ -44,7 +44,7 @@ proving Radó's theorem from it is strictly stronger than proving it from `ω`; 
 `isManifold_omega_of_one` the two hypotheses are in fact equivalent here.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff
 open Set

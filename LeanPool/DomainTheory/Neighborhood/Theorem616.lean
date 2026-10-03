@@ -60,7 +60,7 @@ approximant chains `H`, `G`, `K` (for `h`, `g`, `k`) and the ladder identity `H 
 point. Lemma 6.15 (`trianglelefteq_of_projectionPair`) then closes `D ⊴ E`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

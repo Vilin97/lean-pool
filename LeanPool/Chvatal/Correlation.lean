@@ -48,7 +48,7 @@ as a boundary sum, a constant is subtracted from the second function, and the
 auxiliary orthonormal system bounds the resulting interior sum.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators symmDiff
 

@@ -38,7 +38,7 @@ two-element multi-tensor.
   relation, with its defining equation `modMultiπ_swapPair`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -60,6 +60,7 @@ section CrossDefs
 
 /-- The boundary-insertion object: the monoid between the folds of
 two blocks, whiskered under a prefix. -/
+@[expose]
 def modCrossMid [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (Xs Ys : List (Mod D A)) :
     List (Mod D A) → D
@@ -81,6 +82,7 @@ def modCrossMid [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
   rfl
 
 /-- Assemble a boundary window into a prefix-whiskered leg. -/
+@[expose]
 def modCrossLegOf [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (Xs Ys : List (Mod D A))
     (w : (modList A Xs ⊗ A) ⊗ modList A Ys ⟶ modList A (Xs ++ Ys)) :
@@ -113,6 +115,7 @@ section CrossWindows
 
 /-- The crossing window: the monoid braids over the whole first
 block and acts on its head. -/
+@[expose]
 def modCrossHeadWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D]
     (X : Mod D A) (l Ys : List (Mod D A)) :
@@ -124,6 +127,7 @@ def modCrossHeadWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The stationary window: the monoid acts on the head of the
 second block. -/
+@[expose]
 def modCrossYWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (Xs : List (Mod D A)) (Y : Mod D A)
     (m : List (Mod D A)) :
@@ -146,6 +150,7 @@ section CrossBase
 
 /-- The base bridge: absorb the unit seed of a singleton first
 block and reassociate onto the relation window of the head slot. -/
+@[expose]
 def modCrossBridge [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X Y : Mod D A) (m : List (Mod D A)) :
     (pre : List (Mod D A)) →
@@ -260,6 +265,7 @@ tail block under a prefix extended by the head. -/
 section CrossStep
 
 /-- Peel the head of the first block into the prefix. -/
+@[expose]
 def modCrossPeel [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : Mod D A) (Xs' Ys : List (Mod D A)) :
     (pre : List (Mod D A)) →
@@ -321,6 +327,7 @@ lemma modCrossPeel_yWin [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The step bridge: braid the monoid over the tail of the first
 block and retype at the relation window of the head slot. -/
+@[expose]
 def modCrossStepBridge [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D]
     (X P : Mod D A) (l' Ys : List (Mod D A)) :

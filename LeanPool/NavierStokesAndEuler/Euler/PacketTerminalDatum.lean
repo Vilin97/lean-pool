@@ -16,7 +16,7 @@ has period 2π.  The constant vector is multiplied by the spatial cutoff
 before it is placed in the genuine cylinder L² space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ def scalarField (δ : ℝ) (x : LiftDomain period) : ℝ :=
   innerCutoff x.1 * (profile_periodic δ).lift x.2
 
 /-- Field, given by `scalarField δ x • ξ`. -/
-def field {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
+@[expose] def field {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (ξ : U) (x : LiftDomain period) : U := scalarField δ x • ξ
 
 @[simp] theorem scalarField_coe (δ : ℝ) (y : Space) (θ : ℝ) :
@@ -94,14 +94,14 @@ theorem field_compact {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
   supportSet_compact.of_isClosed_subset (isClosed_tsupport _) (field_support δ ξ)
 
 /-- Compact field, bundling `field`, `compact`, `smooth`. -/
-def compactField {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
+@[expose] def compactField {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (hδ : 0 < δ) (ξ : U) : CompactField period U where
   field := field δ ξ
   compact := field_compact δ ξ
   smooth := field_smooth δ hδ ξ
 
 /-- Terminal, given by `(compactField δ hδ ξ).toLp`. -/
-def terminal {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
+@[expose] def terminal {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (hδ : 0 < δ) (ξ : U) : CylinderL2 period U := (compactField δ hδ ξ).toLp
 
 theorem terminal_ae {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]

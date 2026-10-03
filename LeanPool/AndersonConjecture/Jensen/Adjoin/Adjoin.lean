@@ -28,7 +28,7 @@ adjunction from a prime ideal (Jensen), and the surjectivity
 step ensuring R → T/M² stays surjective (Heitmann Lemma 5).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

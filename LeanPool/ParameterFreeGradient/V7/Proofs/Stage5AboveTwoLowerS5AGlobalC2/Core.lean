@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 The global coordinate-gradient and Hessian formulas for the power smoothing kernel.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Asymptotics

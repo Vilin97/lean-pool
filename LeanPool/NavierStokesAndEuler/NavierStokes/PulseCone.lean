@@ -28,7 +28,7 @@ The resulting remainder is controlled by the actual second derivative of
 the forcing, with constants uniform in the pulse duration.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -853,7 +853,7 @@ The history and its parameter derivative retain the actual incoming prefix.
 Bounds come from their source integrals and the explicit pulse energy weight.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.PulseEnergyHistory
 
@@ -1343,7 +1343,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2046,14 +2046,17 @@ theorem pulse_pressure_bounds (w : ResetWitness d K) {eta y : ℝ}
 /-! ## Actual viscous coefficients on the pulse -/
 
 /-- Radial A, given by `2 - 2 * (dY (H w) p / H w p)`. -/
+@[expose]
 noncomputable def radialA (w : ResetWitness d K) (p : Point) : ℝ :=
   2 - 2 * (dY (H w) p / H w p)
 
 /-- Shear B, given by `2 * dY (U d amp) p / E w p`. -/
+@[expose]
 noncomputable def shearB (w : ResetWitness d K) (amp : ℝ → ℝ) (p : Point) : ℝ :=
   2 * dY (U d amp) p / E w p
 
 /-- Direction ratio, given by `Ns w amp p / (E w p * Qs w amp p)`. -/
+@[expose]
 noncomputable def directionRatio (w : ResetWitness d K) (amp : ℝ → ℝ) (p : Point) : ℝ :=
   Ns w amp p / (E w p * Qs w amp p)
 
@@ -2306,15 +2309,15 @@ theorem normalizedLag_parameter_fine_bound (c : Parameters)
 /-! ## The coefficient in the pulse-direction expansion -/
 
 /-- Geometric source, given by `(1 / 2 - d.h) * eta * shapeGradient eta`. -/
-noncomputable def geometricSource (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def geometricSource (d : TailData) (eta : ℝ) : ℝ :=
   (1 / 2 - d.h) * eta * shapeGradient eta
 
 /-- Equilibrium numerator, given by `d.core.lam - d.h + geometricSource d eta`. -/
-noncomputable def equilibriumNumerator (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def equilibriumNumerator (d : TailData) (eta : ℝ) : ℝ :=
   d.core.lam - d.h + geometricSource d eta
 
 /-- Angular equilibrium, given by `equilibriumNumerator d eta / (1 - d.core.lam)`. -/
-noncomputable def angularEquilibrium (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def angularEquilibrium (d : TailData) (eta : ℝ) : ℝ :=
   equilibriumNumerator d eta / (1 - d.core.lam)
 
 /-- Derivative coefficient, given by `d.core.lam * ((1 / 2 - d.h) + geometricSource d eta) * (1

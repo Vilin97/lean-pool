@@ -32,7 +32,7 @@ type of `TopFlagSubdivision.deletionCoefficient`.  Restriction of a `(p - 1)`-di
 `(p - 2) + 2` vs `p - 1 + 1` reindexing.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

@@ -18,7 +18,7 @@ Integrating its derivative over one period removes that term. A nonzero averaged
 forces the leading differential of the integral to annihilate the resonance vector.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

@@ -21,7 +21,7 @@ insertion and contraction, conjugated by the structure map, so
 their composite is the image of an identity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -19,7 +19,7 @@ less than `n!`, and hence from exponential endomorphism growth.
 The Frobenius and trace-zeta route is retained in `ObjectTower`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

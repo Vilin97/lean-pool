@@ -20,7 +20,7 @@ the good locus, so multiplying by the bad factor extends the conclusion over
 the exceptional locus as well.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

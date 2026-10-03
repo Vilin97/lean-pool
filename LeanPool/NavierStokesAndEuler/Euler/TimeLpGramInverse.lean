@@ -23,7 +23,7 @@ matrix/Hilbert Gram inverse. This identifies the strong-equation inverse
 with the same operator to which the genuine parameter estimates apply.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,7 +42,7 @@ variable {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The genuine Bochner Gram operator, formed from the actual frame multiplier. -/
-def gramOperator (T : ℝ) (hT : 0 ≤ T) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
+@[expose] def gramOperator (T : ℝ) (hT : 0 ≤ T) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
     TimeLp T U →L[ℝ] TimeLp T U :=
   (timeMultiplier T hT Q).adjoint.comp (timeMultiplier T hT Q)
 
@@ -64,7 +64,7 @@ theorem gramOperator_coercive (T : ℝ) (hT : 0 ≤ T)
       simp only [gramOperator, comp_apply, adjoint_inner_left]
 
 /-- The actual coercive inverse of the time Gram operator. -/
-def gramSolver (T : ℝ) (hT : 0 ≤ T)
+@[expose] def gramSolver (T : ℝ) (hT : 0 ≤ T)
     (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (c : ℝ) (hc : 0 < c)
     (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2) : TimeLp T U →L[ℝ] TimeLp T U :=
   coerciveInverse (gramOperator T hT Q) c hc (gramOperator_coercive T hT Q c hQ)

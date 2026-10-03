@@ -23,7 +23,7 @@ matching exist and that a glue preserves.
 This file names that data and the step that advances it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -128,6 +128,7 @@ noncomputable def stepFlags :
   V.dropSubset (cutL n) (cutR n) D.sub.flags
 
 /-- Whether the subset carries the closed cut's own edge. -/
+@[expose]
 noncomputable def stepBit : Bool :=
   decide (V.boundaryFlag (cutL n) ∈ D.sub.flags)
 
@@ -331,6 +332,7 @@ noncomputable def glueData : (n : ℕ) →
 open Classical in
 /-- **The cuts at which a component disappears**: the closed ones
 whose edge the subset carries. -/
+@[expose]
 noncomputable def glueCount : (n : ℕ) →
     (V : Fragment (Fin (0 + n) ⊕ Fin (n + 0))) → StageData n V → ℕ
   | 0, _, _ => 0
@@ -657,6 +659,7 @@ theorem stageLedger_disjUnion (n : ℕ)
 
 /-- The interface identification at size `n`, as an order
 isomorphism. -/
+@[expose]
 def stepIdentOrderIso (n : ℕ) : Fin (0 + n) ≃o Fin (n + 0) :=
   Fin.castOrderIso (by omega)
 

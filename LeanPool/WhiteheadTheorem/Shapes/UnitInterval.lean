@@ -13,7 +13,7 @@ public import Mathlib.Topology.UnitInterval
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.UnitInterval`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace unitInterval

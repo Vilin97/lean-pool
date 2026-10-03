@@ -60,7 +60,7 @@ additional results supply the project's broader scope. The local analytic Nullst
 [scvBibliography]: https://github.com/bjbraams/lean-scv/blob/caef1ae776ff79933718312357980d46628d3702/formalization.yaml
 -/
 
-@[expose] public section
+public section
 
 
 open Complex Filter Function MeasureTheory Metric Set

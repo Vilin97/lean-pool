@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.OrdinaryEulerDifference
 Sobolev evolution used by the H³ stability estimate. The solenoidal
 constraint at the endpoints follows by L² continuity from the interior. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -52,7 +52,7 @@ theorem velocity_solenoidal (t : Icc (0 : ℝ) A.T) : (S.velocity t).toLp ∈ so
 
 /-- Ordinary evolution, bundling `velocity`, `pressureForce`, `velocity_continuous`,
 `pressure_continuous` and the required compatibility proofs. -/
-def ordinaryEvolution : EulerOrdinarySobolev.Evolution A.T A.T_pos.le where
+@[expose] def ordinaryEvolution : EulerOrdinarySobolev.Evolution A.T A.T_pos.le where
   velocity := S.velocity
   pressureForce := S.force
   velocity_continuous := S.velocity_continuous

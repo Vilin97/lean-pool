@@ -19,7 +19,7 @@ for the two marked *vertices*.  The exceptional alternatives retain their
 coordinate descriptions only for genuinely interior marks.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -30,6 +30,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 /-- The endpoint-aware exceptional alternatives in corrected Theorem 3.9.
 The first three clauses are the same-strand endpoint cases, stated as vertex
 equalities.  The final clause is the corrected interior classification. -/
+@[expose]
 def NSMForBananaException {g : ℕ} (B : Banana g) (u v : B.graph.V) : Prop :=
     (u = leftEndpoint B ∧ v = rightEndpoint B) ∨
     (u = rightEndpoint B ∧ v = leftEndpoint B) ∨

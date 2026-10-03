@@ -36,7 +36,7 @@ false, we run it on the contracted *positive* spec, where it applies verbatim,
 and pull the resulting certificate back along the equivalence.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 open Utilities.Certificate

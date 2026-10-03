@@ -20,7 +20,7 @@ of the smaller disk. It is defined on all continuous outer-disk functions;
 on holomorphic inputs it agrees with the actual complex derivative.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -66,7 +66,7 @@ def restrictionCLM (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ) :
 
 @[simp] theorem restrictionCLM_apply (c : ℂ) {ρ σ : ℝ} (h : ρ ≤ σ)
     (f : C(Disk c σ, E)) (z : Disk c ρ) :
-    restrictionCLM c h f z = f ⟨z.1, closedBall_subset_closedBall h z.2⟩ := rfl
+    restrictionCLM c h f z = f ⟨z.1, closedBall_subset_closedBall h z.2⟩ := by rfl
 
 theorem restrictionCLM_comp (c : ℂ) {r ρ σ : ℝ} (h₁ : r ≤ ρ) (h₂ : ρ ≤ σ) :
     (restrictionCLM (E := E) c h₁).comp (restrictionCLM c h₂) =
@@ -264,7 +264,7 @@ noncomputable def ofContinuousOn (c : ℂ) (r : ℝ) (F : ℂ → E)
 omit [NormedSpace ℂ E] [CompleteSpace E] in
 @[simp] theorem ofContinuousOn_apply (c : ℂ) (r : ℝ) (F : ℂ → E)
     (hF : ContinuousOn F (closedBall c r)) (z : Disk c r) :
-    ofContinuousOn c r F hF z = F z := rfl
+    ofContinuousOn c r F hF z = F z := by rfl
 
 /-- Agreement with the actual derivative under holomorphy in the open disk and
 continuity on its closure. No smoothness of the derivative is assumed. -/

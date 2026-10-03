@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 Mostly about `ContinuousLinearMap.IsInvertible` and `ContinuousLinearMap.inverse`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Function Asymptotics Topology
 

@@ -19,7 +19,7 @@ monochromatic vertex and can be contracted explicitly.  This file contains
 the bridge from that local construction to the removal operation.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -114,6 +114,7 @@ theorem exists_nonloop_incident_of_symm_path
           (symmOrientedArrow_target e)), hloop⟩
 
 /-- A generating connected marked graph admits the prescribed removal of a monochromatic vertex. -/
+@[expose]
 def HasRemovedMarkedGraph {n : ℕ}
     (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
     {v : V} (hbase : M.base ≠ v) (color : Bool)

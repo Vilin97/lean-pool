@@ -16,7 +16,7 @@ in a fan face.  This no-junk representation is what lets compactness turn local 
 finite intrinsic triangulation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -45,7 +45,7 @@ noncomputable def adaptiveFanVertexEmbedding (hU : IsOpen U)
     exact congrArg (fun z : K.AdaptiveFanVertex U hU ↦ z.1) hpq
 
 /-- The three vertices of a fan face, now regarded as global used vertices. -/
-noncomputable def adaptiveGlobalFanFaceVertices (hU : IsOpen U)
+@[expose] noncomputable def adaptiveGlobalFanFaceVertices (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) : Finset (K.AdaptiveFanVertex U hU) :=
   (K.adaptiveFanFaceVertices U hU f).attach.map
     (K.adaptiveFanVertexEmbedding U hU f)
@@ -68,7 +68,7 @@ theorem mem_adaptiveGlobalFanFaceVertices_iff (hU : IsOpen U)
     rfl
 
 /-- Relabel the local global vertices of a face by their underlying geometric points. -/
-noncomputable def adaptiveFanFaceVertexEquiv (hU : IsOpen U)
+@[expose] noncomputable def adaptiveFanFaceVertexEquiv (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f} ≃
       {p // p ∈ K.adaptiveFanFaceVertices U hU f} where
@@ -171,7 +171,7 @@ theorem adaptiveFanRelabel_extended_eq_iff (hU : IsOpen U)
           extendFaceCoordinates_of_notMem _ _ hpg]
 
 /-- One adaptive fan face parametrized by its global used vertices. -/
-noncomputable def adaptiveGlobalFanFaceMap (hU : IsOpen U)
+@[expose] noncomputable def adaptiveGlobalFanFaceMap (hU : IsOpen U)
     (f : K.AdaptiveFanFace U hU) :
     stdSimplex ℝ {v // v ∈ K.adaptiveGlobalFanFaceVertices U hU f} → U :=
   fun x ↦ K.adaptiveFanFaceMap U hU f (K.adaptiveFanRelabelSimplex U hU f x)

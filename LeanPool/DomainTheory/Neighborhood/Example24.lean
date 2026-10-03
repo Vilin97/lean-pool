@@ -38,7 +38,7 @@ Definition
 2.1(iii); (i) and (ii) are the principal-filter facts for the cone `(out σ)Σ*`.
 Constructive. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example24
 
@@ -51,9 +51,9 @@ def del : Str → Str
   | true :: t => del t
   | false :: t => false :: t
 
-@[simp] theorem del_nil : del [] = [] := rfl
-@[simp] theorem del_true (t : Str) : del (true :: t) = del t := rfl
-@[simp] theorem del_false (t : Str) : del (false :: t) = false :: t := rfl
+@[simp] theorem del_nil : del [] = [] := by rfl
+@[simp] theorem del_true (t : Str) : del (true :: t) = del t := by rfl
+@[simp] theorem del_false (t : Str) : del (false :: t) = false :: t := by rfl
 
 /-- The guaranteed output prefix: copy leading `0`'s; on the first `1`, eliminate
 the run via `del`.
@@ -63,9 +63,9 @@ def out : Str → Str
   | false :: t => false :: out t
   | true :: t => del t
 
-@[simp] theorem out_nil : out [] = [] := rfl
-@[simp] theorem out_false (t : Str) : out (false :: t) = false :: out t := rfl
-@[simp] theorem out_true (t : Str) : out (true :: t) = del t := rfl
+@[simp] theorem out_nil : out [] = [] := by rfl
+@[simp] theorem out_false (t : Str) : out (false :: t) = false :: out t := by rfl
+@[simp] theorem out_true (t : Str) : out (true :: t) = del t := by rfl
 
 /-- `del` only grows under extension: `del s <+: del (s ++ t)`. -/
 theorem del_append (s t : Str) : del s <+: del (s ++ t) := by

@@ -38,7 +38,7 @@ via Fourier transform.
 - `freePropagator_pos`, `freePropagator_bounded`: Propagator is positive and bounded
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real Filter
 open TopologicalSpace
@@ -112,7 +112,7 @@ variable {m : ℝ} [Fact (0 < m)]
 /-- The free propagator in momentum space: 1/(k² + m²)
     This is the Fourier transform of the free covariance
 -/
-def freePropagatorMomentum (m : ℝ) (k : SpaceTime) : ℝ :=
+@[expose] def freePropagatorMomentum (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / (‖k‖^2 + m^2)
 
 /-- The free propagator is an even function: it depends only on ‖k‖. -/
@@ -124,7 +124,7 @@ lemma freePropagator_even (m : ℝ) (k : SpaceTime) :
     When using Mathlib's Fourier transform convention, the propagator acquires (2π)² factors.
     This is `P_mathlib(k) = 1/((2π)²‖k‖² + m²)` which equals `P_phys(2πk)`.
 -/
-noncomputable def freePropagatorMomentumMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
+@[expose] noncomputable def freePropagatorMomentumMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / ((2 * Real.pi)^2 * ‖k‖^2 + m^2)
 
 /-- The Mathlib propagator is positive for m > 0. -/
@@ -151,7 +151,7 @@ lemma freePropagatorMomentum_mathlib_nonneg (m : ℝ) (hm : 0 < m) (k : SpaceTim
     We realise this as the real part of a complex Fourier integral with the
     standard 2π-normalisation.
 -/
-noncomputable def freeCovarianceRegulated (α : ℝ) (m : ℝ) (x y : SpaceTime) : ℝ :=
+@[expose] noncomputable def freeCovarianceRegulated (α : ℝ) (m : ℝ) (x y : SpaceTime) : ℝ :=
   let normalisation : ℝ := (2 * Real.pi) ^ STDimension
   let regulator : SpaceTime → ℝ := fun k => Real.exp (-α * ‖k‖^2)
   let phase : SpaceTime → ℂ := fun k =>
@@ -219,7 +219,7 @@ noncomputable def schwingerGaussian (α t : ℝ) (m : ℝ) (k : SpaceTime) : ℝ
     This is the Fourier transform of the Gaussian exp(-t·k²).
     Named with PositionSpace suffix to distinguish from momentum-space version.
 -/
-noncomputable def heatKernelPositionSpace (t : ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def heatKernelPositionSpace (t : ℝ) (r : ℝ) : ℝ :=
   (4 * Real.pi * t) ^ (-(STDimension : ℝ) / 2) * Real.exp (-r^2 / (4 * t))
 
 /-- For d = 4, the heat kernel simplifies to 1/(16π²t²) · exp(-r²/(4t)). -/
@@ -389,7 +389,7 @@ theorem heatKernelPositionSpace_integral_eq_one (t : ℝ) (ht : 0 < t) :
 /-- The Schwinger representation of the position-space covariance.
     This expresses C(r) as a 1D integral over proper time.
 -/
-noncomputable def covarianceSchwingerRep (m : ℝ) (r : ℝ) : ℝ :=
+@[expose] noncomputable def covarianceSchwingerRep (m : ℝ) (r : ℝ) : ℝ :=
   ∫ t in Set.Ioi 0, Real.exp (-t * m^2) * heatKernelPositionSpace t r
 
 /-- In 4D, the Schwinger representation of the covariance equals:
@@ -440,7 +440,7 @@ theorem covarianceSchwingerRep_eq_besselFormula (m r : ℝ) (hm : 0 < m) (hr : 0
     This is the explicit formula for the massive scalar field propagator in 4D.
     The formula is valid for x ≠ y and m > 0.
 -/
-noncomputable def freeCovarianceBessel (m : ℝ) (x y : SpaceTime) : ℝ :=
+@[expose] noncomputable def freeCovarianceBessel (m : ℝ) (x y : SpaceTime) : ℝ :=
   let r := ‖x - y‖
   if r = 0 then 0  -- Undefined at coincident points; regularize to 0
   else (m / (4 * Real.pi^2 * r)) * besselK1 (m * r)
@@ -1610,7 +1610,7 @@ theorem freeCovariance_regulated_bilinear_integrable (α : ℝ) (hα : 0 < α) (
   exact Integrable.mono' hbound_int hmeas hnorm
 
 /-- The free covariance kernel (alternative name for compatibility) -/
-noncomputable def freeCovarianceKernel (m : ℝ) (z : SpaceTime) : ℝ :=
+@[expose] noncomputable def freeCovarianceKernel (m : ℝ) (z : SpaceTime) : ℝ :=
   freeCovariance m 0 z
 
 /-- The Bessel covariance kernel is L¹ (integrable on SpaceTime).
@@ -1969,7 +1969,7 @@ noncomputable def momentumWeight (m : ℝ) (k : SpaceTime) : ℝ :=
 /-- The weight function in momentum space (Mathlib convention): 1 / ((2π)²‖k‖² + m²)
     This is the correct weight to use with Mathlib's Fourier transform.
 -/
-noncomputable def momentumWeightMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
+@[expose] noncomputable def momentumWeightMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
   freePropagatorMomentumMathlib m k
 
 /-- The square root of the weight function (physics convention). -/

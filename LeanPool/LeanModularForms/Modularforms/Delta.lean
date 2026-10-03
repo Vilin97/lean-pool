@@ -21,7 +21,7 @@ import Mathlib.Analysis.Normed.Group.Tannery
 /-! # Delta -/
 
 
-@[expose] public section
+public section
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups
@@ -34,7 +34,7 @@ noncomputable section Definitions
 
 /- The discriminant form -/
 /-- The modular discriminant `Δ` on the upper half-plane, via its product expansion. -/
-def Δ (z : UpperHalfPlane) := cexp (2 * π * Complex.I * z) * ∏' (n : ℕ),
+@[expose] def Δ (z : UpperHalfPlane) := cexp (2 * π * Complex.I * z) * ∏' (n : ℕ),
     (1 - cexp (2 * π * Complex.I * (n + 1) * z)) ^ 24
 
 lemma DiscriminantProductFormula (z : ℍ) : Δ z = cexp (2 * π * Complex.I * z) * ∏' (n : ℕ+),
@@ -314,6 +314,7 @@ lemma Discriminant_zeroAtImInfty :
   · apply Delta_boundedfactor
 
 /-- The modular discriminant as a weight-12 cusp form on `SL(2, ℤ)`. -/
+@[expose]
 def Delta : CuspForm (CongruenceSubgroup.Gamma 1) 12 where
   toFun := DiscriminantSIF
   slash_action_eq' := DiscriminantSIF.slash_action_eq'
@@ -408,7 +409,7 @@ theorem div_Delta_is_SIF (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k)
   ring
 
 /-- Divides a weight-`k` cusp form by `Δ` to obtain a weight-`(k - 12)` modular form. -/
-def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k) :
+@[expose] def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k) :
   ModularForm (CongruenceSubgroup.Gamma 1) (k - 12) where
     toFun := f / Delta
     slash_action_eq' := fun γ hγ => div_Delta_is_SIF _ _ γ hγ
@@ -467,7 +468,9 @@ def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1)
       · simp_all
 
 lemma CuspForm_div_Discriminant_apply (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k)
-    (z : ℍ) : (CuspFormDivDiscriminant k f) z = f z / Δ z := rfl
+    (z : ℍ) : (CuspFormDivDiscriminant k f) z = f z / Δ z := by
+  change f z / Delta z = f z / Δ z
+  rw [Delta_apply]
 
 theorem CuspForm_div_Discriminant_Add (k : ℤ) (x y : CuspForm (CongruenceSubgroup.Gamma 1) k) :
   (fun f ↦ CuspFormDivDiscriminant k f) (x + y) =

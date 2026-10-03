@@ -30,7 +30,7 @@ The relational-core collapse lemma `exists_eq_constTerm` (every closed term is a
 included — it drives the later term-model plumbing.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -57,7 +57,7 @@ theorem exists_eq_constTerm [L.IsRelational] (t : L[[ℕ]].Term Empty) :
 /-! ## Seeds -/
 
 /-- A constant as a term inside a sentence (`Empty ⊕ Fin 0` variable context). -/
-def constTermS (c : ℕ) : L[[ℕ]].Term (Empty ⊕ Fin 0) :=
+@[expose] def constTermS (c : ℕ) : L[[ℕ]].Term (Empty ⊕ Fin 0) :=
   Term.func (Sum.inr c : L[[ℕ]].Functions 0) Fin.elim0
 
 /-- The closed constant `constTerm a`, relabeled into the sentence-term context, is
@@ -71,11 +71,11 @@ theorem constTerm_relabel_inl (a : ℕ) :
   exact i.elim0
 
 /-- The constant equality `c_a = c_b`. -/
-def constEq (a b : ℕ) : L[[ℕ]].Sentenceω :=
+@[expose] def constEq (a b : ℕ) : L[[ℕ]].Sentenceω :=
   BoundedFormulaω.equal (constTermS a) (constTermS b)
 
 /-- The atomic relation instance `R(c_{g 0}, …)`. -/
-def relInst {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) : L[[ℕ]].Sentenceω :=
+@[expose] def relInst {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) : L[[ℕ]].Sentenceω :=
   BoundedFormulaω.rel (Sum.inl R : L[[ℕ]].Relations l) (fun i => constTermS (g i))
 
 /-- The seed: the two roots, all constant equalities, all constant atomic relation instances. -/

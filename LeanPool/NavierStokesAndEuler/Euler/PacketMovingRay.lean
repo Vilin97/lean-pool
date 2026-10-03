@@ -11,7 +11,7 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 
 /-! The physical ray ODE in the actual normalized moving frame. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,7 +46,7 @@ theorem movingRayRate_identity (B M : Space →L[ℝ] Space) (p q x : Space)
   ring
 
 /-- Moving ray, given by `⟪normalizedFrame m v t i,r t⟫_ℝ`. -/
-def movingRay (m v r : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
+@[expose] def movingRay (m v r : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
   ⟪normalizedFrame m v t i,r t⟫_ℝ
 
 /-- The actual moving-coordinate ray obeys `-(M-S)ᵀ`, with the skew

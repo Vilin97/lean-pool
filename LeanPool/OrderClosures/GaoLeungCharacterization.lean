@@ -21,7 +21,7 @@ ambient Banach lattice.  The row-limit sublattice then separates uo-adherence
 from order adherence.
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

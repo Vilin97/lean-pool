@@ -23,7 +23,7 @@ greedy process. The formal proof instead uses the deterministic pessimistic-esti
 `BKLOSelection`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

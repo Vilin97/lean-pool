@@ -17,7 +17,7 @@ only inputs here are its sublinearity, measurability, weak `(1,1)` estimate,
 and global `(2,2)` estimate.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology Convolution
 
@@ -31,6 +31,7 @@ namespace CKN.Foundation.Euclidean
 open CKN.Foundation.Parabolic
 
 /-- The explicit integral constant furnished by weak-to-strong interpolation. -/
+@[expose]
 def rieszSecondInterpolationConstant (A₁ A₂ p : ℝ) : ℝ :=
   p * (2 ^ p * (A₁ / (p - 1) + A₂ ^ 2 / (2 - p)))
 

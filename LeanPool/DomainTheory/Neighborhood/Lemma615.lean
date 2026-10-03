@@ -75,7 +75,7 @@ development is
 **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -86,6 +86,7 @@ variable {α β : Type*} {D : NeighborhoodSystem α} {E : NeighborhoodSystem β}
 /-- **Scott's `⊴` (the prose before Lemma 6.15).** `D ⊴ E` means `D ≅ D'` for some
 subdomain
 `D' ◁ E`: `D` *embeds as a subdomain* of `E`. -/
+@[expose]
 def Trianglelefteq (D : NeighborhoodSystem α) (E : NeighborhoodSystem β) : Prop :=
   ∃ D' : NeighborhoodSystem β, D' ◁ E ∧ (D ≅ᴰ D')
 

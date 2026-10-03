@@ -17,7 +17,7 @@ line arrangement and extracts the resulting simple polygonal cycle. Shared abstr
 literally the same replacement arc, so adjacent face fillings will have identical boundaries.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -112,7 +112,7 @@ noncomputable def faceBoundaryRight (t : K.Face)
     (fun i => G.vertexImage (K.faceVertex t i)) p
 
 /-- The union of the three complete replacement-edge carriers around one intrinsic face. -/
-def faceReplacementCarrier (t : K.Face) : Set Plane :=
+@[expose] def faceReplacementCarrier (t : K.Face) : Set Plane :=
   ⋃ i : ZMod 3,
     (faceReplacementArc (G := G) t i
       |>.completeCarrier)

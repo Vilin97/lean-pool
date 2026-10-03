@@ -39,7 +39,7 @@ uniformly for every `k1, k2` (no case split needed: `Function.update`'s value
 when `k1 + k2 = 0`, AND the generic case, `= 0`, matching what the naive product already gives).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Filter Topology Set

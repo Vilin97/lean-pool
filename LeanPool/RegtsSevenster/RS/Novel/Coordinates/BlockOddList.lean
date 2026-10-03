@@ -17,7 +17,7 @@ Definition 5 value map over the block-slot flag enumeration,
 entry by entry.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -18,7 +18,7 @@ any consistent rational system. Its real extension allows approximation
 by rational solutions while retaining open inequalities.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

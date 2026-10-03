@@ -18,7 +18,7 @@ the change-of-basepoint transport used when the monochromatic run begins away
 from the marked base.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -140,6 +140,61 @@ private theorem null_path_tail_read
   have hq := eq_inv_of_mul_eq_one_right h
   rw [L.symmPathRead_toPath] at hq
   simpa [symmLabel_eq_allArrowLabel_oriented] using hq
+
+private theorem package_removed_marked_graph
+    {W : Type} [Fintype W] [qW : Quiver.{0, 0} W]
+    [hW : HasInvolutiveReverse W]
+    [hHomW : ∀ a b : W, Fintype (@Quiver.Hom W qW a b)]
+    {n bound : ℕ}
+    (N : MarkedBinaryGraph (G := G) (H := H) (V := W) n)
+    {w : W} (hbase : N.base ≠ w) (color : Bool)
+    (hmono : MonochromaticVertex N.labeling w color)
+    (hcard : Fintype.card (RemovedVertex w) < bound)
+    (hrem : HasRemovedMarkedGraph N hbase color hmono) :
+    ∃ U : Type,
+      ∃ hFU : Fintype U,
+      ∃ qU : Quiver.{0, 0} U,
+      ∃ hU : @HasInvolutiveReverse U qU,
+      ∃ hHomU : ∀ a b : U, Fintype (@Quiver.Hom U qU a b),
+        letI : Fintype U := hFU
+        letI : Quiver U := qU
+        letI : HasInvolutiveReverse U := hU
+        letI (a b : U) : Fintype (a ⟶ b) := hHomU a b
+        ∃ N' : @MarkedBinaryGraph G H U _ _ qU hU n,
+          Fintype.card U < bound ∧
+          @ReverseFree U qU hU ∧
+          @MarkedBinaryGraph.IsGenerating n G H U _ _ qU hU N' ∧
+          @MarkedBinaryGraph.WeaklyConnected n G H U _ _ qU hU N' ∧
+          Fintype.card (@AllArrow U qU) ≤
+            2 * (n + Fintype.card U - 1) := by
+  unfold HasRemovedMarkedGraph at hrem
+  obtain ⟨eₐ, haₐ, hnₐ, hdata⟩ := hrem
+  obtain ⟨hgenₐ, hconnₐ, hfreeₐ, hEulerₐ, _⟩ := hdata
+  refine ⟨RemovedVertex w, removedVertexFintype w,
+    removeQuiver eₐ hnₐ, removeHasReverse eₐ hnₐ,
+    (fun x y => removeQuiverHomFintype eₐ hnₐ x y), ?_⟩
+  refine ⟨removedMarkedGraph N hbase eₐ haₐ hnₐ color hmono,
+    ?_, ?_, ?_, ?_, ?_⟩
+  · exact hcard
+  · exact hfreeₐ
+  · exact hgenₐ
+  · exact hconnₐ
+  · have hcardEdges :
+        @Fintype.card (@AllArrow (RemovedVertex w) (removeQuiver eₐ hnₐ))
+          (@allArrowFintype (RemovedVertex w) (removedVertexFintype w)
+            (removeQuiver eₐ hnₐ)
+            (fun a b => removeQuiverHomFintype eₐ hnₐ a b)) =
+        @Fintype.card (@AllArrow (RemovedVertex w) (removeQuiver eₐ hnₐ))
+          (removedAllArrowFintype eₐ hnₐ) := by
+          exact @Fintype.card_congr
+            (@AllArrow (RemovedVertex w) (removeQuiver eₐ hnₐ))
+            (@AllArrow (RemovedVertex w) (removeQuiver eₐ hnₐ))
+            (@allArrowFintype (RemovedVertex w) (removedVertexFintype w)
+              (removeQuiver eₐ hnₐ)
+              (fun a b => removeQuiverHomFintype eₐ hnₐ a b))
+            (removedAllArrowFintype eₐ hnₐ)
+            (Equiv.refl _)
+    exact hcardEdges.le.trans hEulerₐ
 
 theorem exists_reduced_graph_of_minimal_null_path
     {V : Type} [Fintype V] [qV : Quiver.{0, 0} V]
@@ -289,11 +344,7 @@ theorem exists_reduced_graph_of_minimal_null_path
     foldQuiverHomFintype e₁ x y
   have hrem := exists_removed_of_unfold_fold
     (M := Mroot) e₀ ha₀ hb₀ e₁ hfree hEuler
-  dsimp only at hrem
   have hrem' := hrem ha₁ q₁ hq₁ hgen₁ hconn₁
-  unfold HasRemovedMarkedGraph at hrem'
-  obtain ⟨eₐ, haₐ, hnₐ, hdata⟩ := hrem'
-  obtain ⟨hgenₐ, hconnₐ, hfreeₐ, hEulerₐ, hcardₐ⟩ := hdata
   let vFold : foldVertex (unfoldNew (allArrowSource e₀))
       (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
         (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀)) :=
@@ -305,11 +356,7 @@ theorem exists_reduced_graph_of_minimal_null_path
         (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
           (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) <
         Fintype.card (UnfoldVertex (allArrowSource e₀)) := hcard₁
-    have hremoved : Fintype.card (RemovedVertex vFold) <
-        Fintype.card (foldVertex (unfoldNew (allArrowSource e₀))
-          (unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
-            (show V from r.target) (unfoldEdgeColor Mroot.labeling e₀))) :=
-      hcardₐ
+    have hremoved := removedVertex_card_add_one vFold
     omega
   have holdb : unfoldOld (allArrowSource e₀) ≠
       unfoldVertexAt Mroot.labeling (allArrowSource e₀) e₀
@@ -330,15 +377,17 @@ theorem exists_reduced_graph_of_minimal_null_path
     apply unfoldNew_ne_old (allArrowSource e₀)
     exact foldVertexMk_eq_of_not_eq h
       (unfoldOld_ne_new (allArrowSource e₀)) holdb
-  refine ⟨RemovedVertex vFold, removedVertexFintype vFold,
-    removeQuiver eₐ hnₐ, removeHasReverse eₐ hnₐ,
-    (fun x y => removeQuiverHomFintype eₐ hnₐ x y), ?_⟩
-  refine ⟨removedMarkedGraph Nfold hbaseFold eₐ haₐ hnₐ
-      (unfoldEdgeColor Mroot.labeling e₀)
-      (by
-        intro e he
-        exact foldedUnfoldOld_incident_color Mroot e₀ ha₀ hb₀ e₁ e he),
-    hcardU, hfreeₐ, hgenₐ, hconnₐ, hEulerₐ⟩
+  have hmonoFold : MonochromaticVertex Nfold.labeling vFold
+      (unfoldEdgeColor Mroot.labeling e₀) := by
+    intro e he
+    dsimp [Nfold, vFold]
+    exact foldedUnfoldOld_incident_color Mroot e₀ ha₀ hb₀ e₁ e he
+  have hremFold : HasRemovedMarkedGraph Nfold hbaseFold
+      (unfoldEdgeColor Mroot.labeling e₀) hmonoFold := by
+    exact hrem'
+  exact package_removed_marked_graph (N := Nfold) (w := vFold)
+    (bound := Fintype.card V) hbaseFold
+    (unfoldEdgeColor Mroot.labeling e₀) hmonoFold hcardU hremFold
 
 theorem hasReducedNullFold :
     HasReducedNullFold (G := G) (H := H) := by

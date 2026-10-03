@@ -25,7 +25,7 @@ The remaining graph-theoretic input is the uniform statement that the core
 vertices form a strong separator in a subdivision.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -290,6 +290,7 @@ namespace ExplicitPotential.CertificateData
 
 /-- The concrete subdivision specified by an integral point of a checked
 local cone. -/
+@[expose]
 def subdivisionSpec (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
@@ -309,6 +310,7 @@ def subdivisionDivisor (certificate : ExplicitPotential.CertificateData m n p)
   | Sum.inr _interior => 0
 
 /-- Evaluate one affine core potential at the chosen integral length point. -/
+@[expose]
 def evaluatedPotential (certificate : ExplicitPotential.CertificateData m n p)
     (anchor : Fin n) (point : Fin m → ℤ) (vertex : Fin n) : ℤ :=
   ((certificate.witness anchor).potential vertex).eval point
@@ -438,6 +440,7 @@ theorem reaches_coreVertex
     (divisor - oneChip (spec.coreVertex anchor)) script
 
 /-- The embedded core vertices of a subdivision. -/
+@[expose]
 def coreVertices (spec : SubdivisionGraph.Spec n p) : Finset spec.graph.V :=
   Finset.univ.image spec.coreVertex
 

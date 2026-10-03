@@ -11,7 +11,7 @@ public import Mathlib.Topology.Path
 # LeanPool.DirectedTopologyLean4.MonotonePath
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains lemmas about monotone paths in a preordered topological space

@@ -17,7 +17,7 @@ public import Mathlib.Data.Set.PowersetCard
 Orthogonal root kernels and the universal BGG complex used in the all-rank argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -47,7 +47,7 @@ inductive OrthogonalPositiveRoot (r n : ℕ) where
       (_ : 2 * (r + 1) ≤ t.val)
 
 /-- The orthogonal positive root derivation used in the spherical-code argument. -/
-def orthogonalPositiveRootDerivation {r n : ℕ}
+@[expose] def orthogonalPositiveRootDerivation {r n : ℕ}
     (h : 2 * (r + 1) ≤ n) :
     OrthogonalPositiveRoot r n →
       Derivation ℂ (MvPolynomial (Fin ((r + 1) * n)) ℂ)
@@ -1055,7 +1055,7 @@ open MetricCodes.Spherical.HigherYoungMaximalCartanNullSubstitutionRange
 open MetricCodes.Spherical.HigherYoungTwoRowLieIrreducibility
 
 /-- The young complex pair used in the spherical-code argument. -/
-def youngComplexPair {r n : ℕ} (lam : Fin (r + 1) → ℕ)
+@[expose] def youngComplexPair {r n : ℕ} (lam : Fin (r + 1) → ℕ)
     (p q : HarmonicYoungSpace (n := n) lam) :
     MvPolynomial (Fin ((r + 1) * n)) ℂ :=
   polynomialComplexification (p : PolynomialSpace r n) +
@@ -1602,7 +1602,7 @@ abbrev PositiveRoot (r : ℕ) :=
   {z : Fin (r + 1) × Fin (r + 1) // z.1 < z.2}
 
 /-- The positive root operator used in the spherical-code argument. -/
-def positiveRootOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
+@[expose] def positiveRootOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
   polarization r n α.val.2 α.val.1
 
@@ -1619,7 +1619,7 @@ section
 variable {α : Type*} [LinearOrder α]
 
 /-- The exterior root sign used in the spherical-code argument. -/
-def exteriorRootSign (s : Finset α) (a : α) : ℤ :=
+@[expose] def exteriorRootSign (s : Finset α) (a : α) : ℤ :=
   (-1 : ℤ) ^ (s.filter fun x => x < a).card
 
 theorem exteriorRoot_predecessorCard_erase_lt (s : Finset α) {a b : α}
@@ -1683,11 +1683,11 @@ abbrev RootWedge (r k : ℕ) :=
   {S : Finset (PositiveRoot r) // S.card = k}
 
 /-- The positive root first used in the spherical-code argument. -/
-def positiveRootFirst {r : ℕ} (α : PositiveRoot r) : Fin (r + 1) :=
+@[expose] def positiveRootFirst {r : ℕ} (α : PositiveRoot r) : Fin (r + 1) :=
   α.val.1
 
 /-- The positive root second used in the spherical-code argument. -/
-def positiveRootSecond {r : ℕ} (α : PositiveRoot r) : Fin (r + 1) :=
+@[expose] def positiveRootSecond {r : ℕ} (α : PositiveRoot r) : Fin (r + 1) :=
   α.val.2
 
 @[simp] theorem positiveRootFirst_lt_second {r : ℕ}
@@ -1699,7 +1699,7 @@ theorem positiveRootFirst_ne_second {r : ℕ} (α : PositiveRoot r) :
   ne_of_lt (positiveRootFirst_lt_second α)
 
 /-- The root charge used in the spherical-code argument. -/
-def rootCharge {r : ℕ} (α : PositiveRoot r)
+@[expose] def rootCharge {r : ℕ} (α : PositiveRoot r)
     (i : Fin (r + 1)) : ℤ :=
   if i = positiveRootFirst α then 1
   else if i = positiveRootSecond α then -1
@@ -1721,7 +1721,7 @@ theorem rootCharge_eq_zero_of_ne {r : ℕ}
   simp only [rootCharge, hfirst, ↓reduceIte, hsecond]
 
 /-- The root family charge used in the spherical-code argument. -/
-def rootFamilyCharge {r : ℕ} (S : Finset (PositiveRoot r))
+@[expose] def rootFamilyCharge {r : ℕ} (S : Finset (PositiveRoot r))
     (i : Fin (r + 1)) : ℤ :=
   ∑ α ∈ S, rootCharge α i
 
@@ -1754,7 +1754,7 @@ theorem rootFamilyCharge_erase {r : ℕ}
   omega
 
 /-- The signed root weight used in the spherical-code argument. -/
-def signedRootWeight {r : ℕ}
+@[expose] def signedRootWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : Finset (PositiveRoot r))
     (i : Fin (r + 1)) : ℤ :=
@@ -1823,12 +1823,12 @@ open MetricCodes.Spherical.HigherHarmonicYoung.BGGRootComplex
 abbrev RootVector (r : ℕ) := PositiveRoot r →₀ ℝ
 
 /-- The root structure constant used in the spherical-code argument. -/
-def rootStructureConstant {r : ℕ} (α β γ : PositiveRoot r) : ℝ :=
+@[expose] def rootStructureConstant {r : ℕ} (α β γ : PositiveRoot r) : ℝ :=
   (if α.val.1 = β.val.2 ∧ γ.val = (β.val.1, α.val.2) then 1 else 0) -
     (if β.val.1 = α.val.2 ∧ γ.val = (α.val.1, β.val.2) then 1 else 0)
 
 /-- The root bracket used in the spherical-code argument. -/
-def rootBracket {r : ℕ} (α β : PositiveRoot r) : RootVector r :=
+@[expose] def rootBracket {r : ℕ} (α β : PositiveRoot r) : RootVector r :=
   ∑ γ : PositiveRoot r,
     rootStructureConstant α β γ • Finsupp.single γ (1 : ℝ)
 
@@ -1982,7 +1982,7 @@ instance positiveRootLinearOrder (r : ℕ) : LinearOrder (PositiveRoot r) :=
       Subtype.ext ((finProdFinEquiv (m := r + 1) (n := r + 1)).injective h))
 
 /-- The root wedge insert used in the spherical-code argument. -/
-def rootWedgeInsert {r k : ℕ} (T : RootWedge r k)
+@[expose] def rootWedgeInsert {r k : ℕ} (T : RootWedge r k)
     (α : PositiveRoot r) (hα : α ∉ T.val) : RootWedge r (k + 1) :=
   ⟨insert α T.val, by simp only [hα, not_false_eq_true, Finset.card_insert_of_notMem, T.property]⟩
 
@@ -1991,12 +1991,12 @@ def rootWedgeInsert {r k : ℕ} (T : RootWedge r k)
     (rootWedgeInsert T α hα).val = insert α T.val := rfl
 
 /-- The real exterior root sign used in the spherical-code argument. -/
-def realExteriorRootSign {α : Type*} [LinearOrder α]
+@[expose] def realExteriorRootSign {α : Type*} [LinearOrder α]
     (S : Finset α) (a : α) : ℝ :=
   (exteriorRootSign S a : ℝ)
 
 /-- The root action boundary used in the spherical-code argument. -/
-def rootActionBoundary (r n k : ℕ) :
+@[expose] def rootActionBoundary (r n k : ℕ) :
     RootPolynomialChain r n (k + 1) →ₗ[ℝ]
       RootPolynomialChain r n k where
   toFun f T :=
@@ -2118,7 +2118,7 @@ theorem rootTransferTarget_eq {r : ℕ}
         not_false_eq_true, Function.update_of_ne]
 
 /-- The weighted positive root operator used in the spherical-code argument. -/
-def weightedPositiveRootOperator {r : ℕ} (n : ℕ)
+@[expose] def weightedPositiveRootOperator {r : ℕ} (n : ℕ)
     (μ : Fin (r + 1) → ℕ) (α : PositiveRoot r)
     (hμ : 0 < μ (positiveRootFirst α)) :
     JointHarmonicWeightSpace n μ →ₗ[ℝ]
@@ -2150,7 +2150,7 @@ def weightedPositiveRootOperator {r : ℕ} (n : ℕ)
       (p.val : PolynomialSpace r n)
 
 /-- The weighted positive root operator star used in the spherical-code argument. -/
-def weightedPositiveRootOperatorStar {r : ℕ} (n : ℕ)
+@[expose] def weightedPositiveRootOperatorStar {r : ℕ} (n : ℕ)
     (μ : Fin (r + 1) → ℕ) (α : PositiveRoot r)
     (hμ : 0 < μ (positiveRootFirst α)) :
     JointHarmonicWeightSpace n (lowerRootWeight μ α) →ₗ[ℝ]
@@ -2244,7 +2244,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root admissible insert used in the spherical-code argument. -/
-def rootAdmissibleInsert {r k : ℕ}
+@[expose] def rootAdmissibleInsert {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (T : AdmissibleRootWedge lam k)
     (α : PositiveRoot r) (hα : α ∉ T.val.val)
@@ -2320,7 +2320,7 @@ def jointHarmonicWeightCast {r : ℕ} (n : ℕ)
   rfl
 
 /-- The weighted exterior root edge used in the spherical-code argument. -/
-def weightedExteriorRootEdge {r k : ℕ}
+@[expose] def weightedExteriorRootEdge {r k : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (T : AdmissibleRootWedge lam k)
     (α : PositiveRoot r) (hα : α ∉ T.val.val)
@@ -2338,7 +2338,7 @@ def weightedExteriorRootEdge {r k : ℕ}
         (rootAdmissibleInsert_first_pos lam T α hα hadm))
 
 /-- The weighted exterior action differential used in the spherical-code argument. -/
-def weightedExteriorActionDifferential {r : ℕ}
+@[expose] def weightedExteriorActionDifferential {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam (k + 1) →ₗ[ℝ]
       RootJointHarmonicChain n lam k where
@@ -2401,7 +2401,7 @@ open ArbitraryRankMixedTraceRegularity
 attribute [local instance] MvPolynomial.weightedGradedAlgebra
 
 /-- The ideal generated by the first `k` Gram quadratic relations. -/
-def youngGramPrefixIdeal (r n k : ℕ) : Ideal (PolynomialSpace r n) :=
+@[expose] def youngGramPrefixIdeal (r n k : ℕ) : Ideal (PolynomialSpace r n) :=
   Ideal.ofList ((gramQuadraticList r n).take k)
 
 /-- The multihomogeneous weight submodule lying in the ideal of the first `k` Gram relations. -/
@@ -2971,7 +2971,7 @@ open scoped BigOperators
 open ArbitraryRankMixedTraceRegularity
 
 /-- The gram pair row degree used in the spherical-code argument. -/
-def gramPairRowDegree {r : ℕ}
+@[expose] def gramPairRowDegree {r : ℕ}
     (z : UpperGramPair r) (i : Fin (r + 1)) : ℕ :=
   (if z.val.1 = i then 1 else 0) +
     (if z.val.2 = i then 1 else 0)
@@ -2983,7 +2983,7 @@ theorem gramPairRowDegree_eq_youngGramPairDegree {r : ℕ}
   simp only [gramPairRowDegree, eq_comm, youngGramPairDegree, Pi.add_apply, Pi.single_apply]
 
 /-- The gram family row degree used in the spherical-code argument. -/
-def gramFamilyRowDegree {r : ℕ}
+@[expose] def gramFamilyRowDegree {r : ℕ}
     (s : Finset (UpperGramPair r)) (i : Fin (r + 1)) : ℕ :=
   ∑ z ∈ s, gramPairRowDegree z i
 
@@ -2995,7 +2995,7 @@ def gramFamilyRowDegree {r : ℕ}
   simp only [gramFamilyRowDegree, hz, not_false_eq_true, Finset.sum_insert]
 
 /-- The shifted young ambient coefficient used in the spherical-code argument. -/
-def shiftedYoungAmbientCoefficient {r : ℕ}
+@[expose] def shiftedYoungAmbientCoefficient {r : ℕ}
     (n : ℕ) (lam delta : Fin (r + 1) → ℕ) : ℕ :=
   ∏ i : Fin (r + 1),
     if delta i ≤ lam i then
@@ -3034,7 +3034,7 @@ theorem shiftedYoungAmbientCoefficient_add {r n : ℕ}
   · rw [ite_eq_right (mt hiff.mp h), ite_eq_right h]
 
 /-- The gram koszul coefficient used in the spherical-code argument. -/
-def gramKoszulCoefficient {r : ℕ}
+@[expose] def gramKoszulCoefficient {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (s : Finset (UpperGramPair r)) : ℤ :=
   ∑ t ∈ s.powerset,
@@ -3110,7 +3110,7 @@ theorem gramKoszulCoefficient_insert {r n : ℕ}
     rw [hsum, add_zero]
 
 /-- The full gram koszul coefficient used in the spherical-code argument. -/
-def fullGramKoszulCoefficient {r : ℕ}
+@[expose] def fullGramKoszulCoefficient {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℤ :=
   gramKoszulCoefficient n lam (Finset.univ : Finset (UpperGramPair r))
 
@@ -3243,19 +3243,19 @@ theorem finrank_youngGramPrefixWeightQuotient_eq_gramKoszulCoefficient_of_recurr
           · rfl
 
 /-- The weyl shift used in the spherical-code argument. -/
-def weylShift {r : ℕ} (lam : Fin (r + 1) → ℕ)
+@[expose] def weylShift {r : ℕ} (lam : Fin (r + 1) → ℕ)
     (σ : Equiv.Perm (Fin (r + 1))) (i : Fin (r + 1)) : ℤ :=
   (lam i : ℤ) - (i.val : ℤ) + ((σ i).val : ℤ)
 
 /-- The signed full gram koszul coefficient used in the spherical-code argument. -/
-def signedFullGramKoszulCoefficient {r : ℕ}
+@[expose] def signedFullGramKoszulCoefficient {r : ℕ}
     (n : ℕ) (mu : Fin (r + 1) → ℤ) : ℤ :=
   if ∀ i, 0 ≤ mu i then
     fullGramKoszulCoefficient n (fun i => (mu i).toNat)
   else 0
 
 /-- The alternating gram koszul coefficient used in the spherical-code argument. -/
-def alternatingGramKoszulCoefficient {r : ℕ}
+@[expose] def alternatingGramKoszulCoefficient {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℤ :=
   ∑ σ : Equiv.Perm (Fin (r + 1)),
     (Equiv.Perm.sign σ : ℤ) *
@@ -3600,7 +3600,7 @@ theorem bgg_range_eq_ker_of_fischerCore_hodgeLaplacian_injective
   simpa only [← hd, ← he] using hinj
 
 /-- The signed joint harmonic weight dimension used in the spherical-code argument. -/
-def signedJointHarmonicWeightDimension {r : ℕ}
+@[expose] def signedJointHarmonicWeightDimension {r : ℕ}
     (n : ℕ) (mu : Fin (r + 1) → ℤ) : ℤ :=
   if _h : ∀ i, 0 ≤ mu i then
     (Module.finrank ℝ
@@ -3650,7 +3650,7 @@ open scoped BigOperators
 open scoped InnerProductSpace
 
 /-- The inner product core on a finite product, obtained by summing the component Fischer cores. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def finitePiFischerCore {ι : Type*} [Fintype ι]
     (V : ι → Type*)
     [∀ i, AddCommGroup (V i)] [∀ i, Module ℝ (V i)]
@@ -3688,7 +3688,7 @@ def finitePiFischerCore {ι : Type*} [Fintype ι]
       hsum i (Finset.mem_univ i)
 
 /-- The finite fischer root laplacian used in the spherical-code argument. -/
-def finiteFischerRootLaplacian {ι V : Type*}
+@[expose] def finiteFischerRootLaplacian {ι V : Type*}
     [Fintype ι]
     [AddCommGroup V] [Module ℝ V]
     (W : ι → Type*)
@@ -3778,7 +3778,7 @@ abbrev ActivePositiveRoot {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
   {α : PositiveRoot r // 0 < lam (positiveRootSecond α)}
 
 /-- The active root base weight used in the spherical-code argument. -/
-def activeRootBaseWeight {r : ℕ}
+@[expose] def activeRootBaseWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (α : ActivePositiveRoot lam) :
     Fin (r + 1) → ℕ :=
   Function.update lam (positiveRootSecond α.val)
@@ -3798,7 +3798,7 @@ def activeRootBaseWeight {r : ℕ}
       Function.update_of_ne]
 
 /-- The active root raised weight used in the spherical-code argument. -/
-def activeRootRaisedWeight {r : ℕ}
+@[expose] def activeRootRaisedWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (α : ActivePositiveRoot lam) :
     Fin (r + 1) → ℕ :=
   Function.update (activeRootBaseWeight lam α)
@@ -3806,7 +3806,7 @@ def activeRootRaisedWeight {r : ℕ}
     (activeRootBaseWeight lam α (positiveRootFirst α.val) + 1)
 
 /-- The active positive root raise used in the spherical-code argument. -/
-def activePositiveRootRaise {r : ℕ}
+@[expose] def activePositiveRootRaise {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (α : ActivePositiveRoot lam) :
     JointHarmonicWeightSpace n lam →ₗ[ℝ]
@@ -3835,7 +3835,7 @@ def activePositiveRootRaise {r : ℕ}
       (positiveRootSecond α.val)) c (p.val : PolynomialSpace r n)
 
 /-- The active positive root lower used in the spherical-code argument. -/
-def activePositiveRootLower {r : ℕ}
+@[expose] def activePositiveRootLower {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (α : ActivePositiveRoot lam) :
     JointHarmonicWeightSpace n (activeRootRaisedWeight lam α) →ₗ[ℝ]
@@ -3994,7 +3994,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root joint harmonic chain fischer core component. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def rootJointHarmonicChainFischerCore {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     InnerProductSpace.Core ℝ (RootJointHarmonicChain n lam k) :=
@@ -4041,7 +4041,7 @@ theorem rootWedgeWeight_degree_zero {r : ℕ}
     Int.toNat_natCast]
 
 /-- The root joint harmonic degree zero equiv used in the spherical-code argument. -/
-def rootJointHarmonicDegreeZeroEquiv {r : ℕ}
+@[expose] def rootJointHarmonicDegreeZeroEquiv {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     RootJointHarmonicChain n lam 0 ≃ₗ[ℝ]
       JointHarmonicWeightSpace n lam :=
@@ -4053,7 +4053,7 @@ def rootJointHarmonicDegreeZeroEquiv {r : ℕ}
           (JointHarmonicWeightSpace n lam))
 
 /-- The root degree zero positive cochain used in the spherical-code argument. -/
-def rootDegreeZeroPositiveCochain {r : ℕ}
+@[expose] def rootDegreeZeroPositiveCochain {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) :
     RootJointHarmonicChain n lam 0 →ₗ[ℝ]
       (∀ α : ActivePositiveRoot lam,
@@ -4918,14 +4918,14 @@ theorem signedJointHarmonicWeightDimension_signedRootWeight
   rfl
 
 /-- The root exterior euler characteristic used in the spherical-code argument. -/
-def rootExteriorEulerCharacteristic {r : ℕ}
+@[expose] def rootExteriorEulerCharacteristic {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℤ :=
   ∑ k ∈ Finset.range (Fintype.card (PositiveRoot r) + 1),
     (-1 : ℤ) ^ k *
       (Module.finrank ℝ (RootJointHarmonicChain n lam k) : ℤ)
 
 /-- The root family euler characteristic used in the spherical-code argument. -/
-def rootFamilyEulerCharacteristic {r : ℕ}
+@[expose] def rootFamilyEulerCharacteristic {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℤ :=
   ∑ S : Finset (PositiveRoot r),
     (-1 : ℤ) ^ S.card *
@@ -5036,7 +5036,7 @@ theorem rootAction_injective {r n : ℕ}
   simpa only [rootAction_X_coefficient] using hcoeff
 
 /-- The root vector bracket used in the spherical-code argument. -/
-def rootVectorBracket {r : ℕ} (x y : RootVector r) : RootVector r :=
+@[expose] def rootVectorBracket {r : ℕ} (x y : RootVector r) : RootVector r :=
   Finsupp.linearCombination ℝ
     (fun α : PositiveRoot r =>
       Finsupp.linearCombination ℝ (rootBracket α) y) x
@@ -5145,7 +5145,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root bracket boundary coefficient used in the spherical-code argument. -/
-def rootBracketBoundaryCoefficient {r k : ℕ}
+@[expose] def rootBracketBoundaryCoefficient {r k : ℕ}
     (S : RootWedge r (k + 1)) (T : RootWedge r k) : ℝ := by
   classical
   exact ∑ α ∈ S.val, ∑ β ∈ S.val.erase α,
@@ -5161,7 +5161,7 @@ def rootBracketBoundaryCoefficient {r k : ℕ}
     else 0
 
 /-- The root wedge singleton used in the spherical-code argument. -/
-def rootWedgeSingleton {r : ℕ} (α : PositiveRoot r) : RootWedge r 1 :=
+@[expose] def rootWedgeSingleton {r : ℕ} (α : PositiveRoot r) : RootWedge r 1 :=
   ⟨{α}, by simp only [Finset.card_singleton]⟩
 
 /-- The root bracket boundary used in the spherical-code argument. -/
@@ -5198,7 +5198,7 @@ def rootBracketBoundary (r n k : ℕ) :
     Finset.erase_eq_of_notMem, insert_empty_eq, true_and, Finset.sum_empty]
 
 /-- The root chevalley eilenberg boundary used in the spherical-code argument. -/
-def rootChevalleyEilenbergBoundary (r n k : ℕ) :
+@[expose] def rootChevalleyEilenbergBoundary (r n k : ℕ) :
     RootPolynomialChain r n (k + 1) →ₗ[ℝ]
       RootPolynomialChain r n k :=
   rootActionBoundary r n k + rootBracketBoundary r n k
@@ -5416,7 +5416,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The weighted chevalley eilenberg differential used in the spherical-code argument. -/
-def weightedChevalleyEilenbergDifferential {r : ℕ}
+@[expose] def weightedChevalleyEilenbergDifferential {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam (k + 1) →ₗ[ℝ]
       RootJointHarmonicChain n lam k :=

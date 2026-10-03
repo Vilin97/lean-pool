@@ -21,7 +21,7 @@ These formulas are used by the concrete common-level middle-prism constructor fo
 relative collar.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -93,6 +93,7 @@ noncomputable def maximalCoordinateReindexLinear
 
 /-- One coordinate of the realization chart of a strict simplex, as a linear functional of its
 barycentric coordinates. -/
+@[expose]
 noncomputable def realizationCoordinateLinear
     (s : Simplex p (p - 1)) (c : BarredPermutation p) :
     (Fin (p - 1 + 1) → Real) →ₗ[Real] Real where

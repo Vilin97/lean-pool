@@ -18,7 +18,7 @@ public import Mathlib.Tactic.FinCases
 * `GerverSofa.KernelOnly.PartB.Semantics.Batch002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,7 +36,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.CellCache`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,7 +50,7 @@ It contains only exact rational interval data, so all 64 diagnostic and
 production rows can be kernel-reduced without rebuilding semantic layers.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 namespace PartB
@@ -58,29 +58,35 @@ namespace PartB
 open RatInterval
 
 /-- Exact target `0.171` used by the continuum theorem. -/
+@[expose]
 def targetQ : ℚ := 171 / 1000
 
 /-- The 64 closed mesh cells determined by the 65 nodes `iπ/128`. -/
 abbrev Cell := Fin 64
 
 /-- Exact rational mesh coefficient. -/
+@[expose]
 def nodeCoeff (i : Nat) : ℚ := (i : ℚ) / 128
 
 /-- Hull of two rational intervals. -/
+@[expose]
 def intervalHull (a b : RatInterval) : RatInterval :=
   ⟨min a.lo b.lo, max a.hi b.hi⟩
 
 /-- Componentwise hull of two planar interval boxes. -/
+@[expose]
 def pointHull (a b : RatInterval × RatInterval) : RatInterval × RatInterval :=
   (intervalHull a.1 b.1, intervalHull a.2 b.2)
 
 /-- Exact interval enclosure of one physical time cell. -/
+@[expose]
 def cellTimeInterval (i : Cell) : RatInterval :=
   intervalHull
     (ExactReplay.scale (nodeCoeff i.1) ExactReplay.piI)
     (ExactReplay.scale (nodeCoeff (i.1 + 1)) ExactReplay.piI)
 
 /-- Exact interval evaluation of one path phase on one complete mesh cell. -/
+@[expose]
 def cellPieceInterval (j : Nat) (i : Cell) : RatInterval × RatInterval :=
   let t := cellTimeInterval i
   let k11 := ExactReplay.getI ExactReplay.fullInputBox 0
@@ -149,6 +155,7 @@ def cellPieceInterval (j : Nat) (i : Cell) : RatInterval × RatInterval :=
 
 /-- The path enclosure for a cell.  Four cells contain a switching angle and
 therefore take the hull of the two adjacent analytic phases. -/
+@[expose]
 def cellPathInterval (i : Cell) : RatInterval × RatInterval :=
   if i.1 = 0 then cellPieceInterval 1 i
   else if i.1 = 1 then pointHull (cellPieceInterval 1 i) (cellPieceInterval 2 i)
@@ -161,6 +168,7 @@ def cellPathInterval (i : Cell) : RatInterval × RatInterval :=
   else cellPieceInterval 5 i
 
 /-- Exact interval image of `Gu` on one product cell. -/
+@[expose]
 def guCellInterval (i j : Cell) : RatInterval :=
   let xi := cellPathInterval i
   let xj := cellPathInterval j
@@ -173,6 +181,7 @@ def guCellInterval (i j : Cell) : RatInterval :=
     (RatInterval.mul dy s)
 
 /-- Exact interval image of `Gv` on one product cell. -/
+@[expose]
 def gvCellInterval (i j : Cell) : RatInterval :=
   let xi := cellPathInterval i
   let xj := cellPathInterval j
@@ -201,15 +210,17 @@ Each table is checked against the original evaluator by the Lean kernel.
 Sharing these evaluations avoids repeating the same Taylor computations in every row.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 
 /-- Reconstruct a natural number from base-10³⁵ chunks to share decimal elaboration. -/
+@[expose]
 def naturalFromChunks (chunks : List ℕ) : ℕ :=
   chunks.foldl (fun value digit => value * 10 ^ 35 + digit) 0
 
 /-- The exact cached path-coordinate pair for cell 0, sharing kernel reduction. -/
+@[expose]
 def cachedPath00 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -260,6 +271,7 @@ def cachedPath00 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 1, sharing kernel reduction. -/
+@[expose]
 def cachedPath01 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -315,6 +327,7 @@ def cachedPath01 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 2, sharing kernel reduction. -/
+@[expose]
 def cachedPath02 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -370,6 +383,7 @@ def cachedPath02 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 3, sharing kernel reduction. -/
+@[expose]
 def cachedPath03 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -425,6 +439,7 @@ def cachedPath03 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 4, sharing kernel reduction. -/
+@[expose]
 def cachedPath04 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -480,6 +495,7 @@ def cachedPath04 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 5, sharing kernel reduction. -/
+@[expose]
 def cachedPath05 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -535,6 +551,7 @@ def cachedPath05 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 6, sharing kernel reduction. -/
+@[expose]
 def cachedPath06 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -590,6 +607,7 @@ def cachedPath06 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 7, sharing kernel reduction. -/
+@[expose]
 def cachedPath07 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -645,6 +663,7 @@ def cachedPath07 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 8, sharing kernel reduction. -/
+@[expose]
 def cachedPath08 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -700,6 +719,7 @@ def cachedPath08 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 9, sharing kernel reduction. -/
+@[expose]
 def cachedPath09 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -755,6 +775,7 @@ def cachedPath09 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 10, sharing kernel reduction. -/
+@[expose]
 def cachedPath10 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -810,6 +831,7 @@ def cachedPath10 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 11, sharing kernel reduction. -/
+@[expose]
 def cachedPath11 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -865,6 +887,7 @@ def cachedPath11 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 12, sharing kernel reduction. -/
+@[expose]
 def cachedPath12 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -920,6 +943,7 @@ def cachedPath12 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 13, sharing kernel reduction. -/
+@[expose]
 def cachedPath13 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -975,6 +999,7 @@ def cachedPath13 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 14, sharing kernel reduction. -/
+@[expose]
 def cachedPath14 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1030,6 +1055,7 @@ def cachedPath14 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 15, sharing kernel reduction. -/
+@[expose]
 def cachedPath15 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1085,6 +1111,7 @@ def cachedPath15 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 16, sharing kernel reduction. -/
+@[expose]
 def cachedPath16 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1140,6 +1167,7 @@ def cachedPath16 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 17, sharing kernel reduction. -/
+@[expose]
 def cachedPath17 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1195,6 +1223,7 @@ def cachedPath17 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 18, sharing kernel reduction. -/
+@[expose]
 def cachedPath18 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1250,6 +1279,7 @@ def cachedPath18 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 19, sharing kernel reduction. -/
+@[expose]
 def cachedPath19 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1305,6 +1335,7 @@ def cachedPath19 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 20, sharing kernel reduction. -/
+@[expose]
 def cachedPath20 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1360,6 +1391,7 @@ def cachedPath20 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 21, sharing kernel reduction. -/
+@[expose]
 def cachedPath21 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1415,6 +1447,7 @@ def cachedPath21 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 22, sharing kernel reduction. -/
+@[expose]
 def cachedPath22 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1470,6 +1503,7 @@ def cachedPath22 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 23, sharing kernel reduction. -/
+@[expose]
 def cachedPath23 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1525,6 +1559,7 @@ def cachedPath23 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 24, sharing kernel reduction. -/
+@[expose]
 def cachedPath24 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1580,6 +1615,7 @@ def cachedPath24 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 25, sharing kernel reduction. -/
+@[expose]
 def cachedPath25 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1635,6 +1671,7 @@ def cachedPath25 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 26, sharing kernel reduction. -/
+@[expose]
 def cachedPath26 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1690,6 +1727,7 @@ def cachedPath26 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 27, sharing kernel reduction. -/
+@[expose]
 def cachedPath27 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1737,6 +1775,7 @@ def cachedPath27 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 28, sharing kernel reduction. -/
+@[expose]
 def cachedPath28 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1784,6 +1823,7 @@ def cachedPath28 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 29, sharing kernel reduction. -/
+@[expose]
 def cachedPath29 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1831,6 +1871,7 @@ def cachedPath29 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 30, sharing kernel reduction. -/
+@[expose]
 def cachedPath30 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1878,6 +1919,7 @@ def cachedPath30 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 31, sharing kernel reduction. -/
+@[expose]
 def cachedPath31 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1925,6 +1967,7 @@ def cachedPath31 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 32, sharing kernel reduction. -/
+@[expose]
 def cachedPath32 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -1972,6 +2015,7 @@ def cachedPath32 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 33, sharing kernel reduction. -/
+@[expose]
 def cachedPath33 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2019,6 +2063,7 @@ def cachedPath33 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 34, sharing kernel reduction. -/
+@[expose]
 def cachedPath34 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2066,6 +2111,7 @@ def cachedPath34 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 35, sharing kernel reduction. -/
+@[expose]
 def cachedPath35 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2113,6 +2159,7 @@ def cachedPath35 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 36, sharing kernel reduction. -/
+@[expose]
 def cachedPath36 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2168,6 +2215,7 @@ def cachedPath36 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 37, sharing kernel reduction. -/
+@[expose]
 def cachedPath37 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2223,6 +2271,7 @@ def cachedPath37 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 38, sharing kernel reduction. -/
+@[expose]
 def cachedPath38 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2278,6 +2327,7 @@ def cachedPath38 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 39, sharing kernel reduction. -/
+@[expose]
 def cachedPath39 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2333,6 +2383,7 @@ def cachedPath39 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 40, sharing kernel reduction. -/
+@[expose]
 def cachedPath40 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2388,6 +2439,7 @@ def cachedPath40 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 41, sharing kernel reduction. -/
+@[expose]
 def cachedPath41 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2443,6 +2495,7 @@ def cachedPath41 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 42, sharing kernel reduction. -/
+@[expose]
 def cachedPath42 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2498,6 +2551,7 @@ def cachedPath42 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 43, sharing kernel reduction. -/
+@[expose]
 def cachedPath43 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2553,6 +2607,7 @@ def cachedPath43 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 44, sharing kernel reduction. -/
+@[expose]
 def cachedPath44 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2608,6 +2663,7 @@ def cachedPath44 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 45, sharing kernel reduction. -/
+@[expose]
 def cachedPath45 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2663,6 +2719,7 @@ def cachedPath45 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 46, sharing kernel reduction. -/
+@[expose]
 def cachedPath46 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2718,6 +2775,7 @@ def cachedPath46 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 47, sharing kernel reduction. -/
+@[expose]
 def cachedPath47 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2773,6 +2831,7 @@ def cachedPath47 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 48, sharing kernel reduction. -/
+@[expose]
 def cachedPath48 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2828,6 +2887,7 @@ def cachedPath48 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 49, sharing kernel reduction. -/
+@[expose]
 def cachedPath49 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2883,6 +2943,7 @@ def cachedPath49 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 50, sharing kernel reduction. -/
+@[expose]
 def cachedPath50 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2938,6 +2999,7 @@ def cachedPath50 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 51, sharing kernel reduction. -/
+@[expose]
 def cachedPath51 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -2993,6 +3055,7 @@ def cachedPath51 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 52, sharing kernel reduction. -/
+@[expose]
 def cachedPath52 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3048,6 +3111,7 @@ def cachedPath52 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 53, sharing kernel reduction. -/
+@[expose]
 def cachedPath53 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3103,6 +3167,7 @@ def cachedPath53 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 54, sharing kernel reduction. -/
+@[expose]
 def cachedPath54 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3158,6 +3223,7 @@ def cachedPath54 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 55, sharing kernel reduction. -/
+@[expose]
 def cachedPath55 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3213,6 +3279,7 @@ def cachedPath55 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 56, sharing kernel reduction. -/
+@[expose]
 def cachedPath56 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3268,6 +3335,7 @@ def cachedPath56 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 57, sharing kernel reduction. -/
+@[expose]
 def cachedPath57 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3323,6 +3391,7 @@ def cachedPath57 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 58, sharing kernel reduction. -/
+@[expose]
 def cachedPath58 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3378,6 +3447,7 @@ def cachedPath58 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 59, sharing kernel reduction. -/
+@[expose]
 def cachedPath59 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3433,6 +3503,7 @@ def cachedPath59 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 60, sharing kernel reduction. -/
+@[expose]
 def cachedPath60 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3488,6 +3559,7 @@ def cachedPath60 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 61, sharing kernel reduction. -/
+@[expose]
 def cachedPath61 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3543,6 +3615,7 @@ def cachedPath61 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 62, sharing kernel reduction. -/
+@[expose]
 def cachedPath62 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3598,6 +3671,7 @@ def cachedPath62 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for cell 63, sharing kernel reduction. -/
+@[expose]
 def cachedPath63 : RatInterval × RatInterval :=
   (⟨(ExactReplay.q
       (-((naturalFromChunks [
@@ -3649,6 +3723,7 @@ def cachedPath63 : RatInterval × RatInterval :=
       0]))⟩)
 
 /-- The exact cached path-coordinate pair for the selected angle cell. -/
+@[expose]
 def cachedPath (i : Cell) : RatInterval × RatInterval :=
   match i.val with
   | 0 => cachedPath00
@@ -3717,6 +3792,7 @@ def cachedPath (i : Cell) : RatInterval × RatInterval :=
   | _ => cachedPath63
 
 /-- The exact cached cosine interval for cell 0, sharing kernel reduction. -/
+@[expose]
 def cachedCosine00 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3730,6 +3806,7 @@ def cachedCosine00 : RatInterval :=
       1)⟩
 
 /-- The exact cached cosine interval for cell 1, sharing kernel reduction. -/
+@[expose]
 def cachedCosine01 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3747,6 +3824,7 @@ def cachedCosine01 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 2, sharing kernel reduction. -/
+@[expose]
 def cachedCosine02 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3764,6 +3842,7 @@ def cachedCosine02 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 3, sharing kernel reduction. -/
+@[expose]
 def cachedCosine03 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3781,6 +3860,7 @@ def cachedCosine03 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 4, sharing kernel reduction. -/
+@[expose]
 def cachedCosine04 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3798,6 +3878,7 @@ def cachedCosine04 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 5, sharing kernel reduction. -/
+@[expose]
 def cachedCosine05 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3815,6 +3896,7 @@ def cachedCosine05 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 6, sharing kernel reduction. -/
+@[expose]
 def cachedCosine06 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3832,6 +3914,7 @@ def cachedCosine06 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 7, sharing kernel reduction. -/
+@[expose]
 def cachedCosine07 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3849,6 +3932,7 @@ def cachedCosine07 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 8, sharing kernel reduction. -/
+@[expose]
 def cachedCosine08 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3866,6 +3950,7 @@ def cachedCosine08 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 9, sharing kernel reduction. -/
+@[expose]
 def cachedCosine09 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3883,6 +3968,7 @@ def cachedCosine09 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 10, sharing kernel reduction. -/
+@[expose]
 def cachedCosine10 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3900,6 +3986,7 @@ def cachedCosine10 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 11, sharing kernel reduction. -/
+@[expose]
 def cachedCosine11 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3917,6 +4004,7 @@ def cachedCosine11 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 12, sharing kernel reduction. -/
+@[expose]
 def cachedCosine12 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3934,6 +4022,7 @@ def cachedCosine12 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 13, sharing kernel reduction. -/
+@[expose]
 def cachedCosine13 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3951,6 +4040,7 @@ def cachedCosine13 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 14, sharing kernel reduction. -/
+@[expose]
 def cachedCosine14 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3968,6 +4058,7 @@ def cachedCosine14 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 15, sharing kernel reduction. -/
+@[expose]
 def cachedCosine15 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -3985,6 +4076,7 @@ def cachedCosine15 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 16, sharing kernel reduction. -/
+@[expose]
 def cachedCosine16 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4002,6 +4094,7 @@ def cachedCosine16 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 17, sharing kernel reduction. -/
+@[expose]
 def cachedCosine17 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4019,6 +4112,7 @@ def cachedCosine17 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 18, sharing kernel reduction. -/
+@[expose]
 def cachedCosine18 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4036,6 +4130,7 @@ def cachedCosine18 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 19, sharing kernel reduction. -/
+@[expose]
 def cachedCosine19 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4053,6 +4148,7 @@ def cachedCosine19 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 20, sharing kernel reduction. -/
+@[expose]
 def cachedCosine20 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4070,6 +4166,7 @@ def cachedCosine20 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 21, sharing kernel reduction. -/
+@[expose]
 def cachedCosine21 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4087,6 +4184,7 @@ def cachedCosine21 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 22, sharing kernel reduction. -/
+@[expose]
 def cachedCosine22 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4104,6 +4202,7 @@ def cachedCosine22 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 23, sharing kernel reduction. -/
+@[expose]
 def cachedCosine23 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4121,6 +4220,7 @@ def cachedCosine23 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 24, sharing kernel reduction. -/
+@[expose]
 def cachedCosine24 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4138,6 +4238,7 @@ def cachedCosine24 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 25, sharing kernel reduction. -/
+@[expose]
 def cachedCosine25 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4155,6 +4256,7 @@ def cachedCosine25 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 26, sharing kernel reduction. -/
+@[expose]
 def cachedCosine26 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4172,6 +4274,7 @@ def cachedCosine26 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 27, sharing kernel reduction. -/
+@[expose]
 def cachedCosine27 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4189,6 +4292,7 @@ def cachedCosine27 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 28, sharing kernel reduction. -/
+@[expose]
 def cachedCosine28 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4206,6 +4310,7 @@ def cachedCosine28 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 29, sharing kernel reduction. -/
+@[expose]
 def cachedCosine29 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4223,6 +4328,7 @@ def cachedCosine29 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 30, sharing kernel reduction. -/
+@[expose]
 def cachedCosine30 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4240,6 +4346,7 @@ def cachedCosine30 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 31, sharing kernel reduction. -/
+@[expose]
 def cachedCosine31 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4257,6 +4364,7 @@ def cachedCosine31 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 32, sharing kernel reduction. -/
+@[expose]
 def cachedCosine32 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4274,6 +4382,7 @@ def cachedCosine32 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 33, sharing kernel reduction. -/
+@[expose]
 def cachedCosine33 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4291,6 +4400,7 @@ def cachedCosine33 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 34, sharing kernel reduction. -/
+@[expose]
 def cachedCosine34 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4308,6 +4418,7 @@ def cachedCosine34 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 35, sharing kernel reduction. -/
+@[expose]
 def cachedCosine35 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4325,6 +4436,7 @@ def cachedCosine35 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 36, sharing kernel reduction. -/
+@[expose]
 def cachedCosine36 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4342,6 +4454,7 @@ def cachedCosine36 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 37, sharing kernel reduction. -/
+@[expose]
 def cachedCosine37 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4359,6 +4472,7 @@ def cachedCosine37 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 38, sharing kernel reduction. -/
+@[expose]
 def cachedCosine38 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4376,6 +4490,7 @@ def cachedCosine38 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 39, sharing kernel reduction. -/
+@[expose]
 def cachedCosine39 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4393,6 +4508,7 @@ def cachedCosine39 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 40, sharing kernel reduction. -/
+@[expose]
 def cachedCosine40 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4410,6 +4526,7 @@ def cachedCosine40 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 41, sharing kernel reduction. -/
+@[expose]
 def cachedCosine41 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4427,6 +4544,7 @@ def cachedCosine41 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 42, sharing kernel reduction. -/
+@[expose]
 def cachedCosine42 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4444,6 +4562,7 @@ def cachedCosine42 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 43, sharing kernel reduction. -/
+@[expose]
 def cachedCosine43 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4461,6 +4580,7 @@ def cachedCosine43 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 44, sharing kernel reduction. -/
+@[expose]
 def cachedCosine44 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4478,6 +4598,7 @@ def cachedCosine44 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 45, sharing kernel reduction. -/
+@[expose]
 def cachedCosine45 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4495,6 +4616,7 @@ def cachedCosine45 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 46, sharing kernel reduction. -/
+@[expose]
 def cachedCosine46 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4512,6 +4634,7 @@ def cachedCosine46 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 47, sharing kernel reduction. -/
+@[expose]
 def cachedCosine47 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4529,6 +4652,7 @@ def cachedCosine47 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 48, sharing kernel reduction. -/
+@[expose]
 def cachedCosine48 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4546,6 +4670,7 @@ def cachedCosine48 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 49, sharing kernel reduction. -/
+@[expose]
 def cachedCosine49 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4563,6 +4688,7 @@ def cachedCosine49 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 50, sharing kernel reduction. -/
+@[expose]
 def cachedCosine50 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4580,6 +4706,7 @@ def cachedCosine50 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 51, sharing kernel reduction. -/
+@[expose]
 def cachedCosine51 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4597,6 +4724,7 @@ def cachedCosine51 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 52, sharing kernel reduction. -/
+@[expose]
 def cachedCosine52 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4614,6 +4742,7 @@ def cachedCosine52 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 53, sharing kernel reduction. -/
+@[expose]
 def cachedCosine53 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4631,6 +4760,7 @@ def cachedCosine53 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 54, sharing kernel reduction. -/
+@[expose]
 def cachedCosine54 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4648,6 +4778,7 @@ def cachedCosine54 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 55, sharing kernel reduction. -/
+@[expose]
 def cachedCosine55 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4665,6 +4796,7 @@ def cachedCosine55 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 56, sharing kernel reduction. -/
+@[expose]
 def cachedCosine56 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4682,6 +4814,7 @@ def cachedCosine56 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 57, sharing kernel reduction. -/
+@[expose]
 def cachedCosine57 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4699,6 +4832,7 @@ def cachedCosine57 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 58, sharing kernel reduction. -/
+@[expose]
 def cachedCosine58 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4716,6 +4850,7 @@ def cachedCosine58 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 59, sharing kernel reduction. -/
+@[expose]
 def cachedCosine59 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4733,6 +4868,7 @@ def cachedCosine59 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 60, sharing kernel reduction. -/
+@[expose]
 def cachedCosine60 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4750,6 +4886,7 @@ def cachedCosine60 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 61, sharing kernel reduction. -/
+@[expose]
 def cachedCosine61 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4767,6 +4904,7 @@ def cachedCosine61 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 62, sharing kernel reduction. -/
+@[expose]
 def cachedCosine62 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4784,6 +4922,7 @@ def cachedCosine62 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for cell 63, sharing kernel reduction. -/
+@[expose]
 def cachedCosine63 : RatInterval :=
   ⟨(ExactReplay.q
       0
@@ -4797,6 +4936,7 @@ def cachedCosine63 : RatInterval :=
       0]))⟩
 
 /-- The exact cached cosine interval for the selected angle cell. -/
+@[expose]
 def cachedCosine (i : Cell) : RatInterval :=
   match i.val with
   | 0 => cachedCosine00
@@ -4865,6 +5005,7 @@ def cachedCosine (i : Cell) : RatInterval :=
   | _ => cachedCosine63
 
 /-- The exact cached sine interval for cell 0, sharing kernel reduction. -/
+@[expose]
 def cachedSine00 : RatInterval :=
   ⟨(ExactReplay.q
       0
@@ -4878,6 +5019,7 @@ def cachedSine00 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 1, sharing kernel reduction. -/
+@[expose]
 def cachedSine01 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4895,6 +5037,7 @@ def cachedSine01 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 2, sharing kernel reduction. -/
+@[expose]
 def cachedSine02 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4912,6 +5055,7 @@ def cachedSine02 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 3, sharing kernel reduction. -/
+@[expose]
 def cachedSine03 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4929,6 +5073,7 @@ def cachedSine03 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 4, sharing kernel reduction. -/
+@[expose]
 def cachedSine04 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4946,6 +5091,7 @@ def cachedSine04 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 5, sharing kernel reduction. -/
+@[expose]
 def cachedSine05 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4963,6 +5109,7 @@ def cachedSine05 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 6, sharing kernel reduction. -/
+@[expose]
 def cachedSine06 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4980,6 +5127,7 @@ def cachedSine06 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 7, sharing kernel reduction. -/
+@[expose]
 def cachedSine07 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -4997,6 +5145,7 @@ def cachedSine07 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 8, sharing kernel reduction. -/
+@[expose]
 def cachedSine08 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5014,6 +5163,7 @@ def cachedSine08 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 9, sharing kernel reduction. -/
+@[expose]
 def cachedSine09 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5031,6 +5181,7 @@ def cachedSine09 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 10, sharing kernel reduction. -/
+@[expose]
 def cachedSine10 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5048,6 +5199,7 @@ def cachedSine10 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 11, sharing kernel reduction. -/
+@[expose]
 def cachedSine11 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5065,6 +5217,7 @@ def cachedSine11 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 12, sharing kernel reduction. -/
+@[expose]
 def cachedSine12 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5082,6 +5235,7 @@ def cachedSine12 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 13, sharing kernel reduction. -/
+@[expose]
 def cachedSine13 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5099,6 +5253,7 @@ def cachedSine13 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 14, sharing kernel reduction. -/
+@[expose]
 def cachedSine14 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5116,6 +5271,7 @@ def cachedSine14 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 15, sharing kernel reduction. -/
+@[expose]
 def cachedSine15 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5133,6 +5289,7 @@ def cachedSine15 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 16, sharing kernel reduction. -/
+@[expose]
 def cachedSine16 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5150,6 +5307,7 @@ def cachedSine16 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 17, sharing kernel reduction. -/
+@[expose]
 def cachedSine17 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5167,6 +5325,7 @@ def cachedSine17 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 18, sharing kernel reduction. -/
+@[expose]
 def cachedSine18 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5184,6 +5343,7 @@ def cachedSine18 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 19, sharing kernel reduction. -/
+@[expose]
 def cachedSine19 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5201,6 +5361,7 @@ def cachedSine19 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 20, sharing kernel reduction. -/
+@[expose]
 def cachedSine20 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5218,6 +5379,7 @@ def cachedSine20 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 21, sharing kernel reduction. -/
+@[expose]
 def cachedSine21 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5235,6 +5397,7 @@ def cachedSine21 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 22, sharing kernel reduction. -/
+@[expose]
 def cachedSine22 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5252,6 +5415,7 @@ def cachedSine22 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 23, sharing kernel reduction. -/
+@[expose]
 def cachedSine23 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5269,6 +5433,7 @@ def cachedSine23 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 24, sharing kernel reduction. -/
+@[expose]
 def cachedSine24 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5286,6 +5451,7 @@ def cachedSine24 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 25, sharing kernel reduction. -/
+@[expose]
 def cachedSine25 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5303,6 +5469,7 @@ def cachedSine25 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 26, sharing kernel reduction. -/
+@[expose]
 def cachedSine26 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5320,6 +5487,7 @@ def cachedSine26 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 27, sharing kernel reduction. -/
+@[expose]
 def cachedSine27 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5337,6 +5505,7 @@ def cachedSine27 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 28, sharing kernel reduction. -/
+@[expose]
 def cachedSine28 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5354,6 +5523,7 @@ def cachedSine28 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 29, sharing kernel reduction. -/
+@[expose]
 def cachedSine29 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5371,6 +5541,7 @@ def cachedSine29 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 30, sharing kernel reduction. -/
+@[expose]
 def cachedSine30 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5388,6 +5559,7 @@ def cachedSine30 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 31, sharing kernel reduction. -/
+@[expose]
 def cachedSine31 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5405,6 +5577,7 @@ def cachedSine31 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 32, sharing kernel reduction. -/
+@[expose]
 def cachedSine32 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5422,6 +5595,7 @@ def cachedSine32 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 33, sharing kernel reduction. -/
+@[expose]
 def cachedSine33 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5439,6 +5613,7 @@ def cachedSine33 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 34, sharing kernel reduction. -/
+@[expose]
 def cachedSine34 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5456,6 +5631,7 @@ def cachedSine34 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 35, sharing kernel reduction. -/
+@[expose]
 def cachedSine35 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5473,6 +5649,7 @@ def cachedSine35 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 36, sharing kernel reduction. -/
+@[expose]
 def cachedSine36 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5490,6 +5667,7 @@ def cachedSine36 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 37, sharing kernel reduction. -/
+@[expose]
 def cachedSine37 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5507,6 +5685,7 @@ def cachedSine37 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 38, sharing kernel reduction. -/
+@[expose]
 def cachedSine38 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5524,6 +5703,7 @@ def cachedSine38 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 39, sharing kernel reduction. -/
+@[expose]
 def cachedSine39 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5541,6 +5721,7 @@ def cachedSine39 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 40, sharing kernel reduction. -/
+@[expose]
 def cachedSine40 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5558,6 +5739,7 @@ def cachedSine40 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 41, sharing kernel reduction. -/
+@[expose]
 def cachedSine41 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5575,6 +5757,7 @@ def cachedSine41 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 42, sharing kernel reduction. -/
+@[expose]
 def cachedSine42 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5592,6 +5775,7 @@ def cachedSine42 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 43, sharing kernel reduction. -/
+@[expose]
 def cachedSine43 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5609,6 +5793,7 @@ def cachedSine43 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 44, sharing kernel reduction. -/
+@[expose]
 def cachedSine44 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5626,6 +5811,7 @@ def cachedSine44 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 45, sharing kernel reduction. -/
+@[expose]
 def cachedSine45 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5643,6 +5829,7 @@ def cachedSine45 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 46, sharing kernel reduction. -/
+@[expose]
 def cachedSine46 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5660,6 +5847,7 @@ def cachedSine46 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 47, sharing kernel reduction. -/
+@[expose]
 def cachedSine47 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5677,6 +5865,7 @@ def cachedSine47 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 48, sharing kernel reduction. -/
+@[expose]
 def cachedSine48 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5694,6 +5883,7 @@ def cachedSine48 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 49, sharing kernel reduction. -/
+@[expose]
 def cachedSine49 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5711,6 +5901,7 @@ def cachedSine49 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 50, sharing kernel reduction. -/
+@[expose]
 def cachedSine50 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5728,6 +5919,7 @@ def cachedSine50 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 51, sharing kernel reduction. -/
+@[expose]
 def cachedSine51 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5745,6 +5937,7 @@ def cachedSine51 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 52, sharing kernel reduction. -/
+@[expose]
 def cachedSine52 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5762,6 +5955,7 @@ def cachedSine52 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 53, sharing kernel reduction. -/
+@[expose]
 def cachedSine53 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5779,6 +5973,7 @@ def cachedSine53 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 54, sharing kernel reduction. -/
+@[expose]
 def cachedSine54 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5796,6 +5991,7 @@ def cachedSine54 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 55, sharing kernel reduction. -/
+@[expose]
 def cachedSine55 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5813,6 +6009,7 @@ def cachedSine55 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 56, sharing kernel reduction. -/
+@[expose]
 def cachedSine56 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5830,6 +6027,7 @@ def cachedSine56 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 57, sharing kernel reduction. -/
+@[expose]
 def cachedSine57 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5847,6 +6045,7 @@ def cachedSine57 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 58, sharing kernel reduction. -/
+@[expose]
 def cachedSine58 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5864,6 +6063,7 @@ def cachedSine58 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 59, sharing kernel reduction. -/
+@[expose]
 def cachedSine59 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5881,6 +6081,7 @@ def cachedSine59 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 60, sharing kernel reduction. -/
+@[expose]
 def cachedSine60 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5898,6 +6099,7 @@ def cachedSine60 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 61, sharing kernel reduction. -/
+@[expose]
 def cachedSine61 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5915,6 +6117,7 @@ def cachedSine61 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 62, sharing kernel reduction. -/
+@[expose]
 def cachedSine62 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5932,6 +6135,7 @@ def cachedSine62 : RatInterval :=
       0]))⟩
 
 /-- The exact cached sine interval for cell 63, sharing kernel reduction. -/
+@[expose]
 def cachedSine63 : RatInterval :=
   ⟨(ExactReplay.q
       (naturalFromChunks [
@@ -5945,6 +6149,7 @@ def cachedSine63 : RatInterval :=
       1)⟩
 
 /-- The exact cached sine interval for the selected angle cell. -/
+@[expose]
 def cachedSine (i : Cell) : RatInterval :=
   match i.val with
   | 0 => cachedSine00
@@ -6063,7 +6268,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.CellRows.Row63`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6074,7 +6279,7 @@ Independent exact product-cell lower bounds for row 48.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_48 :
@@ -6097,7 +6302,7 @@ Independent exact product-cell lower bounds for row 49.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_49 :
@@ -6120,7 +6325,7 @@ Independent exact product-cell lower bounds for row 50.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_50 :
@@ -6143,7 +6348,7 @@ Independent exact product-cell lower bounds for row 51.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_51 :
@@ -6166,7 +6371,7 @@ Independent exact product-cell lower bounds for row 52.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_52 :
@@ -6189,7 +6394,7 @@ Independent exact product-cell lower bounds for row 53.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_53 :
@@ -6212,7 +6417,7 @@ Independent exact product-cell lower bounds for row 54.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_54 :
@@ -6235,7 +6440,7 @@ Independent exact product-cell lower bounds for row 55.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_55 :
@@ -6258,7 +6463,7 @@ Independent exact product-cell lower bounds for row 56.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_56 :
@@ -6281,7 +6486,7 @@ Independent exact product-cell lower bounds for row 57.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_57 :
@@ -6304,7 +6509,7 @@ Independent exact product-cell lower bounds for row 58.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_58 :
@@ -6327,7 +6532,7 @@ Independent exact product-cell lower bounds for row 59.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_59 :
@@ -6350,7 +6555,7 @@ Independent exact product-cell lower bounds for row 60.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_60 :
@@ -6373,7 +6578,7 @@ Independent exact product-cell lower bounds for row 61.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_61 :
@@ -6396,7 +6601,7 @@ Independent exact product-cell lower bounds for row 62.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_62 :
@@ -6419,7 +6624,7 @@ Independent exact product-cell lower bounds for row 63.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_63 :
@@ -6469,7 +6674,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.CellRows.Row47`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6480,7 +6685,7 @@ Independent exact product-cell lower bounds for row 32.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_32 :
@@ -6503,7 +6708,7 @@ Independent exact product-cell lower bounds for row 33.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_33 :
@@ -6526,7 +6731,7 @@ Independent exact product-cell lower bounds for row 34.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_34 :
@@ -6549,7 +6754,7 @@ Independent exact product-cell lower bounds for row 35.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_35 :
@@ -6572,7 +6777,7 @@ Independent exact product-cell lower bounds for row 36.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_36 :
@@ -6595,7 +6800,7 @@ Independent exact product-cell lower bounds for row 37.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_37 :
@@ -6618,7 +6823,7 @@ Independent exact product-cell lower bounds for row 38.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_38 :
@@ -6641,7 +6846,7 @@ Independent exact product-cell lower bounds for row 39.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_39 :
@@ -6664,7 +6869,7 @@ Independent exact product-cell lower bounds for row 40.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_40 :
@@ -6687,7 +6892,7 @@ Independent exact product-cell lower bounds for row 41.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_41 :
@@ -6710,7 +6915,7 @@ Independent exact product-cell lower bounds for row 42.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_42 :
@@ -6733,7 +6938,7 @@ Independent exact product-cell lower bounds for row 43.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_43 :
@@ -6756,7 +6961,7 @@ Independent exact product-cell lower bounds for row 44.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_44 :
@@ -6779,7 +6984,7 @@ Independent exact product-cell lower bounds for row 45.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_45 :
@@ -6802,7 +7007,7 @@ Independent exact product-cell lower bounds for row 46.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_46 :
@@ -6825,7 +7030,7 @@ Independent exact product-cell lower bounds for row 47.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_47 :
@@ -6875,7 +7080,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.CellRows.Row31`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6886,7 +7091,7 @@ Independent exact product-cell lower bounds for row 16.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_16 :
@@ -6909,7 +7114,7 @@ Independent exact product-cell lower bounds for row 17.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_17 :
@@ -6932,7 +7137,7 @@ Independent exact product-cell lower bounds for row 18.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_18 :
@@ -6955,7 +7160,7 @@ Independent exact product-cell lower bounds for row 19.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_19 :
@@ -6978,7 +7183,7 @@ Independent exact product-cell lower bounds for row 20.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_20 :
@@ -7001,7 +7206,7 @@ Independent exact product-cell lower bounds for row 21.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_21 :
@@ -7024,7 +7229,7 @@ Independent exact product-cell lower bounds for row 22.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_22 :
@@ -7047,7 +7252,7 @@ Independent exact product-cell lower bounds for row 23.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_23 :
@@ -7070,7 +7275,7 @@ Independent exact product-cell lower bounds for row 24.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_24 :
@@ -7093,7 +7298,7 @@ Independent exact product-cell lower bounds for row 25.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_25 :
@@ -7116,7 +7321,7 @@ Independent exact product-cell lower bounds for row 26.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_26 :
@@ -7139,7 +7344,7 @@ Independent exact product-cell lower bounds for row 27.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_27 :
@@ -7162,7 +7367,7 @@ Independent exact product-cell lower bounds for row 28.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_28 :
@@ -7185,7 +7390,7 @@ Independent exact product-cell lower bounds for row 29.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_29 :
@@ -7208,7 +7413,7 @@ Independent exact product-cell lower bounds for row 30.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_30 :
@@ -7231,7 +7436,7 @@ Independent exact product-cell lower bounds for row 31.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_31 :
@@ -7281,7 +7486,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.CellRows.Row15`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7292,7 +7497,7 @@ Independent exact product-cell lower bounds for row 00.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_00 :
@@ -7315,7 +7520,7 @@ Independent exact product-cell lower bounds for row 01.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_01 :
@@ -7338,7 +7543,7 @@ Independent exact product-cell lower bounds for row 02.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_02 :
@@ -7361,7 +7566,7 @@ Independent exact product-cell lower bounds for row 03.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_03 :
@@ -7384,7 +7589,7 @@ Independent exact product-cell lower bounds for row 04.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_04 :
@@ -7407,7 +7612,7 @@ Independent exact product-cell lower bounds for row 05.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_05 :
@@ -7430,7 +7635,7 @@ Independent exact product-cell lower bounds for row 06.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_06 :
@@ -7453,7 +7658,7 @@ Independent exact product-cell lower bounds for row 07.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_07 :
@@ -7476,7 +7681,7 @@ Independent exact product-cell lower bounds for row 08.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_08 :
@@ -7499,7 +7704,7 @@ Independent exact product-cell lower bounds for row 09.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_09 :
@@ -7522,7 +7727,7 @@ Independent exact product-cell lower bounds for row 10.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_10 :
@@ -7545,7 +7750,7 @@ Independent exact product-cell lower bounds for row 11.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_11 :
@@ -7568,7 +7773,7 @@ Independent exact product-cell lower bounds for row 12.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_12 :
@@ -7591,7 +7796,7 @@ Independent exact product-cell lower bounds for row 13.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_13 :
@@ -7614,7 +7819,7 @@ Independent exact product-cell lower bounds for row 14.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_14 :
@@ -7637,7 +7842,7 @@ Independent exact product-cell lower bounds for row 15.
 Build all 64 row modules sequentially before the final Part B assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 theorem cell_row_15 :
@@ -7672,7 +7877,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.AllRows`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7680,7 +7885,7 @@ section
 
 /-! Assembly of the 64 independently kernel-checked product-cell rows. -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa.PartB
 

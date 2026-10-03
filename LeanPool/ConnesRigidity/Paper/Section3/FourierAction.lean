@@ -20,7 +20,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 The fourier action component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFourierAction
@@ -162,8 +162,8 @@ theorem paperFourierUnitary_single (d : D) :
     (l2Reindex (Multiplicative.toAdd : Multiplicative D ≃ D)
       (lp.single 2 (Multiplicative.ofAdd d) (1 : ℂ))) = characterL2 d
   rw [l2Reindex_single]
-  exact Orthonormal.linearIsometryEquiv_symm_apply_single_one
-    characterL2_orthonormal characterL2_span_closure_eq_top.ge d
+  change FourierBasis.repr.symm (lp.single 2 d 1) = characterL2 d
+  simpa only [FourierBasis_coe] using FourierBasis.repr_symm_single d
 
 /- Scalar multiples of Fourier point masses are transported linearly. Paper: §3. -/
 private theorem fourierUnitary_single_smul

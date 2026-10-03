@@ -18,7 +18,7 @@ insensitive families, and the first-failure partition upgrades that intersection
 correlated with the ambient word family.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics

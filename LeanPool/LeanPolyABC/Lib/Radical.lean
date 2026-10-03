@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Polynomial.FieldDivision
 # LeanPool.LeanPolyABC.Lib.Radical
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

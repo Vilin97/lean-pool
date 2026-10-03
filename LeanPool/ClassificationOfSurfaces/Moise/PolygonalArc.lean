@@ -20,7 +20,7 @@ chain vertex, turns all crossings and all chain vertices into vertices of one fi
 mesh.  A simple graph path in the resulting one-skeleton is then a loop-free polygonal arc.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -41,10 +41,10 @@ namespace BrokenLineData
 variable {U : Set Plane} (B : BrokenLineData U)
 
 /-- The `start` declaration. -/
-def start : Plane := B.vertex 0
+@[expose] def start : Plane := B.vertex 0
 
 /-- The `finish` declaration. -/
-def finish : Plane := B.vertex (Fin.last B.n)
+@[expose] def finish : Plane := B.vertex (Fin.last B.n)
 
 /-- An auxiliary broken line listing an arbitrary finite family of segments.  The prescribed
 segments occur at the even indices; the odd indices are disposable connectors.  This is the
@@ -112,14 +112,14 @@ theorem segmentFamilyChain_vertex_odd {I : Type*} [Fintype I]
     (segmentFamilyIndex left right i).castSucc =
       ⟨2 * (Fintype.equivFin I i).val, by
         change 2 * (Fintype.equivFin I i).val < 2 * Fintype.card I + 1
-        omega⟩ := rfl
+        omega⟩ := by rfl
 
 @[simp] theorem segmentFamilyIndex_succ {I : Type*} [Fintype I]
     (left right : I → Plane) (i : I) :
     (segmentFamilyIndex left right i).succ =
       ⟨2 * (Fintype.equivFin I i).val + 1, by
         change 2 * (Fintype.equivFin I i).val + 1 < 2 * Fintype.card I + 1
-        omega⟩ := rfl
+        omega⟩ := by rfl
 
 /-- The segment at the distinguished even index is exactly the requested family member. -/
 theorem segmentFamilyChain_segment {I : Type*} [Fintype I]
@@ -226,11 +226,11 @@ theorem mem_segment_of_segmentLine_eq_zero {a b x : Plane} (hab : a ≠ b)
       ring
 
 /-- The `verticalLine` declaration. -/
-noncomputable def verticalLine (p : Plane) : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def verticalLine (p : Plane) : Plane →ᵃ[ℝ] ℝ :=
   cartesianX - AffineMap.const ℝ Plane (p 0)
 
 /-- The `horizontalLine` declaration. -/
-noncomputable def horizontalLine (p : Plane) : Plane →ᵃ[ℝ] ℝ :=
+@[expose] noncomputable def horizontalLine (p : Plane) : Plane →ᵃ[ℝ] ℝ :=
   cartesianY - AffineMap.const ℝ Plane (p 1)
 
 @[simp] theorem verticalLine_apply_self (p : Plane) : verticalLine p p = 0 := by
@@ -251,7 +251,7 @@ noncomputable def vertexLines : List (Plane →ᵃ[ℝ] ℝ) :=
     [verticalLine (B.vertex i), horizontalLine (B.vertex i)]
 
 /-- The `arrangementLines` declaration. -/
-noncomputable def arrangementLines : List (Plane →ᵃ[ℝ] ℝ) :=
+@[expose] noncomputable def arrangementLines : List (Plane →ᵃ[ℝ] ℝ) :=
   B.segmentLines ++ B.vertexLines
 
 /-- A positive radius containing every chain vertex. -/
@@ -283,7 +283,7 @@ noncomputable def enclosingMesh : TriangleMesh :=
     (PolygonalCircle.enclosingTriangleVertices_affineIndependent B.enclosingRadius_pos)
 
 /-- The finite line arrangement resolving every segment crossing and chain vertex. -/
-noncomputable def arrangementMesh : TriangleMesh :=
+@[expose] noncomputable def arrangementMesh : TriangleMesh :=
   B.enclosingMesh.refineByLines B.arrangementLines
 
 theorem arrangementMesh_support :
@@ -544,7 +544,7 @@ theorem exists_vertex_pair_segment_of_mem_cellCarrier {s : Finset K.Vertex}
     rwa [himage, convexHull_pair] at hx
 
 /-- The graph formed by the one-dimensional faces of a plane complex. -/
-def vertexGraph : SimpleGraph K.Vertex where
+@[expose] def vertexGraph : SimpleGraph K.Vertex where
   Adj v w := v ≠ w ∧ ({v, w} : Finset K.Vertex) ∈ K.simplexes
   symm := ⟨by
     rintro v w ⟨hvw, hedge⟩
@@ -581,7 +581,7 @@ theorem position_mem_support_of_mem_walk {u v w : K.Vertex}
 
 /-- The induced subcomplex on the vertices satisfying `p`.  Vertices outside `p` remain in the
 ambient finite type but occur in no face; `PlaneComplex.active` can remove them when desired. -/
-noncomputable def inducedBy (p : K.Vertex → Prop) : PlaneComplex := by
+@[expose] noncomputable def inducedBy (p : K.Vertex → Prop) : PlaneComplex := by
   classical
   exact {
     Vertex := K.Vertex
@@ -1037,7 +1037,7 @@ theorem exists_face_on_segmentFamily {I : Type*} [Fintype I]
 /-- The geometric carrier of all listed segments of a finite broken line.  Auxiliary line
 arrangements may contain many additional faces, so this is the carrier relevant to the
 polygonal object itself. -/
-def segmentCarrier : Set Plane :=
+@[expose] def segmentCarrier : Set Plane :=
   ⋃ i : Fin B.n, segment ℝ (B.vertex i.castSucc) (B.vertex i.succ)
 
 /-- The line arrangement restricted to the actual segments of a finite broken line.  This is a
@@ -1103,7 +1103,7 @@ theorem segmentFamily_arrangementVertex_position_right {I : Type*} [Fintype I]
   exact segmentFamilyChain_vertex_odd left right i
 
 /-- The part of the arrangement mesh lying wholly on one original chain segment. -/
-noncomputable def segmentComplex (i : Fin B.n) : PlaneComplex :=
+@[expose] noncomputable def segmentComplex (i : Fin B.n) : PlaneComplex :=
   B.arrangementMesh.toPlaneComplex.restrictedTo
     (segment ℝ (B.vertex i.castSucc) (B.vertex i.succ))
 
@@ -1244,7 +1244,7 @@ noncomputable def resolvedWalk : B.inSetGraph.Walk
   B.resolvedPath
 
 /-- Ordered geometric vertices of the resolved polygonal arc. -/
-noncomputable def resolvedVertex
+@[expose] noncomputable def resolvedVertex
     (i : Fin (B.resolvedWalk.length + 1)) : Plane :=
   B.arrangementMesh.toPlaneComplex.position
     (B.resolvedWalk.getVert i)
@@ -1354,7 +1354,7 @@ def IsResolvedFace (s : Finset B.arrangementMesh.toPlaneComplex.Vertex) : Prop :
         s ⊆ {B.resolvedWalk.getVert i.val, B.resolvedWalk.getVert (i.val + 1)})
 
 /-- The parent-arrangement subcomplex consisting of the chosen path edges and their vertices. -/
-noncomputable def resolvedComplex : PlaneComplex := by
+@[expose] noncomputable def resolvedComplex : PlaneComplex := by
   classical
   let K := B.arrangementMesh.toPlaneComplex
   exact {
@@ -1676,8 +1676,9 @@ theorem resolvedSegment_inter_of_succ_eq (i j : Fin B.resolvedWalk.length)
     ext x
     simp []
   rw [himage, convexHull_singleton]
-  change {(B.arrangementMesh.toPlaneComplex.position
-      (B.resolvedWalk.getVert (i.val + 1)))} = {B.resolvedVertex i.succ}
+  change Set.singleton (B.arrangementMesh.toPlaneComplex.position
+      (B.resolvedWalk.getVert (i.val + 1))) =
+    Set.singleton (B.resolvedVertex i.succ)
   rfl
 
 /-- The shifted affine edge parameters agree wherever two selected path edges meet. -/
@@ -1925,18 +1926,18 @@ theorem resolvedGlobalParameter_finish :
     exact_mod_cast Nat.sub_add_cancel hpos
 
 /-- Affine inclusion of the real axis into the plane. -/
-def realAxisLinear : ℝ →ₗ[ℝ] Plane where
+@[expose] def realAxisLinear : ℝ →ₗ[ℝ] Plane where
   toFun t := planePoint t 0
   map_add' := by intro x y; ext i ; fin_cases i <;> simp [planePoint]
   map_smul' := by intro c x; ext i ; fin_cases i <;> simp [planePoint]
 
 /-- The `realAxisAffine` declaration. -/
-def realAxisAffine : ℝ →ᵃ[ℝ] Plane := realAxisLinear.toAffineMap
+@[expose] def realAxisAffine : ℝ →ᵃ[ℝ] Plane := realAxisLinear.toAffineMap
 
-@[simp] theorem realAxisAffine_apply (t : ℝ) : realAxisAffine t = planePoint t 0 := rfl
+@[simp] theorem realAxisAffine_apply (t : ℝ) : realAxisAffine t = planePoint t 0 := by rfl
 
 /-- Piecewise-affine straightening of the selected polygonal arc onto the real axis. -/
-noncomputable def resolvedStraighten (x : Plane) : Plane :=
+@[expose] noncomputable def resolvedStraighten (x : Plane) : Plane :=
   realAxisAffine (B.resolvedGlobalParameter x)
 
 theorem resolvedStraighten_start :

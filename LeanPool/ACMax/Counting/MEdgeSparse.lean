@@ -19,7 +19,7 @@ and bulk incidence ledgers would then force `2 * n + 2 ≤ 5 * |F|`, which is
 impossible from order ten onward.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

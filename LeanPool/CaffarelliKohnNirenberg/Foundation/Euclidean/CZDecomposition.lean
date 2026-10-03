@@ -20,7 +20,7 @@ the good/bad part argument.  Its geometry is native to `Vec3`; no alternate
 Euclidean carrier is introduced.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology
@@ -127,6 +127,7 @@ private theorem dyadicAncestor_eq_of_intersect_of_scale_le
   exact ⟨x, hsubset hxR, hxQ⟩
 
 /-- Half-open geometric cube represented by a dyadic index. -/
+@[expose]
 def dyadicCubeSet (Q : DyadicIndex) : Set Vec3 :=
   dyadicCube Q.scale Q.corner
 
@@ -135,29 +136,34 @@ def dyadicParentSet (Q : DyadicIndex) : Set Vec3 :=
   dyadicCubeSet (dyadicParent Q)
 
 /-- Signed average of a scalar function on a dyadic cube. -/
+@[expose]
 def dyadicAverage (F : Vec3 → ℝ) (Q : DyadicIndex) : ℝ :=
   ⨍ x in dyadicCubeSet Q, F x
 
 /-- Average absolute value on a dyadic cube, used in the stopping criterion. -/
+@[expose]
 def dyadicAbsAverage (F : Vec3 → ℝ) (Q : DyadicIndex) : ℝ :=
   ⨍ x in dyadicCubeSet Q, |F x|
 
 /-- Extended nonnegative integral of the absolute value for the dyadic decomposition. -/
+@[expose]
 def dyadicL1Norm (F : Vec3 → ℝ) : ℝ≥0∞ :=
   ∫⁻ x, ENNReal.ofReal |F x|
 
 /-- Membership in the union of a chosen family of dyadic cubes. -/
+@[expose]
 def dyadicCubeMember (D : Set DyadicIndex) (x : Vec3) : Prop :=
   ∃ Q, Q ∈ D ∧ x ∈ dyadicCubeSet Q
 
 /-- Good part obtained by replacing the function by its average on each selected cube. -/
-noncomputable def dyadicGoodPart (F : Vec3 → ℝ) (D : Set DyadicIndex) : Vec3 → ℝ := by
+@[expose] noncomputable def dyadicGoodPart (F : Vec3 → ℝ) (D : Set DyadicIndex) : Vec3 → ℝ := by
   classical
   exact fun x => if hx : dyadicCubeMember D x then
     dyadicAverage F (Classical.choose hx)
   else F x
 
 /-- Mean-zero bad part supported on one selected dyadic cube. -/
+@[expose]
 def dyadicBadPart (F : Vec3 → ℝ) (Q : DyadicIndex) : Vec3 → ℝ :=
   (dyadicCubeSet Q).indicator (fun x => F x - dyadicAverage F Q)
 

@@ -10,7 +10,7 @@ public import LeanPool.Zeta32.PrimeEdge.Disc.Factor
 of `seriesPart` when `dissectNum = p^E u^E R`: the coefficient of `u^e` vanishes for `e < E` and
 has valuation `≥ e`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

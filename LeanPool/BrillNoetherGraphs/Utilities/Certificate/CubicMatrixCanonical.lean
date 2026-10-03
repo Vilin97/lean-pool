@@ -60,7 +60,7 @@ carry all six atlas indices; see
 the accompanying analysis.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.CubicMatrixReplay
 open Utilities.Certificate
@@ -70,6 +70,7 @@ open Utilities.Certificate.CubicMatrixReplay
 /-! ## The canonical predicate -/
 
 /-- A list of naturals is ascending. -/
+@[expose]
 def SortedAsc : List ℕ → Bool
   | [] => true
   | [_] => true
@@ -78,6 +79,7 @@ def SortedAsc : List ℕ → Bool
 /-- `BlocksSorted keys values` asks that `values` be ascending across every
 adjacent pair whose `keys` agree.  With `keys` the tail of row `0` and
 `values` row `1`, this is cut 1. -/
+@[expose]
 def BlocksSorted : List ℕ → List ℕ → Bool
   | a :: b :: keys, x :: y :: values =>
       (decide (a ≠ b) || decide (x ≤ y)) && BlocksSorted (b :: keys) (y :: values)
@@ -85,6 +87,7 @@ def BlocksSorted : List ℕ → List ℕ → Bool
 
 /-- The canonical predicate on a row list.  It inspects only rows `0` and `1`,
 so it is decided as soon as those two are chosen. -/
+@[expose]
 def canonicalPrefix (rows : List (List ℕ)) : Bool :=
   match rows with
   | [] => true
@@ -118,6 +121,7 @@ def AcceptsAlong (accept : List (List ℕ) → Bool) :
 /-- Exhaustive check that skips branches the `accept` predicate rejects.  A
 rejected branch is discharged immediately, so the subtree below it is never
 traversed. -/
+@[expose]
 def prunedCheck (accept leafDecide : List (List ℕ) → Bool) :
     ℕ → List ℕ → List (List ℕ) → Bool
   | 0, _, _ => false

@@ -15,7 +15,7 @@ An arbitrary nice multivalued function is evaluated on all equal-area children. 
 coordinate vector is continuous and transforms by coordinate relabelling.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -27,6 +27,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 namespace PrimeConfigurationModel
 
 /-- Evaluate the multivalued observable on every equal-area child body and interval parameter. -/
+@[expose]
 noncomputable def childTestMap
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)
@@ -58,6 +59,7 @@ theorem childTestMap_smul
   rw [M.child_smul hA C g x i]
 
 /-- The simultaneous child-zero set. -/
+@[expose]
 def allChildrenZeroSet
     (M : PrimeConfigurationModel hp)
     (hA : 0 < A)

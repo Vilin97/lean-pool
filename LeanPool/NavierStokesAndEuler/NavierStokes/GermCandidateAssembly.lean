@@ -50,7 +50,7 @@ unit cube. All derivatives below are the ordinary Frechet coordinate
 derivatives on `ProblemStatement.Space`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -419,7 +419,7 @@ for a continuous periodic field across time one. It assumes no general
 Navier--Stokes existence theorem and never identifies pressure gauges.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -726,7 +726,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -742,6 +742,7 @@ theorem future_uniqueDiff : UniqueDiffOn ℝ futureDomain :=
   (uniqueDiffOn_Ici 0).prod uniqueDiffOn_univ
 
 /-- The physical full spacetime jet, including its one-sided value at time zero. -/
+@[expose]
 noncomputable def futureJet (f : VelocityField) (m : ℕ) :=
   iteratedFDerivWithin ℝ m f futureDomain
 
@@ -946,7 +947,7 @@ schedule supplies the actual velocity and pressure sums, their endpoint
 extensions, and the force with all proved consequences.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1100,7 +1101,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1113,6 +1114,7 @@ open scoped Topology ContDiff
 
 /-- A property of the actual primitive field on a local physical domain.
 The zero neighborhood may depend on the point and on the stage. -/
+@[expose]
 def AxisZeroOn (Ω : Set SpaceTime) (f : VelocityField) : Prop :=
   ∀ w ∈ Ω, PhysicalGraphBounds.radialProjection w = 0 → f =ᶠ[𝓝 w] fun _ => 0
 
@@ -1141,6 +1143,7 @@ theorem angularSupport_axisZeroOn {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (MixedAxisPreservation.radius_zero_of_axis ha)
 
 /-- The base and finite initialization retain the same zeroth cutoff. -/
+@[expose]
 noncomputable def initializedSeries (base initial : VelocityField)
     (stages : ℕ → VelocityField) : ℕ → VelocityField
   | 0 => fun w => base w + initial w
@@ -1194,6 +1197,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Potential stages, given by `initializedSeries (TailGaugePotential.finalPotential H v upper
 bandFloor) initial stages`. -/
+@[expose]
 noncomputable def potentialStages (upper : ℝ) (bandFloor : ℕ)
     (initial : VelocityField) (stages : ℕ → VelocityField) : ℕ → VelocityField :=
   initializedSeries (TailGaugePotential.finalPotential H v upper bandFloor) initial stages

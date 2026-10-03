@@ -29,7 +29,7 @@ used for the local base estimates.  Compact constants use the genuine
 stable inverse branch, including its regular zero-time boundary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -49,6 +49,7 @@ abbrev Plane := MovingFrameODE.Plane
 /-- Two meshes leave an open neighborhood of the closed one-mesh mask
 support.  They also give the precise `3/S³` representative distance used
 by the phase comparison theorem. -/
+@[expose]
 noncomputable def openCell (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
   let s := SquaredPartition.nativeSpacing n
   (Ioo (s * (k 0 : ℝ) - 2 * s) (s * (k 0 : ℝ) + 2 * s) ×ˢ
@@ -107,7 +108,7 @@ theorem openCell_representative_distance (K : Set Slow) (L : PositiveRepresentat
   PositiveRepresentatives.representative_enlarged_distance K L (openCell_subset_box _ _ hp)
 
 /-- Cell domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def cellDomain (h lo hi : ℝ) (N : ℕ) :
+@[expose] noncomputable def cellDomain (h lo hi : ℝ) (N : ℕ) :
     PhaseJetBounds.Domain (BaseChartJets.CellIndex h lo hi N) Slow where
   scale L := ChartScales.S (BaseChartJets.cellBand L)
   carrier L := openCell L.val.val.1 L.val.val.2
@@ -131,6 +132,7 @@ theorem cellDomain_representative {h lo hi : ℝ} {N : ℕ} (L : BaseChartJets.C
 
 /-- Restrict labels after the constants have been chosen.  The actual
 label and its chosen positive representative are unchanged. -/
+@[expose]
 noncomputable def earlierIndex {h lo hi : ℝ} {N M : ℕ} (hNM : N ≤ M)
     (L : BaseChartJets.CellIndex h lo hi M) : BaseChartJets.CellIndex h lo hi N :=
   ⟨L.val, hNM.trans L.property⟩
@@ -160,6 +162,7 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Reference set, given by `PrimaryRepresentatives.referenceCompact F.data.h
 (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W)`. -/
+@[expose]
 noncomputable def referenceSet : Set Slow :=
   PrimaryRepresentatives.referenceCompact F.data.h (NominalConeAssembly.activeLeft W)
     (NominalConeAssembly.activeRight W)
@@ -176,6 +179,7 @@ instance indexCountable (N : ℕ) : Countable (Index W N) := by
   infer_instance
 
 /-- Label, given by `L.val.val`. -/
+@[expose]
 noncomputable def label {N : ℕ} (L : Index W N) : PartitionedCovariance.UnsignedLabel := L.val.val
 
 theorem label_injective {N : ℕ} : Injective (label W (N := N)) :=
@@ -183,14 +187,16 @@ theorem label_injective {N : ℕ} : Injective (label W (N := N)) :=
 
 /-- Domain, given by `cellDomain F.data.h (NominalConeAssembly.activeLeft W)
 (NominalConeAssembly.activeRight W) N`. -/
-noncomputable def domain (N : ℕ) : PhaseJetBounds.Domain (Index W N) Slow :=
+@[expose] noncomputable def domain (N : ℕ) : PhaseJetBounds.Domain (Index W N) Slow :=
   cellDomain F.data.h (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) N
 
 /-- Representative, given by `PositiveRepresentatives.representative (referenceSet W) L.val`. -/
+@[expose]
 noncomputable def representative {N : ℕ} (L : Index W N) : Slow :=
   PositiveRepresentatives.representative (referenceSet W) L.val
 
 /-- Base domain, given by `PositiveRepresentatives.positiveCell L.val.val.1 L.val.val.2`. -/
+@[expose]
 noncomputable def baseDomain {N : ℕ} (L : Index W N) : Set Slow :=
   PositiveRepresentatives.positiveCell L.val.val.1 L.val.val.2
 
@@ -247,6 +253,7 @@ theorem physicalMask_has_index {N : ℕ} (L : PartitionedCovariance.UnsignedLabe
 
 /-- Mean-flow charts use `(T,Z)`, while the phase chart uses `(R,(Z,T))`.
 This explicit map prevents their equal product types hiding a swap. -/
+@[expose]
 noncomputable def fromTimeAxial (R : ℝ) (tz : ℝ × ℝ) : Slow := (R, (tz.2, tz.1))
 
 @[simp] theorem fromTimeAxial_time (R : ℝ) (tz : ℝ × ℝ) :
@@ -259,18 +266,21 @@ variable {W} (H : NominalConeAssembly.Certificate W)
   {ld : ModulatedProfileAssembly.LoopData W} (v : ModulatedProfileAssembly.Witness ld)
 
 /-- The chart field of the very same `FinalSlowBase` schedule. -/
+@[expose]
 noncomputable def frequency (upper : ℝ) (B n : ℕ) : Slow → ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
 /-- Axial, given by `BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
 (FinalSlowBase.coefficients H v) (ChartScales.Q n)`. -/
+@[expose]
 noncomputable def axial (upper : ℝ) (B n : ℕ) : Slow → ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
 /-- Leading frequency, given by `BaseChartJets.leadingFrequency F.data.h W.axis.normalization
 (FinalSlowBase.coefficients H v)`. -/
+@[expose]
 noncomputable def leadingFrequency : Slow → ℝ :=
   BaseChartJets.leadingFrequency F.data.h W.axis.normalization (FinalSlowBase.coefficients H v)
 
@@ -280,6 +290,7 @@ noncomputable def leadingAxial : Slow → ℝ :=
   BaseChartJets.leadingAxial F.data.h (FinalSlowBase.coefficients H v)
 
 /-- Shear, given by `PhaseEstimates.shearVector (leadingFrequency H v) (leadingAxial H v)`. -/
+@[expose]
 noncomputable def shear : Slow → Plane :=
   PhaseEstimates.shearVector (leadingFrequency H v) (leadingAxial H v)
 
@@ -343,6 +354,7 @@ structure Prepared (upper : ℝ) (B : ℕ) (r0 : ℝ) (N0 : ℕ) where
   large : ∀ n, N ≤ n → BasePhaseGeometry.LargeBand F.data.h M u n
 
 /-- Phase sign, with branches according to `c = 0`. -/
+@[expose]
 noncomputable def phaseSign (c : Fin 2) : ℝ := if c = 0 then 1 else -1
 
 theorem phaseSign_abs (c : Fin 2) : |phaseSign c| = 1 := by
@@ -350,6 +362,7 @@ theorem phaseSign_abs (c : Fin 2) : |phaseSign c| = 1 := by
 
 /-- The actual positive representatives instantiate every entry of the
 phase data, including the unstable eigenpair and the nonzero rounding. -/
+@[expose]
 noncomputable def family {upper : ℝ} {B : ℕ} {r0 : ℝ} {N0 : ℕ}
     (a : Prepared H v upper B r0 N0) (c : Fin 2) :
     BasePhaseGeometry.FamilyData (domain W a.N) F.data.h r0 a.u a.M := by
@@ -405,6 +418,7 @@ noncomputable def family {upper : ℝ} {B : ℕ} {r0 : ℝ} {N0 : ℕ}
 /-- Both signs have one joint domain and the same constants, which were
 fixed before its band threshold. All phase comparison outputs are proved
 by `FamilyData.construction`. -/
+@[expose]
 noncomputable def construction {upper : ℝ} {B : ℕ} {r0 : ℝ} {N0 : ℕ}
     (a : Prepared H v upper B r0 N0) (hr0 : 0 < r0) (c : Fin 2) :
     PrimaryPulseBounds.PhaseConstruction (domain W a.N) :=
@@ -592,6 +606,7 @@ theorem construction_u (c : Fin 2) (L : Index W a.N) :
 
 /-- The actual integer angular mode is retained; zero-floor rounding is
 not replaced by an unproved assertion that a real frequency is integral. -/
+@[expose]
 noncomputable def angularMode (c : Fin 2) (L : Index W a.N) : ℤ :=
   (family H v a c).angularMode L
 
@@ -662,6 +677,7 @@ variable {H v}
 reselect a target direction, parameter constant, representative, or
 Fourier mode.  A final consumer can therefore take the maximum of its
 covariance cutoff and this geometry cutoff. -/
+@[expose]
 noncomputable def restrict {upper : ℝ} {B : ℕ} {r0 : ℝ} {N0 : ℕ}
     (a : Prepared H v upper B r0 N0) (N : ℕ) (hN : a.N ≤ N) :
     Prepared H v upper B r0 N0 where
@@ -730,7 +746,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1204,6 +1220,7 @@ structure CompatiblePair (a : Fin 2 → FamilyData D h r0 u M) : Prop where
   sign : ∀ j i, (a j).sigma i = phaseSign j
 
 /-- The native finite covariance with the original joint label. -/
+@[expose]
 noncomputable def familyCovariance (vr vt : TorusInverse.Plane)
     (a : Fin 2 → FamilyData D h r0 u M) (i : ι) (p : Slow) : Mat2 :=
   PrimaryPulseBounds.primaryCovariance
@@ -1219,8 +1236,7 @@ theorem familyCovariance_eq_native (vr vt : TorusInverse.Plane)
       ((a 0).band i) p := by
   unfold familyCovariance nativePrimaryCovariance PrimaryPulseBounds.primaryCovariance
   ext r c
-  change _ * _ = _ * _
-  simp only [FamilyData.length, hc.band]
+  simp only [PrimaryPulseBounds.covarianceMatrix, FamilyData.length, hc.band]
 
 /-- Uniform finite-matrix bounds follow from the actual constructed
 phases and their ODEs.  The model point only records the common
@@ -1371,6 +1387,7 @@ theorem prepared_model_mem (L : Index W a.N) {p : Slow}
     exact (div_le_iff₀ hmpos).mp hratio
 
 /-- Prepared covariance, given by `familyCovariance vr vt (family H v a)`. -/
+@[expose]
 noncomputable def preparedCovariance (vr vt : TorusInverse.Plane) : Index W a.N → Slow → Mat2 :=
   familyCovariance vr vt (family H v a)
 
@@ -1411,9 +1428,9 @@ section MovingWeight
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Left radius, given by `Real.sqrt (2 * NominalConeAssembly.activeLeft W)`. -/
-noncomputable def leftRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
+@[expose] noncomputable def leftRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeLeft W)
 /-- Right radius, given by `Real.sqrt (2 * NominalConeAssembly.activeRight W)`. -/
-noncomputable def rightRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeRight W)
+@[expose] noncomputable def rightRadius : ℝ := Real.sqrt (2 * NominalConeAssembly.activeRight W)
 
 theorem leftRadius_pos : 0 < leftRadius W :=
   Real.sqrt_pos.mpr (mul_pos (by norm_num) (NominalConeAssembly.activeLeft_pos W))
@@ -1427,6 +1444,7 @@ theorem radii_ordered : leftRadius W < rightRadius W :=
 
 /-- These are the radial-log coefficients of the very same product
 weight, not a replacement weight with a faster decay. -/
+@[expose]
 noncomputable def stripWeight (r : ℝ) : ℝ :=
   WeightedRadialPrimitive.zeta (FinalSlowBase.edgeExponent W / 4) 1
     (WeightedRadialPrimitive.logLength (leftRadius W) (rightRadius W))
@@ -1482,11 +1500,11 @@ theorem stripWeight_eq (r eta : ℝ) (hr : 0 < r) :
   norm_num [stripWeight, WeightedRadialPrimitive.zeta]
 
 /-- Profile radius, given by `p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1`. -/
-noncomputable def profileRadius (h : ℝ) (p : Slow) : ℝ :=
+@[expose] noncomputable def profileRadius (h : ℝ) (p : Slow) : ℝ :=
   p.1 / Real.sqrt (BaseChartJets.normalizedCoordinates h p).1
 
 /-- Moving weight, given by `stripWeight W (profileRadius F.data.h p)`. -/
-noncomputable def movingWeight (p : Slow) : ℝ := stripWeight W (profileRadius F.data.h p)
+@[expose] noncomputable def movingWeight (p : Slow) : ℝ := stripWeight W (profileRadius F.data.h p)
 
 theorem movingWeight_nonneg (p : Slow) : 0 ≤ movingWeight W p := stripWeight_nonneg W _
 
@@ -1510,6 +1528,7 @@ theorem movingWeight_eq {p : Slow} (hT : 0 < p.2.2) (hR : 0 < p.1) :
 
 /-- The mean-variable ordering `(R,((T,Z),Y))` uses exactly the same
 normalized point `(R,(Z,T))`. -/
+@[expose]
 noncomputable def meanPoint (x : LocalSignedRequest.Point) : Slow :=
   (x.1,(x.2.1.2,x.2.1.1))
 
@@ -1557,7 +1576,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     (v : ModulatedProfileAssembly.Witness ld)
 
 /-- The literal leading covariance target in its own normalized band. -/
-noncomputable def actualTarget (p : Slow) : Plane :=
+@[expose] noncomputable def actualTarget (p : Slow) : Plane :=
   (BaseChartJets.normalizedCoordinates F.data.h p).1 ^ (-CoordinateAlgebra.A F.data.h - 1/2) •
     ProfileSpectralCone.stressVector v.profiles F.data.h
       (BaseChartJets.normalizedCoordinates F.data.h p).2
@@ -1752,7 +1771,24 @@ theorem exists_actual_bounds (hcone : LeadingStressWeights.FullTrueCone v)
 theorem restricted_covariance (vr vt : TorusInverse.Plane) (N : ℕ) (hN : a.N ≤ N)
     (L : Index W N) (p : Slow) :
     preparedCovariance H v (a.restrict N hN) vr vt L p =
-      preparedCovariance H v a vr vt (earlierIndex hN L) p := rfl
+      preparedCovariance H v a vr vt (earlierIndex hN L) p := by
+  have hband (j : Fin 2) :
+      (family H v (a.restrict N hN) j).band L =
+        (family H v a j).band (earlierIndex hN L) := rfl
+  have hframe (j : Fin 2) :
+      (family H v (a.restrict N hN) j).frame L =
+        (family H v a j).frame (earlierIndex hN L) := rfl
+  have hlam (j : Fin 2) :
+      (family H v (a.restrict N hN) j).lam L =
+        (family H v a j).lam (earlierIndex hN L) := rfl
+  have hlength (j : Fin 2) :
+      (family H v (a.restrict N hN) j).length L =
+        (family H v a j).length (earlierIndex hN L) := by
+    simp only [BasePhaseGeometry.FamilyData.length, hband]
+  have hu : (a.restrict N hN).u = a.u := rfl
+  unfold preparedCovariance familyCovariance PrimaryPulseBounds.primaryCovariance
+  ext r c
+  simp only [PrimaryPulseBounds.covarianceMatrix, hband, hframe, hlam, hlength, hu]
 
 /-- A single final band threshold suffices.  Restriction retains the
 original representative, carrier and phase on each surviving label. -/

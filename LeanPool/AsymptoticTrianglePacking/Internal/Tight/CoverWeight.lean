@@ -38,7 +38,7 @@ what makes the SAFE degree concentrate where the residual degree cannot.
 placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -47,11 +47,11 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 variable {V : Type*} [DecidableEq V]
 
 /-- The loss weight of `v` against a covered set `C`: `∑_{u ∈ C, u ≠ v} codeg(v,u)`. -/
-def coverWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
+@[expose] def coverWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
   ∑ u ∈ C.erase v, codegree H v u
 
 /-- The Bonferroni correction: `∑_{e ∋ v} C(|(e∖v) ∩ C|, 2)`. -/
-def pairWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
+@[expose] def pairWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
   ∑ e ∈ H.filter (fun e => v ∈ e), Nat.choose ((e.erase v ∩ C).card) 2
 
 /-- `coverWeight` counted edge-by-edge: `∑_{e ∋ v} |(e∖v) ∩ C|`. -/

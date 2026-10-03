@@ -18,7 +18,7 @@ length `(n-2) * floor(g/(n-1))`, hence contribute the corresponding binomial
 number of distinct `k`-inversions.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

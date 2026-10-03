@@ -17,7 +17,7 @@ inversion-length cut.  This supplies the combinatorial input needed for
 unconditional opposite-side vertex-wedge transmission gluing.
 -/
 
-@[expose] public section
+public section
 
 namespace AspPerm
 

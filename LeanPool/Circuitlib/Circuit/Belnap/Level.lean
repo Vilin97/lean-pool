@@ -16,13 +16,13 @@ public import Mathlib.Order.WithBotTop
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 
 /-- The Belnap four-valued logic lattice on `Bool`, with a bottom (no information) and a
 top (conflicting information) adjoined. -/
-def BelnapLevel := WithBotTop Bool
+@[expose] def BelnapLevel := WithBotTop Bool
 
 namespace BelnapLevel
 
@@ -37,7 +37,7 @@ instance : Top BelnapLevel where
 
 /-- The information ordering on Belnap levels: `⊥` is below everything, everything is below `⊤`,
 and the two classical values are only related to themselves. -/
-@[inline]
+@[expose, inline]
 def le : BelnapLevel → BelnapLevel → Prop
   | ⊥, _ => true
   | _, ⊤ => true
@@ -83,7 +83,7 @@ instance : SemilatticeSup BelnapLevel where
   sup_le
 
 /-- Logical AND. -/
-@[inline]
+@[expose, inline]
 def and (a b : BelnapLevel) : BelnapLevel := match a, b with
   | .some (.some false), _ => false
   | _, .some (.some false) => false
@@ -94,7 +94,7 @@ def and (a b : BelnapLevel) : BelnapLevel := match a, b with
   | _, _ => false
 
 /-- Logical OR. -/
-@[inline]
+@[expose, inline]
 def or (a b : BelnapLevel) : BelnapLevel := match a, b with
   | .some (.some true), _ => true
   | _, .some (.some true) => true
@@ -105,7 +105,7 @@ def or (a b : BelnapLevel) : BelnapLevel := match a, b with
   | _, _ => true
 
 /-- Logical NOT. -/
-@[inline]
+@[expose, inline]
 def not : BelnapLevel → BelnapLevel
   | .some (.some b) => !b
   | x => x

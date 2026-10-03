@@ -19,7 +19,7 @@ order-two criterion supplies general transmission as soon as submodularity is
 known.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

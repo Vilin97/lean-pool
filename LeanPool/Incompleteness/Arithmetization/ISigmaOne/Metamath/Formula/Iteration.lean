@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Iteration -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -30,7 +30,7 @@ lemma replicate_succ (p : Semiformula L ξ n) (k : ℕ) :
     p.replicate (k + 1) = p ⋏ p.replicate k := by simp [replicate]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def weight (k : ℕ) : Semiformula L ξ n := (List.replicate k ⊤).conj
+@[expose] def weight (k : ℕ) : Semiformula L ξ n := (List.replicate k ⊤).conj
 
 end Semiformula
 end FirstOrder
@@ -82,7 +82,10 @@ section «lp_section_2»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.qqConjDef : Sg1.Semisentence 2 := blueprint.resultDef
 
-lemma qqConj_defined : Sg1-Function₁ (qqConj : V → V) via qqConjDef := construction.result_defined
+lemma qqConj_defined : Sg1-Function₁ (qqConj : V → V) via qqConjDef := by
+  intro v
+  have hparam : (fun i : Fin 0 => v i.succ.succ) = ![] := Subsingleton.elim _ _
+  simpa only [qqConj, qqConjDef, hparam] using construction.result_defined v
 
 @[simp] lemma eval_qqConj (v) :
     Semiformula.Evalbm V v qqConjDef.val ↔ v 0 = qqConj (v 1) := qqConj_defined.df.iff v
@@ -155,7 +158,10 @@ section «lp_section_4»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.qqDisjDef : Sg1.Semisentence 2 := blueprint.resultDef
 
-lemma qqDisj_defined : Sg1-Function₁ (qqDisj : V → V) via qqDisjDef := construction.result_defined
+lemma qqDisj_defined : Sg1-Function₁ (qqDisj : V → V) via qqDisjDef := by
+  intro v
+  have hparam : (fun i : Fin 0 => v i.succ.succ) = ![] := Subsingleton.elim _ _
+  simpa only [qqDisj, qqDisjDef, hparam] using construction.result_defined v
 
 @[simp] lemma eval_qqDisj (v) :
     Semiformula.Evalbm V v qqDisjDef.val ↔ v 0 = qqDisj (v 1) := qqDisj_defined.df.iff v

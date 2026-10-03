@@ -19,7 +19,7 @@ definitional, and the flip `1 + n = n + 1` is transported along
 `eqToIso`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

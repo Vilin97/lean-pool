@@ -22,7 +22,7 @@ Tags: functional-analysis, banach-spaces, schauder-bases
 MSC: 46B15
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Schauder bases and the finite sign criterion

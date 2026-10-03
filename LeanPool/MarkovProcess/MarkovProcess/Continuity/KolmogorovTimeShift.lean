@@ -21,7 +21,7 @@ No global path is glued here, and no measurability of the canonical limit or mod
 assertion is made.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -33,6 +33,7 @@ namespace MarkovProcess
 variable {Ω E : Type*}
 
 /-- Translate a dense-time process by a nonnegative rational time. -/
+@[expose]
 def timeShift (k : NNRat) (X : NNRat → Ω → E) : NNRat → Ω → E :=
   fun q ω ↦ X (k + q) ω
 
@@ -61,6 +62,7 @@ theorem IsKolmogorovProcess.timeShift
 
 /-- The level-`n` dyadic time in the unit interval, translated to the interval beginning at
 `k`. -/
+@[expose]
 noncomputable def shiftedUnitDyadicFloorValue (k : NNRat) (n : ℕ)
     (t : Set.Icc (0 : ℝ) 1) : NNRat :=
   k + unitDyadicFloorValue n t
@@ -78,6 +80,7 @@ variable [PseudoMetricSpace E]
 
 /-- The canonical unit-interval dyadic-floor limit of the process translated by `k`.  Its time
 parameter represents the original interval `[k, k + 1]`. -/
+@[expose]
 def shiftedUnitDyadicFloorLimit (k : NNRat) (X : NNRat → Ω → E) (ω : Ω) :
     Set.Icc (0 : ℝ) 1 → E :=
   unitDyadicFloorLimit (timeShift k X) ω

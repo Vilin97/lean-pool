@@ -19,7 +19,7 @@ statement.  Thresholds are selected before the decomposition, with the final
 prime bound taken over its uniformly bounded node radii.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

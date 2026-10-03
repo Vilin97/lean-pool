@@ -31,7 +31,7 @@ surreals are a field.
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 /-! ### Simplicity theorem -/
 
@@ -43,7 +43,7 @@ namespace IGame
 The simplicity theorem states that if a game fits a numeric game, but none of its options do, then
 the games are equivalent. In particular, a numeric game is equivalent to the game of the least
 birthday that fits in it -/
-def Fits (x y : IGame) : Prop :=
+@[expose] def Fits (x y : IGame) : Prop :=
   (∀ z ∈ yᴸ, z ⧏ x) ∧ (∀ z ∈ yᴿ, x ⧏ z)
 
 theorem fits_of_equiv {x y : IGame} (h : x ≈ y) : Fits x y :=
@@ -123,13 +123,13 @@ open IGame
 
 /-- The type of surreal numbers. These are the numeric games quotiented by the antisymmetrization
 relation `x ≈ y ↔ x ≤ y ∧ y ≤ x`. In the quotient, the order becomes a total order. -/
-def Surreal : Type (u + 1) :=
+@[expose] def Surreal : Type (u + 1) :=
   Antisymmetrization (Subtype Numeric) (· ≤ ·)
 
 namespace Surreal
 
 /-- The quotient map from the subtype of numeric `IGame`s into `ConwayGame`. -/
-def mk (x : IGame) [h : Numeric x] : Surreal := Quotient.mk _ ⟨x, h⟩
+@[expose] def mk (x : IGame) [h : Numeric x] : Surreal := Quotient.mk _ ⟨x, h⟩
 theorem mk_eq_mk {x y : IGame} [Numeric x] [Numeric y] : mk x = mk y ↔ x ≈ y := Quotient.eq
 
 alias ⟨_, mk_eq⟩ := mk_eq_mk
@@ -139,7 +139,7 @@ theorem ind {motive : Surreal → Prop} (mk : ∀ y [Numeric y], motive (mk y)) 
     motive x := Quotient.ind (fun h ↦ @mk _ h.2) x
 
 /-- Choose an element of the equivalence class using the axiom of choice. -/
-@[no_expose] def out (x : Surreal) : IGame := (Quotient.out x).1
+def out (x : Surreal) : IGame := (Quotient.out x).1
 @[simp] instance (x : Surreal) : Numeric x.out := (Quotient.out x).2
 @[simp] theorem out_eq (x : Surreal) : mk x.out = x := Quotient.out_eq x
 
@@ -208,7 +208,7 @@ instance : Nontrivial Surreal :=
   ⟨_, _, zero_ne_one⟩
 
 /-- Casts a `Surreal` number into a `ConwayGame`. -/
-def toGame : Surreal ↪o ConwayGame where
+@[expose] def toGame : Surreal ↪o ConwayGame where
   toFun := Quotient.lift (fun x ↦ .mk x) fun _ _ ↦ ConwayGame.mk_eq
   inj' x y := by
     cases x; cases y;
@@ -229,7 +229,7 @@ theorem toGame_lt_iff {a b : Surreal} : toGame a < toGame b ↔ a < b := by simp
 theorem toGame_inj {a b : Surreal} : toGame a = toGame b ↔ a = b := by simp
 
 /-- `Surreal.toGame` as an `OrderAddMonoidHom` -/
-@[simps]
+@[expose, simps]
 def toGameAddHom : Surreal →+o ConwayGame where
   toFun := toGame
   map_zero' := rfl

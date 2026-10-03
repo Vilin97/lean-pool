@@ -21,7 +21,7 @@ opposite-parameter boundary-seam pairings. The orientable generators are opposit
 orders. The free `h` dart in each boundary block occurs only once and contributes no gluing.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -33,6 +33,7 @@ open SurfaceCellComplex
 /-! ## Nonorientable pairing instructions -/
 
 /-- The same-direction identification contributed by the square `aᵢ aᵢ`. -/
+@[expose]
 def nonOrientableCrosscapIdentification {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (nonOrientableCellComplex p n).Face
       (nonOrientableCellComplex p n).faceBoundaryLength :=
@@ -45,6 +46,7 @@ def nonOrientableCrosscapIdentification {p n : ℕ} (i : Fin p) :
         (nonOrientableCrosscapPosition p n i 1)))
 
 /-- The opposite-direction identification contributed by `cⱼ ... cⱼ⁻¹`. -/
+@[expose]
 def nonOrientableBoundaryIdentification {p n : ℕ} (j : Fin n) :
     PolygonGluing.Identification (nonOrientableCellComplex p n).Face
       (nonOrientableCellComplex p n).faceBoundaryLength :=
@@ -57,6 +59,7 @@ def nonOrientableBoundaryIdentification {p n : ℕ} (j : Fin n) :
         (nonOrientableBoundaryPosition p n j 2)))
 
 /-- The reverse ordered direction of a crosscap identification. -/
+@[expose]
 def nonOrientableCrosscapIdentificationReverse {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (nonOrientableCellComplex p n).Face
       (nonOrientableCellComplex p n).faceBoundaryLength :=
@@ -69,6 +72,7 @@ def nonOrientableCrosscapIdentificationReverse {p n : ℕ} (i : Fin p) :
         (nonOrientableCrosscapPosition p n i 0)))
 
 /-- The reverse ordered direction of a boundary-seam identification. -/
+@[expose]
 def nonOrientableBoundaryIdentificationReverse {p n : ℕ} (j : Fin n) :
     PolygonGluing.Identification (nonOrientableCellComplex p n).Face
       (nonOrientableCellComplex p n).faceBoundaryLength :=
@@ -511,6 +515,7 @@ theorem orientableBoundaryWord_edgeOccurrences_h {p n : ℕ} (j : Fin n) :
     simp
 
 /-- The opposite-direction identification contributed by `aᵢ ... aᵢ⁻¹`. -/
+@[expose]
 def orientableHandleAIdentification {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=
@@ -523,6 +528,7 @@ def orientableHandleAIdentification {p n : ℕ} (i : Fin p) :
         (orientableHandlePosition p n i 2)))
 
 /-- The opposite-direction identification contributed by `bᵢ ... bᵢ⁻¹`. -/
+@[expose]
 def orientableHandleBIdentification {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=
@@ -535,6 +541,7 @@ def orientableHandleBIdentification {p n : ℕ} (i : Fin p) :
         (orientableHandlePosition p n i 3)))
 
 /-- The opposite-direction identification contributed by `cⱼ ... cⱼ⁻¹`. -/
+@[expose]
 def orientableBoundaryIdentification {p n : ℕ} (j : Fin n) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=
@@ -547,6 +554,7 @@ def orientableBoundaryIdentification {p n : ℕ} (j : Fin n) :
         (orientableBoundaryPosition p n j 2)))
 
 /-- The reverse ordered direction of an orientable `aᵢ` identification. -/
+@[expose]
 def orientableHandleAIdentificationReverse {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=
@@ -559,6 +567,7 @@ def orientableHandleAIdentificationReverse {p n : ℕ} (i : Fin p) :
         (orientableHandlePosition p n i 0)))
 
 /-- The reverse ordered direction of an orientable `bᵢ` identification. -/
+@[expose]
 def orientableHandleBIdentificationReverse {p n : ℕ} (i : Fin p) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=
@@ -571,6 +580,7 @@ def orientableHandleBIdentificationReverse {p n : ℕ} (i : Fin p) :
         (orientableHandlePosition p n i 1)))
 
 /-- The reverse ordered direction of an orientable boundary-seam identification. -/
+@[expose]
 def orientableBoundaryIdentificationReverse {p n : ℕ} (j : Fin n) :
     PolygonGluing.Identification (orientableCellComplex p n).Face
       (orientableCellComplex p n).faceBoundaryLength :=

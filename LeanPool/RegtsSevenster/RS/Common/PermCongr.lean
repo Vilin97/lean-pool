@@ -22,7 +22,7 @@ the sum of the two cycle types and the sum of the two fixed-point
 counts.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

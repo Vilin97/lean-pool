@@ -18,7 +18,7 @@ iterate over the interface, and the identity when the interface is
 empty.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

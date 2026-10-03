@@ -16,7 +16,7 @@ The peel induction: the cap value on colour basis vectors is the
 diagonal cap pairing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

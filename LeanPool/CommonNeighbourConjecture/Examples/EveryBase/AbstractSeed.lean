@@ -23,7 +23,7 @@ Faithfulness and irreducibility are intentionally absent from
 needed for the obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace SaxlCounterexamples.EveryBase
 
@@ -563,7 +563,7 @@ noncomputable def regularTupleCode (S : EveryBaseSeed) (n : Nat) :
   hits := regularTupleColour_hits S n
 
 /-- The canonical, genuinely inhabited positive regular-colour tower. -/
-noncomputable def quotientRegularTupleColourTower (S : EveryBaseSeed) :
+@[expose] noncomputable def quotientRegularTupleColourTower (S : EveryBaseSeed) :
     RegularTupleColourTower S where
   C n := RegularTupleColour S n
   fintypeC n := regularTupleColourFintype S n
@@ -631,7 +631,7 @@ theorem firstVectorOrbitColour_regularTupleColour
   exact Quotient.lift_mk _ _ _
 
 /-- Canonical finite tuple/vector orbit colours used by the profile argument. -/
-noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
+@[expose] noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
     BaseArrayColours S tail where
   C := RegularTupleColour S tail
   D := VectorOrbitColour S
@@ -648,7 +648,7 @@ noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
 
 /-- A technically convenient strengthening of `Saxl.ExactBaseSize`: smaller
 ordered tuples are excluded even before imposing injectivity. -/
-def ExactTupleBaseSize
+@[expose] def ExactTupleBaseSize
     (G X : Type*) [Group G] [MulAction G X] (n : Nat) : Prop :=
   (∃ x : Fin n → X, Saxl.IsBaseTuple G X x) ∧
     ∀ m < n, ¬ ∃ x : Fin m → X, Saxl.IsBaseTuple G X x

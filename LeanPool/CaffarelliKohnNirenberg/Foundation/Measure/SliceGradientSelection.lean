@@ -54,7 +54,7 @@ Space-time points use the ordinary product space `Vec3 × ℝ` of docs/DESIGN_NO
 carrier on which `spatialPartial` and `spaceTimeTestFunction` are stated.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped Topology ENNReal

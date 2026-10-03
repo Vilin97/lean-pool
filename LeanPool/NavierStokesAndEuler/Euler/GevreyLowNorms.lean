@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyMetricComparison
 
 /-! Fixed-base pointwise and metric-loss control by actual finite Gevrey norms. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

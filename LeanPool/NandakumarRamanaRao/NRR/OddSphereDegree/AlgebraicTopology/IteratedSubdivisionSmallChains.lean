@@ -11,7 +11,7 @@ public import Mathlib.Tactic
 
 /-! # Iterated Subdivision Small Chains -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Limits

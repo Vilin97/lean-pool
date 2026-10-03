@@ -29,7 +29,7 @@ This file contains:
 * Absolute and uniform convergence of Fourier series under ℓ¹ summability.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev

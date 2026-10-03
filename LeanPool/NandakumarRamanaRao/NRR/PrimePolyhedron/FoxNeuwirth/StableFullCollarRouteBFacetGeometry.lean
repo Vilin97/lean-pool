@@ -17,7 +17,7 @@ so universal triangular targets suffice there.  The two composition steps theref
 frozen-relative targets for every final cell and facet.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

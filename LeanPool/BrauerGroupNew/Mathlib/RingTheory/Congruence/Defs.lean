@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.Congruence.Defs
 This file restores the upstream eliminator name used by the Brauer group port.
 -/
 
-@[expose] public section
+public section
 
 namespace RingCon
 

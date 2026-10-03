@@ -62,7 +62,7 @@ The constant `1 + 2β` is smaller than the paper's `1 + 4eβ`; the bound `c₀ �
 exception to them; only `k_h ≥ 2`, i.e. `k_h − 1 > 0`, is required.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -73,15 +73,17 @@ open Finset
 anti-commuting `k_h`-local rotations, and the threshold of rung `m` in
 `apd:eq:def_high_weight_norm`. It is real-valued so that no `ℕ` subtraction occurs. `kh1` is
 `k_h − 1`. Note `w₂ = (k_h−1)(1+c) = k_o+k_h−1`. -/
-def rungW (kh1 c : ℝ) (m : ℕ) : ℝ := kh1 * ((m : ℝ) - 1 + c)
+@[expose] def rungW (kh1 c : ℝ) (m : ℕ) : ℝ := kh1 * ((m : ℝ) - 1 + c)
 
 /-- The `j`-jump block norm into rung `ν`, `ε_j^{(ν)} = (w_{ν+j}·a)^j / j!`
 (`apd:rmk:multijump`), with `a = sin(dt)`. -/
+@[expose]
 noncomputable def epsJump (kh1 c a : ℝ) (j nu : ℕ) : ℝ :=
   (rungW kh1 c (nu + j) * a) ^ j / (Nat.factorial j : ℝ)
 
 /-- The expansion parameter `β = 2e·w₂·a` of the multi-jump analysis (`apd:rmk:multijump`),
 with `a = sin(dt)`. -/
+@[expose]
 noncomputable def betaOf (kh1 c a : ℝ) : ℝ := 2 * Real.exp 1 * rungW kh1 c 2 * a
 
 lemma rungW_nonneg {kh1 c : ℝ} (hkh : 0 < kh1) (hc : 0 ≤ c) {m : ℕ} (hm : 1 ≤ m) :
@@ -216,6 +218,7 @@ theorem epsJump_ratio {kh1 c a : ℝ} (hkh : 0 < kh1) (hc : 0 ≤ c) (ha : 0 ≤
 /-- The entry factor `E_ν = ∑_{j≥ν} ε_j^{(ν)}` of `apd:eq:composition_majorant`, written as a
 `tsum` over the shift `j = ν + i`. This is the only infinite sum in the multi-jump development;
 the ladder itself takes `E` abstractly (see `Lean4LPD.MultiLadder`). -/
+@[expose]
 noncomputable def entryFactor (kh1 c a : ℝ) (nu : ℕ) : ℝ :=
   ∑' i : ℕ, epsJump kh1 c a (nu + i) nu
 

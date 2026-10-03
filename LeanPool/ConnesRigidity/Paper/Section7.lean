@@ -19,4 +19,4 @@ This facade exposes the assembled paper endpoint relative to the cited EJZK
 property-(T) input.
 -/
 
-@[expose] public section
+public section

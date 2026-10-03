@@ -16,7 +16,7 @@ import Mathlib.Topology.WithTopology
 This module realizes vertices discretely and every directed edge as a separate interval cell.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.SingleObj Quiver
@@ -86,7 +86,7 @@ instance graphRealizationSetoid {V : Type u} [Quiver.{u} V] :
     to a vertex away from its two prescribed endpoints. -/
 
 /-- Labels the two endpoints of an edge interval and leaves interior points unlabeled. -/
-def graphRealizationEndpointLabel {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationEndpointLabel {V : Type u} [Quiver.{u} V]
     : graphRealizationPre V → Option V
   | Sum.inl v => some (graphVertexUnderlying v)
   | Sum.inr ⟨e, t⟩ =>
@@ -121,7 +121,7 @@ abbrev graphRealizationQuotient {V : Type u} [Quiver.{u} V] :
   Quotient.mk'
 
 /-- The point of the realization corresponding to a vertex. -/
-def graphVertex {V : Type u} [Quiver.{u} V] (v : V) : graphRealization V :=
+@[expose] def graphVertex {V : Type u} [Quiver.{u} V] (v : V) : graphRealization V :=
   graphRealizationQuotient (Sum.inl (graphDiscreteVertex v))
 
 /-- The endpoint label descends to the quotient as a set-theoretic invariant. -/
@@ -134,7 +134,7 @@ def graphRealizationEndpointLabelQuotient {V : Type u} [Quiver.{u} V] :
 theorem graphRealizationEndpointLabelQuotient_mk {V : Type u} [Quiver.{u} V]
     (x : graphRealizationPre V) :
     graphRealizationEndpointLabelQuotient (graphRealizationQuotient x) =
-      graphRealizationEndpointLabel x := rfl
+      graphRealizationEndpointLabel x := by rfl
 
 @[simp]
 theorem graphRealizationEndpointLabelQuotient_vertex {V : Type u} [Quiver.{u} V]
@@ -172,7 +172,7 @@ theorem graphRealization_image_isOpen_of_saturated
   exact hopen
 
 /-- The characteristic path of the interval cell associated to an edge. -/
-def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
+@[expose] def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
     C(I, graphRealization V) where
   toFun t := graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩)
   continuous_toFun :=
@@ -182,7 +182,7 @@ def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
 
 @[simp]
 theorem graphRealizationQuotient_vertex {V : Type u} [Quiver.{u} V] (v : V) :
-    graphRealizationQuotient (Sum.inl (graphDiscreteVertex v)) = graphVertex v := rfl
+    graphRealizationQuotient (Sum.inl (graphDiscreteVertex v)) = graphVertex v := by rfl
 
 @[simp]
 theorem graphEdgePath_zero {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
@@ -207,7 +207,7 @@ theorem continuous_graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V
   (graphEdgePath e).continuous
 
 /-- The interval cell, regarded as a path from the source to the target. -/
-def graphRealizationForwardPath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationForwardPath {V : Type u} [Quiver.{u} V]
     {a b : V} (e : a ⟶ b) :
     Path (graphVertex a) (graphVertex b) where
   toContinuousMap := graphEdgePath ⟨a, b, e⟩
@@ -261,7 +261,7 @@ theorem graphRealizationPre_join_vertex {V : Type u} [Quiver.{u} V]
     reverse. -/
 
 /-- The realization path of a symmetric edge, reversing the interval when necessary. -/
-def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
     {a b : V} (e : (Quiver.symmetrifyQuiver V).Hom a b) :
     Path (graphVertex (V := V) a) (graphVertex (V := V) b) :=
   match e with
@@ -269,7 +269,7 @@ def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
   | Sum.inr e => (graphRealizationForwardPath e).symm
 
 /-- Concatenates realized edge paths along a quiver path. -/
-def graphRealizationQuiverPath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationQuiverPath {V : Type u} [Quiver.{u} V]
     {a b : V}
     (p : @Quiver.Path (Quiver.Symmetrify V)
       (Quiver.symmetrifyQuiver V) a b) :
@@ -282,7 +282,7 @@ theorem graphRealizationQuiverPath_nil {V : Type u} [Quiver.{u} V]
     (a : V) :
     graphRealizationQuiverPath
       (Quiver.Path.nil : @Quiver.Path (Quiver.Symmetrify V)
-        (Quiver.symmetrifyQuiver V) a a) = Path.refl (graphVertex a) := rfl
+        (Quiver.symmetrifyQuiver V) a a) = Path.refl (graphVertex a) := by rfl
 
 theorem graphRealization_pathConnected {V : Type u} [Quiver.{u} V]
     [WeaklyConnected V] (root : V) :
@@ -306,7 +306,7 @@ theorem graphRealization_compact {V : Type u} [Quiver.{u} V]
   infer_instance
 
 /-- The prefunctor sending graph vertices and edges to their realization paths. -/
-def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
+@[expose] def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
     V ⥤q FundamentalGroupoid (graphRealization V) where
   obj v := FundamentalGroupoid.mk (graphVertex v)
   map e := FundamentalGroupoid.fromPath
@@ -317,7 +317,7 @@ def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
     fundamental groupoid of the realization. -/
 
 /-- The functor from the free graph groupoid to the realization's fundamental groupoid. -/
-def graphFreeGroupoidToTopological {V : Type u} [Quiver.{u} V] :
+@[expose] def graphFreeGroupoidToTopological {V : Type u} [Quiver.{u} V] :
     Quiver.FreeGroupoid V ⥤ FundamentalGroupoid (graphRealization V) :=
   Quiver.FreeGroupoid.lift (graphRealizationQuiverMap (V := V))
 
@@ -331,7 +331,7 @@ theorem graphFreeGroupoidToTopological_restrict {V : Type u} [Quiver.{u} V] :
     below for the realization of the path-lifting cover. -/
 
 /-- The map on vertex and edge-interval representatives induced by a quiver prefunctor. -/
-def graphRealizationPreMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
+@[expose] def graphRealizationPreMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
     (F : V ⥤q W) : graphRealizationPre V → graphRealizationPre W :=
   Sum.elim
     (fun v => Sum.inl (graphDiscreteVertex (F.obj (graphVertexUnderlying v))))
@@ -364,7 +364,7 @@ theorem graphRealizationPreMap_eqvGen {V W : Type u} [Quiver.{u} V]
   | trans x y z hxy hyz ihxy ihyz => exact Relation.EqvGen.trans _ _ _ ihxy ihyz
 
 /-- The continuous map of graph realizations induced by a quiver prefunctor. -/
-def graphRealizationMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
+@[expose] def graphRealizationMap {V W : Type u} [Quiver.{u} V] [Quiver.{u} W]
     (F : V ⥤q W) : graphRealization V → graphRealization W := by
   let f : graphRealizationPre V → graphRealization W :=
     fun x => graphRealizationQuotient (graphRealizationPreMap F x)
@@ -424,7 +424,7 @@ theorem graphRealizationMap_forwardPath {V W : Type u} [Quiver.{u} V]
     in a finite one-dimensional cell complex. -/
 
 /-- The homomorphism from combinatorial loops to loops in the topological realization. -/
-def graphCombinatorialToTopological {V : Type u} [Quiver.{u} V]
+@[expose] def graphCombinatorialToTopological {V : Type u} [Quiver.{u} V]
     (root : V) :
     graphFundamentalGroup root →*
       FundamentalGroup (graphRealization V) (graphVertex root) :=

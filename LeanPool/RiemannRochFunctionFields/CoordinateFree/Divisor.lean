@@ -24,7 +24,7 @@ degree with the residue-field weighted sum.
 * `FunctionField.principalDivisor`: coordinate-free principal divisors.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 
@@ -164,6 +164,7 @@ end Place
 /-- The chart degree agrees with the intrinsic residue-field degree. -/
 theorem placeDegree_eq (w : PlaceA k K) :
     placeDegree k K w = (chartToPlace k K w).degree := by
+  rw [chartToPlace_apply]
   rcases w with w | w
   · exact (Place.finite_degree_eq k K w).symm
   · exact (Place.infinite_degree_eq k K w).symm
@@ -172,11 +173,11 @@ theorem placeDegree_eq (w : PlaceA k K) :
 abbrev Divisor := Place k K →₀ ℤ
 
 /-- Reindex a chart divisor by the chart/intrinsic place equivalence. -/
-noncomputable def divisorEquivChart : DivisorA k K ≃+ Divisor k K :=
+@[expose] noncomputable def divisorEquivChart : DivisorA k K ≃+ Divisor k K :=
   Finsupp.domCongr (chartToPlace k K)
 
 /-- The coordinate-free principal-divisor homomorphism. -/
-noncomputable def principalDivisor : Additive Kˣ →+ Divisor k K :=
+@[expose] noncomputable def principalDivisor : Additive Kˣ →+ Divisor k K :=
   (divisorEquivChart k K).toAddMonoidHom.comp (principalDivisorA k K)
 
 namespace Divisor
@@ -190,7 +191,7 @@ omit [Algebra k[X] K] [Algebra k⟮X⟯ K] [IsScalarTower k k[X] K]
     [Algebra.IsSeparable k⟮X⟯ K] in
 /-- The degree is the intrinsic residue-degree weighted sum. -/
 theorem deg_formula (D : Divisor k K) :
-    deg k K D = D.sum fun v n => n * (v.degree : ℤ) := rfl
+    deg k K D = D.sum fun v n => n * (v.degree : ℤ) := by rfl
 
 omit [Algebra k[X] K] [Algebra k⟮X⟯ K] [IsScalarTower k k[X] K]
     [IsScalarTower k[X] k⟮X⟯ K] [FunctionField k K]

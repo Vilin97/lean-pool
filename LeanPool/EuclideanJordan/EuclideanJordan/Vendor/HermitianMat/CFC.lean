@@ -17,7 +17,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 /-! Matrix operations on HermitianMats with the CFC -/
 
-@[expose] public section
+public section
 namespace HermitianMat
 
 noncomputable section CFC
@@ -44,6 +44,7 @@ theorem conjTranspose_cfc : (cfc f A.mat).conjTranspose = cfc f A.mat := by
   exact cfc_predicate f A.mat
 
 /-- Continuous functional calculus for a real-valued function of a Hermitian matrix. -/
+@[expose]
 protected def cfc : HermitianMat d 𝕜 :=
   ⟨cfc f A.mat, cfc_predicate _ _⟩
 

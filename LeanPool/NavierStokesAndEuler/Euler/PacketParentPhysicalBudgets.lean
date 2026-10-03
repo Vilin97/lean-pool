@@ -32,7 +32,7 @@ section
 derivative of the deformation and the Jacobi equation.  Uniqueness of
 within-interval derivatives includes both endpoints of the interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -102,6 +102,7 @@ synthesis. -/
 local instance instPacketParentJoinedBudget2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
 /-- Source joined budget as an element of `Budget D τ hτ hτT B (Fin 4) q`. -/
+@[expose]
 def sourceJoinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (q : ℕ)
     (Ti R C C₁ C₂ Cp : ℝ) (hτ1 : τ ≤ 1) (hTi : τ⁻¹ ≤ Ti)
@@ -212,7 +213,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -226,10 +227,11 @@ open scoped ContDiff BoundedContinuousFunction
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 /-- Half ball, given by `{x | ‖x‖ ≤ (1/2 : ℝ)}`. -/
+@[expose]
 def halfBall : Set Space := {x | ‖x‖ ≤ (1/2 : ℝ)}
 
 /-- Physical cost, given by `3*(frameAmplitude K)^3*Cp`. -/
-def physicalCost (K Cp : ℝ) : ℝ := 3*(frameAmplitude K)^3*Cp
+@[expose] def physicalCost (K Cp : ℝ) : ℝ := 3*(frameAmplitude K)^3*Cp
 
 theorem physicalCost_nonneg (K Cp : ℝ) (hCp : 0 ≤ Cp) : 0 ≤ physicalCost K Cp := by
   have h := frameAmplitude_nonneg K
@@ -238,6 +240,7 @@ theorem physicalCost_nonneg (K Cp : ℝ) (hCp : 0 ≤ Cp) : 0 ≤ physicalCost K
 
 /-- At a zero-history stage the real label bounds and physical propagator
 construct the complete source forward budget, before any forcing is chosen. -/
+@[expose]
 def forwardBudget (D : Data U) (q : ℕ)
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)
     (ℓ K Cp : ℝ) (hℓ : 0 ≤ ℓ) (hℓ1 : ℓ ≤ 1) (hK : 0 ≤ K) (hCp : 0 ≤ Cp)
@@ -271,6 +274,7 @@ def forwardBudget (D : Data U) (q : ℕ)
 /-- Positive history uses the actual acceleration in (21) and its true
 within-time derivative identity.  Jacobi and determinant one then supply
 the Hessian multiplier bound needed by the joined variational inverse. -/
+@[expose]
 def joinedBudget (D : Data U) (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T)
     (B : HistoryData (D.initial τ hτ hτT.le)) (q : ℕ)
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)

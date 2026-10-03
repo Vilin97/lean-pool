@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-! # Uniform Arrival -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -133,10 +133,12 @@ theorem uniformArrivalMass_quantile
     exact hself
 
 /-- The dyadic label assigned to the continuous arrival coordinate `u`. -/
+@[expose]
 def uniformArrivalLeaf (L : ℕ) (u : ℝ) : DyadicNode L :=
   (uniformArrivalMass L).selectedIndex u
 
 /-- The finite pushforward law of the selected uniform-arrival label. -/
+@[expose]
 def uniformArrivalLeafLaw (L : ℕ) : FiniteLaw (DyadicNode L) :=
   (uniformArrivalMass L).selectedIndexLaw
     (uniformArrivalMass_isProbability L)

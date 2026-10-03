@@ -29,7 +29,7 @@ for a countable base language (`countable_localEMTupleCode`) — the quotient-tu
 the orbit theorem are unit 3b (`LocalEMTupleOrbit.lean`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -114,6 +114,7 @@ theorem locJRename_expand (e : J ≃o J) {k : ℕ} (s t : Fin k ↪o J)
 
 /-- The code of an `n`-tuple: a compression arity `k` together with `n` closed terms over the
 compressed skeleton `Fin k`. -/
+@[expose]
 def LocalEMTupleCode (Λ : Language.{0, 0}) (n : ℕ) : Type :=
   Σ k : ℕ, Fin n → Λ[[Fin k]].Term Empty
 

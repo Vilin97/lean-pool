@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part04
 
 /-! # Quantum parallel repetition, part 05 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,7 +29,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The total probability mass of exact fixed bob question. -/
-def exactFixedBobQuestionMass
+@[expose] def exactFixedBobQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (fixed : Finset (Fin n))
     (xs : Fin n → X) (known : Fin n → Y) : ℝ :=
@@ -39,7 +39,7 @@ def exactFixedBobQuestionMass
     else 0
 
 /-- The total probability mass of exact fixed alice question. -/
-def exactFixedAliceQuestionMass
+@[expose] def exactFixedAliceQuestionMass
     (G : Game X Y A B) (n : ℕ)
     (fixed : Finset (Fin n))
     (known : Fin n → X) (ys : Fin n → Y) : ℝ :=
@@ -263,14 +263,14 @@ open scoped BigOperators
 attribute [local instance] Classical.propDecidable
 
 /-- The exact reverse left side construction used in the quantum parallel-repetition argument. -/
-def exactReverseLeftSide
+@[expose] def exactReverseLeftSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) : Finset M :=
   insert seed.coordinate
     (exactLeft seed.coordinate seed.partition)
 
 /-- The exact reverse right side construction used in the quantum parallel-repetition argument. -/
-def exactReverseRightSide
+@[expose] def exactReverseRightSide
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) : Finset M :=
   insert seed.coordinate
@@ -454,7 +454,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The exact history accepted construction used in the quantum parallel-repetition argument. -/
-def exactHistoryAccepted
+@[expose] def exactHistoryAccepted
     (G : Game X Y A B) (n : ℕ)
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) : Prop :=
@@ -542,7 +542,7 @@ abbrev ExactGlobalHistoryLocalIndex
       ExactPaddedLocalIndex G n S D r)
 
 /-- The state vector representing exact global history. -/
-def exactGlobalHistoryVector
+@[expose] def exactGlobalHistoryVector
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D)
@@ -586,6 +586,7 @@ theorem exactGlobalHistoryLocalIndex_card_pos
 The exact global history fin reindex construction used in the quantum parallel-repetition
 argument.
 -/
+@[expose]
 def exactGlobalHistoryFinReindex
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
@@ -641,7 +642,7 @@ def exactGlobalHistoryFinPhi
 /--
 The exact global history fin psi construction used in the quantum parallel-repetition argument.
 -/
-def exactGlobalHistoryFinPsi
+@[expose] def exactGlobalHistoryFinPsi
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D)
@@ -697,7 +698,7 @@ abbrev ExactSourceGlobalState
       Fin (Fintype.card (ExactGlobalHistoryLocalIndex G n S D)))
 
 /-- The exact source tuple psi construction used in the quantum parallel-repetition argument. -/
-def exactSourceTuplePsi
+@[expose] def exactSourceTuplePsi
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (t : ExactLocallySampleableTuple X Y A B D) :
@@ -706,7 +707,7 @@ def exactSourceTuplePsi
     G n S D t.2.2.2 t.2.1 t.2.2.1).val
 
 /-- The exact source tuple gamma construction used in the quantum parallel-repetition argument. -/
-def exactSourceTupleGamma
+@[expose] def exactSourceTupleGamma
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (t : ExactLocallySampleableTuple X Y A B D) :
@@ -715,7 +716,7 @@ def exactSourceTupleGamma
     G n S D t.2.2.2 t.2.1).val
 
 /-- The exact source tuple phi construction used in the quantum parallel-repetition argument. -/
-def exactSourceTuplePhi
+@[expose] def exactSourceTuplePhi
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (t : ExactLocallySampleableTuple X Y A B D) :
@@ -740,7 +741,7 @@ theorem exactSourceTupleGamma_norm
     G n S D t.2.2.2 t.2.1).property
 
 /-- The numerical bound for exact source state distance. -/
-def ExactSourceStateDistanceBound
+@[expose] def ExactSourceStateDistanceBound
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (η : ℝ) : Prop :=
   (∑ t : ExactLocallySampleableTuple X Y A B D,
@@ -847,7 +848,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- Alice's question-to-mean entropy increment paired with Bob's question filter. -/
-def exactFairAliceQuestionEntropyIncrement
+@[expose] def exactFairAliceQuestionEntropyIncrement
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (y : Y) : ℝ :=
@@ -863,7 +864,7 @@ def exactFairAliceQuestionEntropyIncrement
       G n S D r.seed r.history r.bobAnswer y)
 
 /-- Bob's question-to-mean entropy increment paired with Alice's question filter. -/
-def exactFairBobQuestionEntropyIncrement
+@[expose] def exactFairBobQuestionEntropyIncrement
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) (x : X) : ℝ :=
@@ -1110,7 +1111,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The error rate associated with exact source classical information. -/
-def exactSourceClassicalInformationRate
+@[expose] def exactSourceClassicalInformationRate
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   (3 * postselectionLogCost G n S D +
@@ -1118,7 +1119,7 @@ def exactSourceClassicalInformationRate
     ((Finset.univ \ D).card : ℝ)
 
 /-- The numerical bound for exact source classical information. -/
-def ExactSourceClassicalInformationBound
+@[expose] def ExactSourceClassicalInformationBound
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) : Prop :=
@@ -1143,7 +1144,7 @@ theorem exactFiniteRelativeEntropy_equiv
     (fun i => q i * InformationTheory.klFun (p i / q i))
 
 /-- The finite equivalence encoding exact alice information. -/
-def exactAliceInformationEquiv
+@[expose] def exactAliceInformationEquiv
     {n : ℕ} (D : Finset (Fin n)) :
     ExactLocallySampleableTuple X Y A B D ≃
       (SourceRemainingCoordinate D × X) ×
@@ -1158,7 +1159,7 @@ def exactAliceInformationEquiv
     rfl
 
 /-- The finite equivalence encoding exact bob information. -/
-def exactBobInformationEquiv
+@[expose] def exactBobInformationEquiv
     {n : ℕ} (D : Finset (Fin n)) :
     ExactLocallySampleableTuple X Y A B D ≃
       (SourceRemainingCoordinate D × Y) ×
@@ -1176,7 +1177,7 @@ def exactBobInformationEquiv
 The exact alice information posterior construction used in the quantum parallel-repetition
 argument.
 -/
-def exactAliceInformationPosterior
+@[expose] def exactAliceInformationPosterior
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     (SourceRemainingCoordinate D × X) ×
@@ -1189,7 +1190,7 @@ def exactAliceInformationPosterior
 The exact alice information reference construction used in the quantum parallel-repetition
 argument.
 -/
-def exactAliceInformationReference
+@[expose] def exactAliceInformationReference
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) :
@@ -1203,7 +1204,7 @@ def exactAliceInformationReference
 The exact bob information posterior construction used in the quantum parallel-repetition
 argument.
 -/
-def exactBobInformationPosterior
+@[expose] def exactBobInformationPosterior
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) :
     (SourceRemainingCoordinate D × Y) ×
@@ -1216,7 +1217,7 @@ def exactBobInformationPosterior
 The exact bob information reference construction used in the quantum parallel-repetition
 argument.
 -/
-def exactBobInformationReference
+@[expose] def exactBobInformationReference
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) :
@@ -1349,7 +1350,7 @@ theorem exact_source_equation_twenty_four_bob
       p q hp hq hac hpnorm hqnorm
 
 /-- The error rate associated with exact source pinsker. -/
-def exactSourcePinskerRate
+@[expose] def exactSourcePinskerRate
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   Real.sqrt (exactSourceClassicalInformationRate G n S D / 2)
@@ -1531,7 +1532,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The finite equivalence encoding exact source prefix flag. -/
-def exactSourcePrefixFlagEquiv
+@[expose] def exactSourcePrefixFlagEquiv
     {Ω V Z : Type*} {h : ℕ} :
     ((Ω × (Fin h → V)) × Z) ≃
       ((Ω × Z) × (Fin h → V)) where
@@ -1560,12 +1561,12 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The marginal distribution of exact alice question prior. -/
-def exactAliceQuestionPriorMarginal
+@[expose] def exactAliceQuestionPriorMarginal
     (G : Game X Y A B) (x : X) : ℝ :=
   ∑ y : Y, G.questionWeight x y
 
 /-- The marginal distribution of exact bob question prior. -/
-def exactBobQuestionPriorMarginal
+@[expose] def exactBobQuestionPriorMarginal
     (G : Game X Y A B) (y : Y) : ℝ :=
   ∑ x : X, G.questionWeight x y
 
@@ -1677,7 +1678,7 @@ variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 The exact alice source marginal information construction used in the quantum parallel-repetition
 argument.
 -/
-def exactAliceSourceMarginalInformation
+@[expose] def exactAliceSourceMarginalInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -1691,7 +1692,7 @@ def exactAliceSourceMarginalInformation
 The exact bob source marginal information construction used in the quantum parallel-repetition
 argument.
 -/
-def exactBobSourceMarginalInformation
+@[expose] def exactBobSourceMarginalInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -1705,7 +1706,7 @@ def exactBobSourceMarginalInformation
 The exact alice source conditional information construction used in the quantum parallel-
 repetition argument.
 -/
-def exactAliceSourceConditionalInformation
+@[expose] def exactAliceSourceConditionalInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -1722,7 +1723,7 @@ def exactAliceSourceConditionalInformation
 The exact bob source conditional information construction used in the quantum parallel-
 repetition argument.
 -/
-def exactBobSourceConditionalInformation
+@[expose] def exactBobSourceConditionalInformation
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -1975,7 +1976,7 @@ open scoped BigOperators
 attribute [local instance] Classical.propDecidable
 
 /-- The exact ordered side prefix construction used in the quantum parallel-repetition argument. -/
-def exactOrderedSidePrefix
+@[expose] def exactOrderedSidePrefix
     {M : Type*} [DecidableEq M]
     (side : Finset M)
     (rank : {j : M // j ∈ side} ≃ Fin side.card)
@@ -2049,7 +2050,7 @@ structure ExactReverseSideContext
 The exact reverse context other prefix construction used in the quantum parallel-repetition
 argument.
 -/
-def exactReverseContextOtherPrefix
+@[expose] def exactReverseContextOtherPrefix
     {M : Type*} [Fintype M] [DecidableEq M]
     {side : Finset M}
     (context : ExactReverseSideContext M side) : Finset M :=
@@ -2085,7 +2086,7 @@ theorem exactReverseRightSide_complement
         exactReverseRightSide, hcoordinate, hbit]
 
 /-- The data context recording exact reverse alice. -/
-def exactReverseAliceContext
+@[expose] def exactReverseAliceContext
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     ExactReverseSideContext M
@@ -2099,7 +2100,7 @@ def exactReverseAliceContext
   otherSide_eq_complement := exactReverseLeftSide_complement seed
 
 /-- The data context recording exact reverse bob. -/
-def exactReverseBobContext
+@[expose] def exactReverseBobContext
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     ExactReverseSideContext M
@@ -2127,7 +2128,7 @@ def exactDefaultReverseSideContext
 The exact reverse alice context at construction used in the quantum parallel-repetition
 argument.
 -/
-def exactReverseAliceContextAt
+@[expose] def exactReverseAliceContextAt
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (seed : ExactForwardSeed M) :
     ExactReverseSideContext M side :=
@@ -2139,7 +2140,7 @@ def exactReverseAliceContextAt
 /--
 The exact reverse bob context at construction used in the quantum parallel-repetition argument.
 -/
-def exactReverseBobContextAt
+@[expose] def exactReverseBobContextAt
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (seed : ExactForwardSeed M) :
     ExactReverseSideContext M side :=
@@ -2218,7 +2219,7 @@ abbrev ExactReverseBobFixedInformation
         j ∈ exactReverseContextOtherPrefix context} → Y)
 
 /-- The projection associated with exact reverse alice source. -/
-def exactReverseAliceSourceProjection
+@[expose] def exactReverseAliceSourceProjection
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D)) :
     ExactJointOutcome X Y A B D →
@@ -2235,7 +2236,7 @@ def exactReverseAliceSourceProjection
       fun k => q.2.2.1 (context.sideRank.symm k).val.val)
 
 /-- The projection associated with exact reverse bob source. -/
-def exactReverseBobSourceProjection
+@[expose] def exactReverseBobSourceProjection
     {n : ℕ} (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D)) :
     ExactJointOutcome X Y A B D →
@@ -2275,7 +2276,7 @@ def exactReverseBobSourceProjection
 The exact reverse context prefix before construction used in the quantum parallel-repetition
 argument.
 -/
-def exactReverseContextPrefixBefore
+@[expose] def exactReverseContextPrefixBefore
     {M : Type*} [Fintype M] [DecidableEq M]
     {side : Finset M}
     (context : ExactReverseSideContext M side)
@@ -2422,7 +2423,7 @@ open QuantumParallelRepetition.ClassicalInformation
 attribute [local instance] Classical.propDecidable
 
 /-- The finite encoding of exact prefix next. -/
-def exactPrefixNextCode
+@[expose] def exactPrefixNextCode
     {Ω V : Type*} {h : ℕ}
     (default : V) (k : Fin h) :
     (Ω × (Fin h → V)) → ((Ω × (Fin h → V)) × V) :=
@@ -3067,7 +3068,7 @@ theorem exactReverseBobSide_marginal
   ring
 
 /-- The probability weight for exact reverse alice conditional seed. -/
-def exactReverseAliceConditionalSeedWeight
+@[expose] def exactReverseAliceConditionalSeedWeight
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (seed : ExactForwardSeed M) : ℝ :=
   if exactReverseLeftSide seed = side then
@@ -3075,7 +3076,7 @@ def exactReverseAliceConditionalSeedWeight
   else 0
 
 /-- The probability weight for exact reverse bob conditional seed. -/
-def exactReverseBobConditionalSeedWeight
+@[expose] def exactReverseBobConditionalSeedWeight
     {M : Type*} [Fintype M] [DecidableEq M]
     (side : Finset M) (seed : ExactForwardSeed M) : ℝ :=
   if exactReverseRightSide seed = side then
@@ -3216,7 +3217,7 @@ def exactForwardSeedLaw
   weight_sum := exactSeedWeight_sum nonempty
 
 /-- The finite probability law for exact reverse alice conditional seed. -/
-def exactReverseAliceConditionalSeedLaw
+@[expose] def exactReverseAliceConditionalSeedLaw
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (side : Finset M) :
@@ -3230,7 +3231,7 @@ def exactReverseAliceConditionalSeedLaw
   else exactForwardSeedLaw nonempty
 
 /-- The finite probability law for exact reverse bob conditional seed. -/
-def exactReverseBobConditionalSeedLaw
+@[expose] def exactReverseBobConditionalSeedLaw
     {M : Type*} [Fintype M] [DecidableEq M]
     (nonempty : 0 < Fintype.card M)
     (side : Finset M) :
@@ -3279,7 +3280,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The finite probability law for reweighted seed prior event. -/
-def reweightedSeedPriorEventLaw
+@[expose] def reweightedSeedPriorEventLaw
     {K : Type*} [Fintype K]
     (seedLaw : FiniteEventLaw K)
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n)) :
@@ -3340,7 +3341,7 @@ theorem reweightedSeedWinEventMass
   simp only [sum_ite_mem, univ_inter, one_mul]
 
 /-- The reweighted seed posterior construction used in the quantum parallel-repetition argument. -/
-def reweightedSeedPosterior
+@[expose] def reweightedSeedPosterior
     {K : Type*} [Fintype K]
     (seedLaw : FiniteEventLaw K)
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -3433,7 +3434,7 @@ theorem reweightedSeedProjection_relativeEntropy_le
       rfl
 
 /-- The finite probability law for reweighted seed flagged projection. -/
-def reweightedSeedFlaggedProjectionLaw
+@[expose] def reweightedSeedFlaggedProjectionLaw
     {K U Z : Type*} [Fintype K]
     (seedLaw : FiniteEventLaw K)
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -3580,7 +3581,7 @@ theorem reweightedSeed_source_equation_twenty_five
 /--
 The reweighted seed prefix joint construction used in the quantum parallel-repetition argument.
 -/
-def reweightedSeedPrefixJoint
+@[expose] def reweightedSeedPrefixJoint
     {K Ω V : Type*} [Fintype K]
     {h : ℕ} (seedLaw : FiniteEventLaw K)
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -3599,7 +3600,7 @@ def reweightedSeedPrefixJoint
 /--
 The reweighted seed prefix prior construction used in the quantum parallel-repetition argument.
 -/
-def reweightedSeedPrefixPrior
+@[expose] def reweightedSeedPrefixPrior
     {K Ω V : Type*} [Fintype K]
     {h : ℕ} (seedLaw : FiniteEventLaw K)
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -4097,7 +4098,7 @@ open QuantumParallelRepetition.ClassicalInformation
 attribute [local instance] Classical.propDecidable
 
 /-- The finite encoding of exact reverse alice marker. -/
-def exactReverseAliceMarkerCode
+@[expose] def exactReverseAliceMarkerCode
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     Σ side : Finset M,
@@ -4109,7 +4110,7 @@ def exactReverseAliceMarkerCode
         exactReverseLeftSide_coordinate_mem seed⟩⟩
 
 /-- The finite encoding of exact reverse bob marker. -/
-def exactReverseBobMarkerCode
+@[expose] def exactReverseBobMarkerCode
     {M : Type*} [Fintype M] [DecidableEq M]
     (seed : ExactForwardSeed M) :
     Σ side : Finset M,
@@ -5534,7 +5535,7 @@ open QuantumParallelRepetition.ClassicalInformation
 attribute [local instance] Classical.propDecidable
 
 /-- The finite equivalence encoding exact reverse alice weighted marker. -/
-def exactReverseAliceWeightedMarkerEquiv
+@[expose] def exactReverseAliceWeightedMarkerEquiv
     {M : Type*} [Fintype M] [DecidableEq M] :
     ExactForwardSeed M ≃
       (Σ side : Finset M,
@@ -5555,7 +5556,7 @@ def exactReverseAliceWeightedMarkerEquiv
       side context position
 
 /-- The finite equivalence encoding exact reverse bob weighted marker. -/
-def exactReverseBobWeightedMarkerEquiv
+@[expose] def exactReverseBobWeightedMarkerEquiv
     {M : Type*} [Fintype M] [DecidableEq M] :
     ExactForwardSeed M ≃
       (Σ side : Finset M,
@@ -6035,7 +6036,7 @@ variable {X Y A B : Type*}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The potential function controlling exact fair alice history high operator. -/
-def exactFairAliceHistoryHighOperatorPotential
+@[expose] def exactFairAliceHistoryHighOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -6049,7 +6050,7 @@ def exactFairAliceHistoryHighOperatorPotential
         G n S D r.seed r.history r.bobAnswer y)
 
 /-- The potential function controlling exact fair alice history low operator. -/
-def exactFairAliceHistoryLowOperatorPotential
+@[expose] def exactFairAliceHistoryLowOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -6062,7 +6063,7 @@ def exactFairAliceHistoryLowOperatorPotential
         G n S D r.seed r.history r.bobAnswer y)
 
 /-- The potential function controlling exact fair bob history high operator. -/
-def exactFairBobHistoryHighOperatorPotential
+@[expose] def exactFairBobHistoryHighOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -6076,7 +6077,7 @@ def exactFairBobHistoryHighOperatorPotential
             G n S D r.seed r.history r.bobAnswer y))
 
 /-- The potential function controlling exact fair bob history low operator. -/
-def exactFairBobHistoryLowOperatorPotential
+@[expose] def exactFairBobHistoryLowOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D) : ℝ :=
@@ -6122,7 +6123,7 @@ theorem exactFairBobHistoryEntropy_eq_operatorPotential_sub
   rw [← mul_sub, map_sub]
 
 /-- The potential function controlling exact reverse alice filter high operator. -/
-def exactReverseAliceFilterHighOperatorPotential
+@[expose] def exactReverseAliceFilterHighOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -6141,7 +6142,7 @@ def exactReverseAliceFilterHighOperatorPotential
     else 0
 
 /-- The potential function controlling exact reverse alice filter low operator. -/
-def exactReverseAliceFilterLowOperatorPotential
+@[expose] def exactReverseAliceFilterLowOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -6160,7 +6161,7 @@ def exactReverseAliceFilterLowOperatorPotential
     else 0
 
 /-- The potential function controlling exact reverse bob filter high operator. -/
-def exactReverseBobFilterHighOperatorPotential
+@[expose] def exactReverseBobFilterHighOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -6179,7 +6180,7 @@ def exactReverseBobFilterHighOperatorPotential
     else 0
 
 /-- The potential function controlling exact reverse bob filter low operator. -/
-def exactReverseBobFilterLowOperatorPotential
+@[expose] def exactReverseBobFilterLowOperatorPotential
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (side : Finset (SourceRemainingCoordinate D))
@@ -6891,7 +6892,7 @@ theorem exactLocallySampleableCode_fixedSeed_fiber_iff
     rw [hx, hy, hr]
 
 /-- The total probability mass of exact fair full outcome born. -/
-def exactFairFullOutcomeBornMass
+@[expose] def exactFairFullOutcomeBornMass
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (r : ExactHistoryFlag X Y A B D)
@@ -7236,7 +7237,7 @@ theorem exactFairPosteriorExpectation_reindex
       · simp only [univ_eq_attach, mem_attach, not_true_eq_false, mul_eq_zero, IsEmpty.forall_iff]
 
 /-- The entropy quantity for exact fair accepted alice. -/
-def exactFairAcceptedAliceEntropy
+@[expose] def exactFairAcceptedAliceEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   ∑ r : ExactHistoryFlag X Y A B D,
@@ -7246,7 +7247,7 @@ def exactFairAcceptedAliceEntropy
     else 0
 
 /-- The entropy quantity for exact fair accepted bob. -/
-def exactFairAcceptedBobEntropy
+@[expose] def exactFairAcceptedBobEntropy
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) : ℝ :=
   ∑ r : ExactHistoryFlag X Y A B D,
@@ -7438,7 +7439,7 @@ private theorem exactFairGammaPsiDistance_mul_postselection_le
       · simp only [accepted, ↓reduceIte, sum_const_zero, mul_zero]
 
 /-- The numerical bound for exact fair operator entropy. -/
-def ExactFairOperatorEntropyBound
+@[expose] def ExactFairOperatorEntropyBound
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (η : ℝ) : Prop :=
   exactFairAcceptedAliceEntropy G n S D ≤

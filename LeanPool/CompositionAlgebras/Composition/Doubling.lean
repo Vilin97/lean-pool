@@ -62,7 +62,7 @@ The named results are the four listed above plus their inputs: `cstar_mul_mul`
 Substrate for the two Hurwitz theorems. It states neither of them.
 -/
 
-@[expose] public section
+public section
 
 namespace CompositionAlgebra
 

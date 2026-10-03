@@ -24,7 +24,7 @@ underlying affine separator directly for downstream polynomial-hull and
 functional-calculus arguments.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Metric Set
 open scoped Topology

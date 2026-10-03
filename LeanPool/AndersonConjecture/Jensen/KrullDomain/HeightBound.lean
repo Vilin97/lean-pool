@@ -30,7 +30,7 @@ at most one in T, using well-founded descent on heights and the
 mod-principal transcendence argument.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

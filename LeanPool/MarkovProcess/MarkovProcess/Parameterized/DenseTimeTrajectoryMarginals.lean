@@ -16,7 +16,7 @@ This file identifies every coordinate marginal of the jointly measurable paramet
 trajectory kernel.  No standard-Borel assumption is imposed on the parameter space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

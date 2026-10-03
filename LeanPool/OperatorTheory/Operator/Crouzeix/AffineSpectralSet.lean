@@ -16,7 +16,7 @@ polynomial spectral-set estimate by the same affine map, without changing
 the spectral-set constant.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace Pointwise Polynomial

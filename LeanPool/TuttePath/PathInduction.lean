@@ -12,7 +12,7 @@ public import LeanPool.TuttePath.PathOperations
 
 /-! The corank induction of `thm:path-theorem`. This file does not import the
 public target, so none of its dependencies can rely on that target. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

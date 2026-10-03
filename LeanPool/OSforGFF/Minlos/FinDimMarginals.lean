@@ -32,7 +32,7 @@ measure μ_F on ℝⁿ.
 - `marginal_measure_exists` — Bochner gives a probability measure with matching CF
 -/
 
-@[expose] public section
+public section
 
 open BigOperators MeasureTheory Complex
 
@@ -45,7 +45,7 @@ noncomputable section
     Defined on `EuclideanSpace ℝ (Fin n)` (which is `PiLp 2 (fun _ => ℝ)`)
     so that we can apply Bochner's theorem (which requires inner product spaces).
 -/
-def marginalCF {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] def marginalCF {E : Type*} [AddCommGroup E] [Module ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E) :
     EuclideanSpace ℝ (Fin n) → ℂ :=
   fun t => Φ (∑ i, (t i) • f i)

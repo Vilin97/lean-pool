@@ -23,7 +23,7 @@ inherits the structure through `Ind.equivalence` and the full
 monoidal subcategory of the ind-property.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ variable (C : Type v)
 
 /-- The ind-property, read on the Day synonym of the presheaf
 category. -/
+@[expose]
 def IsIndDay [SmallCategory C] [MonoidalCategory C]
     (F : MonoidalCategory.DayFunctor Cᵒᵖ (Type v)) : Prop :=
   IsIndObject F.functor
@@ -62,6 +63,7 @@ instance isIndDay_closedUnderIso [SmallCategory C] [MonoidalCategory C] :
 
 /-- The wrapper equivalence between the ind-subcategory of the
 presheaf category and the ind-subcategory of its Day synonym. -/
+@[expose]
 noncomputable def indDayCongr [SmallCategory C] [MonoidalCategory C] :
     ObjectProperty.FullSubcategory
       (IsIndObject (C := C)) ≌
@@ -88,6 +90,7 @@ noncomputable def indDayCongr [SmallCategory C] [MonoidalCategory C] :
 
 /-- `Ind C` is equivalent to the monoidal full subcategory of
 ind-objects of the Day presheaf category. -/
+@[expose]
 noncomputable def indDayEquivalence [SmallCategory C] [MonoidalCategory C] :
     Ind C ≌ ObjectProperty.FullSubcategory
       (C := MonoidalCategory.DayFunctor Cᵒᵖ (Type v))

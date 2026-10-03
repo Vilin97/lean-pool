@@ -14,7 +14,7 @@ This file verifies that the pair `(X.IProd.sk 0, X.IProd)` is homeomorphic to
 and `I` is the unit interval.
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval TopCat
@@ -36,8 +36,11 @@ lemma inl_l_r_eq_relCWComplex_skInclSucc_zero :
         (Limits.Sigma.desc fun a ↦ isEmptyElim a)
         (Limits.Sigma.map fun _ ↦ diskBoundaryIncl 0) ).inv
   simp only [Nat.reduceAdd, Iso.trans_inv, Iso.symm_inv]
-  change _ = _ ≫ _ ≫ _
-  exact (Iso.hom_inv_id_assoc _ _).symm
+  let i : IProd.sk X 0 ≅ _ := asIso <| Limits.pushout.inl
+    (Limits.Sigma.desc fun a : (X.IProd.attachCells 0).cells ↦ isEmptyElim a)
+    (Limits.Sigma.map fun _ ↦ diskBoundaryIncl 0)
+  change (skZeroIsoSkOne X).hom = i.hom ≫ i.inv ≫ (skZeroIsoSkOne X).hom
+  exact (Iso.hom_inv_id_assoc i (skZeroIsoSkOne X).hom).symm
 
 lemma skInclSucc_eq_relCWComplex_skInclSucc (n : ℕ) :
     IProd.skInclSucc X n = RelCWComplex.skInclSucc X.IProd (n + 1) := by
@@ -123,7 +126,7 @@ lemma naturality : X.IProd.skInclSucc n ≫ incl X (n + 1) = incl X n :=
 /-- The cocone with `X.IProd.sk 0 ⟶ X.IProd.sk 1 ⟶ ⋯` as base
 and `TopCat.of (I × X.toTopCat)` as vertex.
 This is actually a colimit cocone (see `CWComplex.IProd.colimitCocone`). -/
-noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
+@[expose] noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
   { pt := TopCat.of (I × X.toTopCat)
     ι := NatTrans.ofSequence (incl X) <| by
       intro n

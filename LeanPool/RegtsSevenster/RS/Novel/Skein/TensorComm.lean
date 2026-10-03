@@ -18,11 +18,12 @@ right-slot half of the monoidal ideal follows from the left-slot
 machinery through the swap.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The block swap of interleaved boundaries. -/
+@[expose]
 noncomputable def tensorSwapEquiv (s t u v : ℕ) :
     Fin ((u + s) + (v + t)) ≃ Fin ((s + u) + (t + v)) :=
   (interleaveEquiv u v s t).symm.trans

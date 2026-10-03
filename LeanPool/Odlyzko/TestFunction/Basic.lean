@@ -10,7 +10,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 
@@ -19,11 +19,11 @@ noncomputable def Tartar.weight (x : ℝ) : ℝ :=
   max (1 - x ^ 2) 0
 
 /-- An amplitude used in the Odlyzko-bound argument. -/
-noncomputable def Tartar.amplitude (x : ℝ) : ℝ :=
+@[expose] noncomputable def Tartar.amplitude (x : ℝ) : ℝ :=
   if x = 0 then 1 else 3 * (Real.sin x - x * Real.cos x) / x ^ 3
 
 /-- A test function used in the Odlyzko-bound argument. -/
-noncomputable def Tartar.testFunction (x : ℝ) : ℝ :=
+@[expose] noncomputable def Tartar.testFunction (x : ℝ) : ℝ :=
   Tartar.amplitude x ^ 2
 
 @[simp]

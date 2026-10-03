@@ -35,7 +35,7 @@ The consumer-supplied resolvent and its limit are `ℝ≥0∞`-valued, so no int
 hypothesis appears; a consumer working with real-valued solutions bridges with `ENNReal.ofReal`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -17,7 +17,7 @@ a linear-equivalence witness.  These lemmas package that use for winnability
 and one-chip reachability without imposing restrictions on the profile slopes.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.WindowProfile.Data
 open Utilities.Certificate
@@ -30,6 +30,7 @@ open SubdivisionGraph
 variable {n p : ℕ} {spec : SubdivisionGraph.Spec n p}
 
 /-- The signed sum of the start and stop endpoint divisors of a profile. -/
+@[expose]
 def endpointDivisors (data : Data spec) : CFDiv spec.graph :=
   ∑ edge : Fin p,
     data.slope edge •

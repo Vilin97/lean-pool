@@ -27,7 +27,7 @@ The auxiliary second mark in transmission disappears because every one of
 these rows lies on the cut `b = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -74,12 +74,14 @@ theorem youngDiagram_transpose_card (lambda : YoungDiagram) :
 /-- The finite pointed rank rows encoded by a Young diagram.  We deliberately
 retain every positive row.  Passing to the last row of each constant block is
 an optional certificate compression, not part of the semantic definition. -/
+@[expose]
 def onceMarkedCorners (lambda : YoungDiagram) : List Corner :=
   lambda.rowLens.zipIdx.map fun p =>
     ((p.2 : ℤ) - (p.1 : ℤ), 0, (p.2 : ℤ))
 
 /-- The `i`th part of a Young diagram, extended by zero beyond its positive
 row list. -/
+@[expose]
 def onceMarkedPart (lambda : YoungDiagram) (i : ℕ) : ℕ :=
   lambda.rowLens.getD i 0
 
@@ -91,6 +93,7 @@ Pflueger--Solomon divisor census.  It is the pole-order inequality
 
 For a connected graph this is equivalent to the finite normalized predicate
 `OnceMarkedBNExists` below. -/
+@[expose]
 def OnceMarkedCensusContains (G : CFGraph) (u : G.V)
     (lambda : YoungDiagram) : Prop :=
   ∃ D : CFDiv G,
@@ -101,6 +104,7 @@ def OnceMarkedCensusContains (G : CFGraph) (u : G.V)
 
 /-- The normalized form of membership of `lambda` in the divisor census of
 the once-marked graph `(G,u)`. -/
+@[expose]
 def OnceMarkedBNExists (G : CFGraph) (u : G.V)
     (lambda : YoungDiagram) : Prop :=
   ∃ D : CFDiv G,
@@ -110,6 +114,7 @@ def OnceMarkedBNExists (G : CFGraph) (u : G.V)
 
 /-- Once-marked Brill--Noether existence for `(G,u)`: every Young diagram of
 size at most the genus occurs in its divisor census. -/
+@[expose]
 def OnceMarkedBNExistence (G : CFGraph) (u : G.V) : Prop :=
   ∀ lambda : YoungDiagram,
     (lambda.card : ℤ) ≤ CFGraph.genus G →
@@ -349,6 +354,7 @@ once-marked partition `lambda` at the cut `b = 0`.
 For the Grassmannian permutation attached to `lambda`, these facts follow
 from its essential-set formula.  Packaging them separately keeps the graph
 side independent of the particular construction of that permutation. -/
+@[expose]
 def GrassmannianPartitionProfile (tau : AspPerm)
     (lambda : YoungDiagram) : Prop :=
   tau.χ = 0 ∧

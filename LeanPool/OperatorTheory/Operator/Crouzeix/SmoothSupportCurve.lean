@@ -24,26 +24,30 @@ the later global argument identifying the curve with the frontier of its
 support envelope.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped ContDiff
 
 /-- Unit outward normal at angle `theta`. -/
+@[expose]
 noncomputable def smoothSupportUnitNormal (theta : ℝ) : ℂ :=
   circleMap 0 1 theta
 
 /-- Positively oriented unit tangent at angle `theta`. -/
+@[expose]
 noncomputable def smoothSupportUnitTangent (theta : ℝ) : ℂ :=
   smoothSupportUnitNormal theta * I
 
 /-- The planar curve represented by a differentiable support function. -/
+@[expose]
 noncomputable def smoothSupportCurve (h : ℝ → ℝ) (theta : ℝ) : ℂ :=
   h theta • smoothSupportUnitNormal theta +
     deriv h theta • smoothSupportUnitTangent theta
 
 /-- The radius of curvature associated with a twice differentiable support
 function. -/
+@[expose]
 noncomputable def smoothSupportCurvatureRadius
     (h : ℝ → ℝ) (theta : ℝ) : ℝ :=
   h theta + deriv (deriv h) theta
@@ -209,6 +213,7 @@ theorem polytopeDirectionalValue_smoothSupportCurve_self
 
 /-- The support curve associated with the strictly rounded log-sum-exp
 support of a finite polytope. -/
+@[expose]
 noncomputable def polytopeRoundedSupportCurve
     (u : Finset ℂ) (delta rho : ℝ) : ℝ → ℂ :=
   smoothSupportCurve (polytopeRoundedSupport u delta rho)

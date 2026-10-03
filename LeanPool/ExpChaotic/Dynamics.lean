@@ -20,7 +20,7 @@ The initial proof architecture uses John Harrison's HOL Light formalisation.
 See `LeanPool.ExpChaotic` for attribution and the upstream source.
 -/
 
-@[expose] public section
+public section
 
 open Function Filter Set Metric
 open scoped Topology NNReal Uniformity
@@ -38,6 +38,7 @@ whose orbit visits each member of a fixed countable basis of the plane.
 -/
 
 /-- A point escapes to infinity if its orbit eventually leaves every centred Euclidean ball. -/
+@[expose]
 def EscapesToInfinity (z : ℂ) : Prop :=
   ∀ R : ℝ, ∃ N : ℕ, ∀ n ≥ N, R ≤ ‖expIterate n z‖
 

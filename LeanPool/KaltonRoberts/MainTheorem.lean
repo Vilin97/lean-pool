@@ -36,7 +36,7 @@ import Mathlib.Tactic.Positivity.Finset
 The final proof that the Kalton-Roberts constant is less than `9919 / 500`.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

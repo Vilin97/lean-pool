@@ -19,7 +19,7 @@ has one common endpoint rise, while every unmarked strand carries a nonzero
 integral slope when that rise is nonzero.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -20,7 +20,7 @@ facewise affine formulas and subordination to old faces.  Thus an arbitrary home
 be installed as a subdivision by bookkeeping alone.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -54,7 +54,7 @@ def ambientFaceCarrier (t : Finset K.Vertex) : Set (K.Vertex → ℝ) :=
   {x | x ∈ stdSimplex ℝ K.Vertex ∧ ∀ v ∉ t, x v = 0}
 
 /-- The carrier of a listed triangle as a subset of the realization. -/
-def faceCarrier (t : Finset K.Vertex) : Set K.realization :=
+@[expose] def faceCarrier (t : Finset K.Vertex) : Set K.realization :=
   {x | ∀ v ∉ t, x.1 v = 0}
 
 theorem mem_realization_iff (x : K.Vertex → ℝ) :
@@ -97,6 +97,7 @@ theorem realization_eq_iUnion_faceCarrier :
   · exact Set.subset_univ _
 
 /-- The intrinsic subcomplex obtained by retaining a selected family of maximal faces. -/
+@[expose]
 def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTwoComplex where
   Vertex := K.Vertex
   faces := K.faces.filter p
@@ -108,7 +109,7 @@ def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTw
     (K.restrictFaces p).faces = K.faces.filter p := rfl
 
 /-- The canonical inclusion of a face restriction into the old realization. -/
-def restrictFacesInclusion (p : Finset K.Vertex → Prop)
+@[expose] def restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :
     (K.restrictFaces p).realization → K.realization :=
   fun x => ⟨x.1, x.2.1, by
@@ -117,7 +118,7 @@ def restrictFacesInclusion (p : Finset K.Vertex → Prop)
 
 @[simp] theorem restrictFacesInclusion_val (p : Finset K.Vertex → Prop) [DecidablePred p]
     (x : (K.restrictFaces p).realization) :
-    (K.restrictFacesInclusion p x).1 = x.1 := rfl
+    (K.restrictFacesInclusion p x).1 = x.1 := by rfl
 
 theorem isEmbedding_restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :
@@ -155,12 +156,12 @@ theorem restrictFacesInclusion_range (p : Finset K.Vertex → Prop)
 /-! ## Intrinsic vertices and edges -/
 
 /-- The edges of an intrinsic two-complex. -/
-def edges : Finset (Finset K.Vertex) :=
+@[expose] def edges : Finset (Finset K.Vertex) :=
   K.faces.biUnion fun t => t.powersetCard 2
 
 /-- The abstract two-complex has surface edge valence when every edge is contained in at most
 two maximal triangles. -/
-def HasSurfaceEdgeValence : Prop :=
+@[expose] def HasSurfaceEdgeValence : Prop :=
   ∀ e ∈ K.edges, (K.faces.filter fun t => e ⊆ t).card ≤ 2
 
 theorem card_of_mem_edges {e : Finset K.Vertex} (he : e ∈ K.edges) : e.card = 2 := by
@@ -176,7 +177,7 @@ theorem exists_face_of_mem_edges {e : Finset K.Vertex} (he : e ∈ K.edges) :
 abbrev Edge : Type := {e : Finset K.Vertex // e ∈ K.edges}
 
 /-- The intrinsic one-skeleton, as the finite union of all barycentric edge carriers. -/
-def oneSkeleton : Set K.realization :=
+@[expose] def oneSkeleton : Set K.realization :=
   {x | ∃ e : K.Edge, x ∈ K.faceCarrier e.1}
 
 theorem mem_oneSkeleton_iff (x : K.realization) :
@@ -207,7 +208,7 @@ noncomputable def faceVertexEquiv (t : K.Face) : Fin 3 ≃ t.1 :=
     rw [Fintype.card_fin, Fintype.card_coe, K.faces_card t.1 t.2])
 
 /-- Cyclically indexed vertices of a maximal face. -/
-noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
+@[expose] noncomputable def faceVertex (t : K.Face) (i : ZMod 3) : K.Vertex :=
   (K.faceVertexEquiv t ((ZMod.finEquiv 3).symm i)).1
 
 theorem faceVertex_mem (t : K.Face) (i : ZMod 3) : K.faceVertex t i ∈ t.1 :=
@@ -255,7 +256,7 @@ noncomputable def faceEdge (t : K.Face) (i : ZMod 3) : K.Edge := by
   · simp [K.faceVertex_ne_next t i]
 
 @[simp] theorem faceEdge_val (t : K.Face) (i : ZMod 3) :
-    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := rfl
+    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := by rfl
 
 /-- The consecutive face edges share exactly their common cyclic vertex. -/
 theorem faceEdge_inter_next (t : K.Face) (i : ZMod 3) :
@@ -296,7 +297,7 @@ theorem faceEdge_ne_next (t : K.Face) (i : ZMod 3) :
 abbrev UsedVertex : Type := {v : K.Vertex // ∃ t ∈ K.faces, v ∈ t}
 
 /-- A cyclic face vertex with explicit evidence that it occurs in the complex. -/
-noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
+@[expose] noncomputable def faceUsedVertex (t : K.Face) (i : ZMod 3) : K.UsedVertex :=
   ⟨K.faceVertex t i, t.1, t.2, K.faceVertex_mem t i⟩
 
 /-- A chosen maximal face containing a used vertex. -/
@@ -310,7 +311,7 @@ theorem usedVertex_mem_parent (v : K.UsedVertex) : v.1 ∈ K.usedVertexParent v 
   (Classical.choose_spec v.2).2
 
 /-- The canonical barycentric point of a used vertex. -/
-noncomputable def vertexPoint (v : K.UsedVertex) : K.realization :=
+@[expose] noncomputable def vertexPoint (v : K.UsedVertex) : K.realization :=
   ⟨Pi.single v.1 1, single_mem_stdSimplex ℝ v.1, by
     refine ⟨K.usedVertexParent v, K.usedVertexParent_mem v, ?_⟩
     intro w hw
@@ -352,11 +353,11 @@ theorem edge_subset_parent (e : K.Edge) : e.1 ⊆ K.edgeParent e :=
   (Classical.choose_spec (K.exists_face_of_mem_edges e.2)).2
 
 /-- The chosen first endpoint of an intrinsic edge. -/
-noncomputable def edgeFirst (e : K.Edge) : K.Vertex :=
+@[expose] noncomputable def edgeFirst (e : K.Edge) : K.Vertex :=
   (Finset.card_eq_two.mp (K.card_of_mem_edges e.2)).choose
 
 /-- The chosen second endpoint of an intrinsic edge. -/
-noncomputable def edgeSecond (e : K.Edge) : K.Vertex :=
+@[expose] noncomputable def edgeSecond (e : K.Edge) : K.Vertex :=
   (Finset.card_eq_two.mp (K.card_of_mem_edges e.2)).choose_spec.choose
 
 theorem edgeFirst_ne_edgeSecond (e : K.Edge) : K.edgeFirst e ≠ K.edgeSecond e :=
@@ -374,7 +375,7 @@ theorem edgeSecond_mem (e : K.Edge) : K.edgeSecond e ∈ e.1 := by
   simp
 
 /-- The canonical barycentric realization point associated to a vertex of an edge. -/
-noncomputable def edgeVertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e.1) :
+@[expose] noncomputable def edgeVertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e.1) :
     K.realization :=
   ⟨Pi.single v 1, single_mem_stdSimplex ℝ v, by
     refine ⟨K.edgeParent e, K.edgeParent_mem e, ?_⟩
@@ -392,20 +393,20 @@ theorem edgeVertexPoint_eq_vertexPoint (e : K.Edge) (v : K.Vertex) (hv : v ∈ e
   rfl
 
 /-- Canonical first endpoint in the barycentric realization. -/
-noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeFirstPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeFirst e) (K.edgeFirst_mem e)
 
 /-- Canonical second endpoint in the barycentric realization. -/
-noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
+@[expose] noncomputable def edgeSecondPoint (e : K.Edge) : K.realization :=
   K.edgeVertexPoint e (K.edgeSecond e) (K.edgeSecond_mem e)
 
 /-- The first endpoint as a used vertex. -/
-noncomputable def edgeFirstUsed (e : K.Edge) : K.UsedVertex :=
+@[expose] noncomputable def edgeFirstUsed (e : K.Edge) : K.UsedVertex :=
   ⟨K.edgeFirst e, K.edgeParent e, K.edgeParent_mem e,
     K.edge_subset_parent e (K.edgeFirst_mem e)⟩
 
 /-- The second endpoint as a used vertex. -/
-noncomputable def edgeSecondUsed (e : K.Edge) : K.UsedVertex :=
+@[expose] noncomputable def edgeSecondUsed (e : K.Edge) : K.UsedVertex :=
   ⟨K.edgeSecond e, K.edgeParent e, K.edgeParent_mem e,
     K.edge_subset_parent e (K.edgeSecond_mem e)⟩
 
@@ -507,7 +508,7 @@ theorem injective_edgePath (e : K.Edge) : Function.Injective (K.edgePath e) := b
   simpa using hcoord
 
 /-- An ambient map restricted to the canonical interval of one intrinsic edge. -/
-noncomputable def mappedEdgePath (h : K.realization → Plane) (e : K.Edge) :
+@[expose] noncomputable def mappedEdgePath (h : K.realization → Plane) (e : K.Edge) :
     Set.Icc (0 : ℝ) 1 → Plane :=
   h ∘ K.edgePath e
 
@@ -702,7 +703,7 @@ theorem disjoint_range_mappedEdgePath {h : K.realization → Plane}
 
 /-- `f` is affine on an intrinsic set when it is the restriction of an ambient affine map in
 barycentric coordinates. -/
-def IsAffineOnSetTo {E : Type*} [AddCommGroup E] [Module ℝ E]
+@[expose] def IsAffineOnSetTo {E : Type*} [AddCommGroup E] [Module ℝ E]
     (f : K.realization → E) (A : Set K.realization) : Prop :=
   ∃ a : (K.Vertex → ℝ) →ᵃ[ℝ] E,
     ∀ x : K.realization, x ∈ A → f x = a x.1
@@ -762,7 +763,7 @@ structure Subdivision where
 namespace Subdivision
 
 /-- Every intrinsic complex is a subdivision of itself. -/
-noncomputable def refl : K.Subdivision where
+@[expose] noncomputable def refl : K.Subdivision where
   refined := K
   homeo := Homeomorph.refl K.realization
   affineOnFace := by
@@ -774,11 +775,11 @@ noncomputable def refl : K.Subdivision where
     intro t ht
     exact ⟨t, ht, fun x hx => hx⟩
 
-@[simp] theorem refl_refined : (refl K).refined = K := rfl
+@[simp] theorem refl_refined : (refl K).refined = K := by rfl
 
 
 /-- Faithful intrinsic subdivisions compose. -/
-noncomputable def trans {K : IntrinsicTwoComplex}
+@[expose] noncomputable def trans {K : IntrinsicTwoComplex}
     (R : K.Subdivision) (Q : R.refined.Subdivision) : K.Subdivision where
   refined := Q.refined
   homeo := Q.homeo.trans R.homeo
@@ -799,11 +800,11 @@ noncomputable def trans {K : IntrinsicTwoComplex}
     exact ⟨s, hs, fun x hx => hus (Q.homeo x) (htu x hx)⟩
 
 @[simp] theorem trans_refined (R : K.Subdivision) (Q : R.refined.Subdivision) :
-    (R.trans Q).refined = Q.refined := rfl
+    (R.trans Q).refined = Q.refined := by rfl
 
 theorem trans_homeo_apply (R : K.Subdivision) (Q : R.refined.Subdivision)
     (x : Q.refined.realization) :
-    (R.trans Q).homeo x = R.homeo (Q.homeo x) := rfl
+    (R.trans Q).homeo x = R.homeo (Q.homeo x) := by rfl
 
 end Subdivision
 
@@ -890,7 +891,7 @@ noncomputable def refl : K.PLHomeomorph K where
     intro x hx
     rfl
 
-@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := rfl
+@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := by rfl
 
 end PLHomeomorph
 

@@ -23,7 +23,7 @@ trace.  Those are what the cycle-trace factorisation of a
 permutation action needs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ public import Mathlib.Tactic
 
 /-! # Singular H0Path Connected -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits
 open SphereOddDegree
@@ -33,7 +33,7 @@ theorem aug_comp_boundary_eq_zero (Y : TopCat.{0}) :
   exact aug_boundary c
 
 /-- The augmentation induced on zeroth singular homology. -/
-def H0aug (Y : TopCat.{0}) : (singularChainComplex ℤ Y).homology 0 ⟶ ModuleCat.of ℤ ℤ :=
+@[expose] def H0aug (Y : TopCat.{0}) : (singularChainComplex ℤ Y).homology 0 ⟶ ModuleCat.of ℤ ℤ :=
   (singularChainComplex ℤ Y).homologyι 0 ≫
     (singularChainComplex ℤ Y).descOpcycles (aug Y) 1 prev_zero (aug_comp_boundary_eq_zero Y)
 
@@ -157,7 +157,7 @@ theorem surjective_H0aug (Y : TopCat.{0}) [Nonempty ↑Y] :
   erw [ModuleCat.hom_comp, LinearMap.comp_apply, hx, h_eval]
 
 /-- The zeroth-homology augmentation for chains supported in a subset. -/
-def subH0aug (X : TopCat.{0}) (S : Set X) :
+@[expose] def subH0aug (X : TopCat.{0}) (S : Set X) :
     (subChainComplex ℤ X S).homology 0 ⟶ ModuleCat.of ℤ ℤ :=
   (subspaceHomologyIso S 0).hom ≫ H0aug (TopCat.of S)
 

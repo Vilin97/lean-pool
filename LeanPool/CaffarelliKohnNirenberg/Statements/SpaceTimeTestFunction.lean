@@ -14,7 +14,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Operations
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open CKN.Foundation.Parabolic
@@ -26,6 +26,7 @@ namespace CKN
 
 /-- The smooth compactly supported test-function class on `Ω × I` from paper label `def:sws`; its
   ordinary product space follows the test-function convention of docs/DESIGN_NOTES.md. -/
+@[expose]
 def spaceTimeTestFunction {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (Ω : Set Vec3) (I : Set ℝ) : Set (Vec3 × ℝ → V) :=
   {φ | ContDiff ℝ (⊤ : ℕ∞) φ ∧ HasCompactSupport φ ∧

@@ -16,7 +16,7 @@ This module binds the generic profile and physical-shear identities to the
 same finite modulation, aligned coefficient family, and covariance target.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -559,6 +559,7 @@ end ClosedDirection
 
 /-- Reference set, given by `PrimaryRepresentatives.referenceCompact F.data.h
 (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W)`. -/
+@[expose]
 noncomputable def referenceSet {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : Set
     Slow :=
   PrimaryRepresentatives.referenceCompact F.data.h (NominalConeAssembly.activeLeft W)

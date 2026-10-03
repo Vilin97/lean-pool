@@ -19,7 +19,7 @@ constrained partition value as the weighted sum the iteration
 carries.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

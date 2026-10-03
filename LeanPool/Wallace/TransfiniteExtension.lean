@@ -22,7 +22,7 @@ This file specializes the coefficient-parametric Wallace recursion to the free A
 An integer coordinate character is uniquely determined by its value at one.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Topology
 

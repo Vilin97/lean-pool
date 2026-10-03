@@ -24,7 +24,7 @@ makes the discarded proportion tend to zero.  The errors form a geometric series
 `1 / 32`, leaving a large margin around an initial character value of `1 / 2`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

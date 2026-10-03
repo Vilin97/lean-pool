@@ -16,7 +16,7 @@ The Riemann-Roch theorem for graphs and its main corollaries.
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Chapter 5.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 

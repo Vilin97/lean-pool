@@ -63,7 +63,7 @@ as is the final connection to `TailTemplateRealizable`. This is a pure file (imp
 `LocalEMTruth`, hence the pure local stack only) — no EM-stack or `Conditional/` reach.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.Finiteness
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal NNReal Topology

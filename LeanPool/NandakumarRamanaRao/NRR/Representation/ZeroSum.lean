@@ -23,7 +23,7 @@ obstruction theory, or quotient spaces, and it does not make `AddCommGroup`/`Mod
 structure mandatory.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -31,6 +31,7 @@ variable {n : ℕ}
 
 /-- **Zero-sum real-valued target type.** A function `Fin n → ℝ` whose coordinates sum to
 zero. -/
+@[expose]
 def ZeroSum (n : ℕ) : Type :=
   {v : Fin n → ℝ // ∑ i, v i = 0}
 
@@ -69,6 +70,7 @@ def ZeroSum.mk' (v : Fin n → ℝ) (hv : ∑ i, v i = 0) : ZeroSum n :=
 zero-sum vector `v : ZeroSum n`, the relabelled vector `ZeroSum.relabel σ v` is obtained by
 precomposing the underlying function with `σ.symm`, i.e.
 `(ZeroSum.relabel σ v) i = v (σ.symm i)`. This `σ.symm` convention matches `Config.relabel`. -/
+@[expose]
 def ZeroSum.relabel (σ : Equiv.Perm (Fin n)) (v : ZeroSum n) : ZeroSum n :=
   { val := fun i => v (σ.symm i)
     property := by
@@ -88,8 +90,8 @@ theorem ZeroSum.relabel_mul (σ τ : Equiv.Perm (Fin n)) (v : ZeroSum n) :
       ZeroSum.relabel σ (ZeroSum.relabel τ v) := by
   apply ZeroSum.ext
   intro i
-  simp [ZeroSum.relabel_apply]
-  rfl
+  simp only [ZeroSum.relabel_apply, ← Equiv.Perm.inv_def, mul_inv_rev,
+    Equiv.Perm.mul_apply]
 
 /-- The `Sₙ`-action `σ • v := ZeroSum.relabel σ v` on the zero-sum target type, by relabelling
 via precomposition with `σ.symm` (matching the `Config` action convention). -/

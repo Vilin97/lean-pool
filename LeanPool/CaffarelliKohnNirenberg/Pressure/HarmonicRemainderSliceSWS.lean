@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.HarmonicRemainderForceTe
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -33,6 +33,7 @@ private theorem harmonic_remainder_vec3_norm_add_le (v w : Vec3) :
   exact norm_add_le _ _
 
 /-- Nonnegative growth coefficient for the forcing part of the harmonic pressure remainder. -/
+@[expose]
 def harmonicRemainderForceBound (z : ParabolicPoint) {ρ : ℝ}
     (hρ : 0 < ρ) (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ :=
   max

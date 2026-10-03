@@ -130,4 +130,4 @@ reference chart and cancels a provably-nonzero transition factor. Anyone needing
 functoriality laws, `pushforward_pullback`) is gate-free.
 -/
 
-@[expose] public section
+public section

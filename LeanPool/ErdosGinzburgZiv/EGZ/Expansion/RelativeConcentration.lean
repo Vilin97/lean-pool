@@ -17,7 +17,7 @@ Concentration of the individual exchange components gives centres in each
 fibre. Integer affine relations turn these centres into one affine slab.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

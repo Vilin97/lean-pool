@@ -22,7 +22,7 @@ completeness, introduces the sequential analogue
 the Archimedean property.
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -70,7 +70,7 @@ lemma exists_isLUB_of_pos_of_shift
 
 /-- Build a `ConditionallyCompleteLattice` structure from a blanket hypothesis
 that every non-empty bounded above set has a least upper bound. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def conditionallyCompleteLatticeOfHasLUB
     {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
     (hLUB : ∀ {S : Set X}, S.Nonempty → BddAbove S → ∃ x, IsLUB S x) :
@@ -187,7 +187,7 @@ noncomputable def conditionallyCompleteLatticeOfPosNet
 /-- On a lattice-ordered additive commutative group, a
 `ConditionallyCompleteLattice` structure exists provided every non-empty
 bounded above set of positive elements has a least upper bound. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def conditionallyCompleteLatticeOfPosSet
     (X : Type*) [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
     (H : ∀ {S : Set X}, S ⊆ {x | 0 ≤ x} → S.Nonempty → BddAbove S →
@@ -225,7 +225,7 @@ instance (priority := 100) ConditionallyCompleteLattice.toSigmaConditionallyComp
 
 /-- Build a `SigmaConditionallyCompleteLattice` structure from a hypothesis
 that every countable non-empty bounded above set has a least upper bound. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def sigmaConditionallyCompleteLatticeOfHasCountableLUB
     {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
     (hLUB : ∀ {S : Set X}, S.Countable → S.Nonempty → BddAbove S →
@@ -324,7 +324,7 @@ lemma exists_isLUB_pos_countable_set_of_pos_seq
 /-- On a lattice-ordered additive commutative group, a `SigmaConditionallyCompleteLattice` structure
 exists provided every increasing bounded above sequence of positive elements
 has a least upper bound. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def sigmaConditionallyCompleteLatticeOfPosSeq
     (X : Type*) [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
     (H : ∀ {u : ℕ → X}, Monotone u → (∀ n, 0 ≤ u n) →

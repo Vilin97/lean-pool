@@ -21,7 +21,7 @@ Subtracting its exact weighted moment makes the negative radial primitive
 compact. The physical construction is normalized by the physical scale.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -122,6 +122,7 @@ theorem cutoff_deriv (P : Patch) (r : ℝ) : deriv (cutoff P) r = density P r :=
   (cutoff_hasDerivAt P r).deriv
 
 /-- Inverse power, given by `((RadialPullback.positiveRadius (P.a / 4) r) ^ e)⁻¹`. -/
+@[expose]
 noncomputable def inversePower (P : Patch) (e : ℕ) (r : ℝ) : ℝ :=
   ((RadialPullback.positiveRadius (P.a / 4) r) ^ e)⁻¹
 
@@ -138,6 +139,7 @@ theorem inversePower_eq (P : Patch) (e : ℕ) {r : ℝ} (hr : P.a ≤ r) :
   rw [RadialPullback.positiveRadius_eq_self (by linarith [P.a_pos]) (by linarith [P.a_pos])]
 
 /-- Moment density, given by `inversePower P e r * density P r`. -/
+@[expose]
 noncomputable def momentDensity (P : Patch) (e : ℕ) (r : ℝ) : ℝ := inversePower P e r * density P r
 
 theorem momentDensity_contDiff (P : Patch) (e : ℕ) : ContDiff ℝ ∞ (momentDensity P e) :=
@@ -181,8 +183,9 @@ section Primitive
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Weighted source, given by `z.1 ^ e * F z`. -/
-noncomputable def weightedSource (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ := z.1 ^ e * F z
+@[expose] noncomputable def weightedSource (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ := z.1 ^ e * F z
 /-- Mass, given by `IntegratedMeanBalances.radialMoment e F`. -/
+@[expose]
 noncomputable def mass (e : ℕ) (F : ℝ × E → ℝ) : E → ℝ := IntegratedMeanBalances.radialMoment e F
 /-- Bump correction, given by `momentDensity P e z.1 * mass e F z.2`. -/
 noncomputable def bumpCorrection (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
@@ -192,10 +195,10 @@ noncomputable def adjusted (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ
   F z - bumpCorrection P e F z
 /-- Primitive, given by `TransportPrimitive.compactIntegral (cutoff P) 0 0 (weightedSource e
 F)`. -/
-noncomputable def primitive (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) : ℝ × E → ℝ :=
+@[expose] noncomputable def primitive (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) : ℝ × E → ℝ :=
   TransportPrimitive.compactIntegral (cutoff P) 0 0 (weightedSource e F)
 /-- Sigma, given by `-inversePower P e z.1 * primitive P e F z`. -/
-noncomputable def sigma (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
+@[expose] noncomputable def sigma (P : Patch) (e : ℕ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   -inversePower P e z.1 * primitive P e F z
 
 theorem weightedSource_contDiff (e : ℕ) {F : ℝ × E → ℝ} (hF : ContDiff ℝ ∞ F) :
@@ -578,6 +581,7 @@ theorem bump_improvedClass_of_moment_identity (P : Patch) (e : ℕ) {cL cR : ℝ
   rwa [heq] at hh
 
 /-- Bar sigma, given by `sigma P e (PressureStream.torusAverage F)`. -/
+@[expose]
 noncomputable def barSigma (P : Patch) (e : ℕ) (F : PressureStream.Lift E → ℝ) : ℝ × E → ℝ :=
   sigma P e (PressureStream.torusAverage F)
 
@@ -637,27 +641,31 @@ section Physical
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The physical radial length is sqrt q, as in the chart R = r / sqrt Q. -/
-noncomputable def lengthScale (q : E → ℝ) (p : E) : ℝ := Real.sqrt (q p)
+@[expose] noncomputable def lengthScale (q : E → ℝ) (p : E) : ℝ := Real.sqrt (q p)
 /-- Native source, given by `F (lengthScale q z.2 * z.1, z.2)`. -/
-noncomputable def nativeSource (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
+@[expose] noncomputable def nativeSource (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   F (lengthScale q z.2 * z.1, z.2)
 /-- Physical density, given by `momentDensity P e (z.1 / lengthScale q z.2) / lengthScale q z.2
 ^ (e + 1)`. -/
-noncomputable def physicalDensity (P : Patch) (e : ℕ) (q : E → ℝ) (z : ℝ × E) : ℝ :=
+@[expose] noncomputable def physicalDensity (P : Patch) (e : ℕ) (q : E → ℝ) (z : ℝ × E) : ℝ :=
   momentDensity P e (z.1 / lengthScale q z.2) / lengthScale q z.2 ^ (e + 1)
 /-- Physical bump, given by `physicalDensity P e q z * mass e F z.2`. -/
+@[expose]
 noncomputable def physicalBump (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   physicalDensity P e q z * mass e F z.2
 /-- Physical adjusted, given by `F z - physicalBump P e q F z`. -/
+@[expose]
 noncomputable def physicalAdjusted (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ
     :=
   F z - physicalBump P e q F z
 /-- Physical sigma, given by `lengthScale q z.2 * sigma P e (nativeSource q F) (z.1 /
 lengthScale q z.2, z.2)`. -/
+@[expose]
 noncomputable def physicalSigma (P : Patch) (e : ℕ) (q : E → ℝ) (F : ℝ × E → ℝ) (z : ℝ × E) : ℝ :=
   lengthScale q z.2 * sigma P e (nativeSource q F) (z.1 / lengthScale q z.2, z.2)
 
 /-- Radial support stated directly using the physical q, with no band index. -/
+@[expose]
 def PhysicalSupport (P : Patch) (q : E → ℝ) (F : ℝ × E → ℝ) : Prop :=
   ∀ z, F z ≠ 0 → z.1 / lengthScale q z.2 ∈ Icc P.a P.b
 
@@ -935,6 +943,7 @@ theorem physical_torusAverage_supported (P : Patch) {q : E → ℝ}
   exact hn (hs (z.1, (z.2, Y)) hF)
 
 /-- Physical bar sigma, given by `physicalSigma P e q (PressureStream.torusAverage F)`. -/
+@[expose]
 noncomputable def physicalBarSigma (P : Patch) (e : ℕ) (q : E → ℝ)
     (F : PressureStream.Lift E → ℝ) : ℝ × E → ℝ :=
   physicalSigma P e q (PressureStream.torusAverage F)

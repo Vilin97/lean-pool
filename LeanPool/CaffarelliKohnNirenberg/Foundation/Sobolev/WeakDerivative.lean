@@ -23,11 +23,12 @@ a.e. uniqueness, restriction, and smooth-function constructors, while using
 the `CKN` namespace and the reduced weak-derivative dependency surface.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
 /-- `gi` is the `i`th weak derivative of `u` on `U`. -/
+@[expose]
 def HasWeakPartialDerivOn {d : ℕ} (U : Set (Vec d)) (i : Fin d)
     (u gi : Vec d → ℝ) : Prop :=
   ∀ φ : Vec d → ℝ,
@@ -38,6 +39,7 @@ def HasWeakPartialDerivOn {d : ℕ} (U : Set (Vec d)) (i : Fin d)
       -∫ x in U, gi x * φ x ∂MeasureTheory.volume
 
 /-- `Du` is a coordinate weak gradient of `u` on `U`. -/
+@[expose]
 def HasWeakGradientOn {d : ℕ}
     (U : Set (Vec d)) (u : Vec d → ℝ) (Du : Vec d → Vec d) : Prop :=
   ∀ i : Fin d, HasWeakPartialDerivOn U i u (fun x => Du x i)

@@ -17,13 +17,14 @@ coefficient of the target monomial in `p₁ʳ · a_{eVec λ}` when `μ`
 extends `λ` by `r` cells.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 open Finset MvPolynomial Equiv
 
 /-- The staircase exponent vector of a diagram in `k` variables. -/
+@[expose]
 noncomputable def eVec (nu : YoungDiagram) (k : ℕ) : Fin k → ℕ :=
   fun i => nu.rowLen i + ((k - 1) - (i : ℕ))
 

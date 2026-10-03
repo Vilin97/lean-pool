@@ -15,7 +15,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -33,7 +33,7 @@ namespace GraphCoveringTheory.Kurosh
 open Monoid.CoprodI
 
 /-- Kill every stabilizer component and retain the free component. -/
-noncomputable def treeKuroshComponentToFreePart {ι : Type v}
+@[expose] noncomputable def treeKuroshComponentToFreePart {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (q : TreeKuroshComponentIndex G H) :
     TreeKuroshComponent G H q →* KuroshFreePart G H := by
@@ -54,7 +54,7 @@ noncomputable def treeKuroshComponentToFreePart {ι : Type v}
           map_mul' := by intro x y; rfl }
 
 /-- The projection of the tree Kurosh product onto its free component. -/
-noncomputable def treeKuroshProductToFreePart {ι : Type v}
+@[expose] noncomputable def treeKuroshProductToFreePart {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     TreeKuroshProduct G H →* KuroshFreePart G H := by
   change FreeProduct (TreeKuroshComponent G H) →* KuroshFreePart G H
@@ -115,6 +115,10 @@ theorem treeKuroshProductToH_factor_through_freePart {ι : Type v}
             (Monoid.CoprodI.of
               (show TreeKuroshComponent G H (Sum.inl a) from x)))
       rw [Monoid.CoprodI.lift_of]
+      have hprojection :
+          (treeKuroshComponentToFreePart G H (Sum.inl a)) x = 1 := by
+        rfl
+      rw [hprojection, map_one]
       change x.down.1 = 1
       exact congrArg Subtype.val hx
   | inr q =>

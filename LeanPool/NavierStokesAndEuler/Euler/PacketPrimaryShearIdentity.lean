@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPrimaryHistory
 zero phase throughout its history interval, including the activation time.
 No derivative of the finite-dimensional history is postulated. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -27,7 +27,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.EpsOptimalSele
 
 /-! ## Fibers of the feasibility graph -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 

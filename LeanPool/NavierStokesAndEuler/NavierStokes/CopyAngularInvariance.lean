@@ -19,7 +19,7 @@ its pressure, and the stripped cylindrical curl inherit those identities.
 The oscillatory carrier retains its separate angular character.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,10 +33,11 @@ open CommonCoverSolve TorusInverse
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Invariant, given by `∀ (x : D) (t : ℝ), f (x + t • θ) = f x`. -/
-noncomputable def Invariant (θ : D) {E : Type} (f : D → E) : Prop :=
+@[expose] noncomputable def Invariant (θ : D) {E : Type} (f : D → E) : Prop :=
   ∀ (x : D) (t : ℝ), f (x + t • θ) = f x
 
 /-- Affine phase, given by `∀ (x : D) (t : ℝ), Φ (x + t • θ) = Φ x + m * t`. -/
+@[expose]
 noncomputable def AffinePhase (θ : D) (m : ℝ) (Φ : D → ℝ) : Prop :=
   ∀ (x : D) (t : ℝ), Φ (x + t • θ) = Φ x + m * t
 
@@ -240,6 +241,7 @@ theorem TangentInvariant.copySolve_invariant {θ : P} {d : TangentData P H} (h :
     h.coefficient h.forcingMap h.source j
 
 /-- Copy native point, given by `(x.1, g.coordinates j x.2)`. -/
+@[expose]
 noncomputable def copyNativePoint (g : Geometry) (j : Frequency) (x : P × Plane) : P × Plane :=
   (x.1, g.coordinates j x.2)
 
@@ -254,14 +256,14 @@ theorem native_invariant {F : Type} {θ : P} {f : P × Plane → F}
 
 /-- Same scalar formula as the particular-wave pressure, evaluated on the
 constructed copy solve and the actual source at the current common point. -/
-noncomputable def copyPressureReal (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
+@[expose] noncomputable def copyPressureReal (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
     (j : Frequency) (x : P × Plane) : ℝ :=
   TangentProjection.pressureCoefficient (d.normal (copyNativePoint g j x))
     (d.normalDot (copyNativePoint g j x)) (d.linearData.copySolve g hab j x)
     (d.action (copyNativePoint g j x) (d.linearData.copySolve g hab j x)) (d.source x)
 
 /-- Copy pressure, given by `Complex.I * (copyPressureReal d g hab j x : ℂ) / (K : ℂ)`. -/
-noncomputable def copyPressure (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
+@[expose] noncomputable def copyPressure (d : TangentData P H) (g : Geometry) (hab : a ≤ b)
     (j : Frequency) (K : ℝ) (x : P × Plane) : ℂ :=
   Complex.I * (copyPressureReal d g hab j x : ℂ) / (K : ℂ)
 

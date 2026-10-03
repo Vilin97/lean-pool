@@ -20,7 +20,7 @@ eliminates the choice in `EdgeSubset.mixedValue` against any
 concrete transition data.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -29,6 +29,7 @@ arXiv:1807.04494, Proposition 3): the mixed summand is independent
 of the transition system and orientation.  Proved as
 `RS.eulerianIndependence` in
 `RS/Novel/Skein/AllInternalAgreement.lean`. -/
+@[expose]
 def EulerianIndependence : Prop :=
   ∀ {α : Type} {W : Fragment α} (F : EdgeSubset W) {k ℓ : ℕ}
     (h : MixedFunctional k ℓ)

@@ -20,7 +20,7 @@ No circuit configurations are enumerated here; the proof is obtained from the
 three algebraic dependency cases in `low_product_quadratic_normal_form`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -29,6 +29,7 @@ noncomputable section
 
 /-- Complete homogeneous normal form of a cubic seed arising from the
 normalized rational prefix. -/
+@[expose]
 def CubicSeedNormalForm (g : ANF 8) : Prop :=
   ∃ (leftConst rightConst : F₂) (leftLinear rightLinear : LinearForm)
     (leftCoeff rightCoeff anchorCoeff : Fin 3 → F₂)
@@ -289,6 +290,7 @@ theorem anfQuinticAnchorProbe_mul_target_congr_of_cubic
 /-- Classified algebraic output of a seed-using useful child at a specified
 rational place.  Indexing by the place keeps every later normalization tied
 to the very same feedback witness. -/
+@[expose]
 def SeedUsingCubicClassifiedFormAt (g : ANF 8) (theta : Fin 3) : Prop :=
   ∃ (correction factor target : ANF 8)
     (targetConst factorConst : F₂)
@@ -312,7 +314,7 @@ def SeedUsingCubicClassifiedFormAt (g : ANF 8) (theta : Fin 3) : Prop :=
 /-- Classified algebraic output of a seed-using useful child after quartic
 exclusion.  Right idempotence makes the low factor a rational singleton and
 the new target its first tangent. -/
-def SeedUsingCubicClassifiedForm (g : ANF 8) : Prop :=
+@[expose] def SeedUsingCubicClassifiedForm (g : ANF 8) : Prop :=
   ∃ theta : Fin 3, SeedUsingCubicClassifiedFormAt g theta
 
 /-- A seed-using branch of the first useful child has the classified cubic
@@ -647,7 +649,7 @@ theorem seedUsingCubicClassified_normalized_anchor
     seedUsingCubicClassified_normalized_anchor_at hseed hfeedback⟩
 
 /-- Canonical zero-place representative of the seed coset. -/
-def ZeroAnchoredCubicSeedForm (g : ANF 8) : Prop :=
+@[expose] def ZeroAnchoredCubicSeedForm (g : ANF 8) : Prop :=
   ∃ (anchorLinear companionLinear : LinearForm) (correction : ANF 8),
     correction ∈ rationalLowSpace ∧
     g + correction =

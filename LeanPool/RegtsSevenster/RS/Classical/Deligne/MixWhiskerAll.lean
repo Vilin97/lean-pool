@@ -21,7 +21,7 @@ every pair of counts and every diagram avoiding the corresponding
 cell.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

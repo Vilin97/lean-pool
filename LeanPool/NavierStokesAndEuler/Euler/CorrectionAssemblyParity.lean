@@ -25,7 +25,7 @@ section
 
 /-! Reflection invariance of the concrete lifted-gradient space and pressure solve. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -153,7 +153,7 @@ section
 
 /-! Joint reflection on the actual complete cylinder Sobolev spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -166,7 +166,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Reflection of a derivative array includes the sign of each derivative word. -/
-def reflectionArrayOperator (q : ℕ) :
+@[expose] def reflectionArrayOperator (q : ℕ) :
     SobolevSpace period q →L[ℝ] (SobolevWord q → LiftL2 period) :=
   ContinuousLinearMap.pi fun w => ((-1 : ℝ) ^ w.1.val) •
     ((reflection period).toContinuousLinearMap.comp (wordOperator period w))
@@ -191,13 +191,14 @@ theorem reflectionArray_mem (q : ℕ) (u : SobolevSpace period q) :
     rfl
 
 /-- Joint pullback reflection as a genuine bounded map of the complete Sobolev space. -/
-def sobolevReflection (q : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
+@[expose] def sobolevReflection (q : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   (reflectionArrayOperator period q).codRestrict (sobolevSubspace period q).toSubmodule
     (reflectionArray_mem period q)
 
 /-- The derivative coordinates of reflection have exactly the alternating signs. -/
 @[simp] theorem sobolevReflection_apply {q : ℕ} (u : SobolevSpace period q) (w : SobolevWord q) :
-    (sobolevReflection period q u).val w = (-1 : ℝ) ^ w.1.val • reflection period (u.val w) := rfl
+    (sobolevReflection period q u).val w =
+      (-1 : ℝ) ^ w.1.val • reflection period (u.val w) := by rfl
 
 /-- The underlying field is the actual L² pullback by joint negation. -/
 @[simp] theorem value_sobolevReflection {q : ℕ} (u : SobolevSpace period q) :
@@ -256,12 +257,12 @@ theorem derivative_reflection {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q 
   simp only [pow_succ, mul_smul, neg_one_smul, smul_neg]
 
 /-- The symmetry whose fixed points are odd velocity fields. -/
-def oddReflection (q : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
+@[expose] def oddReflection (q : ℕ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   -sobolevReflection period q
 
 /-- Odd reflection is represented by minus the field at the reflected point. -/
 @[simp] theorem oddReflection_apply {q : ℕ} (u : SobolevSpace period q) :
-    oddReflection period q u = -sobolevReflection period q u := rfl
+    oddReflection period q u = -sobolevReflection period q u := by rfl
 
 /-- The signed reflection is involutive. -/
 theorem oddReflection_involutive {q : ℕ} (u : SobolevSpace period q) :
@@ -296,7 +297,7 @@ section
 
 /-! Reflection covariance of the literal Sobolev product, transport and pressure operators. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -512,7 +513,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -685,7 +686,7 @@ section
 
 /-! Odd parity of actual inviscid correction solutions, proved by genuine PDE uniqueness. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -780,7 +781,7 @@ section
 /-! Genuine continuous Sobolev realizations of the assembled correction and its actual pressure at
 every order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -793,6 +794,7 @@ variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
 /-- The assembled correction as one actual L² field with continuous Sobolev realizations at every
 order. -/
+@[expose]
 def FiniteFamily.fieldTower (F : FiniteFamily period hT A) (C : ComparisonData period hT A) :
     FieldTower period T where
   field := F.commonPath period
@@ -802,6 +804,7 @@ def FiniteFamily.fieldTower (F : FiniteFamily period hT A) (C : ComparisonData p
 
 /-- The actual signed pressure as one L² field with continuous Sobolev realizations at every order.
 -/
+@[expose]
 def FiniteFamily.pressureTower (F : FiniteFamily period hT A) (C : ComparisonData period hT A) :
     FieldTower period T where
   field := F.commonPressure period
@@ -838,7 +841,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

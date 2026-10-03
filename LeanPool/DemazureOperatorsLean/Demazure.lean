@@ -22,7 +22,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.DemazureOperatorsLean.Demazure
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MvPolynomial
@@ -37,6 +37,7 @@ variable {n : ℕ} (n_pos : n > 0) (n_gt_1 : n > 1)
 /- Prerequisites  -/
 
 /-- The polynomial obtained by swapping the variables indexed by `i` and `j`. -/
+@[expose]
 def SwapVariablesFun (i j : Fin n) (p : MvPolynomial (Fin n) ℂ) : (MvPolynomial (Fin n) ℂ) :=
   (renameEquiv ℂ (Equiv.swap i j)) p
 
@@ -101,7 +102,7 @@ lemma swap_variables_order_two {i j : Fin n} {p : MvPolynomial (Fin n) ℂ} :
   simp
 
 /-- The algebra equivalence swapping the variables indexed by `i` and `j`. -/
-def SwapVariables (i : Fin n) (j : Fin n) :
+@[expose] def SwapVariables (i : Fin n) (j : Fin n) :
     AlgEquiv ℂ (MvPolynomial (Fin n) ℂ) (MvPolynomial (Fin n) ℂ) :=
   renameEquiv ℂ (Equiv.swap i j)
 
@@ -182,6 +183,7 @@ lemma demazure_denominator_not_null (i : Fin n) :
  to perform division by (x_i - x_(i+1)) later (only univariable division is supported) -/
 
 /-- The numerator used to define the Demazure operator in one distinguished variable. -/
+@[expose]
 def DemazureNumerator (i : Fin n) (p : MvPolynomial (Fin (n + 1)) ℂ) :
     Polynomial (MvPolynomial (Fin n) ℂ) :=
   let i' : Fin (n + 1) := Fin.castSucc i
@@ -207,7 +209,7 @@ lemma demazure_numerator_C_mul (i : Fin n) : ∀ (p : MvPolynomial (Fin (n + 1))
 
 -- Now we also define the denominator taking the variable x_i as the variable to divide by
 /-- The monic denominator `X - X_i` used in the Demazure division step. -/
-def DemazureDenominator (i : Fin n) : Polynomial (MvPolynomial (Fin n) ℂ)  :=
+@[expose] def DemazureDenominator (i : Fin n) : Polynomial (MvPolynomial (Fin n) ℂ)  :=
   let X_i : MvPolynomial (Fin n) ℂ := MvPolynomial.X i
   let denominator_X : Polynomial (MvPolynomial (Fin n) ℂ) := (Polynomial.X - Polynomial.C X_i)
   denominator_X
@@ -246,6 +248,7 @@ lemma demazure_division_exact : ∀(i : Fin n), ∀(p : MvPolynomial (Fin (n + 1
 
 
 /-- The Demazure operator as a function on multivariate polynomials. -/
+@[expose]
 def DemazureFun (i : Fin n) (p : MvPolynomial (Fin (n + 1)) ℂ) : MvPolynomial (Fin (n + 1)) ℂ  :=
   let numerator := DemazureNumerator i p
   let denominator := DemazureDenominator i
@@ -334,7 +337,7 @@ lemma demazure_map_smul (i : Fin n) : ∀ (r : ℂ) (p : MvPolynomial (Fin (n + 
   exact demazure_numerator_C_mul i p r
 
 /-- The Demazure operator as a complex-linear map. -/
-def DemazureLinear (i : Fin n) :
+@[expose] def DemazureLinear (i : Fin n) :
     LinearMap (RingHom.id ℂ) (MvPolynomial (Fin (n + 1)) ℂ)
       (MvPolynomial (Fin (n + 1)) ℂ) where
   toFun := DemazureFun i

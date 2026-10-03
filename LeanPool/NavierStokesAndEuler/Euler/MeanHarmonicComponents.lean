@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Scalar test functions and component energies for actual R³ vector fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

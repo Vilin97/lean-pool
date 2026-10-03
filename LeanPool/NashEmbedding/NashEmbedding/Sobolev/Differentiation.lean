@@ -26,7 +26,7 @@ If `∑ |bₘ| < ∞` and `∑ |mⱼ| |bₘ| < ∞`, then the Fourier series
 `∂f/∂θⱼ(θ) = ∑ i mⱼ bₘ eₘ(θ)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open NashEmbedding.Sobolev Complex
@@ -40,7 +40,7 @@ variable {n : ℕ}
 
 /-- The formal partial derivative coefficients: for direction `j`, the coefficient
 of `eₘ` in `∂f/∂θⱼ` is `i · mⱼ · bₘ`. -/
-def partialCoeff (j : Fin n) (b : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
+@[expose] def partialCoeff (j : Fin n) (b : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ :=
   Complex.I * (m j : ℂ) * b m
 
 /-

@@ -10,7 +10,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Caccioppoli.CaccioppoliEnerg
 
 /-! Integrability estimates used by the local energy lower bound. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

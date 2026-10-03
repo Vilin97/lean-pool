@@ -21,7 +21,7 @@ inherits `StandardBorelSpace` as a measurable subspace of the structure space.
 - `modelsOf_standardBorel`: The subtype `↥(ModelsOf φ)` is standard Borel.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

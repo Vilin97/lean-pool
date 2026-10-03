@@ -28,7 +28,7 @@ All three are proved at regular values via `RS.coeffAt_traceForm_of_isRegularVal
 everywhere by `RS.Form1.eq_of_eqOn_dense` (density of regular values).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold

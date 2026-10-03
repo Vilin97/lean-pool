@@ -17,7 +17,7 @@ genuine continuous path of tensors. Finite spatial coordinates establish
 continuity; the actual operator norm is preserved without a coordinate
 count in the bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -106,7 +106,7 @@ def tensorPathLinear (n : ℕ) :
       ContinuousMap.smul_apply, RingHom.id_apply]
 
 /-- Tensor path map, bundling `toLinearMap`, `cont`, `1`. -/
-def tensorPathMap (n : ℕ) :
+@[expose] def tensorPathMap (n : ℕ) :
     (E [×n]→L[ℝ] C(K,V)) →L[ℝ] C(K, E [×n]→L[ℝ] V) where
   toLinearMap := tensorPathLinear n
   cont := AddMonoidHomClass.continuous_of_bound (tensorPathLinear (K := K) (E := E) (V := V) n)

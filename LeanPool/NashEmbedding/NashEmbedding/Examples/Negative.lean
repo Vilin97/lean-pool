@@ -22,7 +22,7 @@ Euclidean space cannot pull the Euclidean inner product back to a Riemannian met
 its differential is zero, so the pullback is degenerate.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff
 open Bundle Function

@@ -29,7 +29,7 @@ further letter.
   projection at one arity is invisible at the next.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

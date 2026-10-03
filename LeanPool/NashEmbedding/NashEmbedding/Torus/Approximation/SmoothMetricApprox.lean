@@ -46,7 +46,7 @@ real-imaginary decomposition of `periodicExtension`, linearity of
 `integrationEmbed`, and `sobolevNormSqDistrib_triangle`).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Complex Real NashEmbedding.Sobolev MeasureTheory Matrix

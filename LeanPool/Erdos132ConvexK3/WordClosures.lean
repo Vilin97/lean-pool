@@ -26,7 +26,7 @@ quadrilateral and half-plane facts, and pointwise arc partitions.  All degree
 and cardinality bounds are conclusions of the theorems below.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

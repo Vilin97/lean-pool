@@ -17,7 +17,7 @@ representative for each germ and retain the theorem identifying its raw
 function germ.
 -/
 
-@[expose] public section
+public section
 
 
 namespace LocalComplexGeometry
@@ -43,7 +43,7 @@ theorem HolomorphicGerm.coe_representative {n : ℕ}
   (Classical.choose_spec (HolomorphicGerm.exists_rep f)).2
 
 /-- Chosen representatives of a finite coefficient vector. -/
-def HolomorphicGerm.coefficientRepresentatives {n k : ℕ}
+@[expose] def HolomorphicGerm.coefficientRepresentatives {n k : ℕ}
     (c : Fin k → HolomorphicGerm n) :
     Fin k → ComplexEuclidean n → ℂ :=
   fun i ↦ HolomorphicGerm.representative (c i)

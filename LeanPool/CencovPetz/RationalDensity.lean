@@ -28,7 +28,7 @@ simplex points.
 - `CencovPetz.Simplex.dense_setOf_isRational`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

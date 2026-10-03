@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Basic
 
 /-! # AxiomDot3 -/
 
-@[expose] public section
+public section
 
 
 namespace LO

@@ -27,7 +27,7 @@ have a unique child. For nodes without children where the paper assumes one we r
 placeholder `⊤`; by Remark 9.9 (`QuasiTab.build_leaf_typ`) this does not happen in `C.Q`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -36,7 +36,7 @@ namespace PDL
 /-- The leading program `α` of the loaded formula `~⌊α⌋ξ` of a sequent, if there is one.
 For a basic sequent this program is atomic, see
 `Sequent.isAtomic_of_basic_of_negLoad_mem_wForms`. -/
-def Sequent.loadedProgOpt : Sequent → Option Program
+@[expose] def Sequent.loadedProgOpt : Sequent → Option Program
   | ⟨_, _, none⟩ => none
   | ⟨_, _, some (Sum.inl (~'(⌊α⌋_)))⟩ => some α
   | ⟨_, _, some (Sum.inr (~'(⌊α⌋_)))⟩ => some α
@@ -44,7 +44,7 @@ def Sequent.loadedProgOpt : Sequent → Option Program
 /-- The leading program of the loaded formula, or `?'⊥` if the sequent is free.
 Only used in the case `k(x) = 3` with `Δₓ` basic of Definition 9.18, where the sequent
 is loaded. -/
-def Sequent.loadedProg (X : Sequent) : Program := X.loadedProgOpt.getD (?'⊥)
+@[expose] def Sequent.loadedProg (X : Sequent) : Program := X.loadedProgOpt.getD (?'⊥)
 
 /-! ## Definition 9.18 -/
 
@@ -67,7 +67,7 @@ The first argument `q` is the whole quasi-tableau (used to find companions), the
 * `k(x) = 3` with `Δ_x` basic: `ι_x := [a] ι_y` where `a` is the leading atomic program of
   the loaded formula of `Δ_x`.
 * `k(x) = 3` with `Δ_x` not basic: `ι_x := ⋀ { ι_y | x ⋖Q y }`. -/
-def iitpAt (q : QuasiTab) (θ : Sequent → Formula) :
+@[expose] def iitpAt (q : QuasiTab) (θ : Sequent → Formula) :
     (n : QuasiTab) → (x : List Nat) → QFormula (List Nat)
   | .QNode .one Δ [], x =>
       match q.companionOpt x with
@@ -113,7 +113,8 @@ variable {X : Sequent} {tab : Tableau .nil X}
 /-- Def 9.18: the pre-interpolant `ι_x` of the node with address `x` of the quasi-tableau
 `Q` of the cluster `C`, where `θ` gives the interpolants of the exit nodes of `C`.
 When there is no node at address `x` we return the placeholder `⊤`. -/
-noncomputable def iitp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula) (x : List Nat) :
+@[expose] noncomputable def iitp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula)
+    (x : List Nat) :
     QFormula (List Nat) :=
   match C.Q.atOpt x with
   | none => .fma ⊤
@@ -121,7 +122,7 @@ noncomputable def iitp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula)
 
 /-- The pre-interpolant of the root of the quasi-tableau. This is the formula `ι_{c_Q}`
 that Def 9.20 turns into the interpolant of the root of the cluster. -/
-noncomputable def rootIitp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula) :
+@[expose] noncomputable def rootIitp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula) :
     QFormula (List Nat) :=
   C.iitp θ QuasiTab.rootAddress
 

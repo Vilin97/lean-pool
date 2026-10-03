@@ -19,7 +19,7 @@ The construction also covers `I = ∅`. In that case the ordered time family and
 coordinate types are empty.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -32,6 +32,7 @@ section
 
 /-- The physical times of a finite dense approximation, listed in the increasing order inherited
 from the original finite set. For an empty finite set this is the empty ordered family. -/
+@[expose]
 def finiteDenseApproximationOrderedTimes {I : Finset NNReal} (q : I ↪o DenseTime) :
     FiniteOrderedTimes I.card :=
   ((I.orderIsoOfFin rfl).toOrderEmbedding.trans q).trans DenseTime.castOrderEmbedding

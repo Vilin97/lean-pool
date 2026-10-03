@@ -31,7 +31,7 @@ converts into universality of the separator.  This is the sense in which the lab
 for" the interpolant's class.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

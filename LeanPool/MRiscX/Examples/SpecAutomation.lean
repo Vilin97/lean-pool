@@ -23,7 +23,7 @@ each branch of the instruction-dispatch in `Tactics/ApplySpec.lean` is covered b
 proved Hoare triple.
 -/
 
-@[expose] public section
+public section
 
 /-
 Store via the inferred specification (`specification_StoreWordImmediate`).

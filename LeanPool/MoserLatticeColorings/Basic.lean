@@ -21,7 +21,7 @@ the paper, and proves that each is proper and geometric on the whole lattice.
 The uniqueness assertion in Theorem 3.2 is not formalized here.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.MoserLatticeColorings
 
@@ -59,7 +59,7 @@ def normRadical (p : Coeff) : ℤ := p.b * p.c - p.a * p.d
 /-- The Euclidean coordinates of
 `a + b * ω₁ + c * ω₃ + d * ω₁ * ω₃`, where
 `ω₁ = 1 / 2 + i * √3 / 2` and `ω₃ = 5 / 6 + i * √11 / 6`. -/
-noncomputable def toR2 (p : Coeff) : R2 :=
+@[expose] noncomputable def toR2 (p : Coeff) : R2 :=
   WithLp.toLp 2 ![
     ((12 * p.a + 6 * p.b + 10 * p.c + 5 * p.d : ℤ) : ℝ) / 12 -
       (p.d : ℝ) * Real.sqrt 33 / 12,

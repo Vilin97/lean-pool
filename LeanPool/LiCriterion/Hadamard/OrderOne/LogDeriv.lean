@@ -19,7 +19,7 @@ The key output is a pointwise formula for the logarithmic derivative of
 `w ↦ ∏' i, weierstrassE 1 (w / z i)` in terms of a (provably summable) partial-fraction series.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter
 open scoped BigOperators

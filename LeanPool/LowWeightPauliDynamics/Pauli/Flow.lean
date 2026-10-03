@@ -119,7 +119,7 @@ scalars: `coeff O p : ℂ`. It is not needed — the transformation is by real p
 coefficient `sin θ` on it real.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -144,6 +144,7 @@ involution because the `X`- and `Z`-parts live in characteristic two. -/
 
 /-- The **partner class** of `p` under `G`: the class of `G · herm p`, hence of the partner
 `±i G s` of `s = herm p`. -/
+@[expose]
 def partner (G : PauliString n) (p : PauliIndex n) : PauliIndex n := (G.x + p.1, G.z + p.2)
 
 @[simp] lemma cls_mul_herm (G : PauliString n) (p : PauliIndex n) :
@@ -185,6 +186,7 @@ rotation on the pair `{s, s'}` an *orthogonal* map rather than merely a bounded 
 
 /-- The sign relating the Hermitian partner `i G s` to the canonical self-adjoint representative
 of its class: `toMatrix (i G herm p) = partnerSign G p • toMatrix (herm (partner G p))`. -/
+@[expose]
 noncomputable def partnerSign (G : PauliString n) (p : PauliIndex n) : ℂ :=
   iPow ((phaseMul 1 (G * herm p)).phase - (herm (partner G p)).phase)
 
@@ -256,6 +258,7 @@ coefficient vectors (no matrix is built): the identity on classes commuting with
 planar rotation `x_s ↦ cos(θ)x_s ∓ sin(θ)x_{s'}` on each anticommuting pair, with the sign given
 by `partnerSign`. That this *is* conjugation is `coeffVec_conj`; that it is *orthogonal* is
 `norm_rotAct`. -/
+@[expose]
 noncomputable def rotAct (G : PauliString n) (θ : ℝ) (y : EuclideanSpace ℂ (PauliIndex n)) :
     EuclideanSpace ℂ (PauliIndex n) :=
   WithLp.toLp 2 fun p =>
@@ -550,6 +553,7 @@ lemma rungWeight_add_two (ko kh m : ℕ) :
 the product of the first `g` rotations `e^{-i G_l θ_l/2}`. In `Rotation.lean`'s angle convention
 `rot G θ` is the `+` exponential `e^{+i G θ/2}`, so one step of the Heisenberg evolution is
 `O ↦ rot G θ * O * rot G (-θ)` and the conjugation angle is `θ`. -/
+@[expose]
 noncomputable def traj (Gs : ℕ → PauliString n) (θ : ℕ → ℝ)
     (O : Matrix (Bits n) (Bits n) ℂ) : ℕ → Matrix (Bits n) (Bits n) ℂ
   | 0 => O

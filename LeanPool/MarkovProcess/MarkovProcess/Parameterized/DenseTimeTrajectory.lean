@@ -12,7 +12,7 @@ public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-! # Parameterized trajectories on countable dense time -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -29,6 +29,7 @@ variable {Theta : Type uTheta} {D : Type*} {alpha : Type uAlpha}
   [MeasurableSpace Theta] [MeasurableSpace alpha] [StandardBorelSpace alpha] [Nonempty alpha]
 
 /-- The initial parameter and state at zero, followed by lifted state observations. -/
+@[expose]
 def trajectoryCoordinate : ℕ → Type (max uTheta uAlpha)
   | 0 => ULift.{max uTheta uAlpha} (Theta × alpha)
   | _ + 1 => ULift.{max uTheta uAlpha} alpha

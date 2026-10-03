@@ -13,7 +13,7 @@ import LeanPool.ConnesRigidity.Construction.SquareSpan
 Finite chart span and exhaustion for Zhou's §4 detector. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperChartSpan

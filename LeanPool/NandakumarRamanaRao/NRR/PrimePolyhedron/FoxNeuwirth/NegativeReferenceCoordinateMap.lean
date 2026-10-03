@@ -15,7 +15,7 @@ negative lift is used as the lower-end comparison map in S6.  Its positive-ray c
 while its deviation map remains the regular S5 reference map.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

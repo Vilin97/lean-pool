@@ -16,7 +16,7 @@ the smaller-cylinder estimates; the gradient covering number is selected
 before the domain and solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

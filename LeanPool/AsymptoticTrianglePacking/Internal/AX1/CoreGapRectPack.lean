@@ -27,7 +27,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapTripleDegre
 
 /-! # CoreGapRectPack -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -37,7 +37,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 
 /-- **The vertex-pair rectangle of a sub-triple**: all ordered pairs joining two different parts
 of `(A, B, C)`. -/
-def tripleRect (A B C : Finset V) : Finset (V × V) :=
+@[expose] def tripleRect (A B C : Finset V) : Finset (V × V) :=
   ((A ×ˢ B) ∪ (B ×ˢ A)) ∪ ((A ×ˢ C) ∪ (C ×ˢ A)) ∪ ((B ×ˢ C) ∪ (C ×ˢ B))
 
 omit [Fintype V] in

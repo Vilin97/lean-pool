@@ -172,7 +172,7 @@ Shannon entropy, conditional mutual information, conditional information inequal
 Kullback-Leibler divergence, Zhang-Yeung, essentially conditional inequality
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 
@@ -922,7 +922,8 @@ private lemma condIndepFun_map_triple_real_singleton
     have h_cancel : μ (h ⁻¹' {c}) * (μ (h ⁻¹' {c}))⁻¹ = 1 :=
       ENNReal.mul_inv_cancel h_h_pre_ne h_h_pre_top
     -- Extract IndepFun on the conditional.
-    have h_cond' : ∀ᵐ z ∂(μ.map h), IndepFun f g (μ[|h ← z]) := h_cond
+    have h_cond' : ∀ᵐ z ∂(μ.map h), IndepFun f g (μ[|h ← z]) :=
+      condIndepFun_iff.mp h_cond
     rw [ae_iff_of_countable] at h_cond'
     have h_indep : IndepFun f g (μ[|h ← c]) := h_cond' c h_map_c_ne
     have h_prod_cond : (μ[|h ← c]) (f ⁻¹' {a} ∩ g ⁻¹' {b})

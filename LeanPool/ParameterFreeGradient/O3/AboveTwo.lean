@@ -24,14 +24,14 @@ derive both the estimate-sequence ledger and the restart gap/distance
 implication.  This module does not replace it with a target-shaped assumption.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace O3
 
 /-- The genuine-real regime from TeX Section 3. -/
-def AboveTwoRegime (p : ℝ) : Prop := 2 < p
+@[expose] def AboveTwoRegime (p : ℝ) : Prop := 2 < p
 
 /-- The exact trial exponent `2(p-1)/(p+2)`. -/
 noncomputable def aboveAlpha (p : ℝ) : ℝ := 2 * (p - 1) / (p + 2)

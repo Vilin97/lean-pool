@@ -20,7 +20,7 @@ These constructions place a lineage's varying coordinate spaces inside its
 initial coordinate space for the common-measure face-counting argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -47,6 +47,7 @@ variable {l m n : ℕ}
 
 /-- Image under an affine map which preserves rational coordinates. The
 image carrier is definitionally the set-theoretic affine image. -/
+@[expose]
 noncomputable def affineImage (P : RationalPolytope m)
     (A : RealCoord m →ᵃ[ℝ] RealCoord n)
     (hAq : ∀ q, IsRational q → IsRational (A q)) : RationalPolytope n := by
@@ -97,6 +98,7 @@ variable {P : RationalPolytope m}
 
 /-- An injective affine map carries every exposed face to an exposed face
 of the image, using an affine left inverse to transport its functional. -/
+@[expose]
 noncomputable def affineImage (Γ : P.Face) (A : RealCoord m →ᵃ[ℝ] RealCoord n)
     (hAq : ∀ q, IsRational q → IsRational (A q)) (hA : Function.Injective A) :
     (P.affineImage A hAq).Face where
@@ -135,6 +137,7 @@ theorem image_carrier (Γ : P.Face) (A : IntegralAffineMap m n)
 
 /-- Pull back any face of an image polytope. The image description supplies
 the required nonemptiness automatically. -/
+@[expose]
 noncomputable def affineImagePullback (A : RealCoord m →ᵃ[ℝ] RealCoord n)
     (hAq : ∀ q, IsRational q → IsRational (A q))
     (Δ : (P.affineImage A hAq).Face) : P.Face :=

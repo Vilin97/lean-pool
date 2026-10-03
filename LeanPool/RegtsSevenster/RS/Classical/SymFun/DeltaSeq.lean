@@ -18,7 +18,7 @@ Jacobi–Trudi character degree as `n!` times the Jacobi–Trudi
 determinant at `t₀`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

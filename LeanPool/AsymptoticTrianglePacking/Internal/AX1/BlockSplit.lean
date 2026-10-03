@@ -27,7 +27,7 @@ public import Mathlib.Data.Int.Star
 
 /-! # BlockSplit -/
 
-@[expose] public section
+public section
 
 open Finset
 

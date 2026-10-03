@@ -41,4 +41,4 @@ Tags: number-theory, abc-conjecture, n-conjecture, ramaekers-conjecture
 MSC: 11A41, 11D75
 -/
 
-@[expose] public section
+public section

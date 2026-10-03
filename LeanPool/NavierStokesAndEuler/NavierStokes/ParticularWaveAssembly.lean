@@ -18,7 +18,7 @@ All signed nonzero harmonics are retained inside their original spatial
 label. A fixed reference solve supplies the compatible band views.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open HarmonicCalculus WeightedClasses
 open scoped BigOperators Topology ContDiff ComplexConjugate
 
 /-- One finite signed harmonic range, without the mean coefficient. -/
-noncomputable def modes (N : ℕ) : Finset ℤ := (Finset.Icc (-(N : ℤ)) N).erase 0
+@[expose] noncomputable def modes (N : ℕ) : Finset ℤ := (Finset.Icc (-(N : ℤ)) N).erase 0
 
 @[simp] theorem mem_modes (N : ℕ) (j : ℤ) :
     j ∈ modes N ↔ j ≠ 0 ∧ j.natAbs ≤ N := by
@@ -86,7 +86,7 @@ theorem signed_pairs_reconstruct {D : Type} (c : Coefficients D) (N : ℕ)
     simp only [ite_eq_right hm, hz, Pi.zero_apply, map_zero, add_zero]
 
 /-- The actual source coefficient, with no convention-dependent scaling. -/
-noncomputable def residualSource {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
+@[expose] noncomputable def residualSource {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (c : Context D) (u : State D) (b : HarmonicBlock D)
     (G A : HarmonicResidual.BlockCoefficients D) (j : ℤ) (n : ℕ) (x : D) : ComplexVector :=
   fun i => (HarmonicResidual.residualBlock c u b G A).velocity n i j x
@@ -105,7 +105,7 @@ theorem residualSource_conjugate {D : Type} [NormedAddCommGroup D] [NormedSpace 
   HarmonicResidual.residualBlock_conjugate c u b G A n i j x
 
 /-- A pair at the original label's carrier, for both velocity and pressure. -/
-noncomputable def modeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
+@[expose] noncomputable def modeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (v : ℕ → D → ComplexVector) (p : ℕ → D → ℂ) : HarmonicBlock D where
   velocity n i := conjugatePair j (fun x => v n x i)
   pressure n := conjugatePair j (p n)
@@ -170,7 +170,7 @@ theorem modeBlock_classes {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Assembled block, given by `sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p
 j))`. -/
-noncomputable def assembledBlock {D : Type} (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
+@[expose] noncomputable def assembledBlock {D : Type} (N : ℕ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (v : ℤ → ℕ → D → ComplexVector) (p : ℤ → ℕ → D → ℂ) : HarmonicBlock D :=
   sumBlock (modes N) k Φ kp (fun j => modeBlock j k Φ kp (v j) (p j))
 
@@ -211,6 +211,7 @@ variable {P Q H : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Transport only the input data. The physical native clock and anchor
 are retained, and the cover is refined by a specified integer power. -/
+@[expose]
 noncomputable def transportTangent (t : TangentData P H) (φ : Q → P)
     (gap : ℕ) (amplitude : ℝ) : TangentData Q H where
   normal z := t.normal (φ z.1, z.2)
@@ -364,6 +365,7 @@ theorem assembledBlock_mean_zero {D : Type}
 
 /-- Full mode block, given by `modeBlock j k Φ kp (fun n x => a.amplitude n (x,0)) (fun n x =>
 a.pressure n (x,0))`. -/
+@[expose]
 noncomputable def fullModeBlock {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) : HarmonicBlock D :=
   modeBlock j k Φ kp (fun n x => a.amplitude n (x,0)) (fun n x => a.pressure n (x,0))
@@ -419,6 +421,7 @@ variable {P Q : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup Q] [NormedSpace ℝ Q]
 
 /-- Transport source, defined pointwise by `amplitude • f (φ q.1, coverPower gap q.2)`. -/
+@[expose]
 noncomputable def transportSource (f : P × Plane → ComplexVector) (φ : Q → P)
     (gap : ℕ) (amplitude : ℝ) : Q × Plane → ComplexVector :=
   fun q => amplitude • f (φ q.1, coverPower gap q.2)
@@ -558,13 +561,14 @@ structure BandCharts (P : Type) where
 
 /-- Reference velocity, given by `commonVelocity (r.tangent j) (residualSource c u b G A j
 r.band) r.geometry r.length_pos.le r.cutoff`. -/
-noncomputable def referenceVelocity (r : Reference P)
+@[expose] noncomputable def referenceVelocity (r : Reference P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) : P × Plane → ComplexVector :=
   commonVelocity (r.tangent j) (residualSource c u b G A j r.band) r.geometry
     r.length_pos.le r.cutoff
 
 /-- Reference pressure, constructed using `commonPressure`. -/
+@[expose]
 noncomputable def referencePressure (r : Reference P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) : P × Plane → ℂ :=
@@ -704,6 +708,7 @@ theorem commonPressure_invariant {θ : P} {t : TangentData P ProblemStatement.Sp
     (complexCopyPressure_invariant ht hs g hab k frequency) (fun r v => r • v)
 
 /-- Angle lift, defined pointwise by `f (z.1.1, z.2)`. -/
+@[expose]
 noncomputable def angleLift {E : Type} (f : P × Plane → E) : (P × ℝ) × Plane → E :=
   fun z => f (z.1.1, z.2)
 
@@ -714,6 +719,7 @@ theorem angleLift_invariant {E : Type} (f : P × Plane → E) :
 
 /-- Angle tangent, bundling `normal`, `normalDot`, `action`, `damping` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def angleTangent (t : TangentData P ProblemStatement.Space) :
     TangentData (P × ℝ) ProblemStatement.Space where
   normal := angleLift t.normal
@@ -729,6 +735,7 @@ theorem angleTangent_invariant (t : TangentData P ProblemStatement.Space) :
 
 /-- An isometry retaining the physical angular coordinate, while moving it
 into the slow-parameter product used by the Volterra construction. -/
+@[expose]
 noncomputable def angleShuffle : ((P × Plane) × ℝ) ≃ₗᵢ[ℝ] ((P × ℝ) × Plane) where
   toFun z := ((z.1.1,z.2),z.1.2)
   invFun z := ((z.1.1,z.2),z.1.2)
@@ -961,7 +968,7 @@ theorem complexCopyPressure_angle (t : TangentData P ProblemStatement.Space)
 
 /-- Frequency and phase are constructed from the original residual block.
 Only the background fields of `base` are retained. -/
-noncomputable def actualCarrier (base : WaveCoefficients ((P × ℝ) × Plane))
+@[expose] noncomputable def actualCarrier (base : WaveCoefficients ((P × ℝ) × Plane))
     (b : HarmonicBlock (P × Plane)) (j : ℤ) : WaveCoefficients ((P × ℝ) × Plane) :=
   { base with
     phase := fun n z => b.phase n (z.1.1,z.2) + (b.angularFrequency n : ℝ) / b.frequency n * z.1.2
@@ -986,6 +993,7 @@ theorem actualCarrier_affine (base : WaveCoefficients ((P × ℝ) × Plane))
   ring
 
 /-- Actual copy coefficients, constructed using `complexCopyCoefficients`. -/
+@[expose]
 noncomputable def actualCopyCoefficients (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
@@ -997,6 +1005,7 @@ noncomputable def actualCopyCoefficients (r : Reference P) (charts : BandCharts 
     (bandGeometry r charts) copy (fun _ => r.length) (fun _ => r.length_pos)
 
 /-- Actual common coefficients as an element of `WaveCoefficients ((P × ℝ) × Plane)`. -/
+@[expose]
 noncomputable def actualCommonCoefficients (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
@@ -1163,7 +1172,7 @@ noncomputable def nativeCutoff (r : Reference P) (charts : BandCharts P) (copy :
 
 /-- The common coefficient already contains its single native cutoff.
 Its correction is the actual cylindrical curl correction of that coefficient. -/
-noncomputable def actualCorrectedCommon (r : Reference P) (charts : BandCharts P)
+@[expose] noncomputable def actualCorrectedCommon (r : Reference P) (charts : BandCharts P)
     (c : Context (P × Plane)) (u : State (P × Plane)) (b : HarmonicBlock (P × Plane))
     (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ)
     (base : WaveCoefficients ((P × ℝ) × Plane)) (s : StripData ((P × ℝ) × Plane))
@@ -1377,11 +1386,13 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Section strip, given by `SignedWaveUpdate.sectionStrip (reindexStrip (angleShuffle (P := P))
 s)`. -/
+@[expose]
 noncomputable def sectionStrip (s : StripData ((P × ℝ) × Plane)) : StripData (P × Plane) :=
   SignedWaveUpdate.sectionStrip (reindexStrip (angleShuffle (P := P)) s)
 
 /-- Native mode block, given by `fullModeBlock j b.frequency b.phase b.angularFrequency
 (reindexCoefficients angleShuffle a)`. -/
+@[expose]
 noncomputable def nativeModeBlock (j : ℤ) (b : HarmonicBlock (P × Plane))
     (a : WaveCoefficients ((P × ℝ) × Plane)) : HarmonicBlock (P × Plane) :=
   fullModeBlock j b.frequency b.phase b.angularFrequency (reindexCoefficients angleShuffle a)
@@ -1457,6 +1468,7 @@ open ParticularWaveBounds CopyAngularInvariance CorrectionState
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Source family, defined pointwise by `angleLift (residualSource c u b G A j n)`. -/
+@[expose]
 noncomputable def sourceFamily (c : Context (P × Plane)) (u : State (P × Plane))
     (b : HarmonicBlock (P × Plane)) (G A : HarmonicResidual.BlockCoefficients (P × Plane)) (j : ℤ) :
     ℕ → (P × ℝ) × Plane → ComplexVector :=
@@ -1884,23 +1896,27 @@ namespace AssemblyData
 variable (D : AssemblyData P)
 
 /-- Wave, constructed using `actualCorrectedCommon`. -/
+@[expose]
 noncomputable def wave (j : ℤ) : WaveCoefficients ((P × ℝ) × Plane) :=
   actualCorrectedCommon D.reference D.charts D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j D.background D.strip D.directions
 
 /-- Controls as an element of `Type`. -/
+@[expose]
 noncomputable def controls (N : ℕ) (α κ : ℝ) : Type :=
   ∀ j ∈ modes N, LocalControl D.reference D.charts D.context D.state D.carrierBlock
     D.gaussianInput D.aliasInput j D.background D.copy D.strip D.directions α κ
 
 /-- Velocity, defined pointwise by `∑ j ∈ modes N, (vectorMode ((D.wave j).frequency n) ((D.wave
 j).phase n) ((D.wave j).amplitude n) x i).re`. -/
+@[expose]
 noncomputable def velocity (N : ℕ) : ℕ → (P × ℝ) × Plane → Fin 3 → ℝ :=
   fun n x i => ∑ j ∈ modes N, (vectorMode ((D.wave j).frequency n) ((D.wave j).phase n)
     ((D.wave j).amplitude n) x i).re
 
 /-- Pressure, defined pointwise by `∑ j ∈ modes N, (mode ((D.wave j).frequency n) ((D.wave
 j).phase n) ((D.wave j).pressure n) x).re`. -/
+@[expose]
 noncomputable def pressure (N : ℕ) : ℕ → (P × ℝ) × Plane → ℝ :=
   fun n x => ∑ j ∈ modes N, (mode ((D.wave j).frequency n) ((D.wave j).phase n)
     ((D.wave j).pressure n) x).re

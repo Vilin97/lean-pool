@@ -33,7 +33,7 @@ holds across its boundary, rather than only inside the native estimate
 domain.  The stripped coefficients are independent of the angular variable.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -216,7 +216,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -434,6 +434,7 @@ section Labels
 variable {B N0 : ℕ}
 
 /-- Band label, given by `⟨spatialLabel l, label_large l⟩`. -/
+@[expose]
 noncomputable def bandLabel (l : SignedLabel B N0) : PhysicalWaveSum.BandLabel :=
   ⟨spatialLabel l, label_large l⟩
 
@@ -461,10 +462,12 @@ theorem selected_eq (l : SignedLabel B N0) (hL : bandLabel l ∈ active) :
 
 /-- Gap, given by `ChartScales.nativeIndex ActualPrimary.h L.val.1 - CommonWindow.index
 ActualPrimary.h L.val.1`. -/
+@[expose]
 noncomputable def gap (L : PhysicalWaveSum.BandLabel) : ℕ :=
   ChartScales.nativeIndex ActualPrimary.h L.val.1 - CommonWindow.index ActualPrimary.h L.val.1
 
 /-- Geometry, given by `ActualSignedPhysicalData.geometry ActualPrimary.slots L.val (gap L)`. -/
+@[expose]
 noncomputable def geometry (L : PhysicalWaveSum.BandLabel) : CommonCoverSolve.Geometry :=
   ActualSignedPhysicalData.geometry ActualPrimary.slots L.val (gap L)
 
@@ -472,6 +475,7 @@ theorem geometry_bandLabel (l : SignedLabel B N0) :
     geometry (bandLabel l) = ActualPrimary.chartGeometry (BaseChartJets.cellBand l.2) l.1 l.2 := rfl
 
 /-- Selected carrier, constructed using `ActualSignedPhysicalData.carrier`. -/
+@[expose]
 noncomputable def selectedCarrier (l : SignedLabel B N0) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   ActualSignedPhysicalData.carrier (h := ActualPrimary.h) (spatialLabel l) k
@@ -482,6 +486,7 @@ noncomputable def selectedCarrier (l : SignedLabel B N0) (k : Frequency) :
     ((ActualPrimary.phases B N0 l.1).phase.G l.2)
 
 /-- Carrier, with branches according to `hL : L ∈ active (B := B) (N0 := N0)`. -/
+@[expose]
 noncomputable def carrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   if hL : L ∈ active (B := B) (N0 := N0) then selectedCarrier (selected L hL) k
@@ -593,6 +598,7 @@ theorem nativePressureSource_uniform :
   exact mul_le_of_le_one_right (Real.sqrt_nonneg _) (fullEnvelope_le_one l.1 n x)
 
 /-- Potential family, bundling `gap`, `carrier`, `amplitude`, `CartesianCopySource`. -/
+@[expose]
 noncomputable def potentialFamily (B N0 : ℕ) (i : Fin 3) :
     PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap := gap
@@ -604,6 +610,7 @@ noncomputable def potentialFamily (B N0 : ℕ) (i : Fin 3) :
     else 0
 
 /-- Pressure family, bundling `gap`, `carrier`, `amplitude`, `nativePressureSource`. -/
+@[expose]
 noncomputable def pressureFamily (B N0 : ℕ) : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap := gap
   carrier k L := carrier (B := B) (N0 := N0) L k
@@ -752,6 +759,7 @@ abbrev LiftPoint := PhysicalGraphBounds.LiftPoint
 
 /-- Slow input, given by `(ActualSignedGeometry.meanEquiv.symm
 (PhysicalClassBounds.cylindricalMap x)).1`. -/
+@[expose]
 noncomputable def slowInput (x : LiftPoint) : PhaseCalculus.Slow :=
   (ActualSignedGeometry.meanEquiv.symm (PhysicalClassBounds.cylindricalMap x)).1
 
@@ -1152,17 +1160,20 @@ theorem pressure_support (B N0 : ℕ) :
 
 /-- The actual initial primary potential.  The physical construction is
 zero on the unused future side of the preterminal domain. -/
+@[expose]
 noncomputable def potential (B N0 : ℕ) : ProblemStatement.VelocityField :=
   PhysicalCopyBounds.vectorSum (potentialFamily B N0) innerRadius ActualPrimary.h
       ActualPrimary.slots.radius
 
 /-- Pressure, defined pointwise by `((pressureFamily B N0).sum innerRadius ActualPrimary.h
 ActualPrimary.slots.radius w).re`. -/
+@[expose]
 noncomputable def pressure (B N0 : ℕ) : ProblemStatement.PressureField :=
   fun w => ((pressureFamily B N0).sum innerRadius ActualPrimary.h ActualPrimary.slots.radius w).re
 
 /-- Copy potential, bundling `Copy`, `harmonics`, `family`, `inner` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def copyPotential (B N0 : ℕ) : MixedAxisPreservation.CopyPotential ActualPrimary.h
     where
   Copy := Frequency
@@ -1364,6 +1375,7 @@ theorem pressure_amplitude_source (B N0 : ℕ) (k : Frequency)
 
 /-- The identity chart only needs its formula on the genuine source
 domain.  Its closure condition follows from actual amplitude support. -/
+@[expose]
 noncomputable def identitySourceChartOn {N : ℕ} {K I : Type}
     (f : PhysicalCopyBounds.CopyFamily N K) (hc : PhysicalCopyBounds.SupportCells f)
     {a b h r Z σ : ℝ} {gap : ℕ} (ha : 0 < a)
@@ -1395,6 +1407,7 @@ noncomputable def identitySourceChartOn {N : ℕ} {K I : Type}
       (fun y hy => hd k J _ (PhysicalWaveSum.globalWave_ne_zero_amp hy))
 
 /-- Potential chart, constructed using `identitySourceChartOn`. -/
+@[expose]
 noncomputable def potentialChart (B N0 : ℕ) (i : Fin 3) :
     LocalPhysicalCopyBounds.CommonChart (potentialFamily B N0 i) (potentialCells B N0 i)
       innerRadius outerRadius ActualPrimary.h ActualPrimary.slots.radius (-ActualPrimary.h)
@@ -1403,6 +1416,7 @@ noncomputable def potentialChart (B N0 : ℕ) (i : Fin 3) :
     (fun k I => (i, I, k)) (potential_amplitude_source B N0 i) (potential_source_domain B N0 i)
 
 /-- Pressure chart, constructed using `identitySourceChartOn`. -/
+@[expose]
 noncomputable def pressureChart (B N0 : ℕ) :
     LocalPhysicalCopyBounds.CommonChart (pressureFamily B N0) (pressureCells B N0)
       innerRadius outerRadius ActualPrimary.h ActualPrimary.slots.radius
@@ -1560,6 +1574,7 @@ section PhysicalData
 
 /-- Actual initial potential copies with their proved support, local
 regularity and uniform native jets. -/
+@[expose]
 noncomputable def potentialWaveData (B N0 : ℕ) :
     PhysicalStageBounds.WaveData ActualPrimary.h LiftPoint (Fin 3 × SourceIndex) Frequency (Fin 3)
         where
@@ -1591,6 +1606,7 @@ noncomputable def potentialWaveData (B N0 : ℕ) :
 
 /-- The pressure has the same copied source construction and its actual
 physical pressure factor. -/
+@[expose]
 noncomputable def pressureWaveData (B N0 : ℕ) :
     PhysicalStageBounds.WaveData ActualPrimary.h LiftPoint SourceIndex Frequency Unit where
   lowerRadius := innerRadius
@@ -1642,6 +1658,7 @@ section LiteralCopies
 variable {B N0 : ℕ}
 
 /-- Positive index, given by `ActualSignedPhysicalData.positiveIndex (bandLabel l)`. -/
+@[expose]
 noncomputable def positiveIndex (l : SignedLabel B N0) : PhysicalWaveSum.WaveIndex 1 :=
   ActualSignedPhysicalData.positiveIndex (bandLabel l)
 
@@ -2007,7 +2024,7 @@ variable {B N0 : ℕ}
 
 /-- Physical X, given by `PhysicalWaveSum.physicalPosition w 0 ^ 2 / (2 *
 PhysicalWaveSum.physicalQ ActualPrimary.h w)`. -/
-noncomputable def physicalX (w : ProblemStatement.SpaceTime) : ℝ :=
+@[expose] noncomputable def physicalX (w : ProblemStatement.SpaceTime) : ℝ :=
   PhysicalWaveSum.physicalPosition w 0 ^ 2 / (2 * PhysicalWaveSum.physicalQ ActualPrimary.h w)
 
 theorem cut_pair_physicalX (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel)
@@ -2614,6 +2631,7 @@ section GlobalPrimaryPressure
 variable {B N0 : ℕ}
 
 /-- Physical pressure coefficient, constructed using `ActualPrimary.periodicGaussian`. -/
+@[expose]
 noncomputable def physicalPressureCoefficient (l : SignedLabel B N0)
     (z : ProblemStatement.SpaceTime) : ℂ :=
   ActualPrimary.periodicGaussian l.1 l.2 (ActualPrimaryCoherence.physicalLift z).1.2 •

@@ -16,7 +16,7 @@ pushed back down is the family itself.  Iterating over the interface
 gives the composition's sum in terms of the base's own subsets.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

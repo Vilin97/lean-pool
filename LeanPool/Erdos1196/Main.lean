@@ -25,7 +25,7 @@ normalization estimates into the final logarithmic-series bound.
 * `mainTheorem`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators
 

@@ -20,7 +20,7 @@ canonical-matrix traversal and a small generated payload table, but no replay
 tree, `native_decide`, private import, or unproved hypothesis.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourCanonicalClassifier
 
 open Utilities

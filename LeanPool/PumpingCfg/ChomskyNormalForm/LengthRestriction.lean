@@ -30,7 +30,7 @@ the original
    [Hopcroft et al. 2006]
 -/
 
-@[expose] public section
+public section
 
 universe uN uT
 variable {T : Type uT}
@@ -144,12 +144,12 @@ def restrictLengthRules [DecidableEq T] [DecidableEq g.NT] (l : List (ContextFre
 end RestrictLength
 
 /-- Construct a `ChomskyNormalGrammar` corresponding to the original `ContextFreeGrammar` -/
-noncomputable def restrictLength [DecidableEq T] (g : ContextFreeGrammar T)
+@[expose] noncomputable def restrictLength [DecidableEq T] (g : ContextFreeGrammar T)
     [e : DecidableEq g.NT] :=
   ChomskyNormalFormGrammar.mk g.NT' (Sum.inl g.initial) (restrictLengthRules g.rules.toList)
 
 /-- A grammar is `Wellformed` if all rules are `ContextFreeRule.Wellformed` -/
-def Wellformed (g : ContextFreeGrammar T) : Prop := ∀ r ∈ g.rules, r.Wellformed
+@[expose] def Wellformed (g : ContextFreeGrammar T) : Prop := ∀ r ∈ g.rules, r.Wellformed
 
 /-! Definitions of embeding into and projecting to the type of symbols of the new grammar -/
 section EmbedProject
@@ -157,7 +157,7 @@ section EmbedProject
 variable {g : ContextFreeGrammar T}
 
 /-- Intuitive embedding of symbols of the original grammar into symbols of the new grammar's type -/
-def embedSymbol (s : Symbol T g.NT) : Symbol T g.NT' :=
+@[expose] def embedSymbol (s : Symbol T g.NT) : Symbol T g.NT' :=
   match s with
   | Symbol.terminal t => Symbol.terminal t
   | Symbol.nonterminal n => Symbol.nonterminal (Sum.inl n)
@@ -428,7 +428,7 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
   | succ n ih =>
     unfold computeRulesRec at hrix
     split at hrix
-    · rename_i _ hrn
+    · rename_i n₁ hrn
       simp only [List.cons_subset, List.get_eq_getElem] at hrix hrn
       obtain ⟨hx₁, hx₂⟩ := hrix
       rw [← List.getElem_cons_drop, hrn]
@@ -438,10 +438,13 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
             · simp only [List.mem_toFinset]
               exact hx₁
             · exact ChomskyNormalFormRule.Rewrites.input_output
-        · simp only [ChomskyNormalFormRule.output, List.map_cons, List.map_drop]
+        · simp only [List.map_cons, List.map_drop]
           rw [← List.singleton_append, ← List.singleton_append, embedSymbol_nonterminal,
             ← List.map_drop]
-          apply ChomskyNormalFormGrammar.Derives.append_left
+          simp only [ChomskyNormalFormRule.output]
+          refine ChomskyNormalFormGrammar.Derives.append_left
+            (g := ChomskyNormalFormGrammar.mk g.NT' _ x.toFinset)
+            (p := ([Symbol.nonterminal (Sum.inl n₁)] : List (Symbol T g.NT'))) ?_
           have hrₒ : r.output.length - 2 - (n + 1) + 1 = r.output.length - 2 - n := by omega
           simp_all
       · omega

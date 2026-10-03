@@ -22,7 +22,7 @@ modified Nesterov scheme contracts the Lyapunov function by a factor 1 - a/2,
 where a = √(μ'·η).
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -59,7 +59,7 @@ The two bridges are
   `DegSpec` *is* an ordinary `Spec`, with `rep = id`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
@@ -117,10 +117,12 @@ abbrev Vertex := d.Class ⊕ d.Interior
 abbrev Step := Σ e : Fin p, Fin (d.length e)
 
 /-- The class of a core vertex, as a vertex of the degenerate subdivision. -/
+@[expose]
 def coreVertex (v : Fin n) : d.Vertex := Sum.inl ⟨d.rep v, d.rep_idem v⟩
 
 /-- The interior vertex at zero-based offset `o` on a slot, corresponding to path position `o +
 1`. -/
+@[expose]
 def interiorVertex (e : Fin p) (o : Fin (d.length e - 1)) : d.Vertex :=
   Sum.inr ⟨e, o⟩
 
@@ -132,16 +134,19 @@ theorem coreVertex_eq_iff (u v : Fin n) :
   · intro h; rw [Sum.inl.injEq]; exact Subtype.ext h
 
 /-- The left vertex of a unit step, using the tail core class at the initial step. -/
+@[expose]
 def stepLeft (e : Fin p) (o : Fin (d.length e)) : d.Vertex :=
   if hzero : o.val = 0 then d.coreVertex (d.core.tail e)
   else d.interiorVertex e ⟨o.val - 1, by have := o.isLt; omega⟩
 
 /-- The right vertex of a unit step, using the head core class at the final step. -/
+@[expose]
 def stepRight (e : Fin p) (o : Fin (d.length e)) : d.Vertex :=
   if hlast : o.val + 1 = d.length e then d.coreVertex (d.core.head e)
   else d.interiorVertex e ⟨o.val, by have := o.isLt; omega⟩
 
 /-- The ordered endpoint pair of a unit-step occurrence in the degenerate subdivision. -/
+@[expose]
 def unitEdge (s : d.Step) : d.Vertex × d.Vertex :=
   (d.stepLeft s.1 s.2, d.stepRight s.1 s.2)
 
@@ -193,6 +198,7 @@ abbrev PathPosition (e : Fin p) := Fin (d.length e + 1)
 
 /-- Decode a slot position as its tail, interior, or head vertex; a zero-length slot has a
 single contracted endpoint. -/
+@[expose]
 def pathVertex (e : Fin p) (k : d.PathPosition e) : d.Vertex :=
   if hzero : k.val = 0 then d.coreVertex (d.core.tail e)
   else if hlast : k.val = d.length e then d.coreVertex (d.core.head e)
@@ -222,6 +228,7 @@ theorem pathVertex_eq_of_val_eq (e : Fin p) {j k : d.PathPosition e}
 /-- A path position clamped into range.  On a slot the certificate actually
 uses this is the identity; it exists so that a *generic* statement can name a
 position on every slot without carrying a bound for the slots it ignores. -/
+@[expose]
 def clampPos (d : DegSpec n p) (e : Fin p) (k : ℕ) : d.PathPosition e :=
   ⟨min k (d.length e), by omega⟩
 
@@ -241,6 +248,7 @@ clamped to the head, which is where a chip pushed off the end belongs.
 It lives here rather than beside its first consumer because the two consumers
 sit on independent branches of the tower: ramp scripts read chips off it, and
 `Certificate/ScaleQReduced.lean` walks along it. -/
+@[expose]
 def pathAt (d : DegSpec n p) (e : Fin p) (k : ℕ) : d.Vertex :=
   d.pathVertex e (d.clampPos e k)
 
@@ -456,6 +464,7 @@ theorem classMap_bijective : Function.Bijective c.classMap := by
     exact ⟨v', Subtype.ext (hv'.trans hv)⟩
 
 /-- Interior half of the vertex bijection. -/
+@[expose]
 def interiorMap : (Σ e' : Fin p', Fin (target.length e' - 1)) → d.Interior :=
   fun s => ⟨c.slot s.1, ⟨s.2.val, by
     have := s.2.isLt
@@ -480,6 +489,7 @@ theorem interiorMap_bijective : Function.Bijective c.interiorMap := by
     exact congrArg (Sigma.mk (c.slot e')) (Fin.ext rfl)
 
 /-- Unit-step bijection. -/
+@[expose]
 def stepMap : target.Step → d.Step :=
   fun s => ⟨c.slot s.1, ⟨s.2.val, by
     have := s.2.isLt
@@ -504,12 +514,14 @@ theorem stepMap_bijective : Function.Bijective c.stepMap := by
     exact congrArg (Sigma.mk (c.slot e')) (Fin.ext rfl)
 
 /-- Vertex bijection of the correspondence. -/
+@[expose]
 noncomputable def vertexEquiv : target.Vertex ≃ d.Vertex :=
   Equiv.sumCongr (Equiv.ofBijective _ c.classMap_bijective)
     (Equiv.ofBijective _ c.interiorMap_bijective)
 
 /-- The bijection from unit steps in the positive contracted presentation to surviving unit
 steps in the closed presentation, preserving offsets. -/
+@[expose]
 noncomputable def stepEquiv : target.Step ≃ d.Step :=
   Equiv.ofBijective _ c.stepMap_bijective
 
@@ -569,6 +581,7 @@ theorem unitEdge_stepEquiv (s : target.Step) :
 /-- **The correspondence.**  A face of the closed orthant whose zero set is a
 forest carries the same Laplacian as the strictly positive subdivision of the
 contracted core. -/
+@[expose]
 noncomputable def laplacianEquiv : LaplacianEquiv target.graph d.graph where
   toEquiv := c.vertexEquiv
   num_edges_eq := by
@@ -631,6 +644,7 @@ theorem rep_eq_self_of_pos (hpos : ∀ e : Fin p, 0 < d.length e) (v : Fin n) :
 
 /-- A degenerate spec with strictly positive lengths *is* an ordinary
 subdivision spec on the same core and lengths. -/
+@[expose]
 def toSpec (hpos : ∀ e : Fin p, 0 < d.length e) : SubdivisionGraph.Spec n p where
   core := d.core
   length := d.length
@@ -670,6 +684,7 @@ theorem bnExists_toSpec_iff (hpos : ∀ e : Fin p, 0 < d.length e) (r deg : ℤ)
 
 /-- Push arbitrary core weights to contracted core classes.  A class carries
 the sum of its members' weights and subdivision-interior vertices carry zero. -/
+@[expose]
 def coreClassDivisor (weight : Fin n → ℤ) : CFDiv d.graph
   | Sum.inl c => ∑ v ∈ Finset.univ.filter (fun v : Fin n => d.rep v = c.val),
       weight v

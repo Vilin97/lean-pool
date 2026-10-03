@@ -9,7 +9,7 @@ public import LeanPool.Odlyzko.CompletedZeta.UnitFundamentalDomain
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ theorem fundamentalUnitForShift_unitExponentReindex
     (fun _ ↦ by simp [unitExponentReindex])).symm
 
 /-- An unit decomposition map used in the Odlyzko-bound argument. -/
-noncomputable def unitDecompositionMap :
+@[expose] noncomputable def unitDecompositionMap :
     torsion K × ({w : InfinitePlace K // w ≠ w₀} → ℤ) →
       (𝓞 K)ˣ :=
   fun p ↦ p.1 * fundamentalUnitForShift p.2
@@ -92,7 +92,7 @@ theorem bijective_unitDecompositionMap :
 
 open scoped Classical in
 /-- An unit decomposition equiv used in the Odlyzko-bound argument. -/
-def unitDecompositionEquiv :
+@[expose] def unitDecompositionEquiv :
     torsion K × ({w : InfinitePlace K // w ≠ w₀} → ℤ) ≃
       (𝓞 K)ˣ :=
   Equiv.ofBijective (unitDecompositionMap K)

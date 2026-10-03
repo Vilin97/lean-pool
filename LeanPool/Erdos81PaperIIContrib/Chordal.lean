@@ -34,7 +34,7 @@ self-contained and depends only on Mathlib.
   graph has two non-adjacent simplicial vertices
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 
@@ -42,18 +42,22 @@ variable {V : Type*} {G : SimpleGraph V}
 
 /-- A graph is **chordal** if every cycle of length `≥ 4` has a chord: an adjacency between two
 vertices of the cycle whose edge is not one of the cycle's own edges. -/
+@[expose]
 def IsChordal (G : SimpleGraph V) : Prop :=
   ∀ ⦃v : V⦄ (c : G.Walk v v), c.IsCycle → 4 ≤ c.length →
     ∃ x y : V, x ∈ c.support ∧ y ∈ c.support ∧ G.Adj x y ∧ s(x, y) ∉ c.edges
 
 /-- A vertex is **simplicial** if its neighbourhood induces a clique. -/
+@[expose]
 def IsSimplicial (G : SimpleGraph V) (v : V) : Prop := G.IsClique (G.neighborSet v)
 
 /-- `S` **separates** `a` from `b` if neither lies in `S` and every walk `a → b` meets `S`. -/
+@[expose]
 def Separates (G : SimpleGraph V) (S : Set V) (a b : V) : Prop :=
   a ∉ S ∧ b ∉ S ∧ ¬ Relation.ReflTransGen (fun p q => p ∉ S ∧ q ∉ S ∧ G.Adj p q) a b
 
 /-- `S` is a **minimal** `a`–`b` separator: it separates them and no proper subset does. -/
+@[expose]
 def IsMinimalSeparator (G : SimpleGraph V) (S : Set V) (a b : V) : Prop :=
   G.Separates S a b ∧ ∀ T ⊂ S, ¬ G.Separates T a b
 

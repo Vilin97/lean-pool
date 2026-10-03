@@ -40,7 +40,7 @@ with `queryCode` of the base-reduct code `pulledCode`); the tree pinning as an *
 (`realize_treeDiagram`); and the bundled `functionalTheta T`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -77,16 +77,19 @@ section Maps
 variable (L) (M : Type) [inst : (MidLang L).Structure M]
 
 /-- The interpreted successor. -/
+@[expose]
 def sMap (x : M) : M := @Structure.funMap (MidLang L) M inst 1 (Sum.inr WitnessFun.s) ![x]
 
 /-- The interpreted `f`. -/
+@[expose]
 def fMap (x : M) : M := @Structure.funMap (MidLang L) M inst 1 (Sum.inr WitnessFun.f) ![x]
 
 /-- The interpreted `g`. -/
+@[expose]
 def gMap (x : M) : M := @Structure.funMap (MidLang L) M inst 1 (Sum.inr WitnessFun.g) ![x]
 
 /-- The numeral map `ℕ → M`. -/
-def numMap : ℕ → M
+@[expose] def numMap : ℕ → M
   | 0 => @Structure.funMap (MidLang L) M inst 0 (Sum.inr WitnessFun.c) Fin.elim0
   | n + 1 => sMap L M (numMap n)
 
@@ -340,7 +343,7 @@ def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).
 
 variable (L) in
 /-- The semantic tuple of a tree atom. -/
-def treeTuple (M : Type) [inst : (MidLang L).Structure M] (n : ℕ)
+@[expose] def treeTuple (M : Type) [inst : (MidLang L).Structure M] (n : ℕ)
     (σ : Fin n → Bool) (τ : Fin n → ℕ) : Fin (2 * n) → M :=
   fun i =>
     if h : (i : ℕ) < n then numMap L M (cond (σ ⟨i, h⟩) 1 0)
@@ -414,6 +417,7 @@ def pathAxiom : (MidLang L).Sentenceω :=
 
 variable (L) in
 /-- The semantic path tuple at level `n`. -/
+@[expose]
 def pathTuple (M : Type) [inst : (MidLang L).Structure M] (n : ℕ) : Fin (2 * n) → M :=
   fun i =>
     if (i : ℕ) < n then fMap L M (numMap L M (i : ℕ))

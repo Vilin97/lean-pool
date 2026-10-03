@@ -20,7 +20,7 @@ section
 /-! The physical tensor estimate controls differences of actual L²
 representatives, which supplies time continuity without a domination premise. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -79,7 +79,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -125,6 +125,7 @@ theorem physicalTensorValue_continuous (n : ℕ) :
 
 /-- The physical tensor path is constructed from the actual graph field;
 continuity is a theorem rather than an additional packet hypothesis. -/
+@[expose]
 def physicalTensorPath (n : ℕ) :
     C(Icc (0 : ℝ) T,Lp (Vector3 [×n]→L[ℝ] Vector3) 2 (volume : Measure Vector3)) :=
   ⟨A.physicalTensorValue k m n,A.physicalTensorValue_continuous k m n⟩

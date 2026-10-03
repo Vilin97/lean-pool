@@ -19,7 +19,7 @@ improper radial integral.  Its regularity is obtained by separating the pure
 heat tail from a compact taper correction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ namespace NavierStokes.TerminalPressure
 
 
 /-- The exponent of the physical angular heat amplitude. -/
-noncomputable def amplitudeExponent (h : ℝ) : ℝ := 1 / 2 + h
+@[expose] noncomputable def amplitudeExponent (h : ℝ) : ℝ := 1 / 2 + h
 
 /-- Derivatives with respect to the actual scaled heat parameter. -/
 noncomputable def heatJet (h : ℝ) (n : ℕ) (ν v : ℝ) : ℝ :=
@@ -42,7 +42,7 @@ noncomputable def heatJetBound (h : ℝ) (n : ℕ) : ℝ :=
   2 ^ n * ParametricHeatTail.heatJetBound h n
 
 /-- Pressure weight, given by `v ^ (-2 * amplitudeExponent h - 1)`. -/
-noncomputable def pressureWeight (h v : ℝ) : ℝ :=
+@[expose] noncomputable def pressureWeight (h v : ℝ) : ℝ :=
   v ^ (-2 * amplitudeExponent h - 1)
 
 /-- Heat pressure jet, given by `pressureWeight h v * ParametricHeatTail.jetProduct (fun i =>
@@ -52,7 +52,7 @@ noncomputable def heatPressureJet (h : ℝ) (n : ℕ) (ν v : ℝ) : ℝ :=
     (fun i => heatJet h i ν v) n
 
 /-- Dimensionless pure-heat pressure integral, including the zero-diffusion endpoint. -/
-noncomputable def heatPressureFactor (h ν : ℝ) : ℝ :=
+@[expose] noncomputable def heatPressureFactor (h ν : ℝ) : ℝ :=
   ∫ v in Ioi (1 : ℝ), pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^ 2
 
 theorem heatJet_zero (h ν v : ℝ) : heatJet h 0 ν v = RadialHeatProfile.profile (1 + h) (2 * ν / v)
@@ -94,11 +94,16 @@ theorem heatJet_bound {h ν v : ℝ} (hh : 0 < h) (hν : 0 ≤ ν) (hv : 1 ≤ v
   have hvp : 0 < v := zero_lt_one.trans_le hv
   have hj : |RadialHeatProfile.profileJet (1 + h) n (2 * ν / v)| ≤ ParametricHeatTail.heatJetBound
       h n := by
-    rw [← RadialHeatProfile.iteratedDerivWithin_profile (by linarith) n (by positivity)]
-    exact RadialHeatProfile.profile_derivative_bound (by linarith) n (by positivity)
+    have ha : 1 < 1 + h := by linarith [hh]
+    have hz : 0 ≤ 2 * ν / v := div_nonneg (mul_nonneg (by norm_num) hν) hvp.le
+    rw [← RadialHeatProfile.iteratedDerivWithin_profile ha n hz]
+    simpa only [ParametricHeatTail.heatJetBound] using
+      (RadialHeatProfile.profile_derivative_bound ha n hz)
   have hp : (2 / v) ^ n ≤ (2 : ℝ) ^ n := by
-    gcongr
-    exact div_le_self (by norm_num) hv
+    have hdiv : (2 : ℝ) / v ≤ 2 := by
+      apply (div_le_iff₀ hvp).2
+      nlinarith [hv]
+    exact pow_le_pow_left₀ (div_nonneg (by norm_num) hvp.le) hdiv n
   rw [heatJet, abs_mul, abs_of_nonneg (pow_nonneg (by positivity) n)]
   exact mul_le_mul hp hj (abs_nonneg _) (by positivity)
 
@@ -122,6 +127,7 @@ theorem heatPressureJet_hasDerivWithinAt {h ν v : ℝ} (hh : 0 < h)
 
 theorem heatPressureJet_dominated {h : ℝ} (hh : 0 < h) :
     ParametricHeatTail.ChainDominated (heatPressureJet h) (volume.restrict (Ioi (1 : ℝ))) := by
+  unfold ParametricHeatTail.ChainDominated
   intro n L hL
   let B := ParametricHeatTail.jetProduct (heatJetBound h) (heatJetBound h) n
   refine ⟨fun v => pressureWeight h v * B, ?_, ?_⟩
@@ -170,7 +176,7 @@ theorem heatPressureFactor_contDiffOn {h : ℝ} (hh : 0 < h) :
 
 /-- Heat density, given by `pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^
 2`. -/
-noncomputable def heatDensity (h ν v : ℝ) : ℝ :=
+@[expose] noncomputable def heatDensity (h ν v : ℝ) : ℝ :=
   pressureWeight h v * RadialHeatProfile.profile (1 + h) (2 * ν / v) ^ 2
 
 /-- Tapered density, given by `heatDensity h p.1 v * f (p.2 + Real.log v) ^ 2`. -/
@@ -565,6 +571,7 @@ theorem canonicalPressure_contDiffAt (C : ℝ) {h Y : ℝ} {f : ℝ → ℝ}
 
 /-- Log scale derivative, given by `CoordinateAlgebra.qAxial (SimilarityProfile.q h p) h
 (SimilarityProfile.eta h p) / SimilarityProfile.q h p`. -/
+@[expose]
 noncomputable def logScaleDerivative (h : ℝ) (p : SimilarityProfile.PhysicalPoint) : ℝ :=
   CoordinateAlgebra.qAxial (SimilarityProfile.q h p) h (SimilarityProfile.eta h p) /
     SimilarityProfile.q h p
@@ -864,7 +871,7 @@ theorem logScaleDerivative_bound {h : ℝ} {p : SimilarityProfile.PhysicalPoint}
 /-! ## The actual outgoing taper and its terminal edge estimate -/
 
 /-- Outgoing taper, given by `OutgoingTail.tailShape d (y - y0)`. -/
-noncomputable def outgoingTaper (d : OutgoingTail.TailData) (y0 y : ℝ) : ℝ :=
+@[expose] noncomputable def outgoingTaper (d : OutgoingTail.TailData) (y0 y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - y0)
 
 theorem outgoingTaper_contDiff (d : OutgoingTail.TailData) (y0 : ℝ) :
@@ -892,7 +899,7 @@ theorem outgoingTaper_plateau (d : OutgoingTail.TailData) (y0 y : ℝ) (hy : y0 
 
 /-- Outgoing pressure, given by `TerminalStress.canonicalPressure
 (TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))`. -/
-noncomputable def outgoingPressure (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ) :
+@[expose] noncomputable def outgoingPressure (C : ℝ) (d : OutgoingTail.TailData) (y0 : ℝ) :
     SimilarityProfile.PhysicalProfile :=
   TerminalStress.canonicalPressure (TerminalStress.swirlCoefficient C d.h (outgoingTaper d y0))
 
@@ -1103,7 +1110,7 @@ theorem canonicalPressure_partialZ_contDiffAt (C : ℝ) {h Y : ℝ} {f : ℝ →
 
 /-- Since `ds = r dr`, this is the cylindrical backward primitive with weight
 `r`. It uses the actual axial derivative of the canonical pressure. -/
-noncomputable def axialBackwardStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
+@[expose] noncomputable def axialBackwardStress (C h : ℝ) (f : ℝ → ℝ) (t z r : ℝ) : ℝ :=
   (∫ s in Ioi (r ^ 2 / 2), SimilarityProfile.partialZ (TerminalStress.canonicalPressure
     (TerminalStress.swirlCoefficient C h f)) (t, (s, z))) / r
 
@@ -1343,7 +1350,7 @@ theorem outgoingAmplitude_suppressed (d : OutgoingTail.TailData) :
 
 /-- The normalization is exactly the physical carrier normalization in
 `ParametricHeatTail.physicalEdit_heat_carrier`. -/
-noncomputable def releasedNormalization (d : OutgoingTail.TailData) (K : ℝ) : ℝ :=
+@[expose] noncomputable def releasedNormalization (d : OutgoingTail.TailData) (K : ℝ) : ℝ :=
   HeatTailEdit.outgoingAmplitude d * K ^ amplitudeExponent d.h
 
 theorem releasedNormalization_pos (d : OutgoingTail.TailData) {K : ℝ} (hK : 0 < K) :

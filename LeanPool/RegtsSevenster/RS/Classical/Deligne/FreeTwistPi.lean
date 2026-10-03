@@ -23,7 +23,7 @@ carries the algebra past the generator, reassociates, and acts.
   consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

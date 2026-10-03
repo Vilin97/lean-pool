@@ -16,7 +16,7 @@ Properties of the Landau collision matrix: evenness, positive semidefiniteness,
 the symmetrized weak form, and the entropy dissipation identity D(f) as a double integral.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

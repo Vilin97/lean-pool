@@ -14,7 +14,7 @@ The harmonic force term in `eq:pressure-gradient-morrey`, including both
 potential-growth constants, is measurable and integrable on interior time boxes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

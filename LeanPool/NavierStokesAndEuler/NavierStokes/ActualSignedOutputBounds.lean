@@ -17,7 +17,7 @@ are restricted to the signed phase cells before applying the native-copy
 localization and periodization estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,15 +30,17 @@ open scoped ContDiff Topology BigOperators
 variable {B N0 : ℕ}
 
 /-- Copies, given by `(parameters l).copyData ActualPrimaryBounds.strip request`. -/
-noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
+@[expose] noncomputable def copies (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) : PeriodizedWaveBounds.CopyData FullPoint Frequency :=
   (parameters l).copyData ActualPrimaryBounds.strip request
 
 /-- Joint cell, given by `phaseCell i.1 n i.2`. -/
+@[expose]
 noncomputable def jointCell (n : ℕ) (i : SignedLabel B N0 × Frequency) : Set FullPoint :=
   phaseCell i.1 n i.2
 
 /-- Primary index, given by `((i.1.2, i.1.1), i.2)`. -/
+@[expose]
 noncomputable def primaryIndex (i : SignedLabel B N0 × Frequency) :
     ActualPrimaryBounds.CopyIndex B N0 := ((i.1.2, i.1.1), i.2)
 
@@ -226,6 +228,7 @@ theorem actual_common_bounds (G : SignedMeanGain.Geometry)
   simpa only [show α - 1 + 1 / 2 = α - 1 / 2 by ring] using common_bounds hr'
 
 /-- Mean envelope, given by `envelope l n (x, 0)`. -/
+@[expose]
 noncomputable def meanEnvelope (l : SignedLabel B N0) (n : ℕ) (x : Point) : ℝ :=
   envelope l n (x, 0)
 
@@ -302,7 +305,7 @@ theorem actual_block_bounds (G : SignedMeanGain.Geometry)
 
 /-- The cut native vector-potential coefficient before restoring the
 carrier or applying the physical coordinate prefactor. -/
-noncomputable def localPotential (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
+@[expose] noncomputable def localPotential (request : ℕ → FullPoint → SignedWaveUpdate.Vec2)
     (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x : FullPoint) :
     HarmonicCalculus.ComplexVector :=
   CurlClassBounds.inverseCarrier ((copies request l).background.frequency n) •

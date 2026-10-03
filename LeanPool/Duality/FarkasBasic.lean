@@ -21,7 +21,7 @@ import Mathlib.LinearAlgebra.Matrix.ToLin
 # LeanPool.Duality.FarkasBasic
 -/
 
-@[expose] public section
+public section
 
 /- Let's move from linear maps to matrices, which give more familiar
 (albeit less general) formulations of the theorems of alternative. -/

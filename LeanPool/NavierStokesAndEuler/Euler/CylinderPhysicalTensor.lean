@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 derivative tensors are bounded by cylinder derivative words, with an
 explicit polynomial frequency loss. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ theorem coordinateEquiv_graphCoordinates (k : ℝ) (m x : Vector3) :
   coordinateEquiv.apply_symm_apply _
 
 /-- Frequency factor, given by `‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+|k| * ‖m‖)`. -/
-def frequencyFactor (k : ℝ) (m : Vector3) : ℝ :=
+@[expose] def frequencyFactor (k : ℝ) (m : Vector3) : ℝ :=
   ‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+|k| * ‖m‖)
 
 theorem frequencyFactor_nonneg (k : ℝ) (m : Vector3) : 0 ≤ frequencyFactor k m := by
@@ -64,6 +64,7 @@ theorem graphCoordinates_norm_le (k : ℝ) (m : Vector3) :
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Physical field, defined pointwise by `f (cylinderGraph P k m x)`. -/
+@[expose]
 def physicalField (k : ℝ) (m : Vector3) (f : LiftDomain P → Vector3) : Vector3 → Vector3 :=
   fun x => f (cylinderGraph P k m x)
 

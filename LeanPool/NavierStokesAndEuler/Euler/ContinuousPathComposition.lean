@@ -22,7 +22,7 @@ norm. Their regularity and factorial bounds are consequently genuine
 derivative statements in that norm.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -97,7 +97,7 @@ theorem postcomposition_norm (A : E →L[ℝ] F) :
     (mul_le_mul_of_nonneg_left (p.norm_coe_le_norm t) (norm_nonneg A))
 
 /-- Lift the actual operator composition bilinear map to the coefficient path. -/
-def compositionLift : C(K,E →L[ℝ] F) →L[ℝ] C(K,(U →L[ℝ] E) →L[ℝ] U →L[ℝ] F) :=
+@[expose] def compositionLift : C(K,E →L[ℝ] F) →L[ℝ] C(K,(U →L[ℝ] E) →L[ℝ] U →L[ℝ] F) :=
   (compL ℝ U E F).compLeftContinuous ℝ K
 
 include U E F in
@@ -105,7 +105,7 @@ theorem compositionLift_norm : ‖compositionLift (K := K) (U := U) (E := E) (F 
   (postcomposition_norm (K := K) (compL ℝ U E F)).trans (norm_compL_le ℝ U E F)
 
 /-- Literal pointwise composition of two continuous coefficient paths. -/
-def compose (A : C(K, E →L[ℝ] F)) (B : C(K, U →L[ℝ] E)) : C(K,U →L[ℝ] F) :=
+@[expose] def compose (A : C(K, E →L[ℝ] F)) (B : C(K, U →L[ℝ] E)) : C(K,U →L[ℝ] F) :=
   multiplier (compositionLift A) B
 
 @[simp] theorem compose_apply (A : C(K, E →L[ℝ] F)) (B : C(K, U →L[ℝ] E)) (t : K) :
@@ -171,7 +171,7 @@ local instance instContinuousPathComposition23 : NormedAddCommGroup C(K,E →L[�
 local instance instContinuousPathComposition24 : NormedSpace ℝ C(K,E →L[ℝ] U) := inferInstance
 
 /-- Actual adjoint at every parameter in the compact path domain. -/
-def adjointMap : C(K,U →L[ℝ] E) →L[ℝ] C(K,E →L[ℝ] U) :=
+@[expose] def adjointMap : C(K,U →L[ℝ] E) →L[ℝ] C(K,E →L[ℝ] U) :=
   (realAdjoint (U := U) (E := E)).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in

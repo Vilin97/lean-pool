@@ -17,7 +17,7 @@ This file defines the exponential object in the category of quasi-borel spaces.
 See [HeunenKSY17], Proposition 18.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 
@@ -129,14 +129,18 @@ lemma isHom_iff (f : A → B →𝒒 C) : IsHom f ↔ IsHom (fun x : A × B ↦ 
     apply isHom_mk hf
 
 /-- Currying for `QuasiBorelHom`s. -/
-@[simps -fullyApplied]
-def curry (f : A × B →𝒒 C) : A →𝒒 B →𝒒 C where
+@[expose] def curry (f : A × B →𝒒 C) : A →𝒒 B →𝒒 C where
   toFun x := { toFun y := f (x, y) }
 
+@[simp] theorem curry_coe_coe (f : A × B →𝒒 C) (x : A) :
+    (curry f x : B → C) = fun y ↦ f (x, y) := by rfl
+
 /-- Uncurrying for `QuasiBorelHom`s. -/
-@[simps -fullyApplied]
-def uncurry (f : A →𝒒 B →𝒒 C) : A × B →𝒒 C where
+@[expose] def uncurry (f : A →𝒒 B →𝒒 C) : A × B →𝒒 C where
   toFun x := f x.1 x.2
+
+@[simp] theorem uncurry_coe (f : A →𝒒 B →𝒒 C) :
+    (uncurry f : A × B → C) = fun x ↦ f x.1 x.2 := by rfl
 
 @[simp]
 lemma curry_uncurry (f : A →𝒒 B →𝒒 C) : curry (uncurry f) = f := rfl
@@ -145,18 +149,21 @@ lemma curry_uncurry (f : A →𝒒 B →𝒒 C) : curry (uncurry f) = f := rfl
 lemma uncurry_curry (f : A × B →𝒒 C) : uncurry (curry f) = f := rfl
 
 /-- The identity morphism. -/
-@[simps -fullyApplied]
-def id : A →𝒒 A where
+@[expose] def id : A →𝒒 A where
   toFun x := x
+
+@[simp] theorem id_coe : ((id : A →𝒒 A) : A → A) = _root_.id := by rfl
 
 @[simp]
 lemma eq_id : (.mk fun x : A ↦ x) = id := by
   rfl
 
 /-- Morphism composition. -/
-@[simps -fullyApplied]
-def comp (f : B →𝒒 C) (g : A →𝒒 B) : A →𝒒 C where
+@[expose] def comp (f : B →𝒒 C) (g : A →𝒒 B) : A →𝒒 C where
   toFun x := f (g x)
+
+@[simp] theorem comp_coe (f : B →𝒒 C) (g : A →𝒒 B) :
+    (comp f g : A → C) = fun x ↦ f (g x) := by rfl
 
 @[simp]
 lemma eq_comp

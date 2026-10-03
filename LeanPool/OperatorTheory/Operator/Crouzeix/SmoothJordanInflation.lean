@@ -20,7 +20,7 @@ Hausdorff displacement.  Thus closed smooth Jordan carriers themselves have
 the local outer-approximation property used by the terminal exhaustion.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 

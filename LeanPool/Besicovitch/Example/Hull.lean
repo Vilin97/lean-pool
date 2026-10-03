@@ -18,7 +18,7 @@ then gives `μH[1] (graphMap '' A) ≤ 2 * volume A` for every `A ⊆ ℝ`; in p
 graph over a Lebesgue-null set is `μH[1]`-null.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

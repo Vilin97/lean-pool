@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPressureSeries
 /-! Pointwise and partial-sum consequences of the one global scale
 choice, ready for a finite-prefix packet induction. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

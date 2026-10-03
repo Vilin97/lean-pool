@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderJetOperations
 
 /-! Spatial support and joint parity of the literal pressure-gradient term. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

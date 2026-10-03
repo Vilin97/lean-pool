@@ -18,7 +18,7 @@ Tags: valued-fields, number-theory, valuation-theory
 MSC: 12J20
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Ramification Index, Residue Degree, and the Fundamental Inequality

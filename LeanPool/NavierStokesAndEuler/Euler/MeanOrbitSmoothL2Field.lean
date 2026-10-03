@@ -21,7 +21,7 @@ coordinate derivatives. A smooth orbit of a continuous-time path supplies
 continuity of every tensor jet in time.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -50,13 +50,14 @@ theorem representative_iteratedFDeriv_memLp (u : L2) (hu : SmoothOrbit u) (n : â
   (Lp.memLp (orbitTensorLp u n)).ae_eq (orbitTensorLp_ae u hu n)
 
 /-- A smooth translation orbit produces a genuine smooth spatial LÂ² field. -/
-def smoothL2Field (u : L2) (hu : SmoothOrbit u) : EulerLpTranslation.SmoothL2Field Space where
+@[expose] def smoothL2Field (u : L2) (hu : SmoothOrbit u) :
+    EulerLpTranslation.SmoothL2Field Space where
   field := representative u hu
   smooth := representative_smooth u hu
   integrable := representative_iteratedFDeriv_memLp u hu
 
 @[simp] theorem smoothL2Field_field (u : L2) (hu : SmoothOrbit u) (x : Space) :
-    (smoothL2Field u hu).field x = representative u hu x := rfl
+    (smoothL2Field u hu).field x = representative u hu x := by rfl
 
 @[simp] theorem smoothL2Field_toLp (u : L2) (hu : SmoothOrbit u) :
     (smoothL2Field u hu).toLp = u := by

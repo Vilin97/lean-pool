@@ -11,7 +11,7 @@ public import Mathlib.Algebra.BigOperators.Finprod
 # LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
 -/
 
-@[expose] public section
+public section
 
 section
 

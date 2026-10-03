@@ -58,7 +58,7 @@ DO NOT frame this as solving an open Erdős problem: this formalises EGRS75
 (Math. Comp. 1975, Theorem 1/2), a KNOWN theorem. Three primes is Erdős #376 (open).
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.MathlibAPI
 

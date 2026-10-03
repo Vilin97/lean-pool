@@ -17,7 +17,7 @@ transported across the equality of wire spaces.  This file implements that
 transport as an actual `Circuit`, rather than only as a flag-level statement.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

@@ -45,7 +45,7 @@ estimate used in `cinfty_rapidDecay` (Bridge Lemma 1 for the assembly).
   `memSobolev_of_rapid_decay`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

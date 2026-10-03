@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.Lin34CentredSource
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -43,7 +43,7 @@ the Calderón--Zygmund estimate for the centred potential.
 
 /-- The spatial average `⨍_{B_ρ(x₀)} u(·, s)` of `eq:Chat`, seen as a
 time-dependent constant vector. -/
-def lin34MeanVelocity (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) :
+@[expose] def lin34MeanVelocity (u : ParabolicPoint → Vec3) (x₀ : Vec3) (ρ : ℝ) :
     ℝ → Vec3 :=
   fun s j => MeasureTheory.average (volume.restrict (vec3Ball x₀ ρ))
     (fun z => u (z, s) j)

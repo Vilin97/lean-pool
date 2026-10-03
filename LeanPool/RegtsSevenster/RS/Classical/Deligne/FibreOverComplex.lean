@@ -69,7 +69,7 @@ of a mixed object as a free super module.
   steps 1 to 5.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

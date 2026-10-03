@@ -29,7 +29,7 @@ multiplication turns into iterated sums that factor via `tensor_sum` and
 identities reduce componentwise to the corresponding identities in `C`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,18 +48,19 @@ variable {C : Type u}
 
 /-- Tensor product of objects in `Mat_ C`: index by the product, with
 componentwise tensor in `C`. -/
-@[reducible] def matTensorObj [Category.{v} C] [MonoidalCategory C]
+@[expose, reducible] def matTensorObj [Category.{v} C] [MonoidalCategory C]
     (M N : Mat_ C) : Mat_ C :=
   ⟨M.ι × N.ι, fun p => M.X p.1 ⊗ N.X p.2⟩
 
 /-- Tensor product of morphisms in `Mat_ C`: the Kronecker product. -/
+@[expose]
 def matTensorHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     {M₁ N₁ M₂ N₂ : Mat_ C}
     (f : M₁ ⟶ N₁) (g : M₂ ⟶ N₂) : matTensorObj M₁ M₂ ⟶ matTensorObj N₁ N₂ :=
   fun (i₁, i₂) (j₁, j₂) => f i₁ j₁ ⊗ₘ g i₂ j₂
 
 /-- The tensor unit in `Mat_ C`. -/
-@[reducible] def matTensorUnit
+@[expose, reducible] def matTensorUnit
     [Category.{v} C] [MonoidalCategory C] : Mat_ C := ⟨PUnit, fun _ => 𝟙_ C⟩
 
 /-! ### Structural isomorphisms
@@ -70,6 +71,7 @@ of `C`, and all other entries are zero. -/
 
 open scoped Classical in
 /-- The associator hom in `Mat_ C`. -/
+@[expose]
 def matAssocHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
     matTensorObj (matTensorObj M N) K ⟶ matTensorObj M (matTensorObj N K) :=
@@ -85,6 +87,7 @@ def matAssocHom [Category.{v} C] [Preadditive C] [MonoidalCategory C]
 
 open scoped Classical in
 /-- The associator inv in `Mat_ C`. -/
+@[expose]
 def matAssocInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
     matTensorObj M (matTensorObj N K) ⟶ matTensorObj (matTensorObj M N) K :=
@@ -100,6 +103,7 @@ def matAssocInv [Category.{v} C] [Preadditive C] [MonoidalCategory C]
 
 open scoped Classical in
 /-- The left unitor hom in `Mat_ C`. -/
+@[expose]
 def matLeftUnitorHom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -111,6 +115,7 @@ def matLeftUnitorHom
 
 open scoped Classical in
 /-- The left unitor inv in `Mat_ C`. -/
+@[expose]
 def matLeftUnitorInv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -122,6 +127,7 @@ def matLeftUnitorInv
 
 open scoped Classical in
 /-- The right unitor hom in `Mat_ C`. -/
+@[expose]
 def matRightUnitorHom
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -133,6 +139,7 @@ def matRightUnitorHom
 
 open scoped Classical in
 /-- The right unitor inv in `Mat_ C`. -/
+@[expose]
 def matRightUnitorInv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
@@ -267,6 +274,7 @@ private theorem matRightUnitor_inv_hom
     simp [this, zero_comp]
 
 /-- The associator isomorphism in `Mat_ C`. -/
+@[expose]
 def matAssociator [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M N K : Mat_ C) :
     matTensorObj (matTensorObj M N) K ≅ matTensorObj M (matTensorObj N K) where
@@ -276,6 +284,7 @@ def matAssociator [Category.{v} C] [Preadditive C] [MonoidalCategory C]
   inv_hom_id := by exact matAssoc_inv_hom M N K
 
 /-- The left unitor isomorphism in `Mat_ C`. -/
+@[expose]
 def matLeftUnitor [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
     matTensorObj matTensorUnit M ≅ M where
@@ -285,6 +294,7 @@ def matLeftUnitor [Category.{v} C] [Preadditive C] [MonoidalCategory C]
   inv_hom_id := by exact matLeftUnitor_inv_hom M
 
 /-- The right unitor isomorphism in `Mat_ C`. -/
+@[expose]
 def matRightUnitor [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     (M : Mat_ C) :
     matTensorObj M matTensorUnit ≅ M where

@@ -28,7 +28,7 @@ to every coordinate, and the finite sum of coordinate vectors fills the whole
 product module.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

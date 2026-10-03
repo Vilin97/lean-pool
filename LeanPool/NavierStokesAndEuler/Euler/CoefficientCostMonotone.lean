@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Joint monotonicity and genuine polynomial formulas for fixed-order
 coefficient and pressure constants. These give uniform parent-scale bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

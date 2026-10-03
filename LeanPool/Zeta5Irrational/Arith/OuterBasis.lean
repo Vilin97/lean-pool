@@ -19,7 +19,7 @@ row `(c, i)` (`i < Lo c`) is `tpol (rootsO c i)` with
 where `big c` are the tail poles of class `c` above `p`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -28,7 +28,7 @@ namespace Zeta5Irrational
 variable {p : ℕ} [hp : Fact p.Prime] {m : ℕ}
 
 /-- The class of a natural number. -/
-def jc (hm : 2 * m + 1 = p) (j : ℕ) : Fin (m + 1) :=
+@[expose] def jc (hm : 2 * m + 1 = p) (j : ℕ) : Fin (m + 1) :=
   ccls hm (((j : ℤ) : ZMod p))
 
 lemma sq_eq_iff_ccls (hm : 2 * m + 1 = p) (x y : ZMod p) :
@@ -55,27 +55,27 @@ lemma sq_eq_iff_ccls (hm : 2 * m + 1 = p) (x y : ZMod p) :
 variable (hm : 2 * m + 1 = p) (n : ℕ)
 
 /-- Tail poles `N < j ≤ K`. -/
-def tailO (n : ℕ) : Finset ℕ :=
+@[expose] def tailO (n : ℕ) : Finset ℕ :=
   Icc (3 * n + 1) (40 * n)
 
 /-- Outer pole indices belonging to the residue class `c`. -/
-def tailC (c : Fin (m + 1)) : Finset ℕ :=
+@[expose] def tailC (c : Fin (m + 1)) : Finset ℕ :=
   (tailO n).filter fun j => jc hm j = c
 
 /-- Number of rows allocated to the outer residue class `c`. -/
-def LoC (c : Fin (m + 1)) : ℕ :=
+@[expose] def LoC (c : Fin (m + 1)) : ℕ :=
   (tailC hm n c).card
 
 /-- Outer pole indices in class `c` that exceed the prime `p`. -/
-def bigC (c : Fin (m + 1)) : Finset ℕ :=
+@[expose] def bigC (c : Fin (m + 1)) : Finset ℕ :=
   (tailC hm n c).filter fun j => p < j
 
 /-- Number of outer poles in class `c` that exceed `p`. -/
-def nbC (c : Fin (m + 1)) : ℕ :=
+@[expose] def nbC (c : Fin (m + 1)) : ℕ :=
   (bigC hm n c).card
 
 /-- The roots of the outer row `(c, i)`. -/
-def rootsO (c : Fin (m + 1)) (i : ℕ) : Multiset ℤ :=
+@[expose] def rootsO (c : Fin (m + 1)) (i : ℕ) : Multiset ℤ :=
   ((tailO n).filter fun j => jc hm j ≠ c).val.map (fun j : ℕ => (j : ℤ)) +
     (if i < nbC hm n c then Multiset.replicate i ((c : ℕ) : ℤ)
     else
@@ -117,7 +117,7 @@ lemma sq_jc (j : ℕ) : (((j : ℤ) : ZMod p)) ^ 2 = ((((jc hm j : ℕ) : ℤ) :
   rw [sq_eq_iff_ccls hm, ccls_self]; rfl
 
 /-- `γ_c = -c²` in `𝔽_p`. -/
-def γO (c : Fin (m + 1)) : ZMod p :=
+@[expose] def γO (c : Fin (m + 1)) : ZMod p :=
   -((((c : ℕ) : ℤ) : ZMod p)) ^ 2
 
 lemma map_factor (γ : ℤ) :

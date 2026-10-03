@@ -18,4 +18,4 @@ development are declared there with a `ₚ` suffix to avoid clashing with the
 into scope.
 -/
 
-@[expose] public section
+public section

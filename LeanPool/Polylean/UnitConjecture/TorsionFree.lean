@@ -34,7 +34,7 @@ Roughly, the steps are as follows (further details can be found in the correspon
 5. Together, these statements show that `P` is torsion-free.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -76,7 +76,7 @@ instance {A B : Type _} [AddGroup A] [AddGroup B] [AddTorsionFree A]
 /-! ### **Step 1:** Defining the square of an element of `P`. -/
 
 /-- The function taking an element of `P` to its square, which lies in the kernel `K`. -/
-@[aesop norm unfold (rule_sets := [P]), reducible]
+@[expose, aesop norm unfold (rule_sets := [P]), reducible]
 def _root_.LeanPool.Polylean.P.sq : P → K
   | ((p, q, r), .e) => (p + p, q + q, r + r)
   | ((_, q, _), .b) => (0, q + q + 1, 0)

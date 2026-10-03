@@ -35,7 +35,7 @@ chosen representative agrees with every valid chart on an ambient
 neighborhood.  No regularity at the boundary of the union is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -50,6 +50,7 @@ variable {ι D E : Type*}
 def domain (U : ι → Set D) : Set D := ⋃ i, U i
 
 /-- Compatible, given by `∀ i j, EqOn (f i) (f j) (U i ∩ U j)`. -/
+@[expose]
 def Compatible (U : ι → Set D) (f : ι → D → E) : Prop :=
   ∀ i j, EqOn (f i) (f j) (U i ∩ U j)
 
@@ -214,7 +215,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -224,6 +225,7 @@ open Set Filter ProblemStatement PhysicalWaveSum
 open scoped Topology ContDiff
 
 /-- Strictly inside the band: the normalized physical scale is in `(1/2,2)`. -/
+@[expose]
 noncomputable def band (h : ℝ) (n : ℕ) : Set SpaceTime :=
   {w | w ∈ preterminal ∧ ChartScales.Q n / 2 < physicalQ h w ∧
     physicalQ h w < 2 * ChartScales.Q n}
@@ -259,6 +261,7 @@ theorem exists_band {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
 abbrev Index (N : ℕ) := {n : ℕ // N ≤ n}
 
 /-- Charts, given by `band h n.val`. -/
+@[expose]
 noncomputable def charts (h : ℝ) (N : ℕ) (n : Index N) : Set SpaceTime := band h n.val
 
 theorem sublevel_covered {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
@@ -271,6 +274,7 @@ theorem sublevel_covered {h qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Compatible, given by `ValidBandGluing.Compatible (charts h N) (fun n => f n.val)`. -/
+@[expose]
 def Compatible (h : ℝ) (N : ℕ) (f : ℕ → SpaceTime → E) : Prop :=
   ValidBandGluing.Compatible (charts h N) (fun n => f n.val)
 

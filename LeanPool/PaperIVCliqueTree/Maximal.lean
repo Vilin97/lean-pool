@@ -37,13 +37,14 @@ that every maximal clique occurs as a bag.
   PEO bags, namely the bag of its earliest vertex (so removing redundant bags loses nothing)
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 
 variable {V : Type*} {G : SimpleGraph V}
 
 /-- `K` is a maximal clique of the subgraph of `G` induced on `S`. -/
+@[expose]
 def IsMaximalCliqueOn (G : SimpleGraph V) (S K : Finset V) : Prop :=
   K ⊆ S ∧ G.IsClique (K : Set V) ∧ ∀ K', K' ⊆ S → G.IsClique (K' : Set V) → K ⊆ K' → K' = K
 

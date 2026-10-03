@@ -39,7 +39,7 @@ is "kicked back" in front of the `|1⟩` component of the control
   `U |u⟩ = e^{iθ} |u⟩`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

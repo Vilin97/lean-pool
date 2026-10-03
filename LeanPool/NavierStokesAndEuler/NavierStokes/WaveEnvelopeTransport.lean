@@ -18,7 +18,7 @@ of the padded native rectangle identifies the one copy met by a slot path.
 The source itself is not assumed periodic on the native torus.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,13 +33,16 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   ENat.natCast_le_of_coe_top_le_withTop le_rfl n
 
 /-- The full padded integration rectangle, including both time endpoints. -/
+@[expose]
 noncomputable def rectangle (r L : ℝ) : Set Plane := Icc (-r) r ×ˢ Icc 0 L
 
 /-- Native region, given by `(fun z => g.center + g.basis z) '' rectangle r L`. -/
+@[expose]
 noncomputable def nativeRegion (g : Geometry) (r L : ℝ) : Set Plane :=
   (fun z => g.center + g.basis z) '' rectangle r L
 
 /-- A geometric injectivity condition, independent of all source fields. -/
+@[expose]
 noncomputable def Separated (g : Geometry) (r L : ℝ) : Prop :=
   InjOn TorusAverages.quotientPoint (nativeRegion g r L)
 
@@ -64,7 +67,7 @@ theorem copy_unique {g : Geometry} {r L : ℝ} (hsep : Separated g r L)
 
 /-- The envelope of the grouped label on the common cover. The summands
 are nonzero only on their own native integration rectangles. -/
-noncomputable def copyEnvelope (g : Geometry) (r L : ℝ) (W : ℝ → ℝ) (Y : Plane) : ℝ := by
+@[expose] noncomputable def copyEnvelope (g : Geometry) (r L : ℝ) (W : ℝ → ℝ) (Y : Plane) : ℝ := by
   classical
   exact ∑' k : Frequency, if g.coordinates k Y ∈ rectangle r L then W (g.coordinates k Y).2 else 0
 

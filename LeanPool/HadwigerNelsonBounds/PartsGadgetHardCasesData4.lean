@@ -15,12 +15,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated hard-case certificates, data group 4. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate19`. -/
-def partsGadgetHardCertificate19 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate19 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 1⟩,
     ⟨1, 2⟩
@@ -231,7 +231,7 @@ def partsGadgetHardCertificate19 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate20`. -/
-def partsGadgetHardCertificate20 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate20 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 1⟩,
     ⟨1, 3⟩
@@ -248,7 +248,7 @@ def partsGadgetHardCertificate20 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate21`. -/
-def partsGadgetHardCertificate21 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate21 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 1⟩
@@ -266,7 +266,7 @@ def partsGadgetHardCertificate21 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate22`. -/
-def partsGadgetHardCertificate22 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate22 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 3⟩, ⟨7, 0⟩, ⟨1, 1⟩
@@ -476,7 +476,7 @@ def partsGadgetHardCertificate22 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate23`. -/
-def partsGadgetHardCertificate23 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate23 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 3⟩, ⟨7, 0⟩, ⟨1, 2⟩, ⟨4, 1⟩, ⟨8, 1⟩

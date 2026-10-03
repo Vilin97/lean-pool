@@ -25,7 +25,7 @@ Unit: cech-cohomology (`docs/design/cech-cohomology.md` §4.6, §6.8).
   `(d' - d).toNat` (no explicit basis/independence argument needed).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set TopologicalSpace RS.Cech Filter

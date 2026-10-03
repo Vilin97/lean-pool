@@ -37,7 +37,7 @@ whose forward walk eventually returns to them.
   not periodic.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -53,6 +53,7 @@ variable {F : EdgeSubset W}
 
 /-- A flag on a closed circuit: it is internal, every intermediate
 pairing stays internal, and the walk returns to it. -/
+@[expose]
 def RelTransitionSystem.PeriodicFlag
     (κ : F.RelTransitionSystem) (f : W.Flag) : Prop :=
   f ∈ F.internalFlags ∧
@@ -136,6 +137,7 @@ theorem RelTransitionSystem.periodicFlag_step
 
 open scoped Classical in
 /-- The finset of periodic flags. -/
+@[expose]
 noncomputable def RelTransitionSystem.periodicFlags
     (κ : F.RelTransitionSystem) : Finset W.Flag :=
   F.internalFlags.filter (fun f =>
@@ -185,6 +187,7 @@ theorem RelTransitionSystem.internalWalk_injOn_periodic
 /-! ### 3. walkPermPeriodic -/
 
 /-- The walk permutation restricted to periodic flags. -/
+@[expose]
 noncomputable def RelTransitionSystem.walkPermPeriodic
     (κ : F.RelTransitionSystem) :
     Equiv.Perm {f : W.Flag // f ∈ κ.periodicFlags} :=
@@ -200,6 +203,7 @@ noncomputable def RelTransitionSystem.walkPermPeriodic
 
 /-- The open circuit count: half the orbit count of the walk on
 periodic flags. -/
+@[expose]
 noncomputable def RelTransitionSystem.openCircuitCount
     (κ : F.RelTransitionSystem) : ℕ :=
   (κ.walkPermPeriodic.cycleType.card +
@@ -473,6 +477,7 @@ theorem pairing_mem_periodicFlags (κ : F.RelTransitionSystem)
   · rw [hrev n le_rfl, Nat.sub_self, iterWalk_zero]
 
 /-- The edge-pairing reversal on periodic flags. -/
+@[expose]
 noncomputable def revPerm (κ : F.RelTransitionSystem) :
     Equiv.Perm {f : W.Flag // f ∈ κ.periodicFlags} :=
   Function.Involutive.toPerm

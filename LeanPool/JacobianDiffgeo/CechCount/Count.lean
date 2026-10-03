@@ -39,7 +39,7 @@ hence injective — forcing `ξ = 0`. Contradiction; so `h⁰¹ ≤ g`.
 Exports: `RS.cechCount` (= `RS.finrank_H1_zero_le_genus`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace

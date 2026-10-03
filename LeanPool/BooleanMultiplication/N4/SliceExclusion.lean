@@ -17,7 +17,7 @@ only exterior products and the two support planes established in
 `SliceGeometry`; it does not enumerate circuits or Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -25,27 +25,27 @@ namespace N4
 noncomputable section
 
 /-- The linear slice variation induced by the two anchor values. -/
-def sliceVaryingLinear (x y : F₂) : LinearForm :=
+@[expose] def sliceVaryingLinear (x y : F₂) : LinearForm :=
   x • sliceBBar + y • sliceABar
 
 /-- Coordinatewise product of two linear coefficient vectors. -/
-def pointwiseLinearProduct (ell m : LinearForm) : LinearForm :=
+@[expose] def pointwiseLinearProduct (ell m : LinearForm) : LinearForm :=
   fun i => ell i * m i
 
 /-- Linear part of `(mu + ell) * (nu + n + Q)`, followed by the fixed
 correction and the `r₁` slice variation. -/
-def sliceProductLinear
+@[expose] def sliceProductLinear
     (mu nu : F₂) (ell n base : LinearForm) (lambdaOne x y : F₂) :
     LinearForm :=
   mu • n + nu • ell + pointwiseLinearProduct ell n + base +
     lambdaOne • sliceVaryingLinear x y
 
 /-- The difference in the target linear parts at two anchor assignments. -/
-def sliceTargetDifference (x y x' y' : F₂) : LinearForm :=
+@[expose] def sliceTargetDifference (x y x' y' : F₂) : LinearForm :=
   (y + y') • sliceU + (x + x') • sliceV
 
 /-- Vanishing of the type-A slice quadratic after its rational correction. -/
-def SliceQuadraticEquationA
+@[expose] def SliceQuadraticEquationA
     (mu : F₂) (ell n : LinearForm)
     (lambdaOne lambdaInfinity : F₂) : Prop :=
   mu • sliceQuadraticA + vectorWedge ell n +
@@ -53,7 +53,7 @@ def SliceQuadraticEquationA
       lambdaInfinity • sliceInfinityQuadratic = 0
 
 /-- Vanishing of the type-B slice quadratic after its rational correction. -/
-def SliceQuadraticEquationB
+@[expose] def SliceQuadraticEquationB
     (mu : F₂) (ell n : LinearForm)
     (lambdaOne lambdaInfinity : F₂) : Prop :=
   mu • sliceQuadraticB + vectorWedge ell n +
@@ -126,6 +126,7 @@ theorem sliceQuadratics_independent
     exact hI
 
 /-- Membership in the two-input support of the infinity place. -/
+@[expose]
 def InSliceInfinityPlane (ell : LinearForm) : Prop :=
   ∃ a b : F₂, ell = a • placeA 2 + b • placeB 2
 
@@ -421,7 +422,7 @@ theorem no_typeA_active_slice_pair
     exact distinct_corner_target_difference_not_in_plane hdistinct hsumPlane
 
 /-- Vanishing of the infinity-type slice quadratic after its rational correction. -/
-def SliceQuadraticEquationInfinity
+@[expose] def SliceQuadraticEquationInfinity
     (mu : F₂) (ell n : LinearForm)
     (lambdaOne lambdaInfinity : F₂) : Prop :=
   mu • sliceInfinityQuadratic + vectorWedge ell n +

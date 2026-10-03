@@ -19,7 +19,7 @@ for restricting such families and their coordinate paths along order embeddings.
 ordinary finite-dimensional API and makes no probability-law or stochastic-process claim.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 
@@ -29,6 +29,7 @@ abbrev FiniteOrderedTimes (n : ℕ) := Fin n ↪o NNReal
 namespace FiniteOrderedTimes
 
 /-- The times after the first one, shifted so that the first time becomes zero. -/
+@[expose]
 def relativeTail {n : ℕ} (times : FiniteOrderedTimes (n + 1)) : FiniteOrderedTimes n :=
   OrderEmbedding.ofStrictMono (fun i ↦ times i.succ - times 0) fun _ _ hij ↦
     tsub_lt_tsub_right_of_le (times.monotone (Fin.zero_le _))
@@ -40,6 +41,7 @@ theorem relativeTail_apply {n : ℕ} (times : FiniteOrderedTimes (n + 1)) (i : F
   rfl
 
 /-- Translate every time in a finite ordered family by the same nonnegative amount. -/
+@[expose]
 def translate {n : ℕ} (s : NNReal) (times : FiniteOrderedTimes n) : FiniteOrderedTimes n :=
   OrderEmbedding.ofStrictMono (fun i ↦ s + times i) fun _ _ hij ↦
     by simpa only [add_comm] using add_lt_add_left (times.strictMono hij) s
@@ -79,6 +81,7 @@ theorem translate_translate {n : ℕ} (s r : NNReal) (times : FiniteOrderedTimes
   exact (add_assoc s r (times i)).symm
 
 /-- Restrict a finite ordered time family along an order embedding of its indices. -/
+@[expose]
 def restrict {m n : ℕ} (times : FiniteOrderedTimes n) (e : Fin m ↪o Fin n) :
     FiniteOrderedTimes m :=
   e.trans times
@@ -102,6 +105,7 @@ theorem restrict_trans {k m n : ℕ} (times : FiniteOrderedTimes n)
   rfl
 
 /-- Restrict a coordinate path along an embedding of finite index sets. -/
+@[expose]
 def restrictPath {m n : ℕ} (e : Fin m ↪o Fin n) {α : Type*} (path : Fin n → α) :
     Fin m → α :=
   fun i ↦ path (e i)

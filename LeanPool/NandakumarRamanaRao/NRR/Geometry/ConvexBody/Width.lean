@@ -39,7 +39,7 @@ normals `u` and `-u`, scaled by `‖u‖`).
 are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -49,6 +49,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- The **width function** of a convex body `K` in direction `u`:
 `w_K(u) = h_K(u) + h_K(-u)`. Defined for all vectors `u`, not only unit vectors. -/
+@[expose]
 noncomputable def widthFunction (K : ConvexBody E) (u : E) : ℝ :=
   supportFunction K u + supportFunction K (-u)
 

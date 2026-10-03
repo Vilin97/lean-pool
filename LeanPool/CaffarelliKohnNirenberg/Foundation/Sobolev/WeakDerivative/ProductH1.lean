@@ -17,7 +17,7 @@ public import Mathlib.Topology.MetricSpace.Thickening
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology Convolution Pointwise

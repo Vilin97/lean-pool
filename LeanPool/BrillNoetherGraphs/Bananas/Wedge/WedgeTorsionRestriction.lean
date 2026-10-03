@@ -23,7 +23,7 @@ pairs.  The proof uses the exact winnability convolution, avoiding a separate
 Jacobian-product construction.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

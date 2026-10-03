@@ -95,7 +95,7 @@ closed walk.
   out, and this is what it has to be.
 -/
 
-@[expose] public section
+public section
 
 open Set Bornology
 open scoped Graph
@@ -107,6 +107,7 @@ namespace CellStructure
 variable {γ : Type*} {S : CellStructure γ}
 
 /-- The subcells of a cell: the index set of its closed cell in assertion (i). -/
+@[expose]
 def subcells (S : CellStructure γ) (τ : γ) : Set γ := {σ | σ ∈ S.cells ∧ S.sub σ τ}
 
 theorem mem_subcells_iff {σ τ : γ} : σ ∈ S.subcells τ ↔ σ ∈ S.cells ∧ S.sub σ τ := Iff.rfl
@@ -163,7 +164,8 @@ theorem cellUnion_congr {S₁ S₂ : CellStructure γ} {R₁ : S₁.Realization}
 cells strictly below it. Under assertion (i) this is the topological frontier of the open
 2-cell (`IsCellDecomposition.faceBoundary_eq_frontier`), which is what makes it the right thing
 for the blueprint's "boundary walk of `F`" without a walk being available. -/
-def faceBoundary (R : S.Realization) (F : γ) : Set Plane := R.cellUnion (S.subcells F \ {F})
+@[expose] def faceBoundary (R : S.Realization) (F : γ) : Set Plane :=
+  R.cellUnion (S.subcells F \ {F})
 
 namespace IsCellDecomposition
 
@@ -417,7 +419,7 @@ variable {d : S.SplitData} {R : S.Realization} {R' : (S.splitFace d).Realization
 
 /-- The cells the ear **creates**: its interior vertices and its edges. The two ends of the ear
 are old vertices, and the blueprint is explicit that the split does not create them. -/
-def earNewCells (d : S.SplitData) : Set γ := (V(d.ear) \ {d.source, d.target}) ∪ E(d.ear)
+@[expose] def earNewCells (d : S.SplitData) : Set γ := (V(d.ear) \ {d.source, d.target}) ∪ E(d.ear)
 
 theorem newCells_eq (d : S.SplitData) : d.newCells = d.earNewCells ∪ {d.face₁, d.face₂} := rfl
 

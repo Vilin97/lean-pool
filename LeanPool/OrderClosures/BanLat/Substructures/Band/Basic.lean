@@ -22,7 +22,7 @@ and vector sublattices, proves the basic closure properties, and records that
 order completeness passes from the ambient vector lattice to a band.
 -/
 
-@[expose] public section
+public section
 
 section MainVariables
 variable {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
@@ -97,6 +97,7 @@ automatically a band. -/
 
 /-- An order ideal is a band as soon as every directed subset of positive
 elements with supremum in `X` has its supremum in the ideal. -/
+@[expose]
 def ofPosDirectedSSupMem (J : OrderIdeal X)
     (h : ∀ S, S ⊆ (J : Set X) → (∀ x ∈ S, 0 ≤ x) → DirectedOn (· ≤ ·) S
       → S.Nonempty → ∀ x, IsLUB S x → x ∈ J) : Band X where

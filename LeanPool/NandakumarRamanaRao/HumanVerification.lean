@@ -16,4 +16,4 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.Transfer
 
 /-! Supporting modules for Equal-area and equal-perimeter convex partitions. -/
 
-@[expose] public section
+public section

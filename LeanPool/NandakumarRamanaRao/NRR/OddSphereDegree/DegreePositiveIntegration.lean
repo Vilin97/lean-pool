@@ -20,7 +20,7 @@ results from that bundle. Later sphere-homology modules construct the
 unconditional orientation used by the public final theorem.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open CategoryTheory AlgebraicTopology
@@ -36,7 +36,7 @@ orientation `o : SphereOrientationPos`.
 This is `degreeOfIso` of `Degree.lean` evaluated at the orientation's chosen
 identification `o.iso n hn : Hₙ(Sⁿ; ℤ) ≅ ℤ`; in particular it carries no free
 per-dimension `SphereTopHomologyIso n` argument — only the bundled `o`. -/
-def degreePos (o : SphereOrientationPos) {n : ℕ} (hn : 1 ≤ n)
+@[expose] def degreePos (o : SphereOrientationPos) {n : ℕ} (hn : 1 ≤ n)
     (f : C(Sphere n, Sphere n)) : ℤ :=
   degreeOfIso (o.iso n hn) f
 

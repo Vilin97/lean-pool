@@ -32,7 +32,7 @@ smooth-boundary estimate is passed through the compact exhaustion.
   convergence of the boundary norms to the target norm.
 -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial Set
 

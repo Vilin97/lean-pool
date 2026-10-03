@@ -24,7 +24,7 @@ The source-facing scale-invariant quantities are intentionally not defined
 here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal

@@ -16,4 +16,4 @@ public import LeanPool.PCFTheory.Background.Topology
 Import-only index for the `Background` directory of the PCF-theory import.
 -/
 
-@[expose] public section
+public section

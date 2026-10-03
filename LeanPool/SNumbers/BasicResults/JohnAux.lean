@@ -49,7 +49,7 @@ candidate for upstreaming to Mathlib:
   for some endomorphism `G`.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace ComplexConjugate
 

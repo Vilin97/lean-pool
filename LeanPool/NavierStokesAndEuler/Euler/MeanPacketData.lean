@@ -36,7 +36,7 @@ operator and harmonic localization. No solution, momentum equation, acceleration
 or initial velocity condition is included in the hypotheses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -146,7 +146,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -267,7 +267,7 @@ theorem opCurvature_upper : ∀ t v, ⟪D.opH t v,v⟫_ℝ ≤ D.K*‖v‖^2 :=
   operatorPath_quadratic_upper D.T D.H.field D.K D.curvature_upper
 
 /-- The actual source weak inverse with the harmonic boundary estimate discharged. -/
-def solver : TimeLp D.T L2 →L[ℝ] meanDerivatives D.T D.T_pos.le D.opInv :=
+@[expose] def solver : TimeLp D.T L2 →L[ℝ] meanDerivatives D.T D.T_pos.le D.opInv :=
   sourceMeanSolver D.T D.T_pos.le D.ℓ D.ℓ_pos D.M0.field D.M0.field.continuous.aestronglyMeasurable
     ‖D.M0.field‖₊ D.M0.field.norm_coe_le_norm D.Be D.Bc D.L D.r D.Be_nonneg D.Bc_nonneg
     D.L_lower D.r_nonneg D.r_le_quarter D.exterior_lower D.core_lower

@@ -18,7 +18,7 @@ corresponding basis vectors — the orthonormal pairing on even
 colours, the symplectic pairing on odd colours.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

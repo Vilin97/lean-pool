@@ -25,7 +25,7 @@ packages that shared output and proves that transitions compose.
 * `Schoenflies.StageTransition.trans` — consecutive transferred refinements compose.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

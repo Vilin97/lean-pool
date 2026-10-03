@@ -19,7 +19,7 @@ import Mathlib.Tactic.ContinuousFunctionalCalculus
 Package the uniform distribution on a finite type as a point of the open simplex.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -29,7 +29,7 @@ variable {α : Type*} [Fintype α] [Nonempty α]
 namespace Simplex
 
 /-- The uniform point of the open simplex. -/
-noncomputable def uniform : Simplex α where
+@[expose] noncomputable def uniform : Simplex α where
   p := uniformDistribution (α := α)
   pos := by
     intro a

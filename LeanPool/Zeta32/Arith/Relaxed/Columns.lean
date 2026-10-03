@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.Interfaces
 (the column multiset `β+1` once, `β+3` μ times, `β−1` (s₀−μ) times, `β+4` (r₀−μ) times, `β`
 otherwise). -/
 
-@[expose] public section
+public section
 namespace Zeta32.Arith.Relaxed
 open Zeta32
 

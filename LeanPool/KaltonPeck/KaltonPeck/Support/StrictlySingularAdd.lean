@@ -20,7 +20,7 @@ This file constructs controlled biorthogonal sequences for strictly singular ope
 proves closure under addition, real scalar multiplication, and negation.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.StrictlySingular
@@ -204,6 +204,7 @@ def BiorthogonalPrefix.nil (U : X →L[ℝ] Y) (η : ℕ → ℝ) :
   small := fun i => Fin.elim0 i
 
 /-- The data needed to extend a finite biorthogonal prefix. -/
+@[expose]
 def BiorthogonalPrefix.Extension
     {U : X →L[ℝ] Y} {η : ℕ → ℝ} {n : ℕ}
     (p : BiorthogonalPrefix U η n) : Prop :=

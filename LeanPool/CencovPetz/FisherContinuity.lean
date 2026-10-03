@@ -26,7 +26,7 @@ family.
 - `CencovPetz.Simplex.continuous_fisherBilin_apply`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators

@@ -19,7 +19,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Azumaya.Mul`.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

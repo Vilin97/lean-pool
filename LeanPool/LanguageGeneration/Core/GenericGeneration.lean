@@ -22,7 +22,7 @@ A finite history of length `t` is represented by `Fin t → α`. Thus a
 `output G stream t` exposes only the prefix strictly before time `t`.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.Generic
 
@@ -44,6 +44,7 @@ abbrev Generator (α : Type*) := ∀ t : ℕ, (Fin t → α) → α
 
 /-- Exact presentation: repetitions are allowed, and every target element
 must eventually occur. -/
+@[expose]
 def Presents (stream : Stream α) (L : Language α) : Prop :=
   Set.range stream = L
 
@@ -57,6 +58,7 @@ noncomputable def sequenceSample {t : ℕ} (xs : Fin t → α) : Finset α := by
   exact Finset.univ.image xs
 
 /-- The distinct observations strictly before time `t`. -/
+@[expose]
 noncomputable def sample (stream : Stream α) (t : ℕ) : Finset α := by
   classical
   exact (Finset.range t).image stream
@@ -81,7 +83,7 @@ theorem streamIn_historyThenFallback
     exact hfallback
 
 /-- Run `G` on the prefix of `stream` strictly before time `t`. -/
-def output (G : Generator α) (stream : Stream α) (t : ℕ) : α :=
+@[expose] def output (G : Generator α) (stream : Stream α) (t : ℕ) : α :=
   G t (fun i => stream i)
 
 theorem mem_sequenceSample_iff {t : ℕ} {xs : Fin t → α} {x : α} :
@@ -347,7 +349,7 @@ theorem exists_sample_card_eq_of_presents_infinite
   exact ⟨r, hr⟩
 
 /-- The generated value is a fresh member of `L` at time `t`. -/
-def CorrectAt
+@[expose] def CorrectAt
     (G : Generator α) (L : Language α) (stream : Stream α) (t : ℕ) : Prop :=
   output G stream t ∈ L ∧ output G stream t ∉ sample stream t
 

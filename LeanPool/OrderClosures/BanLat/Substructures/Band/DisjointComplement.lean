@@ -21,7 +21,7 @@ In a normed vector lattice, every disjoint complement is norm closed: it is
 an intersection of zero-sets of the continuous maps `x ↦ |x| ⊓ |a|`.
 -/
 
-@[expose] public section
+public section
 
 variable {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
   [VectorLattice X]
@@ -30,6 +30,7 @@ variable {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
 
 /-- The **disjoint complement** of a set `A ⊆ X` is the set of all elements
 disjoint from every member of `A`. -/
+@[expose]
 def disjointComplement (A : Set X) : Set X :=
   {x : X | ∀ a ∈ A, IsVLDisjoint x a}
 
@@ -100,6 +101,7 @@ namespace Band
 /-! ### The disjoint complement is a band -/
 
 /-- The disjoint complement of any set is a band. -/
+@[expose]
 def disjointComplement (A : Set X) : Band X :=
   Band.ofPosDirectedSSupMem
     (.ofSolid

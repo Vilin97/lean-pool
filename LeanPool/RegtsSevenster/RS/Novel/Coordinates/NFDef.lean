@@ -20,7 +20,7 @@ interface: the normal form is manifestly independent of the
 transition system and orientation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

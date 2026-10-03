@@ -21,7 +21,7 @@ vertex-wedge rank formula.  This is useful for arbitrary ASP transmission,
 whose required rank `tau.s (a + 1) b - 1` can equal `-1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -78,6 +78,7 @@ theorem wedgeAddDivisor_transmissionTwist_sameLeft
 
 /-- The factor-rank inequality for one transmission row when both marks lie
 on the left factor.  `ell` records chip transfer across the gluing vertex. -/
+@[expose]
 def WedgeSameLeftTransmissionRowProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : G.V)
@@ -104,6 +105,7 @@ theorem transmissionInequality_wedgeAddDivisor_sameLeft_iff_rowProfile
   rfl
 
 /-- The full arbitrary-ASP profile with both marks on the left factor. -/
+@[expose]
 def WedgeSameLeftTransmissionProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : G.V) (tau : AspPerm) : Prop :=
@@ -177,6 +179,7 @@ theorem wedgeAddDivisor_transmissionTwist_sameRight
 
 /-- The factor-rank inequality for one transmission row when both marks lie
 on the right factor. -/
+@[expose]
 def WedgeSameRightTransmissionRowProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : H.V)
@@ -203,6 +206,7 @@ theorem transmissionInequality_wedgeAddDivisor_sameRight_iff_rowProfile
   rfl
 
 /-- The full arbitrary-ASP profile with both marks on the right factor. -/
+@[expose]
 def WedgeSameRightTransmissionProfile
     (G : CFGraph.{u}) (H : CFGraph.{v}) (x : G.V) (y : H.V)
     (D : CFDiv G) (E : CFDiv H) (p q : H.V) (tau : AspPerm) : Prop :=

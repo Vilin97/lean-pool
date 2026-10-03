@@ -18,7 +18,7 @@ common-complement arguments, where the degree bookkeeping is fixed before the
 rank condition is applied.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

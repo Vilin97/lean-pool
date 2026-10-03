@@ -19,7 +19,7 @@ add-one-variable recurrence enters as the hypothesis `HSubRec`,
 discharged in `HInsert.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ theorem hSub_empty (m : ℕ) :
   exact absurd (hall i hi) (Finset.notMem_empty i)
 
 /-- The mixed e–h convolution with one extra variable. -/
+@[expose]
 noncomputable def fmix (A : Finset (Fin k)) (j : Fin k) (M : ℕ) :
     MvPolynomial (Fin k) ℂ :=
   ∑ r ∈ Finset.range (M + 1),

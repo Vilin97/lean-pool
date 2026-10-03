@@ -34,4 +34,4 @@ public import LeanPool.BrillNoetherGraphs.Tricycle.Highlights
 
 /-! # Tricycle -/
 
-@[expose] public section
+public section

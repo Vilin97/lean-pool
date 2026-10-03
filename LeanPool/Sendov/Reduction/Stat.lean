@@ -32,7 +32,7 @@ pointwise comparison, the same way `Sendov.integral_anti` gets it in the batchin
 * `Sendov.stat_of_one_le`: `(1le) + (beta-bound) ⟹ 1 ≤ R n α`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

@@ -21,7 +21,7 @@ section
 by the exponentially small early/history size plus its correction error.
 These are the costs needed to preserve the localized source guards. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +161,7 @@ section
 pressure bound are consequences of the exact physical estimates. The
 radius stays fixed, and the boundary parameter has a canonical value. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -272,7 +272,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

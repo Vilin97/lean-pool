@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Exact identification of ordinary spatial derivatives with all translation jets in L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,8 @@ private theorem iteratedFDeriv_translation_ae_aux (n : ℕ) :
           fun b : Space => translation b A.derivative.toLp) a (Fin.init v)) (v (Fin.last n)) = _
       rw [(derivativeBundling (P := Space) (V := V) volume).iteratedFDeriv_comp_left
         (A.derivative.translation_contDiff.contDiffAt (x := a)) (by simp)]
-      rfl
+      simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply,
+        derivativeBundling_apply]
     rw [he]
     filter_upwards [derivativeMap_ae volume
       (iteratedFDeriv ℝ n (fun b : Space => translation b A.derivative.toLp) a (Fin.init v))

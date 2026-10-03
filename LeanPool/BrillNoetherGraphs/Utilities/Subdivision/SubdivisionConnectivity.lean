@@ -25,7 +25,7 @@ It is therefore constant on the core by core connectedness, and then constant
 on every interior vertex as well.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -37,6 +37,7 @@ variable {n p : ℕ}
 
 /-- Cut connectedness for an ordered loopless core.  Edge slots, rather than
 endpoint pairs, are quantified so parallel edges are retained exactly. -/
+@[expose]
 def Connected (core : ExplicitPotential.Core n p) : Prop :=
   ∀ S : Finset (Fin n),
     (∃ v w : Fin n, v ∈ S ∧ w ∉ S) →
@@ -45,6 +46,7 @@ def Connected (core : ExplicitPotential.Core n p) : Prop :=
         (core.head edge ∈ S ∧ core.tail edge ∉ S)
 
 /-- Exact finite Boolean checker for core connectedness. -/
+@[expose]
 def connectedCheck (core : ExplicitPotential.Core n p) : Bool :=
   AffineCover.allFinset Finset.univ fun S : Finset (Fin n) =>
     decide ((∃ v w : Fin n, v ∈ S ∧ w ∉ S) →

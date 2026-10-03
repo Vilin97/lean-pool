@@ -19,7 +19,7 @@ are derived from the project's explicit `lpNorm 2`; no ambient-norm shortcut
 or minimizer certificate is used.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 namespace Stage8EuclideanMinimizer
@@ -27,12 +27,12 @@ namespace Stage8EuclideanMinimizer
 /-- The canonical representation of the recursive Euclidean estimate
 potential.  The vector `s` is the accumulated weighted gradient and `c`
 contains the accumulated affine offsets. -/
-noncomputable def euclideanPsi (M : ℝ) {d : ℕ}
+@[expose] noncomputable def euclideanPsi (M : ℝ) {d : ℕ}
     (x₀ s : Point d) (c : ℝ) (x : Point d) : ℝ :=
   M / 2 * (lpNorm 2 (x - x₀)) ^ (2 : ℕ) + c + pairing s (x - x₀)
 
 /-- The explicit minimizer `x₀ - M⁻¹ s` of the canonical potential. -/
-noncomputable def euclideanPsiMinimizer (M : ℝ) {d : ℕ}
+@[expose] noncomputable def euclideanPsiMinimizer (M : ℝ) {d : ℕ}
     (x₀ s : Point d) : Point d :=
   x₀ - M⁻¹ • s
 

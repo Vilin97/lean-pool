@@ -15,7 +15,7 @@ whose value is fixed, producing a coordinate-valued affine map with exactly the 
 map and the same positive local-index cochain.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

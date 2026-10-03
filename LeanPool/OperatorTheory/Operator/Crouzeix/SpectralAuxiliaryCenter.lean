@@ -36,7 +36,7 @@ of the numerical range lies in the open disk `ball c r`.
   through the open disks `ball c (r + 1/(n+1))` (`ApproximationSupNorm.lean`).
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial spectrum Filter Topology
 open scoped InnerProductSpace Pointwise

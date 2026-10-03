@@ -14,7 +14,7 @@ This file records exact formulations of the analytic inputs still required to co
 `ClarkOconeFamily` from the natural Brownian Itô integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -116,6 +116,7 @@ def SmoothElementaryNaturalItoDuality
 
 /-- A smooth bounded function of finitely many Brownian coordinates from times at most `a`,
 regarded as an `L²` coefficient measurable at time `a`. -/
+@[expose]
 noncomputable def pastCylinderLpMeas
     (_hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)
@@ -323,6 +324,7 @@ theorem smoothElementaryNaturalItoDuality_pastCylinder
 
 /-- Fixing the time interval makes the elementary predictable construction a continuous linear
 map of its adapted coefficient. -/
+@[expose]
 noncomputable def elementaryPredictableCoefficientCLM
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0) :
     lpMeas ℝ ℝ (𝓕 a) 2 P →L[ℝ] PredictableProcessL2 𝓕 P :=
@@ -371,6 +373,7 @@ theorem elementaryBrownianCoefficientCLM_apply
     naturalItoIntegral_elementaryPredictable hB hsm hnat hab Z]
 
 /-- Smooth bounded finite-coordinate Brownian cylinders available at filtration time `a`. -/
+@[expose]
 def pastCylinderSet
     (hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)
@@ -387,6 +390,7 @@ def pastCylinderSet
       f hf hb hb' t a ht}
 
 /-- The algebraic span of the smooth bounded past Brownian cylinders at time `a`. -/
+@[expose]
 def pastCylinderSpan
     (hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)
@@ -399,6 +403,7 @@ def pastCylinderSpan
 
 /-- The only remaining coefficient-density input: smooth bounded finite-coordinate Brownian
 cylinders are dense in every time section of the natural filtration. -/
+@[expose]
 def PastCylinderDense
     (hB : IsPreBrownianReal B P) (coordinate : ℝ≥0 → StrongDual ℝ W)
     (coordinate_apply : ∀ t w, B t w = coordinate t w)

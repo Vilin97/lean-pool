@@ -14,7 +14,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -104,6 +104,7 @@ lemma succ_existsUnique (s ih : V) :
     ⟨s + 1, fun i ↦ by rintro ⟨hi, _⟩; exact lt_succ_iff_le.mpr hi⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def succ (s ih : V) : V := Classical.choose! (c.succ_existsUnique v s ih)
 
 variable {v}
@@ -146,6 +147,7 @@ lemma eval_succDef (v) :
       c.succ_defined.df.iff v
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def prConstruction : PR.Construction V φ.prBlueprint where
   zero := fun _ ↦ ∅
   succ := c.succ
@@ -155,6 +157,7 @@ def prConstruction : PR.Construction V φ.prBlueprint where
 variable (v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def limSeq (s : V) : V := c.prConstruction.result v s
 
 variable {v}
@@ -230,6 +233,7 @@ lemma mem_limSeq_self [c.StrongFinite] {u s : V} :
 variable (v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def fixedPoint (x : V) : Prop := ∃ s, x ∈ c.limSeq v s
 
 variable {v}

@@ -18,7 +18,7 @@ structure map is the standard form's odd block — the symplectic
 entries.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

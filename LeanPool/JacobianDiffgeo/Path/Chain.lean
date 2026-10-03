@@ -22,7 +22,7 @@ Main declarations:
 * `RS.exists_chartChain` — existence, for any continuous path `γ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open IsManifold Metric Set Filter

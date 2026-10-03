@@ -23,7 +23,7 @@ The mirror form, with the twist on the left, is obtained from this
 one by transporting along the braiding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -57,6 +57,7 @@ theorem OddLine.coevaluation_whiskerRight
 
 /-- **Tensoring by the odd line swaps parity**: points of a
 twisted object are odd elements of the object. -/
+@[expose]
 noncomputable def oddParitySwap
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]

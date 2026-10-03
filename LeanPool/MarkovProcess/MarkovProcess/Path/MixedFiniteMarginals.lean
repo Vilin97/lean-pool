@@ -22,7 +22,7 @@ This is a finite-dimensional law identity.  The conditional factorization of tha
 the state at `S` is in `Restart/RationalRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

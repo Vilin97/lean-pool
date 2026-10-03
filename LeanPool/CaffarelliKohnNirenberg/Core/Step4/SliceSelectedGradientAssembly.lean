@@ -25,7 +25,7 @@ set, which is the coordinate weak gradient of the pressure slice there, and
 whose coordinate norms obey the three-term bound of display (3.5).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

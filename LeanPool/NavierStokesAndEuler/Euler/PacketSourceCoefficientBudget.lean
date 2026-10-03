@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPathJets
 jets of the inverse deformation and strain.  The transported unit normal uses
 the same radius and amplitude. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -48,6 +48,7 @@ theorem VectorCoefficient.path_eq_of_raw_eq {T : ℝ} {raw raw' : VectorField}
 
 /-- Changing the solver fields of the packet operators does not change the
 coefficient budget when the three actual coefficients agree on the interval. -/
+@[expose]
 def CoefficientBudget.ofRawEq {P T : ℝ} {O O' : Operators}
     {G : CoefficientData P T O} (B : CoefficientBudget G)
     (H : CoefficientData P T O')
@@ -95,6 +96,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 /-- Uniform compact-time translation bounds for the literal source coefficients.
 Only the original inverse-frame and strain jets are inputs; in particular the
 normal has no independent bound and there is no loss in radius or amplitude. -/
+@[expose]
 def sourceCoefficientBudget (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
     (hI : ∀ n t x,
       ‖iteratedFDeriv ℝ n (D.FInv.field t : Space → Space →L[ℝ] Space) x‖ ≤

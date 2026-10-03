@@ -27,7 +27,7 @@ The compactness of both the domain and the codomain is essential: the closed-gra
 for continuity without it.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.EMP.VariableBody
 

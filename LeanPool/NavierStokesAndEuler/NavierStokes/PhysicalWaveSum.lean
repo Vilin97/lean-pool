@@ -18,7 +18,7 @@ Cover changes are the actual powers of `J_g`. Bounds use actual Fréchet
 derivatives and the constructed dyadic and spatial masks.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,21 +43,23 @@ private theorem nat_le_infty (k : ℕ) : (k : WithTop ℕ∞) ≤ ∞ :=
   WithTop.coe_le_coe.mpr le_top
 
 /-- Change only the auxiliary coordinate from native to common level. -/
+@[expose]
 noncomputable def downLift (d : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
   (ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
     ((CommonCoverSolve.coverPower d).symm : Plane →L[ℝ] Plane)
 
 /-- Up lift, given by `(ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
 (CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)`. -/
+@[expose]
 noncomputable def upLift (d : ℕ) : LiftPoint →L[ℝ] LiftPoint :=
   (ContinuousLinearMap.id ℝ PhysicalGraphBounds.ChartPoint).prodMap
     (CommonCoverSolve.coverPower d : Plane →L[ℝ] Plane)
 
 @[simp] theorem downLift_apply (d : ℕ) (y : LiftPoint) :
-    downLift d y = (y.1, (CommonCoverSolve.coverPower d).symm y.2) := rfl
+    downLift d y = (y.1, (CommonCoverSolve.coverPower d).symm y.2) := by rfl
 
 @[simp] theorem upLift_apply (d : ℕ) (y : LiftPoint) :
-    upLift d y = (y.1, CommonCoverSolve.coverPower d y.2) := rfl
+    upLift d y = (y.1, CommonCoverSolve.coverPower d y.2) := by rfl
 
 theorem up_down (d : ℕ) (y : LiftPoint) : upLift d (downLift d y) = y := by simp
 theorem down_up (d : ℕ) (y : LiftPoint) : downLift d (upLift d y) = y := by simp
@@ -100,7 +102,7 @@ theorem norm_upLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖upLift d‖ ≤ coverBo
       _ ≤ _ := by unfold coverBound; nlinarith [norm_nonneg y]
 
 /-- Common lift, given by `downLift d ∘ PhysicalGraphBounds.physicalLift h n`. -/
-noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
+@[expose] noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
   downLift d ∘ PhysicalGraphBounds.physicalLift h n
 
 /-- The changed coordinate is exactly `J_g^(i(n)-d) Y`, when the gap does
@@ -189,13 +191,13 @@ structure CarrierData where
 
 /-- Phase, given by `PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center
 r0 c.angular c.axial c.radial c.F c.G`. -/
-noncomputable def CarrierData.phase (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ) :
+@[expose] noncomputable def CarrierData.phase (c : CarrierData) (a h : ℝ) (n : ℕ) (r0 : ℝ) :
     LiftPoint → ℝ :=
   PhysicalGraphBounds.liftedPhase (PolarCharts.chart a c.chart) h n c.center r0
     c.angular c.axial c.radial c.F c.G
 
 /-- Common wave, constructed using `amp`. -/
-noncomputable def commonWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
+@[expose] noncomputable def commonWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
     (amp : LiftPoint → ℂ) (j : ℤ) (w : SpaceTime) : ℂ :=
   amp (commonLift h n d w) *
     PhysicalGraphBounds.character ((ChartScales.carrier h n : ℝ) * (j : ℝ))
@@ -259,6 +261,7 @@ theorem common_carrier_physical_bound {h a b Z r0 P B eBase : ℝ}
   · exact hGb
 
 /-- Closed supports of the actual dyadic and slow masks. -/
+@[expose]
 noncomputable def labelRegion (D : ℝ) (L : Label) : Set (ℝ × Position) :=
   tsupport (SquaredPartition.dyadicMask (L.1 : ℤ)) ×ˢ
     tsupport (SquaredPartition.physicalSlowMask D L.1 L.2.1)
@@ -268,6 +271,7 @@ theorem labelRegion_closed (D : ℝ) (L : Label) : IsClosed (labelRegion D L) :=
 
 /-- Physical mask, given by `SquaredPartition.dyadicMask (L.1 : ℤ) z.1 *
 SquaredPartition.physicalSlowMask D L.1 L.2.1 z.2`. -/
+@[expose]
 noncomputable def physicalMask (D : ℝ) (L : Label) (z : ℝ × Position) : ℝ :=
   SquaredPartition.dyadicMask (L.1 : ℤ) z.1 *
     SquaredPartition.physicalSlowMask D L.1 L.2.1 z.2
@@ -426,12 +430,12 @@ theorem waveRegion_locallyFinite (D : ℝ) (H : ℕ) :
     (fun _ => locallyFinite_of_finite (fun _ : Harmonic H => (univ : Set PositiveParam)))
 
 /-- Preterminal, given by `{w | w.1 < 1}`. -/
-noncomputable def preterminal : Set SpaceTime := {w | w.1 < 1}
+@[expose] noncomputable def preterminal : Set SpaceTime := {w | w.1 < 1}
 
 theorem preterminal_open : IsOpen preterminal := isOpen_lt continuous_fst continuous_const
 
 /-- The actual similarity coordinate at a Cartesian spacetime point. -/
-noncomputable def physicalQ (h : ℝ) (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def physicalQ (h : ℝ) (w : SpaceTime) : ℝ :=
   SimilarityProfile.q h (AxisymmetricFields.profilePoint w.1 w.2)
 
 theorem physicalQ_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -444,6 +448,7 @@ theorem physicalQ_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     AxisymmetricFields.contDiff_profilePoint.contDiffAt
 
 /-- The three physical variables whose rescalings enter the slow masks. -/
+@[expose]
 noncomputable def physicalPosition (w : SpaceTime) : Position :=
   ![PolarCharts.radius (PhysicalGraphBounds.radialProjection w), w.2 2, 1 - w.1]
 
@@ -456,6 +461,7 @@ theorem physicalPosition_continuous : Continuous physicalPosition := by
   · exact continuous_const.sub continuous_fst
 
 /-- Physical params, given by `(physicalQ h w, physicalPosition w)`. -/
+@[expose]
 noncomputable def physicalParams (h : ℝ) (w : SpaceTime) : ℝ × Position :=
   (physicalQ h w, physicalPosition w)
 
@@ -601,6 +607,7 @@ theorem jet_zero_off_tsupport {E F : Type*} [NormedAddCommGroup E] [NormedSpace 
   exact hx ((tsupport_iteratedFDeriv_subset m) (subset_tsupport _ hn))
 
 /-- With chart, given by `{c with chart := i}`. -/
+@[expose]
 noncomputable def CarrierData.withChart (c : CarrierData) (i : PolarCharts.Index) : CarrierData :=
   {c with chart := i}
 
@@ -626,14 +633,14 @@ noncomputable def polarCarrier (c : CarrierData) (k : ℝ) (j : ℤ) (ε : ℝ)
   PhaseCalculus.harmonic k j ε c.angular c.axial c.radial c.F c.G ((rθ.1, zt), (rθ.2, v))
 
 @[simp] theorem withChart_chart (c : CarrierData) (i : PolarCharts.Index) :
-    (c.withChart i).chart = i := rfl
+    (c.withChart i).chart = i := by rfl
 
 @[simp] theorem withChart_center (c : CarrierData) (i : PolarCharts.Index) :
-    (c.withChart i).center = c.center := rfl
+    (c.withChart i).center = c.center := by rfl
 
 @[simp] theorem polarCarrier_withChart (c : CarrierData) (i : PolarCharts.Index)
     (k : ℝ) (j : ℤ) (ε : ℝ) (zt : ℝ × ℝ) (v : ℝ) :
-    polarCarrier (c.withChart i) k j ε zt v = polarCarrier c k j ε zt v := rfl
+    polarCarrier (c.withChart i) k j ε zt v = polarCarrier c k j ε zt v := by rfl
 
 theorem polarCarrier_periodic (c : CarrierData) (k : ℝ) (j : ℤ) (ε : ℝ)
     (zt : ℝ × ℝ) (v : ℝ) (m : ℤ) (hkp : k * c.angular = (m : ℝ)) :
@@ -651,7 +658,8 @@ theorem commonWave_polar (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
         (PolarCharts.chart a c.chart (PhysicalGraphBounds.scaledRadial n w)) := by
   unfold commonWave CarrierData.phase PhysicalGraphBounds.liftedPhase
   rw [Function.comp_apply, PhysicalGraphBounds.character_phase_eq_harmonic,
-    PhysicalGraphBounds.slotMap_formula, PhysicalGraphBounds.liftXY_physicalLift]
+    PhysicalGraphBounds.slotMap_formula, PhysicalGraphBounds.liftXY_physicalLift,
+    PhysicalGraphBounds.slotTime_eq_nativeGraph]
   rfl
 
 theorem commonWave_charts_agree {a : ℝ} (ha : 0 < a) (h : ℝ) (n d : ℕ) (r0 : ℝ)
@@ -675,7 +683,7 @@ theorem commonWave_charts_agree {a : ℝ} (ha : 0 < a) (h : ℝ) (n d : ℕ) (r0
 
 /-- A genuine angular carrier: valid polar charts are selected pointwise;
 the integer angular mode will prove that the selection is smooth. -/
-noncomputable def globalWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
+@[expose] noncomputable def globalWave (a h : ℝ) (n d : ℕ) (r0 : ℝ) (c : CarrierData)
     (amp : LiftPoint → ℂ) (j : ℤ) (w : SpaceTime) : ℂ :=
   commonWave a h n d r0 (c.withChart (chooseChart a (PhysicalGraphBounds.scaledRadial n w))) amp j w
 
@@ -799,11 +807,12 @@ structure WaveFamily (H : ℕ) where
 
 /-- Term, given by `globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I)
 I.2.val`. -/
-noncomputable def WaveFamily.term {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ)
+@[expose] noncomputable def WaveFamily.term {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ)
     (I : WaveIndex H) : SpaceTime → ℂ :=
   globalWave a h I.1.val.1 (f.gap I.1) r0 (f.carrier I.1) (f.amplitude I) I.2.val
 
 /-- Sum, given by `∑ᶠ I : WaveIndex H, f.term a h r0 I w`. -/
+@[expose]
 noncomputable def WaveFamily.sum {H : ℕ} (f : WaveFamily H) (a h r0 : ℝ) (w : SpaceTime) : ℂ :=
   ∑ᶠ I : WaveIndex H, f.term a h r0 I w
 
@@ -991,7 +1000,7 @@ noncomputable def realCoordinate (i : Fin 3) : ℂ →L[ℝ] Space :=
   Complex.reCLM.smulRight (coordinateVector i)
 
 @[simp] theorem realCoordinate_apply (i : Fin 3) (z : ℂ) :
-    realCoordinate i z = z.re • coordinateVector i := rfl
+    realCoordinate i z = z.re • coordinateVector i := by rfl
 
 theorem norm_realCoordinate_le (i : Fin 3) : ‖realCoordinate i‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one ?_
@@ -1001,7 +1010,7 @@ theorem norm_realCoordinate_le (i : Fin 3) : ‖realCoordinate i‖ ≤ 1 := by
   exact Complex.abs_re_le_norm z
 
 /-- Real Euclidean vector assembled from the three scalar carrier sums. -/
-noncomputable def vectorSum {H : ℕ} (f : Fin 3 → WaveFamily H) (a h r0 : ℝ)
+@[expose] noncomputable def vectorSum {H : ℕ} (f : Fin 3 → WaveFamily H) (a h r0 : ℝ)
     (w : SpaceTime) : Space := ∑ i : Fin 3, realCoordinate i ((f i).sum a h r0 w)
 
 theorem vectorSum_smooth {H : ℕ} {f : Fin 3 → WaveFamily H} {a b h r0 Z : ℝ} {Δ : ℕ}

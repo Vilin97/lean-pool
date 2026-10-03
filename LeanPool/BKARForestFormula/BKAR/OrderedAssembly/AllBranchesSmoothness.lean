@@ -17,7 +17,7 @@ contributions, with or without the empty sector split off as `ρ` at the
 zero configuration.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

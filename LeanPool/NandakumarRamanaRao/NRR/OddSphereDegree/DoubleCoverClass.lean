@@ -67,7 +67,7 @@ therefore stops exactly at the last formalized object before `α`, plus the
  fundamental-group form of the eventual `fbar^*(α) = α`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -208,7 +208,7 @@ theorem permToZMod2_eq_one_iff {α : Type*} [Finite α] (h : Nat.card α = 2)
 This is choice-free (no labelling of the two points is needed): it is the
 canonical reason a `ZMod 2`-valued monodromy character exists for the double
 cover, since each fibre of `proj n` is a two-element set. -/
-noncomputable def permTwoMulEquivZMod2 {α : Type*} [Finite α] (h : Nat.card α = 2) :
+@[expose] noncomputable def permTwoMulEquivZMod2 {α : Type*} [Finite α] (h : Nat.card α = 2) :
     Equiv.Perm α ≃* Multiplicative (ZMod 2) := by
   classical
   letI := Fintype.ofFinite α
@@ -235,7 +235,7 @@ sheets of the cover.
 This is the genuine covering-theoretic datum from which the canonical class
 `α ∈ H¹(RP n; F₂)` is obtained, via a degree-one cohomological classifier `H¹(X; F₂) ≅ Hom(π₁(X)ᵃᵇ,
 F₂)`. It is a proved homomorphism out of `π₁(RP n, x)`. -/
-noncomputable def classifyingHom (n : ℕ) (x : RP n) :
+@[expose] noncomputable def classifyingHom (n : ℕ) (x : RP n) :
     FundamentalGroup (RP n) x →* Multiplicative (ZMod 2) :=
   permToZMod2.comp (projMonodromyHom n x)
 
@@ -306,6 +306,7 @@ theorem inducedOnRPFiberMap_bijective (n : ℕ) (f : C(Sphere n, Sphere n)) (hf 
 /-- The fibrewise map of an odd map `f`, packaged as an equivalence between the
 two-element fibre over `q` and the fibre over the descended image
 `inducedOnRP f hf q`. -/
+@[expose]
 noncomputable def inducedOnRPFiberEquiv (n : ℕ) (f : C(Sphere n, Sphere n)) (hf : IsOddMap f)
     (q : RP n) : (proj n ⁻¹' {q}) ≃ (proj n ⁻¹' {inducedOnRP f hf q}) :=
   Equiv.ofBijective _ (inducedOnRPFiberMap_bijective n f hf q)

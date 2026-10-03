@@ -9,12 +9,12 @@ public import LeanPool.HadwigerNelsonBounds.PartsCertificate
 
 /-! Generated chunk 6 of the Parts coloring-tree certificate. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Normalized root orbit 1, checked by Parts tree `L1`. -/
-def partsBaseCertificate1 : PartsCertificate := {
+@[expose] def partsBaseCertificate1 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 1⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -76,7 +76,7 @@ def partsBaseCertificate1 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 7, checked by Parts tree `S`. -/
-def partsBaseCertificate7 : PartsCertificate := {
+@[expose] def partsBaseCertificate7 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 2⟩,
@@ -93,7 +93,7 @@ def partsBaseCertificate7 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 22, checked by Parts tree `S`. -/
-def partsBaseCertificate22 : PartsCertificate := {
+@[expose] def partsBaseCertificate22 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 1⟩, ⟨78, 3⟩,
@@ -110,7 +110,7 @@ def partsBaseCertificate22 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 27, checked by Parts tree `L6`. -/
-def partsBaseCertificate27 : PartsCertificate := {
+@[expose] def partsBaseCertificate27 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,
@@ -141,7 +141,7 @@ def partsBaseCertificate27 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 33, checked by Parts tree `S`. -/
-def partsBaseCertificate33 : PartsCertificate := {
+@[expose] def partsBaseCertificate33 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,
@@ -158,7 +158,7 @@ def partsBaseCertificate33 : PartsCertificate := {
 }
 
 /-- Normalized root orbit 34, checked by Parts tree `L7`. -/
-def partsBaseCertificate34 : PartsCertificate := {
+@[expose] def partsBaseCertificate34 : PartsCertificate := {
   roots := [
     ⟨0, 3⟩, ⟨195, 0⟩, ⟨205, 0⟩, ⟨215, 0⟩, ⟨210, 1⟩,
     ⟨220, 1⟩, ⟨200, 2⟩, ⟨72, 2⟩, ⟨78, 3⟩,

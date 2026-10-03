@@ -23,7 +23,7 @@ The times here are rational.  The strong Markov property at an arbitrary finite 
 is in `Trajectory/FellerStoppingRestart.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

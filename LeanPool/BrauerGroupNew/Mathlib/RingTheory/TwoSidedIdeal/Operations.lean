@@ -14,7 +14,7 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.RingTheory.TwoSidedIdeal.Operations`.
 -/
 
-@[expose] public section
+public section
 
 open Function
 

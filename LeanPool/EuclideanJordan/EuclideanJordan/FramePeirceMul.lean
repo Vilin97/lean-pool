@@ -105,7 +105,7 @@ bounds a frame's cardinality by the rank and by the dimension, and nothing anywh
 `dim V_{ii} = 1` into a statement about `rank J`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

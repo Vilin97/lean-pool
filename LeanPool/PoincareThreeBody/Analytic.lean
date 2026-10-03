@@ -18,7 +18,7 @@ analyticity of arbitrary real powers on the positive half-line. We establish tha
 it to the inverse square roots in the restricted three-body potential.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

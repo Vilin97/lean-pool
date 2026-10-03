@@ -16,7 +16,7 @@ Once the diagonal matching obstruction is selected, supports `67` and `76` eithe
 nonnegative-score packing or route their simultaneous failures into the finite incidence ledger.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

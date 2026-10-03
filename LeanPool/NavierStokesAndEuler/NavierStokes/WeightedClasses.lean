@@ -22,7 +22,7 @@ strips used by the construction.  Radiality of the prescribed smooth weight
 is not needed for these closure results.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.WeightedClasses
@@ -64,7 +64,7 @@ abbrev EuclideanStripData (d : ℕ) := StripData (EuclideanSpace ℝ (Fin d))
 /-- A common polynomial degree in `S` and the inverse edge distance is enough:
 separate finite degrees can always be increased to their sum.  The maximum
 permits arbitrary positive `delta`, agreeing with `delta⁻¹` when `delta ≤ 1`. -/
-def StripData.growth (s : StripData D) (n : ℕ) (x : D) : ℝ :=
+@[expose] def StripData.growth (s : StripData D) (n : ℕ) (x : D) : ℝ :=
   s.slow n * max 1 (s.delta x)⁻¹
 
 theorem StripData.one_le_growth (s : StripData D) (n : ℕ) (x : D) :
@@ -93,7 +93,7 @@ theorem StripData.separate_powers_le_growth (s : StripData D) (p q n : ℕ) (x :
     (pow_le_pow_left₀ he0 he q) (pow_nonneg he0 q) (pow_nonneg (s.growth_nonneg n x) p)
 
 /-- Majorant, given by `C * s.epsilon n ^ α * s.growth n x ^ p * w n x`. -/
-def majorant (s : StripData D) (w : ℕ → D → ℝ) (α C : ℝ) (p n : ℕ) (x : D) : ℝ :=
+@[expose] def majorant (s : StripData D) (w : ℕ → D → ℝ) (α C : ℝ) (p n : ℕ) (x : D) : ℝ :=
   C * s.epsilon n ^ α * s.growth n x ^ p * w n x
 
 theorem majorant_nonneg (s : StripData D) (w : ℕ → D → ℝ) (α : ℝ)
@@ -149,7 +149,7 @@ def StageClasses (s : StripData D) (w : ℕ → D → ℝ) (α : ℕ → ℝ)
 
 /-- A bound on a band-dependent scalar. There is no spatial derivative of
 the discrete band index. -/
-def BandBound (s : StripData D) (β : ℝ) (a : ℕ → ℝ) : Prop :=
+@[expose] def BandBound (s : StripData D) (β : ℝ) (a : ℕ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ,
     ∀ n, ‖a n‖ ≤ C * s.epsilon n ^ β * s.slow n ^ p
 
@@ -480,7 +480,7 @@ theorem MeanClass.bilinear_wave {s : StripData D} {P : ℕ → D → ℝ}
 
 /-- An explicit radial graph operator with a band coefficient `M` and a
 spatial coefficient `a`. The two directions can be radial and auxiliary. -/
-noncomputable def graphDerivative (M : ℕ → ℝ) (a : D → ℝ) (e v : D)
+@[expose] noncomputable def graphDerivative (M : ℕ → ℝ) (a : D → ℝ) (e v : D)
     (f : ℕ → D → E) : ℕ → D → E :=
   fun n x => fderiv ℝ (f n) x e + M n • (a x • fderiv ℝ (f n) x v)
 

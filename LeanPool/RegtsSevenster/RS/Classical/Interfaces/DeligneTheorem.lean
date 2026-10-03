@@ -29,7 +29,7 @@ representations of a supergroup, which yields the functor by
 composing with the forgetful functor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

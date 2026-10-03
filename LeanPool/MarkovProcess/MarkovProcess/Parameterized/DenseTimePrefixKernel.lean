@@ -17,7 +17,7 @@ enumeration. Coordinates remain in enumeration order; the enumeration need not b
 physical time. Fiberwise conservativity is used only for Markovness and prefix consistency.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

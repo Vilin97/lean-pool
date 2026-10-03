@@ -18,7 +18,7 @@ It corresponds roughly to Section 4 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 /-! ### Submodular slipfaces and recovery of ASP permutations
 
@@ -1308,7 +1308,7 @@ instance : PartialOrder AspPerm where
 /-- The relation $\alpha \leq_\chi \beta$ from
 [An extended Demazure product](https://arxiv.org/abs/2206.14227): Bruhat order together with
 equality of shifts. In Lean this is the infix `≤χ`. -/
-def leChi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
+@[expose] def leChi (σ τ : AspPerm) : Prop := σ ≤ τ ∧ σ.χ = τ.χ
 /-- Bruhat comparison restricted to permutations with equal shift. -/
 infix:50 " ≤χ " => leChi
 

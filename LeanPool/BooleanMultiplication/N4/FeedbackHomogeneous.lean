@@ -16,7 +16,7 @@ bilinear and checks the fixed `7 × 7 × 6` basis matrix; it never enumerates
 circuits or Boolean functions.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,11 +24,13 @@ namespace N4
 noncomputable section
 
 /-- The six quartic coordinates used by the feedback minors. -/
+@[expose]
 def feedbackQuarticCoord : Fin 6 → Fin 8 × Fin 8 × Fin 8 × Fin 8 :=
   ![(0, 1, 4, 5), (0, 1, 4, 6), (0, 3, 4, 7),
     (0, 3, 5, 7), (0, 3, 6, 7), (0, 1, 6, 7)]
 
 /-- Extract the six quartic ANF coefficients used in feedback arguments. -/
+@[expose]
 def feedbackQuarticProbeANF : ANF 8 →ₗ[F₂] (Fin 6 → F₂) where
   toFun p u := anfFourProjection p (feedbackQuarticCoord u).1
     (feedbackQuarticCoord u).2.1
@@ -49,6 +51,7 @@ def feedbackQuarticProbeANF : ANF 8 →ₗ[F₂] (Fin 6 → F₂) where
         (feedbackQuarticCoord u).2.2.2 := rfl
 
 /-- Extract the six feedback coordinates of a wedge of two two-forms. -/
+@[expose]
 def feedbackQuarticWedgeProbe (q c : TwoForm) : Fin 6 → F₂ := fun u =>
   wedgeTwo q c (feedbackQuarticCoord u).1
     (feedbackQuarticCoord u).2.1

@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanClassicalConstraints
 chosen on intermediate horizons, and genuine Euler uniqueness removes
 the dependence on that choice. No continuation criterion is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,6 +31,7 @@ variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 abbrev Time : Type := Ico (0 : ℝ) L.duration
 
 /-- Initial time, given by `⟨0,le_rfl,L.duration_pos⟩`. -/
+@[expose]
 def initialTime : L.Time := ⟨0,le_rfl,L.duration_pos⟩
 
 /-- Intermediate horizon, given by `((t : ℝ)+L.duration)/2`. -/
@@ -54,15 +55,18 @@ theorem intermediateHorizon_lt (t : L.Time) : L.intermediateHorizon t < L.durati
   linarith
 
 /-- Intermediate time, given by `⟨t,t.property.1,(L.time_lt_intermediateHorizon t).le⟩`. -/
+@[expose]
 def intermediateTime (t : L.Time) : Icc (0 : ℝ) (L.intermediateHorizon t) :=
   ⟨t,t.property.1,(L.time_lt_intermediateHorizon t).le⟩
 
 /-- Shorter time, given by `⟨t,t.property.1,t.property.2.trans_lt hSL⟩`. -/
+@[expose]
 def shorterTime (S : ℝ) (hSL : S < L.duration) (t : Icc (0 : ℝ) S) : L.Time :=
   ⟨t,t.property.1,t.property.2.trans_lt hSL⟩
 
 /-- Maximal field, given by `(L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos
 t) (L.intermediateHorizon_lt t)).velocity (L.intermediateTime t)`. -/
+@[expose]
 def maximalField (t : L.Time) : SmoothL2Field Space :=
   (L.evolution (L.intermediateHorizon t) (L.intermediateHorizon_pos t)
     (L.intermediateHorizon_lt t)).velocity (L.intermediateTime t)
@@ -157,6 +161,7 @@ theorem maximalPressureField_gradient (t : L.Time) :
     (L.intermediateHorizon_lt t)).gradient (L.intermediateTime t)
 
 /-- Maximal velocity, given by `(L.maximalField t).field`. -/
+@[expose]
 def maximalVelocity (t : L.Time) : Space → Space := (L.maximalField t).field
 
 /-- Maximal pressure, given by `EulerCanonicalGraphPotential.radialPotential

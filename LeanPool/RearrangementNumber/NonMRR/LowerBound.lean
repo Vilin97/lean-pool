@@ -22,7 +22,7 @@ least the bounding number. This statement does not presume that a rearranging
 family has already been constructed.
 -/
 
-@[expose] public section
+public section
 
 open Filter Cardinal Topology
 

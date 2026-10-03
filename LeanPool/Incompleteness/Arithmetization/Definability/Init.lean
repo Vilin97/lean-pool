@@ -7,6 +7,6 @@ module
 
 import Aesop.Frontend.Command
 
-@[expose] public section
+public section
 
 declare_aesop_rule_sets [Definability]

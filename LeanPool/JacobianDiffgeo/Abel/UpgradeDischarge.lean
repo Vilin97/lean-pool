@@ -48,7 +48,7 @@ external fact (the same gate as `DolbeaultBridge.lean`; the weak-solution hypoth
 `WeakSolutionUpgrade` shapes are simply not needed: the construction builds its own pieces).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set MeasureTheory Filter Topology

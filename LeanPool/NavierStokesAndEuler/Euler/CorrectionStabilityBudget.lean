@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionStabilityConstants
 
 /-! Concrete coefficient and inverse-metric data for actual vanishing-viscosity stability. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -76,13 +76,13 @@ def StabilityBudget.operatorPath {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
 
 /-- The fixed squared-energy growth coefficient obtained from the actual background path and a
 solution norm bound. -/
-def StabilityBudget.growth {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
+@[expose] def StabilityBudget.growth {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     {D : CorrectionData period q (Icc (0 : ℝ) T)} (B : StabilityBudget period hT D) (R : ℝ) : ℝ :=
   growthConstant B.c B.bound B.first B.time (velocityBound period q ‖D.approximation‖ R)
     (lowerConstant period q B.linear B.quadratic ‖D.approximation‖ R)
 
 /-- The explicit finite-interval Lipschitz coefficient for viscosity in continuous L². -/
-def StabilityBudget.comparisonConstant {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
+@[expose] def StabilityBudget.comparisonConstant {q : ℕ} {T : ℝ} {hT : 0 ≤ T}
     {D : CorrectionData period q (Icc (0 : ℝ) T)} (B : StabilityBudget period hT D) (R : ℝ) : ℝ :=
   Real.sqrt (defectConstant B.bound R*T*Real.exp (B.growth period R*T))/B.c
 

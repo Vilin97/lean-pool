@@ -29,7 +29,7 @@ public import Mathlib.Tactic.Bound
 
 /-! # YusterEdgeType -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -47,7 +47,7 @@ theorem card_EdgeV : Fintype.card (EdgeV G) = (G.cliqueFinset 2).card :=
 
 /-- The **triangle hypergraph on the edge vertex type**: each triangle contributes the hyperedge of
 its three edges (its `2`-subsets, lifted to the edge type). -/
-def triangleHypergraphSub : Finset (Finset (EdgeV G)) :=
+@[expose] def triangleHypergraphSub : Finset (Finset (EdgeV G)) :=
   (G.cliqueFinset 3).image (fun t => (t.powersetCard 2).subtype (· ∈ G.cliqueFinset 2))
 
 /-- Every `2`-subset of a `3`-clique is a `2`-clique (an edge). -/

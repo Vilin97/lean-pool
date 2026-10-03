@@ -20,7 +20,7 @@ occurrences of its least color.  The required number of occurrences may
 depend arbitrarily on the first index of the interval.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -28,6 +28,7 @@ open scoped BigOperators
 
 /-- An interval on which `l` is a lower bound for the colors and occurs at
 least `h a` times.  Indices and colors start at zero. -/
+@[expose]
 def HasColorInterval (χ : ℕ → ℕ) (h : ℕ → ℕ) (a b l : ℕ) : Prop :=
   a ≤ b ∧ (∀ i ∈ Finset.Icc a b, l ≤ χ i) ∧
     h a ≤ ((Finset.Icc a b).filter fun i => χ i = l).card

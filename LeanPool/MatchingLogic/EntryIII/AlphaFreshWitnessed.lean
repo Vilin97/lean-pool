@@ -22,7 +22,7 @@ import Mathlib.Tactic.FinCases
 # MatchingLogic.EntryIII.AlphaFreshWitnessed
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -119,7 +119,7 @@ abbrev AlphaWitnessSig : Signature where
 
 /-- Public because `alphaBlocked` is public and unfolds through it: a private
 name in the type of a public declaration cannot be reached by the pin list. -/
-def pairArgs (p q : Pattern AlphaWitnessSig Nat) :
+@[expose] def pairArgs (p q : Pattern AlphaWitnessSig Nat) :
     Fin 2 → Pattern AlphaWitnessSig Nat
   | ⟨0, _⟩ => p
   | ⟨1, _⟩ => q
@@ -147,7 +147,7 @@ abbrev alphaWitnessModel : Model AlphaWitnessSig where
 def alphaWitnessRho : Nat → alphaWitnessModel.carrier := fun n => n = 0
 
 /-- The complete pointed theory of `alphaWitnessModel` at `true`. -/
-def alphaWitnessTheory : Set (Pattern AlphaWitnessSig Nat) :=
+@[expose] def alphaWitnessTheory : Set (Pattern AlphaWitnessSig Nat) :=
   pointedTheory alphaWitnessModel alphaWitnessRho true
 
 private theorem alphaWitnessRho_surjective :

@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 The pressure and top transport term cancel. All remaining products
 are controlled by the proved L² interpolation of derivative words. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -77,6 +77,7 @@ theorem tame_transportCommutator (A : SmoothL2Field Space) (m : ℕ) (hm : 3 ≤
     (by simpa only [Nat.add_zero] using hn) w Fin.elim0
 
 /-- Euler rhs, given by `fieldNeg (addField (advectionField A A) P)`. -/
+@[expose]
 def eulerRhs (A P : SmoothL2Field Space) : SmoothL2Field Space :=
   fieldNeg (addField (advectionField A A) P)
 
@@ -111,7 +112,7 @@ theorem tameEnergyConstant_nonneg (m : ℕ) : 0 ≤ tameEnergyConstant m :=
 
 /-- Integer energy production, given by `2*(∑ n ∈ range (m+1), ∑ w : Fin n → Fin 3, ⟪(wordField
 A w).toLp,(wordField Q w).toLp⟫_ℝ)`. -/
-def integerEnergyProduction (m : ℕ) (A Q : SmoothL2Field Space) : ℝ :=
+@[expose] def integerEnergyProduction (m : ℕ) (A Q : SmoothL2Field Space) : ℝ :=
   2*(∑ n ∈ range (m+1), ∑ w : Fin n → Fin 3,
     ⟪(wordField A w).toLp,(wordField Q w).toLp⟫_ℝ)
 

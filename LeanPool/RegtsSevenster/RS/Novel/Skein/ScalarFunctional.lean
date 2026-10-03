@@ -19,7 +19,7 @@ every identity of Hom-classes at arity zero becomes an identity
 of parameter values through this functional.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

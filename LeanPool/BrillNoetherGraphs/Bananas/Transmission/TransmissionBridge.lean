@@ -43,7 +43,7 @@ and `rank (K - (D - u)) + 1`, and Riemann-Roch turns the difference into
 constructs a `SatisfiesTransmission` witness directly.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

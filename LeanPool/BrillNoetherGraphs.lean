@@ -551,7 +551,7 @@ Tags: brill-noether-theory, graph-theory, chip-firing, tropical-geometry
 MSC: 14T15, 05C50
 -/
 
-@[expose] public section
+public section
 
 /-
 Upstream attribution notices:

@@ -29,7 +29,7 @@ suprema once the family is monotone in the index (`minimalResolvent_comm`).
 Nothing here uses the part-process identity; monotonicity in the index is a bare hypothesis.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

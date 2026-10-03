@@ -21,7 +21,7 @@ term ((E + v × B) · ∇ᵥf · log f), and force IBP terms for the Coulomb ker
 Uses Schwartz decay, log growth bounds, and the Lorentz force component bound.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

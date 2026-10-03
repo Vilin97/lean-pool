@@ -20,7 +20,7 @@ transmission on a bridgeless rigid wedge forces the smaller nontrivial order
 to equal the other one.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

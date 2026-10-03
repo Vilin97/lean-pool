@@ -21,7 +21,7 @@ This file merges the following former modules, one section each:
 * `DyadicThresholdTail`: Geometric tails of dyadic increment thresholds
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 

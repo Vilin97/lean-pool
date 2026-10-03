@@ -23,14 +23,14 @@ disk.  An interior point supplies a small disk, and a homothety expands it to
 unit radius.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped InnerProductSpace
 
 /-- Multiplication by a nonzero complex number, regarded as an invertible
 real-linear map of the complex plane. -/
-noncomputable def complexMulRealEquiv (a : ℂ) (ha : a ≠ 0) :
+@[expose] noncomputable def complexMulRealEquiv (a : ℂ) (ha : a ≠ 0) :
     ℂ ≃L[ℝ] ℂ :=
   ContinuousLinearEquiv.smulLeft (R₁ := ℝ) (M₁ := ℂ) (Units.mk0 a ha)
 

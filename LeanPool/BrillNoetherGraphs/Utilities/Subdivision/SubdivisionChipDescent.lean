@@ -66,7 +66,7 @@ by step from the fine script, and the budget hypothesis is exactly what fails
 for two chips at the midpoints of an even refinement.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 
@@ -78,6 +78,7 @@ variable {n p : ℕ} (spec : Spec n p) (N : ℕ) (hN : 0 < N)
 
 /-- The fine vertex at fine offset `N * k` of slot `edge`, for a coarse path
 position `k`. -/
+@[expose]
 def scaledPosition (edge : Fin p) (position : spec.PathPosition edge) :
     (spec.scale N hN).PathPosition edge :=
   ⟨N * position.val, by
@@ -95,6 +96,7 @@ def scaledPosition (edge : Fin p) (position : spec.PathPosition edge) :
 /-- The embedding of the coarse vertices into the fine graph: core vertices go
 to core vertices, and the interior vertex at coarse offset `j + 1` of a slot
 goes to fine offset `N * (j + 1)`. -/
+@[expose]
 def fineOf : spec.Vertex → (spec.scale N hN).Vertex
   | Sum.inl vertex => Sum.inl vertex
   | Sum.inr ⟨edge, offset⟩ =>
@@ -179,6 +181,7 @@ theorem fineOf_pathVertex (edge : Fin p) (position : spec.PathPosition edge) :
 
 /-- Push a coarse divisor forward along `fineOf`: the chips stay on the images
 of the coarse vertices and every other fine vertex carries none. -/
+@[expose]
 def embed (D : CFDiv spec.graph) : CFDiv (spec.scale N hN).graph :=
   fun y => ∑ x : spec.Vertex, if spec.fineOf N hN x = y then D x else 0
 
@@ -265,6 +268,7 @@ namespace Chip
 variable {spec N}
 
 /-- The fine position of a chip: offset `N * step + offset` along its slot. -/
+@[expose]
 def finePosition (c : spec.Chip N) : (spec.scale N hN).PathPosition c.edge :=
   ⟨N * c.step + c.offset, by
     have h1 : N * (c.step + 1) ≤ N * spec.length c.edge :=
@@ -275,25 +279,30 @@ def finePosition (c : spec.Chip N) : (spec.scale N hN).PathPosition c.edge :=
     omega⟩
 
 /-- The fine vertex carrying the chip. -/
+@[expose]
 def fineVertex (c : spec.Chip N) : (spec.scale N hN).Vertex :=
   (spec.scale N hN).pathVertex c.edge (c.finePosition hN)
 
 /-- The coarse step containing the chip. -/
+@[expose]
 def coarseStep (c : spec.Chip N) : spec.Step :=
   ⟨c.edge, ⟨c.step, c.step_lt⟩⟩
 
 /-- The coarse vertex the chip is rounded to. -/
+@[expose]
 def coarseVertex (c : spec.Chip N) : spec.Vertex :=
   if c.toRight then spec.stepRight c.edge ⟨c.step, c.step_lt⟩
   else spec.stepLeft c.edge ⟨c.step, c.step_lt⟩
 
 /-- The fine distance from the chip to the coarse vertex it is rounded to. -/
+@[expose]
 def distance (c : spec.Chip N) : ℕ :=
   if c.toRight then N - c.offset else c.offset
 
 /-- The signed rounding cost: positive when rounding right, negative when
 rounding left.  Adding it to the fine height at the right end of the step
 plays the role of moving the chip. -/
+@[expose]
 def signedCost (c : spec.Chip N) : ℤ :=
   if c.toRight then (N : ℤ) - (c.offset : ℤ) else -(c.offset : ℤ)
 
@@ -344,11 +353,13 @@ theorem fineVertex_not_mem_range (c : spec.Chip N) :
 end Chip
 
 /-- The fine divisor of a family of chips. -/
+@[expose]
 def fineChips {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) :
     CFDiv (spec.scale N hN).graph :=
   ∑ i, oneChip ((chips i).fineVertex hN)
 
 /-- The rounded coarse divisor of a family of chips. -/
+@[expose]
 def coarseChips {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) : CFDiv spec.graph :=
   ∑ i, oneChip (chips i).coarseVertex
 
@@ -362,6 +373,7 @@ def fineValue (σ : firingScript (spec.scale N hN).graph) (edge : Fin p) (j : �
   else 0
 
 /-- The fine slope across fine step `j` of slot `edge`. -/
+@[expose]
 def fineSlope (σ : firingScript (spec.scale N hN).graph) (edge : Fin p) (j : ℕ) : ℤ :=
   spec.fineValue N hN σ edge (j + 1) - spec.fineValue N hN σ edge j
 
@@ -383,6 +395,7 @@ def roundedScript (κ : Fin N) (σ : firingScript (spec.scale N hN).graph) :
 
 /-- The coarse slope of the rounded script across coarse step `k` of slot
 `edge`. -/
+@[expose]
 def roundedSlope (κ : Fin N) (σ : firingScript (spec.scale N hN).graph)
     (edge : Fin p) (k : ℕ) : ℤ :=
   round N κ (spec.fineValue N hN σ edge (N * (k + 1))) -
@@ -403,19 +416,23 @@ theorem isStepSlope_roundedSlope (κ : Fin N)
 /-! ## The step inequality -/
 
 /-- The chips of a family lying in a given coarse step. -/
+@[expose]
 def stepChips {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (step : spec.Step) :
     Finset ι :=
   Finset.univ.filter fun i => (chips i).coarseStep = step
 
 /-- The number of chips of a step rounded to its left end. -/
+@[expose]
 def leftCount {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (step : spec.Step) : ℤ :=
   ((spec.stepChips N chips step).filter fun i => (chips i).toRight = false).card
 
 /-- The number of chips of a step rounded to its right end. -/
+@[expose]
 def rightCount {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (step : spec.Step) : ℤ :=
   ((spec.stepChips N chips step).filter fun i => (chips i).toRight = true).card
 
 /-- The total signed rounding cost of the chips of a step. -/
+@[expose]
 def stepCost {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (step : spec.Step) : ℤ :=
   ∑ i ∈ spec.stepChips N chips step, (chips i).signedCost
 

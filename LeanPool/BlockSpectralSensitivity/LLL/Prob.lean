@@ -35,7 +35,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda.LLL
 
@@ -122,7 +122,7 @@ theorem pr_le_of_subset_biUnion {κ : Type*} {E : Finset (Cfg β)}
 end Additivity
 
 /-- `E` depends only on the coordinates in `S`. -/
-def Determined (S : Finset A) (E : Finset (Cfg β)) : Prop :=
+@[expose] def Determined (S : Finset A) (E : Finset (Cfg β)) : Prop :=
   ∀ ω ω' : Cfg β, (∀ a ∈ S, ω a = ω' a) → (ω ∈ E ↔ ω' ∈ E)
 
 section Determined

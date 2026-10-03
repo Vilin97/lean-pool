@@ -41,7 +41,7 @@ topology once
 the Milner hypothesis is in place.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 

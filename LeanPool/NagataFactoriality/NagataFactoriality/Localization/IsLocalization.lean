@@ -15,7 +15,7 @@ public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSe
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NagataFactoriality
 

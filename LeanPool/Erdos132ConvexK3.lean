@@ -28,7 +28,7 @@ Tags: discrete-geometry, distance-graphs, erdos-problems, convexity
 MSC: 52C10, 05C12
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132

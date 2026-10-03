@@ -11,7 +11,7 @@ import Mathlib.Tactic.Bound.Init
 
 /-! # Coding -/
 
-@[expose] public section
+public section
 
 
 namespace LO

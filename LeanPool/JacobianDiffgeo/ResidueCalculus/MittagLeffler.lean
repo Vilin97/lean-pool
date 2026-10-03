@@ -33,7 +33,7 @@ Main exports: `RS.PrincipalPartData`, `RS.PrincipalPartData.Realizes`,
 interface.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -79,6 +79,7 @@ def principalPartCarrier (U : Set ℂ) : Submodule ℂ (ℂ → (ℤ →₀ ℂ)
 
 /-- A Mittag-Leffler datum of principal parts on `U ⊆ ℂ`: at finitely many points, a finite tail
 of negative-exponent Laurent coefficients. -/
+@[expose]
 def PrincipalPartData (U : Set ℂ) : Type := ↥(principalPartCarrier U)
 
 namespace PrincipalPartData
@@ -105,14 +106,15 @@ def mk' (coeff : ℂ → (ℤ →₀ ℂ)) (coeff_neg : ∀ p, ∀ k ∈ (coeff 
   ⟨coeff, coeff_neg, mem_of_ne_zero, finite_support⟩
 
 @[simp] theorem coeff_mk' (coeff) (coeff_neg) (mem_of_ne_zero) (finite_support) :
-    (mk' coeff coeff_neg mem_of_ne_zero finite_support : PrincipalPartData U).coeff = coeff := rfl
+    (mk' coeff coeff_neg mem_of_ne_zero finite_support : PrincipalPartData U).coeff = coeff := by
+  rfl
 
-@[simp] theorem coeff_zero : (0 : PrincipalPartData U).coeff = 0 := rfl
+@[simp] theorem coeff_zero : (0 : PrincipalPartData U).coeff = 0 := by rfl
 @[simp] theorem coeff_add (D E : PrincipalPartData U) :
-    (D + E).coeff = D.coeff + E.coeff := rfl
-@[simp] theorem coeff_neg_fun (D : PrincipalPartData U) : (-D).coeff = -D.coeff := rfl
+    (D + E).coeff = D.coeff + E.coeff := by rfl
+@[simp] theorem coeff_neg_fun (D : PrincipalPartData U) : (-D).coeff = -D.coeff := by rfl
 @[simp] theorem coeff_smul (c : ℂ) (D : PrincipalPartData U) :
-    (c • D).coeff = c • D.coeff := rfl
+    (c • D).coeff = c • D.coeff := by rfl
 
 /-- `f` realizes the datum on `U`: meromorphic with exactly these principal parts. -/
 def Realizes (f : ℂ → ℂ) (D : PrincipalPartData U) : Prop :=

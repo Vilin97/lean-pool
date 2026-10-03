@@ -32,7 +32,7 @@ roots `sⱼ` in `F`; K06 gives a scaffold of rank `n` with constant `K₀`; E02 
 M01(c) converts the exponent.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

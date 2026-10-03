@@ -17,7 +17,7 @@ actual nonlinear fluxes and differential residuals are consequences.
 Base coefficients need smoothness and periodicity only at positive radii.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanStateRegularity
@@ -38,10 +38,12 @@ abbrev Scalar := MeanIncrementBounds.Field Point
 abbrev Tensor := Fin 3 → Fin 3 → Scalar
 
 /-- Periodicity on the entire fast torus at each allowed slow point. -/
+@[expose]
 noncomputable def Periodic (U : Set Plane) (f : Scalar) : Prop :=
   ∀ n, PhysicalMeanDomain.PeriodicOn U (f n)
 
 /-- A background coefficient is only used at positive physical radii. -/
+@[expose]
 noncomputable def PositivePeriodic (U : Set Plane) (f : Scalar) : Prop :=
   ∀ n R, 0 < R → ∀ s, s ∈ U →
     FourierAlias.TorusPeriodic (fun Y => f n (R, (s, Y)))

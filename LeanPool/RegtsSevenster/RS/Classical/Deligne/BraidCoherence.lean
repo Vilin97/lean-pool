@@ -21,7 +21,7 @@ adjacent pair of crossings `β_ Q R ≫ β_ R Q` cancels by the symmetry
 axiom, and the residual pure-associator words close by coherence.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

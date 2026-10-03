@@ -31,7 +31,7 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.Subfield.Splitting`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

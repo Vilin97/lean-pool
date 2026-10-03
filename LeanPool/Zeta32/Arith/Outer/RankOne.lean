@@ -12,7 +12,7 @@ all nodes p-integral, nodes in one class pairwise congruent mod p, v_p(gamma_{c,
 and w_c nondecreasing in t:
   v_p(det H) >= sum_c sum_{k<C c} min(w_{c,k} + 2k, 0). -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 

@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.H6TransportSource
 
 /-! Actual four-dimensional velocity fields assembled from bounded vector functionals. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,12 +26,12 @@ open MeasureTheory EulerSobolev EulerLiftedGradientSpace EulerMetricTransport
 open scoped ContDiff ENNReal Topology
 
 /-- Assemble the four actual cylinder-velocity components as a bounded linear map. -/
-def velocityMap (L : Fin 4 → Vector3 →L[ℝ] ℝ) : Vector3 →L[ℝ] Domain 4 :=
+@[expose] def velocityMap (L : Fin 4 → Vector3 →L[ℝ] ℝ) : Vector3 →L[ℝ] Domain 4 :=
   (EuclideanSpace.equiv (𝕜 := ℝ) (ι := Fin 4)).symm.toContinuousLinearMap.comp
       (ContinuousLinearMap.pi L)
 
 @[simp] theorem velocityMap_apply (L : Fin 4 → Vector3 →L[ℝ] ℝ) (z : Vector3) (i : Fin 4) :
-    velocityMap L z i = L i z := rfl
+    velocityMap L z i = L i z := by rfl
 
 variable (period : ℝ) [Fact (0 < period)]
 

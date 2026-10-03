@@ -20,7 +20,7 @@ every odd `k` coprime to `n`, `D_(2^k+1)` and `D_3` have equal sums against any
 function on `GF(2^n)`, even at the odd-dimensional bad residue `k ≡ 3 (mod 6)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

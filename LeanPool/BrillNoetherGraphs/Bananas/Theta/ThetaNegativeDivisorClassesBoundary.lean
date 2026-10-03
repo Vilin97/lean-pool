@@ -18,7 +18,7 @@ excluded terminal-near positions are precisely the all-submodular cases of
 Corollary 3.6.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

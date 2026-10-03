@@ -19,7 +19,7 @@ tangent solution after multiplication by F R.  Consequently a physical
 propagator estimate supplies H3 with only the explicit F and F⁻¹ factors,
 preserving exactly the time-profile ratio. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -65,7 +65,7 @@ abbrev fundamental := fundamentalPath D.T D.T_pos.le
   (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower)
 
 /-- Propagator, given by `((fundamental D).forward t x).comp ((fundamental D).backward s x)`. -/
-def propagator (t s : Icc (0 : ℝ) D.T) (x : Space) : U →L[ℝ] U :=
+@[expose] def propagator (t s : Icc (0 : ℝ) D.T) (x : Space) : U →L[ℝ] U :=
   ((fundamental D).forward t x).comp ((fundamental D).backward s x)
 
 /-- Coordinate, given by `extendPath D.T D.T_pos.le (fundamental D).forward t x ((fundamental
@@ -79,7 +79,7 @@ def physical (s : Icc (0 : ℝ) D.T) (x : Space) (v : U) (t : ℝ) : Space :=
 
 /-- Physical rhs, given by `-(D.M.field t x) w + (2*⟪D.normal.field t x,(D.M.field t x)
 w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x`. -/
-def physicalRhs (t : Icc (0 : ℝ) D.T) (x w : Space) : Space :=
+@[expose] def physicalRhs (t : Icc (0 : ℝ) D.T) (x w : Space) : Space :=
   -(D.M.field t x) w +
     (2*⟪D.normal.field t x,(D.M.field t x) w⟫_ℝ/‖D.normal.field t x‖^2) • D.normal.field t x
 
@@ -134,9 +134,8 @@ theorem physical_hasDerivWithinAt (s t : Icc (0 : ℝ) D.T) (x : Space) (v : U) 
     exact (not_le_of_gt D.normalLower_pos) hn
   have he : gram (D.frame.field t x) b =
       (D.frame.field t x).adjoint (0-(2 : ℝ) • D.frameDerivative.field t x a) := by
-    change gram (D.frame.field t x) ((-2 : ℝ) •
-      gramInverse (D.frame.field t x) D.frameLower D.frameLower_pos (D.frame_lower t x)
-        ((D.frame.field t x).adjoint (D.frameDerivative.field t x a))) = _
+    simp only [b, sourceGenerator, EulerBoundedFieldForwardGenerator.generatorPath_apply,
+      smul_apply, comp_apply]
     rw [map_smul,gram_inverse_apply,map_sub,map_zero,map_smul]
     module
   have hb := physical_velocity_balance (D.frame.field t x) (D.frameDerivative.field t x)
@@ -151,7 +150,7 @@ theorem physical_hasDerivWithinAt (s t : Icc (0 : ℝ) D.T) (x : Space) (v : U) 
 
 /-- A physical growth assertion is tested only on genuine solutions of
 the literal tangent ODE, with the actual transported normal. -/
-def PhysicalGrowth (S : Set Space) (g : Icc (0 : ℝ) D.T → ℝ) (C : ℝ) : Prop :=
+@[expose] def PhysicalGrowth (S : Set Space) (g : Icc (0 : ℝ) D.T → ℝ) (C : ℝ) : Prop :=
   ∀ x ∈ S, ∀ w : ℝ → Space,
     (∀ t : Icc (0 : ℝ) D.T, HasDerivWithinAt w (physicalRhs D t x (w t)) (Icc (0 : ℝ) D.T) t) →
     ⟪D.normal.field ⟨0,le_rfl,D.T_pos.le⟩ x,w 0⟫_ℝ = 0 →

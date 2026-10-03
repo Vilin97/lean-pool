@@ -36,7 +36,7 @@ Hilbert sum.  The construction selects its onto branch only when process-measura
 the separable ambient space, so unrelated ambient randomness is never absorbed into the tower.
 -/
 
-@[expose] public section
+public section
 
 namespace Malliavin
 
@@ -449,6 +449,7 @@ end Step
 
 /-- Product of increments along a chain `u 0 ≤ v 0 ≤ u 1 ≤ v 1 ≤ …`: the intended
 ordered-box value in a Brownian-linked iterated-integral family. -/
+@[expose]
 def chainIntegral {n : ℕ} (W : ℝ≥0 → Ω → ℝ) (u v : Fin n → ℝ≥0) : Ω → ℝ :=
   fun x => ∏ i, (W (v i) x - W (u i) x)
 
@@ -476,6 +477,7 @@ lemma measurableEmbedding_nnrealCoe_iterated :
   NNReal.isClosedEmbedding_coe.measurableEmbedding
 
 /-- Lebesgue measure on `ℝ≥0`, obtained by pulling real Lebesgue measure back along coercion. -/
+@[expose]
 noncomputable def nonnegativeLebesgueMeasure : Measure ℝ≥0 :=
   Measure.comap ((↑) : ℝ≥0 → ℝ) (volume : Measure ℝ)
 
@@ -526,6 +528,7 @@ abbrev processMeasurableSpace (B : ℝ≥0 → Ω' → ℝ) : MeasurableSpace Ω
 /-- Exact sigma-algebra generation by a process.  This is the no-extra-randomness formulation
 used by downstream ambient-`L²` results; equality modulo null sets would be a weaker
 alternative. -/
+@[expose]
 def IsWienerGenerated (B : ℝ≥0 → Ω' → ℝ) : Prop :=
   processMeasurableSpace B = ‹MeasurableSpace Ω'›
 
@@ -685,7 +688,7 @@ lemma restrictedSimplexMeasure_le (n : ℕ) :
       (iteratedKernelMeasure n).restrict (simplex ℝ≥0 n) ≤ iteratedKernelMeasure n)
 
 /-- Restrict an L² kernel to the strictly ordered simplex. -/
-noncomputable def restrictToSimplex (n : ℕ) :
+@[expose] noncomputable def restrictToSimplex (n : ℕ) :
     IteratedKernel n →L[ℝ] SimplexKernel n := by
   exact Lp.LpToLpOfMeasureLeSMul (p := (2 : ℝ≥0∞)) (c := 1)
     (by norm_num) (by exact restrictedSimplexMeasure_le n)
@@ -772,6 +775,7 @@ private lemma coeFn_zeroExtendSimplex (n : ℕ) (g : SimplexKernel n) :
   MemLp.coeFn_toLp (memLp_zeroExtension n g)
 
 /-- Symmetrize a product kernel and then restrict it to the strict simplex. -/
+@[expose]
 noncomputable def symmetrizeRestrict (n : ℕ) :
     IteratedKernel n →L[ℝ] SimplexKernel n := by
   exact (restrictToSimplex n).comp
@@ -1191,6 +1195,7 @@ private noncomputable def l2CongrLeft {ι κ : Type*} (e : ι ≃ κ) :
       (e.symm.tsum_eq (fun i ↦ ‖f i‖ ^ (2 : ℝ≥0∞).toReal))
 
 /-- The constant-one vector in `L²(P)` for the probability measure supplied by `hB`. -/
+@[expose]
 noncomputable def probabilityOne (hB : IsPreBrownianReal B P) : RandomL2 P := by
   let _ : IsProbabilityMeasure P := hB.isGaussianProcess.isProbabilityMeasure
   exact indicatorConstLp 2 MeasurableSet.univ (measure_ne_top P Set.univ) (1 : ℝ)
@@ -1298,6 +1303,7 @@ theorem positiveIteratedTowerLI_surjective_of_generated
 
 -- Compiles at default 200k heartbeats (override removed).
 /-- Insert one positive-order simplex kernel into the orthogonal sum of all positive orders. -/
+@[expose]
 noncomputable def singleKernelLI (n : ℕ) :
     SimplexKernel (n + 1) →ₗᵢ[ℝ] PositiveKernelSum where
   toLinearMap := lp.lsingle (𝕜 := ℝ)
@@ -1306,6 +1312,7 @@ noncomputable def singleKernelLI (n : ℕ) :
     (p := (2 : ℝ≥0∞)) (by norm_num) n f
 
 /-- The isometric inclusion of one positive simplex order into ambient `L²(P)`. -/
+@[expose]
 noncomputable def simplexIntegralLI (hB : IsPreBrownianReal B P) (n : ℕ) :
     SimplexKernel (n + 1) →ₗᵢ[ℝ] RandomL2 P :=
   (CenteredRandomL2 hB).subtypeₗᵢ.comp
@@ -1334,6 +1341,7 @@ theorem hasSum_simplexIntegralLI (hB : IsPreBrownianReal B P) (f : PositiveKerne
   · rfl
 
 /-- Restrict a positive-order kernel to its simplex and apply the selected isometric tower. -/
+@[expose]
 noncomputable def positiveIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel (n + 1) →L[ℝ] RandomL2 P :=
   (simplexIntegralLI hB n).toContinuousLinearMap.comp (restrictToSimplex (n + 1))
@@ -1393,6 +1401,7 @@ private theorem norm_positiveIntegralCLM_le (hB : IsPreBrownianReal B P) (n : �
 
 /-- The iterated-integral operator, using the constant kernel at order zero
 and simplex kernels above zero. -/
+@[expose]
 noncomputable def integralCLM (hB : IsPreBrownianReal B P) :
     (n : ℕ) → IteratedKernel n →L[ℝ] RandomL2 P
   | 0 => zeroIntegralCLM hB
@@ -1446,6 +1455,7 @@ private theorem integralCLM_norm_le (hB : IsPreBrownianReal B P)
   | succ n => exact norm_positiveIntegralCLM_le hB n f
 
 /-- A law-level iterated-integral family obtained from the global positive kernel tower. -/
+@[expose]
 noncomputable def family (hB : IsPreBrownianReal B P) : IteratedIntegralFamily P where
   integral := integralCLM hB
   sameOrder := by exact integralCLM_sameOrder hB
@@ -1461,11 +1471,13 @@ end IteratedIntegralConstruction
 Restriction to each simplex is a contraction.  The external sum of all positive orders embeds
 isometrically in centered `L²(P)`.  It is selected to be onto only when process-measurable `L²`
 exhausts a separable ambient space; order zero is the constant embedding. -/
+@[expose]
 noncomputable def iteratedIntegralFamily
     (hB : IsPreBrownianReal B P) : IteratedIntegralFamily P :=
   IteratedIntegralConstruction.family hB
 
 /-- `Jₙ`, the selected order-`n` law-level operator, as a continuous linear map. -/
+@[expose]
 noncomputable def iteratedIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel n →L[ℝ] RandomL2 P :=
   (iteratedIntegralFamily hB).integral n

@@ -18,7 +18,7 @@ equivalence — the change of variables underlying the simplex-sector
 conversion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -207,6 +207,7 @@ The ordered finite simplex in `Fin n` coordinates, including the ambient
 closed cube bounds.  This is the coordinate target for arbitrary canonical
 orders.
 -/
+@[expose]
 def orderedFinSimplex (n : ℕ) : Set (Fin n → ℝ) :=
   {ts | (∀ i, 0 ≤ ts i ∧ ts i ≤ 1) ∧
     OrderedSimplexParams 1 (List.ofFn ts)}

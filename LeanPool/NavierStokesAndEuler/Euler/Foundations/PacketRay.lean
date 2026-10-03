@@ -20,7 +20,7 @@ The triangular ray system and its perturbation estimates.  These results
 derive ray closeness from the differential equations and coefficient errors.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,7 @@ open Set Filter Real EulerPacketPerturbation
 open scoped Topology
 
 /-- The sum norm of three scalar coordinates. -/
-def norm3 (p q n : ℝ) : ℝ := |p| + |q| + |n|
+@[expose] def norm3 (p q n : ℝ) : ℝ := |p| + |q| + |n|
 
 /-- Exact Duhamel formulas for the triangular ray system. -/
 theorem triangular_ray_formula
@@ -391,21 +391,21 @@ theorem ray_closeness_of_coefficient_error
   linarith
 
 /-- The skew matrix of the moving orthonormal frame in the source. -/
-def frameSkew (B : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) : ℝ :=
+@[expose] def frameSkew (B : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) : ℝ :=
   if i = 0 then (if j = 1 then B 0 1 else if j = 2 then B 0 2 else 0)
   else if i = 1 then (if j = 0 then -B 0 1 else if j = 2 then B 2 1 else 0)
   else if j = 0 then -B 0 2 else if j = 1 then -B 2 1 else 0
 
 /-- The older gradient plus rank-one parent shear and error. -/
-def parentEntry (B E : Fin 3 → Fin 3 → ℝ) (h : ℝ) (i j : Fin 3) : ℝ :=
+@[expose] def parentEntry (B E : Fin 3 → Fin 3 → ℝ) (h : ℝ) (i j : Fin 3) : ℝ :=
   B i j + E i j + (if i = 1 ∧ j = 0 then h else 0)
 
 /-- Coordinate scaling for the normalized ray. -/
-def rayScale (ε : ℝ) (i : Fin 3) : ℝ := if i = 1 then ε else 1
+@[expose] def rayScale (ε : ℝ) (i : Fin 3) : ℝ := if i = 1 then ε else 1
 
 /-- Coefficients after the moving-frame transformation and the scaling
 `m/s₀=(P,εQ,N)`, `dt/dτ=ε/a`. -/
-noncomputable def scaledRayEntry (a ε : ℝ) (M S : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) : ℝ :=
+@[expose] noncomputable def scaledRayEntry (a ε : ℝ) (M S : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) : ℝ :=
   -(ε / a) * (rayScale ε j / rayScale ε i) * (M j i - S j i)
 
 /-- The scaled moving-frame ray entries in normalized coefficients. -/
@@ -515,10 +515,10 @@ theorem abs_product_difference
       (mul_le_mul hc hb (abs_nonneg _) hA)
 
 /-- The third velocity coordinate imposed by ray orthogonality. -/
-noncomputable def velocityThird (P Q N U V : ℝ) : ℝ := -(P * U + Q * V) / N
+@[expose] noncomputable def velocityThird (P Q N U V : ℝ) : ℝ := -(P * U + Q * V) / N
 
 /-- Squared norm of the scaled ray. -/
-def rayDenominator (ε P Q N : ℝ) : ℝ := P ^ 2 + ε ^ 2 * Q ^ 2 + N ^ 2
+@[expose] def rayDenominator (ε P Q N : ℝ) : ℝ := P ^ 2 + ε ^ 2 * Q ^ 2 + N ^ 2
 
 /-- Elimination of the third velocity component and the denominator estimate
 are consequences of the proved ray error. -/
@@ -614,12 +614,13 @@ def normalizedVelocityEntry (ε H α κ : ℝ) (B E : Fin 3 → Fin 3 → ℝ)
     else if j = 1 then κ + E 2 1 else B 2 2 + ε * E 2 2
 
 /-- The ideal scaled parent action on velocity coordinates. -/
+@[expose]
 def idealVelocityEntry (β : ℝ) (i j : Fin 3) : ℝ :=
   if (i = 0 ∧ j = 1) ∨ (i = 1 ∧ j = 0) then 1
   else if i = 2 ∧ j = 1 then β else 0
 
 /-- Parent-gradient entries after ray and velocity rescaling. -/
-noncomputable def scaledVelocityEntry (a ε : ℝ) (M : Fin 3 → Fin 3 → ℝ)
+@[expose] noncomputable def scaledVelocityEntry (a ε : ℝ) (M : Fin 3 → Fin 3 → ℝ)
     (i j : Fin 3) : ℝ :=
   (if i = 1 then ε else 1) * (if j = 1 then 1 else ε) * M i j / a
 
@@ -681,7 +682,7 @@ theorem normalized_velocity_entry_error
       e01, e21, eε00, eε02, eε11, eε20, eε22, eε210, eε212, hHb, hαb, hκb]
 
 /-- The scalar pressure numerator in the scaled coordinates. -/
-def velocityNumerator (A : Fin 3 → Fin 3 → ℝ) (P Q N U V W : ℝ) : ℝ :=
+@[expose] def velocityNumerator (A : Fin 3 → Fin 3 → ℝ) (P Q N U V W : ℝ) : ℝ :=
   P * (A 0 0 * U + A 0 1 * V + A 0 2 * W) +
   Q * (A 1 0 * U + A 1 1 * V + A 1 2 * W) +
   N * (A 2 0 * U + A 2 1 * V + A 2 2 * W)
@@ -768,7 +769,7 @@ def normalizedUnprojectedEntry (ε H α : ℝ) (B E : Fin 3 → Fin 3 → ℝ)
     else ε * B 1 2 + ε * B 2 1 + ε ^ 2 * E 1 2
 
 /-- Ideal entries of the unprojected two-component velocity equation. -/
-def idealUnprojectedEntry (i j : Fin 3) : ℝ :=
+@[expose] def idealUnprojectedEntry (i j : Fin 3) : ℝ :=
   if i = 0 then (if j = 1 then 2 else 0) else if j = 0 then 1 else 0
 
 /-- Exact first and second rows of the moving-frame velocity operator. -/
@@ -924,14 +925,14 @@ theorem velocity_projection_error
   linarith only [hU, hV]
 
 /-- The first normalized velocity equation with pressure projection. -/
-noncomputable def velocityFirstRhs
+@[expose] noncomputable def velocityFirstRhs
     (A C : Fin 3 → Fin 3 → ℝ) (ε P Q N U V : ℝ) : ℝ :=
   let W := velocityThird P Q N U V;
   -(C 0 0 * U + C 0 1 * V + C 0 2 * W) +
     2 * P * velocityNumerator A P Q N U V W / rayDenominator ε P Q N
 
 /-- The second normalized velocity equation with pressure projection. -/
-noncomputable def velocitySecondRhs
+@[expose] noncomputable def velocitySecondRhs
     (A C : Fin 3 → Fin 3 → ℝ) (ε P Q N U V : ℝ) : ℝ :=
   let W := velocityThird P Q N U V;
   -(C 1 0 * U + C 1 1 * V + C 1 2 * W) +

@@ -23,7 +23,7 @@ stated for an arbitrary spatial set and an arbitrary time set; no geometry of a
 ball or a backward time window is used.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

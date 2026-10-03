@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Finite-family viscous metric energy for actual finite Sobolev solutions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -70,10 +70,11 @@ theorem finite_sobolev_viscous_energy {ι : Type*} [Fintype ι] {q : ℕ} (hq : 
   have htL (i : ι) : |⟪(K t).operator (value period (e i t)),
       transportOperator period hq κ m z (restrictOperator period (by
           norm_num : 1 ≤ 2) (e i t))⟫_ℝ| ≤
-      β * ‖value period (e i t)‖ ^ 2 :=
-    metric_transport_bound period hq κ m (K t) z (restrictOperator period (by
-        norm_num : 1 ≤ 2) (e i t))
-      hsym hz B hzB
+      β * ‖value period (e i t)‖ ^ 2 := by
+    have hbound := metric_transport_bound period hq κ m (K t) z
+      (restrictOperator period (by norm_num : 1 ≤ 2) (e i t)) hsym hz B hzB
+    rw [value_restrictOperator] at hbound
+    exact hbound
   have hheat (i : ι) : ⟪(K t).operator (value period (e i t)), jetLaplacian period (toJet period (e
       i t))⟫_ℝ ≤
       C * ‖value period (e i t)‖ ^ 2 := by

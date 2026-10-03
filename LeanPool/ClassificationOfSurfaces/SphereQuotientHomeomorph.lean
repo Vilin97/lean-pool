@@ -21,7 +21,7 @@ the descended map is bijective and hence, by compactness of the source and the H
 of the target, a homeomorphism with `SphereRepresentative`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -64,6 +64,7 @@ theorem mem_sphere_of_hemisphereHeight_eq_zero {n : ℕ} (z : PolygonCell n)
   nlinarith [norm_nonneg z.val]
 
 /-- The horizontal coordinates of a point on the standard sphere, regarded as a disk point. -/
+@[expose]
 noncomputable def sphereDiskPoint (x : SphereRepresentative) : PolygonCell 1 :=
   ⟨Complex.mk (x.val 0) (x.val 1), by
     rw [Metric.mem_closedBall, Complex.dist_eq, sub_zero]
@@ -145,6 +146,7 @@ theorem spherePreMap_eq_of_gluingRel
   | trans _ _ _ _ _ hxy hyz => exact hxy.trans hyz
 
 /-- The continuous sphere map descended from the two monogon faces to their polygonal quotient. -/
+@[expose]
 noncomputable def sphereQuotientMap :
     C(sphere.PolygonalRealization sphere_occurrencePairingValid, SphereRepresentative) where
   toFun := Quotient.lift spherePreMap fun _ _ hxy ↦ spherePreMap_eq_of_gluingRel hxy
@@ -258,6 +260,7 @@ theorem sphereQuotientMap_bijective : Function.Bijective sphereQuotientMap :=
   ⟨sphereQuotientMap_injective, sphereQuotientMap_surjective⟩
 
 /-- The underlying equivalence of the two-monogon quotient with the standard sphere. -/
+@[expose]
 noncomputable def spherePolygonalRealizationEquiv :
     sphere.PolygonalRealization sphere_occurrencePairingValid ≃ SphereRepresentative :=
   Equiv.ofBijective sphereQuotientMap sphereQuotientMap_bijective
@@ -269,6 +272,7 @@ theorem spherePolygonalRealizationEquiv_apply
   rfl
 
 /-- The polygonal realization of the two-monogon presentation is the standard two-sphere. -/
+@[expose]
 noncomputable def spherePolygonalRealizationHomeomorph :
     sphere.PolygonalRealization sphere_occurrencePairingValid ≃ₜ SphereRepresentative :=
   Continuous.homeoOfEquivCompactToT2

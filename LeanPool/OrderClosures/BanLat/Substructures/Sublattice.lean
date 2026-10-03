@@ -27,7 +27,7 @@ them in terms of sup- and inf-closures, and records the induced normed vector
 lattice structure on closed sublattices.
 -/
 
-@[expose] public section
+public section
 
 variable {X : Type*} [AddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
   [VectorLattice X]
@@ -106,6 +106,7 @@ theorem smul_mem_infClosure_of_smulClosed {s : Set X}
   exact infClosure_min hsub h_ic hx
 
 /-- The sup-closure of a pointed cone is a pointed cone. -/
+@[expose]
 def supClosure (C : PointedCone ℝ X) : PointedCone ℝ X where
   carrier := _root_.supClosure (C : Set X)
   zero_mem' := subset_supClosure C.zero_mem
@@ -118,6 +119,7 @@ theorem coe_supClosure (C : PointedCone ℝ X) :
     (supClosure C : Set X) = _root_.supClosure (C : Set X) := rfl
 
 /-- The inf-closure of a pointed cone is a pointed cone. -/
+@[expose]
 def infClosure (C : PointedCone ℝ X) : PointedCone ℝ X where
   carrier := _root_.infClosure (C : Set X)
   zero_mem' := subset_infClosure C.zero_mem
@@ -187,6 +189,7 @@ private theorem posPart_mem_of_absClosed (M : Submodule ℝ X)
   exact M.smul_mem _ (M.add_mem hx (h x hx))
 
 /-- Build a `VectorSublattice` from a submodule closed under `|·|`. -/
+@[expose]
 def ofAbsClosed (M : Submodule ℝ X)
     (h : ∀ x : X, x ∈ M → |x| ∈ M) : VectorSublattice X where
   toSubmodule := M
@@ -729,6 +732,7 @@ instance instNormedVectorLatticeSubtype :
 
 /-- The closure of a vector sublattice in a normed vector lattice is again a
 vector sublattice. -/
+@[expose]
 noncomputable def topologicalClosure (Y : VectorSublattice X) : VectorSublattice X where
   toSubmodule := Y.toSubmodule.topologicalClosure
   sup_mem' := fun {x y} hx hy => by

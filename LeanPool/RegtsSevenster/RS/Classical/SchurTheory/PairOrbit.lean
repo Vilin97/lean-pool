@@ -16,7 +16,7 @@ classes (transported along `finProdFinEquiv`), and the
 fibre-margin partition.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -25,6 +25,7 @@ open Finset Equiv
 variable {n k : ℕ}
 
 /-- The content multiset of a pair colouring. -/
+@[expose]
 def pairContent (p : Fin n → Fin k × Fin k) :
     Multiset (Fin k × Fin k) :=
   Finset.univ.val.map p

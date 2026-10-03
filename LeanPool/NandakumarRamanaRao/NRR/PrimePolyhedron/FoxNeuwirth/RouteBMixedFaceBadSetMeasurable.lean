@@ -20,7 +20,7 @@ projection is closed because the simplex is compact.  Hence the complete bad
 set is a countable union of closed sets.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

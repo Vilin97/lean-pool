@@ -25,7 +25,7 @@ longer needed: at the longer target the SUM disjunct alone covers every cell of 
 `55 ≤ n ≤ 122` (the EDGE disjunct was load-bearing exactly on `77 ≤ n ≤ 81` at the old target).
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

@@ -16,7 +16,7 @@ import Mathlib.Analysis.Fourier.Convolution
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ open MeasureTheory
 namespace NumberField.Odlyzko
 
 /-- A cosine transform used in the Odlyzko-bound argument. -/
-def Poitou.cosineTransform (f : ℝ → ℝ) (t : ℝ) : ℝ :=
+@[expose] def Poitou.cosineTransform (f : ℝ → ℝ) (t : ℝ) : ℝ :=
   ∫ x : ℝ, f x * Real.cos (t * x)
 
 /-- Conditions on a test function used in Poitou's explicit formula. -/

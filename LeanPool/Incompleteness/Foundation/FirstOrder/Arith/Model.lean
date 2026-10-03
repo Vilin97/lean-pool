@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # Model -/
 
-@[expose] public section
+public section
 
 
 namespace LO

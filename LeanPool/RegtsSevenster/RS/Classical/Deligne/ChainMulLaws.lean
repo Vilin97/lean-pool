@@ -20,7 +20,7 @@ interchange `tensorμ`.  Transports of chain stages along equalities
 of arities are packaged as `chainStageCast`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -36,6 +36,7 @@ variable {D : Type u}
 section StageCast
 
 /-- Transport of a chain stage along an equality of arities. -/
+@[expose]
 noncomputable def chainStageCast
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

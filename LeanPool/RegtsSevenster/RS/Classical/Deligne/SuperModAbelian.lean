@@ -44,7 +44,7 @@ identities, so each survives verbatim in a submodule and in a
 quotient.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -64,6 +64,7 @@ variable {A E F : Type*}
 
 /-- **The restriction of an action block** to a pair of submodules
 carried into one another by it. -/
+@[expose]
 def actRestrict [AddCommGroup A] [Module ℂ A] [AddCommGroup E] [Module ℂ E]
     [AddCommGroup F] [Module ℂ F]
     (φ : A →ₗ[ℂ] E →ₗ[ℂ] F) {p : Submodule ℂ E}
@@ -92,6 +93,7 @@ theorem actRestrict_coe
 
 /-- **The descent of an action block** to a pair of quotients, the
 first by a submodule carried by the block into the second. -/
+@[expose]
 def actQuot [AddCommGroup A] [Module ℂ A] [AddCommGroup E] [Module ℂ E]
     [AddCommGroup F] [Module ℂ F]
     (φ : A →ₗ[ℂ] E →ₗ[ℂ] F) {p : Submodule ℂ E}

@@ -16,7 +16,7 @@ instance from BanLat `Pi.lean`; the separate finite-dimensional normed products
 are outside the dependency closure of the order-adherence constructions.
 -/
 
-@[expose] public section
+public section
 
 /-! ### Pointwise product -/
 

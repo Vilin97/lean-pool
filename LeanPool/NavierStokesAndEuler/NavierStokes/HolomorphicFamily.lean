@@ -19,7 +19,7 @@ supremum-norm kernel paired with the supplied Banach-valued curve. This proves
 joint smoothness, rather than inferring it from separate smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.HolomorphicFamily
@@ -250,7 +250,7 @@ noncomputable def jointDerivative (a b : E) : ℝ × ℂ →L[ℝ] E :=
 
 omit [CompleteSpace E] in
 @[simp] theorem jointDerivative_apply (a b : E) (v : ℝ × ℂ) :
-    jointDerivative a b v = v.1 • a + v.2 • b := rfl
+    jointDerivative a b v = v.1 • a + v.2 • b := by rfl
 
 omit [CompleteSpace E] in
 /-- The radial partial derivative is obtained by evaluating the genuine

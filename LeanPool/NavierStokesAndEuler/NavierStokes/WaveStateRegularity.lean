@@ -18,7 +18,7 @@ domination of its genuine parameter derivatives. No covariance
 regularity or covariance formula is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,6 +33,7 @@ variable {D : Type} {ι : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Angular smooth, given by `∀ n i, ContDiffOn ℝ ∞ (fun p => u n p i)
 (HarmonicResidual.liftDomain Ω)`. -/
+@[expose]
 noncomputable def AngularSmooth (Ω : Set D) (u : Oscillation D) : Prop :=
   ∀ n i, ContDiffOn ℝ ∞ (fun p => u n p i) (HarmonicResidual.liftDomain Ω)
 
@@ -154,6 +155,7 @@ abbrev Point := GaugeDebtIncrement.Point
 
 /-- Wave support, given by `∀ n θ i, VariableGaugeMean.SupportedGauge a b
 (VariableGaugeMean.qLength coord) U.carrier (fun x => u n (x, θ) i)`. -/
+@[expose]
 noncomputable def WaveSupport {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord)
     (a b : ℝ) (u : Oscillation Point) : Prop :=
   ∀ n θ i, VariableGaugeMean.SupportedGauge a b (VariableGaugeMean.qLength coord)

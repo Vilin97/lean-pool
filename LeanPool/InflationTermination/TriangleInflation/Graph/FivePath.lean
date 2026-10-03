@@ -23,7 +23,7 @@ coordinates, and the analytic core of the bilocal inequality. Nothing in it chan
 seven statements below, which appear in their original form.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -36,6 +36,7 @@ variable {Γ : PairGraph} {t : ℕ}
 namespace FivePathAux
 
 /-- Identify a five-bit tuple with a Boolean assignment on five vertices. -/
+@[expose]
 def fiveEquiv : (Bool × Bool × Bool × Bool × Bool) ≃ (Fin 5 → Bool) where
   toFun p := ![p.1, p.2.1, p.2.2.1, p.2.2.2.1, p.2.2.2.2]
   invFun w := (w 0, w 1, w 2, w 3, w 4)
@@ -163,12 +164,16 @@ theorem bilocal_core (ν : Λ → ℝ) (ν' : Λ' → ℝ) (hν : IsLaw ν) (hν
 
 
 /-- The source edge joining vertices zero and one. -/
+@[expose]
 def E01 : fivePathGraph.Edge := ⟨s((0 : Fin 5), (1 : Fin 5)), by decide⟩
 /-- The source edge joining vertices one and two. -/
+@[expose]
 def E12 : fivePathGraph.Edge := ⟨s((1 : Fin 5), (2 : Fin 5)), by decide⟩
 /-- The source edge joining vertices two and three. -/
+@[expose]
 def E23 : fivePathGraph.Edge := ⟨s((2 : Fin 5), (3 : Fin 5)), by decide⟩
 /-- The source edge joining vertices three and four. -/
+@[expose]
 def E34 : fivePathGraph.Edge := ⟨s((3 : Fin 5), (4 : Fin 5)), by decide⟩
 
 theorem edge_cases (e : fivePathGraph.Edge) : e = E01 ∨ e = E12 ∨ e = E23 ∨ e = E34 := by

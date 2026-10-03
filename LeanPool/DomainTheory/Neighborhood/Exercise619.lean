@@ -55,7 +55,7 @@ continuous on maps, monotone and continuous on domains) is **Part B**, deferred.
 Everything here is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -72,7 +72,7 @@ variable {D₀ D₁ : NeighborhoodSystem Str}
 `1Y = embBit true Y`. -/
 
 /-- The master neighbourhood `{Λ} ∪ 0Δ₀ ∪ 1Δ₁` of the concrete sum. -/
-def sumTokMaster (D₀ D₁ : NeighborhoodSystem Str) : Set Str :=
+@[expose] def sumTokMaster (D₀ D₁ : NeighborhoodSystem Str) : Set Str :=
   insert [] (embBit false D₀.master ∪ embBit true D₁.master)
 
 theorem nil_mem_sumTokMaster : ([] : Str) ∈ sumTokMaster D₀ D₁ := Set.mem_insert _ _
@@ -107,6 +107,7 @@ master `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`, a left copy `0X` (`X ∈ 𝒟₀`), or a ri
 assumption `∅ ∉ 𝒟ᵢ` (`h₀`, `h₁`) makes the two tagged copies disjoint, so the
 system is closed under
 consistent intersection. -/
+@[expose]
 def sumTok (D₀ D₁ : NeighborhoodSystem Str)
     (h₀ : ∀ X, D₀.mem X → X.Nonempty) (h₁ : ∀ Y, D₁.mem Y → Y.Nonempty) :
     NeighborhoodSystem Str where
@@ -434,6 +435,7 @@ the basepoint, in contrast to the sum (where a proper neighbourhood refines
 exactly one summand). -/
 
 /-- A product neighbourhood `{Λ} ∪ 0X ∪ 1Y` over `{0,1}*`. -/
+@[expose]
 def prodTokNbhd (X Y : Set Str) : Set Str := insert [] (embBit false X ∪ embBit true Y)
 
 @[simp] theorem mem_prodTokNbhd_nil {X Y : Set Str} : ([] : Str) ∈ prodTokNbhd X Y :=
@@ -450,7 +452,7 @@ def prodTokNbhd (X Y : Set Str) : Set Str := insert [] (embBit false X ∪ embBi
   simp_all
 
 /-- `prodTokNbhd D₀.master D₁.master` is exactly the sum master `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`. -/
-theorem prodTokNbhd_master_eq : prodTokNbhd D₀.master D₁.master = sumTokMaster D₀ D₁ := rfl
+theorem prodTokNbhd_master_eq : prodTokNbhd D₀.master D₁.master = sumTokMaster D₀ D₁ := by rfl
 
 /-- Scott's (2) for the product: product neighbourhoods intersect componentwise. -/
 theorem prodTokNbhd_inter (X X' Y Y' : Set Str) :
@@ -489,6 +491,7 @@ Neighbourhoods are
 `{Λ} ∪ 0X ∪ 1Y` with `X ∈ 𝒟₀`, `Y ∈ 𝒟₁`. Closed under consistent intersection by
 Scott's (1)/(2)
 together with the factors' closure. -/
+@[expose]
 def prodTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
   mem W := ∃ X Y, D₀.mem X ∧ D₁.mem Y ∧ W = prodTokNbhd X Y
   master := prodTokNbhd D₀.master D₁.master
@@ -508,7 +511,7 @@ def prodTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
 theorem prodTok_mem_prodTokNbhd {X Y : Set Str} (hX : D₀.mem X) (hY : D₁.mem Y) :
     (prodTok D₀ D₁).mem (prodTokNbhd X Y) := ⟨X, Y, hX, hY, rfl⟩
 
-@[simp] theorem prodTok_master : (prodTok D₀ D₁).master = prodTokNbhd D₀.master D₁.master := rfl
+@[simp] theorem prodTok_master : (prodTok D₀ D₁).master = prodTokNbhd D₀.master D₁.master := by rfl
 
 /-- The concrete product is again `∅`-free (every neighbourhood contains `Λ`). -/
 theorem prodTok_nonempty : ∀ W, (prodTok D₀ D₁).mem W → W.Nonempty := by

@@ -15,7 +15,7 @@ for all `s, t ∈ C`, `t \ s` is equal to a disjoint union of finitely many sets
 THIS FILE IS NOT USED FOR THE MAIN RESULT
 -/
 
-@[expose] public section
+public section
 
 
 variable {α : Type*} {C : Set (Set α)} {s t : Set α} {J : Finset (Set α)}

@@ -21,7 +21,7 @@ Tags: learning-theory, probability, combinatorics, online-learning
 MSC: 68Q32, 68T05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

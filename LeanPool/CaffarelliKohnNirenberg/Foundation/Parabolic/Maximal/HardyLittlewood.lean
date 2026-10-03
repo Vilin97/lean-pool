@@ -19,7 +19,7 @@ theorem.  The covering argument follows the general metric-measure argument in
 under Apache 2.0.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -35,6 +35,7 @@ abbrev hardyLittlewoodParabolicMetricBall (z : ParabolicPoint) (r : ℝ) : Set P
   @Metric.ball ParabolicPoint parabolicPseudoMetricSpace z r
 
 /-- Uncentered Hardy–Littlewood maximal function over parabolic balls. -/
+@[expose]
 def parabolicMaximalFunction (f : ParabolicPoint → ℝ≥0∞) (z : ParabolicPoint) : ℝ≥0∞ :=
   ⨆ c : ParabolicPoint, ⨆ r : ℝ,
     (hardyLittlewoodParabolicMetricBall c r).indicator

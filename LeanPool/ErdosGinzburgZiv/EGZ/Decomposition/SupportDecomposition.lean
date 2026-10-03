@@ -17,7 +17,7 @@ decomposition on the given flag itself. Integer transitions preserving these
 supports imply face visibility, so visibility is not an extra input.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

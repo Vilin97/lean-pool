@@ -17,7 +17,7 @@ Only the ranks and integer support boxes enter the coordinate growth function
 and the prime threshold.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

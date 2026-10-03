@@ -16,13 +16,14 @@ between real Banach spaces carrying the invariant used by the transfinite
 construction.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
 open WithLp
 
 /-- The bent seed as a map into the genuine l-one Banach sum. -/
+@[expose]
 noncomputable def bentMapL1 (t : ℝ) : OneSum ℝ :=
   toLp 1 (bentMap t)
 
@@ -49,6 +50,7 @@ theorem bentMapL1_contraction :
   simpa using bentMap_contraction
 
 /-- Stage zero of the claim-14 recursion. -/
+@[expose]
 noncomputable def bentSeedStage : ProtectedStage ((1 : ℝ) / 2) where
   source := RealBanachSpace.ofType ℝ
   target := RealBanachSpace.ofType (OneSum ℝ)

@@ -23,7 +23,7 @@ As in `Nikodym.MultiQuadratic.Basis`, the K01 hypotheses `hr1`, `hsq`, `hcop` ar
 three separate arguments.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

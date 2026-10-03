@@ -85,7 +85,7 @@ Three hypotheses, all named in the statements that carry them.
   simple polygonal arc.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph
@@ -102,7 +102,7 @@ This exists so that a *part* of one overlay can be spoken about as a graph in it
 while remaining a subgraph of the whole overlay (`segGraph_mono`).  Building the part as an
 overlay of its own source segments would not do: the total overlay cuts those segments at more
 points, so a sub-overlay is not a subgraph of it. -/
-def segGraph (S : Set Piece) : Graph Plane Piece where
+@[expose] def segGraph (S : Set Piece) : Graph Plane Piece where
   vertexSet := {v | ∃ P ∈ S, v = P.1 ∨ v = P.2}
   IsLink P x y := P ∈ S ∧ ((x = P.1 ∧ y = P.2) ∨ (x = P.2 ∧ y = P.1))
   edgeSet := S
@@ -200,12 +200,14 @@ variable {pieces : List Piece} {points : List Plane} {c c₁ c₂ : Plane} {r : 
 
 /-- The edges of an overlay whose segment lies on the boundary of the square of `ℓ^∞`-radius
 `r` about `c`. -/
+@[expose]
 def squareEdges (pieces : List Piece) (points : List Plane) (c : Plane) (r : ℝ) : Set Piece :=
   {Q | Q ∈ overlayPieces pieces points ∧ Q.seg ⊆ frontier (Plane.closedSquare c r)}
 
 /-- **The part of one overlay lying on one square boundary.**  A subgraph of that overlay by
 construction (`squareGraph_le`), which is the single-ambient-graph obligation of
 `Graph.IsPlaneChain` discharged at the bottom of the tower. -/
+@[expose]
 def squareGraph (pieces : List Piece) (points : List Plane) (c : Plane) (r : ℝ) :
     Graph Plane Piece :=
   segGraph (squareEdges pieces points c r)
@@ -370,6 +372,7 @@ points, each cut point a vertex — so it is a cycle, and `Graph.IsLongCycle.isT
 finishes.  What a discharging module must build is the cyclic order of the cut points along the
 four sides; `Schoenflies/SegmentOrder.lean` is the tool.  Nothing about the arc, the chain or
 the outer face enters the statement. -/
+@[expose]
 def SquaresTwoConnected : Prop :=
   ∀ (pieces : List Piece) (points : List Plane), (∀ P ∈ pieces, P.Nondeg) →
     EndsAreCut pieces points → MeetsAreCut pieces points →

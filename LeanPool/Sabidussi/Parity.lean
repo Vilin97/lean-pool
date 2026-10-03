@@ -22,7 +22,7 @@ have been balanced: polarization of the quadratic form along an ordered word, an
 the parity of all four colour classes from its linear and quadratic moments.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 
@@ -86,7 +86,7 @@ theorem quadratic_sum_fin : ∀ {n : ℕ} (f : Fin n → Color),
     abel
 
 /-- The positions carrying a specified colour. -/
-def colorFiber {I : Type*} [Fintype I] (f : I → Color) (c : Color) :
+@[expose] def colorFiber {I : Type*} [Fintype I] (f : I → Color) (c : Color) :
     Finset I :=
   Finset.univ.filter fun i ↦ f i = c
 

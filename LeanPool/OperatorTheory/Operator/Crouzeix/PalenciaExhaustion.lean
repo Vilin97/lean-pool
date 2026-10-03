@@ -27,7 +27,7 @@ compact exhaustion of the closed numerical range.
   specialization to closed thickenings of the closed numerical range.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set
 open scoped InnerProductSpace

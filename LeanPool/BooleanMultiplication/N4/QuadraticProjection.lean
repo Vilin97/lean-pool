@@ -16,7 +16,7 @@ squarefree quadratic coefficients.  Products of affine ANFs therefore become
 decomposable alternating forms.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,13 +24,14 @@ namespace N4
 noncomputable section
 
 /-- Extract the coefficients of the eight linear monomials. -/
+@[expose]
 def anfLinearProjection : ANF 8 →ₗ[F₂] LinearForm where
   toFun p i := p.coeff ⟨{i}⟩
   map_add' p q := by ext i; simp
   map_smul' a p := by ext i; simp
 
 /-- Extract quadratic coefficients, with repeated-index coordinates zero. -/
-def anfTwoProjection : ANF 8 →ₗ[F₂] TwoForm where
+@[expose] def anfTwoProjection : ANF 8 →ₗ[F₂] TwoForm where
   toFun p i j := if i = j then 0 else p.coeff ⟨{i, j}⟩
   map_add' p q := by
     funext i j

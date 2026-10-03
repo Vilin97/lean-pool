@@ -18,7 +18,7 @@ record an explicit choice that remains valid even for one-point finite sets,
 where the logarithmic cardinality term vanishes.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff

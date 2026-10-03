@@ -16,7 +16,7 @@ public import Mathlib.CategoryTheory.Category.Basic
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 

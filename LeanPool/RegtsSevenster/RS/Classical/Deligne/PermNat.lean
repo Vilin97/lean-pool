@@ -29,7 +29,7 @@ intertwines the two actions, so if the block idempotent kills
 `X ^ ⊗ n` it kills `Y ^ ⊗ n` as well.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -43,6 +43,7 @@ variable {A : Type u}
 
 /-- **The tensor power of a morphism**: `f ^ ⊗ n` acts as `f` on
 every factor, by the same recursion that defines `tensorPow`. -/
+@[expose]
 noncomputable def tensorPowMap [Category.{v} A] [MonoidalCategory A]
     {X Y : A} (f : X ⟶ Y) :
     (n : ℕ) → (tensorPow A X n ⟶ tensorPow A Y n)

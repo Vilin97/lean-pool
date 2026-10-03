@@ -30,7 +30,7 @@ The chain-map condition is exactly the boundary-commutation identity
  `barycentricSubdivisionGenerator R X n σ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -51,7 +51,7 @@ noncomputable abbrev singularChainComplex (R : Type) [CommRing R] (X : TopCat.{0
 complexes `singularChainComplex R X ⟶ singularChainComplex R X`. The chain-map
 condition is the boundary commutation
 `barycentricSubdivisionLinearMap_commutes_boundary`. -/
-noncomputable def barycentricSubdivisionChainMap
+@[expose] noncomputable def barycentricSubdivisionChainMap
     (R : Type) [CommRing R] (X : TopCat.{0}) :
     singularChainComplex R X ⟶ singularChainComplex R X where
   f n := barycentricSubdivisionLinearMap R X n

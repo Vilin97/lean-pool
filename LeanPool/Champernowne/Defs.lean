@@ -21,15 +21,15 @@ Definitions allow every base; hypotheses `1 < b` appear on the results that
 need them. The prefix-coherence API is in `LeanPool.Champernowne.Prefix`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 
 /-- Big-endian digits of `n` in base `b`. -/
-def bigDigits (b n : ℕ) : List ℕ := (Nat.digits b n).reverse
+@[expose] def bigDigits (b n : ℕ) : List ℕ := (Nat.digits b n).reverse
 
 /-- First `N` blocks of the base-`b` Champernowne sequence: digits of 1..N. -/
-def champBlocks (b N : ℕ) : List ℕ :=
+@[expose] def champBlocks (b N : ℕ) : List ℕ :=
   ((List.range N).map fun n => bigDigits b (n + 1)).flatten
 
 theorem champBlocks_succ (b N : ℕ) :
@@ -48,7 +48,7 @@ theorem le_length_champBlocks (b N : ℕ) : N ≤ (champBlocks b N).length := by
     omega
 
 /-- The `i`-th digit (0-indexed) of the base-`b` Champernowne sequence. -/
-def champDigit (b i : ℕ) : ℕ :=
+@[expose] def champDigit (b i : ℕ) : ℕ :=
   (champBlocks b (i + 1))[i]'(lt_of_lt_of_le (Nat.lt_succ_self i)
     (le_length_champBlocks b (i + 1)))
 
@@ -61,12 +61,12 @@ positions `0 … l.length - w.length`; there are no partial windows at the end
 of the list. In particular `countOccurrences w l = 0` whenever
 `w.length > l.length`, and `countOccurrences [] l = l.length + 1`
 (the empty word is a prefix of every tail) — callers always pass `w ≠ []`. -/
-def countOccurrences (w l : List ℕ) : ℕ :=
+@[expose] def countOccurrences (w l : List ℕ) : ℕ :=
   l.tails.countP (w.isPrefixOf ·)
 
 /-- Normality of a digit sequence in base `b`: every block of length `k`
 (entries `< b`, leading zeros allowed) has asymptotic frequency `b⁻ᵏ`. -/
-def IsNormalSequence (b : ℕ) (s : ℕ → ℕ) : Prop :=
+@[expose] def IsNormalSequence (b : ℕ) (s : ℕ → ℕ) : Prop :=
   ∀ w : List ℕ, w ≠ [] → (∀ d ∈ w, d < b) →
     Filter.Tendsto
       (fun n => (countOccurrences w ((List.range n).map s) : ℝ) / n)

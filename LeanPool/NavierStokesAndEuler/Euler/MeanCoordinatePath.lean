@@ -19,7 +19,7 @@ acceleration. Consequently its uniform-time spatial derivatives have the
 same fixed H¹ trace bound as the physical velocity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,13 +31,13 @@ open Set ContinuousLinearMap EulerSmoothLimit EulerMeanSolenoidal EulerMeanTimeT
 open scoped ContDiff
 
 /-- Spatial translation of continuous solenoidal coordinate paths. -/
-def coordinatePathTranslation (T : ℝ) (a : Space) :
+@[expose] def coordinatePathTranslation (T : ℝ) (a : Space) :
     C(Icc (0 : ℝ) T,solenoidalSpace) →L[ℝ] C(Icc (0 : ℝ) T,solenoidalSpace) :=
   (solenoidalTranslation a).toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
 
 @[simp] theorem coordinatePathTranslation_apply (T : ℝ) (a : Space)
     (p : C(Icc (0 : ℝ) T, solenoidalSpace)) (t : Icc (0 : ℝ) T) :
-    coordinatePathTranslation T a p t = solenoidalTranslation a (p t) := rfl
+    coordinatePathTranslation T a p t = solenoidalTranslation a (p t) := by rfl
 
 theorem reconstruction_translation (T : ℝ) (hT : 0 ≤ T) (a : Space)
     (p q : TimeLp T solenoidalSpace) :
@@ -64,8 +64,9 @@ theorem coordinateVelocityPath_eq_reconstruction (hTpos : 0 < T) :
     s.coordinateVelocityPath = reconstruction T hT (s.velocityLp,s.acceleration) := by
   apply ContinuousMap.ext
   intro t
-  exact (reconstruction_eq_path T hTpos s.velocityLp s.acceleration s.velocity
-    s.velocity_ac s.velocity_ae s.velocity_derivative t).symm
+  simpa only [coordinateVelocityPath_apply] using
+    (reconstruction_eq_path T hTpos s.velocityLp s.acceleration s.velocity
+      s.velocity_ac s.velocity_ae s.velocity_derivative t).symm
 
 theorem coordinateVelocityPath_orbit_eq (hTpos : 0 < T) :
     (fun a : Space => coordinatePathTranslation T a s.coordinateVelocityPath) =

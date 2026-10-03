@@ -79,7 +79,7 @@ see the note there about the `corner` field. Nothing in this file inspects `corn
 * `polygonal_crosscut` — Theorem 2.8, bundled.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 
@@ -97,6 +97,7 @@ functions of the data. -/
 /-- The region of `ℝ² ∖ C` that does **not** contain `y`: everything off `C` except the
 component of `y`. For a separating curve this really is the other region
 (`IsSeparating.isRegionPair_farRegion`); no hypothesis is needed to define it. -/
+@[expose]
 def farRegion (C : Set Plane) (y : Plane) : Set Plane := Cᶜ \ connectedComponentIn Cᶜ y
 
 theorem mem_farRegion_iff : x ∈ farRegion C y ↔ x ∉ C ∧ x ∉ connectedComponentIn Cᶜ y := Iff.rfl
@@ -214,6 +215,7 @@ variable {m : ℕ} {C : ClosedPolygon m} {a : ZMod (m + 3)} {k : ℕ}
 
 /-- The arc of `C` that leaves vertex `a` and runs forward through `k` edges, as a set: the
 blueprint's `A₁` for `k` edges and `A₂` for the remaining `m + 3 - k`. -/
+@[expose]
 def arc (C : ClosedPolygon m) (a : ZMod (m + 3)) (k : ℕ) : Set Plane := cover (C.arcPieces a k)
 
 theorem arc_subset_carrier (C : ClosedPolygon m) (a : ZMod (m + 3)) (k : ℕ) :

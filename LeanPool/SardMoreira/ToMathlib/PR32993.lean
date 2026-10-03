@@ -11,7 +11,7 @@ public import Mathlib.Basic.ENNReal.Basic
 # LeanPool.SardMoreira.ToMathlib.PR32993
 -/
 
-@[expose] public section
+public section
 
 open ENNReal
 

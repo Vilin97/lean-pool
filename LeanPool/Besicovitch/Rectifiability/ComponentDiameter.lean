@@ -19,7 +19,7 @@ the small inner ball.  Any hypothetical clopen separation would be crossed by on
 attachment.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,7 +29,7 @@ open scoped ENNReal MeasureTheory Topology
 namespace LeanPool.Besicovitch
 
 /-- The connected component through `z` in the attachment union localized to a closed ball. -/
-def localAttachmentComponent (F : Set (EuclideanSpace ℝ (Fin 2)))
+@[expose] def localAttachmentComponent (F : Set (EuclideanSpace ℝ (Fin 2)))
     (chosen : Set (Set (EuclideanSpace ℝ (Fin 2))))
     (z : (EuclideanSpace ℝ (Fin 2))) (rho : ℝ) : Set (EuclideanSpace ℝ (Fin 2)) :=
   connectedComponentIn

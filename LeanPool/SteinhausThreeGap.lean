@@ -18,4 +18,4 @@ Tags: number-theory, three-gap-theorem, equidistribution
 MSC: 11K06
 -/
 
-@[expose] public section
+public section

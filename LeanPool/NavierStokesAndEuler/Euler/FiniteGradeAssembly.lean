@@ -12,7 +12,7 @@ import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 
 /-! Reindexing the literal primary/corrector packet into its actual power coefficients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,12 +24,12 @@ open Finset
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- Shift up as an element of `ℕ → V | 0 => 0 | n+1 => truncate M u n`. -/
-def shiftUp (M : ℕ) (u : ℕ → V) : ℕ → V
+@[expose] def shiftUp (M : ℕ) (u : ℕ → V) : ℕ → V
   | 0 => 0
   | n+1 => truncate M u n
 
 /-- Assemble, given by `truncate M u n + shiftUp M c n`. -/
-def assemble (M : ℕ) (u c : ℕ → V) (n : ℕ) : V :=
+@[expose] def assemble (M : ℕ) (u c : ℕ → V) (n : ℕ) : V :=
   truncate M u n + shiftUp M c n
 
 theorem evaluate_shiftUp (M : ℕ) (κ : ℝ) (u : ℕ → V) :

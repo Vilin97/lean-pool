@@ -56,7 +56,7 @@ typeclass resolution downstream), and the supporting `abbrev`/lemmas are
 `proj_isCoveringMap` and `proj_isLocalHomeomorph`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

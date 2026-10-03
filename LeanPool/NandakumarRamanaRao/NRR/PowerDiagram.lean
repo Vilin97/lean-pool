@@ -27,7 +27,7 @@ The proved continuity API is intentionally fixed-site: `continuous_bodyCellArea_
 continuity in moving sites and weights is not claimed.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 

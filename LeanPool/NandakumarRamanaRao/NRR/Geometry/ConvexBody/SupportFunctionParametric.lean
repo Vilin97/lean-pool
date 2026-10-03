@@ -62,7 +62,7 @@ We therefore take the two-pronged approach the design allows:
 * `supportFunction_continuous_family_on_unit_directions`
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -124,7 +124,7 @@ variable {α : Type*} [TopologicalSpace α]
 /-- A family of convex bodies `K : α → ConvexBody E` is a *support-function continuous family* if
 the map `(t, u) ↦ h_{K_t}(u)` is (jointly) continuous. This is the abstraction downstream
 perimeter / partition-cell continuity arguments consume. -/
-def SupportFunctionContinuousFamily (K : α → ConvexBody E) : Prop :=
+@[expose] def SupportFunctionContinuousFamily (K : α → ConvexBody E) : Prop :=
   Continuous fun p : α × E => supportFunction (K p.1) p.2
 
 /-- **Evaluation.** Unfolding the predicate: joint continuity of `(t, u) ↦ h_{K_t}(u)`. -/

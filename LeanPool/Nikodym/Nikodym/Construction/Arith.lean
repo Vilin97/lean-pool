@@ -18,7 +18,7 @@ Blueprint node M01: real-power bookkeeping used to assemble the final upper boun
 supply of `2m` pairwise distinct odd primes indexed as pairs `(ℓⱼ, ℓ'ⱼ)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

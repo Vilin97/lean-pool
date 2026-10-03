@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Inclu
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal NNReal Topology

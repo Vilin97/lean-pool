@@ -13,7 +13,7 @@ public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 Convexity of the finite-dimensional norm and the power smoothing kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

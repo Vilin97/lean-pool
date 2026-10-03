@@ -23,7 +23,7 @@ The explicit boundary definitions support independent statement auditing;
 named bridges transfer their witnesses to the shared library API.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace
@@ -67,6 +67,7 @@ noncomputable def expectationL2
   Lp.const 2 P (∫ w, G w ∂P)
 
 /-- The Cameron--Martin Hilbert space. -/
+@[expose]
 noncomputable def CameronMartin.Space
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [MeasurableSpace W] [BorelSpace W]
@@ -117,6 +118,7 @@ noncomputable def inclusion
   (covarianceMap P).domRestrict (Space P)
 
 /-- A continuous linear functional as its centered Cameron--Martin class. -/
+@[expose]
 noncomputable def ofDual
     {W : Type u} [NormedAddCommGroup W] [NormedSpace ℝ W]
     [MeasurableSpace W] [BorelSpace W]
@@ -146,6 +148,7 @@ noncomputable def mderiv
     ((fderiv ℝ F x).comp (CameronMartin.inclusion P))
 
 /-- The rank-one `H`-valued random variable `w ↦ G(w)h`. -/
+@[expose]
 noncomputable def smulLp
     {W E : Type u} [MeasurableSpace W]
     [NormedAddCommGroup E] [NormedSpace ℝ E] {P : Measure W}

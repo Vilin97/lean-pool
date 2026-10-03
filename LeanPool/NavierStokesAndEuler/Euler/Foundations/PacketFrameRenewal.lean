@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 # Packet Frame Renewal
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -306,7 +306,7 @@ theorem perturbed_target_compression
   linarith only [hnumtime, hden]
 
 /-- The coordinate quadratic form of a real three-by-three matrix. -/
-def quadraticForm3 (B : Fin 3 → Fin 3 → ℝ) (p q n : ℝ) : ℝ :=
+@[expose] def quadraticForm3 (B : Fin 3 → Fin 3 → ℝ) (p q n : ℝ) : ℝ :=
   p * (B 0 0 * p + B 0 1 * q + B 0 2 * n) +
   q * (B 1 0 * p + B 1 1 * q + B 1 2 * n) +
   n * (B 2 0 * p + B 2 1 * q + B 2 2 * n)
@@ -364,12 +364,12 @@ theorem parent_ray_compression
   exact (div_le_iff₀ hD).mpr hquad
 
 /-- The ideal pressure-to-velocity ratio at the inverse target scale. -/
-noncomputable def idealTargetPressure (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
+@[expose] noncomputable def idealTargetPressure (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
   let t := y⁻¹ / ε
   ε ^ 2 * t ^ 2 + ε ^ 2 + (-2 * ε ^ 2 * t) * (-V₁ t / V t)
 
 /-- The ideal cross numerator at the inverse target scale. -/
-noncomputable def idealTargetCross (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
+@[expose] noncomputable def idealTargetCross (ε y : ℝ) (V V₁ : ℝ → ℝ) : ℝ :=
   let t := y⁻¹ / ε
   idealCrossNumerator (ε ^ 2) (ε ^ 2 * t ^ 2) (-2 * ε ^ 2 * t) (-V₁ t / V t)
 

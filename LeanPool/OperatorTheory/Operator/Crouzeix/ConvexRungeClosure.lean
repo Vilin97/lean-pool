@@ -20,7 +20,7 @@ Cauchy-kernel approximation, it turns uniform approximation by quadrature
 sums into uniform approximation by one polynomial sequence.
 -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial Set
 open scoped Topology

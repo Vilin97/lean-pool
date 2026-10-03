@@ -16,7 +16,7 @@ limit point for an embedded injective sequence has a chosen preimage in `G`, the
 package pulls back to `G`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

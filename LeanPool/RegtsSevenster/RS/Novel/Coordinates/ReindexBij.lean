@@ -15,7 +15,7 @@ Closed-pattern fibres are pure; their sums reindex over the
 colouring data through the diagonal parametrization.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -175,6 +175,7 @@ theorem fibreSum_eq_dataSum (W : ClosedFragment)
 open Classical in
 /-- The edge set of an edge subset: representative slots whose
 flags participate. -/
+@[expose]
 noncomputable def edgeIndexSet (W : ClosedFragment)
     (F : EdgeSubset W) : Finset (Fin (edgeCount W)) :=
   Finset.univ.filter (fun i =>

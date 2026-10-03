@@ -16,7 +16,7 @@ with unused colours. Only the edge set must be finite: infinitely many isolated
 vertices are allowed. Empty matching classes contribute zero.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph.MatchingDecomposition
 

@@ -82,7 +82,7 @@ Two deliberate choices, both forced by diamonds.
   coefficient off.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -102,6 +102,7 @@ variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 /-- **The positive cone**: `z` is a finite sum of squares of the bilinear product `m`.
 
 The empty sum is allowed, so `0` is in the cone by `k = 0`. -/
+@[expose]
 def IsSoS (m : J →ₗ[ℝ] J →ₗ[ℝ] J) (z : J) : Prop :=
   ∃ (k : ℕ) (f : Fin k → J), z = ∑ i, m (f i) (f i)
 
@@ -166,7 +167,7 @@ theorem eq_zero_of_isSoS_of_isSoS_neg
   simp [hi]
 
 /-- The partial order induced by the cone: `x ≤ y` iff `y - x` is a sum of squares. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def partialOrderOfSoS (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
     (hfr : ∀ (k : ℕ) (f : Fin k → J), (∑ i, m (f i) (f i)) = 0 → ∀ i, f i = 0) :
     PartialOrder J where
@@ -225,7 +226,7 @@ as the positive cone and the Jordan unit as the order unit.
 A `def`, not an `instance` — see the module docstring.  The `NormedAddCommGroup` and
 `NormedSpace` parents are filled from the ambient instances, so no second normed structure is
 created. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def orderUnitSpaceOfBilinear (m : J →ₗ[ℝ] J →ₗ[ℝ] J)
     (hcomm : ∀ x y : J, m x y = m y x)
     (hjordan : ∀ a b : J, m (m a b) (m a a) = m a (m b (m a a)))

@@ -24,7 +24,7 @@ occurrence calculus, so the paired/countable-completion machinery enters the Lyn
 only at the countable core (`LyndonRelational.lean`), which is its first semantic consumer.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

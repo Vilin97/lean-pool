@@ -31,7 +31,7 @@ intermediate validity arguments. This is the stable target for the remaining der
 normalization chains.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

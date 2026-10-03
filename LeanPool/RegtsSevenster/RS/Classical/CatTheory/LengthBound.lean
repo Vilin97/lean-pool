@@ -23,7 +23,7 @@ in `End Y`, hence a linearly independent family, so that
 two halves.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

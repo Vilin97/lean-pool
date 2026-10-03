@@ -28,7 +28,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMea
 
 /-! ## U1: convergent sequences of probability measures are tight -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology
 

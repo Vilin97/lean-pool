@@ -398,4 +398,4 @@ Tags: convex-geometry, equivariant-topology, partitions
 MSC: 52A10, 55M20
 -/
 
-@[expose] public section
+public section

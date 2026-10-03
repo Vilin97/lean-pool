@@ -26,7 +26,7 @@ The area of a subbody is the real-valued Lebesgue measure of its carrier, matchi
 of `Geometry.ConvexBody.area`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -36,7 +36,7 @@ namespace NRR
 
 /-- A **convex subbody** of a fixed solid parent body `K`: a compact, nonempty, convex Mathlib
 body whose carrier is contained in `K`. Elements may be lower-dimensional. -/
-def ConvexSubbody (K : Geometry.ConvexBody Plane) :=
+@[expose] def ConvexSubbody (K : Geometry.ConvexBody Plane) :=
   {C : _root_.ConvexBody Plane // (C : Set Plane) ⊆ (K : Set Plane)}
 
 namespace ConvexSubbody
@@ -44,7 +44,7 @@ namespace ConvexSubbody
 variable {K : Geometry.ConvexBody Plane}
 
 /-- The underlying Mathlib convex body of a subbody. -/
-def body (C : ConvexSubbody K) : _root_.ConvexBody Plane := C.1
+@[expose] def body (C : ConvexSubbody K) : _root_.ConvexBody Plane := C.1
 
 /-- Coercion of a subbody to its underlying carrier set. The `ConvexSubbody` wrapper is a `def`
 over a subtype, so the subtype/root-body coercion chain does not fire automatically; this instance
@@ -57,7 +57,7 @@ theorem subset_parent (C : ConvexSubbody K) :
   C.2
 
 /-- **Area** of a subbody: the real-valued Lebesgue measure of its carrier. -/
-noncomputable def area (C : ConvexSubbody K) : ℝ :=
+@[expose] noncomputable def area (C : ConvexSubbody K) : ℝ :=
   (volume (C.body : Set Plane)).toReal
 
 @[simp] theorem body_carrier (C : ConvexSubbody K) :
@@ -99,7 +99,7 @@ theorem area_lt_top (C : ConvexSubbody K) :
 end ConvexSubbody
 
 /-- The **lower-area subspace**: subbodies of `K` whose area is at least `A`. -/
-def BodySpace (K : Geometry.ConvexBody Plane) (A : ℝ) :=
+@[expose] def BodySpace (K : Geometry.ConvexBody Plane) (A : ℝ) :=
   {C : ConvexSubbody K // A ≤ C.area}
 
 end NRR

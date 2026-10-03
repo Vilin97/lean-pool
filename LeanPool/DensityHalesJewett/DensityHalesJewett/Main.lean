@@ -18,7 +18,7 @@ import Mathlib.Tactic.LinearCombination
 The binary base case and induction on the alphabet size.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics

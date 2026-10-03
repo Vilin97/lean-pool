@@ -33,7 +33,7 @@ universe containment (the kernel's `GenU`, whose seed already holds every consta
 atom — in particular all of `Bφ`'s diagram), and (*) at every countable ordinal.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -44,7 +44,7 @@ variable {L : Language.{0, 0}}
 /-! ## Mentioned rational constants -/
 
 /-- The rationals whose constants are mentioned by a set of expansion sentences. -/
-def ratSupport (Γ : Set L[[ℕ]].Sentenceω) : Set ℚ :=
+@[expose] def ratSupport (Γ : Set L[[ℕ]].Sentenceω) : Set ℚ :=
   {q | ∃ χ ∈ Γ, ratConstIdx q ∈ sentenceJConsts (L' := L) (J := ℕ) χ}
 
 /-! ## The star witness -/
@@ -77,7 +77,7 @@ structure StarWitness (φ : L.Sentenceω) (lt : L.Relations 2) (Γ : Set L[[ℕ]
   witness : @GapWitness L M inst lt α m fun i => h (ratConstIdx (mark i))
 
 /-- **The (*) condition**: a witness exists. -/
-def StarCondition (φ : L.Sentenceω) (lt : L.Relations 2) (Γ : Set L[[ℕ]].Sentenceω)
+@[expose] def StarCondition (φ : L.Sentenceω) (lt : L.Relations 2) (Γ : Set L[[ℕ]].Sentenceω)
     (α : Ordinal.{0}) : Prop :=
   Nonempty (StarWitness φ lt Γ α)
 

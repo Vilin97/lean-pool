@@ -18,7 +18,7 @@ index over which the pairing-resolved open-sector values live.
 `SamePairing` is exactly equality of chord diagrams.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

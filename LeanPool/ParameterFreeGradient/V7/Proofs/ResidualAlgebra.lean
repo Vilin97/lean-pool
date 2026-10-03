@@ -16,7 +16,7 @@ The weighted reversal, pairing and triangular-sum identities depend on the resid
 map and recurrence, independently of the coefficient regime.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -200,7 +200,7 @@ lemma triangle_sum {E : Type*} [AddCommMonoid E]
     ac_rfl
 
 /-- Dual sequence expressed by the weighted summation-by-parts formula. -/
-noncomputable def dualP (n : ℕ) (u : ScalarSeq)
+@[expose] noncomputable def dualP (n : ℕ) (u : ScalarSeq)
     (C : VectorSeq d) (k : ℕ) : Point d :=
   (1 / u (n - (k + 1))) • C (k + 1) -
     weightedSum (k + 1)

@@ -31,7 +31,7 @@ its measure-theoretic consequences: mutual absolute continuity, the Radon--Nikod
 and the almost-everywhere logarithmic density formula used by the closability rung.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal Real Topology

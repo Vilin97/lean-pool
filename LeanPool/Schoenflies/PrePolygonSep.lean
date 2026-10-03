@@ -90,7 +90,7 @@ under `List.Perm` (immediate, `parity` is a sum over the list), and a strengthen
 shorter than either.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set
 
@@ -236,7 +236,7 @@ that the two are the same list. -/
 
 /-- The `m + 3` edges of the polygon, as a list of pieces in cyclic order. This is the form the
 crossing count of §2 is defined on. -/
-def pieces (P : PrePolygon m) : List Piece :=
+@[expose] def pieces (P : PrePolygon m) : List Piece :=
   (List.range (m + 3)).map fun j : ℕ =>
     (P.vertex (j : ZMod (m + 3)), P.vertex ((j : ZMod (m + 3)) + 1))
 

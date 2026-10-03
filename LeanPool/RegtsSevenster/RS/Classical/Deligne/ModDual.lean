@@ -45,7 +45,7 @@ copairing, need the multi-tensor coherence layer and are outside
 this module's scope.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -60,6 +60,7 @@ section ActCoev
 
 /-- The coevaluation twisted by the action: informally
 `a ↦ (a • xᵢ) ⊗ yᵢ` in dual-basis notation. -/
+@[expose]
 def actCoev
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D) (Y : D)
     [ExactPairing X Y] [ModObj A X] : A ⟶ X ⊗ Y :=
@@ -108,6 +109,7 @@ lemma mul_actCoev
 /-- The contragredient right action on the dual: informally
 `f ⊗ a ↦ f (a • ·)`, that is, `f ⊗ a ↦ f (a • xᵢ) yᵢ` in dual-basis
 notation. -/
+@[expose]
 def dualActRight
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D) (Y : D)
     [ExactPairing X Y] [ModObj A X] : Y ⊗ A ⟶ Y :=
@@ -209,6 +211,7 @@ back along the inverse braiding.  The inverse braiding (rather than
 the braiding `β_ A Y`) is chosen so that the braided right action
 `actRight` derived from it is exactly `dualActRight`; see
 `actRight_dualMod`. -/
+@[expose]
 def dualActLeft [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (X : D) (Y : D) [ExactPairing X Y] [ModObj A X] :
     A ⊗ Y ⟶ Y :=
@@ -259,7 +262,7 @@ lemma mul_dualActLeft [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     IsCommMonObj.mul_comm' A]
 
 /-- The dual module structure on `Y`, for a commutative monoid. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def dualModObj [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (X : D) (Y : D) [ExactPairing X Y] [ModObj A X]
     [IsCommMonObj A] : ModObj A Y where
@@ -269,7 +272,7 @@ def dualModObj [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The dual of a module, bundled: `Y` with the transported
 action. -/
-@[reducible]
+@[expose, reducible]
 def dualMod [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (X : D) (Y : D) [ExactPairing X Y] [ModObj A X]
     [IsCommMonObj A] : Mod D A :=
@@ -298,7 +301,7 @@ end DualModule
 section AsMod
 
 /-- A module object, bundled as a module. -/
-@[reducible]
+@[expose, reducible]
 def asMod [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D)
     [ModObj A X] : Mod D A := ⟨X⟩
 

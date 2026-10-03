@@ -59,7 +59,7 @@ The membership half of the paper (the inflation witnesses) is untouched: it is a
 about finite inflation hierarchies and carries no latent-alphabet hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 

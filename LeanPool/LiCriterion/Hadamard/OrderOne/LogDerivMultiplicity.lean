@@ -17,7 +17,7 @@ We model multiplicity by repeating each zero index `i` exactly `m i` times via t
 log-derivative series carries the expected multiplicity coefficient.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter
 open scoped BigOperators

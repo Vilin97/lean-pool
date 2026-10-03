@@ -17,7 +17,7 @@ A compact exhaustion of the time interval makes the exceptional set uniform
 on the entire interval.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal Topology

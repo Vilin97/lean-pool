@@ -35,7 +35,7 @@ continuity core.
 * `continuous_areaVec_normalizedWeight_compactFamily` — continuity of the selected area vector.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -46,7 +46,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 
 /-- The **boxed selected weight**: the canonical normalized equal-area weight, packaged with its
 uniform coordinate bound as an element of the compact weight box. -/
-noncomputable def normalizedWeightBox
+@[expose] noncomputable def normalizedWeightBox
     (sites : SiteFamily X n) (hA : 0 < A) (hn : 0 < n)
     (z : BodySpace K A × X) :
     WeightBox n (weightBound K sites) :=

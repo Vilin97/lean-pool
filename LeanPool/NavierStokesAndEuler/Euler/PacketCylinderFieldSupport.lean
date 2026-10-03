@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderLocalSupport
 
 /-! Support of a raw packet witness is exactly support of its actual L² path. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

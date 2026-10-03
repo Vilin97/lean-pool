@@ -11,7 +11,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaArithmetic
 
 /-! # Theta Residue -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

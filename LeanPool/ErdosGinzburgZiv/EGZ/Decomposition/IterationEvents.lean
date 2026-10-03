@@ -17,7 +17,7 @@ An event records an unsatisfied conclusion. Its color orders completeness
 and face events by the represented level, with gap cleanup last.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 
@@ -30,6 +30,7 @@ theorem isRealizedFace_top (Φ : FlagDecomposition p d f) (x : Φ.flag.Node) :
   exact Φ.flag.transition_mem (Φ.faceIndex_le x ⊤) hq
 
 /-- A node equality transports its face without choosing coordinates. -/
+@[expose]
 def faceAtNode (Φ : FlagDecomposition p d f) {x y : Φ.flag.Node}
     (Γ : (Φ.flag.polytope x).Face) (h : y = x) : (Φ.flag.polytope y).Face := by
   subst y
@@ -58,11 +59,13 @@ namespace State
 variable (s : State p d f)
 
 /-- Every node gap exceeds the prescribed scale relative to the total input mass. -/
+@[expose]
 def GapCondition (δ : ℝ) : Prop :=
   ∀ x, δ ^ 3 * (s.radius : ℝ)⁻¹ ^ d * (natMass f : ℝ) ≤
     (s.decomposition.gap x : ℝ)
 
 /-- The state satisfies the gap bound and the required completeness condition. -/
+@[expose]
 def Finished (ε δ : ℝ) (g : ℕ → ℕ) : Prop :=
   s.GapCondition δ ∧ s.decomposition.IsComplete (fun _ ↦ g s.radius) ε δ
 
@@ -77,6 +80,7 @@ namespace Event
 variable {s}
 
 /-- The chosen event witnesses a failure of the corresponding termination condition. -/
+@[expose]
 def Valid (ε δ : ℝ) (g : ℕ → ℕ) : s.Event → Prop
   | .gap => ¬ s.GapCondition δ
   | .face x Γ => s.decomposition.IsLargeFace ε x Γ ∧ ¬ s.decomposition.IsRealizedFace x Γ
@@ -84,13 +88,14 @@ def Valid (ε δ : ℝ) (g : ℕ → ℕ) : s.Event → Prop
       ¬ s.decomposition.IsCompleteElement x (g s.radius) δ
 
 /-- The largest level required to remain stable during this event. -/
+@[expose]
 noncomputable def cutoff : s.Event → ℕ
   | .gap => (d + 1) ^ 2
   | .face x _ => s.decomposition.level x
   | .complete x => s.decomposition.level x
 
 /-- Encode the event type and its level as a natural number for the stopping argument. -/
-noncomputable def color : s.Event → ℕ
+@[expose] noncomputable def color : s.Event → ℕ
   | .gap => 2 * (d + 1) ^ 2
   | .face x _ => 2 * s.decomposition.level x + 1
   | .complete x => 2 * s.decomposition.level x
@@ -145,6 +150,7 @@ variable {s t : State p d f}
 /-- A face event has a surviving node at the same level where its selected
 face has become realized. Completeness events kill the selected low-level
 lineage. Gap events establish the gap condition at the current scale. -/
+@[expose]
 def Resolves (S : SubdivisionMap s.decomposition t.decomposition) (δ : ℝ) : s.Event → Prop
   | .gap => t.GapCondition δ
   | .face x Γ => ∃ y : t.decomposition.flag.Node,

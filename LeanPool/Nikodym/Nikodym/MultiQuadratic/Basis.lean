@@ -25,7 +25,7 @@ always passed as three separate arguments:
   constant coordinate, in particular an integer).
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped symmDiff

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
 spatial jets continuous in the uniform time-path norm. This extends the
 ordinary-space coefficient interface to the lifted four-dimensional flow. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -62,12 +62,12 @@ synthesis. -/
 local instance instSmoothTimeField8 (n : ℕ) : NormedSpace ℝ (E →ᵇ (E [×n]→L[ℝ] V)) := inferInstance
 
 /-- Map path, given by `(L.compLeftContinuousBounded E).compLeftContinuous ℝ K`. -/
-def mapPath (L : V →L[ℝ] W) : C(K,E →ᵇ V) →L[ℝ] C(K,E →ᵇ W) :=
+@[expose] def mapPath (L : V →L[ℝ] W) : C(K,E →ᵇ V) →L[ℝ] C(K,E →ᵇ W) :=
   (L.compLeftContinuousBounded E).compLeftContinuous ℝ K
 
 /-- Derivative field, given by `mapPath (continuousMultilinearCurryFin1 ℝ E
 V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet 1)`. -/
-def derivativeField (A : SmoothTimeField K E V) : C(K,E →ᵇ (E →L[ℝ] V)) :=
+@[expose] def derivativeField (A : SmoothTimeField K E V) : C(K,E →ᵇ (E →L[ℝ] V)) :=
   mapPath (continuousMultilinearCurryFin1 ℝ E V).toContinuousLinearEquiv.toContinuousLinearMap
     (A.jet 1)
 
@@ -95,7 +95,7 @@ theorem derivativeJet_eq (A : SmoothTimeField K E V) (n : ℕ) (t : K) (x : E) :
 
 /-- Derivative, bundling `field`, `smooth`, `have`, `exact` and the required compatibility
 proofs. -/
-def derivative (A : SmoothTimeField K E V) : SmoothTimeField K E (E →L[ℝ] V) where
+@[expose] def derivative (A : SmoothTimeField K E V) : SmoothTimeField K E (E →L[ℝ] V) where
   field := A.derivativeField
   smooth t := by
     have he : (A.derivativeField t : E → E →L[ℝ] V) = fderiv ℝ (A.field t : E → V) :=
@@ -108,6 +108,10 @@ def derivative (A : SmoothTimeField K E V) : SmoothTimeField K E (E →L[ℝ] V)
       funext (A.derivativeField_eq t)
     rw [he]
     exact A.derivativeJet_eq n t x
+
+@[simp] theorem derivative_apply (A : SmoothTimeField K E V) (t : K) (x : E) :
+    A.derivative.field t x = fderiv ℝ (A.field t : E → V) x :=
+  A.derivativeField_eq t x
 
 end SmoothTimeField
 
@@ -123,6 +127,6 @@ def toSmoothTimeField {K V : Type} [TopologicalSpace K] [CompactSpace K]
 
 @[simp] theorem toSmoothTimeField_field {K V : Type} [TopologicalSpace K] [CompactSpace K]
     [NormedAddCommGroup V] [NormedSpace ℝ V] (A : SmoothCoefficientPath K V) :
-    A.toSmoothTimeField.field = A.field := rfl
+    A.toSmoothTimeField.field = A.field := by rfl
 
 end EulerMeanCoefficients.SmoothCoefficientPath

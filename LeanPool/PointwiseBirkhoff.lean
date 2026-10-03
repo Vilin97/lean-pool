@@ -19,7 +19,7 @@ Tags: ergodic-theory, measure-theory, probability
 MSC: 37A30, 28D05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

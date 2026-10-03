@@ -35,7 +35,7 @@ orders `4,5,5,5,3` disagree with its per-factor computations `4,4,5,5,3`;
 the `k`-values used here are the correct per-factor ones, and the conclusion
 is unaffected either way.) -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

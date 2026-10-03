@@ -12,7 +12,7 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-! # Reusable upper certificates for arcsine potentials -/
 
-@[expose] public section
+public section
 
 namespace Zeta5Irrational
 

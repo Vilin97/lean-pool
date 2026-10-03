@@ -16,7 +16,7 @@ subordinate to a target mesh with the same support, cut it by every barycentric-
 hyperplane of every target triangle.  The resulting chambers lie in target triangles.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -268,7 +268,7 @@ theorem triangleCoords_nonneg_of_mem (T : M.Triangle) {p : Plane}
   · rw [M.triangleCoords_apply_of_notMem T hv p]
 
 /-- The barycentric-coordinate hyperplanes of all maximal triangles. -/
-noncomputable def coordinateLines : List (Plane →ᵃ[ℝ] ℝ) :=
+@[expose] noncomputable def coordinateLines : List (Plane →ᵃ[ℝ] ℝ) :=
   (Finset.univ : Finset M.Triangle).toList.flatMap fun t =>
     (Finset.univ : Finset (Fin 3)).toList.map (M.oppositeCoord t)
 
@@ -277,7 +277,7 @@ theorem oppositeCoord_mem_coordinateLines (t : M.Triangle) (k : Fin 3) :
   simp [coordinateLines]
 
 /-- Cut `M` by every coordinate hyperplane of `N`. -/
-noncomputable def refineTo (M N : TriangleMesh) : TriangleMesh :=
+@[expose] noncomputable def refineTo (M N : TriangleMesh) : TriangleMesh :=
   M.refineByLines N.coordinateLines
 
 theorem refineTo_support (N : TriangleMesh) :
@@ -478,7 +478,7 @@ theorem exists_target_triangle_of_refineTo_of_interior_inter_support
 /-- Cut `M` by every face line of `N`, then retain exactly the chambers whose interiors meet
 the support of `N`.  This is the unequal-support version of common refinement used in the local
 Radó weld. -/
-noncomputable def refineToSupport (N : TriangleMesh) : TriangleMesh :=
+@[expose] noncomputable def refineToSupport (N : TriangleMesh) : TriangleMesh :=
   by
     classical
     exact (M.refineTo N).restrictTriangles fun t ↦
@@ -601,7 +601,7 @@ namespace PlaneComplex
 variable (K : PlaneComplex)
 
 /-- Regard the two-dimensional faces of a plane complex as the maximal triangles of a mesh. -/
-noncomputable def toTriangleMesh : TriangleMesh where
+@[expose] noncomputable def toTriangleMesh : TriangleMesh where
   Vertex := K.Vertex
   position := K.position
   position_injective := K.position_injective
@@ -712,7 +712,7 @@ variable (K : PlaneComplex)
 Unlike `mapComplex`, this construction does not require an irrelevant global injectivity
 hypothesis.  The additional vertex hypothesis excludes unused vertices, whose images would not
 be controlled by injectivity on the support. -/
-noncomputable def mapComplexOn (f : Plane → Plane)
+@[expose] noncomputable def mapComplexOn (f : Plane → Plane)
     (hvertex : ∀ v : K.Vertex, K.position v ∈ K.support)
     (hinj : Set.InjOn f K.support)
     (haffine : ∀ s ∈ K.simplexes, IsAffineOn f (K.cellCarrier s)) : PlaneComplex where
@@ -822,7 +822,7 @@ theorem IsPure2.mapComplexOn (hpure : K.IsPure2) (f : Plane → Plane)
   exact hpure s hs
 
 /-- Map every face of a finite plane complex through a facewise-affine embedding. -/
-noncomputable def mapComplex (f : Plane → Plane)
+@[expose] noncomputable def mapComplex (f : Plane → Plane)
     (hinj : Function.Injective f)
     (haffine : ∀ s ∈ K.simplexes, IsAffineOn f (K.cellCarrier s)) : PlaneComplex where
   Vertex := K.Vertex

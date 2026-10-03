@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevMetricTransport
 
 /-! Genuine time-continuous transport operators at the H¹→L² metric-energy level. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

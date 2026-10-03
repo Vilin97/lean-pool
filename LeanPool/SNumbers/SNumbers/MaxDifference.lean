@@ -119,7 +119,7 @@ Hilbert space is **not** formalised here.
   (general case).
 -/
 
-@[expose] public section
+public section
 
 universe u
 

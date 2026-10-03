@@ -23,7 +23,7 @@ the lower and upper subdivision stacks together with the controlled middle prism
 this file are theorem-level consequences of that data.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -72,6 +72,7 @@ structure FineFullCollarData
 /-- Item 4, expressed as the exact construction proposition still required from the endpoint-stack
 geometry.  This is a named target, not an assumed theorem and not a field of the final AAK result.
 -/
+@[expose]
 def FineFullCollarConstructionTheorem : Prop :=
   ∀ {p : Nat} (hp : Nat.Prime p)
     (F₀ F₁ : ZeroFreeMap hp)
@@ -98,6 +99,7 @@ namespace FullCollarOriginMarginData
 
 /-- Every finite full-collar assignment which avoids the origin cellwise has a single positive
 coordinate margin valid on all cells. -/
+@[expose]
 noncomputable def ofFineFullCollarData
     {hp : Nat.Prime p}
     {F₀ F₁ : ZeroFreeMap hp}

@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.Defs
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -42,22 +42,22 @@ abbrev Edge (n : Nat) := { e : Tuple 4 n // Function.Injective e }
 namespace Vertex
 
 /-- First coordinate `a` of a vertex `(a,b,c)`. -/
-def a {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨0, by decide⟩
+@[expose] def a {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨0, by decide⟩
 /-- Second coordinate `b` of a vertex `(a,b,c)`. -/
-def b {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨1, by decide⟩
+@[expose] def b {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨1, by decide⟩
 /-- Third coordinate `c` of a vertex `(a,b,c)`. -/
-def c {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨2, by decide⟩
+@[expose] def c {n : Nat} (v : Vertex n) : Sym n := v.1 ⟨2, by decide⟩
 
 end Vertex
 
 namespace Edge
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def srcIndex (i : Fin 3) : Fin 4 :=
+@[expose] def srcIndex (i : Fin 3) : Fin 4 :=
   ⟨i.1, Nat.lt_trans i.2 (by decide)⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def dstIndex (i : Fin 3) : Fin 4 :=
+@[expose] def dstIndex (i : Fin 3) : Fin 4 :=
   ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩
 
 @[simp] lemma srcIndex_zero : srcIndex (0 : Fin 3) = (0 : Fin 4) := by
@@ -85,7 +85,7 @@ def dstIndex (i : Fin 3) : Fin 4 :=
   rfl
 
 /-- Source vertex of an edge `(a,b,c,d)`, i.e. `(a,b,c)`. -/
-def src {n : Nat} (e : Edge n) : Vertex n :=
+@[expose] def src {n : Nat} (e : Edge n) : Vertex n :=
   ⟨fun i => e.1 (srcIndex i), by
     intro i j hij
     have h4 : srcIndex i = srcIndex j := e.2 hij
@@ -93,6 +93,7 @@ def src {n : Nat} (e : Edge n) : Vertex n :=
     simpa [srcIndex] using congrArg Fin.val h4⟩
 
 /-- Target vertex of an edge `(a,b,c,d)`, i.e. `(b,c,d)`. -/
+@[expose]
 def dst {n : Nat} (e : Edge n) : Vertex n :=
   ⟨fun i => e.1 (dstIndex i), by
     intro i j hij
@@ -102,7 +103,7 @@ def dst {n : Nat} (e : Edge n) : Vertex n :=
     exact Nat.succ.inj hval⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def monochromatic {n : Nat} (f : Vertex n → Bool) (e : Edge n) : Prop :=
+@[expose] def monochromatic {n : Nat} (f : Vertex n → Bool) (e : Edge n) : Prop :=
   f (src e) = f (dst e)
 
 instance {n : Nat} (f : Vertex n → Bool) (e : Edge n) : Decidable (monochromatic f e) := by
@@ -115,31 +116,31 @@ end Edge
 abbrev Coloring (n : Nat) := Vertex n → Bool
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def edgeCount (n : Nat) : Nat := Fintype.card (Edge n)
+@[expose] def edgeCount (n : Nat) : Nat := Fintype.card (Edge n)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def monoEdges {n : Nat} (f : Coloring n) : Finset (Edge n) :=
+@[expose] def monoEdges {n : Nat} (f : Coloring n) : Finset (Edge n) :=
   (Finset.univ : Finset (Edge n)).filter (Edge.monochromatic f)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def monoCount {n : Nat} (f : Coloring n) : Nat :=
+@[expose] def monoCount {n : Nat} (f : Coloring n) : Nat :=
   (monoEdges f).card
 
 /-- Fraction of monochromatic directed edges under `f`. -/
-def monoFraction {n : Nat} (f : Coloring n) : ℚ :=
+@[expose] def monoFraction {n : Nat} (f : Coloring n) : ℚ :=
   (monoCount f : ℚ) / (edgeCount n : ℚ)
 
 /-- Convert a coloring to a sign labeling `±1`. -/
-def signOfColoring {n : Nat} (f : Coloring n) : Vertex n → Int :=
+@[expose] def signOfColoring {n : Nat} (f : Coloring n) : Vertex n → Int :=
   fun v => if f v then (-1) else (1)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def edgeCorrSum {n : Nat} (f : Coloring n) : Int :=
+@[expose] def edgeCorrSum {n : Nat} (f : Coloring n) : Int :=
   (Finset.univ : Finset (Edge n)).sum fun e =>
     (signOfColoring f (Edge.src e)) * (signOfColoring f (Edge.dst e))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def edgeCorrelation {n : Nat} (f : Coloring n) : ℚ :=
+@[expose] def edgeCorrelation {n : Nat} (f : Coloring n) : ℚ :=
   (edgeCorrSum f : ℚ) / (edgeCount n : ℚ)
 
 lemma signOfColoring_sq {n : Nat} (f : Coloring n) (v : Vertex n) :

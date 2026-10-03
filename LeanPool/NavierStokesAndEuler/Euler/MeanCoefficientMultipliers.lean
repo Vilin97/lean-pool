@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Continuous matrix fields act as genuine bounded operators on ordinary R³ L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ open scoped NNReal BoundedContinuousFunction
 abbrev Field := Space →ᵇ (Space →L[ℝ] Space)
 
 /-- Pointwise multiplication by a bounded continuous coefficient field. -/
-def multiplier (A : Field) : L2 →L[ℝ] L2 :=
+@[expose] def multiplier (A : Field) : L2 →L[ℝ] L2 :=
   coefficientOperator A A.continuous.aestronglyMeasurable_of_secondCountable ‖A‖₊ A.norm_coe_le_norm
 
 theorem multiplier_ae (A : Field) (u : L2) :
@@ -65,19 +65,19 @@ theorem multiplier_smul (c : ℝ) (A : Field) : multiplier (c • A) = c • mul
   rfl
 
 /-- Multiplier linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def multiplierLinear : Field →ₗ[ℝ] (L2 →L[ℝ] L2) where
+@[expose] def multiplierLinear : Field →ₗ[ℝ] (L2 →L[ℝ] L2) where
   toFun := multiplier
   map_add' := multiplier_add
   map_smul' := multiplier_smul
 
 /-- Uniform coefficient convergence implies operator-norm convergence by this CLM. -/
-def multiplierMap : Field →L[ℝ] (L2 →L[ℝ] L2) where
+@[expose] def multiplierMap : Field →L[ℝ] (L2 →L[ℝ] L2) where
   toLinearMap := multiplierLinear
   cont := AddMonoidHomClass.continuous_of_bound multiplierLinear 1 (fun A => by
     change ‖multiplier A‖ ≤ 1 * ‖A‖
     simpa only [one_mul] using multiplier_norm_le A)
 
-@[simp] theorem multiplierMap_apply (A : Field) : multiplierMap A = multiplier A := rfl
+@[simp] theorem multiplierMap_apply (A : Field) : multiplierMap A = multiplier A := by rfl
 
 theorem multiplier_one : multiplier (1 : Field) = ContinuousLinearMap.id ℝ L2 := by
   apply ContinuousLinearMap.ext

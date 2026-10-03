@@ -35,7 +35,7 @@ assembly proved here.
   product estimate for the actual centered-disk auxiliary operator.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Pointwise

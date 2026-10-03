@@ -33,7 +33,7 @@ diameter-shrinking theorem of the project: once a refined affine simplex has
 domain diameter `< ε`, its image under `σ` lies in some `U ∈ 𝒰`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision

@@ -40,7 +40,7 @@ inferred from the `DegSpec`, no genus-five call site had to change when this
 file stopped being genus-five specific.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationCommon
 
@@ -95,6 +95,7 @@ theorem lastStep_neg_nonpos {L k : ℕ} (hk : 0 < k) (hkL : k ≤ L) :
 /-! ### The one-class potential -/
 
 /-- Negative height on one contracted class and zero on all other classes. -/
+@[expose]
 def centerPotential (d : DegSpec n p) (center : Fin n) (height : ℕ)
     (v : Fin n) : ℤ :=
   if d.rep v = d.rep center then -(height : ℤ) else 0
@@ -117,6 +118,7 @@ theorem centerPotential_eq_of_singleton
 /-! ### Endpoint bookkeeping -/
 
 /-- The per-source-core endpoint contribution used by the class-sum formula. -/
+@[expose]
 def endpointContribution (d : DegSpec n p) (potential : Fin n → ℤ)
     (v : Fin n) : ℤ :=
   ∑ e : Fin p,
@@ -131,6 +133,7 @@ def endpointContribution (d : DegSpec n p) (potential : Fin n → ℤ)
 /-- The two endpoint terms contributed by one original core slot to one
 contracted core class.  Keeping them paired is essential on a closed face:
 when a zero slot is contracted, its two artificial endpoint terms cancel. -/
+@[expose]
 def endpointPair (d : DegSpec n p) (potential : Fin n → ℤ)
     (e : Fin p) (r : Fin n) : ℤ :=
   (if d.rep (d.core.tail e) = d.rep r then
@@ -202,6 +205,7 @@ theorem sum_indicatorWeight_class
 
 /-- Endpoint contribution with the artificial endpoints of a zero slot
 suppressed.  Those two terms cancel after passing to a contracted class. -/
+@[expose]
 def positiveEndpointContribution (d : DegSpec n p)
     (potential : Fin n → ℤ) (v : Fin n) : ℤ :=
   ∑ e : Fin p,

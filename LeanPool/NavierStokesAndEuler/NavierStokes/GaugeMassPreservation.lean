@@ -16,7 +16,7 @@ All conclusions are restricted to the valid open slow region. The common
 torus index and the moving radial support are retained throughout.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -153,6 +153,7 @@ theorem radialMoment_zero_of_torusAverage (k : ℕ) (f : ScalarField Point)
   simp_rw [he, mul_zero, integral_zero]
 
 /-- The two conserved mean masses, restricted to a specified slow set. -/
+@[expose]
 noncomputable def ZeroMassesOn (U : Set Plane) (u : State Point) : Prop :=
   ∀ n s, s ∈ U → CorrectionState.radialMoment 2 u.mean.angular n s = 0 ∧
     CorrectionState.radialMoment 1 u.mean.axial n s = 0

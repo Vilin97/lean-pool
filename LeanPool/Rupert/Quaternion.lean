@@ -15,10 +15,10 @@ public import LeanPool.Rupert.Basic
 Imported Lean Pool material for `LeanPool.Rupert.Quaternion`.
 -/
 
-@[expose] public section
+public section
 
 /-- Converts a quaternion to a normalized rotation matrix. -/
-def matrixOfQuat {R : Type} [Field R] (q : Quaternion R)
+@[expose] def matrixOfQuat {R : Type} [Field R] (q : Quaternion R)
     : Matrix (Fin 3) (Fin 3) R :=
   let ⟨w, x, y, z⟩ := q
   let normsq := w^2 + x^2 + y^2 + z^2

@@ -23,7 +23,7 @@ sum of the power series of the (holomorphic) difference `f_{n+1} - fₙ`, chosen
 that the corrected sequence converges locally uniformly to a solution on the whole disk.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Set Complex Filter Topology
 open scoped Convolution ContDiff NNReal

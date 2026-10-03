@@ -28,7 +28,7 @@ Signed integers are used for arc differences.  Thus the case `L < 0`, where
 `u` precedes `y` in unwrapped order, is represented rather than discarded.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
@@ -65,13 +65,13 @@ structure ErLVK3MaximalGapSetup where
 namespace ErLVK3MaximalGapSetup
 
 /-- The maximal-gap slack `δ = gₓ - gₜ`. -/
-def delta (D : ErLVK3MaximalGapSetup) : ℕ := D.gapX - D.gapT
+@[expose] def delta (D : ErLVK3MaximalGapSetup) : ℕ := D.gapX - D.gapT
 
 /-- The signed side difference `L = |yu|_sides = 3 - δ`. -/
-def L (D : ErLVK3MaximalGapSetup) : ℤ := 3 - (D.delta : ℤ)
+@[expose] def L (D : ErLVK3MaximalGapSetup) : ℤ := 3 - (D.delta : ℤ)
 
 /-- The signed side difference `|yz| = L + M + b`. -/
-def yzSides (D : ErLVK3MaximalGapSetup) : ℤ :=
+@[expose] def yzSides (D : ErLVK3MaximalGapSetup) : ℤ :=
   D.L + (D.M : ℤ) + (D.first.rightMoves : ℤ)
 
 end ErLVK3MaximalGapSetup
@@ -79,7 +79,7 @@ end ErLVK3MaximalGapSetup
 /-- Maximality gives the exact corrected formula `L = 3 - δ`, not merely
 ErLV's printed loose upper bound. -/
 theorem maximal_gap_L_eq_three_sub_delta (D : ErLVK3MaximalGapSetup) :
-    D.L = 3 - (D.delta : ℤ) := rfl
+    D.L = 3 - (D.delta : ℤ) := by rfl
 
 /-- The corrected maximal-gap formula implies the sharp signed bound `L ≤ 3`. -/
 theorem maximal_gap_L_le_three (D : ErLVK3MaximalGapSetup) : D.L ≤ 3 := by
@@ -128,7 +128,7 @@ theorem maximal_gap_signed_yz
 
 /-- The five and only five integer rows for which the short-arc inequality
 `L + M + b ≤ 5` fails under the `k = 3` majorant budgets. -/
-def IsExceptionalMajorantRow (a b L M : ℤ) : Prop :=
+@[expose] def IsExceptionalMajorantRow (a b L M : ℤ) : Prop :=
   (a = 0 ∧ b = 1 ∧ L = 3 ∧ M = 2) ∨
   (a = 1 ∧ b = 1 ∧ L = 3 ∧ M = 2) ∨
   (a = 0 ∧ b = 2 ∧ L = 2 ∧ M = 2) ∨

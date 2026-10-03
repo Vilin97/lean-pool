@@ -25,7 +25,7 @@ import Mathlib.Tactic.Ring.Basic
 `127751/96000 + 9/640` for the outer table.
 -/
 
-@[expose] public section
+public section
 
 open Finset intervalIntegral
 

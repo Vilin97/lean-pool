@@ -16,7 +16,7 @@ homogeneous Markov kernel and identifies every coordinate marginal with the
 usual recursive iterate of the initial law.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.TrajectoryBridge
 
@@ -28,6 +28,7 @@ open scoped ENNReal
 variable {α : Type*} [MeasurableSpace α]
 
 /-- The state law obtained after recursively applying a homogeneous kernel. -/
+@[expose]
 def iterateLaw (κ : Kernel α α) (μ₀ : Measure α) : ℕ → Measure α
   | 0 => μ₀
   | n + 1 => κ ∘ₘ iterateLaw κ μ₀ n
@@ -43,6 +44,7 @@ theorem iterateLaw_succ (κ : Kernel α α) (μ₀ : Measure α) (n : ℕ) :
   rfl
 
 /-- A homogeneous kernel viewed as a history-dependent kernel. -/
+@[expose]
 def historyKernel (κ : Kernel α α) (n : ℕ) :
     Kernel ((i : Finset.Iic n) → α) α :=
   κ.comap (fun h => h ⟨n, Finset.mem_Iic.mpr le_rfl⟩) (by fun_prop)
@@ -54,6 +56,7 @@ instance historyKernel.instIsMarkovKernel (κ : Kernel α α)
   infer_instance
 
 /-- The single path-space law generated from `μ₀` by repeatedly applying `κ`. -/
+@[expose]
 def trajectoryLaw (μ₀ : Measure α) (κ : Kernel α α) [IsMarkovKernel κ] :
     Measure (ℕ → α) :=
   Kernel.trajMeasure (X := fun _ => α) μ₀ (historyKernel κ)

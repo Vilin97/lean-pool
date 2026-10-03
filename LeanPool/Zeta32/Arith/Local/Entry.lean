@@ -26,7 +26,7 @@ For a numerator `A`, `Lfun r n A = U_r(A / D_{5n})` (the proof notes, §0):
   `v_p ≥ min_c (e_c + [c = 0] - ℓ_c) - 2`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

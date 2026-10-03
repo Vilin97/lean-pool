@@ -12,7 +12,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.Interpolate
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains definitions about interpolating points in the directed unit interval
@@ -54,18 +54,18 @@ lemma interp_const_le_of_le_of_le {a b T₀ T₁ : I} (hab : a ≤ b) (hT : T₀
   nlinarith
 
 /-- The continuous map `t ↦ (1 - t) * a + t * b` interpolating between `a` and `b` in `I`. -/
-def interpolateConst (a b : I) : C(I, I) where
+@[expose] def interpolateConst (a b : I) : C(I, I) where
   toFun := fun t => ⟨_, interp_mem_I t a b⟩
 
 /-- The directed-map version of `interpolateConst` when `a ≤ b`. -/
-def directedInterpolateConst {a b : I} (h : a ≤ b) : D(I,I) where
+@[expose] def directedInterpolateConst {a b : I} (h : a ≤ b) : D(I,I) where
   toContinuousMap := interpolateConst a b
   directed_toFun := fun _ _ _ hγ _ _ hxy => interp_const_le_of_le_of_le h (hγ hxy)
 
 variable (f g : C(I, I))
 
 /-- Two-parameter interpolation `(s, t) ↦ (1 - s) * f t + s * g t`. -/
-def interpolate : C(I × I, I) where
+@[expose] def interpolate : C(I × I, I) where
   toFun := fun t => ⟨(σ t.1 : ℝ) * (f t.2) + t.1 * (g t.2), interp_mem_I t.1 (f t.2) (g t.2)⟩
 
 lemma interpolate_left : (interpolate f g).curry 0 = f := by

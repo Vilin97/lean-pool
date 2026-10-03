@@ -16,4 +16,4 @@ formalization. Defines node-labelled, finitely branching trees together with
 basic algebraic structure.
 -/
 
-@[expose] public section
+public section

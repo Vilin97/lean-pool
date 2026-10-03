@@ -19,7 +19,7 @@ after base change; and if the unit of the algebra is a monomorphism
 that is enough to kill the morphism itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

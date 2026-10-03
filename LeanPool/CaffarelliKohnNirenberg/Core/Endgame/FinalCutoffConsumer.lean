@@ -19,7 +19,7 @@ literal localized source unchanged. The remaining input is exactly the
 global heat representation of the localized velocity.
 -/
 
-@[expose] public section
+public section
 
 section
 

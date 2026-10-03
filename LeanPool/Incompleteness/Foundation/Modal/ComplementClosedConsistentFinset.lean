@@ -12,7 +12,7 @@ import Mathlib.Data.Finset.Powerset
 
 /-! # ComplementClosedConsistentFinset -/
 
-@[expose] public section
+public section
 
 
 namespace LO

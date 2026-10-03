@@ -16,7 +16,7 @@ The auxiliary-sign construction of AUDIT-NOTES A5 and Lemma `lem:cyclewitness` o
 `papers/inflation-nontermination/paper/sections/15-cycles.tex`.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -433,7 +433,7 @@ section CycleStructure
 variable {m : ℕ}
 
 /-- The predecessor vertex on the cycle. -/
-def cyclePrev (v : Fin m) : Fin m := ⟨(v.val + (m - 1)) % m, Nat.mod_lt _ v.pos⟩
+@[expose] def cyclePrev (v : Fin m) : Fin m := ⟨(v.val + (m - 1)) % m, Nat.mod_lt _ v.pos⟩
 
 theorem cycleNext_cyclePrev (v : Fin m) : cycleNext (cyclePrev v) = v := by
   have hm : 0 < m := v.pos
@@ -483,7 +483,7 @@ theorem cycleAdj_next (hm : 2 ≤ m) (v : Fin m) : (cycleAdj m).Adj v (cycleNext
   ⟨(cycleNext_ne hm v).symm, Or.inl rfl⟩
 
 /-- The source of the cycle recorded by its lower endpoint: the edge `{j, j+1}`. -/
-def ce (hm : 3 ≤ m) (j : Fin m) : (cycle m hm).Edge :=
+@[expose] def ce (hm : 3 ≤ m) (j : Fin m) : (cycle m hm).Edge :=
   ⟨s(j, cycleNext j), by
     change s(j, cycleNext j) ∈ (cycleAdj m).edgeFinset
     simp only [SimpleGraph.mem_edgeFinset, SimpleGraph.mem_edgeSet]
@@ -602,7 +602,7 @@ variable {m t : ℕ}
 
 /-- The vertices of the cycle scenario are `Fin m`; this is that identification, written out
 so that equations between vertices elaborate at the type `Fin m`. -/
-def vtx (hm : 3 ≤ m) (v : (cycle m hm).V) : Fin m := v
+@[expose] def vtx (hm : 3 ≤ m) (v : (cycle m hm).V) : Fin m := v
 
 theorem vtx_copyObs (hm : 3 ≤ m) (ι : (cycle m hm).Edge → Fin t) (v : Fin m) :
     vtx hm (copyObs ι v).1 = v := rfl

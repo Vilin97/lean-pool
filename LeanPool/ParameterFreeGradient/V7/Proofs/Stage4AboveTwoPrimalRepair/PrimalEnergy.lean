@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 The above-two primal potential identity and terminal objective-gap estimate.
 -/
 
-@[expose] public section
+public section
 
 
 namespace V7.Stage4AboveTwoPrimalRepair

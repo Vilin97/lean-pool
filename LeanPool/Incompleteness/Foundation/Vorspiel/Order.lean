@@ -16,7 +16,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Order -/
 
-@[expose] public section
+public section
 
 
 section «lp_section_1»
@@ -26,10 +26,10 @@ variable {α : Sort u} (r : α → α → Prop)
 local infix:50 " ≺ " => r
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def IsInfiniteDescendingChain (c : ℕ → α) : Prop := ∀ i, c (i + 1) ≺ c i
+@[expose] def IsInfiniteDescendingChain (c : ℕ → α) : Prop := ∀ i, c (i + 1) ≺ c i
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def descendingChain (z : α) : ℕ → α
+@[expose] noncomputable def descendingChain (z : α) : ℕ → α
   | 0       => z
   | (i + 1) => @Classical.epsilon α ⟨z⟩ (fun y => y ≺ descendingChain z i ∧ ¬Acc r y)
 

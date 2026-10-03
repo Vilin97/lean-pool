@@ -19,7 +19,7 @@ states and stages beyond the horizon keep their state. No infinite sequence
 of progress certificates is assumed.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

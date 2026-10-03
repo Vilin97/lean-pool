@@ -16,7 +16,7 @@ maps out of it into filtered colimits factor through stages — the
 form in which the Key Lemma's colimit algebra is probed.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

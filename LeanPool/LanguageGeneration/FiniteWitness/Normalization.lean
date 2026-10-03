@@ -20,7 +20,7 @@ both exhaust each target and agree between a sufficiently confirmed sample
 and that target. The sample search retains the `2 * S.card` length cutoff.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
@@ -93,6 +93,7 @@ theorem content_mono {p q : List α} (hpq : p <+: q) : p.toFinset ⊆ q.toFinset
   simp
 
 /-- The target-dependent genuine errors used only in the proof. -/
+@[expose]
 def BadExtension (F : List α → α) (L : Set α) (p : List α) (k : ℕ)
     (q : List α) : Prop :=
   p <+: q ∧ p.length < q.length ∧ (↑q.toFinset : Set α) ⊆ L ∧
@@ -106,12 +107,23 @@ noncomputable def trueRun (F : List α → α) (L : Set α) : ℕ → List α
       exact if h : ∃ q, BadExtension F L (trueRun F L k) k q then
         leastCode _ h else trueRun F L k
 
+/-- The canonical bad-extension sequence starts with the empty history. -/
+theorem trueRun_zero (F : List α → α) (L : Set α) : trueRun F L 0 = [] := by
+  rfl
+
 theorem trueRun_next {F : List α → α} {L : Set α} {k : ℕ}
     (h : ∃ q, BadExtension F L (trueRun F L k) k q) :
     BadExtension F L (trueRun F L k) k (trueRun F L (k + 1)) := by
   classical
   simp only [trueRun, dite_eq_left h]
   exact leastCode_spec _ h
+
+theorem trueRun_code_le {F : List α → α} {L : Set α} {k : ℕ} {q : List α}
+    (hq : BadExtension F L (trueRun F L k) k q) :
+    Encodable.encode (trueRun F L (k + 1)) ≤ Encodable.encode q := by
+  classical
+  rw [trueRun, dite_eq_left ⟨q, hq⟩]
+  exact leastCode_le _ ⟨q, hq⟩ hq
 
 theorem trueRun_prefix (F : List α → α) (L : Set α) (k : ℕ) :
     trueRun F L k <+: trueRun F L (k + 1) := by

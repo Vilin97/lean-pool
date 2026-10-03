@@ -37,7 +37,7 @@ number of standard exponents of degree at most `t`, i.e. the partial sum of the 
   polynomial.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

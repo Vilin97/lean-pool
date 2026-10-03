@@ -32,7 +32,7 @@ gives a braided fibre functor out of the ambient category.
   splitting algebra at a complex point is braided.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

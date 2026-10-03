@@ -20,7 +20,7 @@ This file uses biorthogonal interpolation to lift strict singularity from the ca
 kernel and quotient to operators on the full canonical Kalton--Peck space.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.GraphFredholm

@@ -21,7 +21,7 @@ The compact support argument controls every small covering translation,
 including its angular component, before dominated L² differentiation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,7 +61,7 @@ theorem toLp_ae (A : CompactField P V) : A.toLp =ᵐ[liftMeasure P] A.field :=
   (A.continuous.memLp_of_hasCompactSupport A.compact).coeFn_toLp
 
 /-- Derivative, bundling `field`, `compact`, `smooth`. -/
-def derivative (A : CompactField P V) : CompactField P (LiftTangent →L[ℝ] V) where
+@[expose] def derivative (A : CompactField P V) : CompactField P (LiftTangent →L[ℝ] V) where
   field := fieldFDeriv P A.field
   compact := fieldFDeriv_compact P A.field A.compact
   smooth := fieldFDeriv_smooth P A.field A.smooth
@@ -165,8 +165,9 @@ theorem translation_hasFDerivAt (A : CompactField P V) (a : LiftTangent) :
 
 theorem translation_fderiv (A : CompactField P V) :
     fderiv ℝ (fun a : LiftTangent => translate P a A.toLp) =
-      fun a => derivativeBundling (liftMeasure P) (translate P a A.derivative.toLp) :=
-  funext (fun a => (A.translation_hasFDerivAt a).fderiv)
+      fun a => derivativeBundling (liftMeasure P) (translate P a A.derivative.toLp) := by
+  funext a
+  simpa only [derivativeBundling_apply] using (A.translation_hasFDerivAt a).fderiv
 
 private theorem translation_contDiff_aux (n : ℕ) :
     ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] (A : CompactField P V),

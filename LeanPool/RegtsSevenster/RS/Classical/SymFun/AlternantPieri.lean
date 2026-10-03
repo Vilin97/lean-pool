@@ -22,7 +22,7 @@ via `det_apply'`, use the per-term product identity for
 match termwise.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ open Finset MvPolynomial Equiv
 variable {k : ℕ}
 
 /-- The plain power alternant of an exponent vector. -/
+@[expose]
 noncomputable def altDet {k : ℕ} (e : Fin k → ℕ) :
     MvPolynomial (Fin k) ℂ :=
   (Matrix.of fun i j : Fin k =>

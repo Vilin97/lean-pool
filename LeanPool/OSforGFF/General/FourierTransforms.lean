@@ -50,7 +50,7 @@ The 1D result follows from Fourier inversion:
 3. Apply Fourier inversion to derive the Lorentzian result
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real
 open scoped BigOperators FourierTransform

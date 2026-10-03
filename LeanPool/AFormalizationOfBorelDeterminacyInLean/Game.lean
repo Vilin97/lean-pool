@@ -23,4 +23,4 @@ import Mathlib.Tactic.NormNum.Pow
 Import-only index for Gale-Stewart game definitions, strategies, and examples.
 -/
 
-@[expose] public section
+public section

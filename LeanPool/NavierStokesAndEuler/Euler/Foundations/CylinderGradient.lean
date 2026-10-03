@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Actual full cylinder gradients from the coordinate derivative Sobolev norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,9 @@ theorem tangent_coordinate_norm_le (v : LiftTangent) (i : Fin 4) :
     ‖coordinateEquiv.symm v i‖ ≤ ‖v‖ := by
   cases i using Fin.cases with
   | zero => simpa using norm_snd_le v
-  | succ i => exact (PiLp.norm_apply_le v.1 i).trans (norm_fst_le v)
+  | succ i =>
+    simpa only [coordinateEquiv_symm_apply, WithLp.ofLp_toLp, Fin.cons_succ] using
+      (PiLp.norm_apply_le v.1 i).trans (norm_fst_le v)
 
 omit [Fact (0 < period)] in
 /-- The full product-tangent operator norm is bounded by its four coordinate values. -/

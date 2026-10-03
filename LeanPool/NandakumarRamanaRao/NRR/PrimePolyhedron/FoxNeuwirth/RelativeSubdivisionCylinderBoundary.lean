@@ -27,7 +27,7 @@ to be the characteristic function of one quotient-facet class gives the pointwis
 identity needed by the global Fox--Neuwirth collar.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -41,6 +41,7 @@ open EquivariantPrismStableRelativeBoundary.FiniteSimplexDoubleBoundary
 
 
 /-- Delete one entry from an ordered vertex tuple. -/
+@[expose]
 def deleteTuple
     {X : Type} {n : Nat} (v : Fin (n + 2) → X) (j : Fin (n + 2)) :
     Fin (n + 1) → X :=
@@ -53,13 +54,14 @@ def coneTuple
   Fin.cases a v
 
 /-- Ordered full facet of one recursive cylinder cell. -/
+@[expose]
 noncomputable def facetTuple
     (d : Nat) (q : RelativeSubdivisionCylinderCombinatorics.Cell d) (j : Fin (d + 2)) :
     Fin (d + 1) → Delta d × Set.Icc (0 : Real) 1 :=
   deleteTuple (RelativeSubdivisionCylinderCombinatorics.vertex d q) j
 
 /-- Alternating weighted boundary of the complete recursive cylinder chain. -/
-noncomputable def fullBoundaryPairing
+@[expose] noncomputable def fullBoundaryPairing
     (R : Type) [CommRing R] (d : Nat)
     (W : (Fin (d + 1) → Delta d × Set.Icc (0 : Real) 1) → R) : R :=
   ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d,
@@ -68,7 +70,7 @@ noncomputable def fullBoundaryPairing
         SimplicialChain.faceSign j * W (facetTuple d q j)
 
 /-- Weighted cone-base chain. -/
-noncomputable def basePairing
+@[expose] noncomputable def basePairing
     (R : Type) [CommRing R] (d : Nat)
     (W : (Fin (d + 1) → Delta d × Set.Icc (0 : Real) 1) → R) : R :=
   ∑ q : RelativeSubdivisionCylinderCombinatorics.Cell d,

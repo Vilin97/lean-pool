@@ -20,7 +20,7 @@ The coordinate growth function depends only on dimension, and the prime
 threshold depends only on dimension and the original uniform box bound.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

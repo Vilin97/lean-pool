@@ -47,7 +47,7 @@ companion exactly.
   constant polynomial sequence converging to the auxiliary operator.
 -/
 
-@[expose] public section
+public section
 
 open Complex ComplexConjugate Filter Polynomial Set
 open scoped Interval Real

@@ -12,4 +12,4 @@ import Mathlib.Tactic.SetLike
 
 /-! Infinite-pigeonhole helpers for finite codomains. -/
 
-@[expose] public section
+public section

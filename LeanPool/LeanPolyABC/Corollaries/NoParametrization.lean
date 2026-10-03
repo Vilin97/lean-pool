@@ -13,7 +13,7 @@ import LeanPool.LeanPolyABC.Corollaries.FltCatalan
 # LeanPool.LeanPolyABC.Corollaries.NoParametrization
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

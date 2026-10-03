@@ -17,31 +17,31 @@ This file encodes the finite incidence ledger for simultaneous failures of suppo
 are exactly the six, eight, and seven cases left by the fixed diagonal matching.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace LeanPool.Besicovitch
 
 /-- The child at one coordinate of an incidence code. -/
-def incidenceChild : Fin 2 → SixPointLabel
+@[expose] def incidenceChild : Fin 2 → SixPointLabel
   | 0 => .left
   | 1 => .right
 
 /-- The other child index. -/
-def otherChild : Fin 2 → Fin 2
+@[expose] def otherChild : Fin 2 → Fin 2
   | 0 => 1
   | 1 => 0
 
 /-- The first child coordinate in the code `2 i + j`. -/
-def incidenceFirst : Fin 4 → Fin 2
+@[expose] def incidenceFirst : Fin 4 → Fin 2
   | 0 => 0
   | 1 => 0
   | 2 => 1
   | 3 => 1
 
 /-- The second child coordinate in the code `2 i + j`. -/
-def incidenceSecond : Fin 4 → Fin 2
+@[expose] def incidenceSecond : Fin 4 → Fin 2
   | 0 => 0
   | 1 => 1
   | 2 => 0
@@ -54,26 +54,26 @@ inductive SiblingTriangleWitness
   deriving DecidableEq
 
 /-- Simultaneously swapping the two children sends an endpoint code `a` to `3 - a`. -/
-def swapEndpointCode : Fin 4 → Fin 4
+@[expose] def swapEndpointCode : Fin 4 → Fin 4
   | 0 => 3
   | 1 => 2
   | 2 => 1
   | 3 => 0
 
 /-- Transposing the two colors transposes an endpoint's two coordinates. -/
-def transposeEndpointCode : Fin 4 → Fin 4
+@[expose] def transposeEndpointCode : Fin 4 → Fin 4
   | 0 => 0
   | 1 => 2
   | 2 => 1
   | 3 => 3
 
 /-- Put a blue endpoint witness into the common `(red child, blue child)` code convention. -/
-def transposeBlueEndpointWitness : SiblingTriangleWitness → SiblingTriangleWitness
+@[expose] def transposeBlueEndpointWitness : SiblingTriangleWitness → SiblingTriangleWitness
   | .endpoint code => .endpoint (transposeEndpointCode code)
   | .balanced code => .balanced code
 
 /-- Simultaneously swapping the children exchanges balanced codes `0` and `3`. -/
-def swapBalancedCode : Fin 4 → Fin 4
+@[expose] def swapBalancedCode : Fin 4 → Fin 4
   | 0 => 3
   | 1 => 1
   | 2 => 2
@@ -113,7 +113,7 @@ inductive BalancedBalancedOrbit
   deriving DecidableEq
 
 /-- Classify an ordered pair of endpoint codes under child swap and color transposition. -/
-def endpointEndpointOrbit : Fin 4 → Fin 4 → EndpointEndpointOrbit
+@[expose] def endpointEndpointOrbit : Fin 4 → Fin 4 → EndpointEndpointOrbit
   | 0, 0 | 3, 3 => .matchedCoincident
   | 1, 1 | 2, 2 => .offMatchingCoincident
   | 0, 1 | 3, 2 | 2, 0 | 1, 3 => .adjacentFirst
@@ -122,7 +122,7 @@ def endpointEndpointOrbit : Fin 4 → Fin 4 → EndpointEndpointOrbit
   | 1, 2 | 2, 1 => .offMatchingDisjoint
 
 /-- Classify an endpoint code and a balanced code under simultaneous child swap. -/
-def endpointBalancedOrbit : Fin 4 → Fin 4 → EndpointBalancedOrbit
+@[expose] def endpointBalancedOrbit : Fin 4 → Fin 4 → EndpointBalancedOrbit
   | 0, 0 | 3, 3 => .e0s0
   | 0, 1 | 3, 1 => .e0s1
   | 0, 2 | 3, 2 => .e0s2
@@ -133,7 +133,7 @@ def endpointBalancedOrbit : Fin 4 → Fin 4 → EndpointBalancedOrbit
   | 1, 3 | 2, 0 => .e1s3
 
 /-- Classify an ordered pair of balanced codes under child swap and color transposition. -/
-def balancedBalancedOrbit : Fin 4 → Fin 4 → BalancedBalancedOrbit
+@[expose] def balancedBalancedOrbit : Fin 4 → Fin 4 → BalancedBalancedOrbit
   | 0, 0 | 3, 3 => .s0s0
   | 0, 3 | 3, 0 => .s0s3
   | 0, 1 | 3, 1 | 1, 0 | 1, 3 => .s0s1
@@ -183,7 +183,7 @@ theorem balancedBalancedOrbit_transpose (redCode blueCode : Fin 4) :
     rfl
 
 /-- The threshold inequality selected by an endpoint or balanced sibling witness. -/
-def siblingTriangleWitnessExceeds (L T : ℝ) (leftReach rightReach : SixPointLabel → ℝ) :
+@[expose] def siblingTriangleWitnessExceeds (L T : ℝ) (leftReach rightReach : SixPointLabel → ℝ) :
     SiblingTriangleWitness → Prop
   | .endpoint code =>
       let reach := if incidenceFirst code = 0 then leftReach else rightReach
@@ -226,24 +226,24 @@ theorem exists_siblingTriangleWitnessExceeds_of_failure
     · exact ⟨.balanced 3, hlabels⟩
 
 /-- The total canonical radius of one color's rooted triangle. -/
-def rootedTriangleTotalRadius (configuration : SixPointConfiguration)
+@[expose] def rootedTriangleTotalRadius (configuration : SixPointConfiguration)
     (color : SixPointColor) : ℝ :=
   (dist (configuration color .root) (configuration color .left) +
     dist (configuration color .root) (configuration color .right) +
     dist (configuration color .left) (configuration color .right)) / 2
 
 /-- The diameter threshold for support `67` at the exact endpoint. -/
-def redSiblingTriangleTarget (configuration : SixPointConfiguration) : ℝ :=
+@[expose] def redSiblingTriangleTarget (configuration : SixPointConfiguration) : ℝ :=
   barC * (dist (configuration .red .left) (configuration .red .right) +
     rootedTriangleTotalRadius configuration .blue)
 
 /-- The diameter threshold for support `76` at the exact endpoint. -/
-def blueSiblingTriangleTarget (configuration : SixPointConfiguration) : ℝ :=
+@[expose] def blueSiblingTriangleTarget (configuration : SixPointConfiguration) : ℝ :=
   barC * (dist (configuration .blue .left) (configuration .blue .right) +
     rootedTriangleTotalRadius configuration .red)
 
 /-- The exact endpoint or balanced failure inequality for support `67`. -/
-def redSiblingTriangleFailure (configuration : SixPointConfiguration) :
+@[expose] def redSiblingTriangleFailure (configuration : SixPointConfiguration) :
     SiblingTriangleWitness → Prop :=
   siblingTriangleWitnessExceeds
     (dist (configuration .red .left) (configuration .red .right))
@@ -252,7 +252,7 @@ def redSiblingTriangleFailure (configuration : SixPointConfiguration) :
     (redSiblingBlueTriangleReach configuration .right)
 
 /-- The exact endpoint or balanced failure inequality for support `76`. -/
-def blueSiblingTriangleFailure (configuration : SixPointConfiguration) :
+@[expose] def blueSiblingTriangleFailure (configuration : SixPointConfiguration) :
     SiblingTriangleWitness → Prop :=
   fun witness ↦ siblingTriangleWitnessExceeds
     (dist (configuration .blue .left) (configuration .blue .right))
@@ -262,7 +262,7 @@ def blueSiblingTriangleFailure (configuration : SixPointConfiguration) :
     (transposeBlueEndpointWitness witness)
 
 /-- The average of the two root-to-child distances at a matched child index. -/
-def matchedChildAverage (configuration : SixPointConfiguration) (child : Fin 2) : ℝ :=
+@[expose] def matchedChildAverage (configuration : SixPointConfiguration) (child : Fin 2) : ℝ :=
   (dist (configuration .red .root) (configuration .red (incidenceChild child)) +
     dist (configuration .blue .root) (configuration .blue (incidenceChild child))) / 2
 
@@ -640,7 +640,7 @@ def blueSiblingTrianglePackingAtEndpoint (configuration : SixPointConfiguration)
     (h.child_distance .red .right (by simp))
 
 /-- Every feasible support `67` radius split has negative endpoint score. -/
-def RedSiblingTriangleFails (configuration : SixPointConfiguration)
+@[expose] def RedSiblingTriangleFails (configuration : SixPointConfiguration)
     (h : configuration.IsAdmissibleAt barS) : Prop :=
   ∀ (x : ℝ)
     (hxLower : dist (configuration .red .left) (configuration .red .right) - 1 ≤ x)
@@ -648,7 +648,7 @@ def RedSiblingTriangleFails (configuration : SixPointConfiguration)
     (redSiblingTrianglePackingAtEndpoint configuration h x hxLower hxUpper).score barS < 0
 
 /-- Every feasible support `76` radius split has negative endpoint score. -/
-def BlueSiblingTriangleFails (configuration : SixPointConfiguration)
+@[expose] def BlueSiblingTriangleFails (configuration : SixPointConfiguration)
     (h : configuration.IsAdmissibleAt barS) : Prop :=
   ∀ (y : ℝ)
     (hyLower : dist (configuration .blue .left) (configuration .blue .right) - 1 ≤ y)

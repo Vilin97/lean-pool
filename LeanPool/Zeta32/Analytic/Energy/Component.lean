@@ -15,7 +15,7 @@ unit disc:
 the balayage of `δ_{±ic}` onto `[-a, a]` minus a multiple of the arcsine measure
 (GLOBAL-INTEGRAL-v1 §5). -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set
 
@@ -24,6 +24,7 @@ noncomputable section
 
 /-- `β = a/(u_c + c)`: `±iβ` are the preimages of `±ic` inside the unit disc under `w ↦ (a/2)(w
 + 1/w)`. -/
+@[expose]
 def betaC (a c : ℝ) : ℝ := a / (uC a c + c)
 
 /-- Angular density of `ρ_c`. -/

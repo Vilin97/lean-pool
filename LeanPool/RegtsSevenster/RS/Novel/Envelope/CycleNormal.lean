@@ -17,7 +17,7 @@ the normal form against which the skein trace of a permutation
 factors into cycle loops.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -25,6 +25,7 @@ open Equiv Equiv.Perm
 
 /-- The block sum of rotations prescribed by a list of block
 lengths. -/
+@[expose]
 noncomputable def blockCycles : (l : List ℕ) → Perm (Fin l.sum)
   | [] => 1
   | c :: rest =>
@@ -34,6 +35,7 @@ noncomputable def blockCycles : (l : List ℕ) → Perm (Fin l.sum)
 
 /-- The full cycle type: the cycle type completed by the fixed
 points as one-cycles. -/
+@[expose]
 noncomputable def fullCycleType {n : ℕ} (π : Perm (Fin n)) :
     Multiset ℕ :=
   π.cycleType + Multiset.replicate (n - π.cycleType.sum) 1

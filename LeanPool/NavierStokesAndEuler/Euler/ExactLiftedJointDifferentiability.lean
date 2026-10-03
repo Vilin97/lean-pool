@@ -21,7 +21,7 @@ section
 Strong continuity on the derivative vector suffices; operator-norm continuity
 or differentiability of the whole family of evaluation maps is unnecessary. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -91,7 +91,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -105,7 +105,7 @@ open scoped ContDiff
 variable {P T : ℝ} [Fact (0 < P)] (A : FieldTower P T)
 
 /-- Raw field, given by `A.pointField (projIcc 0 T hT q.1) (coveringMap P q.2)`. -/
-def rawField (hT : 0 ≤ T) (q : ℝ × LiftTangent) : Vector3 :=
+@[expose] def rawField (hT : 0 ≤ T) (q : ℝ × LiftTangent) : Vector3 :=
   A.pointField (projIcc 0 T hT q.1) (coveringMap P q.2)
 
 theorem rawField_hasFDerivAt (hT : 0 ≤ T) (t : ℝ) (ht : t ∈ Icc 0 T)
@@ -141,9 +141,9 @@ variable {P T : ℝ} [Fact (0 < P)] {hT : 0 < T} {A : Data P T} {B : Budget P hT
   (S : ExactLiftedPacket P hT A B)
 
 /-- Raw velocity, given by `S.velocity.rawField hT.le`. -/
-def rawVelocity : ℝ × LiftTangent → Vector3 := S.velocity.rawField hT.le
+@[expose] def rawVelocity : ℝ × LiftTangent → Vector3 := S.velocity.rawField hT.le
 /-- Raw pressure, given by `S.pressure.rawField hT.le`. -/
-def rawPressure : ℝ × LiftTangent → Vector3 := S.pressure.rawField hT.le
+@[expose] def rawPressure : ℝ × LiftTangent → Vector3 := S.pressure.rawField hT.le
 
 theorem rawVelocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (z : LiftTangent) :
     HasFDerivAt S.rawVelocity

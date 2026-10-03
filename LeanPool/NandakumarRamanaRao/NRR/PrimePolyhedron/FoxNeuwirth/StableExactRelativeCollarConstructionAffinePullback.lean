@@ -24,7 +24,7 @@ The construction uses the focused Route B API rather than repeating the perturba
 * inhabit `ExactRelativeStableCollarConstructionTheorem`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

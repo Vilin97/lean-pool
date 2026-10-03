@@ -15,7 +15,7 @@ mod p)`;
 the poles of `Lfun` are `-j`, `j ∈ [1, 5n]`, and the class `γ : ZMod p` of the pole `-j` corresponds
 to the disc `d = (-γ).val = j mod p`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

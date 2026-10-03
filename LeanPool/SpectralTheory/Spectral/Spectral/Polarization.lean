@@ -20,7 +20,7 @@ satisfying complex homogeneity and the parallelogram law. The diagonal of the re
 is the original quadratic form.
 -/
 
-@[expose] public section
+public section
 
 open scoped ComplexConjugate
 

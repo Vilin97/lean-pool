@@ -48,7 +48,7 @@ first regime.
   Fermat quotients*.
 -/
 
-@[expose] public section
+public section
 
 namespace GranvilleMoore
 
@@ -63,6 +63,7 @@ variable [Monoid R]
 /-- The **Moore matrix** of `x = (x 1, …, x d)` at `p`: the `d × d` matrix whose
 `(i, j)` entry is `x j ^ p ^ i`, so that its `i`-th row is the image of `x` under the
 `i`-th iterate of the `p`-power map. -/
+@[expose]
 def mooreMatrix (p : ℕ) (x : Fin d → R) : Matrix (Fin d) (Fin d) R :=
   Matrix.of fun i j => x j ^ p ^ (i : ℕ)
 
@@ -99,6 +100,7 @@ quotients
 `F⁽⁰⁾_0, F⁽¹⁾_0, …, F⁽ⁱ⁾_0, F⁽ⁱ⁾_1, …, F⁽ⁱ⁾_(d - 1 - i)`
 evaluated at `x`; that is, the row at index `r` is `fun j => iteratedFermatQuot p a b (x j)`
 with `(a, b) = (min r i, r - i)`. -/
+@[expose]
 def ladderMatrix (p : ℕ) (x : Fin d → ℤ) (i : ℕ) : Matrix (Fin d) (Fin d) ℚ :=
   Matrix.of fun r j => iteratedFermatQuot p (min (r : ℕ) i) ((r : ℕ) - i) (x j)
 

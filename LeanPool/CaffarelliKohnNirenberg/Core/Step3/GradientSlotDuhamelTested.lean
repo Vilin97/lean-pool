@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step3.LocalizedEquationConve
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 section
 

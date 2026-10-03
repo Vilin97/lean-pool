@@ -31,7 +31,7 @@ Kruskal–Katona core operates on — not an opaque scalar.  The pair functional
 `initSegPairLayerWindowCost` then assembles the two slice costs exactly the way
 `PairShadowCost` does on simplicial initial segments. -/
 
-@[expose] public section
+public section
 
 namespace BooleanIsoperimetry
 
@@ -107,11 +107,11 @@ each slice's boundary is the layer-window neighborhood cost
 `max (H N a) b + max (H N b) a` on initial segments, but it is *defined* through
 the explicit per-layer windows so the cross-slice Kruskal–Katona minimization can
 be carried out layer by layer. -/
-noncomputable def initSegPairLayerWindowCost (N a b : ℕ) : ℕ :=
+@[expose] noncomputable def initSegPairLayerWindowCost (N a b : ℕ) : ℕ :=
   max (neighborhoodLayerCost N a) b + max (neighborhoodLayerCost N b) a
 
 /-- The number of layer-`r` sets in the initial segment of size `a`. -/
-noncomputable def layerWindowRemainder (N r a : ℕ) : ℕ :=
+@[expose] noncomputable def layerWindowRemainder (N r a : ℕ) : ℕ :=
   layerCount N r (simplicialInitSeg N a)
 
 /-- The number of layer-`r` sets in the neighborhood of the initial segment of size `a`.
@@ -120,7 +120,7 @@ noncomputable def layerWindowShadowCost (N r a : ℕ) : ℕ :=
   layerCount N r (neighborhood 1 (simplicialInitSeg N a))
 
 /-- The cross-slice layer window cost for a single Hamming layer `r`. -/
-noncomputable def PairLayerWindowCost (N r a b : ℕ) : ℕ :=
+@[expose] noncomputable def PairLayerWindowCost (N r a b : ℕ) : ℕ :=
   max (layerWindowShadowCost N r a) (layerWindowRemainder N r b) +
   max (layerWindowShadowCost N r b) (layerWindowRemainder N r a)
 

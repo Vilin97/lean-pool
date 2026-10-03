@@ -29,7 +29,7 @@ identified the concrete double-layer kernel.
   scalar weight bounded by `M` to an operator of norm at most `2 * M`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval Real

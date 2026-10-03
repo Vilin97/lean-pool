@@ -20,7 +20,7 @@ Tags: number-theory, discriminants, number-fields, explicit-formula
 MSC: 11R29, 11R42
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Odlyzko's bound for totally complex number fields

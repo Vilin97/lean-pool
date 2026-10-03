@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.H6PressureInverse
 
 /-! Source18 for the actual coercively constructed pressure of the nonlinear transport source. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

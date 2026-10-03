@@ -17,7 +17,7 @@ quadratic coefficient projection, and the eight-form Hankel obstruction then
 rules out a flattening with eight products.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

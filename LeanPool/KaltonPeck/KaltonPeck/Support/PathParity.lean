@@ -21,7 +21,7 @@ This file constructs kernel splittings and local Schur reductions and proves the
 invariance result for paths of Fredholm alternating forms.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.PathParity
 

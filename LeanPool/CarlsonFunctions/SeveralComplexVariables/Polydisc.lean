@@ -15,7 +15,7 @@ Geometry for the polydisc Cauchy formula. Equal-radius polydiscs use the supremu
 these are not Euclidean balls.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology
@@ -28,6 +28,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E
 
 /-- The closed polydisc of equal radii. For `0 ≤ R` this coincides with the closed ball for the
 sup-norm. -/
+@[expose]
 def closedPolydisc {ι : Type*} (c : ι → ℂ) (R : ℝ) : Set (ι → ℂ) :=
   Set.pi univ fun i => closedBall (c i) R
 
@@ -36,6 +37,7 @@ def polydiscWithRadii {ι : Type*} (c : ι → ℂ) (r : ι → ℝ) : Set (ι �
   Set.pi univ fun i => ball (c i) (r i)
 
 /-- A closed polydisc with a separate radius in each coordinate. -/
+@[expose]
 def closedPolydiscWithRadii {ι : Type*} (c : ι → ℂ) (r : ι → ℝ) : Set (ι → ℂ) :=
   Set.pi univ fun i => closedBall (c i) (r i)
 

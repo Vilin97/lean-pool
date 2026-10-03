@@ -26,7 +26,7 @@ endpoint/semibreak normal form, extract that form from every left-reduced
 divisor, and hence construct one in every linear-equivalence class.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -36,6 +36,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 
 /-- The divisor with the selected optional interior chip on each strand and no chips at the core
 vertices. -/
+@[expose]
 def semibreakDivisor {g : ℕ} (B : Banana g)
     (chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1))) : CFDiv B.graph
   | Sum.inl _ => 0
@@ -43,6 +44,7 @@ def semibreakDivisor {g : ℕ} (B : Banana g)
 
 /-- A divisor represented by at most one selected interior chip per strand and none at the core
 vertices. -/
+@[expose]
 def IsSemibreak {g : ℕ} (B : Banana g) (E : CFDiv B.graph) : Prop :=
   ∃ chips : ∀ γ : Fin (g + 1), Option (Fin (B.length γ - 1)),
     E = semibreakDivisor B chips
@@ -856,6 +858,7 @@ theorem rank_semibreak_eq_zero {g : ℕ} (B : Banana g)
 
 /-- The divisor `a·L + b·R + E` occurring in the banana reduced-divisor
 normal form. -/
+@[expose]
 noncomputable def bananaNormalForm {g : ℕ} (B : Banana g) (a b : ℤ)
     (E : CFDiv B.graph) : CFDiv B.graph :=
   a • oneChip (leftEndpoint B) + b • oneChip (rightEndpoint B) + E

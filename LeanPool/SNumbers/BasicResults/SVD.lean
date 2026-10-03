@@ -49,7 +49,7 @@ operators.
   operator (Bessel plus a row bound).
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -75,6 +75,7 @@ special case with no zeros. -/
 
 /-- `OrthonormalOrZero 𝕜 u`: each `u i` is a unit vector or zero, and distinct
 vectors are orthogonal. -/
+@[expose]
 def OrthonormalOrZero (𝕜 : Type*) [RCLike 𝕜] {H : Type*} [NormedAddCommGroup H]
     [InnerProductSpace 𝕜 H] {ι : Type*} (u : ι → H) : Prop :=
   (∀ i, ‖u i‖ = 1 ∨ u i = 0) ∧ Pairwise (fun i j => (inner 𝕜 (u i) (u j) : 𝕜) = 0)

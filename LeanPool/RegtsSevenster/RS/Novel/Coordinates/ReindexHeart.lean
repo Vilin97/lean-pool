@@ -17,7 +17,7 @@ and the identification of the parameter with Definition 5's mixed
 partition function.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

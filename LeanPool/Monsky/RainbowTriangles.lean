@@ -16,7 +16,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.Monsky.RainbowTriangles`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Monsky
 
@@ -105,6 +105,7 @@ lemma blue_region (X : ℝ²) : (coloring v X = Color.Blue) → v (X 0) ≥ v (1
 -- Record our definition of a rainbow triangle
 
 /-- A triangle is rainbow if its three vertices receive all three colors. -/
+@[expose]
 def rainbowTriangle (T : Fin 3 → ℝ²) : Prop := Function.Surjective (coloring v ∘ T)
 
 -- We need a few inequalities that will be used in the proof of the main lemma.

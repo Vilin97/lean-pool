@@ -10,7 +10,7 @@ public import LeanPool.Zeta5Irrational.Table.UpperCertificate
 
 /-! # Certified arcsine potential bounds (U04) -/
 
-@[expose] public section
+public section
 
 open Finset
 

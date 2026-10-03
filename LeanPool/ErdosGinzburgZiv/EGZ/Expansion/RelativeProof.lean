@@ -19,7 +19,7 @@ made uniform over every support in the prescribed box. All sampling and
 deletion arguments retain the positions of repeated vectors.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 open Module

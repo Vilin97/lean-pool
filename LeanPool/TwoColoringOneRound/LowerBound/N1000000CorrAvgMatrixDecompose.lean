@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -84,7 +84,7 @@ theorem dirMask_base_repVertex (d : DirIdx) :
 
 -- The overlap-type coefficient induced by a coloring.
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def coeff (f : Coloring n) (d : DirIdx) : Q :=
+@[expose] noncomputable def coeff (f : Coloring n) (d : DirIdx) : Q :=
   corrAvg f baseVertex (repVertex d)
 
 theorem corrAvg_eq_coeff_of_dirMask_eq (f : Coloring n) {u v : V} (d : DirIdx)

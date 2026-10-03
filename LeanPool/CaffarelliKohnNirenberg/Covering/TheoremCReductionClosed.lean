@@ -19,7 +19,7 @@ parabolic one dimensional Hausdorff measure.  The criterion is supplied as a
 hypothesis so that a later regularity theorem can instantiate it directly.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

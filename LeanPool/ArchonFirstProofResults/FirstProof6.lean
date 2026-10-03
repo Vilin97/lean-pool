@@ -21,4 +21,4 @@ The proof lives in `Problem6`; supporting infrastructure is in the `Auxiliary`
 sub-modules.
 -/
 
-@[expose] public section
+public section

@@ -19,7 +19,7 @@ the new base, the complement becomes the new remainder, and the
 mixed free part gains one unit summand.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

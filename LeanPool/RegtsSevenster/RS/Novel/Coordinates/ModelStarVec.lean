@@ -18,7 +18,7 @@ fibre-side assembled vector.  This is the form on which the
 colouring coordinates evaluate.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

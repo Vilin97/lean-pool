@@ -19,7 +19,7 @@ import Mathlib.Tactic.SetLike
 This module constructs the standard combinatorial unfolding of a rooted quiver.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Quiver
 
@@ -51,7 +51,7 @@ instance graphCoverQuiver {V : Type u} [Quiver.{u} V] (root : V) :
     x.2 ≫ (Quiver.FreeGroupoid.of V).map e = y.2}
 
 /-- The projection from the path-lifting cover to the original quiver. -/
-def graphCoverProjection {V : Type u} [Quiver.{u} V] (root : V) :
+@[expose] def graphCoverProjection {V : Type u} [Quiver.{u} V] (root : V) :
     graphCoverVertex root ⥤q V where
   obj x := x.1
   map e := e.1
@@ -73,7 +73,7 @@ lemma graphCoverCostar_ext {V : Type u} [Quiver.{u} V] {root : V}
   exact heq_of_eq (Subtype.ext (eq_of_heq h))
 
 /-- Explicit lifting of a star at a cover vertex. -/
-def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
+@[expose] def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     (x : graphCoverVertex root) :
     Quiver.Star x ≃ Quiver.Star x.1 where
   toFun := (graphCoverProjection root).star x
@@ -98,7 +98,7 @@ def graphCoverStarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     rfl
 
 /-- Explicit lifting of a costar at a cover vertex. -/
-def graphCoverCostarEquiv {V : Type u} [Quiver.{u} V] (root : V)
+@[expose] def graphCoverCostarEquiv {V : Type u} [Quiver.{u} V] (root : V)
     (x : graphCoverVertex root) :
     Quiver.Costar x ≃ Quiver.Costar x.1 where
   toFun := (graphCoverProjection root).costar x

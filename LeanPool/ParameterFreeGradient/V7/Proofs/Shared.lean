@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3AnchorNorming
 The normalized dual direction used by the anchor search and its norm-attaining pairing.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

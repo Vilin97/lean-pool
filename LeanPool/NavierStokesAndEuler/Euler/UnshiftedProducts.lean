@@ -14,7 +14,7 @@ import Mathlib.Data.Nat.Choose.Cast
 /-! Actual unshifted Gevrey product and lower-pressure estimates with constants independent of
 truncation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

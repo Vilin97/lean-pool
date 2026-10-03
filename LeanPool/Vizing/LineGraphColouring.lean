@@ -16,7 +16,7 @@ Any colouring of the line graph induces a proper colour assignment on
 equitable recolouring on a fixed finite palette.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Vizing.LineGraphColouring
 

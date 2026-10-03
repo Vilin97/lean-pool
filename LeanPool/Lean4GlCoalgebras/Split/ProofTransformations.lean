@@ -21,7 +21,7 @@ Here we define the GL-ext+pre system. This system is different from the paper, w
 how we connect non-axiomatic leaf nodes into `RuleApp` directly.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -52,7 +52,7 @@ inductive RuleApp {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequen
   | boxᵣ : (Δ : SplitSequent) → (A : Formula) → Sum.inr (□ A) ∈ Δ → RuleApp x τ
 
 /-- Given a RuleApp, obtain the principal formulas. -/
-def fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
+@[expose] def fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
   | RuleApp.pre _ _ => ∅
   | RuleApp.cutₗ _ _ => ∅
   | RuleApp.cutᵣ _ _ => ∅
@@ -72,7 +72,7 @@ def fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : Rule
   | RuleApp.boxᵣ _ A _ => {Sum.inr (□ A)}
 
 /-- Given a RuleApp, obtain the split sequent. -/
-def f {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
+@[expose] def f {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
   | RuleApp.pre y _ => τ y
   | RuleApp.cutₗ Δ _ => Δ
   | RuleApp.cutᵣ Δ _ => Δ
@@ -92,7 +92,7 @@ def f {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp
   | RuleApp.boxᵣ Δ _ _ => Δ
 
 /-- Given a RuleApp, obtain the non-principal formulas. -/
-def fₙ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} :
+@[expose] def fₙ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} :
     RuleApp x τ → SplitSequent := fun r ↦ f r \ fₚ r
 
 /-- Relating principal formulas, non-principal formulas, and the split sequent. -/
@@ -119,7 +119,7 @@ lemma fₙ_alternate {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSeq
 universe u
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[simp] def T {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequent) :
+@[expose, simp] def T {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequent) :
     CategoryTheory.Functor Type Type :=
   { obj := fun X ↦ ((RuleApp x τ × List X) : Type)
     map := fun {X Y} f ↦
@@ -130,25 +130,25 @@ universe u
     map_comp := by aesop_cat }
 
 /-- Get RuleApp of a node (first projection). -/
-def r {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
+@[expose] def r {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
     (α : X → (T x τ).obj X) (x : X) := (α x).1
 
 /-- Get premises of a node (second projection). -/
-def p {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
+@[expose] def p {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
     (α : X → (T x τ).obj X) (x : X) := (α x).2
 
 /-- Edge relation induced by `p`. -/
-def edge {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
+@[expose] def edge {X : Type} {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent}
     (α : X → (T x τ).obj X) (x y : X) : Prop := y ∈ p α x
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox {𝕏 : Split.Proof} {x : 𝕏.X} {τ} : RuleApp x τ → Prop
+@[expose] def RuleApp.isBox {𝕏 : Split.Proof} {x : 𝕏.X} {τ} : RuleApp x τ → Prop
   | RuleApp.boxₗ _ _ _ => true
   | RuleApp.boxᵣ _ _ _ => true
   | _ => false
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isNonAxLeaf {𝕏 : Split.Proof} {x : 𝕏.X} {τ} : RuleApp x τ → Prop
+@[expose] def RuleApp.isNonAxLeaf {𝕏 : Split.Proof} {x : 𝕏.X} {τ} : RuleApp x τ → Prop
   | RuleApp.pre _ _ => true
   | _ => false
 
@@ -197,7 +197,7 @@ structure PreProof {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSeque
       ∀ n, ∃ m, (r α (f.1 (n + m))).isBox
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def Proves {𝕏 : Split.Proof} (x : 𝕏.X) {σ} (𝕐 : PreProof x σ)
+@[expose] def Proves {𝕏 : Split.Proof} (x : 𝕏.X) {σ} (𝕐 : PreProof x σ)
     (Δ : SplitSequent) : Prop := f (r 𝕐.α 𝕐.root) = Δ
 
 end Ext
@@ -872,7 +872,7 @@ private theorem proofTransformation_path {𝕏 : Proof} {σ}
         known
 
 /-- Provides the proof transformation from local pre-proofs and its path witnesses. -/
-noncomputable def proofTransformation {𝕏 : Proof} {σ}
+@[expose] noncomputable def proofTransformation {𝕏 : Proof} {σ}
     (partialProof : (x : 𝕏.X) → Ext.PreProof x σ)
     (root_prop : ∀ x, Ext.Proves x (partialProof x) (σ x))
     (box_prop : ∀ x, (r 𝕏.α x).isBox →

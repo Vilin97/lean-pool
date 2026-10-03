@@ -20,7 +20,7 @@ state the comparisons using the actual normalized subdivision maps, ready
 for tracking persistent nodes through an iteration.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 

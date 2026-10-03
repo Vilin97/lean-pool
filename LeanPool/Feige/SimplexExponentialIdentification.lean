@@ -18,7 +18,7 @@ simplex statistic in (2.1) and the internal exponential representation, in
 the `NNReal` coordinate model used by `expProductMeasure`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory ProbabilityTheory

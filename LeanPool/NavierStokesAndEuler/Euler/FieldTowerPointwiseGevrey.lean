@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.FieldTowerRepresentative
 /-! Actual pointwise mixed derivatives from the finite weighted Sobolev
 norms of one coherent field tower. No pointwise estimate is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

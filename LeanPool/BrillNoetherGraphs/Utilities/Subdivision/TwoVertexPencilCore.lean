@@ -22,7 +22,7 @@ This packages the uniform hyperelliptic argument for banana graphs.  It
 depends only on the segment-reflection and rank-one layers.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 

@@ -16,7 +16,7 @@ structure `(superPow V 1) ⊗ V`: nested unit-padded standard basis
 vectors, one lemma per parity pattern.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

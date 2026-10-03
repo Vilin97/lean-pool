@@ -19,7 +19,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 lie in cylinder L² whenever its actual coordinate words do. The bound
 keeps the ordered-word sum; there is no extra alphabet factor. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ theorem cover_periodic (f : LiftDomain P → V) (c : AddSubgroup.zmultiples P) (
   congrArg f (EulerCylinderMeasureDescent.coveringMap_deck P c z)
 
 /-- Tensor, given by `jetSeries P (fun z => f (coveringMap P z)) q n`. -/
-def tensor (f : LiftDomain P → V) (n : ℕ) (q : LiftDomain P) : LiftTangent [×n]→L[ℝ] V :=
+@[expose] def tensor (f : LiftDomain P → V) (n : ℕ) (q : LiftDomain P) : LiftTangent [×n]→L[ℝ] V :=
   jetSeries P (fun z => f (coveringMap P z)) q n
 
 theorem tensor_continuous (f : LiftDomain P → V)

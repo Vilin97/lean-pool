@@ -53,7 +53,7 @@ The analytic statements allow an empty coordinate type. Statements involving a
 minimum coordinate or a star center explicitly require a nonempty coordinate type.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

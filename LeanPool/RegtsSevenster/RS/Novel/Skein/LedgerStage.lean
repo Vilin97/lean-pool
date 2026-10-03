@@ -20,7 +20,7 @@ given that way, so that a stage consumes only the involution and the
 one equation saying the glued labels are partners.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

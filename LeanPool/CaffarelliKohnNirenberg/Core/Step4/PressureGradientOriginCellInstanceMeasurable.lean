@@ -20,7 +20,7 @@ representative on the whole time interval. Its derivatives on all open
 subdomains share one exceptional set of times, as needed in `prop:bootstrap`.
 -/
 
-@[expose] public section
+public section
 
 section
 

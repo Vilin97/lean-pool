@@ -29,7 +29,7 @@ import this file and use `sphereSuspensionTowerFromMV` (or its aliases) to obtai
 the full positive-dimensional sphere top-homology family and orientation data.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory
 

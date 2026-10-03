@@ -29,7 +29,7 @@ Both are placed in `Conditional/` to make the external dependency visible.
 - [KK04], §1.6
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -84,7 +84,7 @@ Ehrenfeucht–Mostowski / Skolem-hull construction over `J`.
 `Conditional/MorleyHanfSchemaDischarge.lean`) via the schema-completion construction — in fact
 without consuming the sequence's tail indiscernibility. Kept as a named `Prop` because the
 bridge theorems below are stated against it. -/
-def MorleySeedTailTemplateRealizable : Prop :=
+@[expose] def MorleySeedTailTemplateRealizable : Prop :=
   ∀ (φ : L'.Sentenceω) (M : Type) [L'.Structure M] (a : ℕ → M) (J : Type) [LinearOrder J],
     Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1) →
     Sentenceω.Realize φ M →
@@ -247,7 +247,7 @@ namespace FirstOrder.Language
 namespace HeightCex
 
 /-- The counterexample language: unary predicates `Pᵢ` indexed by `i : ℕ`, nothing else. -/
-def Lang : Language.{0, 0} where
+@[expose] def Lang : Language.{0, 0} where
   Functions _ := Empty
   Relations n := match n with
     | 1 => ℕ
@@ -269,12 +269,12 @@ noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
 noncomputable def hgt (x : Carrier) : ℕ := Function.invFun emb x
 
 /-- The unary atom `Pᵢ x₀`. -/
-def P (i : ℕ) : Lang.BoundedFormulaω Empty 1 :=
+@[expose] def P (i : ℕ) : Lang.BoundedFormulaω Empty 1 :=
   BoundedFormulaω.rel (n := 1) (show Lang.Relations 1 from i)
     (fun _ => Term.var (Sum.inr (0 : Fin 1)))
 
 /-- The countable conjunction `⋀ᵢ Pᵢ x₀`. -/
-def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
+@[expose] def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
 
 /-- The seed: `⋀ᵢ Pᵢ` first, then every `Pᵢ`. -/
 def seed : ℕ → Σ n, Lang.BoundedFormulaω Empty n := fun k =>

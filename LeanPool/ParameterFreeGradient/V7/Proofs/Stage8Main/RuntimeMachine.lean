@@ -18,7 +18,7 @@ the primitive `O3.FirstOrderMethod` execution interface from the historical
 namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 
@@ -45,6 +45,7 @@ structure RuntimeData (d : ℕ) where
   anchorTrace : List (Observation d)
 
 /-- The accepted anchor smoothness estimate. -/
+@[expose]
 noncomputable def RuntimeData.Ma (data : RuntimeData d) : ℝ :=
   (2 : ℝ) ^ data.anchorEpoch * data.input.M0
 
@@ -63,16 +64,17 @@ structure RuntimeControllerState (d : ℕ) where
   reports : List (TrialReport d)
 
 /-- The controller state before its first local trial. -/
-def initialRuntimeControllerState : RuntimeControllerState d :=
+@[expose] def initialRuntimeControllerState : RuntimeControllerState d :=
   ⟨0, 0, [], []⟩
 
 /-- The current dyadic smoothness estimate. -/
+@[expose]
 noncomputable def RuntimeControllerState.M (data : RuntimeData d)
     (state : RuntimeControllerState d) : ℝ :=
   (2 : ℝ) ^ state.scaleEpoch * data.Ma
 
 /-- The current dyadic radius estimate normalized by the initial gradient size. -/
-noncomputable def RuntimeControllerState.D (data : RuntimeData d)
+@[expose] noncomputable def RuntimeControllerState.D (data : RuntimeData d)
     (state : RuntimeControllerState d) : ℝ :=
   (2 : ℝ) ^ state.radiusLevel * data.G / state.M data
 
@@ -85,7 +87,7 @@ theorem RuntimeControllerState.D_pos (data : RuntimeData d)
   exact div_pos (mul_pos (pow_pos (by norm_num) _) data.hG) (state.M_pos data)
 
 /-- The certified local trial selected for the current exponent regime and controller estimates. -/
-noncomputable def runtimeTrial (data : RuntimeData d)
+@[expose] noncomputable def runtimeTrial (data : RuntimeData d)
     (state : RuntimeControllerState d) : LocalTrial d :=
   if hp2 : data.input.p < 2 then
     belowTrialFor data.input.p data.hp hp2 data.input.eps
@@ -101,7 +103,7 @@ noncomputable def runtimeTrial (data : RuntimeData d)
       (state.M_pos data) (state.D_pos data) data.input.x0 data.cached
 
 /-- The next controller state after a scale failure, resetting the radius level. -/
-noncomputable def nextScale (data : RuntimeData d) (state : RuntimeControllerState d)
+@[expose] noncomputable def nextScale (data : RuntimeData d) (state : RuntimeControllerState d)
     (report : TrialReport d) : RuntimeControllerState d :=
   { scaleEpoch := state.scaleEpoch + 1
     radiusLevel := 0
@@ -109,7 +111,7 @@ noncomputable def nextScale (data : RuntimeData d) (state : RuntimeControllerSta
     reports := state.reports ++ [report] }
 
 /-- The next controller state after a radius failure, retaining the current smoothness scale. -/
-noncomputable def nextRadius (data : RuntimeData d) (state : RuntimeControllerState d)
+@[expose] noncomputable def nextRadius (data : RuntimeData d) (state : RuntimeControllerState d)
     (report : TrialReport d) : RuntimeControllerState d :=
   { scaleEpoch := state.scaleEpoch
     radiusLevel := state.radiusLevel + 1
@@ -132,6 +134,7 @@ inductive CurrentMethodState (d : ℕ) where
       (observations : List (Observation d))
 
 /-- The first action of the current local trial, embedded in the global method state. -/
+@[expose]
 noncomputable def startLocalAction (data : RuntimeData d)
     (state : RuntimeControllerState d) : O3.Action d (CurrentMethodState d) :=
   let trial := runtimeTrial data state
@@ -141,7 +144,7 @@ noncomputable def startLocalAction (data : RuntimeData d)
   | .finish _ _ => .done data.input.x0
 
 /-- The next local query or controller transition after a local trial observation. -/
-noncomputable def continueLocalAction (data : RuntimeData d)
+@[expose] noncomputable def continueLocalAction (data : RuntimeData d)
     (state : RuntimeControllerState d)
     (machineState : (runtimeTrial data state).State)
     (observations : List (Observation d)) : O3.Action d (CurrentMethodState d) :=
@@ -158,7 +161,7 @@ noncomputable def continueLocalAction (data : RuntimeData d)
       | .radius _ => startLocalAction data (nextRadius data state report)
 
 /-- The observable state transition of the complete parameter-free method. -/
-noncomputable def currentMethodAction :
+@[expose] noncomputable def currentMethodAction :
     CurrentMethodState d → O3.Action d (CurrentMethodState d)
   | .needX0 input =>
       .query input.x0 fun observation =>
@@ -198,7 +201,7 @@ noncomputable def currentMethodAction :
 
 /-- The first-order method implementing initialization, anchor search, and the geometric
 controller. -/
-noncomputable def currentMethod (d : ℕ) : O3.FirstOrderMethod d where
+@[expose] noncomputable def currentMethod (d : ℕ) : O3.FirstOrderMethod d where
   State := CurrentMethodState d
   initial := fun input => CurrentMethodState.needX0
     { p := input.p, eps := input.eps, x0 := input.x0,
@@ -206,6 +209,7 @@ noncomputable def currentMethod (d : ℕ) : O3.FirstOrderMethod d where
   action := currentMethodAction
 
 /-- One family is fixed before runtime `p`, dimension-specific input, or oracle. -/
+@[expose]
 noncomputable def currentMethodFamily : RuntimeMethodFamily := fun d => currentMethod d
 
 end V7.Stage8Main

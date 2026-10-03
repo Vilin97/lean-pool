@@ -30,7 +30,7 @@ Nagata's criterion then
 gives that S itself is a UFD.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

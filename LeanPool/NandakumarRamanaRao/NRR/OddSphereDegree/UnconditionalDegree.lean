@@ -18,7 +18,7 @@ invariance APIs from that setup. Unconditional instances of both fields are cons
 and re-exported through `SphereOddDegree.Final`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -56,7 +56,7 @@ variable (S : SphereDegreeSetup)
 /-- The integer **degree** of a self-map `f : C(Sphere n, Sphere n)` (`n ≥ 1`),
 read off the setup's top-homology orientation. Honest and unconditional *given*
 the setup `S`. -/
-def degree {n : ℕ} (hn : 1 ≤ n) (f : C(Sphere n, Sphere n)) : ℤ :=
+@[expose] def degree {n : ℕ} (hn : 1 ≤ n) (f : C(Sphere n, Sphere n)) : ℤ :=
   S.orientation.degree hn f
 
 /-- **Compatibility with the conditional API.** The setup degree is the conditional
@@ -102,7 +102,7 @@ theorem not_homotopic_of_degree_ne {n : ℕ} (hn : 1 ≤ n)
 /-- The integer **degree of a `TopCat.sphere n` self-morphism** `g`, read off the
 setup's orientation. the library-sphere degree is its value on the model
 transport (`degree_eq_degreeTopCat`). -/
-def degreeTopCat {n : ℕ} (hn : 1 ≤ n)
+@[expose] def degreeTopCat {n : ℕ} (hn : 1 ≤ n)
     (g : TopCat.sphere.{0} n ⟶ TopCat.sphere.{0} n) : ℤ :=
   degreeOfIsoTop (S.orientation.iso n hn) g
 
@@ -187,7 +187,7 @@ end SphereDegreeSetup
 
 /-- A `SphereSuspensionTower` and a `SingularPrismOperator` assemble a full
 `SphereDegreeSetup`. -/
-def SphereSuspensionTower.degreeSetup (T : SphereSuspensionTower)
+@[expose] def SphereSuspensionTower.degreeSetup (T : SphereSuspensionTower)
     (prism : SingularPrismOperator) : SphereDegreeSetup where
   orientation := T.orientation
   prism := prism

@@ -17,7 +17,7 @@ identity is the reusable form of the manuscript's ledger
 `number of nonredundant gates = target rank + defect rank`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -25,28 +25,28 @@ namespace N4
 noncomputable section
 
 /-- The target ambient space `Aff + T`. -/
-def targetAmbient (m : Nat) (T : Submodule F₂ (ANF m)) : Submodule F₂ (ANF m) :=
+@[expose] def targetAmbient (m : Nat) (T : Submodule F₂ (ANF m)) : Submodule F₂ (ANF m) :=
   affine m ⊔ T
 
 /-- Target dimension of a wire space, measured modulo affine functions. -/
-def flagTargetRank {m : Nat} (V T : Submodule F₂ (ANF m)) : Nat :=
+@[expose] def flagTargetRank {m : Nat} (V T : Submodule F₂ (ANF m)) : Nat :=
   Module.finrank F₂ ↥(V ⊓ targetAmbient m T) - Module.finrank F₂ ↥(affine m)
 
 /-- Defect dimension: directions in the wire space outside `Aff + T`. -/
-def flagDefectRank {m : Nat} (V T : Submodule F₂ (ANF m)) : Nat :=
+@[expose] def flagDefectRank {m : Nat} (V T : Submodule F₂ (ANF m)) : Nat :=
   Module.finrank F₂ ↥V - Module.finrank F₂ ↥(V ⊓ targetAmbient m T)
 
 /-- The wire-space flag associated with a semantic circuit. -/
-def circuitFlag {m r : Nat} (C : Circuit m r) (j : Nat) : Submodule F₂ (ANF m) :=
+@[expose] def circuitFlag {m r : Nat} (C : Circuit m r) (j : Nat) : Submodule F₂ (ANF m) :=
   wireSpace C.gate j
 
 /-- A gate is nonredundant when its output is not already in the preceding
 wire space.  Minimal circuits have this property at every gate. -/
-def NonredundantAt {m r : Nat} (C : Circuit m r) (j : Fin r) : Prop :=
+@[expose] def NonredundantAt {m r : Nat} (C : Circuit m r) (j : Fin r) : Prop :=
   C.gate j ∉ circuitFlag C j.val
 
 /-- A gate is useful when adjoining it raises the target rank. -/
-def UsefulAt {m r : Nat} (C : Circuit m r) (T : Submodule F₂ (ANF m))
+@[expose] def UsefulAt {m r : Nat} (C : Circuit m r) (T : Submodule F₂ (ANF m))
     (j : Fin r) : Prop :=
   flagTargetRank (circuitFlag C (j.val + 1)) T =
     flagTargetRank (circuitFlag C j.val) T + 1

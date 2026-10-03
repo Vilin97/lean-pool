@@ -25,7 +25,7 @@ functional sees only the multiset and the set, and the sign the
 reindexing costs is exactly the one the list carries.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,18 +37,21 @@ variable {k ℓ : ℕ}
 
 /-- The even colours of a mixed colouring, as a multiset: even
 colours may repeat. -/
+@[expose]
 noncomputable def evenMultisetOf {d : ℕ} (c : MixedColouring k ℓ d)
     : Multiset (Fin k) :=
   ↑((List.ofFn c).filterMap Sum.getLeft?)
 
 /-- The odd colours, in slot order: the list whose sorting sign the
 summand carries. -/
+@[expose]
 noncomputable def oddListOf {d : ℕ} (c : MixedColouring k ℓ d)
     : List (Fin (2 * ℓ)) :=
   (List.ofFn c).filterMap Sum.getRight?
 
 /-- The odd colours as a set — the index the functional is
 evaluated at. -/
+@[expose]
 noncomputable def oddFinsetOf {d : ℕ} (c : MixedColouring k ℓ d)
     : Finset (Fin (2 * ℓ)) :=
   (oddListOf c).toFinset

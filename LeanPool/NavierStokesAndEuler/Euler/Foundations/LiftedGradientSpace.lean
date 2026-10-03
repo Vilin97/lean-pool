@@ -19,7 +19,7 @@ The angular measure here has total mass `period`; renormalizing it changes only 
 fixed scalar in the L² norm and not the gradient subspace or projection.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,7 +38,7 @@ abbrev LiftTangent := Vector3 × ℝ
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Product Lebesgue and angle Haar measure on the cylinder. -/
-def liftMeasure : Measure (LiftDomain period) :=
+@[expose] def liftMeasure : Measure (LiftDomain period) :=
   (volume : Measure Vector3).prod (volume : Measure (AddCircle period))
 
 instance liftMeasure_finiteOnCompacts : IsFiniteMeasureOnCompacts (liftMeasure period) := by
@@ -49,11 +49,11 @@ instance liftMeasure_finiteOnCompacts : IsFiniteMeasureOnCompacts (liftMeasure p
 abbrev LiftL2 := Lp Vector3 2 (liftMeasure period)
 
 /-- The scalar field pulled back to covering coordinates centered at x. -/
-def localLift (φ : LiftDomain period → ℝ) (x : LiftDomain period) : LiftTangent → ℝ :=
+@[expose] def localLift (φ : LiftDomain period → ℝ) (x : LiftDomain period) : LiftTangent → ℝ :=
   fun h => φ (x.1 + h.1, x.2 + (h.2 : AddCircle period))
 
 /-- The quotient covering map from the real tangent space to the cylinder. -/
-def coveringMap : LiftTangent → LiftDomain period :=
+@[expose] def coveringMap : LiftTangent → LiftDomain period :=
   fun z => (z.1, (z.2 : AddCircle period))
 
 omit [Fact (0 < period)] in
@@ -73,7 +73,7 @@ theorem fderiv_localLift_cover (φ : LiftDomain period → ℝ) (z : LiftTangent
   rw [localLift_cover, fderiv_comp_add_left, add_zero]
 
 /-- The actual differential expression `κ ∇_y φ + m ∂_θ φ`. -/
-def liftedGradient (κ : ℝ) (m : Vector3) (φ : LiftDomain period → ℝ)
+@[expose] def liftedGradient (κ : ℝ) (m : Vector3) (φ : LiftDomain period → ℝ)
     (x : LiftDomain period) : Vector3 :=
   WithLp.toLp 2 fun i =>
     κ * fderiv ℝ (localLift period φ x) 0 (EuclideanSpace.single i 1, 0) +
@@ -169,7 +169,8 @@ theorem measurePreserving_translation (a : LiftDomain period) :
     (measurePreserving_add_right (volume : Measure (AddCircle period)) a.2)
 
 /-- The measure preserving translation isometry on the actual L² space. -/
-def translation (a : LiftDomain period) : LiftL2 period →ₗᵢ[ℝ] LiftL2 period :=
+@[expose] def translation (a : LiftDomain period) :
+    LiftL2 period →ₗᵢ[ℝ] LiftL2 period :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain period => x + a)
     (measurePreserving_translation period a)
 
@@ -215,7 +216,7 @@ theorem testGradientLp_mem_generators (κ : ℝ) (m : Vector3) (φ : LiftDomain 
   ⟨φ, hφ, testGradientLp_ae period κ m φ hφ⟩
 
 /-- Closure of the span of genuine smooth test gradients in the concrete L² space. -/
-def gradientSpace (κ : ℝ) (m : Vector3) : Submodule ℝ (LiftL2 period) :=
+@[expose] def gradientSpace (κ : ℝ) (m : Vector3) : Submodule ℝ (LiftL2 period) :=
   (Submodule.span ℝ (({g : EulerLiftedGradientSpace.LiftL2 period | ∃ φ :
       EulerLiftedGradientSpace.LiftDomain period → ℝ, (HasCompactSupport φ ∧ ∀ x, ContDiff ℝ ∞
           (EulerLiftedGradientSpace.localLift period φ x)) ∧ g
@@ -236,7 +237,7 @@ instance gradientSpace_complete (κ : ℝ) (m : Vector3) :
   (gradientSpace_closed period κ m).completeSpace_coe
 
 /-- Orthogonal projection onto the closed lifted gradient subspace. -/
-def gradientProjection (κ : ℝ) (m : Vector3) : LiftL2 period →L[ℝ] LiftL2 period :=
+@[expose] def gradientProjection (κ : ℝ) (m : Vector3) : LiftL2 period →L[ℝ] LiftL2 period :=
   (gradientSpace period κ m).starProjection
 
 /-- The projection bound is independent of the frequency parameter κ. -/
@@ -321,7 +322,7 @@ theorem gradientProjection_translation (κ : ℝ) (m : Vector3) (a : LiftDomain 
     (translation period a).map_starProjection (gradientSpace period κ m) f
 
 /-- The concrete L² weak divergence-free subspace. -/
-def divergenceFreeSpace (κ : ℝ) (m : Vector3) : Submodule ℝ (LiftL2 period) :=
+@[expose] def divergenceFreeSpace (κ : ℝ) (m : Vector3) : Submodule ℝ (LiftL2 period) :=
   (gradientSpace period κ m).orthogonal
 
 /-- Pressure cancellation in the concrete lifted L² space. -/

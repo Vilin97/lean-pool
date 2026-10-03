@@ -18,7 +18,7 @@ torsion-periodicity argument that follows solely from linear equivalence,
 before any banana rank computation is used.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

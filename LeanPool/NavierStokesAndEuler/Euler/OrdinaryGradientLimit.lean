@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryGradientStability
 actual time integral of the velocity gradient. The H³ bound, all higher
 bounds, and path Cauchy convergence are derived from the true equations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -22,7 +22,7 @@ import Std.Tactic.BVDecide.Normalize.Prop
 This module provides the per-instruction Hoare specifications.
 -/
 
-@[expose] public section
+public section
 open Lean Elab Tactic
 
 /-

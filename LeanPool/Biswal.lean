@@ -22,4 +22,4 @@ Tags: algebraic-combinatorics, chebyshev, demazure
 MSC: 05E10
 -/
 
-@[expose] public section
+public section

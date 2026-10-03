@@ -17,7 +17,7 @@ to canonical barycentric realizations.  The target geometry is unchanged: finite
 embedded arcs admit uniform disjoint vertex disks and nonincident edge tubes.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -609,7 +609,7 @@ noncomputable def exitData (A : K.CentralPolygonalArc hcont hinj D C e) :
         (K.edgeFirstUsed_ne_edgeSecondUsed e)
 
 /-- The `trimmedCarrier` declaration. -/
-def trimmedCarrier (A : K.CentralPolygonalArc hcont hinj D C e) : Set Plane :=
+@[expose] def trimmedCarrier (A : K.CentralPolygonalArc hcont hinj D C e) : Set Plane :=
   A.parameterization.curve '' Set.Icc A.exitData.left A.exitData.right
 
 theorem trimmedCarrier_subset_resolvedCarrier
@@ -664,27 +664,27 @@ theorem trimmedCarrier_avoids_nonincident
     (Set.image_subset_range _ _)
 
 /-- The `leftEndpoint` declaration. -/
-noncomputable def leftEndpoint
+@[expose] noncomputable def leftEndpoint
     (A : K.CentralPolygonalArc hcont hinj D C e) : Plane :=
   A.parameterization.curve A.exitData.left
 
 /-- The `rightEndpoint` declaration. -/
-noncomputable def rightEndpoint
+@[expose] noncomputable def rightEndpoint
     (A : K.CentralPolygonalArc hcont hinj D C e) : Plane :=
   A.parameterization.curve A.exitData.right
 
 /-- The `leftSpoke` declaration. -/
-noncomputable def leftSpoke
+@[expose] noncomputable def leftSpoke
     (A : K.CentralPolygonalArc hcont hinj D C e) : Set Plane :=
   segment ℝ (h (K.edgeFirstPoint e)) A.leftEndpoint
 
 /-- The `rightSpoke` declaration. -/
-noncomputable def rightSpoke
+@[expose] noncomputable def rightSpoke
     (A : K.CentralPolygonalArc hcont hinj D C e) : Set Plane :=
   segment ℝ A.rightEndpoint (h (K.edgeSecondPoint e))
 
 /-- The complete replacement carrier of one intrinsic edge. -/
-noncomputable def completeCarrier
+@[expose] noncomputable def completeCarrier
     (A : K.CentralPolygonalArc hcont hinj D C e) : Set Plane :=
   A.leftSpoke ∪ A.trimmedCarrier ∪ A.rightSpoke
 
@@ -724,7 +724,7 @@ theorem rightEndpoint_on_sphere
   A.exitData.right_on_sphere
 
 /-- The trimmed polygonal middle as a path. -/
-noncomputable def middlePath (A : K.CentralPolygonalArc hcont hinj D C e) :
+@[expose] noncomputable def middlePath (A : K.CentralPolygonalArc hcont hinj D C e) :
     Path A.leftEndpoint A.rightEndpoint where
   toFun t := A.parameterization.curve
     (Path.segment A.exitData.left A.exitData.right t)
@@ -758,7 +758,7 @@ theorem range_middlePath (A : K.CentralPolygonalArc hcont hinj D C e) :
     exact ⟨t, rfl⟩
 
 /-- The complete polygonal replacement path for one intrinsic edge. -/
-noncomputable def completePath (A : K.CentralPolygonalArc hcont hinj D C e) :
+@[expose] noncomputable def completePath (A : K.CentralPolygonalArc hcont hinj D C e) :
     Path (h (K.edgeFirstPoint e)) (h (K.edgeSecondPoint e)) :=
   (Path.segment (h (K.edgeFirstPoint e)) A.leftEndpoint).trans
     (A.middlePath.trans (Path.segment A.rightEndpoint (h (K.edgeSecondPoint e))))
@@ -1333,7 +1333,7 @@ theorem faceReplacementCarrier_inter_next {h : K.realization → Plane}
       simp [IntrinsicTwoComplex.faceUsedVertex, add_assoc]
 
 /-- A point is an active graph vertex when it is a canonical used-vertex point. -/
-def IsGraphVertexPoint (x : K.realization) : Prop :=
+@[expose] def IsGraphVertexPoint (x : K.realization) : Prop :=
   ∃ v : K.UsedVertex, x = K.vertexPoint v
 
 /-- The unique unit-interval parameter of a point on an intrinsic edge. -/
@@ -1388,7 +1388,7 @@ theorem edgeAt_spec (x : K.realization) (hx : x ∈ K.oneSkeleton) :
   Classical.choose_spec hx
 
 /-- The edgewise replacement map, expressed on the intrinsic edge carrier. -/
-noncomputable def edgeReplacementMap {h : K.realization → Plane}
+@[expose] noncomputable def edgeReplacementMap {h : K.realization → Plane}
     (hcont : Continuous h) (hinj : Function.Injective h)
     (D : K.VertexDiskControl h) (C : K.CentralTubeControl hcont hinj D)
     (e : K.Edge) (x : K.realization) : Plane :=

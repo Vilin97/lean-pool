@@ -20,7 +20,7 @@ The indices deliberately agree with `rpfcheck.c`: a named point has index
 `s : ℕ`, is the end of block `s - 1`, and hence runs in W4 start at `1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -33,10 +33,12 @@ namespace RichWitness
 variable {m n p : ℕ}
 
 /-- The right end of block `i - 1`; index zero is the tail of the slot. -/
+@[expose]
 def point (w : RichWitness) (a e i : ℕ) : Form :=
   if i = 0 then [] else (w.block a e (i - 1)).endForm
 
 /-- The length of block `i`, as a form. -/
+@[expose]
 def blockLength (w : RichWitness) (a e i : ℕ) : Form :=
   subForm (w.block a e i).endForm (w.point a e i)
 
@@ -47,6 +49,7 @@ This intentionally follows `rpfcheck.c`'s W3 scan: a chip belongs to the
 when zero-length blocks make two named forms equal.  In particular index zero
 is the tail, not a named interior point, so it never receives a chip.  W3
 separately ensures that every chip has such a matching interior point. -/
+@[expose]
 def chipAt (w : RichWitness) (a e i : ℕ) : ℤ :=
   if i == 0 then 0 else
     w.chips.foldl (fun z c =>
@@ -60,6 +63,7 @@ def chipAt (w : RichWitness) (a e i : ℕ) : ℤ :=
   simp [chipAt]
 
 /-- Chip coefficients at named points `1, …, s`, inclusive. -/
+@[expose]
 def chipPrefix (w : RichWitness) (a e s : ℕ) : ℤ :=
   (List.range (s + 1)).foldl (fun z i => z + w.chipAt a e i) 0
 
@@ -70,6 +74,7 @@ def tailCandidate (w : RichWitness) (a e s : ℕ) : ℤ :=
 
 /-- The W5 head candidate when precisely the last `s` named points have
 fallen into the head. -/
+@[expose]
 def headCandidate (w : RichWitness) (a e s : ℕ) : ℤ :=
   let k := (w.blockList a e).length
   (List.range (s + 1)).foldl (fun z t =>
@@ -81,27 +86,33 @@ def headCandidate (w : RichWitness) (a e s : ℕ) : ℤ :=
 This is public because the closed-face soundness proof uses the elementary
 fact that it is bounded above by every candidate represented by a collapsed
 endpoint prefix/suffix. -/
+@[expose]
 def minOver (f : ℕ → ℤ) (bound : ℕ) : ℤ :=
   (List.range bound).foldl (fun z i => min z (f (i + 1))) (f 0)
 
 /-- The conservative W5 contribution of a slot at its tail. -/
+@[expose]
 def tailContribution (w : RichWitness) (a e : ℕ) : ℤ :=
   minOver (w.tailCandidate a e) ((w.plan a).headSlack.getD e 0)
 
 /-- The conservative W5 contribution of a slot at its head. -/
+@[expose]
 def headContribution (w : RichWitness) (a e : ℕ) : ℤ :=
   minOver (w.headCandidate a e) ((w.plan a).tailSlack.getD e 0)
 
 /-- The constant residual of the W4 run from named point `i` through `j`. -/
+@[expose]
 def w4Residual (w : RichWitness) (a e i j : ℕ) : ℤ :=
   (List.range (j + 1 - i)).foldl (fun z t => z + w.chipAt a e (i + t)) 0 +
     (w.block a e j).lo - (w.block a e (i - 1)).hi
 
 /-- The strict-integer certificate that a form is positive. -/
+@[expose]
 def positiveCheck (c : Cert) (Γ : Context) (f : Form) : Bool :=
   c.check Γ (subForm f [1])
 
 /-- W1: block order, final endpoint, and endpoint-slack discipline. -/
+@[expose]
 def w1Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) (Γ : Context) : Bool :=
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     let bs := w.blockList a.val e.val
@@ -121,6 +132,7 @@ def w1Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) (Γ : Contex
 
 /-- W2: each block is realizable by convex interpolation and the block rises
 close the potential around every slot. -/
+@[expose]
 def w2Checks (w : RichWitness) (core : ExplicitPotential.Core n p) (Γ : Context) : Bool :=
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     let k := (w.blockList a.val e.val).length
@@ -134,6 +146,7 @@ def w2Checks (w : RichWitness) (core : ExplicitPotential.Core n p) (Γ : Context
       (subForm (w.pot a.val (core.head e).val) (w.pot a.val (core.tail e).val)))
 
 /-- W3: each chip is on this slot's syntactically named interior point. -/
+@[expose]
 def w3Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) : Bool :=
   w.chips.all (fun c => decide (c.1 < p)) &&
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
@@ -147,10 +160,12 @@ def w3Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) : Bool :=
 W1 makes the named points weakly increasing from `0`, such a point evaluates
 to `0` at every parameter value, so any collapsed run through it sits on the
 tail core vertex, where W5 — not W4 — accounts for it. -/
+@[expose]
 def tailConfined (w : RichWitness) (a e i : ℕ) : Bool :=
   formEq (w.point a e i) []
 
 /-- The head-side mirror of `tailConfined`. -/
+@[expose]
 def headConfined (w : RichWitness) (a e j : ℕ) : Bool :=
   formEq (w.point a e j) (coordForm e)
 
@@ -167,6 +182,7 @@ the *declared* endpoint slack.  That is unsound: `α` bounds how many named
 points **may** slide onto the tail, not how many **do**, so a run starting at
 `i ≤ α` can collapse at a strictly interior vertex whose residual then goes
 unchecked.  See the accompanying analysis. -/
+@[expose]
 def w4Checks (w : RichWitness) (_core : ExplicitPotential.Core n p) (Γ : Context) : Bool :=
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun e : Fin p =>
     let k := (w.blockList a.val e.val).length
@@ -188,6 +204,7 @@ at the plan's own vertex.
 instead that `D − m·1_x` is winnable.  The two run through identical
 machinery; this coefficient is the only difference, exactly as in
 `rpfcheck.c`'s W5. -/
+@[expose]
 def w5MultResidual (w : RichWitness) (core : ExplicitPotential.Core n p)
     (mult : ℤ) (a v : ℕ) : ℤ :=
   w.divisorCore.getD v 0 - (if v == a then mult else 0) +
@@ -213,6 +230,7 @@ def w5MultChecks (w : RichWitness) (core : ExplicitPotential.Core n p)
   simp [w5MultChecks, ExplicitPotential.allFin_eq_true_iff]
 
 /-- W5: all conservative core residuals are effective. -/
+@[expose]
 def w5Checks (w : RichWitness) (core : ExplicitPotential.Core n p) : Bool :=
   ExplicitPotential.allFin (fun a : Fin n => ExplicitPotential.allFin fun v : Fin n =>
     decide (0 ≤ w.w5Residual core a.val v.val))

@@ -19,7 +19,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 The quotient action component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperQuotientAction
@@ -95,13 +95,13 @@ def paperThetaTwoAddEquiv (h : H) : D ≃+ D :=
 /-- The multiplicative reindexing form used by the group Hilbert space. Paper:
 §3.
 -/
-def paperThetaOneMulEquiv (h : H) : Multiplicative D ≃ Multiplicative D :=
+@[expose] def paperThetaOneMulEquiv (h : H) : Multiplicative D ≃ Multiplicative D :=
   (additiveEquivToMulAut (paperThetaOneLinearHom h)).toEquiv
 
 /-- The second quotient has the analogous multiplicative reindexing. Paper:
 §3.
 -/
-def paperThetaTwoMulEquiv (h : H) : Multiplicative D ≃ Multiplicative D :=
+@[expose] def paperThetaTwoMulEquiv (h : H) : Multiplicative D ≃ Multiplicative D :=
   (additiveEquivToMulAut (paperThetaTwoLinearHom h)).toEquiv
 
 @[simp] theorem paperThetaOneMulEquiv_ofAdd (h : H) (d : D) :

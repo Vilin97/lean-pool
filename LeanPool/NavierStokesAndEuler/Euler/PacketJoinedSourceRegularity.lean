@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourceRegularity
 
 /-! Classical spatial slices and true within-time derivatives of the joined recursive family. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ Bochner integral. Its differential equation, initial trace, uniqueness, and
 weighted bounds are proved, rather than included in the evolution data.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -91,7 +91,7 @@ theorem backward_derivative (t : Icc (0 : ℝ) T) :
   exact U.backward_eq_inverse ⟨s,hs⟩
 
 /-- The two-time homogeneous propagator. -/
-def propagator (t s : Icc (0 : ℝ) T) : E →L[ℝ] E :=
+@[expose] def propagator (t s : Icc (0 : ℝ) T) : E →L[ℝ] E :=
   (U.forward t).comp (U.backward s)
 
 omit [CompleteSpace E] in
@@ -101,7 +101,7 @@ omit [CompleteSpace E] in
   U.forward_backward t
 
 /-- The forcing pulled back by the inverse homogeneous evolution. -/
-def transformedForcing (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
+@[expose] def transformedForcing (f : C(Icc (0 : ℝ) T, E)) : ℝ → E :=
   fun s => extendPath T hT U.backward s (extendPath T hT f s)
 
 omit [CompleteSpace E] in
@@ -111,7 +111,7 @@ theorem transformedForcing_continuous (f : C(Icc (0 : ℝ) T, E)) :
   (extendPath_continuous T hT U.backward).clm_apply (extendPath_continuous T hT f)
 
 /-- Duhamel's formula, as an actual interval integral. -/
-def solutionReal (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : ℝ → E :=
+@[expose] def solutionReal (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : ℝ → E :=
   fun t => extendPath T hT U.forward t
     (U.backward ⟨0,le_rfl,hT⟩ a₀ + ∫ s in (0 : ℝ)..t, U.transformedForcing f s)
 
@@ -123,7 +123,7 @@ theorem solutionReal_continuous (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
       (U.transformedForcing_continuous f)).continuous)
 
 /-- The actual continuous forced solution on the time interval. -/
-def solution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
+@[expose] def solution (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) : C(Icc (0 : ℝ) T,E) :=
   ⟨fun t => U.solutionReal f a₀ t, (U.solutionReal_continuous f a₀).comp continuous_subtype_val⟩
 
 /-- Duhamel's formula attains the prescribed initial data. -/

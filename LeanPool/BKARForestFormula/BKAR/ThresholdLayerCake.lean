@@ -21,7 +21,7 @@ nonnegative weights, and the weighted sum of threshold-component indicators
 recovers the BKAR interpolation value.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 

@@ -18,7 +18,7 @@ sectors to the one-cube-integral-per-forest form of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

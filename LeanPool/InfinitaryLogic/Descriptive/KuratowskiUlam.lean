@@ -35,7 +35,7 @@ in the Baire space `X` are non-meager, some such `x₁` lies in `G`. Then
 space.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Topology TopologicalSpace
 

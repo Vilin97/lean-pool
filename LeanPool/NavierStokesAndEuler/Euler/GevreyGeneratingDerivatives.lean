@@ -33,7 +33,7 @@ The polynomials below are auxiliary nonnegative scalar polynomials.  Their
 composition is the exact scalar Faà di Bruno sum, not an assumed majorant
 for a flow or for a solution of a differential equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -207,7 +207,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -300,11 +300,11 @@ theorem generating_sum_le_polynomial
     _ = _ := by simp only [Polynomial.eval_comp, p, q]
 
 /-- Normalized jet, given by `‖P n‖/(n.factorial : ℝ)^2`. -/
-def normalizedJet (P : FormalMultilinearSeries ℝ E F) (n : ℕ) : ℝ :=
+@[expose] def normalizedJet (P : FormalMultilinearSeries ℝ E F) (n : ℕ) : ℝ :=
   ‖P n‖/(n.factorial : ℝ)^2
 
 /-- Generating sum, given by `∑ n ∈ Finset.Icc 1 N, normalizedJet P n*z^n`. -/
-def generatingSum (P : FormalMultilinearSeries ℝ E F) (N : ℕ) (z : ℝ) : ℝ :=
+@[expose] def generatingSum (P : FormalMultilinearSeries ℝ E F) (N : ℕ) (z : ℝ) : ℝ :=
   ∑ n ∈ Finset.Icc 1 N, normalizedJet P n*z^n
 
 theorem generatingSum_nonneg (P : FormalMultilinearSeries ℝ E F)
@@ -363,7 +363,7 @@ source (21).  A first-hitting argument proves the bound from an integral
 inequality valid only inside its radius of convergence.  No global
 smallness of the unknown path or exponential flow bound is assumed. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -412,7 +412,7 @@ theorem continuous_barrier (f : ℝ → ℝ) (T B a : ℝ)
   exact hstep t ht (fun s hs => (hstrict s ⟨hs.1,hs.2.trans ht.2⟩).le)
 
 /-- Rational rate, given by `B*(R*(a+u))/(1-R*(a+u))`. -/
-def rationalRate (B R a u : ℝ) : ℝ := B*(R*(a+u))/(1-R*(a+u))
+@[expose] def rationalRate (B R a u : ℝ) : ℝ := B*(R*(a+u))/(1-R*(a+u))
 
 theorem rationalRate_le (B R a u : ℝ) (hB : 0 ≤ B)
     (hu : R * (a + u) ≤ 1 / 2) : rationalRate B R a u ≤ B := by
@@ -472,7 +472,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -488,7 +488,7 @@ variable {E F G : Type*}
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
 /-- Derivative sum, given by `generatingSum (ftaylorSeries ℝ f x) N z`. -/
-def derivativeSum (f : E → F) (N : ℕ) (z : ℝ) (x : E) : ℝ :=
+@[expose] def derivativeSum (f : E → F) (N : ℕ) (z : ℝ) (x : E) : ℝ :=
   generatingSum (ftaylorSeries ℝ f x) N z
 
 theorem derivativeSum_nonneg (f : E → F) (N : ℕ) (z : ℝ) (x : E)

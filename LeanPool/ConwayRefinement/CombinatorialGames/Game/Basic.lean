@@ -29,7 +29,7 @@ there exist `x₁ ≈ x₂` and `y₁ ≈ y₂` with `x₁ * y₁ ≉ x₂ * y�
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 open IGame Set Pointwise
 
@@ -44,13 +44,13 @@ extra move for Left.
 In particular, note that a `ConwayGame` has no well-defined notion of left and right options.
 This means
 you should prefer `IGame` when analyzing specific games. -/
-def ConwayGame : Type (u + 1) :=
+@[expose] def ConwayGame : Type (u + 1) :=
   Antisymmetrization IGame (· ≤ ·)
 
 namespace ConwayGame
 
 /-- The quotient map from `IGame` into `ConwayGame`. -/
-def mk (x : IGame) : ConwayGame := Quotient.mk _ x
+@[expose] def mk (x : IGame) : ConwayGame := Quotient.mk _ x
 theorem mk_eq_mk {x y : IGame} : mk x = mk y ↔ x ≈ y := Quotient.eq
 
 alias ⟨_, mk_eq⟩ := mk_eq_mk
@@ -60,7 +60,7 @@ theorem ind {motive : ConwayGame → Prop} (mk : ∀ y, motive (mk y)) (x : Conw
   Quotient.ind mk x
 
 /-- Choose an element of the equivalence class using the axiom of choice. -/
-@[no_expose] def out (x : ConwayGame) : IGame := Quotient.out x
+def out (x : ConwayGame) : IGame := Quotient.out x
 @[simp] theorem out_eq (x : ConwayGame) : mk x.out = x := Quotient.out_eq x
 
 theorem mk_out_equiv (x : IGame) : (mk x).out ≈ x := Quotient.mk_out (s := AntisymmRel.setoid ..) x

@@ -111,7 +111,7 @@ component is connected by construction.
   not cover.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph

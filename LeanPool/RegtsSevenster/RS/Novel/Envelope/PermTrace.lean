@@ -23,7 +23,7 @@ lengths are its full cycle type (`exists_conj_blockCycles`), so the
 three combine to give the general formula.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

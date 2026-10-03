@@ -17,7 +17,7 @@ Fréchet derivatives in the cylindrical divergence. No output divergence
 condition, nonzero frequency, or nonzero angular frequency is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

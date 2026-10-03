@@ -33,7 +33,7 @@ Global roadmap (matching Shannon Appendix 2):
    continuity upgrades the rational formula to all real probabilities.
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section
@@ -41,7 +41,7 @@ open Filter
 open scoped Topology
 
 /-- `p` has nonnegative masses that sum to one. -/
-def IsProbDist {α : Type} [Fintype α] (p : α → ℝ) : Prop :=
+@[expose] def IsProbDist {α : Type} [Fintype α] (p : α → ℝ) : Prop :=
   (∀ a, 0 ≤ p a) ∧ (∑ a, p a) = 1
 
 /--
@@ -63,7 +63,7 @@ lemma prob_le_one {α : Type} [Fintype α] (p : ProbDist α) (a : α) : p a ≤ 
   (prob_sum_eq_one p) ▸ Finset.single_le_sum (fun b _ => prob_nonneg p b) (Finset.mem_univ a)
 
 /-- Uniform distribution on `Fin (n + 1)`. -/
-def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) :=
+@[expose] def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) :=
   ⟨fun _ => 1 / (n + 1 : ℝ), fun _ => by positivity,
     by simp [Finset.card_univ, show (n + 1 : ℝ) ≠ 0 by exact_mod_cast Nat.succ_ne_zero n]⟩
 
@@ -71,12 +71,12 @@ def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) :=
 Uniform distribution on `Fin n` for positive natural `n : ℕ+`.
 This avoids `n + 1` index gymnastics when formalizing Appendix 2.
 -/
-def uniformPNat (n : ℕ+) : ProbDist (Fin n) :=
+@[expose] def uniformPNat (n : ℕ+) : ProbDist (Fin n) :=
   ⟨fun _ => 1 / (n : ℝ), fun _ => by positivity,
     by simp [Finset.card_univ, show (n : ℝ) ≠ 0 by exact_mod_cast Nat.ne_of_gt n.2]⟩
 
 /-- Composite distribution for a two-stage random choice. -/
-def composeProb
+@[expose] def composeProb
     {α : Type} [Fintype α]
     {β : α → Type} [∀ a, Fintype (β a)]
     (p : ProbDist α)
@@ -88,7 +88,7 @@ def composeProb
         prob_sum_eq_one p]⟩
 
 /-- Equivalence between two-stage finite outcomes and `Fin (n * m)`. -/
-def sigmaConstFinEquivFinMul (n m : ℕ+) :
+@[expose] def sigmaConstFinEquivFinMul (n m : ℕ+) :
     Sigma (fun _ : Fin n => Fin m) ≃ Fin (n * m : ℕ+) :=
   (Equiv.sigmaEquivProdOfEquiv (fun _ : Fin n => (Equiv.refl (Fin m)))).trans
     finProdFinEquiv
@@ -97,7 +97,7 @@ def sigmaConstFinEquivFinMul (n m : ℕ+) :
 Relabel a distribution along an equivalence of finite types.
 This is the formal "event names do not matter" transport map.
 -/
-def relabelProb
+@[expose] def relabelProb
     {α β : Type} [Fintype α] [Fintype β]
     (e : α ≃ β)
     (p : ProbDist α) :
@@ -138,7 +138,7 @@ structure ShannonEntropyAxioms
 `A_H(n)` is Shannon's notation for uncertainty on the uniform distribution
 with `n + 1` equiprobable outcomes.
 -/
-def A
+@[expose] def A
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
     (n : ℕ) : ℝ :=
   H (uniformFin n)
@@ -146,7 +146,7 @@ def A
 /--
 `Apos H n` is uncertainty for exactly `n` equiprobable outcomes (`n : ℕ+`).
 -/
-def Apos
+@[expose] def Apos
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
     (n : ℕ+) : ℝ :=
   H (uniformPNat n)

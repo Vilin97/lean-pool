@@ -18,7 +18,7 @@ multiply; the copairing seeds the bottom stage, and the iterated
 seed multiplication is the copairing power of the duality datum.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -117,6 +117,7 @@ theorem powMulDesc_act
   simpa only [Category.assoc] using h
 
 /-- The descended power multiplication as a map of modules. -/
+@[expose]
 noncomputable def powMulMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -150,6 +151,7 @@ theorem actLeft_modPowOne_inv
         simp only [Iso.hom_inv_id, Category.comp_id]
 
 /-- A module maps into the singleton stage of its power tower. -/
+@[expose]
 noncomputable def toModPowModZero
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -162,6 +164,7 @@ noncomputable def toModPowModZero
 
 /-- One stage of the power chain: the module tensor product of
 matching module powers of the dual pair, in copairing order. -/
+@[expose]
 noncomputable def powStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -189,6 +192,7 @@ noncomputable def powChainMul
 
 /-- **The seed of the power chain**: the copairing lands in the
 bottom stage. -/
+@[expose]
 noncomputable def powSeed
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -201,6 +205,7 @@ noncomputable def powSeed
     modTensorMap A (toModPowModZero A M) (toModPowModZero A M')
 
 /-- An arity transport of module powers, as a map of modules. -/
+@[expose]
 noncomputable def modPowCastMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -213,6 +218,7 @@ noncomputable def modPowCastMod
 
 /-- The braiding of the module tensor product, as a map of
 modules. -/
+@[expose]
 noncomputable def modTensorSwapMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -226,6 +232,7 @@ noncomputable def modTensorSwapMod
 position of the nested pairing — the new factor joins the
 `M`-power at the front and the `M'`-power at the back, so the
 peel of the nested pairing removes exactly the inserted pair. -/
+@[expose]
 noncomputable def powDelta
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -248,6 +255,7 @@ noncomputable def powDelta
 
 /-- **The copairing powers**: the iterated seed multiplication
 along the power chain. -/
+@[expose]
 noncomputable def powUnitStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

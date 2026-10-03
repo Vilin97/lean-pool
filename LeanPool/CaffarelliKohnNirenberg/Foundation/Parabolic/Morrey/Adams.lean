@@ -17,7 +17,7 @@ This module connects the parabolic Riesz potential with the exported maximal
 function estimates and the cylinder Morrey seminorm.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology
@@ -28,6 +28,7 @@ noncomputable section
 namespace CKN.Foundation.Parabolic.Morrey
 
 /-- The maximal function applied to the absolute value of a real function. -/
+@[expose]
 def parabolicMaximalMajorant (f : ParabolicPoint → ℝ) : ParabolicPoint → ℝ≥0∞ :=
   parabolicMaximalFunction (fun w ↦ ENNReal.ofReal |f w|)
 
@@ -251,6 +252,7 @@ private lemma near_shell_integral_le
           ac_rfl
 
 /-- The geometric constant in the local Hedberg estimate. -/
+@[expose]
 def parabolicHedbergNearConstant (β : ℝ) : ℝ≥0∞ :=
   (ENNReal.ofReal (2 ^ 5) *
       (ENNReal.ofReal (2 ^ 5) * volume (parabolicCylinder 0 0 1))) *

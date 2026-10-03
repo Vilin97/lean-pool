@@ -16,7 +16,7 @@ Monotonicity in `x` uses the log form with `U_c = √(c²+a²)` fixed and the id
 `(U₁+s)(U₂+t)(U₁−t)(U₂−s) − (U₁+t)(U₂+s)(U₁−s)(U₂−t) = 2(s−t)(U₂−U₁)(U₁U₂+st)`.
 Integrability: `ρ_a = fc − log x/(6π)` on `(0, a]` with `fc` continuous. Written from scratch. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory
 namespace Zeta32.Fstar

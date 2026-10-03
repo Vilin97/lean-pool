@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Slope
 
 /-! Exact differentiated projected-pressure equations for actual translation Sobolev jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

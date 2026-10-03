@@ -26,7 +26,7 @@ Tags: algebraic-combinatorics, demazure-operators, polynomials, representation-t
 MSC: 05E05, 13P10, 20F55
 -/
 
-@[expose] public section
+public section
 
 /-!
 The Demazure-operator declarations are sourced to the BGG Schubert-cells paper

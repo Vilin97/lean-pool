@@ -23,7 +23,7 @@ character combinatorics to the categorical direct-sum transfer of
 Schur vanishing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

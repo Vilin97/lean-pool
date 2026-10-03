@@ -37,7 +37,7 @@ Lie algebra, central extension, 2-cocycle
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -55,7 +55,7 @@ namespace LieTwoCocycle
 
 /-- The underlying type of the central extension of Lie algebras determined by a Lie
 algebra 2-cocycle. -/
-def CentralExtension (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :=
+@[expose] def CentralExtension (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :=
   let _ : LieTwoCocycle 𝕜 𝓰 𝓪 := γ
   𝓰 × 𝓪
 
@@ -97,7 +97,7 @@ variable (γ)
 
 open LinearMapClass RingHom in
 /-- The Lie bracket in a central extension defined by a Lie algebra 2-cocycle. -/
-def bracket : γ.CentralExtension
+@[expose] def bracket : γ.CentralExtension
       →ₗ[𝕜] γ.CentralExtension →ₗ[𝕜] γ.CentralExtension where
   toFun := fun ⟨X,_⟩ ↦ {
     toFun := fun ⟨Y,_⟩ ↦ ⟨⁅X,Y⁆, γ X Y⟩
@@ -122,7 +122,7 @@ def bracket : γ.CentralExtension
       exact congrArg (fun f => f Y) (map_smul γ m X)
 
 @[simp] lemma bracket_apply (Z W : γ.CentralExtension) :
-    γ.bracket Z W = ⟨⁅Z.fst, W.fst⁆, γ Z.fst W.fst⟩ := rfl
+    γ.bracket Z W = ⟨⁅Z.fst, W.fst⁆, γ Z.fst W.fst⟩ := by rfl
 
 lemma bracket_self (Z : γ.CentralExtension) :
     γ.bracket Z Z = 0 := by
@@ -213,19 +213,19 @@ def congr {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) :
     ext <;> dsimp only
 
 lemma congr_apply {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) (Z : γ₁.CentralExtension) :
-    congr h Z = ⟨Z.1, Z.2⟩ := rfl
+    congr h Z = ⟨Z.1, Z.2⟩ := by rfl
 
 @[simp] lemma congr_trans {γ₁ γ₂ γ₃ : LieTwoCocycle 𝕜 𝓰 𝓪} (h₁₂ : γ₁ = γ₂) (h₂₃ : γ₂ = γ₃) :
     (congr h₁₂).trans (congr h₂₃) = (congr (h₁₂.trans h₂₃)) :=
-  rfl
+  by rfl
 
 lemma congr_congr_symm {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) :
     (congr h).trans (congr h.symm) = LieEquiv.refl :=
-  rfl
+  by rfl
 
 lemma hom_of_coboundary_refl (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
     congr (Eq.refl γ) = LieEquiv.refl (R := 𝕜) (L₁ := γ.CentralExtension) :=
-  rfl
+  by rfl
 
 lemma hom_of_coboundary_add (γ₁ γ₂ γ₃ : LieTwoCocycle 𝕜 𝓰 𝓪)
     (β₁ β₂ : LieOneCochain 𝕜 𝓰 𝓪) (h₂ : γ₁ + β₁.bdry = γ₂) (h₃ : γ₂ + β₂.bdry = γ₃) :

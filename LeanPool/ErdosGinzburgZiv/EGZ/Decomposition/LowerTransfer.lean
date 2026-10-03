@@ -17,7 +17,7 @@ local summand below the anchor to the lower layer. The lower anchor keeps
 the same cumulative function, while its upper copy ceases to be reduced.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EGZ.FlagDecomposition.LowerTransfer
@@ -46,6 +46,7 @@ theorem active_lowerAnchor :
 
 open Classical in
 /-- The active lower-layer copy of the anchor after lower transfer. -/
+@[expose]
 def lowerAnchor : (decomposition Φ anchor hp).flag.Node :=
   ⟨TwoLayer.lower anchor anchor le_rfl, active_lowerAnchor Φ anchor hp⟩
 
@@ -115,6 +116,7 @@ theorem upperAnchor_not_isReducedElement :
 
 open Classical in
 /-- Additional slab coordinates are carried only by lower nodes. -/
+@[expose]
 noncomputable def extra (k : ℕ) (x : (decomposition Φ anchor hp).flag.Node) : ℕ :=
   if x.1.1.2 = 0 then k else 0
 

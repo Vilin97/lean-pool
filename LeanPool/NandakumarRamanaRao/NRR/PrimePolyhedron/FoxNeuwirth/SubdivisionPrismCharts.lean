@@ -17,7 +17,7 @@ For a refined `(p-1)`-simplex, its product with the unit interval is triangulate
 barycentric refinement.  These charts are the finite domain on which the S6 PL homotopy is sampled.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -31,11 +31,13 @@ namespace SubdivisionPrismCharts
 variable {p : Nat}
 
 /-- The interval coordinate attached to a staircase vertex. -/
+@[expose]
 def staircaseTime (k : Fin p) (j : Fin (p + 1)) : Fin 2 :=
   if j.1 ≤ k.1 then 0 else 1
 
 /-- Spatial vertex attached to a staircase vertex.  Vertices `k` and `k+1` project to the same
 spatial vertex and lie at the two interval endpoints. -/
+@[expose]
 def staircaseSpatial (p : Nat) (k : Fin p) (j : Fin (p + 1)) : Fin p :=
   if h : j.1 ≤ k.1 then
     ⟨j.1, lt_of_le_of_lt h k.2⟩
@@ -54,18 +56,20 @@ def staircaseSpatial (p : Nat) (k : Fin p) (j : Fin (p + 1)) : Fin p :=
     staircaseTime k j = 1 := by simp [staircaseTime, Nat.not_le.mpr h]
 
 /-- Spatial barycentric coordinate induced by one staircase simplex. -/
-noncomputable def spatialWeight
+@[expose] noncomputable def spatialWeight
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p)
     (i : Fin (p - 1 + 1)) : Real :=
   ∑ j : Fin (p + 1),
     if Fin.cast (Nat.sub_add_cancel hp.pos).symm (staircaseSpatial p k j) = i then w j else 0
 
 /-- The staircase interval coordinate. -/
+@[expose]
 noncomputable def intervalWeight
     (k : Fin p) (w : StandardSimplex p) : Real :=
   ∑ j : Fin (p + 1), if staircaseTime k j = 1 then w j else 0
 
 /-- The spatial weights form a standard `(p-1)`-simplex. -/
+@[expose]
 noncomputable def spatialPoint
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p) :
     StandardSimplex (p - 1) :=
@@ -81,6 +85,7 @@ noncomputable def spatialPoint
       simp [w.sum_eq_one]⟩
 
 /-- The interval weight lies in the unit interval. -/
+@[expose]
 noncomputable def intervalPoint
     (k : Fin p) (w : StandardSimplex p) : Set.Icc (0 : Real) 1 :=
   ⟨intervalWeight k w, by
@@ -100,6 +105,7 @@ noncomputable def intervalPoint
         _ = 1 := w.sum_eq_one⟩
 
 /-- One staircase chart from the `p`-simplex to `Δ^(p-1) × I`. -/
+@[expose]
 noncomputable def staircasePoint
     (hp : Nat.Prime p) (k : Fin p) (w : StandardSimplex p) :
     StandardSimplex (p - 1) × Set.Icc (0 : Real) 1 :=
@@ -123,6 +129,7 @@ noncomputable instance (hp : Nat.Prime p) (N L : Nat) : DecidableEq (PrismCell h
   inferInstance
 
 /-- Refined prism chart into the realization cylinder. -/
+@[expose]
 noncomputable def chart
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L) :
     C(Delta p, Realization p × Set.Icc (0 : Real) 1) where
@@ -169,15 +176,18 @@ noncomputable def chart
     · exact hinterval
 
 /-- Vertices of a refined prism cell. -/
+@[expose]
 noncomputable def vertex
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L) (i : Fin (p + 1)) :
     Realization p × Set.Icc (0 : Real) 1 :=
   chart hp N L q (SphereOddDegree.FiniteSimplex.vertex (S := Real) i)
 
 /-- Orientation sign of a staircase simplex. -/
+@[expose]
 noncomputable def staircaseSign (k : Fin p) : Int := (-1 : Int) ^ k.1
 
 /-- Orientation sign of a fully refined prism simplex. -/
+@[expose]
 noncomputable def prismSign {hp : Nat.Prime p} (q : PrismCell hp N L) : Int :=
   staircaseSign q.1.2 *
     (∏ r : Fin L, (Equiv.Perm.sign (q.2 r) : Int))

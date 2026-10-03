@@ -14,7 +14,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch004`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4823,7 +4823,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC4BatchPhiAboveF9C1LLRLL0009`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4831,7 +4831,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30000 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4864,7 +4864,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30001 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4897,7 +4897,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30002 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4930,7 +4930,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30003 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4963,7 +4963,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30010 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4996,7 +4996,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30011 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5029,7 +5029,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30012 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5062,7 +5062,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30013 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5095,7 +5095,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30020 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5128,7 +5128,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30021 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5161,7 +5161,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30022 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5194,7 +5194,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30023 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5227,7 +5227,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30030 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5260,7 +5260,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30031 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5293,7 +5293,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30032 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5326,7 +5326,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30033 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5360,7 +5360,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30100 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5412,7 +5412,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30101 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5464,7 +5464,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30102 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5516,7 +5516,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30103 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5567,7 +5567,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30110 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5600,7 +5600,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30111 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5634,7 +5634,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30112 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5685,7 +5685,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30113 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5719,7 +5719,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30120 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5771,7 +5771,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30121 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5823,7 +5823,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30122 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5875,7 +5875,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30123 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5927,7 +5927,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30130 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5978,7 +5978,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30131 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6012,7 +6012,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30132 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6064,7 +6064,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30133 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6115,7 +6115,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30200 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6148,7 +6148,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30201 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6181,7 +6181,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30202 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6214,7 +6214,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30203 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6247,7 +6247,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30210 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6281,7 +6281,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30211 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6332,7 +6332,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30212 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6366,7 +6366,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30213 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6417,7 +6417,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30220 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6450,7 +6450,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30221 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6483,7 +6483,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30222 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6516,7 +6516,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30223 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6549,7 +6549,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30230 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6583,7 +6583,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30231 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6634,7 +6634,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30232 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6668,7 +6668,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30233 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6720,7 +6720,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30300 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6772,7 +6772,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30301 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6824,7 +6824,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30302 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6876,7 +6876,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30303 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6928,7 +6928,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30310 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6980,7 +6980,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30311 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7032,7 +7032,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30312 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7084,7 +7084,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30313 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7136,7 +7136,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30320 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7188,7 +7188,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30321 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7240,7 +7240,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30322 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7292,7 +7292,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30323 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7344,7 +7344,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30330 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7422,7 +7422,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30331 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7487,7 +7487,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30332 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7565,7 +7565,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=30333 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7655,7 +7655,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31000 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7688,7 +7688,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31001 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7721,7 +7721,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31002 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7754,7 +7754,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31003 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7787,7 +7787,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31010 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7820,7 +7820,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31011 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7853,7 +7853,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31012 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7886,7 +7886,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31013 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7919,7 +7919,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31020 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7952,7 +7952,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31021 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7985,7 +7985,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31022 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8018,7 +8018,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31023 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8051,7 +8051,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31030 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8084,7 +8084,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31031 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8117,7 +8117,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31032 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8150,7 +8150,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31033 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8183,7 +8183,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=3110 remaining=10 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8216,7 +8216,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=3111 remaining=10 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8249,7 +8249,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31120 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8282,7 +8282,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31121 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8315,7 +8315,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31122 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8348,7 +8348,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31123 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8381,7 +8381,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=3113 remaining=10 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8415,7 +8415,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31200 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8466,7 +8466,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31201 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8500,7 +8500,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31202 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8552,7 +8552,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31203 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8603,7 +8603,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31210 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8636,7 +8636,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31211 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8669,7 +8669,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31212 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8702,7 +8702,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31213 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8736,7 +8736,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31220 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8788,7 +8788,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31221 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8840,7 +8840,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31222 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8892,7 +8892,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31223 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8943,7 +8943,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31230 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8976,7 +8976,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31231 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9010,7 +9010,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31232 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9061,7 +9061,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31233 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9094,7 +9094,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31300 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9127,7 +9127,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31301 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9160,7 +9160,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31302 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9193,7 +9193,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31303 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9226,7 +9226,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31310 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9259,7 +9259,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31311 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9292,7 +9292,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31312 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9325,7 +9325,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31313 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9358,7 +9358,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31320 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9391,7 +9391,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31321 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9424,7 +9424,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31322 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9457,7 +9457,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31323 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9490,7 +9490,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31330 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9523,7 +9523,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31331 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9556,7 +9556,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31332 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9589,7 +9589,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=31333 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9622,7 +9622,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32000 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9655,7 +9655,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32001 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9688,7 +9688,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32002 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9721,7 +9721,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32003 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9754,7 +9754,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32010 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9788,7 +9788,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32011 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9839,7 +9839,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32012 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9873,7 +9873,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32013 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9924,7 +9924,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32020 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9957,7 +9957,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32021 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9990,7 +9990,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32022 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10023,7 +10023,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32023 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10056,7 +10056,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32030 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10090,7 +10090,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32031 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10141,7 +10141,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32032 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10175,7 +10175,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32033 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10227,7 +10227,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32100 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10279,7 +10279,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32101 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10331,7 +10331,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32102 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10383,7 +10383,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32103 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10435,7 +10435,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32110 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10513,7 +10513,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32111 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10617,7 +10617,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32112 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10695,7 +10695,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32113 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10799,7 +10799,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32120 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10851,7 +10851,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32121 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10903,7 +10903,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32122 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10955,7 +10955,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32123 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11007,7 +11007,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32130 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11085,7 +11085,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32131 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11189,7 +11189,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32132 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11280,7 +11280,7 @@ section
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32133 remaining=9 kind=F reason=ADAPTIVE.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11383,7 +11383,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32200 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11416,7 +11416,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32201 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11449,7 +11449,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32202 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11482,7 +11482,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32203 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11515,7 +11515,7 @@ section
 
 /-! Generated E24KC2 kernel leaf. Discovery claim: PB path=32210 remaining=9 kind=T reason=R. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -11548,7 +11548,7 @@ section
 
 /-! E24KC4 auto-tuned batched kernel certificates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -12208,7 +12208,7 @@ section
 
 /-! E24KC4 auto-tuned batched kernel certificates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -12274,7 +12274,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC5TerminalBatchT665600016`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -12282,7 +12282,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -14886,7 +14886,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC5FrontierBatchF96R00465`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -14894,7 +14894,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -15007,7 +15007,7 @@ section
 
 /-! E24KC5 checkpoint-aware kernel batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ We express “distinct zeros” using the `MeromorphicOn.divisor` support on a c
 analytic function this support is exactly the set of zeros in the ball (no poles).
 -/
 
-@[expose] public section
+public section
 
 open Complex Real Filter Topology MeasureTheory
 open scoped BigOperators

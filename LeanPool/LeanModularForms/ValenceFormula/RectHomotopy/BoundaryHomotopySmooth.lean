@@ -17,7 +17,7 @@ Proves the homotopy is not differentiable at t ∈ {1, 3, 4} (left/right derivat
 differ) and that the per-segment derivatives are continuous.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

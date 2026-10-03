@@ -19,7 +19,7 @@ estimate.  Consequently, outside the projected full-zero set, nearby frozen chil
 by a zero-free straight-line homotopy.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -32,6 +32,7 @@ namespace EquivariantCoordinateHomotopy
 variable {p : Nat}
 
 /-- Joint child coordinate map, with the parent/interval parameter left variable. -/
+@[expose]
 noncomputable def childFamilyMap
     {K : Geometry.ConvexBody Plane} {A : Real}
     (hp : Nat.Prime p) (hA : 0 < A)

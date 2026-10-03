@@ -15,7 +15,7 @@ The exact centered Gaussian law of each finite Brownian step sum transfers gener
 orthogonality to the concrete `L²` Wick powers used in the Brownian chaos reduction.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

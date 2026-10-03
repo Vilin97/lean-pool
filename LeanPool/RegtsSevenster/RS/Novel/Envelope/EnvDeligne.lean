@@ -25,7 +25,7 @@ and moderate growth in `EnvGrowth.lean`; `EnvDelignePackage.lean`
 feeds all five to the cited statement.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

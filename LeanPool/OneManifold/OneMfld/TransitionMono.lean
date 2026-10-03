@@ -19,7 +19,7 @@ monotone or strictly antitone; and a strictly monotone map of one open interval 
 another sends ends to ends.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

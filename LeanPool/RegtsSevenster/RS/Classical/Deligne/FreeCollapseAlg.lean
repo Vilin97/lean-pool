@@ -17,7 +17,7 @@ letters becomes, after collapsing the heads, the action on the
 ambient word under the head.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

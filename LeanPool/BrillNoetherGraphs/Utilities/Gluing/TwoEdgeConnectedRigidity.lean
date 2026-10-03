@@ -24,7 +24,7 @@ out-degree zero; at `y` it forces out-degree at most one.  Thus the whole cut
 has size at most one, contradicting the hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -36,12 +36,14 @@ variable {H : CFGraph.{uTwoEdgeRigidity}}
 
 /-- Total edge multiplicity crossing from `S` to its complement, counted at
 the endpoint in `S`. -/
+@[expose]
 def cutMultiplicity (H : CFGraph) (S : Finset H.V) : ℤ :=
   ∑ v ∈ S, outdegreeSet H S v
 
 /-- Every nonempty proper vertex set has at least two outgoing edges, counted
 with multiplicity.  For a connected loopless multigraph this is the usual
 absence of bridges. -/
+@[expose]
 def TwoEdgeCutCondition (H : CFGraph) : Prop :=
   ∀ S : Finset H.V, S.Nonempty → S ≠ Finset.univ →
     2 ≤ cutMultiplicity H S

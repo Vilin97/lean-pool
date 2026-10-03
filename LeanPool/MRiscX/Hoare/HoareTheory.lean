@@ -15,7 +15,7 @@ This file contains some minor lemmas to ease the prove in the "main" file "Hoare
 Also, those lemmas can be used to deepen the understanding of the weak function.
 -/
 
-@[expose] public section
+public section
 
 theorem weak_with_less_BL_weakens : ∀ (s s' : MState) (L_w L_b L : Set UInt64) (c : Code),
   weak s s' L_w L_b c →

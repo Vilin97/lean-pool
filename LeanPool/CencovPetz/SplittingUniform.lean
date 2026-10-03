@@ -27,7 +27,7 @@ This is one of the standard reduction steps in finite Čencov/Chentsov uniquenes
 - `CencovPetz.MarkovMorphism.split_pushforward_eq_uniform_of_apply_eq_div_card`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -44,7 +44,7 @@ Such points become uniform after applying the fiberwise splitting Markov morphis
 `α → Σ a, Fin (m a)`. This is the standard “rational-point” reduction step in finite Čencov/Chentsov
 arguments.
 -/
-def IsSplitRepresentable (p : Simplex α) : Prop :=
+@[expose] def IsSplitRepresentable (p : Simplex α) : Prop :=
   ∃ m : α → ℕ,
     (∀ a, 0 < m a) ∧
       ∀ a,

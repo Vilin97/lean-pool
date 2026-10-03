@@ -30,7 +30,7 @@ Witness-level one-sided recombination theorem for approximate additive
 functions.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 
@@ -195,7 +195,7 @@ variable {r : ℕ} (edge : V → Fin r → W)
 variable (C : V → Finset U)
 
 /-- For each item `i`, the set of source vertices containing it. -/
-def sourceVertices (i : U) : Finset V :=
+@[expose] def sourceVertices (i : U) : Finset V :=
   Finset.univ.filter (fun v => i ∈ C v)
 
 /-- Per-item Hall matching: for each item `i`, an injective map from

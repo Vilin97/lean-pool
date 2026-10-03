@@ -31,7 +31,7 @@ one instantiates `ι` with the ordinary order-preserving injection missing
 `π last`, and `ρ` with the induced ordering of the remaining vertices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

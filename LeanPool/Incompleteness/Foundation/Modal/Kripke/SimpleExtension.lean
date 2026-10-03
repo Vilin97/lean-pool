@@ -10,7 +10,7 @@ public import Mathlib.Basic.Finite.Sum
 
 /-! # SimpleExtension -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -18,6 +18,7 @@ namespace Modal
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Modal.Kripke.FiniteTransitiveTree.SimpleExtension (F : FiniteTransitiveTree) :
     Kripke.FiniteTransitiveTree where
   World := Unit ⊕ F.World

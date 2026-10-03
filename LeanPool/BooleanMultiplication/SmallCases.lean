@@ -11,7 +11,7 @@ public import LeanPool.BooleanMultiplication.Mul
 # Exact small cases and explicit upper-bound circuits
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 

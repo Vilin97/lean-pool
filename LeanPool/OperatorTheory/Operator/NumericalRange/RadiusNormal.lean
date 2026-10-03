@@ -18,7 +18,7 @@ Since the spectrum lies in the closed numerical-range disk, the numerical
 radius therefore equals the operator norm.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

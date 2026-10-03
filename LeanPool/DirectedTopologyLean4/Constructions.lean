@@ -12,7 +12,7 @@ import LeanPool.DirectedTopologyLean4.MonotonePath
 # LeanPool.DirectedTopologyLean4.Constructions
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains constructions of directed spaces such as:
@@ -30,7 +30,7 @@ universe u v
 /-- Any space with a preorder can be equiped with a directedness, by allowing all monotone paths
   as directed paths
 -/
-@[reducible] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
+@[reducible, expose] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
     DirectedSpace α where
   IsDipath := fun {x y : α} γ => Monotone ↑γ
   isDipath_constant := fun x _ _ _ => le_refl x
@@ -55,7 +55,7 @@ universe u v
 topological space
   creates a directed structure on α by pulling back paths.
 -/
-@[reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
+@[expose, reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
     [hβ : DirectedSpace β] {f : α → β} (hf : Continuous f) : DirectedSpace α where
   IsDipath := fun {x y : α} γ => IsDipath (γ.map hf)
   isDipath_constant := fun x => isDipath_constant (f x)
@@ -78,7 +78,7 @@ lemma directed_induced {α : Type u} {β : Type v} [TopologicalSpace α] [hβ : 
 
 /-- The inclusion of a subtype with the induced directed structure into the ambient space
 is a directed map. -/
-def DirectedSubtypeInclusion {α : Type u} (p : α → Prop) [DirectedSpace α] :
+@[expose] def DirectedSubtypeInclusion {α : Type u} (p : α → Prop) [DirectedSpace α] :
     D(Subtype p, α) where
   toFun := fun x => ↑x
   continuous_toFun := continuous_induced_dom
@@ -86,6 +86,7 @@ def DirectedSubtypeInclusion {α : Type u} (p : α → Prop) [DirectedSpace α] 
 
 /-- The inclusion of one subset into another, when both carry the induced directed structure,
 is a directed map. -/
+@[expose]
 def DirectedSubsetInclusion {α : Type u} [t : DirectedSpace α] {X Y : Set α} (h : X ⊆ Y) : D(X,Y)
     where
   toFun := Set.inclusion h
@@ -116,12 +117,12 @@ instance DirectedProduct {α : Type u} {β : Type v} [t₁ : DirectedSpace α] [
       ⟨isDipath_reparam hφ_mono γ₁_dipath, isDipath_reparam hφ_mono γ₂_dipath⟩
 
 /-- The projection map `α × β → α` -/
-def directedFst {α β : Type*} [DirectedSpace α] [DirectedSpace β] : D(α × β, α) where
+@[expose] def directedFst {α β : Type*} [DirectedSpace α] [DirectedSpace β] : D(α × β, α) where
   toFun := fun x => x.1
   directed_toFun := fun _ _ γ ⟨hγ₁, _⟩ => hγ₁
 
 /-- The projection map `α × β → β` -/
-def directedSnd {α β : Type*} [DirectedSpace α] [DirectedSpace β] : D(α × β, β) where
+@[expose] def directedSnd {α β : Type*} [DirectedSpace α] [DirectedSpace β] : D(α × β, β) where
   toFun := fun x => x.2
   directed_toFun := fun _ _ γ ⟨_, hγ₂⟩ => hγ₂
 
@@ -132,7 +133,7 @@ variable {α β γ δ : Type*} [DirectedSpace α] [DirectedSpace β] [DirectedSp
 /-- Two directed maps `f : α → β` and `g : α → γ` can be turned into a directed map `α → β × γ` by
   mapping `a : α` to `(f a, g a)`.
 -/
-protected def DirectedMap.prodMapMk (f : D(α,β)) (g : D(α,γ)) : D(α, β × γ) where
+@[expose] protected def DirectedMap.prodMapMk (f : D(α,β)) (g : D(α,γ)) : D(α, β × γ) where
   toFun := fun x => (f x, g x)
   directed_toFun := fun x y γ hγ => ⟨f.directed_toFun γ hγ, g.directed_toFun γ hγ⟩
 
@@ -140,26 +141,26 @@ protected def DirectedMap.prodMapMk (f : D(α,β)) (g : D(α,γ)) : D(α, β × 
 by
   mapping `(a, b) : α × β` to `(f a, g b)`.
 -/
-protected def DirectedMap.prodMapMk' (f : D(α,γ)) (g : D(β,δ)) : D(α × β, γ × δ) where
+@[expose] protected def DirectedMap.prodMapMk' (f : D(α,γ)) (g : D(β,δ)) : D(α × β, γ × δ) where
   toFun := fun x => (f x.1, g x.2)
   directed_toFun := fun x y γ ⟨hγ₁, hγ₂⟩ => ⟨f.directed_toFun _ hγ₁, g.directed_toFun _ hγ₂⟩
 
 /-- For every `t : α`, we can convert a directed map `F : α × β → γ` to a directed map `β → γ` by
   sending `b` to `F(t, b)`
 -/
-def DirectedMap.prodConstFst (F : D(α × β,γ)) (a : α) : D(β,γ) :=
+@[expose] def DirectedMap.prodConstFst (F : D(α × β,γ)) (a : α) : D(β,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.const β a) (DirectedMap.id β))
 
 @[simp] lemma DirectedMap.prod_const_fst_apply (F : D(α × β,γ)) (a : α) (b : β) :
-  DirectedMap.prodConstFst F a b = F (a, b) := rfl
+  DirectedMap.prodConstFst F a b = F (a, b) := by rfl
 
 /-- For every `t : β`, we can convert a directed map `F : α × β → γ` to a directed map `α → γ` by
   sending `a` to `F(a, t)`
 -/
-def DirectedMap.prodConstSnd (F : D(α × β,γ)) (t : β) : D(α,γ) :=
+@[expose] def DirectedMap.prodConstSnd (F : D(α × β,γ)) (t : β) : D(α,γ) :=
   F.comp (DirectedMap.prodMapMk (DirectedMap.id α) (DirectedMap.const α t))
 
 @[simp] lemma DirectedMap.prod_const_snd_apply (F : D(α × β,γ)) (b : β) (a : α) :
-  DirectedMap.prodConstSnd F b a = F (a, b) := rfl
+  DirectedMap.prodConstSnd F b a = F (a, b) := by rfl
 
 end prod

@@ -18,7 +18,7 @@ public import LeanPool.ScottishBook155.LimitCardinal
 # Cardinal-controlled protected prefixes
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -49,6 +49,7 @@ abbrev topStage : ProtectedStage.{0} ((1 : ℝ) / 2) :=
   P.chain.stage ⟨j, show j ≤ j from le_rfl⟩
 
 /-- The canonical recursion-indexed enumeration at a stage of a prefix. -/
+@[expose]
 noncomputable def enumerate (i : Set.Iic j) : RI → (P.chain.stage i).target :=
   stageEnumeration (P.target_mk_le i)
 
@@ -57,12 +58,14 @@ theorem enumerate_surjective (i : Set.Iic j) :
   stageEnumeration_surjective (P.target_mk_le i)
 
 /-- The bent seed as the bounded prefix at the minimum recursion index. -/
+@[expose]
 noncomputable def ofMin (j : RI) (_hj : IsMin j) : ProtectedPrefix j where
   chain := constantProtectedChain bentSeedStage
   source_mk_le := fun _ ↦ bentSeedStage_source_mk_le
   target_mk_le := fun _ ↦ bentSeedStage_target_mk_le
 
 /-- Append one scheduled successor to a bounded prefix. -/
+@[expose]
 noncomputable def successor (P : ProtectedPrefix j) (y : P.topStage.target) :
     ProtectedPrefix (Order.succ j) := by
   let T := scheduledSuccessor P.topStage y
@@ -92,6 +95,7 @@ noncomputable def successor (P : ProtectedPrefix j) (y : P.topStage.target) :
     target_mk_le := fun i ↦ hTarget (e i) }
 
 /-- Append the completed direct limit at a nonzero limit index. -/
+@[expose]
 noncomputable def ofLimit (j : RI) (hj : Order.IsSuccLimit j)
     (C : ProtectedChain (ι := Set.Iio j) ((1 : ℝ) / 2) 1)
     (hSource : ∀ i, Cardinal.mk (C.stage i).source ≤ stageCardinal)
@@ -127,6 +131,7 @@ noncomputable def ofLimit (j : RI) (hj : Order.IsSuccLimit j)
     target_mk_le := fun i ↦ hTargetPlus (e i) }
 
 /-- Restrict a bounded prefix to an earlier closed initial segment. -/
+@[expose]
 noncomputable def restriction {i : RI} (hij : i ≤ j) : ProtectedPrefix i where
   chain := P.chain.reindex
     ⟨⟨fun k ↦ (⟨k.1, k.2.trans hij⟩ : Set.Iic j),

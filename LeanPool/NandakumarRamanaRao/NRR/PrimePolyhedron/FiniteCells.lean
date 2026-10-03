@@ -19,13 +19,14 @@ This module defines standard simplex coordinates as nonnegative weights summing 
 with their induced topology and relative interior.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
 open scoped BigOperators
 
 /-- Barycentric coordinates of the standard `d`-simplex. -/
+@[expose]
 def StandardSimplex (d : ℕ) :=
   {w : Fin (d + 1) → ℝ // (∀ i, 0 ≤ w i) ∧ ∑ i, w i = 1}
 
@@ -46,6 +47,7 @@ instance (d : ℕ) : CoeFun (StandardSimplex d) (fun _ => Fin (d + 1) → ℝ) :
   w.2.2
 
 /-- The relative interior of the standard simplex. -/
+@[expose]
 def IsInterior {d : ℕ} (w : StandardSimplex d) : Prop :=
   ∀ i, 0 < w i
 

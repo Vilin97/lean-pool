@@ -17,7 +17,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated exact combinatorics for the finite second-stage Parts gadget. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -29,7 +29,7 @@ structure PartsGadgetVertex where
 deriving DecidableEq
 
 /-- Exact descriptor of one of the 73 gadget vertices. -/
-def partsGadgetVertex (vertex : Fin 73) : PartsGadgetVertex :=
+@[expose] def partsGadgetVertex (vertex : Fin 73) : PartsGadgetVertex :=
   match vertex.val with
   | 0 => ⟨false, -3, 0⟩
   | 1 => ⟨false, -3, 1⟩
@@ -121,7 +121,7 @@ deriving DecidableEq
 
 /-- A vertex has the requested axial coordinates in the requested patch.
 The common origin belongs to both patches. -/
-def partsGadgetAxialAt (rotated : Bool) (q r : Int)
+@[expose] def partsGadgetAxialAt (rotated : Bool) (q r : Int)
     (vertex : Fin 73) : Prop :=
   let descriptor := partsGadgetVertex vertex
   descriptor.q = q ∧ descriptor.r = r ∧
@@ -133,7 +133,7 @@ instance (rotated : Bool) (q r : Int) (vertex : Fin 73) :
   infer_instance
 
 /-- Decidable equality-up-to-permutation for three named vertices. -/
-def partsGadgetSameTriple (a b c x y z : Fin 73) : Prop :=
+@[expose] def partsGadgetSameTriple (a b c x y z : Fin 73) : Prop :=
   (a = x ∧ b = y ∧ c = z) ∨ (a = x ∧ b = z ∧ c = y) ∨
     (a = y ∧ b = x ∧ c = z) ∨ (a = y ∧ b = z ∧ c = x) ∨
     (a = z ∧ b = x ∧ c = y) ∨ (a = z ∧ b = y ∧ c = x)
@@ -144,7 +144,7 @@ instance (a b c x y z : Fin 73) :
   infer_instance
 
 /-- Exact validity conditions for a triangle witness. -/
-def PartsGadgetTriangleWitnessData.Valid
+@[expose] def PartsGadgetTriangleWitnessData.Valid
     (witness : PartsGadgetTriangleWitnessData) (root : Fin 73) : Prop :=
   partsGadgetSameTriple witness.a witness.b witness.c
       root witness.left witness.right ∧
@@ -165,7 +165,7 @@ instance (witness : PartsGadgetTriangleWitnessData) (root : Fin 73) :
   infer_instance
 
 /-- Geometric witnesses for every listed sqrt-three triple. -/
-def partsGadgetTriangleWitnesses (vertex : Fin 73) :
+@[expose] def partsGadgetTriangleWitnesses (vertex : Fin 73) :
     List PartsGadgetTriangleWitnessData :=
   match vertex.val with
   | 0 => [
@@ -545,7 +545,7 @@ def partsGadgetTriangleWitnesses (vertex : Fin 73) :
   | _ => []
 
 /-- Unit-edge neighbors used by the executable certificate checker. -/
-def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
+@[expose] def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
   match vertex.val with
   | 0 => [1, 4, 5]
   | 1 => [0, 2, 5, 6]
@@ -623,12 +623,12 @@ def partsGadgetNeighbors (vertex : Fin 73) : List (Fin 73) :=
   | _ => []
 
 /-- Opposite pairs completing sqrt-three triples at a vertex. -/
-def partsGadgetTriplePairs (vertex : Fin 73) : List (Fin 73 × Fin 73) :=
+@[expose] def partsGadgetTriplePairs (vertex : Fin 73) : List (Fin 73 × Fin 73) :=
   (partsGadgetTriangleWitnesses vertex).map fun witness =>
     (witness.left, witness.right)
 
 /-- Central inversion of both lattice patches. -/
-def partsGadgetNegation (vertex : Fin 73) : Fin 73 :=
+@[expose] def partsGadgetNegation (vertex : Fin 73) : Fin 73 :=
   match vertex.val with
   | 0 => 36
   | 1 => 35

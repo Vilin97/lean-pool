@@ -12,7 +12,7 @@ public import Mathlib.Basic.Denumerable
 # Checkpoint interface and its construction from an enumeration
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness.Simplified
 

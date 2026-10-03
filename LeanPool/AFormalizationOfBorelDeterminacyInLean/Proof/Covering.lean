@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -32,7 +32,7 @@ noncomputable section «Section1»
 variable {k m n : ℕ} {p : Player}
 namespace Covering
 /-- a tree that is pruned and nonempty as required for determinacy -/
-def PTrees := Σ' (T : Trees), IsPruned T.2 ∧ [] ∈ T.2
+@[expose] def PTrees := Σ' (T : Trees), IsPruned T.2 ∧ [] ∈ T.2
 @[simp] lemma pTrees_isPruned (T : PTrees) : IsPruned T.1.2 := T.2.1
 @[simp] lemma pTrees_ne (T : PTrees) : [] ∈ T.1.2 := T.2.2
 end Covering
@@ -46,7 +46,7 @@ def chooseSucc : ResStrategy T.1 p m :=
 lemma res_surjective (h : m ≤ k) : (res h (T := T.1) (p := p)).Surjective :=
   fun S ↦ ⟨_, S.res_chooseSucc h⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def chooseSystem : StrategySystem T.1 p where
+@[expose, simps] def chooseSystem : StrategySystem T.1 p where
   str k := S.chooseSucc
   con k := by ext x; simp [chooseSucc, res]
 lemma chooseSystem_self : S.chooseSystem.str k = S := by ext _ _ hl; simp [chooseSucc, hl]
@@ -65,11 +65,11 @@ structure PTreesS where
   toFun : ∀ p k, ResStrategy T.tree.1 p k → ResStrategy U.tree.1 p k
   con : ∀ p {k m} (h : m ≤ k) S, (toFun p k S).res h = toFun p m (S.res h)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LvlStratHom.id (T : PTreesS) : LvlStratHom T T where
+@[expose] def LvlStratHom.id (T : PTreesS) : LvlStratHom T T where
   toFun p k := _root_.id
   con := by simp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LvlStratHom.comp {T U V : PTreesS} (g : LvlStratHom U V) (f : LvlStratHom T U) :
+@[expose] def LvlStratHom.comp {T U V : PTreesS} (g : LvlStratHom U V) (f : LvlStratHom T U) :
   LvlStratHom T V where
   toFun p k := g.toFun p k ∘ f.toFun p k
   con := by simp [g.con, f.con]
@@ -84,7 +84,7 @@ instance : Category PTreesS where
 @[ext] lemma LvlStratHom.ext' {T U : PTreesS} {f g : T ⟶ U} (h : f.toFun = g.toFun) : f = g :=
   LvlStratHom.ext h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LvlStratHom.system (p : Player) : PTreesS ⥤ Type where
+@[expose] def LvlStratHom.system (p : Player) : PTreesS ⥤ Type where
   obj T := StrategySystem T.tree.1 p
   map {T U} f := TypeCat.ofHom fun S : StrategySystem T.tree.1 p ↦ ({
     str := fun k ↦ f.toFun p k (S.str k),
@@ -103,7 +103,7 @@ abbrev LvlStratHom.systemOfObj {T : PTreesS} (S : (LvlStratHom.system p).obj T) 
   cast (by dsimp [LvlStratHom.system] :
     (LvlStratHom.system p).obj T = StrategySystem T.tree.1 p) S
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def LvlStratHom.global (p : Player) : PTreesS ⥤ Type where
+@[expose] def LvlStratHom.global (p : Player) : PTreesS ⥤ Type where
   obj T := Strategy T.tree.1.2 p
   map {T U} f := TypeCat.ofHom fun S : Strategy T.tree.1.2 p ↦
     strategyEquivSystem.symm
@@ -129,6 +129,7 @@ abbrev LvlStratHom.globalOfObj {T : PTreesS} (S : (LvlStratHom.global p).obj T) 
     (LvlStratHom.global p).obj T = Strategy T.tree.1.2 p) S
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
+@[expose]
 def bodyLiftExists {T U : PTrees} (toHom : T.1 ⟶ U.1) (str : PTreesS.mk T ⟶ PTreesS.mk U) :=
   ∀ {p : Player} {S : Strategy T.1.2 p}
   (y : body (LvlStratHom.globalOfObj
@@ -213,7 +214,7 @@ instance : Category PTrees where
     rw [CategoryTheory.Functor.map_comp]
     exact (congrArg (fun w ↦ ((bodyFunctor.map g.toHom) w).val) hybody).trans hy'⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def PTreeForget : PTrees ⥤ Trees where
+@[expose] def PTreeForget : PTrees ⥤ Trees where
   obj T := T.1
   map f := f.toHom
 @[simp, simp_lengths] lemma id_covering_toHom (T : PTrees) :
@@ -230,7 +231,7 @@ lemma comp_covering_str_apply (S T U : PTrees) (f : S ⟶ T) (g : T ⟶ U) A :
   (h2 : f.str = g.str) : f = g := Covering.ext h1 h2
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Fixing k {T U : PTrees} (f : T ⟶ U) :=
+@[expose] def Fixing k {T U : PTrees} (f : T ⟶ U) :=
   ∃ _ : Tree.Fixing k f.toHom, ∀ p, f.str.toFun p k = ResStrategy.fromMap f.toHom
 @[simp] lemma fixing_id k T : Fixing k (𝟙 T) := by
   use (by synthFixing); intros; ext; simp
@@ -249,7 +250,7 @@ lemma fixing_mon {S T} (f : S ⟶ T) (h : Fixing k f) (hn : n ≤ k) :
   Fixing n f := ⟨h.1.mon hn, fun _ ↦ fixing_snd_mon hn _ h _⟩
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Games := Σ' (A : Type*) (G : Game A), IsPruned G.tree ∧ [] ∈ G.tree
+@[expose] def Games := Σ' (A : Type*) (G : Game A), IsPruned G.tree ∧ [] ∈ G.tree
 @[simp] lemma games_isPruned (G : Games) : IsPruned G.2.1.tree := G.2.2.1
 @[simp] lemma games_ne (G : Games) : [] ∈ G.2.1.tree := G.2.2.2
 instance (G : Games) : TopologicalSpace G.1 := ⊥
@@ -284,7 +285,7 @@ lemma covering_winning {G' G} (f : Games.GameCovering G' G) {p : Player}
     hxpre, rfl⟩
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.GameCovering G' G),
+@[expose] def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.GameCovering G' G),
   Fixing k f.toCovering ∧ IsClopen G'.2.1.payoff
 lemma Games.IsUnravelable.isDetermined {G : Games} (h : G.IsUnravelable) :
   G.2.1.IsDetermined :=

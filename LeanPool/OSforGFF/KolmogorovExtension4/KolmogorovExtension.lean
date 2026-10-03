@@ -19,7 +19,7 @@ public import Mathlib.MeasureTheory.Measure.RegularityCompacts
 Auxiliary statements for constructing measures from projective finite-dimensional marginals.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

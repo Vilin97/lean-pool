@@ -25,7 +25,7 @@ public import Mathlib.LinearAlgebra.Determinant
   commutative ring and with no invertibility hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open LinearMap
 open scoped ComplexConjugate

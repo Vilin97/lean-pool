@@ -17,4 +17,4 @@ import Mathlib.Data.Nat.Choose.Multinomial
 Import aggregator for the `Schwinger` directory.
 -/
 
-@[expose] public section
+public section

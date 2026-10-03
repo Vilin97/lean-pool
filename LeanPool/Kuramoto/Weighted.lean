@@ -17,19 +17,19 @@ The weighted Kuramoto potential and vector field, where coupling strengths are g
 matrix `W`. For the gradient identity the coupling matrix is assumed symmetric.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 
 /-- The weighted Kuramoto potential
 `V = -(K / 2) ∑_{i,j} W i j * cos (θ_j - θ_i)`. -/
-noncomputable def weightedKuramotoV (K : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
+@[expose] noncomputable def weightedKuramotoV (K : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
     (θ : Fin N → ℝ) : ℝ :=
   -(K / 2) * ∑ i : Fin N, ∑ j : Fin N, W i j * Real.cos (θ j - θ i)
 
 /-- The weighted Kuramoto force on oscillator `i`,
 `F_i = K ∑_j W i j * sin (θ_j - θ_i)`. -/
-noncomputable def weightedKuramotoF (K : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
+@[expose] noncomputable def weightedKuramotoF (K : ℝ) (N : ℕ) (W : Fin N → Fin N → ℝ)
     (i : Fin N) (θ : Fin N → ℝ) : ℝ :=
   K * ∑ j : Fin N, W i j * Real.sin (θ j - θ i)
 

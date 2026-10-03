@@ -15,7 +15,7 @@ place.  The complete zero-place slice theorem then excludes every possible
 second direction in the normalized seed plane.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

@@ -23,7 +23,7 @@ import Mathlib.Tactic.Ring.Basic
 /-! # Growth: the limits of the three prime sums
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 

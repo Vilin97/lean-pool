@@ -24,7 +24,7 @@ import Mathlib.RingTheory.SimpleRing.Principal
 # LeanPool.SardMoreira.Chart
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -301,7 +301,7 @@ theorem differentiableAt (f : Chart k α s) (hk : k ≠ 0) {x : E × f.Dom} (hx 
   f.contDiffMoreiraHolderAt hx |>.differentiableAt hk
 
 /-- The identity chart. -/
-@[simps -fullyApplied]
+@[expose, simps -fullyApplied]
 protected def id : Chart k α s where
   Dom := F
   toFun := id
@@ -420,7 +420,7 @@ theorem exists_dim_lt_map_nhdsWithin_eq (hs : ¬IsLargeAt k α s a)
     · exact mem_nhdsWithin_of_mem_nhds <| hUo.mem_nhds hUmem
 
 /-- Compose two charts of the same depth. -/
-@[simps -fullyApplied]
+@[expose, simps -fullyApplied]
 protected def comp (g : Chart k α s) (f : Chart k α g.set) (hk : k ≠ 0) :
     Chart k α s where
   Dom := f.Dom
@@ -438,7 +438,7 @@ protected def comp (g : Chart k α s) (f : Chart k α g.set) (hk : k ≠ 0) :
   mapsTo := g.mapsTo.comp f.mapsTo
 
 /-- Restrict a chart to a smaller subset of its domain. -/
-@[simps -fullyApplied]
+@[expose, simps -fullyApplied]
 def restr (f : Chart k α s) (t : Set (E × f.Dom)) : Chart k α s where
   Dom := f.Dom
   toFun := f
@@ -450,7 +450,7 @@ def restr (f : Chart k α s) (t : Set (E × f.Dom)) : Chart k α s where
   mapsTo := f.mapsTo.mono_left inter_subset_left
 
 /-- Regard a chart of depth `k` as a chart of any smaller depth. -/
-@[simps -fullyApplied]
+@[expose, simps -fullyApplied]
 def ofLE (ψ : Chart k α s) (l : ℕ) (hl : l ≤ k) : Chart l α s where
   __ := ψ
   contDiffMoreiraHolderAt hx := ψ.contDiffMoreiraHolderAt hx |>.of_le hl
@@ -532,6 +532,17 @@ def _root_.Moreira2001.Atlas.main {E : Type u} [NormedAddCommGroup E] [NormedSpa
           with ⟨φ, hφ, y, hy, rfl⟩
         refine mem_biUnion hφ ?_
         aesop }
+
+theorem main_succ_charts {E : Type u} {F : Type v}
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F]
+    (k : ℕ) (α : I) (s : Set (E × F)) :
+    (main (k + 1) α s).charts =
+      ⋃ ψ ∈ (choice k α s).charts,
+        (fun φ ↦
+          ((ψ.ofLE 1 (by simp)).restr {x | IsLargeAt (k + 1) α ψ.set x}).comp φ one_ne_zero) ''
+          (main k α {x ∈ ψ.set | IsLargeAt (k + 1) α ψ.set x}).charts := by
+  rfl
 
 end Atlas
 

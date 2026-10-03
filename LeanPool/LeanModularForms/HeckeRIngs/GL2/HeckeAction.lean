@@ -37,7 +37,7 @@ anti-involution preserving `Γ` and fixing every double coset (`GL_pair_onHeckeC
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4, Prop 3.30
 -/
 
-@[expose] public section
+public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn
@@ -46,7 +46,7 @@ open scoped Pointwise ModularForm MatrixGroups UpperHalfPlane
 namespace HeckeRing.GL2
 
 /-- Embed `GL₂(ℚ)` into `GL₂(ℝ)` via `ℚ ↪ ℝ`. -/
-noncomputable def glMap : GL (Fin 2) ℚ →* GL (Fin 2) ℝ :=
+@[expose] noncomputable def glMap : GL (Fin 2) ℚ →* GL (Fin 2) ℝ :=
   GeneralLinearGroup.map (algebraMap ℚ ℝ)
 
 /-- Slash action on `GL₂(ℚ)` induced from `GL₂(ℝ)` via the embedding `ℚ ↪ ℝ`.
@@ -117,7 +117,7 @@ noncomputable abbrev tRep (D : HeckeCoset (GLPair 2))
     where `ΓδΓ = ⊔ᵢ (σᵢδ)Γ` is the right coset decomposition.
     Each `(σᵢδ)ᵀ = δᵀσᵢᵀ` is a left coset representative, giving
     genuinely distinct terms `f ∣[k] (δᵀσᵢᵀ)`. -/
-noncomputable def heckeSlash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ → ℂ) : ℍ → ℂ :=
+@[expose] noncomputable def heckeSlash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ → ℂ) : ℍ → ℂ :=
   ∑ i : decompQuot (GLPair 2) (HeckeCoset.rep D), f ∣[k] tRep D i
 
 /-- The Hecke slash action distributes over addition of functions. -/
@@ -306,7 +306,7 @@ lemma heckeSlash_slash_invariant (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ 
   rfl
 
 /-- The `SlashInvariantForm` obtained by applying a Hecke operator. -/
-noncomputable def heckeSlashInvariant (k : ℤ) (D : HeckeCoset (GLPair 2))
+@[expose] noncomputable def heckeSlashInvariant (k : ℤ) (D : HeckeCoset (GLPair 2))
     (f : SlashInvariantForm 𝒮ℒ k) : SlashInvariantForm 𝒮ℒ k where
   toFun := heckeSlash k D f
   slash_action_eq' γ hγ := heckeSlash_slash_invariant k D f

@@ -18,7 +18,7 @@ Definitions appear in `LeanPool.TuttePath.Definitions`.
 Structural dependencies are proved in the imported project modules.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

@@ -31,7 +31,7 @@ letters `M'`).
   descends to every tower stage.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

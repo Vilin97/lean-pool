@@ -31,7 +31,7 @@ Native smoothness and genuine zero germs, rather than estimates on a
 smaller strip, supply the continuation away from the active phase patches.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,6 +46,7 @@ variable {D I : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- A qualitative domain for the same operators.  No quantitative bound is
 extended from the original strip. -/
+@[expose]
 noncomputable def onDomain (s : StripData D) (Ω : Set D) (hΩ : IsOpen Ω) : StripData D where
   domain := Ω
   isOpen_domain := hΩ
@@ -196,6 +197,7 @@ Fréchet derivatives, transferred through an open neighborhood.
 -/
 
 /-- Translation on, given by `∀ x ∈ Ω, f (x + z) = f x`. -/
+@[expose]
 noncomputable def TranslationOn {E : Type} (Ω : Set D) (z : D) (f : D → E) : Prop :=
   ∀ x ∈ Ω, f (x + z) = f x
 
@@ -396,6 +398,7 @@ abbrev Cylinder := Point × ℝ
 
 /-- Full domain, given by `HarmonicResidual.liftDomain (PhysicalMeanDomain.slowDomain
 U.carrier)`. -/
+@[expose]
 noncomputable def fullDomain {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord) : Set Cylinder :=
   HarmonicResidual.liftDomain (PhysicalMeanDomain.slowDomain U.carrier)
 
@@ -404,6 +407,7 @@ theorem fullDomain_open {coord : ℝ} (U : LocalSignedRequest.SlowRegion coord) 
   (PhysicalMeanDomain.slowDomain_open U.isOpen).prod isOpen_univ
 
 /-- Native domain, given by `e.symm ⁻¹' fullDomain U`. -/
+@[expose]
 noncomputable def nativeDomain {coord : ℝ} (e : Cylinder ≃ₗᵢ[ℝ] D)
     (U : LocalSignedRequest.SlowRegion coord) : Set D := e.symm ⁻¹' fullDomain U
 
@@ -412,11 +416,13 @@ theorem nativeDomain_open {coord : ℝ} (e : Cylinder ≃ₗᵢ[ℝ] D)
   (fullDomain_open U).preimage e.symm.continuous
 
 /-- Deck shift, given by `((0, (0, ((k.1 : ℝ), (k.2 : ℝ)))), 0)`. -/
+@[expose]
 noncomputable def deckShift (k : TorusInverse.Frequency) : Cylinder :=
   ((0, (0, ((k.1 : ℝ), (k.2 : ℝ)))), 0)
 
 /-- Mode oscillation, defined pointwise by `(vectorMode (a.background.frequency n)
 (a.background.phase n) ((a.commonCorrected s d).amplitude n) (e x) i).re`. -/
+@[expose]
 noncomputable def modeOscillation (a : CopyData D I) (s : StripData D)
     (d : GraphDirections D) (e : Cylinder ≃ₗᵢ[ℝ] D) : Oscillation Point :=
   fun n x i => (vectorMode (a.background.frequency n) (a.background.phase n)
@@ -552,15 +558,18 @@ open CorrectionStep ParticularWaveAssembly ParticularWaveBounds CopyAngularInvar
 abbrev ParticularSpace := (CycleSlow × ℝ) × TorusInverse.Plane
 
 /-- Particular chart, given by `(StateReindex.cylinder cycleAssoc).trans angleShuffle`. -/
+@[expose]
 noncomputable def particularChart : Cylinder ≃ₗᵢ[ℝ] ParticularSpace :=
   (StateReindex.cylinder cycleAssoc).trans angleShuffle
 
 /-- Particular strip, given by `ParticularParameters.nativeStrip (reindexStrip cycleAssoc.symm
 p.strip)`. -/
+@[expose]
 noncomputable def particularStrip {ι : Type} (p : CycleParameters ι) : StripData ParticularSpace :=
   ParticularParameters.nativeStrip (reindexStrip cycleAssoc.symm p.strip)
 
 /-- Particular copy data as an element of `CopyData ParticularSpace TorusInverse.Frequency`. -/
+@[expose]
 noncomputable def particularCopyData {ι : Type} (p : CycleParameters ι)
     (v : CycleCoefficients ι) (c : Context Point) (u : State Point) (l : ι) (j : ℤ) :
     CopyData ParticularSpace TorusInverse.Frequency :=
@@ -947,7 +956,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -968,6 +977,7 @@ variable {B N0 : ℕ}
 
 /-- Ordered, given by `CommonWindow.index ActualPrimary.h n ≤ ChartScales.nativeIndex
 ActualPrimary.h (BaseChartJets.cellBand l.1)`. -/
+@[expose]
 noncomputable def Ordered (l : Index B N0) (n : ℕ) : Prop :=
   CommonWindow.index ActualPrimary.h n ≤
     ChartScales.nativeIndex ActualPrimary.h (BaseChartJets.cellBand l.1)
@@ -1435,6 +1445,7 @@ theorem target_zero_outside {p : PhaseCalculus.Slow}
   simp only [PrimaryTargetBounds.actualTarget, hz, smul_zero]
 
 /-- Radius, given by `x.1.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.1.2.1`. -/
+@[expose]
 noncomputable def radius (x : FullPoint) : ℝ :=
   x.1.1 / VariableGaugeMean.qLength (2 * ActualPrimary.h) x.1.2.1
 
@@ -1651,6 +1662,7 @@ theorem full_regular_of_envelope_class {E : Type} [NormedAddCommGroup E] [Normed
 
 /-- Signed copies, given by `(ActualSignedStageControls.parameters l).copyData
 ActualPrimaryBounds.strip request`. -/
+@[expose]
 noncomputable def signedCopies (l : Index B N0)
     (request : ℕ → FullPoint → SignedWaveUpdate.Vec2) :
     PeriodizedWaveBounds.CopyData FullPoint Frequency :=
@@ -1743,6 +1755,7 @@ theorem signed_pressure_full_regular (l : Index B N0)
 
 /-- Positive domain, given by `ActualWaveRegularity.fullDomain ActualPrimary.standardRegion ∩
 ActualPrimaryCoherence.positiveRadialChart`. -/
+@[expose]
 noncomputable def positiveDomain : Set FullPoint :=
   ActualWaveRegularity.fullDomain ActualPrimary.standardRegion ∩
       ActualPrimaryCoherence.positiveRadialChart
@@ -2221,6 +2234,7 @@ theorem signed_pressure_smooth (l : Index B N0) (P : SignedStressPrimitive.Patch
 
 /-- Particular full strip, given by `ParticularWaveBounds.reindexStrip
 ActualWaveRegularity.particularChart.symm ActualSignedStageControls.fullStrip`. -/
+@[expose]
 noncomputable def particularFullStrip : StripData ActualWaveRegularity.ParticularSpace :=
   ParticularWaveBounds.reindexStrip ActualWaveRegularity.particularChart.symm
     ActualSignedStageControls.fullStrip
@@ -2299,6 +2313,7 @@ not a smoothness assumption on an output. -/
 
 /-- Particular copies, given by `(ActualParticularStageControls.canonicalParameters l).copyData
 c u b G A j`. -/
+@[expose]
 noncomputable def particularCopies (l : ActualParticularStageControls.Label B N0)
     (c : CorrectionState.Context (CorrectionStep.CycleSlow × Plane))
     (u : CorrectionState.State (CorrectionStep.CycleSlow × Plane))
@@ -2308,6 +2323,7 @@ noncomputable def particularCopies (l : ActualParticularStageControls.Label B N0
 
 /-- Particular positive, given by `ActualWaveRegularity.particularChart.symm ⁻¹'
 positiveDomain`. -/
+@[expose]
 noncomputable def particularPositive : Set ActualWaveRegularity.ParticularSpace :=
   ActualWaveRegularity.particularChart.symm ⁻¹' positiveDomain
 
@@ -2414,6 +2430,7 @@ variable (l : ActualParticularStageControls.Label B N0)
   (G A : HarmonicResidual.BlockCoefficients (CorrectionStep.CycleSlow × Plane)) (j : ℤ)
 
 /-- Particular normal, constructed using `CurlClassBounds.coefficient`. -/
+@[expose]
 noncomputable def particularNormal (n : ℕ) : ActualWaveRegularity.ParticularSpace → ComplexVector :=
   CurlClassBounds.coefficient ((particularCopies l c u b G A j).background.radius n)
     ((ActualParticularStageControls.canonicalParameters l).directions.radialField n)

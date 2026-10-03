@@ -93,7 +93,7 @@ All of the following live in `Schoenflies.CellStructure`.
   `LimitTower.tgtStar_subset_of_mem_cellNbhd`.
 -/
 
-@[expose] public section
+public section
 
 open Set Metric Bornology Filter
 open scoped Graph
@@ -380,17 +380,17 @@ namespace LimitTower
 variable [Nonempty γ] (L : LimitTower γ) {x y z : Plane} {m n : ℕ} {σ : γ}
 
 /-- The open source region `D = Int(C)`. -/
-def region : Set Plane := L.dom \ L.bdry
+@[expose] def region : Set Plane := L.dom \ L.bdry
 
 /-- The open target region `Q°`. -/
-def region' : Set Plane := L.dom' \ L.bdry'
+@[expose] def region' : Set Plane := L.dom' \ L.bdry'
 
 /-- `St_{Γ'_n}(σ'_n(x))`, written `T_n(x)` in the blueprint: the closed target star of the cell
 corresponding to the source carrier of `x`. -/
-def tgtStar (n : ℕ) (x : Plane) : Set Plane := (L.tgt n).star ((L.src n).carrier x)
+@[expose] def tgtStar (n : ℕ) (x : Plane) : Set Plane := (L.tgt n).star ((L.src n).carrier x)
 
 /-- `St_{Γ_n}(x)`, the closed source star of the source carrier of `x`. -/
-def srcStar (n : ℕ) (x : Plane) : Set Plane := (L.src n).star ((L.src n).carrier x)
+@[expose] def srcStar (n : ℕ) (x : Plane) : Set Plane := (L.src n).star ((L.src n).carrier x)
 
 variable {L}
 

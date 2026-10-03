@@ -36,7 +36,7 @@ The `k = 1` case is separated out because `affineReflection` needs `2 ≤ k`.
 There every index is principal, so `τ` is again a translation.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

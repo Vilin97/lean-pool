@@ -23,7 +23,7 @@ handles directly: deleting an endpoint from a semibreak divisor puts a `-1`
 endpoint coefficient into the normal form, and such a divisor has rank `-1`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

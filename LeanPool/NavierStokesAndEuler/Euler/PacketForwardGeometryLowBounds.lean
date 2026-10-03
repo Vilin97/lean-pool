@@ -19,7 +19,7 @@ section
 geometry. The source normal, primary and all ODEs are the actual forward
 fields, including exact initial data at time zero. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,6 +41,7 @@ theorem error_le_scaled_error : P.forwardError G.radius ≤
   linarith only [he,hbase]
 
 /-- Geometry data, bundling `center`, `B`, `B₁`, `M` and the required compatibility proofs. -/
+@[expose]
 def geometryData (Ω : Set Space) (h0 : 0 ∈ Ω) (hΩ : ∀ x ∈ Ω, ‖x‖ ≤ G.radius) :
     PhysicalGeometryData {x : Space // x ∈ Ω} where
   center := ⟨0,h0⟩
@@ -166,7 +167,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -182,10 +183,12 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteS
 
 /-- Low geometry, given by `G.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx =>
 hx.trans hball)`. -/
+@[expose]
 def lowGeometry : PhysicalGeometryData {x : Space // ‖x‖ ≤ (1/2 : ℝ)} :=
   G.geometryData {x | ‖x‖ ≤ (1/2 : ℝ)} (by norm_num) (fun _ hx => hx.trans hball)
 
 /-- Primary amplitude, given by `(G.lowGeometry hball).amplitude`. -/
+@[expose]
 def primaryAmplitude : ℝ := (G.lowGeometry hball).amplitude
 
 theorem primaryAmplitude_nonneg : 0 ≤ G.primaryAmplitude hball :=
@@ -193,7 +196,7 @@ theorem primaryAmplitude_nonneg : 0 ≤ G.primaryAmplitude hball :=
 
 /-- Early ratio, given by `cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp
 (-(1/(4*P.sigma))))`. -/
-def earlyRatio (_G : ForwardGuards P) : ℝ :=
+@[expose] def earlyRatio (_G : ForwardGuards P) : ℝ :=
   cutoffBound*(8232*Real.exp 9*P.horizon^5*Real.exp (-(1/(4*P.sigma))))
 
 omit [CompleteSpace U] in

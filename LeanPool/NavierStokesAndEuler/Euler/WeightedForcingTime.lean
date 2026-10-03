@@ -16,7 +16,7 @@ section
 
 /-! Actual L²-time convergence of finite Hilbert forcing norms. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -85,7 +85,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -112,6 +112,7 @@ theorem scalarTimeMultiplier_ae (T : ℝ) (hT : 0 ≤ T) (w : C(Icc (0 : ℝ) T,
       C(Icc (0 : ℝ) T, ℝ →L[ℝ] ℝ)) u
 
 /-- The genuine finite weighted sum of actual forcing norms represented in L² time. -/
+@[expose]
 def weightedForcingTime (T : ℝ) (hT : 0 ≤ T) (w : A → C(Icc (0 : ℝ) T, ℝ))
     (F : A → TimeLp T (I → H)) : TimeLp T ℝ :=
   ∑ i, scalarTimeMultiplier T hT (w i) (familyNormTime T (F i))

@@ -22,7 +22,7 @@ section
 /-! Differentiating an actual compact mollifier transfers the distributional Laplacian to the
 kernel. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -186,7 +186,7 @@ theorem weakHarmonic_pointwise (u : L2) (hu : WeakHarmonicOn (Metric.ball (0 : S
 
 /-- Weak harmonic small ball constant, given by `(Real.pi * 4 / 3) *
 harmonicQuarterBallConstant`. -/
-def weakHarmonicSmallBallConstant : ℝ := (Real.pi * 4 / 3) * harmonicQuarterBallConstant
+@[expose] def weakHarmonicSmallBallConstant : ℝ := (Real.pi * 4 / 3) * harmonicQuarterBallConstant
 
 theorem weakHarmonicSmallBallConstant_nonneg : 0 ≤ weakHarmonicSmallBallConstant := by
   unfold weakHarmonicSmallBallConstant

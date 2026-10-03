@@ -26,7 +26,7 @@ the finite model. The oriented mod-`p` cycle obtained by gluing boundary faces i
 the chain modules.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -40,6 +40,7 @@ abbrev FoxNeuwirthTopCell (p : ℕ) := BarredPermutation.TopCell p
 namespace FoxNeuwirthTopCell
 
 /-- The identity order with no bars. -/
+@[expose]
 def identity (p : ℕ) : FoxNeuwirthTopCell p :=
   ⟨⟨1, ∅⟩, rfl⟩
 
@@ -52,6 +53,7 @@ noncomputable instance : MetricSpace (FoxNeuwirthTopCell p) :=
     inferInstance
 
 /-- Relabelling preserves the one-block condition. -/
+@[expose]
 def relabel (σ : Equiv.Perm (Fin p))
     (c : FoxNeuwirthTopCell p) : FoxNeuwirthTopCell p :=
   ⟨c.1.relabel σ, by simpa using c.2⟩
@@ -82,6 +84,7 @@ theorem relabel_mul
 end FoxNeuwirthTopCell
 
 /-- Barycentric coordinates on a top-dimensional Fox--Neuwirth cell. -/
+@[expose]
 def FoxNeuwirthWeights (p : ℕ) :=
   ↥(SphereOddDegree.finiteSimplex ℝ (Fin p))
 
@@ -102,6 +105,7 @@ instance : CoeFun (FoxNeuwirthWeights p) (fun _ => Fin p → ℝ) :=
   w.2.2
 
 /-- Relabel barycentric coordinates by the established `σ.symm` convention. -/
+@[expose]
 def relabel (σ : Equiv.Perm (Fin p))
     (w : FoxNeuwirthWeights p) : FoxNeuwirthWeights p :=
   ⟨fun i => w (σ.symm i), by
@@ -154,6 +158,7 @@ theorem continuous_relabel (σ : Equiv.Perm (Fin p)) :
 end FoxNeuwirthWeights
 
 /-- Concrete finite polyhedron used as the prime configuration model. -/
+@[expose]
 def FoxNeuwirthTopCellModelPoint (p : ℕ) :=
   FoxNeuwirthTopCell p × FoxNeuwirthWeights p
 
@@ -216,6 +221,7 @@ theorem site_injective (z : FoxNeuwirthTopCellModelPoint p) :
   exact_mod_cast hy
 
 /-- Embedded labelled configuration. -/
+@[expose]
 noncomputable def toConfig
     (z : FoxNeuwirthTopCellModelPoint p) : Config p :=
   ⟨z.site, z.site_injective⟩
@@ -259,6 +265,7 @@ theorem continuous_toConfig :
           ((c.1.rank i).1 : ℝ)).comp continuous_fst)
 
 /-- Equivariant reference map: first-coordinate vector with its diagonal part removed. -/
+@[expose]
 noncomputable def reference
     (hp : Nat.Prime p)
     (z : FoxNeuwirthTopCellModelPoint p) : ZeroSum p :=

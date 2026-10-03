@@ -45,7 +45,7 @@ public import Mathlib.Algebra.Lie.OfAssociative
 
 /-! # GridLineDesign -/
 
-@[expose] public section
+public section
 
 namespace Nibble.AX1
 
@@ -53,7 +53,7 @@ variable {q : ℕ}
 
 /-- **One block sub-triple of the line `(a, b)`**: the blocks `j` of `U`, `j + a` of `W` and
 `j + b` of `X`. -/
-def lineTriple (a b j : ZMod q) : ZMod q × ZMod q × ZMod q := (j, j + a, j + b)
+@[expose] def lineTriple (a b j : ZMod q) : ZMod q × ZMod q × ZMod q := (j, j + a, j + b)
 
 @[simp] theorem lineTriple_fst (a b j : ZMod q) : (lineTriple a b j).1 = j := rfl
 

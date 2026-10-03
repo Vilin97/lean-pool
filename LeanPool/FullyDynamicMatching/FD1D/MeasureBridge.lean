@@ -15,7 +15,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Realization
 
 /-! # Measure Bridge -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -39,6 +39,7 @@ namespace FiniteLaw
 variable {α β Ω : Type*} [Fintype α]
 
 /-- The probability mass function represented by a `FiniteLaw`. -/
+@[expose]
 def toPMF (μ : FiniteLaw α) : PMF α :=
   PMF.ofFintype (fun x => ENNReal.ofReal (μ.mass x)) (by
     rw [← ENNReal.ofReal_sum_of_nonneg
@@ -56,6 +57,7 @@ The probability measure represented by a `FiniteLaw`.
 On a finite type it is enough to assume measurable singletons: this already
 makes every function from the type measurable.
 -/
+@[expose]
 def toMeasure [MeasurableSpace α] (μ : FiniteLaw α) : Measure α :=
   μ.toPMF.toMeasure
 
@@ -145,6 +147,7 @@ namespace FiniteKernel
 variable {α : Type*} [Fintype α]
 
 /-- The probability law represented by one row of a finite kernel. -/
+@[expose]
 def rowLaw (K : FiniteKernel α) (x : α) : FiniteLaw α where
   mass := K x
   mass_nonneg := K.trans_nonneg x
@@ -156,6 +159,7 @@ theorem rowLaw_mass (K : FiniteKernel α) (x y : α) :
   rfl
 
 /-- A project `FiniteKernel`, viewed as a Mathlib Markov kernel. -/
+@[expose]
 noncomputable def toKernel [MeasurableSpace α] [MeasurableSingletonClass α]
     (K : FiniteKernel α) : Kernel α α where
   toFun x := (K.rowLaw x).toMeasure

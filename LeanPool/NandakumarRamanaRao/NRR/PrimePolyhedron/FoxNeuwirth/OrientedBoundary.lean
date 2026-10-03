@@ -20,7 +20,7 @@ This module records the oriented cell model and its boundary relation. The cycle
 cancellation results are proved in the chain modules.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -133,6 +133,7 @@ theorem boundarySupport_eq_facets (b : BarredPermutation p) :
   simp [boundarySupport, facets, signedIncidence_ne_zero_iff]
 
 /-- Formal cellular boundary of one oriented cell. -/
+@[expose]
 def cellularBoundary (b : BarredPermutation p) : BarredPermutation p → Int :=
   fun a => signedIncidence a b
 

@@ -16,7 +16,7 @@ label identities, and the `BraidedCategory`/`SymmetricCategory`
 instances on `SkeinObj f`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

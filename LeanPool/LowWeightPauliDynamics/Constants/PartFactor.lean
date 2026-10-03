@@ -50,7 +50,7 @@ every `j ≥ 2`; the only numerical input is `exp(4/3) ≤ 4.03`. The bound is a
 at `j = σ = 2`, `c = 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -63,6 +63,7 @@ open Finset
 
 The product runs over `s−j+1, …, s`, which is the product `∏_{i=σ-j+1}^{σ}(i+c)` of the module
 docstring written in increasing order so that no `ℕ` subtraction occurs. -/
+@[expose]
 noncomputable def partFactor (j : ℕ) (s : ℝ) : ℝ :=
   (s + j - 1) ^ j / ((Nat.factorial j : ℝ) * ∏ i ∈ range j, (s - j + 1 + i))
 

@@ -21,7 +21,7 @@ tie every statement to one `Semiring` derivation path and break instance unifica
 (`OreLocalization.instSemiring` vs `FractionRing.field`).
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart
@@ -42,7 +42,7 @@ variable [Algebra k[X] K] [IsScalarTower k[X] W.CoordinateRing K]
 
 /-- The integral-closure identification between the affine coordinate ring and the
 finite-integer ring of its fraction field. -/
-noncomputable def coordinateRingEquivIntegers :
+@[expose] noncomputable def coordinateRingEquivIntegers :
     W.CoordinateRing ≃ₐ[k[X]] ringOfIntegers k K :=
   IsIntegralClosure.equiv k[X] W.CoordinateRing K (ringOfIntegers k K)
 
@@ -65,13 +65,13 @@ lemma XYIdeal_ne_bot {x y : k} (_h : W.Nonsingular x y) :
   exact Ideal.subset_span (Set.mem_insert _ _)
 
 /-- A nonsingular affine point as a height-one prime of the coordinate ring. -/
-noncomputable def affineHeightOne {x y : k} (h : W.Nonsingular x y) :
+@[expose] noncomputable def affineHeightOne {x y : k} (h : W.Nonsingular x y) :
     IsDedekindDomain.HeightOneSpectrum W.CoordinateRing :=
   ⟨CoordinateRing.XYIdeal W x (Polynomial.C y),
     (XYIdeal_isMaximal W h).isPrime, XYIdeal_ne_bot W h⟩
 
 /-- The finite place corresponding to a nonsingular affine pair. -/
-noncomputable def finitePlaceOfAffine {x y : k} (h : W.Nonsingular x y) : PlaceA k K :=
+@[expose] noncomputable def finitePlaceOfAffine {x y : k} (h : W.Nonsingular x y) : PlaceA k K :=
   Sum.inl (IsDedekindDomain.HeightOneSpectrum.equivOfRingEquiv
     (coordinateRingEquivIntegers W K).toRingEquiv (affineHeightOne W h))
 
@@ -137,7 +137,7 @@ lemma maximal_eq_XYIdeal [IsAlgClosed k] (I : Ideal W.CoordinateRing) [I.IsMaxim
   exact ((XYIdeal_isMaximal W hns).eq_of_le (Ideal.IsMaximal.ne_top inferInstance) hle).symm
 
 /-- The finite place corresponding to a nonsingular affine point `(x, y)`. -/
-noncomputable def placeOfPoint : W.Point → PlaceA k K
+@[expose] noncomputable def placeOfPoint : W.Point → PlaceA k K
   | .zero => infinityPlace K
   | .some _ _ h => finitePlaceOfAffine W K h
 

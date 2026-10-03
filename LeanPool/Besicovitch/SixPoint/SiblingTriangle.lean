@@ -14,7 +14,7 @@ public import LeanPool.Besicovitch.SixPoint.Packing
 This file constructs supports `67` and `76` and proves their one-dimensional routing algebra.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -253,21 +253,21 @@ theorem blueSiblingRedTrianglePacking_totalRadius
       ring
 
 /-- Cross reach from a red point to a blue point carrying its canonical radius. -/
-def redSiblingBlueTriangleReach (configuration : SixPointConfiguration)
+@[expose] def redSiblingBlueTriangleReach (configuration : SixPointConfiguration)
     (redLabel blueLabel : SixPointLabel) : ℝ :=
   dist (configuration .red redLabel) (configuration .blue blueLabel) +
     canonicalTriangleRadius (configuration .blue .root) (configuration .blue .left)
       (configuration .blue .right) blueLabel
 
 /-- Cross reach from a blue point to a red point carrying its canonical radius. -/
-def blueSiblingRedTriangleReach (configuration : SixPointConfiguration)
+@[expose] def blueSiblingRedTriangleReach (configuration : SixPointConfiguration)
     (blueLabel redLabel : SixPointLabel) : ℝ :=
   dist (configuration .blue blueLabel) (configuration .red redLabel) +
     canonicalTriangleRadius (configuration .red .root) (configuration .red .left)
       (configuration .red .right) redLabel
 
 /-- The largest of three labelled real values. -/
-def triangleMaximum (value : SixPointLabel → ℝ) : ℝ :=
+@[expose] def triangleMaximum (value : SixPointLabel → ℝ) : ℝ :=
   max (value .root) (max (value .left) (value .right))
 
 /-- Every labelled value is bounded by its triangle maximum. -/

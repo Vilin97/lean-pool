@@ -32,7 +32,7 @@ import Mathlib.Tactic.Positivity.Finset
 Spine theorems with epsilon-loss recombination and the final exact `C₂` bound.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

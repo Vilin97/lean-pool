@@ -48,7 +48,7 @@ transported radial and axial directions. No new divergence premise is
 needed for the associated particular-solver coordinates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -162,6 +162,7 @@ open scoped ContDiff Topology InnerProductSpace BigOperators
 variable {B N0 : ℕ}
 
 /-- Primary carrier as an element of `HarmonicBlock CyclePoint`. -/
+@[expose]
 noncomputable def primaryCarrier (l : Label B N0) : HarmonicBlock CyclePoint :=
   (ActualPrimary.piece ActualPrimary.standardRegion l.1 l.2).tangentBlock
     (fun n x => (ActualPrimary.chartCoefficients l.1 l.2).phase n (x,0))
@@ -221,6 +222,7 @@ theorem normalWeight_eq (l : Label B N0) (n : ℕ) (j : ℤ) (hj : j ≠ 0) :
     ActualPrimaryDynamics.radialScale_eq]
 
 /-- Data used in actual particular dynamics. -/
+@[expose]
 noncomputable def data (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).copyData (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
@@ -962,10 +964,20 @@ theorem controlPatch_geometry (x : CycleState (Label B N0)) (l : Label B N0)
           N0).prepared.N).carrier l.2 ∧
     (referencePoint l n k z).2.2 ∈ Ioo 0 ((ActualPrimary.phases B N0 l.1).L l.2) ∧
     (referencePoint l n k z).2 ∈ (ActualPrimary.clockWindow l.2).core := by
+  have hnative : z ∈ (ParticularParameters.nativeStrip associatedStrip).domain := by
+    rw [← ActualParticularStageControls.nativeStrip_eq]
+    change z.1.1 ∈ slowStrip.domain
+    exact hz.2.1.1
   have hp := ActualPrimaryCoherence.piece_domain_positive ActualPrimary.standardRegion
     (show nativeToFull z ∈ (HarmonicWaveInteraction.productStrip
       (BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion)).domain
-          from hz.2.1.1)
+          from by
+            rw [native_strip_eq] at hnative
+            change nativeToFull z ∈
+              (HarmonicWaveInteraction.productStrip
+                (BaseContextAssembly.nativeStrip ActualPrimary.nominal
+                  ActualPrimary.standardRegion)).domain at hnative
+            exact hnative)
   have hslow : (referencePoint l n k z).1 ∈
       (PrimaryGeometryAssembly.domain ActualPrimary.nominal (ActualPrimary.choice B
           N0).prepared.N).carrier l.2 :=
@@ -1174,6 +1186,7 @@ theorem SupportData.localized_alternative {x : CycleState (Label B N0)}
   · exact Or.inr (localized_zero_of_fields _ ha hp)
 
 /-- Actual wave used in actual particular dynamics. -/
+@[expose]
 noncomputable def actualWave (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (parameters x l).wave associatedStrip (assembly x l).context (assembly x l).state
     (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput j
@@ -1275,7 +1288,9 @@ theorem common_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
         rcases S.localized_alternative hz hk with hc | ⟨_,hp⟩
         · have hr := (ActualParticularStageControls.raw_jets x (carrier_frequency Hc) j hj Hs).2
           exact (Complex.ofRealCLM.contDiff.contDiffAt.comp z
-            (native_cutoff_smooth x l j n k).contDiffAt).mul (hr.smooth l n k z hz hc)
+            (native_cutoff_smooth x l j n k).contDiffAt).mul
+              (hr.smooth l n k z (by
+                simpa only [ActualParticularStageControls.nativeStrip_eq] using hz) hc)
         · exact contDiffAt_const.congr_of_eventuallyEq hp
       exact hn.congr_of_eventuallyEq ((data x l j).common_pressure_germ S.cells S.cutoff_support n
           hk)
@@ -1441,7 +1456,8 @@ noncomputable def supportData (x : CycleState (Label B N0))
     SupportData x l j where
   cells := ActualParticularStageControls.carrierCells l
   cutoff_support := ActualParticularStageControls.data_cutoff_support x l j
-  cover n k _ hz hk := ActualParticularStageControls.data_control_alternative x hs hN l j n k hz hk
+  cover n k _ hz hk := ActualParticularStageControls.data_control_alternative x hs hN l j n k
+    (by simpa only [ActualParticularStageControls.nativeStrip_eq] using hz) hk
 
 theorem source_phase_smooth {x : CycleState (Label B N0)} (Hc : PreservesCarriers x)
     (l : Label B N0) (n : ℕ) :
@@ -1894,7 +1910,7 @@ is applied at that original band.  The square-root moving-edge weight is kept
 through the entire estimate, including the uncovered source term.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1909,6 +1925,7 @@ variable {B N0 : ℕ}
 
 /-- Native strip, given by `CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip
 slowStrip)`. -/
+@[expose]
 noncomputable def nativeStrip : StripData Native :=
   CommonCoverClass.sourceStrip (ActualParticularControl.angleStrip slowStrip)
 
@@ -2139,6 +2156,18 @@ theorem gaussianBlock_all_gains (x : CycleState (Label B N0))
         (assembly x l).carrierBlock (assembly x l).gaussianInput (assembly x l).aliasInput
             N).velocity
         n i m z) := by
+  have hstrip : nativeStrip = UniformBlockBounds.nativeStrip associatedStrip := by
+    rw [nativeStrip, ActualParticularStageControls.nativeStrip_eq]
+    rfl
+  have hζ (z : Parameter × TorusInverse.Plane) :
+      nativeStrip.zeta (ParticularWaveAssembly.angleShuffle (z, 0)) =
+        associatedStrip.zeta z := by
+    rw [hstrip]
+    have he := congrArg (fun s : StripData (Parameter × TorusInverse.Plane) => s.zeta z)
+      (UniformBlockBounds.sectionStrip_nativeStrip associatedStrip)
+    change (UniformBlockBounds.nativeStrip associatedStrip).zeta
+      (ParticularWaveAssembly.angleShuffle (z, 0)) = associatedStrip.zeta z at he
+    exact he
   have hh := UniformBlockBounds.native_assembledBlock_original_uniform
     (s := associatedStrip)
     (w := fun (_ : Label B N0) (_ : ℕ) z => Real.sqrt (nativeStrip.zeta z))
@@ -2149,10 +2178,22 @@ theorem gaussianBlock_all_gains (x : CycleState (Label B N0))
     (v := fun l j => (data x l j).globalGaussian (directions (B := B)))
     (p := fun _ _ _ _ => (0 : ℂ))
     (fun _ _ _ _ => Real.sqrt_nonneg _)
-    (fun j hj => globalGaussian_all_gains x hfrequency hs hN j
-      ((ParticularWaveAssembly.mem_modes N j).mp hj).1 (H j hj) β)
+    (fun j hj => by
+      rw [← hstrip]
+      exact globalGaussian_all_gains x hfrequency hs hN j
+        ((ParticularWaveAssembly.mem_modes N j).mp hj).1 (H j hj) β)
     (fun _ _ => LabelSumBounds.UniformClass.zero (fun _ _ _ _ => Real.sqrt_nonneg _))
-  exact hh.1 i m
+  have hw :
+      (fun (_ : Label B N0) (_ : ℕ) z =>
+        Real.sqrt (nativeStrip.zeta (ParticularWaveAssembly.angleShuffle (z, 0)))) =
+      (fun (_ : Label B N0) (_ : ℕ) z => Real.sqrt (associatedStrip.zeta z)) := by
+    funext l n z
+    exact congrArg Real.sqrt (hζ z)
+  have h := hh.1 i m
+  rw [hw] at h
+  have hdir (l : Label B N0) : (parameters x l).directions = directions (B := B) := by
+    rfl
+  simpa only [ParticularParameters.gaussianBlock, ActualParticularStageControls.data, hdir] using h
 
 end NavierStokes.ActualParticularGaussian
 
@@ -2161,7 +2202,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2260,6 +2301,7 @@ section NativeData
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
 
 /-- Native data used in actual particular cycle data. -/
+@[expose]
 noncomputable def nativeData (x : CycleState (Index B N0)) (l : Index B N0) (j : ℤ) :=
   (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
     (StateReindex.context cycleAssoc.symm (ActualPrimary.commonContext B))
@@ -2477,6 +2519,8 @@ theorem native_raw_class (H : Invariant σ x) (hN : ActualCarrierGeometry.geomet
   have ha := (ActualParticularStageControls.common_bounds _ (preservesCarriers H)
     (native_inputSupport H) hN j hj (native_source_class H j hj)).1.each (l.2,l.1)
   rw [← nativeData_eq_data H l j] at ha
+  rw [ActualParticularStageControls.nativeStrip_eq,
+    ← ActualWaveRegularityData.particularFullStrip_eq] at ha
   exact ha.mono_weight (fun _ _ _ => Real.sqrt_nonneg _)
     (fun n z _ => mul_le_of_le_one_right (Real.sqrt_nonneg _) (native_envelope_le_one l n z))
 
@@ -2489,6 +2533,8 @@ theorem native_pressure_class (H : Invariant σ x) (hN : ActualCarrierGeometry.g
   have hp := (ActualParticularStageControls.common_bounds _ (preservesCarriers H)
     (native_inputSupport H) hN j hj (native_source_class H j hj)).2.2.1.each (l.2,l.1)
   rw [← nativeData_eq_data H l j] at hp
+  rw [ActualParticularStageControls.nativeStrip_eq,
+    ← ActualWaveRegularityData.particularFullStrip_eq] at hp
   exact hp.mono_weight (fun _ _ _ => Real.sqrt_nonneg _)
     (fun n z _ => mul_le_of_le_one_right (Real.sqrt_nonneg _) (native_envelope_le_one l n z))
 
@@ -2502,7 +2548,15 @@ theorem native_gaussian_class (H : Invariant σ x) (hN : ActualCarrierGeometry.g
   have hg := (ActualParticularGaussian.globalGaussian_all_gains _
     (fun l => ActualCycleParameters.current_frequency x (l.2,l.1) (H.carrier (l.2,l.1)))
     (native_inputSupport H) hN j hj (native_source_class H j hj) β).each (l.2,l.1)
-  rwa [← nativeData_eq_data H l j] at hg
+  rw [← nativeData_eq_data H l j,
+    ActualParticularGaussian.nativeStrip,
+    ActualParticularStageControls.nativeStrip_eq,
+    ← ActualWaveRegularityData.particularFullStrip_eq] at hg
+  have hdir :
+      (ActualParticularStageControls.canonicalParameters (l.2, l.1)).directions =
+        ActualParticularStageControls.directions := rfl
+  rw [hdir]
+  exact hg
 
 theorem native_raw_smooth (H : Invariant σ x) (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     (l : Index B N0) (j : ℤ) (hj : j ≠ 0) (n : ℕ) :
@@ -2563,6 +2617,7 @@ theorem native_source_periodic (H : Invariant σ x) (T : ActualCyclePeriodicity.
     (fun l n hn j _ hz => source_inactive H l n hn j hz) l j n z hz
 
 /-- Native mode, constructed using `ActualWaveRegularity.modeOscillation`. -/
+@[expose]
 noncomputable def nativeMode (x : CycleState (Index B N0)) (l : Index B N0) (j : ℤ) :=
   ActualWaveRegularity.modeOscillation (nativeData x l j)
       ActualWaveRegularityData.particularFullStrip
@@ -2591,14 +2646,45 @@ theorem native_mode_periodic (H : Invariant σ x) (T : ActualCyclePeriodicity.Pe
 
 theorem block_eq_modes (H : Invariant σ x) (l : Index B N0) :
     (block x l).oscillation = LabelSumBounds.fieldSum
-      (fun _ => ParticularWaveAssembly.modes x.coefficients.residualBand) (nativeMode x l) :=
-  ActualWaveRegularity.particularBlock_eq_modes (parameters B N0) x.coefficients
+      (fun _ => ParticularWaveAssembly.modes x.coefficients.residualBand) (nativeMode x l) := by
+  have hcopy (j : ℤ) :
+      ActualWaveRegularity.particularCopyData (parameters B N0) x.coefficients
+        (ActualPrimary.commonContext B) x.state l j = nativeData x l j := by
+    unfold ActualWaveRegularity.particularCopyData nativeData
+    rw [ActualCycleParameters.fixedParameters_particular]
+  have hstrip :
+      ActualWaveRegularity.particularStrip (parameters B N0) =
+        ActualWaveRegularityData.particularFullStrip := by
+    rw [ActualWaveRegularity.particularStrip,
+      ActualCycleParameters.fixedParameters_strip,
+      ActualInitialization.geometry_strip,
+      ActualWaveRegularityData.particularFullStrip_eq]
+    rfl
+  have hdir :
+      ((parameters B N0).particular l).directions =
+        (ActualParticularStageControls.canonicalParameters (l.2, l.1)).directions := by
+    rw [ActualCycleParameters.fixedParameters_particular]
+  have hmode :
+      (fun j => ActualWaveRegularity.modeOscillation
+        (ActualWaveRegularity.particularCopyData (parameters B N0) x.coefficients
+          (ActualPrimary.commonContext B) x.state l j)
+        (ActualWaveRegularity.particularStrip (parameters B N0))
+        ((parameters B N0).particular l).directions
+        ActualWaveRegularity.particularChart) = nativeMode x l := by
+    funext j
+    unfold nativeMode
+    rw [hcopy j, hstrip, hdir]
+  change ((parameters B N0).particularBlock x.coefficients
+    (ActualPrimary.commonContext B) x.state l).oscillation = _
+  refine (ActualWaveRegularity.particularBlock_eq_modes (parameters B N0) x.coefficients
     (ActualPrimary.commonContext B) x.state l
     (fun n => (ActualParticularDynamics.native_angular (ActualCycleParameters.particularState x)
       (l.2,l.1) 1 n 0).radius)
     (fun n => (ActualParticularDynamics.native_angular (ActualCycleParameters.particularState x)
       (l.2,l.1) 1 n 0).radial_field)
-    (H.frequency l)
+    (H.frequency l)).trans ?_
+  exact congrArg (LabelSumBounds.fieldSum
+    (fun _ => ParticularWaveAssembly.modes x.coefficients.residualBand)) hmode
 
 theorem block_regular (H : Invariant σ x) (T : ActualCyclePeriodicity.Periodic x)
     (hN : ActualCarrierGeometry.geometricThreshold ≤ N0) (l : Index B N0) :
@@ -2773,6 +2859,7 @@ theorem block_eq_output (H : Invariant σ x) (l : Index B N0) :
 
 /-- Good block, given by `ActualParticularStageControls.outputGood
 (ActualCycleParameters.particularState x) x.coefficients.residualBand (l.2,l.1)`. -/
+@[expose]
 noncomputable def goodBlock (x : CycleState (Index B N0)) (l : Index B N0) :=
   ActualParticularStageControls.outputGood (ActualCycleParameters.particularState x)
     x.coefficients.residualBand (l.2,l.1)

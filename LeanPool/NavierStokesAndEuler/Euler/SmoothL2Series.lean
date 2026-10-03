@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 /-! A series of genuine smooth spatial L² fields that is absolutely
 summable at every finite Sobolev order has one smooth L² sum. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

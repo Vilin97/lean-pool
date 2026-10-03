@@ -14,7 +14,7 @@ This file connects the pushforward laws `zPlusLaw` and `zMinusLaw` to the
 convolution densities `LikelihoodRatio.fPlus` and `fMinus`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real Set
 open scoped ENNReal

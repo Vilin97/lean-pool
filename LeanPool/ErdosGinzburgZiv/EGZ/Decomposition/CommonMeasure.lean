@@ -17,7 +17,7 @@ The estimates apply to finite real weights, including natural weights by
 `WeightedIncidence.mass_natCast`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -21,7 +21,7 @@ simultaneous action: the plain action on the twisting powers
 alongside the descended action on the module powers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

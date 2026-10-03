@@ -22,7 +22,7 @@ many derivatives of its smooth profile and proves continuity in the integral
 parameter. Exponential-majorant integrability is supplied separately.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,10 +33,10 @@ open scoped ContDiff
 namespace NavierStokes.FlatKernelBounds
 
 /-- Denominator, given by `Real.sqrt (1 + x ^ 2 * t)`. -/
-def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
+@[expose] def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
 
 /-- Coordinate, given by `x / denominator x t`. -/
-def coordinate (x t : ℝ) : ℝ := x / denominator x t
+@[expose] def coordinate (x t : ℝ) : ℝ := x / denominator x t
 
 theorem base_pos {x t : ℝ} (ht : 0 ≤ t) : 0 < 1 + x ^ 2 * t := by
   positivity
@@ -93,7 +93,7 @@ inductive Expr where
   | mul (e f : Expr)
 
 /-- Eval used in flat kernel bounds. -/
-def Expr.eval : Expr → (ℝ → ℝ) → ℝ → ℝ → ℝ
+@[expose] def Expr.eval : Expr → (ℝ → ℝ) → ℝ → ℝ → ℝ
   | .const c, _, _, _ => c
   | .x, _, xv, _ => xv
   | .t, _, _, tv => tv
@@ -190,7 +190,7 @@ theorem abs_inv_denominator_le_one {x t : ℝ} (ht : 0 ≤ t) :
     (one_le_denominator (x := x) ht)
 
 /-- A bound uniform in a closed `x` interval and polynomial in nonnegative `t`. -/
-def PolynomialBound (R : ℝ) (F : ℝ → ℝ → ℝ) : Prop :=
+@[expose] def PolynomialBound (R : ℝ) (F : ℝ → ℝ → ℝ) : Prop :=
   ∃ C : ℝ, ∃ N : ℕ, 0 ≤ C ∧
     ∀ x t : ℝ, |x| ≤ R → 0 ≤ t → |F x t| ≤ C * (1 + t) ^ N
 
@@ -343,7 +343,7 @@ theorem Expr.jetOrder_iterate_diff_le (e : Expr) (n : ℕ) :
         (by simpa only [Nat.add_assoc] using Nat.add_le_add_right ih 1)
 
 /-- Kernel expr, given by `.mul (.mul (Expr.root.pow j) (Expr.invRoot.pow 3)) (.jet 0)`. -/
-def kernelExpr (j : ℕ) : Expr :=
+@[expose] def kernelExpr (j : ℕ) : Expr :=
   .mul (.mul (Expr.root.pow j) (Expr.invRoot.pow 3)) (.jet 0)
 
 theorem kernelExpr_jetOrder (j : ℕ) : (kernelExpr j).jetOrder = 0 := by
@@ -355,7 +355,7 @@ theorem kernelExpr_jetOrder (j : ℕ) : (kernelExpr j).jetOrder = 0 := by
 
 /-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator x t ^ j / denominator x t ^
 3) * b (coordinate x t)`. -/
-def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
+@[expose] def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator x t ^ j / denominator x t ^ 3) * b (coordinate x t)
 

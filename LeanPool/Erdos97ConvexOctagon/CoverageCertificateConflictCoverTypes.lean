@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Types and local audit for repeated-pair row-mask covers -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -30,7 +30,7 @@ structure ConflictCover where
   pairIndices : List Nat
 
 /-- Audit the short pair list and its precomputed row-mask union. -/
-def ConflictCover.validB (cover : ConflictCover) : Bool :=
+@[expose] def ConflictCover.validB (cover : ConflictCover) : Bool :=
   if _hcentre : cover.centre < 8 then
     let masks := pairRowIndexMasks.getD cover.centre #[]
     cover.pairIndices.all (fun index =>

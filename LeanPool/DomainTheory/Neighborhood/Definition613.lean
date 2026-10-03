@@ -85,7 +85,7 @@ The identity functor is monotone and continuous on domains
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -128,7 +128,7 @@ is *monotone on
 domains* iff every subdomain relation `D ◁ E` is carried to a subdomain relation
 `T(D) ◁ T(E)` whose
 projection pair is `(T(i), T(j))` — see `MonotoneAt`. -/
-def MonotoneOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
+@[expose] def MonotoneOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
   ∀ {α : Type w} {D E : NeighborhoodSystem α} (h : D ◁ E), MonotoneAt T h
 
 /-- The **identity functor is monotone on domains**: it fixes objects and maps, so
@@ -145,7 +145,7 @@ theorem monotoneOnDomains_id : MonotoneOnDomains (idEndofunctor DomainObj.{w}) :
 over `T(E)`'s carrier (using `MonotoneAt.carrier_eq` to transport neighbourhoods
 of `T(D)` to that
 carrier). This is the data on which "`λD. T(D)` is approximable" is expressed. -/
-def targetFam (T : Endofunctor DomainObj.{w}) (hmono : MonotoneOnDomains T)
+@[expose] def targetFam (T : Endofunctor DomainObj.{w}) (hmono : MonotoneOnDomains T)
     {α : Type w} {D E : NeighborhoodSystem α} (h : D ◁ E) :
     Set (Set (T.obj ⟨α, E⟩).carrier) :=
   {Y | (T.obj ⟨α, D⟩).sys.mem ((hmono h).carrier_eq ▸ Y)}
@@ -159,7 +159,7 @@ for any non-empty
 directed family `ℱ` of subsystems of `E` whose union is the subsystem `U` (`hU`),
 the target-side
 neighbourhood family of `T(U)` is the union of those of the `T(D)` for `D ∈ ℱ`. -/
-def ContinuousOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
+@[expose] def ContinuousOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
   ∃ hmono : MonotoneOnDomains T,
     ∀ {α : Type w} {E : NeighborhoodSystem α}
       (ℱ : Set (NeighborhoodSystem α)) (hℱ : ∀ ⦃D⦄, D ∈ ℱ → D ◁ E)

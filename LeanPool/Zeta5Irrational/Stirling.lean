@@ -34,7 +34,7 @@ import Mathlib.Tactic.Ring.RingNF
   the bound displayed before (6.15) in the paper.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 

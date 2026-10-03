@@ -17,7 +17,7 @@ The improved velocity exponent supplies the linear velocity terms, while
 a cutoff of absolute value at most one preserves pressure-gradient bounds.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -29,6 +29,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- A scalar product restricted to nonpositive times. -/
+@[expose]
 def pastMultiplierSource (a f : ParabolicPoint → ℝ) : ParabolicPoint → ℝ :=
   {z : ParabolicPoint | z.2 ≤ 0}.indicator (fun z => a z * f z)
 

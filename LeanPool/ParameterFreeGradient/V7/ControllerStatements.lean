@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.V7.AboveTwoStatements
 Observable trial certification and amortized query bounds along the realized controller path.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 
@@ -31,12 +31,12 @@ structure AnchorRunData (d : ℕ) where
   trace : List (Observation d)
 
 /-- The normalized signed power vector that attains the dual norm pairing. -/
-noncomputable def normingDirection (q : ℝ) (g : Point d) : Point d :=
+@[expose] noncomputable def normingDirection (q : ℝ) (g : Point d) : Point d :=
   fun i => ((SignType.sign (g i) : ℝ) * |g i| ^ (q - 1)) /
     (lpNorm q g) ^ (q - 1)
 
 /-- The norming direction has unit primal norm and attains the gradient's dual norm. -/
-noncomputable def NormingDirectionStatement : Prop :=
+@[expose] noncomputable def NormingDirectionStatement : Prop :=
   ∀ (p : ℝ), 1 < p → ∀ (d : ℕ) (g : Point d),
     0 < lpNorm (conjugateExponent p) g →
     lpNorm p (normingDirection (conjugateExponent p) g) = 1 ∧
@@ -44,6 +44,7 @@ noncomputable def NormingDirectionStatement : Prop :=
       lpNorm (conjugateExponent p) g
 
 /-- The candidate anchor achieves the required decrease from the initial point. -/
+@[expose]
 def AnchorTest (oracle : PairOracle d) (x0 : Point d) (G D : ℝ)
     (y : Point d) : Prop :=
   oracle.value y ≤ oracle.value x0 - G * D / 2
@@ -51,7 +52,7 @@ def AnchorTest (oracle : PairOracle d) (x0 : Point d) (G D : ℝ)
 /-- The explicit dyadic ray search, including every rejected test and the
 first accepted test.  These are algorithm-definition assumptions, not the
 named carrier's mathematical conclusions. -/
-def AnchorExecution (p : ℝ) (input : MethodInput d) (oracle : PairOracle d)
+@[expose] def AnchorExecution (p : ℝ) (input : MethodInput d) (oracle : PairOracle d)
     (cached : CachedPair d) (run : AnchorRunData d) : Prop :=
   let G := lpNorm (conjugateExponent p) cached.observation.gradient
   (∀ k, run.M k = (2 : ℝ) ^ k * input.M0) ∧
@@ -69,7 +70,7 @@ def AnchorExecution (p : ℝ) (input : MethodInput d) (oracle : PairOracle d)
 
 /-- U03/U13/U14/U19: source carrier for `lem:anchor`, keeping raw `M0`,
 accepted `Ma`, and `Da` distinct. -/
-noncomputable def AnchorStatement : Prop :=
+@[expose] noncomputable def AnchorStatement : Prop :=
   ∀ (p : ℝ), 1 < p → ∀ (d : ℕ) (input : MethodInput d)
     (inst : PositiveInstance p d input.x0),
     input.p = p → 0 < input.eps → SecantInitialization input inst.oracle →
@@ -95,16 +96,17 @@ structure ControllerVisit where
   D : ℝ
 
 /-- The specified visit occupies index `i` in the chronological controller path. -/
-def VisitAt (visits : List ControllerVisit) (i : ℕ)
+@[expose] def VisitAt (visits : List ControllerVisit) (i : ℕ)
     (visit : ControllerVisit) : Prop :=
   (visits.drop i).head? = some visit
 
 /-- The specified trial report occupies index `i` in the report list. -/
-def ReportAt (reports : List (TrialReport d)) (i : ℕ)
+@[expose] def ReportAt (reports : List (TrialReport d)) (i : ℕ)
     (report : TrialReport d) : Prop :=
   (reports.drop i).head? = some report
 
 /-- The initial visit and successive controller transitions agree with their trial reports. -/
+@[expose]
 def ControllerPath (G Ma Da : ℝ) (visits : List ControllerVisit)
     (reports : List (TrialReport d)) : Prop :=
   visits.length = reports.length ∧
@@ -118,6 +120,7 @@ def ControllerPath (G Ma Da : ℝ) (visits : List ControllerVisit)
     | .scale _ => next.M = 2 * current.M ∧ next.D = G / next.M
 
 /-- The realized visits form the permitted geometric sequence of scales and radii. -/
+@[expose]
 def RealizedPathGeometricallyDominated (eps G Ma R : ℝ)
     (visits : List ControllerVisit) : Prop :=
   ∃ (S : ℕ) (lastRadius : ℕ → ℕ),
@@ -135,7 +138,7 @@ def RealizedPathGeometricallyDominated (eps G Ma R : ℝ)
         (Ms S * R / eps) ^ a / (1 - (2 : ℝ) ^ (-a)))
 
 /-- The observable guard kind is available in the selected exponent regime. -/
-def GuardAllowedInRegime (p : ℝ) (kind : ObservableGuardKind) : Prop :=
+@[expose] def GuardAllowedInRegime (p : ℝ) (kind : ObservableGuardKind) : Prop :=
   if p = 2 then
     kind = .upperModel ∨ kind = .interpolation ∨ kind = .terminalDescent
   else
@@ -144,6 +147,7 @@ def GuardAllowedInRegime (p : ℝ) (kind : ObservableGuardKind) : Prop :=
 /-- The complete schedule belongs to the specified local routine.  An early
 success or first failure consumes a prefix; Radius is legal only after the
 entire regime-appropriate schedule has been checked. -/
+@[expose]
 def GuardLedgerComplete (p : ℝ) (report : TrialReport d)
     (schedule : List (ObservableGuardCheck d)) : Prop :=
   report.checkedGuards <+: schedule ∧
@@ -154,6 +158,7 @@ def GuardLedgerComplete (p : ℝ) (report : TrialReport d)
 /-- U15--U22: source carrier for `prop:certification`.  Correctness,
 visited bounds, reset behavior, and realized-path accounting are distinct
 conjuncts. -/
+@[expose]
 noncomputable def TrialOutcomeCertificationStatement : Prop :=
   ∀ (p : ℝ), 1 < p → ∀ (d : ℕ) (eps G Ma Da L R : ℝ),
     0 < eps → 0 < G → 0 < Ma → 0 < Da →
@@ -175,11 +180,12 @@ noncomputable def TrialOutcomeCertificationStatement : Prop :=
       RealizedPathGeometricallyDominated eps G Ma R visits
 
 /-- The trial complexity exponent: one half below two, and `p / (p + 2)` above two. -/
-noncomputable def localCostExponent (p : ℝ) : ℝ :=
+@[expose] noncomputable def localCostExponent (p : ℝ) : ℝ :=
   if p ≤ 2 then 1 / 2 else p / (p + 2)
 
 /-- G01--G02: source carrier for `lem:amortization`.  Both geometric sums
 range over the realized path, never a rectangular product grid. -/
+@[expose]
 noncomputable def GeometricTrialAmortizationStatement : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (p : ℝ), 1 < p →
   ∃ Cp : ℝ, 0 < Cp ∧ ∀ (eps G L R Ma Da : ℝ),

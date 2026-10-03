@@ -48,7 +48,7 @@ The mixed representation exhibits:
 - Haag, "Local Quantum Physics" (1996), §V.3
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Real Filter QFT LaplaceIntegral
 open TopologicalSpace

@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # FiniteBaseAnnulusEstimate -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

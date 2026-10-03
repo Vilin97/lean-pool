@@ -28,7 +28,7 @@ affine independence of the three vertices, proved from non-collinearity by coord
 computation.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -36,7 +36,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- The vertices of the standard triangle: `(0,0)`, `(1,0)`, `(0,1)`. -/
-def standardTriangleVertex : Fin 3 → Plane :=
+@[expose] def standardTriangleVertex : Fin 3 → Plane :=
   ![!₂[(0 : ℝ), 0], !₂[(1 : ℝ), 0], !₂[(0 : ℝ), 1]]
 
 /-- The vertices of the standard triangle are not collinear. -/
@@ -81,7 +81,7 @@ theorem standardTriangleVertex_triple_affineIndependent (a b c : Fin 3)
 
 /-- **Positive anchor** for `PolygonalCircle`: the boundary of the standard triangle with
 vertices `(0,0)`, `(1,0)`, `(0,1)` is a polygonal simple closed curve. -/
-def standardTriangleCircle : PolygonalCircle where
+@[expose] def standardTriangleCircle : PolygonalCircle where
   n := 3
   three_le := le_rfl
   vertex := standardTriangleVertex
@@ -104,7 +104,7 @@ def standardTriangleCircle : PolygonalCircle where
     absurd ((by decide : ∀ i j : ZMod 3, i ≠ j → i ≠ j + 1 → j = i + 1) i j h₁ h₂) h₃
 
 /-- Three affinely independent points in the plane form an affine basis. -/
-noncomputable def planeAffineBasisOfTriple (p : Fin 3 → Plane)
+@[expose] noncomputable def planeAffineBasisOfTriple (p : Fin 3 → Plane)
     (hp : AffineIndependent ℝ p) : AffineBasis (Fin 3) ℝ Plane where
   toFun := p
   ind' := hp

@@ -16,7 +16,7 @@ condition ensures that left-exclusive vertices acquire no extra neighbours.
 The existing simplicial-elimination ranking then yields a PEO and chordality.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

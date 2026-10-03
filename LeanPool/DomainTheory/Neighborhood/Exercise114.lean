@@ -37,7 +37,7 @@ exactly the principals
 Constructive (`[propext, Quot.sound]`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise114
 
@@ -46,6 +46,7 @@ open Domain.Neighborhood NeighborhoodSystem
 /-- Membership: `X` is a neighbourhood iff `X = ℕ` (the master `Δ`) or `X` is
 finite and
 non-empty. -/
+@[expose]
 def mem (X : Set ℕ) : Prop := X = Set.univ ∨ (X.Finite ∧ X.Nonempty)
 
 theorem empty_not_mem : ¬ mem (∅ : Set ℕ) := by
@@ -64,6 +65,7 @@ theorem mem_singleton (n : ℕ) : mem {n} :=
 /-- **Exercise 1.14.** The neighbourhood system of finite non-empty subsets of `ℕ`
 (plus `Δ =
 ℕ`). -/
+@[expose]
 def neighborhoodSystem : NeighborhoodSystem ℕ where
   mem := mem
   master := Set.univ

@@ -32,7 +32,7 @@ section
 /-! Actual scalar pressures whose lifted gradients are smooth L² fields.
 The witnesses below are closed under the literal finite packet assembly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -202,6 +202,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (k : ℝ) (hk : k ≠ 0) {p : ScalarField}
 
 /-- Pressure field as an element of `Field P D.T (coordinatePressure D k p)`. -/
+@[expose]
 def pressureField (G : GradientWitness P D.T k⁻¹ D.m₀ p) :
     Field P D.T (coordinatePressure D k p) :=
   (G.field.smul (k^2)).congr (fun t x θ => by
@@ -230,7 +231,7 @@ section
 spaces.  Compact ordinary scalar tests give compact cylinder scalar tests,
 and the bounded embedding carries their closures into one another. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -317,7 +318,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -390,7 +391,7 @@ section
 This discharges the approximation equation, using the source coefficients
 and the genuine packet Fields rather than an assumed residual equation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -448,6 +449,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Normalized residual, given by `k • rawInverse D z (slicedMomentumResidual (Icc (0 : ℝ) D.T)
 k⁻¹ (rawInverse D z) (D.strain z) (D.normalField z) W p z)`. -/
+@[expose]
 def normalizedResidual (k : ℝ) (W : VectorField) (p : ScalarField) (z : Domain) : Space :=
   k • rawInverse D z (slicedMomentumResidual (Icc (0 : ℝ) D.T) k⁻¹
     (rawInverse D z) (D.strain z) (D.normalField z) W p z)
@@ -497,7 +499,7 @@ variable (k : ℝ) (hk : k ≠ 0) (hκ : |k⁻¹| ≤ 1)
 
 /-- The data used for cancellation has the literal normalized packet field
 and residual. Its coefficients are the original deformation coefficients. -/
-def coordinateData : EulerAllOrderCorrectionData.Data P D.T :=
+@[expose] def coordinateData : EulerAllOrderCorrectionData.Data P D.T :=
   correctionDataOfFields D P k⁻¹ hκ (coordinateField D G k) R
 
 include hk hW in

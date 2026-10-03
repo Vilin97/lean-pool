@@ -21,7 +21,7 @@ two-monogon presentation and transports the already established sphere homeomorp
 comparison.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 

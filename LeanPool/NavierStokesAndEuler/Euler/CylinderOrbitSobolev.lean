@@ -17,7 +17,7 @@ word. The complete Sobolev norm is bounded by the exact finite word sum, and
 uniform-time mixed orbit regularity yields a continuous Sobolev path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -75,8 +75,9 @@ theorem spatialJet_word (n q : ℕ) (hn : n ≤ q) (u : LiftL2 period)
 theorem sobolev_coordinate (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u)
     (w : SobolevWord q) :
     (sobolev period q u hu).val w =
-      wordDerivative standardDirection (fun a : LiftTangent => translate period a u) w.2 0 :=
-  spatialJet_word period w.1.val q (Nat.le_of_lt_succ w.1.isLt) u hu w.2
+      wordDerivative standardDirection (fun a : LiftTangent => translate period a u) w.2 0 := by
+  rw [sobolev, ofJet_apply]
+  exact spatialJet_word period w.1.val q (Nat.le_of_lt_succ w.1.isLt) u hu w.2
 
 /-- A complete Sobolev norm is controlled by the genuine fixed-order word sum. -/
 theorem sobolev_norm_le_baseSize (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
@@ -130,7 +131,7 @@ theorem path_sobolev_continuous (q : ℕ) (p : C(K, LiftL2 period))
       0).continuous
 
 /-- The actual continuous Sobolev path. -/
-def sobolevPath (q : ℕ) (p : C(K, LiftL2 period))
+@[expose] def sobolevPath (q : ℕ) (p : C(K, LiftL2 period))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p)) : C(K,SobolevSpace period
         q) :=
   ⟨fun t => sobolev period q (p t) (path_evaluation_smooth period p hp t),path_sobolev_continuous

@@ -23,7 +23,7 @@ compactly supported function is the right factor, so Mathlib's right-factor
 regularity and derivative-transport theorems apply directly.
 -/
 
-@[expose] public section
+public section
 
 open scoped Convolution
 open scoped BigOperators
@@ -40,7 +40,7 @@ namespace CKN.Foundation.Heat
 open CKN.Foundation.Parabolic
 
 /-- Spatial convolution of the heat kernel with a scalar function. -/
-noncomputable def heatConv (t : ℝ) (u : Vec3 → ℝ) : Vec3 → ℝ :=
+@[expose] noncomputable def heatConv (t : ℝ) (u : Vec3 → ℝ) : Vec3 → ℝ :=
   MeasureTheory.convolution (fun y : Vec3 => heatKernel y t) u
     (ContinuousLinearMap.lsmul ℝ ℝ) volume
 

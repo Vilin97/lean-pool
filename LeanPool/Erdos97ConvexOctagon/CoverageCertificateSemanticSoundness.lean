@@ -14,7 +14,7 @@ import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
 
 /-! # Semantic consequences of compact coverage certificates -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

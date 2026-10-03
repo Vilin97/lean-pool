@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 
 /-! The actual continuous-path embedding as a bounded linear time-space map. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -44,7 +44,8 @@ theorem pathLp_smul (T : ℝ) (hT : 0 ≤ T) (r : ℝ) (f : C(Icc (0 : ℝ) T, E
   rfl
 
 /-- The genuine continuous-path to Bochner L² embedding is a bounded linear map. -/
-def pathLpOperator (T : ℝ) (hT : 0 ≤ T) : C(Icc (0 : ℝ) T, E) →L[ℝ] TimeLp T E :=
+@[expose] def pathLpOperator (T : ℝ) (hT : 0 ≤ T) :
+    C(Icc (0 : ℝ) T, E) →L[ℝ] TimeLp T E :=
   ({ toFun := pathLp T hT
      map_add' := pathLp_add T hT
      map_smul' := fun r f => by simpa only [RingHom.id_apply] using pathLp_smul T hT r f } :
@@ -53,6 +54,6 @@ def pathLpOperator (T : ℝ) (hT : 0 ≤ T) : C(Icc (0 : ℝ) T, E) →L[ℝ] Ti
 
 /-- The bounded embedding is exactly the actual L² equivalence class of the path. -/
 theorem pathLpOperator_apply (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
-    pathLpOperator T hT f = pathLp T hT f := rfl
+    pathLpOperator T hT f = pathLp T hT f := by rfl
 
 end EulerTimeLp

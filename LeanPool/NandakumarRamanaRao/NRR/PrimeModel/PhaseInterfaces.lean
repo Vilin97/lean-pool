@@ -21,7 +21,7 @@ no new mathematical assertion; later `PrimeModel` modules import this file rathe
 implementation details of the hyperspace, variable-body, or multivalued-function developments.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

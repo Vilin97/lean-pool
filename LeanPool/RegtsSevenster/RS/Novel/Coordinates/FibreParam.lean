@@ -16,7 +16,7 @@ flags carry the odd edge colour on the representative slot and its
 partner on the partner slot; the rest carry the even colour.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -26,6 +26,7 @@ open CategoryTheory Finset
 variable {k ℓ : ℕ}
 
 /-- The colouring of an edge subset with colouring data. -/
+@[expose]
 noncomputable def colouringOf (W : ClosedFragment)
     (F : EdgeSubset W) (ψ : F.EvenColouring k)
     (φ : F.OddColouring ℓ) :
@@ -131,6 +132,7 @@ def diagPartner (x : Fin k ⊕ Fin (2 * ℓ)) :
 
 /-- Diagonal colourings: the partner slot carries the diagonal
 partner of the representative slot. -/
+@[expose]
 def Diagonal (W : ClosedFragment)
     (c : MixedColouring k ℓ (edgeCount W + edgeCount W)) :
     Prop :=

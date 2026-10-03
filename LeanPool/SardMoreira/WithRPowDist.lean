@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.WithRPowDist
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Filter Uniformity Topology
 open Function
@@ -38,7 +38,7 @@ theorem measurable_mk : Measurable (mk : X → WithRPowDist X α hα₀ hα₁) 
     rw [instMeasurableSpace, MeasurableSpace.comap_comp, val_comp_mk, MeasurableSpace.comap_id]
 
 /-- The natural measurable equivalence between `WithRPowDist X α hα₀ hα₁` and `X`. -/
-@[simps! -fullyApplied toEquiv apply symm_apply]
+@[expose, simps! -fullyApplied toEquiv apply symm_apply]
 def measurableEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵐ X where
   toEquiv := WithRPowDist.equiv X α hα₀ hα₁
   measurable_toFun := measurable_val
@@ -61,7 +61,7 @@ open WithRPowDist
 variable (α hα₀ hα₁) in
 /-- The pushforward of a measure `μ` on `X` under the canonical map
 `X → WithRPowDist X α hα₀ hα₁`. -/
-def withRPowDist (μ : Measure X) : Measure (WithRPowDist X α hα₀ hα₁) :=
+@[expose] def withRPowDist (μ : Measure X) : Measure (WithRPowDist X α hα₀ hα₁) :=
   μ.map .mk
 
 theorem withRPowDist_apply (μ : Measure X) (s : Set (WithRPowDist X α hα₀ hα₁)) :
@@ -116,7 +116,14 @@ instance [TopologicalSpace X] [μ.WeaklyRegular] :
     apply WeaklyRegular.innerRegular.map'
     · exact fun U hU ↦ hU.preimage continuous_mk
     · intro K hK
-      rwa [measurableEquiv_symm_apply, ← homeomorph_symm_apply, Homeomorph.isClosed_image]
+      have h_image :
+          (measurableEquiv.symm : X → WithRPowDist X α hα₀ hα₁) '' K =
+            (homeomorph.symm : X → WithRPowDist X α hα₀ hα₁) '' K := by
+        apply Set.image_congr
+        intro x hx
+        simp only [measurableEquiv_symm_apply, homeomorph_symm_apply]
+      rw [h_image]
+      exact homeomorph.symm.isClosed_image.mpr hK
 
 instance [TopologicalSpace X] [μ.InnerRegularCompactLTTop] :
     (μ.withRPowDist α hα₀ hα₁).InnerRegularCompactLTTop where

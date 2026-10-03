@@ -18,7 +18,7 @@ initialization consumer. No `MeanHypotheses` or divergence statement is
 an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,6 +36,7 @@ abbrev Point := PressureStream.Lift PressureStream.Plane
 abbrev Full := Point × ℝ
 
 /-- Strip, given by `BaseContextAssembly.nativeStrip nominal standardRegion`. -/
+@[expose]
 noncomputable def strip : WeightedClasses.StripData Point :=
   BaseContextAssembly.nativeStrip nominal standardRegion
 

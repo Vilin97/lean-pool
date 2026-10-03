@@ -17,7 +17,7 @@ group element.  The corollary specialises this to the native
 submodule representations `rhoS`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

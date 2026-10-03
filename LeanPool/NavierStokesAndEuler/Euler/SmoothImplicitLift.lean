@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 smooth when the derivative in its value variable is invertible. The local
 inverse theorem proves regularity; no new solution is postulated. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

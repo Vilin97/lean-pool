@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.Derivation.Basic
 Mickelsson operators, interlacing schedules, and canonical projected-axis witnesses.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -35,7 +35,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankLowerRowBranching
 open MetricCodes.Spherical.HigherHarmonicYoung.AllRankArbitraryRowBranchingOperator
 
 /-- The upper polarization path commutator used in the spherical-code argument. -/
-def upperPolarizationPathCommutator {r n : ℕ}
+@[expose] def upperPolarizationPathCommutator {r n : ℕ}
     (a b : Fin (r + 1)) :
     List (Fin (r + 1)) →
       (PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n)
@@ -3155,7 +3155,7 @@ open MetricCodes.Spherical.HigherRepresentationGraph
 
 /-- The reverse interlacing polynomial seed bundled as a map to homogeneous highest-weight
 space. -/
-def reverseInterlacingHighestWeightSeed
+@[expose] def reverseInterlacingHighestWeightSeed
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu) :
     HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
@@ -3176,7 +3176,7 @@ def reverseInterlacingHighestWeightSeed
     exact map_smul (reverseInterlacingPolynomialSeed lam mu) c p
 
 /-- The reverse interlacing harmonic branch used in the spherical-code argument. -/
-def reverseInterlacingHarmonicBranch
+@[expose] def reverseInterlacingHarmonicBranch
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu) :
     HarmonicYoungSpace (n := n) mu →ₗ[ℝ]
@@ -3236,7 +3236,7 @@ open SpherePacking.HarmonicCoordinateOperators
 
 /-- The reverse interlacing harmonic branch normalized to an isometry using its positive Gram
 scalar. -/
-def normalizedGelfandTsetlinFibre
+@[expose] def normalizedGelfandTsetlinFibre
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (c : ℝ) (hc : 0 < c)
@@ -3371,7 +3371,7 @@ theorem ambientCoordinateDerivation_X {r n : ℕ}
       not_false_eq_true, Pi.single_eq_of_ne, mul_zero, Finset.sum_const_zero, h, ↓reduceIte]
 
 /-- The ambient rotation used in the spherical-code argument. -/
-def ambientRotation {r n : ℕ} (a b : Fin n) :
+@[expose] def ambientRotation {r n : ℕ} (a b : Fin n) :
     Derivation ℝ (PolynomialSpace r n) (PolynomialSpace r n) :=
   ambientCoordinateDerivation (r := r) a b -
     ambientCoordinateDerivation (r := r) b a
@@ -3557,7 +3557,7 @@ theorem ambientRotation_mem_harmonicYoungSubmodule {r n : ℕ}
       map_zero]
 
 /-- The young ambient rotation used in the spherical-code argument. -/
-def youngAmbientRotation {r n : ℕ}
+@[expose] def youngAmbientRotation {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (a b : Fin n) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       HarmonicYoungSpace (n := n) lam where
@@ -3718,7 +3718,7 @@ namespace ClebschRotation
 open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 
 /-- The euclidean ambient rotation used in the spherical-code argument. -/
-def euclideanAmbientRotation {n : ℕ} (a b : Fin n) :
+@[expose] def euclideanAmbientRotation {n : ℕ} (a b : Fin n) :
     SpherePacking.Euclidean n →ₗ[ℝ] SpherePacking.Euclidean n where
   toFun v :=
     v b • EuclideanSpace.basisFun (Fin n) ℝ a -
@@ -3810,7 +3810,7 @@ theorem ambientRotation_rowAxisPolynomial {r n : ℕ}
     MvPolynomial.algebraMap_eq]
 
 /-- The tensor ambient rotation used in the spherical-code argument. -/
-def tensorAmbientRotation {r n : ℕ}
+@[expose] def tensorAmbientRotation {r n : ℕ}
     (mu : Fin (r + 1) → ℕ) (a b : Fin n) :
     (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) mu) →ₗ[ℝ]
@@ -4147,7 +4147,7 @@ section
 open scoped BigOperators InnerProductSpace
 
 /-- The young ambient casimir used in the spherical-code argument. -/
-def youngAmbientCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
+@[expose] def youngAmbientCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       HarmonicYoungSpace (n := n) lam :=
   (2 : ℝ)⁻¹ •
@@ -4790,7 +4790,7 @@ open scoped BigOperators InnerProductSpace
 open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRankLowerRowBranching
 
 /-- The all rank casimir eigenvalue used in the spherical-code argument. -/
-def allRankCasimirEigenvalue {r : ℕ}
+@[expose] def allRankCasimirEigenvalue {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℝ :=
   ∑ i : Fin (r + 1),
     (lam i : ℝ) * ((lam i : ℝ) + (n : ℝ) - 2 - 2 * (i.val : ℝ))
@@ -4967,7 +4967,7 @@ open scoped BigOperators InnerProductSpace TensorProduct
 open MetricCodes.Spherical.HigherChannel
 
 /-- The adjacent casimir eigenvalue used in the spherical-code argument. -/
-def adjacentCasimirEigenvalue {r : ℕ}
+@[expose] def adjacentCasimirEigenvalue {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : ℝ :=
   ∑ row : Fin (r + 1),
     (lam row : ℝ) *
@@ -5009,7 +5009,7 @@ theorem adjacentCasimirEigenvalue_raiseWeight {r : ℕ}
   ring
 
 /-- The predicate asserting all rank one box neighbor. -/
-def IsAllRankOneBoxNeighbor {r : ℕ}
+@[expose] def IsAllRankOneBoxNeighbor {r : ℕ}
     (target source : Fin (r + 1) → ℕ) : Prop :=
   ∃ row : Fin (r + 1),
     source = raiseWeight target row ∨ target = raiseWeight source row
@@ -5505,7 +5505,7 @@ theorem boxWeylDimensions_of_actualWeyl {r m n : ℕ}
     exact (boxSignature_interlaces a b hstable j).antitone_ambient
 
 /-- The box axis used in the spherical-code argument. -/
-def boxAxis (n : ℕ) (hn : 0 < n) : SpherePoint n := by
+@[expose] def boxAxis (n : ℕ) (hn : 0 < n) : SpherePoint n := by
   cases n with
   | zero => omega
   | succ d =>
@@ -5929,7 +5929,7 @@ variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- The adjacent normalized axis coefficient used in the spherical-code argument. -/
-def adjacentNormalizedAxisCoefficient
+@[expose] def adjacentNormalizedAxisCoefficient
     (sourceGram targetGram coefficient : ℝ) : ℝ :=
   coefficient * Real.sqrt targetGram / Real.sqrt sourceGram
 
@@ -6132,7 +6132,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherYoungMixedGapBranching
 
 /-- The predicate asserting rotation invariant. -/
-def IsRotationInvariant {V I : Type*} [AddCommGroup V] [Module ℝ V]
+@[expose] def IsRotationInvariant {V I : Type*} [AddCommGroup V] [Module ℝ V]
     (R : I → V →ₗ[ℝ] V) (W : Submodule ℝ V) : Prop :=
   ∀ (i : I) (v : V), v ∈ W → R i v ∈ W
 
@@ -6196,7 +6196,7 @@ theorem symmetricRotationIntertwiner_eq_smul_id
       exact Module.End.mem_eigenspace_iff.mp hv
 
 /-- The young rotation family used in the spherical-code argument. -/
-def youngRotationFamily {r n : ℕ}
+@[expose] def youngRotationFamily {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Fin n × Fin n →
       HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
@@ -6537,7 +6537,7 @@ theorem positiveGelfandTsetlinFischerGram_of_irreducible
     _ = c * ⟪q, t⟫_ℝ := real_inner_smul_left q t c
 
 /-- The canonical gelfand tsetlin fibre used in the spherical-code argument. -/
-def canonicalGelfandTsetlinFibre
+@[expose] def canonicalGelfandTsetlinFibre
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h) :
@@ -6626,7 +6626,7 @@ theorem canonicalGelfandTsetlinFibre_channel_apply
     channel coefficient haxis p
 
 /-- The canonical box gelfand tsetlin fibre used in the spherical-code argument. -/
-def canonicalBoxGelfandTsetlinFibre {r m n : ℕ}
+@[expose] def canonicalBoxGelfandTsetlinFibre {r m n : ℕ}
     (a : Fin (r + 2) → ℝ) (b : Fin (r + 1) → ℝ)
     (hstable : ∀ v : RectangularVertices.Vertex (r + 1) m,
       FiniteInterlacing n (RectangularVertices.signature a n v)
@@ -6848,7 +6848,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.BGGRootComplex
 open MetricCodes.Spherical.HigherYoungInternalRowPolarizationDescent
 
 /-- The lowered internal young weight used in the spherical-code argument. -/
-def loweredInternalYoungWeight {r : ℕ}
+@[expose] def loweredInternalYoungWeight {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (a : Fin (r + 1)) :
     Fin (r + 1) → ℕ :=
   Function.update lam a (lam a - 1)

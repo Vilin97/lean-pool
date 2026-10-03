@@ -22,7 +22,7 @@ certificates for the boundary faces; row 096 additionally has a readable
 symbolic proof on the positive orthant.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourRowsClosed
 
 open Utilities

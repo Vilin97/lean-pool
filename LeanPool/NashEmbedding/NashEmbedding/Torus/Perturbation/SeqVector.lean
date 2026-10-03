@@ -27,7 +27,7 @@ This file lifts the scalar facts of `SobolevLimits` (quasi-triangle inequalities
 Cauchy limits) to vector sequences. They are consumed by the abstract Günther iteration.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev
@@ -43,10 +43,11 @@ abbrev VecSeq (n N : ℕ) := Fin N → (Fin n → ℤ) → ℂ
 variable {n N : ℕ}
 
 /-- Componentwise membership in `H^s`. -/
-def VMem (n N : ℕ) (s : ℝ) (v : VecSeq n N) : Prop := ∀ α, MemSobolev n s (v α)
+@[expose] def VMem (n N : ℕ) (s : ℝ) (v : VecSeq n N) : Prop :=
+  ∀ α, MemSobolev n s (v α)
 
 /-- Componentwise squared `H^s` norm: `∑ α, ‖v α‖²_(s)`. -/
-def vecNormSq (n N : ℕ) (s : ℝ) (v : VecSeq n N) : ℝ := ∑ α, sobolevNormSq n s (v α)
+@[expose] def vecNormSq (n N : ℕ) (s : ℝ) (v : VecSeq n N) : ℝ := ∑ α, sobolevNormSq n s (v α)
 
 lemma vecNormSq_nonneg (s : ℝ) (v : VecSeq n N) : 0 ≤ vecNormSq n N s v :=
   Finset.sum_nonneg fun α _ => sobolevNormSq_nonneg s (v α)

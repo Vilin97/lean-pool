@@ -41,7 +41,7 @@ That second consumer is why `isWellOrder_of_realize_of_modelsOf_subset` is the p
 - `isWellOrder_of_realize`: the equality-form corollary.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

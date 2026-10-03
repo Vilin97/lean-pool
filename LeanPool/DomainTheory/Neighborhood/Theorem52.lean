@@ -46,7 +46,7 @@ uses the permitted
 `ext_of_toElementMap`, the *value* equations are choice-free.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

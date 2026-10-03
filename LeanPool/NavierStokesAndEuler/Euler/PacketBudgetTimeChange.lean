@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketTimeProfiles
 /-! Time-endpoint equality transports the actual path norm and its profile without changing any
 bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -23,7 +23,7 @@ namespace EulerPacketCylinderField
 open Set EulerPacketProfileRecursion EulerPacketTimeProfile
 
 /-- Time profile change, given by `h ▸ g`. -/
-def timeProfileChange {T T' : ℝ} (g : C(Icc (0 : ℝ) T, ℝ)) (h : T = T') :
+@[expose] def timeProfileChange {T T' : ℝ} (g : C(Icc (0 : ℝ) T, ℝ)) (h : T = T') :
     C(Icc (0 : ℝ) T',ℝ) := h ▸ g
 
 theorem timeProfileChange_pos {T T' : ℝ} (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
@@ -73,6 +73,7 @@ namespace EulerPacketTimeProfile.Scales
 open Set EulerPacketCylinderField
 
 /-- Change time, given by `h ▸ S`. -/
+@[expose]
 def changeTime {T T' : ℝ} (S : Scales (Icc (0 : ℝ) T)) (h : T = T') :
     Scales (Icc (0 : ℝ) T') := h ▸ S
 

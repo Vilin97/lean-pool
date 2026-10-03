@@ -19,7 +19,7 @@ Correct non-degeneracy conditions for uniqueness in the prior variable.
 - `Kernel.RowSeparating`
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory
@@ -32,21 +32,21 @@ variable {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
 namespace Kernel
 
 /-- The output prior map `p ↦ Σ_x p(x) k(x, ·)`. -/
-noncomputable def priorPushforward (k : Kernel α β) [IsMarkovKernel k]
+@[expose] noncomputable def priorPushforward (k : Kernel α β) [IsMarkovKernel k]
     (p : ProbabilityMeasure α) : ProbabilityMeasure β :=
   outputPrior k p
 
 /-- Pairwise-distinct rows of a kernel. This is weaker than injective prior pushforward. -/
-def RowSeparating (k : Kernel α β) : Prop :=
+@[expose] def RowSeparating (k : Kernel α β) : Prop :=
   ∀ ⦃a a' : α⦄, a ≠ a' → k a ≠ k a'
 
 /-- The correct non-degeneracy hypothesis for uniqueness in the prior variable. -/
-def InjectivePriorPushforward (k : Kernel α β) [IsMarkovKernel k] : Prop :=
+@[expose] def InjectivePriorPushforward (k : Kernel α β) [IsMarkovKernel k] : Prop :=
   Function.Injective (priorPushforward k)
 
 /-- Reference measures needed by the strict-concavity proof: output marginals of priors that
 dominate the given prior. -/
-def OutputMarginalReference (k : Kernel α β) [IsMarkovKernel k]
+@[expose] def OutputMarginalReference (k : Kernel α β) [IsMarkovKernel k]
     (p : ProbabilityMeasure α) (ν : Measure β) : Prop :=
   ∃ q : ProbabilityMeasure α, p.toMeasure ≪ q.toMeasure ∧ ν = (outputPrior k q).toMeasure
 

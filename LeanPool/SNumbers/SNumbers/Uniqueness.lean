@@ -60,7 +60,7 @@ input is `SpectralRepresentation.exists_spectral_projection`.
   `sₙ(S) = aₙ(S)`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

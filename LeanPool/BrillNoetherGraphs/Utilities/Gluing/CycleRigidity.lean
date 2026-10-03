@@ -19,7 +19,7 @@ length.  This file proves that every such subdivision has no one-edge cut and
 therefore satisfies the pointed genus-one rigidity interface.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -29,6 +29,7 @@ open Certificate
 /-! ## Two-regular connected graphs have no one-edge cuts -/
 
 /-- The contribution to the degree of `v` from vertices inside `S`. -/
+@[expose]
 def internalDegree (H : CFGraph) (S : Finset H.V) (v : H.V) : ℤ :=
   ∑ w ∈ S, (numEdges H v w : ℤ)
 
@@ -177,6 +178,7 @@ theorem core_connected : core.Connected := by
   exact core.connectedCheck_eq_true_iff.mp (by decide)
 
 /-- Two positive subdivided paths with common endpoints. -/
+@[expose]
 def spec (length : Fin 2 → ℕ) (hLength : ∀ edge, 0 < length edge) :
     SubdivisionGraph.Spec 2 2 where
   core := core

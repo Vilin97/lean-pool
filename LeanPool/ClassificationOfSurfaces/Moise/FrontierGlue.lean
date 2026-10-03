@@ -16,7 +16,7 @@ continuously with the unchanged map outside the open set.  This file isolates th
 argument from the later complex bookkeeping.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -28,13 +28,13 @@ open scoped _root_.Topology
 
 /-- A positive control on `U` is strongly positive when it has a positive lower bound on every
 compact subset of `U`.  This is Moise's notation `phi >> 0`, stated without continuity. -/
-def StronglyPositiveOn {X : Type*} [TopologicalSpace X]
+@[expose] def StronglyPositiveOn {X : Type*} [TopologicalSpace X]
     (U : Set X) (phi : X → ℝ) : Prop :=
   ∀ C : Set X, IsCompact C → C ⊆ U →
     ∃ eps : ℝ, 0 < eps ∧ ∀ x ∈ C, eps ≤ phi x
 
 /-- Distance to the complement, the canonical frontier-vanishing control on an open set. -/
-noncomputable def frontierDistance {X : Type*} [PseudoMetricSpace X]
+@[expose] noncomputable def frontierDistance {X : Type*} [PseudoMetricSpace X]
     (U : Set X) (x : X) : ℝ :=
   Metric.infDist x Uᶜ
 
@@ -150,7 +150,7 @@ noncomputable def frontierGlue {X Y : Type*} (U : Set X) (g h : X → Y) : X →
 
 /-- A replacement agrees asymptotically with the old map at the frontier of its open domain.
 This is the topology-only form of Moise's condition `phi(P) → 0`. -/
-def MatchesAtFrontier {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+@[expose] def MatchesAtFrontier {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
     (U : Set X) (g h : X → Y) : Prop :=
   ∀ x ∈ frontier U, Tendsto g (nhdsWithin x U) (nhds (h x))
 

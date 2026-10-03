@@ -33,7 +33,7 @@ Everything else — the slice bound, the moat cap `|F| ≤ Σ_{S₁}(deg − 2)`
 verbatim `master_cycle_fires`; only the ledger and the threshold change.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

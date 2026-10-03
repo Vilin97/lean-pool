@@ -21,7 +21,7 @@ import Mathlib.Tactic.Ring.RingNF
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 attribute [simp_lengths]

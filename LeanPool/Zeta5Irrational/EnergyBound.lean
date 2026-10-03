@@ -36,7 +36,7 @@ import Mathlib.Tactic.Ring.Basic
 * everything else: the pointwise bound for the integrand of (6.10) and its integration.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set MeasureTheory Finset Polynomial
 

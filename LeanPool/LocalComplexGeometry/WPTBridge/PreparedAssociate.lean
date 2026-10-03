@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 # The prepared divisor is associate to the regularized germ
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -25,7 +25,7 @@ open ClassicalComplexWPT
 noncomputable section
 
 /-- Transport an analytic WPT unit from product coordinates to standard coordinates. -/
-def standardPreparationUnitGerm {n : ℕ} (u : Ambient n → ℂ)
+@[expose] def standardPreparationUnitGerm {n : ℕ} (u : Ambient n → ℂ)
     (hu : AnalyticAt ℂ u 0) : HolomorphicGerm (n + 1) :=
   HolomorphicGerm.ofFunction (fun x ↦ u (wptAmbientEquiv n x))
     (by

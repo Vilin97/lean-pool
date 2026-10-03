@@ -39,7 +39,7 @@ last possibility.  Thus the winding is exactly one.
   propagates throughout the carrier.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

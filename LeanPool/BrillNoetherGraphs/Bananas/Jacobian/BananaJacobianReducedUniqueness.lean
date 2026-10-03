@@ -17,7 +17,7 @@ vectors differing by the displayed lattice first give linearly equivalent
 left-reduced divisors, hence equal divisors by uniqueness of q-reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

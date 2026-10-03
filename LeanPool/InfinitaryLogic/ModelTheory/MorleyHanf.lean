@@ -30,7 +30,7 @@ together with the corollaries packaged here:
   arbitrarily large models (via `Theoryω.conjunction`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

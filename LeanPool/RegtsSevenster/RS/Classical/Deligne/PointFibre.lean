@@ -80,7 +80,7 @@ algebra being a monomorphism — vanishes itself.
 * `RS.exists_deligneFibre_of_point`: the four properties packaged.
 -/
 
-@[expose] public section
+public section
 namespace RS
 
 open CategoryTheory Limits
@@ -216,6 +216,7 @@ variable {M N Q : S.Mod.{u, u, u, u}}
 The morphism is tensored with the residue module and the result is
 read in the coordinates that `RS.toSuperVect` installs on the two
 components. -/
+@[expose]
 noncomputable def superVectHom
     [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
@@ -342,6 +343,7 @@ variable {S : SuperCommAlgebra.{u, u}} (P : SuperPoint S) {E : Type u₂}
 tensored with the residue module of the point and packaged as a
 super vector space; each morphism is conjugated through the
 coordinate equivalences. -/
+@[expose]
 noncomputable def superVectFunctor
     [Category.{v₂} E] (G : E ⥤ S.Mod.{u, u, u, u})
     (hE : ∀ X, FiniteDimensional ℂ ((G.obj X).tensor (pointMod P)).even)
@@ -584,6 +586,7 @@ theorem finiteDimensional_indFibre_odd
 
 /-- **The fibre functor into super vector spaces**: embed, take the
 fibre over the splitting algebra, and base change to the ℂ-point. -/
+@[expose]
 noncomputable def deligneFibre
     [SmallCategory C] [MonoidalCategory C] [SymmetricCategory C] [Abelian C]
     [MonoidalPreadditive C] [CategoryTheory.Linear ℂ (Ind C)]

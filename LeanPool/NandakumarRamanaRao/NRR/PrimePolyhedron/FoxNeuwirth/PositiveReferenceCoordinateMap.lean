@@ -17,7 +17,7 @@ order-complex realization.  This gives a manifestly zero-free straight-line homo
 upper child map to the reference obstruction map.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

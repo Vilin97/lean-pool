@@ -19,7 +19,7 @@ slopes, including the first unit ramp.  Angular derivatives are derivatives of
 the actual improper integral.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -225,6 +225,7 @@ theorem future_square_integral_le (d : TailData) {y eta : ℝ}
       ring
 
 /-- The canonical pressure from the actual future of the clean outgoing field. -/
+@[expose]
 noncomputable def Pi (d : TailData) (y eta : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ t in Ioi y, finalAngular d (t, eta) ^ 2
 

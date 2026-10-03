@@ -16,7 +16,7 @@ parameters and a filter-generic criterion that turns a vanishing square bound
 into convergence to zero.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess.Semigroup
 

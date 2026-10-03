@@ -29,7 +29,7 @@ the divisor identities needed before applying the banana normal-form rank
 calculus.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

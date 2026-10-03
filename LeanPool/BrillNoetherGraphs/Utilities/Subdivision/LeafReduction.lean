@@ -27,7 +27,7 @@ still needs a well-founded wrapper (for example, recursion on the number of
 vertices) and a choice of a degree-one vertex at every nonterminal step.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 

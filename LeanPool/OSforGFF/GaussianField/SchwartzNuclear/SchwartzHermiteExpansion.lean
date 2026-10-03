@@ -43,7 +43,7 @@ to be exported:
 - `hermiteFunction_contDiff` (smoothness)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Real SchwartzMap
 open scoped BigOperators
@@ -72,7 +72,7 @@ theorem schwartzHermiteBasis1D_coe (n : ℕ) :
 /-- The n-th Hermite coefficient of a Schwartz function f:
     cₙ(f) = ∫ f(x) ψₙ(x) dx.
 -/
-def hermiteCoeff1D (n : ℕ) (f : SchwartzMap ℝ ℝ) : ℝ :=
+@[expose] def hermiteCoeff1D (n : ℕ) (f : SchwartzMap ℝ ℝ) : ℝ :=
   ∫ x, f x * hermiteFunction n x
 
 /-- The Hermite coefficient is the L² inner product with ψₙ. -/

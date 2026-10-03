@@ -39,7 +39,7 @@ permutations. The commutation identity below relates
 `singularBoundary R X n ≫ barycentricSubdivisionLinearMap R X n`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits

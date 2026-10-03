@@ -34,7 +34,7 @@ Nothing here constructs a law, asserts a Hölder exponent for individual paths, 
 tightness; tightness is assembled from this estimate elsewhere.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ENNReal NNReal
@@ -47,6 +47,7 @@ variable {alpha : Type*} [PseudoEMetricSpace alpha]
 
 /-- The paths whose oscillation over `[0, T]` at scale `delta` is at most `r`: any two times of
 `[0, T]` within `delta` of each other carry values within `r` of each other. -/
+@[expose]
 def modulusSet (T : ℝ≥0) (delta r : ℝ≥0∞) : Set (ContinuousPath alpha) :=
   {omega | ∀ s t : ℝ≥0, s ≤ T → t ≤ T → edist s t ≤ delta → edist (omega s) (omega t) ≤ r}
 

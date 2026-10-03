@@ -25,7 +25,7 @@ as a genuine element of the lower-area hyperspace `BodySpace K (A / (n : ℝ))`.
   a direct composition through the solid bridge `BodySpace.toGeometryConvexBody`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open Filter Topology
@@ -46,6 +46,7 @@ theorem child_lower_bound_pos (hA : 0 < A) (hn : 0 < n) :
 an element of the lower-area hyperspace `BodySpace K (A / (n : ℝ))`. The lower-area condition
 follows
 from `A ≤ z.1.body.area`, `0 < n`, and `canonicalCell.area = z.1.body.area / n`. -/
+@[expose]
 noncomputable def child
     (z : BodySpace K A × X) (i : Fin n) :
     BodySpace K (A / (n : ℝ)) :=

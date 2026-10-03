@@ -18,7 +18,7 @@ finite independent product.  It is the product-measure interface used in the
 proof of Theorem 2.1 before conditioning on all latent pairs.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set
 
@@ -28,7 +28,7 @@ noncomputable section
 
 /-- Given all latent coordinates, the observations are conditionally
 independent with the augmented two-point conditional marginals. -/
-noncomputable def augmentedConditionalProduct {n : ℕ}
+@[expose] noncomputable def augmentedConditionalProduct {n : ℕ}
     (p : Fin n → AugmentedTwoPointParams) : Measure (Fin n → ℝ) :=
   Measure.pi (fun i ↦ augmentedTwoPointKernel (p i))
 
@@ -80,7 +80,7 @@ theorem parallelComp_comp_prod_measure
 section RecursiveFiniteKernel
 
 /-- Measurable head/tail splitting of a homogeneous `Fin (n+1)` vector. -/
-noncomputable def finHeadTailEquiv (α : Type*) [MeasurableSpace α] (n : ℕ) :
+@[expose] noncomputable def finHeadTailEquiv (α : Type*) [MeasurableSpace α] (n : ℕ) :
     (Fin (n + 1) → α) ≃ᵐ α × (Fin n → α) :=
   MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => α) 0
 
@@ -88,7 +88,7 @@ noncomputable def finHeadTailEquiv (α : Type*) [MeasurableSpace α] (n : ℕ) :
 coordinate kernels.  This avoids the unavailable `Kernel.pi`: the successor
 case splits head and tail, uses `parallelComp`, and maps the output pair back
 to a `Fin (n+1)` vector. -/
-noncomputable def recursiveAugmentedKernel :
+@[expose] noncomputable def recursiveAugmentedKernel :
     (n : ℕ) → Kernel (Fin n → AugmentedTwoPointParams) (Fin n → ℝ)
   | 0 => Kernel.const _ (Measure.dirac (fun i => Fin.elim0 i))
   | n + 1 =>
@@ -134,7 +134,7 @@ theorem bind_congr_measurableEquiv
 
 /-- Recursive latent product aligned definitionally with
 `recursiveAugmentedKernel`. -/
-noncomputable def recursiveAugmentedLatent :
+@[expose] noncomputable def recursiveAugmentedLatent :
     (n : ℕ) → (Fin n → Measure AugmentedTwoPointParams) →
       Measure (Fin n → AugmentedTwoPointParams)
   | 0 => fun _ => Measure.dirac (fun i => Fin.elim0 i)
@@ -198,7 +198,7 @@ theorem recursiveAugmentedKernel_comp_latent
 /-- Zero-dimensional recursive product. -/
 theorem recursiveRealProduct_zero (μ : Fin 0 → Measure ℝ) :
     recursiveRealProduct 0 μ =
-      Measure.dirac (fun i : Fin 0 => Fin.elim0 i) := rfl
+      Measure.dirac (fun i : Fin 0 => Fin.elim0 i) := by rfl
 
 /-- The head/tail recursive product is the standard finite `Measure.pi`. -/
 theorem recursiveRealProduct_eq_pi

@@ -21,13 +21,14 @@ sum of the
 lower bound.
 Written from scratch. -/
 
-@[expose] public section
+public section
 
 open Real
 namespace Zeta32.Fstar.B2
 noncomputable section
 
 /-- Partial sum `2(t + t³/3 + t⁵/5 + t⁷/7)` of `log((1+t)/(1−t))`. -/
+@[expose]
 def lser (t : ℝ) : ℝ := 2 * (t + t ^ 3 / 3 + t ^ 5 / 5 + t ^ 7 / 7)
 
 theorem lser_le_log {z : ℝ} (hz : 1 ≤ z) : lser ((z - 1) / (z + 1)) ≤ log z := by

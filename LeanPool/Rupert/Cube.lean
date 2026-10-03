@@ -16,7 +16,7 @@ import LeanPool.Rupert.MatrixSimps
 Imported Lean Pool material for `LeanPool.Rupert.Cube`.
 -/
 
-@[expose] public section
+public section
 
 namespace Cube
 open Matrix

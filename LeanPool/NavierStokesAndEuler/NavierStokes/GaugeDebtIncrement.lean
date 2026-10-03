@@ -17,7 +17,7 @@ The change estimates use the actual velocity and covariance increments;
 no improved bound on the whole updated covariance or debt is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.GaugeDebtIncrement

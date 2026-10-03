@@ -22,7 +22,7 @@ constrained value is a function of the boundary pairing, and of
 nothing else.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

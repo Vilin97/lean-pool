@@ -40,7 +40,7 @@ puiseux series, laurent series, hahn series
 
 /- Ported to Lean Pool and its pinned Mathlib toolchain in September 2026. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -72,6 +72,7 @@ variable (K : Type*) [Field K]
 
 /-- The expansion ring embedding `K((t)) →+* K((t))`, `t ↦ t ^ m`:
 `embDomainRingHom` along the exponent map `k ↦ m * k` on `ℤ`. -/
+@[expose]
 def expand (m : ℕ+) : LaurentSeries K →+* LaurentSeries K :=
   HahnSeries.embDomainRingHom (AddMonoidHom.mk' ((m : ℤ) * ·) (mul_add _))
     (fun _ _ => mul_left_cancel₀ (by exact_mod_cast m.ne_zero))
@@ -174,7 +175,7 @@ end PuiseuxSeries
 
 /-- The type of Puiseux series over `K`: the carrier of the Puiseux subfield of
 `HahnSeries ℚ K`. A field, by the generic subfield instances. -/
-def PuiseuxSeries (K : Type*) [Field K] : Type _ :=
+@[expose] def PuiseuxSeries (K : Type*) [Field K] : Type _ :=
   ↥(PuiseuxSeries.subfield K)
 
 namespace PuiseuxSeries

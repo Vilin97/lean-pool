@@ -15,7 +15,7 @@ import Mathlib.SetTheory.Ordinal.Arithmetic
 The foundational results of inductive inference theory.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

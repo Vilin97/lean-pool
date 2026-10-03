@@ -24,7 +24,7 @@ and is handled
 by the boundary-cancellation theorems.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,6 +39,7 @@ namespace FoxNeuwirthOrderComplex
 namespace FaceMap
 
 /-- The coface map that omits vertex `k`. -/
+@[expose]
 def delete (k : Fin (d + 2)) : FaceMap d (d + 1) where
   toFun := k.succAbove
   strictMono := (Fin.succAboveOrderEmb k).strictMono
@@ -61,11 +62,12 @@ section
 variable {R : Type*} [CommRing R]
 
 /-- The alternating sign of the face obtained by deleting vertex `k`. -/
+@[expose]
 def faceSign (k : Fin (d + 2)) : R :=
   (-1 : R) ^ k.1
 
 /-- Coefficient contributed by one simplex and one deleted vertex. -/
-def faceContribution
+@[expose] def faceContribution
     (chain : SimplicialChain R p (d + 1))
     (target : Simplex p d)
     (source : Simplex p (d + 1))
@@ -76,6 +78,7 @@ def faceContribution
 
 /-- Simplicial boundary, written as a finite double sum over source simplices and deleted
 vertices. -/
+@[expose]
 def boundary (chain : SimplicialChain R p (d + 1)) :
     SimplicialChain R p d :=
   fun target =>
@@ -141,6 +144,7 @@ def single (s : Simplex p d) : SimplicialChain R p d :=
   simp [single, h]
 
 /-- Relabel a simplicial chain by precomposition with the inverse vertex action. -/
+@[expose]
 def relabel (sigma : Equiv.Perm (Fin p))
     (chain : SimplicialChain R p d) : SimplicialChain R p d :=
   fun s => chain (s.relabel sigma.symm)
@@ -203,6 +207,7 @@ theorem maximalIndex_eq (hp : Nat.Prime p) : p - 1 + 1 = p := by
   omega
 
 /-- Cast a maximal-simplex index to a label index. -/
+@[expose]
 def maximalIndexCast (hp : Nat.Prime p)
     (i : Fin (p - 1 + 1)) : Fin p :=
   Fin.cast (maximalIndex_eq hp) i
@@ -236,6 +241,7 @@ def affineBlockDeterminant
 /-- Fox--Neuwirth top chain on maximal flags.
 
 The coefficient orients each barycentric simplex by its affine block-coordinate determinant. -/
+@[expose]
 def topChain (hp : Nat.Prime p) :
     SimplicialChain (ZMod p) p (p - 1) :=
   fun s => (affineBlockDeterminant hp s : ZMod p)

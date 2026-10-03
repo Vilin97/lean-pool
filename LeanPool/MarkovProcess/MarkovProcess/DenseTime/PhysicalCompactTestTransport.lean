@@ -19,7 +19,7 @@ corresponding dense times. It pulls compactly supported tests back across this h
 rewrites integrals against mapped finite-set kernels.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped NNReal CompactlySupported

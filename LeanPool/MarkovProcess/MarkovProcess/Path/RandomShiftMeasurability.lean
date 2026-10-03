@@ -22,7 +22,7 @@ expectation formula; those are in `Trajectory/FellerStoppingRestart.lean` and
 `Trajectory/FellerStoppingConditional.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

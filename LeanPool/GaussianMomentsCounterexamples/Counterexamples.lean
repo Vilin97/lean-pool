@@ -10,7 +10,7 @@ public import LeanPool.GaussianMomentsCounterexamples.DimensionExtension
 
 /-! The unconditional Gaussian counterexamples and genuine failure of GMC in all n ≥ 3. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MvPolynomial
 namespace GaussianMomentsCounterexamples

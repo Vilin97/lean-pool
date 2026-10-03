@@ -15,11 +15,12 @@ The block enumeration pairs a block index with an offset within the
 block to enumerate the concatenated total.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- Split the sigma over a cons list into head + tail. -/
+@[expose]
 def blockSigmaSplitFun (d : ℕ) (ds : List ℕ) :
     (Σ v : Fin (ds.length + 1), Fin ((d :: ds).get v)) →
       Fin d ⊕ (Σ w : Fin ds.length, Fin (ds.get w))
@@ -34,6 +35,7 @@ def blockSigmaSplitInv (d : ℕ) (ds : List ℕ) :
   | Sum.inr ⟨w, j⟩ => ⟨w.succ, j⟩
 
 /-- The sigma over a cons list splits as head + tail. -/
+@[expose]
 def blockSigmaSplit (d : ℕ) (ds : List ℕ) :
     (Σ v : Fin (ds.length + 1), Fin ((d :: ds).get v)) ≃
       Fin d ⊕ (Σ w : Fin ds.length, Fin (ds.get w)) where
@@ -51,6 +53,7 @@ def blockSigmaSplit (d : ℕ) (ds : List ℕ) :
 
 /-- The block enumeration: a block index and an offset within the
 block enumerate the concatenated total. -/
+@[expose]
 noncomputable def blockSigmaEquiv : (ds : List ℕ) →
     (Σ v : Fin ds.length, Fin (ds.get v)) ≃ Fin ds.sum
   | [] =>

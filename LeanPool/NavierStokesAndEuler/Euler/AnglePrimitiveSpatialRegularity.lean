@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 /-! The actual angular primitive is jointly smooth in spatial labels and angle. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

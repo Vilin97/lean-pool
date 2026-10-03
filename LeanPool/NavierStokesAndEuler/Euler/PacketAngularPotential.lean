@@ -14,7 +14,7 @@ section
 
 /-! Uniform bounds for the actual mean-zero angular primitive. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -60,7 +60,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -70,7 +70,7 @@ open EulerSmoothLimit EulerPacketCrossProduct EulerAngleMeanZeroPrimitive
   MeasureTheory Set InnerProductSpace
 
 /-- Potential, given by `primitive P (fun θ => potentialMultiplier m (A θ))`. -/
-def potential (P : ℝ) (m : Space) (A : ℝ → Space) : ℝ → Space :=
+@[expose] def potential (P : ℝ) (m : Space) (A : ℝ → Space) : ℝ → Space :=
   primitive P (fun θ => potentialMultiplier m (A θ))
 
 theorem potential_hasDerivAt (P : ℝ) (m : Space) (A : ℝ → Space)

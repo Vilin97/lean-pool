@@ -22,7 +22,7 @@ cell: the bottom rank fixes the block order and the final rank fixes the order i
 This yields the explicit inverse `simplexToCode` and proves that `toSimplex` is bijective.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -42,10 +42,12 @@ theorem mem_rankPrefix {c : BarredPermutation p} {r : Fin (p - 1)} {x : Fin p} :
 
 Using an explicit constructor avoids relying on the non-definitional arithmetic identity
 `p - 1 + 1 = p`. -/
+@[expose]
 def barLeft (r : Fin (p - 1)) : Fin p :=
   ⟨r.1, by have := r.2; omega⟩
 
 /-- The displayed position immediately to the right of a bar. -/
+@[expose]
 def barRight (r : Fin (p - 1)) : Fin p :=
   ⟨r.1 + 1, by have := r.2; omega⟩
 
@@ -409,6 +411,7 @@ theorem removedBarAt_injective
   exact hiNot (hsub hjMem)
 
 /-- Canonical removal permutation recovered from a maximal strict flag. -/
+@[expose]
 noncomputable def decodedRemoval
     (hp : Nat.Prime p) (s : Simplex p (p - 1)) :
     Equiv.Perm (Fin (p - 1)) :=

@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.ImplicitFunction
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,7 +27,7 @@ variable {𝕜 E F : Type*} [NontriviallyNormedField 𝕜]
 
 /-- An `ImplicitFunctionData` from a strict Fréchet derivative `f'` with both
 its kernel and its range closed-complemented. -/
-@[irreducible, simps +simpRhs pt]
+@[irreducible]
 def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] F) {a : E}
     (hf : HasStrictFDerivAt f f' a) (hker : f'.ker.ClosedComplemented)
     (hrange : f'.range.ClosedComplemented) :
@@ -55,6 +55,33 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
       hasStrictFDerivAt_rightFun := hker.choose.hasStrictFDerivAt
       isCompl_ker := ?_ }
   simpa only [hker_eq] using LinearMap.isCompl_of_proj hker.choose_spec
+
+@[simp] theorem implicitFunctionDataOfComplementedKerRange_pt (f : E → F)
+    (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
+    (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) :
+    have := hrange.isClosed.completeSpace_coe
+    (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).pt = a := by
+  classical
+  unfold implicitFunctionDataOfComplementedKerRange
+  rfl
+
+@[simp] theorem implicitFunctionDataOfComplementedKerRange_leftFun_apply
+    (f : E → F) (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
+    (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) (x : E) :
+    have := hrange.isClosed.completeSpace_coe
+    (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).leftFun x =
+      hrange.choose (f x) := by
+  unfold implicitFunctionDataOfComplementedKerRange
+  rfl
+
+@[simp] theorem implicitFunctionDataOfComplementedKerRange_rightFun_apply
+    (f : E → F) (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
+    (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) (x : E) :
+    have := hrange.isClosed.completeSpace_coe
+    (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).rightFun x =
+      hker.choose x := by
+  unfold implicitFunctionDataOfComplementedKerRange
+  rfl
 
 /-- The `OpenPartialHomeomorph` associated to
 `implicitFunctionDataOfComplementedKerRange`. -/

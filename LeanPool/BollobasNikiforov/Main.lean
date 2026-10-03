@@ -19,7 +19,7 @@ multiplicity. Completeness is `G = ⊤`; the hypothesis `G ≠ ⊤` is the paper
 noncomplete assumption. `[Nontrivial V]` is the paper's `n ≥ 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

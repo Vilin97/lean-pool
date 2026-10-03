@@ -16,7 +16,7 @@ nonzero rational coefficient vectors and 128 Hankel words.  It is an
 algebraic coordinate check, not a circuit or truth-table enumeration.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,11 +24,11 @@ namespace N4
 noncomputable section
 
 /-- The unit coefficient vector for one rational place. -/
-def rationalSingleton (theta : Fin 3) : Fin 3 → F₂ :=
+@[expose] def rationalSingleton (theta : Fin 3) : Fin 3 → F₂ :=
   ![![1, 0, 0], ![0, 1, 0], ![0, 0, 1]] theta
 
 /-- A first-jet target at a rational place, optionally translated by the place itself. -/
-def rationalTangentAt (theta : Fin 3) (eps : F₂) : TargetCoeff :=
+@[expose] def rationalTangentAt (theta : Fin 3) (eps : F₂) : TargetCoeff :=
   match theta with
   | ⟨0, _⟩ => ![eps, 1, 0, 0, 0, 0, 0]
   | ⟨1, _⟩ =>
@@ -37,6 +37,7 @@ def rationalTangentAt (theta : Fin 3) (eps : F₂) : TargetCoeff :=
 
 /-- A compact set of quartic coordinates sufficient for the rational
 annihilator classification. -/
+@[expose]
 def quarticAnnihilatorCoord :
     Fin 9 → Fin 8 × Fin 8 × Fin 8 × Fin 8 :=
   ![(0,1,4,5), (0,3,5,7), (0,1,4,6),
@@ -55,7 +56,7 @@ def quarticAnnihilatorTable : Fin 9 → Nat :=
     0x092c00, 0x018482, 0x086000]
 
 /-- The scalar bilinear formula for a quartic-annihilator probe on target coordinates. -/
-def quarticAnnihilatorCoeffProbe
+@[expose] def quarticAnnihilatorCoeffProbe
     (c : TargetCoeff) (delta : Fin 3 → F₂) (k : Fin 9) : F₂ :=
   match k with
   | ⟨0, _⟩ => c 0 * delta 1 + c 2 * delta 0 + c 2 * delta 1
@@ -76,6 +77,7 @@ def quarticAnnihilatorCoeffProbe
   | ⟨8, _⟩ => c 4 * delta 1 + c 4 * delta 2 + c 6 * delta 1
 
 /-- Every designated quartic-annihilator coefficient vanishes. -/
+@[expose]
 def VanishesOnQuarticAnnihilatorProbe
     (c : TargetCoeff) (delta : Fin 3 → F₂) : Prop :=
   ∀ k : Fin 9, quarticAnnihilatorCoeffProbe c delta k = 0
@@ -97,6 +99,7 @@ theorem quarticAnnihilatorCoeffProbe_eq
     simp [N3Certificate.two_eq_zero_f2]
 
 /-- The rational-place coefficient vectors paired with the six tangent targets. -/
+@[expose]
 def rationalAnnihilatorDelta : Fin 6 → (Fin 3 → F₂) :=
   ![![1, 0, 0], ![1, 0, 0],
     ![0, 1, 0], ![0, 1, 0],

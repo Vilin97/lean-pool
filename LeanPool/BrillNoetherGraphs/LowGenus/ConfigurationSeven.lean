@@ -52,7 +52,7 @@ pairs and covers the rest by other pictures.  Rows `05` and `08` pair this file
 with `ConfigurationThree`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationSeven
 

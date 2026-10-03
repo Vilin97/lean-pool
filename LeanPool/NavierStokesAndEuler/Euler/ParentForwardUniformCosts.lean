@@ -20,7 +20,7 @@ section
 radius controlled by the same fixed parent polynomial. Its genuine geometric
 propagator constant is retained, without replacing the growth profile. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -156,7 +156,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -183,7 +183,7 @@ local notation "BC" => forwardCoefficientBudget period (G.meanData H)
 
 /-- Geometry forward parameter size, given by `parameterSize L.K 0 Ti
 (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild`. -/
-def geometryForwardParameterSize (ξ : U) : ℝ :=
+@[expose] def geometryForwardParameterSize (ξ : U) : ℝ :=
   parameterSize L.K 0 Ti (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild
 
 theorem geometryForward_uniform_primitives (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1) :

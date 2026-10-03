@@ -61,4 +61,4 @@ no new analysis, per the design doc §0/§6's own explicit recommendation not to
 Miranda's finiteness route independently.
 -/
 
-@[expose] public section
+public section

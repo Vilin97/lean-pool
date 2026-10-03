@@ -31,7 +31,7 @@ canonical polygonal generators transports to the equivalence closure of `Orienta
 `NonOrientableRel`.
 -/
 
-@[expose] public section
+public section
 
 namespace Complex
 

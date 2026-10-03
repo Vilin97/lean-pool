@@ -15,7 +15,7 @@ ordered pair of bands is contained in the radius rectangle of one stored certifi
 swapping the two sibling pairs when the blue band precedes the red one.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

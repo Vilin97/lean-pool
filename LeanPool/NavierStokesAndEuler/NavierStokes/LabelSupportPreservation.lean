@@ -17,7 +17,7 @@ The Gaussian clock cutoff supplies the temporal boundary of the carrier;
 the source supplies its slow and transverse boundaries.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

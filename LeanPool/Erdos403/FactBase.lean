@@ -30,7 +30,7 @@ This file builds the infrastructure the sharp endgame needs:
 `Erdos403.Superseded`.)
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos403
 
@@ -38,7 +38,7 @@ open Finset
 open scoped Nat
 
 /-- The `i`-th factorial-base digit of `n`: `dᵢ(n) = ⌊n / i!⌋ mod (i+1)`. -/
-def factDigit (i n : ℕ) : ℕ := (n / i !) % (i + 1)
+@[expose] def factDigit (i n : ℕ) : ℕ := (n / i !) % (i + 1)
 
 /-- The factorials below `i` (positive indices) sum to less than `i!`. -/
 theorem sum_lt_factorial_of_lt (T : Finset ℕ) (hT : ∀ a ∈ T, 1 ≤ a) (i : ℕ) :

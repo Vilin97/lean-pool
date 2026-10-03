@@ -35,7 +35,7 @@ injectivity. So the polynomials of total degree `≤ r - 1` in `s` variables emb
 The hypothesis `[Infinite K]` is removed by base change in the assembly (node TR).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

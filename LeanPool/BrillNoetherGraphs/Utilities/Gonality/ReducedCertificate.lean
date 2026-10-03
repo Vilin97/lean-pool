@@ -41,7 +41,7 @@ together with `D' ≥ 0 off v` and `D' v ≤ 0`
 `BurningOrder` quantifies over `Fin π.length` and `G.V`, both finite.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 
@@ -57,6 +57,7 @@ chips than it has edges to its predecessors.
 
 Repetitions are harmless; only the *first* occurrence of each vertex matters to
 the soundness proof. -/
+@[expose]
 def BurningOrder (G : CFGraph) (D : CFDiv G) (v : G.V) (order : List G.V) :
     Prop :=
   order.head? = some v ∧ (∀ w : G.V, w ∈ order) ∧
@@ -170,6 +171,7 @@ variable {D : CFDiv G} (c : RankZeroCertificate G D)
 def reduced : CFDiv G := D + prin G c.script
 
 /-- Everything the certificate must satisfy, as one decidable proposition. -/
+@[expose]
 def Valid : Prop :=
   qEffective c.vertex c.reduced ∧
     BurningOrder G c.reduced c.vertex c.order ∧

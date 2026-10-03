@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.V5.ContinuousProcess
 
 /-! # Initial Process -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -35,7 +35,7 @@ def spatialLawFrom (μ₀ : Measure (SpatialState m))
 @[simp]
 theorem spatialLawFrom_zero
     (μ₀ : Measure (SpatialState m)) (a : ℝ) (fallback : Fin m) :
-    spatialLawFrom (L := L) μ₀ a fallback 0 = μ₀ :=
+    spatialLawFrom (L := L) μ₀ a fallback 0 = μ₀ := by
   rfl
 
 @[simp]
@@ -44,7 +44,7 @@ theorem spatialLawFrom_succ
     (fallback : Fin m) (t : ℕ) :
     spatialLawFrom (L := L) μ₀ a fallback (t + 1) =
       spatialKernel (L := L) a fallback ∘ₘ
-        spatialLawFrom (L := L) μ₀ a fallback t :=
+        spatialLawFrom (L := L) μ₀ a fallback t := by
   rfl
 
 instance spatialLawFrom.isProbabilityMeasure
@@ -98,6 +98,7 @@ theorem map_spatialCount_spatialLawFrom
 /-! ## Joint process and trajectory laws -/
 
 /-- Attach an independent first demand/replenishment pair to `μ₀`. -/
+@[expose]
 def initialProcessLawFrom (μ₀ : Measure (SpatialState m)) :
     Measure (ProcessState m) :=
   μ₀.prod noiseLaw
@@ -105,7 +106,7 @@ def initialProcessLawFrom (μ₀ : Measure (SpatialState m)) :
 @[simp]
 theorem initialProcessLawFrom_eq_product
     (μ₀ : Measure (SpatialState m)) :
-    initialProcessLawFrom μ₀ = μ₀.prod noiseLaw :=
+    initialProcessLawFrom μ₀ = μ₀.prod noiseLaw := by
   rfl
 
 instance initialProcessLawFrom.isProbabilityMeasure
@@ -154,7 +155,7 @@ theorem processLawFrom_eq_product
       rw [ih, processKernel_comp_product, spatialLawFrom_succ]
 
 /-- One path-space law for the joint process initialized by `μ₀`. -/
-def trajectoryLawFrom
+@[expose] def trajectoryLawFrom
     (μ₀ : Measure (SpatialState m))
     (a : ℝ) (fallback : Fin m) :
     Measure (ℕ → ProcessState m) :=
@@ -262,6 +263,7 @@ theorem integral_processSquaredCost_processLawFrom
       L a hm s
 
 /-- One-period cost on the generalized path-space law. -/
+@[expose]
 def trajectoryExpectedSquaredCostFrom
     (μ₀ : Measure (SpatialState m))
     (a : ℝ) (hm : 0 < m) (fallback : Fin m) (t : ℕ) : ℝ :=
@@ -374,12 +376,14 @@ def processLawFromState (s₀ : SpatialState m)
   processLawFrom (L := L) (Measure.dirac s₀) a fallback t
 
 /-- Path-space law from a fixed spatial state. -/
+@[expose]
 def trajectoryLawFromState (s₀ : SpatialState m)
     (a : ℝ) (fallback : Fin m) :
     Measure (ℕ → ProcessState m) :=
   trajectoryLawFrom (L := L) (Measure.dirac s₀) a fallback
 
 /-- One-period trajectory cost from a fixed spatial state. -/
+@[expose]
 def trajectoryExpectedSquaredCostFromState
     (s₀ : SpatialState m) (a : ℝ) (hm : 0 < m)
     (fallback : Fin m) (t : ℕ) : ℝ :=

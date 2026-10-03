@@ -18,7 +18,7 @@ the module objects, and once as a composite, so that the monoidal
 comparison could be read off.  The two are the same functor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

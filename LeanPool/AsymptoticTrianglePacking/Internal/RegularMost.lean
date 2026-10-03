@@ -28,7 +28,7 @@ Definitions (`degree`, `codegree`) come from `LeanPool.AsymptoticTrianglePacking
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -37,11 +37,11 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V]
 
 /-- `H` is `(1 ± μ)`-nearly `d`-regular: every degree lies in `[(1-μ)d, (1+μ)d]`. -/
-def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
+@[expose] def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
   ∀ v : V, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
 /-- `H` has codegree bounded by `C`: every distinct pair lies in at most `C` edges. -/
-def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
+@[expose] def CodegreeBounded (H : Finset (Finset V)) (C : ℝ) : Prop :=
   ∀ x y : V, x ≠ y → (codegree H x y : ℝ) ≤ C
 
 /-- **A4 — degree-sum squeeze.** If `H` is `(1±μ)`-nearly `d`-regular on a finite vertex type,
@@ -78,7 +78,7 @@ Definitions come from `LeanPool.AsymptoticTrianglePacking.Internal.Basic` (`IsUn
 (`NearlyRegular`, `CodegreeBounded`).
 -/
 
-@[expose] public section
+public section
 
 open Hypergraph
 
@@ -88,7 +88,7 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 near-regularity/codegree tolerance `μ > 0` such that every `r`-uniform hypergraph on a finite vertex
 set that is `(1±μ)`-nearly `d`-regular with codegree `≤ μd` has a matching covering at least a
 `(1-β)` fraction of the maximum possible (`|V|/r`). -/
-def NibbleTheorem : Prop :=
+@[expose] def NibbleTheorem : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →
       IsUniform H r → NearlyRegular H d μ → CodegreeBounded H (μ * d) →
@@ -117,7 +117,7 @@ that consume this hypothesis.
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -127,7 +127,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- **Majority near-regularity.** `H` is `(1±μ)`-nearly `d`-regular outside an exceptional set of
 vertices of size at most `η·|V|`. Recovers `NearlyRegular` when the exceptional set is empty. -/
-def NearlyRegularMost (H : Finset (Finset V)) (d μ η : ℝ) : Prop :=
+@[expose] def NearlyRegularMost (H : Finset (Finset V)) (d μ η : ℝ) : Prop :=
   ∃ Exc : Finset V, (Exc.card : ℝ) ≤ η * (Fintype.card V : ℝ) ∧
     ∀ v ∉ Exc, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
@@ -149,7 +149,7 @@ open Hypergraph
 such that every `r`-uniform hypergraph that is `(1±μ)`-nearly `d`-regular OUTSIDE an `η`-fraction
 exceptional set, with codegree `≤ μd`, has a matching covering `≥ (1-β)·(|V|/r)`. The nibble absorbs
 the small exceptional set into the target slack `β`. -/
-def NibbleTheoremMost : Prop :=
+@[expose] def NibbleTheoremMost : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →
       IsUniform H r → NearlyRegularMost H d μ η → CodegreeBounded H (μ * d) →
@@ -160,6 +160,7 @@ def NibbleTheoremMost : Prop :=
 Freedman assembly: in addition to majority near-regularity and codegree boundedness, every vertex
 has
 degree at most `(1+μ)d`. -/
+@[expose]
 def NibbleTheoremMostCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →
@@ -172,7 +173,7 @@ def NibbleTheoremMostCeil : Prop :=
 selection needs a uniform way to make the all-vertices bad-event probability small.  The abstract
 hypergraph hypotheses do not bound `|V|` in terms of the regular degree scale `d`; the triangle
 hypergraph application does.  This interface records that missing input explicitly. -/
-def NibbleTheoremMostCeilSized : Prop :=
+@[expose] def NibbleTheoremMostCeilSized : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧
     ∃ d₀ : ℝ, 0 < d₀ ∧ ∃ K : ℝ, 0 < K ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →

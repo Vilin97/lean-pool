@@ -24,7 +24,7 @@ states. The `PureState` wrappers automatically form probability distributions,
 because normalization is part of `PureState`.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -36,7 +36,7 @@ variable {n : ℕ}
 
 /-- Born rule [dW19, qcnotes.tex:406]: the probability of observing outcome `x`
 when measuring `psi` in the computational basis. -/
-noncomputable def probOutcome (psi : StateVector n) (x : Fin (2 ^ n)) : ℝ :=
+@[expose] noncomputable def probOutcome (psi : StateVector n) (x : Fin (2 ^ n)) : ℝ :=
   ‖psi x‖ ^ 2
 
 theorem probOutcome_nonneg (psi : StateVector n) (x : Fin (2 ^ n)) :
@@ -60,6 +60,7 @@ theorem probOutcome_ket (x y : Fin (2 ^ n)) :
 
 /-- Probability that measuring qubit 0 of a `1 + n`-qubit raw state vector
 yields `b`, leaving the other qubits unobserved. -/
+@[expose]
 noncomputable def probQubit0 (psi : StateVector (1 + n)) (b : Fin (2 ^ 1)) : ℝ :=
   ∑ y : Fin (2 ^ n), ‖psi (prodEquiv (b, y))‖ ^ 2
 
@@ -86,6 +87,7 @@ noncomputable section
 variable {n : ℕ}
 
 /-- Born-rule probability for a pure state. -/
+@[expose]
 def probOutcome (psi : PureState n) (x : Fin (2 ^ n)) : ℝ :=
   StateVector.probOutcome (psi : StateVector n) x
 
@@ -112,12 +114,13 @@ theorem probOutcome_ket (x y : Fin (2 ^ n)) :
 /-- Expectation value `<psi|O|psi>` of an observable `O`, represented as a real
 number via the real part. Hermiticity is a property of the observable, not part
 of the raw `HilbertOperator` type. -/
+@[expose]
 def expVal (psi : PureState n) (O : HilbertOperator n) : ℝ :=
   (inner ℂ (psi : StateVector n) (HilbertOperator.applyVec O (psi : StateVector n))).re
 
 /-- Probability that measuring qubit 0 of a `1 + n`-qubit pure state yields
 `b`, leaving the other qubits unobserved. -/
-def probQubit0 (psi : PureState (1 + n)) (b : Fin (2 ^ 1)) : ℝ :=
+@[expose] def probQubit0 (psi : PureState (1 + n)) (b : Fin (2 ^ 1)) : ℝ :=
   StateVector.probQubit0 (psi : StateVector (1 + n)) b
 
 theorem probQubit0_nonneg (psi : PureState (1 + n)) (b : Fin (2 ^ 1)) :

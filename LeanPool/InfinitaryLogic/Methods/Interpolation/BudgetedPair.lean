@@ -58,7 +58,7 @@ Stern's model-theoretic forcing proof is identified as the semantic dual, but it
 **unverified** — the paper has not been read.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -69,7 +69,7 @@ variable {L : Language.{0, 0}} {M : Type}
 /-! ## The constant support of a labelled side -/
 
 /-- The Henkin constants occurring anywhere in a set of sentences. -/
-def theoryJConsts (T : Set L[[ℕ]].Sentenceω) : Set ℕ :=
+@[expose] def theoryJConsts (T : Set L[[ℕ]].Sentenceω) : Set ℕ :=
   ⋃ σ ∈ T, sentenceJConsts (L' := L) (J := ℕ) σ
 
 variable {T T' : Set L[[ℕ]].Sentenceω} {σ : L[[ℕ]].Sentenceω} {c : ℕ}
@@ -123,6 +123,7 @@ variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relat
 /-- **A budgeted separator of the labelled pair `(Γ, Δ)`.**  Five conditions: the two
 entailments, the
 shared vocabulary, the **shared constants**, and the two quantifier permissions. -/
+@[expose]
 def BudgetedPairSeparates (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (Γ Δ : Set L[[ℕ]].Sentenceω) (θ : L[[ℕ]].Sentenceω) : Prop :=
@@ -134,7 +135,7 @@ def BudgetedPairSeparates (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, 
   (hasQuantSigned false θ → Theoryω.HasQuantSigned true Δ)
 
 /-- **The invariant**: the labelled pair admits no budgeted separator. -/
-def BudgetedPairInsep (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+@[expose] def BudgetedPairInsep (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (Γ Δ : Set L[[ℕ]].Sentenceω) : Prop :=
   ¬ ∃ θ, BudgetedPairSeparates F₁ R₁ F₂ R₂ Γ Δ θ
@@ -587,7 +588,7 @@ transfer gates below license. -/
 
 /-- Membership in the labelled family: some finite, `GenU`-bounded, side-typed decomposition of `S`
 whose labelled pair is budget-inseparable. -/
-def BudgetedPairMem (r₁ r₂ : L[[ℕ]].Sentenceω)
+@[expose] def BudgetedPairMem (r₁ r₂ : L[[ℕ]].Sentenceω)
     (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (S : Set L[[ℕ]].Sentenceω) : Prop :=
@@ -2558,7 +2559,7 @@ supports — if a field ever needs more than an application, the corresponding h
 
 /-- **The budgeted labelled-pair consistency property.**  The finite labelled family over the
 generated universe `GenU r₁ r₂`.  Root-support finiteness is consumed only by `neg_all_witness`. -/
-def budgetedPairConsistencyProperty
+@[expose] def budgetedPairConsistencyProperty
     (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (r₁ r₂ : L[[ℕ]].Sentenceω)

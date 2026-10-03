@@ -62,7 +62,7 @@ needs the orbit machinery; that construction is
 segment.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -78,6 +78,7 @@ variable {W : Fragment α} {F : EdgeSubset W}
 
 /-- Re-pair a matching function at four flags: `a ↦ c`, `c ↦ a`,
 `b ↦ d`, `d ↦ b`, leaving every other flag to `m`. -/
+@[expose]
 def repairFun (m : W.Flag → W.Flag) (a b c d : W.Flag) :
     W.Flag → W.Flag := fun f =>
   if f = a then c else if f = c then a else
@@ -217,6 +218,7 @@ square (`a ↔ b`, `c ↔ d` matched, all four distinct, all at vertex
 `v`), the transition system matching `a ↔ c` and `b ↔ d` instead,
 keeping every other matched pair.  The result is a system over the
 *same* edge subset `F`. -/
+@[expose]
 def repair (κ : F.RelTransitionSystem) (a b c d : W.Flag)
     (v : W.Vertex) (h : RepairSquare κ a b c d v) :
     F.RelTransitionSystem where
@@ -328,6 +330,7 @@ on the internal flags.  All fields of `RelTransitionSystem` constrain
 only internal flags, so `MatchEq`-related systems are
 interchangeable; the matching's values off `F.internalFlags` are
 junk. -/
+@[expose]
 def MatchEq (κ₁ κ₂ : F.RelTransitionSystem) : Prop :=
   ∀ f ∈ F.internalFlags, κ₁.match_ f = κ₂.match_ f
 
@@ -412,6 +415,7 @@ theorem RepairSquare.symm {κ : F.RelTransitionSystem}
 
 /-- One elementary move joins `κ₁` to `κ₂`: some admissible square of
 `κ₁` repairs it to a system matching-equal to `κ₂`. -/
+@[expose]
 def IsRepairStep (κ₁ κ₂ : F.RelTransitionSystem) : Prop :=
   ∃ (a b c d : W.Flag) (v : W.Vertex)
     (h : RepairSquare κ₁ a b c d v),
@@ -596,6 +600,7 @@ namespace RelTransitionSystem
 /-- Orientations transport across matching equality: an orientation
 constrains `isOut` only through the matching's values on internal
 flags. -/
+@[expose]
 def Orientation.ofMatchEq {κ κ' : F.RelTransitionSystem}
     (heq : κ.MatchEq κ') (o : κ.Orientation) : κ'.Orientation where
   isOut := o.isOut
@@ -608,6 +613,7 @@ orientation already separates `a` and `c` (`isOut c = !isOut a`), it
 transports *unchanged* along the repair.  When instead
 `isOut c = isOut a` the transported orientation must flip `isOut`
 along a walk segment; that is `Orientation.segFlip`. -/
+@[expose]
 def Orientation.transportRepair {κ : F.RelTransitionSystem}
     {a b c d : W.Flag} {v : W.Vertex} (h : RepairSquare κ a b c d v)
     (o : κ.Orientation) (hflip : o.isOut c = !o.isOut a) :

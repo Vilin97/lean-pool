@@ -53,7 +53,7 @@ small-chain homology `H_*(C_*^{U,V}(X))` by the singular homology `H_*(X)`.
  H_n(U ∩ V)`, the sphere-ready corollary.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory Limits TopologicalSpace ShortComplex
 open SphereOddDegree.AffineBarycentricSubdivision

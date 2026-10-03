@@ -37,7 +37,7 @@ The Günther operator is built from these operations, so it preserves `conjRefle
 sequences; this is how the fixed point of Theorem B is seen to be real (`ℝᴺ`-valued).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open Complex
@@ -128,7 +128,7 @@ lemma seqConv_finset_sum_left {ι : Type*} {s : ℝ} (hn : 0 < n) (hs : (n : ℝ
 
 /-- `conjReflect a m = conj (a (-m))`. The coefficient sequence of a function `f` is
 `conjReflect`-fixed iff `f` is real-valued. -/
-def conjReflect (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ := conj (a (-m))
+@[expose] def conjReflect (a : (Fin n → ℤ) → ℂ) (m : Fin n → ℤ) : ℂ := conj (a (-m))
 
 lemma conjReflect_conjReflect (a : (Fin n → ℤ) → ℂ) : conjReflect (conjReflect a) = a := by
   funext m; simp [conjReflect]

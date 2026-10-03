@@ -18,7 +18,7 @@ successor cap evaluates through the peel rotation and the
 tensor split.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

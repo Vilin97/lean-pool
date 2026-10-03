@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketExactEulerianField
 physical velocity gradient and scalar-pressure Hessian retain the
 normalized packet's size: neither receives a negative power of ell. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerLagrangian
 
 
 /-- Add velocity, given by `u x+ell • w (ell⁻¹ • x)`. -/
-def addVelocity (ell : ℝ) (u w : Space → Space) (x : Space) : Space :=
+@[expose] def addVelocity (ell : ℝ) (u w : Space → Space) (x : Space) : Space :=
   u x+ell • w (ell⁻¹ • x)
 
 /-- Add pressure, given by `p x+ell^2*q (ell⁻¹ • x)`. -/
@@ -91,6 +91,7 @@ variable (A : Parent)
 
 
 /-- Normalized packet velocity, constructed using `κ`. -/
+@[expose]
 def normalizedPacketVelocity (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   κ • A.frame.field t (I.normalized t x)
     ((exactPacketOfResidual P B residual).velocity.pointField t
@@ -98,6 +99,7 @@ def normalizedPacketVelocity (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
 
 /-- Normalized packet pressure, given by `(exactPacketOfResidual P B residual).graphPotential k
 t ∘ I.normalized t`. -/
+@[expose]
 def normalizedPacketPressure (t : Icc (0 : ℝ) A.T) : Space → ℝ :=
   (exactPacketOfResidual P B residual).graphPotential k t ∘ I.normalized t
 
@@ -219,7 +221,8 @@ theorem normalizedPacketVelocity_initialized (t : Icc (0 : ℝ) A.T) :
         (A.sourceAgreement m hm J support hSupport H) N hN k hk) k I t =
     initializedExactPhysicalVelocity (A.meanData H) (A.transverseData m hm J support hSupport) rfl
       τ hτ hτT (A.historyOn H m hm J support hSupport τ hτ hτT) δ hδ ξ hs α
-      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := rfl
+      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := by
+  rfl
 
 theorem normalizedPacketPressure_initialized (t : Icc (0 : ℝ) A.T) :
     A.normalizedPacketPressure m hm J support hSupport Q
@@ -229,6 +232,7 @@ theorem normalizedPacketPressure_initialized (t : Icc (0 : ℝ) A.T) :
         (A.sourceAgreement m hm J support hSupport H) N hN k hk) k I t =
     initializedExactPhysicalPressure (A.meanData H) (A.transverseData m hm J support hSupport) rfl
       τ hτ hτT (A.historyOn H m hm J support hSupport τ hτ hτT) δ hδ ξ hs α
-      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := rfl
+      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := by
+  rfl
 
 end EulerParentPacketFrames.Parent

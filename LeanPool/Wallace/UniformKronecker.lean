@@ -17,7 +17,7 @@ This file isolates the exact (non-quantitative) character-extension argument use
 The remaining quantitative statement is developed on top of these declarations.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,7 +30,7 @@ namespace Wallace
 open Filter Set TopologicalSpace Topology
 
 /-- The homomorphism which evaluates an integer relation on a finite tuple. -/
-def relationMap {G : Type u} [AddCommGroup G] {m : ℕ} (z : Fin m → G) :
+@[expose] def relationMap {G : Type u} [AddCommGroup G] {m : ℕ} (z : Fin m → G) :
     (Fin m → ℤ) →+ G where
   toFun a := ∑ i, a i • z i
   map_zero' := by simp
@@ -46,7 +46,7 @@ theorem relationMap_single {G : Type u} [AddCommGroup G] {m : ℕ}
   simp [relationMap]
 
 /-- Evaluation of an integer vector on a tuple in the unit additive torus. -/
-def torusRelationMap {m : ℕ} (t : Fin m → UnitAddCircle) :
+@[expose] def torusRelationMap {m : ℕ} (t : Fin m → UnitAddCircle) :
     (Fin m → ℤ) →+ UnitAddCircle :=
   relationMap t
 
@@ -80,13 +80,13 @@ theorem natAbs_le_intVectorHeight {m : ℕ} (a : Fin m → ℤ) (i : Fin m) :
   exact Finset.le_sup (f := fun j => (a j).natAbs) (Finset.mem_univ i)
 
 /-- A target tuple respects all relations of height at most `q`. -/
-def RespectsRelationsUpTo {G : Type u} [AddCommGroup G] {m : ℕ}
+@[expose] def RespectsRelationsUpTo {G : Type u} [AddCommGroup G] {m : ℕ}
     (q : ℕ) (z : Fin m → G) (t : Fin m → UnitAddCircle) : Prop :=
   ∀ a : Fin m → ℤ, intVectorHeight a ≤ q →
     relationMap z a = 0 → torusRelationMap t a = 0
 
 /-- `q` is a uniform Kronecker bound for tuples of length `m` and error `ε`. -/
-def IsUniformKroneckerBound (m : ℕ) (ε : ℝ) (q : ℕ) : Prop :=
+@[expose] def IsUniformKroneckerBound (m : ℕ) (ε : ℝ) (q : ℕ) : Prop :=
   ∀ {G : Type u} [AddCommGroup G] (z : Fin m → G) (t : Fin m → UnitAddCircle),
     RespectsRelationsUpTo q z t →
       ∃ χ : G →+ UnitAddCircle, ∀ i, ‖χ (z i) - t i‖ < ε
@@ -205,7 +205,7 @@ theorem isClosed_integerAnnihilator {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) 
   exact isClosed_singleton.preimage (by fun_prop)
 
 /-- Distance to the relation annihilator, as a bounded continuous real-valued function. -/
-def annihilatorDistance {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
+@[expose] def annihilatorDistance {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
     BoundedContinuousFunction (UnitAddTorus (Fin m)) ℝ :=
   BoundedContinuousFunction.mkOfCompact
     (⟨fun x ↦ Metric.infDist x (integerAnnihilator R),

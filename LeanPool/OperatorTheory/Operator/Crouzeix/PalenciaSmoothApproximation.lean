@@ -49,7 +49,7 @@ from the set-theoretic approximation alone.
   companions, uniform polynomial approximation, and calculus identification.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped InnerProductSpace Interval Real

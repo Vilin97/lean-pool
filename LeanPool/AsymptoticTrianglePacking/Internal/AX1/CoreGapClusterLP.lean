@@ -41,7 +41,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapBlockCover
 
 /-! # CoreGapCoverCapacity -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -236,7 +236,7 @@ end
 
 /-! # CoreGapClusterLP -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 

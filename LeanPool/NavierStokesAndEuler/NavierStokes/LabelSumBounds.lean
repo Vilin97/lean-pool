@@ -20,7 +20,7 @@ sum estimates use the actual closed label windows and the existing finite
 coloring, rather than the total number of labels in an active finite set.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -267,6 +267,7 @@ abbrev WindowPoint := ℝ × SlotColoring.Position
 /-- The first coordinate is the logarithmic dyadic coordinate.  The
 window includes a two-level closed band and the actual two-mesh spatial
 box used by `SlotColoring`. -/
+@[expose]
 noncomputable def closedWindow (d : ℝ) (l : SlotColoring.Label) : Set WindowPoint :=
   Icc ((l.1 : ℝ) - 2) ((l.1 : ℝ) + 2) ×ˢ SlotColoring.physicalBox d l
 
@@ -515,10 +516,12 @@ theorem uniform_blockCovariance {s : StripData D} {P : ι → ℕ → D → ℝ}
 /-! ## Actual finite sums and support-induced covariance diagonality -/
 
 /-- Field sum, defined pointwise by `∑ l ∈ labels n, u l n p i`. -/
+@[expose]
 noncomputable def fieldSum (labels : ℕ → Finset ι) (u : ι → Oscillation D) : Oscillation D :=
   fun n p i => ∑ l ∈ labels n, u l n p i
 
 /-- Angular continuous, given by `∀ n x i, Continuous (fun θ : ℝ => u n (x, θ) i)`. -/
+@[expose]
 noncomputable def AngularContinuous (u : Oscillation D) : Prop :=
   ∀ n x i, Continuous (fun θ : ℝ => u n (x, θ) i)
 
@@ -530,6 +533,7 @@ theorem block_angularContinuous (a : HarmonicBlock D) : AngularContinuous a.osci
 
 /-- Actual support in a slow-label window and its padded native slot,
 viewed through one common auxiliary coordinate. -/
+@[expose]
 noncomputable def SupportedOscillations {d h : ℝ} {vr vt : TorusInverse.Plane}
     (sys : PartitionedCovariance.SlotSystem d h vr vt)
     (label : ℕ → ι → SlotColoring.Label) (χ : ℕ → D → WindowPoint)
@@ -765,11 +769,11 @@ theorem signedTailLabel_admissible {N : ℕ} (hN : 1 ≤ N) :
 abbrev Tensor (D : Type) := Fin 3 → Fin 3 → ScalarField D
 
 /-- Symmetric covariance, given by `bilinearCovariance u v + bilinearCovariance v u`. -/
-noncomputable def symmetricCovariance (u v : Oscillation D) : Tensor D :=
+@[expose] noncomputable def symmetricCovariance (u v : Oscillation D) : Tensor D :=
   bilinearCovariance u v + bilinearCovariance v u
 
 /-- Definitionally the same five terms used by CorrectionStep. -/
-noncomputable def signedRemainder (primary old tangent curl : Oscillation D) : Tensor D :=
+@[expose] noncomputable def signedRemainder (primary old tangent curl : Oscillation D) : Tensor D :=
   (bilinearCovariance old (tangent + curl) + bilinearCovariance (tangent + curl) old +
     bilinearCovariance (tangent + curl) (tangent + curl)) - symmetricCovariance primary tangent
 
@@ -843,12 +847,13 @@ structure SameCarrier (a b : HarmonicBlock D) : Prop where
 
 /-- Add block, given by `{ a with velocity := fun n i => a.velocity n i + b.velocity n i
 pressure := fun n => a.pressure n + b.pressure n }`. -/
-noncomputable def addBlock (a b : HarmonicBlock D) : HarmonicBlock D :=
+@[expose] noncomputable def addBlock (a b : HarmonicBlock D) : HarmonicBlock D :=
   { a with velocity := fun n i => a.velocity n i + b.velocity n i
            pressure := fun n => a.pressure n + b.pressure n }
 
 /-- Sub block, given by `{ a with velocity := fun n i => a.velocity n i - b.velocity n i
 pressure := fun n => a.pressure n - b.pressure n }`. -/
+@[expose]
 noncomputable def subBlock (a b : HarmonicBlock D) : HarmonicBlock D :=
   { a with velocity := fun n i => a.velocity n i - b.velocity n i
            pressure := fun n => a.pressure n - b.pressure n }

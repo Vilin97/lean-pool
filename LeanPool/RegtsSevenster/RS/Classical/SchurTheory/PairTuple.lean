@@ -15,7 +15,7 @@ The set of pair-contents with prescribed row and column margins bijects
 with the set of row-wise multisets with matching column margins.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

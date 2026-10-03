@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.LogicSymbol
 
 /-! # Formula -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -131,14 +131,14 @@ instance : ModalDeMorgan (Formula α) where
 -/
 
 /-- Formula complexity -/
-def complexity : Formula α → ℕ
+@[expose] def complexity : Formula α → ℕ
 | atom _  => 0
 | ⊥       => 0
 | φ ==> ψ   => max φ.complexity ψ.complexity + 1
 | □φ   => φ.complexity + 1
 
 /-- Max numbers of `□` -/
-def degree : Formula α → Nat
+@[expose] def degree : Formula α → Nat
   | atom _ => 0
   | ⊥ => 0
   | φ ==> ψ => max φ.degree ψ.degree

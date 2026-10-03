@@ -26,7 +26,7 @@ power datum detects the nonvanishing of the copairing powers
 from the nonvanishing of the power modules.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -120,6 +120,7 @@ theorem powCopairA_linear
 /-- **The power duality datum**: the tensor powers of a dual pair
 form a dual pair, with the power pairing and the copairing
 power. -/
+@[expose]
 noncomputable def powDualityDatum
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

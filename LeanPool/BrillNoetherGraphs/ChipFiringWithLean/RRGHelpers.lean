@@ -11,7 +11,7 @@ public import LeanPool.BrillNoetherGraphs.ChipFiringWithLean.Rank
 
 /-! # RRGHelpers -/
 
-@[expose] public section
+public section
 open Multiset Finset
 
 /-!
@@ -29,6 +29,7 @@ maximal unwinnable divisors:
 -/
 
 /-- The chosen unique $q$-reduced representative of the linear equivalence class of $D$. -/
+@[expose]
 noncomputable def qReducedRep {G : CFGraph}
     (h_conn : graphConnected G) (q : G.V) (D : CFDiv G) : CFDiv G :=
   Classical.choose (unique_q_reduced h_conn q D)

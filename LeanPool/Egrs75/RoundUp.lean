@@ -38,7 +38,7 @@ low-digit number in both bases is the EGRS Diophantine "iterative digit repair"
 step (their eq. (2) + the repair Lemma), which is the genuine remaining gap.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.RoundUp
 

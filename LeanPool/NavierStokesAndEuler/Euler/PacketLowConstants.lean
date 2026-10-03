@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.BaseEulerState
 /-! Fixed low-order constants are chosen before the stage and base scale.
 Their slack absorbs the universal good-time and first-packet ratios. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

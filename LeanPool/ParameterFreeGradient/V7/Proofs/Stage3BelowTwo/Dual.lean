@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Identity
 The below-two dual phase terminal gradient bound from the residual identity.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -35,30 +35,30 @@ continuous across the breakpoints. Two integrations by parts on each piece and t
 `∑_i ∫_{t_i}^{t_{i+1}} (x F + 27/16)/x³ ≤ tailBound`.
 -/
 
-@[expose] public section
+public section
 
 open Finset intervalIntegral
 
 namespace Zeta5Irrational
 
 /-- The grid. -/
-noncomputable def tT (i : ℕ) : ℝ :=
+@[expose] noncomputable def tT (i : ℕ) : ℝ :=
   20 + i / 3
 
 /-- Integer part of the left endpoint `tT i` of a tail interval. -/
-def qT (i : ℕ) : ℕ :=
+@[expose] def qT (i : ℕ) : ℕ :=
   (60 + i) / 3
 
 /-- Integer part of `3 / 40 * tT i`, used to fix the second fractional part. -/
-def qT' (i : ℕ) : ℕ :=
+@[expose] def qT' (i : ℕ) : ℕ :=
   (60 + i) / 40
 
 /-- `F` on the piece `i`. -/
-noncomputable def FT (i : ℕ) (x : ℝ) : ℝ :=
+@[expose] noncomputable def FT (i : ℕ) (x : ℝ) : ℝ :=
   37 / 10 + 37 / 20 * (x - qT i) - 111 / 10 * (3 / 40 * x - qT' i)
 
 /-- The tail majorant on piece `i`, including the additive error `27 / 16`. -/
-noncomputable def gT (i : ℕ) (x : ℝ) : ℝ :=
+@[expose] noncomputable def gT (i : ℕ) (x : ℝ) : ℝ :=
   x * FT i x + 27 / 16
 
 /-- The quadratic oscillation contributed by the two fractional parts on tail piece `i`. -/

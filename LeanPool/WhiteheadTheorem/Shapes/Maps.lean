@@ -15,7 +15,7 @@ public import Mathlib.Topology.Category.TopCat.Basic
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Maps`.
 -/
 
-@[expose] public section
+public section
 -- import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 open scoped Topology unitInterval CategoryTheory
@@ -91,7 +91,7 @@ lemma set_neq_zero_eq_compl_range_i₀ (X : TopCat.{u}) :
     simp_all only [not_true_eq_false]
 
 /-- `i₁ToComplRangeI₀` -/
-def i₁ToComplRangeI₀ (X : TopCat.{u}) :
+@[expose] def i₁ToComplRangeI₀ (X : TopCat.{u}) :
     C(X, (Set.range (Cyl.i₀ X)).compl) where
   toFun x := ⟨Cyl.i₁ _ x, by
       rw [(by rfl: (Set.range (Cyl.i₀ X)).compl = {z | z ∉ Set.range (Cyl.i₀ X)})]

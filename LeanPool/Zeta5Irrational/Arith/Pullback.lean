@@ -30,7 +30,7 @@ With `PlK K = {±1, …, ±K}` and `pull K P = (-1)^K x⁵ P(-x²)` we have
 `x⁵ P(-x²) / D_K(-x²) = pull K P / ∏_{r ∈ PlK K} (x - r)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -98,7 +98,7 @@ lemma tau_cubic (a : ℚ) : tau (-X ^ 3 - C a * X) = -1 / 4 := by
 /-! ### The pole set `{±1, …, ±K}` -/
 
 /-- The poles `±1, …, ±K` in the variable `x`. -/
-def PlK (K : ℕ) : Finset ℤ :=
+@[expose] def PlK (K : ℕ) : Finset ℤ :=
   (Icc 1 K).image (fun j : ℕ => (j : ℤ)) ∪ (Icc 1 K).image (fun j : ℕ => -(j : ℤ))
 
 lemma PlK_disjoint (K : ℕ) :
@@ -139,7 +139,7 @@ lemma piPl_PlK (K : ℕ) : piPl (PlK K) = C ((-1 : ℚ) ^ K) * (D K).comp (-X ^ 
   ring
 
 /-- `pull K P = (-1)^K x⁵ P(-x²)`. -/
-noncomputable def pull (K : ℕ) (P : ℚ[X]) : ℚ[X] :=
+@[expose] noncomputable def pull (K : ℕ) (P : ℚ[X]) : ℚ[X] :=
   C ((-1 : ℚ) ^ K) * X ^ 5 * P.comp (-X ^ 2)
 
 lemma card_PlK (K : ℕ) : (PlK K).card = 2 * K := by

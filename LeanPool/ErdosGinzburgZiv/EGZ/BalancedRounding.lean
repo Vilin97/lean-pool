@@ -18,7 +18,7 @@ and coefficient upper bounds transfer quantitatively. Bounded rounded weights
 belong to a finite family before the prime or original masses are fixed.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -40,7 +40,7 @@ No completion, Zorn, term model, or `realizeWith` bridge appears here — this c
 pins the countable substrate.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -234,7 +234,7 @@ variable {s₀ : LocalStage}
 `((localColim s₀)[[ℕ]])[[ℕ]]`: each schema sentence `templateSentence ψ t` (`⟨m, ψ⟩ ∈ ΓEMlocal`),
 lifted along the Henkin inclusion and packaged with its finite-support proof. This is the
 enumeration domain the ω-stage completion (checkpoint 3b) decides. -/
-def schemaFSentenceUniverse (s₀ : LocalStage) :
+@[expose] def schemaFSentenceUniverse (s₀ : LocalStage) :
     Set (FSentence (L'' := localColim s₀) (J := ℕ)) :=
   ⋃ (mφ ∈ ΓEMlocal s₀), Set.range fun t : Fin mφ.1 ↪o ℕ =>
     (⟨(Lomega1omegaTemplate.templateSentence mφ.2 t).mapLanguage
@@ -432,6 +432,7 @@ variable (ρ : ℕ → FSentence (L'' := localColim s₀) (J := ℕ))
   (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
 
 /-- **The completed theory** (raw set of Marker sentences), the union of the completion stages. -/
+@[expose]
 def schemaCompletionTheory : Set (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) :=
   {τ | ∃ n, τ ∈ (schemaCompletionStage ρ hM n).1}
 

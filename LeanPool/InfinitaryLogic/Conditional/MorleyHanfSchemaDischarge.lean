@@ -30,7 +30,7 @@ constants pass through; the degenerate `IsEmpty J` case is served by the source 
 So: **`ℶ_{ω₁}` is a Hanf bound for every `L_{ω₁ω}` sentence, unconditionally.**
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -18,7 +18,7 @@ factor torsion orders, forces them equal, and identifies the asserted wedge
 period with that common order.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

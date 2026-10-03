@@ -22,7 +22,7 @@ something in the library needed them, and they are collected in `ForMathlib` so 
 can be contributed upstream, or deleted when Mathlib grows its own.
 -/
 
-@[expose] public section
+public section
 
 
 theorem eq_of_testBit_lt {n a b : ℕ} (ha : a < 2 ^ n) (hb : b < 2 ^ n)

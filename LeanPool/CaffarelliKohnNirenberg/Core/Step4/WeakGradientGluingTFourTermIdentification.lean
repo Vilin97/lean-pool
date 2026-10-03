@@ -9,7 +9,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.WeakGradientGluingTGap
 
 /-! # Four-term identification on interior collars -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal Topology BigOperators

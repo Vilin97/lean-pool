@@ -31,7 +31,7 @@ products are formed in the same order on both sides, so no
 commutativity is needed for the step.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

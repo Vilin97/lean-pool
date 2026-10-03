@@ -38,7 +38,7 @@ function estimate to `u, v` and to `-u, -v`, and adds; the two `‖·‖` terms 
 `import Mathlib`, so no extra imports are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

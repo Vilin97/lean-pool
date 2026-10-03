@@ -32,7 +32,7 @@ of a basic first year approach* (arXiv:1809.00533v6, file `060_ElliptFunct.tex`)
   `ζ = σ'/σ` (paper Def. `defizeta`) and `ζ' = -℘` (paper Def. `defiwp`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,23 +42,24 @@ open Complex Filter Topology Module
 
 /-- The factor of the Weierstrass σ-product associated to a nonzero lattice point `w`:
 `(1 - z/w)·exp(z/w + z²/(2w²))`. -/
-def weierstrassSigmaTerm (z w : ℂ) : ℂ :=
+@[expose] def weierstrassSigmaTerm (z w : ℂ) : ℂ :=
   (1 - z / w) * Complex.exp (z / w + z ^ 2 / (2 * w ^ 2))
 
 /-- The summand of the Weierstrass ζ-series associated to a nonzero lattice point `w`:
 `1/(z-w) + 1/w + z/w²`. -/
-def weierstrassZetaTerm (z w : ℂ) : ℂ :=
+@[expose] def weierstrassZetaTerm (z w : ℂ) : ℂ :=
   1 / (z - w) + 1 / w + z / w ^ 2
 
 variable (L : PeriodPair)
 
 /-- The Weierstrass σ-function of the lattice `L` (paper Def. `defisigma`):
 `σ(z; L) = z·∏_{ω ∈ L, ω ≠ 0} (1 - z/ω)·exp(z/ω + z²/(2ω²))`. -/
-def weierstrassSigma (z : ℂ) : ℂ :=
+@[expose] def weierstrassSigma (z : ℂ) : ℂ :=
   z * ∏' l : {l : L.lattice // l ≠ 0}, weierstrassSigmaTerm z (l.1 : ℂ)
 
 /-- The Weierstrass ζ-function of the lattice `L` (paper Def. `defizeta`):
 `ζ(z; L) = 1/z + ∑_{ω ∈ L, ω ≠ 0} (1/(z-ω) + 1/ω + z/ω²)`. -/
+@[expose]
 def weierstrassZeta (z : ℂ) : ℂ :=
   1 / z + ∑' l : {l : L.lattice // l ≠ 0}, weierstrassZetaTerm z (l.1 : ℂ)
 

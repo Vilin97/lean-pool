@@ -12,7 +12,7 @@ public import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 # LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the construction of the following statement:
@@ -43,7 +43,7 @@ namespace Dihomotopy
 variable {X : dTopCat} {x y : X} (γ : Dipath x y)
 
 /-- The directed map taking the pointwise minimum of the two coordinates on `I × I`. -/
-def MinDirected : D(I × I, I) where
+@[expose] def MinDirected : D(I × I, I) where
   toFun := fun t => min t.1 t.2
   continuous_toFun :=
     Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).min
@@ -52,7 +52,7 @@ def MinDirected : D(I × I, I) where
     le_min (min_le_of_left_le (h₁ hab)) (min_le_of_right_le (h₂ hab))
 
 /-- The directed map taking the pointwise maximum of the two coordinates on `I × I`. -/
-def MaxDirected : D(I × I, I) where
+@[expose] def MaxDirected : D(I × I, I) where
   toFun := fun t => max t.1 t.2
   continuous_toFun :=
     Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).max
@@ -62,7 +62,7 @@ def MaxDirected : D(I × I, I) where
 
 /-- Dihomotopy from the constant path at the source to a dipath, given by
 `SourceToPath γ (s, t) = γ (min s t)`. -/
-def SourceToPath : Dihomotopy (Dipath.refl x).toDirectedMap γ.toDirectedMap where
+@[expose] def SourceToPath : Dihomotopy (Dipath.refl x).toDirectedMap γ.toDirectedMap where
   toDirectedMap := γ.toDirectedMap.comp MinDirected
   map_zero_left := fun t => by
     change γ (min 0 t) = _
@@ -88,7 +88,7 @@ lemma sourceToPath_range : Set.range (SourceToPath γ) = Set.range γ := by
 
 /-- Dihomotopy from a dipath to the constant path at the target, given by
 `PathToTarget γ (s, t) = γ (max s t)`. -/
-def PathToTarget : Dihomotopy γ.toDirectedMap (Dipath.refl y).toDirectedMap where
+@[expose] def PathToTarget : Dihomotopy γ.toDirectedMap (Dipath.refl y).toDirectedMap where
   toDirectedMap := γ.toDirectedMap.comp MaxDirected
   map_zero_left := fun t => by
     change γ (max 0 t) = _

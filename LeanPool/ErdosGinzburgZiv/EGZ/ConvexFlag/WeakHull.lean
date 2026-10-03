@@ -17,13 +17,13 @@ This is Definition 3.10 and the elementary closure API around equation
 characterization, is stated as the geometric proof target.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.ConvexFlag
 
 /-- The weak convex hull of `S`: every flag functional defined at `q` has a
 defined point of `S` on the same or higher side. -/
-def weakConvexHull (F : ConvexFlag) (S : Set F.Point) : Set F.Point :=
+@[expose] def weakConvexHull (F : ConvexFlag) (S : Set F.Point) : Set F.Point :=
   {q | ∀ (xi : F.LinearFunction) (hq : xi.EvaluableAt q),
     ∃ s, s ∈ S ∧ ∃ hs : xi.EvaluableAt s, xi.eval q hq ≤ xi.eval s hs}
 

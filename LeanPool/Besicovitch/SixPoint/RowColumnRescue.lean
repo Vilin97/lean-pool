@@ -19,7 +19,7 @@ for the four-child packing forces the corresponding root against the full opposi
 have nonnegative score.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

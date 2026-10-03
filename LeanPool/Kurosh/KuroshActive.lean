@@ -15,7 +15,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -42,7 +42,7 @@ abbrev KuroshActiveComponentIndex {ι : Type v} (G : ι → Type u)
   KuroshActiveVertexIndex G H ⊕ PUnit
 
 /-- The nontrivial vertex stabilizers together with the free part. -/
-def KuroshActiveComponent {ι : Type v} (G : ι → Type u)
+@[expose] def KuroshActiveComponent {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     KuroshActiveComponentIndex G H → Type (max (u + 1) (v + 1)) :=
   Sum.elim
@@ -108,7 +108,7 @@ noncomputable def treeVertexComponentToActive {ι : Type v}
           rfl }
 
 /-- Include an active vertex stabilizer in the product of all components. -/
-noncomputable def activeVertexComponentToTree {ι : Type v}
+@[expose] noncomputable def activeVertexComponentToTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     (j : KuroshActiveVertexIndex G H) :
     KuroshActiveComponent G H (Sum.inl j) →*
@@ -170,7 +170,7 @@ noncomputable def treeFreeComponentToActive {ι : Type v}
       rfl }
 
 /-- Include the active free component in the product of all components. -/
-noncomputable def activeFreeComponentToTree {ι : Type v}
+@[expose] noncomputable def activeFreeComponentToTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     KuroshActiveComponent G H (Sum.inr PUnit.unit) →*
       TreeKuroshProduct G H :=
@@ -209,7 +209,7 @@ noncomputable def treeComponentToActive {ι : Type v}
   | Sum.inr _ => treeFreeComponentToActive G H
 
 /-- Map an active component back into the product of all tree components. -/
-noncomputable def activeComponentToTree {ι : Type v}
+@[expose] noncomputable def activeComponentToTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     ∀ q : KuroshActiveComponentIndex G H,
       KuroshActiveComponent G H q →* TreeKuroshProduct G H
@@ -223,7 +223,7 @@ noncomputable def treeProductToActive {ι : Type v}
   Monoid.CoprodI.lift (treeComponentToActive G H)
 
 /-- The homomorphism reinserting the active factors into the full tree product. -/
-noncomputable def activeProductToTree {ι : Type v}
+@[expose] noncomputable def activeProductToTree {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     KuroshActiveProduct G H →* TreeKuroshProduct G H :=
   Monoid.CoprodI.lift (activeComponentToTree G H)
@@ -314,7 +314,7 @@ theorem Internal.treeProductToActive_comp_activeProductToTree {ι : Type v}
       rfl
 
 /-- Removing trivial stabilizer factors preserves the Kurosh product up to isomorphism. -/
-noncomputable def treeProductActiveEquiv {ι : Type v}
+@[expose] noncomputable def treeProductActiveEquiv {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     @TreeKuroshProduct.{u, v, 0} ι G _ H ≃*
       @KuroshActiveProduct.{u, v, 0} ι G _ H :=
@@ -331,7 +331,7 @@ noncomputable def treeProductActiveEquiv {ι : Type v}
     map_mul' := (treeProductToActive G H).map_mul }
 
 /-- The factor-only Kurosh product is isomorphic to the subgroup. -/
-noncomputable def kuroshActiveEquivH {ι : Type v}
+@[expose] noncomputable def kuroshActiveEquivH {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     @KuroshActiveProduct.{u, v, 0} ι G _ H ≃* H :=
   (treeProductActiveEquiv G H).symm.trans

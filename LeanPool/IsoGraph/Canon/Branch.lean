@@ -36,7 +36,7 @@ the bookkeeping for the third and hardest one, backjumping.
   not already dominated.  This is `jump_sound` fed by `Jmp`.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -94,25 +94,25 @@ theorem mem_usableAutos {autos : Array (Array Nat)} {path : Array Nat} {g : Arra
 /-! ## The running invariants -/
 
 /-- A leaf the state records. -/
-def Rec (st : St) (l : Leaf) : Prop := st.best = some l ∨ st.first = some l
+@[expose] def Rec (st : St) (l : Leaf) : Prop := st.best = some l ∨ st.first = some l
 
 /-- No recorded leaf lies below the current node. -/
-def Pth (st : St) (path : Array Nat) : Prop := ∀ l, Rec st l → ¬ PathPre path l.path
+@[expose] def Pth (st : St) (path : Array Nat) : Prop := ∀ l, Rec st l → ¬ PathPre path l.path
 
 /-- **The backjump invariant**, relative to a target predicate `P` on leaf keys.  Every branch a
 recorded leaf went down and that the current path has already left behind consists entirely of
 keys satisfying `P`.  At the use site `P` is "dominated by the incumbent, or already accounted
 for by the caller". -/
-def Jmp (n : Nat) (f : Nat → Nat → Bool) (P : List (List UInt64) → Prop) (path : Array Nat)
-    (st : St) : Prop :=
+@[expose] def Jmp (n : Nat) (f : Nat → Nat → Bool) (P : List (List UInt64) → Prop)
+    (path : Array Nat) (st : St) : Prop :=
   ∀ l, Rec st l → ∀ j, j < path.size → j < l.path.size →
     path.toList.take j = l.path.toList.take j → path[j]! ≠ l.path[j]! →
       ∀ k, ancReach n f l.path (j + 1) k → P k
 
 /-- The same, also covering the branches leaving the current node itself: what holds while a node
 is working through its children. -/
-def JmpC (n : Nat) (f : Nat → Nat → Bool) (P : List (List UInt64) → Prop) (path : Array Nat)
-    (st : St) : Prop :=
+@[expose] def JmpC (n : Nat) (f : Nat → Nat → Bool) (P : List (List UInt64) → Prop)
+    (path : Array Nat) (st : St) : Prop :=
   ∀ l, Rec st l → ∀ j, j ≤ path.size → j < l.path.size →
     path.toList.take j = l.path.toList.take j → (j < path.size → path[j]! ≠ l.path[j]!) →
       ∀ k, ancReach n f l.path (j + 1) k → P k

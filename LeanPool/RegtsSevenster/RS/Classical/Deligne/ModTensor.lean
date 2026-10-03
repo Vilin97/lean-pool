@@ -47,7 +47,7 @@ The development is scoped to the structures above; associativity of
 `modTensor` is outside this module's scope.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -62,6 +62,7 @@ section ActLeft
 
 /-- The action morphism of a module object, typed at the tensor
 product. -/
+@[expose]
 def actLeft [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] : A ⊗ X ⟶ X :=
   γ[A, X]
@@ -99,7 +100,7 @@ lemma actLeft_natural [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The regular module, with underlying object reducibly `A`; it is
 definitionally Mathlib's `Mod.regular A`. -/
-@[reducible]
+@[expose, reducible]
 def regularMod
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] : Mod D A :=
   letI := ModObj.regular A
@@ -138,7 +139,7 @@ lemma mul_act_tensorRight
 
 /-- A left module tensored with an object on the right: the action
 of `A` on `X ⊗ V` through the left factor. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def tensorRightModObj [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] (V : D) :
     ModObj A (X ⊗ V) where
@@ -157,7 +158,7 @@ def tensorRightModObj [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- The free module on an object: `A ⊗ V` with the action given by
 multiplication on the left factor. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def freeModObj [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (V : D) : ModObj A (A ⊗ V) :=
   letI := ModObj.regular A
@@ -176,7 +177,7 @@ theorem whiskerLeft_one_mul
   monoidal
 
 /-- The free module on an object, bundled. -/
-def freeMod [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
+@[expose] def freeMod [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (V : D) : Mod D A :=
   letI := freeModObj A V
   ⟨A ⊗ V⟩
@@ -194,6 +195,7 @@ section RightAction
 
 /-- The right action of `A` on a left module, induced by the
 braiding. -/
+@[expose]
 def actRight [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D]
     (X : D) [ModObj A X] : X ⊗ A ⟶ X :=
@@ -230,6 +232,7 @@ lemma actRight_natural_mod
 factors, having carried the first generator past the second
 algebra factor.  This is at once the head absorption that folds an
 incoming free letter into an accumulated head. -/
+@[expose]
 def freeModShuffle [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D]
     (V W : D) : (A ⊗ V) ⊗ (A ⊗ W) ⟶ A ⊗ (V ⊗ W) :=
@@ -268,6 +271,7 @@ section ModTensor
 
 /-- First leg of the module-tensor parallel pair on
 `(M.X ⊗ A) ⊗ N.X`: act on `M` through the braided right action. -/
+@[expose]
 def modTensorLegM [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (M : Mod D A) (N : Mod D A) :
     (M.X ⊗ A) ⊗ N.X ⟶ M.X ⊗ N.X :=
@@ -275,6 +279,7 @@ def modTensorLegM [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
 
 /-- Second leg of the module-tensor parallel pair on
 `(M.X ⊗ A) ⊗ N.X`: associate and act on `N`. -/
+@[expose]
 def modTensorLegN
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (M : Mod D A)
     (N : Mod D A) : (M.X ⊗ A) ⊗ N.X ⟶ M.X ⊗ N.X :=
@@ -327,12 +332,14 @@ section
 
 /-- The tensor product of two modules over `A`: the coequalizer of
 `modTensorLegM` and `modTensorLegN`. -/
+@[expose]
 noncomputable def modTensor
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (M : Mod D A) (N : Mod D A) [HasCoequalizers D] : D :=
   coequalizer (modTensorLegM A M N) (modTensorLegN A M N)
 
 /-- The projection onto the tensor product of modules. -/
+@[expose]
 noncomputable def modTensorπ
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (M : Mod D A) (N : Mod D A) [HasCoequalizers D] :
@@ -614,7 +621,7 @@ lemma modTensorDescAct_desc
 
 /-- Descend a compatible monoid action on `M.X` to a module
 structure on the tensor product. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def modTensorDescModObj
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] (M : Mod D A) (N : Mod D A) [HasCoequalizers D]
@@ -637,7 +644,7 @@ section TensorModule
 
 /-- The `A`-module structure on the tensor product of modules over
 a commutative monoid: the action on the `M`-factor descends. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def modTensorModObj
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] (M : Mod D A) (N : Mod D A)
@@ -648,6 +655,7 @@ noncomputable def modTensorModObj
     (actLeft_actRight A M.X) (one_actLeft A M.X) (mul_actLeft A M.X)
 
 /-- The action of `A` on the tensor product of modules. -/
+@[expose]
 noncomputable def modTensorAct
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] (M : Mod D A) (N : Mod D A)
@@ -692,7 +700,7 @@ lemma modTensorAct_mul [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (actLeft_actRight A M.X) (mul_actLeft A M.X)
 
 /-- The tensor product of modules, bundled as a module. -/
-noncomputable def modTensorMod
+@[expose] noncomputable def modTensorMod
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] (M : Mod D A) (N : Mod D A)
     [HasCoequalizers D]
@@ -764,7 +772,7 @@ lemma modTensorLegM_regular_actRight
 
 /-- The regular module is a left unit for the module tensor
 product. -/
-@[simps]
+@[expose, simps]
 noncomputable def modTensorUnitLeft
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] (N : Mod D A) [HasCoequalizers D] :
@@ -797,7 +805,7 @@ noncomputable def modTensorUnitLeft
 
 /-- The regular module is a right unit for the module tensor
 product of a commutative monoid. -/
-@[simps]
+@[expose, simps]
 noncomputable def modTensorUnitRight
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] [IsCommMonObj A] (M : Mod D A) [HasCoequalizers D] :
@@ -962,6 +970,7 @@ lemma modTensorAct_map [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
   rw [reassoc_of% hpre]
 
 /-- Functoriality, as a morphism of bundled modules. -/
+@[expose]
 noncomputable def modTensorMapMod
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] {M : Mod D A} {M' : Mod D A} {N : Mod D A}
@@ -972,6 +981,7 @@ noncomputable def modTensorMapMod
   Mod.Hom.mk' (modTensorMap A f g) (modTensorAct_map A f g)
 
 /-- The relative tensor product of two module isomorphisms. -/
+@[expose]
 noncomputable def modTensorMapIso
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     [BraidedCategory D] {M : Mod D A} {M' : Mod D A} {N : Mod D A}
@@ -998,7 +1008,7 @@ section BaseChange
 
 /-- `B` as an `A`-module by restriction along `φ`, with underlying
 object reducibly `B`. -/
-@[reducible]
+@[expose, reducible]
 def restrictRegular
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] : Mod D A :=
@@ -1036,6 +1046,7 @@ lemma mul_actRight_restrictRegular
 
 /-- Base change along `φ`: the extension `B ⊗[A] M` of an
 `A`-module `M`. -/
+@[expose]
 noncomputable def baseChange
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] [BraidedCategory D]
@@ -1045,7 +1056,7 @@ noncomputable def baseChange
 
 /-- The `B`-module structure on the base change: multiplication on
 the left factor descends. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def baseChangeModObj
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] [BraidedCategory D]
@@ -1058,6 +1069,7 @@ noncomputable def baseChangeModObj
     (MonObj.mul_assoc B)
 
 /-- The action of `B` on the base change. -/
+@[expose]
 noncomputable def baseChangeAct
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] [BraidedCategory D]
@@ -1083,7 +1095,7 @@ lemma whiskerLeft_modTensorπ_baseChangeAct
     (mul_actRight_restrictRegular φ)
 
 /-- Base change, bundled as a `B`-module. -/
-noncomputable def baseChangeMod
+@[expose] noncomputable def baseChangeMod
     [Category.{v} D] [MonoidalCategory D] {A : D} {B : D} [MonObj A]
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] [BraidedCategory D]
     [HasCoequalizers D]

@@ -39,7 +39,7 @@ in this packaged form, so that step is the recorded next concrete theorem (see
 cohomology computation is introduced.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

@@ -16,7 +16,7 @@ at most two vertices of degree at most `1`.  This is the combinatorial input to 
 step of Vizing's theorem.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph Finset
 

@@ -34,7 +34,7 @@ the graph-relation convention `funMap f args = output`.
 Unit 5b consumes these to reconstruct an `L`-structure from any model of `graphAxioms F`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

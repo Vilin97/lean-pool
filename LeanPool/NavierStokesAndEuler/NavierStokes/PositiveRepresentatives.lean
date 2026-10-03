@@ -19,7 +19,7 @@ constructed inverse extends the stable branch across its regular zero-time
 face.  The actual mask representatives stay at positive time.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,12 +36,16 @@ abbrev Slow := PhaseCalculus.Slow
 abbrev Label := PartitionedCovariance.UnsignedLabel
 
 /-- Positive time, given by `{p | 0 < p.2.2}`. -/
+@[expose]
 noncomputable def positiveTime : Set Slow := {p | 0 < p.2.2}
 /-- Positive part, given by `K ∩ positiveTime`. -/
+@[expose]
 noncomputable def positivePart (K : Set Slow) : Set Slow := K ∩ positiveTime
 /-- Active label, given by `PrimaryRepresentatives.ActiveLabel (positivePart K)`. -/
+@[expose]
 noncomputable def ActiveLabel (K : Set Slow) := PrimaryRepresentatives.ActiveLabel (positivePart K)
 /-- Representative, given by `PrimaryRepresentatives.representative (positivePart K) L`. -/
+@[expose]
 noncomputable def representative (K : Set Slow) (L : ActiveLabel K) : Slow :=
   PrimaryRepresentatives.representative (positivePart K) L
 
@@ -93,11 +97,11 @@ theorem physicalMask_has_positive_representative {h a b : ℝ} (L : Label) (hL :
 /-! ## A smooth inverse on the stable branch, including its zero-time face -/
 
 /-- Stable source, given by `{p | 0 < p.1 ∧ 0 < scalarSlope a p.2 p.1}`. -/
-noncomputable def stableSource (a : ℝ) : Set (ℝ × ℝ) :=
+@[expose] noncomputable def stableSource (a : ℝ) : Set (ℝ × ℝ) :=
   {p | 0 < p.1 ∧ 0 < scalarSlope a p.2 p.1}
 
 /-- Stable target, given by `forwardMap a '' stableSource a`. -/
-noncomputable def stableTarget (a : ℝ) : Set (ℝ × ℝ) := forwardMap a '' stableSource a
+@[expose] noncomputable def stableTarget (a : ℝ) : Set (ℝ × ℝ) := forwardMap a '' stableSource a
 
 theorem scalarSlope_smoothAt {a : ℝ} {p : ℝ × ℝ} (hp : p.1 ≠ 0) :
     ContDiffAt ℝ ∞ (fun x : ℝ × ℝ => scalarSlope a x.2 x.1) p :=
@@ -291,6 +295,7 @@ theorem referenceCompact_eq_activeReference {h a b : ℝ} (hh : 0 ≤ h) (hh1 : 
     (activeReference_subset_lifted_image hh hh1 ha hab)
 
 /-- Stable domain, given by `{p | 0 < p.1 ∧ (p.2.2, p.2.1) ∈ stableTarget (2 * h)}`. -/
+@[expose]
 noncomputable def stableDomain (h : ℝ) : Set Slow :=
   {p | 0 < p.1 ∧ (p.2.2, p.2.1) ∈ stableTarget (2 * h)}
 
@@ -299,13 +304,16 @@ noncomputable def stableQ (h : ℝ) (p : Slow) : ℝ :=
   (stableInverse (2 * h) (p.2.2, p.2.1)).1
 
 /-- Stable eta, given by `p.2.1 / stableQ h p ^ CoordinateAlgebra.D h`. -/
+@[expose]
 noncomputable def stableEta (h : ℝ) (p : Slow) : ℝ :=
   p.2.1 / stableQ h p ^ CoordinateAlgebra.D h
 
 /-- Stable X, given by `p.1 ^ 2 / (2 * stableQ h p)`. -/
+@[expose]
 noncomputable def stableX (h : ℝ) (p : Slow) : ℝ := p.1 ^ 2 / (2 * stableQ h p)
 
 /-- Stable inner, given by `(stableX h p, stableEta h p)`. -/
+@[expose]
 noncomputable def stableInner (h : ℝ) (p : Slow) : ℝ × ℝ := (stableX h p, stableEta h p)
 
 theorem stableDomain_open (h : ℝ) : IsOpen (stableDomain h) :=
@@ -441,6 +449,7 @@ theorem referenceCompact_subset_boundedDomain {h a b : ℝ} (hh : 0 ≤ h) (hh1 
   · exact ⟨by linarith [hb.2.1], by linarith [hb.2.2]⟩
 
 /-- Three-mesh open box; the actual enlarged support uses two meshes. -/
+@[expose]
 noncomputable def openGrid (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
   let s := SquaredPartition.nativeSpacing n
   Ioo (s * (k 0 : ℝ) - 3 * s) (s * (k 0 : ℝ) + 3 * s) ×ˢ
@@ -448,6 +457,7 @@ noncomputable def openGrid (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
       Ioo (s * (k 2 : ℝ) - 3 * s) (s * (k 2 : ℝ) + 3 * s))
 
 /-- Positive cell, given by `openGrid n k ∩ positiveTime`. -/
+@[expose]
 noncomputable def positiveCell (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
   openGrid n k ∩ positiveTime
 
@@ -522,6 +532,7 @@ theorem positiveCell_eventually_subset {K U : Set Slow} (hK : IsCompact K)
   simpa only [dist_eq_norm] using hd'.trans (hN _ hL).le
 
 /-- Cell bound, given by `max (2 * Real.sqrt b + 1) 3`. -/
+@[expose]
 noncomputable def cellBound (b : ℝ) : ℝ := max (2 * Real.sqrt b + 1) 3
 
 theorem cellBound_pos (b : ℝ) : 0 < cellBound b :=
@@ -618,7 +629,7 @@ theorem compact_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   exact ⟨C, hC, fun p hp => hb _ ⟨p, hp, rfl⟩⟩
 
 /-- Stable pullback, given by `stableQ h p ^ exponent * f (stableInner h p)`. -/
-noncomputable def stablePullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
+@[expose] noncomputable def stablePullback (h exponent : ℝ) (f : (ℝ × ℝ) → ℝ) (p : Slow) : ℝ :=
   stableQ h p ^ exponent * f (stableInner h p)
 
 /-- Physical pullback, given by `SimilarityHomogeneity.chartQ h p ^ exponent * f
@@ -683,7 +694,7 @@ noncomputable def ActiveLabel.toClosed {K : Set Slow} (L : ActiveLabel K) :
   ⟨L.val, L.property.1, representative K L, representative_mem K L, representative_mem_tsupport K L⟩
 
 @[simp] theorem ActiveLabel.toClosed_val {K : Set Slow} (L : ActiveLabel K) :
-    L.toClosed.val = L.val := rfl
+    L.toClosed.val = L.val := by rfl
 
 /-- The reference functions on the compact closure are explicit extensions.
 Only their values at the positive representatives are identified with the

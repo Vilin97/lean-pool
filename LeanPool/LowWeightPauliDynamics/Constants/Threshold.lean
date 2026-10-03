@@ -48,7 +48,7 @@ Choosing a larger numerical step count is separate from constructing the corresp
 angles. Nothing here assumes a fixed angle family still satisfies `a ≤ αt/r` after `r` changes.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

@@ -25,7 +25,7 @@ Three bookkeeping inputs the assembled theorem needs:
 
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

@@ -14,7 +14,7 @@ public import Mathlib.Data.Finset.Lattice.Fold
 A support remembers selected zero-radius labels, so its virtual diameter has no degenerate cases.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,10 +42,12 @@ theorem support_nonempty : packing.support.Nonempty := by
   exact ⟨(.red, label), hlabel⟩
 
 /-- The sum of all supported radii. -/
+@[expose]
 def totalRadius : ℝ :=
   packing.support.attach.sum fun i ↦ (packing.radius i : ℝ)
 
 /-- The maximum pairwise center distance plus the two radii on the explicit support. -/
+@[expose]
 def virtualDiameter : ℝ :=
   packing.support.attach.sup' packing.support_nonempty.attach fun i ↦
     packing.support.attach.sup' packing.support_nonempty.attach fun j ↦
@@ -53,6 +55,7 @@ def virtualDiameter : ℝ :=
         packing.radius i + packing.radius j
 
 /-- The packing score at parameter `s`. -/
+@[expose]
 def score (s : ℝ) : ℝ :=
   packing.totalRadius - packing.virtualDiameter / (2 * s)
 

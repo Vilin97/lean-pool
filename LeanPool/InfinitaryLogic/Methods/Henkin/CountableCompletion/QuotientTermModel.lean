@@ -36,7 +36,7 @@ constant-specialized equality and congruence laws.
 congruence, and `C0` alone. There is no `M ⊨ φ ↔ φ ∈ S` for arbitrary `φ`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -80,10 +80,10 @@ def qSetoid (hsc : HenkinComplete U S) : Setoid (L[[ℕ]].Term Empty) :=
   ⟨qRel (S := S), by exact qRel_equiv hsc⟩
 
 /-- The quotient term model. -/
-def QModel (hsc : HenkinComplete U S) := Quotient (qSetoid hsc)
+@[expose] def QModel (hsc : HenkinComplete U S) := Quotient (qSetoid hsc)
 
 /-- The class of a closed term. -/
-def qmk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty) : QModel hsc :=
+@[expose] def qmk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty) : QModel hsc :=
   Quotient.mk (qSetoid hsc) t
 
 private theorem qmk_eq_iff (hsc : HenkinComplete U S) (t u : L[[ℕ]].Term Empty) :

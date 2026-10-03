@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch042`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4470,7 +4470,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.ThetaAbove.Leaf00565`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4481,7 +4481,7 @@ section
 Leaf0000220020_c0_c0_c2_c1_c1_c2_3_00504
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4691,7 +4691,7 @@ section
 Leaf0000220020_c0_c0_c2_c1_c1_c3_3_00505
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4901,7 +4901,7 @@ section
 Leaf0000220020_c0_c0_c2_c1_c2_4_00507
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5137,7 +5137,7 @@ section
 Leaf0000220020_c0_c0_c2_c1_c3_4_00508
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5373,7 +5373,7 @@ section
 Leaf0000220020_c0_c0_c2_c2_5_00510
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5427,7 +5427,7 @@ section
 Leaf0000220020_c0_c0_c2_c3_5_00511
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5481,7 +5481,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c0_c0_3_00516
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5535,7 +5535,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c0_c1_3_00517
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5589,7 +5589,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c0_c2_3_00518
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5799,7 +5799,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c0_c3_3_00519
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6009,7 +6009,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c1_c0_3_00522
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6063,7 +6063,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c1_c1_3_00523
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6117,7 +6117,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c1_c2_3_00524
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6327,7 +6327,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c1_c3_3_00525
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6537,7 +6537,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c2_4_00527
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6773,7 +6773,7 @@ section
 Leaf0000220020_c0_c0_c3_c0_c3_4_00528
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7009,7 +7009,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c0_c0_3_00532
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7063,7 +7063,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c0_c1_3_00533
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7097,7 +7097,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c0_c2_3_00534
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7307,7 +7307,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c0_c3_3_00535
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7517,7 +7517,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c1_c0_3_00538
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7551,7 +7551,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c1_c1_3_00539
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7585,7 +7585,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c1_c2_3_00540
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7795,7 +7795,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c1_c3_3_00541
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8005,7 +8005,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c2_4_00543
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8241,7 +8241,7 @@ section
 Leaf0000220020_c0_c0_c3_c1_c3_4_00544
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8477,7 +8477,7 @@ section
 Leaf0000220020_c0_c0_c3_c2_5_00546
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8531,7 +8531,7 @@ section
 Leaf0000220020_c0_c0_c3_c3_5_00547
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8585,7 +8585,7 @@ section
 Leaf0000220020_c0_c1_c0_6_00551
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8665,7 +8665,7 @@ section
 Leaf0000220020_c0_c1_c1_6_00552
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8745,7 +8745,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c0_c0_3_00556
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8779,7 +8779,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c0_c1_3_00557
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8813,7 +8813,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c0_c2_3_00558
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9023,7 +9023,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c0_c3_3_00559
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9233,7 +9233,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c1_c0_3_00562
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9267,7 +9267,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c1_c1_3_00563
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9301,7 +9301,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c1_c2_3_00564
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9511,7 +9511,7 @@ section
 Leaf0000220020_c0_c1_c2_c0_c1_c3_3_00565
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ equation is localized to the Gaussian support: the outer attachment cutoff
 is deliberately differentiated outside that support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -246,6 +246,7 @@ theorem geometry_temporal (j : Fin 2) (L : Label B N0) :
     mul_left_comm]
 
 /-- Absolute native linear, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
+@[expose]
 noncomputable def absoluteNativeLinear (j : Fin 2) (L : Label B N0) :
     ActualPrimaryCoherence.Absolute →L[ℝ] Native where
   toFun x := (nativeSlow L x.1, (geometry j L).coordinateLinear x.1.2)
@@ -258,12 +259,13 @@ noncomputable def absoluteNativeLinear (j : Fin 2) (L : Label B N0) :
 
 /-- Copy linear, given by `(absoluteNativeLinear j L).comp (ActualPrimaryCoherence.absoluteChart
 n).toContinuousLinearMap`. -/
+@[expose]
 noncomputable def copyLinear (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint →L[ℝ] Native :=
   (absoluteNativeLinear j L).comp (ActualPrimaryCoherence.absoluteChart n).toContinuousLinearMap
 
 /-- Copy point, given by `(nativeSlow L (toAbsolute n x.1), (geometry j L).coordinates k
 (toAbsolute n x.1).2)`. -/
-noncomputable def copyPoint (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def copyPoint (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : Native :=
   (nativeSlow L (toAbsolute n x.1), (geometry j L).coordinates k (toAbsolute n x.1).2)
 
@@ -290,17 +292,17 @@ theorem copyPoint_smooth (j : Fin 2) (L : Label B N0) (n : ℕ)
 
 /-- Clock scale, given by `ChartScales.Q n ^ (1+h) / ChartScales.Q (BaseChartJets.cellBand L) ^
 (1+h)`. -/
-noncomputable def clockScale (L : Label B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def clockScale (L : Label B N0) (n : ℕ) : ℝ :=
   ChartScales.Q n ^ (1+h) / ChartScales.Q (BaseChartJets.cellBand L) ^ (1+h)
 
 /-- Radial scale, given by `Real.sqrt (ChartScales.Q n) / Real.sqrt (ChartScales.Q
 (BaseChartJets.cellBand L))`. -/
-noncomputable def radialScale (L : Label B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def radialScale (L : Label B N0) (n : ℕ) : ℝ :=
   Real.sqrt (ChartScales.Q n) / Real.sqrt (ChartScales.Q (BaseChartJets.cellBand L))
 
 /-- Velocity scale, given by `ChartScales.Q n ^ CoordinateAlgebra.A h / ChartScales.Q
 (BaseChartJets.cellBand L) ^ CoordinateAlgebra.A h`. -/
-noncomputable def velocityScale (L : Label B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def velocityScale (L : Label B N0) (n : ℕ) : ℝ :=
   ChartScales.Q n ^ CoordinateAlgebra.A h /
     ChartScales.Q (BaseChartJets.cellBand L) ^ CoordinateAlgebra.A h
 
@@ -326,6 +328,7 @@ theorem copyPoint_fast_line (j : Fin 2) (L : Label B N0) (n : ℕ)
   all_goals ring
 
 /-- Slot linear as an element of `FullPoint →L[ℝ] PhaseCalculus.Slot`. -/
+@[expose]
 noncomputable def slotLinear (j : Fin 2) (L : Label B N0) (n : ℕ) :
     FullPoint →L[ℝ] PhaseCalculus.Slot :=
   ((ContinuousLinearMap.fst ℝ PhaseCalculus.Slow TorusInverse.Plane).comp (copyLinear j L n)).prod
@@ -335,7 +338,7 @@ noncomputable def slotLinear (j : Fin 2) (L : Label B N0) (n : ℕ) :
             n))))
 
 /-- Slot point, given by `((copyPoint j L n k x).1,(x.2,(copyPoint j L n k x).2.2))`. -/
-noncomputable def slotPoint (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def slotPoint (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : PhaseCalculus.Slot :=
   ((copyPoint j L n k x).1,(x.2,(copyPoint j L n k x).2.2))
 
@@ -459,7 +462,7 @@ section CopyGerms
 variable {B N0 : ℕ}
 
 /-- Coefficient point, given by `(nativeSlow L (toAbsolute n x.1), (toAbsolute n x.1).2)`. -/
-noncomputable def coefficientPoint (L : Label B N0) (n : ℕ) (x : FullPoint) : Native :=
+@[expose] noncomputable def coefficientPoint (L : Label B N0) (n : ℕ) (x : FullPoint) : Native :=
   (nativeSlow L (toAbsolute n x.1), (toAbsolute n x.1).2)
 
 theorem coefficientPoint_smooth (L : Label B N0) (n : ℕ) :
@@ -468,6 +471,7 @@ theorem coefficientPoint_smooth (L : Label B N0) (n : ℕ) :
     (((toAbsolute_smooth n).comp contDiff_fst).snd)
 
 /-- Native phase, constructed using `PhaseCalculus.phase`. -/
+@[expose]
 noncomputable def nativePhase (j : Fin 2) (L : Label B N0) : PhaseCalculus.Slot → ℝ :=
   PhaseCalculus.phase ((phases B N0 j).phase.epsilon L)
     ((phases B N0 j).phase.p L) ((phases B N0 j).phase.pz L) ((phases B N0 j).phase.x0 L)
@@ -519,13 +523,13 @@ theorem pressureScale_eq (L : Label B N0) (n : ℕ) :
 
 /-- Copy amplitude, given by `velocityScale L n • CurlClassBounds.complexify
 (attachedRawVelocity j L (copyPoint j L n k x))`. -/
-noncomputable def copyAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def copyAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : ComplexVector :=
   velocityScale L n • CurlClassBounds.complexify (attachedRawVelocity j L (copyPoint j L n k x))
 
 /-- Copy pressure, given by `velocityScale L n ^ 2 • attachedRawPressure j L (copyPoint j L n k
 x)`. -/
-noncomputable def copyPressure (j : Fin 2) (L : Label B N0) (n : ℕ)
+@[expose] noncomputable def copyPressure (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : ℂ :=
   velocityScale L n ^ 2 • attachedRawPressure j L (copyPoint j L n k x)
 
@@ -643,7 +647,7 @@ theorem native_base_differentiable (j : Fin 2) (L : Label B N0) (n : ℕ)
 
 /-- Normal scale, given by `((ChartScales.carrier h (BaseChartJets.cellBand L) : ℝ) /
 (ChartScales.carrier h n : ℝ)) * radialScale L n`. -/
-noncomputable def normalScale (L : Label B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def normalScale (L : Label B N0) (n : ℕ) : ℝ :=
   ((ChartScales.carrier h (BaseChartJets.cellBand L) : ℝ) / (ChartScales.carrier h n : ℝ)) *
     radialScale L n
 

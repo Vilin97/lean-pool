@@ -18,7 +18,7 @@ on a larger ball. Measurable selection fixes one field on the inner ball
 before any smaller cells or quantitative estimates are considered.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

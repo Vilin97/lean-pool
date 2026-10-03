@@ -15,7 +15,7 @@ This file defines the rational numbers in ZFC, based on the integers and using t
 
 -/
 
-@[expose] public section
+public section
 
 namespace ZFSet
 /-- Imported ZFLean declaration. -/
@@ -67,7 +67,7 @@ abbrev ZFRat := Quotient ZFSet.instSetoidZFIntZFInt'
 
 namespace ZFRat
 /-- Imported ZFLean declaration. -/
-def mk : ZFInt × ZFInt' → ZFRat := Quotient.mk''
+@[expose] def mk : ZFInt × ZFInt' → ZFRat := Quotient.mk''
 
 @[simp]
 theorem mk_eq (x : ZFInt × ZFInt') : @Eq ZFRat ⟦x⟧ (mk x) := rfl

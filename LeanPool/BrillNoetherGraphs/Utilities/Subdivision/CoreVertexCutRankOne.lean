@@ -17,7 +17,7 @@ cycle after every positive subdivision.  The public genus-three rigid-wedge
 theorem then supplies a degree-three rank-one divisor on the ambient graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.CoreVertexCut.Data
 

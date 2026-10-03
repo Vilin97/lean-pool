@@ -16,7 +16,7 @@ public import Mathlib.Tactic
 
 /-! Walsh sign families. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset
@@ -26,7 +26,7 @@ noncomputable section
 namespace NonMRR
 
 /-- The sum of the first `j` coordinates of a finite real vector. -/
-def vectorPrefix {L : ℕ} (v : Fin L → ℝ) (j : ℕ) : ℝ :=
+@[expose] def vectorPrefix {L : ℕ} (v : Fin L → ℝ) (j : ℕ) : ℝ :=
   ∑ i ∈ univ.filter (fun i : Fin L => i.val < j), v i
 
 private def sign (b : Bool) : ℝ := if b then 1 else -1

@@ -17,7 +17,7 @@ The representation is Nat-indexed because the certificate sums over
 boundary hypothesis explicitly.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -194,7 +194,7 @@ theorem stage9Kappa_mono {n i j : ℕ} (hij : i ≤ j) (hjn : j ≤ n) :
       exact (ih (by omega)).trans (stage9Kappa_mono_succ (by omega))
 
 /-- The source increment `delta_i = kappa_(i+1) - kappa_i`. -/
-noncomputable def stage9Delta (n i : ℕ) : ℝ :=
+@[expose] noncomputable def stage9Delta (n i : ℕ) : ℝ :=
   stage9Kappa n (i + 1) - stage9Kappa n i
 
 theorem stage9Delta_nonneg {n i : ℕ} (hin : i < n) :

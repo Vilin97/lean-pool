@@ -18,7 +18,7 @@ permutations and proves the affine compatibility identity used by both the stabl
 interpolant and the explicit middle collar.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -116,6 +116,7 @@ theorem affineCompMap_extendSpatialRefinementWord_lastFace
 
 /-- Lift a refinement permutation of one boundary face to an ambient permutation whose final
 facet is that boundary face. -/
+@[expose]
 noncomputable def liftFacePermutation
     (n : Nat) (j : Fin (n + 2)) (pi : Equiv.Perm (Fin (n + 1))) :
     Equiv.Perm (Fin (n + 2)) :=
@@ -204,6 +205,7 @@ theorem affineCompMap_liftFaceRefinementWord
 
 /-- Last-face lifting for a boundary face of `Fin (p + 1)`, without exposing predecessor casts in
 subsequent definitions. -/
+@[expose]
 noncomputable def liftBoundaryPermutation
     {p : Nat} (j : Fin (p + 1)) (pi : Equiv.Perm (Fin p)) : Equiv.Perm (Fin (p + 1)) :=
   match p with
@@ -220,6 +222,7 @@ noncomputable def liftBoundaryRefinementWord
       (fun r => extendSpatialPermutation (eta r.succ))
 
 /-- Facet omitted by a canonical endpoint occurrence. -/
+@[expose]
 def endpointOmittedPrime
     (L : Nat) (j : Fin (p + 1)) : Fin (p + 1) :=
   match L with
@@ -260,12 +263,14 @@ theorem affineCompMap_liftBoundaryRefinementWord
   exact affineCompMap_liftFaceRefinementWord n L j eta x
 
 /-- Split a refinement word of length `N + L` into its prefix and tail. -/
+@[expose]
 def splitRefinementWord
     (N L : Nat) (rho : RefinementWord p (N + L)) :
     RefinementWord p N × RefinementWord p L :=
   (fun i => rho (Fin.castAdd L i), fun i => rho (Fin.natAdd N i))
 
 /-- Concatenate two refinement words. -/
+@[expose]
 def appendRefinementWord
     (N L : Nat) (rho : RefinementWord p N) (eta : RefinementWord p L) :
     RefinementWord p (N + L) :=
@@ -350,6 +355,7 @@ theorem affineCompMap_append
     simp [splitRefinementWord, appendRefinementWord]
 
 /-- Reindex a horizontal endpoint simplex as a top cell at the combined refinement level. -/
+@[expose]
 noncomputable def endpointTopCell
     (hp : Nat.Prime p) (N L : Nat)
     (q : TopCell hp N) (eta : RefinementWord p L) :

@@ -18,7 +18,7 @@ and the actual repair coefficients are the only perturbation parameters.
 All histories are recovered from the exact five-row match at the right end.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -281,7 +281,7 @@ theorem radialJet_freeE_zero (F : Profile) (p : Point) :
   ring
 
 /-- Endpoint error, given by `c.initialAxial eta - 4 * eta`. -/
-noncomputable def endpointError {F : Profile} {A : NominalProfile.AxisStage F}
+@[expose] noncomputable def endpointError {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (eta : ℝ) : ℝ := c.initialAxial eta - 4 * eta
 /-- Data parameter, given by `(endpointError c eta, NominalProfile.resetCoefficients F c.debt
 eta)`. -/
@@ -376,6 +376,7 @@ noncomputable def logRows (F : Profile) (p : Point) : Fin 5 → ℝ :=
 
 /-- Free rows, given by `![freeM F z, Real.sqrt 2 * freeI F z, Real.sqrt 2 * freeJ F z, freeS F
 z, freePi F z - F.axisDatum z.2.2]`. -/
+@[expose]
 noncomputable def freeRows (F : Profile) (z : Raw) : Fin 5 → ℝ :=
   ![freeM F z, Real.sqrt 2 * freeI F z, Real.sqrt 2 * freeJ F z, freeS F z,
     freePi F z - F.axisDatum z.2.2]

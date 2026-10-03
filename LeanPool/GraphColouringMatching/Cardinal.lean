@@ -16,7 +16,7 @@ vertices, edges, or palette. The lift only reconciles the two type universes.
 This is distinct from natural-number counting, which requires finite edges.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

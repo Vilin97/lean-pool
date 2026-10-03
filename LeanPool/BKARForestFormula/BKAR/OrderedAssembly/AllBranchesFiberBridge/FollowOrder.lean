@@ -16,7 +16,7 @@ such a growth.  Every chosen growth arises this way, giving the canonical
 realization of a support/order fiber used by the fiber bridge.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -67,6 +67,7 @@ theorem support_edges_eq_toFinset_emptyStart
 end ChosenGrowth
 
 /-- Follow an edge order through the active extensions selected by `choices`. -/
+@[expose]
 noncomputable def followOrderOption
     (choices : ActiveExtensionChoice V) :
     Forest V → List (Edge V) → Option (Forest V)

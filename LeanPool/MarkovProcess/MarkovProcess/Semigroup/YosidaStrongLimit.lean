@@ -19,7 +19,7 @@ orbits is proved in `Semigroup/Generation.lean`, from the criterion of
 `Semigroup/OrbitContinuity.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -30,6 +30,7 @@ section
 namespace MarkovProcess.Semigroup
 
 /-- The canonical sequence of positive shifts, `n + 1`. -/
+@[expose]
 def naturalShift (n : ℕ) : PositiveShift :=
   ⟨(n : ℝ) + 1, by
     change 0 < (n : ℝ) + 1
@@ -130,6 +131,7 @@ theorem cauchySeq_yosidaOperatorSequence_apply
     (R.cauchySeq_yosidaOperator_naturalShift_apply_operator one t) x
 
 /-- The canonical strong limit of the Yosida exponential approximants. -/
+@[expose]
 def yosidaStrongLimit (R : ContractiveResolvent E) (t : NNReal) : E →L[ℝ] E :=
   strongOperatorLimit (R.yosidaOperatorSequence t)
     (R.norm_yosidaOperatorSequence_le_one t)

@@ -36,7 +36,7 @@ derives the geometric fact the factorisation needs.
   bounded below by `c` there. This is the geometric heart of `SVD.exists_scalar_factorisation`.
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap Complexification RCLike
 

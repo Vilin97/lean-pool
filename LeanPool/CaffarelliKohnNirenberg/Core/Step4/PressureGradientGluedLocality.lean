@@ -23,7 +23,7 @@ available anywhere: the previously existing interface for weak derivatives
 consisted only of restriction, transport and almost-everywhere uniqueness.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 noncomputable section

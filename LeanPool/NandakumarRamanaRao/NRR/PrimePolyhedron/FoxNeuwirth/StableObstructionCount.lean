@@ -24,7 +24,7 @@ nonzero orbit count.  This obligation is strictly smaller than, and does not imp
 homotopy-invariance proposition.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

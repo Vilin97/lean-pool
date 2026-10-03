@@ -20,7 +20,7 @@ outwards along a supporting direction until it hits the boundary of `L`), so
 one-dimensional Hausdorff measure.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal NNReal Topology

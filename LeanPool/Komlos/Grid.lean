@@ -22,7 +22,7 @@ Its square has total mass `1`. The `L²` distance between `gridF N` and its tran
 integer `m` is at most `|m| / (N * √12)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -36,7 +36,7 @@ noncomputable def gridZ (N : ℕ) : ℝ :=
   ∑ j ∈ Finset.Icc (-(gridM N : ℤ)) (gridM N), tent (gridM N) j ^ 2
 
 /-- The normalised one-dimensional weight. -/
-noncomputable def gridF (N : ℕ) (j : ℤ) : ℝ := tent (gridM N) j / Real.sqrt (gridZ N)
+@[expose] noncomputable def gridF (N : ℕ) (j : ℤ) : ℝ := tent (gridM N) j / Real.sqrt (gridZ N)
 
 lemma cast_gridM (N : ℕ) : (gridM N : ℝ) = 6 * N := by
   rw [gridM, Nat.cast_mul, Nat.cast_ofNat]

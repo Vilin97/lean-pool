@@ -16,7 +16,7 @@ Lifetime and the coordinates at the fixed countable dense time set separate cont
 paths.  Their measurable coding therefore gives a countable separating family.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

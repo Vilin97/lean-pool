@@ -51,7 +51,7 @@ its layer inflow are supplied in `Lean4LPD/Pauli/LayerError.lean`.
 * `MultiLadder.sum_block_epsJump_le_cZero`: the `c₀`-form bound for the concrete jump norms.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

@@ -32,7 +32,7 @@ This generalizes `gaussian_pairing_product_integrable_free_core` to arbitrary n,
 providing a unified foundation for all Schwinger function computations.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex Finset
 open TopologicalSpace SchwartzMap
@@ -66,6 +66,7 @@ lemma gaussian_complex_pairing_abs_sq_integrable
       MemLp (distributionPairingCLM φIm) (2 : ENNReal)
         (gaussianFreeFieldFree m).toMeasure :=
     gaussianFreeField_pairing_memLp (m := m) (φ := φIm) (p := (2 : ENNReal)) (hp := by simp)
+  simp only [distributionPairingCLM_eq_fun] at hRe_mem hIm_mem
   -- Convert the MemLp statements to integrability of the square magnitudes
   have hRe_sq : Integrable (fun ω => (distributionPairing ω φRe) ^ 2)
       (gaussianFreeFieldFree m).toMeasure := by
@@ -127,6 +128,7 @@ theorem gaussian_pairing_product_integrable_free_2point
   have hψIm_mem : MemLp (distributionPairingCLM ψIm) (2 : ENNReal) (gaussianFreeFieldFree
     m).toMeasure :=
     gaussianFreeField_pairing_memLp m ψIm (2 : ENNReal) (by simp)
+  simp only [distributionPairingCLM_eq_fun] at hφRe_mem hφIm_mem hψRe_mem hψIm_mem
   -- Convert to integrability of individual real pairings
   have hφRe_int : Integrable (fun ω => distributionPairing ω φRe) (gaussianFreeFieldFree
     m).toMeasure := by

@@ -35,12 +35,12 @@ introduced only where it is actually needed (see `Discriminant.lean`). For
 no longer matches the order of discriminant `d`.
 -/
 
-@[expose] public section
+public section
 
 open scoped Polynomial
 
 /-- The defining polynomial of `QuadraticOrder d`. -/
-noncomputable def poly (d : ℤ) : ℤ[X] :=
+@[expose] noncomputable def poly (d : ℤ) : ℤ[X] :=
   Polynomial.X ^ 2 - Polynomial.C d * Polynomial.X + Polynomial.C ((d ^ 2 - d) / 4)
 
 /--
@@ -118,6 +118,8 @@ lemma tau_minimal_poly :
 /-- `QuadraticOrder d` has a `ℤ`-module power basis `{1, τ}` of rank 2. -/
 noncomputable def basis : PowerBasis ℤ (QuadraticOrder d) :=
   AdjoinRoot.powerBasis' (poly_monic d)
+
+lemma basis_gen_eq_tau : (basis (d := d)).gen = tau := by rfl
 
 /-- `QuadraticOrder d` is a free `ℤ`-module (of rank 2). -/
 instance : Module.Free ℤ (QuadraticOrder d) :=

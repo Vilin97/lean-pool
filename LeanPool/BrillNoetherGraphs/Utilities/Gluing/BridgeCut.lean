@@ -21,7 +21,7 @@ either factor remain fully visible while the separating edge has multiplicity
 exactly one.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs
 
@@ -65,10 +65,12 @@ noncomputable abbrev rightGraph : CFGraph :=
   inducedSubgraph K cut.right cut.right_nonempty
 
 /-- The left endpoint, as a vertex of the left induced factor. -/
+@[expose]
 noncomputable def leftGlue : cut.leftGraph.V :=
   ⟨cut.leftAttach, cut.leftAttach_mem⟩
 
 /-- The right endpoint, as a vertex of the right induced factor. -/
+@[expose]
 noncomputable def rightGlue : cut.rightGraph.V :=
   ⟨cut.rightAttach, cut.rightAttach_mem⟩
 
@@ -87,6 +89,7 @@ noncomputable abbrev bridgeGraph : CFGraph :=
   Utilities.bridgeGraph cut.leftGraph cut.rightGraph cut.leftGlue cut.rightGlue
 /-- The vertex equivalence from the concrete bridge model to the ambient
 graph. -/
+@[expose]
 noncomputable def vertexEquiv : cut.bridgeGraph.V ≃ K.V where
   toFun
     | Sum.inl a => a.val
@@ -269,6 +272,7 @@ theorem graph_connected_left_of_connected (hK : graphConnected K) :
     simpa [leftGraph, hxValue, yLeft] using hxy
 
 /-- Exchange the two sides of a bridge cut. -/
+@[expose]
 def swap : OneBridgeCut K where
   left := cut.right
   right := cut.left

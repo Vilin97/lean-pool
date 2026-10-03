@@ -21,7 +21,7 @@ northwest quadrants which are already identified with complementary divisor
 ranks in `ThetaNonrecurrence`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

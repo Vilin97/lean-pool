@@ -33,7 +33,7 @@ chain result and `σ` is the edge pairing), established by induction
 on `j` using `match_invol`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -120,6 +120,7 @@ theorem traceChain_result_boundary (κ : F.RelTransitionSystem)
 /-- The fuel-free chain step iterated: cross the edge, then match.
 This is `traceChain`'s recursion without the termination test, so
 the two can be compared step by step. -/
+@[expose]
 noncomputable def iterWalk (κ : F.RelTransitionSystem)
     (f : W.Flag) : ℕ → W.Flag
   | 0 => f

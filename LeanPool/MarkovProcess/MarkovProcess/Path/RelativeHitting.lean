@@ -23,7 +23,7 @@ Public declarations:
 * `ContinuousPath.measurableSet_hitsSetBetween`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

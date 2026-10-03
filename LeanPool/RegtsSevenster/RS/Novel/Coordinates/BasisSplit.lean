@@ -18,7 +18,7 @@ both parities identify the coordinates; injectivity does the
 rest.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

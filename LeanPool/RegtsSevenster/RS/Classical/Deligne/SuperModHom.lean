@@ -17,7 +17,7 @@ four action blocks.  Postcomposition with a morphism of module
 objects realizes one.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -48,6 +48,7 @@ namespace SuperCommAlgebra.Mod
 variable {S : SuperCommAlgebra}
 
 /-- The identity morphism of super modules. -/
+@[expose]
 def Hom.id (M : S.Mod) : Hom M M where
   evenMap := LinearMap.id
   oddMap := LinearMap.id
@@ -57,6 +58,7 @@ def Hom.id (M : S.Mod) : Hom M M where
   map_actOO _ _ := rfl
 
 /-- Composition of morphisms of super modules. -/
+@[expose]
 def Hom.comp {M N P : S.Mod} (f : Hom M N) (g : Hom N P) :
     Hom M P where
   evenMap := g.evenMap.comp f.evenMap
@@ -217,6 +219,7 @@ theorem gact_naturality [Category.{v} D] [MonoidalCategory D] (R : D) [MonObj R]
     MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id]
 
 /-- **Postcomposition realizes a morphism of super modules.** -/
+@[expose]
 noncomputable def gammaModuleMap
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]

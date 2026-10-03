@@ -17,7 +17,7 @@ bound makes all chosen chart reductions injective and all new supports
 centered, simultaneously for every input decomposition.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

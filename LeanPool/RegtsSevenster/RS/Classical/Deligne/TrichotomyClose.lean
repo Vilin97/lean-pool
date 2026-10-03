@@ -20,7 +20,7 @@ remainder.  The descent is a parameter, discharged by the
 sandwich retract.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

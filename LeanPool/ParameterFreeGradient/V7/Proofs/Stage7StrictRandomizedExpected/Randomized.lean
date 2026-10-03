@@ -14,7 +14,7 @@ A single normalized hard instance makes finite-horizon randomized success arbitr
 unlikely.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

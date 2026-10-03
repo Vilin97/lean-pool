@@ -20,7 +20,7 @@ import Mathlib.Tactic.Ring.Basic
 /-! # Uniform bounds for the additive constants of the per-prime bounds
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

@@ -34,4 +34,4 @@ whole trichotomy is routed through one ring isomorphism rather than the
 thesis's explicit index computations.
 -/
 
-@[expose] public section
+public section

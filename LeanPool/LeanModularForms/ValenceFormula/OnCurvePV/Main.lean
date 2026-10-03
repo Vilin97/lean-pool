@@ -24,7 +24,7 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 For any point `s` on `fdBoundaryH H`, the CPV integral of `(z - s)⁻¹` exists.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

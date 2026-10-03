@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Accounting
 The successful runtime produces a causal exact query trace and valid output.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 

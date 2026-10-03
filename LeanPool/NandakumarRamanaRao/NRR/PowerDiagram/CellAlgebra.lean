@@ -29,7 +29,7 @@ matching the (always true) inequality `powerDist s w i x ≤ powerDist s w i x`.
 This yields the exact intersection‑of‑half‑spaces representation of each power cell.
 -/
 
-@[expose] public section
+public section
 
 open NRR
 open scoped RealInnerProductSpace
@@ -41,12 +41,12 @@ variable {n : ℕ}
 /-- **Separating normal** for the pair `(i, j)`: the inner normal of the closed half‑space
 whose boundary is the radical axis of sites `i` and `j`. Chosen as `2 • (sⱼ - sᵢ)` so that
 `powerDist s w i x ≤ powerDist s w j x ↔ ⟪sepNormal s i j, x⟫ ≤ sepOffset s w i j`. -/
-noncomputable def sepNormal (s : Fin n → E2) (i j : Fin n) : E2 :=
+@[expose] noncomputable def sepNormal (s : Fin n → E2) (i j : Fin n) : E2 :=
   (2 : ℝ) • (s j - s i)
 
 /-- **Separating offset** for the pair `(i, j)`: the offset of the closed half‑space bounding
 the power cell of `i` against `j`, equal to `‖sⱼ‖² - ‖sᵢ‖² - wⱼ + wᵢ`. -/
-noncomputable def sepOffset (s : Fin n → E2) (w : Fin n → ℝ) (i j : Fin n) : ℝ :=
+@[expose] noncomputable def sepOffset (s : Fin n → E2) (w : Fin n → ℝ) (i j : Fin n) : ℝ :=
   ‖s j‖ ^ 2 - ‖s i‖ ^ 2 - w j + w i
 
 /-- The pairwise power‑distance inequality is exactly membership in the closed half‑space with

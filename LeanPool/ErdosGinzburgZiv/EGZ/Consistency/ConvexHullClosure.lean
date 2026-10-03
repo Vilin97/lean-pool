@@ -16,7 +16,7 @@ the two downstream consequences used by decomposition visible at the
 consistency layer.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

@@ -19,7 +19,7 @@ public import Mathlib.Tactic.NormNum
 
 /-! Finite analytic estimates. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -114,7 +114,7 @@ theorem sum_walk_fourth_le {ι : Type*} [Fintype ι] {L : ℕ} (hLpos : 0 < L)
     _ = 4 := by simp [hLne]
 
 /-- The walks that at some time exceed the threshold `1/q`. -/
-noncomputable def badWalks {ι : Type*} [Fintype ι]
+@[expose] noncomputable def badWalks {ι : Type*} [Fintype ι]
     (S : ι → ℕ → ℝ) (L q : ℕ) : Finset ι := by
   classical
   exact Finset.univ.filter fun k => ∃ j ≤ L, 1 / (q : ℝ) < |S k j|

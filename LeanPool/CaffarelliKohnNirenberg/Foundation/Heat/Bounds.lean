@@ -16,7 +16,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Morrey.Kerne
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -38,10 +38,12 @@ lemma abs_vec3_component_le_norm (x : Vec3) (i : Fin 3) :
   exact hi
 
 /-- Sum of absolute spatial derivatives of the heat kernel. -/
+@[expose]
 def heatKernelGradientNorm (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, |heatKernelSpaceDerivative x t i|
 
 /-- Time derivative of a spatial heat-kernel derivative, extended by zero to nonpositive time. -/
+@[expose]
 def heatKernelTimeGradientDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   if 0 < t then
     (x i) / (2 * t ^ 2) * heatKernel x t +
@@ -50,6 +52,7 @@ def heatKernelTimeGradientDerivative (x : Vec3) (t : ℝ) (i : Fin 3) : ℝ :=
   else 0
 
 /-- Sum of absolute time derivatives of the spatial heat-kernel gradient. -/
+@[expose]
 def heatKernelTimeGradientNorm (x : Vec3) (t : ℝ) : ℝ :=
   ∑ i, |heatKernelTimeGradientDerivative x t i|
 

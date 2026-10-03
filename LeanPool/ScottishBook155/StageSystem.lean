@@ -16,7 +16,7 @@ This file packages exactly the data exported by the protected one-point
 extension in the form needed by the transfinite construction.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -60,11 +60,13 @@ structure ProtectedSuccessor {r : ℝ} (S : ProtectedStage.{u} r)
     targetRetraction (next.map (sourceEquiv (toLp 1 (m, s)))) = S.map m
 
 /-- The canonical old-source embedding into an l-one successor source. -/
+@[expose]
 noncomputable def oneSumSourceEmbedding (M : RealBanachSpace.{u}) :
     M →ₗᵢ[ℝ] OneSum M :=
   protectedSourceBaseLinearIsometry
 
 /-- The source embedding associated to a protected successor. -/
+@[expose]
 noncomputable def ProtectedSuccessor.sourceEmbedding
     {r L : ℝ} {S : ProtectedStage.{u} r} {y : S.target}
     (P : ProtectedSuccessor S L y) : S.source →ₗᵢ[ℝ] P.next.source :=
@@ -147,6 +149,7 @@ structure ProtectedTransition {r : ℝ} (S : ProtectedStage.{u} r) (L : ℝ) whe
     targetProjection (next.map z) = S.map (sourceProjection z)
 
 /-- An active protected successor as a uniform transition. -/
+@[expose]
 noncomputable def ProtectedSuccessor.toTransition
     {r L : ℝ} {S : ProtectedStage.{u} r} {y : S.target}
     (P : ProtectedSuccessor S L y) : ProtectedTransition S L where
@@ -182,6 +185,7 @@ noncomputable def ProtectedSuccessor.toTransition
   recovers := P.recovers_of_dist_le
 
 /-- The idle successor transition. -/
+@[expose]
 noncomputable def idleTransition {r L : ℝ} (S : ProtectedStage.{u} r) :
     ProtectedTransition S L where
   next := S
@@ -199,6 +203,7 @@ noncomputable def idleTransition {r L : ℝ} (S : ProtectedStage.{u} r) :
 
 /-- Claim 13 supplies every active successor transition required by the
 claim-14 recursion. -/
+@[expose]
 noncomputable def protectedSuccessor
     {r L : ℝ} (hr : 0 < r) (hL : 0 < L)
     (S : ProtectedStage.{u} r) (y : S.target) (hy : y ∉ Set.range S.map) :

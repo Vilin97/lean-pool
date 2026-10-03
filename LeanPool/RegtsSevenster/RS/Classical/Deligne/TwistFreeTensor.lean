@@ -23,7 +23,7 @@ braiding.
   a module is the twist of that module by the generating object.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -58,6 +58,7 @@ theorem freeRegTwist_act
 /-- **The free module is a twisted regular module**: the free
 module on `V` is the twist by `V` of the regular module, through
 the braiding carrying the algebra past the generator. -/
+@[expose]
 noncomputable def freeRegTwistIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A]
@@ -87,6 +88,7 @@ module on `V` with a module `M` is the twist of `M` by `V`.  The
 free module is the twisted regular module, the twist shuffle
 collects both twists in front, and the regular module is the unit
 of the relative tensor. -/
+@[expose]
 noncomputable def freeTensorTwistIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

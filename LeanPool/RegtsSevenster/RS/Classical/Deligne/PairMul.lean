@@ -18,7 +18,7 @@ crossed pairs.  The chain transitions and the stage products of
 the splitting algebra factor through it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -30,6 +30,7 @@ universe v u
 variable {D : Type u}
 
 /-- The raw interchange: cross the middle factors. -/
+@[expose]
 def rawInterchange
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (N₁ : Mod D A) (N₂ : Mod D A) (P₁ : Mod D A) (P₂ : Mod D A) :
@@ -38,6 +39,7 @@ def rawInterchange
   tensorμ N₁.X N₂.X P₁.X P₂.X
 
 /-- The raw interchange followed by the projections. -/
+@[expose]
 noncomputable def rawInterchangeπ
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

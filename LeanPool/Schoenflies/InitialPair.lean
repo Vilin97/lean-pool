@@ -86,7 +86,7 @@ restatement of anything proved here.
   `prop:initial-pair`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Topology unitInterval
 open scoped Graph
@@ -229,22 +229,22 @@ namespace InitialCell
 
 /-- The two ends of a cell, when it is an edge. Junk elsewhere; the graph below only ever
 consults it on an edge name. -/
-def ends : InitialCell → InitialCell × InitialCell
+@[expose] def ends : InitialCell → InitialCell × InitialCell
   | .edge i => (.vert i, .vert (i + 1))
   | .chord => (.vert 1, .vert 4)
   | c => (c, c)
 
 /-- The six 0-cells. -/
-def vertices : Set InitialCell := Set.range InitialCell.vert
+@[expose] def vertices : Set InitialCell := Set.range InitialCell.vert
 
 /-- The seven 1-cells: six outer edges and the crosscut. -/
-def edges : Set InitialCell := Set.range InitialCell.edge ∪ {InitialCell.chord}
+@[expose] def edges : Set InitialCell := Set.range InitialCell.edge ∪ {InitialCell.chord}
 
 /-- The six outer 1-cells. -/
-def outerEdges : Set InitialCell := Set.range InitialCell.edge
+@[expose] def outerEdges : Set InitialCell := Set.range InitialCell.edge
 
 /-- The two 2-cells. -/
-def faces : Set InitialCell := Set.range InitialCell.face
+@[expose] def faces : Set InitialCell := Set.range InitialCell.face
 
 theorem outerEdges_subset_edges : outerEdges ⊆ edges := Set.subset_union_left
 
@@ -283,7 +283,7 @@ theorem disjoint_faces_edges : Disjoint faces edges := by
 end InitialCell
 
 /-- The abstract 1-skeleton of the initial structure: a hexagon with one long chord. -/
-def initSkel : Graph InitialCell InitialCell where
+@[expose] def initSkel : Graph InitialCell InitialCell where
   vertexSet := InitialCell.vertices
   edgeSet := InitialCell.edges
   IsLink e x y := e ∈ InitialCell.edges ∧
@@ -297,7 +297,7 @@ def initSkel : Graph InitialCell InitialCell where
       hxy.1 ▸ (InitialCell.ends_mem_vertices he).2]
 
 /-- The distinguished outer cycle: the same hexagon without the chord. -/
-def initOuter : Graph InitialCell InitialCell where
+@[expose] def initOuter : Graph InitialCell InitialCell where
   vertexSet := InitialCell.vertices
   edgeSet := InitialCell.outerEdges
   IsLink e x y := e ∈ InitialCell.outerEdges ∧
@@ -331,12 +331,12 @@ theorem initOuter_le_initSkel : initOuter ≤ initSkel :=
 /-- The cells lying on the closed boundary of a 2-cell: the vertices and edges of `Bᵢ`
 together with the crosscut. `face false = R₁` is bounded by `B₁ ∪ P`, `face true = R₂` by
 `B₂ ∪ P`. -/
-def faceCells : Bool → Set InitialCell
+@[expose] def faceCells : Bool → Set InitialCell
   | false => {.vert 1, .vert 2, .vert 3, .vert 4, .edge 1, .edge 2, .edge 3, .chord}
   | true => {.vert 4, .vert 5, .vert 0, .vert 1, .edge 4, .edge 5, .edge 0, .chord}
 
 /-- The cyclic boundary walk of each 2-cell, as a list of edge names. -/
-def initBoundary : InitialCell → List InitialCell
+@[expose] def initBoundary : InitialCell → List InitialCell
   | .face false => [.edge 1, .edge 2, .edge 3, .chord]
   | .face true => [.edge 4, .edge 5, .edge 0, .chord]
   | _ => []
@@ -344,7 +344,7 @@ def initBoundary : InitialCell → List InitialCell
 /-- The names that `initialStructure` declares to be cells: the six 0-cells, the seven 1-cells
 and the two 2-cells. This is `initialStructure.cells` unfolded, written out here because
 `initSub` is a field of `initialStructure` and cannot refer to it. -/
-def cellNames : Set InitialCell :=
+@[expose] def cellNames : Set InitialCell :=
   InitialCell.vertices ∪ InitialCell.edges ∪ InitialCell.faces
 
 theorem aux_notMem_cellNames (n : ℕ) : InitialCell.aux n ∉ cellNames := by
@@ -362,7 +362,7 @@ The reflexive clause is restricted to `cellNames`. `≼_abs` must relate cells t
 `CellStructure.CombInvariants.sub_mem_left` and `.sub_mem_right` say so — and `InitialCell`
 carries a spare supply of names beyond the fifteen cells, so unrestricted reflexivity would
 relate a spare name to itself and make both false. -/
-def initSub (c d : InitialCell) : Prop :=
+@[expose] def initSub (c d : InitialCell) : Prop :=
   (c = d ∧ d ∈ cellNames) ∨ (d ∈ InitialCell.edges ∧ (c = d.ends.1 ∨ c = d.ends.2)) ∨
     (∃ k, d = .face k ∧ c ∈ faceCells k)
 
@@ -376,7 +376,7 @@ theorem initSub_face {k : Bool} {c : InitialCell} (h : c ∈ faceCells k) :
     initSub c (.face k) := Or.inr (Or.inr ⟨k, rfl, h⟩)
 
 /-- **The abstract record of the initial matched cellulation.** -/
-def initialStructure : CellStructure InitialCell where
+@[expose] def initialStructure : CellStructure InitialCell where
   skel := initSkel
   faces := InitialCell.faces
   outerGraph := initOuter
@@ -474,27 +474,27 @@ namespace HexData
 variable (H : HexData)
 
 /-- Where each 0-cell sits. Junk on the other cells, which `Realization` never reads. -/
-def point : InitialCell → Plane
+@[expose] def point : InitialCell → Plane
   | .vert i => H.pos i
   | _ => 0
 
 /-- How each 1-cell is drawn. Junk on the other cells. -/
-def draw : InitialCell → ℝ → Plane
+@[expose] def draw : InitialCell → ℝ → Plane
   | .edge i => H.outer i
   | .chord => H.chordParam
   | _ => fun _ => 0
 
 /-- The crosscut, as a set. -/
-def chordSet : Set Plane := H.chordParam '' I
+@[expose] def chordSet : Set Plane := H.chordParam '' I
 
 /-- The two boundary edge-paths from `pos 1` to `pos 4`, as sets: `arcOf false` is `A₁`, the
 union of the outer edges `1, 2, 3`, and `arcOf true` is `A₂`, the union of `4, 5, 0`. -/
-def arcOf : Bool → Set Plane
+@[expose] def arcOf : Bool → Set Plane
   | false => H.outer 1 '' I ∪ (H.outer 2 '' I ∪ H.outer 3 '' I)
   | true => H.outer 4 '' I ∪ (H.outer 5 '' I ∪ H.outer 0 '' I)
 
 /-- The realized outer cycle, as the union of the six outer edges. -/
-def outerArcs : Set Plane := ⋃ i : Fin 6, H.outer i '' I
+@[expose] def outerArcs : Set Plane := ⋃ i : Fin 6, H.outer i '' I
 
 /-- The point set of each open cell.
 
@@ -503,7 +503,7 @@ blueprint prescribes (tex 1590–1602): "the 2-cell `Rᵢ` is realized in the so
 side whose closure meets `C` in `Aᵢ`". By `thm:general-crosscut` that side is
 `Int(Aᵢ ∪ P)` = `inside (arcOf k ∪ chordSet)`, and taking this as the *definition* makes the
 crosscut theorem apply to it with nothing to transport. -/
-def cellSet : InitialCell → Set Plane
+@[expose] def cellSet : InitialCell → Set Plane
   | .vert i => {H.pos i}
   | .edge i => H.outer i '' I \ {H.pos i, H.pos (i + 1)}
   | .chord => H.chordParam '' I \ {H.pos 1, H.pos 4}
@@ -618,7 +618,7 @@ theorem isDrawing : Graph.IsDrawing (initSkel.map H.point) H.draw where
           key _ (j + 1) (InitialCell.edge_mem_edges j) (Or.inr rfl)]
 
 /-- **The realization of `initialStructure` determined by a `HexData`.** -/
-def realization : initialStructure.Realization where
+@[expose] def realization : initialStructure.Realization where
   pos := H.point
   drawing := H.draw
   injOn_pos := H.injOn_point
@@ -971,16 +971,16 @@ variable {α β : ℝ}
 
 /-- The six marked points of `S`, in cyclic order: the corner `(1,1)`, `u(a) = (α,1)`, the
 corners `(-1,1)` and `(-1,-1)`, `u(b) = (β,-1)`, and the corner `(1,-1)`. -/
-def tgtPos (α β : ℝ) : Fin 6 → Plane :=
+@[expose] def tgtPos (α β : ℝ) : Fin 6 → Plane :=
   ![Plane.mk 1 1, Plane.mk α 1, Plane.mk (-1) 1, Plane.mk (-1) (-1), Plane.mk β (-1),
     Plane.mk 1 (-1)]
 
 /-- The six outer edges of the target, straight. -/
-noncomputable def tgtOuter (α β : ℝ) (i : Fin 6) : ℝ → Plane :=
+@[expose] noncomputable def tgtOuter (α β : ℝ) (i : Fin 6) : ℝ → Plane :=
   AffineMap.lineMap (tgtPos α β i) (tgtPos α β (i + 1))
 
 /-- The straight chord `[u(a), u(b)]`. -/
-noncomputable def tgtChord (α β : ℝ) : ℝ → Plane :=
+@[expose] noncomputable def tgtChord (α β : ℝ) : ℝ → Plane :=
   AffineMap.lineMap (tgtPos α β 1) (tgtPos α β 4)
 
 theorem tgtOuter_image (α β : ℝ) (i : Fin 6) :
@@ -1141,7 +1141,7 @@ theorem tgtPos_succ_ne (hα : |α| < 1) (hβ : |β| < 1) (i : Fin 6) :
 /-- **The target realization of `prop:initial-pair`**: the square `S`, subdivided at its four
 corners and at `u(a) = (α,1)`, `u(b) = (β,-1)`, together with the straight chord between the
 last two. -/
-noncomputable def targetHex (hα : |α| < 1) (hβ : |β| < 1) : HexData where
+@[expose] noncomputable def targetHex (hα : |α| < 1) (hβ : |β| < 1) : HexData where
   pos := tgtPos α β
   outer := tgtOuter α β
   chordParam := tgtChord α β
@@ -1189,7 +1189,7 @@ variable {C : Set Plane}
 /-- **The source realization of `prop:initial-pair`**: `C`, subdivided at the `u`-preimages of
 the four corners and of `u(a), u(b)`, together with the polygonal crosscut `P` from `a` to
 `b`. -/
-noncomputable def sourceHex {u w : Plane → Plane} {sp : ℝ → Plane}
+@[expose] noncomputable def sourceHex {u w : Plane → Plane} {sp : ℝ → Plane}
     (hw : IsSetHomeoOn u w C modelCurve) (hα : |α| < 1) (hβ : |β| < 1)
     (hspc : ContinuousOn sp I) (hspi : InjOn sp I)
     (hsp0 : sp 0 = w (tgtPos α β 1)) (hsp1 : sp 1 = w (tgtPos α β 4))
@@ -1330,27 +1330,27 @@ namespace InitialData
 variable {C : Set Plane} (d : InitialData C)
 
 /-- The first chosen boundary point, `a = u⁻¹(xa, 1)`. -/
-def a : Plane := d.w (tgtPos d.xa d.xb 1)
+@[expose] def a : Plane := d.w (tgtPos d.xa d.xb 1)
 
 /-- The second chosen boundary point, `b = u⁻¹(xb, -1)`. -/
-def b : Plane := d.w (tgtPos d.xa d.xb 4)
+@[expose] def b : Plane := d.w (tgtPos d.xa d.xb 4)
 
 /-- The polygonal crosscut `P`, as a set. -/
-def crossSet : Set Plane := d.cross '' I
+@[expose] def crossSet : Set Plane := d.cross '' I
 
 /-- **The source realization data.** -/
-noncomputable def src : HexData :=
+@[expose] noncomputable def src : HexData :=
   sourceHex d.homeo d.abs_xa d.abs_xb d.continuousOn_cross d.injOn_cross d.cross_zero
     d.cross_one d.cross_inside
 
 /-- **The target realization data.** -/
-noncomputable def tgt : HexData := targetHex d.abs_xa d.abs_xb
+@[expose] noncomputable def tgt : HexData := targetHex d.abs_xa d.abs_xb
 
 /-- **The source realization of `initialStructure`** — `Γ` of `prop:initial-pair`. -/
-noncomputable def sourceRealization : initialStructure.Realization := d.src.realization
+@[expose] noncomputable def sourceRealization : initialStructure.Realization := d.src.realization
 
 /-- **The target realization of `initialStructure`** — `Γ'` of `prop:initial-pair`. -/
-noncomputable def targetRealization : initialStructure.Realization := d.tgt.realization
+@[expose] noncomputable def targetRealization : initialStructure.Realization := d.tgt.realization
 
 @[simp] theorem src_pos_one : d.src.pos 1 = d.a := rfl
 
@@ -1544,7 +1544,7 @@ theorem rightInvOn_skel :
 (clause 2), and on the crosscut it is the chosen homeomorphism `P → [u(a), u(b)]` matching
 endpoints (clause 3); clause 1 is definitional here, both realizations being realizations of
 the one `initialStructure`. -/
-noncomputable def skeletonHomeo :
+@[expose] noncomputable def skeletonHomeo :
     CellStructure.SkeletonHomeo d.sourceRealization d.targetRealization where
   toFun := d.skelMap
   invFun := d.skelInv
@@ -1743,10 +1743,10 @@ nonempty, so the countable dense set of strongly accessible points of
 then supply the polygonal crosscut. -/
 
 /-- The relative interior of the top side of the square. -/
-def openTop : Set Plane := {p : Plane | |p 0| < 1 ∧ 0 < p 1} ∩ modelCurve
+@[expose] def openTop : Set Plane := {p : Plane | |p 0| < 1 ∧ 0 < p 1} ∩ modelCurve
 
 /-- The relative interior of the bottom side — the side *opposite* the top one. -/
-def openBottom : Set Plane := {p : Plane | |p 0| < 1 ∧ p 1 < 0} ∩ modelCurve
+@[expose] def openBottom : Set Plane := {p : Plane | |p 0| < 1 ∧ p 1 < 0} ∩ modelCurve
 
 theorem isOpen_topBand : IsOpen {p : Plane | |p 0| < 1 ∧ 0 < p 1} := by
   have h1 : IsOpen {p : Plane | |p 0| < 1} :=

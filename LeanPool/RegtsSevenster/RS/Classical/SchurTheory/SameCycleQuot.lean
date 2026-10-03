@@ -19,7 +19,7 @@ cycle-sum identity: a permutation's completed cycle-type product
 expands as a sum over colourings of its orbits.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,10 +34,12 @@ def sameCycleSetoid : Setoid (Fin n) where
     Equiv.Perm.SameCycle.symm, Equiv.Perm.SameCycle.trans⟩
 
 /-- The orbit space of a permutation. -/
+@[expose]
 def OrbitSpace : Type :=
   Quotient (sameCycleSetoid π)
 
 /-- The class of a point. -/
+@[expose]
 def orbitOf (i : Fin n) : OrbitSpace π :=
   Quotient.mk (sameCycleSetoid π) i
 
@@ -58,11 +60,13 @@ noncomputable instance : Fintype (OrbitSpace π) := by
     (Classical.decRel _)
 
 /-- The fibre of an orbit: the points lying in it. -/
+@[expose]
 noncomputable def orbFibre (O : OrbitSpace π) : Finset (Fin n) := by
   classical
   exact Finset.univ.filter (fun i => orbitOf π i = O)
 
 /-- The size of an orbit. -/
+@[expose]
 noncomputable def orbCard (O : OrbitSpace π) : ℕ :=
   (orbFibre π O).card
 
@@ -123,6 +127,7 @@ theorem fixed_comp_zpow {C : Type*} {f : Fin n → C}
 
 /-- Functions fixed by the permutation are exactly the functions
 on the orbit space. -/
+@[expose]
 noncomputable def fixedFunEquiv (C : Type*) :
     {f : Fin n → C // f ∘ π = f} ≃ (OrbitSpace π → C) where
   toFun f := Quotient.lift f.1 (by

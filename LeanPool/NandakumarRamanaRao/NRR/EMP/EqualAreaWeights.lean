@@ -64,7 +64,7 @@ theorem EMP.equalArea_weights_unique
 ```
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -76,7 +76,7 @@ namespace EMP
 
 /-- **Equal‑area (power‑cell) area vector.** A thin alias of the fixed‑site restricted
 power‑cell area vector `PowerDiagram.areaVec K s w`. -/
-noncomputable def areaVec
+@[expose] noncomputable def areaVec
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ) : Fin n → ℝ :=
   NRR.PowerDiagram.areaVec K s w
 
@@ -88,7 +88,7 @@ noncomputable def areaVec
 /-- **Equal‑area weight.** The weights `w` are *equal‑area* for the sites `s` in `K` if every
 restricted power cell has exactly the average area `K.area / n`. The count `n : ℕ` is coerced
 to `ℝ` via `Nat.cast`. -/
-def IsEqualAreaWeight
+@[expose] def IsEqualAreaWeight
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ) : Prop :=
   ∀ i, areaVec K s w i = K.area / (n : ℝ)
 

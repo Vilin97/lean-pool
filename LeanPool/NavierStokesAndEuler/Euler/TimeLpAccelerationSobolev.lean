@@ -24,7 +24,7 @@ section
 
 /-! Actual projected acceleration in the same fixed Sobolev word blocks. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,7 @@ The genuine continuous Gram solve incurs one factorial shift at the original
 radius. Time endpoint values are included in the continuous-path norm.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

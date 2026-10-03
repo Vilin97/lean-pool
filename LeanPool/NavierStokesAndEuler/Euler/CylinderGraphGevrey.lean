@@ -18,7 +18,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 The L² trace uses one extra angular derivative but no extra factor of
 the graph frequency. Only the n physical derivatives cost its n-th power. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ open scoped ContDiff
 variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
 
 /-- Graph factor, given by `1+|k| * ‖m‖`. -/
-def graphFactor (k : ℝ) (m : Vector3) : ℝ := 1+|k| * ‖m‖
+@[expose] def graphFactor (k : ℝ) (m : Vector3) : ℝ := 1+|k| * ‖m‖
 
 theorem graphFactor_nonneg (k : ℝ) (m : Vector3) : 0 ≤ graphFactor k m := by
   unfold graphFactor

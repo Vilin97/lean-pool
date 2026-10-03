@@ -18,7 +18,7 @@ import Mathlib.Tactic.Attr.Core
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 
@@ -36,7 +36,7 @@ instance : OfNat (SequentialCircuitCategory V G) n where
 namespace SequentialCircuitCategory
 
 /-- A stream of values, i.e. an infinite sequence indexed by time. -/
-@[inline]
+@[expose, inline]
 def Stream := Stream'
 
 instance [Preorder α] : Preorder (Stream α) where
@@ -56,15 +56,16 @@ universe u v
 variable {V : Type v} {G : Type u}
 
 /-- A stream function is causal if the output at time `t` depends only on inputs up to time `t`. -/
+@[expose]
 def Causal (f : Stream α → Stream β) : Prop :=
   ∀ (x y : Stream α) (t : ℕ), (∀ s, s ≤ t → x s = y s) → f x t = f y t
 
 /-- Homomorphism. -/
-def Hom (V : Type v) [Preorder V] (I O : SequentialCircuitCategory V G) :=
+@[expose] def Hom (V : Type v) [Preorder V] (I O : SequentialCircuitCategory V G) :=
   { f : Stream (Wires V I.obj) → Stream (Wires V O.obj) // Monotone f ∧ Causal f }
 
 /-- The underlying identity wire-function. -/
-@[inline, simp]
+@[expose, inline, simp]
 def idVal : Stream (Wires V n) → Stream (Wires V n) := fun x => x
 
 variable [Preorder V]
@@ -77,7 +78,7 @@ omit [Preorder V] in
 lemma id_causal : Causal (idVal (V:=V) (n:=n)) := fun _ _ t h => h t le_rfl
 
 /-- The identity morphism. -/
-@[inline, simp]
+@[expose, inline, simp]
 def id : SequentialCircuitCategory.Hom V X X := ⟨idVal, ⟨id_monotone, id_causal⟩⟩
 
 open CategoryTheory

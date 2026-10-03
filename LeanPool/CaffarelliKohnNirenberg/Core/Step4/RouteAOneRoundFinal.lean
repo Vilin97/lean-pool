@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Endgame.CarrierLocalAE
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 section
 
@@ -43,7 +43,7 @@ namespace CKN.Core.Step4
    theorem.  Its test functions are supported in the same local product box
    as the cutoff. -/
 /-- Heat-potential representation interface with an explicitly selected weak pressure gradient. -/
-def routeAGradientSlotRepresentation : Prop :=
+@[expose] def routeAGradientSlotRepresentation : Prop :=
   ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},
@@ -85,7 +85,7 @@ namespace CKN.Core.Step4
    boundary until its general construction lands.  Its two support fields are
    deliberately symmetric-ball fields, matching BallBootstrap. -/
 /-- Final localized-source integrability and Morrey estimates required by the bootstrap route. -/
-def routeAFinalSourcePackage : Prop :=
+@[expose] def routeAFinalSourcePackage : Prop :=
   ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},

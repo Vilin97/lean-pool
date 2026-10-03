@@ -18,7 +18,7 @@ copairing (`RS.zigCarrier`), with their naturality in the module
 and their evaluation on scalars.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {D : Type u}
 
 /-- **The scalar-based copairing power**: the base acts on the
 chain unit. -/
+@[expose]
 noncomputable def powCopairA
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -140,6 +141,7 @@ noncomputable def zigCarrier
     (β_ (modTensor A M' M) M.X).hom ≫ carrierContract A p
 
 /-- The singleton stage maps back onto the module. -/
+@[expose]
 noncomputable def fromModPowModZero
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

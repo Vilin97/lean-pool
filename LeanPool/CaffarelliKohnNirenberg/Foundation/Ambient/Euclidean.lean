@@ -20,7 +20,7 @@ body of `spaceEuclideanNorm` is kept definitionally identical to the
 finite-sum expression used by the parabolic spatial norm.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
@@ -28,6 +28,7 @@ namespace CKN
 abbrev Space := Vec 3
 
 /-- The Euclidean length given by the finite sum of coordinate squares. -/
+@[expose]
 noncomputable def spaceEuclideanNorm (x : Space) : ℝ := Real.sqrt (∑ k, x k ^ 2)
 
 theorem space_norm_le_euclideanNorm (x : Space) :

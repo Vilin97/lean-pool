@@ -44,7 +44,7 @@ function `ψ(d) = d · ∏_{p | d} (1 + 1/p)`. For the prime-power case needed f
 * Shimura, Proposition 3.14, 3.18, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open HeckeRing HeckeRing.GL2 Finset CongruenceSubgroup Matrix.SpecialLinearGroup Matrix
   ModularGroup

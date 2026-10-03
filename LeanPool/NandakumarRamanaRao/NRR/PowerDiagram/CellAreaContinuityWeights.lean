@@ -46,7 +46,7 @@ harmless, which is why the diagonal is exempted (only the off‑diagonal normals
 nonzero).
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 open scoped RealInnerProductSpace

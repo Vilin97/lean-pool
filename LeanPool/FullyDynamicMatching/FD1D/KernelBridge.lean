@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.MeasureBridge
 
 /-! # Kernel Bridge -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -40,6 +40,7 @@ theorem measure_ext_of_singletons [Finite α] [MeasurableSpace α]
   Measure.ext_of_singleton h
 
 /-- The independent product of two finite laws. -/
+@[expose]
 def product (μ : FiniteLaw α) (ν : FiniteLaw β) :
     FiniteLaw (α × β) where
   mass p := μ.mass p.1 * ν.mass p.2

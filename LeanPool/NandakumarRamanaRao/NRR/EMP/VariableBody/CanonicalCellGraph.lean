@@ -30,7 +30,7 @@ and the selected weight, through `continuous_normalizedWeight_compactFamily`) to
 closedness of `≤`. Hence `y` lies in the limiting cell.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open scoped RealInnerProductSpace
@@ -58,6 +58,7 @@ theorem mem_canonicalCell_iff
 
 /-- The **one-sided (lower) canonical-cell graph**: parameter–subbody pairs `(z, D)` where the
 subbody `D` is contained in the canonical power cell of site `i` at `z`. -/
+@[expose]
 def CanonicalCellLowerGraph
     (sites : SiteFamily X n) (hA : 0 < A) (hn : 0 < n)
     (i : Fin n) :

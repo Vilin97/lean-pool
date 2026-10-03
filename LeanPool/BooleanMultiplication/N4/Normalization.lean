@@ -16,7 +16,7 @@ vector without changing the state.  This is exactly what later gates see in
 the semantic circuit model.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -68,18 +68,18 @@ theorem circuit_first_entry_replacement {m r : Nat} (C : Circuit m r)
   exact span_first_entry_replacement _ _ _ ht htFirst
 
 /-- The product target corresponding to evaluation at zero. -/
-def rZeroANF : ANF 8 := targetANF rZeroCoeff
+@[expose] def rZeroANF : ANF 8 := targetANF rZeroCoeff
 /-- The product target corresponding to evaluation at one. -/
-def rOneANF : ANF 8 := targetANF rOneCoeff
+@[expose] def rOneANF : ANF 8 := targetANF rOneCoeff
 /-- The product target corresponding to the leading coefficient. -/
-def rInfinityANF : ANF 8 := targetANF rInfinityCoeff
+@[expose] def rInfinityANF : ANF 8 := targetANF rInfinityCoeff
 
 /-- The span of the product evaluations at zero, one, and infinity. -/
-def rationalTargetSpace : Submodule F₂ (ANF 8) :=
+@[expose] def rationalTargetSpace : Submodule F₂ (ANF 8) :=
   Submodule.span F₂ {rZeroANF, rOneANF, rInfinityANF}
 
 /-- Affine functions together with the rational-place product targets. -/
-def rationalLowSpace : Submodule F₂ (ANF 8) :=
+@[expose] def rationalLowSpace : Submodule F₂ (ANF 8) :=
   affine 8 ⊔ rationalTargetSpace
 
 theorem targetANF_rationalCoeffRep (α : Fin 3 → F₂) :
@@ -185,6 +185,7 @@ theorem NormalizedEight.seed_right_mem_rationalLow {C : Circuit 8 8}
   exact C.right_mem 3
 
 /-- Algebraic factor data exposed by the normalized seed. -/
+@[expose]
 def SeedFactorData (C : Circuit 8 8) : Prop :=
   ∃ (leftAffine rightAffine : ANF 8)
       (leftCoeff rightCoeff : Fin 3 → F₂),

@@ -23,7 +23,7 @@ must be the right endpoint.  With that correction the divisor has the right
 degree and its marked second difference is one.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

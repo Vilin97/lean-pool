@@ -13,7 +13,7 @@ public import LeanPool.MovingSofa.Development.Geometry.Foundations.Development00
 * `Gerver.Foundations.Development001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,7 +32,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.Area.TrigEnclosure`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ The kernel accelerates `Int` arithmetic but not `Rat` arithmetic, so the whole f
 calculation is carried out on pairs of integers denoting the interval `[lo / M, hi / M]`.
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa.GerverAreaCert
 
@@ -90,15 +90,18 @@ def imax (a b : ℤ) : ℤ := if a ≤ b then b else a
 def ratI (a b : ℤ) : SI := ⟨(a * M) / b, -((-(a * M)) / b)⟩
 
 /-- The exact interval `[0, 0]`. -/
+@[expose]
 def zero : SI := ⟨0, 0⟩
 /-- The exact interval `[1, 1]`. -/
 def one : SI := ⟨M, M⟩
 
 /-- Interval addition. -/
+@[expose]
 def add (x y : SI) : SI := ⟨x.lo + y.lo, x.hi + y.hi⟩
 /-- Interval negation. -/
 def neg (x : SI) : SI := ⟨-x.hi, -x.lo⟩
 /-- Interval subtraction. -/
+@[expose]
 def sub (x y : SI) : SI := ⟨x.lo - y.hi, x.hi - y.lo⟩
 
 /-- Interval multiplication: the extreme endpoint products, rounded outward. -/
@@ -111,6 +114,7 @@ def mul (x y : SI) : SI :=
     -((-(imax (imax p₁ p₂) (imax p₃ p₄))) / M)⟩
 
 /-- Division by a positive integer. -/
+@[expose]
 def divn (x : SI) (b : ℤ) : SI := ⟨x.lo / b, -((-x.hi) / b)⟩
 
 /-- Multiplication by an integer. -/
@@ -120,6 +124,7 @@ def imul (k : ℤ) (x : SI) : SI :=
 /-! #### Real semantics and soundness -/
 
 /-- `z` denotes the real interval `[z.lo / M, z.hi / M]`. -/
+@[expose]
 def Contains (z : SI) (x : ℝ) : Prop :=
   (z.lo : ℝ) ≤ (M : ℝ) * x ∧ (M : ℝ) * x ≤ (z.hi : ℝ)
 
@@ -354,14 +359,17 @@ def e1Z : SI := ⟨1210322422072688751416085718500, 1210322422072688751416285718
 /-- Enclosure of the direct parameter `e₂`. -/
 def e2Z : SI := ⟨249999999999999999999900000000, 250000000000000000000100000000⟩
 /-- Enclosure of the first stage angle `φ`. -/
+@[expose]
 def phiZ : SI := ⟨39177364790083641863217874980, 39177364790083641863217875500⟩
 /-- Enclosure of the second stage angle `θ`. -/
+@[expose]
 def thetaZ : SI := ⟨681301509382724894473855754540, 681301509382724894473855759660⟩
 
 /-- The integer enclosure of `π`, from the certified Machin arctangent sums. -/
 def piZ : SI := ⟨3141592653589793238462643383279, 3141592653589793238462643383280⟩
 
 /-- The integer enclosure of `π / 2`. -/
+@[expose]
 def piHalfZ : SI := divn piZ 2
 
 /-! #### The parameter enclosures are the certified box rows -/
@@ -495,9 +503,11 @@ def trigZ (t : SI) : SI × SI :=
 /-! ### Stage endpoints and the uniform grid -/
 
 /-- Number of subintervals per analytic stage. -/
+@[expose]
 def NN : ℕ := 64
 
 /-- Integer enclosures of the six stage endpoints `0, φ, θ, η, τ, π / 2`, constant past `5`. -/
+@[expose]
 def endZ : ℕ → SI
   | 0 => zero
   | 1 => phiZ
@@ -507,16 +517,19 @@ def endZ : ℕ → SI
   | _ => piHalfZ
 
 /-- The `m`-th grid angle, `0 ≤ m ≤ 5 * NN`. -/
+@[expose]
 def ttZ (m : ℕ) : SI :=
   divn (add (imul ((NN - m % NN : ℕ) : ℤ) (endZ (m / NN)))
     (imul ((m % NN : ℕ) : ℤ) (endZ (m / NN + 1)))) (NN : ℤ)
 
 /-- The analytic branch that the piecewise definitions select at the `m`-th grid angle. -/
+@[expose]
 def stageOf (m : ℕ) : ℕ := if m % NN = 0 then max 1 (m / NN) else m / NN + 1
 
 /-! ### The five phase formulas and the four contact curves -/
 
 /-- `kind`: `0` the path, `1` `A`, `2` `B`, `3` `C`, `4` `D`. -/
+@[expose]
 def evalZ (stage : ℕ) (t : SI) (kind : ℕ) : SI × SI :=
   let sc := trigZ t
   let s := sc.1
@@ -565,38 +578,47 @@ def evalZ (stage : ℕ) (t : SI) (kind : ℕ) : SI × SI :=
   (if kind = 3 then sub x3 s else x3, if kind = 3 then add y3 c else y3)
 
 /-- The contact point at grid index `m`, evaluated on the branch the definitions select. -/
+@[expose]
 def contactZ (m kind : ℕ) : SI × SI := evalZ (stageOf m) (ttZ m) kind
 
 /-! ### Cap: the ordered support contacts and their fan shoelace sum -/
 
 /-- Number of listed support contacts feeding the fan, excluding the anchor. -/
+@[expose]
 def fanCount : ℕ := 10 * NN
 
 /-- Contact kind at fan position `i`: `A` for `i ≤ 5 * NN`, otherwise `C`. -/
+@[expose]
 def fanKind (i : ℕ) : ℕ := if i ≤ 5 * NN then 1 else 3
 
 /-- Grid index at fan position `i`. -/
+@[expose]
 def fanIdx (i : ℕ) : ℕ := if i ≤ 5 * NN then i else i - 5 * NN
 
 /-- Both coordinates of the contact listed at fan position `i`. -/
+@[expose]
 def fanZ (i : ℕ) : SI × SI := contactZ (fanIdx i) (fanKind i)
 
 /-- The fan anchor `L = C (π / 2)`. -/
+@[expose]
 def anchorZ : SI × SI := contactZ (5 * NN) 3
 
 /-- The `i`-th fan determinant over the anchor. -/
+@[expose]
 def crossZ (i : ℕ) : SI :=
   sub (mul (sub (fanZ i).1 anchorZ.1) (sub (fanZ (i + 1)).2 anchorZ.2))
     (mul (sub (fanZ i).2 anchorZ.2) (sub (fanZ (i + 1)).1 anchorZ.1))
 
 /-- Twice the signed area of the fan polygon: the shoelace sum of the listed contacts over
 the anchor. -/
+@[expose]
 def capDoubledZ : SI :=
   (List.range (fanCount - 1)).foldl (fun acc i => add acc (crossZ i)) zero
 
 /-! ### Niche: the seven roof pieces and their covering rectangles -/
 
 /-- The seven roof pieces as `(kind, stage, traversed forwards?)`. -/
+@[expose]
 def rowData : ℕ → ℕ × ℕ × Bool
   | 0 => (4, 1, true)
   | 1 => (4, 2, true)
@@ -607,47 +629,59 @@ def rowData : ℕ → ℕ × ℕ × Bool
   | _ => (2, 5, true)
 
 /-- Contact kind traced by roof piece `r`. -/
+@[expose]
 def rowKind (r : ℕ) : ℕ := (rowData r).1
 /-- Analytic stage traced by roof piece `r`. -/
+@[expose]
 def rowStage (r : ℕ) : ℕ := (rowData r).2.1
 /-- Whether roof piece `r` is traversed in increasing time. -/
+@[expose]
 def rowFwd (r : ℕ) : Bool := (rowData r).2.2
 
 /-- Grid index of the left end of the `j`-th subinterval of row `r`. -/
+@[expose]
 def rowBase (r j : ℕ) : ℕ := (rowStage r - 1) * NN + j
 
 /-- Left horizontal bound of the covering rectangle of `(r, j)`. -/
+@[expose]
 def rectLoZ (r j : ℕ) : ℤ :=
   if rowFwd r then (contactZ (rowBase r j) (rowKind r)).1.lo
   else (contactZ (rowBase r j + 1) (rowKind r)).1.lo
 
 /-- Right horizontal bound of the covering rectangle of `(r, j)`. -/
+@[expose]
 def rectHiZ (r j : ℕ) : ℤ :=
   if rowFwd r then (contactZ (rowBase r j + 1) (rowKind r)).1.hi
   else (contactZ (rowBase r j) (rowKind r)).1.hi
 
 /-- Height bound of the covering rectangle of `(r, j)`: the branch evaluation over the
 whole subinterval, widened to cover the left endpoint, which sits on the previous branch. -/
+@[expose]
 def rectHZ (r j : ℕ) : ℤ :=
   imax (evalZ (stageOf (rowBase r j + 1))
       ⟨(ttZ (rowBase r j)).lo, (ttZ (rowBase r j + 1)).hi⟩ (rowKind r)).2.hi
     (contactZ (rowBase r j) (rowKind r)).2.hi
 
 /-- Area of the covering rectangle of `(r, j)`, in units of `1 / M ^ 2`. -/
+@[expose]
 def rectAreaZ (r j : ℕ) : ℤ :=
   imax 0 (rectHiZ r j - rectLoZ r j) * imax 0 (rectHZ r j)
 
 /-- Total covering area of row `r`, in units of `1 / M ^ 2`. -/
+@[expose]
 def rowSumZ (r : ℕ) : ℤ := (List.range NN).foldl (fun acc j => acc + rectAreaZ r j) 0
 
 /-- Total covering area of the `7 * NN` rectangles, in units of `1 / M ^ 2`. -/
+@[expose]
 def nicheSumZ : ℤ := (List.range 7).foldl (fun acc r => acc + rowSumZ r) 0
 
 /-! ### The two decidable numeric conclusions -/
 
 /-- The closed numeric cap check: `2 * 28609 / 10000 ≤ capDoubledZ.lo / M`. -/
+@[expose]
 def capOK : Bool := 2 * 28609 * M ≤ 10000 * capDoubledZ.lo
 /-- The closed numeric niche check: `nicheSumZ / M ^ 2 ≤ 3301 / 5000`. -/
+@[expose]
 def nicheOK : Bool := 5000 * nicheSumZ ≤ 3301 * M * M
 
 /-- The niche check passes, by kernel reduction. -/
@@ -683,7 +717,7 @@ one-unit widening.
 
 /-! ### Sine and cosine enclosures -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 

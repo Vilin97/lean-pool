@@ -17,7 +17,7 @@ import Mathlib.Tactic.Linarith.Frontend
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.One
@@ -29,7 +29,7 @@ variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 noncomputable section «Section1»
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
+@[expose] def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
   ResStrategy (oldAsTrees hyp) Player.one lvl := fun x hp hlen ↦
   if hxlen : x.val.length ≤ 2 * k then (ResStrategy.fromMap (treeHom hyp)) (R.res hlen) x hp le_rfl
   else
@@ -38,7 +38,7 @@ def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
         R.res ((Nat.succ_le_of_lt (Nat.lt_of_not_ge hxlen)).trans hlen)⟩
     pL.extension hp (R.res hlen)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def stratMap' (R : Strategy (gameTree hyp) Player.one) : Strategy G.tree Player.one :=
+@[expose] def stratMap' (R : Strategy (gameTree hyp) Player.one) : Strategy G.tree Player.one :=
   fun x hp ↦ stratMap x.val.length ((strategyEquivSystem R).str _) x hp le_rfl
 attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma stratMap'_short R x hp (hx : x.val.length ≤ 2 * k) :
@@ -70,11 +70,11 @@ attribute [simp] TreeLift.hlvl
 lemma hlvl_le : 2 * k + 1 ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
 @[simp] lemma hlvl' : 2 * k ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps!] def preLift : PreLift hyp := ⟨subtreeIncl _ H.x,
+@[expose, simps!] def preLift : PreLift hyp := ⟨subtreeIncl _ H.x,
   H.hlvl, (strategyEquivSystem H.R).str (2 * k + 1)⟩
 attribute [simp_lengths] preLift_x_coe
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def take (n : ℕ) (hk : 2 * k < n) : TreeLift hyp where
+@[expose, simps] def take (n : ℕ) (hk : 2 * k < n) : TreeLift hyp where
   R := H.R
   x := Tree.take n H.x
   hlvl := by simp [hk]
@@ -104,7 +104,7 @@ lemma stratMap'_extend : stratMap' H.R (subtreeIncl _ H.x) = H.extension := by
     omega
   · rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps! -isSimp] def dropLast (h : 2 * k + 2 ≤ H.x.val.length) :=
+@[expose, simps! -isSimp] def dropLast (h : 2 * k + 2 ≤ H.x.val.length) :=
   H.take (H.x.val.length - 1) (by omega)
 @[simp, simp_lengths] lemma dropLast_x {h} :
   (H.dropLast h).x = Tree.take (H.x.val.length - 1) H.x := rfl
@@ -661,7 +661,7 @@ end TreeLift
 
 variable {R : Strategy (gameAsTrees hyp).2 Player.one} (y : body (stratMap' R).pre.subtree)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def bodyTake (n : ℕ) : TreeLift hyp where
+@[expose, simps] def bodyTake (n : ℕ) : TreeLift hyp where
   R := R
   x := body.take (2 * k + 1 + n) y
   hlvl := by synthIsPosition
@@ -711,9 +711,11 @@ lemma won_of_winnable n (h : (bodyTake y n).preLift.Winnable) :
           (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
           (by simp) rfl
       simp_rw [add_assoc] at this ⊢; convert (hsub ▸ this) using 4
-      exact (WinningPrefix.prefix_num _
-        (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
-        (by simp) rfl).symm
+      · simp only [Game.residual_tree]
+      · rfl
+      · exact (WinningPrefix.prefix_num _
+          (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
+          rfl rfl).symm
     have hw := h.strat_winning hb
     simp only [Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right] at hw
     replace hw := hw.2

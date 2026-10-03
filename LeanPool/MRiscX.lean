@@ -23,7 +23,7 @@ Tags: hoare-logic, program-verification, risc-v, assembly, formal-methods
 MSC: 68Q60
 -/
 
-@[expose] public section
+public section
 
 /-!
 # MRiscX: a Hoare logic for unstructured RISC-V-like assembly in Lean

@@ -17,7 +17,7 @@ upper bound. Applying the display on a doubled interior cylinder produces
 an explicit energy coefficient before any solution is chosen.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology

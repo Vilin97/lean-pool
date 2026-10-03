@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 
 /-! Actual bounded coefficient paths identified with the raw packet coefficients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -59,13 +59,13 @@ namespace MatrixCoefficient
 variable {P T : ℝ} [Fact (0 < P)] {coef : Domain → Space →L[ℝ] Space} {raw : VectorField}
 
 /-- Multiply, given by `G.multiply A.path A.orbit coef A.raw_eq`. -/
-def multiply (A : MatrixCoefficient T coef) (G : Field P T raw) :
+@[expose] def multiply (A : MatrixCoefficient T coef) (G : Field P T raw) :
     Field P T (fun z => coef z (raw z)) :=
   G.multiply A.path A.orbit coef A.raw_eq
 
 /-- Adjoint, bundling `path`, `orbit`, `translateCoefficientPath`, `exact` and the required
 compatibility proofs. -/
-def adjoint (A : MatrixCoefficient T coef) :
+@[expose] def adjoint (A : MatrixCoefficient T coef) :
     MatrixCoefficient T (fun z => (coef z).adjoint) where
   path := pathAdjointMap A.path
   orbit := by

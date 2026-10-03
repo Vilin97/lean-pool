@@ -16,7 +16,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The dual coordinates component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualCoordinates
@@ -68,6 +68,7 @@ noncomputable def vStarDualEquiv : Module.Dual k VStar ≃ₗ[k] V :=
 /--
 The `transposeToDual` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def transposeToDual : (A →ₗ[k] V) →ₗ[k]
     (VStar →ₗ[k] Module.Dual k A) where
   toFun f :=
@@ -83,7 +84,7 @@ def transposeToDual : (A →ₗ[k] V) →ₗ[k]
 /--
 The `transposeFromDual` construction used in the Connes rigidity formalization.
 -/
-def transposeFromDual : (VStar →ₗ[k] Module.Dual k A) →ₗ[k]
+@[expose] def transposeFromDual : (VStar →ₗ[k] Module.Dual k A) →ₗ[k]
     (A →ₗ[k] V) where
   toFun g :=
     { toFun := fun a =>
@@ -136,6 +137,7 @@ theorem transposeFromDual_right_inverse
 /--
 The `transposeEquiv` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 noncomputable def transposeEquiv : (A →ₗ[k] V) ≃ₗ[k]
     (VStar →ₗ[k] Module.Dual k A) :=
   LinearEquiv.ofLinearMap transposeToDual transposeFromDual
@@ -145,6 +147,7 @@ noncomputable def transposeEquiv : (A →ₗ[k] V) ≃ₗ[k]
 /--
 The `dualTensorToPartial` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 def dualTensorToPartial : Module.Dual k AVStar →ₗ[k]
     (VStar →ₗ[k] Module.Dual k A) where
   toFun f :=
@@ -177,7 +180,7 @@ def dualTensorToPartial : Module.Dual k AVStar →ₗ[k]
 /--
 The `partialToDual` construction used in the Connes rigidity formalization.
 -/
-def partialToDual : (VStar →ₗ[k] Module.Dual k A) →ₗ[k]
+@[expose] def partialToDual : (VStar →ₗ[k] Module.Dual k A) →ₗ[k]
     Module.Dual k AVStar where
   toFun g := TensorProduct.lift
     { toFun := fun a =>
@@ -211,6 +214,7 @@ theorem partialToDual_right_inverse
 /--
 The `dualTensorPartialEquiv` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 noncomputable def dualTensorPartialEquiv : Module.Dual k AVStar ≃ₗ[k]
     (VStar →ₗ[k] Module.Dual k A) :=
   LinearEquiv.ofLinearMap dualTensorToPartial partialToDual
@@ -220,6 +224,7 @@ noncomputable def dualTensorPartialEquiv : Module.Dual k AVStar ≃ₗ[k]
 /--
 The `avDualEquiv` construction used in the Connes rigidity formalization.
 -/
+@[expose]
 noncomputable def avDualEquiv : Module.Dual k AVStar ≃ₗ[k] A →ₗ[k] V :=
   dualTensorPartialEquiv.trans transposeEquiv.symm
 
@@ -228,7 +233,7 @@ noncomputable def avDualEquiv : Module.Dual k AVStar ≃ₗ[k] A →ₗ[k] V :=
 /--
 The `dualEquiv` construction used in the Connes rigidity formalization.
 -/
-noncomputable def dualEquiv : Module.Dual k D ≃ₗ[k] DualCoordinates :=
+@[expose] noncomputable def dualEquiv : Module.Dual k D ≃ₗ[k] DualCoordinates :=
   (Module.dualProdDualEquivDual k AVStar C).symm.trans
     (avDualEquiv.prodCongr (LinearEquiv.refl k (C →ₗ[k] k)))
 

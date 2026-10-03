@@ -22,7 +22,7 @@ explicit open physical domain where those profiles have been constructed.
 No assertion about the regularity of the final Navier--Stokes force is made.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,10 +41,12 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
 /-- Physical Q, given by `SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)`. -/
+@[expose]
 noncomputable def physicalQ (h : ℝ) (p : ProfilePoint) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - p.1, p.2.2)
 
 /-- Physical eta, given by `SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)`. -/
+@[expose]
 noncomputable def physicalEta (h : ℝ) (p : ProfilePoint) : ℝ :=
   SimilarityCoordinates.coordinateEta (2 * h) (1 - p.1, p.2.2)
 

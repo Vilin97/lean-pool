@@ -24,7 +24,7 @@ application of the ordinary Hales--Jewett theorem per variable, each of them app
 profile of colours obtained by letting the remaining positions vary.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -32,7 +32,7 @@ open Combinatorics
 namespace DensityHalesJewett
 
 /-- Two words over `Option α` have the same support when their variable positions agree. -/
-def SameSupport {α ι : Type*} (x y : ι → Option α) : Prop := ∀ i, x i = none ↔ y i = none
+@[expose] def SameSupport {α ι : Type*} (x y : ι → Option α) : Prop := ∀ i, x i = none ↔ y i = none
 
 namespace Line
 
@@ -57,7 +57,7 @@ variable {α η θ ι : Type*}
 
 /-- Substitute a word over `Option α` into a combinatorial subspace, marking variable positions
 of the parameter word by `none`. -/
-def wordMap (V : Combinatorics.Subspace η α ι) (x : η → Option α) : ι → Option α :=
+@[expose] def wordMap (V : Combinatorics.Subspace η α ι) (x : η → Option α) : ι → Option α :=
   fun i ↦ Sum.elim some x (V.idxFun i)
 
 lemma wordMap_compose (V : Combinatorics.Subspace η α ι) (W : Combinatorics.Subspace θ α η)

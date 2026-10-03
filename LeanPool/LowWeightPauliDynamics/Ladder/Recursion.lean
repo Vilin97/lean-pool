@@ -32,7 +32,7 @@ conclusion have the same shape.
 * `Ladder.cumulation`: `N m g ≤ C(g, m) · a^m · M`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.Ladder
 

@@ -10,7 +10,7 @@ public import LeanPool.PDL.Local.Tableau
 
 /-! # Interpolants preserved by local tableau rules -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -19,11 +19,11 @@ open HasSat
 /-! ## Partition Interpolants -/
 
 /-- The vocabulary and two inconsistency conditions defining a partial interpolant. -/
-def isPartInterpolant (X : Sequent) (θ : Formula) :=
+@[expose] def isPartInterpolant (X : Sequent) (θ : Formula) :=
   θ.voc ⊆ jvoc X ∧ (¬ satisfiable ({~θ} ∪ X.left) ∧ ¬ satisfiable ({θ} ∪ X.right))
 
 /-- A formula equipped with the partial-interpolant conditions for a sequent. -/
-def PartInterpolant (N : Sequent) := Subtype <| isPartInterpolant N
+@[expose] def PartInterpolant (N : Sequent) := Subtype <| isPartInterpolant N
 
 /-! ## Interpolants for local rules -/
 

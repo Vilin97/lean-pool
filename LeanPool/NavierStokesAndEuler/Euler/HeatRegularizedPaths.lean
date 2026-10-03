@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MildWordEquation
 
 /-! Genuine heat regularization of continuous Sobolev paths, uniformly in time. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -60,7 +60,7 @@ theorem heatRegularizer_heat {q : ℕ} (n : ℕ) (v : ℝ≥0) (u : SobolevSpace
     cylinderHeat_semigroup, cylinderHeat_semigroup, add_comm]
 
 /-- Heat acting pointwise on a continuous Sobolev time path. -/
-def pathHeat (q : ℕ) (T : ℝ) (v : ℝ≥0) (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
+@[expose] def pathHeat (q : ℕ) (T : ℝ) (v : ℝ≥0) (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
     C(Icc (0 : ℝ) T, SobolevSpace period q) := mapPath period T (heatOperator period q v) u
 
 /-- Strong heat continuity is uniform over every compact continuous time path. -/

@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketProfileCoarseBounds
 
 /-! The finite approximate velocity and its genuine time derivative share the profile bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

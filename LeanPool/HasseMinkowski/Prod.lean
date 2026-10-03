@@ -28,7 +28,7 @@ The proofs mirror the reference development, adapted to Mathlib 4.33's API
 (`baseChange_ext` on pure tensors avoids the bilinear-form machinery of the original).
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap TensorProduct
 

@@ -20,7 +20,7 @@ permission.  These are the smooth one-dimensional estimates used by the
 unit-ball Poincare proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

@@ -26,7 +26,7 @@ gives commutativity of the Hecke ring.
 * `instCommRingHeckeAlgebra` -- `CommRing (HeckeAlgebra n)`
 -/
 
-@[expose] public section
+public section
 
 open Matrix HeckeRing HeckeRing.GLn Matrix.SpecialLinearGroup
 

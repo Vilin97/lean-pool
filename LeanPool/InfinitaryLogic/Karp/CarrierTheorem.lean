@@ -52,7 +52,7 @@ The common-carrier formulation with `IndexCoding` is this formalization's presen
 a statement made in those sources; the mathematics is Karp's.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w' uι uκ
 
@@ -69,6 +69,7 @@ open FirstOrder Structure BoundedFormulaInf
 /-- `L∞ω`-equivalence at a fixed branching carrier `ι`: the structures satisfy the same
 sentences whose infinitary connectives branch over `ι`. The structures need not share a
 universe. -/
+@[expose]
 def InfEquivAt (L : Language.{u, v}) (ι : Type uι) (M : Type w) (N : Type w')
     [L.Structure M] [L.Structure N] : Prop :=
   ∀ φ : L.SentenceInf ι, SentenceInf.Realize φ M ↔ SentenceInf.Realize φ N
@@ -76,6 +77,7 @@ def InfEquivAt (L : Language.{u, v}) (ι : Type uι) (M : Type w) (N : Type w')
 /-- `L∞ω`-equivalence with branching carriers drawn from the structures' own universe. The
 quantifier over index types is here, outside the syntax, rather than inside every
 infinitary node. -/
+@[expose]
 def InfEquivW (L : Language.{u, v}) (M N : Type w) [L.Structure M] [L.Structure N] : Prop :=
   ∀ ι : Type w, InfEquivAt L ι M N
 

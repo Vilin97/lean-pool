@@ -21,7 +21,7 @@ transpose identity and the Hermitian Fourier pairing. No extension to an
 operator on all of `L²` is used.
 -/
 
-@[expose] public section
+public section
 
 
 

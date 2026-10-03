@@ -21,7 +21,7 @@ section
 /-! The actual exact packet remains incompressible after the genuine
 unit-Jacobian parent-flow coordinate change. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -92,7 +92,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

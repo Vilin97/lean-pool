@@ -23,7 +23,7 @@ to show invariance under elementary moves and to prove that `R[G]` is a ring.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -36,13 +36,13 @@ variable {G : Type} [Group G] [DecidableEq G]
 ## Multiplication on formal sums
 -/
 /-- multiplication by a monomial -/
-def _root_.LeanPool.Polylean.FormalSum.mulMonom
+@[expose] def _root_.LeanPool.Polylean.FormalSum.mulMonom
     (b : R) (h : G) : FormalSum R G → FormalSum R G
 | [] => []
 | (a, g) :: tail => (a * b, g * h) :: (mulMonom b h tail)
 
 /-- multiplication for formal sums -/
-def _root_.LeanPool.Polylean.FormalSum.mul
+@[expose] def _root_.LeanPool.Polylean.FormalSum.mul
     (fst : FormalSum R G) : FormalSum R G → FormalSum R G
 | [] => []
 | (b, h) :: ys =>
@@ -139,7 +139,7 @@ theorem mul_zero_cons (s t : FormalSum R G) : mul s ((0, h) :: t) ≈ mul s t :=
 
 /-- Quotient in second argument for group ring multiplication
 -/
-def mulAux : FormalSum R G → R[G] → R[G] := by
+@[expose] def mulAux : FormalSum R G → R[G] → R[G] := by
   intro s
   apply Quotient.lift (⟦FormalSum.mul s ·⟧)
   apply func_eql_of_move_equiv
@@ -241,7 +241,7 @@ theorem first_arg_invariant_nil (s₁ s₂ : FormalSum R G)
   first_arg_invariant s₁ s₂ [] rel
 
 /-- multiplication for free modules -/
-def mul : R[G] → R[G] → R[G] := by
+@[expose] def mul : R[G] → R[G] → R[G] := by
   let f := fun (s : FormalSum R G) =>
     fun (t : R[G]) => mulAux s t
   apply Quotient.lift f
@@ -451,7 +451,7 @@ theorem groupRingMul_apply {R G : Type _} [Ring R] [DecidableEq G] [DecidableEq 
     (r : R) (g : G) : r * g = (⟦[(r, g)]⟧ : FreeModule R G) := rfl
 
 /-- Monoid homomorphism from `G` to `R[G]` given by `g ↦ 1 ⬝ g` -/
-def groupInclusionHom (G : Type) [Group G] [DecidableEq G] : G →* R[G] :=
+@[expose] def groupInclusionHom (G : Type) [Group G] [DecidableEq G] : G →* R[G] :=
   { toFun := baseInclusion 1,
     map_one' := rfl,
     map_mul' :=
@@ -484,7 +484,7 @@ theorem groupInclusionHom_injective {F : Type} [Field F] [DecidableEq F]
   simp_all
 
 /-- The ring homomorphism `R → R[G]` given by `a ↦  a ⬝ 1` -/
-def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=
+@[expose] def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=
   { toFun := coeffInclusion 1,
     map_one' := rfl,
     map_mul' :=

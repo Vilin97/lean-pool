@@ -18,7 +18,7 @@ support polytope. A chart for support in a proper face of a minimal node has
 strictly smaller rank.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

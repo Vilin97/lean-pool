@@ -25,7 +25,7 @@ Fréchet–Kolmogorov / Riesz–Kolmogorov approach to Euclidean Rellich–Kondr
 Tracking: Beads `lean-103.5.2.26.5.3.2.2.1.1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis

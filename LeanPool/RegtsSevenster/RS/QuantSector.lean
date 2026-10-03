@@ -23,7 +23,7 @@ together with the square Schur nonvanishing); this file holds the
 tower half of the dichotomy and the assembly.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

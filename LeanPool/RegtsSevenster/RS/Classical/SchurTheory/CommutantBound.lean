@@ -19,7 +19,7 @@ faithfulness, and the commutant dimension bounds the number of simple
 summands, counted with multiplicity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

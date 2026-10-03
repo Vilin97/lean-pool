@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.UniformLimitsDeriv
 
 /-! Closed differentiability for strongly continuous linear isometric actions. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

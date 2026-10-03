@@ -15,7 +15,7 @@ section
 
 /-! Exact heat commutation with the genuine Sobolev derivatives and Laplacian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -65,13 +65,13 @@ open scoped Topology NNReal
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual three-derivative heat regularization of an H¹ mild state. -/
-def regularizedState (T : ℝ) (n : ℕ) (u : C(Icc (0 : ℝ) T, SobolevSpace period 1)) :
+@[expose] def regularizedState (T : ℝ) (n : ℕ) (u : C(Icc (0 : ℝ) T, SobolevSpace period 1)) :
     C(Icc (0 : ℝ) T, SobolevSpace period 3) :=
   mapPath period T ((heatRegularizer period 0 n).comp (truncateOperator period 0)) u
 
 /-- The same genuine heat regularization of the source, retained at the gradient-energy source
 order. -/
-def regularizedForcing (T : ℝ) (n : ℕ) (f : C(Icc (0 : ℝ) T, SobolevSpace period 0)) :
+@[expose] def regularizedForcing (T : ℝ) (n : ℕ) (f : C(Icc (0 : ℝ) T, SobolevSpace period 0)) :
     C(Icc (0 : ℝ) T, SobolevSpace period 1) :=
   mapPath period T ((restrictOperator period (by
       norm_num : 1 ≤ 3)).comp (heatRegularizer period 0 n)) f
@@ -129,7 +129,8 @@ theorem regularizedForcing_value_tendsto (T : ℝ) (f : C(Icc (0 : ℝ) T, Sobol
   simpa only [regularizedForcing_value_eq, Function.comp_def] using hv
 
 /-- The first derivative of the genuine regularizer, as a bounded heat-commuting block. -/
-def regularizerFirst (n : ℕ) (i : Fin 4) : SobolevSpace period 0 →L[ℝ] SobolevSpace period 2 :=
+@[expose] def regularizerFirst (n : ℕ) (i : Fin 4) :
+    SobolevSpace period 0 →L[ℝ] SobolevSpace period 2 :=
   (derivativeOperator period 2 i).comp (heatRegularizer period 0 n)
 
 /-- The regularized first-derivative block commutes with actual heat. -/

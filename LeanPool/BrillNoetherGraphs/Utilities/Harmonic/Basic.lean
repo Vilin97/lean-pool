@@ -30,7 +30,7 @@ source vertex.  Equivalence of one-chip divisors on the target transports the
 corresponding fibres, so the fibre has rank at least one.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs
 
@@ -193,6 +193,7 @@ def fibre (f : IndexedHarmonicData G H) (z : H.V) : CFDiv G :=
   fun x => if f.vertexMap x = z then f.localDegree x else 0
 
 /-- Pullback of an arbitrary target divisor using the local degrees. -/
+@[expose]
 def pullback (f : IndexedHarmonicData G H) (A : CFDiv H) : CFDiv G :=
   fun x => (f.localDegree x : ℤ) * A (f.vertexMap x)
 
@@ -537,6 +538,7 @@ theorem targetOneChipEquivalent_of_connected_genus_zero
 /-- Mathematical pullback compatibility, deliberately separate from the raw
 finite data.  The unit-indexed checker implies it below; non-unit metric
 dilations still need a future weighted-Laplacian development. -/
+@[expose]
 def PullbackPrincipalCompatible (f : IndexedHarmonicData G H) : Prop :=
   ∀ A B : CFDiv H, linearEquiv H A B →
     linearEquiv G (f.pullback A) (f.pullback B)

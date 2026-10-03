@@ -19,7 +19,7 @@ Tags: formal-languages, context-free-grammars, computability, pumping-lemma
 MSC: 68Q45
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

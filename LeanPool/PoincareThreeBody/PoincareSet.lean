@@ -20,14 +20,14 @@ defines that set intrinsically in the full two-dimensional action region and pro
 leading-coefficient obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Prograde, noncircular elliptic actions whose entire ellipse stays inside the unit primary
 orbit. -/
-def InteriorProgradeEllipticActions : Set ActionSpace :=
+@[expose] def InteriorProgradeEllipticActions : Set ActionSpace :=
   {action | action ∈ ProgradeEllipticActions ∧
     action 0 ^ 2 * (1 + eccentricityFromActions action) < 1}
 
@@ -37,7 +37,7 @@ abbrev InteriorProgradeEllipticAction :=
 
 /-- The classical Poincaré set: rational Kepler resonances at which the disturbing average has a
 nonzero orientation derivative. -/
-def classicalPoincareSet : Set InteriorProgradeEllipticAction :=
+@[expose] def classicalPoincareSet : Set InteriorProgradeEllipticAction :=
   {action | ∃ p q : ℕ, 0 < p ∧ 0 < q ∧
     action.1 0 = resonantFirstAction p q ∧
     ∃ orientation,
@@ -46,12 +46,12 @@ def classicalPoincareSet : Set InteriorProgradeEllipticAction :=
           (eccentricityFromActions action.1)) orientation ≠ 0}
 
 /-- The exact classical celestial-mechanics input used by the density argument. -/
-def HasDenseClassicalPoincareSet : Prop :=
+@[expose] def HasDenseClassicalPoincareSet : Prop :=
   Dense classicalPoincareSet
 
 /-- A stronger sufficient condition: every interior positive rational resonance has a
 nonconstant disturbing average as the relative apsidal orientation varies. -/
-def ClassicalDisturbingNondegeneracy : Prop :=
+@[expose] def ClassicalDisturbingNondegeneracy : Prop :=
   ∀ {eccentricity : ℝ}, 0 < eccentricity → eccentricity < 1 →
     ∀ {p q : ℕ}, 0 < p → 0 < q →
       resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1 →
@@ -60,7 +60,7 @@ def ClassicalDisturbingNondegeneracy : Prop :=
 
 /-- The open interval of admissible noncircular eccentricities for one fixed positive rational
 resonance. -/
-def admissibleResonantEccentricitySet (p q : ℕ) : Set ℝ :=
+@[expose] def admissibleResonantEccentricitySet (p q : ℕ) : Set ℝ :=
   {eccentricity | 0 < eccentricity ∧ eccentricity < 1 ∧
     resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1}
 
@@ -69,7 +69,7 @@ abbrev AdmissibleResonantEccentricity (p q : ℕ) :=
   {eccentricity : ℝ // eccentricity ∈ admissibleResonantEccentricitySet p q}
 
 /-- Eccentricities at a fixed resonance where the resonant disturbing average is nonconstant. -/
-def nondegenerateResonantEccentricities (p q : ℕ) :
+@[expose] def nondegenerateResonantEccentricities (p q : ℕ) :
     Set (AdmissibleResonantEccentricity p q) :=
   {eccentricity | ∃ orientation,
     deriv (resonantDisturbingAverage p q eccentricity.1) orientation ≠ 0}

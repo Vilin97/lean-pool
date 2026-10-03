@@ -37,7 +37,7 @@ mask [dW19, qcnotes.tex:1460].
   is the hidden nonzero mask.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

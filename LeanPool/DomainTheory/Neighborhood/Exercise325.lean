@@ -47,7 +47,7 @@ recovered from its
 basic neighbourhoods.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise325
 

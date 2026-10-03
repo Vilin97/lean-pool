@@ -21,7 +21,7 @@ variable-body power partition: they let one work inside a fixed ball and with a 
 independently of the parameter.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry
 

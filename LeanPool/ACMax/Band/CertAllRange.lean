@@ -15,7 +15,7 @@ exponent at least eight, the fourth nonconstant term of the binomial expansion
 gives a uniform certificate with no upper bound on the order.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

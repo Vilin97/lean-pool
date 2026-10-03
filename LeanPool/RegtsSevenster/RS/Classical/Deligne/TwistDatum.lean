@@ -28,7 +28,7 @@ along the twist shuffle gives the odd twist of a duality datum,
 zigzag laws included.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -11,7 +11,7 @@ public import Mathlib.Topology.ContinuousMap.Bounded.Basic
 /-! Continuous families with a common compact spatial support give continuous paths in the
 space of bounded continuous functions, equipped with the uniform norm. -/
 
-@[expose] public section
+public section
 
 
 open Set Filter Topology
@@ -25,14 +25,14 @@ variable {A E V : Type*} [TopologicalSpace A] [TopologicalSpace E]
   [NormedAddCommGroup V]
 
 /-- A continuous, compactly supported function, regarded as a bounded continuous function. -/
-def boundedOfCompactSupport (f : E → V) (hf : Continuous f)
+@[expose] def boundedOfCompactSupport (f : E → V) (hf : Continuous f)
     (hs : HasCompactSupport f) : E →ᵇ V where
   toFun := f
   continuous_toFun := hf
   map_bounded' := Metric.isBounded_range_iff.mp (hs.isCompact_range hf).isBounded
 
 @[simp] theorem boundedOfCompactSupport_apply (f : E → V) (hf : Continuous f)
-    (hs : HasCompactSupport f) (x : E) : boundedOfCompactSupport f hf hs x = f x := rfl
+    (hs : HasCompactSupport f) (x : E) : boundedOfCompactSupport f hf hs x = f x := by rfl
 
 /-- Uniformly compact spatial support upgrades joint continuity to continuity in the
 bounded-continuous-function norm. No compactness assumption on the parameter space is needed. -/
@@ -66,7 +66,7 @@ theorem continuous_boundedOfCompactSupport
 
 /-- A continuous family with one common compact spatial support, bundled as a continuous
 path of bounded continuous functions. -/
-def compactSupportBoundedPath
+@[expose] def compactSupportBoundedPath
     (u : A × E → V) (hu : Continuous u) (K : Set E) (hK : IsCompact K)
     (hs : ∀ t, tsupport (fun x => u (t, x)) ⊆ K) : C(A, E →ᵇ V) where
   toFun t := boundedOfCompactSupport (fun x => u (t, x))
@@ -77,6 +77,6 @@ def compactSupportBoundedPath
 @[simp] theorem compactSupportBoundedPath_apply
     (u : A × E → V) (hu : Continuous u) (K : Set E) (hK : IsCompact K)
     (hs : ∀ t, tsupport (fun x => u (t, x)) ⊆ K) (t : A) (x : E) :
-    compactSupportBoundedPath u hu K hK hs t x = u (t, x) := rfl
+    compactSupportBoundedPath u hu K hK hs t x = u (t, x) := by rfl
 
 end EulerComparator

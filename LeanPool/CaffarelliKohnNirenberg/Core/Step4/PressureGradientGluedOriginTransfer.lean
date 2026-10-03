@@ -19,7 +19,7 @@ centre is not met by the carrier contribute nothing, and cells at or above the
 fixed scale are handled by the total integral on the carrier.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

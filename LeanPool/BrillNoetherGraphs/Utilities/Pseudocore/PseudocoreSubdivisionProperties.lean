@@ -18,7 +18,7 @@ the low-genus normalizers: connectedness, genus, and leaflessness of every
 positive subdivision.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Certificate.PseudocoreSubdivisionProperties
 
 open Utilities

@@ -25,7 +25,7 @@ at `ζ(3) − r ζ(2)` (`analytic_node`), and the nonvanishing modulo primes (`p
 independence then follows from the irrationality of `ζ(3) − r ζ(2)` for every rational `r` and
 of `ζ(2)`. -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial
 

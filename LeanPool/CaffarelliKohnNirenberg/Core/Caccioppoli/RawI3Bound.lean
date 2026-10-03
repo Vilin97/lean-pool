@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.SliceNormBounds
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology
@@ -28,6 +28,7 @@ noncomputable section
 namespace CKN
 
 /-- Raw pressure contribution paired with velocity and the spatial gradient of the heat cutoff. -/
+@[expose]
 def caccioppoliI3HeatCutoffRaw
     {p : ParabolicPoint → ℝ} {v : ParabolicPoint → Vec3}
     {x₀ : Vec3} {t₀ ρ ε r : ℝ} (hρ : 0 < ρ) (hε : 0 < ε) : ℝ :=

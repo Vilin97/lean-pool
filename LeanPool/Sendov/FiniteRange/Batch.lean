@@ -38,7 +38,7 @@ member, so a batch is cheaper than any single degree it covers except the first.
 * `Sendov.A_mono`: `A` increases with `n`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

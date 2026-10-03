@@ -14,7 +14,7 @@ section
 
 /-! Actual correction coefficient data restricted along continuous time maps. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,14 +27,14 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Restrict the actual spatial coefficient and its jet along a continuous parameter map. -/
-def CoefficientPath.comp {q : ℕ} {T U : Type*} [TopologicalSpace T] [TopologicalSpace U]
+@[expose] def CoefficientPath.comp {q : ℕ} {T U : Type*} [TopologicalSpace T] [TopologicalSpace U]
     (A : CoefficientPath period q T) (f : C(U, T)) : CoefficientPath period q U where
   coefficient t := A.coefficient (f t)
   jet t := A.jet (f t)
   continuous := A.continuous.comp f.continuous
 
 /-- Restrict every actual coefficient, background field, and residual along the same time map. -/
-def CorrectionData.comp {q : ℕ} {T U : Type*} [TopologicalSpace T] [TopologicalSpace U]
+@[expose] def CorrectionData.comp {q : ℕ} {T U : Type*} [TopologicalSpace T] [TopologicalSpace U]
     (D : CorrectionData period q T) (f : C(U, T)) : CorrectionData period q U where
   κ := D.κ
   direction := D.direction
@@ -54,7 +54,7 @@ theorem CorrectionData.comp_source {q : ℕ} {T U : Type*} [TopologicalSpace T] 
     (D : CorrectionData period q T) (f : C(U, T)) (hq : 6 ≤ q)
     (t : U) (u : SobolevSpace period (q + 1)) :
     ((D.comp period f).coefficients period hq).apply t u =
-      (D.coefficients period hq).apply (f t) u := rfl
+      (D.coefficients period hq).apply (f t) u := by rfl
 
 /-- Restricting the concrete data gives precisely the same nonlinear mild equation on a shorter
 interval. -/
@@ -65,7 +65,7 @@ theorem CorrectionData.comp_quadraticDuhamel {q : ℕ} (hq : 6 ≤ q)
     (t : Icc (0 : ℝ) T) :
     quadraticDuhamel period ν hν hT le_rfl
         ((D.comp period (timeInclusion hTS)).coefficients period hq) u₀ u t =
-      quadraticDuhamel period ν hν hT hTS (D.coefficients period hq) u₀ u t := rfl
+      quadraticDuhamel period ν hν hT hTS (D.coefficients period hq) u₀ u t := by rfl
 
 end EulerCorrectionOperators
 
@@ -74,7 +74,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,6 +111,7 @@ theorem hasDerivAt_restriction {E : Type*} [NormedAddCommGroup E] [NormedSpace �
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Every concrete spatial budget restricts with exactly the same numerical constants. -/
+@[expose]
 def SpatialBudget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q + 1}
     {D : CorrectionData period (q + 1) (Icc (0 : ℝ) S)} {N : ℕ} {R : C(Icc (0 : ℝ) S, ℝ)}
     (B : SpatialBudget period hq D N R) (hTS : T ≤ S) :
@@ -145,6 +146,7 @@ def SpatialBudget.restrict {q : ℕ} {T S : ℝ} {hq : 6 ≤ q + 1}
 
 /-- The actual inverse metric and its genuine derivative restrict with unchanged numerical budgets.
 -/
+@[expose]
 def MetricBudget.restrict {q : ℕ} {T S : ℝ} {hS : 0 ≤ S}
     {D : CorrectionData period (q + 1) (Icc (0 : ℝ) S)}
     (K : MetricBudget period S hS D) (hT : 0 ≤ T) (hTS : T ≤ S) :

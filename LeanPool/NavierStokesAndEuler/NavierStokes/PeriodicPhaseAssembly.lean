@@ -18,7 +18,7 @@ is therefore periodic on the full auxiliary lift and retains the original
 clock, with every derivative, on each padded wave core.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -76,7 +76,7 @@ namespace ClockWindow
 variable (w : ClockWindow)
 
 /-- Core, given by `Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2`. -/
-noncomputable def core : Set Plane :=
+@[expose] noncomputable def core : Set Plane :=
   Icc w.lower.1 w.upper.1 ×ˢ Icc w.lower.2 w.upper.2
 
 /-- Plateau, given by `Ioo (w.lower.1 - w.padding) (w.upper.1 + w.padding) ×ˢ Ioo (w.lower.2 -
@@ -87,12 +87,14 @@ noncomputable def plateau : Set Plane :=
 
 /-- Outer, given by `Icc (w.lower.1 - 2 * w.padding) (w.upper.1 + 2 * w.padding) ×ˢ Icc
 (w.lower.2 - 2 * w.padding) (w.upper.2 + 2 * w.padding)`. -/
+@[expose]
 noncomputable def outer : Set Plane :=
   Icc (w.lower.1 - 2 * w.padding) (w.upper.1 + 2 * w.padding) ×ˢ
     Icc (w.lower.2 - 2 * w.padding) (w.upper.2 + 2 * w.padding)
 
 /-- Cutoff, given by `intervalCutoff w.lower.1 w.upper.1 w.padding z.1 * intervalCutoff
 w.lower.2 w.upper.2 w.padding z.2`. -/
+@[expose]
 noncomputable def cutoff (z : Plane) : ℝ :=
   intervalCutoff w.lower.1 w.upper.1 w.padding z.1 *
     intervalCutoff w.lower.2 w.upper.2 w.padding z.2
@@ -144,6 +146,7 @@ theorem cutoff_germ_on_support {E : Type} [Zero E] {κ : Plane → E}
 end ClockWindow
 
 /-- The literal lattice sum of a native scalar. -/
+@[expose]
 noncomputable def periodizeScalar (g : Geometry) (f : Plane → ℝ) (Y : Plane) : ℝ :=
   ∑' k : Frequency, f (g.coordinates k Y)
 
@@ -193,6 +196,7 @@ theorem periodizeScalar_transport (g : Geometry) (f : Plane → ℝ) (d : ℕ)
     CopySolveCompatibility.coordinates_refine, CopySolveCompatibility.coordinates_timeGeometry]
 
 /-- The clock itself is periodicized together with its cutoff. -/
+@[expose]
 noncomputable def periodicClock (g : Geometry) (χ : Plane → ℝ) : Plane → ℝ :=
   periodizeScalar g (fun z => χ z * z.2)
 
@@ -278,6 +282,7 @@ section Phases
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Phase, given by `A z.1 - periodicClock g χ z.2 * B z.1`. -/
+@[expose]
 noncomputable def phase (g : Geometry) (χ : Plane → ℝ) (A B : P → ℝ)
     (z : P × Plane) : ℝ := A z.1 - periodicClock g χ z.2 * B z.1
 
@@ -331,7 +336,7 @@ theorem phase_path (g : Geometry) (w : ClockWindow)
   simp only [phase, periodicClock_path g w hinj k Y t htransverse ht]
 
 /-- The angular coordinate is distinct from the auxiliary torus. -/
-noncomputable def angularLift (Φ : P × Plane → ℝ) (angular : ℝ)
+@[expose] noncomputable def angularLift (Φ : P × Plane → ℝ) (angular : ℝ)
     (x : (P × ℝ) × Plane) : ℝ := Φ (x.1.1, x.2) + angular * x.1.2
 
 theorem angularLift_contDiff {Φ : P × Plane → ℝ} (hΦ : ContDiff ℝ ∞ Φ) (angular : ℝ) :
@@ -431,17 +436,21 @@ end Phases
 abbrev Parameter := PhysicalParticularWave.Parameter
 
 /-- Slow swap, given by `(p.1, (p.2.2, p.2.1))`. -/
+@[expose]
 noncomputable def slowSwap (p : Parameter) : PhaseCalculus.Slow := (p.1, (p.2.2, p.2.1))
 
 /-- Profile intercept, given by `(pz / ε) * s.2.2 + x0 * s.1`. -/
+@[expose]
 noncomputable def profileIntercept (ε pz x0 : ℝ) (s : Parameter) : ℝ :=
   (pz / ε) * s.2.2 + x0 * s.1
 
 /-- Profile rate, given by `p * F s + pz * G s`. -/
+@[expose]
 noncomputable def profileRate (p pz : ℝ) (F G : Parameter → ℝ) (s : Parameter) : ℝ :=
   p * F s + pz * G s
 
 /-- Profile phase, given by `phase g χ (profileIntercept ε pz x0) (profileRate p pz F G)`. -/
+@[expose]
 noncomputable def profilePhase (g : Geometry) (χ : Plane → ℝ) (ε p pz x0 : ℝ)
     (F G : Parameter → ℝ) : Parameter × Plane → ℝ :=
   phase g χ (profileIntercept ε pz x0) (profileRate p pz F G)

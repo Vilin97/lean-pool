@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch020`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2953,7 +2953,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24KC6ProofBatch32fd0d2bad1c3ab1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2961,7 +2961,7 @@ section
 
 /-! E24KC6 explicit proof-producing certificate batch. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

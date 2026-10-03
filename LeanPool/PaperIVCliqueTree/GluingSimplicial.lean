@@ -15,7 +15,7 @@ outside it is eliminated. The proof works in the connected component of an
 outside vertex and uses the existing one- and two-vertex Dirac interfaces.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

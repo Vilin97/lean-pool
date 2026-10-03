@@ -39,7 +39,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapRegularFami
 
 /-! # CoreGapRegularCover -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -50,6 +50,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 /-! ### The triangle support -/
 
 /-- The spanning subgraph of the edges of `G` that lie in at least one triangle. -/
+@[expose]
 noncomputable def triangleSupport (G : SimpleGraph V) [DecidableRel G.Adj] : SimpleGraph V :=
   edgeSelect G (fun e => 0 < edgeTriangleDegree G e)
 
@@ -216,6 +217,7 @@ theorem hasNearRegularFamily_of_cover (G : SimpleGraph V) [DecidableRel G.Adj]
 
 /-- A **good triple** of clusters: three distinct parts of `P`, pairwise `ep`-uniform in `G` with
 density at least `de`.  These are the triples that can carry a triangle of the reduced graph. -/
+@[expose]
 def GoodTriple (G : SimpleGraph V) [DecidableRel G.Adj] (P : Finpartition (univ : Finset V))
     (ep de : ℝ) (U W X : Finset V) : Prop :=
   U ∈ P.parts ∧ W ∈ P.parts ∧ X ∈ P.parts ∧ U ≠ W ∧ U ≠ X ∧ W ≠ X ∧

@@ -18,7 +18,7 @@ Wiener and Consequences retain the PNT and prime-interval dependency closure;
 unrelated later developments and LeanArchitect annotations are omitted.
 -/
 
-@[expose] public section
+public section
 
 namespace MooreBound
 

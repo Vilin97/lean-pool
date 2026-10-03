@@ -30,7 +30,7 @@ Core type definitions for the formalization:
 - `GJGeneratingFunctional` = Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
 -/
 
-@[expose] public section
+public section
 
 /-- Spacetime dimension. Currently set to 4 (Euclidean ℝ⁴).
     Changing this value requires corresponding changes throughout the project;
@@ -111,7 +111,7 @@ abbrev FieldConfiguration := WeakDual ℝ (SchwartzMap SpaceTime ℝ)
     Note: FieldConfiguration = WeakDual ℝ (SchwartzMap SpaceTime ℝ) has the correct
     weak-* topology, making evaluation maps x ↦ ω(x) continuous for each test function x.
 -/
-def distributionPairing (ω : FieldConfiguration) (f : OSforGFF.TestFunction) : ℝ := ω f
+@[expose] def distributionPairing (ω : FieldConfiguration) (f : OSforGFF.TestFunction) : ℝ := ω f
 
 @[simp] lemma distributionPairing_add (ω₁ ω₂ : FieldConfiguration) (a : OSforGFF.TestFunction) :
     distributionPairing (ω₁ + ω₂) a = distributionPairing ω₁ a + distributionPairing ω₂ a := rfl
@@ -141,7 +141,12 @@ lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : OSforGFF.TestFu
     exact WeakDual.eval_continuous a
 
 lemma distributionPairingCLM_apply (a : OSforGFF.TestFunction) (ω : FieldConfiguration) :
-    distributionPairingCLM a ω = distributionPairing ω a := rfl
+    distributionPairingCLM a ω = distributionPairing ω a := by rfl
+
+lemma distributionPairingCLM_eq_fun (a : OSforGFF.TestFunction) :
+    (distributionPairingCLM a : FieldConfiguration → ℝ) = fun ω => distributionPairing ω a := by
+  funext ω
+  exact distributionPairingCLM_apply a ω
 
 variable [SigmaFinite μ]
 
@@ -155,7 +160,7 @@ where the integral is over field configurations ω (distributions).
 /-- The Glimm-Jaffe generating functional: Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
     This is the fundamental object in constructive QFT.
 -/
-def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
   (J : OSforGFF.TestFunction) : ℂ :=
   ∫ ω, Complex.exp (Complex.I * (distributionPairing ω J : ℂ)) ∂dμ_config.toMeasure
 
@@ -193,12 +198,12 @@ omit [SigmaFinite μ]
 
 /-- Evaluate `schwartzCompCLM` pointwise. -/
 @[simp] lemma schwartz_comp_clm_apply (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) (x : SpaceTime) :
-  (schwartzCompCLM f L) x = L (f x) := rfl
+  (schwartzCompCLM f L) x = L (f x) := by rfl
 
 /-- Decompose a complex test function into its real and imaginary parts as real test functions.
     This is more efficient than separate extraction functions.
 -/
-def complexTestFunctionDecompose (f : TestFunctionℂ) :
+@[expose] def complexTestFunctionDecompose (f : TestFunctionℂ) :
     OSforGFF.TestFunction × OSforGFF.TestFunction :=
   (schwartzCompCLM f Complex.reCLM, schwartzCompCLM f Complex.imCLM)
 
@@ -238,19 +243,19 @@ lemma complex_testfunction_decompose_recompose
     We extend the pairing by treating the complex test function as f(x) = f_re(x) + i*f_im(x)
     and defining ⟨ω, f⟩ = ⟨ω, f_re⟩ + i*⟨ω, f_im⟩
 -/
-def distributionPairingℂReal (ω : FieldConfiguration) (f : TestFunctionℂ) : ℂ :=
+@[expose] def distributionPairingℂReal (ω : FieldConfiguration) (f : TestFunctionℂ) : ℂ :=
   -- Extract real and imaginary parts using our efficient decomposition
   let ⟨f_re, f_im⟩ := complexTestFunctionDecompose f
   -- Pair with the real field configuration and combine
   (ω f_re : ℂ) + Complex.I * (ω f_im : ℂ)
 
 /-- Complex version of the generating functional -/
-def GJGeneratingFunctionalℂ (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def GJGeneratingFunctionalℂ (dμ_config : ProbabilityMeasure FieldConfiguration)
   (J : TestFunctionℂ) : ℂ :=
   ∫ ω, Complex.exp (Complex.I * (distributionPairingℂReal ω J)) ∂dμ_config.toMeasure
 
 /-- The mean field in the Glimm-Jaffe framework -/
-def GJMean (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def GJMean (dμ_config : ProbabilityMeasure FieldConfiguration)
   (φ : OSforGFF.TestFunction) : ℝ :=
   ∫ ω, distributionPairing ω φ ∂dμ_config.toMeasure
 
@@ -263,7 +268,7 @@ abbrev SpatialCoords := EuclideanSpace ℝ (Fin (STDimension - 1))
 abbrev SpatialL2 := Lp ℝ 2 (volume : Measure SpatialCoords)
 
 /-- Extract spatial part of spacetime coordinate -/
-def spatialPart (x : SpaceTime) : SpatialCoords :=
+@[expose] def spatialPart (x : SpaceTime) : SpatialCoords :=
   (EuclideanSpace.equiv (Fin (STDimension - 1)) ℝ).symm
     (fun i => x ⟨i.val + 1, by simp [STDimension]; omega⟩)
 

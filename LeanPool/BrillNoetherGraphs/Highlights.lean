@@ -30,7 +30,7 @@ lower bound on divisorial gonality.  Further headline theorems can be added one
 at a time in the same style.
 -/
 
-@[expose] public section
+public section
 
 namespace Highlights
 

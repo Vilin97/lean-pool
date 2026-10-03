@@ -38,7 +38,7 @@ heat semigroup has multiplier `exp (-4 * π² * s * ‖ξ‖²)`.  Integrating i
 spatial derivative over positive time recovers the double Riesz multiplier.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -201,7 +201,7 @@ The only polynomial estimate used here absorbs the square of the norm into
 a Gaussian with half the decay rate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -279,7 +279,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,7 +490,7 @@ absolute integral. The resulting radial majorant belongs to `L^(4/3)`, so
 Hölder with the `L^4` test function proves integrability on space times time.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -605,7 +605,7 @@ integrability also proves that the spatial convolution exists at every point;
 no global integrability of `inverseFourier A` is required.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -697,7 +697,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

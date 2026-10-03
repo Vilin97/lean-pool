@@ -13,7 +13,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SelbergSieve4.ForMathlib.Basic
 -/
 
-@[expose] public section
+public section
 
 namespace Aux
 

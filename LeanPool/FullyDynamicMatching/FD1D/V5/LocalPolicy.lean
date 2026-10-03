@@ -16,33 +16,39 @@ the fixed left/right spatial sign. Empty-child rates are auxiliary analytic
 rates; empty children still receive zero deletion mass.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.LocalPolicy
 
 noncomputable section
 
 /-- Parent inventory, coerced to `ℝ`. -/
+@[expose]
 def inventory (x y : ℕ) : ℝ :=
   (x : ℝ) + (y : ℝ)
 
 /-- Parent deletion mass under the identity `q = Nh`. -/
+@[expose]
 def parentMass (h : ℝ) (x y : ℕ) : ℝ :=
   inventory x y * h
 
 /-- The feedback candidate, for ordered positive counts `x ≥ y > 0`. -/
+@[expose]
 def feedbackCandidate (a h : ℝ) (x y : ℕ) : ℝ :=
   2 * a * parentMass h x y * ((x : ℝ) - y) / ((x : ℝ) * y)
 
 /-- The uniform-deletion cap, for ordered counts. -/
+@[expose]
 def uniformCandidate (h : ℝ) (x y : ℕ) : ℝ :=
   parentMass h x y * ((x : ℝ) - y) / inventory x y
 
 /-- The rate-floor cap, for ordered counts and parent interval mass `p`. -/
+@[expose]
 def floorCandidate (a p h : ℝ) (x y : ℕ) : ℝ :=
   parentMass h x y - 2 * p * y / (2 * (y : ℝ) + a)
 
 /-- Nonnegative bias magnitude after temporarily ordering `x ≥ y`. -/
+@[expose]
 def orderedBias (a p h : ℝ) (x y : ℕ) : ℝ :=
   if x = y then 0
   else if x + y = 0 then 0
@@ -51,54 +57,66 @@ def orderedBias (a p h : ℝ) (x y : ℕ) : ℝ :=
     (min (uniformCandidate h x y) (floorCandidate a p h x y))
 
 /-- Signed left-minus-right deletion bias in fixed spatial labels. -/
+@[expose]
 def bias (a p h : ℝ) (x y : ℕ) : ℝ :=
   if y ≤ x then orderedBias a p h x y else -orderedBias a p h y x
 
 /-- Left-child deletion mass. -/
+@[expose]
 def massLeft (a p h : ℝ) (x y : ℕ) : ℝ :=
   (parentMass h x y + bias a p h x y) / 2
 
 /-- Right-child deletion mass. -/
+@[expose]
 def massRight (a p h : ℝ) (x y : ℕ) : ℝ :=
   (parentMass h x y - bias a p h x y) / 2
 
 /-- Auxiliary child rate on the spatial left. -/
+@[expose]
 def rateLeft (a p h : ℝ) (x y : ℕ) : ℝ :=
   if x + y = 0 then h
   else if x = 0 then max h (p / a)
   else massLeft a p h x y / x
 
 /-- Auxiliary child rate on the spatial right. -/
+@[expose]
 def rateRight (a p h : ℝ) (x y : ℕ) : ℝ :=
   if x + y = 0 then h
   else if y = 0 then max h (p / a)
   else massRight a p h x y / y
 
 /-- Discrepancy `t = (p-q)/a`. -/
+@[expose]
 def discrepancy (a p h : ℝ) (x y : ℕ) : ℝ :=
   (p - parentMass h x y) / a
 
 /-- Regularized inverse inventory `Z = p/(N+a/2)`. -/
+@[expose]
 def regularizedMass (a p : ℝ) (x y : ℕ) : ℝ :=
   p / (inventory x y + a / 2)
 
 /-- Left-child discrepancy. -/
+@[expose]
 def discrepancyLeft (a p h : ℝ) (x y : ℕ) : ℝ :=
   (p / 2 - massLeft a p h x y) / a
 
 /-- Right-child discrepancy. -/
+@[expose]
 def discrepancyRight (a p h : ℝ) (x y : ℕ) : ℝ :=
   (p / 2 - massRight a p h x y) / a
 
 /-- Left-child regularized inverse inventory. -/
+@[expose]
 def regularizedMassLeft (a p : ℝ) (x : ℕ) : ℝ :=
   (p / 2) / ((x : ℝ) + a / 2)
 
 /-- Right-child regularized inverse inventory. -/
+@[expose]
 def regularizedMassRight (a p : ℝ) (y : ℕ) : ℝ :=
   (p / 2) / ((y : ℝ) + a / 2)
 
 /-- The quadratic Bellman correction in equation (15). -/
+@[expose]
 def bellman (h t Z : ℝ) : ℝ :=
   (t - h / 2) * Z - t ^ 2 / 6
 

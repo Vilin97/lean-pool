@@ -23,7 +23,7 @@ DecayMediumNodes: `D_eval_neg_of_lt`, `padicValRat_factorial_small`, `rscale_val
 IntegerFamily: the integer quotient),
 with the layout `(s, K) = (3, 4)` there replaced by `(4, 5)` here. -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 
@@ -231,6 +231,7 @@ theorem entry_eq (r : ℚ) (n : ℕ) (a b : Fin (3 * n)) :
 /-- Node weight of the proof notes, Lemma 5: `w_j = v_p(ρ_j) + betaWt`, and a large dummy value
 for the
 cancelled nodes `j ≤ n` (where `ρ_j = 0`). -/
+@[expose]
 def wv (n p j : ℕ) : ℚ :=
   if j ≤ n then 15 * (n:ℚ) + 1 else
     (3 * ((j-1)/p : ℕ) - 4 * ((j-1-n)/p : ℕ) - ((5 * n-j)/p : ℕ) : ℚ) + betaWt p j

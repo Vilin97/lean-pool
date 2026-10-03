@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketShiftArithmetic
 
 /-! Uniform shifts and actual time profiles for the three known pieces of every grade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,7 +22,7 @@ namespace EulerPacketCylinderField.KnownPiece
 open EulerPacketTimeProfile EulerPacketShiftArithmetic
 
 /-- Shift as an element of `ℕ`. -/
-def shift (k : KnownPiece) (i : ℕ) : ℕ :=
+@[expose] def shift (k : KnownPiece) (i : ℕ) : ℕ :=
   match k with
   | .high => highShift i
   | .mean => meanShift i
@@ -31,13 +31,14 @@ def shift (k : KnownPiece) (i : ℕ) : ℕ :=
 variable {K : Type*} [TopologicalSpace K]
 
 /-- Profile as an element of `C(K,ℝ)`. -/
-def profile (k : KnownPiece) (S : Scales K) (i : ℕ) : C(K,ℝ) :=
+@[expose] def profile (k : KnownPiece) (S : Scales K) (i : ℕ) : C(K,ℝ) :=
   match k with
   | .high => S.high i
   | .mean => S.mean i
   | .corrector => S.high (i-1)
 
 /-- Envelope as an element of `C(K,ℝ)`. -/
+@[expose]
 def envelope (k : KnownPiece) (S : Scales K) (i : ℕ) : C(K,ℝ) :=
   match k with
   | .high | .corrector => S.high i

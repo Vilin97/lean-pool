@@ -19,7 +19,7 @@ proves it is the derivative of the solved coordinate velocity; bounded H¹
 reconstruction then supplies the actual continuous history path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,24 +46,25 @@ variable {U E : Type*}
 
 /-- Velocity Lᵖ, given by `(zeroTraceDerivatives (U := U) T hT).subtypeL.comp (fixedFrameSolver
 T hT Q Q₁ H c hc hQ hd K hK hH hsmall)`. -/
-def velocityLp : TimeLp T E →L[ℝ] TimeLp T U :=
+@[expose] def velocityLp : TimeLp T E →L[ℝ] TimeLp T U :=
   (zeroTraceDerivatives (U := U) T hT).subtypeL.comp
     (fixedFrameSolver T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 /-- Acceleration Lᵖ as an element of `TimeLp T E →L[ℝ] TimeLp T U`. -/
-def accelerationLp : TimeLp T E →L[ℝ] TimeLp T U :=
+@[expose] def accelerationLp : TimeLp T E →L[ℝ] TimeLp T U :=
   (gramSolver T hT Q c hc hQ).comp ((timeMultiplier T hT Q).adjoint.comp
     (ContinuousLinearMap.id ℝ (TimeLp T E)-(2 : ℝ) • (timeMultiplier T hT Q₁).comp
       (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)))
 
 /-- Velocity path as an element of `TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U)`. -/
-def velocityPath : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U) :=
+@[expose] def velocityPath : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U) :=
   (valuePart T hT).comp (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall) +
     (derivativePart T hT).comp (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 theorem velocityLp_zero_trace (f : TimeLp T E) :
     initialTrace T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) = 0 :=
-  (fixedFrameSolver T hT Q Q₁ H c hc hQ hd K hK hH hsmall f).property
+  (mem_zeroTraceDerivatives T hT _).1
+    (fixedFrameSolver T hT Q Q₁ H c hc hQ hd K hK hH hsmall f).property
 
 theorem accelerationLp_ae (f : TimeLp T E) :
     (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f : ℝ → U) =ᵐ[timeMeasure T]

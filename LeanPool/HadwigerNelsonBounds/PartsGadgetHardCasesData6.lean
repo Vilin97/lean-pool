@@ -15,12 +15,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated hard-case certificates, data group 6. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate28`. -/
-def partsGadgetHardCertificate28 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate28 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 3⟩, ⟨7, 0⟩, ⟨1, 2⟩, ⟨4, 3⟩, ⟨8, 2⟩
@@ -230,7 +230,7 @@ def partsGadgetHardCertificate28 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate29`. -/
-def partsGadgetHardCertificate29 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate29 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 3⟩, ⟨7, 0⟩, ⟨1, 2⟩, ⟨4, 3⟩, ⟨8, 3⟩
@@ -440,7 +440,7 @@ def partsGadgetHardCertificate29 : PartsGadgetCertificate := {
 }
 
 /-- Independently checked hard-case certificate `partsGadgetHardCertificate30`. -/
-def partsGadgetHardCertificate30 : PartsGadgetCertificate := {
+@[expose] def partsGadgetHardCertificate30 : PartsGadgetCertificate := {
   roots := [
     ⟨5, 0⟩, ⟨31, 3⟩, ⟨18, 0⟩, ⟨25, 1⟩, ⟨19, 3⟩, ⟨12, 2⟩,
     ⟨6, 3⟩, ⟨7, 1⟩

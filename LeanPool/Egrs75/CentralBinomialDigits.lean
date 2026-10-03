@@ -38,7 +38,7 @@ The carry machinery below is the general-base-`p` analogue of the base-3
 doubling transducer already proven in ConcreteMath/CarryTransducerCorrectness.lean.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.Erdos376
 
@@ -49,7 +49,7 @@ open Nat
 /-- `LowDoubleDigits p n`: doubling `n` in base `p` produces no carry, i.e.
 every base-`p` digit `d` of `n` satisfies `2*d < p`. For `p = 3` this is
 "all digits ≤ 1", for `p = 5` "≤ 2", for `p = 7` "≤ 3". -/
-def LowDoubleDigits (p n : ℕ) : Prop := ∀ d ∈ Nat.digits p n, 2 * d < p
+@[expose] def LowDoubleDigits (p n : ℕ) : Prop := ∀ d ∈ Nat.digits p n, 2 * d < p
 
 /-! ## General-base doubling carry transducer
 

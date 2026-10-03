@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -37,10 +37,12 @@ abbrev Block := Fin 7
 abbrev Mu := Fin muSupport.size
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def xEdge (x : Var → Q) : Q :=
   x ⟨edgeVar, by decide⟩
 
 /-- The empty dual-certificate entry used as a default value. -/
+@[expose]
 def defaultMu : Nat × Array Int × Int := (0, #[], 0)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -52,19 +54,21 @@ def muVal (k : Mu) : Q :=
   (muNumD k : Q) / (D : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def aVec (k : Mu) : Array Int :=
+@[expose] def aVec (k : Mu) : Array Int :=
   (muSupport.getD k.1 defaultMu).2.1
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def aCoeffInt (k : Mu) (i : Var) : Int :=
   coeffAt (aVec k) i.1
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def aCoeff (k : Mu) (i : Var) : Q :=
   (aCoeffInt k i : Q)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def aDot (k : Mu) (x : Var → Q) : Q :=
+@[expose] def aDot (k : Mu) (x : Var → Q) : Q :=
   ∑ i : Var, (aCoeff k i) * x i
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -72,23 +76,23 @@ def muSum : Q :=
   ∑ k : Mu, muVal k
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def S0Num (r : Block) : Array (Array Int) :=
+@[expose] def S0Num (r : Block) : Array (Array Int) :=
   S0Blocks.getD r.1 #[]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def SiNum (r : Block) (i : Var) : Array (Array Int) :=
+@[expose] def SiNum (r : Block) (i : Var) : Array (Array Int) :=
   (SiBlocks.getD r.1 #[]).getD i.1 #[]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def S0 (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def S0 (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
   toMat3Scaled D (S0Num r)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def Si (r : Block) (i : Var) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def Si (r : Block) (i : Var) : Matrix (Fin 3) (Fin 3) Q :=
   toMat3Scaled D (SiNum r i)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def S (x : Var → Q) (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
+@[expose] def S (x : Var → Q) (r : Block) : Matrix (Fin 3) (Fin 3) Q :=
   S0 r + ∑ i : Var, x i • Si r i
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -104,11 +108,11 @@ def zCoeff (i : Var) : Q :=
   ∑ r : Block, frobInner (Z r) (Si r i)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def dualObjective : Q :=
+@[expose] def dualObjective : Q :=
   (dualObjectiveComputedD2 : Q) / ((D : Q) * (D : Q))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
+@[expose] def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
   (∀ k : Mu, aDot k x ≤ (1 : Q)) ∧ ∀ r : Block, (S x r).PosSemidef
 
 theorem muVal_nonneg (k : Mu) : 0 ≤ muVal k := by

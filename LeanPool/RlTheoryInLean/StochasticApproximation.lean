@@ -14,4 +14,4 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 Discrete Gronwall inequalities from the stochastic-approximation core.
 -/
 
-@[expose] public section
+public section

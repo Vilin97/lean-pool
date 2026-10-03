@@ -21,7 +21,7 @@ time derivative. The original AC paths have these derivatives at every
 interior time, and within the interval at both endpoints.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -51,14 +51,14 @@ variable {T : ℝ} {hT : 0 ≤ T}
   (s : StrongMeanEvolution T hT FInv F F₁ A L u f)
 
 /-- The original coordinate velocity is continuous on the closed time interval. -/
-def coordinateVelocityPath : C(Icc (0 : ℝ) T, solenoidalSpace) :=
+@[expose] def coordinateVelocityPath : C(Icc (0 : ℝ) T, solenoidalSpace) :=
   ⟨fun t => s.velocity t, by
     have hc : ContinuousOn s.velocity (Icc (0 : ℝ) T) := by
       simpa only [uIcc_of_le hT] using s.velocity_ac.continuousOn
     exact hc.domRestrict⟩
 
 @[simp] theorem coordinateVelocityPath_apply (t : Icc (0 : ℝ) T) :
-    s.coordinateVelocityPath t = s.velocity t := rfl
+    s.coordinateVelocityPath t = s.velocity t := by rfl
 
 /-- This is a continuous representative of the actual L² coordinate velocity. -/
 theorem coordinateVelocityPath_ae :
@@ -98,7 +98,7 @@ variable (c : ℝ) (hc : 0 < c)
   (fC : C(Icc (0 : ℝ) T, L2))
 
 /-- Continuous coordinate acceleration constructed by the actual Gram inverse. -/
-def classicalAcceleration : C(Icc (0 : ℝ) T, solenoidalSpace) :=
+@[expose] def classicalAcceleration : C(Icc (0 : ℝ) T, solenoidalSpace) :=
   accelerationPath T (solenoidalFrame T F) (solenoidalFrame T F₁) c hc hLower
     s.coordinateVelocityPath fC
 
@@ -137,7 +137,7 @@ theorem velocity_hasDerivWithinAt
     s.velocity s.velocity_ac s.velocity_derivative t
 
 /-- The physical derivative path is the actual continuous product-rule expression. -/
-def classicalPhysicalDerivative : C(Icc (0 : ℝ) T, L2) :=
+@[expose] def classicalPhysicalDerivative : C(Icc (0 : ℝ) T, L2) :=
   ⟨fun t => F₁ t (s.coordinateVelocityPath t : L2) +
       F t (s.classicalAcceleration c hc hLower fC t : L2),
     (F₁.continuous.clm_apply (solenoidalSpace.subtypeL.continuous.comp

@@ -20,7 +20,7 @@ public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -36,7 +36,7 @@ open CKN
 abbrev rieszSecondL2 := Lp ℝ 2 (volume : Measure Vec3)
 
 /-- Continuous inclusion of Schwartz functions into the L² source space. -/
-def rieszSecondSchwartzEmbedding :
+@[expose] def rieszSecondSchwartzEmbedding :
     SchwartzMap Vec3 ℝ →L[ℝ] rieszSecondL2 :=
   SchwartzMap.toLpCLM ℝ ℝ 2 volume
 
@@ -375,6 +375,7 @@ structure RieszSecondL2CZCertificate {i j : Fin 3}
               ENNReal.ofReal |dyadicBadPart F Q.1 x|)
 
 /-- Explicit weak-(1,1) coefficient assembled from the decomposition and kernel bounds. -/
+@[expose]
 def rieszSecondWeakTypeConstant : ℝ :=
   32 + 32 * Real.pi * Real.sqrt 3 +
     256 * Real.pi * rieszSecondKernelC₂
@@ -388,7 +389,7 @@ theorem rieszSecondKernelC_H :
   ring
 
 /-- Measurable second-Riesz operator on L² inputs, extended by zero outside L². -/
-def rieszSecondL2RawOperator {i j : Fin 3}
+@[expose] def rieszSecondL2RawOperator {i j : Fin 3}
     (hL2 : RieszSecondL2Input i j) (f : Vec3 → ℝ) : Vec3 → ℝ := by
   classical
   exact if hf : MemLp f (2 : ℝ≥0∞) volume then

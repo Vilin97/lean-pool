@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketSourceData
 and pressure Hessian. The only matching data are the literal Lagrangian
 velocity and acceleration laws, not separate coefficient identities. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ namespace Parent
 variable (G : Parent)
 
 /-- Position, given by `x+G.displacement.field t x`. -/
-def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
+@[expose] def position (t : Icc (0 : ℝ) G.T) (x : Space) : Space :=
   x+G.displacement.field t x
 
 @[simp] theorem position_initial (x : Space) : G.position G.zeroTime x=x := by
@@ -98,7 +98,7 @@ theorem initialStrain_physical (x : Space) :
 
 /-- The source low-order hypotheses follow from the actual physical
 gradient at time zero and the actual physical pressure-force derivative. -/
-def lowBoundsOfPhysical (Be Bc L r K : ℝ)
+@[expose] def lowBoundsOfPhysical (Be Bc L r K : ℝ)
     (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1 * Bc ≤ L)
     (hr : 0 ≤ r) (hrq : r ≤ 1 / 4) (hK : 0 ≤ K)
     (hexterior : ∀ x, r ≤ ‖x‖ → ∀ v : Space,

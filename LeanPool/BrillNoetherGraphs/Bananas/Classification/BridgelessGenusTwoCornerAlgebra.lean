@@ -19,7 +19,7 @@ The hypotheses isolate exactly what bridgelessness supplies: every one-chip
 divisor has rank zero.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

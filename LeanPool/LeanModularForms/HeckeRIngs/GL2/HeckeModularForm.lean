@@ -26,7 +26,7 @@ proving holomorphicity, linearity, and boundedness at cusps.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.4
 -/
 
-@[expose] public section
+public section
 
 open Matrix Matrix.SpecialLinearGroup Subgroup.Commensurable Pointwise
 open HeckeRing DoubleCoset HeckeRing.GLn HeckeRing.GL2
@@ -62,6 +62,7 @@ lemma heckeSlash_bdd_at_cusps (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : Modular
     OnePoint.IsBoundedAt.smul_iff.mp (f.bdd_at_cusps' (glMap_smul_isCusp _ hc))
 
 /-- The Hecke operator `T(D)` on modular forms, preserving slash invariance and holomorphicity. -/
+@[expose]
 noncomputable def heckeOperator (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ModularForm 𝒮ℒ k) :
     ModularForm 𝒮ℒ k where
   toSlashInvariantForm := heckeSlashInvariant k D f.toSlashInvariantForm
@@ -286,9 +287,8 @@ private theorem heckeSlash_comp (k : ℤ) (D₁ D₂ : HeckeCoset (GLPair 2)) (f
     unfold heckeSlashExt; rw [mul_singleton_𝕋]; simp]
   have h_comm : m (GLPair 2) (HeckeCoset.rep D₂) (HeckeCoset.rep D₁) =
       m (GLPair 2) (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) := by
-    rw [← @T_single_one_mul_T_single_one _ _ (GLPair 2) D₂ D₁,
-      ← @T_single_one_mul_T_single_one _ _ (GLPair 2) D₁ D₂]
-    exact (instCommRingHeckeAlgebra (n := 2)).mul_comm _ _
+    exact (GLPairAntiInvolution 2).m_comm_of_onHeckeCoset_eq
+      (GL_pair_onHeckeCoset_eq 2) D₂ D₁
   rw [h_comm]; simp_rw [heckeSlash]
   rw [show (∑ i : decompQuot (GLPair 2) (HeckeCoset.rep D₁),
       (∑ j : decompQuot (GLPair 2) (HeckeCoset.rep D₂),

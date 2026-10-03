@@ -18,7 +18,7 @@ from edge-interleaved to oriented order has sign `(−1)^s` where `s`
 is the number of edges whose representative flag is outgoing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

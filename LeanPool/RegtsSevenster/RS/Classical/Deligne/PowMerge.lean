@@ -35,7 +35,7 @@ concatenation of ambient tensor powers.
   forward direction and `powSplit` as the inverse.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -887,6 +887,7 @@ projection.
 section Interior
 
 /-- The bridge of `midConcatFst`, as an isomorphism. -/
+@[expose]
 noncomputable def midConcatFstIso
     [Category.{v} D] [MonoidalCategory D] (A : D) (X : D)
     (s t n : ℕ) :
@@ -898,6 +899,7 @@ noncomputable def midConcatFstIso
       (tensorPowConcat X t n)
 
 /-- The bridge of `midConcatSnd`, as an isomorphism. -/
+@[expose]
 noncomputable def midConcatSndIso
     [Category.{v} D] [MonoidalCategory D] (A : D) (X : D)
     (m s t : ℕ) :

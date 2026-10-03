@@ -24,7 +24,7 @@ finitely many neighbours, then the Laplacian is surjective.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -63,6 +63,7 @@ lemma mem_incidenceFinset' (v : V) [Fintype (X.neighborSet v)] (e : X.edgeSet) :
 
 /-- The Laplacian of an `M`-valued function on the set of edges of `X` as an `M`-valued function
 on the vertices of `X`. -/
+@[expose]
 def laplace [∀ v, Fintype (X.neighborSet v)] (w : V → Aˣ) (f : X.edgeSet → M) (v : V) : M :=
   w v • ∑ e ∈ X.incidenceFinset' v, f e
 
@@ -763,8 +764,7 @@ lemma laplace_add (f g : X.edgeSet → M) : X.laplace w (f + g) = X.laplace w f 
   simp [laplace_apply, Finset.sum_add_distrib]
 
 /-- The Laplacian of `X` as a group homomorphism. -/
-@[simps]
-def laplaceHom : (X.edgeSet → M) →+ (V → M) where
+@[expose, simps] def laplaceHom : (X.edgeSet → M) →+ (V → M) where
   toFun := X.laplace w
   map_zero' := laplace_zero w
   map_add' := laplace_add w
@@ -786,7 +786,7 @@ lemma isLinearMap_laplace : IsLinearMap A (X.laplace (M := M) w) where
   map_smul := laplace_ASmul w
 
 /-- The Laplacian of `X` as an `A`-linear map. -/
-def laplaceLinearMap : (X.edgeSet → M) →ₗ[A] (V → M) := (isLinearMap_laplace w).mk'
+@[expose] def laplaceLinearMap : (X.edgeSet → M) →ₗ[A] (V → M) := (isLinearMap_laplace w).mk'
 
 omit [DecidableEq V] in
 @[simp]

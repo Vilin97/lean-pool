@@ -19,7 +19,7 @@ transmission permutation is the size of the Weierstrass partition at its
 second marked point.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

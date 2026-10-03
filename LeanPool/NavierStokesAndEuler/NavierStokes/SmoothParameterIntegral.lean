@@ -19,7 +19,7 @@ differentiation and the currying identity for `iteratedFDeriv`; it is not an
 assumption on a separately supplied family of jets.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,13 +34,13 @@ variable {α H E : Type*} [MeasurableSpace α]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The genuine derivative in the parameter, with the integration variable last. -/
-def jet (F : H → α → E) (k : ℕ) (x : H) (t : α) : H [×k]→L[ℝ] E :=
+@[expose] def jet (F : H → α → E) (k : ℕ) (x : H) (t : α) : H [×k]→L[ℝ] E :=
   iteratedFDeriv ℝ k (fun y => F y t) x
 
 /-- Each order has an integrable majorant on a neighborhood of each parameter.
 The neighborhood is uniform in the integration variable; it may depend on the
 order and the center. -/
-def LocallyDominated (F : H → α → E) (μ : Measure α) : Prop :=
+@[expose] def LocallyDominated (F : H → α → E) (μ : Measure α) : Prop :=
   ∀ (k : ℕ) (x : H), ∃ ε : ℝ, 0 < ε ∧ ∃ bound : α → ℝ,
     Integrable bound μ ∧
       ∀ᵐ t ∂μ, ∀ y ∈ ball x ε, ‖jet F k y t‖ ≤ bound t
@@ -274,7 +274,7 @@ variable {F : ℝ → α → E}
 
 /-- One-dimensional form of the same local domination condition, using actual
 scalar iterated derivatives rather than multilinear maps. -/
-def LocallyDominatedDeriv (F : ℝ → α → E) (μ : Measure α) : Prop :=
+@[expose] def LocallyDominatedDeriv (F : ℝ → α → E) (μ : Measure α) : Prop :=
   ∀ (k : ℕ) (x : ℝ), ∃ ε : ℝ, 0 < ε ∧ ∃ bound : α → ℝ,
     Integrable bound μ ∧ ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
       ‖iteratedDeriv k (fun z => F z t) y‖ ≤ bound t

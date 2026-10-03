@@ -24,7 +24,7 @@ section
 
 /-! Exact angular mean and raw corrector identities for the constructed source profiles. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -102,6 +102,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (I Iprimary : EulerTransversePacketProvider.InitialData P D)
 
 /-- Source time, given by `⟨t,by rw [← hT]; exact t.property⟩`. -/
+@[expose]
 def sourceTime (t : Icc (0 : ℝ) M.T) : Icc (0 : ℝ) D.T :=
   ⟨t,by rw [← hT]; exact t.property⟩
 
@@ -162,7 +163,7 @@ section
 
 /-! The literal packet sums and their genuine first derivatives match the graded assembly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -19,7 +19,7 @@ and `a ≤ r`. If also `(a + 1) * M ≤ q * L`, then `r ≤ q`.
 In the induction, `a = 8 d ^ 2`, `C = a + 1`, and `M = Δ q ^ k`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketRecursiveBase
 
 /-! The literal residual of the generated finite packet contains only the uncancelled tail. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

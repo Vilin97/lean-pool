@@ -25,7 +25,7 @@ sections.
   `zeroOutsideInt` generators of `F`, together with its `Epi` instance.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -123,7 +123,7 @@ abbrev finsetGeneratedSheaf {X : TopCat.{u}}
     (fun σ ↦ sectionHom hF σ.1)
 
 /-- Coproduct inclusion induced by `S ⊆ S'` on the finite generator coproducts. -/
-noncomputable def finsetCoproductInclGen {X : TopCat.{u}}
+@[expose] noncomputable def finsetCoproductInclGen {X : TopCat.{u}}
     {F : TopCat.Presheaf AddCommGrpCat.{u} X}
     {S S' : Finset (SectionIndex F)}
     (h : S ⊆ S') :
@@ -133,6 +133,7 @@ noncomputable def finsetCoproductInclGen {X : TopCat.{u}}
     Sigma.ι (fun τ : {τ // τ ∈ S'} ↦ TopCat.Sheaf.zeroOutsideInt τ.1.1) ⟨σ.1, h σ.2⟩
 
 /-- Inclusion of finitely generated subsheaves induced by `S ⊆ S'`. -/
+@[expose]
 noncomputable def finsetImageInclGen {X : TopCat.{u}}
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     {S S' : Finset (SectionIndex F)}

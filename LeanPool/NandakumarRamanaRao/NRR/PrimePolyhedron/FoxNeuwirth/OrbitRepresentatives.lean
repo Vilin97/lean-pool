@@ -17,7 +17,7 @@ by the group order.  This module records chosen representatives together with ex
 uniqueness up to the acting group.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

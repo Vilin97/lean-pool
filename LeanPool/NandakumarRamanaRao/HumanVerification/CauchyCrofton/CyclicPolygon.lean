@@ -27,7 +27,7 @@ The cyclic ordering of the vertices is therefore supplied by the construction; n
 combinatorial analysis of an arbitrary finite planar point set is needed.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise
@@ -139,16 +139,16 @@ end AngleSystem
 variable (K : Body) (A : AngleSystem)
 
 /-- The `j`-th vertex: the radial boundary point of `K` at angle `A.θ j`. -/
-def vtx (j : ℤ) : Point2 := radPt K (A.θ j)
+@[expose] def vtx (j : ℤ) : Point2 := radPt K (A.θ j)
 
 /-- The vertex set of the polygon, together with the origin. -/
-def polyVerts : Set Point2 := insert 0 (Set.range fun j : Fin A.m => vtx K A (j : ℤ))
+@[expose] def polyVerts : Set Point2 := insert 0 (Set.range fun j : Fin A.m => vtx K A (j : ℤ))
 
 /-- The inscribed polygon attached to `K` and the angle system `A`. -/
-def polySet : Set Point2 := convexHull ℝ (polyVerts K A)
+@[expose] def polySet : Set Point2 := convexHull ℝ (polyVerts K A)
 
 /-- The `j`-th edge. -/
-def edge (j : ℤ) : Set Point2 := segment ℝ (vtx K A j) (vtx K A (j + 1))
+@[expose] def edge (j : ℤ) : Set Point2 := segment ℝ (vtx K A j) (vtx K A (j + 1))
 
 /-- Outward normal of the `j`-th edge. -/
 def nrm (j : ℤ) : Point2 := rot (vtx K A j - vtx K A (j + 1))
@@ -577,6 +577,7 @@ theorem zero_mem_interior_polySet (h0 : (0 : Point2) ∈ interior (K : Set Point
   exact mem_interior.2 ⟨Metric.ball 0 ε, hsub, Metric.isOpen_ball, Metric.mem_ball_self hε⟩
 
 /-- The polygon, as a convex body. -/
+@[expose]
 def polyBody (K : Body) (A : AngleSystem) (h0 : (0 : Point2) ∈ interior (K : Set Point2)) :
     Body where
   carrier := polySet K A

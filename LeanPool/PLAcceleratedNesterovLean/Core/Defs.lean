@@ -15,7 +15,7 @@ Core definitions: ambient space, optimization concepts (argmin, PL condition, L-
 tubular neighborhoods, first-order algorithm model, convergence rate, and manifold setup.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -32,15 +32,15 @@ abbrev E (d : ℕ) := EuclideanSpace ℝ (Fin d)
 /-! ## Definitions for the optimization problem -/
 
 /-- The set of global minimizers of f. -/
-def argminSet (f : E d → ℝ) : Set (E d) :=
+@[expose] def argminSet (f : E d → ℝ) : Set (E d) :=
   {x | ∀ y, f x ≤ f y}
 
 /-- The infimal value f⋆ = inf_x f(x). -/
-def fStar (f : E d → ℝ) : ℝ := iInf f
+@[expose] def fStar (f : E d → ℝ) : ℝ := iInf f
 
 /-- A function f satisfies the μ-Polyak-Łojasiewicz (PL) condition on a set U if
     f is differentiable on U and ‖∇f(x)‖² ≥ 2μ(f(x) - f⋆) for all x ∈ U. -/
-def PolyakLojasiewicz (f : E d → ℝ) (μ : ℝ) (U : Set (E d)) : Prop :=
+@[expose] def PolyakLojasiewicz (f : E d → ℝ) (μ : ℝ) (U : Set (E d)) : Prop :=
   0 < μ ∧ DifferentiableOn ℝ f U ∧ ∀ x ∈ U, ‖gradient f x‖ ^ 2 ≥ 2 * μ * (f x - fStar f)
 
 /-- L-smoothness: the gradient of f is L-Lipschitz. -/
@@ -97,13 +97,13 @@ def FirstOrderAlgorithm.iterate (alg : FirstOrderAlgorithm d) (f : E d → ℝ) 
 /-! ## Convergence rate -/
 
 /-- Accelerated convergence rate: f(xₖ) - f⋆ ≤ C · exp(-k / √(L/μ)). -/
-def HasAcceleratedRate (f : E d → ℝ) (iterates : ℕ → E d) (L μ : ℝ) : Prop :=
+@[expose] def HasAcceleratedRate (f : E d → ℝ) (iterates : ℕ → E d) (L μ : ℝ) : Prop :=
   ∃ C : ℝ, 0 < C ∧
     ∀ k : ℕ, f (iterates k) - fStar f ≤ C * Real.exp (-(↑k / Real.sqrt (L / μ)))
 
 /-- Accelerated convergence with explicit prefactor `2`:
     f(xₖ) - f⋆ ≤ 2 · exp(-k / √(L/μ)) · (f(x₀) - f⋆). -/
-def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d)
+@[expose] def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d)
     (L μ : ℝ) (x₀ : E d) : Prop :=
   ∀ k : ℕ,
     f (iterates k) - fStar f ≤
@@ -115,7 +115,7 @@ def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d
 abbrev ManifoldModel (n : ℕ) := EuclideanSpace ℝ (Fin n)
 
 /-- Model with corners for the n-dimensional Euclidean model (no boundary). -/
-def modelI (n : ℕ) : ModelWithCorners ℝ (ManifoldModel n) (ManifoldModel n) :=
+@[expose] def modelI (n : ℕ) : ModelWithCorners ℝ (ManifoldModel n) (ManifoldModel n) :=
   modelWithCornersSelf ℝ (ManifoldModel n)
 
 end PLAcceleratedNesterovLean

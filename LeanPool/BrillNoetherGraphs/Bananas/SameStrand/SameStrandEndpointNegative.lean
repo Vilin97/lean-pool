@@ -24,7 +24,7 @@ For the left endpoint and an interior mark `v_j` with `j < n-1`, take
 `D = v_(j-1) + v_n`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -229,6 +229,7 @@ theorem rankDelta_one_chip_self_lt_zero
 
 /-- The three same-strand exceptional coordinate pairs in Theorem 3.9,
 expanded to include both orders. -/
+@[expose]
 def NSMForBananaSameStrandException
     {g : ℕ} (B : Banana g) (alpha : Fin (g + 1))
     (i j : B.PathPosition alpha) : Prop :=

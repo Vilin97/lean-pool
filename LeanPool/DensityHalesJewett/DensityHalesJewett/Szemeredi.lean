@@ -17,7 +17,7 @@ The digital transfer from density Hales--Jewett to Szemeredi's theorem on finite
 mathlib's fixed-length base encoding `finFunctionFinEquiv`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open Combinatorics
@@ -36,12 +36,12 @@ structure ArithmeticProgression (α : Type*) [AddMonoid α] (k : ℕ) where
 namespace ArithmeticProgression
 
 /-- The term of `P` indexed by `i`. -/
-def term {α : Type*} [AddMonoid α] {k : ℕ} (P : ArithmeticProgression α k)
+@[expose] def term {α : Type*} [AddMonoid α] {k : ℕ} (P : ArithmeticProgression α k)
     (i : Fin k) : α :=
   P.start + (i : ℕ) • P.diff
 
 /-- The proposition that every term of `P` belongs to `s`. -/
-def IsSubset {α : Type*} [AddMonoid α] {k : ℕ} (P : ArithmeticProgression α k)
+@[expose] def IsSubset {α : Type*} [AddMonoid α] {k : ℕ} (P : ArithmeticProgression α k)
     (s : Set α) : Prop :=
   ∀ i, P.term i ∈ s
 

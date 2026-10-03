@@ -19,7 +19,7 @@ in `Aff + R`, contradicting the presence of a non-rational target direction.
 This argument uses neither circuit enumeration nor a truth-table search.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

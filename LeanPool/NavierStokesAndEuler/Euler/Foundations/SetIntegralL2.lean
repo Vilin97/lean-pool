@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderMollifier
 
 /-! Set integration as a bounded functional on L², and its commutation with Bochner averages. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

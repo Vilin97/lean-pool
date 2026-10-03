@@ -19,7 +19,7 @@ the loss of powers in the background estimates must not. All jet estimates
 refer to actual iterated Fréchet derivatives of the displayed fields.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -48,10 +48,11 @@ variable {D V : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- A single quantitative order for one actual derivative. -/
-def JetRate (l : Filter D) (q : D → ℝ) (f : D → V) (m : ℕ) (r : ℝ) : Prop :=
+@[expose] def JetRate (l : Filter D) (q : D → ℝ) (f : D → V) (m : ℕ) (r : ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ x in l, ‖iteratedFDeriv ℝ m f x‖ ≤ C * (q x) ^ r
 
 /-- A common constant and neighborhood for a finite list of actual jets. -/
+@[expose]
 def FiniteJetRate (l : Filter D) (q : D → ℝ) (f : D → V) (M : ℕ) (r : ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ x in l, ∀ m ≤ M,
     ‖iteratedFDeriv ℝ m f x‖ ≤ C * (q x) ^ r

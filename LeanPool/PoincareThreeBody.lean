@@ -64,7 +64,7 @@ Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrabil
 MSC: 70F07, 37J30, 37J40
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Poincaré's theorem for the planar restricted three-body problem

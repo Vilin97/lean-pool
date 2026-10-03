@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Semantics.Batch002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24PhiBelowKernelLL`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -38,7 +38,7 @@ section
 
 /-! E24 kernel child certificate: PhiBelow/LH, remaining depth 13. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1246,7 +1246,7 @@ section
 
 /-! E24 kernel child certificate: PhiBelow/LL, remaining depth 13. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

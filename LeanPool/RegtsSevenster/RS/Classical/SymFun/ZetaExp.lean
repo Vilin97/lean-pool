@@ -17,7 +17,7 @@ via the differential characterization — the displayed form of the
 trace zeta function.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -21,7 +21,7 @@ algebra.  The balanced line recovers the degree-zero algebra
 carrier.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -35,6 +35,7 @@ variable {D : Type u}
 /-- **The shifted graded component**: the colimit of the
 two-index stages along the line through the starting bidegree,
 climbing both arities by the seed transition. -/
+@[expose]
 noncomputable def chainBdeg
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -49,6 +50,7 @@ noncomputable def chainBdeg
     (fun k => chainDelta2 A M M' d (p₀ + k) (q₀ + k))
 
 /-- The stage insertion of a shifted graded component. -/
+@[expose]
 noncomputable def chainBdegι
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -101,6 +103,7 @@ theorem chainCast_line
 
 /-- **The stagewise multiplication of two lines**: the two-index
 stage multiplication, transported onto the sum line. -/
+@[expose]
 noncomputable def chainBdegMulStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -188,6 +191,7 @@ theorem chainBdegMulStage_delta_left
 section ZeroLine
 
 /-- The stage identification of the balanced line. -/
+@[expose]
 noncomputable def chainBdegZeroStageIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -235,6 +239,7 @@ private theorem chainBdegZeroStage_compatibility
 
 /-- **The balanced line is the degree-zero algebra carrier**: the
 zero-offset line's colimit is the splitting-chain algebra. -/
+@[expose]
 noncomputable def chainBdegZeroIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -256,6 +261,7 @@ end ZeroLine
 
 /-- The stages of the raised line are the shifted stages of the
 line. -/
+@[expose]
 noncomputable def chainBdegSuccStageIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -296,6 +302,7 @@ private theorem chainBdegSuccStage_compatibility
 /-- **The raised line is the line**: shifting both offsets by one
 is passing to the tail of the chain, which has the same
 colimit. -/
+@[expose]
 noncomputable def chainBdegSuccIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -349,6 +356,7 @@ noncomputable def chainBdegMul
     (chainBdegMulStage_delta_right A M M' d p₀ q₀ r₀ s₀)
 
 /-- Transport of a graded component along offset equalities. -/
+@[expose]
 noncomputable def chainBdegCast
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

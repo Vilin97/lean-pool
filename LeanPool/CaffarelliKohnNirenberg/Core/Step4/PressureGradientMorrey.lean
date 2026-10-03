@@ -15,7 +15,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step2.MorreyForm
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 section
 

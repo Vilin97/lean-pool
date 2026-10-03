@@ -16,14 +16,14 @@ prescribed filler counts. Disjointness of multiset positions is expressed by
 a pointwise capacity bound on all reserved multiplicities.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace EGZ.Expansion
 
 /-- The sum of the group elements counted with their natural-number multiplicities. -/
-noncomputable def vectorSum {G : Type*} [AddCommMonoid G] [Fintype G]
+@[expose] noncomputable def vectorSum {G : Type*} [AddCommMonoid G] [Fintype G]
     (u : G → ℕ) : G := ∑ v, u v • v
 
 theorem vectorSum_add {G : Type*} [AddCommMonoid G] [Fintype G]

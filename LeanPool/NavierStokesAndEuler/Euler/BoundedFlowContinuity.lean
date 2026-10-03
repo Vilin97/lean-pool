@@ -13,7 +13,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 and the initial point. Reversing its two time arguments gives its genuine
 continuous inverse, so each fixed-time map is a homeomorphism. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -69,7 +69,7 @@ theorem flow_joint_continuous :
 
 /-- Flow homeomorph, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
 compatibility proofs. -/
-def flowHomeomorph (s t : ℝ) : E ≃ₜ E where
+@[expose] def flowHomeomorph (s t : ℝ) : E ≃ₜ E where
   toFun := V.flow s t
   invFun := V.flow t s
   left_inv := V.flow_inverse s t
@@ -80,10 +80,10 @@ def flowHomeomorph (s t : ℝ) : E ≃ₜ E where
     (continuous_const.prodMk (continuous_const.prodMk continuous_id))
 
 /-- Forward, given by `V.flow 0 t x`. -/
-def forward (t : ℝ) (x : E) : E := V.flow 0 t x
+@[expose] def forward (t : ℝ) (x : E) : E := V.flow 0 t x
 
 /-- Backward, given by `V.flow t 0 x`. -/
-def backward (t : ℝ) (x : E) : E := V.flow t 0 x
+@[expose] def backward (t : ℝ) (x : E) : E := V.flow t 0 x
 
 @[simp] theorem backward_forward (t : ℝ) (x : E) :
     V.backward t (V.forward t x) = x := V.flow_inverse 0 t x

@@ -16,7 +16,7 @@ chain rules for log, integration by parts consequences, Laplacian sign at extrem
 and Maxwellian parameter regularity.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 

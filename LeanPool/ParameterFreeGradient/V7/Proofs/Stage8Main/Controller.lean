@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage4AlgebraRadius
 Finite scale and radius caps give a decreasing rank and controller termination.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 
@@ -28,6 +28,7 @@ noncomputable def controllerLocalSpec (data : RuntimeData d)
   Classical.choice (runtimeTrial_spec data state inst hcached hlarge)
 
 /-- The report of the selected certified local trial execution. -/
+@[expose]
 noncomputable def controllerReport (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (hcached : data.cached.observation = inst.oracle.observe data.input.x0)
@@ -51,6 +52,7 @@ inductive RuntimeControllerRunResult (d : ℕ) where
   | success (finish : RuntimeFinish d)
 
 /-- The controller transition determined by a local trial's success, radius, or scale outcome. -/
+@[expose]
 noncomputable def controllerStep (data : RuntimeData d)
     (state : RuntimeControllerState d) (report : TrialReport d) :
     RuntimeControllerRunResult d :=
@@ -63,6 +65,7 @@ noncomputable def controllerStep (data : RuntimeData d)
   | .radius _ => .exhausted (nextRadius data state report)
 
 /-- The finite-fuel controller execution driven by certified local trial reports. -/
+@[expose]
 noncomputable def runController (data : RuntimeData d)
     (inst : PositiveInstance data.input.p d data.input.x0)
     (hcached : data.cached.observation = inst.oracle.observe data.input.x0)
@@ -77,6 +80,7 @@ noncomputable def runController (data : RuntimeData d)
       | .exhausted state' => runController data inst hcached hlarge fuel state'
 
 /-- The underlying controller configuration, including the initialization and anchor call count. -/
+@[expose]
 noncomputable def controllerConfig (data : RuntimeData d) : O3.ControllerConfig :=
   { initialScale := data.Ma
     gradientSizeAtStart := data.G

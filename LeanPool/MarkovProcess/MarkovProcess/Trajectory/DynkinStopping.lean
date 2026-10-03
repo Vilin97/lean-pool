@@ -39,7 +39,7 @@ The progressive-measurability and optional-stopping statements below are the zer
 specializations of the corresponding results in `Trajectory/DiscountedDynkin.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

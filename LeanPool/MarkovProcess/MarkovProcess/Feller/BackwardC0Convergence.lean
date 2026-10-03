@@ -29,7 +29,7 @@ The factors and the observation times are fixed; nothing is asserted when they v
 filter as well, and no rate of convergence is claimed.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

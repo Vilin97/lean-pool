@@ -16,7 +16,7 @@ This module formalizes the scalar cutoff from the last part of
 Lipschitz-free-space construction.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

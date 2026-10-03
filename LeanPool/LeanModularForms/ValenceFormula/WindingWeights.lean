@@ -27,7 +27,7 @@ fundamental domain boundary around the elliptic points i, ρ, ρ+1.
 * `effectiveWinding_i_eq_neg_gWN` — 1/2 = -gWN(i)
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

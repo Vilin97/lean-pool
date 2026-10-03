@@ -24,7 +24,7 @@ external radius and shift. Scalar time weights commute with these expressions;
 in particular no derivative of the positive profile is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -49,13 +49,13 @@ variable (P : ℝ) [Fact (0 < P)]
 
 /-- Coordinate rhs, given by `supportedMultiplierMap P S hS (sourceGenerator Q Q₁ c hc hQ) a +
 projectedForcing P S hS Q c hc hQ f`. -/
-def coordinateRhs : C(K,Supported P U S hS) :=
+@[expose] def coordinateRhs : C(K,Supported P U S hS) :=
   supportedMultiplierMap P S hS (sourceGenerator Q Q₁ c hc hQ) a +
     projectedForcing P S hS Q c hc hQ f
 
 /-- Physical rhs, given by `supportedMultiplierMap P S hS Q₁.field a + supportedMultiplierMap P
 S hS Q.field (coordinateRhs P S hS Q Q₁ c hc hQ f a)`. -/
-def physicalRhs : C(K,Supported P E S hS) :=
+@[expose] def physicalRhs : C(K,Supported P E S hS) :=
   supportedMultiplierMap P S hS Q₁.field a +
     supportedMultiplierMap P S hS Q.field (coordinateRhs P S hS Q Q₁ c hc hQ f a)
 
@@ -81,13 +81,13 @@ theorem physicalRhs_contDiff
 
 /-- Coordinate cost, given by `3*sobolevCoefficientAmplitude ι q (4*Ri) (18*Ri*C₀*C₁)*Da +
 3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*C₀)*Df`. -/
-def coordinateCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
+@[expose] def coordinateCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) (18*Ri*C₀*C₁)*Da +
     3*sobolevCoefficientAmplitude ι q (4*Ri) (3*Ri*C₀)*Df
 
 /-- Physical cost, given by `3*sobolevCoefficientAmplitude ι q (4*Ri) C₁*Da +
 3*sobolevCoefficientAmplitude ι q (4*Ri) C₀*coordinateCost ι q Ri C₀ C₁ Df Da`. -/
-def physicalCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
+@[expose] def physicalCost (ι : Type*) [Fintype ι] (q : ℕ) (Ri C₀ C₁ Df Da : ℝ) : ℝ :=
   3*sobolevCoefficientAmplitude ι q (4*Ri) C₁*Da +
     3*sobolevCoefficientAmplitude ι q (4*Ri) C₀*coordinateCost ι q Ri C₀ C₁ Df Da
 
@@ -124,8 +124,10 @@ theorem coordinateRhs_block_bound
       (projectedForcing P S hS Q c hc hQ f)))
     (supported_product_orbit_contDiff P B hB S hS a ha)
     (projectedForcing_contDiff P S hS Q c hc hQ f hf) n 0
+  simp only [include_supportedMultiplier] at hsum
   have hbound := hsum.trans (add_le_add hfirst hsecond)
-  simpa only [coordinateRhs,coordinateCost,B,map_add,Pi.add_def,add_mul] using hbound
+  simpa only [coordinateRhs,coordinateCost,B,map_add,Pi.add_def,add_mul,
+    include_supportedMultiplier] using hbound
 
 theorem physicalRhs_block_bound
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
@@ -180,8 +182,10 @@ theorem physicalRhs_block_bound
       (supportedMultiplierMap P S hS Q.field (coordinateRhs P S hS Q Q₁ c hc hQ f a))))
     (supported_product_orbit_contDiff P Q₁.field Q₁.translation_contDiff S hS a ha)
     (supported_product_orbit_contDiff P Q.field Q.translation_contDiff S hS _ hcoord) n 0
+  simp only [include_supportedMultiplier] at hsum
   have hbound := hsum.trans (add_le_add hfirst hsecond)
-  simpa only [physicalRhs,physicalCost,map_add,Pi.add_def,add_mul] using hbound
+  simpa only [physicalRhs,physicalCost,map_add,Pi.add_def,add_mul,
+    include_supportedMultiplier] using hbound
 
 theorem coordinateRhs_weight (g : C(K, ℝ)) :
     coordinateRhs P S hS Q Q₁ c hc hQ (weight g f) (weight g a) =

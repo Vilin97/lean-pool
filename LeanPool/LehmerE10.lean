@@ -25,7 +25,7 @@ Tags: number-theory, mahler-measure, salem-numbers, coxeter-groups
 MSC: 11R06, 11C08, 20F55
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Lehmer's polynomial and the E10 Coxeter element

@@ -20,27 +20,32 @@ duality and later arithmetic reductions insensitive to the particular divisor
 chosen as a witness.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The width `g - d + r` of the Brill--Noether rectangle. -/
+@[expose]
 def rectangleWidth (G : CFGraph) (r d : ℤ) : ℤ :=
   CFGraph.genus G - d + r
 
 /-- The Brill--Noether number `g - (r + 1) * (g - d + r)`. -/
+@[expose]
 def bnNumber (G : CFGraph) (r d : ℤ) : ℤ :=
   CFGraph.genus G - (r + 1) * rectangleWidth G r d
 
 /-- There is a divisor of degree `d` and rank at least `r` on `G`. -/
+@[expose]
 def BNExists (G : CFGraph) (r d : ℤ) : Prop :=
   ∃ D : CFDiv G, CFDiv.degree D = d ∧ rank G D ≥ r
 
 /-- The degree complementary to `d` with respect to the canonical divisor. -/
+@[expose]
 def dualDegree (G : CFGraph) (d : ℤ) : ℤ :=
   2 * CFGraph.genus G - 2 - d
 
 /-- The dual rank `g - d + r - 1`. -/
+@[expose]
 def dualRank (G : CFGraph) (r d : ℤ) : ℤ :=
   rectangleWidth G r d - 1
 

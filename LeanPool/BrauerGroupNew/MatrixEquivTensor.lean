@@ -14,7 +14,7 @@ public import Mathlib.RingTheory.TensorProduct.Basic
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.MatrixEquivTensor`.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -36,7 +36,7 @@ def toTensorMartrixToFunBilinear : K →ₗ[F] Matrix n n A →ₗ[F] Matrix n n
 @[simp]
 lemma toTensorMartrixToFunBilinear_apply (k : K) (M : Matrix n n A) :
   toTensorMartrixToFunBilinear K F A n k M =
-  k • Algebra.TensorProduct.includeRight.mapMatrix M := rfl
+  k • Algebra.TensorProduct.includeRight.mapMatrix M := by rfl
 
 /-- The `F`-linear map induced from `toTensorMartrixToFunBilinear`. -/
 abbrev toTensorMatrixToFunFlinear : K ⊗[F] Matrix n n A →ₗ[F] Matrix n n (K ⊗[F] A) :=
@@ -82,7 +82,7 @@ def invFunToFunBilinear (i j : n) : K →ₗ[F] A →ₗ[F] K ⊗[F] Matrix n n 
 omit [Fintype n] in
 @[simp]
 lemma invFunToFunBilinear_apply (i j : n) (k : K) (a : A) :
-  invFunToFunBilinear K F A n i j k a = k ⊗ₜ single i j a := rfl
+  invFunToFunBilinear K F A n i j k a = k ⊗ₜ single i j a := by rfl
 
 /-- The `F`-linear map induced by `invFunToFunBilinear`. -/
 abbrev invFunToFun (i j : n) : K ⊗[F] A →ₗ[F] K ⊗[F] Matrix n n A :=
@@ -132,8 +132,8 @@ def matrixTensorEquivTensor : K ⊗[F] Matrix n n A ≃ₐ[K] Matrix n n (K ⊗[
 
 @[simp]
 lemma matrixTensorEquivTensor_apply (M : K ⊗[F] Matrix n n A) :
-    matrixTensorEquivTensor K F A n M = toTensorMatrix K F A n M := rfl
+    matrixTensorEquivTensor K F A n M = toTensorMatrix K F A n M := by rfl
 
 @[simp]
 lemma matrixTensorEquivTensor_symm_apply (M : Matrix n n (K ⊗[F] A)) :
-    (matrixTensorEquivTensor K F A n).symm M = invFunLinearMap K F A n M := rfl
+    (matrixTensorEquivTensor K F A n).symm M = invFunLinearMap K F A n M := by rfl

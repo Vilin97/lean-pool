@@ -20,13 +20,14 @@ the parameter value times the empty class — the identity that the
 fibre functor transports into the standard model.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The star-union class as a `(0, 2m)`-morphism. -/
+@[expose]
 noncomputable def starClass (W : ClosedFragment) :
     HomSpace f.val (0 + (edgeCount W + edgeCount W)) :=
   HomSpace.ofFragment f.val

@@ -16,7 +16,7 @@ import Mathlib.Algebra.Ring.Nat
 These are used when proving the subsum condition in the odd case.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Nat

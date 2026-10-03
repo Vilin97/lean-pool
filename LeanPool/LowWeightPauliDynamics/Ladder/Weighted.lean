@@ -64,7 +64,7 @@ distinguished reservoir rather than a computed `rungWeight _ _ 0`.
 * `satLadder_cumulation_eq`: the cumulation bound is attained by `satLadder`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -210,6 +210,6 @@ noncomputable def satLadder {c : ℕ → ℝ} {M : ℝ} (hc : ∀ j, 0 ≤ c j) 
 
 /-- The bound of `cumulation` is **attained**: at the saturating family it is an equality. -/
 lemma satLadder_cumulation_eq {c : ℕ → ℝ} {M : ℝ} (hc : ∀ j, 0 ≤ c j) (hM : 0 ≤ M) (m g : ℕ) :
-    (satLadder hc hM).N m g = (g.choose m : ℝ) * (∏ j ∈ Icc 1 m, c j) * M := rfl
+    (satLadder hc hM).N m g = (g.choose m : ℝ) * (∏ j ∈ Icc 1 m, c j) * M := by rfl
 
 end Lean4LPD

@@ -15,7 +15,7 @@ This file assembles the three residue-specific calculations of corrected
 Lemma 4.30 over the full interval guaranteed by `CrossOneOffLongEnough`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -23,6 +23,7 @@ open Utilities
 
 /-- The corrected value forced in row `b` of the both-off transmission
 permutation. -/
+@[expose]
 def crossOneOffRow (g n b : ℕ) : ℕ :=
   if b % n = 0 then b / n + 1
   else if b % n = n - 1 then g + b / n + 1

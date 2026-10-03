@@ -31,7 +31,7 @@ that are needed to prove `pv_modular_side` and `pv_residue_side`.
     `fdBoundaryH H` equals `2πi · Σ gWN · ord`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -45,18 +45,18 @@ variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 /-- The ε-truncated integrand for the PV integral of `f'/f` along `γ`,
 with singular set `S₀`. Zero when `γ(t)` is within `ε` of any `s ∈ S₀`,
 otherwise `logDeriv f (γ t) * γ'(t)`. -/
-noncomputable def pvIntegrand {k : ℤ} (f : ModularForm (Gamma 1) k) (γ : ℝ → ℂ)
+@[expose] noncomputable def pvIntegrand {k : ℤ} (f : ModularForm (Gamma 1) k) (γ : ℝ → ℂ)
     (S₀ : Finset ℂ) (ε : ℝ) (t : ℝ) : ℂ :=
   cauchyPrincipalValueIntegrandOn S₀ (logDeriv (modularFormCompOfComplex f)) γ ε t
 
 /-- Arc singular set: unit-circle zeros (and S-transforms) plus ρ, ρ+1. -/
-noncomputable def sArcOfS (S : Finset UpperHalfPlane) : Finset ℂ :=
+@[expose] noncomputable def sArcOfS (S : Finset UpperHalfPlane) : Finset ℂ :=
   (S.filter (fun (p : ℍ) => ‖(↑p : ℂ)‖ = 1)).image (↑· : ℍ → ℂ) ∪
   (S.filter (fun (p : ℍ) => ‖(↑p : ℂ)‖ = 1)).image (fun (p : ℍ) => -(1 : ℂ) / (↑p : ℂ)) ∪
   {ellipticPointRho, ellipticPointRhoPlusOne}
 
 /-- Vertical singular set: re = ±1/2, ‖z‖ > 1 zeros, plus T-shifts. -/
-noncomputable def sVertOfS (S : Finset UpperHalfPlane) : Finset ℂ :=
+@[expose] noncomputable def sVertOfS (S : Finset UpperHalfPlane) : Finset ℂ :=
   (S.filter (fun p : ℍ => (↑p : ℂ).re = 1/2 ∧ ‖(↑p : ℂ)‖ > 1)).image
     (↑· : ℍ → ℂ) ∪
   (S.filter (fun p : ℍ => (↑p : ℂ).re = 1/2 ∧ ‖(↑p : ℂ)‖ > 1)).image

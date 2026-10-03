@@ -11,7 +11,7 @@ public import LeanPool.EuclideanJordan.EuclideanJordan.Vendor.Matrix
 
 /-! Simultaneous orthogonal diagonalization of commuting symmetric operators. -/
 
-@[expose] public section
+public section
 
 open scoped Matrix
 

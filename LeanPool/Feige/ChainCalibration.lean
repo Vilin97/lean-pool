@@ -25,14 +25,14 @@ exactly `K t`, which gives exact chain calibration whenever the rejected
 states form that terminal segment.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace Feige
 
 /-- Adjacent-difference mass associated with a decreasing sequence. -/
-def chainMass (K : ℕ → ℝ) (j : ℕ) : ℝ :=
+@[expose] def chainMass (K : ℕ → ℝ) (j : ℕ) : ℝ :=
   K j - K (j + 1)
 
 /-- A decreasing chain of `m + 1` statistic values, extended by a zero
@@ -49,6 +49,7 @@ namespace CalibratedChain
 variable {m : ℕ} (C : CalibratedChain m)
 
 /-- Total chain mass of states whose statistic does not exceed `α`. -/
+@[expose]
 noncomputable def rejectedMass (α : ℝ) : ℝ := by
   classical
   exact ∑ j ∈ (Finset.range (m + 1)).filter (fun j ↦ C.K j ≤ α),

@@ -19,7 +19,7 @@ to a curl-corrected coefficient without replacing it by its tangent principal
 part. The angular direction is unscaled.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ open scoped Topology ContDiff BigOperators
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Time direction, given by `Vf x - ε • Vs x`. -/
-noncomputable def timeDirection (ε : ℝ) (Vf Vs : E → E) (x : E) : E :=
+@[expose] noncomputable def timeDirection (ε : ℝ) (Vf Vs : E → E) (x : E) : E :=
   Vf x - ε • Vs x
 
 theorem along_timeDirection (ε : ℝ) (Vf Vs : E → E) (f : E → ℂ) (x : E) :
@@ -48,65 +48,65 @@ theorem along_mul_real (V : E → E) {f g : E → ℝ} {x : E}
   ring
 
 /-- The real base components, with angular velocity `V=R F`. -/
-noncomputable def base (R b F G : E → ℝ) (x : E) : Fin 3 → ℝ :=
+@[expose] noncomputable def base (R b F G : E → ℝ) (x : E) : Fin 3 → ℝ :=
   ![b x, R x * F x, G x]
 
 /-- Complex base, defined pointwise by `(base R b F G x i : ℂ)`. -/
-noncomputable def complexBase (R b F G : E → ℝ) (x : E) : ComplexVector :=
+@[expose] noncomputable def complexBase (R b F G : E → ℝ) (x : E) : ComplexVector :=
   fun i => (base R b F G x i : ℂ)
 
 /-- Cylindrical bilinear advection, including the derivative of the frame. -/
-noncomputable def transport (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def transport (R : E → ℝ) (Vr Vθ Vz : E → E)
     (u v : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   u x 0 * along Vr (fun y => v y i) x +
     (u x 1 / (R x : ℂ)) * (along Vθ (fun y => v y i) x + angularGenerator (v x) i) +
     u x 2 * along Vz (fun y => v y i) x
 
 /-- Gradient, given by `![along Vr p x, (R x)⁻¹ • along Vθ p x, along Vz p x]`. -/
-noncomputable def gradient (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def gradient (R : E → ℝ) (Vr Vθ Vz : E → E)
     (p : E → ℂ) (x : E) : ComplexVector :=
   ![along Vr p x, (R x)⁻¹ • along Vθ p x, along Vz p x]
 
 /-- The genuine differential linearization with viscosity `ε`. -/
-noncomputable def linearResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
+@[expose] noncomputable def linearResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (B a : E → ComplexVector) (p : E → ℂ) (x : E) : ComplexVector := fun i =>
   along Vt (fun y => a y i) x + transport R Vr Vθ Vz B a x i +
     transport R Vr Vθ Vz a B x i + gradient R Vr Vθ Vz p x i -
     (ε : ℂ) * cylindricalVectorLaplacian R Vr Vθ Vz a x i
 
 /-- Matrix `K` from (27), with its radial coefficients actually differentiated. -/
-noncomputable def shear (R F G : E → ℝ) (Vr : E → E)
+@[expose] noncomputable def shear (R F G : E → ℝ) (Vr : E → E)
     (a : E → ComplexVector) (x : E) : ComplexVector :=
   ![-2 * (F x : ℂ) * a x 1,
     Complex.ofReal (2 * F x + R x * along Vr F x) * a x 0,
     Complex.ofReal (along Vr G x) * a x 0]
 
 /-- The base derivative and radial-flow connection terms outside `K`. -/
-noncomputable def baseDerivativeRemainder (R b F G : E → ℝ) (Vr Vz : E → E)
+@[expose] noncomputable def baseDerivativeRemainder (R b F G : E → ℝ) (Vr Vz : E → E)
     (a : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   (![a x 0 * Complex.ofReal (along Vr b x), (b x : ℂ) / (R x : ℂ) * a x 1, 0] i) +
     a x 2 * Complex.ofReal (along Vz (fun y => base R b F G y i) x)
 
 /-- Material phase defect, given by `along Vt Φ x + b x * along Vr Φ x + F x * along Vθ Φ x + G
 x * along Vz Φ x`. -/
-noncomputable def materialPhaseDefect (_R b F G : E → ℝ) (Vr Vθ Vz Vt : E → E)
+@[expose] noncomputable def materialPhaseDefect (_R b F G : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (Φ : E → ℝ) (x : E) : ℝ :=
   along Vt Φ x + b x * along Vr Φ x + F x * along Vθ Φ x + G x * along Vz Φ x
 
 /-- Slow transport, defined pointwise by `-(ε : ℂ) * along Vs (fun y => a y i) x + (b x : ℂ) *
 along Vr (fun y => a y i) x + (G x : ℂ) * along Vz (fun y => a y i) x`. -/
-noncomputable def slowTransport (ε : ℝ) (b G : E → ℝ) (Vs Vr Vz : E → E)
+@[expose] noncomputable def slowTransport (ε : ℝ) (b G : E → ℝ) (Vs Vr Vz : E → E)
     (a : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   -(ε : ℂ) * along Vs (fun y => a y i) x +
     (b x : ℂ) * along Vr (fun y => a y i) x +
     (G x : ℂ) * along Vz (fun y => a y i) x
 
 /-- Stripped pressure gradient, given by `![along Vr p x, 0, along Vz p x]`. -/
-noncomputable def strippedPressureGradient (Vr Vz : E → E) (p : E → ℂ)
+@[expose] noncomputable def strippedPressureGradient (Vr Vz : E → E) (p : E → ℂ)
     (x : E) : ComplexVector := ![along Vr p x, 0, along Vz p x]
 
 /-- The complete viscous braces in (31), after removal of phase-square damping. -/
-noncomputable def viscousRemainder (R : E → ℝ) (Vr Vθ Vz : E → E) (κ : ℝ)
+@[expose] noncomputable def viscousRemainder (R : E → ℝ) (Vr Vθ Vz : E → E) (κ : ℝ)
     (Φ : E → ℝ) (a : E → ComplexVector) (x : E) : ComplexVector := fun i =>
   along Vr (along Vr (fun y => a y i)) x + (R x)⁻¹ • along Vr (fun y => a y i) x +
     along Vz (along Vz (fun y => a y i)) x +
@@ -122,14 +122,14 @@ noncomputable def viscousRemainder (R : E → ℝ) (Vr Vθ Vz : E → E) (κ : �
       angularGenerator (a x) i
 
 /-- Principal as an element of `ComplexVector`. -/
-noncomputable def principal (ε κ : ℝ) (R F G : E → ℝ) (Vr Vθ Vz Vf : E → E)
+@[expose] noncomputable def principal (ε κ : ℝ) (R F G : E → ℝ) (Vr Vθ Vz Vf : E → E)
     (Φ : E → ℝ) (a : E → ComplexVector) (p : E → ℂ) (x : E) : ComplexVector := fun i =>
   along Vf (fun y => a y i) x + shear R F G Vr a x i +
     Complex.ofReal (ε * κ ^ 2 * ‖phaseNormal R Vr Vθ Vz Φ x‖ ^ 2) * a x i +
     phaseFactor κ * Complex.ofReal (phaseNormal R Vr Vθ Vz Φ x i) * p x
 
 /-- Remainder as an element of `ComplexVector`. -/
-noncomputable def remainder (ε κ : ℝ) (R b F G : E → ℝ) (Vr Vθ Vz Vf Vs : E → E)
+@[expose] noncomputable def remainder (ε κ : ℝ) (R b F G : E → ℝ) (Vr Vθ Vz Vf Vs : E → E)
     (Φ : E → ℝ) (a : E → ComplexVector) (p : E → ℂ) (x : E) : ComplexVector := fun i =>
   slowTransport ε b G Vs Vr Vz a x i +
     phaseFactor κ * Complex.ofReal
@@ -446,27 +446,28 @@ theorem cylindricalLaplacian_map (L : F₁ →L[ℝ] F₂) {U : Set E} (R : E �
 end LinearMaps
 
 /-- Real lift, defined pointwise by `(a x i : ℂ)`. -/
+@[expose]
 noncomputable def realLift (a : E → Fin 3 → ℝ) (x : E) : ComplexVector := fun i => (a x i : ℂ)
 
 /-- Real angular generator, given by `![-a 1, a 0, 0]`. -/
-noncomputable def realAngularGenerator (a : Fin 3 → ℝ) : Fin 3 → ℝ := ![-a 1, a 0, 0]
+@[expose] noncomputable def realAngularGenerator (a : Fin 3 → ℝ) : Fin 3 → ℝ := ![-a 1, a 0, 0]
 
 /-- Real transport as an element of `Fin 3 → ℝ`. -/
-noncomputable def realTransport (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def realTransport (R : E → ℝ) (Vr Vθ Vz : E → E)
     (u v : E → Fin 3 → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   u x 0 * along Vr (fun y => v y i) x +
     (u x 1 / R x) * (along Vθ (fun y => v y i) x + realAngularGenerator (v x) i) +
     u x 2 * along Vz (fun y => v y i) x
 
 /-- Real frame laplacian as an element of `Fin 3 → ℝ`. -/
-noncomputable def realFrameLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
+@[expose] noncomputable def realFrameLaplacian (R : E → ℝ) (Vr Vθ Vz : E → E)
     (a : E → Fin 3 → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   cylindricalLaplacian R Vr Vθ Vz (fun y => a y i) x + ((R x) ^ 2)⁻¹ *
     (2 * realAngularGenerator (fun j => along Vθ (fun y => a y j) x) i +
       realAngularGenerator (realAngularGenerator (a x)) i)
 
 /-- Real component form of the same differential linearization. -/
-noncomputable def realComponentLinearResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
+@[expose] noncomputable def realComponentLinearResidual (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
     (B a : E → Fin 3 → ℝ) (p : E → ℝ) (x : E) : Fin 3 → ℝ := fun i =>
   along Vt (fun y => a y i) x + realTransport R Vr Vθ Vz B a x i +
     realTransport R Vr Vθ Vz a B x i +
@@ -523,7 +524,7 @@ theorem realMap_linearResidual {U : Set E} (L : ℂ →L[ℝ] ℝ) (ε : ℝ) (R
 open ProblemStatement
 
 /-- Bilinear advection, constructed using `u`. -/
-noncomputable def bilinearAdvection (u v : Space → Space) (q : Space) : Space :=
+@[expose] noncomputable def bilinearAdvection (u v : Space → Space) (q : Space) : Space :=
   u q 0 • CylindricalResidual.dCoord 0 v q +
     (u q 1 / q 0) • (CylindricalResidual.dCoord 1 v q + CylindricalResidual.connection (v q)) +
     u q 2 • CylindricalResidual.dCoord 2 v q
@@ -602,14 +603,14 @@ theorem cartesianLinearResidual_cylindrical (ε : ℝ) {B a : VelocityField} {p 
   rfl
 
 /-- Space direction, given by `(0, coordinateVector i)`. -/
-noncomputable def spaceDirection (i : Fin 3) (_ : SpaceTime) : SpaceTime :=
+@[expose] noncomputable def spaceDirection (i : Fin 3) (_ : SpaceTime) : SpaceTime :=
   (0, coordinateVector i)
 
 /-- Physical time direction, given by `(1, 0)`. -/
-noncomputable def physicalTimeDirection (_ : SpaceTime) : SpaceTime := (1, 0)
+@[expose] noncomputable def physicalTimeDirection (_ : SpaceTime) : SpaceTime := (1, 0)
 
 /-- Coordinate radius, given by `x.2 0`. -/
-noncomputable def coordinateRadius (x : SpaceTime) : ℝ := x.2 0
+@[expose] noncomputable def coordinateRadius (x : SpaceTime) : ℝ := x.2 0
 
 section Slices
 

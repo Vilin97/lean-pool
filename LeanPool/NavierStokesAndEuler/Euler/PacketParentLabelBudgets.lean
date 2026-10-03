@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentMeanBudget
 physical-label H⁶ word norms of the displacement, velocity and acceleration.
 No multiplier bound or inverse-solver estimate is an input. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,7 +27,7 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerMeanCoefficient
 open scoped ContDiff BoundedContinuousFunction
 
 /-- The individual component of the literal three-field bound in (21). -/
-def HasLabelBound (K : ℝ) (A : SmoothL2Field Space) : Prop :=
+@[expose] def HasLabelBound (K : ℝ) (A : SmoothL2Field Space) : Prop :=
   ∀ n, classicalBlockSize direction 6 A.toLp A.translation_contDiff n ≤
     K^(n+1)*(n.factorial : ℝ)^2
 
@@ -68,6 +68,7 @@ open scoped ContDiff BoundedContinuousFunction
 
 /-- The full normal/pressure/corrector multiplier budget follows from the
 actual parent displacement and velocity in physical initial labels. -/
+@[expose]
 def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
     (D : EulerTransversePacketProvider.Data U) (q : ℕ)
     (A V : Icc (0 : ℝ) D.T → SmoothL2Field Space)
@@ -89,6 +90,7 @@ def normalBudget {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- The actual mean variational inverse budget is constructed from the
 three literal parent fields in (21), det F=1, and the inverse time length. -/
+@[expose]
 def meanBudget (D : EulerMeanPacketProvider.Data) (q : ℕ)
     (A V W : Icc (0 : ℝ) D.T → SmoothL2Field Space)
     (Ti K : ℝ) (hT : D.T ≤ 1) (hTi : D.T⁻¹ ≤ Ti) (hK : 0 ≤ K)

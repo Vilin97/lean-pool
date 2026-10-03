@@ -91,7 +91,7 @@ auxiliary product estimate.
   specializes the sharp estimate to a star-normal operator.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace Pointwise

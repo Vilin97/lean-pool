@@ -30,7 +30,7 @@ parts and the Mittag-Leffler expansion);
 * `Δ_pos` : `Δ_K(ζ(5)) > 0`, since `G_K(ζ(5))` is the Gram matrix of a positive weight.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial MeasureTheory Set Finset
 
@@ -146,7 +146,7 @@ theorem moment_rep (K : ℕ) (P : ℚ[X]) :
     rw [integral_const_mul, pole_moment j (Finset.mem_Icc.mp hj).1]
 
 /-- The positive weight `ν(y) = D_N(y²)^6 / D_K(y²) · w(y)`. -/
-noncomputable def ν (n : ℕ) (y : ℝ) : ℝ :=
+@[expose] noncomputable def ν (n : ℕ) (y : ℝ) : ℝ :=
   aeval (y ^ 2) (D (3 * n)) ^ 6 / aeval (y ^ 2) (D (40 * n)) * w y
 
 lemma ν_pos (n : ℕ) {y : ℝ} (hy : 0 < y) : 0 < ν n y := by

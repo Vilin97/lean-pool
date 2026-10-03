@@ -27,7 +27,7 @@ public import Mathlib.Topology.Separation.Hausdorff
 * `GerverSofa.KernelOnly.PartC.Semantics.Batch001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartC.Stage4.FinalTopologyClosure`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -90,7 +90,7 @@ closed Parts A and B.  No alternative parameter vector or geometric set is
 introduced here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,11 +101,14 @@ namespace PartC
 abbrev params : Romik.Params := PartB.params
 
 /-- Physical terminal angle. -/
+@[expose]
 def T : ℝ := Real.pi / 2
 
 /-- Reflected switching angles. -/
+@[expose]
 def eta : ℝ := T - params.theta
 /-- The reflected switching angle `π/2 - φ` for the certified parameters. -/
+@[expose]
 def tau : ℝ := T - params.phi
 
 /-- The concrete cap, fixed sofa, reconstructed Romik set and frame. -/
@@ -118,11 +121,13 @@ abbrev Sx : Set Point := Romik.reconstructedSet params
 abbrev frame : ℝ → SE2 := Romik.frame params
 
 /-- Endpoint support point used for the direct nonemptiness proof. -/
+@[expose]
 def anchor : Point := (1, 0)
 
 /-- Piecewise body-frame derivative coefficients.  This definition is local to
 Part C so that the geometric layer does not import the later Part D article
 claims. -/
+@[expose]
 def alphaBetaAt (t : ℝ) : Point :=
   if t ≤ params.phi then Romik.alphaBeta1 params t
   else if t ≤ params.theta then Romik.alphaBeta2 params t
@@ -131,11 +136,14 @@ def alphaBetaAt (t : ℝ) : Point :=
   else Romik.alphaBeta5 params t
 
 /-- The horizontal body-frame velocity coefficient. -/
+@[expose]
 def alpha (t : ℝ) : ℝ := (alphaBetaAt t).1
 /-- The vertical body-frame velocity coefficient. -/
+@[expose]
 def beta (t : ℝ) : ℝ := (alphaBetaAt t).2
 
 /-- The four standard contact curves. -/
+@[expose]
 def A (t : ℝ) : Point :=
   let x := Romik.path params t
   let a := alpha t
@@ -143,6 +151,7 @@ def A (t : ℝ) : Point :=
    x.2 + a * (v t).2 + (u t).2)
 
 /-- The inner contact curve `x + α v`. -/
+@[expose]
 def B (t : ℝ) : Point :=
   let x := Romik.path params t
   let a := alpha t
@@ -150,6 +159,7 @@ def B (t : ℝ) : Point :=
    x.2 + a * (v t).2)
 
 /-- The outer contact curve `x - β u + v`. -/
+@[expose]
 def C (t : ℝ) : Point :=
   let x := Romik.path params t
   let b := beta t
@@ -157,6 +167,7 @@ def C (t : ℝ) : Point :=
    x.2 - b * (u t).2 + (v t).2)
 
 /-- The inner contact curve `x - β u`. -/
+@[expose]
 def D (t : ℝ) : Point :=
   let x := Romik.path params t
   let b := beta t
@@ -195,7 +206,7 @@ section
 # Frozen parameter and endpoint consequences for Part C
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -255,7 +266,7 @@ that the relevant contact points belong to the cap and that no hidden crossing
 changes the boundary envelope.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -310,7 +321,7 @@ half-plane inequality.  This is one of the main bridges from Part B into the
 global geometry of Part C.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -382,7 +393,7 @@ numerical replay.  They are collected here for the concrete certified
 parameter vector.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -423,7 +434,7 @@ set-theoretic obligations.  A later concrete proof must construct a value of
 `TopologyCertificate`; until then Part C cannot close.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -461,7 +472,7 @@ hidden inside an arbitrary `connected` field: contact support, the two
 no-hidden-crossing inequalities, and the claimed boundary of the niche.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -525,7 +536,7 @@ Part C contact and no-hidden-crossing certificates can reuse the exact 64-cell
 mesh without depending on private declarations.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -700,7 +711,7 @@ nonpositive scalar multiple of `u`.  The scalar coefficients below are the
 five exact algebraic pieces.  No numerical root is recomputed here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -709,6 +720,7 @@ namespace PartC
 namespace Stage2
 
 /-- Phasewise scalar multiplying `v(t)` in the derivative of `A`. -/
+@[expose]
 def rhoA (t : ℝ) : ℝ :=
   if t ≤ params.phi then 0
   else if t ≤ params.theta then
@@ -721,6 +733,7 @@ def rhoA (t : ℝ) : ℝ :=
     1 / 2
 
 /-- Phasewise nonnegative scalar for `C'(t) = -rhoC(t) * u(t)`. -/
+@[expose]
 def rhoC (t : ℝ) : ℝ :=
   if t ≤ params.phi then 1 / 2
   else if t ≤ params.theta then
@@ -961,7 +974,7 @@ sound Part B intervals `Gu` and `Gv`.  The only analytic remainder after all
 cell, named `SameCellU` and `SameCellV` below.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1000,7 +1013,7 @@ shape from the start.  The proof remains organized in body coordinates and the
 accompanying runner forces a fresh build of this module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1009,42 +1022,52 @@ namespace PartC
 namespace Stage2
 
 /-- Phase-local outer `A` contact, written in vector form. -/
+@[expose]
 def phaseA1 (t : ℝ) : Point :=
   Romik.path1 params t + (Romik.alphaBeta1 params t).1 • v t + u t
 
 /-- The phase 2 formula for the outer A contact curve. -/
+@[expose]
 def phaseA2 (t : ℝ) : Point :=
   Romik.path2 params t + (Romik.alphaBeta2 params t).1 • v t + u t
 
 /-- The phase 3 formula for the outer A contact curve. -/
+@[expose]
 def phaseA3 (t : ℝ) : Point :=
   Romik.path3 params t + (Romik.alphaBeta3 params t).1 • v t + u t
 
 /-- The phase 4 formula for the outer A contact curve. -/
+@[expose]
 def phaseA4 (t : ℝ) : Point :=
   Romik.path4 params t + (Romik.alphaBeta4 params t).1 • v t + u t
 
 /-- The phase 5 formula for the outer A contact curve. -/
+@[expose]
 def phaseA5 (t : ℝ) : Point :=
   Romik.path5 params t + (Romik.alphaBeta5 params t).1 • v t + u t
 
 /-- Phase-local outer `C` contact, written in vector form. -/
+@[expose]
 def phaseC1 (t : ℝ) : Point :=
   Romik.path1 params t - (Romik.alphaBeta1 params t).2 • u t + v t
 
 /-- The phase 2 formula for the outer C contact curve. -/
+@[expose]
 def phaseC2 (t : ℝ) : Point :=
   Romik.path2 params t - (Romik.alphaBeta2 params t).2 • u t + v t
 
 /-- The phase 3 formula for the outer C contact curve. -/
+@[expose]
 def phaseC3 (t : ℝ) : Point :=
   Romik.path3 params t - (Romik.alphaBeta3 params t).2 • u t + v t
 
 /-- The phase 4 formula for the outer C contact curve. -/
+@[expose]
 def phaseC4 (t : ℝ) : Point :=
   Romik.path4 params t - (Romik.alphaBeta4 params t).2 • u t + v t
 
 /-- The phase 5 formula for the outer C contact curve. -/
+@[expose]
 def phaseC5 (t : ℝ) : Point :=
   Romik.path5 params t - (Romik.alphaBeta5 params t).2 • u t + v t
 
@@ -1550,7 +1573,7 @@ monotonicity across the four certified switching times.  It does not require a
 globally differentiable contact parametrisation at the speed-change junctions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2754,7 +2777,7 @@ exactly the six substantive topology/no-hidden facts; no additional certificate
 wrapper is introduced.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2801,7 +2824,7 @@ Source-clean phase derivatives of the five Gerver path pieces.  These are
 provided here as compatibility wrappers around the shared Stage 2 proofs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2862,7 +2885,7 @@ Part B cell enclosure instead of being reproved by a large transcendental
 `nlinarith` call.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4103,7 +4126,7 @@ section
 # Gerver Sofa / Kernel Only / Part C / Stage4 / No Hidden Match Facts
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 namespace PartC
@@ -4223,7 +4246,7 @@ This file turns the five exact coefficient matching statements into a public
 continuity interface for `alphaBetaAt`, `alpha`, `beta`, `B`, and `D`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4363,7 +4386,7 @@ section
 # Gerver Sofa / Kernel Only / Part C / Stage4 / No Hidden Sign Facts
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 namespace PartC
@@ -4594,7 +4617,7 @@ These phasewise facts are the analytic input for the remaining one-turn chord
 argument; they do not assert the no-hidden conclusion by themselves.
 -/
 
-@[expose] public section
+public section
 
 namespace GerverSofa
 namespace PartC
@@ -4745,7 +4768,7 @@ derivatives themselves need not match at a switch.  Consequently the fixed
 projection is proved antitone phase by phase and then glued order-theoretically.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5376,7 +5399,7 @@ The affine reflection is derived phase by phase from the certified matching
 equations.  No global symmetry hypothesis is introduced.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5660,7 +5683,7 @@ The first inequality follows from concavity and the two endpoint values.  The
 second is its exact phase-derived horizontal reflection.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5751,7 +5774,7 @@ section
 # Gerver Sofa / Kernel Only / Part C / Stage4 / Niche Envelope Support
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6797,7 +6820,7 @@ This module separates the already direct cap geometry from the later theorem
 that removing the downward niche preserves connectedness.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6891,7 +6914,7 @@ upper-envelope/frontier equality.  It can therefore be kernel-built even while
 the boundary module is still under repair.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6902,10 +6925,12 @@ namespace Stage4
 open Set
 
 /-- Vertical fill below a parametrized graph. -/
+@[expose]
 def verticalFill (f : ℝ → Point) (I : Set ℝ) : Set Point :=
   {q | ∃ t ∈ I, q.1 = (f t).1 ∧ 0 ≤ q.2 ∧ q.2 < (f t).2}
 
 /-- The three certified upper-envelope pieces as strict vertical fills. -/
+@[expose]
 def certifiedNicheRegion : Set Point :=
   verticalFill D (Icc (0 : ℝ) params.theta) ∪
   verticalFill (Romik.path params) (Icc params.phi tau) ∪
@@ -7078,7 +7103,7 @@ section
 # Part C Stage 4: inner-wall graph identities
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7155,7 +7180,7 @@ literal niche with its certified vertical-fill region.  They are proved from
 the literal open-quadrant definition, not assumed through a Stage 2 API.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7358,7 +7383,7 @@ vertical subgraph directly.
 
 /-! ## The three Gerver roof arcs are graphs over horizontal position -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7814,6 +7839,7 @@ theorem core_path_fst_strictAnti :
 
 /-- The affine reversal which runs through the core path from `tau` to `phi`
 while the auxiliary parameter runs from `theta` to `eta`. -/
+@[expose]
 def coreReverseTime (s : ℝ) : ℝ :=
   tau - ((tau - params.phi) / (eta - params.theta)) *
     (s - params.theta)
@@ -7851,6 +7877,7 @@ private theorem coreReverseTime_continuous : Continuous coreReverseTime := by
   fun_prop
 
 /-- A single continuous parametrization of the complete upper niche arc. -/
+@[expose]
 def nicheTopArc (s : ℝ) : Point :=
   if s ≤ params.theta then D s
   else if s ≤ eta then Romik.path params (coreReverseTime s)
@@ -8830,7 +8857,7 @@ three-piece region.  Once the boundary layer identifies that region with the
 literal niche, connectedness is immediate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8869,7 +8896,7 @@ point.  Thus the horizontal projections of the cap and sofa agree.  A compact
 map with connected fibres over that connected projection closes connectedness.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9273,7 +9300,7 @@ No new certificate structure is introduced here.  This file is intended to
 close the two literal topology fields left by `RemainingTopologyTarget`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9374,7 +9401,7 @@ This is the only terminal assembly for Part C.  It contains no payload and no
 new certificate interface.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

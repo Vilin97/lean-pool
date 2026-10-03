@@ -16,7 +16,7 @@ retractions supplies both a directed system and the projection system used at
 completed limit stages.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -67,6 +67,7 @@ noncomputable instance directedSystem (B : CoherentBiSystem G) :
 
 /-- Projection from any component to component `a`: embed forward below `a`,
 and retract backward above `a`. -/
+@[expose]
 noncomputable def totalProject (B : CoherentBiSystem G) (a i : ι) :
     G i →L[ℝ] G a := by
   by_cases hia : i ≤ a
@@ -96,6 +97,7 @@ theorem totalProject_of_ge (B : CoherentBiSystem G)
 
 /-- The total projections form the projection system required at a completed
 direct limit. -/
+@[expose]
 noncomputable def projectionSystem (B : CoherentBiSystem G) :
     CoherentRetractionLimit.ProjectionSystem G B.embed where
   project := totalProject G B

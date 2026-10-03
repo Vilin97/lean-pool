@@ -24,7 +24,7 @@ Definition 5 value.
 This is the base case of the converse's factorization induction.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -11,7 +11,7 @@ public import Mathlib.Analysis.InnerProductSpace.Projection.Minimal
 
 /-! # Nearest Projection -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal NNReal

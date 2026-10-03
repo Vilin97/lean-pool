@@ -19,7 +19,7 @@ that this map is genuinely PL on one named finite subdivision.  Polygonal Schoen
 it by a finite PL homeomorphism, without changing any shared-edge boundary values.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

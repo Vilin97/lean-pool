@@ -17,7 +17,7 @@ the comparison argument. Bounds that require a finite right-hand norm retain
 an explicit `MemLp` hypothesis.
 -/
 
-@[expose] public section
+public section
 
 
 

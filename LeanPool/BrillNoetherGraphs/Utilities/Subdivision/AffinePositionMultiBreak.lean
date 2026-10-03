@@ -46,7 +46,7 @@ only Boolean checks are the fail-closed bound checks already introduced by
 `AffinePosition`.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate
 open Utilities.Certificate
@@ -151,6 +151,7 @@ variable {m n p : ℕ}
 /-- A certificate carrying only length geometry.  Its `divisor` and `witness`
 fields are placeholders: the real pencil is a `MultiCode` and the real firing
 scripts are multi-break scripts. -/
+@[expose]
 def certificate (core : ExplicitPotential.Core n p)
     (segment : Fin p → ExplicitPotential.AffineForm m)
     (cone : List (ExplicitPotential.AffineForm m)) :
@@ -450,6 +451,7 @@ open Utilities.Certificate.SubdivisionGraph.Spec
 /-- Scan a break list left to right, keeping the value of the last entry
 whose start index is at most `k`.  `initial` is the slope in force before the
 list begins. -/
+@[expose]
 def breakSlopeFrom (initial : ℤ) : List (ℕ × ℤ) → ℕ → ℤ
   | [], _ => initial
   | entry :: rest, k =>
@@ -457,6 +459,7 @@ def breakSlopeFrom (initial : ℤ) : List (ℕ × ℤ) → ℕ → ℤ
 
 /-- The slope named by a break list at unit step `k`: the value of the last
 entry whose start is at most `k`, and `0` before every entry. -/
+@[expose]
 def breakSlope (breaks : List (ℕ × ℤ)) (k : ℕ) : ℤ := breakSlopeFrom 0 breaks k
 
 @[simp] theorem breakSlopeFrom_nil (initial : ℤ) (k : ℕ) :
@@ -632,6 +635,7 @@ def checkBounds (certificate : ExplicitPotential.CertificateData m n p)
 
 /-- The concrete per-slot break list obtained by evaluating every affine
 break position at a length point. -/
+@[expose]
 def breaks (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) (edge : Fin p) :
     List (ℕ × ℤ) :=

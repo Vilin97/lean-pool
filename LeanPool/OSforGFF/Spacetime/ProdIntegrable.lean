@@ -17,7 +17,7 @@ For SpaceTime = EuclideanSpace ℝ (Fin 4), the time coordinate is accessed via 
 This specialized version matches the signature needed in OS3_MixedRepInfra.lean.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory SchwartzMap Real Set Metric
 open scoped ENNReal
@@ -121,7 +121,7 @@ On the bounded time domain {0 < t₁, 0 < t₂, t₁+t₂ < 1}, this gives integ
 abbrev SpatialCoords3 : Type := EuclideanSpace ℝ (Fin 3)
 
 /-- Decomposition of SpaceTime as time × space. -/
-noncomputable def spacetimeOfTimeSpace (t : ℝ) (x : SpatialCoords3) : SpaceTime :=
+@[expose] noncomputable def spacetimeOfTimeSpace (t : ℝ) (x : SpatialCoords3) : SpaceTime :=
   EuclideanSpace.equiv (Fin 4) ℝ |>.symm (Fin.cons t (fun i => x i))
 
 /-- The time coordinate of spacetimeOfTimeSpace is t. -/
@@ -270,7 +270,7 @@ lemma schwartz_time_slice_integrable (f : TestFunctionℂ) (t : ℝ) :
   exact h_bound x
 
 /-- The spatial integral G(t) = ∫_{ℝ³} ‖f(t, x)‖ dx. -/
-noncomputable def spatialNormIntegral (f : TestFunctionℂ) (t : ℝ) : ℝ :=
+@[expose] noncomputable def spatialNormIntegral (f : TestFunctionℂ) (t : ℝ) : ℝ :=
   ∫ x : SpatialCoords3, ‖f (spacetimeOfTimeSpace t x)‖
 
 /-- G(t) = 0 for t ≤ 0 when f vanishes on {t ≤ 0}. -/

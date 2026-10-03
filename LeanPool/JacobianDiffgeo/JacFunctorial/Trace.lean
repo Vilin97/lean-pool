@@ -41,7 +41,7 @@ Main declarations:
   formula / functoriality laws / the trace–period relation).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set Filter Metric IsManifold
@@ -138,13 +138,13 @@ variable (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) (hne : ¬ ∃ c, ∀ x, f x =
 
 /-- The chart of the trace's coefficient data at index `y`: the preferred chart at `y`,
 restricted to the stack neighborhood `(stackAt hf hne y).V`. -/
-def traceChart (y : Y) : OpenPartialHomeomorph Y ℂ :=
+@[expose] def traceChart (y : Y) : OpenPartialHomeomorph Y ℂ :=
   (chartAt ℂ y).restr (stackAt hf hne y).V
 
-@[simp] theorem traceChart_coe (y : Y) : ⇑(traceChart hf hne y) = ⇑(chartAt ℂ y) := rfl
+@[simp] theorem traceChart_coe (y : Y) : ⇑(traceChart hf hne y) = ⇑(chartAt ℂ y) := by rfl
 
 @[simp] theorem traceChart_symm_coe (y : Y) :
-    ⇑(traceChart hf hne y).symm = ⇑(chartAt ℂ y).symm := rfl
+    ⇑(traceChart hf hne y).symm = ⇑(chartAt ℂ y).symm := by rfl
 
 theorem traceChart_source (y : Y) :
     (traceChart hf hne y).source = (chartAt ℂ y).source ∩ (stackAt hf hne y).V := by
@@ -168,7 +168,7 @@ theorem traceChart_mem_maximalAtlas (y : Y) :
 
 /-- The transition from the preferred chart's coordinate at `y` to the `i`-th branch's target
 chart coordinate. -/
-def branchTrans (y : Y) (i : Fin (stackAt hf hne y).n) : ℂ → ℂ :=
+@[expose] def branchTrans (y : Y) (i : Fin (stackAt hf hne y).n) : ℂ → ℂ :=
   ⇑((stackAt hf hne y).A i).e' ∘ ⇑(chartAt ℂ y).symm
 
 theorem analyticAt_branchTrans (y : Y) {w : ℂ} (hw : w ∈ (traceChart hf hne y).target)
@@ -186,7 +186,7 @@ theorem branchTrans_mem_ball (y : Y) {w : ℂ} (hw : w ∈ (traceChart hf hne y)
 
 /-- The coefficient of the trace in the chart at index `y`: the branch-transported sum of the
 repaired planar trace coefficients of `η`'s stack-chart coefficients. -/
-def traceCoeffFun (η : Form1 X) (y : Y) : ℂ → ℂ := fun w =>
+@[expose] def traceCoeffFun (η : Form1 X) (y : Y) : ℂ → ℂ := fun w =>
   ∑ i, deriv (branchTrans hf hne y i) w
     * traceCoeff (coeffIn ((stackAt hf hne y).A i).e η)
         (multiplicity f ((stackAt hf hne y).pt i)) (branchTrans hf hne y i w)
@@ -220,6 +220,7 @@ theorem analyticOnNhd_traceCoeffFun (η : Form1 X) (y : Y) :
 /-- The canonical (stack-independent) contribution of a fibre point `x` to the trace's
 coefficient in a target chart `e₀`: the coefficient of `η` at `x`, divided by the chart
 derivative of `f`. (Junk `0` at ramified `x`, where the chart derivative vanishes.) -/
+@[expose]
 def qCoeff (f : X → Y) (η : Form1 X) (e₀ : OpenPartialHomeomorph Y ℂ) (x : X) : ℂ :=
   (deriv (⇑e₀ ∘ f ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x))⁻¹ * coeffAt x η
 

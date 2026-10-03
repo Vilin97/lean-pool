@@ -53,7 +53,7 @@ where:
 - Fubini requires showing the triple integral is absolutely convergent
 -/
 
-@[expose] public section
+public section
 
 section ParsevalCovariance
 
@@ -376,7 +376,7 @@ lemma phase_factorization (k x y : SpaceTime) :
   ring
 
 /-- The physics Fourier transform at k. -/
-noncomputable def physicsFT (f : TestFunctionℂ) (k : SpaceTime) : ℂ :=
+@[expose] noncomputable def physicsFT (f : TestFunctionℂ) (k : SpaceTime) : ℂ :=
   ∫ x, f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) ∂volume
 
 /-- Norm squared rescaling: ‖c • x‖² = c² ‖x‖² for c ≥ 0. -/
@@ -972,7 +972,7 @@ open scoped InnerProductSpace
     This is the distributional formulation: the double integral is well-defined
     for Schwartz test functions due to the L¹ integrability of the Bessel kernel.
 -/
-noncomputable def freeCovarianceℂBilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
+@[expose] noncomputable def freeCovarianceℂBilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y)
 
 end GlobalBilinearDefs

@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedConvolution
 /-! The actual transport forcing has the shifted Gevrey H⁶ estimate without a cutoff-plus-one loss.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ omit [Fact (0 < period)] in
 theorem word_zero {n : ℕ} (w : Fin n → Fin 4) :
     iteratedFieldDerivative period w (0 : LiftDomain period → F) = 0 := by
   induction n with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ n ih =>
     rw [iteratedFieldDerivative_succ, ih]
     ext x
@@ -124,6 +124,7 @@ theorem wordSobolevNorm_postcomp_le (q n : ℕ) (L : F →L[ℝ] G) (hL : ‖L�
 end Postcomposition
 
 /-- Actual transport in the four cylinder coordinates; angle is the first coordinate. -/
+@[expose]
 def transportField (q : ℕ) (b : LiftDomain period → Domain 4) (e : LiftDomain period → Domain q) :
     LiftDomain period → Domain q :=
   ∑ i : Fin 4, (fun x => b x i • fieldDerivative period (standardDirection i) e x)

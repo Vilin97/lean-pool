@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-! Adding the actual correction removes a genuine approximate-solution residual. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ local instance residualSobolevGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace
 local instance residualSobolevSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The actual linear coefficient plus the full transport-and-algebraic quadratic nonlinearity. -/
-def nonlinearity {q : ℕ} {T : Type*} [TopologicalSpace T]
+@[expose] def nonlinearity {q : ℕ} {T : Type*} [TopologicalSpace T]
     (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T)
     (u : SobolevSpace period (q + 1)) : SobolevSpace period q :=
   coefficientSobolevOperator period (D.linear.jet t) (truncateOperator period q u) +

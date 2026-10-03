@@ -23,7 +23,7 @@ Tags: number-theory, finite-fields, algebraic-geometry
 MSC: 14G15, 11T06
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

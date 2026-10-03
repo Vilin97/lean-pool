@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Integral.Prod
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

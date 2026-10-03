@@ -17,7 +17,7 @@ object, so a section of a free morphism over one algebra
 base-changes to a section over any algebra under it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

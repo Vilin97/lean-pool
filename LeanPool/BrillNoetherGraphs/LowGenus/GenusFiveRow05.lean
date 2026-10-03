@@ -51,7 +51,7 @@ The other three chambers are the images of this one under the two leg swaps, so
 the closed orthant.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow05
 

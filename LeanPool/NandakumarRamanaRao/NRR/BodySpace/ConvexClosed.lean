@@ -32,7 +32,7 @@ endpoints of a segment and passing the convex combinations to the limit; closedn
 (`isClosed_convex_nonemptyCompacts`) is the sequential packaging of this fact.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology EMetric
 

@@ -15,7 +15,7 @@ Ported from the corresponding upstream modules listed by the source sections bel
 References beginning with `Source` name these retained sections.
 -/
 
-@[expose] public section
+public section
 
 section SourceQuantumFiniteHilbert
 
@@ -73,18 +73,21 @@ variable {H : Type*} [Fintype H] [DecidableEq H]
 
 /-- The Hermitian inner product on `H → ℂ`, conjugate-linear in the **first**
 argument (the physicists' convention, and Mathlib's). -/
+@[expose]
 def qInner (ψ φ : H → ℂ) : ℂ := star ψ ⬝ᵥ φ
 
 omit [DecidableEq H] in
 lemma qInner_def (ψ φ : H → ℂ) : qInner ψ φ = ∑ h, star (ψ h) * φ h := rfl
 
 /-- The squared norm of a state, as a real number. -/
+@[expose]
 def qNormSq (ψ : H → ℂ) : ℝ := ∑ h, Complex.normSq (ψ h)
 
 omit [DecidableEq H] in
 lemma qNormSq_def (ψ : H → ℂ) : qNormSq ψ = ∑ h, Complex.normSq (ψ h) := rfl
 
 /-- A (pure) quantum state: a unit vector. -/
+@[expose]
 def IsQState (ψ : H → ℂ) : Prop := qNormSq ψ = 1
 
 omit [DecidableEq H] in
@@ -361,9 +364,11 @@ lemma qPerm_mul_self_of_involutive {e : Equiv.Perm H} (he : Function.Involutive 
 /-! ## Projectors and reflections -/
 
 /-- An orthogonal projector. -/
+@[expose]
 def IsQProjector (P : Matrix H H ℂ) : Prop := Pᴴ = P ∧ P * P = P
 
 /-- The reflection about the range of a projector, `2P - 1`. -/
+@[expose]
 def qRefl (P : Matrix H H ℂ) : Matrix H H ℂ := (2 : ℂ) • P - 1
 
 lemma qRefl_conjTranspose {P : Matrix H H ℂ} (hP : IsQProjector P) :
@@ -540,6 +545,7 @@ variable {O : Type} [Fintype O] [DecidableEq O]
 /-! ## The exponential-moment tail -/
 
 /-- The number of coordinates at which the record `y` differs from `b`. -/
+@[expose]
 def wrongCount {k : ℕ} (y b : Fin k → O) : ℕ :=
   (Finset.univ.filter (fun j => y j ≠ b j)).card
 
@@ -833,10 +839,12 @@ variable {H : Type*} [Fintype H] [DecidableEq H]
 variable {O : Type*} [DecidableEq O]
 
 /-- The unnormalized part of `ψ` that announces the outcome `o`. -/
+@[expose]
 def qRestrict (p : H → O) (o : O) (ψ : H → ℂ) : H → ℂ :=
   fun h => if p h = o then ψ h else 0
 
 /-- **The probability that measuring `ψ` announces the outcome `o`.** -/
+@[expose]
 def qProb (p : H → O) (ψ : H → ℂ) (o : O) : ℝ :=
   ∑ h, if p h = o then Complex.normSq (ψ h) else 0
 
@@ -1089,6 +1097,7 @@ variable {ι σ W : Type*} [Fintype ι] [DecidableEq ι] [Fintype σ] [Decidable
   [Fintype W] [DecidableEq W]
 
 /-- The oracle's action on the computational basis. -/
+@[expose]
 def oracleMap (a : ι → σ) : QBasis ι σ W → QBasis ι σ W
   | (none, t, w) => (none, t, w)
   | (some i, t, w) => (some i, Equiv.swap none (some (a i)) t, w)
@@ -1138,6 +1147,7 @@ lemma oracleMap_involutive (a : ι → σ) :
   · simp
 
 /-- The oracle as a permutation of the basis. -/
+@[expose]
 def oraclePerm (a : ι → σ) : Equiv.Perm (QBasis ι σ W) :=
   Function.Involutive.toPerm _ (oracleMap_involutive a)
 
@@ -1150,6 +1160,7 @@ lemma oraclePerm_involutive (a : ι → σ) :
     Function.Involutive (oraclePerm (W := W) a) := oracleMap_involutive a
 
 /-- **The oracle unitary.** -/
+@[expose]
 def oracleMat (a : ι → σ) : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ :=
   qPerm (oraclePerm a)
 
@@ -1267,6 +1278,7 @@ structure QAlg (ι σ O W : Type) [Fintype ι] [DecidableEq ι] [Fintype σ]
 namespace QAlg
 
 /-- **The state of `A` on input `a` after `t` queries.** -/
+@[expose]
 def state (A : QAlg ι σ O W) (a : ι → σ) : ℕ → (QBasis ι σ W → ℂ)
   | 0 => A.step 0 *ᵥ A.init
   | t + 1 => A.step (t + 1) *ᵥ (oracleMat a *ᵥ A.state a t)
@@ -1290,6 +1302,7 @@ theorem state_isQState (A : QAlg ι σ O W) (a : ι → σ) (t : ℕ) :
 variable [DecidableEq O]
 
 /-- The probability that `A`, run for `t` queries on input `a`, announces `o`. -/
+@[expose]
 def prob (A : QAlg ι σ O W) (a : ι → σ) (t : ℕ) (o : O) : ℝ :=
   qProb A.readout (A.state a t) o
 
@@ -1309,6 +1322,7 @@ variable [DecidableEq O]
 
 /-- **`A` computes `f` on the promise `read` with error at most `ε` in `q`
 queries.** -/
+@[expose]
 def ComputesWithErrorOn (A : QAlg ι σ O W) (q : ℕ) (read : X → ι → σ) (f : X → O)
     (ε : ℝ) : Prop :=
   ∀ x : X, 1 - ε ≤ A.prob (read x) q (f x)
@@ -1414,6 +1428,7 @@ lemma matrix_ext_of_mulVec_qBasis {H : Type} [Fintype H] [DecidableEq H]
   simpa [Matrix.mulVec, dotProduct, qBasis_apply, Finset.sum_ite_eq'] using hpq
 
 /-- The extended basis, split as (rest, extra register). -/
+@[expose]
 def regEquiv : QBasis ι σ (V × W) ≃ QBasis ι σ W × V where
   toFun p := ((p.1, p.2.1, p.2.2.2), p.2.2.1)
   invFun x := (x.1.1, x.1.2.1, (x.2, x.1.2.2))
@@ -1485,6 +1500,7 @@ lemma liftReg_mem_unitaryGroup {U : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ
 
 /-- **The encoded subspace**: `ψ`, placed in the sector where the extra register
 holds `v`. -/
+@[expose]
 def embedReg (v : V) (ψ : QBasis ι σ W → ℂ) : QBasis ι σ (V × W) → ℂ :=
   fun p => if p.2.2.1 = v then ψ (p.1, p.2.1, p.2.2.2) else 0
 
@@ -1794,11 +1810,13 @@ variable {X : Type} [Fintype X]
 /-- The set of query counts at which `f` is computable with error `≤ ε`.  The
 workspace is existentially quantified here — this is the one place where that
 costs anything, and it keeps `QAlg` free of a bundled type field. -/
+@[expose]
 def QueryCounts (read : X → ι → σ) (f : X → O) (ε : ℝ) : Set ℕ :=
   {q | ∃ (W : Type) (_ : Fintype W) (_ : DecidableEq W) (A : QAlg ι σ O W),
     ComputesWithErrorOn A q read f ε}
 
 /-- **Bounded-error quantum query complexity on a promise.** -/
+@[expose]
 noncomputable def qQueryOn (read : X → ι → σ) (f : X → O) (ε : ℝ) : ℕ :=
   sInf (QueryCounts read f ε)
 
@@ -2004,6 +2022,7 @@ variable (Q : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ)
 
 /-- The operator implemented by the first `t` queries of `R`, with the opaque
 oracle matrix `Q` in place of the transposition oracle. -/
+@[expose]
 def runWith (R : QRoutine ι σ W) : ℕ → Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ
   | 0 => R.step 0
   | t + 1 => R.step (t + 1) * (Q * R.runWith t)
@@ -2032,6 +2051,7 @@ lemma runWith_congr {R S : QRoutine ι σ W} {t : ℕ}
 end GeneralOracle
 
 /-- The operator implemented by the first `t` queries of `R`. -/
+@[expose]
 def runUpto (R : QRoutine ι σ W) (a : ι → σ) :
     ℕ → Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ := R.runWith (oracleMat a)
 
@@ -2043,6 +2063,7 @@ def runUpto (R : QRoutine ι σ W) (a : ι → σ) :
     R.runUpto a (t + 1) = R.step (t + 1) * (oracleMat a * R.runUpto a t) := rfl
 
 /-- **The operator implemented by `R`**, using exactly `R.len` queries. -/
+@[expose]
 def run (R : QRoutine ι σ W) (a : ι → σ) : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ :=
   R.runUpto a R.len
 
@@ -2062,6 +2083,7 @@ lemma runUpto_congr {R S : QRoutine ι σ W} (a : ι → σ) {t : ℕ}
 
 /-- Turn a routine into an algorithm by supplying an initial state and a
 readout. -/
+@[expose]
 def toAlg (R : QRoutine ι σ W) (init : QBasis ι σ W → ℂ) (hinit : IsQState init)
     (readout : QBasis ι σ W → O) : QAlg ι σ O W where
   init := init
@@ -2091,6 +2113,7 @@ lemma toAlg_state_len (R : QRoutine ι σ W) (init : QBasis ι σ W → ℂ)
 
 /-- **Sequencing**: run `R`, then `S`.  The two boundary unitaries are merged,
 so the query count is exactly `R.len + S.len`. -/
+@[expose]
 def comp (R S : QRoutine ι σ W) : QRoutine ι σ W where
   len := R.len + S.len
   step := fun t =>
@@ -2211,6 +2234,7 @@ identity.  Padding by *one* is a different matter — it needs somewhere to park
 the query index so that the extra query idles — and lives in `SourceQuantumControl`. -/
 
 /-- Append two queries that cancel. -/
+@[expose]
 def padTwo (R : QRoutine ι σ W) : QRoutine ι σ W where
   len := R.len + 2
   step := fun t => if t ≤ R.len then R.step t else 1
@@ -2322,6 +2346,7 @@ theorem exists_inv (R : QRoutine ι σ W) :
 /-! ## Zero-query constructors, and an explicit inverse -/
 
 /-- A zero-query routine: just a unitary. -/
+@[expose]
 def ofUnitary (U : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ)
     (hU : U ∈ Matrix.unitaryGroup (QBasis ι σ W) ℂ) : QRoutine ι σ W where
   len := 0
@@ -2341,6 +2366,7 @@ lemma ofUnitary_runWith (Q : Matrix (QBasis ι σ W) (QBasis ι σ W) ℂ)
     (ofUnitary U hU).runWith Q 0 = U := rfl
 
 /-- The zero-query identity routine. -/
+@[expose]
 def identity : QRoutine ι σ W := ofUnitary 1 one_mem_qUnitary
 
 @[simp] lemma identity_len : (identity : QRoutine ι σ W).len = 0 := rfl
@@ -2349,6 +2375,7 @@ def identity : QRoutine ι σ W := ofUnitary 1 one_mem_qUnitary
     (identity : QRoutine ι σ W).run a = 1 := rfl
 
 /-- **The one-query routine**: a single bare oracle call. -/
+@[expose]
 def query : QRoutine ι σ W where
   len := 1
   step := fun _ => 1
@@ -2504,6 +2531,7 @@ instance instCtrlWorkFintype {ι W : Type} [Fintype ι] [Fintype W] :
 
 /-- Swap the query-index register with the parking slot, unless the control bit
 says otherwise. -/
+@[expose]
 def parkMap : QBasis ι σ (CtrlWork ι W) → QBasis ι σ (CtrlWork ι W)
   | (k, t, (true, s, w)) => (k, t, (true, s, w))
   | (k, t, (false, s, w)) => (s, t, (false, k, w))
@@ -2546,6 +2574,7 @@ lemma parkMat_mulVec_apply (ψ : QBasis ι σ (CtrlWork ι W) → ℂ)
 
 /-- **The controlled query**: park, query, unpark.  Note the single `oracleMat`
 factor — this costs exactly one physical query. -/
+@[expose]
 def ctrlQuery (a : ι → σ) :
     Matrix (QBasis ι σ (CtrlWork ι W)) (QBasis ι σ (CtrlWork ι W)) ℂ :=
   parkMat * (oracleMat a * parkMat)
@@ -2556,6 +2585,7 @@ lemma ctrlQuery_mem_unitaryGroup (a : ι → σ) :
     (mul_mem (oracleMat_mem_unitaryGroup a) parkMat_mem_unitaryGroup)
 
 /-- The basis action of the controlled query. -/
+@[expose]
 def ctrlMap (a : ι → σ) :
     QBasis ι σ (CtrlWork ι W) → QBasis ι σ (CtrlWork ι W) :=
   fun p => parkMap (oracleMap a (parkMap p))
@@ -2657,6 +2687,7 @@ theorem ctrlQuery_mulVec_of_parked (a : ι → σ)
 /-! ## Idling and padding by one -/
 
 /-- The controlled query as a **one-query routine**. -/
+@[expose]
 def ctrlQueryRoutine : QRoutine ι σ (CtrlWork ι W) where
   len := 1
   step := fun _ => parkMat
@@ -2669,6 +2700,7 @@ lemma ctrlQueryRoutine_run (a : ι → σ) :
     (ctrlQueryRoutine (ι := ι) (σ := σ) (W := W)).run a = ctrlQuery a := rfl
 
 /-- **Padding by one query.** -/
+@[expose]
 def padOne (R : QRoutine ι σ (CtrlWork ι W)) : QRoutine ι σ (CtrlWork ι W) :=
   R.comp ctrlQueryRoutine
 
@@ -2699,6 +2731,7 @@ it. -/
 
 /-- The blank-slot embedding: `ψ` in the sector with control bit `b` and an
 empty parking slot. -/
+@[expose]
 def embedCtrl (b : Bool) (ψ : QBasis ι σ W → ℂ) : QBasis ι σ (CtrlWork ι W) → ℂ :=
   embedReg b (embedReg none ψ)
 
@@ -2876,6 +2909,7 @@ variable {β γ δ : Type} [Fintype β] [DecidableEq β] [Fintype γ] [Decidable
   [Fintype δ] [DecidableEq δ]
 
 /-- `M ⊗ 1`, read through the factorizing equivalence `e`. -/
+@[expose]
 def kronLift (e : β ≃ γ × δ) (M : Matrix γ γ ℂ) : Matrix β β ℂ :=
   (Matrix.kroneckerMap (· * ·) M (1 : Matrix δ δ ℂ)).submatrix e e
 
@@ -2910,6 +2944,7 @@ lemma kronLift_mem_unitaryGroup (e : β ≃ γ × δ) {M : Matrix γ γ ℂ}
 
 /-- A state of split form: `φ` on the system factor, `ξ` on the
 environment. -/
+@[expose]
 def splitVec (e : β ≃ γ × δ) (φ : γ → ℂ) (ξ : δ → ℂ) : β → ℂ :=
   fun b => φ (e b).1 * ξ (e b).2
 
@@ -2991,6 +3026,7 @@ lemma oracleMat_mulVec_splitVec {e : QBasis ι σ W' ≃ QBasis ι σ W × D}
     oracleMat_mulVec_apply]
 
 /-- A routine's steps, lifted along `e`. -/
+@[expose]
 def QRoutine.kronLift (e : QBasis ι σ W' ≃ QBasis ι σ W × D)
     (R : QRoutine ι σ W) : QRoutine ι σ W' where
   len := R.len
@@ -3066,6 +3102,7 @@ lemma qProb_comp_ge {H O O' : Type} [Fintype H]
 
 /-- **Relabelling the readout**: same initial state, same steps, composed
 output map. -/
+@[expose]
 def QAlg.postcomp {O O' W : Type} [Fintype W] [DecidableEq W]
     (A : QAlg ι σ O W) (g : O → O') : QAlg ι σ O' W :=
   { A with readout := fun p => g (A.readout p) }
@@ -3184,6 +3221,7 @@ section IdxSwap
 variable {W : Type} [Fintype W] [DecidableEq W]
 
 /-- Transpose two values of the query-index register. -/
+@[expose]
 def idxSwapMap (u v : Option ι) : QBasis ι σ W → QBasis ι σ W :=
   fun p => (Equiv.swap u v p.1, p.2)
 
@@ -3194,6 +3232,7 @@ lemma idxSwapMap_involutive (u v : Option ι) :
   simp [idxSwapMap]
 
 /-- The index-register transposition, as a permutation of the basis. -/
+@[expose]
 def idxSwapPerm (u v : Option ι) : Equiv.Perm (QBasis ι σ W) :=
   Function.Involutive.toPerm _ (idxSwapMap_involutive u v)
 
@@ -3207,6 +3246,7 @@ end IdxSwap
 abbrev QRec (ι σ : Type) : Type := ι → Option σ
 
 /-- Swap the answer register with the workspace slot `j`. -/
+@[expose]
 def slotSwapMap (j : ι) : QBasis ι σ (QRec ι σ) → QBasis ι σ (QRec ι σ) :=
   fun p => (p.1, p.2.2 j, Function.update p.2.2 j p.2.1)
 
@@ -3218,6 +3258,7 @@ lemma slotSwapMap_involutive (j : ι) :
 
 /-- The slot swap at an *optional* index: at `none` there is nothing to store, so
 the algorithm idles.  This is what lets one formula describe every step. -/
+@[expose]
 def slotSwapPerm : Option ι → Equiv.Perm (QBasis ι σ (QRec ι σ))
   | none => 1
   | some j => Function.Involutive.toPerm _ (slotSwapMap_involutive j)
@@ -3268,6 +3309,7 @@ lemma equivFin_of_idxAt {t : ℕ} {j : ι} (h : idxAt ι t = some j) :
 /-! ## The record -/
 
 /-- The workspace after `t` queries: the answers at the first `t` indices. -/
+@[expose]
 noncomputable def recAt (a : ι → σ) (t : ℕ) : QRec ι σ :=
   fun i => if (Fintype.equivFin ι i : ℕ) < t then some (a i) else none
 
@@ -3317,6 +3359,7 @@ lemma recAt_self_eq_none (a : ι → σ) {t : ℕ} {j : ι}
 
 /-- **The algorithm that reads every coordinate**, announcing `dec` of the
 completed record. -/
+@[expose]
 noncomputable def readAllAlg (dec : QRec ι σ → O) : QAlg ι σ O (QRec ι σ) where
   init := qBasis (none, none, fun _ => none)
   init_isQState := isQState_qBasis _
@@ -3483,12 +3526,14 @@ variable {σ : Type} [Fintype σ] [DecidableEq σ]
 
 /-- The left vector of the factorization: `1` on the constant coordinate and
 `1` at its own letter. -/
+@[expose]
 def uniformLeft (a : σ) : Option σ → ℝ
   | none => 1
   | some x => if x = a then 1 else 0
 
 /-- The right vector: `1` on the constant coordinate and `−1` at its own
 letter. -/
+@[expose]
 def uniformRight (b : σ) : Option σ → ℝ
   | none => 1
   | some x => if x = b then -1 else 0
@@ -3624,6 +3669,7 @@ lemma normSq_hadS : Complex.normSq hadS = 2⁻¹ := by
     Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
 
 /-- The Hadamard gate on one qubit: `(1/√2)·(−1)^{b·b'}`. -/
+@[expose]
 noncomputable def hadMat : Matrix Bool Bool ℂ :=
   Matrix.of fun b b' => if b && b' then -hadS else hadS
 
@@ -3719,6 +3765,7 @@ lemma isQState_hadInit {u : QBasis ι σ W → ℂ} (hu : IsQState u) :
 /-- **The Hadamard test of `R` on `u`**: controlled-`R` between two Hadamards
 on a control qubit, measuring the control.  Announces `true` on control `0`.
 Costs exactly `R.len` queries. -/
+@[expose]
 noncomputable def hadTest (R : QRoutine ι σ W) (u : QBasis ι σ W → ℂ)
     (hu : IsQState u) : QAlg ι σ Bool (CtrlWork ι W) :=
   (R.control.comp (QRoutine.ofUnitary ctrlHad ctrlHad_mem_unitaryGroup)).toAlg
@@ -4168,6 +4215,7 @@ section Realizes
 variable {X : Type} [Fintype X] {O O' : Type} [DecidableEq O] [DecidableEq O']
 
 /-- Some algorithm has outcome distribution `P` after `q` queries. -/
+@[expose]
 def Realizes (read : X → ι → σ) (q : ℕ) (P : X → O → ℝ) : Prop :=
   ∃ (W : Type) (_ : Fintype W) (_ : DecidableEq W) (A : QAlg ι σ O W),
     ∀ x o, A.prob (read x) q o = P x o
@@ -4330,6 +4378,7 @@ open Matrix
 
 /-- XOR the `some`-part of `s` into the `some`-part of `t`; blank on either
 side leaves `t` alone. -/
+@[expose]
 def optXor : Option Bool → Option Bool → Option Bool
   | some b, some c => some (xor b c)
   | t, _ => t
@@ -4351,6 +4400,7 @@ lemma optXor_optXor (t s : Option Bool) : optXor (optXor t s) s = t := by
 variable {ι W : Type} [Fintype ι] [DecidableEq ι] [Fintype W] [DecidableEq W]
 
 /-- The XOR oracle's action on the computational basis. -/
+@[expose]
 def xorOracleMap (a : ι → Bool) : QBasis ι Bool W → QBasis ι Bool W
   | (none, t, w) => (none, t, w)
   | (some i, t, w) => (some i, optXor t (some (a i)), w)
@@ -4379,6 +4429,7 @@ lemma xorOracleMap_involutive (a : ι → Bool) :
   · simp [optXor_optXor]
 
 /-- The XOR oracle as a permutation of the basis. -/
+@[expose]
 def xorOraclePerm (a : ι → Bool) : Equiv.Perm (QBasis ι Bool W) :=
   Function.Involutive.toPerm _ (xorOracleMap_involutive a)
 
@@ -4416,6 +4467,7 @@ variable {O : Type} [DecidableEq O]
 variable {X : Type} [Fintype X]
 
 /-- **The state of `A` on input `a` after `t` XOR queries.** -/
+@[expose]
 def xorState (A : QAlg ι Bool O W) (a : ι → Bool) :
     ℕ → (QBasis ι Bool W → ℂ)
   | 0 => A.step 0 *ᵥ A.init
@@ -4457,6 +4509,7 @@ lemma xorState_eq_runWith (A : QAlg ι Bool O W) (n : ℕ) (a : ι → Bool)
 
 /-- `A` computes `f` on the promise `read` with error at most `ε` in `q`
 **XOR queries**. -/
+@[expose]
 def XorComputesWithErrorOn (A : QAlg ι Bool O W) (q : ℕ)
     (read : X → ι → Bool) (f : X → O) (ε : ℝ) : Prop :=
   ∀ x : X, 1 - ε ≤ qProb A.readout (xorState A (read x) q) (f x)
@@ -4843,6 +4896,7 @@ variable {ι W : Type} [Fintype ι] [DecidableEq ι] [Fintype W] [DecidableEq W]
 namespace QRoutine
 
 /-- The operator implemented by `R` against the XOR oracle. -/
+@[expose]
 def xorRun (R : QRoutine ι Bool W) (a : ι → Bool) :
     Matrix (QBasis ι Bool W) (QBasis ι Bool W) ℂ :=
   R.runWith (xorOracleMat a) R.len
@@ -4863,6 +4917,7 @@ All on `QBasis ι Bool (Option Bool × W)`: index, answer, ancilla,
 workspace. -/
 
 /-- Swap the answer register with the ancilla. -/
+@[expose]
 def swapAncMap : QBasis ι Bool (Option Bool × W) → QBasis ι Bool (Option Bool × W)
   | (idx, t, (v, w)) => (idx, v, (t, w))
 
@@ -4878,6 +4933,7 @@ lemma swapAncMap_involutive :
   rfl
 
 /-- XOR the answer register's value into the ancilla. -/
+@[expose]
 def xorIntoMap : QBasis ι Bool (Option Bool × W) → QBasis ι Bool (Option Bool × W)
   | (idx, s, (t, w)) => (idx, s, (optXor t s, w))
 
@@ -4895,6 +4951,7 @@ lemma xorIntoMap_involutive :
 /-- On an active index with answer `some v`: swap `⊥ ↔ some v` in the
 ancilla.  Controlled on the index being active, so the idle sector is exactly
 fixed. -/
+@[expose]
 def ctrlSwapMap : QBasis ι Bool (Option Bool × W) → QBasis ι Bool (Option Bool × W)
   | (some i, some v, (t, w)) => (some i, some v, (Equiv.swap none (some v) t, w))
   | p => p
@@ -4974,6 +5031,7 @@ lemma ctrlSwapMat_mulVec_apply (ψ : QBasis ι Bool (Option Bool × W) → ℂ)
 /-! ## The two gadgets -/
 
 /-- **Transposition simulates XOR**: two physical queries. -/
+@[expose]
 def xorGadget : QRoutine ι Bool (Option Bool × W) where
   len := 2
   step := fun t => if t = 1 then xorIntoMat else swapAncMat
@@ -4986,6 +5044,7 @@ def xorGadget : QRoutine ι Bool (Option Bool × W) where
 @[simp] lemma xorGadget_len : (xorGadget (ι := ι) (W := W)).len = 2 := rfl
 
 /-- **XOR simulates transposition**: two physical queries. -/
+@[expose]
 def transGadget : QRoutine ι Bool (Option Bool × W) where
   len := 2
   step := fun t => if t = 1 then ctrlSwapMat else swapAncMat

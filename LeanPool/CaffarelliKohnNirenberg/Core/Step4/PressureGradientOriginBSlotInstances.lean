@@ -24,7 +24,7 @@ gradient of `eq:pressure-gradient-morrey`, cover the carrier by the fixed finite
 lattice of collars of radius `1/8`, and add the collar estimates.
 -/
 
-@[expose] public section
+public section
 
 section
 

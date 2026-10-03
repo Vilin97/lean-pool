@@ -15,7 +15,7 @@ Small helper lemmas about `CauSeq` suprema/infima and about Cauchy sequences
 converging to a real number, used in the construction of computable reals.
 -/
 
-@[expose] public section
+public section
 
 theorem abs_ite_le [AddCommGroup α] [LinearOrder α] [IsOrderedAddMonoid α] (x : α) :
     abs x = if 0 ≤ x then x else -x := by
@@ -59,7 +59,7 @@ theorem inf_equiv_of_equivs (ha : a ≈ c) (hb : b ≈ c) : a ⊓ b ≈ c := by
   all_goals linarith
 
 /-- Dropping the first n terms of a Cauchy sequence to get a new sequence. -/
-def drop (a : CauSeq α abs) (n : ℕ) : CauSeq α abs :=
+@[expose] def drop (a : CauSeq α abs) (n : ℕ) : CauSeq α abs :=
   ⟨fun k ↦ a.val (n+k), fun _ hq ↦ Exists.casesOn (cauchy₂ a hq)
     fun i hi ↦ ⟨i,
       fun _ hj ↦ hi _ (le_add_of_le_right hj) _ (Nat.le_add_left i n)⟩⟩

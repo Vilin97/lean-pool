@@ -19,7 +19,7 @@ most `(2s)^(s²)` times it, so the dimension dominates
 the hypothesis `H3`, discharged in `FactorialBound.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

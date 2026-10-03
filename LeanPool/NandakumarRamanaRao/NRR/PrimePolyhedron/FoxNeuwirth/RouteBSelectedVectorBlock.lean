@@ -21,7 +21,7 @@ The proof uses the `vertex_orbit_injective` field of
 without justification.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -93,6 +93,7 @@ namespace MixedFaceCase
 
 /-- The complete movable `p`-coordinate block belonging to the retained local
 vertex selected by a mixed-face case. -/
+@[expose]
 noncomputable def vectorParameter
     (κ : MixedFaceCase hp C) (j : Fin p) : MovableParameter hp C :=
   ⟨localParameter hp C κ.cell κ.retained j,

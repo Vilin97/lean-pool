@@ -10,7 +10,7 @@ public import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
 
 /-! # Soundness of flat postorder coverage-certificate nodes -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 

@@ -21,7 +21,7 @@ In this file we prove the Pythagorean theorem (Euclid I.47) using Avigad's axiom
 geometry.
 -/
 
-@[expose] public section
+public section
 
 namespace SyntheticEuclid4
 

@@ -76,13 +76,14 @@ Everything (including `numEquiv` and the order-isomorphisms) is **choice-free**
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise513
 
 /-! ### Triangular numbers -/
 
 /-- The `k`-th triangular number `T(k) = k(k+1)/2`. -/
+@[expose]
 def tri (k : ℕ) : ℕ := k * (k + 1) / 2
 
 /-- `k(k+1)` is even (choice-free, by induction). -/
@@ -124,10 +125,10 @@ theorem tri_mono {a b : ℕ} (h : a ≤ b) : tri a ≤ tri b := by
 
 /-- The pairing function `num n m = (n+m)(n+m+1)/2 + m` (Cantor's diagonal
 enumeration). -/
-def num (n m : ℕ) : ℕ := tri (n + m) + m
+@[expose] def num (n m : ℕ) : ℕ := tri (n + m) + m
 
 /-- Its uncurried form, the actual `N × N → N` of the exercise. -/
-def numP (p : ℕ × ℕ) : ℕ := num p.1 p.2
+@[expose] def numP (p : ℕ × ℕ) : ℕ := num p.1 p.2
 
 theorem num_zero_zero : num 0 0 = 0 := rfl
 
@@ -210,7 +211,7 @@ def numEquiv : ℕ × ℕ ≃ ℕ where
   left_inv := unnum_numP
   right_inv := numP_unnum
 
-@[simp] theorem numEquiv_apply (p : ℕ × ℕ) : numEquiv p = num p.1 p.2 := rfl
+@[simp] theorem numEquiv_apply (p : ℕ × ℕ) : numEquiv p = num p.1 p.2 := by rfl
 
 /-! ### The domain isomorphisms
 

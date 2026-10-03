@@ -23,7 +23,7 @@ import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
 
 /-! # Erdős 97 convex-octagon formalization: Residual Obstructions -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

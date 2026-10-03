@@ -18,7 +18,7 @@ chosen cyclic `Fin 3` ordering and identifies the result with the standard close
 triangle. The cyclic sides are carried exactly to the corresponding standard polygon sides.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -44,14 +44,14 @@ theorem standardFaceBoundary_mem_region (p : StandardFaceBoundary) :
 abbrev ClosedFace (f : K.Face) := stdSimplex ℝ {v // v ∈ K.faceVertices f}
 
 /-- Reindex native face coordinates by the chosen cyclic `Fin 3` ordering. -/
-noncomputable def faceReindexToStandard (f : K.Face) (x : K.ClosedFace f) :
+@[expose] noncomputable def faceReindexToStandard (f : K.Face) (x : K.ClosedFace f) :
     stdSimplex ℝ (Fin 3) := by
   refine ⟨fun i ↦ x (K.faceVertexEquiv f i), ?_, ?_⟩
   · exact fun i ↦ x.2.1 _
   · exact (K.faceVertexEquiv f).sum_comp (fun v ↦ x v) |>.trans x.2.2
 
 /-- Undo the cyclic coordinate reindexing. -/
-noncomputable def faceReindexFromStandard (f : K.Face) (z : stdSimplex ℝ (Fin 3)) :
+@[expose] noncomputable def faceReindexFromStandard (f : K.Face) (z : stdSimplex ℝ (Fin 3)) :
     K.ClosedFace f := by
   refine ⟨fun v ↦ z ((K.faceVertexEquiv f).symm v), ?_, ?_⟩
   · exact fun v ↦ z.2.1 _
@@ -86,7 +86,7 @@ theorem continuous_faceReindexFromStandard (f : K.Face) :
     (continuous_apply ((K.faceVertexEquiv f).symm v)).comp continuous_subtype_val
 
 /-- Native face coordinates are canonically homeomorphic to `stdSimplex ℝ (Fin 3)`. -/
-noncomputable def faceReindexHomeomorph (f : K.Face) :
+@[expose] noncomputable def faceReindexHomeomorph (f : K.Face) :
     K.ClosedFace f ≃ₜ stdSimplex ℝ (Fin 3) where
   toFun := K.faceReindexToStandard f
   invFun := K.faceReindexFromStandard f
@@ -97,12 +97,12 @@ noncomputable def faceReindexHomeomorph (f : K.Face) :
 
 /-- Insert a standard simplex point into the one-face intrinsic realization used by the
 standard plane triangle complex. -/
-noncomputable def standardSimplexToRealization (z : stdSimplex ℝ (Fin 3)) :
+@[expose] noncomputable def standardSimplexToRealization (z : stdSimplex ℝ (Fin 3)) :
     standardTrianglePlaneComplex.toIntrinsic.realization :=
   ⟨z.1, z.2, ⟨Finset.univ, standardTriangle_univ_mem_cells, by simp⟩⟩
 
 /-- Forget the vacuous one-face support witness in the standard intrinsic realization. -/
-noncomputable def standardRealizationToSimplex
+@[expose] noncomputable def standardRealizationToSimplex
     (z : standardTrianglePlaneComplex.toIntrinsic.realization) :
     stdSimplex ℝ (Fin 3) :=
   ⟨z.1, z.2.1⟩
@@ -118,7 +118,7 @@ noncomputable def standardRealizationToSimplex
 
 /-- The standard simplex and the canonical intrinsic realization of the standard triangle are
 the same topological simplex. -/
-noncomputable def standardSimplexRealizationHomeomorph :
+@[expose] noncomputable def standardSimplexRealizationHomeomorph :
     stdSimplex ℝ (Fin 3) ≃ₜ standardTrianglePlaneComplex.toIntrinsic.realization where
   toFun := standardSimplexToRealization
   invFun := standardRealizationToSimplex
@@ -148,7 +148,7 @@ theorem edgeSecond_faceEdge_mem_face (f : K.Face) (i : ZMod 3) :
   K.faceEdge_subset_faceVertices f i (K.edgeSecond_mem (K.faceEdge f i))
 
 /-- The standard plane realization of one locally finite closed face. -/
-noncomputable def facePlaneHomeomorph (f : K.Face) :
+@[expose] noncomputable def facePlaneHomeomorph (f : K.Face) :
     K.ClosedFace f ≃ₜ standardTrianglePlaneComplex.support :=
   (K.faceReindexHomeomorph f).trans
     (standardSimplexRealizationHomeomorph.trans
@@ -214,7 +214,7 @@ theorem faceStandardEdge_eq_endpointIndices (f : K.Face) (i : ZMod 3) :
     exact Finset.pair_comm _ _
 
 /-- The standard source point on a face side, oriented by the global edge ordering. -/
-noncomputable def faceEdgeSourcePoint (f : K.Face) (i : ZMod 3) (r : ℝ) : Plane :=
+@[expose] noncomputable def faceEdgeSourcePoint (f : K.Face) (i : ZMod 3) (r : ℝ) : Plane :=
   AffineMap.lineMap
     (standardTriangleVertex (K.faceEdgeFirstIndex f i))
     (standardTriangleVertex (K.faceEdgeSecondIndex f i)) r
@@ -276,7 +276,7 @@ theorem faceEdgeSourcePoint_image_Icc (f : K.Face) (i : ZMod 3) :
   rfl
 
 /-- Native face-simplex points supported on cyclic edge `i`. -/
-def faceSide (f : K.Face) (i : ZMod 3) : Set (K.ClosedFace f) :=
+@[expose] def faceSide (f : K.Face) (i : ZMod 3) : Set (K.ClosedFace f) :=
   {x | ∀ v, v.1 ∉ (K.faceEdge f i).1 → x v = 0}
 
 private theorem eq_edgeFirst_or_edgeSecond (e : K.Edge) {v : K.Vertex}
@@ -389,7 +389,7 @@ theorem faceMap_mem_edgeCarrier_of_mem_faceSide (f : K.Face) (i : ZMod 3)
     (K.faceEdge_subset_faceVertices f i) x hx
 
 /-- Include edge-local simplex coordinates in any incident maximal face. -/
-noncomputable def edgeSimplexInFace (f : K.Face) (e : K.Edge)
+@[expose] noncomputable def edgeSimplexInFace (f : K.Face) (e : K.Edge)
     (hef : e.1 ⊆ K.faceVertices f)
     (z : stdSimplex ℝ {v // v ∈ e.1}) : K.ClosedFace f :=
   stdSimplex.map (fun v : {v // v ∈ e.1} ↦ ⟨v.1, hef v.2⟩) z

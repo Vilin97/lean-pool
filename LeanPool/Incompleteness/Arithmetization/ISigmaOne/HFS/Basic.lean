@@ -14,7 +14,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -483,7 +483,7 @@ end «lp_section_9»
 section «lp_section_10»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def IsMapping (m : V) : Prop := ∀ x ∈ domain m, ∃! y, ⟪x, y⟫ ∈ m
+@[expose] def IsMapping (m : V) : Prop := ∀ x ∈ domain m, ∃! y, ⟪x, y⟫ ∈ m
 
 section «lp_section_11»
 
@@ -701,7 +701,7 @@ theorem sigma₁_replacement₂ {f : V → V → V} (hf : Sg1-Function₂ f) (s�
 section «lp_section_13»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def fstIdx (p : V) : V := π₁ (p - 1)
+@[expose] def fstIdx (p : V) : V := π₁ (p - 1)
 
 @[simp] lemma fstIdx_le_self (p : V) : fstIdx p ≤ p :=
   le_trans (by simp [fstIdx]) (show p - 1 ≤ p by simp)
@@ -725,7 +725,7 @@ end «lp_section_13»
 section «lp_section_14»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sndIdx (p : V) : V := π₂ (p - 1)
+@[expose] def sndIdx (p : V) : V := π₂ (p - 1)
 
 @[simp] lemma sndIdx_le_self (p : V) : sndIdx p ≤ p :=
   le_trans (by simp [sndIdx]) (show p - 1 ≤ p by simp)

@@ -34,7 +34,7 @@ This file records the consequences for the Clark--Ocone development:
   `ClarkOcone.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -562,7 +562,7 @@ theorem condExp_timeSection_predictableProjection_ae
     _ =ᵐ[P] P[(fun ω ↦ U (t, ω)) | 𝓕 a] := hU
 
 /-- The strict-past σ-algebra `𝓕_{t⁻} = ⨆_{s < t} 𝓕 s`. -/
-@[instance_reducible]
+@[instance_reducible, expose]
 def filtrationPred (t : ℝ≥0) : MeasurableSpace W :=
   ⨆ (s : ℝ≥0) (_ : s < t), 𝓕 s
 

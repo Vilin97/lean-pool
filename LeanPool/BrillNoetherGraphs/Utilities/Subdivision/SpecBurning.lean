@@ -45,7 +45,7 @@ between are the slot interior.  Statements carry explicit
 change the meaning.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 
@@ -264,6 +264,7 @@ risk R1, one step further than the blueprint's own suggestion: not merely a
 disjoint partition, but a *coordinate system*. -/
 
 /-- The chips on the interior of slot `edge`. -/
+@[expose]
 def slotInteriorChips (sp : Spec n p) (D : CFDiv sp.graph) (edge : Fin p) : ℤ :=
   ∑ j : Fin (sp.length edge - 1), D (sp.interiorVertex edge j)
 

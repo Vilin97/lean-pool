@@ -38,7 +38,7 @@ then these sets become balls, and we can apply Vitali theorem.
   [Moreira2001]
 -/
 
-@[expose] public section
+public section
 
 
 open scoped ENNReal NNReal Filter Uniformity Topology
@@ -59,12 +59,18 @@ namespace WithRPowDist
 variable {X : Type*} {α : ℝ} {hα₀ : 0 < α} {hα₁ : α ≤ 1}
 
 /-- The natural equivalence between `WithRPowDist X α hr₀ hr₁` and `X`. -/
-@[simps -fullyApplied apply symm_apply]
+@[expose]
 def equiv (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) : WithRPowDist X α hr₀ hr₁ ≃ X where
   toFun := val
   invFun := mk
   left_inv _ := rfl
   right_inv _ := rfl
+
+@[simp] theorem equiv_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) :
+    ⇑(equiv X α hr₀ hr₁) = val := by rfl
+
+@[simp] theorem equiv_symm_apply (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) :
+    ⇑(equiv X α hr₀ hr₁).symm = mk := by rfl
 
 @[simp]
 theorem val_comp_mk : (val : WithRPowDist X α hα₀ hα₁ → X) ∘ mk = id := rfl
@@ -119,9 +125,19 @@ theorem continuous_mk : Continuous (mk : X → WithRPowDist X α hα₀ hα₁) 
   continuous_induced_rng.2 continuous_id
 
 /-- The natural homeomorphism between `WithRPowDist X α hα₀ hα₁` and `X`. -/
-@[simps! -fullyApplied toEquiv apply symm_apply]
-def homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X where
+@[expose] def homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X where
   toEquiv := WithRPowDist.equiv X α hα₀ hα₁
+
+theorem toEquiv_homeomorph : homeomorph.toEquiv = equiv X α hα₀ hα₁ := by rfl
+
+@[simp] theorem homeomorph_toEquiv : homeomorph.toEquiv = equiv X α hα₀ hα₁ :=
+  toEquiv_homeomorph
+
+@[simp] theorem homeomorph_apply :
+    ⇑(homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X) = val := by rfl
+
+@[simp] theorem homeomorph_symm_apply :
+    ⇑(homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X).symm = mk := by rfl
 
 /-!
 We copy some instances from the underlying space `X` to `WithRPowDist X α hα₀ hα₁`.
@@ -197,11 +213,19 @@ theorem _root_.WithRPowDist.uniformContinuous_mk :
   uniformContinuous_comap' uniformContinuous_id
 
 /-- The natural uniform equivalence between `WithRPowDist X α hα₀ hα₁` and `X`. -/
-@[simps! toEquiv apply symm_apply]
 def _root_.WithRPowDist.uniformEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵤ X where
   toEquiv := WithRPowDist.equiv X α hα₀ hα₁
   uniformContinuous_toFun := uniformContinuous_val
   uniformContinuous_invFun := uniformContinuous_mk
+
+@[simp] theorem uniformEquiv_toEquiv : uniformEquiv.toEquiv = equiv X α hα₀ hα₁ := by rfl
+
+@[simp] theorem uniformEquiv_apply (x : WithRPowDist X α hα₀ hα₁) :
+    uniformEquiv x = x.val := by rfl
+
+@[simp] theorem uniformEquiv_symm_apply (x : X) :
+    (uniformEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵤ X).symm x =
+      (mk x : WithRPowDist X α hα₀ hα₁) := by rfl
 
 end UniformSpace
 

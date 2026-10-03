@@ -74,4 +74,4 @@ No `T2Space`/`CompactSpace`/`ConnectedSpace` anywhere in this unit (compactness 
 the bridge/FTC lemma removes the only candidate dependency).
 -/
 
-@[expose] public section
+public section

@@ -28,7 +28,7 @@ Tags: analytic-number-theory, sieve-theory, twin-primes, optimization
 MSC: 11N05, 11N35
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

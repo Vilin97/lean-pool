@@ -19,7 +19,7 @@ these integer coefficients constructs compatible affine maps over the real
 numbers and modulo every natural number.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -54,7 +54,7 @@ namespace IntegralAffineMap
 variable {l m n : ℕ}
 
 /-- Extend the integer matrix of a linear map to a commutative ring. -/
-noncomputable def linearScalarExtension (R : Type*) [CommRing R]
+@[expose] noncomputable def linearScalarExtension (R : Type*) [CommRing R]
     (A : IntCoord m →ₗ[ℤ] IntCoord n) : (Fin m → R) →ₗ[R] (Fin n → R) where
   toFun x i := ∑ j, x j * (A (Pi.single j 1) i : R)
   map_add' x y := by
@@ -65,6 +65,7 @@ noncomputable def linearScalarExtension (R : Type*) [CommRing R]
     simp [Finset.mul_sum, mul_assoc]
 
 /-- Extend the integer coefficients and offset of an affine lattice map. -/
+@[expose]
 noncomputable def scalarExtension (R : Type*) [CommRing R]
     (A : IntCoord m →ᵃ[ℤ] IntCoord n) : (Fin m → R) →ᵃ[R] (Fin n → R) :=
   (linearScalarExtension R A.linear).toAffineMap +
@@ -143,6 +144,7 @@ theorem scalarExtension_comp (R : Type*) [CommRing R]
   simp only [scalarExtension_intCast, AffineMap.comp_apply]
 
 /-- Package any integer affine map with its real and modular scalar extensions. -/
+@[expose]
 noncomputable def ofIntAffineMap (A : IntCoord m →ᵃ[ℤ] IntCoord n) :
     IntegralAffineMap m n where
   real := scalarExtension ℝ A
@@ -236,6 +238,7 @@ def integerLinear (A : IntegralAffineMap m n) : IntCoord m →ₗ[ℤ] IntCoord 
       RingHom.id_apply]
 
 /-- The stored integer realization is itself an affine map over the integers. -/
+@[expose]
 def toIntAffineMap (A : IntegralAffineMap m n) : IntCoord m →ᵃ[ℤ] IntCoord n where
   toFun := A.integer
   linear := A.integerLinear

@@ -79,7 +79,7 @@ existential.
   crosscut with no hypothesis left standing, and certifies that `HasArcCollars` is satisfiable.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 
@@ -134,7 +134,7 @@ the endpoints" amounts to here, since the endpoints of a crosscut are outside `D
 Nondegeneracy is asked for because the blueprint's proof builds the collar out of edge blocks
 and vertex disks along `K`, which needs `K` to contain an edge; a consumer that has a genuine
 subarc always has it. -/
-def HasArcCollars (D P : Set Plane) : Prop :=
+@[expose] def HasArcCollars (D P : Set Plane) : Prop :=
   ∀ K : Set Plane, K ⊆ D ∩ P → IsCompact K → IsPreconnected K → K.Nontrivial →
     Nonempty (ArcCollar D P K)
 

@@ -59,7 +59,7 @@ inclusion `Ω† ⊆ Wᵢ`, which is a hypothesis here. A consumer supplies it b
   because the bundled form carries the hypotheses of both indices at once.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Set
 
@@ -75,12 +75,12 @@ complement. -/
 
 /-- The union of the bounded components of the complement — the blueprint's `Int(C)` once `C`
 is known to be separating. -/
-def inside (C : Set Plane) : Set Plane :=
+@[expose] def inside (C : Set Plane) : Set Plane :=
   {x | x ∉ C ∧ IsBounded (connectedComponentIn Cᶜ x)}
 
 /-- The union of the unbounded components of the complement — the blueprint's `Ext(C)` once `C`
 is known to be separating. -/
-def outside (C : Set Plane) : Set Plane :=
+@[expose] def outside (C : Set Plane) : Set Plane :=
   {x | x ∉ C ∧ ¬ IsBounded (connectedComponentIn Cᶜ x)}
 
 theorem mem_inside_iff : x ∈ inside C ↔ x ∉ C ∧ IsBounded (connectedComponentIn Cᶜ x) := Iff.rfl
@@ -200,10 +200,10 @@ are *the* two regions". Both are stated without a separation hypothesis; the fac
 them useful carry one. -/
 
 /-- `Ω` is a region of the complement of `C`. -/
-def IsRegionOf (C Ω : Set Plane) : Prop := Ω = inside C ∨ Ω = outside C
+@[expose] def IsRegionOf (C Ω : Set Plane) : Prop := Ω = inside C ∨ Ω = outside C
 
 /-- `Ω` and `Ω'` are the two regions of the complement of `C`, in one order or the other. -/
-def IsRegionPair (C Ω Ω' : Set Plane) : Prop :=
+@[expose] def IsRegionPair (C Ω Ω' : Set Plane) : Prop :=
   (Ω = inside C ∧ Ω' = outside C) ∨ (Ω = outside C ∧ Ω' = inside C)
 
 /-- Every component of the complement is one of the two regions: there are no others. This is

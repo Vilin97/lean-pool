@@ -15,7 +15,7 @@ usual weighted cut vector therefore certifies algebraic connectivity at most
 two whenever that boundary satisfies the corresponding cut inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

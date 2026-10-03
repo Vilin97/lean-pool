@@ -14,7 +14,7 @@ import Mathlib.Tactic.Attr.Core
 Imported Lean Pool material for `LeanPool.ZFLean.Basic`.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 namespace ZFSet

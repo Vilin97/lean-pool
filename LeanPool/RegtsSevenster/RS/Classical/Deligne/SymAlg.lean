@@ -53,7 +53,7 @@ frame machinery below are the concatenation substrate they will
 consume.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -70,6 +70,7 @@ section PowCast
 
 /-- Transport of a tensor power along an equality of arities.  It is
 an `eqToHom`, so it composes and cancels by `eqToHom` simp lemmas. -/
+@[expose]
 def powCast [Category.{v} D] [MonoidalCategory D] (X : D)
     {m n : ℕ} (h : m = n) :
     tensorPow D X m ⟶ tensorPow D X n :=
@@ -112,6 +113,7 @@ module factor be compared in a common frame.
 section Peel
 
 /-- Peel the first factor off a non-empty tensor power. -/
+@[expose]
 noncomputable def powPeel
     [Category.{v} D] [MonoidalCategory D] (X : D) : (q : ℕ) →
     (tensorPow D X (q + 1) ≅ X ⊗ tensorPow D X q)
@@ -125,6 +127,7 @@ theorem powPeel_zero [Category.{v} D] [MonoidalCategory D] (X : D) :
 /-- Attach a peeled factor to the power below it.  The associator,
 retyped so that its target is stated through the tensor power — this
 keeps every statement about it type-correct at low transparency. -/
+@[expose]
 noncomputable def powAttach [Category.{v} D] [MonoidalCategory D] (X : D)
     (p q : ℕ) :
     tensorPow D X p ⊗ (X ⊗ tensorPow D X q) ⟶
@@ -134,6 +137,7 @@ noncomputable def powAttach [Category.{v} D] [MonoidalCategory D] (X : D)
 /-- Expose the top factor of the second block of a pair of powers.
 The associator, retyped so that its source is stated through the
 tensor power. -/
+@[expose]
 noncomputable def powExpose [Category.{v} D] [MonoidalCategory D] (X : D)
     (p q : ℕ) :
     tensorPow D X p ⊗ tensorPow D X (q + 1) ⟶
@@ -237,12 +241,14 @@ section WinLeg
 
 /-- The slot leg acting on the left factor, through the braided
 right action. -/
+@[expose]
 noncomputable def winLegM
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] : (X ⊗ A) ⊗ X ⟶ X ⊗ X :=
   actRight A X ▷ X
 
 /-- The slot leg acting on the right factor: associate, then act. -/
+@[expose]
 noncomputable def winLegN
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D)
     [ModObj A X] : (X ⊗ A) ⊗ X ⟶ X ⊗ X :=
@@ -264,6 +270,7 @@ abbrev modPowMid [Category.{v} D] [MonoidalCategory D] (A : D) (X : D)
 
 /-- Glue a resolved slot back into the ambient power: reassociate
 the two exposed factors onto the lower power and concatenate. -/
+@[expose]
 noncomputable def modPowGlue [Category.{v} D] [MonoidalCategory D] (X : D)
     (a b : ℕ) :
     (tensorPow D X a ⊗ (X ⊗ X)) ⊗ tensorPow D X b ⟶
@@ -273,6 +280,7 @@ noncomputable def modPowGlue [Category.{v} D] [MonoidalCategory D] (X : D)
 
 /-- The first relation leg at slot `(a, b)`: act on the left module
 factor through the braided right action, then glue. -/
+@[expose]
 noncomputable def modPowLegM
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X]
@@ -283,6 +291,7 @@ noncomputable def modPowLegM
 
 /-- The second relation leg at slot `(a, b)`: associate and act on
 the right module factor, then glue. -/
+@[expose]
 noncomputable def modPowLegN
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D)
     [ModObj A X]
@@ -307,6 +316,7 @@ noncomputable abbrev modPowSrc
   ⨁ fun i : Fin (n - 1) => modPowMid A X i.val (n - 2 - i.val)
 
 /-- The first leg of the relation pair, assembled over all slots. -/
+@[expose]
 noncomputable def modPowLegFst
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -316,6 +326,7 @@ noncomputable def modPowLegFst
     modPowLegM A X i.val (n - 2 - i.val) ≫ powCast X (slot_decomp i)
 
 /-- The second leg of the relation pair, assembled over all slots. -/
+@[expose]
 noncomputable def modPowLegSnd
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (X : D)
     [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -334,6 +345,7 @@ section ModPow
 the wide relation pair, identifying `(x·c) ⊗ y ~ x ⊗ (c·y)` in every
 adjacent slot simultaneously.  No binary module tensor product and
 no associativity enter. -/
+@[expose]
 noncomputable def modPow
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -342,6 +354,7 @@ noncomputable def modPow
   coequalizer (modPowLegFst A X n) (modPowLegSnd A X n)
 
 /-- The projection of the ambient power onto the module power. -/
+@[expose]
 noncomputable def modPowπ
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -442,6 +455,7 @@ isomorphism.
 -/
 
 /-- Below two factors the projection is an isomorphism. -/
+@[expose]
 noncomputable def modPowTriv
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -455,6 +469,7 @@ noncomputable def modPowTriv
   inv_hom_id := modPowπ_desc A X _ _
 
 /-- **The empty module power is the unit.** -/
+@[expose]
 noncomputable def modPowZero
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -462,6 +477,7 @@ noncomputable def modPowZero
   modPowTriv A X (by omega)
 
 /-- **The singleton module power is the module.** -/
+@[expose]
 noncomputable def modPowOne
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1763,7 +1779,7 @@ theorem modPowPerm_mul
 
 /-- **The symmetric group acting on the module power**, as a monoid
 homomorphism. -/
-@[simps]
+@[expose, simps]
 noncomputable def modPowPermHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1787,6 +1803,7 @@ section Symmetriser
 
 /-- **The symmetriser** `(1/n!) • ∑ σ, σ` of the symmetric-group
 algebra. -/
+@[expose]
 noncomputable def symmetriser (n : ℕ) : SymGroupAlgebra n :=
   ((n.factorial : ℂ))⁻¹ •
     ∑ σ : Equiv.Perm (Fin n), MonoidAlgebra.single σ 1
@@ -1831,6 +1848,7 @@ section SymPow
 
 /-- **The symmetric-group algebra acting on the module power**, the
 `ℂ`-linear extension of the descended action. -/
+@[expose]
 noncomputable def modPowAlg
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1853,6 +1871,7 @@ theorem modPowAlg_single
   rfl
 
 /-- The symmetriser acting on the module power. -/
+@[expose]
 noncomputable def symPowIdem
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1878,6 +1897,7 @@ with section `symPowσ`; this presentation is chosen because the
 consumers of the Key Lemma build morphisms out of the symmetric
 power by descent along `symPowπ` and morphisms into it through the
 section. -/
+@[expose]
 noncomputable def symPow
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]

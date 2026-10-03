@@ -26,7 +26,7 @@ Heitmann, "Characterization of completions of UFDs", 1993, Lemma 6
 Loepp, "Constructing local generic formal fibers", 1997, Lemmas 14--15.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,7 +63,7 @@ lemma directed_carriers (chain : NSubringChain T ι) :
   fun α β => ⟨max α β, chain.mono (le_max_left α β), chain.mono (le_max_right α β)⟩
 
 /-- The union of all subrings in the chain. -/
-def unionSubring (chain : NSubringChain T ι) : Subring T :=
+@[expose] def unionSubring (chain : NSubringChain T ι) : Subring T :=
   ⨆ (α : ι), (chain.ring α).carrier
 
 /-- Every chain member is contained in the union. -/
@@ -271,6 +271,22 @@ def NSubringChain.unionNSubring [Nonempty ι] (chain : NSubringChain T ι)
       card_le := h_card
       maximal_ideal_eq := hU_maximal
       height_bound := hU_height }
+
+/-- The union construction preserves the underlying union subring. -/
+lemma NSubringChain.unionNSubring_carrier [Nonempty ι] (chain : NSubringChain T ι)
+    (h_card : Cardinal.mk ↥chain.unionSubring ≤
+      max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T))) :
+    (chain.unionNSubring h_card).carrier = chain.unionSubring := by
+  rfl
+
+theorem NSubringChain.prime_unionNSubring [Nonempty ι] (chain : NSubringChain T ι)
+    (h_card : Cardinal.mk ↥chain.unionSubring ≤
+      max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)))
+    (α : ι) (r : (chain.ring α).carrier) (hr : Prime r)
+    (hmem : (r : T) ∈ (chain.unionNSubring h_card).carrier) :
+    Prime (⟨(r : T), hmem⟩ : (chain.unionNSubring h_card).carrier) := by
+  exact transfinite_union_primes_preserved chain chain.unionSubring chain.le_union
+    (fun x => chain.mem_union_iff.mp x.2) α r hr
 
 /-- Heitmann Lemma 6: The union of a well-ordered ascending chain of
 A-extensions is an N-subring (modulo cardinality bound).

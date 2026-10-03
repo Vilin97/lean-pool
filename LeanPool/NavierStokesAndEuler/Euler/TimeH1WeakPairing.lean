@@ -18,7 +18,7 @@ tests. The identity follows from the proved primitive representation and
 does not posit a weak derivative as an additional assumption.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

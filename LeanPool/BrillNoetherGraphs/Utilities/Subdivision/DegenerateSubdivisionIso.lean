@@ -28,7 +28,7 @@ Slot reversal is part of the datum, just as it is for the positive-length
 inside a surviving slot; the quotient-class boundary is unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 open Utilities.Certificate
@@ -80,12 +80,14 @@ def stepOffsetEquiv (e : Fin p) :
     (finCongr (r.length_eq e))
 
 /-- The vertex equivalence induced by a closed-face relabeling. -/
+@[expose]
 def vertexEquiv : source.Vertex ≃ target.Vertex :=
   Equiv.sumCongr r.classEquiv
     (Equiv.sigmaCongr r.slotEquiv
       (fun e => interiorEquiv source target r e))
 
 /-- The unit-step occurrence equivalence induced by a closed-face relabeling. -/
+@[expose]
 def stepEquiv : source.Step ≃ target.Step :=
   Equiv.sigmaCongr r.slotEquiv (fun e =>
     stepOffsetEquiv source target r e)

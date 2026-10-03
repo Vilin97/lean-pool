@@ -15,7 +15,7 @@ gives a single canonical isometry from the external Hilbert sum of positive simp
 random `L²`; its range is exactly the closed supremum of the positive canonical Brownian chaoses.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -34,6 +34,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 omit [CompleteSpace W] [BorelSpace W] in
 /-- The canonical Brownian simplex integral at one positive order, bundled as a linear
 isometry. -/
+@[expose]
 noncomputable def brownianSimplexIntegralLI
     (hB : IsPreBrownianReal B P) (hsm : ∀ t, StronglyMeasurable (B t)) (n : ℕ) :
     IteratedIntegralConstruction.SimplexKernel (n + 1) →ₗᵢ[ℝ] RandomL2 P where

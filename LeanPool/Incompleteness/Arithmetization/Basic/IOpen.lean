@@ -13,7 +13,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # IOpen -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -277,7 +277,7 @@ def rem (a b : V) : V := a - b * (a / b)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped instance instModV : Mod V := ⟨rem⟩
 
-lemma mod_def (a b : V) : a % b = a - b * (a / b) := rfl
+lemma mod_def (a b : V) : a % b = a - b * (a / b) := by exact rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.remDef : Sg0.Semisentence 3 :=
@@ -539,6 +539,7 @@ section «lp_section_5»
 -- https://github.com/leanprover-community/mathlib4/blob/
 -- b075cdd0e6ad8b5a3295e7484b2ae59e9b2ec2a7/Mathlib/Data/Nat/Pairing.lean#L37
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def pair (a b : V) : V := if a < b then b * b + a else a * a + a + b
 
 --notation "⟪" a ", " b "⟫" => pair a b

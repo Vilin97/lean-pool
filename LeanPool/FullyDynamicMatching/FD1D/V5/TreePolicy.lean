@@ -16,7 +16,7 @@ tree. It proves the invariant domain, rate-energy monotonicity, the lifted
 local Bellman inequality, and the deterministic aggregate estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.TreePolicy
 
@@ -27,10 +27,12 @@ open LocalPolicy
 variable {L m : ℕ}
 
 /-- Select the left or right rate of the local rule for one dyadic child. -/
+@[expose]
 def childRate (a p h : ℝ) (x y : ℕ) (side : Fin 2) : ℝ :=
   if side = 0 then rateLeft a p h x y else rateRight a p h x y
 
 /-- Recursively propagated analytic rate, rooted at `1/m`. -/
+@[expose]
 def rate (I : AggregatedInventory L m) (a : ℝ) :
     ∀ d, DyadicNode d → ℝ
   | 0, _ => 1 / (m : ℝ)
@@ -41,25 +43,30 @@ def rate (I : AggregatedInventory L m) (a : ℝ) :
         (I.count (d + 1) (rightChild z.1)) z.2
 
 /-- Inventory count coerced to `ℝ`. -/
+@[expose]
 def inventory (I : AggregatedInventory L m) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   I.count d v
 
 /-- Node interval mass. -/
+@[expose]
 def intervalMass (d : ℕ) (v : DyadicNode d) : ℝ :=
   nodeMass d v
 
 /-- Deletion mass `q_v = N_v h_v`. -/
+@[expose]
 def deletionMass (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   inventory I d v * rate I a d v
 
 /-- Discrepancy `t_v = (p_v-q_v)/a`. -/
+@[expose]
 def discrepancy (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   (intervalMass d v - deletionMass I a d v) / a
 
 /-- Regularized mass `Z_v = p_v/(N_v+a/2)`. -/
+@[expose]
 def regularizedMass (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   intervalMass d v / (inventory I d v + a / 2)
@@ -71,6 +78,7 @@ def bellmanValue (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (regularizedMass I a d v)
 
 /-- Fixed-spatial-label child deletion imbalance. -/
+@[expose]
 def imbalance (I : AggregatedInventory L m) (a : ℝ) (d : ℕ)
     (v : DyadicNode d) : ℝ :=
   deletionMass I a (d + 1) (leftChild v) -
@@ -571,10 +579,12 @@ theorem local_bellman_inequality_separated
 /-! ## Deterministic aggregate estimate -/
 
 /-- The transport energy `G = ∑_{v internal} p_v b_v²`. -/
+@[expose]
 def transportEnergy (I : AggregatedInventory L m) (a : ℝ) : ℝ :=
   internalWeightedSum (fun d v => imbalance I a d v ^ 2) L
 
 /-- The restoring term in the drift of the harmonic inventory potential. -/
+@[expose]
 def restoringDrift (I : AggregatedInventory L m) (a : ℝ) : ℝ :=
   bellmanDrift L (a / 2) (inventory I) (deletionMass I a)
 

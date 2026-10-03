@@ -28,7 +28,7 @@ lemmas of `Deligne/PermNat.lean` do, and linearises to the group
 algebra, whose diagonal double action is packaged as `diagAlg`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -42,6 +42,7 @@ variable {A : Type u}
 
 /-- **The middle-four interchange as an isomorphism**: `tensorμ` and
 `tensorδ` are mutually inverse. -/
+@[expose]
 noncomputable def tensorμIso
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (P Q X Y : A) :
@@ -55,6 +56,7 @@ noncomputable def tensorμIso
 `(X ⊗ Y) ^ ⊗ n ≅ X ^ ⊗ n ⊗ Y ^ ⊗ n`: at each stage the previous
 stage sorts all but the newest pair of factors, and the middle-four
 interchange routes that pair to its two destinations. -/
+@[expose]
 noncomputable def tensorPowDistrib
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X Y : A) : (n : ℕ) →
@@ -330,7 +332,7 @@ theorem tensorPowDistrib_permMor
 /-- **The diagonal double action of a permutation** on
 `X ^ ⊗ n ⊗ Y ^ ⊗ n`, as a monoid homomorphism: `σ` acts by its two
 actions tensored together. -/
-@[simps]
+@[expose, simps]
 noncomputable def diagPermHom
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X Y : A) (n : ℕ) :

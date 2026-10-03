@@ -16,7 +16,7 @@ carrier. This is the measure-level counterpart of continuous-path kernel identif
 deterministic property of continuous paths.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

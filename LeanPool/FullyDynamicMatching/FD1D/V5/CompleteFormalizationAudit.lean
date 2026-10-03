@@ -16,7 +16,7 @@ The commands below reject proof placeholders and nonstandard axioms in the
 paper-facing theorem and its principal producer lemmas.
 -/
 
-@[expose] public section
+public section
 
 open Lean Meta Elab Command
 

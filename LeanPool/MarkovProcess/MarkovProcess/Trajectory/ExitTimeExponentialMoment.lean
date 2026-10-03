@@ -44,7 +44,7 @@ Every statement is an inequality of `ℝ≥0∞`-valued integrals; no integrabil
 no real-valued restatement appears.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

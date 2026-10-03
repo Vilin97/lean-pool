@@ -19,7 +19,7 @@ make the latter minors zero.  Thus a single parameter row contributes at
 most one to the degree per factor, not the size of the minor.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

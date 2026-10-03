@@ -30,7 +30,7 @@ Existence of a dual certificate for best `l∞` approximation from the additive
 subspace, using geometric Hahn-Banach separation.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 
@@ -41,7 +41,7 @@ variable {U : Type*} [DecidableEq U] [Fintype U]
 /-! ## Indicator function and basic properties -/
 
 /-- Indicator function of a finset as a vector in `U → ℝ`. -/
-def _root_.Finset.indicator' (S : Finset U) : U → ℝ :=
+@[expose] def _root_.Finset.indicator' (S : Finset U) : U → ℝ :=
   fun i => if i ∈ S then 1 else 0
 
 omit [Fintype U] in

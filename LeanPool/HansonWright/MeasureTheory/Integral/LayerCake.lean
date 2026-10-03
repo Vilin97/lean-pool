@@ -22,7 +22,7 @@ This module introduces no new definitions.
 * `lintegral_eq_lintegral_tail`: a nonnegative function is the integral of its upper tails.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool
 

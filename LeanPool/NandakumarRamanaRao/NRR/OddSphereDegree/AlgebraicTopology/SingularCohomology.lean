@@ -78,7 +78,7 @@ coefficient theorem, any cohomology computation, or the cup product; those remai
 downstream work.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 
@@ -92,7 +92,7 @@ It sends a space `X` (as an object of `TopCatᵒᵖ`) to the cochain complex
 map in the opposite direction. The codomain `CochainComplex (ModuleCat R) ℕ` is
 definitionally `HomologicalComplex (ModuleCat R) (ComplexShape.down ℕ).symm`,
 since `(ComplexShape.down ℕ).symm = ComplexShape.up ℕ`. -/
-noncomputable def singularCochainComplexFunctor (R : Type) [CommRing R]
+@[expose] noncomputable def singularCochainComplexFunctor (R : Type) [CommRing R]
     (M : ModuleCat.{0} R) :
     TopCat.{0}ᵒᵖ ⥤ CochainComplex (ModuleCat.{0} R) ℕ :=
   ((singularChainComplexFunctor (ModuleCat.{0} R)).obj M).op
@@ -106,7 +106,7 @@ homology of the singular cochain complex `Hom(C_•(X), M)`.
 Contravariance in the space is structural: a continuous map `f` induces the
 pullback `f^* : Hⁿ(Y; M) → Hⁿ(X; M)` via the functor's action on `(TopCat.ofHom
 f).op`. -/
-noncomputable def singularCohomologyFunctor (R : Type) [CommRing R]
+@[expose] noncomputable def singularCohomologyFunctor (R : Type) [CommRing R]
     (M : ModuleCat.{0} R) (n : ℕ) :
     TopCat.{0}ᵒᵖ ⥤ ModuleCat.{0} R :=
   singularCochainComplexFunctor R M ⋙ HomologicalComplex.homologyFunctor _ _ n

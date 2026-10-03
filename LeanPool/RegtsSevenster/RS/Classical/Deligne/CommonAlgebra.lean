@@ -21,7 +21,7 @@ The index type is put in bijection with a well-ordered one so
 that the slot order required by the tensor product is available.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

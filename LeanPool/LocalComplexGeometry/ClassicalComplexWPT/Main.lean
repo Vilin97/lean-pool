@@ -16,7 +16,7 @@ This module assembles the general analytic existence construction and its full
 germ uniqueness theorem into the exact independently frozen public result.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

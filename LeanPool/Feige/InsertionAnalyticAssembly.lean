@@ -20,7 +20,7 @@ transfer hypotheses required by `exists_insertChainPerm_dominates_reveal`
 follow automatically.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

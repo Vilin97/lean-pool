@@ -18,7 +18,7 @@ of the envelope from the connection-rank bound, without a Schur
 package. The resulting fibre functor provides the mixed model.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

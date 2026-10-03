@@ -20,7 +20,7 @@ the parameter value as a pairing in the fibre, ready for the
 standard-model coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -30,6 +30,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
 
 /-- The image vector of a `⟨0⟩ ⟶ ⟨d⟩` morphism. -/
+@[expose]
 noncomputable def omegaVec {d : ℕ}
     (p : (SkeinObj.mk 0 : SkeinObj f) ⟶ SkeinObj.mk d) :
     (P.ω.obj (SkeinObj.mk d)).even :=
@@ -39,6 +40,7 @@ noncomputable def omegaVec {d : ℕ}
     SuperVect.Hom _ _).evenMap 1
 
 /-- The image functional of a `⟨d⟩ ⟶ ⟨0⟩` morphism. -/
+@[expose]
 noncomputable def omegaFun {d : ℕ}
     (q : (SkeinObj.mk d : SkeinObj f) ⟶ SkeinObj.mk 0) :
     (P.ω.obj (SkeinObj.mk d)).even →ₗ[ℂ] ℂ :=
@@ -67,6 +69,7 @@ theorem star_pairing (W : ClosedFragment) :
 
 /-- The single-vertex star with `d` legs: one internal vertex,
 `d` pendant edges. -/
+@[expose]
 def vertexStar (d : ℕ) : Fragment (Fin d) where
   Flag := Fin d ⊕ Fin d
   Vertex := Unit

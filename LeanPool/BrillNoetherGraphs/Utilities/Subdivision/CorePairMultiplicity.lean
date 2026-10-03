@@ -21,7 +21,7 @@ file) so that consumers of these three declarations do not pull in the
 occurrence-relabeling and replay machinery.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -32,6 +32,7 @@ variable {n p : ℕ}
 /-- The number of ordered edge slots of `core` whose two endpoints are
 exactly the unordered vertex pair `{i, j}`.  Both orientations are counted,
 so the value is symmetric in `i` and `j`. -/
+@[expose]
 def pairMultiplicity (core : Core n p) (i j : Fin n) : ℕ :=
   (Finset.univ.filter fun edge : Fin p =>
       (core.tail edge = i ∧ core.head edge = j) ∨

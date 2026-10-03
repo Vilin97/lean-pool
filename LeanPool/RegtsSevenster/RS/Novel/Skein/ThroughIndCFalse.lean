@@ -24,7 +24,7 @@ interfaces consuming `ThroughIndependenceC` must be re-based on
 the pairing-resolved value.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

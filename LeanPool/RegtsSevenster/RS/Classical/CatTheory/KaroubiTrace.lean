@@ -19,7 +19,7 @@ nondegenerate trace that kills nilpotents proves semisimplicity
 of every corner endomorphism algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

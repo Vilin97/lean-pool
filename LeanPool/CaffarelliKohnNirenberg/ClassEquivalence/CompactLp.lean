@@ -27,7 +27,7 @@ clauses, since it would assume what is being proved.  The proofs below use
 nothing beyond the data clauses.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

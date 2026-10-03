@@ -30,7 +30,7 @@ bounds `|δ|` by the total distance the chips travel.
 All of this is finite-sum integer arithmetic; no graph theory is involved.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.BlockSlopeRounding
 

@@ -29,7 +29,7 @@ on `κ` is separated by finitely many coordinates
 infinite matrix visible on a single finite submatrix.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

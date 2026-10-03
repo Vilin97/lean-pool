@@ -21,7 +21,7 @@ noncomputable optimal pebbling number `optimalPebblingNumber n` and the explicit
 constant `CLean`.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

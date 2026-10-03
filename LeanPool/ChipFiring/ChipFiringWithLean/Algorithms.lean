@@ -21,7 +21,7 @@ In particular, the core mathematical statements about $q$-reduced divisors, supe
 and Dhar's algorithm are proved elsewhere in the library.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 

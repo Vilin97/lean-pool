@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic
 Joint measurability and exactness of randomized causal queries, transcripts, and outputs.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 
@@ -63,7 +63,7 @@ def causalQuery {Ω : Type*} [MeasurableSpace Ω]
 
 /-- Exact chronological transcript against one fixed oracle, simultaneously
 defined for every seed and every finite horizon. -/
-noncomputable def causalTrace {Ω : Type*} [MeasurableSpace Ω]
+@[expose] noncomputable def causalTrace {Ω : Type*} [MeasurableSpace Ω]
     (method : RandomizedStrictLocalMethod Ω) (x0 : StrictPoint)
     (oracle : PairOracle 1) : ℕ → Ω → StrictTranscript
   | 0 => fun _ => []

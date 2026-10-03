@@ -38,7 +38,7 @@ Tags: analysis, measure-theory, sard-theorem, hausdorff-measure
 MSC: 28A78, 58C25
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

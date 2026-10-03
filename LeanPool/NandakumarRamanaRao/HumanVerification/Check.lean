@@ -10,7 +10,7 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.Main
 
 /-! # Check -/
 
-@[expose] public section
+public section
 
 /-- The public plane is definitionally the standard two-dimensional Euclidean space. -/
 example :

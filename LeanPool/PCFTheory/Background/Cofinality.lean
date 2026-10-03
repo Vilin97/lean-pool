@@ -14,7 +14,7 @@ A more general universe version of `iSup_lt_ord_lift` and a related corollary
 phrased in terms of `Iio`.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

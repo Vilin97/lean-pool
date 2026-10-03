@@ -23,7 +23,7 @@ An A-extension preserves primality and cardinality bounds.
 * Jensen, "Completions of UFDs with semi-local formal fibers", 2006.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

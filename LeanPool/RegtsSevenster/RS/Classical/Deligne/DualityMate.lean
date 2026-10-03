@@ -17,7 +17,7 @@ mate of its partner.  A monoidal natural transformation between
 fibre functors supplies exactly this data at every object.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

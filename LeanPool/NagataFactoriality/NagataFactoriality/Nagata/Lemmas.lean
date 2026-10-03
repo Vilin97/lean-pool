@@ -16,7 +16,7 @@ public import LeanPool.NagataFactoriality.NagataFactoriality.Basic.UFD
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NagataFactoriality
 

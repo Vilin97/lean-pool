@@ -25,7 +25,7 @@ unit of multiplicity.  Consequently `hVal x` satisfies the defining
 recursion of `newtonH (pVal x)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,11 +34,13 @@ open Finset
 variable {N : ℕ}
 
 /-- The power sum of exponent `c` of a finite family. -/
+@[expose]
 noncomputable def pVal (x : Fin N → ℂ) (c : ℕ) : ℂ :=
   ∑ j : Fin N, x j ^ c
 
 /-- The complete homogeneous value of degree `k` of a finite
 family: the sum of the products of all size-`k` multisets. -/
+@[expose]
 noncomputable def hVal (x : Fin N → ℂ) (k : ℕ) : ℂ :=
   ∑ s : Sym (Fin N) k, (s.1.map x).prod
 

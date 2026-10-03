@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Order.Antidiag.Nat
 # LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction.omega
 

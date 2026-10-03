@@ -40,7 +40,7 @@ symmetric summation convention under which Li's formula actually holds, and
 a symmetry of the zero multiset.
 -/
 
-@[expose] public section
+public section
 
 namespace LiCriterion
 

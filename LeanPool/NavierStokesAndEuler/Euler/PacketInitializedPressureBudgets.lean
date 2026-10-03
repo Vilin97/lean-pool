@@ -28,7 +28,7 @@ section
 the unit grade budget. This is derived from the same source solve used by
 the velocity recursion. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

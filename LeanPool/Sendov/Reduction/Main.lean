@@ -52,7 +52,7 @@ logarithmic half by `Sendov.alpha_le_seventeen`, to bound `1/x²`.
 * `Sendov.polar_origin_incompatible`: the two raw inequalities have no common solution.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

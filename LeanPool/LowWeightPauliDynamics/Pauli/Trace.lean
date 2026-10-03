@@ -56,7 +56,7 @@ and the sum is `2^n` at `u.z = 0` and `0` otherwise. The pairing statement then 
 `toMatrix_star` and `toMatrix_mul`, since `(star s * t).x = s.x + t.x` in characteristic two.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

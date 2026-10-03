@@ -57,7 +57,7 @@ self-duality of the odd line,
 `RS.OddLine.evaluation_coevaluation`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -75,6 +75,7 @@ variable {D : Type u}
 /-- The *pairing* of a morphism into one module object with a
 morphism into another, taken at arbitrary sources: tensor the two
 morphisms and project to the relative tensor product. -/
+@[expose]
 noncomputable def gpair
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [HasCoequalizers D] {R : D} [MonObj R] {M : Mod D R} {N : Mod D R}
@@ -167,6 +168,7 @@ along a chosen morphism `s` from the intended source into the
 tensor product of the two given sources.  The four graded blocks of
 the comparison map of `RS.gammaPairComparison` are the four
 instances of this construction. -/
+@[expose]
 noncomputable def gpairLin
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [HasCoequalizers D] {R : D} [MonObj R] [Preadditive D]
@@ -1028,6 +1030,7 @@ source identifications, and they descend by the universal property
 of `RS.SuperCommAlgebra.Mod.tensor` because the eight balancing
 laws hold; that they are morphisms of super modules is the eight
 action laws. -/
+@[expose]
 noncomputable def gammaPairComparison
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]

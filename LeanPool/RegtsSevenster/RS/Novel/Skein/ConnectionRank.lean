@@ -26,7 +26,7 @@ literature's supremum over finite submatrices
 (`edgeRankBounded_iff_submatrixRank`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -17,7 +17,7 @@ equations. The largest centrality keeps the resulting coefficients uniform
 over every admissible centrality parameter.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

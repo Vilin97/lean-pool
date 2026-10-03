@@ -20,7 +20,7 @@ The proof is the corresponding statement for the adjacency sign
 (`adjSign_eq_tail`) carried through the word and its permutation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

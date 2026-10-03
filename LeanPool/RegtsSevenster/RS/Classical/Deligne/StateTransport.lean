@@ -17,7 +17,7 @@ generates, so an isomorphism of objects carries a state to a
 state without disturbing any of the counts.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -33,6 +33,7 @@ attribute [local instance]
 
 /-- **Transport of a dévissage state along an isomorphism** of
 the object being decomposed. -/
+@[expose]
 noncomputable def DevissageState.transportObj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

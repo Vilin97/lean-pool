@@ -19,7 +19,7 @@ into 196 half-open pieces `[ub i, ub (i+1))`. On the piece with `⌊u⌋ = m` an
 The outer range `(7/3, 5]` of `x` is `[1/5, 3/7)` in `u`, four pieces on which `phiL` is linear.
 The tail `x ≤ 1/20` is handled by the global bound `psiL x ≤ 33/5 + (121/100) x`. -/
 
-@[expose] public section
+public section
 
 namespace Zeta32.ArithSum
 noncomputable section
@@ -27,17 +27,20 @@ noncomputable section
 /-! ### The cells of `[0,1]` and the ten formulas -/
 
 /-- Breakpoints of the cells of `[0, 1]` (partition by `j/3, j/4, j/5`). -/
+@[expose]
 def alphaQ : ℕ → ℚ
   | 0 => 0 | 1 => 1/5 | 2 => 1/4 | 3 => 1/3 | 4 => 2/5 | 5 => 1/2 | 6 => 3/5 | 7 => 2/3
   | 8 => 3/4 | 9 => 4/5 | _ => 1
 
 /-- Constant coefficient on cell `k` (with `m = ⌊1/x⌋`). -/
+@[expose]
 def cellA : ℕ → ℚ → ℚ
   | 0, m => (62*m+49)/4 | 1, m => (62*m+7)/4 | 2, m => (62*m+39)/4 | 3, m => (62*m+63)/4
   | 4, m => (62*m+21)/4 | 5, m => (62*m+53)/4 | 6, m => (62*m+11)/4 | 7, m => (62*m+35)/4
   | 8, m => (62*m+67)/4 | _, m => (62*m+25)/4
 
 /-- Coefficient of `x` on cell `k`. -/
+@[expose]
 def cellB : ℕ → ℚ → ℚ
   | 0, m => -(m*(37*m+25))/4 | 1, m => -(37*m^2-5*m-6)/4 | 2, m => -(37*m^2+27*m+2)/4
   | 3, m => -(37*m^2+51*m+10)/4 | 4, m => -(37*m^2+21*m-2)/4 | 5, m => -(37*m^2+53*m+14)/4
@@ -218,14 +221,19 @@ theorem psiL_cell (k : ℕ) (hk : k < 10) (m : ℕ) {x : ℝ} (hx : 0 < x)
 /-! ### The 196 pieces of the relaxed range, indexed flatly -/
 
 /-- Integer part `m` of piece `i` (pieces `0..5` have `m = 0`, cells `4..9`). -/
+@[expose]
 def pm (i : ℕ) : ℕ := if i < 6 then 0 else (i - 6) / 10 + 1
 /-- Cell `k` of piece `i`. -/
+@[expose]
 def pk (i : ℕ) : ℕ := if i < 6 then i + 4 else (i - 6) % 10
 /-- Left endpoint (in `u = 1/x`) of piece `i`; piece `0` starts at `3/7` inside cell `4`. -/
+@[expose]
 def ub (i : ℕ) : ℚ := if i = 0 then 3/7 else (pm i : ℚ) + alphaQ (pk i)
 /-- Coefficients of piece `i`: `psiL x = pa i + pb i · x − 25/(4x)`. -/
+@[expose]
 def pa (i : ℕ) : ℚ := cellA (pk i) (pm i)
 /-- Constant term of the affine arithmetic-profile cell selected by `i`. -/
+@[expose]
 def pb (i : ℕ) : ℚ := cellB (pk i) (pm i)
 
 lemma pk_lt (i : ℕ) : pk i < 10 := by
@@ -289,12 +297,15 @@ theorem psiL_piece (i : ℕ) {x : ℝ} (hx : 0 < x) (h1 : (ub i : ℝ) ≤ 1 / x
 /-! ### The four pieces of the outer range (`7/3 < x ≤ 5`, i.e. `1/5 ≤ u < 3/7`) -/
 
 /-- Rational breakpoints for the reciprocal outer-prime profile. -/
+@[expose]
 def vb : ℕ → ℚ
   | 0 => 1/5 | 1 => 1/4 | 2 => 1/3 | 3 => 2/5 | _ => 3/7
 /-- Constant terms of the affine pieces of the reciprocal outer-prime profile. -/
+@[expose]
 def vc : ℕ → ℚ
   | 0 => 2 | 1 => 18 | 2 => 24 | _ => 6
 /-- Slopes of the affine pieces of the reciprocal outer-prime profile. -/
+@[expose]
 def vd : ℕ → ℚ
   | 0 => -1 | 1 => -5 | 2 => -7 | _ => -1
 

@@ -16,7 +16,7 @@ induction for Theorem 2.1.  Every high set on `Fin (n + 1)` is uniquely a
 lifted old high set, with or without the last coordinate.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

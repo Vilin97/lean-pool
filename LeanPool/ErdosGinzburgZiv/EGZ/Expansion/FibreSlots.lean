@@ -16,7 +16,7 @@ their separate multiplicities. The remaining fibres reconstruct exactly
 the remaining natural-valued weight.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 on every fixed continuous phase graph, including every cylinder word and
 the genuine time derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

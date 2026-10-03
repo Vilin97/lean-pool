@@ -32,7 +32,7 @@ are direct adaptations of the classical arguments.
 * `QuadraticMap.Equivalent.represents_iff`: equivalent forms represent the same values.
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap TensorProduct
 

@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage2RouteB
 Conjugacy, gradients, and uniform convexity of the above-two power mirror geometry.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

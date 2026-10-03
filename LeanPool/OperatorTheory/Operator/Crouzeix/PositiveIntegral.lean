@@ -30,7 +30,7 @@ has a positive Bochner integral.
   on positively oriented intervals.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped InnerProductSpace

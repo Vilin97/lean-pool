@@ -33,7 +33,7 @@ compatibilities is that lemma conjugated by the very coherence
 isomorphisms that identify the sources in `RS.gammaAlgebra`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -53,6 +53,7 @@ variable {D : Type u}
 /-- **The odd cap**: contract the two twisting legs of a doubly
 twisted object against the square trivialisation of the odd
 line. -/
+@[expose]
 def OddLine.cap [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D]
     (L : OddLine D) (Z : D) :
@@ -194,6 +195,7 @@ variable {D : Type u}
 parity swaps of `RS.RhoTwist` intertwine the four action blocks of
 the Γ-module of the free module on the odd line with the four
 relabelled blocks of the parity shift of the Γ-module of `R`. -/
+@[expose]
 noncomputable def gammaShiftHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]
@@ -241,6 +243,7 @@ noncomputable def gammaShiftHom
 /-- **The realization of an odd twist is the parity shift of the
 realization**: the Γ-module of the free `R`-module on the odd line
 is the parity shift of the Γ-module of `R`. -/
+@[expose]
 noncomputable def gammaShiftIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [CategoryTheory.Linear ℂ D]

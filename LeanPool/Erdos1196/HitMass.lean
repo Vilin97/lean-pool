@@ -41,7 +41,7 @@ paths in the multiplicative chain can meet `A` at most once.
 * `PrimitiveSet.summable_indicator_visitProbability_and_tsum_le_one_of_visitMass_le_one`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators
 

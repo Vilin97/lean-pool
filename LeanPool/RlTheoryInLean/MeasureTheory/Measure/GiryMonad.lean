@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # LeanPool.RlTheoryInLean.MeasureTheory.Measure.GiryMonad
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure  ProbabilityTheory Finset NNReal ENNReal Preorder Filter
 

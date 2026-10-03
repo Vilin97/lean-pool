@@ -20,7 +20,7 @@ Build the formula, realization, and elementarity declarations registered by `@[r
 The expression representation and its correctness lemmas live in `RealizeCore`.
 -/
 
-@[expose] public section
+public section
 
 open Lean Parser Elab Term Meta Qq Std FirstOrder.Language
 

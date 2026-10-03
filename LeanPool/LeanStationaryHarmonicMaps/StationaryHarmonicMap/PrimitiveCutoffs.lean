@@ -16,7 +16,7 @@ This module contains the primitive cutoff realization and the abstract
 one-dimensional sharp-cutoff inputs.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,21 +27,21 @@ namespace LeanStationaryHarmonicMaps
 namespace StationaryHarmonicMap
 
 /-- The purely one-dimensional sharp-cutoff approximation step. -/
-def WeakOneDimensionalSharpCutoffStep {n m : ℕ}
+@[expose] def WeakOneDimensionalSharpCutoffStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialOneDimensionalIdentity Du R0 →
     WeakSharpCutoffLimitIdentity Du (0 : Domain n) R0
 
 /-- Intermediate distributional form of the one-dimensional sharp-cutoff
 argument. -/
-def WeakOneDimensionalToDistributionStep {n m : ℕ}
+@[expose] def WeakOneDimensionalToDistributionStep {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   WeakRadialOneDimensionalIdentity Du R0 →
     WeakSharpCutoffDistributionIdentity Du (0 : Domain n) R0
 
 /-- After the one-dimensional radial identity is integrated by parts, the defect
 pairs to zero against derivatives of compactly supported radial cutoffs. -/
-def WeakOneDimensionalDefectDerivativeIdentity {n m : ℕ}
+@[expose] def WeakOneDimensionalDefectDerivativeIdentity {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ phi : ℝ → ℝ,
     Differentiable ℝ phi →
@@ -55,7 +55,7 @@ def WeakOneDimensionalDefectDerivativeIdentity {n m : ℕ}
 argument.  It says every smooth compactly supported test function in `(0, R0)`
 can be represented, for pairing with the defect, as `-phi'` for an admissible
 radial cutoff primitive. -/
-def WeakOneDimensionalPrimitiveTestFamily {n m : ℕ}
+@[expose] def WeakOneDimensionalPrimitiveTestFamily {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ g : ℝ → ℝ,
     ContDiff ℝ (⊤ : ℕ∞) g →
@@ -77,7 +77,7 @@ def WeakOneDimensionalPrimitiveTestFamily {n m : ℕ}
 test function in `(0, R0)` is the negative derivative, on `(0, R0)`, of a
 compactly supported radial cutoff.  This predicate contains only the
 one-dimensional construction, independent of the map `Du`. -/
-def WeakPrimitiveCutoffRealization (R0 : ℝ) : Prop :=
+@[expose] def WeakPrimitiveCutoffRealization (R0 : ℝ) : Prop :=
   ∀ g : ℝ → ℝ,
     ContDiff ℝ (⊤ : ℕ∞) g →
       HasCompactSupport g →

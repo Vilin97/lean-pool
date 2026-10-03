@@ -19,7 +19,7 @@ The Besicovitch pair condition rules out a positive straight purely unrectifiabl
 density is strictly above the pair-condition parameter.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

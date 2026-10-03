@@ -18,7 +18,7 @@ factorial-rank proof of nilpotent-trace vanishing
 (arXiv:1211.3561, Proposition 4).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

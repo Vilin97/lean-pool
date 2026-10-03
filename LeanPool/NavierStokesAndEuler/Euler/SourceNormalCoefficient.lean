@@ -19,7 +19,7 @@ regularity and factorial multiplier bounds from the normal field and its
 positive lower bound, without assuming regularity of a reciprocal field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,13 +35,13 @@ variable {K E : Type*} [TopologicalSpace K] [CompactSpace K]
   (m : SmoothCoefficientPath K E)
 
 /-- The normal vector as a genuine scalar-to-vector coefficient path. -/
-def normalColumn : SmoothCoefficientPath K (ℝ →L[ℝ] E) :=
+@[expose] def normalColumn : SmoothCoefficientPath K (ℝ →L[ℝ] E) :=
   SmoothCoefficientPath.map
     (ContinuousLinearMap.toSpanSingletonLIE ℝ E).toLinearIsometry.toContinuousLinearMap m
 
 omit [CompleteSpace E] in
 @[simp] theorem normalColumn_apply (t : K) (x : Space) (r : ℝ) :
-    (normalColumn m).field t x r = r • m.field t x := rfl
+    (normalColumn m).field t x r = r • m.field t x := by rfl
 
 omit [CompleteSpace E] in
 theorem normalColumn_lower (c : ℝ) (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
@@ -53,7 +53,7 @@ theorem normalColumn_lower (c : ℝ) (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
 variable (c : ℝ) (hc : 0 < c) (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
 
 /-- The actual scalar coefficient used by the pressure in equation (11). -/
-def normalFunctional : C(K,Space →ᵇ E →L[ℝ] ℝ) :=
+@[expose] def normalFunctional : C(K,Space →ᵇ E →L[ℝ] ℝ) :=
   sourceForcing (normalColumn m) c hc (normalColumn_lower m c hm)
 
 /-- The constructed Gram left inverse is precisely the literal normal quotient. -/
@@ -62,9 +62,13 @@ theorem normalFunctional_apply (t : K) (x : Space) (v : E) :
   have hn : ‖m.field t x‖^2 ≠ 0 := ne_of_gt (hc.trans_le (hm t x))
   have he := gram_inverse_apply ((normalColumn m).field t x) c hc (normalColumn_lower m c hm t x)
     (((normalColumn m).field t x).adjoint v)
-  change ((normalColumn m).field t x).adjoint
-    ((normalColumn m).field t x (normalFunctional m c hc hm t x v)) =
-      ((normalColumn m).field t x).adjoint v at he
+  have hfunctional :
+      normalFunctional m c hc hm t x v =
+        gramInverse ((normalColumn m).field t x) c hc
+          (normalColumn_lower m c hm t x) (((normalColumn m).field t x).adjoint v) := by
+    simp only [normalFunctional, sourceForcing,
+      EulerBoundedFieldForwardGenerator.leftInversePath_apply, comp_apply]
+  rw [gram, comp_apply, ← hfunctional] at he
   have hadj : ((normalColumn m).field t x).adjoint = innerSL ℝ (m.field t x) :=
     adjoint_toSpanSingleton (m.field t x)
   rw [hadj] at he

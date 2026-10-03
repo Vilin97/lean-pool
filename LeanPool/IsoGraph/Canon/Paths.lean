@@ -28,7 +28,7 @@ which leaf is *best*.
   invariant "the incumbent's path does not go down a branch we have not explored yet".
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -59,7 +59,8 @@ theorem extract_nodup {n : Nat} {p : Part} (hp : Part.WF n p) (a b : Nat) :
 /-! ## Prefixes of paths -/
 
 /-- `a` is an initial segment of `b`. -/
-def PathPre (a b : Array Nat) : Prop := a.size ≤ b.size ∧ ∀ i, i < a.size → a[i]! = b[i]!
+@[expose] def PathPre (a b : Array Nat) : Prop :=
+  a.size ≤ b.size ∧ ∀ i, i < a.size → a[i]! = b[i]!
 
 theorem PathPre.refl (a : Array Nat) : PathPre a a := ⟨Nat.le_refl _, fun _ _ => rfl⟩
 
@@ -95,7 +96,7 @@ theorem PathPre.push_iff {a b : Array Nat} {v : Nat} :
 /-! ## The search only records leaves of the subtree it is in -/
 
 /-- Every leaf a state remembers — incumbent or first — has a path satisfying `P`. -/
-def StQ (P : Array Nat → Prop) (st : St) : Prop :=
+@[expose] def StQ (P : Array Nat → Prop) (st : St) : Prop :=
   (∀ l, st.best = some l → P l.path) ∧ (∀ l, st.first = some l → P l.path)
 
 theorem StQ.mono {P P' : Array Nat → Prop} {st : St} (h : StQ P st) (hPP : ∀ Q, P Q → P' Q) :

@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.TwoSidedIdeal.Basic
 This file restores upstream scalar-action helpers for two-sided ideals.
 -/
 
-@[expose] public section
+public section
 
 namespace TwoSidedIdeal
 

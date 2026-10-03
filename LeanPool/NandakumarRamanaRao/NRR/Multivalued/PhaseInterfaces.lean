@@ -33,4 +33,4 @@ alias is required; downstream separator modules import this file rather than rea
 individual prerequisite modules.
 -/
 
-@[expose] public section
+public section

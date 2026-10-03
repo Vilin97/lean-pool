@@ -20,7 +20,7 @@ The target-manifold constraint is intentionally absent.  The monotonicity proof
 uses only this stationary package.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,7 +44,7 @@ structure StationaryW12LocMap {n m : Nat}
 namespace StationaryW12LocMap
 
 /-- Build a stationary Sobolev witness from component hypotheses. -/
-def ofComponents {n m : Nat}
+@[expose] def ofComponents {n m : Nat}
     {u : Domain n -> Target m} {Du : Domain n -> Gradient n m}
     {Omega : Set (Domain n)}
     (hu_memLp : LocallyMemLpTwoIn u Omega)

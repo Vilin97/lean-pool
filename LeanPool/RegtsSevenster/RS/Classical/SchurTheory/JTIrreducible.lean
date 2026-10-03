@@ -20,7 +20,7 @@ squares over the classes, and conclude a unique class with
 coefficient `±1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

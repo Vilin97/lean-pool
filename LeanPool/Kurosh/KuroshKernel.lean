@@ -15,7 +15,7 @@ commit `911707126c8b9bb0c764bf853008fe1053c0aad9`: imports, API compatibility,
 and proof organization were revised.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory
@@ -159,7 +159,7 @@ theorem Internal.treeKuroshProductToH_injective {ι : Type v}
     _ = q := by simp
 
 /-- The tree Kurosh decomposition, induced by the actual stabilizer inclusions. -/
-noncomputable def treeKuroshProductMulEquivH {ι : Type v}
+@[expose] noncomputable def treeKuroshProductMulEquivH {ι : Type v}
     (G : ι → Type u) [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     @TreeKuroshProduct.{u, v, 0} ι G _ H ≃* H :=
   MulEquiv.ofBijective (@treeKuroshProductToH.{u, v, 0} ι G _ H)

@@ -53,7 +53,7 @@ The proof follows from
 ℂ-differentiable function, harmonic function, Poisson integral.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Real Set
 

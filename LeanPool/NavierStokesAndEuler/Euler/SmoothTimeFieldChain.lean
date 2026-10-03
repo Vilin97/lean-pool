@@ -19,7 +19,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 bounded coefficient paths. The closed-interval statements include both
 one-sided endpoints, obtained from the actual Bochner integral identity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,13 +38,14 @@ variable {K E V W : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Apply field, given by `bilinear (ContinuousLinearMap.id ℝ (V →L[ℝ] W)) A B`. -/
+@[expose]
 def applyField (A : SmoothTimeField K E (V →L[ℝ] W)) (B : SmoothTimeField K E V) :
     SmoothTimeField K E W :=
   bilinear (ContinuousLinearMap.id ℝ (V →L[ℝ] W)) A B
 
 @[simp] theorem applyField_apply (A : SmoothTimeField K E (V →L[ℝ] W))
     (B : SmoothTimeField K E V) (t : K) (x : E) :
-    (applyField A B).field t x = A.field t x (B.field t x) := rfl
+    (applyField A B).field t x = A.field t x (B.field t x) := by rfl
 
 end Application
 

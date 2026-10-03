@@ -53,7 +53,7 @@ restatement of an existing proof. Further paper-specific reference sources are
 `Bananas/FORMALIZATION_NOTES.md`.
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Bridges to the implementation library

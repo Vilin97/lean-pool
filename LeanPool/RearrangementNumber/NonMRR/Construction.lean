@@ -23,7 +23,7 @@ The analytic hypotheses are precisely the conclusions of the finite construction
 they do not assume an inequality between cardinal characteristics.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset Cardinal Set
 open scoped Topology

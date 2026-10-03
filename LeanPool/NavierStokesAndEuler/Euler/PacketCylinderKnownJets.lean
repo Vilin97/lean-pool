@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderSpatialJet
 
 /-! Literal known-grade jet data are reconstructed from only the genuine prefix fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

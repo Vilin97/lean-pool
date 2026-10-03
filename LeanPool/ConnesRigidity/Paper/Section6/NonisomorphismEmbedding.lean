@@ -18,7 +18,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The nonisomorphism embedding component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism
@@ -31,7 +31,7 @@ noncomputable section
 /--
 The `paperDTwoEmbeddingLinear` construction used in the Connes rigidity formalization.
 -/
-def paperDTwoEmbeddingLinear : PaperEll →ₗ[k] PaperKernel.D where
+@[expose] def paperDTwoEmbeddingLinear : PaperEll →ₗ[k] PaperKernel.D where
   toFun p :=
     (a0 ⊗ₜ[k] p.1, p.2 • PaperKernel.diagonal a0)
   map_add' p r := by
@@ -102,7 +102,7 @@ theorem paperDTwoEmbedding_injective :
     apply a0_ne_zero
     have hdelta := congrArg PaperKernel.delta hzero
     rw [PaperKernel.delta_diagonal] at hdelta
-    exact hdelta
+    simpa only [map_zero] using hdelta
   have hscalar : p.2 = r.2 :=
     (smul_left_injective k (m := PaperKernel.diagonal a0) hdiag) hsecond
   have hfunctional : ∀ v : PaperKernel.PaperV, p.1 v = r.1 v := by
@@ -146,7 +146,7 @@ theorem paper_moduleTwo_not_semisimple :
 /--
 The `paperEllRepresentationAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllRepresentationAlong (σ : PaperKernel.Q ≃* PaperKernel.Q) :
+@[expose] def paperEllRepresentationAlong (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     Representation k PaperKernel.Q PaperEll :=
   paperEllRepresentation.comp σ
 
@@ -198,7 +198,7 @@ theorem paperDTwoEmbeddingAlong_injective
 /--
 The `paperEllVStarRepresentationAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllVStarRepresentationAlong
+@[expose] def paperEllVStarRepresentationAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     Representation k PaperKernel.Q PaperKernel.VStar :=
   paperEllVStarRepresentation.comp σ
@@ -206,7 +206,7 @@ def paperEllVStarRepresentationAlong
 /--
 The `paperEllScalarRepresentationAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllScalarRepresentationAlong
+@[expose] def paperEllScalarRepresentationAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     Representation k PaperKernel.Q k :=
   paperEllScalarRepresentation.comp σ
@@ -214,7 +214,7 @@ def paperEllScalarRepresentationAlong
 /--
 The `paperEllInclusionIntertwiningAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllInclusionIntertwiningAlong
+@[expose] def paperEllInclusionIntertwiningAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     Representation.IntertwiningMap
       (paperEllVStarRepresentationAlong σ)
@@ -235,7 +235,7 @@ def paperEllInclusionIntertwiningAlong
 /--
 The `paperEllProjectionIntertwiningAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllProjectionIntertwiningAlong
+@[expose] def paperEllProjectionIntertwiningAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     Representation.IntertwiningMap
       (paperEllRepresentationAlong σ)
@@ -256,7 +256,7 @@ def paperEllProjectionIntertwiningAlong
 /--
 The `paperEllInclusionAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllInclusionAlong
+@[expose] def paperEllInclusionAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     (paperEllVStarRepresentationAlong σ).asModule →ₗ[Ring]
       (paperEllRepresentationAlong σ).asModule :=
@@ -268,7 +268,7 @@ def paperEllInclusionAlong
 /--
 The `paperEllProjectionAlong` construction used in the Connes rigidity formalization.
 -/
-def paperEllProjectionAlong
+@[expose] def paperEllProjectionAlong
     (σ : PaperKernel.Q ≃* PaperKernel.Q) :
     (paperEllRepresentationAlong σ).asModule →ₗ[Ring]
       (paperEllScalarRepresentationAlong σ).asModule :=

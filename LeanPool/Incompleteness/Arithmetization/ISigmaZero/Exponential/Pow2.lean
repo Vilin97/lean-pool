@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Cast.Order.Basic
 
 /-! # Pow2 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -124,7 +124,7 @@ lemma _root_.LO.Arith.Pow2.elim' {p : V} : Pow2 p ↔ p = 1 ∨ 1 < p ∧ ∃ q,
 section «lp_section_2»
 
 /-- $\mathrm{LenBit} (2^i, a) \iff \text{$i$th-bit of $a$ is $1$}$. -/
-def LenBit (i a : V) : Prop := ¬2 ∣ (a / i)
+@[expose] def LenBit (i a : V) : Prop := ¬2 ∣ (a / i)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.lenbitDef : Sg0.Semisentence 2 :=

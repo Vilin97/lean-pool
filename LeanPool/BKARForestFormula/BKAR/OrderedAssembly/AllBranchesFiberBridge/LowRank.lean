@@ -15,7 +15,7 @@ when `followOrder` succeeds and vanishes otherwise, with the empty,
 singleton, and pair supports worked out explicitly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

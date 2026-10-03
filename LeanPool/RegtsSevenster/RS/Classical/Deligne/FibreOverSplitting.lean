@@ -33,7 +33,7 @@ consume.  The variable block therefore names the symmetry of
 `Ind C` only, matching `RS.Classical.Deligne.UniversalAlgebra`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -46,7 +46,7 @@ variable {C : Type v}
 
 /-- **The restricted fibre functor is strong monoidal** over an
 algebra that splits the embedded objects. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def indFibreMonoidal
     [SmallCategory C] [MonoidalCategory C] [Abelian C]
     [CategoryTheory.Linear ℂ (Ind C)] [MonoidalPreadditive (Ind C)]

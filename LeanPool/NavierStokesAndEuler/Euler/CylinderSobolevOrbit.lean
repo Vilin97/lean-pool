@@ -28,7 +28,7 @@ retraction. We use the equivalent Hilbert product norm only to construct the
 retraction; all stated spaces retain their original sup norms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -101,7 +101,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -116,12 +116,12 @@ variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace
 
 /-- Sobolev path translate, given by `(sobolevTranslation P q (coveringMap P
 a)).compLeftContinuous ℝ K`. -/
-def sobolevPathTranslate (q : ℕ) (a : LiftTangent) :
+@[expose] def sobolevPathTranslate (q : ℕ) (a : LiftTangent) :
     C(K,SobolevSpace P q) →L[ℝ] C(K,SobolevSpace P q) :=
   (sobolevTranslation P q (coveringMap P a)).compLeftContinuous ℝ K
 
 /-- Sobolev orbit, given by `sobolevPathTranslate P q a (sobolevPath P q p hp)`. -/
-def sobolevOrbit (q : ℕ) (p : C(K, LiftL2 P))
+@[expose] def sobolevOrbit (q : ℕ) (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (a : LiftTangent) :
     C(K,SobolevSpace P q) := sobolevPathTranslate P q a (sobolevPath P q p hp)
 

@@ -56,4 +56,4 @@ unit's `Builds on:` list, per the design doc's non-blocking flag); final assembl
 `_root_.ContMDiff.degree` and friends verbatim.
 -/
 
-@[expose] public section
+public section

@@ -40,7 +40,7 @@ marked `e4`), `be = |e7| - |e2|` (the near half of the marked `e7`),
 target `5` the same picture is read with `al ↔ be` and `p ↔ r`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow08ChamberTwo
 

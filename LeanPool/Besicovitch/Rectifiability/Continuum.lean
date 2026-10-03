@@ -14,7 +14,7 @@ public import Mathlib.Topology.Order.IntermediateValue
 A preconnected set has one-dimensional Hausdorff measure at least its extended diameter.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

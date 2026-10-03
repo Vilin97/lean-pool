@@ -18,7 +18,7 @@ branch.  The extension below is built from that branch and agrees with all
 actual physical coordinate jets at every point with `t<1`.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -84,13 +84,16 @@ theorem stableInverse_zeroTime {a z : ℝ} (ha : 0 < a) (ha1 : a < 1) (hz : z �
   rwa [hf] at he
 
 /-- Time axial, given by `(1 - p.1, p.2.2)`. -/
+@[expose]
 noncomputable def timeAxial (p : PhysicalPoint) : ℝ × ℝ := (1 - p.1, p.2.2)
 
 /-- Domain, given by `timeAxial ⁻¹' PositiveRepresentatives.stableTarget (2 * h)`. -/
+@[expose]
 noncomputable def domain (h : ℝ) : Set PhysicalPoint :=
   timeAxial ⁻¹' PositiveRepresentatives.stableTarget (2 * h)
 
 /-- Q extension, given by `(PositiveRepresentatives.stableInverse (2 * h) (timeAxial p)).1`. -/
+@[expose]
 noncomputable def qExtension (h : ℝ) (p : PhysicalPoint) : ℝ :=
   (PositiveRepresentatives.stableInverse (2 * h) (timeAxial p)).1
 
@@ -106,6 +109,7 @@ noncomputable def innerExtension (h : ℝ) (p : PhysicalPoint) : ℝ × ℝ :=
   (XExtension h p, etaExtension h p)
 
 /-- Chart extension, given by `(qExtension h p, innerExtension h p)`. -/
+@[expose]
 noncomputable def chartExtension (h : ℝ) (p : PhysicalPoint) : Chart :=
   (qExtension h p, innerExtension h p)
 
@@ -251,10 +255,12 @@ theorem endpoint_neighborhood {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- Cartesian domain, given by `(fun z => AxisymmetricFields.profilePoint z.1 z.2) ⁻¹' domain
 h`. -/
+@[expose]
 noncomputable def cartesianDomain (h : ℝ) : Set ProblemStatement.SpaceTime :=
   (fun z => AxisymmetricFields.profilePoint z.1 z.2) ⁻¹' domain h
 
 /-- Cartesian extension, given by `chartExtension h (AxisymmetricFields.profilePoint z.1 z.2)`. -/
+@[expose]
 noncomputable def cartesianExtension (h : ℝ) (z : ProblemStatement.SpaceTime) : Chart :=
   chartExtension h (AxisymmetricFields.profilePoint z.1 z.2)
 

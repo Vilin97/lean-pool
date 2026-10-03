@@ -57,7 +57,7 @@ Yoneda lemma, by one element — its value on the canonical element
 comparisons are decided by evaluating both sides there.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -77,7 +77,7 @@ variable {D : Type v}
 /-- The Day-convolution structure of a plain presheaf pair, read
 through the synonym: makes the `DayConvolution` API available on
 underlying functors of the Day category. -/
-@[reducible] def dayConvPlain [SmallCategory D] [MonoidalCategory D]
+@[expose, reducible] def dayConvPlain [SmallCategory D] [MonoidalCategory D]
     (F G : D ⥤ Type v) : DayConvolution F G :=
   dayConv (DayFunctor.mk F) (DayFunctor.mk G)
 
@@ -86,6 +86,7 @@ attribute [local instance] dayConvPlain
 /-- The canonical element of the Day tensor of two
 corepresentables: the Kan-extension unit evaluated on the pair of
 identities. -/
+@[expose]
 def dayCoyonedaUnitElt [SmallCategory D] [MonoidalCategory D]
     (a b : D) :
     ((DayFunctor.mk (coyoneda.obj (op a)) ⊗
@@ -97,6 +98,7 @@ def dayCoyonedaUnitElt [SmallCategory D] [MonoidalCategory D]
 
 /-- The canonical element of a left-nested triple Day tensor of
 corepresentables. -/
+@[expose]
 def dayCoyonedaUnitElt₂ [SmallCategory D] [MonoidalCategory D]
     (a b c : D) :
     (((DayFunctor.mk (coyoneda.obj (op a)) ⊗
@@ -110,6 +112,7 @@ def dayCoyonedaUnitElt₂ [SmallCategory D] [MonoidalCategory D]
 
 /-- The canonical element of a right-nested triple Day tensor of
 corepresentables. -/
+@[expose]
 def dayCoyonedaUnitElt₂' [SmallCategory D] [MonoidalCategory D]
     (a b c : D) :
     ((DayFunctor.mk (coyoneda.obj (op a)) ⊗
@@ -127,6 +130,7 @@ corepresents evaluation at `(a ⊗ b) ⊗ c`: iterate the Kan-extension
 universal property twice and read off the Yoneda lemma on the
 external product of three corepresentables, which is definitionally
 the corepresentable of the triple product category. -/
+@[expose]
 def dayCoyonedaCorepresentableBy₂ [SmallCategory D] [MonoidalCategory D]
     (a b c : D) :
     (dayEvaluation ((a ⊗ b) ⊗ c)).CorepresentableBy
@@ -739,6 +743,7 @@ section Powers
 tensor powers**: `n = 0` is `RS.indOfUnitIso`, and each successor
 stage tensors the previous one with `indOf.obj X` and applies the
 embedding-tensor comparison. -/
+@[expose]
 def indOfPowIso [SmallCategory C] [MonoidalCategory C]
     (X : C) : (n : ℕ) →
     (tensorPow (Ind C) (indOf.obj X) n ≅ indOf.obj (tensorPow C X n))

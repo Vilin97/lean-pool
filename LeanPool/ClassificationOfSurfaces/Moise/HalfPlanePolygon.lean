@@ -22,7 +22,7 @@ file records the elementary but important consequence: once the replacement poly
 that half-plane, its bounded Schoenflies filling stays there as well.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology

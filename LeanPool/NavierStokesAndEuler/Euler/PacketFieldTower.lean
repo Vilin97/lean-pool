@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderField
 /-! The actual smooth cylinder paths produced by the packet construction
 give coherent continuous Sobolev realizations at every finite order. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,15 +26,15 @@ variable {P T : ℝ} [Fact (0 < P)] {raw raw_t : VectorField}
 
 /-- No Sobolev realizations are hypothesized: each is constructed from the
 genuine mixed translation orbit of the prescribed field. -/
-def toFieldTower (G : Field P T raw) : EulerAllOrderCorrectionData.FieldTower P T where
+@[expose] def toFieldTower (G : Field P T raw) : EulerAllOrderCorrectionData.FieldTower P T where
   field := G.path
   realization q := sobolevPath P q G.path G.orbit
   value_eq q t := sobolevPath_value P q G.path G.orbit t
 
-@[simp] theorem toFieldTower_field (G : Field P T raw) : G.toFieldTower.field = G.path := rfl
+@[simp] theorem toFieldTower_field (G : Field P T raw) : G.toFieldTower.field = G.path := by rfl
 
 @[simp] theorem toFieldTower_realization (G : Field P T raw) (q : ℕ) :
-    G.toFieldTower.realization q = sobolevPath P q G.path G.orbit := rfl
+    G.toFieldTower.realization q = sobolevPath P q G.path G.orbit := by rfl
 
 theorem toFieldTower_value (G : Field P T raw) (q : ℕ) (t : Icc (0 : ℝ) T) :
     value P (G.toFieldTower.realization q t) = G.path t := G.toFieldTower.value_eq q t

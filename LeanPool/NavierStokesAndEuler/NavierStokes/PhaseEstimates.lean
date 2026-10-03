@@ -47,7 +47,7 @@ The invariant region is proved using a quadratic boundary function, without
 dividing by the growing coordinate or assuming its positivity along the solution.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.GrowingMode
 
@@ -58,7 +58,7 @@ open scoped Topology
 abbrev State := EuclideanSpace ℝ (Fin 2)
 
 /-- The actual two-mode coefficient, including four independent error entries. -/
-noncomputable def modalOperator (lam damping e11 e12 e21 e22 : ℝ) : State →L[ℝ] State :=
+@[expose] noncomputable def modalOperator (lam damping e11 e12 e21 e22 : ℝ) : State →L[ℝ] State :=
   LinearMap.toContinuousLinearMap {
     toFun := fun z => !₂[(lam - damping + e11) * z 0 + e12 * z 1,
       e21 * z 0 + (-lam - damping + e22) * z 1]
@@ -73,11 +73,11 @@ noncomputable def modalOperator (lam damping e11 e12 e21 e22 : ℝ) : State →L
 
 @[simp] theorem modalOperator_zero (lam damping e11 e12 e21 e22 : ℝ) (z : State) :
     modalOperator lam damping e11 e12 e21 e22 z 0 =
-      (lam - damping + e11) * z 0 + e12 * z 1 := rfl
+      (lam - damping + e11) * z 0 + e12 * z 1 := by rfl
 
 @[simp] theorem modalOperator_one (lam damping e11 e12 e21 e22 : ℝ) (z : State) :
     modalOperator lam damping e11 e12 e21 e22 z 1 =
-      e21 * z 0 + (-lam - damping + e22) * z 1 := rfl
+      e21 * z 0 + (-lam - damping + e22) * z 1 := by rfl
 
 /-- A nonzero solution of a continuous homogeneous linear equation cannot hit zero.
 This uses backwards uniqueness, not a positivity assumption on any coordinate. -/
@@ -244,7 +244,7 @@ theorem positive_invariant_cone
 
 /-- A fixed constant for the manuscript's `O(1/S)` cone width. The added one
 allows the same statement when the perturbation bound is zero. -/
-noncomputable def coneConstant (lamMin C : ℝ) : ℝ := 4 * (C + 1) / lamMin
+@[expose] noncomputable def coneConstant (lamMin C : ℝ) : ℝ := 4 * (C + 1) / lamMin
 
 /-- An explicit sufficient meaning of "sufficiently large S". -/
 theorem scaled_cone_conditions {lamMin C S : ℝ}
@@ -494,7 +494,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.MovingFrameODE
 
@@ -508,11 +508,11 @@ abbrev Space := EuclideanSpace ℝ (Fin 3)
 abbrev Frame := OrthonormalBasis (Fin 2) ℝ Plane
 
 /-- Pack, given by `!₂[r, w 0, w 1]`. -/
-noncomputable def pack (r : ℝ) (w : Plane) : Space := !₂[r, w 0, w 1]
+@[expose] noncomputable def pack (r : ℝ) (w : Plane) : Space := !₂[r, w 0, w 1]
 /-- Tail, given by `!₂[w 1, w 2]`. -/
-noncomputable def tail (w : Space) : Plane := !₂[w 1, w 2]
+@[expose] noncomputable def tail (w : Space) : Plane := !₂[w 1, w 2]
 /-- Unit theta, given by `!₂[1, 0]`. -/
-noncomputable def unitTheta : Plane := !₂[1, 0]
+@[expose] noncomputable def unitTheta : Plane := !₂[1, 0]
 
 @[simp] theorem pack_zero (r : ℝ) (w : Plane) : pack r w 0 = r := rfl
 @[simp] theorem pack_one (r : ℝ) (w : Plane) : pack r w 1 = w 0 := rfl
@@ -574,15 +574,15 @@ theorem frame_ext (B : Frame) {u v : Space} (hr : u 0 = v 0)
   · exact congrArg (fun w : Plane => w 1) ht
 
 /-- Normal, given by `pack (β * ρ) (β • B 0)`. -/
-noncomputable def normal (β ρ : ℝ) (B : Frame) : Space :=
+@[expose] noncomputable def normal (β ρ : ℝ) (B : Frame) : Space :=
   pack (β * ρ) (β • B 0)
 
 /-- Tangent, given by `pack x ((-ρ * x) • B 0 + y • B 1)`. -/
-noncomputable def tangent (ρ : ℝ) (B : Frame) (x y : ℝ) : Space :=
+@[expose] noncomputable def tangent (ρ : ℝ) (B : Frame) (x y : ℝ) : Space :=
   pack x ((-ρ * x) • B 0 + y • B 1)
 
 /-- Normal motion, given by `pack (β' * ρ + β * ρ') (β' • B 0 + (β * rot) • B 1)`. -/
-noncomputable def normalMotion (β β' ρ ρ' rot : ℝ) (B : Frame) : Space :=
+@[expose] noncomputable def normalMotion (β β' ρ ρ' rot : ℝ) (B : Frame) : Space :=
   pack (β' * ρ + β * ρ') (β' • B 0 + (β * rot) • B 1)
 
 /-- Tangent motion, given by `pack x' (-(ρ' * x + ρ * x' + rot * y) • B 0 + (y' - ρ * rot * x) •
@@ -593,7 +593,7 @@ noncomputable def tangentMotion (ρ ρ' rot : ℝ) (B : Frame)
     (y' - ρ * rot * x) • B 1)
 
 /-- The exact zeroth-order ambient matrix from the pulse equation. -/
-noncomputable def baseAction (F : ℝ) (g : Plane) (t : Space) : Space :=
+@[expose] noncomputable def baseAction (F : ℝ) (g : Plane) (t : Space) : Space :=
   pack (-2 * F * (tail t) 0) ((t 0) • ((2 * F) • unitTheta + g))
 
 theorem normal_ne_zero {β ρ : ℝ} (B : Frame) (hβ : β ≠ 0) : normal β ρ B ≠ 0 := by
@@ -646,21 +646,21 @@ theorem normal_baseAction (β ρ F : ℝ) (B : Frame) (g : Plane) (x y : ℝ) :
   ring
 
 /-- Coefficients before subtracting the scalar viscous damping. -/
-noncomputable def coeff11 (ρ ρ' gK : ℝ) : ℝ := ρ * (gK - ρ') / (1 + ρ ^ 2)
+@[expose] noncomputable def coeff11 (ρ ρ' gK : ℝ) : ℝ := ρ * (gK - ρ') / (1 + ρ ^ 2)
 /-- Coeff12, given by `(2 * F * Nθ - ρ * rot) / (1 + ρ ^ 2)`. -/
-noncomputable def coeff12 (F Nθ ρ rot : ℝ) : ℝ := (2 * F * Nθ - ρ * rot) / (1 + ρ ^ 2)
+@[expose] noncomputable def coeff12 (F Nθ ρ rot : ℝ) : ℝ := (2 * F * Nθ - ρ * rot) / (1 + ρ ^ 2)
 /-- Coeff21, given by `-(2 * F * Nθ + gN) + ρ * rot`. -/
-noncomputable def coeff21 (F Nθ gN ρ rot : ℝ) : ℝ := -(2 * F * Nθ + gN) + ρ * rot
+@[expose] noncomputable def coeff21 (F Nθ gN ρ rot : ℝ) : ℝ := -(2 * F * Nθ + gN) + ρ * rot
 
 /-- Rhs X, given by `(coeff11 ρ ρ' ⟪B 0, g⟫_ℝ - d) * x + coeff12 F ((B 1) 0) ρ rot * y - (f 0 -
 ρ * ⟪B 0, tail f⟫_ℝ) / (1 + ρ ^ 2)`. -/
-noncomputable def rhsX (F d ρ ρ' rot : ℝ) (B : Frame) (g : Plane)
+@[expose] noncomputable def rhsX (F d ρ ρ' rot : ℝ) (B : Frame) (g : Plane)
     (f : Space) (x y : ℝ) : ℝ :=
   (coeff11 ρ ρ' ⟪B 0, g⟫_ℝ - d) * x + coeff12 F ((B 1) 0) ρ rot * y -
     (f 0 - ρ * ⟪B 0, tail f⟫_ℝ) / (1 + ρ ^ 2)
 
 /-- Rhs Y, given by `coeff21 F ((B 1) 0) ⟪B 1, g⟫_ℝ ρ rot * x - d * y - ⟪B 1, tail f⟫_ℝ`. -/
-noncomputable def rhsY (F d ρ rot : ℝ) (B : Frame) (g : Plane)
+@[expose] noncomputable def rhsY (F d ρ rot : ℝ) (B : Frame) (g : Plane)
     (f : Space) (x y : ℝ) : ℝ :=
   coeff21 F ((B 1) 0) ⟪B 1, g⟫_ℝ ρ rot * x - d * y - ⟪B 1, tail f⟫_ℝ
 
@@ -739,7 +739,7 @@ theorem tangentMotion_eq_projectedRhs_iff {β : ℝ} (hβ : β ≠ 0)
     rfl
 
 /-- Pack continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
-noncomputable def packCLM : (ℝ × Plane) →L[ℝ] Space :=
+@[expose] noncomputable def packCLM : (ℝ × Plane) →L[ℝ] Space :=
   LinearMap.toContinuousLinearMap {
     toFun := fun p => pack p.1 p.2
     map_add' := by
@@ -753,7 +753,7 @@ noncomputable def packCLM : (ℝ × Plane) →L[ℝ] Space :=
 
 /-- Tail continuous linear map, given by `LinearMap.toContinuousLinearMap { toFun := tail
 map_add' := tail_add map_smul' := tail_smul }`. -/
-noncomputable def tailCLM : Space →L[ℝ] Plane :=
+@[expose] noncomputable def tailCLM : Space →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := tail
     map_add' := tail_add
@@ -811,7 +811,7 @@ theorem hasDerivAt_projected_iff {β ρ x y : ℝ → ℝ} {B : ℝ → Frame}
     exact h ▸ ht
 
 /-- Counterclockwise quarter-turn in the angular-axial plane. -/
-noncomputable def quarterTurn : Plane →L[ℝ] Plane :=
+@[expose] noncomputable def quarterTurn : Plane →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := fun w => !₂[-w 1, w 0]
     map_add' := by
@@ -867,8 +867,9 @@ noncomputable def frameOfUnit (K : Plane) (hK : ‖K‖ = 1) : Frame :=
   simp [frameOfUnit]
 
 /-- Normal scale, given by `‖tail n‖`. -/
-noncomputable def normalScale (n : Space) : ℝ := ‖tail n‖
+@[expose] noncomputable def normalScale (n : Space) : ℝ := ‖tail n‖
 /-- Radial slope, given by `n 0 / normalScale n`. -/
+@[expose]
 noncomputable def radialSlope (n : Space) : ℝ := n 0 / normalScale n
 /-- Normal direction, given by `(normalScale n)⁻¹ • tail n`. -/
 noncomputable def normalDirection (n : Space) : Plane := (normalScale n)⁻¹ • tail n
@@ -1184,13 +1185,13 @@ theorem frame_coefficients_close {B B0 : Frame} {g g0 : Plane}
 /-! ## The moving eigenbasis, including its derivative -/
 
 /-- Modal11, given by `(a + h * b + c / h - rate) / 2`. -/
-noncomputable def modal11 (a b c h rate : ℝ) : ℝ := (a + h * b + c / h - rate) / 2
+@[expose] noncomputable def modal11 (a b c h rate : ℝ) : ℝ := (a + h * b + c / h - rate) / 2
 /-- Modal12, given by `(a - h * b + c / h + rate) / 2`. -/
-noncomputable def modal12 (a b c h rate : ℝ) : ℝ := (a - h * b + c / h + rate) / 2
+@[expose] noncomputable def modal12 (a b c h rate : ℝ) : ℝ := (a - h * b + c / h + rate) / 2
 /-- Modal21, given by `(a + h * b - c / h + rate) / 2`. -/
-noncomputable def modal21 (a b c h rate : ℝ) : ℝ := (a + h * b - c / h + rate) / 2
+@[expose] noncomputable def modal21 (a b c h rate : ℝ) : ℝ := (a + h * b - c / h + rate) / 2
 /-- Modal22, given by `(a - h * b - c / h - rate) / 2`. -/
-noncomputable def modal22 (a b c h rate : ℝ) : ℝ := (a - h * b - c / h - rate) / 2
+@[expose] noncomputable def modal22 (a b c h rate : ℝ) : ℝ := (a - h * b - c / h - rate) / 2
 
 /-- Exact change to `x = p + q`, `y = h (p - q)`, with `h' = rate * h`.
 Here the reference off-diagonal entries are `λ/h` and `λ*h`, and `a,b,c`
@@ -1229,7 +1230,7 @@ theorem modal_equations_iff {h : ℝ} (hh : h ≠ 0)
       field_simp; ring
 
 /-- Pair continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
-noncomputable def pairCLM : (ℝ × ℝ) →L[ℝ] Plane :=
+@[expose] noncomputable def pairCLM : (ℝ × ℝ) →L[ℝ] Plane :=
   LinearMap.toContinuousLinearMap {
     toFun := fun z => !₂[z.1, z.2]
     map_add' := by intro u v; ext i; fin_cases i <;> simp
@@ -1318,7 +1319,8 @@ theorem modalOperator_eq_coefficient (lam damping e11 e12 e21 e22 : ℝ) :
         (GrowingMode.modalOperator 0 0 e11 e12 e21 e22) := by
   ext z i
   fin_cases i <;> simp [GrowingMode.modalOperator, ViscousPropagator.coefficient,
-    ViscousPropagator.diagonal, ViscousPropagator.reflection] <;> ring
+    ViscousPropagator.diagonal, ViscousPropagator.reflection_zero,
+    ViscousPropagator.reflection_one] <;> ring
 
 theorem plane_norm_le_coordinate_sum (z : Plane) : ‖z‖ ≤ |z 0| + |z 1| := by
   have h := ViscousPropagator.plane_norm_sq z
@@ -1369,7 +1371,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 namespace NavierStokes.PhaseEstimates
 
@@ -1385,6 +1387,7 @@ abbrev Slow := PhaseCalculus.Slow
 
 /-- Rounding in the punctured integer lattice.  The zero floor is replaced by
 one; the distance to the input is still at most one. -/
+@[expose]
 noncomputable def nonzeroRound (x : ℝ) : ℤ := if Int.floor x = 0 then 1 else Int.floor x
 
 theorem nonzeroRound_ne_zero (x : ℝ) : nonzeroRound x ≠ 0 := by
@@ -1404,6 +1407,7 @@ theorem nonzeroRound_error (x : ℝ) : |(nonzeroRound x : ℝ) - x| ≤ 1 := by
   · exact abs_le.mpr ⟨by linarith, by linarith⟩
 
 /-- Rounded frequency, given by `(nonzeroRound (k * target) : ℝ) / k`. -/
+@[expose]
 noncomputable def roundedFrequency (k target : ℝ) : ℝ := (nonzeroRound (k * target) : ℝ) / k
 
 theorem roundedFrequency_integer {k : ℝ} (hk : k ≠ 0) (target : ℝ) :
@@ -1430,7 +1434,7 @@ theorem roundedFrequency_error {k : ℝ} (hk : 0 < k) (target : ℝ) :
   exact div_le_div_of_nonneg_right (nonzeroRound_error _) hk.le
 
 /-- The fixed representative frequency in its two tangential components. -/
-noncomputable def representativeFrequency (B sigma u L : ℝ) (K g : Plane) : Plane :=
+@[expose] noncomputable def representativeFrequency (B sigma u L : ℝ) (K g : Plane) : Plane :=
   B • (K - (sigma * u / (L * ‖g‖ ^ 2)) • g)
 
 theorem representative_slope (B sigma u L : ℝ) (K g : Plane)
@@ -1472,7 +1476,7 @@ theorem representative_frequency_bound (B sigma u L : ℝ) (K g : Plane)
   linarith only [h]
 
 /-- Signed slot, given by `sigma * (u / 2 + u * v / L)`. -/
-noncomputable def signedSlot (sigma u L v : ℝ) : ℝ := sigma * (u / 2 + u * v / L)
+@[expose] noncomputable def signedSlot (sigma u L v : ℝ) : ℝ := sigma * (u / 2 + u * v / L)
 
 /-- The cancellation producing the intended radial slope is exact for the
 unrounded representative data. -/
@@ -1593,11 +1597,11 @@ theorem axial_frequency_bound {p target pz a b M rounding : ℝ}
 
 /-- Explicit normal, given by `!₂[x0 - v * (p * FR + pz * GR), p / R, pz - ε * v * (p * FZ + pz
 * GZ)]`. -/
-noncomputable def explicitNormal (ε p pz x0 R v FR GR FZ GZ : ℝ) : Space :=
+@[expose] noncomputable def explicitNormal (ε p pz x0 R v FR GR FZ GZ : ℝ) : Space :=
   !₂[x0 - v * (p * FR + pz * GR), p / R, pz - ε * v * (p * FZ + pz * GZ)]
 
 /-- Reference normal, given by `MovingFrameODE.pack (B * signedSlot sigma u L v) (B • K)`. -/
-noncomputable def referenceNormal (B sigma u L v : ℝ) (K : Plane) : Space :=
+@[expose] noncomputable def referenceNormal (B sigma u L v : ℝ) (K : Plane) : Space :=
   MovingFrameODE.pack (B * signedSlot sigma u L v) (B • K)
 
 theorem vec3_norm_le_sum (w : Space) : ‖w‖ ≤ |w 0| + |w 1| + |w 2| := by
@@ -1710,7 +1714,7 @@ theorem phaseNormal_eq_explicit (ε p pz x0 : ℝ) (F G : Slow → ℝ)
 /-- Phase error, given by `1 / S + S * ε ^ 2 + S / k + ε * S`. -/
 noncomputable def phaseError (S ε k : ℝ) : ℝ := 1 / S + S * ε ^ 2 + S / k + ε * S
 /-- Phase constant, given by `8 * M ^ 3 + 2 * M ^ 4`. -/
-noncomputable def phaseConstant (M : ℝ) : ℝ := 8 * M ^ 3 + 2 * M ^ 4
+@[expose] noncomputable def phaseConstant (M : ℝ) : ℝ := 8 * M ^ 3 + 2 * M ^ 4
 
 theorem inverse_cube_bounds {S : ℝ} (hS : 1 ≤ S) :
     1 / S ^ 3 ≤ 1 / S ∧ S * (1 / S ^ 3) ≤ 1 / S := by
@@ -1809,7 +1813,7 @@ theorem phaseError_le_four_div {S ε k : ℝ} (hS : 0 < S)
   linarith only [h1, h2, h3]
 
 /-- Normal velocity, given by `!₂[-(p * FR + pz * GR), 0, -ε * (p * FZ + pz * GZ)]`. -/
-noncomputable def normalVelocity (ε p pz FR GR FZ GZ : ℝ) : Space :=
+@[expose] noncomputable def normalVelocity (ε p pz FR GR FZ GZ : ℝ) : Space :=
   !₂[-(p * FR + pz * GR), 0, -ε * (p * FZ + pz * GZ)]
 
 /-- The slot derivative is estimated from its exact formula, independently of
@@ -2033,23 +2037,23 @@ theorem transverseDirection_close {n : Space} {K : Plane} {B s δ : ℝ}
 
 /-- Scale derivative, given by `⟪MovingFrameODE.tail n, MovingFrameODE.tail n'⟫_ℝ /
 MovingFrameODE.normalScale n`. -/
-noncomputable def scaleDerivative (n n' : Space) : ℝ :=
+@[expose] noncomputable def scaleDerivative (n n' : Space) : ℝ :=
   ⟪MovingFrameODE.tail n, MovingFrameODE.tail n'⟫_ℝ / MovingFrameODE.normalScale n
 
 /-- Slope derivative, given by `(n' 0 - MovingFrameODE.radialSlope n * scaleDerivative n n') /
 MovingFrameODE.normalScale n`. -/
-noncomputable def slopeDerivative (n n' : Space) : ℝ :=
+@[expose] noncomputable def slopeDerivative (n n' : Space) : ℝ :=
   (n' 0 - MovingFrameODE.radialSlope n * scaleDerivative n n') / MovingFrameODE.normalScale n
 
 /-- Direction derivative, given by `(MovingFrameODE.normalScale n)⁻¹ • (MovingFrameODE.tail n' -
 scaleDerivative n n' • MovingFrameODE.normalDirection n)`. -/
-noncomputable def directionDerivative (n n' : Space) : Plane :=
+@[expose] noncomputable def directionDerivative (n n' : Space) : Plane :=
   (MovingFrameODE.normalScale n)⁻¹ •
     (MovingFrameODE.tail n' - scaleDerivative n n' • MovingFrameODE.normalDirection n)
 
 /-- Angular velocity, given by `⟪MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection n),
 directionDerivative n n'⟫_ℝ`. -/
-noncomputable def angularVelocity (n n' : Space) : ℝ :=
+@[expose] noncomputable def angularVelocity (n n' : Space) : ℝ :=
   ⟪MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection n), directionDerivative n n'⟫_ℝ
 
 theorem hasDerivAt_normalScale {n : ℝ → Space} {n' : Space} {v : ℝ}
@@ -2232,7 +2236,7 @@ theorem radius_difference_le {q q0 : Slow} {diameter : ℝ} (hd : ‖q - q0‖ �
   simpa only [Prod.fst_sub, Real.norm_eq_abs] using (norm_fst_le (q - q0)).trans hd
 
 /-- Shear vector, given by `!₂[q.1 * PhaseCalculus.slowR F q, PhaseCalculus.slowR G q]`. -/
-noncomputable def shearVector (F G : Slow → ℝ) (q : Slow) : Plane :=
+@[expose] noncomputable def shearVector (F G : Slow → ℝ) (q : Slow) : Plane :=
   !₂[q.1 * PhaseCalculus.slowR F q, PhaseCalculus.slowR G q]
 
 theorem localBase_shear_error {F G F0 G0 : Slow → ℝ} {U : Set Slow}

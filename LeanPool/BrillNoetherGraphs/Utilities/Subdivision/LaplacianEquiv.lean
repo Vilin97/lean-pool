@@ -19,7 +19,7 @@ Brill--Noether existence transport without requiring a general graph
 isomorphism API.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -49,6 +49,7 @@ instance : CoeFun (LaplacianEquiv G H) (fun _ => G.V → H.V) :=
 basic transport API rather than in a particular subdivision construction, so
 proof-carrying normalization certificates can combine independent graph
 presentations without changing universes. -/
+@[expose]
 def trans {K : CFGraph.{w}} (first : LaplacianEquiv G H)
     (second : LaplacianEquiv H K) : LaplacianEquiv G K where
   toEquiv := first.toEquiv.trans second.toEquiv
@@ -59,6 +60,7 @@ def trans {K : CFGraph.{w}} (first : LaplacianEquiv G H)
     rw [second.num_edges_eq, first.num_edges_eq]
 
 /-- Reverse an adjacency-preserving vertex equivalence. -/
+@[expose]
 def symm (equivalence : LaplacianEquiv G H) : LaplacianEquiv H G where
   toEquiv := equivalence.toEquiv.symm
   num_edges_eq := by
@@ -68,10 +70,12 @@ def symm (equivalence : LaplacianEquiv G H) : LaplacianEquiv H G where
         (equivalence.toEquiv.symm x) (equivalence.toEquiv.symm y)).symm
 
 /-- Transport a divisor forward along the vertex equivalence. -/
+@[expose]
 def mapDiv (equivalence : LaplacianEquiv G H) (D : CFDiv G) : CFDiv H :=
   fun y => D (equivalence.toEquiv.symm y)
 
 /-- Transport a firing script forward along the vertex equivalence. -/
+@[expose]
 def mapScript (equivalence : LaplacianEquiv G H)
     (script : firingScript G) : firingScript H :=
   fun y => script (equivalence.toEquiv.symm y)
@@ -303,20 +307,20 @@ namespace LaplacianEquiv.Examples
 abbrev PairVertex := Fin 2
 
 /-- Two vertices joined by two parallel edges. -/
-def parallelPair : CFGraph where
+@[expose] def parallelPair : CFGraph where
   V := PairVertex
   edges := Multiset.ofList [(0, 1), (0, 1)]
   loopless := by decide
 
 /-- The same parallel pair with both endpoint labels exchanged. -/
-def relabeledParallelPair : CFGraph where
+@[expose] def relabeledParallelPair : CFGraph where
   V := PairVertex
   edges := Multiset.ofList [(1, 0), (1, 0)]
   loopless := by decide
 
 /-- Swapping the two labels preserves every Laplacian entry, including the
 off-diagonal multiplicity two. -/
-def parallelPairEquiv : LaplacianEquiv parallelPair relabeledParallelPair where
+@[expose] def parallelPairEquiv : LaplacianEquiv parallelPair relabeledParallelPair where
   toEquiv := Equiv.swap (0 : PairVertex) (1 : PairVertex)
   num_edges_eq := by decide
 

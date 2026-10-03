@@ -21,7 +21,7 @@ exact quantitative input needed here is therefore recorded explicitly below,
 but only as a proposition carrier, never as an assumption or an axiom.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

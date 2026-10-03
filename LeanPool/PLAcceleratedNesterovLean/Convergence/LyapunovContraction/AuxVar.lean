@@ -15,7 +15,7 @@ The sequence-indexed recursion is the zero-velocity sequence specialization of
 the state-based one-step identity `auxVarOfState_step`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

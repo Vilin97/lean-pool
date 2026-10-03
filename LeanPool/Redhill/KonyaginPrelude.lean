@@ -15,7 +15,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # The "warm-up" result (Theorem 2.1)
 -/
 
-@[expose] public section
+public section
 
 
 namespace KonyaginPrelude

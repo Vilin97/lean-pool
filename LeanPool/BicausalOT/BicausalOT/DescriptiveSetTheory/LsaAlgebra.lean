@@ -22,7 +22,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal

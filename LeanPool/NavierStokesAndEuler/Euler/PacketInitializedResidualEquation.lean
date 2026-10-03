@@ -24,7 +24,7 @@ section
 Field in the closed lifted gradient space.  Both the mean and oscillatory
 pieces come from the actual source inverses. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -175,6 +175,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized pressure, given by `fieldSum (N+1) κ (assembledPressure N (initializedProfiles M
 D τ hτ hτT B δ hδ ξ hs α))`. -/
+@[expose]
 def initializedPressure (N : ℕ) (κ : ℝ) : ScalarField :=
   fieldSum (N+1) κ (assembledPressure N (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
@@ -191,6 +192,7 @@ def initializedPressureWitness (N : ℕ) (κ : ℝ) :
 
 /-- The actual pressure-gradient input Pa for the normalized coordinate
 equation. The factor k² is the same as in the literal residual identity. -/
+@[expose]
 def initializedCoordinatePressureField (N : ℕ) (k : ℝ) (hk : k ≠ 0) :
     Field period D.T (coordinatePressure D k
       (initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹)) :=
@@ -210,7 +212,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -244,25 +246,25 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M
 D τ hτ hτT B δ hδ ξ hs α))`. -/
-def initializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def initializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
 /-- Initialized velocity field as an element of `Field period D.T (initializedVelocity M D τ hτ
 hτT B δ hδ ξ hs α N κ)`. -/
-def initializedVelocityField (N : ℕ) (κ : ℝ) :
+@[expose] def initializedVelocityField (N : ℕ) (κ : ℝ) :
     Field period D.T (initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityField M.T_pos
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
         κ).changeTime hTime
 
 /-- Initialized velocity derivative, constructed using `fieldSum`. -/
-def initializedVelocityDerivative (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def initializedVelocityDerivative (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (ProfileRegularity.velocityTimeCoefficients (T := M.T) (N := N)
     (a := initializedProfiles M D τ hτ hτT B δ hδ ξ hs α))
 
 /-- Initialized velocity derivative field as an element of `Field period D.T
 (initializedVelocityDerivative M D τ hτ hτT B δ hδ ξ hs α N κ)`. -/
-def initializedVelocityDerivativeField (N : ℕ) (κ : ℝ) :
+@[expose] def initializedVelocityDerivativeField (N : ℕ) (κ : ℝ) :
     Field period D.T (initializedVelocityDerivative M D τ hτ hτT B δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityDerivativeField M.T_pos
     (fun i (_ : i ≤ N) => initializedProfileWitness M D hTime τ hτ hτT B δ hδ ξ hs α i)
@@ -326,6 +328,7 @@ theorem initializedCorrectionData_eq_coordinate (Cagree : SourceCoefficientAgree
 
 /-- The actual finite pressure and every-order residual identity, with no
 assumed pressure field, approximation derivative or residual cancellation. -/
+@[expose]
 def initializedApproximationResidual (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     ApproximationResidual period D.T_pos

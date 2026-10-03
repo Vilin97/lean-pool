@@ -20,7 +20,7 @@ import Mathlib.Tactic.NormNum.Pow
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof of `Γ`,
 proven in `prover_win_builds_proof`, all other definitions and proofs in this file are helpers. -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -125,12 +125,13 @@ lemma rewind_history_in_cone {Γ} (g : coalgebraGame.Pos)
   simp [rewindHistory]
 
 /-- This is the type of the coalgebra we will use to build the proof of `Γ`. -/
-def proof_type (Γ : Sequent) (strat : Strategy coalgebraGame Prover) :=
+@[expose] def proof_type (Γ : Sequent) (strat : Strategy coalgebraGame Prover) :=
  {g // inMyCone strat (startPos Γ) g ∧ coalgebraGame.turn g = Builder}
 
 attribute [local implicit_reducible] proof_type
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
+@[expose]
 def builderRuleApp (g : coalgebraGame.Pos) (h : coalgebraGame.turn g = Builder) : RuleApp :=
   match g with
   | ⟨Sum.inr R, _, _⟩ => R
@@ -498,10 +499,12 @@ lemma rewind_history_correspondence (Γ g) (strat : Strategy coalgebraGame Prove
   exact rewind_history_correspondence_aux Γ info Γs Rs strat n h2 h3 h4 h6 in_cone
 
 /-- Defines the premise when we have a repeat. -/
-def repNext (Γ : Sequent) {Δ : Sequent} {strat : Strategy coalgebraGame Prover}
+@[expose] def repNext (Γ : Sequent) {Δ : Sequent} {strat : Strategy coalgebraGame Prover}
   (g : proof_type Γ strat) (rep : Δ ∈ g.1.2.1) : (proof_type Γ strat) :=
   ⟨repPos g rep,
-   rewind_history_in_cone g.1 ⟨(2 * (Fin.find _ (List.mem_iff_get.1 rep)).1), _⟩ strat g.2.1,
+    by
+      exact rewind_history_in_cone g.1
+        ⟨(2 * (Fin.find _ (List.mem_iff_get.1 rep)).1), _⟩ strat g.2.1,
     by
       have hbound :
           2 * (Fin.find _ (List.mem_iff_get.1 rep)).1 <
@@ -664,7 +667,7 @@ theorem prover_win_builds_proof {Γ : Sequent} (strat : Strategy coalgebraGame P
           case pos rep =>
             simp only [rep, ↓reduceDIte, List.cons.injEq, and_true, exists_eq_left']
             simp only [repNext]
-            exact rep_next_cor Γ
+            exact rep_next_cor (Δ := Δ \ {φ1 v φ2} ∪ {φ1, φ2}) Γ
               ⟨⟨Sum.inr (RuleApp.or Δ φ1 φ2 φ_in), Γs, Rs⟩, in_cone, b_move⟩
               (by simp only [rep])
           case neg nrep =>
@@ -680,7 +683,7 @@ theorem prover_win_builds_proof {Γ : Sequent} (strat : Strategy coalgebraGame P
           case pos rep =>
             simp only [rep, ↓reduceDIte, List.cons.injEq, and_true, exists_eq_left']
             simp only [repNext]
-            exact rep_next_cor Γ
+            exact rep_next_cor (Δ := (Δ \ {□φ1}).D ∪ {φ1}) Γ
               ⟨⟨Sum.inr (RuleApp.box Δ φ1 φ_in), Γs, Rs⟩, in_cone, b_move⟩
               (by simp only [rep])
           case neg nrep =>

@@ -40,7 +40,7 @@ map `σ ↦ [permFragment σ]` is a genuine `MonoidHom` from
 `Perm (Fin n)` to `End (SkeinObj.mk n)` by `permFragmentCompose`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -52,6 +52,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 
 /-- The endomorphism ℂ-algebra of the `n`-strand object of the skein
 category.  Definitionally `HomSpace f.val (n + n)`. -/
+@[expose]
 noncomputable def skeinEnd (n : ℕ) : Type 1 :=
   End (SkeinObj.mk (f := f) n)
 
@@ -75,6 +76,7 @@ noncomputable instance skeinEndModule (n : ℕ) : Module ℂ (skeinEnd f n) :=
 /-! ### The permutation representation -/
 
 /-- The class of a permutation fragment in the endomorphism algebra. -/
+@[expose]
 noncomputable def permClass (n : ℕ) (σ : Equiv.Perm (Fin n)) :
     skeinEnd f n :=
   HomSpace.ofFragment f.val (permFragment σ)
@@ -85,6 +87,7 @@ identity.  Multiplication: `End.mul_def` reverses composition
 order, and `permFragmentCompose τ σ` gives
 `(permFragment τ).compose (permFragment σ) ≃ permFragment (σ * τ)`,
 so `[P_σ] * [P_τ] = [P_τ] ≫ [P_σ] = [compose P_τ P_σ] = [P_{σ*τ}]`. -/
+@[expose]
 noncomputable def permToEnd (n : ℕ) :
     Equiv.Perm (Fin n) →* skeinEnd f n where
   toFun σ := permClass f n σ
@@ -281,6 +284,7 @@ the tensor extension, and the dimension bound from the Hom-space
 rank bound.  The growth constant is `R ^ 2` because the tower's
 bound is `A ^ n` while the Hom-space bound is `R ^ (2n)`; its square
 root, which is what the threshold `2e√A` reads, is `R`. -/
+@[expose]
 noncomputable def skeinPermTower :
     PermTower (skeinEnd f) ((R : ℝ) ^ 2) where
   rep := skeinRep f

@@ -17,7 +17,7 @@ explicit hypothesis.  This is the period-separation condition missing from
 the printed proof of Corollary 4.31.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -25,6 +25,7 @@ open Utilities
 
 /-- Translate the standard pair embedding into a natural interval beginning
 at `lo`. -/
+@[expose]
 noncomputable def shiftedEndpointPairEmbedding (lo length : ℕ) :
     Sym2 (Fin length) → ℤ × ℤ := fun x =>
   let p := endpointPairEmbedding length x

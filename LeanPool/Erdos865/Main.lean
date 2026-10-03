@@ -30,7 +30,7 @@ size forcing such a triple. This file assembles the proof that
   `8|A| = 5N + 16`, so the constant `5/8` is optimal.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

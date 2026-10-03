@@ -22,7 +22,7 @@ integral form supplied by Hölder's inequality, which is convenient when
 passing a distributional identity to the limit.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

@@ -21,7 +21,7 @@ actual value of the continuous patched homotopy; this follows from endpoint iden
 prime equivariance, and the refined-vertex interpolation theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

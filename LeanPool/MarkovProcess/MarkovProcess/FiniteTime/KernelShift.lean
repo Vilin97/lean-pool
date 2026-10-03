@@ -16,7 +16,7 @@ This file proves the finite-dimensional translation identity for a conservative 
 semigroup. It is ordinary kernel infrastructure and makes no path-space or process-existence claim.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ProbabilityTheory

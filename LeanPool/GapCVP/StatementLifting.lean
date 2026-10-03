@@ -9,7 +9,7 @@ public import Mathlib.Computability.TuringMachine.StackTuringMachine
 
 /-! # Transporting stack-machine statements into a larger machine -/
 
-@[expose] public section
+public section
 
 namespace GapCVP
 

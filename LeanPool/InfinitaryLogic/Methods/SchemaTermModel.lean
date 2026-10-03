@@ -30,7 +30,7 @@ sequence `schemaSeq` (the classes of the `d`-constants). No `iSup`, `all`, or tr
 that is checkpoint 5b.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -40,11 +40,13 @@ variable {s₀ : LocalStage} {M : Type} [(localColim s₀).Structure M] [LinearO
   [WellFoundedLT M] (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
 
 /-- The canonical finite support of an equality between two closed schema terms. -/
+@[expose]
 def schemaSupport (t u : (localColim s₀)[[ℕ]].Term Empty) : Finset ℕ :=
   locJSupport (localColim s₀) ℕ t ∪ locJSupport (localColim s₀) ℕ u
 
 /-- The lifted `templateSentence` of the de-substituted equality atom `locDeEqAtom` at the
 canonical support — the schema-universe sentence that encodes "`t = u`". -/
+@[expose]
 def schemaEqSentence (t u : (localColim s₀)[[ℕ]].Term Empty) :
     ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω :=
   (Lomega1omegaTemplate.templateSentence
@@ -65,6 +67,7 @@ private theorem schemaEqSentence_mem_universe (t u : (localColim s₀)[[ℕ]].Te
 
 /-- **Canonical-support schema equality** on closed `(localColim s₀)[[ℕ]]` terms: `t ≈ u` iff the
 completed theory contains the encoded equality sentence. -/
+@[expose]
 def SchemaTermEq (t u : (localColim s₀)[[ℕ]].Term Empty) : Prop :=
   schemaEqSentence t u ∈ schemaCompletionTheory (schemaEnumeration s₀) hM
 
@@ -260,6 +263,7 @@ theorem locJSupport_subset_schemaRelSupport {l : ℕ}
 
 /-- The lifted `templateSentence` of the de-substituted relation atom `locDeRelAtom` at the
 canonical support — the schema-universe sentence that encodes "`R ts`". -/
+@[expose]
 def schemaRelSentence {l : ℕ} (R : (localColim s₀).Relations l)
     (ts : Fin l → (localColim s₀)[[ℕ]].Term Empty) :
     ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω :=
@@ -296,6 +300,7 @@ theorem realize_schemaRelSentence_iff (σ h : ℕ → M) {l : ℕ} (R : (localCo
   rw [Term.realize_relabel, Sum.elim_comp_inr, locDeTermFin_realize_constInterp_nat]
 
 /-- **Canonical-support schema relation membership** on tuples of closed schema terms. -/
+@[expose]
 def SchemaTermRel {l : ℕ} (R : (localColim s₀).Relations l)
     (ts : Fin l → (localColim s₀)[[ℕ]].Term Empty) : Prop :=
   schemaRelSentence R ts ∈ schemaCompletionTheory (schemaEnumeration s₀) hM
@@ -341,6 +346,7 @@ private theorem schemaTermRel_congr {l : ℕ} (R : (localColim s₀).Relations l
 /-! ### The quotient term model -/
 
 /-- The setoid on closed schema terms induced by the completed theory. -/
+@[expose]
 def schemaTermSetoid : Setoid ((localColim s₀)[[ℕ]].Term Empty) where
   r := SchemaTermEq hM
   iseqv := by exact ⟨schemaTermEq_refl hM, schemaTermEq_symm hM, schemaTermEq_trans hM⟩
@@ -418,6 +424,7 @@ theorem schemaTerm_relMap_mk_iff {l : ℕ} (R : (localColim s₀).Relations l)
 /-- **The canonical schema sequence** in the term model: the classes of the sequence constants
 `d₀, d₁, …`. This is the sequence the witnessed template (`TailTemplateOmegaWitnessed`) will be
 established for. -/
+@[expose]
 noncomputable def schemaSeq (n : ℕ) : SchemaTermCarrier (s₀ := s₀) (M := M) hM :=
   SchemaTermCarrier.mk hM (henkinConst (L := localColim s₀) n)
 
@@ -436,7 +443,7 @@ interpretation pair, contradicting the equivalence. -/
 /-- The lifted `templateSentence` of the general de-substituted formula `locDeForm` at the
 canonical support — the schema-universe sentence that encodes "`φ` holds on the closed terms
 `ts`". `schemaEqSentence`/`schemaRelSentence` are the atomic special cases of this shape. -/
-def schemaFormulaSentence {n : ℕ} (φ : (localColim s₀).BoundedFormulaω Empty n)
+@[expose] def schemaFormulaSentence {n : ℕ} (φ : (localColim s₀).BoundedFormulaω Empty n)
     (ts : Fin n → (localColim s₀)[[ℕ]].Term Empty) :
     ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω :=
   (Lomega1omegaTemplate.templateSentence

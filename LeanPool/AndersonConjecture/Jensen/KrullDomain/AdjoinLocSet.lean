@@ -21,7 +21,7 @@ local domain T and their intersection, used in the Krull domain
 construction of Anderson--Jensen.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,7 +34,7 @@ section IntersectionDefs
 /-- The set A = R[x, y⁻¹] inside T: elements t such that t·yⁿ = f(x)
 for some f ∈ R[X] and n ∈ ℕ. This is the image of the localization
 of R[x] at the powers of y, embedded in T via evaluation. -/
-def adjoinLocSetY (R : NSubring T) (x : T) (y : R.carrier) : Set T :=
+@[expose] def adjoinLocSetY (R : NSubring T) (x : T) (y : R.carrier) : Set T :=
   {t : T | ∃ (f : Polynomial R.carrier) (n : ℕ), t * (↑y : T) ^ n = aeval x f}
 
 /-- R ⊆ R[x, y⁻¹]. -/
@@ -48,7 +48,7 @@ theorem x_mem_adjoinLocSetY (R : NSubring T) (x : T) (y : R.carrier) :
   ⟨X, 0, by simp⟩
 
 /-- The intersection Rbar = A₁ ∩ A₂ as a set in T. -/
-def intersectionSet (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier) : Set T :=
+@[expose] def intersectionSet (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier) : Set T :=
   adjoinLocSetY R x₁ y₂ ∩ adjoinLocSetY R x₂ y₁
 
 /-- R ⊆ Rbar. -/

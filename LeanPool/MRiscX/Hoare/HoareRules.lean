@@ -30,7 +30,7 @@ These statements must be valid in order for the conditions for applying the assu
 TODO: prove of S_LOOP
 -/
 
-@[expose] public section
+public section
 
 /--
 Allows to weaken the Hoare triple by removing a set

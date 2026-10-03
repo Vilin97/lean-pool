@@ -25,7 +25,7 @@ Theorem A and the theorem labeled `thm:resL`, which describe the special case of
 $S = \{n\}$ a singleton.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -142,7 +142,7 @@ private lemma sigma_involutive {S : Set ℤ} (hS : NoConsecutive S) :
   -- Proof written by GPT 5.5.
   apply AspPerm.ext.mpr
   funext n
-  change Function.invFun (sigma S hS).func n = sigma S hS n
+  rw [AspPerm.inv_func]
   apply (sigma S hS).injective
   rw [Function.rightInverse_invFun (sigma S hS).surjective n]
   exact Eq.symm <| sigma_involutive hS n

@@ -20,7 +20,7 @@ import LeanPool.ConnesRigidity.Porting.CoreTransfer
 The property t transfer component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -33,7 +33,7 @@ namespace CountableDiscreteGroup
 /--
 The `quotient` construction used in the Connes rigidity formalization.
 -/
-noncomputable def quotient
+@[expose] noncomputable def quotient
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G) (hN : N.Normal) :
     CountableDiscreteGroup.{u} := by
   let normalInstance : N.Normal := hN

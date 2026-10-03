@@ -25,7 +25,7 @@ namespace carries their machinery, and the `Exhaustion` namespace the graph theo
 rest of the library.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -134,6 +134,7 @@ theorem sum_pi_prod_indep {ι : Type*} [Fintype ι] [DecidableEq ι] {α : ι �
 /-! ## The edge map of an induced embedding -/
 
 /-- The edge map induced by an induced embedding. -/
+@[expose]
 def edgeMap (G H : PairGraph) (φ : H.V → G.V)
     (hind : ∀ u v : H.V, H.G.Adj u v ↔ G.G.Adj (φ u) (φ v)) : H.Edge → G.Edge := fun e =>
   ⟨Sym2.map φ e.1, by
@@ -245,6 +246,7 @@ theorem restrictModel_valid (G H : PairGraph) (φ : H.V → G.V) (hφ : Function
 /-! ## Range equivalences and counting -/
 
 /-- An injection is an equivalence onto its image, described as a subtype. -/
+@[expose]
 noncomputable def imgEquiv {A B : Type*} (F : A → B) (hF : Function.Injective F) :
     A ≃ {b : B // ∃ a, F a = b} where
   toFun a := ⟨F a, a, rfl⟩
@@ -778,6 +780,7 @@ theorem transport_diag (G H : PairGraph) (φ : H.V → G.V) (hφ : Function.Inje
 /-! ## Symmetry -/
 
 /-- The action of a per-source permutation of copy indices, as an equivalence. -/
+@[expose]
 def gPermEquiv {Γ : PairGraph} {t : ℕ} (π : Γ.Edge → Equiv.Perm (Fin t)) :
     GObs Γ t ≃ GObs Γ t :=
   Equiv.sigmaCongrRight (fun _ => Equiv.piCongrRight (fun e => π e.1))

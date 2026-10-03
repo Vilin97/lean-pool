@@ -23,7 +23,7 @@ has squared norm `p·q·n`, and Laplacian quadratic form `n²·cut`, so
 and unbalanced near-regular graphs where a balanced cut is unavailable.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

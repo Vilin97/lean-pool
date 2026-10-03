@@ -12,7 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 /-! Odd prescribed velocity gives an odd actual Picard flow and inverse.
 The symmetry is proved by uniqueness of the genuine ODE solution. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

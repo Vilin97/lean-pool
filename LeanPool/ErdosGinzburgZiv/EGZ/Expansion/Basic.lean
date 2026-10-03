@@ -18,7 +18,7 @@ weights retain these multiplicities when several positions have the same
 vector.  Affine changes of coordinates preserve zero sums of length `p`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -26,7 +26,7 @@ namespace EGZ
 namespace Expansion
 
 /-- Push a finite multiplicity function through an arbitrary map. -/
-noncomputable def pushWeight {α β : Type*} [Fintype α]
+@[expose] noncomputable def pushWeight {α β : Type*} [Fintype α]
     (f : α → β) (w : α → ℕ) (b : β) : ℕ := by
   classical
   exact ∑ a, if f a = b then w a else 0
@@ -119,12 +119,14 @@ theorem hasZeroSumMultiplicity_pushWeight {p m n : ℕ} [NeZero p]
     exact affine_sum_eq_zero A u hm hz
 
 /-- Two points in one fibre of `φ` are distinguished by `ξ`. -/
+@[expose]
 def NonconstantOnFibers {p n r : ℕ}
     (φ : FpCoord p n → FpCoord p r)
     (ξ : FpCoord p n →ᵃ[ZMod p] ZMod p) : Prop :=
   ∃ v u, φ v = φ u ∧ ξ v ≠ ξ u
 
 /-- The thickness assumption of the relative expansion theorem. -/
+@[expose]
 def IsThickRelative {p n r : ℕ} [NeZero p]
     (w : FpCoord p n → ℕ) (φ : FpCoord p n → FpCoord p r)
     (T : ℕ) (δ : ℝ) : Prop :=

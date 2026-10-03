@@ -18,7 +18,7 @@ fibre.  Relabelling along the sort turns the multi-star into the
 block-assigned form, ready for the block factorization.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -75,6 +75,7 @@ theorem degList_card_sigma :
 
 /-- The sort map: a slot goes to its vertex block at its
 enumerated offset within the fibre. -/
+@[expose]
 noncomputable def sortFun (i : Fin n) :
     Σ w : Fin (degList assign).length,
       Fin ((degList assign).get w) :=
@@ -112,6 +113,7 @@ theorem sortFun_bijective : Function.Bijective (sortFun assign) := by
   exact ⟨hinj, by rw [Fintype.card_fin, degList_card_sigma]⟩
 
 /-- **The sort equivalence** onto the block index space. -/
+@[expose]
 noncomputable def sortSigma :
     Fin n ≃ Σ w : Fin (degList assign).length,
       Fin ((degList assign).get w) :=

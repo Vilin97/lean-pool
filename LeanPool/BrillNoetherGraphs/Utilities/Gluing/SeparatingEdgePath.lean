@@ -21,7 +21,7 @@ needed to show that a script normalized across every bridge is constant on
 the degree-one divisor classes.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

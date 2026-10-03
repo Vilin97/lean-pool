@@ -24,7 +24,7 @@ the free-module functor is then full and faithful on the mixed
 objects, and idempotents split with free image.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

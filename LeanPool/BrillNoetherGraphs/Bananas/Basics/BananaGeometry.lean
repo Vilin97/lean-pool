@@ -19,7 +19,7 @@ their presentation as positive subdivisions of a two-vertex parallel-edge
 core.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

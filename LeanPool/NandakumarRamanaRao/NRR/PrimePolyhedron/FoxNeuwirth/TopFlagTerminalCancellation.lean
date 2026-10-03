@@ -21,7 +21,7 @@ The proof is deliberately separated from the internal rank-two cancellation.  No
 of rank-two intervals is used here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -117,6 +117,7 @@ theorem maximal_last_dualDimension
   · simpa using Simplex.index_le_dualDimension s (Fin.last (p - 1))
 
 /-- The terminal deletion index in the arithmetic presentation used by `deletionCoefficient`. -/
+@[expose]
 def terminalIndex (hp : Nat.Prime p) : Fin ((p - 2) + 2) :=
   ⟨p - 1, by
     have := hp.two_le
@@ -135,6 +136,7 @@ theorem terminalIndex_eq_last (hp : Nat.Prime p) :
   omega
 
 /-- Maximal flags whose terminal face is a fixed codimension-one flag. -/
+@[expose]
 def TerminalSource (hp : Nat.Prime p) (target : Simplex p (p - 2)) :=
   {source : Simplex p ((p - 2) + 1) //
     source.restrict (FaceMap.delete (terminalIndex hp)) = target}

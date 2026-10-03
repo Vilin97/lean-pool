@@ -50,7 +50,7 @@ The localization needed for `fullPerm_repair` comes from
 assumption is discharged by well-ordering the label type.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

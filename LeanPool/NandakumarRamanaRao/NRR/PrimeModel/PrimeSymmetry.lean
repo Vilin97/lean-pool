@@ -15,7 +15,7 @@ it is the alternating group. The prime configuration model uses this constructio
 cardinality.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -25,6 +25,7 @@ variable {p : ℕ}
 
 /-- The permutation subgroup used for prime symmetry: all permutations for two labels and even
 permutations otherwise. -/
+@[expose]
 def primeSymmetrySubgroup (p : ℕ) :
     Subgroup (Equiv.Perm (Fin p)) := by
   classical
@@ -34,6 +35,7 @@ def primeSymmetrySubgroup (p : ℕ) :
 abbrev PrimeSymmetry (p : ℕ) := primeSymmetrySubgroup p
 
 /-- Faithful inclusion of the selected subgroup into all label permutations. -/
+@[expose]
 def PrimeSymmetry.toPerm (p : ℕ) :
     PrimeSymmetry p →* Equiv.Perm (Fin p) :=
   (primeSymmetrySubgroup p).subtype

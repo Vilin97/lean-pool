@@ -16,7 +16,7 @@ on the ordinary infinite-dimensional solenoidal Hilbert space. The actual mean
 constraint supplies the range property needed to reconstruct coordinates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (FInv F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
 
 /-- A concrete positive Gram lower-bound constant from the actual inverse path. -/
-def meanFrameCoercivity : ℝ := ((‖FInv‖+1)^2)⁻¹
+@[expose] def meanFrameCoercivity : ℝ := ((‖FInv‖+1)^2)⁻¹
 
 theorem meanFrameCoercivity_pos : 0 < meanFrameCoercivity T FInv := by
   unfold meanFrameCoercivity
@@ -64,7 +64,8 @@ theorem meanPrimitive_in_frame_range
     (u : meanDerivatives T hT FInv) (t : Icc (0 : ℝ) T) :
     ∃ z : solenoidalSpace, solenoidalFrame T F t z = realPrimitive T (u : TimeLp T L2) t := by
   have hz : FInv t (realPrimitive T (u : TimeLp T L2) t) ∈ solenoidalSpace := by
-    simpa only [terminalPrimitive_apply] using u.property t
+    simpa only [terminalPrimitive_apply] using
+      ((mem_meanDerivatives T hT FInv (u : TimeLp T L2)).mp u.property t)
   refine ⟨⟨FInv t (realPrimitive T (u : TimeLp T L2) t), hz⟩, ?_⟩
   exact hRight t _
 

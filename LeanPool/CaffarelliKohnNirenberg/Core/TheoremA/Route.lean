@@ -36,7 +36,7 @@ here: it additionally requires the causal localization and source estimates
 of Step 3, through the top time face.
 -/
 
-@[expose] public section
+public section
 
 section
 

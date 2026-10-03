@@ -11,7 +11,7 @@ public import Mathlib.RingTheory.Polynomial.Content
 Adapted from Li2Unified/Modular/Base/DetCongruence.lean and PrimitiveReduction.lean
 (li2-light-certs-2026-09-29/repo-simplify), restated for `Zeta32.Arith.Local.VG/GV`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

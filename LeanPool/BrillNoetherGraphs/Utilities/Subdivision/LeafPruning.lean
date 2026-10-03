@@ -19,7 +19,7 @@ the corresponding explicit leaf extension.  The rank-one lifting theorem is
 then an immediate composition of the two small certificate interfaces.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 

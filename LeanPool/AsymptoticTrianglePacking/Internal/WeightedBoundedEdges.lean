@@ -52,7 +52,7 @@ public import Mathlib.Tactic.ContinuousFunctionalCalculus
 
 /-! # Fractional rounding with bounded incidence discrepancy -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -424,7 +424,7 @@ end
 
 /-! # Simultaneous fractional rounding of degrees and codegrees -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -631,7 +631,7 @@ near-regular hypotheses of `nearRegularNibbleTheorem`. These definitions retain 
 finite-set model of the frozen proof. The rounding theorem itself is not asserted here.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -689,7 +689,7 @@ end
 
 /-! # Weighted fractional-to-integral nibble bridge -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph LeanPool.AsymptoticTrianglePacking.Internal
 
@@ -889,7 +889,7 @@ end
 
 /-! # Three-uniform weighted rounding with total slack -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -900,7 +900,7 @@ namespace Slack
 variable {X : Type} [DecidableEq X]
 
 /-- The `w`-load of a vertex: the total weight of the edges through it. -/
-def wLoad (K : Finset (Finset X)) (w : Finset X → ℝ) (v : X) : ℝ :=
+@[expose] def wLoad (K : Finset (Finset X)) (w : Finset X → ℝ) (v : X) : ℝ :=
   ∑ T ∈ K.filter (fun T => v ∈ T), w T
 
 /-- The padded vertex type: the real vertices together with `2m` dummies, `m` on each side. -/
@@ -1448,7 +1448,7 @@ end
 
 /-! # Uniform weighted rounding with total slack -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 
@@ -2075,7 +2075,7 @@ end
 
 /-! # Weighted rounding for nonuniform hypergraphs with bounded edge size -/
 
-@[expose] public section
+public section
 
 open Finset Hypergraph
 

@@ -19,7 +19,7 @@ maximal space of selected directions. Retained points also have bounded
 integer coordinates in the selected directions.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -30,7 +30,7 @@ section Restriction
 variable {α I : Type*} [Fintype α] [Fintype I]
 
 /-- Delete all mass outside a set. -/
-noncomputable def restrictWeight (w : α → ℕ) (S : Set α) : α → ℕ := by
+@[expose] noncomputable def restrictWeight (w : α → ℕ) (S : Set α) : α → ℕ := by
   classical
   exact fun v ↦ if v ∈ S then w v else 0
 
@@ -123,6 +123,7 @@ theorem IsThinAlong.compl_mass_le {p d : ℕ} [NeZero p]
   linarith
 
 /-- The intersection of the first `k` stage-indexed slabs. -/
+@[expose]
 def slabIntersection {p d : ℕ} (k : ℕ)
     (ξ : ℕ → FpCoord p d →ᵃ[ZMod p] ZMod p) (t : ℕ → ℕ) : Set (FpCoord p d) :=
   {v | ∀ i : Fin k, v ∈ slab (ξ i) (t (i + 1))}
@@ -212,7 +213,7 @@ theorem HasBoundedRepresentative.valMinAbs_natAbs_le {p K : ℕ} [NeZero p]
   rwa [hval]
 
 /-- Integer coordinates supplied by the selected affine functionals. -/
-def slabCoordinates {p d : ℕ} (k : ℕ)
+@[expose] def slabCoordinates {p d : ℕ} (k : ℕ)
     (ξ : ℕ → FpCoord p d →ᵃ[ZMod p] ZMod p) (v : FpCoord p d) : IntCoord k :=
   fun i ↦ (ξ i v).valMinAbs
 

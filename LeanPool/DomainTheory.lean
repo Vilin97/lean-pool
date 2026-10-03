@@ -166,4 +166,4 @@ Tags: domain-theory, denotational-semantics, information-systems
 MSC: 03B70, 06B35, 68Q55
 -/
 
-@[expose] public section
+public section

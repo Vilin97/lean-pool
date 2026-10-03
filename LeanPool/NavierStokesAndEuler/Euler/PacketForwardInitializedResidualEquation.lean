@@ -23,7 +23,7 @@ section
 /-! The actual direct-forward source packet has a lifted pressure gradient.
 Every component is constructed from its mean or oscillatory inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,7 +133,7 @@ section
 
 /-! The finite zero-history pressure and its actual lifted gradient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,6 +150,7 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized pressure, given by `fieldSum (N+1) κ (assembledPressure N
 (forwardInitializedProfiles M D δ hδ ξ hs α))`. -/
+@[expose]
 def forwardInitializedPressure (N : ℕ) (κ : ℝ) : ScalarField :=
   fieldSum (N+1) κ (assembledPressure N (forwardInitializedProfiles M D δ hδ ξ hs α))
 
@@ -162,6 +163,7 @@ def forwardInitializedPressureWitness (N : ℕ) (κ : ℝ) :
 
 /-- Forward initialized coordinate pressure field, given by `pressureField D k hk
 ((forwardInitializedPressureWitness M D hTime δ hδ ξ hs α N k⁻¹).changeTime hTime)`. -/
+@[expose]
 def forwardInitializedCoordinatePressureField (N : ℕ) (k : ℝ) (hk : k ≠ 0) :
     Field period D.T (coordinatePressure D k
       (forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹)) :=
@@ -181,7 +183,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -214,11 +216,12 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Forward initialized velocity, given by `fieldSum (N+1) κ (assembledVelocity N
 (forwardInitializedProfiles M D δ hδ ξ hs α))`. -/
-def forwardInitializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
+@[expose] def forwardInitializedVelocity (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (assembledVelocity N (forwardInitializedProfiles M D δ hδ ξ hs α))
 
 /-- Forward initialized velocity field as an element of `Field period D.T
 (forwardInitializedVelocity M D δ hδ ξ hs α N κ)`. -/
+@[expose]
 def forwardInitializedVelocityField (N : ℕ) (κ : ℝ) :
     Field period D.T (forwardInitializedVelocity M D δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityField M.T_pos
@@ -226,12 +229,14 @@ def forwardInitializedVelocityField (N : ℕ) (κ : ℝ) :
         hTime
 
 /-- Forward initialized velocity derivative, constructed using `fieldSum`. -/
+@[expose]
 def forwardInitializedVelocityDerivative (N : ℕ) (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (ProfileRegularity.velocityTimeCoefficients (T := M.T) (N := N)
     (a := forwardInitializedProfiles M D δ hδ ξ hs α))
 
 /-- Forward initialized velocity derivative field as an element of `Field period D.T
 (forwardInitializedVelocityDerivative M D δ hδ ξ hs α N κ)`. -/
+@[expose]
 def forwardInitializedVelocityDerivativeField (N : ℕ) (κ : ℝ) :
     Field period D.T (forwardInitializedVelocityDerivative M D δ hδ ξ hs α N κ) :=
   (ProfileRegularity.velocityDerivativeField M.T_pos
@@ -296,6 +301,7 @@ theorem forwardInitializedCorrectionData_eq_coordinate (Cagree : SourceCoefficie
 
 /-- The actual finite pressure and every-order residual identity, with no
 assumed pressure field, approximation derivative or residual cancellation. -/
+@[expose]
 def forwardInitializedApproximationResidual (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     ApproximationResidual period D.T_pos

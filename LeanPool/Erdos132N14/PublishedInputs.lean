@@ -24,7 +24,7 @@ paper and returns only a genuine Euclidean distance-scaling similarity to one
 of the three explicit coordinate templates.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -43,14 +43,14 @@ inductive ThirteenPointSixDistanceClassification
 /-- Published planar few-distance input: a set determining at most six
 distances has at most thirteen points. This combines the known maxima through
 five distances with Wei's exact six-distance theorem `g(6) = 13`. -/
-def PublishedAtMostSixDistanceCardinalityBound : Prop :=
+@[expose] def PublishedAtMostSixDistanceCardinalityBound : Prop :=
   ∀ {ι : Type} [Fintype ι] [LinearOrder ι]
     (P : Configuration ι) (S : Finset ι),
     (P.realizedDistances S).card ≤ 6 → S.card ≤ 13
 
 /-- Published Szöllősi--Östergård input: every thirteen-point planar
 six-distance set is similar to one of the three explicit templates. -/
-def SzollosiOstergardThirteenPointSixDistanceClassification : Prop :=
+@[expose] def SzollosiOstergardThirteenPointSixDistanceClassification : Prop :=
   ∀ {ι : Type} [Fintype ι] [LinearOrder ι]
     (P : Configuration ι) (S : Finset ι),
     S.card = 13 → (P.realizedDistances S).card = 6 →

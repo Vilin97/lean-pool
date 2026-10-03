@@ -25,7 +25,7 @@ radius `XR`, the physical factors are `XR` for `M,S` and `XR * sqrt (2*XR)`
 for `I,J`.  These factors cancel from both normalized lags.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -48,7 +48,7 @@ noncomputable abbrev dY := ProfileHistories.radialPartial
 noncomputable abbrev dEta := ProfileHistories.parameterPartial
 
 /-- The whole log-coordinate plane; this is not a radial domain at `X=0`. -/
-noncomputable def logDomain : ProfileHistories.RadialDomain where
+@[expose] noncomputable def logDomain : ProfileHistories.RadialDomain where
   carrier := univ
   isOpen := isOpen_univ
   scale_mem := by intros; trivial
@@ -74,7 +74,7 @@ theorem dEta_smooth {f : Field} (hf : ContDiff ℝ ∞ f) : ContDiff ℝ ∞ (dE
   contDiffOn_univ.mp (ProfileHistories.parameterPartial_smooth logDomain hf.contDiffOn)
 
 /-- A fixed incoming integral plus a finite log-coordinate integral. -/
-noncomputable def history (initial : ℝ → ℝ) (f : Field) (p : Point) : ℝ :=
+@[expose] noncomputable def history (initial : ℝ → ℝ) (f : Field) (p : Point) : ℝ :=
   initial p.2 + ProfileHistories.primitive f p
 
 theorem prefix_smooth {initial : ℝ → ℝ} {f : Field}
@@ -115,7 +115,7 @@ theorem dEta_mul {f g : Field} (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ 
   (dEta_hasDerivAt (hf.mul hg) p).unique ((dEta_hasDerivAt hf p).mul (dEta_hasDerivAt hg p))
 
 /-- X, given by `Real.exp p.1`. -/
-noncomputable def X (p : Point) : ℝ := Real.exp p.1
+@[expose] noncomputable def X (p : Point) : ℝ := Real.exp p.1
 
 theorem X_pos (p : Point) : 0 < X p := Real.exp_pos _
 theorem X_smooth : ContDiff ℝ ∞ X := contDiff_fst.exp
@@ -127,27 +127,28 @@ theorem dEta_X (p : Point) : dEta X p = 0 :=
 variable {d : TailData} {K : ℝ}
 
 /-- E, given by `correctedAngular d w.coefficients`. -/
-noncomputable def E (w : ResetWitness d K) : Field := correctedAngular d w.coefficients
+@[expose] noncomputable def E (w : ResetWitness d K) : Field := correctedAngular d w.coefficients
 /-- U, given by `axial d.core Amp`. -/
-noncomputable def U (d : TailData) (Amp : ℝ → ℝ) : Field := axial d.core Amp
+@[expose] noncomputable def U (d : TailData) (Amp : ℝ → ℝ) : Field := axial d.core Amp
 /-- H, given by `Real.exp (p.1 / 2) * E w p`. -/
-noncomputable def H (w : ResetWitness d K) (p : Point) : ℝ := Real.exp (p.1 / 2) * E w p
+@[expose] noncomputable def H (w : ResetWitness d K) (p : Point) : ℝ := Real.exp (p.1 / 2) * E w p
 
 /-- Mass weight, given by `X p * U d Amp p`. -/
 noncomputable def massWeight (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ := X p * U d Amp p
 /-- Angular weight, given by `X p * H w p`. -/
+@[expose]
 noncomputable def angularWeight (w : ResetWitness d K) (p : Point) : ℝ := X p * H w p
 /-- Transport weight, given by `X p * (U d Amp p * H w p)`. -/
 noncomputable def transportWeight (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   X p * (U d Amp p * H w p)
 /-- Energy density, given by `U d Amp p ^ 2 - E w p ^ 2 / 2`. -/
-noncomputable def energyDensity (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def energyDensity (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   U d Amp p ^ 2 - E w p ^ 2 / 2
 /-- Energy weight, given by `X p * energyDensity w Amp p`. -/
-noncomputable def energyWeight (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def energyWeight (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   X p * energyDensity w Amp p
 /-- Pressure weight, given by `E w p ^ 2 / 2`. -/
-noncomputable def pressureWeight (w : ResetWitness d K) (p : Point) : ℝ := E w p ^ 2 / 2
+@[expose] noncomputable def pressureWeight (w : ResetWitness d K) (p : Point) : ℝ := E w p ^ 2 / 2
 
 /-- Initial M, given by `4 * eta`. -/
 noncomputable def initialM (eta : ℝ) : ℝ := 4 * eta
@@ -156,11 +157,11 @@ noncomputable def initialI (d : TailData) (eta : ℝ) : ℝ := (5 / 8) * d.core.
 /-- Initial J, given by `(5 / 2) * d.core.P * eta * shape eta`. -/
 noncomputable def initialJ (d : TailData) (eta : ℝ) : ℝ := (5 / 2) * d.core.P * eta * shape eta
 /-- Initial S, given by `16 * eta ^ 2 - (5 / 12) * d.core.P ^ 2 * shape eta ^ 2`. -/
-noncomputable def initialS (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def initialS (d : TailData) (eta : ℝ) : ℝ :=
   16 * eta ^ 2 - (5 / 12) * d.core.P ^ 2 * shape eta ^ 2
 /-- Initial pi, given by `SchedulePressure.axisPressure d eta + (5 / 2) * d.core.P ^ 2 * shape
 eta ^ 2`. -/
-noncomputable def initialPi (d : TailData) (eta : ℝ) : ℝ :=
+@[expose] noncomputable def initialPi (d : TailData) (eta : ℝ) : ℝ :=
   SchedulePressure.axisPressure d eta + (5 / 2) * d.core.P ^ 2 * shape eta ^ 2
 
 /-- M, given by `history initialM (massWeight d Amp)`. -/
@@ -171,9 +172,10 @@ noncomputable def I (w : ResetWitness d K) : Field := history (initialI d) (angu
 noncomputable def J (w : ResetWitness d K) (Amp : ℝ → ℝ) : Field := history (initialJ d)
     (transportWeight w Amp)
 /-- S, given by `history (initialS d) (energyWeight w Amp)`. -/
-noncomputable def S (w : ResetWitness d K) (Amp : ℝ → ℝ) : Field := history (initialS d)
+@[expose] noncomputable def S (w : ResetWitness d K) (Amp : ℝ → ℝ) : Field := history (initialS d)
     (energyWeight w Amp)
 /-- Pi, given by `history (initialPi d) (pressureWeight w)`. -/
+@[expose]
 noncomputable def Pi (w : ResetWitness d K) : Field := history (initialPi d) (pressureWeight w)
 
 theorem E_smooth (w : ResetWitness d K) : ContDiff ℝ ∞ (E w) :=
@@ -324,19 +326,20 @@ theorem dEta_Pi_hasDerivAt (w : ResetWitness d K) (p : Point) :
 
 /-- XW, given by `X p - 2 * axialExponent d.h * p.2 * M d Amp p - coordinateFactor p.2 * dEta (M
 d Amp) p`. -/
-noncomputable def XW (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def XW (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   X p - 2 * axialExponent d.h * p.2 * M d Amp p - coordinateFactor p.2 * dEta (M d Amp) p
 /-- W, given by `XW d Amp p / X p`. -/
-noncomputable def W (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ := XW d Amp p / X p
+@[expose] noncomputable def W (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ := XW d Amp p / X p
 /-- Ubar, given by `M d Amp p / X p`. -/
-noncomputable def Ubar (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ := M d Amp p / X p
+@[expose] noncomputable def Ubar (d : TailData) (Amp : ℝ → ℝ) (p : Point) : ℝ := M d Amp p / X p
 
 /-- Angular source as an element of `ℝ`. -/
-noncomputable def angularSource (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def angularSource (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   -W d Amp p * dY (H w) p - d.h * (1 - 2 * p.2 * U d Amp p) * H w p -
     (axialExponent d.h * p.2 + coordinateFactor p.2 * U d Amp p) * dEta (H w) p
 
 /-- Sq, given by `angularSource w Amp p / H w p`. -/
+@[expose]
 noncomputable def Sq (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ := angularSource w Amp p
     / H w p
 
@@ -552,7 +555,7 @@ theorem U_before_pulse (d : TailData) (Amp : ℝ → ℝ) (eta : ℝ) {y : ℝ} 
     U d Amp (y, eta) = dropCoefficient d.core.m y * eta := axial_before_pulse d.core Amp eta hy
 
 theorem M_eq_massMoment (d : TailData) (Amp : ℝ → ℝ) (y eta : ℝ) :
-    M d Amp (y, eta) = massMoment d.core Amp eta y := rfl
+    M d Amp (y, eta) = massMoment d.core Amp eta y := by rfl
 
 theorem M_div_E_before (w : ResetWitness d K) (Amp : ℝ → ℝ) (eta : ℝ)
     {y : ℝ} (hy : y ≤ d.core.endpoint) :
@@ -1029,7 +1032,7 @@ theorem Pi_ideal (w : ResetWitness d K) (eta : ℝ) {y : ℝ} (hy : y ≤ 0) :
   ring
 
 /-- Shape rate, given by `2 * eta / (1 + eta ^ 2)`. -/
-noncomputable def shapeRate (eta : ℝ) : ℝ := 2 * eta / (1 + eta ^ 2)
+@[expose] noncomputable def shapeRate (eta : ℝ) : ℝ := 2 * eta / (1 + eta ^ 2)
 
 theorem dEta_E_ideal (w : ResetWitness d K) (eta : ℝ) {y : ℝ} (hy : y ≤ 0) :
     dEta (E w) (y, eta) = -(E w (y, eta) * shapeRate eta) := by
@@ -1251,7 +1254,7 @@ theorem Ns_eq_source_integral (w : ResetWitness d K) {Amp : ℝ → ℝ}
 /-! ## Entrance-radius factors -/
 
 /-- Physical X, given by `XR * X p`. -/
-noncomputable def physicalX (XR : ℝ) (p : Point) : ℝ := XR * X p
+@[expose] noncomputable def physicalX (XR : ℝ) (p : Point) : ℝ := XR * X p
 /-- Physical H, given by `Real.sqrt (2 * XR) * H w p`. -/
 noncomputable def physicalH (XR : ℝ) (w : ResetWitness d K) (p : Point) : ℝ := Real.sqrt (2 * XR) *
     H w p
@@ -1340,10 +1343,10 @@ theorem Ns_dilation (XR : ℝ) (hXR : 0 < XR) (w : ResetWitness d K)
   field_simp [hXR.ne', (X_pos p).ne']
 
 /-- P1, given by `physicalX XR p * Qs w Amp p / (1 - 2 * d.h * p.2 ^ 2)`. -/
-noncomputable def p1 (XR : ℝ) (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def p1 (XR : ℝ) (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   physicalX XR p * Qs w Amp p / (1 - 2 * d.h * p.2 ^ 2)
 /-- P2, given by `physicalX XR p * Ns w Amp p / ((1 - 2 * d.h * p.2 ^ 2) * E w p)`. -/
-noncomputable def p2 (XR : ℝ) (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
+@[expose] noncomputable def p2 (XR : ℝ) (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) : ℝ :=
   physicalX XR p * Ns w Amp p / ((1 - 2 * d.h * p.2 ^ 2) * E w p)
 
 theorem p1_dilation (XR : ℝ) (w : ResetWitness d K) (Amp : ℝ → ℝ) (p : Point) :

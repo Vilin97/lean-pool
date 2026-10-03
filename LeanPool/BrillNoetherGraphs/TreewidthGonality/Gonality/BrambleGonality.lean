@@ -38,7 +38,7 @@ Connectivity of a vertex set is `((underlyingSimpleGraph G).induce (↑B : Set G
 the convention fixed in `TreewidthGonality/Treewidth/TreeDecomposition.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 

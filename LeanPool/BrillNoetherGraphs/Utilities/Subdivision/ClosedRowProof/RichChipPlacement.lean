@@ -28,7 +28,7 @@ adding a tail term and a head term would count a chip there twice.
 anyway, so nothing is lost.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

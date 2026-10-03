@@ -58,7 +58,7 @@ required at the level of axioms; downstream constructions add
 `[CompleteSpace X]` where needed.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -90,30 +90,35 @@ abbrev Family (𝕜 : Type u) [NontriviallyNormedField 𝕜] :=
 variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
 
 /-- (S1) `s` takes non-negative values. -/
+@[expose]
 def Nonneg (s : Family 𝕜) : Prop :=
   ∀ {X Y : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (S : X →L[𝕜] Y) (n : ℕ),
     0 ≤ s S n
 
 /-- (S1) The first value equals the operator norm: `s 0 S = ‖S‖`. -/
+@[expose]
 def NormAtZero (s : Family 𝕜) : Prop :=
   ∀ {X Y : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (S : X →L[𝕜] Y),
     s S 0 = ‖S‖
 
 /-- (S1) The sequence is non-increasing in `n`. -/
+@[expose]
 def Antitone (s : Family 𝕜) : Prop :=
   ∀ {X Y : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (S : X →L[𝕜] Y) (n : ℕ),
     s S (n + 1) ≤ s S n
 
 /-- (S2) Subadditivity: `s n (S + T) ≤ s n S + ‖T‖`. -/
+@[expose]
 def Subadditive (s : Family 𝕜) : Prop :=
   ∀ {X Y : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (S T : X →L[𝕜] Y) (n : ℕ),
     s (S + T) n ≤ s S n + ‖T‖
 
 /-- (S3) Ideal property: `s n (B ∘ S ∘ A) ≤ ‖B‖ * s n S * ‖A‖`. -/
+@[expose]
 def IdealLike (s : Family 𝕜) : Prop :=
   ∀ {W X Y Z : Type u} [NormedAddCommGroup W] [NormedSpace 𝕜 W]
       [NormedAddCommGroup X] [NormedSpace 𝕜 X]
@@ -123,12 +128,14 @@ def IdealLike (s : Family 𝕜) : Prop :=
     s (B.comp (S.comp A)) n ≤ ‖B‖ * s S n * ‖A‖
 
 /-- (S4) Vanishing on operators of rank at most `n`. -/
+@[expose]
 def VanishesOnLowRank (s : Family 𝕜) : Prop :=
   ∀ {X Y : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (S : X →L[𝕜] Y) (n : ℕ),
     S.rank ≤ (n : Cardinal) → s S n = 0
 
 /-- (S5) Normalisation: `s n (id_{ℓ₂^{n+1}}) = 1`. -/
+@[expose]
 def NormalisedAtId (s : Family 𝕜) : Prop :=
   ∀ (n : ℕ), s (ContinuousLinearMap.id 𝕜 (EuclideanSpace 𝕜 (Fin (n + 1)))) n = 1
 
@@ -138,6 +145,7 @@ A strengthening of (S5), which only fixes the value on the specific Hilbert
 space `ℓ₂^{n+1}`. Sequences satisfying (S5') have `s n (id_X) = 1` on *every*
 `X` with finite dimension strictly above `n`; specialising to
 `X = ℓ₂^{n+1}` (where `dim = n + 1 > n`) recovers (S5). -/
+@[expose]
 def StrictlyNormalisedAtId (s : Family 𝕜) : Prop :=
   ∀ {X : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X] (n : ℕ),
       n < Module.finrank 𝕜 X → s (ContinuousLinearMap.id 𝕜 X) n = 1

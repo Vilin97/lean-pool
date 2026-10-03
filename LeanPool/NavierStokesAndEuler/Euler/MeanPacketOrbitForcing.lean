@@ -17,7 +17,7 @@ orbit produce the literal smooth L² slices required by the forcing interface.
 The same construction applies to its actual time derivative and pressure force.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ namespace Forcing
 variable {D : Data} {raw : VectorField}
 
 /-- Actual path-orbit regularity is converted into literal spatial derivative data. -/
-def ofOrbitPath (p : C(Icc (0 : ℝ) D.T, L2))
+@[expose] def ofOrbitPath (p : C(Icc (0 : ℝ) D.T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation D.T a p))
     (heq : ∀ (t : Icc (0 : ℝ) D.T) x θ,
       raw (t,(x,θ)) = representative (p t) (pathTranslation_evaluation_contDiff D.T p hp t) x) :
@@ -51,23 +51,23 @@ def ofOrbitPath (p : C(Icc (0 : ℝ) D.T, L2))
     simpa only [Data.clamp_coe, smoothL2Field_field] using heq t x θ
 
 /-- The output velocity of the genuine source mean solve can be used as the next forcing input. -/
-def vectorForcing (G : Forcing D raw) : Forcing D G.vector :=
+@[expose] def vectorForcing (G : Forcing D raw) : Forcing D G.vector :=
   ofOrbitPath G.velocityPath G.velocityPath_orbit (fun t x θ => by
     simp only [vector, pathRepresentative, Data.clamp_coe])
 
 /-- Its true continuous time derivative has the same literal spatial admissibility. -/
-def vectorDerivativeForcing (G : Forcing D raw) : Forcing D G.vectorDerivative :=
+@[expose] def vectorDerivativeForcing (G : Forcing D raw) : Forcing D G.vectorDerivative :=
   ofOrbitPath G.derivativePath G.derivativePath_orbit (fun t x θ => by
     simp only [vectorDerivative, pathRepresentative, Data.clamp_coe])
 
 /-- Pressure force, defined pointwise by `pathRepresentative D.T G.pressureForcePath
 G.pressureForcePath_orbit (D.clamp z.1) z.2.1`. -/
-def pressureForce (G : Forcing D raw) : VectorField := fun z =>
+@[expose] def pressureForce (G : Forcing D raw) : VectorField := fun z =>
   pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp z.1) z.2.1
 
 /-- The physical pressure gradient, rather than the unneeded scalar pressure value, is spatially L².
 -/
-def pressureForceForcing (G : Forcing D raw) : Forcing D G.pressureForce :=
+@[expose] def pressureForceForcing (G : Forcing D raw) : Forcing D G.pressureForce :=
   ofOrbitPath G.pressureForcePath G.pressureForcePath_orbit (fun t x θ => by
     simp only [pressureForce, pathRepresentative, Data.clamp_coe])
 

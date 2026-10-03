@@ -17,7 +17,7 @@ rational place and its first tangent to the zero place.  No circuit states or
 Boolean functions are enumerated.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -26,7 +26,7 @@ noncomputable section
 
 /-- Images of the eight coordinate linear forms under the identity,
 translation, and reversal substitutions. -/
-def inputPlaceChange : Fin 3 → Fin 8 → LinearForm :=
+@[expose] def inputPlaceChange : Fin 3 → Fin 8 → LinearForm :=
   ![
     ![![1,0,0,0,0,0,0,0], ![0,1,0,0,0,0,0,0],
       ![0,0,1,0,0,0,0,0], ![0,0,0,1,0,0,0,0],
@@ -42,11 +42,11 @@ def inputPlaceChange : Fin 3 → Fin 8 → LinearForm :=
       ![0,0,0,0,0,1,0,0], ![0,0,0,0,1,0,0,0]]]
 
 /-- Apply the input coordinate change moving the chosen rational place to zero. -/
-def normalizePlaceLinear (theta : Fin 3) (ell : LinearForm) : LinearForm :=
+@[expose] def normalizePlaceLinear (theta : Fin 3) (ell : LinearForm) : LinearForm :=
   ∑ i : Fin 8, ell i • inputPlaceChange theta i
 
 /-- Permute rational-place coefficients under the chosen place normalization. -/
-def normalizeRationalCoeff
+@[expose] def normalizeRationalCoeff
     (theta : Fin 3) (alpha : Fin 3 → F₂) : Fin 3 → F₂ :=
   ![![alpha 0, alpha 1, alpha 2],
     ![alpha 1, alpha 0, alpha 2],
@@ -137,6 +137,7 @@ theorem anf_prod_union
       Finset.prod_union_inter
 
 /-- Substitute the normalized linear inputs into a squarefree monomial. -/
+@[expose]
 def placeSubstitutionMonoid (theta : Fin 3) : Monomial 8 →* ANF 8 where
   toFun s := ∏ i ∈ s.vars, linearANF (inputPlaceChange theta i)
   map_one' := by simp
@@ -161,6 +162,7 @@ def anfPlaceNormalize (theta : Fin 3) : ANF 8 →ₐ[F₂] ANF 8 :=
   simp [X]
 
 /-- Convert a coefficient vector to its linear ANF, as a linear map. -/
+@[expose]
 def linearANFMap : LinearForm →ₗ[F₂] ANF 8 where
   toFun := linearANF
   map_add' := linearANF_add

@@ -15,7 +15,7 @@ Side conditions only: `f_0` against the linear, `max` and shifted-`max` kernels 
 interval-integrable, and the outer integral needs a continuous integrand.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

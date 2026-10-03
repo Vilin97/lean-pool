@@ -19,15 +19,17 @@ transvection matrices `E_{ij}(c) = I + c·e_{ij}`.
   of transvections.
 -/
 
-@[expose] public section
+public section
 
 /-- An elementary transvection in `SL_m(ℤ)`: the matrix `I + c·e_{ij}`. -/
+@[expose]
 def slTransvecG {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c : ℤ) :
     Matrix.SpecialLinearGroup (Fin m) ℤ :=
   ⟨Matrix.transvection i j c, Matrix.det_transvection_of_ne i j hij c⟩
 
 /-- A matrix in `SL_m(ℤ)` is a transvection if it equals `slTransvecG i j hij c`
 for some `i ≠ j` and scalar `c`. -/
+@[expose]
 def IsTransvec {m : ℕ} (E : Matrix.SpecialLinearGroup (Fin m) ℤ) : Prop :=
   ∃ (i j : Fin m) (hij : i ≠ j) (c : ℤ), E = slTransvecG i j hij c
 

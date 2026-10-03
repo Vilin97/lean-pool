@@ -15,7 +15,7 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.HomotopyGroup.ChangeBasePt`.
 -/
 
-@[expose] public section
+public section
 -- import Mathlib.CategoryTheory.Category.Pointed
 -- import WhiteheadTheorem.HEP.Retract
 -- import Mathlib.CategoryTheory.LiftingProperties.Adjunction
@@ -350,7 +350,7 @@ end GenLoop
 
 
 /-- Transport an element of `π_ n X (p 0)` along the path `p`. -/
-noncomputable def HomotopyGroup.changeBasePt (n : ℕ) (p : Path x₀ x₁) :
+@[expose] noncomputable def HomotopyGroup.changeBasePt (n : ℕ) (p : Path x₀ x₁) :
     π_ n X x₀ → π_ n X x₁ := by
   apply Quotient.map fun f₀ ↦ (p # f₀)
   intro f₀ g₀ eq₀

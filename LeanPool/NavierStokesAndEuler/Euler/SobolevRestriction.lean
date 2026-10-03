@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevDerivatives
 
 /-! Genuine restrictions between any two finite cylinder Sobolev orders. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -21,13 +21,14 @@ open EulerLiftedGradientSpace EulerPressureSpatialRegularity EulerCylinderSobole
 open scoped Topology
 
 /-- The same derivative word at a larger Sobolev order. -/
-def restrictIndex {p q : ℕ} (h : q ≤ p) (w : SobolevWord q) : SobolevWord p :=
+@[expose] def restrictIndex {p q : ℕ} (h : q ≤ p) (w : SobolevWord q) : SobolevWord p :=
   ⟨⟨w.1.val, Nat.lt_of_lt_of_le w.1.isLt (Nat.succ_le_succ h)⟩, w.2⟩
 
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Restriction is a bounded linear map between the actual complete Sobolev spaces. -/
-def restrictOperator {p q : ℕ} (h : q ≤ p) : SobolevSpace period p →L[ℝ] SobolevSpace period q :=
+@[expose] def restrictOperator {p q : ℕ} (h : q ≤ p) :
+    SobolevSpace period p →L[ℝ] SobolevSpace period q :=
   ((ContinuousLinearMap.pi (fun w : SobolevWord q =>
     ContinuousLinearMap.proj (restrictIndex h w))).comp (arrayOperator period p)).codRestrict
     (sobolevSubspace period q).toSubmodule (by
@@ -38,10 +39,15 @@ def restrictOperator {p q : ℕ} (h : q ≤ p) : SobolevSpace period p →L[ℝ]
 
 @[simp] theorem restrictOperator_apply {p q : ℕ} (h : q ≤ p) (u : SobolevSpace period p) (w :
     SobolevWord q) :
-    (restrictOperator period h u).val w = u.val (restrictIndex h w) := rfl
+    (restrictOperator period h u).val w = u.val (restrictIndex h w) := by rfl
 
 @[simp] theorem value_restrictOperator {p q : ℕ} (h : q ≤ p) (u : SobolevSpace period p) :
-    value period (restrictOperator period h u) = value period u := rfl
+    value period (restrictOperator period h u) = value period u := by rfl
+
+@[simp] theorem word_restrictOperator {p q n : ℕ} (h : q ≤ p) (hn : n ≤ q)
+    (u : SobolevSpace period p) (w : Fin n → Fin 4) :
+    word period (restrictOperator period h u) hn w =
+      word period u (hn.trans h) w := by rfl
 
 theorem restrictOperator_bound {p q : ℕ} (h : q ≤ p) (u : SobolevSpace period p) :
     ‖restrictOperator period h u‖ ≤ ‖u‖ := by
@@ -66,13 +72,13 @@ theorem restrictOperator_bound {p q : ℕ} (h : q ≤ p) (u : SobolevSpace perio
     restrictOperator period h (truncateOperator period p u) = restrictOperator period (by
         omega : q ≤ p+1) u := by
   apply value_injective period
-  rfl
+  simp only [value_restrictOperator, value_truncateOperator]
 
 @[simp] theorem truncate_restrictOperator {p q : ℕ} (h : q + 1 ≤ p) (u : SobolevSpace period p) :
     truncateOperator period q (restrictOperator period h u) = restrictOperator period (by
         omega : q ≤ p) u := by
   apply value_injective period
-  rfl
+  simp only [value_restrictOperator, value_truncateOperator]
 
 /-- Actual restriction and spatial differentiation commute. -/
 theorem restrictOperator_derivative {p q : ℕ} (h : q ≤ p) (i : Fin 4) (u : SobolevSpace period
@@ -80,6 +86,7 @@ theorem restrictOperator_derivative {p q : ℕ} (h : q ≤ p) (i : Fin 4) (u : S
     restrictOperator period h (derivativeOperator period p i u) =
       derivativeOperator period q i (restrictOperator period (Nat.succ_le_succ h) u) := by
   apply value_injective period
+  simp only [value, restrictOperator_apply, derivativeOperator_apply]
   rfl
 
 /-- Restriction commutes with every genuine cylinder translation. -/
@@ -88,6 +95,6 @@ theorem restrictOperator_translation {p q : ℕ} (h : q ≤ p) (a : LiftDomain p
     restrictOperator period h (sobolevTranslation period p a u) =
       sobolevTranslation period q a (restrictOperator period h u) := by
   apply value_injective period
-  rfl
+  simp only [value_restrictOperator, value_sobolevTranslation]
 
 end EulerCylinderSobolevSpace

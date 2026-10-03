@@ -19,7 +19,7 @@ which is the form the trace zeta function is read in, and the
 recurrence itself is supplied by hook vanishing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

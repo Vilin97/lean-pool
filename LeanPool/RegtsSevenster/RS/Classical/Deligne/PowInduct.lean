@@ -21,7 +21,7 @@ transfer and the step is the tensor inheritance transferred along
 the merge.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

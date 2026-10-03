@@ -19,7 +19,7 @@ its radial flux is `X*beta`.  The two residual equations below are derived from
 the constructed natural equations, not assumed as slow-order hypotheses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -96,7 +96,7 @@ noncomputable def naturalFlux (h : ℝ) (U V : InnerProfile) (w : InnerPoint) : 
       CoordinateAlgebra.d w.2 * NaturalAxisBridge.partialEta V w)
 
 /-- Zero sequence, with branches according to `n = 0`. -/
-noncomputable def zeroSequence (f : InnerProfile) (n : ℕ) : InnerProfile :=
+@[expose] noncomputable def zeroSequence (f : InnerProfile) (n : ℕ) : InnerProfile :=
   if n = 0 then f else fun _ => 0
 
 /-- Natural profiles, bundling `phi`, `axial`, `flux`, `pressure`. -/
@@ -276,6 +276,7 @@ noncomputable def initialBand (Λ : ℝ) : Set InnerPoint :=
   Icc (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval
 
 /-- Initial core, given by `Ioo (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval`. -/
+@[expose]
 noncomputable def initialCore (Λ : ℝ) : Set InnerPoint :=
   Ioo (0 : ℝ) (4 / Λ) ×ˢ ReferencePath.parameterInterval
 

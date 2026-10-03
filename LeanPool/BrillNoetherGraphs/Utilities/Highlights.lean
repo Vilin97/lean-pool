@@ -47,7 +47,7 @@ it:
   `Tricycle/`, restated in `Tricycle/Highlights.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Highlights
 

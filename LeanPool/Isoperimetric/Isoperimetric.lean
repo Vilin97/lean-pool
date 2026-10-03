@@ -19,7 +19,7 @@ relating `volume A`, the volume of the unit ball, and the volume of the
 `ε`-thickening of `A`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped Pointwise

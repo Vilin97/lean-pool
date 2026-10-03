@@ -26,7 +26,7 @@ subsingletons is countable. Transport to the original language is `Lomega1omegaS
 (`ModelTheory/InfinitaryTypes.lean`), not re-proved here.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

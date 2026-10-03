@@ -17,7 +17,7 @@ bijection satisfying the paper's closed-ball conclusion while failing to be a
 global isometry.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -39,6 +39,7 @@ instance : CoeSort (RealBanachSpace.{u}) (Type u) :=
   ⟨RealBanachSpace.carrier⟩
 
 /-- Bundle an already-instanced real Banach space. -/
+@[expose]
 def RealBanachSpace.ofType (X : Type u) [NormedAddCommGroup X]
     [NormedSpace ℝ X] [CompleteSpace X] : RealBanachSpace.{u} where
   carrier := X
@@ -55,6 +56,7 @@ structure Claim14Witness where
   isCounterexample : IsCounterexampleAt ((1 : ℝ) / 4) map
 
 /-- The exact formal proposition corresponding to canonical claim 14. -/
+@[expose]
 def Claim14 : Prop := Nonempty (Claim14Witness.{u})
 
 /-- The stronger construction invariant used in the paper is sufficient for

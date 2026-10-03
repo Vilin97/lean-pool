@@ -14,7 +14,7 @@ actual coefficient derivative tree. At each fixed Sobolev order these
 costs are finite polynomials in the coefficient bound and inverse coercivity.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,13 +24,13 @@ namespace EulerCoefficientJetPressureBounds
 open Finset EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerJetProductBounds
 
 /-- Product cost as an element of `ℕ → ℝ | 0 => B | q+1 => B+8*productCost B q`. -/
-def productCost (B : ℝ) : ℕ → ℝ
+@[expose] def productCost (B : ℝ) : ℕ → ℝ
   | 0 => B
   | q+1 => B+8*productCost B q
 
 /-- Pressure cost as an element of `ℕ → ℝ | 0 => c⁻¹ | q+1 => c⁻¹+4*(pressureCost c B
 q*(1+productCost B q*pressureCost c B q))`. -/
-def pressureCost (c B : ℝ) : ℕ → ℝ
+@[expose] def pressureCost (c B : ℝ) : ℕ → ℝ
   | 0 => c⁻¹
   | q+1 => c⁻¹+4*(pressureCost c B q*(1+productCost B q*pressureCost c B q))
 

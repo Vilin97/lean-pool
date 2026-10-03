@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.RootComplex
 Euler groupings, orthogonal denominator formulas, and all-rank Weyl evaluations.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -311,7 +311,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- Erase a root from an admissible wedge when the resulting signed weight remains nonnegative. -/
-def rootAdmissibleErase {r k : ℕ}
+@[expose] def rootAdmissibleErase {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam (k + 1))
     (α : PositiveRoot r) (hα : α ∈ S.val.val)
@@ -856,7 +856,7 @@ private theorem degreeZero_realExteriorRootSign_singleton_metriccodes2_89cbd172
     lt_self_iff_false, ↓reduceIte, Finset.card_empty, pow_zero, Int.cast_one]
 
 /-- The admissible singleton wedge associated with an active positive root. -/
-def activeAdmissibleRootWedge {r : ℕ}
+@[expose] def activeAdmissibleRootWedge {r : ℕ}
     (lam : Fin (r + 1) → ℕ) (α : ActivePositiveRoot lam) :
     AdmissibleRootWedge lam 1 := by
   refine ⟨rootWedgeSingleton α.val, ?_⟩
@@ -1055,13 +1055,13 @@ open scoped BigOperators
 namespace HigherWeylBinomialDeterminant
 
 /-- The orthogonal complete symmetric coefficient used in the spherical-code argument. -/
-def orthogonalCompleteSymmetricCoefficient (n : ℕ) (k : ℤ) : ℤ :=
+@[expose] def orthogonalCompleteSymmetricCoefficient (n : ℕ) (k : ℤ) : ℤ :=
   if 0 ≤ k then
     (((n + k.toNat - 1).choose k.toNat : ℕ) : ℤ)
   else 0
 
 /-- The orthogonal jacobi trudi matrix used in the spherical-code argument. -/
-def orthogonalJacobiTrudiMatrix {r : ℕ} (n : ℕ)
+@[expose] def orthogonalJacobiTrudiMatrix {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) :
     Matrix (Fin (r + 1)) (Fin (r + 1)) ℤ :=
   fun i j =>
@@ -1071,7 +1071,7 @@ def orthogonalJacobiTrudiMatrix {r : ℕ} (n : ℕ)
         ((lam i : ℤ) - (i.val : ℤ) - (j.val : ℤ) - 2)
 
 /-- The orthogonal jacobi trudi dimension used in the spherical-code argument. -/
-def orthogonalJacobiTrudiDimension {r : ℕ} (n : ℕ)
+@[expose] def orthogonalJacobiTrudiDimension {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) : ℤ :=
   (orthogonalJacobiTrudiMatrix n lam).det
 
@@ -3160,7 +3160,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung
 open MetricCodes.Spherical.HigherHarmonicYoung.BGGRootComplex
 
 /-- The positive root upper operator used in the spherical-code argument. -/
-def positiveRootUpperOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
+@[expose] def positiveRootUpperOperator {r : ℕ} (n : ℕ) (α : PositiveRoot r) :
     PolynomialSpace r n →ₗ[ℝ] PolynomialSpace r n :=
   polarization r n (positiveRootFirst α) (positiveRootSecond α)
 
@@ -3476,7 +3476,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root admissible swap used in the spherical-code argument. -/
-def rootAdmissibleSwap {r k : ℕ}
+@[expose] def rootAdmissibleSwap {r k : ℕ}
     (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α β : PositiveRoot r)
@@ -4482,7 +4482,7 @@ theorem includedDescendingPositiveRootFischerLaplacian_energy_ge_self
 The root joint harmonic included descending fischer laplacian used in the spherical-code
 argument.
 -/
-def rootJointHarmonicIncludedDescendingFischerLaplacian {r : ℕ}
+@[expose] def rootJointHarmonicIncludedDescendingFischerLaplacian {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam k →ₗ[ℝ]
       RootJointHarmonicChain n lam k :=
@@ -4621,7 +4621,7 @@ def includedNondescendingPositiveRootFischerLaplacian
     (includedNondescendingPositiveRootOperatorStar n lam S)
 
 /-- The active raising operator for a root absent from the wedge. -/
-def excludedActivePositiveRootOperator
+@[expose] def excludedActivePositiveRootOperator
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : ExcludedActivePositiveRoot lam S) :
@@ -4633,7 +4633,7 @@ def excludedActivePositiveRootOperator
     ⟨α.val, α.property.2⟩
 
 /-- The Fischer adjoint lowering operator for an active root absent from the wedge. -/
-def excludedActivePositiveRootOperatorStar
+@[expose] def excludedActivePositiveRootOperatorStar
     {r k : ℕ} (n : ℕ) (lam : Fin (r + 1) → ℕ)
     (S : AdmissibleRootWedge lam k)
     (α : ExcludedActivePositiveRoot lam S) :
@@ -4678,7 +4678,7 @@ def excludedActivePositiveRootFischerLaplacian
     (excludedActivePositiveRootOperatorStar n lam S)
 
 /-- The root joint harmonic hodge diagonal used in the spherical-code argument. -/
-def rootJointHarmonicHodgeDiagonal {r : ℕ}
+@[expose] def rootJointHarmonicHodgeDiagonal {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam k →ₗ[ℝ]
       RootJointHarmonicChain n lam k :=
@@ -4823,7 +4823,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root swap exterior hodge sign used in the spherical-code argument. -/
-def rootSwapExteriorHodgeSign {r k : ℕ}
+@[expose] def rootSwapExteriorHodgeSign {r k : ℕ}
     {lam : Fin (r + 1) → ℕ}
     (S : AdmissibleRootWedge lam k)
     (α β : PositiveRoot r) : ℝ :=
@@ -4881,7 +4881,7 @@ def rootJointHarmonicActionLowerRootStructureCross {r : ℕ}
     else 0
 
 /-- The root joint harmonic action hodge off diagonal used in the spherical-code argument. -/
-def rootJointHarmonicActionHodgeOffDiagonal {r : ℕ}
+@[expose] def rootJointHarmonicActionHodgeOffDiagonal {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam k →ₗ[ℝ]
       RootJointHarmonicChain n lam k :=
@@ -5261,7 +5261,7 @@ section
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root joint harmonic polynomial inclusion used in the spherical-code argument. -/
-def rootJointHarmonicPolynomialInclusion {r : ℕ}
+@[expose] def rootJointHarmonicPolynomialInclusion {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam k →ₗ[ℝ]
       RootPolynomialChain r n k where
@@ -5583,7 +5583,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The positive root order code used in the spherical-code argument. -/
-def positiveRootOrderCode {r : ℕ} (α : PositiveRoot r) :
+@[expose] def positiveRootOrderCode {r : ℕ} (α : PositiveRoot r) :
     Fin ((r + 1) * (r + 1)) :=
   (finProdFinEquiv (m := r + 1) (n := r + 1)) α.val
 
@@ -5661,7 +5661,7 @@ theorem realExteriorRootSign_mul_self (S : Finset ι) (a : ι) :
   norm_num
 
 /-- The actual exterior root contraction used in the spherical-code argument. -/
-def actualExteriorRootContraction (M : Type*)
+@[expose] def actualExteriorRootContraction (M : Type*)
     [AddCommGroup M] [Module ℝ M] (a : ι) :
     Module.End ℝ (Finset ι → M) where
   toFun f S :=
@@ -5675,7 +5675,7 @@ def actualExteriorRootContraction (M : Type*)
     by_cases h : a ∈ S <;> simp [h, smul_smul, mul_comm]
 
 /-- The actual exterior root creation used in the spherical-code argument. -/
-def actualExteriorRootCreation (M : Type*)
+@[expose] def actualExteriorRootCreation (M : Type*)
     [AddCommGroup M] [Module ℝ M] (a : ι) :
     Module.End ℝ (Finset ι → M) where
   toFun f S :=
@@ -7023,7 +7023,7 @@ theorem actualExteriorRootContraction_creation_contraction_contraction_anticommu
       split_ifs <;> simp
 
 /-- The actual exterior root bracket coboundary used in the spherical-code argument. -/
-def actualExteriorRootBracketCoboundary [Fintype ι]
+@[expose] def actualExteriorRootBracketCoboundary [Fintype ι]
     (structureConstant : ι → ι → ι → ℝ) :
     Module.End ℝ (Finset ι → M) :=
   ∑ b : ι, ∑ c : ι, ∑ d : ι,
@@ -7072,7 +7072,7 @@ abbrev FullRootExteriorPolynomialChain (r n : ℕ) :=
   Finset (PositiveRoot r) → PolynomialSpace r n
 
 /-- The full root exterior polynomial action used in the spherical-code argument. -/
-def fullRootExteriorPolynomialAction (r n : ℕ) (α : PositiveRoot r) :
+@[expose] def fullRootExteriorPolynomialAction (r n : ℕ) (α : PositiveRoot r) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) where
   toFun f S := positiveRootOperator n α (f S)
   map_add' f g := by
@@ -7160,18 +7160,18 @@ theorem actualExteriorRootContraction_mul_self_zero
     simp [actualExteriorRootContraction_apply, h]
 
 /-- The full root exterior action atom used in the spherical-code argument. -/
-def fullRootExteriorActionAtom (r n : ℕ) (α : PositiveRoot r) :
+@[expose] def fullRootExteriorActionAtom (r n : ℕ) (α : PositiveRoot r) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   fullRootExteriorPolynomialAction r n α *
     actualExteriorRootContraction (PolynomialSpace r n) α
 
 /-- The full root exterior action used in the spherical-code argument. -/
-def fullRootExteriorAction (r n : ℕ) :
+@[expose] def fullRootExteriorAction (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, fullRootExteriorActionAtom r n α
 
 /-- The full root exterior bracket atom used in the spherical-code argument. -/
-def fullRootExteriorBracketAtom (r n : ℕ)
+@[expose] def fullRootExteriorBracketAtom (r n : ℕ)
     (α β γ : PositiveRoot r) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   actualExteriorRootCreation (PolynomialSpace r n) γ *
@@ -7179,7 +7179,7 @@ def fullRootExteriorBracketAtom (r n : ℕ)
       actualExteriorRootContraction (PolynomialSpace r n) α)
 
 /-- The full root exterior bracket used in the spherical-code argument. -/
-def fullRootExteriorBracket (r n : ℕ) :
+@[expose] def fullRootExteriorBracket (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) := by
   classical
   exact ∑ α : PositiveRoot r, ∑ β : PositiveRoot r,
@@ -7286,7 +7286,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- Erase a specified member of a root wedge, reducing its cardinality by one. -/
-def rootWedgeErase {r k : ℕ}
+@[expose] def rootWedgeErase {r k : ℕ}
     (S : RootWedge r (k + 1)) (α : PositiveRoot r)
     (hα : α ∈ S.val) : RootWedge r k := by
   refine ⟨S.val.erase α, ?_⟩
@@ -7554,7 +7554,7 @@ theorem rootActionCoboundary_eq_exteriorCreation_zeroExtension
       map_zero, ]
 
 /-- The full root exterior upper polynomial action used in the spherical-code argument. -/
-def fullRootExteriorUpperPolynomialAction (r n : ℕ) (α : PositiveRoot r) :
+@[expose] def fullRootExteriorUpperPolynomialAction (r n : ℕ) (α : PositiveRoot r) :
     Module.End ℝ (Finset (PositiveRoot r) → PolynomialSpace r n) where
   toFun f S := positiveRootUpperOperator n α (f S)
   map_add' f g := by
@@ -7572,7 +7572,7 @@ def fullRootExteriorUpperPolynomialAction (r n : ℕ) (α : PositiveRoot r) :
       positiveRootUpperOperator n α (f S) := rfl
 
 /-- The full root exterior action coboundary used in the spherical-code argument. -/
-def fullRootExteriorActionCoboundary (r n : ℕ) :
+@[expose] def fullRootExteriorActionCoboundary (r n : ℕ) :
     Module.End ℝ (Finset (PositiveRoot r) → PolynomialSpace r n) :=
   ∑ α : PositiveRoot r,
     fullRootExteriorUpperPolynomialAction r n α *
@@ -7909,7 +7909,7 @@ theorem rootStructureConstant_coboundaryIncidence_swap
     (actualExteriorRootCreation M b * actualExteriorRootContraction M d)
 
 /-- The actual ordered root bracket coboundary used in the spherical-code argument. -/
-def actualOrderedRootBracketCoboundary {r : ℕ} :
+@[expose] def actualOrderedRootBracketCoboundary {r : ℕ} :
     Module.End ℝ (Finset (PositiveRoot r) → M) :=
   ((2 : ℝ)⁻¹) •
     actualExteriorRootBracketCoboundary (M := M)
@@ -7958,7 +7958,7 @@ open scoped BigOperators
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root joint harmonic bracket action mixed used in the spherical-code argument. -/
-def rootJointHarmonicBracketActionMixed {r : ℕ}
+@[expose] def rootJointHarmonicBracketActionMixed {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) (k : ℕ) :
     RootJointHarmonicChain n lam (k + 1) →ₗ[ℝ]
       RootJointHarmonicChain n lam (k + 1) :=
@@ -7975,7 +7975,7 @@ section
 open MetricCodes.Spherical.HigherHarmonicYoung
 
 /-- The root polynomial bracket action mixed used in the spherical-code argument. -/
-def rootPolynomialBracketActionMixed (r n k : ℕ) :
+@[expose] def rootPolynomialBracketActionMixed (r n k : ℕ) :
     RootPolynomialChain r n (k + 1) →ₗ[ℝ]
       RootPolynomialChain r n (k + 1) :=
   (rootBracketCoboundary r n k).comp (rootActionBoundary r n k) +
@@ -8096,7 +8096,7 @@ theorem fullRootExteriorPolynomialAction_orderedBracketCoboundary_commute
     _ = _ := by noncomm_ring
 
 /-- The full root exterior lower root structure incidence used in the spherical-code argument. -/
-def fullRootExteriorLowerRootStructureIncidence (r n : ℕ) :
+@[expose] def fullRootExteriorLowerRootStructureIncidence (r n : ℕ) :
     Module.End ℝ (FullRootExteriorPolynomialChain r n) :=
   ∑ α : PositiveRoot r, ∑ β : PositiveRoot r, ∑ γ : PositiveRoot r,
     rootStructureConstant γ α β •

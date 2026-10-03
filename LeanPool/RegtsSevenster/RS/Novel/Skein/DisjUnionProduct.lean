@@ -26,7 +26,7 @@ value (`EdgeSubset.throughValueC_eq_mixedValue`).  Independence
 across boundary pairings is not needed, there being no boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

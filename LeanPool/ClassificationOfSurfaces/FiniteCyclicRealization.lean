@@ -29,7 +29,7 @@ legacy cell-complex predicate. It therefore supplies the complete occurrence-pai
 needed by this construction.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -50,11 +50,11 @@ instance boundaryOccurrenceFintype (P : FiniteCyclicPresentation) :
 namespace BoundaryOccurrence
 
 /-- The signed dart stored at a boundary occurrence. -/
-def dart {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Dart :=
+@[expose] def dart {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Dart :=
   (P.boundary o.1).get o.2
 
 /-- The unoriented edge stored at a boundary occurrence. -/
-def edge {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Edge :=
+@[expose] def edge {P : FiniteCyclicPresentation} (o : P.BoundaryOccurrence) : P.Edge :=
   edgeOfDart o.dart
 
 @[simp]
@@ -73,7 +73,7 @@ theorem edge_mk (P : FiniteCyclicPresentation) (f : P.Face)
 end BoundaryOccurrence
 
 /-- The polygon side indexed by a boundary occurrence. -/
-def occurrenceSide (P : FiniteCyclicPresentation) (o : P.BoundaryOccurrence) :
+@[expose] def occurrenceSide (P : FiniteCyclicPresentation) (o : P.BoundaryOccurrence) :
     PolygonGluing.Side P.Face fun f => (P.boundary f).length :=
   ⟨o.1, o.2⟩
 
@@ -260,7 +260,7 @@ end IsSurfaceValid
 namespace BoundaryPairing
 
 /-- The polygon-side identification associated to a compatible occurrence pairing. -/
-def identification {P : FiniteCyclicPresentation} (pairing : P.BoundaryPairing) :
+@[expose] def identification {P : FiniteCyclicPresentation} (pairing : P.BoundaryPairing) :
     PolygonGluing.Identification P.Face fun f => (P.boundary f).length where
   source := P.occurrenceSide pairing.source
   target := P.occurrenceSide pairing.target
@@ -284,6 +284,7 @@ theorem identification_direction {P : FiniteCyclicPresentation} (pairing : P.Bou
 end BoundaryPairing
 
 /-- All polygon-side identifications compatible with a valid finite cyclic presentation. -/
+@[expose]
 def polygonalIdentifications
     (P : FiniteCyclicPresentation) (_valid : P.IsSurfaceValid) :
     Set (PolygonGluing.Identification P.Face fun f => (P.boundary f).length) :=
@@ -323,6 +324,7 @@ abbrev PolygonalRealization
   PolygonGluing.Realization (P.polygonalIdentifications valid)
 
 /-- The quotient map from the disjoint union of face polygons. -/
+@[expose]
 def polygonalMk
     (P : FiniteCyclicPresentation) (valid : P.IsSurfaceValid) :
     P.PolygonalPreRealization → P.PolygonalRealization valid :=
@@ -375,6 +377,7 @@ structure RealizationEquivData
 namespace RealizationEquivData
 
 /-- Descend the forward cut-and-paste map through the source gluing relation. -/
+@[expose]
 def toQuotient
     {P Q : FiniteCyclicPresentation} {validP : P.IsSurfaceValid}
     {validQ : Q.IsSurfaceValid} (data : RealizationEquivData P Q validP validQ) :
@@ -382,6 +385,7 @@ def toQuotient
   Quotient.lift data.toPre data.to_respects
 
 /-- Descend the reverse cut-and-paste map through the target gluing relation. -/
+@[expose]
 def invQuotient
     {P Q : FiniteCyclicPresentation} {validP : P.IsSurfaceValid}
     {validQ : Q.IsSurfaceValid} (data : RealizationEquivData P Q validP validQ) :
@@ -437,6 +441,7 @@ noncomputable def homeomorph
 end RealizationEquivData
 
 /-- Quotient semantics for comparing two valid finite cyclic presentations. -/
+@[expose]
 def PolygonallyEquivalent
     (P Q : FiniteCyclicPresentation) (validP : P.IsSurfaceValid)
     (validQ : Q.IsSurfaceValid) : Prop :=

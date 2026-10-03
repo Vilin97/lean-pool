@@ -41,7 +41,7 @@ for any α > 0.
 - Glimm-Jaffe "Quantum Physics" Sec. 6.2 (clustering bounds)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Complex SchwartzMap Filter Set Function Metric
 open scoped Real Topology

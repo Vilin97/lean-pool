@@ -31,7 +31,7 @@ the central idempotents at each size — are named `Prop`s here and
 discharged for the tree's package where the block theory lives.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

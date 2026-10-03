@@ -16,7 +16,7 @@ integrable slices almost everywhere when the original slices are integrable
 on that window. Its completed Riesz representative is selected on all times.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

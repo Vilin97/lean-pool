@@ -24,7 +24,7 @@ explicit regular language by nonexceptional powers of two.
 This equivalence is a reduction of the open conjecture, not a proof of it.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

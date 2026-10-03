@@ -19,30 +19,31 @@ three-body Hamiltonian. This file verifies the radius and distance identities ne
 the first mass perturbation to a resonant Kepler orbit.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Cartesian position on an inertial Kepler ellipse, with periapsis on the positive x-axis. -/
-noncomputable def inertialEllipsePosition
+@[expose] noncomputable def inertialEllipsePosition
     (firstAction eccentricity anomaly : ℝ) : ActionSpace :=
   ![firstAction ^ 2 * (Real.cos anomaly - eccentricity),
     firstAction ^ 2 * Real.sqrt (1 - eccentricity ^ 2) * Real.sin anomaly]
 
 /-- A planar position expressed in coordinates rotating counterclockwise through angle `time`. -/
+@[expose]
 noncomputable def positionInRotatingFrame (time : ℝ) (position : ActionSpace) : ActionSpace :=
   ![Real.cos time * position 0 + Real.sin time * position 1,
     -Real.sin time * position 0 + Real.cos time * position 1]
 
 /-- Position of the Kepler ellipse in the rotating frame. -/
-noncomputable def rotatingEllipsePosition
+@[expose] noncomputable def rotatingEllipsePosition
     (firstAction eccentricity anomaly time : ℝ) : ActionSpace :=
   positionInRotatingFrame time (inertialEllipsePosition firstAction eccentricity anomaly)
 
 /-- Embed a planar position into phase space with zero placeholder momenta. The first mass
 perturbation depends only on position, so these momentum entries are immaterial. -/
-def positionPhasePoint (position : ActionSpace) : PhaseSpace :=
+@[expose] def positionPhasePoint (position : ActionSpace) : PhaseSpace :=
   ![position 0, position 1, 0, 0]
 
 /-- A rotating elliptic position embedded in the restricted three-body phase space. -/

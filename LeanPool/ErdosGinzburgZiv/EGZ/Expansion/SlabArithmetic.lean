@@ -12,7 +12,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Expansion.Basic
 # Slab Arithmetic
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

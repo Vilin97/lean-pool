@@ -18,7 +18,7 @@ opposite inner product space.
 
 -/
 
-@[expose] public section
+public section
 
 
 open Module

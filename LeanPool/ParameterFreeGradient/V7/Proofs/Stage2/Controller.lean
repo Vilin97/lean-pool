@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.PathShape
 Observable trial outcomes certify success or an insufficient scale or radius estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2

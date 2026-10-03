@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.NoncompactTransport
 
 /-! Metric-energy evolution using a separate actual smooth representative of each L² class. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

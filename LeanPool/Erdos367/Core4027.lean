@@ -16,7 +16,7 @@ import Mathlib.Tactic.Ring.RingNF
 
 /-! ## Definitions -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

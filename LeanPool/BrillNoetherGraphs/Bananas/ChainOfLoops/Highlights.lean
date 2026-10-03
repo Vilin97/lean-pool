@@ -37,7 +37,7 @@ vertex.
 
 -/
 
-@[expose] public section
+public section
 
 namespace ChainOfLoops.Highlights
 

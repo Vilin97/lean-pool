@@ -17,7 +17,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.CrossedKernel
 The group factor component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperGroupFactor
@@ -57,14 +57,14 @@ abbrev CrossedTwo := crossedHilbert paperHaarActionTwo
 /--
 The `paperGroupFactorUnitaryOne` construction used in the Connes rigidity formalization.
 -/
-def paperGroupFactorUnitaryOne :
+@[expose] def paperGroupFactorUnitaryOne :
     GroupL2 Γ₁ ≃ₗᵢ[ℂ] CrossedOne :=
   (semidirectFubini paperThetaOneHom).trans
     (crossedFiberwiseEquiv (K := H) paperFourierCoordinateUnitary)
 
 /-- The second concrete Zhou group-factor unitary. Paper: §3.
 -/
-def paperGroupFactorUnitaryTwo :
+@[expose] def paperGroupFactorUnitaryTwo :
     GroupL2 Γ₂ ≃ₗᵢ[ℂ] CrossedTwo :=
   (semidirectFubini paperThetaTwoHom).trans
     (crossedFiberwiseEquiv (K := H) paperFourierCoordinateUnitary)

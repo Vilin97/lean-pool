@@ -40,7 +40,7 @@ Positions/level/fiber/`LevelCanonical` are reused from `CriticalPortraits.Core`.
 `LevelCanonical (T P)` is a LATER brick (3b) and is deliberately NOT stated here.
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits
 
@@ -51,6 +51,7 @@ open scoped BigOperators
 
 /-- `S ⊆ Z_{d*m}` is a **critical set**: it lies in one `σ_d`-fiber (all points share a
     column `r < m`) and has at least `2` points. Its **weight** is `S.card - 1`. -/
+@[expose]
 def IsCriticalSet (d m : ℕ) (S : Finset (ZMod (d * m))) : Prop :=
   (∃ r, r < m ∧ ∀ x ∈ S, x.val % m = r) ∧ 2 ≤ S.card
 
@@ -66,6 +67,7 @@ crossing patterns (up to relabelling) are `a1 < b1 < a2 < b2` and `b1 < a1 < b2 
 `a, b, a, b`", which is exactly the negation of "`A` is a single cyclic run" — i.e. the
 bare-Lean `hullsUnlinked` test `cyclicRuns ≤ 1`.  `Unlinked A B := ¬ Linked A B`. -/
 /-- Two cyclic subsets `A` and `B` are linked when they interleave. -/
+@[expose]
 def Linked {N : ℕ} (A B : Finset (ZMod N)) : Prop :=
   ∃ a1 ∈ A, ∃ a2 ∈ A, ∃ b1 ∈ B, ∃ b2 ∈ B,
     (a1.val < b1.val ∧ b1.val < a2.val ∧ a2.val < b2.val) ∨
@@ -75,6 +77,7 @@ instance {N : ℕ} (A B : Finset (ZMod N)) : Decidable (Linked A B) := by
   unfold Linked; infer_instance
 
 /-- `A` and `B` have unlinked convex hulls (no crossing chords). -/
+@[expose]
 def Unlinked {N : ℕ} (A B : Finset (ZMod N)) : Prop := ¬ Linked A B
 
 instance {N : ℕ} (A B : Finset (ZMod N)) : Decidable (Unlinked A B) := by
@@ -101,6 +104,7 @@ theorem not_unlinked_of_alternating {N : ℕ} {A B : Finset (ZMod N)}
 
 /-- A **critical portrait**: a family of critical sets that is pairwise vertex-disjoint,
     pairwise unlinked, of total weight `∑ (|S| - 1) = d - 1`. -/
+@[expose]
 def Portrait (d m : ℕ) (P : Finset (Finset (ZMod (d * m)))) : Prop :=
   (∀ S ∈ P, IsCriticalSet d m S) ∧
   (∀ A ∈ P, ∀ B ∈ P, A ≠ B → Disjoint A B) ∧
@@ -193,7 +197,7 @@ lemma mem_eraseMin {N : ℕ} (S : Finset (ZMod N)) (h : S.Nonempty) (x : ZMod N)
   tauto
 
 /-- `T(P)`: delete the lowest-level point of every set, then take the union. -/
-noncomputable def T {N : ℕ} (P : Finset (Finset (ZMod N))) : Finset (ZMod N) :=
+@[expose] noncomputable def T {N : ℕ} (P : Finset (Finset (ZMod N))) : Finset (ZMod N) :=
   P.sup eraseMin
 
 /-- The erased sets remain pairwise disjoint (erase only shrinks). -/

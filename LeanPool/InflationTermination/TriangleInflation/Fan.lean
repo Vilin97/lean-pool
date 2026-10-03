@@ -16,7 +16,7 @@ Statements for paper Section 5.4: Theorem 5.11 (`thm:fan`) with its pointwise ce
 (`prop:Rp`). Proofs are deferred.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 
@@ -670,7 +670,35 @@ private lemma pushforward_equiv {α β γ : Type*} [Fintype α] [Fintype β] [De
 
 private lemma obs_one_not_disjoint (u v : Obs 1) :
     ¬ Disjoint (Obs.ancestors u) (Obs.ancestors v) := by
-  revert u v; decide
+  have cases_one (w : Obs 1) :
+      w = Obs.A 0 0 ∨ w = Obs.B 0 0 ∨ w = Obs.C 0 0 := by
+    cases w with
+    | A i j =>
+      left
+      have hi : i = 0 := Subsingleton.elim _ _
+      have hj : j = 0 := Subsingleton.elim _ _
+      subst i
+      subst j
+      rfl
+    | B i k =>
+      right
+      left
+      have hi : i = 0 := Subsingleton.elim _ _
+      have hk : k = 0 := Subsingleton.elim _ _
+      subst i
+      subst k
+      rfl
+    | C j k =>
+      right
+      right
+      have hj : j = 0 := Subsingleton.elim _ _
+      have hk : k = 0 := Subsingleton.elim _ _
+      subst j
+      subst k
+      rfl
+  rcases cases_one u with rfl | rfl | rfl <;>
+    rcases cases_one v with rfl | rfl | rfl <;>
+    simp [Obs.ancestors, Finset.disjoint_left]
 
 private lemma symmetric_one {P : ThreeBit → ℝ} :
     SymmetricLaw 1 (fun ω => P (assignOneEquiv ω)) := by

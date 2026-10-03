@@ -20,7 +20,7 @@ pressure equals one global bounded cylinder operator applied to the actual
 forcing and velocity. This gives its estimates without any further solve.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,7 +56,8 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
       intro x
       apply ContinuousLinearMap.ext
       intro v
-      erw [normalFunctional_apply]
+      erw [normalFunctional_apply,normalFunctional_apply]
+      all_goals rfl
     rw [pressurePath_left τ hτ hτT B G th]
     change primitive P (fullOperatorMap P
       (normalFunctional Dh.normal Dh.normalLower Dh.normalLower_pos Dh.normal_lower th)

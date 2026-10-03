@@ -16,7 +16,7 @@ This file identifies the result of adjoining one conditionally sampled observati
 augmented finite history. It makes no infinite-process or path-regularity claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -82,6 +82,7 @@ namespace DenseTimeHistory
 variable {α : Type*} [MeasurableSpace α]
 
 /-- Adjoin one observation at the end of a finite dense-time history. -/
+@[expose]
 def append (n : ℕ) : DenseTimeHistory α n × α → DenseTimeHistory α (n + 1) :=
   fun hx ↦ (historyEquiv (n + 1)).symm
     ((historyEquiv n hx.1).1, (splitLast n).symm ((historyEquiv n hx.1).2, hx.2))

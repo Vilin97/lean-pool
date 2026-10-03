@@ -16,7 +16,7 @@ canonical forests with the intrinsic ordered-contribution data of those
 forests.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -20,7 +20,7 @@ one.  Oriented and canonical-orientation corollaries expose the forms needed
 by polynomial approximation on smooth convex domains.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Topology

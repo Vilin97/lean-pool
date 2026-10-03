@@ -18,7 +18,7 @@ Its angular-velocity entries are derived from the physical ODEs and agree
 with the `frameSkew` matrix used in the source propagation estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ open EulerSmoothLimit EulerPacketCrossProduct EulerPacketNormalizedPrimary
   InnerProductSpace ContinuousLinearMap Matrix WithLp
 
 /-- Cross bilinear as an element of `Space →L[ℝ] Space →L[ℝ] Space`. -/
-def crossBilinear : Space →L[ℝ] Space →L[ℝ] Space :=
+@[expose] def crossBilinear : Space →L[ℝ] Space →L[ℝ] Space :=
   ({ toFun := crossLeft
      map_add' a b := by
        apply ContinuousLinearMap.ext
@@ -83,16 +83,16 @@ theorem inner_cross_exchange_last (p q r : Space) :
     ← cross_anticomm (ofLp q) (ofLp p), dotProduct_neg]
 
 /-- Frame, given by `![p, q, cross p q]`. -/
-def frame (p q : Space) : Fin 3 → Space := ![p, q, cross p q]
+@[expose] def frame (p q : Space) : Fin 3 → Space := ![p, q, cross p q]
 
 /-- Frame rate, given by `![rayRate B p, velocityRate B p q, cross (rayRate B p) q + cross p
 (velocityRate B p q)]`. -/
-def frameRate (B : Space →L[ℝ] Space) (p q : Space) : Fin 3 → Space :=
+@[expose] def frameRate (B : Space →L[ℝ] Space) (p q : Space) : Fin 3 → Space :=
   ![rayRate B p, velocityRate B p q,
     cross (rayRate B p) q + cross p (velocityRate B p q)]
 
 /-- Frame matrix, given by `⟪frame p q i, B (frame p q j)⟫_ℝ`. -/
-def frameMatrix (B : Space →L[ℝ] Space) (p q : Space) (i j : Fin 3) : ℝ :=
+@[expose] def frameMatrix (B : Space →L[ℝ] Space) (p q : Space) (i j : Fin 3) : ℝ :=
   ⟪frame p q i, B (frame p q j)⟫_ℝ
 
 theorem frame_orthonormal (p q : Space)
@@ -189,6 +189,7 @@ theorem frameRate_skew (B : Space →L[ℝ] Space) (p q : Space)
   · exact hnn
 
 /-- Normalized frame, given by `frame (unit (m t)) (unit (v t))`. -/
+@[expose]
 def normalizedFrame (m v : ℝ → Space) (t : ℝ) : Fin 3 → Space := frame (unit (m t)) (unit (v t))
 
 theorem normalizedFrame_hasDerivAt (B : Space →L[ℝ] Space) {m v : ℝ → Space} {t : ℝ}

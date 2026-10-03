@@ -25,7 +25,7 @@ section
 a small amplitude controlled by the scaled spatial field, the actual
 normal component, and the correction size. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,7 +130,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -148,7 +148,7 @@ def liftedInputConstant (P : ℝ) [Fact (0 < P)] : ℝ := 1 + sobolevEmbeddingCo
 
 /-- Lifted input radius, given by `1 + ‖coordinateEquiv.symm.toContinuousLinearMap‖ * (R +
 ρ⁻¹)`. -/
-def liftedInputRadius (R ρ : ℝ) : ℝ :=
+@[expose] def liftedInputRadius (R ρ : ℝ) : ℝ :=
   1 + ‖coordinateEquiv.symm.toContinuousLinearMap‖ * (R + ρ⁻¹)
 
 theorem liftedInputConstant_one_le (P : ℝ) [Fact (0 < P)] : 1 ≤ liftedInputConstant P := by

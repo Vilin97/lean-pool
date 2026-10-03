@@ -27,7 +27,7 @@ low-in-old (the re-paired ends carry opposite old statuses,
 on a re-paired end (`mem_highSet_repair_untouched`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

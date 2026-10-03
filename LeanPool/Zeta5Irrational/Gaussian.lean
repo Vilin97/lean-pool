@@ -20,7 +20,7 @@ import Mathlib.Tactic.Ring.Basic
 * `intervalIntegral_swap_of_continuous` : Fubini for interval integrals of continuous functions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Real
 

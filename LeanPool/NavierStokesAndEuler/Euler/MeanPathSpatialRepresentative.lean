@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Jointly continuous ordinary spatial representatives of continuous L² paths with smooth spatial
 orbits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

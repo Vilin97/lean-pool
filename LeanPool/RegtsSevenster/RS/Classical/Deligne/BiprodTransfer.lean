@@ -24,7 +24,7 @@ not, since a nonzero multiplicity pushes a bounding-box cell into
 `μ'` or `ν'` (Deligne 1.10).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-! Genuine closed-interval derivatives lift through injective bounded embeddings. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

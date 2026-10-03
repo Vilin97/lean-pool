@@ -21,7 +21,7 @@ to the finite-dimensional `PiLp 2` space.  A closest point in that proper
 space therefore gives an actual optimizer at the exact frozen radius.
 -/
 
-@[expose] public section
+public section
 
 namespace O3.Stage8EuclideanRadius
 

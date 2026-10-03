@@ -15,7 +15,7 @@ The strict endpoint signs of a nice multivalued function place the child test ma
 orthant at `-1` and the positive orthant at `1`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -24,10 +24,12 @@ open Geometry
 variable {p : ℕ}
 
 /-- Strictly negative coordinate orthant. -/
+@[expose]
 def negativeOrthant (p : ℕ) : Set (Fin p → ℝ) :=
   {v | ∀ i, v i < 0}
 
 /-- Strictly positive coordinate orthant. -/
+@[expose]
 def positiveOrthant (p : ℕ) : Set (Fin p → ℝ) :=
   {v | ∀ i, 0 < v i}
 

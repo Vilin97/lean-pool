@@ -73,7 +73,7 @@ maps `projFin` / `padFin` in `SNumbers.PiLpCoordinates`.
   [link](https://zbmath.org/3996455).
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -89,6 +89,7 @@ variable {𝕜 : Type u} [RCLike 𝕜] {m : ℕ} {p : ℝ≥0∞} [Fact (1 ≤ p
 /-- The **diagonal operator** `D_σ : ℓ^p_m → ℓ^p_m`, `x ↦ (σ_i · x_i)`, as a
 continuous linear map. The domain is finite-dimensional, so continuity is
 automatic (`LinearMap.toContinuousLinearMap`). -/
+@[expose]
 noncomputable def DiagCLM (p : ℝ≥0∞) [Fact (1 ≤ p)] (σ : Fin m → 𝕜) :
     PiLp p (fun _ : Fin m => 𝕜) →L[𝕜] PiLp p (fun _ : Fin m => 𝕜) :=
   LinearMap.toContinuousLinearMap
@@ -347,6 +348,7 @@ variable {q : ℝ≥0∞} [Fact (1 ≤ q)]
 so continuity is automatic. Specialises to `DiagCLM p σ` when `q = p`
 (`DiagCLMpq_self`) and to the identity embedding `idEmbed p q` when `σ ≡ 1`
 (`DiagCLMpq_one`). -/
+@[expose]
 noncomputable def DiagCLMpq (p q : ℝ≥0∞) [Fact (1 ≤ p)] [Fact (1 ≤ q)] (σ : Fin m → 𝕜) :
     PiLp q (fun _ : Fin m => 𝕜) →L[𝕜] PiLp p (fun _ : Fin m => 𝕜) :=
   LinearMap.toContinuousLinearMap

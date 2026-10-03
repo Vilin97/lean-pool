@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
 
 /-! Genuine continuous energy paths and their weighted strong limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -41,15 +41,16 @@ def familyValuePath (q : ℕ) {I : Type*} (T : ℝ)
 /-- Family-path values are the literal underlying L² values of the Sobolev fields. -/
 theorem familyValuePath_apply (q : ℕ) {I : Type*} (T : ℝ)
     (u : C(Icc (0 : ℝ) T, I → SobolevSpace period q)) (t : Icc (0 : ℝ) T) (i : I) :
-    familyValuePath period q T u t i = value period (u t i) := rfl
+    familyValuePath period q T u t i = value period (u t i) := by rfl
 
 omit [Fact (0 < period)] in
 /-- The actual factorial Gevrey weight along a continuous radius path. -/
-def gevreyWeightPath (T : ℝ) (ρ : C(Icc (0 : ℝ) T, ℝ)) (n : ℕ) : C(Icc (0 : ℝ) T, ℝ) :=
+@[expose] def gevreyWeightPath (T : ℝ) (ρ : C(Icc (0 : ℝ) T, ℝ)) (n : ℕ) : C(Icc (0 : ℝ) T, ℝ) :=
   ⟨fun t => weight (ρ t) n, (ρ.continuous.pow n).div_const ((n.factorial : ℝ)^2)⟩
 
 omit [Fact (0 < period)] in
 /-- The actual radius-loss weight along the same radius path. -/
+@[expose]
 def gevreyLossWeightPath (T : ℝ) (ρ : C(Icc (0 : ℝ) T, ℝ)) (n : ℕ) : C(Icc (0 : ℝ) T, ℝ) :=
   (n : ℝ) • gevreyWeightPath T ρ n
 

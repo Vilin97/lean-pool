@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.RiemannMappingTheorem.Spaces
 -/
 
-@[expose] public section
+public section
 
 open Topology Filter Set Function UniformConvergence Metric
 
@@ -26,7 +26,7 @@ uniform (compact-open) convergence on `U`. -/
 abbrev 𝓒 (U : Set ℂ) := ℂ →ᵤ[compacts U] ℂ
 
 /-- The complex derivative as a self-map on `𝓒 U`. -/
-noncomputable def uderiv (f : 𝓒 U) : 𝓒 U := deriv f
+@[expose] noncomputable def uderiv (f : 𝓒 U) : 𝓒 U := deriv f
 
 lemma tendsto_𝓒_iff (hU : IsOpen U) {F : ι → 𝓒 U} {f : 𝓒 U} :
     Tendsto F l (𝓝 f) ↔ TendstoLocallyUniformlyOn F f l U := by
@@ -35,7 +35,7 @@ lemma tendsto_𝓒_iff (hU : IsOpen U) {F : ι → 𝓒 U} {f : 𝓒 U} :
 
 /-- `𝓗 U` : the subspace of `𝓒 U` consisting of holomorphic
 (complex-differentiable) functions on `U`. -/
-def 𝓗 (U : Set ℂ) := {f : 𝓒 U | DifferentiableOn ℂ f U}
+@[expose] def 𝓗 (U : Set ℂ) := {f : 𝓒 U | DifferentiableOn ℂ f U}
 
 lemma isClosed_𝓗 (hU : IsOpen U) : IsClosed (𝓗 U) := by
   refine isClosed_iff_clusterPt.2 (fun f hf => ?_)
@@ -55,7 +55,7 @@ lemma ContinuousOn_uderiv (hU : IsOpen U) : ContinuousOn uderiv (𝓗 U) := by
 /-- `𝓑 U Q` : the collection of holomorphic maps on `U` whose image on
 each compact `K ⊆ U` is contained in `Q K`. Used to formalise local
 boundedness conditions for normal-family arguments. -/
-def 𝓑 (U : Set ℂ) (Q : Set ℂ → Set ℂ) : Set (𝓒 U) :=
+@[expose] def 𝓑 (U : Set ℂ) (Q : Set ℂ → Set ℂ) : Set (𝓒 U) :=
     {f ∈ 𝓗 U | ∀ K ∈ compacts U, MapsTo f K (Q K)}
 
 lemma 𝓑_const {Q : Set ℂ} : 𝓑 U (fun _ => Q) = {f ∈ 𝓗 U | MapsTo f U Q} := by
@@ -79,7 +79,7 @@ theorem isClosed_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q K
 
 /-- `𝓜 U` : holomorphic functions on `U` whose image lies in the closed
 unit disk `closedBall 0 1 ⊆ ℂ`. -/
-def 𝓜 (U : Set ℂ) := {f ∈ 𝓗 U | MapsTo f U (closedBall (0 : ℂ) 1)}
+@[expose] def 𝓜 (U : Set ℂ) := {f ∈ 𝓗 U | MapsTo f U (closedBall (0 : ℂ) 1)}
 
 lemma 𝓜_eq_𝓑 : 𝓜 U = 𝓑 U (fun _ => closedBall 0 1) := 𝓑_const.symm
 
@@ -91,7 +91,7 @@ lemma IsClosed_𝓜 (hU : IsOpen U) : IsClosed (𝓜 U) := by
     (mem_singleton z) ⟨singleton_subset_iff.2 hz, isCompact_singleton⟩).continuous)
 
 /-- `𝓘 U` : holomorphic injections from `U` into the closed unit disk. -/
-def 𝓘 (U : Set ℂ) := {f ∈ 𝓜 U | InjOn f U}
+@[expose] def 𝓘 (U : Set ℂ) := {f ∈ 𝓜 U | InjOn f U}
 
 lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
   obtain ⟨u, hu⟩ := nonempty_compl.mpr (good_domain.ne_univ : U ≠ univ)
@@ -134,6 +134,6 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
 maps `U → closedBall 0 1` that are either injective or constant.
 Hurwitz's theorem says these are the only locally uniform limits of
 elements of `𝓘 U`. -/
-def 𝓙 (U : Set ℂ) := {f ∈ 𝓜 U | InjOn f U ∨ ∃ w : ℂ, EqOn f (fun _ => w) U}
+@[expose] def 𝓙 (U : Set ℂ) := {f ∈ 𝓜 U | InjOn f U ∨ ∃ w : ℂ, EqOn f (fun _ => w) U}
 
 lemma 𝓘_subset_𝓙 : 𝓘 U ⊆ 𝓙 U := fun _ hf => ⟨hf.1, Or.inl hf.2⟩

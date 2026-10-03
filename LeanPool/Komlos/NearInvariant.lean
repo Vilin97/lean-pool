@@ -22,7 +22,7 @@ under every grid translation of Euclidean norm at most `1`.
 The distribution is the image of `cubeP d N` under coordinatewise division by `N`.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -39,7 +39,7 @@ noncomputable def gridEmb (d N : ℕ) : (Fin d → ℤ) →+ (Fin d → ℝ) whe
     simp [add_div]
 
 @[simp] lemma gridEmb_apply (d N : ℕ) (g : Fin d → ℤ) (k : Fin d) :
-    gridEmb d N g k = (g k : ℝ) / N := rfl
+    gridEmb d N g k = (g k : ℝ) / N := by rfl
 
 lemma gridEmb_injective {d N : ℕ} (hN : 0 < N) : Function.Injective (gridEmb d N) := by
   intro g g' h

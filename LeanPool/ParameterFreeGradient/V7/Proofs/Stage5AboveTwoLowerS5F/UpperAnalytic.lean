@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Semantics
 The initial gradient is bounded by smoothness times the distance to the minimizer set.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 

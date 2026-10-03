@@ -21,7 +21,7 @@ This file constructs, rather than assumes, the inverse of the actual operator
 primitive estimate.  No inverse, solution, or weak equation is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable {V W : Type*}
   [NormedAddCommGroup W] [InnerProductSpace ℝ W] [CompleteSpace W]
 
 /-- The operator representing the kinetic form minus the actual potential form. -/
-def dirichletOperator (J : V →L[ℝ] W) (H : W →L[ℝ] W) : V →L[ℝ] V :=
+@[expose] def dirichletOperator (J : V →L[ℝ] W) (H : W →L[ℝ] W) : V →L[ℝ] V :=
   ContinuousLinearMap.id ℝ V - J.adjoint.comp (H.comp J)
 
 /-- This is precisely the displacement variational form. -/

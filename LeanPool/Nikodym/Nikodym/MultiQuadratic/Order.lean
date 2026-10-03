@@ -21,7 +21,7 @@ sign embeddings `emb`, and conjugations `conj`. Linear independence of square ro
 used here.
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial Finset
 open scoped symmDiff
@@ -44,6 +44,7 @@ def mono (r : Fin m → ℕ) (S : Finset (Fin m)) : Order r :=
   Ideal.Quotient.mk _ (∏ j ∈ S, X j)
 
 /-- Blueprint K02: the image of the indeterminate `Xⱼ` in `𝒪_r`. -/
+@[expose]
 def gen (r : Fin m → ℕ) (j : Fin m) : Order r :=
   Ideal.Quotient.mk _ (X j)
 
@@ -164,6 +165,7 @@ theorem mono_mul_mono (r : Fin m → ℕ) (S T : Finset (Fin m)) :
 section Sign
 
 /-- Blueprint K02: the sign `ε_S = ∏_{j ∈ S} εⱼ` of a subset. -/
+@[expose]
 def sgn (ε : Fin m → ℤˣ) (S : Finset (Fin m)) : ℤ :=
   ∏ j ∈ S, (ε j : ℤ)
 

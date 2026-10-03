@@ -16,7 +16,7 @@ This finite-dimensional consequence of Krein--Milman is used when a hollow
 rational polytope is converted into a finite `p`-hollow family.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.RationalPolytope
 

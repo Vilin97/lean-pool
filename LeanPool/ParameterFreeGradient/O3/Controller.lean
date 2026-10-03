@@ -19,7 +19,7 @@ from the local-trial obligations and finite numerical search caps; it is not a
 field of the controller state or of a certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -35,10 +35,12 @@ structure ControllerConfig where
   prefixCalls : ℕ
 
 /-- The scale estimate after the specified number of dyadic doublings. -/
+@[expose]
 def ControllerConfig.scaleAt (cfg : ControllerConfig) (s : ℕ) : ℝ :=
   (2 : ℝ) ^ s * cfg.initialScale
 
 /-- The radius at a given scale epoch and radius-doubling level. -/
+@[expose]
 noncomputable def ControllerConfig.radiusAt (cfg : ControllerConfig) (s j : ℕ) : ℝ :=
   (2 : ℝ) ^ j * cfg.gradientSizeAtStart / cfg.scaleAt s
 

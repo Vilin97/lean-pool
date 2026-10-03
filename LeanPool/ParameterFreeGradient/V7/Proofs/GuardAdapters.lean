@@ -14,7 +14,7 @@ Compatibility and soundness of the current observable guards and the original an
 inequalities.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

@@ -32,7 +32,7 @@ import Mathlib.MeasureTheory.Integral.Prod
 
 -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory
 
@@ -45,8 +45,7 @@ variable {Ω S T U : Type*} [mΩ : MeasurableSpace Ω]
   [MeasurableSpace S] [MeasurableSpace T] [MeasurableSpace U]
 
 /-- Entropy of a kernel with respect to a measure. -/
-noncomputable
-def entropy (κ : Kernel T S) (μ : Measure T) := μ[fun y ↦ Hm[κ y]]
+@[expose] noncomputable def entropy (κ : Kernel T S) (μ : Measure T) := μ[fun y ↦ Hm[κ y]]
 
 /-- Entropy of a kernel with respect to a measure. -/
 notation3:100 "Hk[" κ " , " μ "]" => ProbabilityTheory.Kernel.entropy κ μ

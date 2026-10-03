@@ -69,7 +69,7 @@ public import Mathlib.Topology.Order.IntermediateValue
 * `Infrastructure.Geometry.Foundations.Development004`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Analysis.Foundations.Development002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Analysis.SurfaceMeasure.SegmentGraph`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -142,13 +142,14 @@ Authors: Dean Cureton
 # Analysis / Bounded Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Bounded variation for a real function on its actual closed-interval domain. -/
+@[expose]
 def IsIntervalBoundedVariation (a b : ℝ) (f : Set.Icc a b → ℝ) : Prop :=
   BoundedVariationOn f Set.univ
 
@@ -166,6 +167,7 @@ private theorem intervalBV_add {a b : ℝ} {f g : Set.Icc a b → ℝ}
     _ ≤ _ := add_le_add (eVariationOn.sum_le hu hus) (eVariationOn.sum_le hu hus)
 
 /-- The submodule of continuous planar interval functions with coordinatewise finite variation. -/
+@[expose]
 def continuousBVSubmodule (a b : ℝ) : Submodule ℝ (Set.Icc a b → Point) where
   carrier := {f | Continuous f ∧
     ∀ i : Fin 2, IsIntervalBoundedVariation a b (fun t ↦ f t i)}
@@ -224,7 +226,7 @@ Authors: Dean Cureton
 # Analysis / Measure Products
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -256,6 +258,7 @@ def functionMeasureDot {X : Type*} [MeasurableSpace X]
   functionMeasureMul f.1 μ.1 + functionMeasureMul f.2 μ.2
 
 /-- The oriented planar determinant `p₀ q₁ - p₁ q₀`. -/
+@[expose]
 def planeCrossProduct (p q : Point) : ℝ :=
   p 0 * q 1 - p 1 * q 0
 
@@ -403,7 +406,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Integral
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -439,11 +442,13 @@ theorem RightContinuousIntervalBV.exists_norm_bound {a b : ℝ} (hab : a ≤ b)
           f.boundedVariation.dist_le (Set.mem_univ t) (Set.mem_univ ⟨a, le_rfl, hab⟩)
 
 /-- The finite signed Stieltjes measure on the interval, with zero initial atom. -/
+@[expose]
 def intervalStieltjesMeasure {a b : ℝ} (f : RightContinuousIntervalBV a b) :
     SignedMeasure (Set.Icc a b) :=
   f.boundedVariation.vectorMeasure
 
 /-- The Stieltjes integral, used for bounded measurable integrands and Borel subsets. -/
+@[expose]
 def intervalStieltjesIntegral {a b : ℝ} (f : RightContinuousIntervalBV a b)
     (g : Set.Icc a b → ℝ) (X : Set (Set.Icc a b)) : ℝ :=
   ∫ᵛ t in X, g t ∂[ContinuousLinearMap.mul ℝ ℝ; intervalStieltjesMeasure f]
@@ -475,7 +480,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Absolute Continuity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -634,7 +639,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Calculus
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -862,7 +867,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Density Integration
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -981,7 +986,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Linearity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1062,7 +1067,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Inner Product
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1115,7 +1120,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Smooth
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1229,7 +1234,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Frame
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1301,7 +1306,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Transport
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1518,7 +1523,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Continuous
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1641,7 +1646,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Affine
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1785,7 +1790,7 @@ integral of a continuous integrand against a continuous BV integrator, uniformly
 mesh of the partition.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1982,7 +1987,7 @@ Authors: Dean Cureton
 # Analysis / Stieltjes / Shift
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2074,7 +2079,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Basic
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2087,24 +2092,29 @@ instance angleMeasurableSpace : MeasurableSpace Real.Angle := borel Real.Angle
 instance angleBorelSpace : BorelSpace Real.Angle := ⟨rfl⟩
 
 /-- An exterior normal direction at a point of a convex body. -/
+@[expose]
 def IsExteriorNormal (K : ConvexBody Point) (p : Point) (a : Real.Angle) : Prop :=
   ∀ q ∈ (K : Set Point), inner ℝ (q - p) (normalVector a) ≤ 0
 
 /-- Boundary points with exactly one exterior unit normal. -/
+@[expose]
 def regularBoundary (K : ConvexBody Point) : Set Point :=
   {p | p ∈ frontier (K : Set Point) ∧ ∃! a, IsExteriorNormal K p a}
 
 /-- The unique exterior normal at regular points, extended by zero elsewhere. -/
+@[expose]
 def exteriorNormalAngle (K : ConvexBody Point) (p : Point) : Real.Angle := by
   classical
   exact if h : ∃! a, IsExteriorNormal K p a then h.exists.choose else 0
 
 /-- A nontrivial segment presentation and a perpendicular angular direction. -/
+@[expose]
 def IsSegmentPresentation (K : ConvexBody Point) (d : Point × Point × Real.Angle) : Prop :=
   d.1 ≠ d.2.1 ∧ (K : Set Point) = segment ℝ d.1 d.2.1 ∧
     inner ℝ (d.2.1 - d.1) (normalVector d.2.2) = 0
 
 /-- Surface measure in angular coordinates, including point and segment bodies. -/
+@[expose]
 def surfaceAreaMeasure (K : ConvexBody Point) : Measure Real.Angle := by
   classical
   exact if (K : Set Point).Subsingleton then 0
@@ -2135,7 +2145,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Exterior Normal
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2211,28 +2221,32 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Graph Definitions
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Project the convex body horizontally after translating and changing orthonormal frame. -/
+@[expose]
 def horizontalProjection (K : ConvexBody Point) (o : Point)
     (e : Point ≃ₗᵢ[ℝ] Point) : Set ℝ :=
   (fun p : Point ↦ e (p - o) 0) '' (K : Set Point)
 
 /-- The infimum and supremum of the body’s horizontal projection in the chosen frame. -/
+@[expose]
 def horizontalBounds (K : ConvexBody Point) (o : Point)
     (e : Point ≃ₗᵢ[ℝ] Point) : ℝ × ℝ :=
   (sInf (horizontalProjection K o e), sSup (horizontalProjection K o e))
 
 /-- The supremum of the body’s vertical section at a given horizontal coordinate. -/
+@[expose]
 def upperGraphHeight (K : ConvexBody Point) (o : Point)
     (e : Point ≃ₗᵢ[ℝ] Point) (x : ℝ) : ℝ :=
   sSup {y : ℝ | o + e.symm !₂[x, y] ∈ (K : Set Point)}
 
 /-- The argument of a planar vector, viewed as an angle modulo a full turn. -/
+@[expose]
 def vectorNormalAngle (p : Point) : Real.Angle :=
   (Complex.arg ⟨p 0, p 1⟩ : ℝ)
 
@@ -2260,6 +2274,7 @@ theorem normalVector_vectorNormalAngle {p : Point} (hp : p ≠ 0) :
       Complex.sin_arg z
 
 /-- Weight the upper graph by its normal direction and arc-length Jacobian. -/
+@[expose]
 def upperGraphSurfaceIntegrand (K : ConvexBody Point) (o : Point)
     (e : Point ≃ₗᵢ[ℝ] Point) (ψ : Real.Angle → ℝ) (x : ℝ) : ℝ :=
   ψ (vectorNormalAngle (e.symm !₂[-deriv (upperGraphHeight K o e) x, 1])) *
@@ -2284,7 +2299,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Regularity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2484,7 +2499,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Segment
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2623,7 +2638,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Segment Faces
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2814,7 +2829,7 @@ Authors: Dean Cureton
 # Analysis / Surface Measure / Segment Graph
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3229,7 +3244,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Curve.Foundations.Development001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3270,7 +3285,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Curve.StieltjesChainRule`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3286,18 +3301,20 @@ Authors: Dean Cureton
 # Curve / Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The constant planar path, as a continuous path of bounded variation. -/
+@[expose]
 def constBVPath (a b : ℝ) (p : Point) : ContinuousBVPaths a b :=
   ⟨fun _ ↦ p, continuous_const, fun i ↦ by
     simp [IsIntervalBoundedVariation, BoundedVariationOn, eVariationOn]⟩
 
 /-- View one coordinate of a continuous BV path as a right-continuous BV function. -/
+@[expose]
 def continuousBVCoordinate {a b : ℝ} (x : ContinuousBVPaths a b) (i : Fin 2) :
     RightContinuousIntervalBV a b where
   toFun t := x.val t i
@@ -3306,6 +3323,7 @@ def continuousBVCoordinate {a b : ℝ} (x : ContinuousBVPaths a b) (i : Fin 2) :
     ((PiLp.continuous_apply 2 _ i).comp x.property.1).continuousAt.continuousWithinAt
 
 /-- Half the difference of the two coordinate Stieltjes integrals, giving signed area. -/
+@[expose]
 def curveAreaFunctional {a b : ℝ} (x : ContinuousBVPaths a b) : ℝ :=
   (intervalStieltjesIntegral (continuousBVCoordinate x 1) (fun t ↦ x.val t 0) Set.univ -
     intervalStieltjesIntegral (continuousBVCoordinate x 0) (fun t ↦ x.val t 1) Set.univ) / 2
@@ -3329,7 +3347,7 @@ Authors: Dean Cureton
 # Curve / Area Transport
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3554,7 +3572,7 @@ Authors: Dean Cureton
 # Curve / Concatenation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3572,6 +3590,7 @@ structure RectifiablePathData where
 
 /-- An ordered interval partition identifies the path with a nonempty list of parametrized
 pieces. -/
+@[expose]
 def IsPathConcatenation (Γ : RectifiablePathData) {n : ℕ}
     (pieces : Fin n → RectifiablePathData) : Prop :=
   0 < n ∧ ∃ cuts : Fin (n + 1) → Set.Icc Γ.a Γ.b,
@@ -3637,7 +3656,7 @@ Authors: Dean Cureton
 # Curve / Area Additivity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3734,7 +3753,7 @@ Authors: Dean Cureton
 # Curve / Cyclic Rotation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3743,6 +3762,7 @@ namespace MovingSofa
 open MeasureTheory Set
 
 /-- Restrict a continuous BV path to a closed subinterval. -/
+@[expose]
 def ContinuousBVPaths.restrict {a b : ℝ} (x : ContinuousBVPaths a b)
     (l u : Set.Icc a b) (_hlu : l ≤ u) : ContinuousBVPaths (l : ℝ) u :=
   let ι : Set.Icc (l : ℝ) u → Set.Icc a b := fun t ↦
@@ -4145,16 +4165,18 @@ Authors: Dean Cureton
 # Curve / Jordan / Basic
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
 /-- The set is the range of an injective continuous map from a closed real interval. -/
+@[expose]
 def IsJordanArc (Γ : Set Point) : Prop :=
   ∃ (a b : ℝ) (_ : a ≤ b) (x : Set.Icc a b → Point),
     Continuous x ∧ Function.Injective x ∧ Set.range x = Γ
 
 /-- The set is the range of an injective continuous map from the circle. -/
+@[expose]
 def IsJordanCurve (Γ : Set Point) : Prop :=
   ∃ x : Circle → Point, Continuous x ∧ Function.Injective x ∧ Set.range x = Γ
 
@@ -4163,6 +4185,7 @@ def jordanSets : (Set Point → Prop) × (Set Point → Prop) :=
   (IsJordanArc, IsJordanCurve)
 
 /-- A Jordan arc admits a parametrization with the specified starting and ending points. -/
+@[expose]
 def IsOrientedJordanArc (Γ : Set Point) (p q : Point) : Prop :=
   ∃ (a b : ℝ) (hab : a ≤ b) (x : Set.Icc a b → Point),
     Continuous x ∧ Function.Injective x ∧ Set.range x = Γ ∧
@@ -4195,17 +4218,19 @@ Authors: Dean Cureton
 # Curve / Jordan / Orientation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Points outside the curve whose connected component in its complement is bounded. -/
+@[expose]
 def jordanInterior (Γ : Set Point) : Set Point :=
   {p | p ∉ Γ ∧ Bornology.IsBounded (connectedComponentIn Γᶜ p)}
 
 /-- A continuous real angle lifts the normalized displacement from the specified point. -/
+@[expose]
 def IsCurveAngleLift {a b : ℝ} (x : Set.Icc a b → Point) (p : Point)
     (θ : Set.Icc a b → ℝ) : Prop :=
   Continuous θ ∧ ∀ t,
@@ -4213,6 +4238,7 @@ def IsCurveAngleLift {a b : ℝ} (x : Set.Icc a b → Point) (p : Point)
     Real.sin (θ t) = (x t - p) 1 / ‖x t - p‖
 
 /-- The angle-lift increment divided by `2π`, with value zero if no lift exists. -/
+@[expose]
 def curveWinding {a b : ℝ} (hab : a ≤ b) (x : Set.Icc a b → Point) (p : Point) : ℝ := by
   classical
   exact if h : ∃ θ, IsCurveAngleLift x p θ then
@@ -4220,6 +4246,7 @@ def curveWinding {a b : ℝ} (hab : a ≤ b) (x : Set.Icc a b → Point) (p : Po
   else 0
 
 /-- A simple closed parametrization with the specified winding sign on the interior. -/
+@[expose]
 def IsOrientedJordanParametrization {a b : ℝ} (hab : a ≤ b)
     (Γ : Set Point) (counterclockwise : Bool) (x : Set.Icc a b → Point) : Prop :=
   a < b ∧ IsJordanCurve Γ ∧ Continuous x ∧ Set.range x = Γ ∧
@@ -4260,7 +4287,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4300,6 +4327,7 @@ abbrev RectifiableOrientedCurve :=
   {Γ : OrientedJordanCurve // Nonempty (ClosedBVParametrization Γ)}
 
 /-- The signed Stieltjes area of a chosen BV parametrization of the oriented arc. -/
+@[expose]
 def jordanArcArea (Γ : RectifiableOrientedArc) : ℝ :=
   curveAreaFunctional (Classical.choice Γ.property).path
 
@@ -4330,7 +4358,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Arc Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4443,7 +4471,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Parametrization
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4476,6 +4504,7 @@ theorem intervalToRange_surjective {a b : ℝ} (x : Set.Icc a b → Point) :
   exact ⟨t, rfl⟩
 
 /-- The carrier of a closed parametrized loop with its basepoint removed. -/
+@[expose]
 def puncturedLoopRangeSet {a b : ℝ} (hab : a ≤ b)
     (x : Set.Icc a b → Point) : Set (Set.range x) :=
   {p | (p : Point) ≠ x ⟨a, le_rfl, hab⟩}
@@ -4901,7 +4930,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Unit Sphere
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -4982,7 +5011,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Winding
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5074,7 +5103,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Radial Winding
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -5121,7 +5150,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Winding Concatenation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5212,7 +5241,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Cyclic Rotation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -5325,7 +5354,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Winding Kernel
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5334,6 +5363,7 @@ open MeasureTheory
 namespace MovingSofa
 
 /-- The inverse-distance vector kernel based at `z`. -/
+@[expose]
 def windingKernel (z p : Point) : Point :=
   (‖z - p‖ ^ 2)⁻¹ • (z - p)
 
@@ -5564,7 +5594,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Winding Local Constancy
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5877,7 +5907,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Winding Lifts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6075,7 +6105,7 @@ compact initial subarc has finite Hausdorff length, hence vanishing Hausdorff `2
 and a rational exhaustion together with the terminal point covers the whole range.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6139,13 +6169,14 @@ Authors: Dean Cureton
 # Curve / Segment Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Half the oriented determinant of the two endpoints. -/
+@[expose]
 def segmentArea (p q : Point) : ℝ := planeCrossProduct p q / 2
 
 /-- The signed segment area is antisymmetric in its two endpoints. -/
@@ -6208,7 +6239,7 @@ Authors: Dean Cureton
 # Curve / Segment Area / Parametrization
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6217,6 +6248,7 @@ namespace MovingSofa
 open MeasureTheory Set
 
 /-- The affine segment from `p` to `q`, bundled as a continuous BV path. -/
+@[expose]
 def lineSegmentBVPath (p q : Point) : ContinuousBVPaths 0 1 where
   val := Path.segment p q
   property := by
@@ -6300,7 +6332,7 @@ Authors: Dean Cureton
 # Curve / Smooth Interval Paths
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6308,6 +6340,7 @@ namespace MovingSofa
 
 /-- A continuously differentiable planar path on a compact interval has continuous
 bounded-variation coordinates. -/
+@[expose]
 def continuousBVOfContDiffOn {a b : ℝ} (f : ℝ → Point)
     (hf : ContDiffOn ℝ 1 f (Set.Icc a b)) : ContinuousBVPaths a b := by
   refine ⟨fun t ↦ f t, continuousOn_iff_continuous_domRestrict.mp hf.continuousOn, ?_⟩
@@ -6326,6 +6359,7 @@ def continuousBVOfContDiffOn {a b : ℝ} (f : ℝ → Point)
   exact (EuclideanSpace.proj (𝕜 := ℝ) i).lipschitzWith.comp_boundedVariationOn hpath
 
 /-- A Lipschitz planar path on a compact interval has continuous bounded-variation coordinates. -/
+@[expose]
 def continuousBVOfLipschitz {a b : ℝ} (f : Set.Icc a b → Point)
     {C : NNReal} (hf : LipschitzWith C f) : ContinuousBVPaths a b := by
   refine ⟨f, hf.continuous, ?_⟩
@@ -6373,6 +6407,7 @@ theorem boundedVariationOn_coord_Icc_of_contDiffOn {a b : ℝ} (g : Set.Icc a b 
 
 /-- Gluing two continuously differentiable pieces along a shared endpoint gives a continuous
 path of bounded variation. -/
+@[expose]
 def continuousBVOfContDiffOnIccUnionIcc {a b c : ℝ} (f : ℝ → Point) (hab : a ≤ b) (hbc : b ≤ c)
     (h₁ : ContDiffOn ℝ 1 f (Set.Icc a b)) (h₂ : ContDiffOn ℝ 1 f (Set.Icc b c)) :
     ContinuousBVPaths a c := by
@@ -6406,12 +6441,13 @@ Authors: Dean Cureton
 # Curve / Jordan / Radial Loop
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
 
 /-- A Lipschitz map on the unit circle induces a continuous BV loop in increasing angular order. -/
+@[expose]
 def radialBVLoop (f : {u : Point | ‖u‖ = 1} → Point) {C : NNReal}
     (hf : LipschitzWith C f) : ContinuousBVPaths 0 (2 * Real.pi) := by
   let n : Set.Icc (0 : ℝ) (2 * Real.pi) → {u : Point | ‖u‖ = 1} :=
@@ -6498,7 +6534,7 @@ This is what a locally defined argument branch supplies: no single plane functio
 named, and no constant is needed across a branch cut.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6568,7 +6604,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Foundations.Development002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6587,7 +6623,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.ThreePieceRoof`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6603,7 +6639,7 @@ Authors: Dean Cureton
 # Area / Monotone Roof
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7112,7 +7148,7 @@ bounds it, and `area_region_under_roof_le` compares that area with the areas of 
 set containing the rest of the open region.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7633,7 +7669,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Convex.Foundations.Development001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7662,7 +7698,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Convex.Space`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7678,7 +7714,7 @@ Authors: Dean Cureton
 # Convex / Boundary Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7857,7 +7893,7 @@ Authors: Dean Cureton
 # Convex / Boundary Approximation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7999,7 +8035,7 @@ Authors: Dean Cureton
 # Convex / Combination
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8010,17 +8046,20 @@ universe u v w
 namespace MovingSofa
 
 /-- A barycentric operation has an injective realization as convex combinations in a real space. -/
+@[expose]
 def IsConvexDomain {α : Type u} (c : I → α → α → α) : Prop :=
   ∃ (V : ModuleCat.{v} ℝ) (e : α → V), Function.Injective e ∧
     Convex ℝ (Set.range e) ∧
     ∀ (t : I) x y, e (c t x y) = (1 - (t : ℝ)) • e x + (t : ℝ) • e y
 
 /-- Preservation of the specified barycentric operations. -/
+@[expose]
 def IsConvexLinear {α : Type u} {β : Type v}
     (cα : I → α → α → α) (cβ : I → β → β → β) (f : α → β) : Prop :=
   ∀ t x y, f (cα t x y) = cβ t (f x) (f y)
 
 /-- Separate preservation of barycentric combinations in both variables. -/
+@[expose]
 def IsConvexBilinear {α : Type u} {β : Type v} {γ : Type w}
     (cα : I → α → α → α) (cβ : I → β → β → β) (cγ : I → γ → γ → γ)
     (g : α → β → γ) : Prop :=
@@ -8028,24 +8067,29 @@ def IsConvexBilinear {α : Type u} {β : Type v} {γ : Type w}
     ∀ y, IsConvexLinear cα cγ (fun x ↦ g x y)
 
 /-- The usual barycentric combination of real numbers. -/
+@[expose]
 def realCombination (t : I) (x y : ℝ) : ℝ := (1 - (t : ℝ)) * x + (t : ℝ) * y
 
 /-- A quadratic functional is the diagonal of a separately convex-linear real map. -/
+@[expose]
 def IsQuadraticFunctional {α : Type u} (c : I → α → α → α) (f : α → ℝ) : Prop :=
   ∃ g : α → α → ℝ, IsConvexBilinear c c realCombination g ∧ ∀ x, f x = g x x
 
 /-- Concavity or convexity according to the direction of the barycentric inequality. -/
+@[expose]
 def IsConvexFunctional {α : Type u} (c : I → α → α → α) (f : α → ℝ)
     (concave : Bool) : Prop :=
   ∀ t x y, if concave then realCombination t (f x) (f y) ≤ f (c t x y)
     else f (c t x y) ≤ realCombination t (f x) (f y)
 
 /-- The segment function, extended by zero outside its parameter interval. -/
+@[expose]
 def segmentFunctional {α : Type u} (c : I → α → α → α) (f : α → ℝ)
     (x y : α) (t : ℝ) : ℝ :=
   if ht : t ∈ Set.Icc (0 : ℝ) 1 then f (c ⟨t, ht⟩ x y) else 0
 
 /-- The right derivative along the barycentric segment; used for quadratic functionals. -/
+@[expose]
 def convexDirectionalDerivative {α : Type u} (c : I → α → α → α)
     (f : α → ℝ) (x y : α) : ℝ :=
   derivWithin (segmentFunctional c f x y) (Set.Icc 0 1) 0
@@ -8073,7 +8117,7 @@ Authors: Dean Cureton
 # Convex / Area Superlevel
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8164,7 +8208,7 @@ two endpoints. Neither statement needs any topology or differentiability: the tw
 functions are literally equal.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8247,7 +8291,7 @@ off that null set and monotonicity give the bound. Repeated contacts, zero conta
 collinear consecutive rays are allowed: a degenerate triangle simply has vanishing area.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8432,7 +8476,7 @@ Authors: Dean Cureton
 # Convex / Exposed Faces
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8543,7 +8587,7 @@ Authors: Dean Cureton
 # Convex / Limits
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8553,6 +8597,7 @@ open scoped Topology
 namespace MovingSofa
 
 /-- The supremum of scalar products with a specified direction vector. -/
+@[expose]
 def vectorSupport (S : Set Point) (u : Point) : ℝ := sSup ((fun x ↦ inner ℝ x u) '' S)
 
 /-- Support values in a unit direction vary by at most the Hausdorff distance. -/
@@ -8926,7 +8971,7 @@ Authors: Dean Cureton
 # Convex / Support Embedding
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9000,7 +9045,7 @@ Authors: Dean Cureton
 # Convex / Combination Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9142,7 +9187,7 @@ one-sided derivatives of `s ↦ ⟪z, u_s⟫ - m s` at `t`:
 `p` with one endpoint vertex of the face at the two boundary parameters.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9271,7 +9316,7 @@ Authors: Dean Cureton
 # Convex / Space
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Pointwise
 
@@ -9327,7 +9372,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Foundations.Development001`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9346,7 +9391,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.Quadratic`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9362,7 +9407,7 @@ Authors: Dean Cureton
 # Area / Modulo Linear
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9373,6 +9418,7 @@ universe u
 namespace MovingSofa
 
 /-- The difference of two functionals preserves the specified convex combinations. -/
+@[expose]
 def EquivalentModuloConvexLinear {α : Type u} (c : I → α → α → α)
     (f g : α → ℝ) : Prop :=
   IsConvexLinear c realCombination (fun x ↦ f x - g x)
@@ -9396,7 +9442,7 @@ Authors: Dean Cureton
 # Area / Quadratic
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9669,7 +9715,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Geometry.Foundations.Development002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9688,7 +9734,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Geometry.RadialBoundary`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9704,7 +9750,7 @@ Authors: Dean Cureton
 # Geometry / Convex / Frontier Interior
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Topology
@@ -9816,7 +9862,7 @@ Authors: Dean Cureton
 # Geometry / Radial Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

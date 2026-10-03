@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.GevreyOrderZero
 
 /-! The actual asymmetric Sobolev transport map needed for the parabolic source upgrade. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ synthesis. -/
 local instance asymmetricSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- Actual transport Hs×H^(s+1)→Hs; the coefficient velocity needs no extra derivative. -/
-def asymmetricTransport {s : ℕ} (hs : 6 ≤ s)
+@[expose] def asymmetricTransport {s : ℕ} (hs : 6 ≤ s)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) :
     SobolevSpace period s →L[ℝ] SobolevSpace period (s+1) →L[ℝ] SobolevSpace period s :=
   ∑ i : Fin 4, (productHqBilinear period hs (L i) (hL i)).bilinearComp

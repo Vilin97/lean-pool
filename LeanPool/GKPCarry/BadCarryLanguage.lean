@@ -19,7 +19,7 @@ explicit digit patterns.  This turns the remaining GKP power-of-two condition
 into an exact regular-language avoidance statement.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 
@@ -35,7 +35,7 @@ inductive BadCarryState where
   deriving DecidableEq, Repr
 
 /-- One transition of the deficient-carry automaton. -/
-def badCarryStateStep : BadCarryState → ℕ → BadCarryState
+@[expose] def badCarryStateStep : BadCarryState → ℕ → BadCarryState
   | .good, _ => .good
   | .zeroCarry, digit =>
       if digit = 2 then .oneCarryOut
@@ -46,7 +46,7 @@ def badCarryStateStep : BadCarryState → ℕ → BadCarryState
       if digit < 2 then .oneCarryNoCarry else .good
 
 /-- Run the automaton from an arbitrary state. -/
-def badCarryStateAux : List ℕ → BadCarryState → BadCarryState
+@[expose] def badCarryStateAux : List ℕ → BadCarryState → BadCarryState
   | [], state => state
   | digit :: digits, state =>
       badCarryStateAux digits (badCarryStateStep state digit)
@@ -60,14 +60,14 @@ def badCarryLanguage (digits : List ℕ) : Bool :=
   decide (badCarryState digits ≠ .good)
 
 /-- Incoming arithmetic carry represented by an automaton state. -/
-def BadCarryState.incomingCarry : BadCarryState → ℕ
+@[expose] def BadCarryState.incomingCarry : BadCarryState → ℕ
   | .zeroCarry => 0
   | .oneCarryOut => 1
   | .oneCarryNoCarry => 0
   | .good => 0
 
 /-- Additional carries required to reach the accepting state. -/
-def BadCarryState.neededCarries : BadCarryState → ℕ
+@[expose] def BadCarryState.neededCarries : BadCarryState → ℕ
   | .zeroCarry => 2
   | .oneCarryOut => 1
   | .oneCarryNoCarry => 1
@@ -131,7 +131,7 @@ def badCarryExactlyOneTwoFollowedByZero (digits : List ℕ) : Prop :=
       digits = lows ++ 2 :: 0 :: highs
 
 /-- The union of the three concrete deficient-carry shapes. -/
-def badCarryLanguageShape (digits : List ℕ) : Prop :=
+@[expose] def badCarryLanguageShape (digits : List ℕ) : Prop :=
   badCarryAllZeroOrOne digits ∨
     badCarryExactlyOneTopTwo digits ∨
       badCarryExactlyOneTwoFollowedByZero digits

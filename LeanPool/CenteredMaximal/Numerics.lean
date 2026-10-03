@@ -14,7 +14,7 @@ public import LeanPool.CenteredMaximal.Statement
 `√(17 + 4√22)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

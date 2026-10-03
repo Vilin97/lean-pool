@@ -60,7 +60,7 @@ Dedekind/recursion theorem
 must.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

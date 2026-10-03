@@ -30,7 +30,7 @@ per-coordinate flips. Three structural facts carry every statement below.
   flipped blocks.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -213,6 +213,7 @@ theorem injectable_vertex_injective {S : Finset (GObs Γ t)} (hS : GInjectable S
   rw [key o.1 o.2, key p.1 p.2, hop]
 
 /-- The copied observation that diagonal row `r` reads at vertex `v`. -/
+@[expose]
 def diagObs (Γ : PairGraph) (t : ℕ) (p : Σ _ : Fin t, Γ.V) : GObs Γ t := ⟨p.2, fun _ => p.1⟩
 
 theorem readDiag_eq (ω : GAssign Γ t) (r : Fin t) (v : Γ.V) :

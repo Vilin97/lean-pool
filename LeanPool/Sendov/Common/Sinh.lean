@@ -60,7 +60,7 @@ identity and eight applications of "vanishes at `0` and has nonnegative derivati
 * `Sendov.sinh_le_mul_exp`: the form actually used, `sinh h ≤ h exp (√(h²+9) - 3)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

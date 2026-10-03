@@ -22,7 +22,7 @@ section
 /-! Joint smoothness in the reference bounds spatial derivatives on every fixed
 compact spatial set and closed finite time interval, including time zero. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ section
 /-! Joint smoothness bounds the actual spatial vorticity on every fixed
 compact spatial set and every closed finite time interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -111,7 +111,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -18,7 +18,7 @@ permute among themselves and no sign appears.  This is the module
 underlying a twist by the odd line.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ namespace SuperCommAlgebra.Mod
 variable {S : SuperCommAlgebra.{u, u'}}
 
 /-- **The parity shift** of a super module. -/
+@[expose]
 def shift (M : S.Mod) : S.Mod where
   even := M.odd
   odd := M.even

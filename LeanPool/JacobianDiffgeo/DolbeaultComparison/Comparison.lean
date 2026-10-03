@@ -26,7 +26,7 @@ the time of this build `Jacobian/Finiteness/H1Finite.lean` (the file that would 
 hypothesis unconditionally) has not landed; see the unit's build-log entry.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace RS.Cech
@@ -54,7 +54,7 @@ noncomputable instance : AddCommGroup (H1 (0 : RS.Divisor X)) :=
 /-! ### `H01 X` -/
 
 /-- The Dolbeault `H^{0,1}(X)`: the naked quotient of `Form01 X` by `range dbar` (D3). -/
-noncomputable def H01 (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
+@[expose] noncomputable def H01 (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold 𝓘(ℂ) ω X] : Type _ :=
   Form01 X ⧸ LinearMap.range (RS.dbar (X := X))
 
@@ -65,7 +65,7 @@ noncomputable instance : Module ℂ (H01 X) :=
   Submodule.Quotient.module _
 
 /-- The quotient map onto `H01 X`. -/
-noncomputable def H01.mk : Form01 X →ₗ[ℂ] H01 X := Submodule.mkQ _
+@[expose] noncomputable def H01.mk : Form01 X →ₗ[ℂ] H01 X := Submodule.mkQ _
 
 theorem H01.mk_surjective : Function.Surjective (H01.mk (X := X)) := Submodule.mkQ_surjective _
 
@@ -361,7 +361,7 @@ noncomputable def dolbeaultEquiv [T2Space X] [CompactSpace X] :
 -- `(X := X)` pins the equiv's implicit type argument before the `CoeFun` search starts; left to
 -- unification it searches with `H01 ?X` still a metavariable and exhausts the instance budget.
 @[simp] theorem dolbeaultEquiv_apply [T2Space X] [CompactSpace X] (ξ : H1 (0 : RS.Divisor X)) :
-    dolbeaultEquiv (X := X) ξ = cechToH01 ξ := rfl
+    dolbeaultEquiv (X := X) ξ = cechToH01 ξ := by rfl
 
 /-- The blueprint's stated purpose: Čech finiteness transfers to `H^{0,1}`. Gated on
 `[FiniteDimensional ℂ (H1 (0 : Divisor X))]` — the unconditional discharge of this hypothesis

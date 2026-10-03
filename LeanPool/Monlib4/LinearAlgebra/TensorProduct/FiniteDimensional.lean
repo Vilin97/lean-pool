@@ -18,7 +18,7 @@ star modules and proves compatibility lemmas for tensor-product maps.
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped TensorProduct BigOperators
@@ -160,6 +160,7 @@ StarAlgEquiv.ofAlgEquiv
     (fun _ _ h1 h2 => by simp only [star_add, map_add, h1, h2]))
 
 /-- Tensor a pair of star algebra equivalences. -/
+@[expose]
 noncomputable def StarAlgEquiv.TensorProduct.map {R A B C D : Type*} [RCLike R]
   [Ring A] [Ring B] [Ring C] [Ring D]
   [Algebra R A] [Algebra R B] [Algebra R C] [Algebra R D]
@@ -180,20 +181,20 @@ theorem StarAlgEquiv.TensorProduct.map_tmul {R A B C D : Type*} [RCLike R]
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C] [StarAddMonoid D]
   [StarModule R A] [StarModule R B] [StarModule R C] [StarModule R D]
   (f : A ≃⋆ₐ[R] B) (g : C ≃⋆ₐ[R] D) (x : A) (y : C) :
-  (StarAlgEquiv.TensorProduct.map f g) (x ⊗ₜ[R] y) = f x ⊗ₜ g y :=
-rfl
+  (StarAlgEquiv.TensorProduct.map f g) (x ⊗ₜ[R] y) = f x ⊗ₜ g y := by
+  rfl
 theorem StarAlgEquiv.TensorProduct.map_symm_tmul {R A B C D : Type*} [RCLike R]
   [Ring A] [Ring B] [Ring C] [Ring D]
   [Algebra R A] [Algebra R B] [Algebra R C] [Algebra R D]
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C] [StarAddMonoid D]
   [StarModule R A] [StarModule R B] [StarModule R C] [StarModule R D]
   (f : A ≃⋆ₐ[R] B) (g : C ≃⋆ₐ[R] D) (x : B) (y : D) :
-  (StarAlgEquiv.TensorProduct.map f g).symm (x ⊗ₜ[R] y) = f.symm x ⊗ₜ g.symm y :=
-rfl
+  (StarAlgEquiv.TensorProduct.map f g).symm (x ⊗ₜ[R] y) = f.symm x ⊗ₜ g.symm y := by
+  rfl
 
 
 /-- Tensor a star algebra equivalence on the left by a fixed algebra. -/
-noncomputable def StarAlgEquiv.lTensor {R A B : Type*} (C : Type*) [RCLike R]
+@[expose] noncomputable def StarAlgEquiv.lTensor {R A B : Type*} (C : Type*) [RCLike R]
   [Ring A]
   [Ring B] [Ring C] [Algebra R A] [Algebra R B] [Algebra R C]
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C]

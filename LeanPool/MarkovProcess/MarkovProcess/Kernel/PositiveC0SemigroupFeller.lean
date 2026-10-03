@@ -17,7 +17,7 @@ recovers the original operators on `C₀` and therefore satisfies the existing F
 This file makes no conservativity, stochastic-process, or Hunt-process claim.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped ZeroAtInfty

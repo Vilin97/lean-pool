@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketInitialRepresentative
 the genuine homogeneous physical propagator.  Its scalar pressure has the
 literal normal residual as its angular derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -77,11 +77,12 @@ theorem vector_homogeneous_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 end General
 
 /-- Uncut velocity, given by `physical D ⟨0,le_rfl,D.T_pos.le⟩ x ξ t`. -/
+@[expose]
 def uncutVelocity (ξ : U) (t : ℝ) (x : Space) : Space :=
   physical D ⟨0,le_rfl,D.T_pos.le⟩ x ξ t
 
 /-- Canonical velocity, given by `innerCutoff x • uncutVelocity D ξ t x`. -/
-def canonicalVelocity (ξ : U) (t : ℝ) (x : Space) : Space :=
+@[expose] def canonicalVelocity (ξ : U) (t : ℝ) (x : Space) : Space :=
   innerCutoff x • uncutVelocity D ξ t x
 
 theorem uncutVelocity_initial (ξ : U) (x : Space) :

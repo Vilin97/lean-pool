@@ -35,7 +35,7 @@ these hypotheses, the public identity and its centered/norm consequences concern
 contract operator rather than asserting that it is the constructed Brownian Itô integral.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -245,6 +245,7 @@ theorem measurable_fst_predictable (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace
 
 /-- Pull a deterministic time integrand back to the time--sample product along `Prod.fst`.
 This is an isometry because `P` is a probability measure. -/
+@[expose]
 noncomputable def deterministicTimeEmbedding :
     Lp ℝ 2 nonnegativeLebesgueMeasure →ₗᵢ[ℝ] TimeProcessL2 P :=
   Lp.compMeasurePreservingₗᵢ ℝ Prod.fst measurePreserving_fst
@@ -265,6 +266,7 @@ theorem deterministicTimeEmbedding_aestronglyMeasurable
 
 /-- The linear-isometric inclusion of deterministic square-integrable time functions into
 predictable product-space processes. -/
+@[expose]
 noncomputable def deterministicPredictableEmbedding
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     Lp ℝ 2 nonnegativeLebesgueMeasure →ₗᵢ[ℝ] PredictableProcessL2 𝓕 P where
@@ -286,6 +288,7 @@ theorem deterministicPredictableEmbedding_coeFn
 /-! ### Adapted elementary processes -/
 
 /-- Pointwise representative of the one-step process `1_(a,b] Z`. -/
+@[expose]
 noncomputable def elementaryRepresentative (_𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›)
     (a b : ℝ≥0) (Z : W → ℝ) (p : ℝ≥0 × W) : ℝ :=
   if p.1 ∈ Set.Ioc a b then Z p.2 else 0
@@ -328,6 +331,7 @@ theorem stronglyMeasurable_elementaryRepresentative
     exact measurableSet_predictable_Ioc_prod a b (hZ.measurable measurableSet_Iic)
 
 /-- The scalar time indicator `1_(a,b]` as an `L²` function. -/
+@[expose]
 noncomputable def iocIndicator (a b : ℝ≥0) :
     Lp ℝ 2 nonnegativeLebesgueMeasure :=
   indicatorConstLp 2 measurableSet_Ioc
@@ -344,6 +348,7 @@ abbrev PredictableProcessL2 (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) 
 
 /-- The predictable `L²` class represented by `(t, ω) ↦ 1_(a,b](t) Z(ω)` for an
 `𝓕_a`-measurable square-integrable coefficient `Z`. -/
+@[expose]
 noncomputable def elementaryPredictable
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) : PredictableProcessL2 𝓕 P := by
@@ -409,6 +414,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- The predictable `L²` class represented by `(t, ω) ↦ 1_(a,b](t) Z(ω)` for an
 `𝓕_a`-measurable square-integrable coefficient `Z`. -/
+@[expose]
 noncomputable def elementaryPredictable [SFinite P]
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a b : ℝ≥0)
     (Z : lpMeas ℝ ℝ (𝓕 a) 2 P) : PredictableProcessL2 𝓕 P := by
@@ -469,6 +475,7 @@ theorem elementaryPredictable_coeFn [SFinite P]
   by_cases ht : p.1 ∈ Set.Ioc a b <;> simp [ht]
 
 /-- The constant coefficient `1`, regarded as an `𝓕_a`-measurable `L²(P)` random variable. -/
+@[expose]
 noncomputable def adaptedOne
     (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) (a : ℝ≥0) :
     lpMeas ℝ ℝ (𝓕 a) 2 P :=
@@ -497,6 +504,7 @@ theorem elementaryPredictable_adaptedOne
 
 /-- Orthogonal projection onto predictable time-space processes.  This is Mathlib's `L²`
 conditional expectation with respect to the predictable sigma-algebra. -/
+@[expose]
 def predictableProjection (𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›) :
     TimeProcessL2 P →L[ℝ] PredictableProcessL2 𝓕 P :=
   condExpL2 ℝ ℝ (predictable_le_prod 𝓕)
@@ -551,6 +559,7 @@ theorem norm_filtrationCondExpL2_le
   norm_condExpL2_coe_le (𝓕.le t) F
 
 /-- The constant `L²` representative of the expectation of `F`. -/
+@[expose]
 def expectationL2 (F : RandomL2 P) : RandomL2 P :=
   Lp.const 2 P (∫ ω, F ω ∂P)
 
@@ -592,6 +601,7 @@ structure ClarkOconeFamily (B : ℝ≥0 → W → ℝ) (P : Measure W) [IsGaussi
           (mderivD12 P F))) u
 
 /-- The designated integral bundled as a linear isometry. -/
+@[expose]
 def ClarkOconeFamily.itoIntegralₗᵢ {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) :
     PredictableProcessL2 𝓕 P →ₗᵢ[ℝ] RandomL2 P :=
@@ -604,6 +614,7 @@ theorem ClarkOconeFamily.itoIntegralₗᵢ_apply {𝓕 : Filtration ℝ≥0 ‹M
   rfl
 
 /-- The designated Itô integral, with codomain restricted to centered random variables. -/
+@[expose]
 noncomputable def ClarkOconeFamily.centeredItoIntegralₗᵢ
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) :
@@ -642,6 +653,7 @@ theorem ClarkOconeFamily.centeredItoIntegralₗᵢ_surjective
   exact hu.symm
 
 /-- Predictable square-integrable processes are linearly isometric to centered random variables. -/
+@[expose]
 noncomputable def ClarkOconeFamily.centeredItoEquiv
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) :
@@ -665,6 +677,7 @@ theorem ClarkOconeFamily.inner_itoIntegral {𝓕 : Filtration ℝ≥0 ‹Measura
 /-- **The time derivative of the contract is constructed, not stipulated**: the
 Cameron--Martin/Fubini realization `L²(P; H) → L²(ℝ≥0 × W)` of an `H`-valued random derivative
 as `DₜF`, obtained from `Malliavin.timeDerivative` (`TimeDerivative.lean`). -/
+@[expose]
 noncomputable def ClarkOconeFamily.timeDerivative {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) : Lp (CameronMartin.Space P) 2 P →L[ℝ] TimeProcessL2 P :=
   (Malliavin.timeDerivative C.isPreBrownian C.coordinate C.coordinate_apply
@@ -846,6 +859,7 @@ theorem ClarkOconeFamily.elementaryIntegralValue_adaptedOne_zero
 /-- Brownian compatibility on all one-step adapted `L²` integrands.  This is the textbook
 formula `∫_a^b Z dB = Z (B_b - B_a)` and is stronger than compatibility on
 deterministic integrands. -/
+@[expose]
 def ClarkOconeFamily.IsBrownianOnElementary
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) : Prop :=
@@ -942,6 +956,7 @@ theorem ClarkOconeFamily.IsBrownianOnElementary.isBrownianOnDeterministic
   exact h
 
 /-- Restriction of the designated integral to deterministic predictable processes. -/
+@[expose]
 noncomputable def ClarkOconeFamily.deterministicIntegral
     {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›} (C : ClarkOconeFamily B P 𝓕) :
     Lp ℝ 2 nonnegativeLebesgueMeasure →L[ℝ] RandomL2 P :=
@@ -1000,6 +1015,7 @@ theorem ClarkOconeFamily.IsBrownianOnDeterministic.itoIntegral_deterministic_Ioc
     wienerIntegral_indicatorConstLp_Ioc C.isPreBrownian hab]
 
 /-- The predictable product-space projection of the time-realized Malliavin derivative. -/
+@[expose]
 def predictableDerivative {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) (F : D12 P) : PredictableProcessL2 𝓕 P :=
   predictableProjection 𝓕
@@ -1015,6 +1031,7 @@ theorem aestronglyMeasurable_predictableDerivative
   lpMeas.aestronglyMeasurable _
 
 /-- The designated integration operator applied to the predictable Malliavin derivative. -/
+@[expose]
 def clarkOconeIntegral {𝓕 : Filtration ℝ≥0 ‹MeasurableSpace W›}
     (C : ClarkOconeFamily B P 𝓕) (F : D12 P) : RandomL2 P :=
   C.itoIntegral (predictableDerivative C F)

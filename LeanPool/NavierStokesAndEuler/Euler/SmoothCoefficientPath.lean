@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientPath
 
 /-! All-order spatial translation regularity uniformly over a compact parameter interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,12 +40,12 @@ local instance instSmoothCoefficientPath3 : NormedAddCommGroup (Space →ᵇ W) 
 local instance instSmoothCoefficientPath4 : NormedSpace ℝ (Space →ᵇ W) := inferInstance
 
 /-- Map coefficient path, given by `(L.compLeftContinuousBounded Space).compLeftContinuous ℝ K`. -/
-def mapCoefficientPath (L : V →L[ℝ] W) : C(K, Space →ᵇ V) →L[ℝ] C(K, Space →ᵇ W) :=
+@[expose] def mapCoefficientPath (L : V →L[ℝ] W) : C(K, Space →ᵇ V) →L[ℝ] C(K, Space →ᵇ W) :=
   (L.compLeftContinuousBounded Space).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem mapCoefficientPath_apply (L : V →L[ℝ] W)
-    (A : C(K, Space →ᵇ V)) (t : K) (x : Space) : mapCoefficientPath L A t x = L (A t x) := rfl
+    (A : C(K, Space →ᵇ V)) (t : K) (x : Space) : mapCoefficientPath L A t x = L (A t x) := by rfl
 
 end Mapping
 
@@ -89,7 +89,7 @@ local instance instSmoothCoefficientPath10 (n : ℕ) : NormedSpace ℝ (Space �
 
 /-- Derivative field, given by `mapCoefficientPath (continuousMultilinearCurryFin1 ℝ Space
 V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet 1)`. -/
-def derivativeField (A : SmoothCoefficientPath K V) : C(K, Space →ᵇ (Space →L[ℝ] V)) :=
+@[expose] def derivativeField (A : SmoothCoefficientPath K V) : C(K, Space →ᵇ (Space →L[ℝ] V)) :=
   mapCoefficientPath
     (continuousMultilinearCurryFin1 ℝ Space V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet
         1)
@@ -120,7 +120,8 @@ theorem derivativeJet_eq (A : SmoothCoefficientPath K V) (n : ℕ) (t : K) (x : 
 
 /-- Derivative, bundling `field`, `smooth`, `fderiv`, `exact` and the required compatibility
 proofs. -/
-def derivative (A : SmoothCoefficientPath K V) : SmoothCoefficientPath K (Space →L[ℝ] V) where
+@[expose] def derivative (A : SmoothCoefficientPath K V) :
+    SmoothCoefficientPath K (Space →L[ℝ] V) where
   field := A.derivativeField
   smooth t := by
     have he : (A.derivativeField t : Space → Space →L[ℝ] V) =
@@ -134,6 +135,10 @@ def derivative (A : SmoothCoefficientPath K V) : SmoothCoefficientPath K (Space 
     rw [he]
     exact A.derivativeJet_eq n t x
 
+@[simp] theorem derivative_apply (A : SmoothCoefficientPath K V) (t : K) (x : Space) :
+    A.derivative.field t x = fderiv ℝ (A.field t : Space → V) x :=
+  A.derivativeField_eq t x
+
 theorem translation_hasFDerivAt (A : SmoothCoefficientPath K V) (a : Space) :
     HasFDerivAt (translateCoefficientPath A.field)
       (pathDerivativeMap (translateCoefficientPath A.derivative.field a)) a := by
@@ -145,8 +150,9 @@ theorem translation_hasFDerivAt (A : SmoothCoefficientPath K V) (a : Space) :
 
 theorem translation_fderiv (A : SmoothCoefficientPath K V) :
     fderiv ℝ (translateCoefficientPath A.field) =
-      fun a => pathDerivativeBundling (translateCoefficientPath A.derivative.field a) :=
-  funext (fun a => (A.translation_hasFDerivAt a).fderiv)
+      fun a => pathDerivativeBundling (translateCoefficientPath A.derivative.field a) := by
+  funext a
+  simpa only [pathDerivativeBundling_apply] using (A.translation_hasFDerivAt a).fderiv
 
 private theorem translation_contDiff_nat_aux (n : ℕ) :
     ∀ (V : Type v) [NormedAddCommGroup V] [NormedSpace ℝ V] (A : SmoothCoefficientPath K V),

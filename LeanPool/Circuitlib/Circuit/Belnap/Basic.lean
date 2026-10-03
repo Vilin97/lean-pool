@@ -17,14 +17,14 @@ public import LeanPool.Circuitlib.Circuit.Wires
 
 -/
 
-@[expose] public section
+public section
 
 namespace Circuit
 
 namespace Belnap
 
 /-- The AND wire-function on a pair of Belnap-valued wires. -/
-@[inline]
+@[expose, inline]
 def and (w : Wires BelnapLevel 2) : Wires BelnapLevel 1 := #v[(w.get 0).and (w.get 1)]
 
 @[simp]
@@ -44,7 +44,7 @@ lemma and_monotonic : Monotone and := by
   exact and_leq (hab 0) (hab 1)
 
 /-- The OR wire-function on a pair of Belnap-valued wires. -/
-@[inline]
+@[expose, inline]
 def or (w : Wires BelnapLevel 2) : Wires BelnapLevel 1 := #v[(w.get 0).or (w.get 1)]
 
 @[simp]
@@ -64,7 +64,7 @@ lemma or_monotonic : Monotone or := by
   exact or_leq (hab 0) (hab 1)
 
 /-- The NOT wire-function on a single Belnap-valued wire. -/
-@[inline]
+@[expose, inline]
 def not (w : Wires BelnapLevel 1) : Wires BelnapLevel 1 := #v[ (w.get 0).not ]
 
 @[simp]

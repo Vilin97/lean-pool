@@ -18,7 +18,7 @@ public import Mathlib.RepresentationTheory.Invariants
 The finite property t component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

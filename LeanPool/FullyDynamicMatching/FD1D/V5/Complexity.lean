@@ -20,7 +20,7 @@ These are mathematical accounting functions, not runtime measurements of
 Lean's noncomputable definitions.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5
 

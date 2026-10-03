@@ -24,4 +24,4 @@ Import-only index for the basic list, stream, category, and tactic support
 modules in the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section

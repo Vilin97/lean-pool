@@ -48,7 +48,7 @@ doubling every coefficient preserves the support but destroys reducedness.
 Proc. Amer. Math. Soc. 134 (2006), 1277–1287, cited as [PS06].
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz.FinitePowerFamily
 
@@ -89,6 +89,7 @@ theorem typeLT_finiteLex (n : ℕ) :
       congr 2
 
 /-- The contraction factor separating consecutive lexicographic blocks. -/
+@[expose]
 def scale : ℝ := 1 / 3
 
 @[simp]
@@ -540,6 +541,7 @@ theorem finitePowerOz_hasFiniteDegree (n : ℕ) :
   exact omega_opow_nat_add_one_lt_omega_opow_omega n
 
 /-- Every coefficient-one omnific integer `finitePowerOz n` is primal. -/
+@[expose]
 def PrimalFamily : Prop :=
   ∀ n : ℕ, IsPrimal (finitePowerOz n)
 

@@ -30,4 +30,4 @@ Tags: graph-theory, eulerian-graphs, circuit-decomposition, sabidussi
 MSC: 05C45
 -/
 
-@[expose] public section
+public section

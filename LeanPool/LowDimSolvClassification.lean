@@ -27,7 +27,7 @@ Tags: lie-algebras, solvable, classification
 MSC: 17B30
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

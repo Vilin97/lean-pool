@@ -13,7 +13,7 @@ public import LeanPool.OrderClosures.GaoLeungProblem.OrdinalSpace
 # Adherence formulas for Gao stages
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

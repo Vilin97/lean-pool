@@ -25,7 +25,7 @@ import Mathlib.Tactic.Push
 Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker`.
 -/
 
-@[expose] public section
+public section
 
 open Nat
 

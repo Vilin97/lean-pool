@@ -26,7 +26,7 @@ section
 /-! Mixed derivative product estimates with only five total derivatives, for the base transport
 commutator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -167,7 +167,7 @@ section
 
 /-! Actual outer derivatives of mixed products, with a fixed total derivative budget. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -227,6 +227,7 @@ theorem mixed_outer_product_bound {n k l : ℕ} (hnkl : n + k + l ≤ 5)
           (fun x => F x • fieldDerivative period (standardDirection i) G x) x) :=
         fun x => (hF x).smul (fieldDerivative_smooth period _ G hG x)
       rw [word_add period (Fin.init a) _ _ hleft hright]
+      simp only [iteratedFieldDerivative_succ, Fin.cons_zero, Fin.tail_cons]
       rfl
     change MemLp (iteratedFieldDerivative period a (fun x => F x • G x)) 2 (liftMeasure period) ∧ _
     rw [he]
@@ -241,7 +242,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -257,7 +258,7 @@ open scoped ContDiff ENNReal Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The sum of H⁵ norms of the four actual first derivatives. -/
-def gradientFiveNorm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+@[expose] def gradientFiveNorm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : LiftDomain period → F) : ℝ :=
   ∑ i : Fin 4, liftSobolevNorm period 5 (fieldDerivative period (standardDirection i) f)
 
@@ -283,7 +284,8 @@ theorem derivative_memLp_five {F : Type*} [NormedAddCommGroup F] [NormedSpace �
       MemLp (iteratedFieldDerivative period w (fieldDerivative period (standardDirection i) f)) 2
           (liftMeasure period) := by
   intro j hj w
-  exact word_memLp period (by omega : 1+j ≤ 6) w (fun _ : Fin 1 => i) f hfL
+  simpa only [iteratedFieldDerivative_succ, iteratedFieldDerivative_zero] using
+    word_memLp period (by omega : 1+j ≤ 6) w (fun _ : Fin 1 => i) f hfL
 
 /-- The literal differential commutator D^w(fg)−f D^w g. -/
 def scalarCommutator {n : ℕ} (w : Fin n → Fin 4)
@@ -341,6 +343,8 @@ theorem mixed_scalarCommutator_bound {n l : ℕ} (hnl : n + l ≤ 6)
       (fieldDerivative period (standardDirection i) f) g (fieldDerivative_smooth period _ f hf) hg
       (derivative_memLp_five period f hfL i) hgL
     have h2 := ih (by omega : n+(l+1) ≤ 6) (Fin.init w) (Fin.cons i v)
+    simp only [iteratedFieldDerivative_zero] at h1
+    simp only [iteratedFieldDerivative_succ, Fin.cons_zero, Fin.tail_cons] at h2
     have h3 : (eLpNorm (iteratedFieldDerivative period (Fin.init w)
         (fun x => fieldDerivative period (standardDirection i) f x • iteratedFieldDerivative period
             v g x))
@@ -367,7 +371,8 @@ theorem scalarCommutator_bound {n : ℕ} (hn : n ≤ 6) (w : Fin n → Fin 4)
     (eLpNorm (scalarCommutator period w f g) 2 (liftMeasure period)).toReal ≤
       ((2 : ℝ)^n-1) * mixedConstant period * gradientFiveNorm period f * liftSobolevNorm period 5 g
           := by
-  exact mixed_scalarCommutator_bound period (by omega : n+0 ≤ 6) w Fin.elim0 f g hf hg hfL hgL
+  simpa only [iteratedFieldDerivative_zero] using
+    mixed_scalarCommutator_bound period (by omega : n+0 ≤ 6) w Fin.elim0 f g hf hg hfL hgL
 
 end EulerBaseTransportCommutator
 
@@ -381,7 +386,7 @@ section
 /-! Actual fixed-H⁶ external scalar multiplication commutators with positive-order binomial bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -416,11 +421,11 @@ theorem word_sub {n : ℕ} (w : Fin n → Fin 4) (f g : LiftDomain period → F)
     iteratedFieldDerivative period w (f-g) = iteratedFieldDerivative period w
         f-iteratedFieldDerivative period w g := by
   induction n with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ n ih =>
     rw [iteratedFieldDerivative_succ, ih (Fin.tail w), fieldDerivative_sub period _ _ _
       (iteratedFieldDerivative_smooth period _ f hf) (iteratedFieldDerivative_smooth period _ g hg)]
-    rfl
+    simp only [iteratedFieldDerivative_succ]
 
 end Subtraction
 
@@ -543,7 +548,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -567,15 +572,15 @@ theorem word_derivative_comm {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ
     iteratedFieldDerivative period w (fieldDerivative period a f) =
       fieldDerivative period a (iteratedFieldDerivative period w f) := by
   induction n with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ n ih =>
-    rw [iteratedFieldDerivative_succ, ih (Fin.tail w)]
+    rw [iteratedFieldDerivative_succ, ih (Fin.tail w), iteratedFieldDerivative_succ]
     funext x
     exact fieldDerivatives_commute period _ _ _ (iteratedFieldDerivative_smooth period (Fin.tail w)
         f hf) x
 
 /-- The literal external transport commutator D^w(b·∇e)−b·∇D^w e. -/
-def transportCommutator {n : ℕ} (w : Fin n → Fin 4)
+@[expose] def transportCommutator {n : ℕ} (w : Fin n → Fin 4)
     (b : LiftDomain period → Domain 4) (e : LiftDomain period → Vector3) : LiftDomain period →
         Vector3 :=
   iteratedFieldDerivative period w (transportField period 3 b e) -
@@ -602,8 +607,8 @@ theorem transportCommutator_eq_sum {n : ℕ} (w : Fin n → Fin 4)
   rfl
 
 /-- Sum of the actual H⁶ norms of all external transport commutators at one order. -/
-def transportCommutatorNorm (n : ℕ) (b : LiftDomain period → Domain 4) (e : LiftDomain period →
-    Vector3) : ℝ :=
+@[expose] def transportCommutatorNorm (n : ℕ) (b : LiftDomain period → Domain 4)
+    (e : LiftDomain period → Vector3) : ℝ :=
   ∑ w : Fin n → Fin 4, liftSobolevNorm period 6 (transportCommutator period w b e)
 
 /-- Positivity allows monotonicity of the coefficient sequence in the genuine commutator

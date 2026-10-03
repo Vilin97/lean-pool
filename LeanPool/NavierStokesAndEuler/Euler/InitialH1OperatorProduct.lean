@@ -16,7 +16,7 @@ These permit nonzero terminal values and hence explicit affine coordinate
 lifts in the fixed-space endpoint problem.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -62,7 +62,7 @@ variable (T : ℝ) (hT : 0 ≤ T) (A A₁ : C(Icc (0 : ℝ) T, E →L[ℝ] F))
 
 /-- Initial product derivative, given by `(timeMultiplier T hT A₁).comp (initialPrimitiveTimeLp
 T hT) + timeMultiplier T hT A`. -/
-def initialProductDerivative : TimeLp T E →L[ℝ] TimeLp T F :=
+@[expose] def initialProductDerivative : TimeLp T E →L[ℝ] TimeLp T F :=
   (timeMultiplier T hT A₁).comp (initialPrimitiveTimeLp T hT) + timeMultiplier T hT A
 
 /-- Initial product primitive, given by `extendPath T hT A t (initialRealPrimitive T u t)`. -/
@@ -118,7 +118,7 @@ theorem initialProductDerivative_eq_product_of_trace_zero (u : TimeLp T E)
   rfl
 
 /-- Constants embedded as a genuine bounded operator into time L². -/
-def constantFieldOperator : E →L[ℝ] TimeLp T E :=
+@[expose] def constantFieldOperator : E →L[ℝ] TimeLp T E :=
   (pathLpOperator T hT).comp (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T))
 
 omit [CompleteSpace E] in

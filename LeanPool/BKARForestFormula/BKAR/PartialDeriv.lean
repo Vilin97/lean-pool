@@ -20,13 +20,14 @@ appearing in the integrand of the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
 variable {V : Type*} [DecidableEq V]
 
 /-- Replace one BKAR edge coordinate in a parameter vector. -/
+@[expose]
 def updateCoord (x : Edge V → ℝ) (e : Edge V) (t : ℝ) : Edge V → ℝ :=
   Function.update x e t
 
@@ -70,6 +71,7 @@ theorem edgeBasis_of_ne {e e' : Edge V} (hne : e' ≠ e) :
     Pi.single_eq_of_ne (M := fun _ : Edge V => ℝ) hne (1 : ℝ)
 
 /-- Partial derivative of `ρ` along one edge coordinate. -/
+@[expose]
 noncomputable def partialDeriv (e : Edge V)
     (ρ : (Edge V → ℝ) → ℝ) (x : Edge V → ℝ) : ℝ :=
   deriv (fun t : ℝ => ρ (updateCoord x e t)) (x e)
@@ -108,6 +110,7 @@ theorem partialDeriv_of_hasFDerivAt [Finite V] (e : Edge V)
   exact hcomp.deriv
 
 /-- Iterated mixed partial derivative along a list of edge coordinates. -/
+@[expose]
 noncomputable def mixedPartialList :
     List (Edge V) → ((Edge V → ℝ) → ℝ) → (Edge V → ℝ) → ℝ
   | [], ρ => ρ
@@ -155,6 +158,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 variable (F : Forest V)
 
 /-- The mixed partial derivative indexed by the edge set of a forest. -/
+@[expose]
 noncomputable def mixedPartial (ρ : (Edge V → ℝ) → ℝ) :
     (Edge V → ℝ) → ℝ :=
   mixedPartialList F.edges.toList ρ

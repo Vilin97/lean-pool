@@ -28,7 +28,7 @@ section
 
 /-! # Fourier bounds for pressure test functionals -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +311,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -413,14 +413,14 @@ def l1PairLinear (g : Space → ℝ) (hg : Integrable g) : ComplexTest →ₗ[�
   integralPairLinear g testValueLinear (integrable_l1_pair hg)
 
 @[simp] theorem l2PairLinear_apply (W : Space → ℝ) (hW : MemLp W 2) (ψ : ComplexTest) :
-    l2PairLinear W hW ψ = ∫ x : Space, (W x : ℂ) * ψ x := rfl
+    l2PairLinear W hW ψ = ∫ x : Space, (W x : ℂ) * ψ x := by rfl
 
 @[simp] theorem l1PairLinear_apply (g : Space → ℝ) (hg : Integrable g) (ψ : ComplexTest) :
-    l1PairLinear g hg ψ = ∫ x : Space, (g x : ℂ) * ψ x := rfl
+    l1PairLinear g hg ψ = ∫ x : Space, (g x : ℂ) * ψ x := by rfl
 
 /-- The coefficients are the two time averages of velocity and the time average
 of the quadratic tensor in the conservative pressure equation. -/
-def averagedPressureDifferenceValue (W0 W1 : Space → ℝ)
+@[expose] def averagedPressureDifferenceValue (W0 W1 : Space → ℝ)
     (G : Fin 3 → Fin 3 → Space → ℝ) (k : Fin 3) (ψ : ComplexTest) : ℂ :=
   (∫ x : Space, (W0 x : ℂ) * laplacianCLM ψ x) +
     (∫ x : Space, (W1 x : ℂ) * ψ x) +
@@ -550,7 +550,7 @@ def pressurePairLinear (i j : Fin 3) (g : Space → ℝ) (hg : Integrable g) :
 
 @[simp] theorem pressurePairLinear_apply (i j : Fin 3) (g : Space → ℝ)
     (hg : Integrable g) (ψ : ComplexTest) :
-    pressurePairLinear i j g hg ψ = pressurePair i j g ψ := rfl
+    pressurePairLinear i j g hg ψ = pressurePair i j g ψ := by rfl
 
 /-- The averaged pressure-gradient difference determined by the stated
 velocity and quadratic-tensor coefficients. -/

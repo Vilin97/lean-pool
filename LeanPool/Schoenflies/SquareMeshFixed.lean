@@ -114,7 +114,7 @@ hypothesis giving two distinct fresh points.
   open.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -740,6 +740,7 @@ chain running from `P.1` to `P.2`. Nothing about the mesh appears in it. -/
 /-- **The overlay subdivides each source segment into a path.** For each nondegenerate source
 segment `P` there is an ordering `W` of *exactly* the overlay edges lying inside `P` which is a
 path of the overlay from `P.1` to `P.2`. -/
+@[expose]
 def SubdividesToPath (pieces : List Piece) (points : List Plane) : Prop :=
   ∀ P ∈ pieces, P.Nondeg → ∃ W : List Piece,
     (overlayGraph pieces points).IsPath P.1 W P.2 ∧
@@ -779,16 +780,16 @@ sides are disjoint; two adjacent ones meet in their common corner. Everything is
 `mem_segment_horiz` / `mem_segment_vert` and `plane_eq_of_coords`. -/
 
 /-- The top side of `S`, from the north-east corner to the north-west one. -/
-def sideT : Piece := (Plane.mk 1 1, Plane.mk (-1) 1)
+@[expose] def sideT : Piece := (Plane.mk 1 1, Plane.mk (-1) 1)
 
 /-- The left side of `S`. -/
-def sideL : Piece := (Plane.mk (-1) 1, Plane.mk (-1) (-1))
+@[expose] def sideL : Piece := (Plane.mk (-1) 1, Plane.mk (-1) (-1))
 
 /-- The bottom side of `S`. -/
-def sideB : Piece := (Plane.mk (-1) (-1), Plane.mk 1 (-1))
+@[expose] def sideB : Piece := (Plane.mk (-1) (-1), Plane.mk 1 (-1))
 
 /-- The right side of `S`, from the south-east corner back to the north-east one. -/
-def sideR : Piece := (Plane.mk 1 (-1), Plane.mk 1 1)
+@[expose] def sideR : Piece := (Plane.mk 1 (-1), Plane.mk 1 1)
 
 theorem sideT_mem_ringPieces : sideT ∈ ringPieces 1 := by simp [ringPieces, sideT]
 theorem sideL_mem_ringPieces : sideL ∈ ringPieces 1 := by simp [ringPieces, sideL]

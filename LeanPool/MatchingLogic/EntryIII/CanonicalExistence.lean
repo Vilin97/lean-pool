@@ -21,7 +21,7 @@ import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 # MatchingLogic.EntryIII.CanonicalExistence
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 
@@ -34,7 +34,7 @@ noncomputable section
 /-- The exact one-sorted universal statement of the source's canonical
 Existence Lemma.  It lives with the stage-system interface so the construction
 precedes, rather than imports, the Truth Lemma that consumes it. -/
-def CanonicalExistenceProperty (S : Signature) : Prop :=
+@[expose] def CanonicalExistenceProperty (S : Signature) : Prop :=
   ∀ (Gamma : CanonicalCarrier S) (sigma : S.Sym)
     (args : Fin (S.arity sigma) → Pattern S Nat),
     Pattern.app sigma args ∈ Gamma.val →

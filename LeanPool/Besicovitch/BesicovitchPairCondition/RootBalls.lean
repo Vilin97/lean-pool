@@ -13,12 +13,12 @@ public import LeanPool.Besicovitch.Statement
 The direct pair-condition transfer charges both child extractions to one union of root balls.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Besicovitch
 
 /-- The common open neighborhood formed by two balls of the same radius. -/
-def rootBallUnion (x y : (EuclideanSpace ℝ (Fin 2))) (r : ℝ) :
+@[expose] def rootBallUnion (x y : (EuclideanSpace ℝ (Fin 2))) (r : ℝ) :
     Set (EuclideanSpace ℝ (Fin 2)) :=
   Metric.ball x r ∪ Metric.ball y r
 

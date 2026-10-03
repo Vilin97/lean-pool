@@ -17,7 +17,7 @@ import Mathlib.Tactic.ArithMult.Init
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -69,7 +69,7 @@ theorem meromorphicOrderAt_poleClearedCompletedDedekindZetaContinuation_nonneg
 
 open Classical in
 /-- A completed dedekind zeta zero divisor used in the Odlyzko-bound argument. -/
-noncomputable def completedDedekindZetaZeroDivisor :
+@[expose] noncomputable def completedDedekindZetaZeroDivisor :
     Function.locallyFinsuppWithin (Set.univ : Set ℂ) ℤ :=
   MeromorphicOn.divisor
     (poleClearedCompletedDedekindZetaContinuation K) Set.univ

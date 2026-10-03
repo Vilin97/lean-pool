@@ -11,7 +11,7 @@ public import LeanPool.DirectedTopologyLean4.FundamentalCategory
 # LeanPool.DirectedTopologyLean4.DipathSubtype
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains properties of dipaths contained in directed subspaces of a directed space.
@@ -50,14 +50,14 @@ lemma target_elt_of_image_subset {γ : Dipath x y} (hγ : range γ ⊆ X₀) : y
     := γ.target ▸ (hγ (mem_range_self 1))
 
 /-- Lift a path whose range lies inside `X₀` to a path in the subtype `X₀`. -/
-def SubtypePath {γ : Dipath x y} (hγ : range γ ⊆ X₀) :
+@[expose] def SubtypePath {γ : Dipath x y} (hγ : range γ ⊆ X₀) :
     Path (⟨x, source_elt_of_image_subset hγ⟩ : X₀) ⟨y, target_elt_of_image_subset hγ⟩ where
   toFun := fun t => ⟨γ t, hγ (mem_range_self t)⟩
   source' := by simp
   target' := by simp
 
 /-- Lift a dipath whose range lies inside `X₀` to a dipath in the subtype `X₀`. -/
-def SubtypeDipath (γ : Dipath x y) (hγ : range γ ⊆ X₀) :
+@[expose] def SubtypeDipath (γ : Dipath x y) (hγ : range γ ⊆ X₀) :
     Dipath (⟨x, source_elt_of_image_subset hγ⟩ : X₀) ⟨y, target_elt_of_image_subset hγ⟩ where
   toPath := SubtypePath hγ
   dipath_toPath := γ.dipath_toPath

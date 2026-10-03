@@ -21,7 +21,7 @@ reference endpoint is discharged explicitly at level zero by the reference-map s
 transversality theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

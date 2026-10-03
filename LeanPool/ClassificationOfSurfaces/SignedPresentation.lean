@@ -24,7 +24,7 @@ does not trust the stored vertex endpoints. This is the combinatorial input need
 boundary-word moves can be stated independently of a presentation's original edge names.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -34,7 +34,7 @@ namespace SurfaceCellComplex
 namespace SignedDart
 
 /-- Relabel signed darts along an equivalence of edge names. -/
-def mapEquiv {α β : Type*} (e : α ≃ β) : SignedDart α ≃ SignedDart β where
+@[expose] def mapEquiv {α β : Type*} (e : α ≃ β) : SignedDart α ≃ SignedDart β where
   toFun
     | .pos a => .pos (e a)
     | .neg a => .neg (e a)

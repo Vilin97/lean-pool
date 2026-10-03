@@ -30,7 +30,7 @@ row–vector products. Under the Gaussian law on `A`, each `Aᵢ · x` is `N(0, 
 labeled hypothesis by the existence theorem.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

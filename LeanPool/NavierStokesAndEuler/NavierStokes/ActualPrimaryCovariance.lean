@@ -17,7 +17,7 @@ those of `CorrectionInitialization.ActualPrimary`.  The finite family is
 assembled before averaging.  The fixed starting threshold is retained.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -144,7 +144,7 @@ theorem physicalTangentMode_eq_slot (j : Fin 2) (L : Label B N0) (p : Slow)
 /-! ## The same physical point in each fixed label's native coordinates -/
 
 /-- Native point, given by `nativeSlow L (toAbsolute n x)`. -/
-noncomputable def nativePoint (n : ℕ) (x : Point) (L : Label B N0) : Slow :=
+@[expose] noncomputable def nativePoint (n : ℕ) (x : Point) (L : Label B N0) : Slow :=
   nativeSlow L (toAbsolute n x)
 
 theorem nativePoint_auxiliary (n : ℕ) (x : Point) (L : Label B N0) (Y : Plane) :
@@ -236,6 +236,7 @@ theorem nativePoint_reference (n : ℕ) {x : Point}
   · exact hm
 
 /-- Unsigned labels as an element of `Finset (Label B N0)`. -/
+@[expose]
 noncomputable def unsignedLabels (B N0 n : ℕ) : Finset (Label B N0) := by
   classical
   exact (CorrectionInitialization.CommonWindow.labels (CoordinateAlgebra.D h)
@@ -262,6 +263,7 @@ theorem active_cover_le (n : ℕ) {L : Label B N0} (hL : L ∈ unsignedLabels B 
   exact CorrectionInitialization.CommonWindow.index_le hm
 
 /-- Signed label of, given by `signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2`. -/
+@[expose]
 noncomputable def signedLabelOf (l : Label B N0 × Fin 2) : SlotColoring.Label :=
   signedLabel (PrimaryGeometryAssembly.label nominal l.1) l.2
 
@@ -279,7 +281,7 @@ theorem signedLabelOf_injective : Function.Injective (signedLabelOf (B := B) (N0
   rfl
 
 /-- View tangent, constructed using `physicalTangentMode`. -/
-noncomputable def viewTangent (n : ℕ) (x : Point) (l : Label B N0 × Fin 2)
+@[expose] noncomputable def viewTangent (n : ℕ) (x : Point) (l : Label B N0 × Fin 2)
     (Y : Plane) (theta : ℝ) : Fin 3 → ℝ :=
   physicalTangentMode l.2 l.1 (nativePoint n x l.1)
     ((CommonCoverSolve.coverPower (CorrectionInitialization.CommonWindow.index h n)).symm Y) theta
@@ -413,7 +415,7 @@ noncomputable def physicalLeading (n : ℕ) (x : Point) (i : Fin 2) : ℝ :=
 
 /-- Partition factor, given by `∑ L ∈ unsignedLabels B N0 n, spatialMask L (nativePoint n x L) ^
 2`. -/
-noncomputable def partitionFactor (B N0 n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def partitionFactor (B N0 n : ℕ) (x : Point) : ℝ :=
   ∑ L ∈ unsignedLabels B N0 n, spatialMask L (nativePoint n x L) ^ 2
 
 theorem viewSum_covariance_factor (B N0 n : ℕ) {x : Point}
@@ -579,13 +581,13 @@ theorem physicalScale_tail (B N0 : ℕ) {n : ℕ} (hn : (choice B N0).prepared.N
 
 /-- Tangent sum, defined pointwise by `∑ l ∈ activeLabels standardRegion B N0 n, (piece
 standardRegion l.2 l.1).tangentVelocity n z i`. -/
-noncomputable def tangentSum (B N0 : ℕ) : CorrectionState.Oscillation Point :=
+@[expose] noncomputable def tangentSum (B N0 : ℕ) : CorrectionState.Oscillation Point :=
   fun n z i => ∑ l ∈ activeLabels standardRegion B N0 n,
     (piece standardRegion l.2 l.1).tangentVelocity n z i
 
 /-- Tangent covariance, given by `CorrectionState.bilinearCovariance (tangentSum B N0)
 (tangentSum B N0) i j`. -/
-noncomputable def tangentCovariance (B N0 : ℕ) (i j : Fin 3) :
+@[expose] noncomputable def tangentCovariance (B N0 : ℕ) (i j : Fin 3) :
     CorrectionState.ScalarField Point :=
   CorrectionState.bilinearCovariance (tangentSum B N0) (tangentSum B N0) i j
 
@@ -1065,6 +1067,7 @@ theorem slotAmplitude_supported {D h : ℝ} {vr vt : Plane}
 
 /-- Absolute auxiliary, given by `(CommonCoverSolve.coverPower
 (CorrectionInitialization.CommonWindow.index h n)).symm x.2.2`. -/
+@[expose]
 noncomputable def absoluteAuxiliary (n : ℕ) (x : Point) : Plane :=
   (CommonCoverSolve.coverPower (CorrectionInitialization.CommonWindow.index h n)).symm x.2.2
 
@@ -1075,6 +1078,7 @@ theorem absoluteAuxiliary_continuous (n : ℕ) : Continuous (absoluteAuxiliary n
 
 /-- Physical window, given by `(SquaredPartition.logCoordinate (physicalScale n x),
 physicalPosition n x)`. -/
+@[expose]
 noncomputable def physicalWindow (n : ℕ) (x : Point) : LabelSumBounds.WindowPoint :=
   (SquaredPartition.logCoordinate (physicalScale n x), physicalPosition n x)
 
@@ -1105,7 +1109,7 @@ theorem physicalWindow_continuousOn (n : ℕ) :
 
 /-- Cut amplitude, given by `((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude
 n`. -/
-noncomputable def cutAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) :
+@[expose] noncomputable def cutAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) :
     FullPoint → HarmonicCalculus.ComplexVector :=
   ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n
 

@@ -50,7 +50,7 @@ Three layers:
   joins but no indexed supremum.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -26,7 +26,7 @@ collapses to the ambient category.
   whose carrier is zero collapses to the other summand.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -41,6 +41,7 @@ section UnitModule
 
 /-- Any object, as a module over the tensor unit through the
 trivial action. -/
+@[expose]
 def unitMod [Category.{v} D] [MonoidalCategory D]
     (X : D) : Mod D (𝟙_ D) := ⟨X⟩
 
@@ -93,7 +94,7 @@ lemma modTensorLegM_unitBase_eq
 /-- **Over the trivial base the module tensor product is the
 plain tensor product**: the coequalizer of a pair of equal legs
 is the target itself. -/
-@[simps]
+@[expose, simps]
 noncomputable def modTensorUnitBase
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     (M : Mod D (𝟙_ D)) (N : Mod D (𝟙_ D)) [HasCoequalizers D] :
@@ -130,6 +131,7 @@ theorem freeModUnitBase_linear_inv
 
 /-- **The free module over the trivial base is its generator**,
 via the left unitor. -/
+@[expose]
 noncomputable def freeModUnitBase
     [Category.{v} D] [MonoidalCategory D] (V : D) :
     freeMod (𝟙_ D) V ≅ unitMod V where

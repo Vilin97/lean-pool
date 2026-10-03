@@ -33,7 +33,7 @@ buying the extra half-level over the pair form `ahl_irregular_moore`.
   arithmetic instantiates at the extremal `V₉/2`-core.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

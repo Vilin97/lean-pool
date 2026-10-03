@@ -42,7 +42,7 @@ Rellich compactness is not used. This is the analytic core of Theorem B; the con
 Günther operator is shown to satisfy (E1), (E2) in `GuntherOperator.lean`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Filter Topology NashEmbedding.Sobolev

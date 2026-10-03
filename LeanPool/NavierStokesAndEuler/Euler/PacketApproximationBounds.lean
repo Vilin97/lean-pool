@@ -20,7 +20,7 @@ section
 
 /-! Inverse-frame normalized approximation bounds are independent of truncation length. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -55,7 +55,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

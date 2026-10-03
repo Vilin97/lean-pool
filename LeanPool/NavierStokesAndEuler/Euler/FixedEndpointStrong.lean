@@ -16,7 +16,7 @@ from its explicit coordinate primitive.  No ambient normal, nor a supplied
 weak equation or smooth representative, is an input to these results.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

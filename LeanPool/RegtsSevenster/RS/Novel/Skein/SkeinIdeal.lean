@@ -21,7 +21,7 @@ row of the original — the rotation of closures moves the
 composed factor into the test fragment.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

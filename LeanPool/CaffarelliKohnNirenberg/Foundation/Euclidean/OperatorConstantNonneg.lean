@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.OscillationLin34
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Real
 

@@ -19,7 +19,7 @@ Order estimates for the scalar ODE occurring in equation (30) of the proposed
 Euler packet argument.  These are finite-dimensional ODE results only.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -857,10 +857,12 @@ theorem inversion_riccati_error
 
 /-- Inversion of a solution in the original time variable, including the
 rescaling `x = ετ`. -/
+@[expose]
 noncomputable def invertedScalar (ε : ℝ) (V : ℝ → ℝ) (y : ℝ) : ℝ :=
   V (y⁻¹ / ε) / y
 
 /-- The exact derivative of `invertedScalar`, away from `y = 0`. -/
+@[expose]
 noncomputable def invertedScalarDeriv (ε : ℝ) (V V₁ : ℝ → ℝ) (y : ℝ) : ℝ :=
   -V (y⁻¹ / ε) / y ^ 2 - V₁ (y⁻¹ / ε) / (ε * y ^ 3)
 
@@ -1827,11 +1829,11 @@ theorem equation30_inverted_riccati_range
     hinit.1 hinit.2.1 hinit.2.2 y ⟨le_rfl, hy1⟩
 
 /-- The ideal next-frame numerator in inversion coordinates. -/
-def idealFrameNumerator (ε y z : ℝ) : ℝ :=
+@[expose] def idealFrameNumerator (ε y z : ℝ) : ℝ :=
   -1 + (1 + y ^ 4) * z ^ 2 + ε ^ 2 * y ^ 2 - 2 * ε * z * y ^ 3
 
 /-- The ideal next-frame denominator divided by `x²`, where `y=1/x`. -/
-def idealFrameDenominator (ε y z : ℝ) : ℝ :=
+@[expose] def idealFrameDenominator (ε y z : ℝ) : ℝ :=
   1 - ε ^ 2 * y ^ 2 + 2 * ε * z * y ^ 3
 
 /-- The two exact algebraic identities used for the ideal frame renewal. -/

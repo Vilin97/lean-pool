@@ -18,7 +18,7 @@ label recovers exactly the S5 map.  Relabelling acts by the same coordinate perm
 lift is genuinely prime-equivariant.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace AAK

@@ -20,7 +20,7 @@ assumed, and no assertion that separate copy classes have uniform constants
 is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -504,6 +504,7 @@ end UniformModalControl
 
 /-- Reindexed base, bundling `radius`, `radialBase`, `frequencyBase`, `axialBase` and the
 required compatibility proofs. -/
+@[expose]
 noncomputable def reindexedBase {D : Type*} (base : Label → LinearWaveBounds.WaveCoefficients D)
     (e : ℕ → ℕ × Label) : LinearWaveBounds.WaveCoefficients D where
   radius n := (base (e n).2).radius (e n).1

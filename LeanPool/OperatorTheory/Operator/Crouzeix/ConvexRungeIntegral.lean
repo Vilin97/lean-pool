@@ -25,7 +25,7 @@ gives finite sampled kernel sums, and a diagonal choice of their polynomial
 approximants converges uniformly to the full integral.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Topology Interval

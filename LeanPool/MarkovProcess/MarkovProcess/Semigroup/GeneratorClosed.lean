@@ -27,7 +27,7 @@ Nothing is asserted about the domain beyond closedness of the graph; density is 
 `Semigroup/Generator.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped NNReal

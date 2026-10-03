@@ -17,7 +17,7 @@ Proves `muPL_norm_sq_bound` and `hessian_coercive_on_orthogonal_of_MuPL_impl`,
 establishing that the Hessian is μ-coercive on ker(Hess)⊥ under the PŁ condition.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Submodule Asymptotics
 

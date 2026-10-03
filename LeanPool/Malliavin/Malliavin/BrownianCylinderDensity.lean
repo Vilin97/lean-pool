@@ -16,7 +16,7 @@ This file proves that powers of finite linear combinations of Brownian coordinat
 ambient real `L²` space whenever the Brownian process generates the ambient measurable space.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open NormedSpace
@@ -251,11 +251,13 @@ theorem memLp_two_stepSum_pow (hB : IsPreBrownianReal B P)
   ring
 
 /-- A polynomial generator obtained by taking a power of a finite Brownian step sum. -/
+@[expose]
 def brownianStepPowerLp (hB : IsPreBrownianReal B P)
     (v : ℝ≥0 →₀ ℝ) (n : ℕ) : RandomL2 P :=
   (memLp_two_stepSum_pow hB v n).toLp fun w ↦ stepSum B v w ^ n
 
 /-- The algebraic space of Brownian polynomial cylinders. -/
+@[expose]
 def brownianPolynomialSpan (hB : IsPreBrownianReal B P) :
     Submodule ℝ (RandomL2 P) :=
   Submodule.span ℝ (Set.range fun a : (ℝ≥0 →₀ ℝ) × ℕ ↦

@@ -18,7 +18,7 @@ epic, and the ordinary tensor product with a zero object is
 zero.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

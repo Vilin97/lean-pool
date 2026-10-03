@@ -34,7 +34,7 @@ Tags: nonassociative-algebra, composition-algebras, octonions, hurwitz-theorem, 
 MSC: 17A75, 17A35, 11E88
 -/
 
-@[expose] public section
+public section
 
 /-!
 # Euclidean composition algebras over `ℝ`

@@ -38,7 +38,7 @@ Combining the two pins down the torsion order at
 `eg:cycle`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

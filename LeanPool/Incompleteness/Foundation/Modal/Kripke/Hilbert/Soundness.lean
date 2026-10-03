@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # Soundness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

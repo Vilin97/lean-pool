@@ -26,7 +26,7 @@ points extends or truncates a broken line by one segment.  Preconnectedness of `
 the complement to be empty.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -35,7 +35,7 @@ namespace Moise
 
 /-- `a` and `b` are joined by a broken line inside `U`: there is a finite chain of vertices
 starting at `a` and ending at `b` such that every consecutive closed segment lies in `U`. -/
-def JoinedByBrokenLine (U : Set Plane) (a b : Plane) : Prop :=
+@[expose] def JoinedByBrokenLine (U : Set Plane) (a b : Plane) : Prop :=
   ∃ (n : ℕ) (v : Fin (n + 1) → Plane), v 0 = a ∧ v (Fin.last n) = b ∧
     ∀ i : Fin n, segment ℝ (v i.castSucc) (v i.succ) ⊆ U
 

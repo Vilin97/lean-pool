@@ -14,7 +14,7 @@ BG-01 hyperplane separation follows the source's basis construction.
 ST-02's modular-cut rule is then proved using the exact rank equality.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

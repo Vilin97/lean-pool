@@ -18,7 +18,7 @@ the coordinate change. Increasing the coordinate bounds only weakens the
 required inverse-power gap threshold.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -145,13 +145,14 @@ theorem normalized_gap_bound {K : Φ.flag.Node → ℕ}
     Fintype.card_pos (hKB x) d).trans (hgap x)
 
 /-- The subdivision map obtained by cleaning and normalizing the pruned weights. -/
+@[expose]
 noncomputable def normalizedSubdivisionMap :
     SubdivisionMap Φ (D.normalized hp C hmod hcenter) :=
   (D.cleanedSubdivisionMap hp).comp (Rechart.subdivisionMap (D.cleaned hp) C hp hmod hcenter)
 
 @[simp]
 theorem normalizedSubdivisionMap_node (x : (D.cleaned hp).flag.Node) :
-    (D.normalizedSubdivisionMap hp C hmod hcenter).node x = x.val.val := rfl
+    (D.normalizedSubdivisionMap hp C hmod hcenter).node x = x.val.val := by rfl
 
 theorem normalized_isRealizedFace (x : (D.cleaned hp).flag.Node)
     (Γ : (Φ.flag.polytope x.val.val).Face)

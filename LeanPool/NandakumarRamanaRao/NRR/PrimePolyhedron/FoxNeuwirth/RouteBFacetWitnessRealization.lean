@@ -18,7 +18,7 @@ that target by one global movable-parameter assignment.  This is the algebraic a
 concrete endpoint-stack facet witnesses.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 open FoxNeuwirthOrderComplex
@@ -40,6 +40,7 @@ variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 
 /-- A local target respects the relative boundary when it agrees with the base assignment at every
 frozen local scalar site. -/
+@[expose]
 def LocalTargetRespectsFrozen
     (base : Assignment hp C) (q : C.Cell)
     (target : Fin (p + 1) → Fin p → Real) : Prop :=

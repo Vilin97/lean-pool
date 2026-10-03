@@ -19,7 +19,7 @@ The concrete normalized operations satisfy the iteration's level, stable
 mass transport, parent injectivity, resolution, and numerical requirements.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

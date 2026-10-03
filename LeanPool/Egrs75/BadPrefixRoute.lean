@@ -80,7 +80,7 @@ existing clean file.  Formalizes the KNOWN theorem EGRS75 (1975); three primes i
 Erdős #376 (OPEN) — not attempted.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.Finish
 

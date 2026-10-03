@@ -19,7 +19,7 @@ This file merges the following former modules, one section each:
 * `DyadicAncestorTail`: Uniform tail bounds for finite dyadic ancestor chains
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess
 
@@ -91,6 +91,7 @@ variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [PseudoEMetricSpace E]
 
 /-- The canonical inclusion of the level-`n` unit dyadic grid into level `n + 1`.
 Its value is twice the old grid index. -/
+@[expose]
 def unitDyadicRefineIndex (n : ℕ) (i : Fin (2 ^ n + 1)) : Fin (2 ^ (n + 1) + 1) :=
   ⟨2 * i.val, by
     have hi : i.val ≤ 2 ^ n := Nat.le_of_lt_succ i.isLt
@@ -112,6 +113,7 @@ theorem unitDyadicGrid_refineIndex (n : ℕ) (i : Fin (2 ^ n + 1)) :
 
 /-- The canonical level-`n` parent of a point on the level-`n + 1` unit dyadic grid.
 It is obtained by rounding the fine-grid index down after division by two. -/
+@[expose]
 def unitDyadicParentIndex (n : ℕ) (i : Fin (2 ^ (n + 1) + 1)) : Fin (2 ^ n + 1) :=
   ⟨i.val / 2, by
     have hi : i.val ≤ 2 ^ (n + 1) := Nat.le_of_lt_succ i.isLt
@@ -201,6 +203,7 @@ open scoped ENNReal NNReal
 variable {Ω E : Type*} {mΩ : MeasurableSpace Ω} [PseudoEMetricSpace E]
 
 /-- The canonical level-`n` ancestor of a point lying `r` dyadic refinements above it. -/
+@[expose]
 def unitDyadicAncestorIndex (n : ℕ) :
     (r : ℕ) → Fin (2 ^ (n + r) + 1) → Fin (2 ^ n + 1)
   | 0, i => i

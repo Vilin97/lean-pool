@@ -27,7 +27,7 @@ The perturbation direction is a single global continuous map.  Consequently valu
 shared refined face and prime-symmetry equivariance is preserved.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -204,7 +204,7 @@ structure RegularApproximation
 namespace RegularApproximation
 
 /-- Positive orbit count represented by a regular refined approximation. -/
-noncomputable def zeroCount
+@[expose] noncomputable def zeroCount
     {hp : Nat.Prime p} {F : ContinuousCoordinateMap p}
     (A : RegularApproximation hp F) : ZMod p :=
   RefinedAffineMap.zeroCount hp A.level A.map

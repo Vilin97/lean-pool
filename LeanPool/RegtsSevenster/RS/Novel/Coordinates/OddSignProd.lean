@@ -12,7 +12,7 @@ public import LeanPool.RegtsSevenster.RS.Novel.Skein.TransitionExists
 # Product of odd signs over vertices equals product over outgoing flags
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

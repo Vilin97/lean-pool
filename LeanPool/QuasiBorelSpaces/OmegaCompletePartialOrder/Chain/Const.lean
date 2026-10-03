@@ -13,7 +13,7 @@ public import Mathlib.Order.OmegaCompletePartialOrder
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Const`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace OmegaCompletePartialOrder.Chain

@@ -29,7 +29,7 @@ Tags: combinatorics, polynomial-method, alon-tarsi, restricted-sums, congruence-
 MSC: 11B30, 11B75, 11P70
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

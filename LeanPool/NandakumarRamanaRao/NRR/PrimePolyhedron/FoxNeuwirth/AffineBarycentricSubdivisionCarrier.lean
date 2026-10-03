@@ -23,7 +23,7 @@ is determined by the image point itself.  These are the algebraic carrier facts 
 piecewise-affine interpolation agrees on overlapping barycentric-subdivision simplices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

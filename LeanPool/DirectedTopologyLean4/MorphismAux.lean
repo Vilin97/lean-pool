@@ -12,7 +12,7 @@ import Mathlib.Tactic.Attr.Core
 # LeanPool.DirectedTopologyLean4.MorphismAux
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains auxiliary equalities of objects morphisms in a category.

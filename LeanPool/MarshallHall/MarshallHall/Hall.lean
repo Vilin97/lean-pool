@@ -12,7 +12,7 @@ public import LeanPool.MarshallHall.MarshallHall.Separation
 /-! The finite-core completion argument.  Its conclusion records the actual
 inclusion of the original subgroup into the finite-index subgroup. -/
 
-@[expose] public section
+public section
 
 open Set Function
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver FreeGroup

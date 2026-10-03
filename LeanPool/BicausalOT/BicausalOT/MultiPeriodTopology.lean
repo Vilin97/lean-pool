@@ -28,7 +28,7 @@ public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 The product topology on histories, by recursion on the time index. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

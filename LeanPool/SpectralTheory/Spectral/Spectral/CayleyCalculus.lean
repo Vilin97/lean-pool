@@ -17,7 +17,7 @@ result turns a PVM representation of the scalar Cayley phase into containment of
 self-adjoint operator, after which self-adjoint maximality upgrades containment to equality.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

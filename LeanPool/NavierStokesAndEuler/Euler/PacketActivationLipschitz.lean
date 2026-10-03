@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryLipschitz
 constants below are computed from the supplied smooth coefficient paths;
 no continuity or estimate for the solved history is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -114,17 +114,20 @@ local instance instPacketActivationLipschitz18 : NormedSpace ℝ C(Icc (0 : ℝ)
     inferInstance
 
 /-- History transport cost as an element of `ℝ`. -/
+@[expose]
 def historyTransportCost : ℝ :=
   1+((2*(D.frameLower⁻¹)^2*‖D.frame.field‖^2*‖D.frameDerivative.field‖+
     D.frameLower⁻¹*‖D.frameDerivative.field‖)*D.T+D.frameLower⁻¹*‖D.frame.field‖)
 
 /-- History label size cost, constructed using `historyCost`. -/
+@[expose]
 def historyLabelSizeCost : ℝ :=
   historyCost D.T D.frameLower ‖D.frame.field‖ ‖D.frameDerivative.field‖
     (D.T*‖D.frameDerivative.field‖+‖D.frame.field‖) (1+D.T^2*‖B.H.field‖)
     (historyTransportCost (D := D))
 
 /-- History label difference cost, constructed using `historyDifferenceCost`. -/
+@[expose]
 def historyLabelDifferenceCost : ℝ :=
   historyDifferenceCost D.T D.frameLower ‖D.frame.field‖ ‖D.frameDerivative.field‖
     (D.T*‖D.frameDerivative.field‖+‖D.frame.field‖) (1+D.T^2*‖B.H.field‖)

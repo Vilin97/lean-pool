@@ -55,7 +55,7 @@ project's permitted
 `Element.ext`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -70,7 +70,7 @@ namespace ApproximableMap
 /-- **Exercise 4.10 (Scott 1981, PRG-19).** The relativized neighbourhood system
 `Dₐ`: same tokens
 and master, neighbourhoods exactly the members of the filter `a`. -/
-def relSystem (a : V.Element) : NeighborhoodSystem α where
+@[expose] def relSystem (a : V.Element) : NeighborhoodSystem α where
   mem X := a.mem X
   master := V.master
   master_mem := a.master_mem
@@ -80,10 +80,10 @@ def relSystem (a : V.Element) : NeighborhoodSystem α where
 @[simp] theorem relSystem_mem (a : V.Element) {X : Set α} :
     (relSystem a).mem X ↔ a.mem X := Iff.rfl
 
-@[simp] theorem relSystem_master (a : V.Element) : (relSystem a).master = V.master := rfl
+@[simp] theorem relSystem_master (a : V.Element) : (relSystem a).master = V.master := by rfl
 
 /-- The `𝒟`-element obtained from a `Dₐ`-filter by upward closure in `𝒟`. -/
-def embed (a : V.Element) (g : (relSystem a).Element) : V.Element where
+@[expose] def embed (a : V.Element) (g : (relSystem a).Element) : V.Element where
   mem X := V.mem X ∧ ∃ W, a.mem W ∧ g.mem W ∧ W ⊆ X
   sub := fun h => h.1
   master_mem := ⟨V.master_mem, V.master, a.master_mem, g.master_mem, subset_rfl⟩

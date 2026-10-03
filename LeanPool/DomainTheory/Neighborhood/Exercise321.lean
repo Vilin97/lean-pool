@@ -40,7 +40,7 @@ outputs are `Δ₂`, or
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

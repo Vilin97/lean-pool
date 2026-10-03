@@ -21,7 +21,7 @@ This is what makes "the number of chords" a single notion: it is
 the diagram, and they agree.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -62,6 +62,7 @@ theorem boundaryLabel_boundaryFlag {W : Fragment α}
 
 /-- The label a subset's chain carries a used label to; the identity on
 unused ones. -/
+@[expose]
 noncomputable def chordInv {W : Fragment α}
     (F : EdgeSubset W) (κ : F.RelTransitionSystem)
     (i : α) : α :=

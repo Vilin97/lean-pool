@@ -35,7 +35,7 @@ expansion `p(x) ≤ Σₖ |fₖ(x)| · cₖ` with `|fₖ| ≤ q`), we:
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -50,7 +50,7 @@ there exist CLFs `fₙ` and non-negative reals `cₙ` with `Σ cₙ < ∞`, and 
 continuous seminorm `q ≥ p`, such that `|fₙ(x)| ≤ q(x)` and
 `p(x) ≤ Σₙ |fₙ(x)| · cₙ`.
 -/
-def IsNuclear (E : Type*) [AddCommGroup E] [Module ℝ E]
+@[expose] def IsNuclear (E : Type*) [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] : Prop :=
   ∀ (p : Seminorm ℝ E), Continuous p →
     ∃ (q : Seminorm ℝ E), Continuous q ∧ (∀ x, p x ≤ q x) ∧
@@ -175,7 +175,7 @@ def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
 theorem hilbertianLift_apply (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x) (x : E) :
-    hilbertianLift f c hc_nn hc_sum q hfq x = Real.sqrt (∑' n, (f n x) ^ 2 * c n) := rfl
+    hilbertianLift f c hc_nn hc_sum q hfq x = Real.sqrt (∑' n, (f n x) ^ 2 * c n) := by rfl
 
 /-- The Hilbertian lift satisfies the parallelogram law.
 

@@ -19,7 +19,7 @@ by their induced subgraphs.  This is the structural extraction lemma needed
 to turn articulation/block data into divisor and transmission theorems.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -53,18 +53,22 @@ theorem right_nonempty : cut.right.Nonempty :=
   ⟨cut.glue, cut.glue_mem_right⟩
 
 /-- The induced left factor. -/
+@[expose]
 noncomputable def leftGraph : CFGraph :=
   inducedSubgraph K cut.left cut.left_nonempty
 
 /-- The induced right factor. -/
+@[expose]
 noncomputable def rightGraph : CFGraph :=
   inducedSubgraph K cut.right cut.right_nonempty
 
 /-- The common vertex as a vertex of the left induced factor. -/
+@[expose]
 noncomputable def leftGlue : cut.leftGraph.V :=
   ⟨cut.glue, cut.glue_mem_left⟩
 
 /-- The common vertex as a vertex of the right induced factor. -/
+@[expose]
 noncomputable def rightGlue : cut.rightGraph.V :=
   ⟨cut.glue, cut.glue_mem_right⟩
 
@@ -74,6 +78,7 @@ noncomputable def rightGlue : cut.rightGraph.V :=
 
 /-- A one-vertex cut canonically presents the ambient graph as the wedge of
 its two induced factors. -/
+@[expose]
 noncomputable def presentation :
     VertexWedgePresentation K cut.leftGraph cut.rightGraph
       cut.leftGlue cut.rightGlue where
@@ -125,6 +130,7 @@ noncomputable def presentation :
         exact hValue
 
 /-- The occurrence-safe graph isomorphism extracted from a one-vertex cut. -/
+@[expose]
 noncomputable def graphIso :
     CFGraphIso
       (vertexWedge cut.leftGraph cut.rightGraph cut.leftGlue cut.rightGlue) K :=

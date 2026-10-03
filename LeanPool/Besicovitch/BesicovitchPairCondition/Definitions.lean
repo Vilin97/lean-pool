@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.Statement
 This file defines straight measures and the pair condition in the Euclidean plane.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -23,14 +23,17 @@ open scoped ENNReal
 namespace LeanPool.Besicovitch
 
 /-- The extended distance between two sets; it is infinite when either set is empty. -/
+@[expose]
 def setEDist {X : Type*} [PseudoEMetricSpace X] (s t : Set X) : ℝ≥0∞ :=
   ⨅ x ∈ s, ⨅ y ∈ t, edist x y
 
 /-- A measure is straight if every measurable set has mass at most its extended diameter. -/
+@[expose]
 def IsStraightMeasure (μ : Measure (EuclideanSpace ℝ (Fin 2))) : Prop :=
   ∀ s, MeasurableSet s → μ s ≤ Metric.ediam s
 
 /-- The Besicovitch pair condition at density parameter `β`. -/
+@[expose]
 def BesicovitchPairCondition (β : ℝ) : Prop :=
   ∀ μ : Measure (EuclideanSpace ℝ (Fin 2)), IsStraightMeasure μ →
     ∃ τ : ℝ, 0 < τ ∧ ∀ scale : ℝ, 0 < scale →

@@ -19,7 +19,7 @@ genus-one transmission theorem, this turns an exact torsion calculation on a
 cycle factor directly into `KGeneralTransmission`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

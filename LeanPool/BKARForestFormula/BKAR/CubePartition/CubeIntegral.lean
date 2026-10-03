@@ -22,7 +22,7 @@ cube integral of the BKAR forest interpolation formula (see
 `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,6 +36,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 The parameter cube `[0, 1]^{E(F)}` for a forest.  Parameters are indexed by
 the edge subtype `F.EdgeParam`.
 -/
+@[expose]
 def unitCube (F : Forest V) : Set (F.EdgeParam → ℝ) :=
   Set.univ.pi fun _ => Set.Icc (0 : ℝ) 1
 
@@ -49,6 +50,7 @@ The ordered simplex sector inside the unit cube attached to one edge order.
 For `order = [e₁, ..., eₙ]`, this is the region
 `1 ≥ u(e₁) ≥ ... ≥ u(eₙ) ≥ 0`, together with the ambient cube bounds.
 -/
+@[expose]
 def orderedCubeSimplex (F : Forest V) (order : List (Edge V)) :
     Set (F.EdgeParam → ℝ) :=
   {u | u ∈ F.unitCube ∧
@@ -277,6 +279,7 @@ theorem unitCube_eq_iUnion_orderedCubeSimplex (F : Forest V) :
 The usual unordered BKAR cube contribution for one `Forest` representative, using the
 mixed partial attached to `F.edges.toList`.
 -/
+@[expose]
 def cubeContribution (F : Forest V) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   ∫ u in F.unitCube, F.mixedPartial ρ (F.standardInterp u)
 
@@ -285,6 +288,7 @@ The set-integral version of one ordered cube sector.  The later cube-partition
 bridge identifies the sum of these sectors with `cubeContribution`; the
 ordered-simplex bridge identifies each sector with `orderedContribution`.
 -/
+@[expose]
 def orderedCubeSectorContribution
     (F : Forest V) (order : List (Edge V))
     (ρ : (Edge V → ℝ) → ℝ) : ℝ :=

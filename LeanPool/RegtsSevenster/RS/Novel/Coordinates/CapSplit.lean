@@ -17,7 +17,7 @@ transported merge of model vectors is the product of the smaller
 cap value and the strand evaluation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

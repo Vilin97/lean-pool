@@ -27,4 +27,4 @@ Tags: information-theory, channel-capacity, mutual-information, kullback-leibler
 MSC: 94A17, 94A15, 60A10
 -/
 
-@[expose] public section
+public section

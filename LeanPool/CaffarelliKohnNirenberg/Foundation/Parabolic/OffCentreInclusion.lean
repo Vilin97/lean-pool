@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Vec3Norm
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

@@ -13,6 +13,8 @@ public import LeanPool.HadwigerNelsonBounds.PartsCertificateData3
 public import LeanPool.HadwigerNelsonBounds.PartsCertificateData4
 public import LeanPool.HadwigerNelsonBounds.PartsCertificateData5
 public import LeanPool.HadwigerNelsonBounds.PartsCertificateData6
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.NormNum
 
 /-!
 # The Parts obstruction to a monochromatic sqrt-three triangle
@@ -22,25 +24,25 @@ root symmetries and the remaining color swap. The resulting 432 certificates
 cover every proper normalized coloring of the 13-vertex 2-Golomb root.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Swap the two colors not fixed by the normalized root. -/
-def partsSwapMiddleColor (color : Fin 4) : Fin 4 := ![0, 2, 1, 3] color
+@[expose] def partsSwapMiddleColor (color : Fin 4) : Fin 4 := ![0, 2, 1, 3] color
 
 /-- The color renaming used by a certificate variant. -/
-def partsTransformColor (swap : Bool) (color : Fin 4) : Fin 4 :=
+@[expose] def partsTransformColor (swap : Bool) (color : Fin 4) : Fin 4 :=
   if swap then partsSwapMiddleColor color else color
 
 /-- Rename the vertices and optionally the two free colors of an assignment. -/
-def partsTransformAssignment (symmetry : Fin 6) (swap : Bool)
+@[expose] def partsTransformAssignment (symmetry : Fin 6) (swap : Bool)
     (assignment : PartsAssignment) : PartsAssignment :=
   { vertex := partsPermuteVertex symmetry assignment.vertex
     color := partsTransformColor swap assignment.color }
 
 /-- Transform a root path without materializing a second copy of its tree. -/
-def partsTransformPath (symmetry : Fin 6) (swap : Bool) :
+@[expose] def partsTransformPath (symmetry : Fin 6) (swap : Bool) :
     List PartsAssignment → List PartsAssignment
   | [] => []
   | assignment :: path =>
@@ -190,11 +192,4929 @@ private lemma IsTransform.isUnit_eq {symmetry : Fin 6} {point image : PartsPoint
 end PartsPoint
 
 /-- The stored vertex tables implement the exact isometries described above. -/
+private lemma partsPoint_permuteVertex_isTransform_case0 :
+    ∀ vertex, PartsPoint.IsTransform (0 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (0 : Fin 6) vertex)) := by
+  rintro ⟨vertex, bound⟩
+  have hsplit :
+      vertex < 120 ∨
+        (120 ≤ vertex ∧ vertex < 240) ∨
+        (240 ≤ vertex ∧ vertex < 360) ∨
+        360 ≤ vertex := by omega
+  rcases hsplit with upper | ⟨lower, upper⟩ | ⟨lower, upper⟩ | lower
+  all_goals
+    interval_cases vertex <;> simp only [PartsPoint.IsTransform]
+    all_goals
+      have hbound : bound = (by decide) := Subsingleton.elim _ _
+      rw [hbound]
+      rfl
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk0
+    (vertex : Fin 481) (range : vertex.val < 8) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  interval_cases vertex
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk1
+    (vertex : Fin 481) (range : 8 ≤ vertex.val ∧ vertex.val < 16) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk2
+    (vertex : Fin 481) (range : 16 ≤ vertex.val ∧ vertex.val < 24) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk3
+    (vertex : Fin 481) (range : 24 ≤ vertex.val ∧ vertex.val < 32) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk4
+    (vertex : Fin 481) (range : 32 ≤ vertex.val ∧ vertex.val < 40) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk5
+    (vertex : Fin 481) (range : 40 ≤ vertex.val ∧ vertex.val < 48) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk6
+    (vertex : Fin 481) (range : 48 ≤ vertex.val ∧ vertex.val < 56) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0, partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk7
+    (vertex : Fin 481) (range : 56 ≤ vertex.val ∧ vertex.val < 64) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk8
+    (vertex : Fin 481) (range : 64 ≤ vertex.val ∧ vertex.val < 72) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk0, partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk9
+    (vertex : Fin 481) (range : 72 ≤ vertex.val ∧ vertex.val < 80) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk10
+    (vertex : Fin 481) (range : 80 ≤ vertex.val ∧ vertex.val < 88) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk11
+    (vertex : Fin 481) (range : 88 ≤ vertex.val ∧ vertex.val < 96) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk12
+    (vertex : Fin 481) (range : 96 ≤ vertex.val ∧ vertex.val < 104) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk13
+    (vertex : Fin 481) (range : 104 ≤ vertex.val ∧ vertex.val < 112) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk14
+    (vertex : Fin 481) (range : 112 ≤ vertex.val ∧ vertex.val < 120) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk15
+    (vertex : Fin 481) (range : 120 ≤ vertex.val ∧ vertex.val < 128) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk16
+    (vertex : Fin 481) (range : 128 ≤ vertex.val ∧ vertex.val < 136) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk1, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk17
+    (vertex : Fin 481) (range : 136 ≤ vertex.val ∧ vertex.val < 144) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk18
+    (vertex : Fin 481) (range : 144 ≤ vertex.val ∧ vertex.val < 152) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk19
+    (vertex : Fin 481) (range : 152 ≤ vertex.val ∧ vertex.val < 160) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk20
+    (vertex : Fin 481) (range : 160 ≤ vertex.val ∧ vertex.val < 168) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk21
+    (vertex : Fin 481) (range : 168 ≤ vertex.val ∧ vertex.val < 176) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk22
+    (vertex : Fin 481) (range : 176 ≤ vertex.val ∧ vertex.val < 184) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk23
+    (vertex : Fin 481) (range : 184 ≤ vertex.val ∧ vertex.val < 192) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk2,
+      partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk24
+    (vertex : Fin 481) (range : 192 ≤ vertex.val ∧ vertex.val < 200) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk25
+    (vertex : Fin 481) (range : 200 ≤ vertex.val ∧ vertex.val < 208) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk26
+    (vertex : Fin 481) (range : 208 ≤ vertex.val ∧ vertex.val < 216) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk27
+    (vertex : Fin 481) (range : 216 ≤ vertex.val ∧ vertex.val < 224) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk28
+    (vertex : Fin 481) (range : 224 ≤ vertex.val ∧ vertex.val < 232) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk29
+    (vertex : Fin 481) (range : 232 ≤ vertex.val ∧ vertex.val < 240) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk30
+    (vertex : Fin 481) (range : 240 ≤ vertex.val ∧ vertex.val < 248) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk31
+    (vertex : Fin 481) (range : 248 ≤ vertex.val ∧ vertex.val < 256) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk32
+    (vertex : Fin 481) (range : 256 ≤ vertex.val ∧ vertex.val < 264) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk33
+    (vertex : Fin 481) (range : 264 ≤ vertex.val ∧ vertex.val < 272) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk34
+    (vertex : Fin 481) (range : 272 ≤ vertex.val ∧ vertex.val < 280) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk35
+    (vertex : Fin 481) (range : 280 ≤ vertex.val ∧ vertex.val < 288) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk36
+    (vertex : Fin 481) (range : 288 ≤ vertex.val ∧ vertex.val < 296) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk37
+    (vertex : Fin 481) (range : 296 ≤ vertex.val ∧ vertex.val < 304) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk38
+    (vertex : Fin 481) (range : 304 ≤ vertex.val ∧ vertex.val < 312) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk39
+    (vertex : Fin 481) (range : 312 ≤ vertex.val ∧ vertex.val < 320) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk4,
+      partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk40
+    (vertex : Fin 481) (range : 320 ≤ vertex.val ∧ vertex.val < 328) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk41
+    (vertex : Fin 481) (range : 328 ≤ vertex.val ∧ vertex.val < 336) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk42
+    (vertex : Fin 481) (range : 336 ≤ vertex.val ∧ vertex.val < 344) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk43
+    (vertex : Fin 481) (range : 344 ≤ vertex.val ∧ vertex.val < 352) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk44
+    (vertex : Fin 481) (range : 352 ≤ vertex.val ∧ vertex.val < 360) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk45
+    (vertex : Fin 481) (range : 360 ≤ vertex.val ∧ vertex.val < 368) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk46
+    (vertex : Fin 481) (range : 368 ≤ vertex.val ∧ vertex.val < 376) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk47
+    (vertex : Fin 481) (range : 376 ≤ vertex.val ∧ vertex.val < 384) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk5,
+      partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk48
+    (vertex : Fin 481) (range : 384 ≤ vertex.val ∧ vertex.val < 392) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk49
+    (vertex : Fin 481) (range : 392 ≤ vertex.val ∧ vertex.val < 400) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk50
+    (vertex : Fin 481) (range : 400 ≤ vertex.val ∧ vertex.val < 408) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk51
+    (vertex : Fin 481) (range : 408 ≤ vertex.val ∧ vertex.val < 416) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk52
+    (vertex : Fin 481) (range : 416 ≤ vertex.val ∧ vertex.val < 424) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk53
+    (vertex : Fin 481) (range : 424 ≤ vertex.val ∧ vertex.val < 432) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk54
+    (vertex : Fin 481) (range : 432 ≤ vertex.val ∧ vertex.val < 440) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk55
+    (vertex : Fin 481) (range : 440 ≤ vertex.val ∧ vertex.val < 448) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk6,
+      partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk56
+    (vertex : Fin 481) (range : 448 ≤ vertex.val ∧ vertex.val < 456) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk7,
+      partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk57
+    (vertex : Fin 481) (range : 456 ≤ vertex.val ∧ vertex.val < 464) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk58
+    (vertex : Fin 481) (range : 464 ≤ vertex.val ∧ vertex.val < 472) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk59
+    (vertex : Fin 481) (range : 472 ≤ vertex.val ∧ vertex.val < 480) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1_chunk60
+    (vertex : Fin 481) (range : 480 ≤ vertex.val ∧ vertex.val < 481) :
+    PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation1, partsVertexPermutation1Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case1 :
+    ∀ vertex, PartsPoint.IsTransform (1 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (1 : Fin 6) vertex)) := by
+  intro vertex
+  by_cases h0 : vertex.val < 8
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk0 vertex h0
+  by_cases h1 : vertex.val < 16
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk1 vertex ⟨by omega, h1⟩
+  by_cases h2 : vertex.val < 24
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk2 vertex ⟨by omega, h2⟩
+  by_cases h3 : vertex.val < 32
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk3 vertex ⟨by omega, h3⟩
+  by_cases h4 : vertex.val < 40
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk4 vertex ⟨by omega, h4⟩
+  by_cases h5 : vertex.val < 48
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk5 vertex ⟨by omega, h5⟩
+  by_cases h6 : vertex.val < 56
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk6 vertex ⟨by omega, h6⟩
+  by_cases h7 : vertex.val < 64
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk7 vertex ⟨by omega, h7⟩
+  by_cases h8 : vertex.val < 72
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk8 vertex ⟨by omega, h8⟩
+  by_cases h9 : vertex.val < 80
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk9 vertex ⟨by omega, h9⟩
+  by_cases h10 : vertex.val < 88
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk10 vertex ⟨by omega, h10⟩
+  by_cases h11 : vertex.val < 96
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk11 vertex ⟨by omega, h11⟩
+  by_cases h12 : vertex.val < 104
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk12 vertex ⟨by omega, h12⟩
+  by_cases h13 : vertex.val < 112
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk13 vertex ⟨by omega, h13⟩
+  by_cases h14 : vertex.val < 120
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk14 vertex ⟨by omega, h14⟩
+  by_cases h15 : vertex.val < 128
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk15 vertex ⟨by omega, h15⟩
+  by_cases h16 : vertex.val < 136
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk16 vertex ⟨by omega, h16⟩
+  by_cases h17 : vertex.val < 144
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk17 vertex ⟨by omega, h17⟩
+  by_cases h18 : vertex.val < 152
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk18 vertex ⟨by omega, h18⟩
+  by_cases h19 : vertex.val < 160
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk19 vertex ⟨by omega, h19⟩
+  by_cases h20 : vertex.val < 168
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk20 vertex ⟨by omega, h20⟩
+  by_cases h21 : vertex.val < 176
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk21 vertex ⟨by omega, h21⟩
+  by_cases h22 : vertex.val < 184
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk22 vertex ⟨by omega, h22⟩
+  by_cases h23 : vertex.val < 192
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk23 vertex ⟨by omega, h23⟩
+  by_cases h24 : vertex.val < 200
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk24 vertex ⟨by omega, h24⟩
+  by_cases h25 : vertex.val < 208
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk25 vertex ⟨by omega, h25⟩
+  by_cases h26 : vertex.val < 216
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk26 vertex ⟨by omega, h26⟩
+  by_cases h27 : vertex.val < 224
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk27 vertex ⟨by omega, h27⟩
+  by_cases h28 : vertex.val < 232
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk28 vertex ⟨by omega, h28⟩
+  by_cases h29 : vertex.val < 240
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk29 vertex ⟨by omega, h29⟩
+  by_cases h30 : vertex.val < 248
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk30 vertex ⟨by omega, h30⟩
+  by_cases h31 : vertex.val < 256
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk31 vertex ⟨by omega, h31⟩
+  by_cases h32 : vertex.val < 264
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk32 vertex ⟨by omega, h32⟩
+  by_cases h33 : vertex.val < 272
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk33 vertex ⟨by omega, h33⟩
+  by_cases h34 : vertex.val < 280
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk34 vertex ⟨by omega, h34⟩
+  by_cases h35 : vertex.val < 288
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk35 vertex ⟨by omega, h35⟩
+  by_cases h36 : vertex.val < 296
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk36 vertex ⟨by omega, h36⟩
+  by_cases h37 : vertex.val < 304
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk37 vertex ⟨by omega, h37⟩
+  by_cases h38 : vertex.val < 312
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk38 vertex ⟨by omega, h38⟩
+  by_cases h39 : vertex.val < 320
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk39 vertex ⟨by omega, h39⟩
+  by_cases h40 : vertex.val < 328
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk40 vertex ⟨by omega, h40⟩
+  by_cases h41 : vertex.val < 336
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk41 vertex ⟨by omega, h41⟩
+  by_cases h42 : vertex.val < 344
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk42 vertex ⟨by omega, h42⟩
+  by_cases h43 : vertex.val < 352
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk43 vertex ⟨by omega, h43⟩
+  by_cases h44 : vertex.val < 360
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk44 vertex ⟨by omega, h44⟩
+  by_cases h45 : vertex.val < 368
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk45 vertex ⟨by omega, h45⟩
+  by_cases h46 : vertex.val < 376
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk46 vertex ⟨by omega, h46⟩
+  by_cases h47 : vertex.val < 384
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk47 vertex ⟨by omega, h47⟩
+  by_cases h48 : vertex.val < 392
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk48 vertex ⟨by omega, h48⟩
+  by_cases h49 : vertex.val < 400
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk49 vertex ⟨by omega, h49⟩
+  by_cases h50 : vertex.val < 408
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk50 vertex ⟨by omega, h50⟩
+  by_cases h51 : vertex.val < 416
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk51 vertex ⟨by omega, h51⟩
+  by_cases h52 : vertex.val < 424
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk52 vertex ⟨by omega, h52⟩
+  by_cases h53 : vertex.val < 432
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk53 vertex ⟨by omega, h53⟩
+  by_cases h54 : vertex.val < 440
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk54 vertex ⟨by omega, h54⟩
+  by_cases h55 : vertex.val < 448
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk55 vertex ⟨by omega, h55⟩
+  by_cases h56 : vertex.val < 456
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk56 vertex ⟨by omega, h56⟩
+  by_cases h57 : vertex.val < 464
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk57 vertex ⟨by omega, h57⟩
+  by_cases h58 : vertex.val < 472
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk58 vertex ⟨by omega, h58⟩
+  by_cases h59 : vertex.val < 480
+  · exact partsPoint_permuteVertex_isTransform_case1_chunk59 vertex ⟨by omega, h59⟩
+  exact partsPoint_permuteVertex_isTransform_case1_chunk60 vertex ⟨by omega, by omega⟩
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk0
+    (vertex : Fin 481) (range : vertex.val < 8) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  interval_cases vertex
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk1
+    (vertex : Fin 481) (range : 8 ≤ vertex.val ∧ vertex.val < 16) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk2
+    (vertex : Fin 481) (range : 16 ≤ vertex.val ∧ vertex.val < 24) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk3
+    (vertex : Fin 481) (range : 24 ≤ vertex.val ∧ vertex.val < 32) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk4
+    (vertex : Fin 481) (range : 32 ≤ vertex.val ∧ vertex.val < 40) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk5
+    (vertex : Fin 481) (range : 40 ≤ vertex.val ∧ vertex.val < 48) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk6
+    (vertex : Fin 481) (range : 48 ≤ vertex.val ∧ vertex.val < 56) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk7
+    (vertex : Fin 481) (range : 56 ≤ vertex.val ∧ vertex.val < 64) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk0,
+      partsPointChunk0, partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk8
+    (vertex : Fin 481) (range : 64 ≤ vertex.val ∧ vertex.val < 72) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk0, partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk9
+    (vertex : Fin 481) (range : 72 ≤ vertex.val ∧ vertex.val < 80) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk10
+    (vertex : Fin 481) (range : 80 ≤ vertex.val ∧ vertex.val < 88) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk11
+    (vertex : Fin 481) (range : 88 ≤ vertex.val ∧ vertex.val < 96) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk12
+    (vertex : Fin 481) (range : 96 ≤ vertex.val ∧ vertex.val < 104) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk13
+    (vertex : Fin 481) (range : 104 ≤ vertex.val ∧ vertex.val < 112) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk14
+    (vertex : Fin 481) (range : 112 ≤ vertex.val ∧ vertex.val < 120) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk15
+    (vertex : Fin 481) (range : 120 ≤ vertex.val ∧ vertex.val < 128) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk1,
+      partsPointChunk1, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk16
+    (vertex : Fin 481) (range : 128 ≤ vertex.val ∧ vertex.val < 136) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk1, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk17
+    (vertex : Fin 481) (range : 136 ≤ vertex.val ∧ vertex.val < 144) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk18
+    (vertex : Fin 481) (range : 144 ≤ vertex.val ∧ vertex.val < 152) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk19
+    (vertex : Fin 481) (range : 152 ≤ vertex.val ∧ vertex.val < 160) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk20
+    (vertex : Fin 481) (range : 160 ≤ vertex.val ∧ vertex.val < 168) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk21
+    (vertex : Fin 481) (range : 168 ≤ vertex.val ∧ vertex.val < 176) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk22
+    (vertex : Fin 481) (range : 176 ≤ vertex.val ∧ vertex.val < 184) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk23
+    (vertex : Fin 481) (range : 184 ≤ vertex.val ∧ vertex.val < 192) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk2,
+      partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk24
+    (vertex : Fin 481) (range : 192 ≤ vertex.val ∧ vertex.val < 200) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk25
+    (vertex : Fin 481) (range : 200 ≤ vertex.val ∧ vertex.val < 208) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk26
+    (vertex : Fin 481) (range : 208 ≤ vertex.val ∧ vertex.val < 216) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk27
+    (vertex : Fin 481) (range : 216 ≤ vertex.val ∧ vertex.val < 224) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk28
+    (vertex : Fin 481) (range : 224 ≤ vertex.val ∧ vertex.val < 232) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk29
+    (vertex : Fin 481) (range : 232 ≤ vertex.val ∧ vertex.val < 240) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk30
+    (vertex : Fin 481) (range : 240 ≤ vertex.val ∧ vertex.val < 248) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk31
+    (vertex : Fin 481) (range : 248 ≤ vertex.val ∧ vertex.val < 256) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk32
+    (vertex : Fin 481) (range : 256 ≤ vertex.val ∧ vertex.val < 264) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk33
+    (vertex : Fin 481) (range : 264 ≤ vertex.val ∧ vertex.val < 272) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk34
+    (vertex : Fin 481) (range : 272 ≤ vertex.val ∧ vertex.val < 280) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk35
+    (vertex : Fin 481) (range : 280 ≤ vertex.val ∧ vertex.val < 288) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk36
+    (vertex : Fin 481) (range : 288 ≤ vertex.val ∧ vertex.val < 296) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk37
+    (vertex : Fin 481) (range : 296 ≤ vertex.val ∧ vertex.val < 304) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk38
+    (vertex : Fin 481) (range : 304 ≤ vertex.val ∧ vertex.val < 312) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk39
+    (vertex : Fin 481) (range : 312 ≤ vertex.val ∧ vertex.val < 320) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk4,
+      partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk40
+    (vertex : Fin 481) (range : 320 ≤ vertex.val ∧ vertex.val < 328) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk41
+    (vertex : Fin 481) (range : 328 ≤ vertex.val ∧ vertex.val < 336) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk42
+    (vertex : Fin 481) (range : 336 ≤ vertex.val ∧ vertex.val < 344) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk43
+    (vertex : Fin 481) (range : 344 ≤ vertex.val ∧ vertex.val < 352) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk44
+    (vertex : Fin 481) (range : 352 ≤ vertex.val ∧ vertex.val < 360) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk45
+    (vertex : Fin 481) (range : 360 ≤ vertex.val ∧ vertex.val < 368) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk46
+    (vertex : Fin 481) (range : 368 ≤ vertex.val ∧ vertex.val < 376) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk47
+    (vertex : Fin 481) (range : 376 ≤ vertex.val ∧ vertex.val < 384) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk5,
+      partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk48
+    (vertex : Fin 481) (range : 384 ≤ vertex.val ∧ vertex.val < 392) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk49
+    (vertex : Fin 481) (range : 392 ≤ vertex.val ∧ vertex.val < 400) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk50
+    (vertex : Fin 481) (range : 400 ≤ vertex.val ∧ vertex.val < 408) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk51
+    (vertex : Fin 481) (range : 408 ≤ vertex.val ∧ vertex.val < 416) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk52
+    (vertex : Fin 481) (range : 416 ≤ vertex.val ∧ vertex.val < 424) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk53
+    (vertex : Fin 481) (range : 424 ≤ vertex.val ∧ vertex.val < 432) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk54
+    (vertex : Fin 481) (range : 432 ≤ vertex.val ∧ vertex.val < 440) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk55
+    (vertex : Fin 481) (range : 440 ≤ vertex.val ∧ vertex.val < 448) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk6,
+      partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk56
+    (vertex : Fin 481) (range : 448 ≤ vertex.val ∧ vertex.val < 456) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk57
+    (vertex : Fin 481) (range : 456 ≤ vertex.val ∧ vertex.val < 464) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk7,
+      partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk58
+    (vertex : Fin 481) (range : 464 ≤ vertex.val ∧ vertex.val < 472) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk59
+    (vertex : Fin 481) (range : 472 ≤ vertex.val ∧ vertex.val < 480) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2_chunk60
+    (vertex : Fin 481) (range : 480 ≤ vertex.val ∧ vertex.val < 481) :
+    PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation2, partsVertexPermutation2Chunk7,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case2 :
+    ∀ vertex, PartsPoint.IsTransform (2 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (2 : Fin 6) vertex)) := by
+  intro vertex
+  by_cases h0 : vertex.val < 8
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk0 vertex h0
+  by_cases h1 : vertex.val < 16
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk1 vertex ⟨by omega, h1⟩
+  by_cases h2 : vertex.val < 24
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk2 vertex ⟨by omega, h2⟩
+  by_cases h3 : vertex.val < 32
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk3 vertex ⟨by omega, h3⟩
+  by_cases h4 : vertex.val < 40
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk4 vertex ⟨by omega, h4⟩
+  by_cases h5 : vertex.val < 48
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk5 vertex ⟨by omega, h5⟩
+  by_cases h6 : vertex.val < 56
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk6 vertex ⟨by omega, h6⟩
+  by_cases h7 : vertex.val < 64
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk7 vertex ⟨by omega, h7⟩
+  by_cases h8 : vertex.val < 72
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk8 vertex ⟨by omega, h8⟩
+  by_cases h9 : vertex.val < 80
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk9 vertex ⟨by omega, h9⟩
+  by_cases h10 : vertex.val < 88
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk10 vertex ⟨by omega, h10⟩
+  by_cases h11 : vertex.val < 96
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk11 vertex ⟨by omega, h11⟩
+  by_cases h12 : vertex.val < 104
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk12 vertex ⟨by omega, h12⟩
+  by_cases h13 : vertex.val < 112
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk13 vertex ⟨by omega, h13⟩
+  by_cases h14 : vertex.val < 120
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk14 vertex ⟨by omega, h14⟩
+  by_cases h15 : vertex.val < 128
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk15 vertex ⟨by omega, h15⟩
+  by_cases h16 : vertex.val < 136
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk16 vertex ⟨by omega, h16⟩
+  by_cases h17 : vertex.val < 144
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk17 vertex ⟨by omega, h17⟩
+  by_cases h18 : vertex.val < 152
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk18 vertex ⟨by omega, h18⟩
+  by_cases h19 : vertex.val < 160
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk19 vertex ⟨by omega, h19⟩
+  by_cases h20 : vertex.val < 168
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk20 vertex ⟨by omega, h20⟩
+  by_cases h21 : vertex.val < 176
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk21 vertex ⟨by omega, h21⟩
+  by_cases h22 : vertex.val < 184
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk22 vertex ⟨by omega, h22⟩
+  by_cases h23 : vertex.val < 192
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk23 vertex ⟨by omega, h23⟩
+  by_cases h24 : vertex.val < 200
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk24 vertex ⟨by omega, h24⟩
+  by_cases h25 : vertex.val < 208
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk25 vertex ⟨by omega, h25⟩
+  by_cases h26 : vertex.val < 216
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk26 vertex ⟨by omega, h26⟩
+  by_cases h27 : vertex.val < 224
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk27 vertex ⟨by omega, h27⟩
+  by_cases h28 : vertex.val < 232
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk28 vertex ⟨by omega, h28⟩
+  by_cases h29 : vertex.val < 240
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk29 vertex ⟨by omega, h29⟩
+  by_cases h30 : vertex.val < 248
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk30 vertex ⟨by omega, h30⟩
+  by_cases h31 : vertex.val < 256
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk31 vertex ⟨by omega, h31⟩
+  by_cases h32 : vertex.val < 264
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk32 vertex ⟨by omega, h32⟩
+  by_cases h33 : vertex.val < 272
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk33 vertex ⟨by omega, h33⟩
+  by_cases h34 : vertex.val < 280
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk34 vertex ⟨by omega, h34⟩
+  by_cases h35 : vertex.val < 288
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk35 vertex ⟨by omega, h35⟩
+  by_cases h36 : vertex.val < 296
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk36 vertex ⟨by omega, h36⟩
+  by_cases h37 : vertex.val < 304
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk37 vertex ⟨by omega, h37⟩
+  by_cases h38 : vertex.val < 312
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk38 vertex ⟨by omega, h38⟩
+  by_cases h39 : vertex.val < 320
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk39 vertex ⟨by omega, h39⟩
+  by_cases h40 : vertex.val < 328
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk40 vertex ⟨by omega, h40⟩
+  by_cases h41 : vertex.val < 336
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk41 vertex ⟨by omega, h41⟩
+  by_cases h42 : vertex.val < 344
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk42 vertex ⟨by omega, h42⟩
+  by_cases h43 : vertex.val < 352
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk43 vertex ⟨by omega, h43⟩
+  by_cases h44 : vertex.val < 360
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk44 vertex ⟨by omega, h44⟩
+  by_cases h45 : vertex.val < 368
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk45 vertex ⟨by omega, h45⟩
+  by_cases h46 : vertex.val < 376
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk46 vertex ⟨by omega, h46⟩
+  by_cases h47 : vertex.val < 384
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk47 vertex ⟨by omega, h47⟩
+  by_cases h48 : vertex.val < 392
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk48 vertex ⟨by omega, h48⟩
+  by_cases h49 : vertex.val < 400
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk49 vertex ⟨by omega, h49⟩
+  by_cases h50 : vertex.val < 408
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk50 vertex ⟨by omega, h50⟩
+  by_cases h51 : vertex.val < 416
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk51 vertex ⟨by omega, h51⟩
+  by_cases h52 : vertex.val < 424
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk52 vertex ⟨by omega, h52⟩
+  by_cases h53 : vertex.val < 432
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk53 vertex ⟨by omega, h53⟩
+  by_cases h54 : vertex.val < 440
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk54 vertex ⟨by omega, h54⟩
+  by_cases h55 : vertex.val < 448
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk55 vertex ⟨by omega, h55⟩
+  by_cases h56 : vertex.val < 456
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk56 vertex ⟨by omega, h56⟩
+  by_cases h57 : vertex.val < 464
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk57 vertex ⟨by omega, h57⟩
+  by_cases h58 : vertex.val < 472
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk58 vertex ⟨by omega, h58⟩
+  by_cases h59 : vertex.val < 480
+  · exact partsPoint_permuteVertex_isTransform_case2_chunk59 vertex ⟨by omega, h59⟩
+  exact partsPoint_permuteVertex_isTransform_case2_chunk60 vertex ⟨by omega, by omega⟩
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk0
+    (vertex : Fin 481) (range : vertex.val < 8) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  interval_cases vertex
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk1
+    (vertex : Fin 481) (range : 8 ≤ vertex.val ∧ vertex.val < 16) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk3, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk2
+    (vertex : Fin 481) (range : 16 ≤ vertex.val ∧ vertex.val < 24) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk3
+    (vertex : Fin 481) (range : 24 ≤ vertex.val ∧ vertex.val < 32) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk4
+    (vertex : Fin 481) (range : 32 ≤ vertex.val ∧ vertex.val < 40) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk5
+    (vertex : Fin 481) (range : 40 ≤ vertex.val ∧ vertex.val < 48) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk6
+    (vertex : Fin 481) (range : 48 ≤ vertex.val ∧ vertex.val < 56) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk7
+    (vertex : Fin 481) (range : 56 ≤ vertex.val ∧ vertex.val < 64) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk0,
+      partsPointChunk0, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk8
+    (vertex : Fin 481) (range : 64 ≤ vertex.val ∧ vertex.val < 72) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk9
+    (vertex : Fin 481) (range : 72 ≤ vertex.val ∧ vertex.val < 80) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk10
+    (vertex : Fin 481) (range : 80 ≤ vertex.val ∧ vertex.val < 88) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk11
+    (vertex : Fin 481) (range : 88 ≤ vertex.val ∧ vertex.val < 96) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk12
+    (vertex : Fin 481) (range : 96 ≤ vertex.val ∧ vertex.val < 104) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk13
+    (vertex : Fin 481) (range : 104 ≤ vertex.val ∧ vertex.val < 112) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk14
+    (vertex : Fin 481) (range : 112 ≤ vertex.val ∧ vertex.val < 120) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk15
+    (vertex : Fin 481) (range : 120 ≤ vertex.val ∧ vertex.val < 128) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk16
+    (vertex : Fin 481) (range : 128 ≤ vertex.val ∧ vertex.val < 136) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk17
+    (vertex : Fin 481) (range : 136 ≤ vertex.val ∧ vertex.val < 144) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk18
+    (vertex : Fin 481) (range : 144 ≤ vertex.val ∧ vertex.val < 152) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk19
+    (vertex : Fin 481) (range : 152 ≤ vertex.val ∧ vertex.val < 160) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk20
+    (vertex : Fin 481) (range : 160 ≤ vertex.val ∧ vertex.val < 168) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk21
+    (vertex : Fin 481) (range : 168 ≤ vertex.val ∧ vertex.val < 176) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk2, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk22
+    (vertex : Fin 481) (range : 176 ≤ vertex.val ∧ vertex.val < 184) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk23
+    (vertex : Fin 481) (range : 184 ≤ vertex.val ∧ vertex.val < 192) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk2,
+      partsPointChunk0, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk24
+    (vertex : Fin 481) (range : 192 ≤ vertex.val ∧ vertex.val < 200) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk25
+    (vertex : Fin 481) (range : 200 ≤ vertex.val ∧ vertex.val < 208) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk26
+    (vertex : Fin 481) (range : 208 ≤ vertex.val ∧ vertex.val < 216) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk27
+    (vertex : Fin 481) (range : 216 ≤ vertex.val ∧ vertex.val < 224) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk28
+    (vertex : Fin 481) (range : 224 ≤ vertex.val ∧ vertex.val < 232) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk29
+    (vertex : Fin 481) (range : 232 ≤ vertex.val ∧ vertex.val < 240) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk0, partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk30
+    (vertex : Fin 481) (range : 240 ≤ vertex.val ∧ vertex.val < 248) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk0, partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk31
+    (vertex : Fin 481) (range : 248 ≤ vertex.val ∧ vertex.val < 256) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk32
+    (vertex : Fin 481) (range : 256 ≤ vertex.val ∧ vertex.val < 264) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk33
+    (vertex : Fin 481) (range : 264 ≤ vertex.val ∧ vertex.val < 272) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk34
+    (vertex : Fin 481) (range : 272 ≤ vertex.val ∧ vertex.val < 280) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk35
+    (vertex : Fin 481) (range : 280 ≤ vertex.val ∧ vertex.val < 288) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk36
+    (vertex : Fin 481) (range : 288 ≤ vertex.val ∧ vertex.val < 296) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk37
+    (vertex : Fin 481) (range : 296 ≤ vertex.val ∧ vertex.val < 304) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk38
+    (vertex : Fin 481) (range : 304 ≤ vertex.val ∧ vertex.val < 312) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk39
+    (vertex : Fin 481) (range : 312 ≤ vertex.val ∧ vertex.val < 320) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk4,
+      partsPointChunk2, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk40
+    (vertex : Fin 481) (range : 320 ≤ vertex.val ∧ vertex.val < 328) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk41
+    (vertex : Fin 481) (range : 328 ≤ vertex.val ∧ vertex.val < 336) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk42
+    (vertex : Fin 481) (range : 336 ≤ vertex.val ∧ vertex.val < 344) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk43
+    (vertex : Fin 481) (range : 344 ≤ vertex.val ∧ vertex.val < 352) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk44
+    (vertex : Fin 481) (range : 352 ≤ vertex.val ∧ vertex.val < 360) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk45
+    (vertex : Fin 481) (range : 360 ≤ vertex.val ∧ vertex.val < 368) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk46
+    (vertex : Fin 481) (range : 368 ≤ vertex.val ∧ vertex.val < 376) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk47
+    (vertex : Fin 481) (range : 376 ≤ vertex.val ∧ vertex.val < 384) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk5,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk48
+    (vertex : Fin 481) (range : 384 ≤ vertex.val ∧ vertex.val < 392) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk1, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk49
+    (vertex : Fin 481) (range : 392 ≤ vertex.val ∧ vertex.val < 400) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk50
+    (vertex : Fin 481) (range : 400 ≤ vertex.val ∧ vertex.val < 408) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk51
+    (vertex : Fin 481) (range : 408 ≤ vertex.val ∧ vertex.val < 416) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk52
+    (vertex : Fin 481) (range : 416 ≤ vertex.val ∧ vertex.val < 424) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk53
+    (vertex : Fin 481) (range : 424 ≤ vertex.val ∧ vertex.val < 432) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk54
+    (vertex : Fin 481) (range : 432 ≤ vertex.val ∧ vertex.val < 440) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk2, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk55
+    (vertex : Fin 481) (range : 440 ≤ vertex.val ∧ vertex.val < 448) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk6,
+      partsPointChunk0, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk56
+    (vertex : Fin 481) (range : 448 ≤ vertex.val ∧ vertex.val < 456) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk57
+    (vertex : Fin 481) (range : 456 ≤ vertex.val ∧ vertex.val < 464) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk58
+    (vertex : Fin 481) (range : 464 ≤ vertex.val ∧ vertex.val < 472) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk7,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk59
+    (vertex : Fin 481) (range : 472 ≤ vertex.val ∧ vertex.val < 480) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3_chunk60
+    (vertex : Fin 481) (range : 480 ≤ vertex.val ∧ vertex.val < 481) :
+    PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation3, partsVertexPermutation3Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case3 :
+    ∀ vertex, PartsPoint.IsTransform (3 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (3 : Fin 6) vertex)) := by
+  intro vertex
+  by_cases h0 : vertex.val < 8
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk0 vertex h0
+  by_cases h1 : vertex.val < 16
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk1 vertex ⟨by omega, h1⟩
+  by_cases h2 : vertex.val < 24
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk2 vertex ⟨by omega, h2⟩
+  by_cases h3 : vertex.val < 32
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk3 vertex ⟨by omega, h3⟩
+  by_cases h4 : vertex.val < 40
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk4 vertex ⟨by omega, h4⟩
+  by_cases h5 : vertex.val < 48
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk5 vertex ⟨by omega, h5⟩
+  by_cases h6 : vertex.val < 56
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk6 vertex ⟨by omega, h6⟩
+  by_cases h7 : vertex.val < 64
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk7 vertex ⟨by omega, h7⟩
+  by_cases h8 : vertex.val < 72
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk8 vertex ⟨by omega, h8⟩
+  by_cases h9 : vertex.val < 80
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk9 vertex ⟨by omega, h9⟩
+  by_cases h10 : vertex.val < 88
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk10 vertex ⟨by omega, h10⟩
+  by_cases h11 : vertex.val < 96
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk11 vertex ⟨by omega, h11⟩
+  by_cases h12 : vertex.val < 104
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk12 vertex ⟨by omega, h12⟩
+  by_cases h13 : vertex.val < 112
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk13 vertex ⟨by omega, h13⟩
+  by_cases h14 : vertex.val < 120
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk14 vertex ⟨by omega, h14⟩
+  by_cases h15 : vertex.val < 128
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk15 vertex ⟨by omega, h15⟩
+  by_cases h16 : vertex.val < 136
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk16 vertex ⟨by omega, h16⟩
+  by_cases h17 : vertex.val < 144
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk17 vertex ⟨by omega, h17⟩
+  by_cases h18 : vertex.val < 152
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk18 vertex ⟨by omega, h18⟩
+  by_cases h19 : vertex.val < 160
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk19 vertex ⟨by omega, h19⟩
+  by_cases h20 : vertex.val < 168
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk20 vertex ⟨by omega, h20⟩
+  by_cases h21 : vertex.val < 176
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk21 vertex ⟨by omega, h21⟩
+  by_cases h22 : vertex.val < 184
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk22 vertex ⟨by omega, h22⟩
+  by_cases h23 : vertex.val < 192
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk23 vertex ⟨by omega, h23⟩
+  by_cases h24 : vertex.val < 200
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk24 vertex ⟨by omega, h24⟩
+  by_cases h25 : vertex.val < 208
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk25 vertex ⟨by omega, h25⟩
+  by_cases h26 : vertex.val < 216
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk26 vertex ⟨by omega, h26⟩
+  by_cases h27 : vertex.val < 224
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk27 vertex ⟨by omega, h27⟩
+  by_cases h28 : vertex.val < 232
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk28 vertex ⟨by omega, h28⟩
+  by_cases h29 : vertex.val < 240
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk29 vertex ⟨by omega, h29⟩
+  by_cases h30 : vertex.val < 248
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk30 vertex ⟨by omega, h30⟩
+  by_cases h31 : vertex.val < 256
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk31 vertex ⟨by omega, h31⟩
+  by_cases h32 : vertex.val < 264
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk32 vertex ⟨by omega, h32⟩
+  by_cases h33 : vertex.val < 272
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk33 vertex ⟨by omega, h33⟩
+  by_cases h34 : vertex.val < 280
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk34 vertex ⟨by omega, h34⟩
+  by_cases h35 : vertex.val < 288
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk35 vertex ⟨by omega, h35⟩
+  by_cases h36 : vertex.val < 296
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk36 vertex ⟨by omega, h36⟩
+  by_cases h37 : vertex.val < 304
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk37 vertex ⟨by omega, h37⟩
+  by_cases h38 : vertex.val < 312
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk38 vertex ⟨by omega, h38⟩
+  by_cases h39 : vertex.val < 320
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk39 vertex ⟨by omega, h39⟩
+  by_cases h40 : vertex.val < 328
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk40 vertex ⟨by omega, h40⟩
+  by_cases h41 : vertex.val < 336
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk41 vertex ⟨by omega, h41⟩
+  by_cases h42 : vertex.val < 344
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk42 vertex ⟨by omega, h42⟩
+  by_cases h43 : vertex.val < 352
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk43 vertex ⟨by omega, h43⟩
+  by_cases h44 : vertex.val < 360
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk44 vertex ⟨by omega, h44⟩
+  by_cases h45 : vertex.val < 368
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk45 vertex ⟨by omega, h45⟩
+  by_cases h46 : vertex.val < 376
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk46 vertex ⟨by omega, h46⟩
+  by_cases h47 : vertex.val < 384
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk47 vertex ⟨by omega, h47⟩
+  by_cases h48 : vertex.val < 392
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk48 vertex ⟨by omega, h48⟩
+  by_cases h49 : vertex.val < 400
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk49 vertex ⟨by omega, h49⟩
+  by_cases h50 : vertex.val < 408
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk50 vertex ⟨by omega, h50⟩
+  by_cases h51 : vertex.val < 416
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk51 vertex ⟨by omega, h51⟩
+  by_cases h52 : vertex.val < 424
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk52 vertex ⟨by omega, h52⟩
+  by_cases h53 : vertex.val < 432
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk53 vertex ⟨by omega, h53⟩
+  by_cases h54 : vertex.val < 440
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk54 vertex ⟨by omega, h54⟩
+  by_cases h55 : vertex.val < 448
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk55 vertex ⟨by omega, h55⟩
+  by_cases h56 : vertex.val < 456
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk56 vertex ⟨by omega, h56⟩
+  by_cases h57 : vertex.val < 464
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk57 vertex ⟨by omega, h57⟩
+  by_cases h58 : vertex.val < 472
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk58 vertex ⟨by omega, h58⟩
+  by_cases h59 : vertex.val < 480
+  · exact partsPoint_permuteVertex_isTransform_case3_chunk59 vertex ⟨by omega, h59⟩
+  exact partsPoint_permuteVertex_isTransform_case3_chunk60 vertex ⟨by omega, by omega⟩
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk0
+    (vertex : Fin 481) (range : vertex.val < 8) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  interval_cases vertex
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk1
+    (vertex : Fin 481) (range : 8 ≤ vertex.val ∧ vertex.val < 16) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk3, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk2
+    (vertex : Fin 481) (range : 16 ≤ vertex.val ∧ vertex.val < 24) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk3
+    (vertex : Fin 481) (range : 24 ≤ vertex.val ∧ vertex.val < 32) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk4
+    (vertex : Fin 481) (range : 32 ≤ vertex.val ∧ vertex.val < 40) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk3, partsPointChunk6,
+      partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk5
+    (vertex : Fin 481) (range : 40 ≤ vertex.val ∧ vertex.val < 48) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk6
+    (vertex : Fin 481) (range : 48 ≤ vertex.val ∧ vertex.val < 56) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk7
+    (vertex : Fin 481) (range : 56 ≤ vertex.val ∧ vertex.val < 64) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk0,
+      partsPointChunk0, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk8
+    (vertex : Fin 481) (range : 64 ≤ vertex.val ∧ vertex.val < 72) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk9
+    (vertex : Fin 481) (range : 72 ≤ vertex.val ∧ vertex.val < 80) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk10
+    (vertex : Fin 481) (range : 80 ≤ vertex.val ∧ vertex.val < 88) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk11
+    (vertex : Fin 481) (range : 88 ≤ vertex.val ∧ vertex.val < 96) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk12
+    (vertex : Fin 481) (range : 96 ≤ vertex.val ∧ vertex.val < 104) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk13
+    (vertex : Fin 481) (range : 104 ≤ vertex.val ∧ vertex.val < 112) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk14
+    (vertex : Fin 481) (range : 112 ≤ vertex.val ∧ vertex.val < 120) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk15
+    (vertex : Fin 481) (range : 120 ≤ vertex.val ∧ vertex.val < 128) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk16
+    (vertex : Fin 481) (range : 128 ≤ vertex.val ∧ vertex.val < 136) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk17
+    (vertex : Fin 481) (range : 136 ≤ vertex.val ∧ vertex.val < 144) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk18
+    (vertex : Fin 481) (range : 144 ≤ vertex.val ∧ vertex.val < 152) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk19
+    (vertex : Fin 481) (range : 152 ≤ vertex.val ∧ vertex.val < 160) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk20
+    (vertex : Fin 481) (range : 160 ≤ vertex.val ∧ vertex.val < 168) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk21
+    (vertex : Fin 481) (range : 168 ≤ vertex.val ∧ vertex.val < 176) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk2, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk22
+    (vertex : Fin 481) (range : 176 ≤ vertex.val ∧ vertex.val < 184) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk23
+    (vertex : Fin 481) (range : 184 ≤ vertex.val ∧ vertex.val < 192) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk2,
+      partsPointChunk0, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk24
+    (vertex : Fin 481) (range : 192 ≤ vertex.val ∧ vertex.val < 200) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk25
+    (vertex : Fin 481) (range : 200 ≤ vertex.val ∧ vertex.val < 208) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk26
+    (vertex : Fin 481) (range : 208 ≤ vertex.val ∧ vertex.val < 216) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk27
+    (vertex : Fin 481) (range : 216 ≤ vertex.val ∧ vertex.val < 224) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk28
+    (vertex : Fin 481) (range : 224 ≤ vertex.val ∧ vertex.val < 232) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk29
+    (vertex : Fin 481) (range : 232 ≤ vertex.val ∧ vertex.val < 240) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk0, partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk30
+    (vertex : Fin 481) (range : 240 ≤ vertex.val ∧ vertex.val < 248) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk0, partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk31
+    (vertex : Fin 481) (range : 248 ≤ vertex.val ∧ vertex.val < 256) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk32
+    (vertex : Fin 481) (range : 256 ≤ vertex.val ∧ vertex.val < 264) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk33
+    (vertex : Fin 481) (range : 264 ≤ vertex.val ∧ vertex.val < 272) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk3, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk34
+    (vertex : Fin 481) (range : 272 ≤ vertex.val ∧ vertex.val < 280) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk35
+    (vertex : Fin 481) (range : 280 ≤ vertex.val ∧ vertex.val < 288) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk36
+    (vertex : Fin 481) (range : 288 ≤ vertex.val ∧ vertex.val < 296) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk37
+    (vertex : Fin 481) (range : 296 ≤ vertex.val ∧ vertex.val < 304) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk38
+    (vertex : Fin 481) (range : 304 ≤ vertex.val ∧ vertex.val < 312) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk39
+    (vertex : Fin 481) (range : 312 ≤ vertex.val ∧ vertex.val < 320) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk4,
+      partsPointChunk2, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk40
+    (vertex : Fin 481) (range : 320 ≤ vertex.val ∧ vertex.val < 328) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk41
+    (vertex : Fin 481) (range : 328 ≤ vertex.val ∧ vertex.val < 336) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk42
+    (vertex : Fin 481) (range : 336 ≤ vertex.val ∧ vertex.val < 344) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk0, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk43
+    (vertex : Fin 481) (range : 344 ≤ vertex.val ∧ vertex.val < 352) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk44
+    (vertex : Fin 481) (range : 352 ≤ vertex.val ∧ vertex.val < 360) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk45
+    (vertex : Fin 481) (range : 360 ≤ vertex.val ∧ vertex.val < 368) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk46
+    (vertex : Fin 481) (range : 368 ≤ vertex.val ∧ vertex.val < 376) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk47
+    (vertex : Fin 481) (range : 376 ≤ vertex.val ∧ vertex.val < 384) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk48
+    (vertex : Fin 481) (range : 384 ≤ vertex.val ∧ vertex.val < 392) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk1, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk49
+    (vertex : Fin 481) (range : 392 ≤ vertex.val ∧ vertex.val < 400) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk50
+    (vertex : Fin 481) (range : 400 ≤ vertex.val ∧ vertex.val < 408) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk51
+    (vertex : Fin 481) (range : 408 ≤ vertex.val ∧ vertex.val < 416) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk52
+    (vertex : Fin 481) (range : 416 ≤ vertex.val ∧ vertex.val < 424) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk53
+    (vertex : Fin 481) (range : 424 ≤ vertex.val ∧ vertex.val < 432) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk54
+    (vertex : Fin 481) (range : 432 ≤ vertex.val ∧ vertex.val < 440) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk2, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk55
+    (vertex : Fin 481) (range : 440 ≤ vertex.val ∧ vertex.val < 448) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk6,
+      partsPointChunk0, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk56
+    (vertex : Fin 481) (range : 448 ≤ vertex.val ∧ vertex.val < 456) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk57
+    (vertex : Fin 481) (range : 456 ≤ vertex.val ∧ vertex.val < 464) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk58
+    (vertex : Fin 481) (range : 464 ≤ vertex.val ∧ vertex.val < 472) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk7,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk59
+    (vertex : Fin 481) (range : 472 ≤ vertex.val ∧ vertex.val < 480) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4_chunk60
+    (vertex : Fin 481) (range : 480 ≤ vertex.val ∧ vertex.val < 481) :
+    PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation4, partsVertexPermutation4Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case4 :
+    ∀ vertex, PartsPoint.IsTransform (4 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (4 : Fin 6) vertex)) := by
+  intro vertex
+  by_cases h0 : vertex.val < 8
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk0 vertex h0
+  by_cases h1 : vertex.val < 16
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk1 vertex ⟨by omega, h1⟩
+  by_cases h2 : vertex.val < 24
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk2 vertex ⟨by omega, h2⟩
+  by_cases h3 : vertex.val < 32
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk3 vertex ⟨by omega, h3⟩
+  by_cases h4 : vertex.val < 40
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk4 vertex ⟨by omega, h4⟩
+  by_cases h5 : vertex.val < 48
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk5 vertex ⟨by omega, h5⟩
+  by_cases h6 : vertex.val < 56
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk6 vertex ⟨by omega, h6⟩
+  by_cases h7 : vertex.val < 64
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk7 vertex ⟨by omega, h7⟩
+  by_cases h8 : vertex.val < 72
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk8 vertex ⟨by omega, h8⟩
+  by_cases h9 : vertex.val < 80
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk9 vertex ⟨by omega, h9⟩
+  by_cases h10 : vertex.val < 88
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk10 vertex ⟨by omega, h10⟩
+  by_cases h11 : vertex.val < 96
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk11 vertex ⟨by omega, h11⟩
+  by_cases h12 : vertex.val < 104
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk12 vertex ⟨by omega, h12⟩
+  by_cases h13 : vertex.val < 112
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk13 vertex ⟨by omega, h13⟩
+  by_cases h14 : vertex.val < 120
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk14 vertex ⟨by omega, h14⟩
+  by_cases h15 : vertex.val < 128
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk15 vertex ⟨by omega, h15⟩
+  by_cases h16 : vertex.val < 136
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk16 vertex ⟨by omega, h16⟩
+  by_cases h17 : vertex.val < 144
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk17 vertex ⟨by omega, h17⟩
+  by_cases h18 : vertex.val < 152
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk18 vertex ⟨by omega, h18⟩
+  by_cases h19 : vertex.val < 160
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk19 vertex ⟨by omega, h19⟩
+  by_cases h20 : vertex.val < 168
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk20 vertex ⟨by omega, h20⟩
+  by_cases h21 : vertex.val < 176
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk21 vertex ⟨by omega, h21⟩
+  by_cases h22 : vertex.val < 184
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk22 vertex ⟨by omega, h22⟩
+  by_cases h23 : vertex.val < 192
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk23 vertex ⟨by omega, h23⟩
+  by_cases h24 : vertex.val < 200
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk24 vertex ⟨by omega, h24⟩
+  by_cases h25 : vertex.val < 208
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk25 vertex ⟨by omega, h25⟩
+  by_cases h26 : vertex.val < 216
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk26 vertex ⟨by omega, h26⟩
+  by_cases h27 : vertex.val < 224
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk27 vertex ⟨by omega, h27⟩
+  by_cases h28 : vertex.val < 232
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk28 vertex ⟨by omega, h28⟩
+  by_cases h29 : vertex.val < 240
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk29 vertex ⟨by omega, h29⟩
+  by_cases h30 : vertex.val < 248
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk30 vertex ⟨by omega, h30⟩
+  by_cases h31 : vertex.val < 256
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk31 vertex ⟨by omega, h31⟩
+  by_cases h32 : vertex.val < 264
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk32 vertex ⟨by omega, h32⟩
+  by_cases h33 : vertex.val < 272
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk33 vertex ⟨by omega, h33⟩
+  by_cases h34 : vertex.val < 280
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk34 vertex ⟨by omega, h34⟩
+  by_cases h35 : vertex.val < 288
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk35 vertex ⟨by omega, h35⟩
+  by_cases h36 : vertex.val < 296
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk36 vertex ⟨by omega, h36⟩
+  by_cases h37 : vertex.val < 304
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk37 vertex ⟨by omega, h37⟩
+  by_cases h38 : vertex.val < 312
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk38 vertex ⟨by omega, h38⟩
+  by_cases h39 : vertex.val < 320
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk39 vertex ⟨by omega, h39⟩
+  by_cases h40 : vertex.val < 328
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk40 vertex ⟨by omega, h40⟩
+  by_cases h41 : vertex.val < 336
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk41 vertex ⟨by omega, h41⟩
+  by_cases h42 : vertex.val < 344
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk42 vertex ⟨by omega, h42⟩
+  by_cases h43 : vertex.val < 352
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk43 vertex ⟨by omega, h43⟩
+  by_cases h44 : vertex.val < 360
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk44 vertex ⟨by omega, h44⟩
+  by_cases h45 : vertex.val < 368
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk45 vertex ⟨by omega, h45⟩
+  by_cases h46 : vertex.val < 376
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk46 vertex ⟨by omega, h46⟩
+  by_cases h47 : vertex.val < 384
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk47 vertex ⟨by omega, h47⟩
+  by_cases h48 : vertex.val < 392
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk48 vertex ⟨by omega, h48⟩
+  by_cases h49 : vertex.val < 400
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk49 vertex ⟨by omega, h49⟩
+  by_cases h50 : vertex.val < 408
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk50 vertex ⟨by omega, h50⟩
+  by_cases h51 : vertex.val < 416
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk51 vertex ⟨by omega, h51⟩
+  by_cases h52 : vertex.val < 424
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk52 vertex ⟨by omega, h52⟩
+  by_cases h53 : vertex.val < 432
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk53 vertex ⟨by omega, h53⟩
+  by_cases h54 : vertex.val < 440
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk54 vertex ⟨by omega, h54⟩
+  by_cases h55 : vertex.val < 448
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk55 vertex ⟨by omega, h55⟩
+  by_cases h56 : vertex.val < 456
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk56 vertex ⟨by omega, h56⟩
+  by_cases h57 : vertex.val < 464
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk57 vertex ⟨by omega, h57⟩
+  by_cases h58 : vertex.val < 472
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk58 vertex ⟨by omega, h58⟩
+  by_cases h59 : vertex.val < 480
+  · exact partsPoint_permuteVertex_isTransform_case4_chunk59 vertex ⟨by omega, h59⟩
+  exact partsPoint_permuteVertex_isTransform_case4_chunk60 vertex ⟨by omega, by omega⟩
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk0
+    (vertex : Fin 481) (range : vertex.val < 8) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  interval_cases vertex
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk1
+    (vertex : Fin 481) (range : 8 ≤ vertex.val ∧ vertex.val < 16) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk3, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk2
+    (vertex : Fin 481) (range : 16 ≤ vertex.val ∧ vertex.val < 24) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk3
+    (vertex : Fin 481) (range : 24 ≤ vertex.val ∧ vertex.val < 32) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk4
+    (vertex : Fin 481) (range : 32 ≤ vertex.val ∧ vertex.val < 40) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk5
+    (vertex : Fin 481) (range : 40 ≤ vertex.val ∧ vertex.val < 48) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk6
+    (vertex : Fin 481) (range : 48 ≤ vertex.val ∧ vertex.val < 56) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk7
+    (vertex : Fin 481) (range : 56 ≤ vertex.val ∧ vertex.val < 64) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk0,
+      partsPointChunk0, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk8
+    (vertex : Fin 481) (range : 64 ≤ vertex.val ∧ vertex.val < 72) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk9
+    (vertex : Fin 481) (range : 72 ≤ vertex.val ∧ vertex.val < 80) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk10
+    (vertex : Fin 481) (range : 80 ≤ vertex.val ∧ vertex.val < 88) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk11
+    (vertex : Fin 481) (range : 88 ≤ vertex.val ∧ vertex.val < 96) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk12
+    (vertex : Fin 481) (range : 96 ≤ vertex.val ∧ vertex.val < 104) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk13
+    (vertex : Fin 481) (range : 104 ≤ vertex.val ∧ vertex.val < 112) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk3, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk14
+    (vertex : Fin 481) (range : 112 ≤ vertex.val ∧ vertex.val < 120) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk15
+    (vertex : Fin 481) (range : 120 ≤ vertex.val ∧ vertex.val < 128) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk1,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk16
+    (vertex : Fin 481) (range : 128 ≤ vertex.val ∧ vertex.val < 136) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk17
+    (vertex : Fin 481) (range : 136 ≤ vertex.val ∧ vertex.val < 144) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk18
+    (vertex : Fin 481) (range : 144 ≤ vertex.val ∧ vertex.val < 152) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk19
+    (vertex : Fin 481) (range : 152 ≤ vertex.val ∧ vertex.val < 160) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk4, partsPointChunk5, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk20
+    (vertex : Fin 481) (range : 160 ≤ vertex.val ∧ vertex.val < 168) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk21
+    (vertex : Fin 481) (range : 168 ≤ vertex.val ∧ vertex.val < 176) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk2, partsPointChunk6, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk22
+    (vertex : Fin 481) (range : 176 ≤ vertex.val ∧ vertex.val < 184) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk23
+    (vertex : Fin 481) (range : 184 ≤ vertex.val ∧ vertex.val < 192) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk2,
+      partsPointChunk0, partsPointChunk2]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk24
+    (vertex : Fin 481) (range : 192 ≤ vertex.val ∧ vertex.val < 200) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk25
+    (vertex : Fin 481) (range : 200 ≤ vertex.val ∧ vertex.val < 208) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk26
+    (vertex : Fin 481) (range : 208 ≤ vertex.val ∧ vertex.val < 216) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk27
+    (vertex : Fin 481) (range : 216 ≤ vertex.val ∧ vertex.val < 224) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk28
+    (vertex : Fin 481) (range : 224 ≤ vertex.val ∧ vertex.val < 232) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk29
+    (vertex : Fin 481) (range : 232 ≤ vertex.val ∧ vertex.val < 240) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk0, partsPointChunk1, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk30
+    (vertex : Fin 481) (range : 240 ≤ vertex.val ∧ vertex.val < 248) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk0, partsPointChunk3]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk31
+    (vertex : Fin 481) (range : 248 ≤ vertex.val ∧ vertex.val < 256) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk3,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk32
+    (vertex : Fin 481) (range : 256 ≤ vertex.val ∧ vertex.val < 264) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk3, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk33
+    (vertex : Fin 481) (range : 264 ≤ vertex.val ∧ vertex.val < 272) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk34
+    (vertex : Fin 481) (range : 272 ≤ vertex.val ∧ vertex.val < 280) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk35
+    (vertex : Fin 481) (range : 280 ≤ vertex.val ∧ vertex.val < 288) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk36
+    (vertex : Fin 481) (range : 288 ≤ vertex.val ∧ vertex.val < 296) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk37
+    (vertex : Fin 481) (range : 296 ≤ vertex.val ∧ vertex.val < 304) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk38
+    (vertex : Fin 481) (range : 304 ≤ vertex.val ∧ vertex.val < 312) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk39
+    (vertex : Fin 481) (range : 312 ≤ vertex.val ∧ vertex.val < 320) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk4,
+      partsPointChunk2, partsPointChunk4]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk40
+    (vertex : Fin 481) (range : 320 ≤ vertex.val ∧ vertex.val < 328) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk41
+    (vertex : Fin 481) (range : 328 ≤ vertex.val ∧ vertex.val < 336) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk42
+    (vertex : Fin 481) (range : 336 ≤ vertex.val ∧ vertex.val < 344) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk43
+    (vertex : Fin 481) (range : 344 ≤ vertex.val ∧ vertex.val < 352) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk44
+    (vertex : Fin 481) (range : 352 ≤ vertex.val ∧ vertex.val < 360) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk0, partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk45
+    (vertex : Fin 481) (range : 360 ≤ vertex.val ∧ vertex.val < 368) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk46
+    (vertex : Fin 481) (range : 368 ≤ vertex.val ∧ vertex.val < 376) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk1, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk47
+    (vertex : Fin 481) (range : 376 ≤ vertex.val ∧ vertex.val < 384) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk5,
+      partsPointChunk1, partsPointChunk2, partsPointChunk5]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk48
+    (vertex : Fin 481) (range : 384 ≤ vertex.val ∧ vertex.val < 392) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk1, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk49
+    (vertex : Fin 481) (range : 392 ≤ vertex.val ∧ vertex.val < 400) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk50
+    (vertex : Fin 481) (range : 400 ≤ vertex.val ∧ vertex.val < 408) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk51
+    (vertex : Fin 481) (range : 408 ≤ vertex.val ∧ vertex.val < 416) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk52
+    (vertex : Fin 481) (range : 416 ≤ vertex.val ∧ vertex.val < 424) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk53
+    (vertex : Fin 481) (range : 424 ≤ vertex.val ∧ vertex.val < 432) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk2, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk54
+    (vertex : Fin 481) (range : 432 ≤ vertex.val ∧ vertex.val < 440) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk2, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk55
+    (vertex : Fin 481) (range : 440 ≤ vertex.val ∧ vertex.val < 448) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk6,
+      partsPointChunk0, partsPointChunk4, partsPointChunk6]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk56
+    (vertex : Fin 481) (range : 448 ≤ vertex.val ∧ vertex.val < 456) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk57
+    (vertex : Fin 481) (range : 456 ≤ vertex.val ∧ vertex.val < 464) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk7,
+      partsPointChunk0, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk58
+    (vertex : Fin 481) (range : 464 ≤ vertex.val ∧ vertex.val < 472) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk7,
+      partsPointChunk0, partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk59
+    (vertex : Fin 481) (range : 472 ≤ vertex.val ∧ vertex.val < 480) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5_chunk60
+    (vertex : Fin 481) (range : 480 ≤ vertex.val ∧ vertex.val < 481) :
+    PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  rcases vertex with ⟨vertex, bound⟩
+  rcases range with ⟨lower, upper⟩
+  interval_cases vertex using lower, upper
+  all_goals
+    have hbound : bound = (by decide) := Subsingleton.elim _ _
+    rw [hbound]
+    norm_num [PartsPoint.IsTransform, partsPoint, partsPermuteVertex,
+      partsVertexPermutation5, partsVertexPermutation5Chunk7,
+      partsPointChunk2, partsPointChunk7]
+
+private lemma partsPoint_permuteVertex_isTransform_case5 :
+    ∀ vertex, PartsPoint.IsTransform (5 : Fin 6) (partsPoint vertex)
+      (partsPoint (partsPermuteVertex (5 : Fin 6) vertex)) := by
+  intro vertex
+  by_cases h0 : vertex.val < 8
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk0 vertex h0
+  by_cases h1 : vertex.val < 16
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk1 vertex ⟨by omega, h1⟩
+  by_cases h2 : vertex.val < 24
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk2 vertex ⟨by omega, h2⟩
+  by_cases h3 : vertex.val < 32
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk3 vertex ⟨by omega, h3⟩
+  by_cases h4 : vertex.val < 40
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk4 vertex ⟨by omega, h4⟩
+  by_cases h5 : vertex.val < 48
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk5 vertex ⟨by omega, h5⟩
+  by_cases h6 : vertex.val < 56
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk6 vertex ⟨by omega, h6⟩
+  by_cases h7 : vertex.val < 64
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk7 vertex ⟨by omega, h7⟩
+  by_cases h8 : vertex.val < 72
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk8 vertex ⟨by omega, h8⟩
+  by_cases h9 : vertex.val < 80
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk9 vertex ⟨by omega, h9⟩
+  by_cases h10 : vertex.val < 88
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk10 vertex ⟨by omega, h10⟩
+  by_cases h11 : vertex.val < 96
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk11 vertex ⟨by omega, h11⟩
+  by_cases h12 : vertex.val < 104
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk12 vertex ⟨by omega, h12⟩
+  by_cases h13 : vertex.val < 112
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk13 vertex ⟨by omega, h13⟩
+  by_cases h14 : vertex.val < 120
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk14 vertex ⟨by omega, h14⟩
+  by_cases h15 : vertex.val < 128
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk15 vertex ⟨by omega, h15⟩
+  by_cases h16 : vertex.val < 136
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk16 vertex ⟨by omega, h16⟩
+  by_cases h17 : vertex.val < 144
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk17 vertex ⟨by omega, h17⟩
+  by_cases h18 : vertex.val < 152
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk18 vertex ⟨by omega, h18⟩
+  by_cases h19 : vertex.val < 160
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk19 vertex ⟨by omega, h19⟩
+  by_cases h20 : vertex.val < 168
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk20 vertex ⟨by omega, h20⟩
+  by_cases h21 : vertex.val < 176
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk21 vertex ⟨by omega, h21⟩
+  by_cases h22 : vertex.val < 184
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk22 vertex ⟨by omega, h22⟩
+  by_cases h23 : vertex.val < 192
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk23 vertex ⟨by omega, h23⟩
+  by_cases h24 : vertex.val < 200
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk24 vertex ⟨by omega, h24⟩
+  by_cases h25 : vertex.val < 208
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk25 vertex ⟨by omega, h25⟩
+  by_cases h26 : vertex.val < 216
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk26 vertex ⟨by omega, h26⟩
+  by_cases h27 : vertex.val < 224
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk27 vertex ⟨by omega, h27⟩
+  by_cases h28 : vertex.val < 232
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk28 vertex ⟨by omega, h28⟩
+  by_cases h29 : vertex.val < 240
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk29 vertex ⟨by omega, h29⟩
+  by_cases h30 : vertex.val < 248
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk30 vertex ⟨by omega, h30⟩
+  by_cases h31 : vertex.val < 256
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk31 vertex ⟨by omega, h31⟩
+  by_cases h32 : vertex.val < 264
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk32 vertex ⟨by omega, h32⟩
+  by_cases h33 : vertex.val < 272
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk33 vertex ⟨by omega, h33⟩
+  by_cases h34 : vertex.val < 280
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk34 vertex ⟨by omega, h34⟩
+  by_cases h35 : vertex.val < 288
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk35 vertex ⟨by omega, h35⟩
+  by_cases h36 : vertex.val < 296
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk36 vertex ⟨by omega, h36⟩
+  by_cases h37 : vertex.val < 304
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk37 vertex ⟨by omega, h37⟩
+  by_cases h38 : vertex.val < 312
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk38 vertex ⟨by omega, h38⟩
+  by_cases h39 : vertex.val < 320
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk39 vertex ⟨by omega, h39⟩
+  by_cases h40 : vertex.val < 328
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk40 vertex ⟨by omega, h40⟩
+  by_cases h41 : vertex.val < 336
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk41 vertex ⟨by omega, h41⟩
+  by_cases h42 : vertex.val < 344
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk42 vertex ⟨by omega, h42⟩
+  by_cases h43 : vertex.val < 352
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk43 vertex ⟨by omega, h43⟩
+  by_cases h44 : vertex.val < 360
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk44 vertex ⟨by omega, h44⟩
+  by_cases h45 : vertex.val < 368
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk45 vertex ⟨by omega, h45⟩
+  by_cases h46 : vertex.val < 376
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk46 vertex ⟨by omega, h46⟩
+  by_cases h47 : vertex.val < 384
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk47 vertex ⟨by omega, h47⟩
+  by_cases h48 : vertex.val < 392
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk48 vertex ⟨by omega, h48⟩
+  by_cases h49 : vertex.val < 400
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk49 vertex ⟨by omega, h49⟩
+  by_cases h50 : vertex.val < 408
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk50 vertex ⟨by omega, h50⟩
+  by_cases h51 : vertex.val < 416
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk51 vertex ⟨by omega, h51⟩
+  by_cases h52 : vertex.val < 424
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk52 vertex ⟨by omega, h52⟩
+  by_cases h53 : vertex.val < 432
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk53 vertex ⟨by omega, h53⟩
+  by_cases h54 : vertex.val < 440
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk54 vertex ⟨by omega, h54⟩
+  by_cases h55 : vertex.val < 448
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk55 vertex ⟨by omega, h55⟩
+  by_cases h56 : vertex.val < 456
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk56 vertex ⟨by omega, h56⟩
+  by_cases h57 : vertex.val < 464
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk57 vertex ⟨by omega, h57⟩
+  by_cases h58 : vertex.val < 472
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk58 vertex ⟨by omega, h58⟩
+  by_cases h59 : vertex.val < 480
+  · exact partsPoint_permuteVertex_isTransform_case5_chunk59 vertex ⟨by omega, h59⟩
+  exact partsPoint_permuteVertex_isTransform_case5_chunk60 vertex ⟨by omega, by omega⟩
+
 private lemma partsPoint_permuteVertex_isTransform (symmetry : Fin 6) :
     ∀ vertex, PartsPoint.IsTransform symmetry (partsPoint vertex)
       (partsPoint (partsPermuteVertex symmetry vertex)) := by
-  fin_cases symmetry <;>
-    simp only [PartsPoint.IsTransform] <;> decide +kernel
+  fin_cases symmetry
+  · simpa using partsPoint_permuteVertex_isTransform_case0
+  · simpa using partsPoint_permuteVertex_isTransform_case1
+  · simpa using partsPoint_permuteVertex_isTransform_case2
+  · simpa using partsPoint_permuteVertex_isTransform_case3
+  · simpa using partsPoint_permuteVertex_isTransform_case4
+  · simpa using partsPoint_permuteVertex_isTransform_case5
 
 private lemma partsAdjacent_permuteVertex (symmetry : Fin 6) (left right : Fin 481) :
     partsAdjacent (partsPermuteVertex symmetry left) (partsPermuteVertex symmetry right) =
@@ -251,7 +5171,7 @@ private lemma partsRunStemB_transform (symmetry : Fin 6) (swap : Bool) :
       · rfl
 
 /-- Select one of the 36 normalized root-orbit certificates. -/
-def partsBaseCertificate (base : Fin 36) : PartsCertificate :=
+@[expose] def partsBaseCertificate (base : Fin 36) : PartsCertificate :=
   match base.val with
   | 0 => partsBaseCertificate0
   | 1 => partsBaseCertificate1
@@ -374,7 +5294,7 @@ private lemma partsVerifiesVariantNodeB_transform (symmetry : Fin 6) (swap : Boo
                   partsTransformColor_involutive]
 
 /-- One of the 432 symmetry-expanded certificates passes the checker. -/
-def PartsCertificateVariantVerifies (base : Fin 36) (symmetry : Fin 6)
+@[expose] def PartsCertificateVariantVerifies (base : Fin 36) (symmetry : Fin 6)
     (swap : Bool) : Prop :=
   let certificate := partsBaseCertificate base
   PartsVerifiesVariantNodeB symmetry swap certificate.nodes

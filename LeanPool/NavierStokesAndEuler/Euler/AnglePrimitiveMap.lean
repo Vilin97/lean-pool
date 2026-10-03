@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.AngleMeanZeroPrimitive
 
 /-! Bounded linear maps commute with the literal normalized angular integral. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

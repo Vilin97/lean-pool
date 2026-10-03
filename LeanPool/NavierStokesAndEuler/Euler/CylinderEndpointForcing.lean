@@ -27,7 +27,7 @@ potential term. Its variational correction is exactly the already
 constructed zero-endpoint inverse applied to `2 Q₁(t) (Y/T)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -64,7 +64,7 @@ def affineAcceleration (Y : U) : C(Icc (0 : ℝ) T,E) :=
 
 omit [CompleteSpace U] [CompleteSpace E] in
 /-- The genuine affine forcing, as a bounded linear function of terminal data. -/
-def affineForcing : U →L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def affineForcing : U →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   (2 : ℝ) • (multiplier Q₁).comp
     ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)).comp (T⁻¹ • ContinuousLinearMap.id ℝ U))
 
@@ -181,7 +181,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -200,12 +200,12 @@ variable {U E : Type*}
   (P : ℝ) [Fact (0 < P)] {T : ℝ} (D : Coefficients T U E)
 
 /-- The exact forcing of the affine endpoint correction. -/
-def endpointForcing : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
+@[expose] def endpointForcing : CylinderL2 P U →L[ℝ] C(Icc (0 : ℝ) T,CylinderL2 P E) :=
   affineForcing T (D.frameDerivative P)
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem endpointForcing_apply (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
-    D.endpointForcing P Y t = (2 : ℝ) • D.frameDerivative P t (T⁻¹ • Y) := rfl
+    D.endpointForcing P Y t = (2 : ℝ) • D.frameDerivative P t (T⁻¹ • Y) := by rfl
 
 /-- Equality of the genuinely constructed corrections, not a new solution assumption. -/
 theorem endpointCorrection_eq_forced (Y : CylinderL2 P U) :

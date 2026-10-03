@@ -26,7 +26,7 @@ outer curve separate.
   transfer.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -215,7 +215,7 @@ noncomputable def crosscutPieces (J : Piece) (p : Plane) (s epsilon : ℝ) : Lis
 
 /-- The finite straight-line overlay of the old compact source core, an auxiliary crosscut,
 and the local grid.  Old nonboundary vertices and prescribed points are retained. -/
-noncomputable def crosscutOverlay (J : Piece) (p : Plane) (s epsilon : ℝ)
+@[expose] noncomputable def crosscutOverlay (J : Piece) (p : Plane) (s epsilon : ℝ)
     (extra : List Plane) : Graph Plane Piece :=
   attachGraph (Q.crosscutPieces J p s epsilon)
     (extra ++ P.sourceNonboundaryGraph.vertexFinset.toList)
@@ -608,7 +608,7 @@ noncomputable abbrev innerGraph : _root_.Graph Plane γ :=
   (Q.crosscutOverlay J p s epsilon extra).relabelEdges w.name w.name_inj
 
 /-- The mixed crosscut source graph. -/
-noncomputable def graph : _root_.Graph Plane γ := w.outerGraph.union w.innerGraph
+@[expose] noncomputable def graph : _root_.Graph Plane γ := w.outerGraph.union w.innerGraph
 
 /-- The mixed drawing keeps the wild outer parametrizations and uses straight segments on all
 fresh inner edges. -/

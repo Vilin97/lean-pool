@@ -44,7 +44,7 @@ about convergence in the operator norm, nor about families that are merely unifo
 rather than contractive.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

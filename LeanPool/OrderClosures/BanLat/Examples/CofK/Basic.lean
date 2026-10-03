@@ -19,7 +19,7 @@ real-valued functions equipped with the supremum norm and the pointwise order
 is a Banach lattice.
 -/
 
-@[expose] public section
+public section
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 

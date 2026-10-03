@@ -21,7 +21,7 @@ ones used in the history solution. Smooth coefficient and forcing parameters
 therefore give smooth continuous-time coordinate and physical velocities.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -20,4 +20,4 @@ import Mathlib.Tactic.NormNum.GCD
 Imported Lean Pool material for `LeanPool.Rupert.Equivalences.AffineRupertEquivRupertSet`.
 -/
 
-@[expose] public section
+public section

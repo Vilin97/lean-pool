@@ -17,7 +17,7 @@ The Kuramoto potential `kuramotoV` and force field `kuramotoF`, together with th
 gradient identity expressing the force as the negative phase-derivative of the potential.
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 
@@ -26,7 +26,7 @@ noncomputable def kuramotoV (K : ℝ) (N : ℕ) (θ : Fin N → ℝ) : ℝ :=
   -(K / (2 * N)) * ∑ i : Fin N, ∑ j : Fin N, Real.cos (θ j - θ i)
 
 /-- The Kuramoto force on oscillator `i`, `F_i = (K / N) ∑_j sin (θ_j - θ_i)`. -/
-noncomputable def kuramotoF (K : ℝ) (N : ℕ) (i : Fin N) (θ : Fin N → ℝ) : ℝ :=
+@[expose] noncomputable def kuramotoF (K : ℝ) (N : ℕ) (i : Fin N) (θ : Fin N → ℝ) : ℝ :=
   (K / N) * ∑ j : Fin N, Real.sin (θ j - θ i)
 
 private lemma hasDerivAt_update_apply {N : ℕ} (θ : Fin N → ℝ) (i j : Fin N) :

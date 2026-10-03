@@ -98,4 +98,4 @@ congruences; the raw files remain the foundation every proof works through via r
   the clean home, and `residue-theorem` now imports it from here).
 -/
 
-@[expose] public section
+public section

@@ -13,7 +13,7 @@ The strict-oracle scale-identification impossibility theorem and its determinist
 randomized forms.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

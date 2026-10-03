@@ -34,7 +34,7 @@ the bridges in both directions.
   the coercion of this one).
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 
@@ -62,11 +62,13 @@ theorem one_le_deg_of_rank_ge_one {D : CFDiv G} (hD : rank G D ≥ 1) : 1 ≤ CF
 /-! ## The gonality set and `divisorialGonality` -/
 
 /-- The degrees of the effective divisors of rank at least one. -/
+@[expose]
 def gonalitySet (G : CFGraph) : Set ℕ :=
   {d : ℕ | ∃ D : CFDiv G, effective D ∧ CFDiv.degree D = (d : ℤ) ∧ rank G D ≥ 1}
 
 /-- The **divisorial gonality** of `G`: the least degree of an effective divisor
 of rank at least one, as a natural number. -/
+@[expose]
 noncomputable def divisorialGonality (G : CFGraph) : ℕ :=
   sInf (gonalitySet G)
 

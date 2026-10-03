@@ -16,7 +16,7 @@ Nothing here is specific about PDL, but we prove some useful results about the r
 closure `ReflTransGen` and the transitive closure `TransGen`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 

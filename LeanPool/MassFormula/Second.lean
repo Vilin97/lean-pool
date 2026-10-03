@@ -41,7 +41,7 @@ elements of `sigma K n`, the sum of `1 / ((w M.1 : ℝ≥0∞) * (q K : ℝ≥0�
   degré donné d'un corps local*, C. R. Acad. Sci. Paris **286** (1978), Série A, 1031–1036.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel
 open scoped ENNReal

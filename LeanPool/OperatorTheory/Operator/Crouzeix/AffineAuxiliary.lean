@@ -29,7 +29,7 @@ contour is unchanged under these three simultaneous operations.
   scalar auxiliary identity on an arbitrary enclosing disk.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory
 open scoped InnerProductSpace Interval Real

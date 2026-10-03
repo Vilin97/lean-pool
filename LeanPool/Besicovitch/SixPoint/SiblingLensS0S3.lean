@@ -16,7 +16,7 @@ three positive cross distances. Two secants of the square root retain enough of 
 radial penalties, and three exact rational Gram factorizations cover the resulting radial ranges.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

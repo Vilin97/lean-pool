@@ -34,7 +34,7 @@ in the sense of `SimpleGraph.CliqueTree`, with parent of `v` the earliest later 
   exactly once, to its earlier endpoint
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 
@@ -265,6 +265,7 @@ theorem mem_peoBag_peoParent {v w : V} (hw : w ∈ peoBag G ord v) (hne : w ≠ 
 
 /-- **The clique-bag decomposition of a perfect elimination order is a clique tree.**
 No maximality of the bags is required. -/
+@[expose]
 noncomputable def cliqueTree : CliqueTree G V where
   bag := peoBag G ord
   parent := peoParent G ord

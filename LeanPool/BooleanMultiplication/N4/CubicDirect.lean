@@ -21,7 +21,7 @@ linearity.  This compact certificate replaces repeated coordinate chases in
 the quartic and annihilator arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -65,13 +65,13 @@ def cubicDirectRecover (r : Fin 18) : ThreeForm →ₗ[F₂] F₂ :=
         (upperTriple k).2.2
 
 /-- Wedge a linear form with the two-form of one rational place. -/
-def cubicPlaceLinear (theta : Fin 3) : LinearForm →ₗ[F₂] ThreeForm where
+@[expose] def cubicPlaceLinear (theta : Fin 3) : LinearForm →ₗ[F₂] ThreeForm where
   toFun := fun u => vectorWedgeTwo u (rationalPlaceTwo theta)
   map_add' u v := vectorWedgeTwo_add_left u v _
   map_smul' a u := vectorWedgeTwo_smul_left a u _
 
 /-- Sum of the cubic contributions at the three rational places. -/
-def rationalCubicDirectSum (M : Fin 3 → LinearForm) : ThreeForm :=
+@[expose] def rationalCubicDirectSum (M : Fin 3 → LinearForm) : ThreeForm :=
   ∑ theta : Fin 3, cubicPlaceLinear theta (M theta)
 
 /-- Six quotient coordinates for each of `P₀`, `P₁`, and `P∞`. -/

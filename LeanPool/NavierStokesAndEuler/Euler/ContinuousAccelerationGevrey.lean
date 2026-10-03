@@ -21,7 +21,7 @@ to its literal forcing. Smoothness and factorial estimates therefore apply
 to the actual continuous path, including its endpoint values.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

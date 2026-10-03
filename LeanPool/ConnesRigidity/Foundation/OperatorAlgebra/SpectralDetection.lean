@@ -20,7 +20,7 @@ import Mathlib.Algebra.Order.Ring.Star
 The spectral detection component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

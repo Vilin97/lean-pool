@@ -15,7 +15,7 @@ The only finite certificate is the left inverse in `CubicDirect`; the orbit
 arguments below are ordinary exterior algebra and coordinate extensionality.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

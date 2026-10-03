@@ -46,7 +46,7 @@ No existence of equal‑area weights and no topological‑degree/obstruction arg
 proved here.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -58,13 +58,13 @@ namespace EMP
 
 /-- **Target equal‑area vector.** The constant vector whose every component is the average
 area `K.area / n`. -/
-noncomputable def equalAreaTarget
+@[expose] noncomputable def equalAreaTarget
     (K : Geometry.ConvexBody Plane) (n : ℕ) : Fin n → ℝ :=
   fun _ => K.area / n
 
 /-- **Zero‑sum deviation map.** The difference between the area vector and the equal‑area
 target; for distinct sites its components sum to zero. -/
-noncomputable def areaDeviation
+@[expose] noncomputable def areaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ) : Fin n → ℝ :=
   fun i => EMP.areaVec K s w i - EMP.equalAreaTarget K n i
 

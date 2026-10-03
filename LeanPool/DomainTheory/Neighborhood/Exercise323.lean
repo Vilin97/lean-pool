@@ -46,7 +46,7 @@ right adjoint to `- × 𝒟₀`. Everything is **choice-free** (`#print axioms �
 {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

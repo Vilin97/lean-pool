@@ -18,7 +18,7 @@ directional words. The forcing and solution word sums stay unchanged;
 there is no dimension factor or enlargement of their radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

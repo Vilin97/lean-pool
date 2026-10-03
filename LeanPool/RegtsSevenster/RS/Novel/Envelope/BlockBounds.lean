@@ -20,7 +20,7 @@ containment.  Both are stated against an arbitrary target algebra;
 the skein endomorphism algebras are substituted downstream.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

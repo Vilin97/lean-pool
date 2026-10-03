@@ -26,7 +26,7 @@ machinery used in the parity (door-counting) argument that culminates in
 colorful room.
 -/
 
-@[expose] public section
+public section
 
 section fiberlemma
 
@@ -99,7 +99,7 @@ variable (σ : Finset T) (C : Finset I)
 
 /- Definition of Dominant -/
 /-- `σ` is dominant for `C`: every point is dominated at some index of `C`. -/
-def isDominant :=
+@[expose] def isDominant :=
   ∀ y, ∃ i ∈ C, ∀ x ∈ σ,  y ≤[i] x
 
 variable {σ C} in
@@ -916,12 +916,13 @@ attribute [local instance] Classical.propDecidable
 variable (c : T → I) (σ : Finset T) (C : Finset I)
 
 /-- A colorful cell: the image of the coloring on `σ` equals `C`. -/
-def isColorful : Prop := IST.isCell σ C ∧ σ.image c   = C
+@[expose] def isColorful : Prop := IST.isCell σ C ∧ σ.image c   = C
 
 /-- A nearly colorful cell: exactly one color of `C` is missing. -/
 def isNearlyColorful : Prop := IST.isCell σ C ∧ (C \ σ.image c).card = 1
 
 /-- A nearly colorful cell whose missing color is exactly `i`. -/
+@[expose]
 def isTypedNC (i : I) (σ : Finset T) (C : Finset I) : Prop := IST.isCell σ C ∧ (C \ (σ.image c))
     = {i}
 

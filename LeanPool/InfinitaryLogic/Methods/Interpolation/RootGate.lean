@@ -24,7 +24,7 @@ turns that *syntactic* left inverse into the *semantic* bridge the argument need
   documented future composition.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

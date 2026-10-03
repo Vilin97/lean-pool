@@ -19,7 +19,7 @@ section
 
 /-! Exact restriction and time continuity of the actual order-zero correction source. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -126,7 +126,7 @@ section
 /-! Strong actual heat approximation and time-dependent operator commutators in Bochner Sobolev
 spaces. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -191,7 +191,7 @@ section
 /-! Actual derivative-losing transport on continuous coefficients and square-integrable higher
 Sobolev states. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -256,7 +256,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -285,7 +285,7 @@ local instance timeCorrectionPathAdd (T : ℝ) (q : ℕ) :
     Add C(Icc (0 : ℝ) T, SobolevSpace period q) := inferInstance
 
 /-- The actual order-zero source is a continuous path on the energy Sobolev level. -/
-def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
+@[expose] def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C0 : C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))
     (C : Fin 3 → C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))
@@ -298,7 +298,7 @@ def orderZeroPath {s : ℕ} (hs : 6 ≤ s) (T : ℝ)
 
 /-- The genuine energy-order raw correction source uses the constructed higher derivative only in
 its top transport. -/
-def rawSourceTime {s : ℕ} (hs : 6 ≤ s) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def rawSourceTime {s : ℕ} (hs : 6 ≤ s) (T : ℝ) (hT : 0 ≤ T)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (C0 : C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))
     (C : Fin 3 → C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s))
@@ -372,7 +372,7 @@ theorem restrict_raw_source {q : ℕ} (hq : 6 ≤ q)
         L hL A0 KP0 KQ0 A KP KQ z r e))
 
 /-- The actual positive coercive pressure operator is a continuous energy-order time path. -/
-def positivePressurePath {s : ℕ} (T : ℝ) (G : CoefficientPath period s (Icc (0 : ℝ) T))
+@[expose] def positivePressurePath {s : ℕ} (T : ℝ) (G : CoefficientPath period s (Icc (0 : ℝ) T))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ t x v, c * ‖v‖ ^ 2 ≤ ⟪(G.coefficient t).coefficient x v, v⟫_ℝ) :
     C(Icc (0 : ℝ) T, SobolevSpace period s →L[ℝ] SobolevSpace period s) :=
@@ -381,6 +381,7 @@ def positivePressurePath {s : ℕ} (T : ℝ) (G : CoefficientPath period s (Icc 
         G.jet κ m c hc hpos t G.continuous.continuousAt)⟩
 
 /-- The actual signed PDE pressure belongs to the full energy-order Bochner space. -/
+@[expose]
 def pressureTime {s : ℕ} (T : ℝ) (hT : 0 ≤ T) (G : CoefficientPath period s (Icc (0 : ℝ) T))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ t x v, c * ‖v‖ ^ 2 ≤ ⟪(G.coefficient t).coefficient x v, v⟫_ℝ)
@@ -388,6 +389,7 @@ def pressureTime {s : ℕ} (T : ℝ) (hT : 0 ≤ T) (G : CoefficientPath period 
   -(timeMultiplier T hT (positivePressurePath period T G κ m c hc hpos) F)
 
 /-- The actual projected mild forcing belongs to the full energy-order Bochner space. -/
+@[expose]
 def projectedTime {s : ℕ} (T : ℝ) (hT : 0 ≤ T) (G : CoefficientPath period s (Icc (0 : ℝ) T))
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
     (hpos : ∀ t x v, c * ‖v‖ ^ 2 ≤ ⟪(G.coefficient t).coefficient x v, v⟫_ℝ)

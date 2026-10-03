@@ -86,28 +86,33 @@ and `R 97 17 ≈ 0.2921`.  The feasibility constraint is binding at low degree: 
 * T. Tao, *A digestion of the proof of Sendov's conjecture*, blog post, 2026.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 /-- `M n = n - 1`.  All of the quantities below are naturally expressed in terms of it. -/
+@[expose]
 noncomputable def M (n : ℕ) : ℝ := (n : ℝ) - 1
 
 /-- `A n α = a ^ 2 = 1 - 2α/(n-1)`, from the definition `α = (n-1)(1-a²)/2` of `α`.
 The blog post's `a ^ 4` is therefore `A n α ^ 2`. -/
+@[expose]
 noncomputable def A (n : ℕ) (α : ℝ) : ℝ := 1 - 2 * α / M n
 
 /-- `c n α = 1 - α/(n-1) - α/(2(3+α))`: the value taken by `a * x` after the substitution
 of `α/(3+α)` for `β(1)`.  This is `c(α)` in the blog post. -/
+@[expose]
 noncomputable def c (n : ℕ) (α : ℝ) : ℝ := 1 - α / M n - α / (2 * (3 + α))
 
 /-- `Q n α t = 1 - 2 c t + A t ^ 2`: the quadratic replacing `β(t) = 1 - 2 a x t + a² t²`
 after the substitution of `α/(3+α)` for `β(1)`.  Note `Q n α 1 = α/(3+α)`. -/
+@[expose]
 noncomputable def Q (n : ℕ) (α : ℝ) (t : ℝ) : ℝ := 1 - 2 * c n α * t + A n α * t ^ 2
 
 /-- `R n α` is the right-hand side of equation `stat` of the blog post:
 `1/6 + 1/(4(3+α)) + 1/(2(n-1)) + 1/(4(n-1)(3+α))
     + a⁴ n (n-1) (n-2)/(4(3+α)) * ∫ t in 0..1, t³ (1 - 2c(α)t + a²t²) ^ ((n-4)/2)`. -/
+@[expose]
 noncomputable def R (n : ℕ) (α : ℝ) : ℝ :=
   1 / 6 + 1 / (4 * (3 + α)) + 1 / (2 * M n) + 1 / (4 * M n * (3 + α)) +
     A n α ^ 2 * n * M n * ((n : ℝ) - 2) / (4 * (3 + α)) *

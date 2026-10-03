@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 The below-two primal potential identity and terminal objective-gap bound.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

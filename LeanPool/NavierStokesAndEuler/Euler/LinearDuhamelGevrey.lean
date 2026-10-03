@@ -33,7 +33,7 @@ The coefficient difference vanishes at the base point, so the resulting
 binomial recurrence contains only lower solution derivatives on the right.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -96,7 +96,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

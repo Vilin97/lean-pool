@@ -32,7 +32,7 @@ winding contribution and crossing angle contributions.
 * `windingNumberWithAngles_union` — additivity over disjoint crossings
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

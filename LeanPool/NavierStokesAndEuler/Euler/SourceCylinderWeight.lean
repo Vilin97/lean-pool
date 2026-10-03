@@ -18,7 +18,7 @@ physical forcing g f by g. This is an algebraic identity of continuous paths;
 it does not differentiate g or introduce its extrema into any estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

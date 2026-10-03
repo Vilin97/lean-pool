@@ -20,7 +20,7 @@ unified by rewiring) and the closed case (they bound a common
 edge, which closes into a free circle parameterized by a Bool).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -55,6 +55,7 @@ variable {W : Fragment α} {i j : α}
 /-- In the open case, the W-partner of boundary flag `i` is a
 surviving flag (it is neither `boundaryFlag i` nor
 `boundaryFlag j`). -/
+@[expose]
 def partnerSurvI
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j) :
     SurvivingFlag W i j :=
@@ -64,6 +65,7 @@ def partnerSurvI
 
 /-- In the open case, the W-partner of boundary flag `j` is a
 surviving flag. -/
+@[expose]
 def partnerSurvJ
     (hopen : W.pairing (W.boundaryFlag i) ≠ W.boundaryFlag j) :
     SurvivingFlag W i j :=
@@ -298,6 +300,7 @@ variable {W : Fragment α} {i j : α}
 image under `Subtype.val`, together with both boundary flags `i`
 and `j` iff the Bool `b` is true (the closed-off circle-edge
 participates). -/
+@[expose]
 noncomputable def liftSubsetClosed
     (s' : Finset (SurvivingFlag W i j)) (b : Bool) :
     Finset W.Flag :=

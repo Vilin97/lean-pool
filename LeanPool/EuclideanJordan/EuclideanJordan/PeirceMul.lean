@@ -59,7 +59,7 @@ characterisation of the rank-two block.
 * McCrimmon, *A Taste of Jordan Algebras*, §II.8.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

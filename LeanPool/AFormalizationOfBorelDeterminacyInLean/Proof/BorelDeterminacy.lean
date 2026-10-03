@@ -18,7 +18,7 @@ import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.Zero.Strat
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame
@@ -72,7 +72,7 @@ namespace BorelDet'
 
 variable (T : PTrees) (W : Set (body T.1.2)) {n : ℕ}
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def extendToGame : Games where
+@[expose, simps] def extendToGame : Games where
   fst := T.1.1
   snd := {
     fst := {
@@ -83,7 +83,7 @@ variable (T : PTrees) (W : Set (body T.1.2)) {n : ℕ}
   }
 
 /-- a slight strengthening of Martin's notion of unravelable games to facilitate Borel induction -/
-def UniversallyUnravelable :=
+@[expose] def UniversallyUnravelable :=
   ∀ ⦃T'⦄ (f : T' ⟶ T), (extendToGame T' <| (bodyFunctor.map f.toHom)⁻¹' W).IsUnravelable
 lemma unravelable_complement (h : UniversallyUnravelable T W) :
   UniversallyUnravelable T Wᶜ := by
@@ -116,7 +116,7 @@ structure PartiallyUnravelled (n : ℕ) where
   sets : ℕ → PSigma (UniversallyUnravelable carrier)
   unrav : ∀ m < n, IsOpen (sets m).1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def PartiallyUnravelled.continue (G : PartiallyUnravelled n) (k : ℕ) :
+@[expose] def PartiallyUnravelled.continue (G : PartiallyUnravelled n) (k : ℕ) :
   Σ' (G' : PartiallyUnravelled (n + 1)) (f : G'.carrier ⟶ G.carrier),
   Covering.Fixing (k + n) f ∧
   ∀ n, (G'.sets n).1 = (bodyFunctor.map f.toHom)⁻¹' (G.sets n).1 := by
@@ -143,11 +143,11 @@ def PartiallyUnravelled.continue (G : PartiallyUnravelled n) (k : ℕ) :
   }, f.toCovering, hf, fun _ ↦ rfl
 variable (G : PartiallyUnravelled 0) (k : ℕ)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def unravelNth : ∀ n, PartiallyUnravelled n
+@[expose] def unravelNth : ∀ n, PartiallyUnravelled n
   | 0 => G
   | n + 1 => ((unravelNth n).continue k).1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def unravelFunctor : ℕᵒᵖ ⥤ PTrees :=
+@[expose] def unravelFunctor : ℕᵒᵖ ⥤ PTrees :=
   natFreeCat.symm ⟨fun n ↦ (unravelNth G k n).carrier,
     fun n ↦ ((unravelNth G k n).continue k).2.1⟩
 lemma unravelFunctor_succ n :

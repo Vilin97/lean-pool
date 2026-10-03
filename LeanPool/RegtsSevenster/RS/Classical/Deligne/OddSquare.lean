@@ -24,7 +24,7 @@ of parities — are the content of this file.  Two of them carry a
 sign, and the sign is the self-braiding of the odd line.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

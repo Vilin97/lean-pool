@@ -18,7 +18,7 @@ composition is the descended bilinear composition.  All axioms were proven in
 `SkeinCategory.lean`; this file only packages them.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

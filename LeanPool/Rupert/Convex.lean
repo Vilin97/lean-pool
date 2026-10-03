@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Star.Real
 Imported Lean Pool material for `LeanPool.Rupert.Convex`.
 -/
 
-@[expose] public section
+public section
 
 open Pointwise
 

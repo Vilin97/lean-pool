@@ -21,7 +21,7 @@ The public definitions (`IsEssentialInput`, `EssentialInputs`) are in
 `lower_bound_all_inputs`) are accessible through `Circ.LowerBound`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

@@ -22,7 +22,7 @@ the mixed sum forces the diagram to contain the cell recording
 the two counts.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

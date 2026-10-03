@@ -19,7 +19,7 @@ parity rigidity `CycleModelAux.quant_rigidity` (Lemma `lem:quantrigidity`). Ever
 is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 
@@ -58,6 +58,7 @@ section Av
 variable {X : Type*} [Fintype X] {μ f g : X → ℝ}
 
 /-- Weighted average of a function over a finite latent alphabet. -/
+@[expose]
 def av {X : Type*} [Fintype X] (μ f : X → ℝ) : ℝ := ∑ x, μ x * f x
 
 theorem av_mono (hμ : ∀ x, 0 ≤ μ x) (h : ∀ x, f x ≤ g x) : av μ f ≤ av μ g :=
@@ -546,6 +547,7 @@ theorem adj_of_mem_edgeFinset (hm : 3 ≤ m) {a b : Fin m}
   rwa [SimpleGraph.mem_edgeFinset, SimpleGraph.mem_edgeSet] at h2
 
 /-- The edge of the cycle recorded by its lower endpoint. -/
+@[expose]
 def cEdge (m : ℕ) (hm : 3 ≤ m) (i : Fin m) : (cycle m hm).Edge :=
   CycleWitnessAux.ce hm i
 

@@ -17,7 +17,7 @@ is rigid, so the general genus-two nonrecurrence criterion applies without
 any residual graph-theoretic hypothesis.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Initialization
 
 /-! # Symmetry -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -49,6 +49,7 @@ def liftNodePerm {k : ℕ} (e : Equiv.Perm (DyadicNode k)) :
 
 /-- The permutation at level `d+1+r` induced by swapping the children of
 `v`. -/
+@[expose]
 def subtreeSwap {d : ℕ} (v : DyadicNode d) :
     (r : ℕ) → Equiv.Perm (DyadicNode ((d + 1) + r))
   | 0 => Equiv.swap (leftChild v) (rightChild v)
@@ -112,6 +113,7 @@ theorem subtreeSwap_symm {d r : ℕ} (v : DyadicNode d) :
   simp
 
 /-- The ancestor `r` levels above a node. -/
+@[expose]
 def ancestorNode {k : ℕ} : (r : ℕ) → DyadicNode (k + r) → DyadicNode k
   | 0, w => w
   | r + 1, w => ancestorNode r (parent w)
@@ -176,6 +178,7 @@ instance inventoryStateNonempty
   exact ⟨⟨fun i => if i = Classical.arbitrary ι then m else 0, by simp⟩⟩
 
 /-- Push a fixed-total count vector forward along a permutation. -/
+@[expose]
 def inventoryPerm {ι : Type*} [Fintype ι] {m : ℕ}
     (e : Equiv.Perm ι) : Equiv.Perm (InventoryState ι m) :=
   inventoryStatePerm e
@@ -193,6 +196,7 @@ theorem inventoryPerm_apply_image_count
   simp [inventoryPerm]
 
 /-- Transport an explicitly iterated subtree swap to a named leaf depth. -/
+@[expose]
 def leafSwapWithGap {d L : ℕ} (v : DyadicNode d) (r : ℕ)
     (hlevel : (d + 1) + r = L) : Equiv.Perm (DyadicNode L) :=
   let c : DyadicNode ((d + 1) + r) ≃ DyadicNode L :=
@@ -200,16 +204,19 @@ def leafSwapWithGap {d L : ℕ} (v : DyadicNode d) (r : ℕ)
   c.symm.trans ((subtreeSwap v r).trans c)
 
 /-- The involution of depth-`L` leaves induced by a child swap at `v`. -/
+@[expose]
 def leafSwap {d L : ℕ} (hdL : d < L) (v : DyadicNode d) :
     Equiv.Perm (DyadicNode L) :=
   leafSwapWithGap v (L - (d + 1)) (by omega)
 
 /-- The child swap lifted to fixed-total leaf inventories. -/
+@[expose]
 def inventorySwap {d L m : ℕ} (hdL : d < L) (v : DyadicNode d) :
     Equiv.Perm (InventoryState (DyadicNode L) m) :=
   inventoryPerm (leafSwap hdL v)
 
 /-- The lifted inventory swap with an explicit depth gap. -/
+@[expose]
 def inventorySwapWithGap {d L m : ℕ} (v : DyadicNode d) (r : ℕ)
     (hlevel : (d + 1) + r = L) :
     Equiv.Perm (InventoryState (DyadicNode L) m) :=
@@ -254,6 +261,7 @@ def stateLeafInventory {L m : ℕ}
   HierarchicalDynamics.leafInventory x
 
 /-- The canonical aggregate counts of a fixed-total state. -/
+@[expose]
 def stateAggregate {L m : ℕ}
     (x : InventoryState (DyadicNode L) m) : AggregatedInventory L m :=
   HierarchicalDynamics.aggregatedInventory x
@@ -1088,6 +1096,7 @@ theorem concrete_kernel_equivariant
 /-! ## Invariant stationary laws for a single permutation -/
 
 /-- Push a finite law forward along a permutation, in pointwise form. -/
+@[expose]
 def permuteLaw {α : Type*} [Fintype α]
     (e : Equiv.Perm α) (μ : FiniteLaw α) : FiniteLaw α where
   mass x := μ.mass (e.symm x)

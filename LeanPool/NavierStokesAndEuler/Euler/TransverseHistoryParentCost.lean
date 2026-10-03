@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryPolynomialCos
 /-! The actual zeroth-order history costs are bounded by fixed scalar
 polynomials in the parent coefficient bounds and reciprocal horizon. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -21,6 +21,7 @@ namespace EulerTransverseHistoryBounds
 open EulerPacketParentMeanCoercivity
 
 /-- Scalar transport, given by `1+((2*(c⁻¹)^2*q^2*q1+c⁻¹*q1)*T+c⁻¹*q)`. -/
+@[expose]
 def scalarTransport (T c q q1 : ℝ) : ℝ :=
   1+((2*(c⁻¹)^2*q^2*q1+c⁻¹*q1)*T+c⁻¹*q)
 

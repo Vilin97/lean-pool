@@ -38,7 +38,7 @@ This layer deliberately gives no graph, subdivision, or divisor semantics to
 the cones.  Those belong in a separate local-certificate checker.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.AffineCover
 
@@ -48,6 +48,7 @@ open Finset
 
 /-- Boolean universal quantification over `Fin k`, implemented as a list fold
 rather than a proof-producing `Decidable` computation. -/
+@[expose]
 def allFin {k : ℕ} (test : Fin k → Bool) : Bool :=
   (List.ofFn test).all id
 
@@ -58,6 +59,7 @@ def allFin {k : ℕ} (test : Fin k → Bool) : Bool :=
 /-- Boolean universal quantification over an arbitrary finite set.  `Finset.fold`
 keeps kernel evaluation proof-free even when the element type itself is a
 finite combinatorial object such as `Finset (Fin n)`. -/
+@[expose]
 def allFinset {α : Type*}
     (elements : Finset α) (test : α → Bool) : Bool :=
   elements.fold (fun left right => left && right) true test
@@ -94,6 +96,7 @@ instance : Zero (AffineForm m) where
 this avoids asking `Decidable` to construct an equality proof between two
 function-valued coefficient fields while a large generated certificate is
 being reduced by the kernel. -/
+@[expose]
 def equal (left right : AffineForm m) : Bool :=
   decide (left.fixedValue = right.fixedValue) &&
     allFin fun coordinate =>
@@ -120,6 +123,7 @@ def equal (left right : AffineForm m) : Bool :=
     simp [equal]
 
 /-- Proof-free list membership for integral affine forms. -/
+@[expose]
 def mem (form : AffineForm m) (forms : List (AffineForm m)) : Bool :=
   forms.any fun candidate => equal form candidate
 
@@ -129,10 +133,12 @@ def mem (form : AffineForm m) (forms : List (AffineForm m)) : Bool :=
   simp [mem]
 
 /-- Evaluation of an integral affine form at an integral point. -/
+@[expose]
 def eval (form : AffineForm m) (point : Fin m → ℤ) : ℤ :=
   form.fixedValue + ∑ i, form.coefficient i * point i
 
 /-- The closed integral inequality represented by an affine form. -/
+@[expose]
 def Holds (form : AffineForm m) (point : Fin m → ℤ) : Prop :=
   0 ≤ form.eval point
 
@@ -176,11 +182,13 @@ end AffineForm
 
 /-- A finite conjunction of affine inequalities.  This is used for base
 regions and for individual proof cones. -/
+@[expose]
 def FormsHold {m : ℕ} (forms : List (AffineForm m))
     (point : Fin m → ℤ) : Prop :=
   ∀ form ∈ forms, form.Holds point
 
 /-- A family of cones covers a base region at every integral point. -/
+@[expose]
 def Covers {m : ℕ} (base : List (AffineForm m))
     (cones : List (List (AffineForm m))) : Prop :=
   ∀ point : Fin m → ℤ, FormsHold base point →
@@ -512,16 +520,19 @@ namespace CoverTree
 variable {m : ℕ}
 
 /-- Look up a cone in the cover table, returning an empty cone for an out-of-range index. -/
+@[expose]
 def coneAt (cones : List (List (AffineForm m))) (index : ℕ) :
     List (AffineForm m) :=
   cones.getD index []
 
 /-- Look up an affine constraint in a cone, returning the zero form for an out-of-range index. -/
+@[expose]
 def formAt (cone : List (AffineForm m)) (index : ℕ) : AffineForm m :=
   cone.getD index 0
 
 /-- Mathematical validity of a contradiction tree under the currently active
 affine rows. -/
+@[expose]
 def Valid (cones : List (List (AffineForm m)))
     (active : List (AffineForm m)) : CoverTree m → Prop
   | .leaf farkas => farkas.Valid active
@@ -853,6 +864,7 @@ def form2 (fixedValue a b : ℤ) : AffineForm 2 where
 
 /-- The two cones `x-y >= 1` and `y-x >= 0`.  Their use of constants `-1`
 and `0` is the strict integer partition required by the C kernel grammar. -/
+@[expose]
 def strictPartitionCones : List (List (AffineForm 2)) := [
   [form2 (-1) 1 (-1)],
   [form2 0 (-1) 1]
@@ -860,6 +872,7 @@ def strictPartitionCones : List (List (AffineForm 2)) := [
 
 /-- If both one-row cones were violated, the active rows would be
 `x-y-1 >= 0` and `y-x >= 0`; adding them gives `-1 >= 0`. -/
+@[expose]
 def strictPartitionTree : CoverTree 2 :=
   .branch 0 1 fun _ =>
     .branch 1 1 fun _ =>

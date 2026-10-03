@@ -9,22 +9,24 @@ public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
 
 /-! # Erdős 97 convex-octagon formalization: Radius -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
 namespace OctagonIncidence
 
 /-- Two centres are mutually selected. -/
-def Mutual (Q : OctagonIncidence) (a b : Vertex) : Prop :=
+@[expose] def Mutual (Q : OctagonIncidence) (a b : Vertex) : Prop :=
   b ∈ Q.targets a ∧ a ∈ Q.targets b
 
 /-- Two centres lie in the same connected component of mutual selections. -/
+@[expose]
 def SameComponent (Q : OctagonIncidence) (a b : Vertex) : Prop :=
   Relation.ReflTransGen Q.Mutual a b
 
 /-- An undirected pair is labelled by the radius of a mutual component when
 one endpoint in that component selects the other. -/
+@[expose]
 def LabelledEdge (Q : OctagonIncidence) (root a b : Vertex) : Prop :=
   (Q.SameComponent root a ∧ b ∈ Q.targets a) ∨
     (Q.SameComponent root b ∧ a ∈ Q.targets b)

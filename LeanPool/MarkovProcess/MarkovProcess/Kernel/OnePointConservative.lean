@@ -26,7 +26,7 @@ The regularity data of the compactification are an explicit hypothesis, as every
 continuous-path process is formed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

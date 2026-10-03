@@ -26,7 +26,7 @@ its center.
   arbitrary-center disk estimate under strict operator-norm enclosure.
 -/
 
-@[expose] public section
+public section
 
 open Complex Polynomial Set
 open scoped InnerProductSpace

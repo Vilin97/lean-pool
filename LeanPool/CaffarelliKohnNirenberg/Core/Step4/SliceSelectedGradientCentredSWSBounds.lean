@@ -16,7 +16,7 @@ mean-component bounds, and the localized force estimate used in
 All coefficients are explicit and independent of the solution.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -28,7 +28,7 @@ namespace CKN.Core.Step4
 
 /-- The uncentred source majorant in `eq:pressure-gradient-decomposition`, using the
 native vector norms of the velocity, gradient, and force slices. -/
-def centredSWSUncentredMajorant (x : Vec3) (ρ q : ℝ)
+@[expose] def centredSWSUncentredMajorant (x : Vec3) (ρ q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ≥0∞ :=
   let μ := volume.restrict (vec3Ball x ρ)

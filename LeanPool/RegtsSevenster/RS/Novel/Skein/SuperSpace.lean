@@ -29,7 +29,7 @@ the tower's colour kernel, which pairs the odd colours through
 `-oddThroughFactor`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -38,6 +38,7 @@ namespace RS
 /-- **The symplectic matrix** `J = [[0, I], [-I, 0]]` in
 coordinates: `J c d` is `1` when `d = c + ℓ`, `-1` when
 `c = d + ℓ`, and `0` otherwise. -/
+@[expose]
 noncomputable def symplecticJ (ℓ : ℕ) (c d : Fin (2 * ℓ)) : ℂ :=
   if d.val = c.val + ℓ then 1
   else if c.val = d.val + ℓ then -1
@@ -45,6 +46,7 @@ noncomputable def symplecticJ (ℓ : ℕ) (c d : Fin (2 * ℓ)) : ℂ :=
 
 /-- **The super form on one leg**: the identity on the even
 colours, `J` on the odd ones, zero across. -/
+@[expose]
 noncomputable def superLeg {k ℓ : ℕ} :
     (Fin k ⊕ Fin (2 * ℓ)) → (Fin k ⊕ Fin (2 * ℓ)) → ℂ
   | Sum.inl a, Sum.inl b => if a = b then 1 else 0
@@ -80,6 +82,7 @@ fixes the convention.
 /-- The symplectic dual of a colour: the partner colour with the
 partner sign.  This is RS21's `g_c` written in the basis of the
 `f`'s. -/
+@[expose]
 noncomputable def dualSign (ℓ : ℕ) (c : Fin (2 * ℓ)) : ℂ :=
   ((oddPartnerSign ℓ c : ℤ) : ℂ)
 

@@ -18,7 +18,7 @@ theorem, there is no bivalent-path suppression or graph-isomorphism transport
 left to prove.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

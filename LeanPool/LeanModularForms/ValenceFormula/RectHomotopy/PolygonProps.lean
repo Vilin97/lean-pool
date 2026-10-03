@@ -21,7 +21,7 @@ Defines per-segment functions `fdPolygonSeg1`..`fdPolygonSeg5` and proves:
 * Segment differentiability and `fdPolygon_differentiableAt_off_partition`
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 
@@ -57,23 +57,23 @@ lemma fdPolygon_at_t4 :
   simp only [HHeight]; push_cast; ring
 
 /-- The first segment of the boundary polygon (right vertical edge). -/
-noncomputable def fdPolygonSeg1 : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygonSeg1 : ℝ → ℂ := fun t =>
   1/2 + (HHeight - t * (HHeight - Real.sqrt 3 / 2)) * I
 
 /-- The second segment of the boundary polygon (chord from `ρ'` to `i`). -/
-noncomputable def fdPolygonSeg2 : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygonSeg2 : ℝ → ℂ := fun t =>
   chordSegment rho' iPoint (t - 1)
 
 /-- The third segment of the boundary polygon (chord from `i` to `ρ`). -/
-noncomputable def fdPolygonSeg3 : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygonSeg3 : ℝ → ℂ := fun t =>
   chordSegment iPoint rho (t - 2)
 
 /-- The fourth segment of the boundary polygon (left vertical edge). -/
-noncomputable def fdPolygonSeg4 : ℝ → ℂ := fun t =>
+@[expose] noncomputable def fdPolygonSeg4 : ℝ → ℂ := fun t =>
   -1/2 + (Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2)) * I
 
 /-- The fifth segment of the boundary polygon (top horizontal edge). -/
-noncomputable def fdPolygonSeg5 : ℝ → ℂ := fun t => (t - 9/2) + HHeight * I
+@[expose] noncomputable def fdPolygonSeg5 : ℝ → ℂ := fun t => (t - 9/2) + HHeight * I
 
 lemma fdPolygon_seg1_continuous :
     Continuous fdPolygonSeg1 := by unfold fdPolygonSeg1; continuity

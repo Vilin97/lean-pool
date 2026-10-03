@@ -17,7 +17,7 @@ The preceding slice theorem takes the weak-gradient construction as an explicit
 solution-level statement without an analytic Calderón–Zygmund premise.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

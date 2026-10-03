@@ -24,7 +24,7 @@ Proved here (sorry-free): the count **numerator** `#{(d−1)-subsets of Z_N} = C
 Mathlib's `Fintype.card_finset_len` + `ZMod.card`.
 -/
 
-@[expose] public section
+public section
 
 namespace CriticalPortraits
 
@@ -42,7 +42,7 @@ def level {N : ℕ} (m : ℕ) (i : ZMod N) : ℕ := i.val / m
 def fiber {N : ℕ} (m : ℕ) (i : ZMod N) : ℕ := i.val % m
 
 /-- `S ⊆ Z_{d*m}` is **level-canonical** iff `#{i ∈ S : level i ≤ j} ≤ j` for every `j < d`. -/
-def LevelCanonical (d m : ℕ) (S : Finset (ZMod (d * m))) : Prop :=
+@[expose] def LevelCanonical (d m : ℕ) (S : Finset (ZMod (d * m))) : Prop :=
   ∀ j < d, (S.filter (fun i => i.val / m ≤ j)).card ≤ j
 
 instance (d m : ℕ) (S : Finset (ZMod (d * m))) : Decidable (LevelCanonical d m S) := by

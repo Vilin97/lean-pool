@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.BesicovitchPairCondition.Definitions
 This file develops the elementary set-distance API needed by the six-point transfer.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

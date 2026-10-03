@@ -13,4 +13,4 @@ public import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectat
 Import-only index for the `ConditionalExpectation` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

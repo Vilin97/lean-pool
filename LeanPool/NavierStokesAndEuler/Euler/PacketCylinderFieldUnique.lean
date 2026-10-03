@@ -11,7 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
 
 /-! A raw cylinder field determines its actual continuous L² path uniquely. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

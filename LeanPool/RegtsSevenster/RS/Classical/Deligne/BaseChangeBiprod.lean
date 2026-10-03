@@ -18,7 +18,7 @@ projects componentwise; the inverse injects componentwise; both
 are linear over the new base, and they are mutually inverse.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

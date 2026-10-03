@@ -11,7 +11,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Functions -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -195,12 +195,14 @@ end «lp_section_1»
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.imp (p q : V) : V := L.neg p ^⋎ q
 
 /-- Imported declaration from the Incompleteness formalization. -/
 notation:60 p:61 " ^→[" L "] " q:60 => Language.imp L p q
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.iff (p q : V) : V := (L.imp p q) ^⋏ (L.imp q p)
 
 variable {L}
@@ -526,6 +528,7 @@ open Substs
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.substs (w p : V) : V := (construction L).result w p
 
 variable {L}
@@ -883,6 +886,7 @@ end «lp_section_9»
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.substs₁ (t u : V) : V := L.substs ?[t] u
 
 variable {L}
@@ -917,6 +921,7 @@ end «lp_section_12»
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.free (p : V) : V := L.substs₁ ^&0 (L.shift p)
 
 variable {L}
@@ -952,16 +957,16 @@ end «lp_section_14»
 namespace Formalized
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqEQ (x y : V) : V := ^rel 2 (eqIndex : V) ?[x, y]
+@[expose] def qqEQ (x y : V) : V := ^rel 2 (eqIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqNEQ (x y : V) : V := ^nrel 2 (eqIndex : V) ?[x, y]
+@[expose] def qqNEQ (x y : V) : V := ^nrel 2 (eqIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqLT (x y : V) : V := ^rel 2 (ltIndex : V) ?[x, y]
+@[expose] def qqLT (x y : V) : V := ^rel 2 (ltIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqNLT (x y : V) : V := ^nrel 2 (ltIndex : V) ?[x, y]
+@[expose] def qqNLT (x y : V) : V := ^nrel 2 (ltIndex : V) ?[x, y]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 notation:75 x:75 " ^= " y:76 => qqEQ x y

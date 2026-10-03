@@ -14,7 +14,7 @@ import Mathlib.Algebra.Prime.Lemmas
 
 /-! # PeanoMinus -/
 
-@[expose] public section
+public section
 
 
 namespace LO

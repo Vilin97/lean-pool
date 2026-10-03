@@ -15,7 +15,7 @@ semisimplicity predicates are the concrete `k[Sp₄(F₂)]` modules attached to
 the two actions from §2.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperNonisomorphism
@@ -39,21 +39,21 @@ The `Ring` construction used in the Connes rigidity formalization.
 abbrev Ring := MonoidAlgebra k Q
 
 /-- The quotient action map `Sp₄(F₂) → SL₃(R) × Sp₄(F₂)`. Paper: §§2, 6. -/
-def qToH : Q →* H where
+@[expose] def qToH : Q →* H where
   toFun q := (1, q)
   map_one' := by rfl
   map_mul' p q := by simp
 
 /-- The first quotient action on the actual additive kernel. Paper: §6. -/
-def qLinearActionOne : Q →* (D ≃ₗ[k] D) :=
+@[expose] def qLinearActionOne : Q →* (D ≃ₗ[k] D) :=
   PaperKernel.paperThetaOneLinearHom.comp qToH
 
 /-- The second quotient action on the actual additive kernel. Paper: §6. -/
-def qLinearActionTwo : Q →* (D ≃ₗ[k] D) :=
+@[expose] def qLinearActionTwo : Q →* (D ≃ₗ[k] D) :=
   PaperKernel.paperThetaTwoLinearHom.comp qToH
 
 /-- Linear representation attached to the first actual quotient action. -/
-def qRepresentationOne : Representation k Q D where
+@[expose] def qRepresentationOne : Representation k Q D where
   toFun q := (qLinearActionOne q).toLinearMap
   map_one' := by
     apply LinearMap.ext
@@ -70,7 +70,7 @@ def qRepresentationOne : Representation k Q D where
       (qLinearActionOne.map_mul p q)
 
 /-- Linear representation attached to the second actual quotient action. -/
-def qRepresentationTwo : Representation k Q D where
+@[expose] def qRepresentationTwo : Representation k Q D where
   toFun q := (qLinearActionTwo q).toLinearMap
   map_one' := by
     apply LinearMap.ext
@@ -88,7 +88,7 @@ def qRepresentationTwo : Representation k Q D where
 
 /-- Pull back the second quotient action along the quotient automorphism induced
 by a hypothetical group isomorphism. Paper: §6. -/
-def qRepresentationTwoAlong (σ : Q ≃* Q) : Representation k Q D where
+@[expose] def qRepresentationTwoAlong (σ : Q ≃* Q) : Representation k Q D where
   toFun q := qRepresentationTwo (σ q)
   map_one' := by
     apply LinearMap.ext
@@ -131,7 +131,7 @@ abbrev W := OpenAIPort.ModTwoSpace
 
 /-- The finite quadratic correction appearing in the second action. Paper:
 §2, §6. -/
-def cocycle (q : Q) (v : W) : k :=
+@[expose] def cocycle (q : Q) (v : W) : k :=
   OpenAIPort.standardQuadraticForm (q⁻¹ • v) +
     OpenAIPort.standardQuadraticForm v
 

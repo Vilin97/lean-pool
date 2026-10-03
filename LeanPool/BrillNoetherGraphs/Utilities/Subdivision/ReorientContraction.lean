@@ -29,7 +29,7 @@ reorient the target spec, contract there, and transport back along the
 identity relabeling whose `reversed` field records the flips.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.ReorientContraction
 
@@ -43,6 +43,7 @@ open Utilities.Certificate.ContractionForestCensusGeneral
 variable {n p n' p' : ℕ}
 
 /-- Reverse a chosen set of slots of a core. -/
+@[expose]
 def Core.reorient (core : ExplicitPotential.Core n p) (rev : Fin p → Bool) :
     ExplicitPotential.Core n p where
   tail := fun e => if rev e then core.head e else core.tail e
@@ -71,6 +72,7 @@ theorem Core.reorient_loopless {core : ExplicitPotential.Core n p}
     exact h e
 
 /-- The same subdivision, with a chosen set of slots read backwards. -/
+@[expose]
 def reorientSpec (s : SubdivisionGraph.Spec n p)
     (rev : Fin p → Bool) : SubdivisionGraph.Spec n p where
   core := Core.reorient s.core rev

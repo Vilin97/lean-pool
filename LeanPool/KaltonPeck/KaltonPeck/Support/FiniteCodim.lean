@@ -22,7 +22,7 @@ This file relates symplectic orthogonals to finite codimension, constructs the r
 forms, and proves the finite-codimensional parity theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.FiniteCodim
 

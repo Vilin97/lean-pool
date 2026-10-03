@@ -17,7 +17,7 @@ coefficient of `w₀` in `P · a_δ` is the signed sum over
 permutations of the guarded shifted coefficients of `P`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

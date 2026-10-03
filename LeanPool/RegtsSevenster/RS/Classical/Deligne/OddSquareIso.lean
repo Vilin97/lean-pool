@@ -23,7 +23,7 @@ is an isomorphism.  The sign is the self-braiding of the line and
 is the same on all four blocks.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

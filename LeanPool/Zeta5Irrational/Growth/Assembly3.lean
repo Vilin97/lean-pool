@@ -24,7 +24,7 @@ import Mathlib.Tactic.Ring.Basic
 /-! # Growth: the per-range sums as prime sums
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 
@@ -102,7 +102,7 @@ lemma range2_le {n : ℕ} (hn : 10400 ≤ n) :
   linarith
 
 /-- The inner table as a function. -/
-noncomputable def fIn (x : ℝ) : ℝ :=
+@[expose] noncomputable def fIn (x : ℝ) : ℝ :=
   gIn (pieceIdx tIn 125 x) x
 
 lemma tIn_zero : tIn 0 = 3 := by simp [tIn, tInL]

@@ -22,7 +22,7 @@ We show that a graph action induces an action on the edges.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

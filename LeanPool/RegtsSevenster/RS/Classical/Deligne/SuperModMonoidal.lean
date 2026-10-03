@@ -43,7 +43,7 @@ morphisms out of a two-, three- and four-fold tensor product.
   `MonoidalCategory` and `SymmetricCategory` instances.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -61,6 +61,7 @@ variable {A A' B C D : Type*}
 again bilinear.  This is the shape in which a lift out of a tensor
 product is fed into a second lift: the value of the outer lift is
 itself a linear map. -/
+@[expose]
 noncomputable def bicomp
     [AddCommGroup A] [Module ℂ A] [AddCommGroup A'] [Module ℂ A']
     [AddCommGroup B] [Module ℂ B] [AddCommGroup C] [Module ℂ C]
@@ -82,6 +83,7 @@ theorem bicomp_apply
 argument is the one held back: `(a', d) ↦ (a ↦ f (g a a') d)`.
 This is the shape needed when the inner lift is taken in the
 second factor of a tensor product. -/
+@[expose]
 noncomputable def bicompFlip
     [AddCommGroup A] [Module ℂ A] [AddCommGroup A'] [Module ℂ A']
     [AddCommGroup B] [Module ℂ B] [AddCommGroup C] [Module ℂ C]
@@ -537,6 +539,7 @@ variable {M N Q : S.Mod.{u, u, u, u}} (d : TensorData M N Q)
 /-- **A morphism out of a tensor product**: the two lifts of the
 four blocks of a `TensorData`, assembled into a morphism of super
 modules out of `M ⊗ N`. -/
+@[expose]
 noncomputable def mkHom : M.tensor N ⟶ Q where
   evenMap := liftEven M N d.fee d.foo d.hee d.hoo d.hoeo d.hooe
   oddMap := liftOdd M N d.feo d.foe d.heeo d.heoe d.hoee d.hooo
@@ -622,6 +625,7 @@ section TensorHom
 variable {M M' M'' N N' N'' : S.Mod.{u, u, u, u}}
 
 /-- The data of the tensor product of two morphisms. -/
+@[expose]
 noncomputable def tensorHomData (f : M ⟶ M') (g : N ⟶ N') :
     TensorData M N (M'.tensor N') where
   fee := (tmulEE M' N').compl₁₂ f.evenMap g.evenMap
@@ -695,6 +699,7 @@ noncomputable def tensorHomData (f : M ⟶ M') (g : N ⟶ N') :
 
 /-- **The tensor product of two morphisms**: apply each morphism
 in its own factor, degreewise. -/
+@[expose]
 noncomputable def tensorHom (f : M ⟶ M') (g : N ⟶ N') :
     M.tensor N ⟶ M'.tensor N' :=
   mkHom (tensorHomData f g)
@@ -760,7 +765,7 @@ associativity laws.
 
 It is `reducible` so that the identification of its components
 with those of `S` is transparent to unification and to `rw`. -/
-@[reducible]
+@[expose, reducible]
 def _root_.RS.SuperCommAlgebra.unitMod (S : SuperCommAlgebra.{u, u}) :
     S.Mod.{u, u, u, u} where
   even := S.even
@@ -879,6 +884,7 @@ theorem leftUnitorHom_oddMap_tmulOE (u : S.odd) (m : M.even) :
 
 /-- The inverse of the left unitor: tensor with the algebra
 unit. -/
+@[expose]
 noncomputable def leftUnitorInv : M ⟶ S.unitMod.tensor M where
   evenMap := tmulEE S.unitMod M S.one
   oddMap := tmulEO S.unitMod M S.one
@@ -905,6 +911,7 @@ theorem leftUnitorInv_oddMap (m : M.odd) :
 
 /-- **The left unitor**: tensoring with the unit on the left
 changes nothing. -/
+@[expose]
 noncomputable def leftUnitor : S.unitMod.tensor M ≅ M where
   hom := leftUnitorHom M
   inv := leftUnitorInv M
@@ -1022,6 +1029,7 @@ theorem rightUnitorHom_oddMap_tmulOE (m : M.odd) (x : S.even) :
 
 /-- The inverse of the right unitor: tensor with the algebra unit
 on the right. -/
+@[expose]
 noncomputable def rightUnitorInv : M ⟶ M.tensor S.unitMod where
   evenMap := (tmulEE M S.unitMod).flip S.one
   oddMap := (tmulOE M S.unitMod).flip S.one
@@ -1040,6 +1048,7 @@ theorem rightUnitorInv_oddMap (m : M.odd) :
 
 /-- **The right unitor**: tensoring with the unit on the right
 changes nothing. -/
+@[expose]
 noncomputable def rightUnitor : M.tensor S.unitMod ≅ M where
   hom := rightUnitorHom M
   inv := rightUnitorInv M
@@ -1228,6 +1237,7 @@ theorem braidingHom_braidingHom :
       id_oddMap, LinearMap.id_coe, id_eq]
 
 /-- **The braiding**: the Koszul swap of the two factors. -/
+@[expose]
 noncomputable def braiding : M.tensor N ≅ N.tensor M where
   hom := braidingHom M N
   inv := braidingHom N M
@@ -2172,6 +2182,7 @@ theorem assocInv_assocHom :
 
 /-- **The associator**: reassociation of a threefold tensor
 product, with no sign. -/
+@[expose]
 noncomputable def associator :
     (M.tensor N).tensor P ≅ M.tensor (N.tensor P) where
   hom := assocHom M N P

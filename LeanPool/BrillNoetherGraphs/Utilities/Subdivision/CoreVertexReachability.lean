@@ -18,7 +18,7 @@ is the common final step shared by explicit-potential, loop-split, and local
 configuration certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.CoreVertexReachability
 

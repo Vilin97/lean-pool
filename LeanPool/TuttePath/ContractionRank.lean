@@ -15,7 +15,7 @@ dual deletion; its dual and restriction rank formulas therefore suffice
 to derive the paper's contraction rank formula without adding an assumption.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 

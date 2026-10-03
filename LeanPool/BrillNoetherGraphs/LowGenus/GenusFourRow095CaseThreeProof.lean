@@ -17,7 +17,7 @@ sparse endpoint replay and closes the three remaining core reachability
 tests.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow095.CaseThree
 open Utilities.Certificate

@@ -18,7 +18,7 @@ computation behind the coarea/radial representation, together with the ambient
 Sobolev setup on which the later files build.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

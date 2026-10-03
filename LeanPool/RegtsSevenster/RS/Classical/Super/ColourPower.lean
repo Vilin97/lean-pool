@@ -23,7 +23,7 @@ meshing directly with the mixed partition function's
 Definition-5 sum.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 
@@ -46,11 +46,13 @@ instance (k ℓ d : ℕ) : DecidableEq (MixedColouring k ℓ d) :=
   inferInstanceAs (DecidableEq (Fin d → Fin k ⊕ Fin (2 * ℓ)))
 
 /-- The odd positions of a colouring. -/
+@[expose]
 def oddSet {k ℓ d : ℕ} (c : MixedColouring k ℓ d) :
     Finset (Fin d) :=
   Finset.univ.filter (fun i => (c i).isRight)
 
 /-- A colouring is even when its odd support has even size. -/
+@[expose]
 def IsEven {k ℓ d : ℕ} (c : MixedColouring k ℓ d) : Prop :=
   Even c.oddSet.card
 
@@ -64,6 +66,7 @@ end MixedColouring
 /-- **The colouring model** of the `d`-th tensor power of the
 standard super space: functions on mixed colourings, graded by
 the parity of the odd support. -/
+@[expose]
 noncomputable def colourPower (k ℓ d : ℕ) : SuperVect where
   even := {c : MixedColouring k ℓ d // c.IsEven} → ℂ
   odd := {c : MixedColouring k ℓ d // ¬ c.IsEven} → ℂ
@@ -78,6 +81,7 @@ structure SuperLinearEquiv (V W : SuperVect) where
 
 /-- The tensor product of function spaces on finite types is the
 function space on the product. -/
+@[expose]
 noncomputable def funTensorFun (ι κ : Type) [Fintype ι]
     [Fintype κ] :
     ((ι → ℂ) ⊗[ℂ] (κ → ℂ)) ≃ₗ[ℂ] (ι × κ → ℂ) :=
@@ -89,6 +93,7 @@ noncomputable def funTensorFun (ι κ : Type) [Fintype ι]
 
 /-- The iterated monoidal power of a super vector space, new
 factors on the right. -/
+@[expose]
 noncomputable def superPow (V : SuperVect) : ℕ → SuperVect
   | 0 => SuperVect.tensorUnit
   | d + 1 => SuperVect.tensorObj (superPow V d) V
@@ -98,6 +103,7 @@ noncomputable def superPow (V : SuperVect) : ℕ → SuperVect
 namespace MixedColouring
 
 /-- The tail of a colouring: the first `d` positions. -/
+@[expose]
 def tail {k ℓ d : ℕ} (c : MixedColouring k ℓ (d + 1)) :
     MixedColouring k ℓ d :=
   fun i => c i.castSucc
@@ -132,6 +138,7 @@ theorem isEven_succ_right {k ℓ d : ℕ}
 end MixedColouring
 
 /-- Splitting a colouring at its last position. -/
+@[expose]
 noncomputable def colouringSplit (k ℓ d : ℕ) :
     MixedColouring k ℓ (d + 1) ≃
       MixedColouring k ℓ d × (Fin k ⊕ Fin (2 * ℓ)) where
@@ -160,6 +167,7 @@ theorem MixedColouring.isEven_split {k ℓ d : ℕ}
     exact c.isEven_succ_right b h
 
 /-- A subtype of a product by a condition on the first factor. -/
+@[expose]
 def subtypeProdFst {A X : Type} (Q : A → Prop) :
     {p : A × X // Q p.1} ≃ {a : A // Q a} × X where
   toFun p := (⟨p.val.1, p.prop⟩, p.val.2)
@@ -170,6 +178,7 @@ def subtypeProdFst {A X : Type} (Q : A → Prop) :
 /-- The even colourings of `d + 1` positions split by the last
 colour: an even colour on an even tail, or an odd colour on an
 odd tail. -/
+@[expose]
 noncomputable def evenSplitEquiv (k ℓ d : ℕ) :
     {c : MixedColouring k ℓ (d + 1) // c.IsEven} ≃
       ({c : MixedColouring k ℓ d // c.IsEven} × Fin k) ⊕
@@ -200,6 +209,7 @@ noncomputable def evenSplitEquiv (k ℓ d : ℕ) :
 /-- The odd colourings of `d + 1` positions split by the last
 colour: an even colour on an odd tail, or an odd colour on an
 even tail. -/
+@[expose]
 noncomputable def oddSplitEquiv (k ℓ d : ℕ) :
     {c : MixedColouring k ℓ (d + 1) // ¬ c.IsEven} ≃
       ({c : MixedColouring k ℓ d // ¬ c.IsEven} × Fin k) ⊕
@@ -238,16 +248,19 @@ noncomputable def oddSplitEquiv (k ℓ d : ℕ) :
 namespace SuperLinearEquiv
 
 /-- The identity super linear equivalence. -/
+@[expose]
 noncomputable def refl (V : SuperVect) : SuperLinearEquiv V V :=
   ⟨LinearEquiv.refl ℂ _, LinearEquiv.refl ℂ _⟩
 
 /-- Composition of super linear equivalences. -/
+@[expose]
 noncomputable def trans {U V W : SuperVect}
     (e : SuperLinearEquiv U V) (e' : SuperLinearEquiv V W) :
     SuperLinearEquiv U W :=
   ⟨e.evenEquiv.trans e'.evenEquiv, e.oddEquiv.trans e'.oddEquiv⟩
 
 /-- The tensor of super linear equivalences. -/
+@[expose]
 noncomputable def tensorCongr {V V' W W' : SuperVect}
     (e : SuperLinearEquiv V V') (e' : SuperLinearEquiv W W') :
     SuperLinearEquiv (SuperVect.tensorObj V W)
@@ -290,6 +303,7 @@ noncomputable def colourPowerZero (k ℓ : ℕ) :
 
 /-- The step of the recursion: tensoring the colouring model with
 the standard space extends the colourings by one position. -/
+@[expose]
 noncomputable def colourPowerStep (k ℓ d : ℕ) :
     SuperLinearEquiv
       (SuperVect.tensorObj (colourPower k ℓ d) (stdSuperPair k ℓ))
@@ -316,6 +330,7 @@ noncomputable def colourPowerStep (k ℓ d : ℕ) :
 /-- **The colouring model of the iterated power**: the `d`-th
 monoidal power of the standard super space is the colouring
 model. -/
+@[expose]
 noncomputable def colourPowerEquiv (k ℓ : ℕ) : (d : ℕ) →
     SuperLinearEquiv (superPow (stdSuperPair k ℓ) d)
       (colourPower k ℓ d)

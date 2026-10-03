@@ -12,7 +12,7 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.ClosedRowProof.R
 
 /-! # Rich Leaf Assembly -/
 
-@[expose] public section
+public section
 
 open MarkedGraphs.Certificate
 open Utilities.Certificate

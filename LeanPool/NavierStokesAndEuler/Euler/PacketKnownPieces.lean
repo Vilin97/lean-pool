@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! The three actual, strictly known pieces of a recursive velocity jet. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ instance : Fintype KnownPiece where
 namespace KnownPiece
 
 /-- Active as an element of `Prop`. -/
-def active (k : KnownPiece) (p i : ℕ) : Prop :=
+@[expose] def active (k : KnownPiece) (p i : ℕ) : Prop :=
   match k with
   | .high => 1 ≤ i ∧ i < p
   | .mean => 2 ≤ i ∧ i < p
@@ -51,7 +51,7 @@ def profileIndex (k : KnownPiece) (i : ℕ) : ℕ :=
   | .corrector => i-1
 
 /-- Raw, with branches according to `k.active p i`. -/
-def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField :=
+@[expose] def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField :=
   if k.active p i then
     match k with
     | .high => (a i).high
@@ -60,7 +60,7 @@ def raw (k : KnownPiece) (p : ℕ) (a : ℕ → Profile) (i : ℕ) : VectorField
   else 0
 
 /-- Jet, given by `slicedJet O.interval (k.raw p a i) z`. -/
-def jet (k : KnownPiece) (O : Operators) (p : ℕ) (a : ℕ → Profile)
+@[expose] def jet (k : KnownPiece) (O : Operators) (p : ℕ) (a : ℕ → Profile)
     (z : Domain) (i : ℕ) : VectorJet :=
   slicedJet O.interval (k.raw p a i) z
 
@@ -102,7 +102,7 @@ theorem knownJets_eq_pieces (O : Operators) (p : ℕ) (hp : 2 ≤ p)
 variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {p : ℕ} {a : ℕ → Profile}
 
 /-- Each masked component remains an actual field from the strict prefix. -/
-def PrefixFields.piece (F : PrefixFields P T p a) (k : KnownPiece) (i : ℕ) :
+@[expose] def PrefixFields.piece (F : PrefixFields P T p a) (k : KnownPiece) (i : ℕ) :
     Field P T (k.raw p a i) := by
   by_cases hi : k.active p i
   · cases k with
@@ -116,6 +116,7 @@ def PrefixFields.piece (F : PrefixFields P T p a) (k : KnownPiece) (i : ℕ) :
   · exact (Field.zero P T).congr (fun _ _ _ => by simp only [KnownPiece.raw, hi, ite_false])
 
 /-- Piece jet, given by `SpatialJetField.ofField O.interval (F.piece k i)`. -/
+@[expose]
 def PrefixFields.pieceJet (F : PrefixFields P T p a) (O : Operators) (k : KnownPiece) (i : ℕ) :
     SpatialJetField P T (fun z => k.jet O p a z i) :=
   SpatialJetField.ofField O.interval (F.piece k i)

@@ -15,7 +15,7 @@ public import LeanPool.RearrangementNumber.NonMRR.Walsh
 
 /-! Finite vector constructions. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

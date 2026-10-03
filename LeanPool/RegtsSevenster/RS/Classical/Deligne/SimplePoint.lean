@@ -21,7 +21,7 @@ the base change of `RS/Classical/Deligne/PointFibre.lean` lands in
 finite-dimensional super vector spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

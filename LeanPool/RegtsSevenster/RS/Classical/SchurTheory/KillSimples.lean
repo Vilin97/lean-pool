@@ -18,7 +18,7 @@ of elements of simples, and left multiplication kills each
 summand.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

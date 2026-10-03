@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderTimeParity
 
 /-! The literal recursive force preserves joint odd parity from its actual prefix data. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

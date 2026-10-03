@@ -25,7 +25,7 @@ of both sources outside the half ball.  The centre and radius are arbitrary
 and the carrier is the symmetric parabolic ball, not a one-sided cylinder.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory MeasureTheory.Measure Set Metric Filter

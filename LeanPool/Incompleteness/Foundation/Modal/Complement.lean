@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Subformulas
 
 /-! # Complement -/
 
-@[expose] public section
+public section
 
 
 
@@ -20,7 +20,7 @@ namespace Modal
 namespace Formula
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def complement : Formula α → Formula α
+@[expose] def complement : Formula α → Formula α
   | ∼φ => φ
   | φ  => ∼φ
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -71,6 +71,7 @@ namespace FormulaFinset
 variable [DecidableEq α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def complementary (P : FormulaFinset α) : FormulaFinset α := P ∪ (P.image (Formula.complement))
 /-- Imported declaration from the Incompleteness formalization. -/
 postfix:80 "⁻" => complementary

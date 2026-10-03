@@ -20,7 +20,7 @@ Thus the time derivative holds at every interior time and within the closed
 interval at both endpoints.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Constructions.BorelSpace.Metric
 This file collects the finite-ball estimates used in the packing-to-measure transfer.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -25,7 +25,7 @@ namespace LeanPool.Besicovitch
 variable {X ι : Type*} [PseudoMetricSpace X]
 
 /-- The union of open balls indexed by a finite support. -/
-def finiteBallUnion (support : Finset ι) (center : support → X) (radius : support → ℝ) :
+@[expose] def finiteBallUnion (support : Finset ι) (center : support → X) (radius : support → ℝ) :
     Set X :=
   ⋃ i : support, Metric.ball (center i) (radius i)
 

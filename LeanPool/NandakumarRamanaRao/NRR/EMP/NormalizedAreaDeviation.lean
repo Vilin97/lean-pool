@@ -23,7 +23,7 @@ This is the finite-dimensional map to which the eventual degree / outward-pointi
 for existence of equal-area power weights is applied.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 
@@ -45,7 +45,7 @@ namespace NormalizedWeightSpace
   Subtype.ext h
 
 /-- The zero weight vector belongs to the normalized weight hyperplane. -/
-noncomputable def zero (n : ℕ) : EMP.NormalizedWeightSpace n :=
+@[expose] noncomputable def zero (n : ℕ) : EMP.NormalizedWeightSpace n :=
   ⟨fun _ => 0, EMP.weightSum_zero⟩
 
 @[simp] theorem coe_zero :
@@ -55,7 +55,7 @@ noncomputable def zero (n : ℕ) : EMP.NormalizedWeightSpace n :=
 end NormalizedWeightSpace
 
 /-- The area-deviation vector, regarded as a self-map of the normalized weight hyperplane. -/
-noncomputable def normalizedAreaDeviation
+@[expose] noncomputable def normalizedAreaDeviation
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane)
     (hn : 0 < n) (hs : Function.Injective s)
     (w : EMP.NormalizedWeightSpace n) : EMP.NormalizedWeightSpace n :=

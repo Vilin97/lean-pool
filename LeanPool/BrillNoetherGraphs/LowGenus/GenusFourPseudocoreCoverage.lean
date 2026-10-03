@@ -28,7 +28,7 @@ closed degree-three pencils on connected loopless cubic `6/9` cores.  No
 111-row pseudocore catalog is needed by this unmarked proof.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourPseudocoreCoverage
 
 open Utilities
@@ -48,6 +48,7 @@ open AtanasovRanganathan.Configurations
 /-- Exact finite input for the public genus-four reduction: every connected
 loopless cubic `6/9` core carries a degree-three pencil on all of its nonloopy
 forest faces. -/
+@[expose]
 def CubicClosedCoverage : Prop :=
   ∀ (candidate : Core 6 9), candidate.Connected →
     (∀ edge : Fin 9, candidate.tail edge ≠ candidate.head edge) →

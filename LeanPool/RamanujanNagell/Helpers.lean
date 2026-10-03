@@ -26,7 +26,7 @@ rather than through `𝓞 K` where `K = QuadraticAlgebra ℚ (-2) 1`. The payoff
   replaces the discriminant / class-number-1 detour through Dirichlet.
 -/
 
-@[expose] public section
+public section
 
 namespace RamanujanNagell
 
@@ -36,23 +36,23 @@ open QuadraticAlgebra
 abbrev R : Type := QuadraticAlgebra ℤ (-2) 1
 
 /-- `θ = (1 + √-7)/2`, the generator of `R`. -/
-def θ : R := ⟨0, 1⟩
+@[expose] def θ : R := ⟨0, 1⟩
 
 /-- `θ' = (1 - √-7)/2 = 1 - θ`, the Galois conjugate of `θ`. -/
-def θ' : R := ⟨1, -1⟩
+@[expose] def θ' : R := ⟨1, -1⟩
 
 /-! ## Stoll's `rfl` claims -/
 
-lemma theta_sq : θ ^ 2 = θ - 2 := rfl
+lemma theta_sq : θ ^ 2 = θ - 2 := by rfl
 
-lemma theta_mul_theta' : θ * θ' = 2 := rfl
+lemma theta_mul_theta' : θ * θ' = 2 := by rfl
 
-lemma theta_add_theta' : θ + θ' = 1 := rfl
+lemma theta_add_theta' : θ + θ' = 1 := by rfl
 
-lemma theta'_eq_one_sub_theta : θ' = 1 - θ := rfl
+lemma theta'_eq_one_sub_theta : θ' = 1 - θ := by rfl
 
 /-- For backward compatibility with the old Helpers API. -/
-lemma two_factorisation_R : θ * (1 - θ) = 2 := rfl
+lemma two_factorisation_R : θ * (1 - θ) = 2 := by rfl
 
 /-! ## Norm form and positivity
 

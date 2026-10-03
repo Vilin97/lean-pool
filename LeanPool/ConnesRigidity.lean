@@ -21,4 +21,4 @@ Tags: operator-algebras, von-neumann-algebras, property-t, group-theory, connes-
 MSC: 46L10, 20F65, 22D10
 -/
 
-@[expose] public section
+public section

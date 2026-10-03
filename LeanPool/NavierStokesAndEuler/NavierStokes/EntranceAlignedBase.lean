@@ -28,7 +28,7 @@ before the finite modulation begins.  The same finite base, local hierarchy,
 and five-row exterior repair are used throughout.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -172,7 +172,7 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- A new actual global recursion, retaining the same local hierarchy
 through the entrance and changing only its common seed cutoff. -/
-noncomputable def scheme : Scheme S F.data.h W.axis.normalization :=
+@[expose] noncomputable def scheme : Scheme S F.data.h W.axis.normalization :=
   schemeFromHierarchy (nominalHierarchy W) (ActualSlowAxis.axisRadius_pos _ _)
     (nominalComplexDomain_open W) (modifiedDomain W Q M) (fun _ he => (M.subset he).2)
     W.axis.normalization_pos.ne' F.data.core.lam_pos (window_order W H hlo).2.2.1
@@ -396,6 +396,7 @@ theorem smallZeroOrder : ZeroOrderSolved (scheme W H Q M hlo) (nominalInner W) :
 
 /-- Aligned coefficients, given by `coefficients (smallLocalization W H Q M hlo)
 (smallBaseAgreement W H Q M hlo) (smallZeroOrder W H Q M hlo) M.contains`. -/
+@[expose]
 noncomputable def alignedCoefficients : SlowBorelBase.Coefficients :=
   coefficients (smallLocalization W H Q M hlo) (smallBaseAgreement W H Q M hlo)
     (smallZeroOrder W H Q M hlo) M.contains
@@ -868,11 +869,13 @@ theorem modulation_after_entrance : NominalConeAssembly.activeLeft W < d.modulat
 
 /-- Modulated scheme, given by `scheme W H v.profiles v.finiteModification
 (modulation_after_entrance (d := d))`. -/
+@[expose]
 noncomputable def modulatedScheme : Scheme v.slowParameters F.data.h W.axis.normalization :=
   scheme W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
 
 /-- Modulated coefficients, given by `alignedCoefficients W H v.profiles v.finiteModification
 (modulation_after_entrance (d := d))`. -/
+@[expose]
 noncomputable def modulatedCoefficients : SlowBorelBase.Coefficients :=
   alignedCoefficients W H v.profiles v.finiteModification (modulation_after_entrance (d := d))
 
@@ -1172,7 +1175,7 @@ The constants remain uniform as that time approaches zero while the
 normalized positive branch stays in a fixed annulus.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1189,7 +1192,7 @@ abbrev Chart := SlowBorelBase.Chart
 abbrev Inner := SlowBorelBase.Inner
 
 /-- One domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
-noncomputable def oneDomain (ι : Type*) {E : Type*} [NormedAddCommGroup E]
+@[expose] noncomputable def oneDomain (ι : Type*) {E : Type*} [NormedAddCommGroup E]
     (U : ι → Set E) (hU : ∀ i, IsOpen (U i)) : Domain ι E where
   scale _ := 1
   carrier := U
@@ -1229,6 +1232,7 @@ theorem uniform_envelope {ι E F : Type*} [NormedAddCommGroup E] [NormedSpace �
       (mul_le_mul_of_nonneg_right (by linarith) (hw i))
 
 /-- Sum region, given by `Ioi 0 ×ˢ (Ioi 0 ×ˢ univ)`. -/
+@[expose]
 noncomputable def sumRegion : Set Chart := Ioi 0 ×ˢ (Ioi 0 ×ˢ univ)
 
 theorem sumRegion_open : IsOpen sumRegion := isOpen_Ioi.prod (isOpen_Ioi.prod isOpen_univ)
@@ -1277,6 +1281,7 @@ theorem scaled_jet_from_blown {f : Chart → ℝ}
   exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (norm_nonneg _) hnorm j) (norm_nonneg _)
 
 /-- Inner region, given by `Ioo qlo qhi ×ˢ (Ioo lo hi ×ˢ Ioo (-1) 1)`. -/
+@[expose]
 noncomputable def innerRegion (qlo qhi lo hi : ℝ) : Set Chart :=
   Ioo qlo qhi ×ˢ (Ioo lo hi ×ˢ Ioo (-1) 1)
 
@@ -1329,11 +1334,13 @@ theorem normalized_error_envelope {ι : Type*} {h qlo qhi lo hi : ℝ}
 
 /-- Swirl error, given by `SlowBorelBase.normalizedSwirl a h C d y - SlowBorelBase.leadingSwirl
 C d y.2`. -/
+@[expose]
 noncomputable def swirlError (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients) (y : Chart) : ℝ
     :=
   SlowBorelBase.normalizedSwirl a h C d y - SlowBorelBase.leadingSwirl C d y.2
 
 /-- Axial error, given by `SlowBorelBase.slowSum a h d.axial y - d.axial 0 y.2`. -/
+@[expose]
 noncomputable def axialError (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients) (y : Chart) : ℝ :=
   SlowBorelBase.slowSum a h d.axial y - d.axial 0 y.2
 
@@ -1378,6 +1385,7 @@ theorem actual_error_envelopes {ι : Type*} {a : ℕ → ℕ} {h C qlo qhi lo hi
     exact ⟨B, hB, fun q hq hq1 w hw => (hb q hq hq1 w hw).2⟩
 
 /-- Physical input, given by `(1 - p.2.2, (p.1 ^ 2 / 2, p.2.1))`. -/
+@[expose]
 noncomputable def physicalInput (p : Slow) : Chart := (1 - p.2.2, (p.1 ^ 2 / 2, p.2.1))
 
 theorem physicalInput_smooth : ContDiff ℝ ∞ physicalInput :=
@@ -1430,6 +1438,7 @@ structure GeometryBounds {ι : Type*} (D : Domain ι Slow)
     lo < (normalizedCoordinates h p).2.1 ∧ (normalizedCoordinates h p).2.1 < hi
 
 /-- Unit scale, given by `oneDomain ι D.carrier D.isOpen`. -/
+@[expose]
 noncomputable def unitScale {ι E : Type*} [NormedAddCommGroup E] (D : Domain ι E) : Domain ι E :=
   oneDomain ι D.carrier D.isOpen
 
@@ -1535,32 +1544,34 @@ theorem normalizedCoordinates_polynomial {ι : Type*} {D : Domain ι Slow}
       exact (hBj j hj p hpnorm).trans (by simpa only [pow_one] using pow_le_pow_right₀ hB hj1)
 
 /-- Axial factor, given by `(normalizedCoordinates h p).1 ^ (-CoordinateAlgebra.A h)`. -/
-noncomputable def axialFactor (h : ℝ) (p : Slow) : ℝ :=
+@[expose] noncomputable def axialFactor (h : ℝ) (p : Slow) : ℝ :=
   (normalizedCoordinates h p).1 ^ (-CoordinateAlgebra.A h)
 
 /-- Frequency factor, given by `axialFactor h p / p.1`. -/
-noncomputable def frequencyFactor (h : ℝ) (p : Slow) : ℝ := axialFactor h p / p.1
+@[expose] noncomputable def frequencyFactor (h : ℝ) (p : Slow) : ℝ := axialFactor h p / p.1
 
 /-- The actual `Q^A`-normalized angular velocity divided by the normalized
 radius.  The factor `1/R` is retained in the definition. -/
-noncomputable def frequency (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients)
+@[expose] noncomputable def frequency (a : ℕ → ℕ) (h C : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   frequencyFactor h p * SlowBorelBase.normalizedSwirl a h C d
     (SlowBorelBase.scaleMap Q (normalizedCoordinates h p))
 
 /-- Axial, given by `axialFactor h p * SlowBorelBase.slowSum a h d.axial (SlowBorelBase.scaleMap
 Q (normalizedCoordinates h p))`. -/
-noncomputable def axial (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
+@[expose] noncomputable def axial (a : ℕ → ℕ) (h : ℝ) (d : SlowBorelBase.Coefficients)
     (Q : ℝ) (p : Slow) : ℝ :=
   axialFactor h p * SlowBorelBase.slowSum a h d.axial
     (SlowBorelBase.scaleMap Q (normalizedCoordinates h p))
 
 /-- Leading frequency, given by `frequencyFactor h p * SlowBorelBase.leadingSwirl C d
 (normalizedCoordinates h p).2`. -/
+@[expose]
 noncomputable def leadingFrequency (h C : ℝ) (d : SlowBorelBase.Coefficients) (p : Slow) : ℝ :=
   frequencyFactor h p * SlowBorelBase.leadingSwirl C d (normalizedCoordinates h p).2
 
 /-- Leading axial, given by `axialFactor h p * d.axial 0 (normalizedCoordinates h p).2`. -/
+@[expose]
 noncomputable def leadingAxial (h : ℝ) (d : SlowBorelBase.Coefficients) (p : Slow) : ℝ :=
   axialFactor h p * d.axial 0 (normalizedCoordinates h p).2
 
@@ -1856,7 +1867,7 @@ theorem leadingFrequency_eq {h C : ℝ} {d : SlowBorelBase.Coefficients}
 
 /-- Band point, given by `(1 - Q * p.2.2, !₂[Real.sqrt Q * p.1, 0, Q ^ CoordinateAlgebra.D h *
 p.2.1])`. -/
-noncomputable def bandPoint (h Q : ℝ) (p : Slow) : ProblemStatement.SpaceTime :=
+@[expose] noncomputable def bandPoint (h Q : ℝ) (p : Slow) : ProblemStatement.SpaceTime :=
   (1 - Q * p.2.2, !₂[Real.sqrt Q * p.1, 0, Q ^ CoordinateAlgebra.D h * p.2.1])
 
 theorem bandPoint_time {h Q : ℝ} (hQ : 0 < Q) {p : Slow} (hT : 0 < p.2.2) :
@@ -2022,15 +2033,17 @@ theorem Estimates.uniform_errors {ι : Type*} {D : Domain ι Slow} {Q : ι → �
     (hG i x hx j hj).trans (mul_le_mul_of_nonneg_right (le_max_right _ _) hw)⟩
 
 /-- Every actual positive active label above a single fixed band. -/
-noncomputable def CellIndex (h lo hi : ℝ) (N : ℕ) :=
+@[expose] noncomputable def CellIndex (h lo hi : ℝ) (N : ℕ) :=
   {L : PositiveRepresentatives.ActiveLabel (PrimaryRepresentatives.referenceCompact h lo hi) //
     N ≤ L.val.1}
 
 /-- Cell band, given by `L.val.val.1`. -/
+@[expose]
 noncomputable def cellBand {h lo hi : ℝ} {N : ℕ} (L : CellIndex h lo hi N) : ℕ := L.val.val.1
 
 /-- The actual convex positive-time three-mesh cells. The slow scale is
 precisely the manuscript's `S_n`; it is not a replacement coordinate. -/
+@[expose]
 noncomputable def positiveCellDomain (h lo hi : ℝ) (N : ℕ) : Domain (CellIndex h lo hi N) Slow where
   scale L := ChartScales.S (cellBand L)
   carrier L := PositiveRepresentatives.positiveCell L.val.val.1 L.val.val.2
@@ -2140,7 +2153,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2328,7 +2341,7 @@ open ProfileHistories
 
 /-- The two actual leading stress coefficients, in the Euclidean plane
 used by the primary ODE. -/
-noncomputable def stressVector {D : RadialDomain} (P : Profiles D) (h : ℝ)
+@[expose] noncomputable def stressVector {D : RadialDomain} (P : Profiles D) (h : ℝ)
     (p : Point) : Plane := !₂[LeadingStress.theta P h p, LeadingStress.axial P h p]
 
 /-- Both entries use the actual integral-history stocks; the axial sign

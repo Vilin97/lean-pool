@@ -14,7 +14,7 @@ import LeanPool.QuasiBorelSpaces.Basic
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Cont`.
 -/
 
-@[expose] public section
+public section
 
 open QuasiBorelSpace
 open OmegaCompletePartialOrder
@@ -41,7 +41,7 @@ instance : PartialOrder (Cont R A) :=
     simp only [mk.injEq, imp_self])
 
 /-- The underlying continuation as an order homomorphism. -/
-def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
+@[expose] def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
   toFun := apply
   monotone' _ _ h := h
 
@@ -120,27 +120,27 @@ instance : OmegaQuasiBorelSpace (Cont R A) where
     · apply Prod.isHom_snd
 
 /-- The `unit` operator (i.e., pure values) for the continuation monad. -/
-@[simps]
-def unit : A →ω𝒒 Cont R A where
+@[expose, simps] def unit : A →ω𝒒 Cont R A where
   toFun x := ⟨{ toFun k := k x }⟩
 
 /-- The `bind` operator (i.e., sequential composition) for the continuation monad. -/
-@[simps]
+@[expose, simps]
 def bind [OmegaQuasiBorelSpace B] : (A →ω𝒒 Cont R B) →ω𝒒 (Cont R A →ω𝒒 Cont R B) where
   toFun f := { toFun x := ⟨{ toFun k := x.apply { toFun y := (f y).apply k } }⟩ }
 
 @[simp]
-lemma bind_unit [OmegaQuasiBorelSpace B] (f : A →ω𝒒 Cont R B) (x : A) : bind f (unit x) = f x := rfl
+lemma bind_unit [OmegaQuasiBorelSpace B] (f : A →ω𝒒 Cont R B) (x : A) :
+    bind f (unit x) = f x := by rfl
 
 @[simp]
-lemma unit_bind : bind (unit (R := R) (A := A)) = .id := rfl
+lemma unit_bind : bind (unit (R := R) (A := A)) = .id := by rfl
 
 @[simp]
 lemma bind_bind {C : Type*}
     [OmegaQuasiBorelSpace B] [OmegaQuasiBorelSpace C]
     (f : B →ω𝒒 Cont R C) (g : A →ω𝒒 Cont R B)
     : (bind f).comp (bind g) = bind ((bind f).comp g) :=
-  rfl
+  by rfl
 
 end Cont
 

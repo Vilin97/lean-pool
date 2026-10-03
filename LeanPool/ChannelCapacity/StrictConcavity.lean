@@ -19,7 +19,7 @@ strict concavity is phrased directly in terms of the explicit operation
 `ProbabilityMeasure.convexCombination`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

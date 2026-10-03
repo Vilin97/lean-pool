@@ -18,7 +18,7 @@ occurs evenly contributes exactly `(−1)^length`.  That is the sign
 bookkeeping the paired step of Proposition 3 runs on.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

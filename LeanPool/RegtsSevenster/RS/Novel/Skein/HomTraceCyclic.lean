@@ -17,7 +17,7 @@ order.  Bilinear induction
 with `fragTrace_comm` at the singles.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

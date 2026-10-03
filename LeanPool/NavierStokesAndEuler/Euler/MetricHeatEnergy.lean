@@ -16,7 +16,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Dissipation of the genuine cylinder Laplacian in a variable positive metric. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -148,6 +148,7 @@ theorem standardDirection_norm (i : Fin 4) : ‖standardDirection i‖ = 1 := by
   cases i using Fin.cases <;> simp [Prod.norm_def]
 
 /-- The actual cylinder Laplacian assembled from strong second coordinate derivatives. -/
+@[expose]
 def jetLaplacian {f : LiftL2 period} (J : SpatialJet period standardDirection 2 f) : LiftL2 period
     :=
   ∑ i : Fin 4, J.word (fun _ : Fin 2 => i)

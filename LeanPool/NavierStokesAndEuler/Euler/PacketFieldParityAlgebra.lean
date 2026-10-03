@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteParity
 /-! Oddness of actual cylinder paths is preserved by scalar multiplication,
 time identification, and multiplication by an even matrix coefficient. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

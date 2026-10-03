@@ -12,7 +12,7 @@ public import Mathlib.Analysis.PSeries
 `E[(t+j)^{-(p+1)}] = (p+1) (ζ(p+2) − H_j^{(p+2)})`.
 Both follow from the shift rule `E[F(t+1)] − E[F(t)] = F'(1)` alone. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology Finset
 

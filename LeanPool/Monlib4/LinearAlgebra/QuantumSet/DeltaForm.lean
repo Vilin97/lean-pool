@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.QuantumSet.DeltaForm`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ComplexOrder
 

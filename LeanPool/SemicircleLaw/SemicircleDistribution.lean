@@ -40,7 +40,7 @@ We define the real-valued Wigner semicircle distribution.
 * `centralMoment_odd_semicircleReal`: the odd central moments of the semicircle distribution vanish.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Real ProbabilityTheory
 
@@ -50,8 +50,7 @@ namespace LeanPool.SemicircleLaw
 
 /-- Probability density function of the semicircle distribution with mean `μ` and variance `v`.
 Note that the square root of a negative number is defined to be zero. -/
-noncomputable
-def semicirclePDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ :=
+@[expose] noncomputable def semicirclePDFReal (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ :=
   1 / (2 * π * v) * √(4 * v - (x - μ) ^ 2)
 
 lemma semicirclePDFReal_def (μ : ℝ) (v : ℝ≥0) :
@@ -207,8 +206,7 @@ lemma lintegral_semicirclePDFReal_eq_one (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0)
   rw [integral_semicirclePDFReal_eq_one μ hv, ENNReal.ofReal_one]
 
 /-- The `ℝ≥0∞`-valued pdf of a semicircle distribution on `ℝ` with mean `μ` and variance `v`. -/
-noncomputable
-def semicirclePDF (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ≥0∞ :=
+@[expose] noncomputable def semicirclePDF (μ : ℝ) (v : ℝ≥0) (x : ℝ) : ℝ≥0∞ :=
   ENNReal.ofReal (semicirclePDFReal μ v x)
 
 lemma semicirclePDF_def (μ : ℝ) (v : ℝ≥0) :

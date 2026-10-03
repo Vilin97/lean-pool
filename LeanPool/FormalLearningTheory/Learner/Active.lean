@@ -16,7 +16,7 @@ Meta-learners learn to learn. Also includes synthesizers and verifiers
 for the CEGIS paradigm.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -125,6 +125,7 @@ structure LLMCritic (X : Type u) (Y : Type v) extends Teacher X Y where
   critiqueQuality : ℝ
 
 /-- A synthesizer: produces candidate concepts from specifications. -/
+@[expose]
 def Synthesizer (X : Type u) (Y : Type v) := List (X × Y) → Concept X Y
 
 /-- A verifier: checks whether a candidate concept satisfies a specification. -/

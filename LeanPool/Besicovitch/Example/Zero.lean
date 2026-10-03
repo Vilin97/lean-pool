@@ -24,7 +24,7 @@ Combined with `ae_eventually_mem_avoid`, every subset of `[0, 1]` on which `g` i
 Lebesgue-null.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

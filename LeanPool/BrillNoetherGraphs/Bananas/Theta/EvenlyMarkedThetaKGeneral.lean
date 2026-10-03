@@ -23,7 +23,7 @@ non-recurrence, and k-general transmission (Lemma 4.15, Theorem 4.8,
 Corollary 4.17).
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

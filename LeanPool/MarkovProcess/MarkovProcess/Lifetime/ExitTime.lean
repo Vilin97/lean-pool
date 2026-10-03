@@ -19,7 +19,7 @@ Only deterministic order properties are proved here. No measurability or stoppin
 made.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -35,6 +35,7 @@ namespace LifetimePath
 variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- The first time at which a lifetime path is not a live point of `U`. -/
+@[expose]
 def exitTime (U : Set alpha) (omega : LifetimePath alpha) : ENNReal :=
   sInf {s : ENNReal | ∃ t : NNReal, s = (t : ENNReal) ∧
     coordinate t omega ∉ Cemetery.alive '' U}
@@ -77,6 +78,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [TopologicalSpace alpha]
 
 /-- The first time at which an ordinary continuous path leaves `U`. -/
+@[expose]
 def exitTime (U : Set alpha) (omega : ContinuousPath alpha) : ENNReal :=
   sInf {s : ENNReal | ∃ t : NNReal, s = (t : ENNReal) ∧ omega t ∉ U}
 

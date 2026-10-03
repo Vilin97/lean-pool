@@ -48,7 +48,7 @@ and with maximal-clique bags).
   partitioned by their assigned bags.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 
@@ -91,6 +91,7 @@ theorem exists_mem_bag (v : V) : ∃ i, v ∈ T.bag i := ⟨T.top v, T.mem_bag_t
 
 /-- `T.IsAncestor i j` means that `j` occurs on the chain of parents starting at `i`
 (inclusively). -/
+@[expose]
 def IsAncestor (i j : ι) : Prop := Relation.ReflTransGen (fun a b => T.parent a = some b) i j
 
 variable {T}
@@ -177,6 +178,7 @@ theorem exists_isLeaf [Finite ι] [Nonempty ι] (T : CliqueTree G ι) : ∃ i, T
 variable (T)
 
 /-- The vertices occurring in exactly one bag, namely in the bag of `i`. -/
+@[expose]
 def privateVerts (i : ι) : Set V := {v | v ∈ T.bag i ∧ ∀ k, v ∈ T.bag k → k = i}
 
 variable {T}
@@ -218,6 +220,7 @@ theorem exists_bag_ne_of_isLeaf {i : ι} (hleaf : T.IsLeaf i) {x y : V} (hadj : 
 variable (T)
 
 /-- The set of vertices covered by the subtree hanging below `i`. -/
+@[expose]
 def branch (i : ι) : Set V := {v | ∃ j, T.IsAncestor j i ∧ v ∈ T.bag j}
 
 variable {T}
@@ -259,6 +262,7 @@ theorem not_adj_of_branch_separator [DecidableEq V] {i j : ι} (hp : T.parent i 
 /-! ### Unique edge assignment and accounting -/
 
 /-- The canonical bag of an edge: the deeper of the two top bags of its endpoints. -/
+@[expose]
 noncomputable def edgeBag (T : CliqueTree G ι) (e : Sym2 V) : ι :=
   Sym2.lift ⟨fun x y => if T.rank (T.top x) ≤ T.rank (T.top y) then T.top y else T.top x,
     by

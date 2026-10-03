@@ -11,7 +11,7 @@ public import LeanPool.TuttePath.IndecomposableStep
 
 /-! The rank-selection consequence of `cor:indecomposable-chain`, obtained by
 literally repeating the downward step. This is the chain interface needed below. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 variable {α : Type*} {M : Matroid α} [M.Finite] {S T : Set α}

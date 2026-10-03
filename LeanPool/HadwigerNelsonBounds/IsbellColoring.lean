@@ -16,7 +16,7 @@ This module proves the numerical gap estimates, constructs the plane coloring,
 and establishes the seven-color upper bound.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

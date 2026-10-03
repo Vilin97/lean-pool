@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 /-! A literal time derivative of smooth bounded fields differentiates
 every actual spatial jet, both pointwise and in the uniform field norm. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,7 +47,7 @@ local instance instSmoothTimeFieldTimeJets4 (n : ℕ) : NormedSpace ℝ (E →�
     inferInstance
 
 /-- Slice family, given by `A.superposition ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x)`. -/
-def sliceFamily (x : E) : C(Icc (0 : ℝ) T,V) :=
+@[expose] def sliceFamily (x : E) : C(Icc (0 : ℝ) T,V) :=
   A.superposition ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) x)
 
 omit [FiniteDimensional ℝ E] [FiniteDimensional ℝ V] in

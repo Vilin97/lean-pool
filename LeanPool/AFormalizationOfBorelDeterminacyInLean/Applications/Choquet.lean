@@ -20,7 +20,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 open GaleStewartGame
@@ -52,11 +52,11 @@ variable {W : Set (Set X)} (hWV : W ⊆ V) (hW : ∀ A ∈ V, ∃ B ∈ W, B ⊆
 lemma extend_mem_iff (x : List W) : x.map (Set.inclusion hWV) ∈ chainTree V ↔ x ∈ chainTree W := by
     simp [chainTree, List.isChain_map]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def extend (x : chainTree W) : chainTree V where
+@[expose, simps] def extend (x : chainTree W) : chainTree V where
     val := x.1.map (Set.inclusion hWV)
     property := by simpa only [extend_mem_iff] using x.2
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def extend' {x : chainTree W} (a : Tree.ExtensionsAt x) :
+@[expose, simps] def extend' {x : chainTree W} (a : Tree.ExtensionsAt x) :
     Tree.ExtensionsAt (extend hWV x) where
     val := Set.inclusion hWV a.val
     property := by

@@ -17,7 +17,7 @@ This file contains some basic lemmas about complex numbers.
 
 -/
 
-@[expose] public section
+public section
 
 
 open scoped ComplexConjugate BigOperators

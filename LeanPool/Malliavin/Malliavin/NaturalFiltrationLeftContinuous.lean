@@ -25,7 +25,7 @@ claim.  Combining it with `PointwiseCondExp.lean` yields the literal textbook
 `E[DₜF | 𝓕_t]` representative of the Clark--Ocone integrand.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace

@@ -28,7 +28,7 @@ independent of any singular-chain or face-map API:
 No chain-level boundary statement is asserted here.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

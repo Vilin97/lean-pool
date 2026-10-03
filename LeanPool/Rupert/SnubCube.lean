@@ -13,7 +13,7 @@ public import LeanPool.Rupert.Basic
 Imported Lean Pool material for `LeanPool.Rupert.SnubCube`.
 -/
 
-@[expose] public section
+public section
 
 namespace SnubCube
 

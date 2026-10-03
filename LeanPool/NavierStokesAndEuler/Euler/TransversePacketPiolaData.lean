@@ -15,7 +15,7 @@ section
 
 /-! The actual high/corrector pair, with all potential regularity derived from the high field. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -27,6 +27,7 @@ open EulerSmoothLimit EulerPacketPiola EulerPacketPeriodicPotential EulerPacketC
 open scoped ContDiff
 
 /-- Normal, given by `(F y).symm.toContinuousLinearMap.adjoint m₀`. -/
+@[expose]
 def normal (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (y : Space) : Space :=
   (F y).symm.toContinuousLinearMap.adjoint m₀
 
@@ -43,7 +44,7 @@ theorem normal_ne_zero (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (hm�
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Corrector, given by `liftedSlowCurl P F (field P (normal F m₀) A)`. -/
-def corrector (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (A : LiftDomain P → Space) :
+@[expose] def corrector (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (A : LiftDomain P → Space) :
     LiftDomain P → Space := liftedSlowCurl P F (field P (normal F m₀) A)
 
 variable (κ : ℝ) (m₀ : Space) (Ξ : Space → Space) (A : LiftDomain P → Space)
@@ -85,7 +86,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -99,18 +100,18 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Deformation equiv, given by `ContinuousLinearEquiv.equivOfInverse (D.F.field t x)
 (D.FInv.field t x) (D.inverse_left t x) (D.inverse_right t x)`. -/
-def deformationEquiv (t : Icc (0 : ℝ) D.T) (x : Space) : Space ≃L[ℝ] Space :=
+@[expose] def deformationEquiv (t : Icc (0 : ℝ) D.T) (x : Space) : Space ≃L[ℝ] Space :=
   ContinuousLinearEquiv.equivOfInverse (D.F.field t x) (D.FInv.field t x)
     (D.inverse_left t x) (D.inverse_right t x)
 
 @[simp] theorem deformationEquiv_coe (t : Icc (0 : ℝ) D.T) (x : Space) :
-    (D.deformationEquiv t x).toContinuousLinearMap = D.F.field t x := rfl
+    (D.deformationEquiv t x).toContinuousLinearMap = D.F.field t x := by rfl
 
 @[simp] theorem deformationEquiv_symm_coe (t : Icc (0 : ℝ) D.T) (x : Space) :
-    (D.deformationEquiv t x).symm.toContinuousLinearMap = D.FInv.field t x := rfl
+    (D.deformationEquiv t x).symm.toContinuousLinearMap = D.FInv.field t x := by rfl
 
 @[simp] theorem deformationEquiv_normal (t : Icc (0 : ℝ) D.T) :
-    EulerPacketConstructedPiola.normal (D.deformationEquiv t) D.m₀ = D.normal.field t := rfl
+    EulerPacketConstructedPiola.normal (D.deformationEquiv t) D.m₀ = D.normal.field t := by rfl
 
 theorem initialNormal_ne_zero : D.m₀ ≠ 0 := by
   intro h

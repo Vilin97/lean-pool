@@ -34,7 +34,7 @@ actual firing script on a subdivision graph.  The graph-construction layer is
 kept separate so that this file remains a small arithmetic trust boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 
@@ -49,6 +49,7 @@ abbrev AffineForm (m : ℕ) := AffineCover.AffineForm m
 abbrev FormsHold {m : ℕ} := AffineCover.FormsHold (m := m)
 
 /-- Executable universal quantification over a finite index type. -/
+@[expose]
 def allFin {k : ℕ} (test : Fin k → Bool) : Bool :=
   AffineCover.allFin test
 
@@ -94,17 +95,20 @@ namespace AffineForm
 
 /-- Integral scalar multiplication, kept explicit to make the generated data
 grammar independent of typeclass inference. -/
+@[expose]
 def scale (scalar : ℤ) (form : AffineForm m) : AffineForm m where
   fixedValue := scalar * form.fixedValue
   coefficient := fun coordinate => scalar * form.coefficient coordinate
 
 /-- Difference of two integral affine forms. -/
+@[expose]
 def sub (left right : AffineForm m) : AffineForm m where
   fixedValue := left.fixedValue - right.fixedValue
   coefficient := fun coordinate =>
     left.coefficient coordinate - right.coefficient coordinate
 
 /-- The strict-integral positivity row `form(point) - 1 >= 0`. -/
+@[expose]
 def positive (form : AffineForm m) : AffineForm m where
   fixedValue := form.fixedValue - 1
   coefficient := form.coefficient
@@ -147,6 +151,7 @@ end AffineForm
 namespace CertificateData
 
 /-- The potential rise from the tail to the head of one expanded edge. -/
+@[expose]
 def rise (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub
@@ -154,6 +159,7 @@ def rise (certificate : CertificateData m n p) (anchor : Fin n)
     ((certificate.witness anchor).potential (certificate.core.tail edge))
 
 /-- The displayed lower endpoint inequality `rise - alpha * length >= 0`. -/
+@[expose]
 def lowerForm (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub (certificate.rise anchor edge)
@@ -162,6 +168,7 @@ def lowerForm (certificate : CertificateData m n p) (anchor : Fin n)
 
 /-- The displayed upper endpoint inequality
 `-beta * length - rise >= 0`. -/
+@[expose]
 def upperForm (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub
@@ -170,11 +177,13 @@ def upperForm (certificate : CertificateData m n p) (anchor : Fin n)
     (certificate.rise anchor edge)
 
 /-- The target coefficient at a core vertex after removing the anchor chip. -/
+@[expose]
 def targetCoefficient (certificate : CertificateData m n p)
     (anchor vertex : Fin n) : ℤ :=
   certificate.divisor vertex - if vertex = anchor then 1 else 0
 
 /-- The conservative endpoint contribution checked before seeing any lengths. -/
+@[expose]
 def lowerEndpointContribution (certificate : CertificateData m n p)
     (anchor vertex : Fin n) : ℤ :=
   ∑ edge : Fin p,
@@ -184,6 +193,7 @@ def lowerEndpointContribution (certificate : CertificateData m n p)
         (certificate.witness anchor).beta edge else 0))
 
 /-- Point-independent exact validity of a passive local record. -/
+@[expose]
 def Valid (certificate : CertificateData m n p) (degree : ℤ) : Prop :=
   (∀ edge : Fin p, certificate.core.tail edge ≠ certificate.core.head edge) ∧
   (∑ vertex : Fin n, certificate.divisor vertex) = degree ∧
@@ -260,6 +270,7 @@ theorem segment_positive_of_valid
   omega
 
 /-- The natural-number segment length decoded from an integral point. -/
+@[expose]
 def segmentNat (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (edge : Fin p) : ℕ :=
   ((certificate.segment edge).eval point).toNat
@@ -283,6 +294,7 @@ theorem segmentNat_positive
   exact_mod_cast hPositive
 
 /-- Numerical core-potential rise at one integral length point. -/
+@[expose]
 def riseValue (certificate : CertificateData m n p) (anchor : Fin n)
     (point : Fin m → ℤ) (edge : Fin p) : ℤ :=
   (certificate.rise anchor edge).eval point
@@ -334,6 +346,7 @@ theorem interpolated_endpoint_bounds
   · simpa only [hCast] using hBounds.2
 
 /-- Actual interpolated endpoint contribution at a core vertex. -/
+@[expose]
 def endpointContribution (certificate : CertificateData m n p)
     (anchor : Fin n) (point : Fin m → ℤ) (vertex : Fin n) : ℤ :=
   ∑ edge : Fin p,

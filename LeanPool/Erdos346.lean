@@ -22,4 +22,4 @@ Tags: number-theory, golden-ratio, erdos-problems
 MSC: 11B05, 11J70
 -/
 
-@[expose] public section
+public section

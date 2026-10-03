@@ -24,7 +24,7 @@ available only while the cell is small relative to its distance to the carrier
 boundary, so the two regimes must be kept separate and then glued.
 -/
 
-@[expose] public section
+public section
 
 section
 

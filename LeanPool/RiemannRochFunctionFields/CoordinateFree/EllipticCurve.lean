@@ -19,7 +19,7 @@ intrinsic places.  The former two-chart implementation remains in
 `WeierstrassCurve.Affine.Chart`.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.RegularizedMildEquation
 
 /-! Exact compatibility of the actual heat regularizations with highest derivative blocks. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ theorem heatRegularizer_word {q m : ℕ} (n : ℕ) (hm : m ≤ q) (w : Fin m →
   exact h
 
 /-- The actual regularized state, retained at the full maximal-regularity spatial order. -/
-def maximalApproximation (q : ℕ) (T : ℝ) (n : ℕ)
+@[expose] def maximalApproximation (q : ℕ) (T : ℝ) (n : ℕ)
     (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) :
     C(Icc (0 : ℝ) T, SobolevSpace period (2+q)) :=
   mapPath period T ((restrictOperator period (by omega : 2+q ≤ q+3)).comp

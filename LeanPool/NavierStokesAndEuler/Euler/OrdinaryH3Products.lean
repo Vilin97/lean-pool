@@ -17,7 +17,7 @@ import Mathlib.Algebra.Order.Star.Real
 distributions use H² point evaluation. The constant is independent of
 the fields and contains no fourth derivative of either H³ argument. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

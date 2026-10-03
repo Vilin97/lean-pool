@@ -76,7 +76,7 @@ development; they are the missing companions of `Graph.IsPath.split_meet` and
   the descent step of `lem:outer-chain`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph

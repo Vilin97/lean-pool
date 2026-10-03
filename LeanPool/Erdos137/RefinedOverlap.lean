@@ -74,7 +74,7 @@ logarithm `k log(k/g) + O(k)`.
   inequalities of `BlockFramework`, restated with `WgRefinedCap g k` in place of `k^k`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

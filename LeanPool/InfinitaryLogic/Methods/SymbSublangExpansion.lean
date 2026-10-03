@@ -27,7 +27,7 @@ of any `Conditional` file.
   via the expansion of an arbitrary sublanguage model.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

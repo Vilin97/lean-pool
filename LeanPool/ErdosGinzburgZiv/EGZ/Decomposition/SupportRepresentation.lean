@@ -18,7 +18,7 @@ constructs a representation without assuming surjectivity of the original
 coordinate maps on the ambient space.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -57,6 +57,7 @@ variable {p d : ℕ} {F : ConvexFlag}
 
 open Classical in
 /-- The smallest ambient affine space containing the cumulative support. -/
+@[expose]
 def cumulativeSpace (w : F.Node → FpCoord p d → ℕ) (x : F.Node) :
     AffineSubspace (ZMod p) (FpCoord p d) :=
   affineSpan (ZMod p) {v | FlagDecompositionRaw.cumulativeWeight w x v ≠ 0}
@@ -93,6 +94,7 @@ open Classical in
 /-- Construct a representation from its cumulative support images. Integer
 affine generation supplies surjectivity, and compatibility is needed only on
 the nonzero cumulative atoms. -/
+@[expose]
 noncomputable def ofCumulativeSupport [Fact p.Prime]
     (w : F.Node → FpCoord p d → ℕ)
     (ψ : (x : F.Node) → FpCoord p d →ᵃ[ZMod p] FpCoord p (F.rank x))

@@ -27,7 +27,7 @@ operators such as Laplace–Beltrami).
 - `CompactSpectral.tendsto_norm_apply_of_isCompactOperator_of_orthonormal`
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSpectral
 

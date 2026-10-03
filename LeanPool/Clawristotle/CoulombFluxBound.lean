@@ -22,7 +22,7 @@ Proves:
 - `coulomb_flux_component_bound`: Pointwise |flux_i(v)| ≤ Cf * g(v) * (1+‖v‖)^Kg.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

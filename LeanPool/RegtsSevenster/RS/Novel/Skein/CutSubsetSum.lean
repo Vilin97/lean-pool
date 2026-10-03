@@ -25,7 +25,7 @@ trips of `GlueSubsetBij`: `dropSubset` recovers the glued subset,
 pairing-closed subset is always a lift.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

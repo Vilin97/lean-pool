@@ -15,7 +15,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
 The pointwise primal-dual residual identity for the above-two coefficient recurrences.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

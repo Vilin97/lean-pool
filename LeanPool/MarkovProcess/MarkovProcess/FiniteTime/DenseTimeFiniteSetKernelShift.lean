@@ -16,7 +16,7 @@ This file transports the finite-set kernel translation law from physical nonnega
 to finite sets of dense times, using the canonical coordinate reindexings.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

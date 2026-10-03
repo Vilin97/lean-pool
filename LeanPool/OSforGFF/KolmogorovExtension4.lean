@@ -17,4 +17,4 @@ public import LeanPool.OSforGFF.KolmogorovExtension4.Semiring
 Import aggregator for the `KolmogorovExtension4` directory.
 -/
 
-@[expose] public section
+public section

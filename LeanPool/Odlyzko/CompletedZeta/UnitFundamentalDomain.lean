@@ -9,7 +9,7 @@ public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.NormLeOne
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -45,18 +45,18 @@ open scoped Classical in
 open scoped Classical in
 open scoped Classical in
 /-- An unit floor used in the Odlyzko-bound argument. -/
-def unitFloor (x : realSpace K) : InfinitePlace K → ℤ :=
+@[expose] def unitFloor (x : realSpace K) : InfinitePlace K → ℤ :=
   fun w ↦ if w = w₀ then 0 else ⌊x w⌋
 
 open scoped Classical in
 /-- An unit coordinate shift used in the Odlyzko-bound argument. -/
-def unitCoordinateShift
+@[expose] def unitCoordinateShift
     (z : {w : InfinitePlace K // w ≠ w₀} → ℤ) : realSpace K :=
   fun w ↦ if hw : w = w₀ then 0 else z ⟨w, hw⟩
 
 open scoped Classical in
 /-- A fundamental unit for shift used in the Odlyzko-bound argument. -/
-def fundamentalUnitForShift
+@[expose] def fundamentalUnitForShift
     (z : {w : InfinitePlace K // w ≠ w₀} → ℤ) : (𝓞 K)ˣ :=
   ∏ i, fundSystem K (equivFinRank.symm i) ^ z i
 

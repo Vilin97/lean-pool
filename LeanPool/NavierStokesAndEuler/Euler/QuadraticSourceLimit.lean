@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.VolterraFixedPoint
 
 /-! The actual pressure-projected quadratic source passes to uniform Sobolev path limits. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ variable {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup Y] [NormedSpace ℝ Y]
 
 /-- The literal quadratic source evaluated along an actual continuous state path. -/
-def sourcePath {T : ℝ} (C : Coefficients (Icc (0 : ℝ) T) X Y) (u : C(Icc (0 : ℝ) T, X)) :
+@[expose] def sourcePath {T : ℝ} (C : Coefficients (Icc (0 : ℝ) T) X Y) (u : C(Icc (0 : ℝ) T, X)) :
     C(Icc (0 : ℝ) T,Y) := pathNonlinearity T C.apply C.continuous u
 
 /-- The actual nonlinear source map obeys the proved ball Lipschitz bound in uniform path norm. -/

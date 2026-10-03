@@ -60,7 +60,7 @@ and from the project's `ext_of_toElementMap`/`Element.ext` machinery, as elsewhe
 in §3.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise326
 

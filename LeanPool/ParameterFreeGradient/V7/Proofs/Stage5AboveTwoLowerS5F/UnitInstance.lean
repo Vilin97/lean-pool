@@ -13,7 +13,7 @@ The normalized completed resisting oracle is a certified positive smooth optimiz
 instance.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5F
 
@@ -73,6 +73,7 @@ theorem unitCompleted_smooth {p : ℝ} {d T : ℕ}
       field_simp [ne_of_gt (unitChi_pos hT), ne_of_gt (repairMpd_pos hp hd)]
 
 /-- The normalized completed resisting oracle certified as a positive optimization instance. -/
+@[expose]
 noncomputable def unitPositiveInstance {p : ℝ} {d T : ℕ}
     (algorithm : DeterministicExactPairAlgorithm d)
     (hp : 2 < p) (hd : 2 ≤ d) (hT : 1 ≤ T) (hTd : T ≤ d) :

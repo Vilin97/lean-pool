@@ -15,7 +15,7 @@ space-time carrier. It therefore belongs to every finite integrability
 class needed here. Subtracting it preserves the velocity Morrey class.
 -/
 
-@[expose] public section
+public section
 
 section
 

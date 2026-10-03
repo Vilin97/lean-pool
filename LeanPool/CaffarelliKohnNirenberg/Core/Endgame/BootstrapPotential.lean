@@ -16,7 +16,7 @@ every evaluation point. All conversions to real numbers are made only after
 this finiteness has been established.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 open MeasureTheory Set Filter

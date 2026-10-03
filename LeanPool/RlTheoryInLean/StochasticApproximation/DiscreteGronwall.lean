@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 # LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
 -/
 
-@[expose] public section
+public section
 
 open Real Finset
 

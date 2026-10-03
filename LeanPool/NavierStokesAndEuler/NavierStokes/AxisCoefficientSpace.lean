@@ -35,7 +35,7 @@ the mixed derivative estimate is proved after the radial inverse; no boundedness
 of either differentiation operator on its own is assumed.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.AxisWeightEstimates
 
@@ -45,12 +45,12 @@ open Finset Finset.Nat
 noncomputable section
 
 /-- The exact coefficient weight printed in the candidate manuscript. -/
-def weight (ε : ℝ) (n m : ℕ) : ℝ :=
+@[expose] def weight (ε : ℝ) (n m : ℕ) : ℝ :=
   (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) * ((n + m).choose m : ℝ) /
     (((n : ℝ) + 1) ^ 2 * ((m : ℝ) + 1) ^ 2)
 
 /-- The analytic part of the weight, before the two square-decay factors. -/
-def coreWeight (ε : ℝ) (n m : ℕ) : ℝ :=
+@[expose] def coreWeight (ε : ℝ) (n m : ℕ) : ℝ :=
   (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) * ((n + m).choose m : ℝ)
 
 /-- Square decay, given by `1 / ((n : ℝ) + 1) ^ 2`. -/
@@ -355,7 +355,7 @@ theorem productWeightSum_le {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
     _ = _ := by rw [weight_eq_core_decay]; ring
 
 /-- Actual radial convolution with the parameter Leibniz coefficients. -/
-def jetProduct (f g : ℕ → ℕ → ℝ) (n m : ℕ) : ℝ :=
+@[expose] def jetProduct (f g : ℕ → ℕ → ℝ) (n m : ℕ) : ℝ :=
   ∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
     (m.choose kl.1 : ℝ) * f ij.1 kl.1 * g ij.2 kl.2
 
@@ -407,7 +407,7 @@ theorem jetProduct_bound {ε F G : ℝ} (hε : 0 < ε) (hF : 0 ≤ F) (hG : 0 �
     _ = _ := by ring
 
 /-- Radial divisor, given by `((n : ℝ) + 1) * ((n : ℝ) + r)`. -/
-def radialDivisor (r n : ℕ) : ℝ := ((n : ℝ) + 1) * ((n : ℝ) + r)
+@[expose] def radialDivisor (r n : ℕ) : ℝ := ((n : ℝ) + 1) * ((n : ℝ) + r)
 
 theorem radialDivisor_pos {r : ℕ} (hr : 1 ≤ r) (n : ℕ) : 0 < radialDivisor r n := by
   have hr' : (1 : ℝ) ≤ r := by exact_mod_cast hr
@@ -424,7 +424,7 @@ theorem mixed_factors_le_divisor {r n i j : ℕ} (hr : 1 ≤ r) (hij : i + j = n
 
 /-- Shifted product weight sum, given by `∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
 (m.choose kl.1 : ℝ) * weight ε (ij.1 + 1) kl.1 * weight ε ij.2 kl.2`. -/
-def shiftedProductWeightSum (ε : ℝ) (n m : ℕ) : ℝ :=
+@[expose] def shiftedProductWeightSum (ε : ℝ) (n m : ℕ) : ℝ :=
   ∑ ij ∈ antidiagonal n, ∑ kl ∈ antidiagonal m,
     (m.choose kl.1 : ℝ) * weight ε (ij.1 + 1) kl.1 * weight ε ij.2 kl.2
 
@@ -540,7 +540,7 @@ def primitiveJet (f : ℕ → ℕ → ℝ) : ℕ → ℕ → ℝ
   | n + 1, m => f n m / ((n : ℝ) + 1)
 
 /-- Coefficients of the regular zero-datum inverse of `Y f'' + r f'`. -/
-def regularInverseJet (r : ℕ) (f : ℕ → ℕ → ℝ) : ℕ → ℕ → ℝ
+@[expose] def regularInverseJet (r : ℕ) (f : ℕ → ℕ → ℝ) : ℕ → ℕ → ℝ
   | 0, _ => 0
   | n + 1, m => f n m / radialDivisor r n
 
@@ -641,7 +641,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -659,7 +659,7 @@ structure Window where
   nondegenerate : left < right
 
 /-- Interval, given by `Icc I.left I.right`. -/
-def Window.interval (I : Window) : Set ℝ := Icc I.left I.right
+@[expose] def Window.interval (I : Window) : Set ℝ := Icc I.left I.right
 
 /-- The continuous clamping map is only an extension device. Smoothness is
 proved on the original closed interval, including its one-sided endpoint jets. -/
@@ -763,7 +763,7 @@ instance coefficientSpace_complete (I : Window) (w : ℕ → ℕ → ℝ) :
   (isClosed_compatible I w).completeSpace_coe
 
 /-- A coefficient is the zeroth actual jet. -/
-def coefficient (I : Window) (w : ℕ → ℕ → ℝ) (A : CoefficientSpace I w) (n : ℕ) : ℝ → ℝ :=
+@[expose] def coefficient (I : Window) (w : ℕ → ℕ → ℝ) (A : CoefficientSpace I w) (n : ℕ) : ℝ → ℝ :=
   jet I w A.1 n 0
 
 /-- FTC compatibility identifies the derivative within the closed interval;

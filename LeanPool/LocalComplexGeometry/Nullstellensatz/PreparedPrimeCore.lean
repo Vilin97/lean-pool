@@ -24,7 +24,7 @@ finite pointwise information used by the geometric argument.  Its fields are
 later furnished by denominator-cleared minimal-polynomial identities.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

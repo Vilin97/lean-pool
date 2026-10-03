@@ -52,7 +52,7 @@ through the
 project's permitted `Element.ext` / `ext_of_toElementMap`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

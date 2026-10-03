@@ -38,7 +38,7 @@ The elementary majorant `u ^ A * exp (-p u) ≤ exp (A log (A/p))` (`rpow_mul_ex
 work that Stirling would otherwise do; it is just `log t ≤ t - 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace LiCriterion.XiGrowth
 

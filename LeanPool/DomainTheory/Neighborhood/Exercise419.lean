@@ -64,7 +64,7 @@ structurally from `T` (Example 1.2), exactly as `Example23.parityMap` and
 `Example43.zeroMap` do.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise419
 
@@ -125,7 +125,7 @@ variable {β : Type*}
 With `z = ⊥` this is the value at the *partial* element `σ⊥`; with `z = vΛ` the
 value at the
 *total* element `σ`. -/
-def headValC (V : NeighborhoodSystem β) (z a0 a1 : V.Element) : Str → V.Element
+@[expose] def headValC (V : NeighborhoodSystem β) (z a0 a1 : V.Element) : Str → V.Element
   | [] => z
   | false :: _ => a0
   | true :: _ => a1

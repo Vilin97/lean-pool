@@ -14,7 +14,7 @@ public import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Instances
  This file defines the quantum adjacency matrix of a quantum graph.
 -/
 
-@[expose] public section
+public section
 
 
 variable {n p : Type _} [Fintype n] [Fintype p] [DecidableEq n] [DecidableEq p]

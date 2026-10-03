@@ -23,7 +23,7 @@ genus one.  Finally, a degree-zero canonical divisor is moved to zero by its uni
 Riemann–Roch section.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

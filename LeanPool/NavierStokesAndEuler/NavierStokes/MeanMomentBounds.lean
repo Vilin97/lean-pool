@@ -18,7 +18,7 @@ Finite torus averaging and radial integration preserve these bounds.  All
 derivatives in this file are `iteratedFDeriv` of the actual integral.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.MeanMomentBounds
@@ -35,6 +35,7 @@ variable {D E F : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- A global finite-prefix bound, with the discrete band and slow polynomial
 still visible.  This is a proved consequence of the flat weighted class below. -/
+@[expose]
 noncomputable def GlobalBandJets (ε S : ℕ → ℝ) (α : ℝ) (f : ℕ → D → E) : Prop :=
   ∀ m : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ,
     ∀ n x, ∀ j : ℕ, j ≤ m →
@@ -104,7 +105,7 @@ theorem norm_iteratedFDeriv_affine_le (L : D →L[ℝ] E) (hL : ‖L‖ ≤ 1)
   exact mul_le_of_le_one_right (norm_nonneg _) (pow_le_one₀ (norm_nonneg L) hL)
 
 /-- The unweighted slow strip keeps precisely the same band scales. -/
-noncomputable def slowStripData (ε S : ℕ → ℝ)
+@[expose] noncomputable def slowStripData (ε S : ℕ → ℝ)
     (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hS : ∀ n, 1 ≤ S n) :
     StripData D where
   domain := univ
@@ -169,6 +170,7 @@ variable [CompleteSpace F]
 
 /-- A finite affine average; coordinate projections and torus insertion are
 special cases. -/
+@[expose]
 noncomputable def affineAverage (L : D →L[ℝ] E) (v : E) (a b : ℝ) (f : E → F) (x : D) : F :=
   ∫ t in a..b, f (L x + t • v)
 
@@ -294,7 +296,7 @@ noncomputable def auxY : PressureStream.Lift P := (0, (0, (0, 1)))
   ext <;> simp [eraseAuxY, auxY]
 
 /-- Lifted torus average, given by `PressureStream.torusAverage f (x.1, x.2.1)`. -/
-noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
+@[expose] noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
     (x : PressureStream.Lift P) : ℝ := PressureStream.torusAverage f (x.1, x.2.1)
 
 theorem liftedTorusAverage_eq_affine (f : PressureStream.Lift P → ℝ) :
@@ -362,6 +364,7 @@ section PressureMass
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Lifted pressure mass, given by `PressureStream.pressureMass f x.2.1`. -/
+@[expose]
 noncomputable def liftedPressureMass (f : PressureStream.Lift P → ℝ)
     (x : PressureStream.Lift P) : ℝ := PressureStream.pressureMass f x.2.1
 
@@ -403,6 +406,7 @@ theorem meanClass_pressureMass_lift
     hf hs hab.le
 
 /-- Insert slow, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
+@[expose]
 noncomputable def insertSlow : P →L[ℝ] PressureStream.Lift P where
   toFun p := (0, (p, (0, 0)))
   map_add' := by intros; ext <;> simp
@@ -452,6 +456,7 @@ theorem radialCoefficient_unweighted
   exact ⟨C, fun j hj x hx => hb j hj x ⟨hx.1.le, hx.2.le⟩⟩
 
 /-- Radial weighted, given by `x.1 ^ k * f x`. -/
+@[expose]
 noncomputable def radialWeighted (k : ℕ) (f : ℝ × P → ℝ) (x : ℝ × P) : ℝ :=
   x.1 ^ k * f x
 

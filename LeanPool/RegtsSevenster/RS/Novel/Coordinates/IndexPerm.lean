@@ -19,7 +19,7 @@ any injective relabelling differ by exactly it, and the sign is
 multiplicative along a chain of reorderings.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

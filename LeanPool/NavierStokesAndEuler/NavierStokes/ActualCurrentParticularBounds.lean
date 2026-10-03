@@ -32,7 +32,7 @@ Positive jets have a fixed `Q^(-2h)` loss, uniformly before the label and
 band are selected. No bound on the unbounded phase value is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,11 +51,13 @@ abbrev FullPoint := ActualPrimary.FullPoint
 variable {B N0 : ℕ}
 
 /-- The actual common phase in the current free-angle native coordinates. -/
+@[expose]
 noncomputable def phase (l : Label B N0) (n : ℕ) (z : Native) : ℝ :=
   (ActualPrimary.chartCoefficients l.1 l.2).phase n
     (ActualParticularBackground.nativeToFull z)
 
 /-- The same phase with the actual base carrier already included. -/
+@[expose]
 noncomputable def weightedPhase (l : Label B N0) (n : ℕ) (z : Native) : ℝ :=
   ActualPhaseJetBounds.weightedPhase l n (ActualParticularBackground.nativeToFull z)
 
@@ -240,7 +242,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -623,7 +625,7 @@ end Carrier
 /-! ## The current physical graph, with no copy-family premise -/
 
 /-- Current loss, given by `degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1`. -/
-noncomputable def currentLoss (degree ρ : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def currentLoss (degree ρ : ℝ) (m : ℕ) : ℝ :=
   degree + ρ * m + PhysicalGraphBounds.graphLoss m + 1
 
 private theorem mode_majorant_factorization {Q : ℝ} (hQ : 0 < Q)
@@ -888,6 +890,7 @@ theorem native_closed_mem_closure {z : Native}
         (PrimaryTargetBounds.rightRadius CorrectionInitialization.ActualPrimary.nominal))
             nativeStrip.domain := by
     intro r hrr
+    rw [nativeStrip, ActualParticularStageControls.nativeStrip_eq]
     apply ActualCurrentParticularPhysical.nativeStrip_mem (show g r ∈
       ActualCurrentParticularPhysical.nativeDomain from hz)
     change ell * r / ell ∈ Ioo _ _
@@ -1173,7 +1176,7 @@ theorem current_potential_mode_bound (H : ActualParticularCycleData.Invariant σ
         CurrentModeGeometry.chartInner_pos chart hchart) m]
     convert! he using 1
     congr 2
-    unfold currentLoss
+    simp only [currentLoss]
     ring
   · have hsupport := (ActualCurrentWaveSupport.current_mode_annulus hN y l
       (H.inputSupport (l.2,l.1)) j 0).1

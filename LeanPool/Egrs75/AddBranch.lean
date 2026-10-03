@@ -57,7 +57,7 @@ not attempted.  Recon: ~/Knowledge/Construct/recon/erdos_376.md.
 Imports only the pre-existing kernel-clean files; modifies none of them.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.ClearingP2
 

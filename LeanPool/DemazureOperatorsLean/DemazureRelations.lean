@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.DemazureOperatorsLean.DemazureRelations
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open MvPolynomial

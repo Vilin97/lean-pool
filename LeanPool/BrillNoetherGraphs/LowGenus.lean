@@ -88,4 +88,4 @@ certificates and is outside the dependency closure of
 Add an import line above whenever a module is added under `LowGenus/`, or
 `lake build LowGenus` will silently skip it. -/
 
-@[expose] public section
+public section

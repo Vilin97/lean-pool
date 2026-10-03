@@ -27,7 +27,7 @@ The `instConst` dependency is why this file currently sits under `Methods` besid
 machinery rather than in the syntax layer; #39's consolidation is where that is resolved.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

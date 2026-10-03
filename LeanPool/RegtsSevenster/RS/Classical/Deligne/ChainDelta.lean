@@ -18,7 +18,7 @@ transition.  The stage units ride along the transitions by
 construction; their nonvanishing is the pairing side's business.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -110,6 +110,7 @@ theorem actLeft_symPowOne_inv
 
 /-- A module maps into the singleton stage of its symmetric-power
 tower. -/
+@[expose]
 noncomputable def toSymPowModZero
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -122,6 +123,7 @@ noncomputable def toSymPowModZero
 
 /-- **The seed of the splitting chain**: the copairing lands in
 the bottom stage. -/
+@[expose]
 noncomputable def chainSeed
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -134,6 +136,7 @@ noncomputable def chainSeed
     modTensorMap A (toSymPowModZero A M') (toSymPowModZero A M)
 
 /-- **The chain transition**: multiplication by the seed. -/
+@[expose]
 noncomputable def chainDelta
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -148,6 +151,7 @@ noncomputable def chainDelta
     chainMul A M M' k 0
 
 /-- The stage units of the splitting chain. -/
+@[expose]
 noncomputable def chainUnitStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

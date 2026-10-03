@@ -19,7 +19,7 @@ bumps are controlled by actual moment identities; the complete covariance
 remainder retains the signed square and the curl terms.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -47,6 +47,7 @@ noncomputable def axialCovarianceChange (o : Operators D) (X : Tensor D) : Scala
 
 /-- Radial covariance change, given by `-o.radialDiv 1 (X 0 0) - o.dz (X 2 0) + o.invRadius * X
 1 1`. -/
+@[expose]
 noncomputable def radialCovarianceChange (o : Operators D) (X : Tensor D) : ScalarField D :=
   -o.radialDiv 1 (X 0 0) - o.dz (X 2 0) + o.invRadius * X 1 1
 
@@ -124,6 +125,7 @@ end CovarianceChanges
 
 /-- A bound on each actual tensor entry. It is not a bound on the resulting
 residual and contains no update-preservation assertion. -/
+@[expose]
 def TensorClass (s : StripData D) (α : ℝ) (X : Tensor D) : Prop :=
   ∀ i j, MeanClass s α (X i j)
 
@@ -157,6 +159,7 @@ end CovarianceBounds
 /-! ## Literal state and covariance increments -/
 
 /-- Zero triple, given by `⟨0, 0, 0⟩`. -/
+@[expose]
 noncomputable def zeroTriple : Triple D := ⟨0, 0, 0⟩
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -166,7 +169,7 @@ theorem updated_zeroTriple (m : Triple D) : updated m zeroTriple = m := by
 
 /-- Covariance increment, given by `bilinearCovariance (u + w) (u + w) - bilinearCovariance u
 u`. -/
-noncomputable def covarianceIncrement (u w : Oscillation D) : Tensor D :=
+@[expose] noncomputable def covarianceIncrement (u w : Oscillation D) : Tensor D :=
   bilinearCovariance (u + w) (u + w) - bilinearCovariance u u
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -186,13 +189,14 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Wave stage, given by `VariableGaugeMean.reconstructState g c (u.addIncrement zeroTriple 0 w
 q ⟨0, gaussian, 0⟩)`. -/
-noncomputable def waveStage (g : VariableGaugeMean.GaugeData S)
+@[expose] noncomputable def waveStage (g : VariableGaugeMean.GaugeData S)
     (c : Context (PressureStream.Lift S)) (u : State (PressureStream.Lift S))
     (w : Oscillation (PressureStream.Lift S)) (q : OscillatoryScalar (PressureStream.Lift S))
     (gaussian : Oscillation (PressureStream.Lift S)) : State (PressureStream.Lift S) :=
   VariableGaugeMean.reconstructState g c (u.addIncrement zeroTriple 0 w q ⟨0, gaussian, 0⟩)
 
 /-- Pressure change, given by `(waveStage g c u w q gaussian).pressure - u.pressure`. -/
+@[expose]
 noncomputable def pressureChange (g : VariableGaugeMean.GaugeData S)
     (c : Context (PressureStream.Lift S)) (u : State (PressureStream.Lift S))
     (w : Oscillation (PressureStream.Lift S)) (q : OscillatoryScalar (PressureStream.Lift S))
@@ -437,15 +441,19 @@ structure Assembly (f : SignedFamily s P α δ β η) where
     (fun l => (f.curl l).oscillation)
 
 /-- Primary field, given by `fieldSum a.labels (fun l => (f.primary l).oscillation)`. -/
+@[expose]
 noncomputable def primaryField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.primary l).oscillation)
 /-- Old field, given by `fieldSum a.labels (fun l => (f.old l).oscillation)`. -/
+@[expose]
 noncomputable def oldField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.old l).oscillation)
 /-- Tangent field, given by `fieldSum a.labels (fun l => (f.tangent l).oscillation)`. -/
+@[expose]
 noncomputable def tangentField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.tangent l).oscillation)
 /-- Curl field, given by `fieldSum a.labels (fun l => (f.curl l).oscillation)`. -/
+@[expose]
 noncomputable def curlField (f : SignedFamily s P α δ β η) (a : Assembly f) : Oscillation D :=
   fieldSum a.labels (fun l => (f.curl l).oscillation)
 /-- Remainder tensor, given by `signedRemainder (primaryField f a) (oldField f a) (tangentField
@@ -453,10 +461,12 @@ f a) (curlField f a)`. -/
 noncomputable def remainderTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   signedRemainder (primaryField f a) (oldField f a) (tangentField f a) (curlField f a)
 /-- Cross tensor, given by `symmetricCovariance (primaryField f a) (tangentField f a)`. -/
+@[expose]
 noncomputable def crossTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   symmetricCovariance (primaryField f a) (tangentField f a)
 /-- Increment tensor, given by `covarianceIncrement (oldField f a) (tangentField f a + curlField
 f a)`. -/
+@[expose]
 noncomputable def incrementTensor (f : SignedFamily s P α δ β η) (a : Assembly f) : Tensor D :=
   covarianceIncrement (oldField f a) (tangentField f a + curlField f a)
 
@@ -618,22 +628,24 @@ structure Geometry where
 namespace Geometry
 
 /-- Strip, constructed using `LocalSignedRequest.movingStripData`. -/
-noncomputable def strip (G : Geometry) : StripData Point :=
+@[expose] noncomputable def strip (G : Geometry) : StripData Point :=
   LocalSignedRequest.movingStripData G.region G.patch.a G.patch.b G.leftWeight G.rightWeight
     G.patch.a_pos G.left_pos G.right_pos G.epsilon G.slow G.epsilon_pos
     G.epsilon_le_one G.slow_ge_one
 
 /-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
-noncomputable def slowStrip (G : Geometry) : StripData Plane :=
+@[expose] noncomputable def slowStrip (G : Geometry) : StripData Plane :=
   PhysicalMeanDomain.localSlowStripData G.region.carrier G.region.isOpen G.epsilon G.slow
     G.epsilon_pos G.epsilon_le_one G.slow_ge_one
 
 /-- Domain, given by `PhysicalMeanDomain.slowDomain G.region.carrier`. -/
+@[expose]
 noncomputable def domain (G : Geometry) : Set Point := PhysicalMeanDomain.slowDomain
     G.region.carrier
 
 /-- Operators, given by `StateMomentBalances.nativeOperators G.gauge.radial G.epsilon G.fast
 G.axial G.time G.temporal`. -/
+@[expose]
 noncomputable def operators (G : Geometry) : Operators Point :=
   StateMomentBalances.nativeOperators G.gauge.radial G.epsilon G.fast G.axial G.time G.temporal
 
@@ -721,6 +733,7 @@ end Geometry
 
 /-- Regularity is imposed on actual fluxes, before any class estimate on
 their derivatives is derived. -/
+@[expose]
 def MovingField (G : Geometry) (f : ScalarField Point) : Prop :=
   GaugeMomentBalances.MovingField G.region G.patch.a G.patch.b f
 
@@ -757,6 +770,7 @@ end MovingField
 
 /-- Physical sigma, defined pointwise by `SignedStressPrimitive.physicalBarSigma G.patch e
 (SimilarityCoordinates.coordinateQ G.coord) (f n) (x.1, x.2.1)`. -/
+@[expose]
 noncomputable def physicalSigma (G : Geometry) (e : ℕ) (f : ScalarField Point) : ScalarField Point
     :=
   fun n x => SignedStressPrimitive.physicalBarSigma G.patch e
@@ -889,11 +903,13 @@ end Geometry
 
 /-- Theta remainder field, given by `thetaCovarianceChange G.operators E + G.operators.dz (S 2
 1)`. -/
+@[expose]
 noncomputable def thetaRemainderField (G : Geometry) (S E : Tensor Point) : ScalarField Point :=
   thetaCovarianceChange G.operators E + G.operators.dz (S 2 1)
 
 /-- Axial remainder field, given by `axialCovarianceChange G.operators E + G.operators.dz (S 2
 2) + G.operators.dz p`. -/
+@[expose]
 noncomputable def axialRemainderField (G : Geometry) (S E : Tensor Point) (p : ScalarField Point) :
     ScalarField Point := axialCovarianceChange G.operators E + G.operators.dz (S 2 2) +
         G.operators.dz p

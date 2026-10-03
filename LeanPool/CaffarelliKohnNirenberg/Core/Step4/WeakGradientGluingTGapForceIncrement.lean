@@ -15,7 +15,7 @@ annular force potential. Its coefficient is uniform for collars of radius
 at least one over 128, without an additive data-independent remainder.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology BigOperators
@@ -24,6 +24,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- The force-potential increment in the actual pressure decomposition. -/
+@[expose]
 def gapForceIncrement (z : ParabolicPoint) {ρ : ℝ} (hρ : 0 < ρ)
     (u : ParabolicPoint → Vec3) (p : ParabolicPoint → ℝ)
     (f : ParabolicPoint → Vec3) (i : Fin 3) (w : ParabolicPoint) : ℝ :=
@@ -33,7 +34,7 @@ def gapForceIncrement (z : ParabolicPoint) {ρ : ℝ} (hρ : 0 < ρ)
     classicalGradient (harmonicPressurePart η u c p w.2) w.1 i
 
 /-- An absolute coefficient for the force increment on either half-gap collar. -/
-def gapForceIncrementCoefficient : ℝ :=
+@[expose] def gapForceIncrementCoefficient : ℝ :=
   400 * sliceForcePotentialConstant * cutoffGradientConstant * (128 : ℝ)^3
 
 /-- The absolute force-increment coefficient is nonnegative. -/

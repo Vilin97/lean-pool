@@ -34,7 +34,7 @@ the compactified process started at any point almost surely never reaches the ad
 space is produced from that statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -66,6 +66,7 @@ variable (T : Semigroup.PositiveShift → C₀(alpha, ℝ) → C₀(alpha, ℝ))
 /-- **The `C₀` operator of the supremum resolvent** at a positive shift: the value supplied by
 the analytic hypothesis `hT`, packaged as a continuous linear map by additivity, real
 homogeneity, and the uniform bound `1 / lam`. -/
+@[expose]
 def minimalC0Operator (hemb : ∀ m, MeasurableEmbedding (emb m))
     (hmono : ∀ nu > 0, ∀ {h : alpha → ℝ≥0∞}, Measurable h → ∀ y,
       Monotone fun m ↦ localResolvent R emb m nu h y)

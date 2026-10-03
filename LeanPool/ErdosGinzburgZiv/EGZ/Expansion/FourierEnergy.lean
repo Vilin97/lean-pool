@@ -17,7 +17,7 @@ finite sum identities used in the spectral growth estimate directly,
 without introducing a weighted graph or its eigenvalues.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ComplexConjugate
 open RCLike

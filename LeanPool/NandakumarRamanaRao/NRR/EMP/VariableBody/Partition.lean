@@ -31,7 +31,7 @@ dependent `partition` field is *not* asserted to be continuous, and no topology 
   as consumed by the prime-refinement layer.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 
@@ -45,6 +45,7 @@ omit [CompactSpace X]
 
 /-- The **canonical equal-area power partition** of the variable solid body `solidBody hA z.1`,
 computed with the site configuration `sites z.2`. A thin wrapper around `EMP.powerPartition`. -/
+@[expose]
 noncomputable def partition
     (z : BodySpace K A × X) :
     ConvexPartition (solidBody hA z.1) n :=
@@ -125,6 +126,7 @@ structure Witness
 /-- The **canonical partition witness** at `z`, built from the existing variable-body partition and
 its canonical children. No partition proof is duplicated: every field reuses the corresponding
 `partition_*` fact. -/
+@[expose]
 noncomputable def witness
     (z : BodySpace K A × X) :
     Witness sites hA hn z where

@@ -17,7 +17,7 @@ Over a zigzag datum the sandwich retract exists, so vanishing of
 a relative tensor power descends to the module itself.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

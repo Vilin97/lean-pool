@@ -36,11 +36,12 @@ matters, because `A` is genuinely negative in parts of the range.
 * `Sendov.QQ_le_at_one`: `QQ t ≤ QQ 1` above it.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 /-- The quadratic `1 - 2ct + At²`. -/
+@[expose]
 noncomputable def QQ (c A t : ℝ) : ℝ := 1 - 2 * c * t + A * t ^ 2
 
 /-- `Sendov.Q` is an instance of `Sendov.QQ`.  Stated before the section variables below,

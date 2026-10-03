@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2.Geometric
 The realized controller path has the prescribed geometric sequence of scales and radii.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2
@@ -24,18 +24,18 @@ private theorem controllerVisit_ext {v w : ControllerVisit}
   simp_all
 
 /-- The dyadic smoothness estimate at scale index `s`. -/
-def pathScale (Ma : ℝ) (s : ℕ) : ℝ := (2 : ℝ) ^ s * Ma
+@[expose] def pathScale (Ma : ℝ) (s : ℕ) : ℝ := (2 : ℝ) ^ s * Ma
 
 /-- The dyadic radius at scale index `s` and radius index `j`. -/
-noncomputable def pathRadius (G Ma : ℝ) (s j : ℕ) : ℝ :=
+@[expose] noncomputable def pathRadius (G Ma : ℝ) (s j : ℕ) : ℝ :=
   (2 : ℝ) ^ j * G / pathScale Ma s
 
 /-- The controller visit associated with the two geometric indices. -/
-noncomputable def pathVisit (G Ma : ℝ) (s j : ℕ) : ControllerVisit :=
+@[expose] noncomputable def pathVisit (G Ma : ℝ) (s j : ℕ) : ControllerVisit :=
   ⟨pathScale Ma s, pathRadius G Ma s j⟩
 
 /-- The chronological path through each scale's realized initial segment of radii. -/
-noncomputable def pathGrid (G Ma : ℝ) (S : ℕ) (lastRadius : ℕ → ℕ) :
+@[expose] noncomputable def pathGrid (G Ma : ℝ) (S : ℕ) (lastRadius : ℕ → ℕ) :
     List ControllerVisit :=
   (List.range (S + 1)).flatMap fun s =>
     (List.range (lastRadius s + 1)).map fun j => pathVisit G Ma s j

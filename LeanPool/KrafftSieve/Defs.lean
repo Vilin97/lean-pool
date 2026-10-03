@@ -35,7 +35,7 @@ This module establishes the foundational definitions for the sieve:
 - $sum1, sum2$: Weighted sums over the interval.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 
@@ -45,36 +45,36 @@ noncomputable section
 
 /-- Definition of the set of primes primeWindow.
 Let $\mathcal{P}_n$ denote the set of primes $p$ such that $5 \le p < 6n+2$. -/
-def primeWindow (n : ℕ) : Finset ℕ :=
+@[expose] def primeWindow (n : ℕ) : Finset ℕ :=
   (Finset.range (6 * n + 2)).filter (fun p => 5 ≤ p ∧ p.Prime)
 
 /-- Definition of the primorial q.
 Define the primorial $q = \prod_{p \in \mathcal{P}_n} p$. -/
-def q (n : ℕ) : ℕ := (primeWindow n).prod (fun p => p)
+@[expose] def q (n : ℕ) : ℕ := (primeWindow n).prod (fun p => p)
 
 /-- Definition of w as the cardinality of primeWindow.
 Let $w = |\mathcal{P}_n|$ be the number of distinct prime factors of $q$. -/
-def w (n : ℕ) : ℕ := (primeWindow n).card
+@[expose] def w (n : ℕ) : ℕ := (primeWindow n).card
 
 /-- Definition of the sorted list of primes and the accessor function p_i.
 Index the primes in $\mathcal{P}_n$ as $p_1, p_2, \dots, p_w$. -/
-def primesList (n : ℕ) : List ℕ := (primeWindow n).sort (· ≤ ·)
+@[expose] def primesList (n : ℕ) : List ℕ := (primeWindow n).sort (· ≤ ·)
 
 /-- Access the $i$-th prime $p_i$. Note that we use 0-based indexing for the implementation,
 so $p_0$ corresponds to the user's $p_1$. -/
-def p (n : ℕ) (i : Fin (w n)) : ℕ := (primesList n).get (i.cast (by
+@[expose] def p (n : ℕ) (i : Fin (w n)) : ℕ := (primesList n).get (i.cast (by
   unfold w primesList
   simp_all only [Finset.length_sort]))
 
 /-- Define r^K
 Define the Krafft tuple r^K such that for each 1 <= i <= w,
 r^K_i = floor((p_i+1)/6). -/
-def krafftResidue (n : ℕ) (i : Fin (w n)) : ℕ := (p n i + 1) / 6
+@[expose] def krafftResidue (n : ℕ) (i : Fin (w n)) : ℕ := (p n i + 1) / 6
 
 /-- Define evalInterval
 Define the target interval of indices:
 evalInterval = {x in N | 6n^2 - 2n <= x <= 6n^2 + 10n + 3}. -/
-def evalInterval (n : ℕ) : Finset ℕ :=
+@[expose] def evalInterval (n : ℕ) : Finset ℕ :=
   Finset.Icc (6 * n ^ 2 - 2 * n) (6 * n ^ 2 + 10 * n + 3)
 
 /-- Define the local hit function g_i(x)
@@ -82,7 +82,7 @@ Define the local hit function $g_i : \mathbb{Z}/q\mathbb{Z} \to \mathbb{R}$
 for each prime index $i \in \{1, \dots, w\}$.
 - $g_i(x) = 1$ if $x \equiv r^K_i \pmod{p_i}$ or $x \equiv -r^K_i \pmod{p_i}$.
 - Otherwise, $g_i(x) = 0$. -/
-noncomputable def g (n : ℕ) (i : Fin (w n)) (x : ZMod (q n)) : ℝ :=
+@[expose] noncomputable def g (n : ℕ) (i : Fin (w n)) (x : ZMod (q n)) : ℝ :=
   if (x.cast : ZMod (p n i)) = (krafftResidue n i : ZMod (p n i))
     ∨ (x.cast : ZMod (p n i)) = -(krafftResidue n i : ZMod (p n i))
   then 1 else 0
@@ -91,19 +91,19 @@ noncomputable def g (n : ℕ) (i : Fin (w n)) (x : ZMod (q n)) : ℝ :=
 Define the global additive hit counter
 $c : \mathbb{Z}/q\mathbb{Z} \to \mathbb{R}$ as the sum of all local hits:
 $$ c(x) = \sum_{i=1}^w g_i(x) $$ -/
-noncomputable def c (n : ℕ) (x : ZMod (q n)) : ℝ :=
+@[expose] noncomputable def c (n : ℕ) (x : ZMod (q n)) : ℝ :=
   ∑ i : Fin (w n), g n i x
 
 /-- Define the total weighted mass of the interval sum1(n, W)
 Define the total weighted mass of the interval $sum1(n, W)$:
 $$ sum1(n, W) = \sum_{x \in \mathcal{A}_n} W(x) $$ -/
-noncomputable def sum1 (n : ℕ) (W : ZMod (q n) → ℝ) : ℝ :=
+@[expose] noncomputable def sum1 (n : ℕ) (W : ZMod (q n) → ℝ) : ℝ :=
   ∑ x ∈ evalInterval n, W (x : ZMod (q n))
 
 /-- Define the weighted hit count sum2(n, W)
 Define the weighted hit count $sum2(n, W)$:
 $$ sum2(n, W) = \sum_{x \in \mathcal{A}_n} W(x) c(x) $$ -/
-noncomputable def sum2 (n : ℕ) (W : ZMod (q n) → ℝ) : ℝ :=
+@[expose] noncomputable def sum2 (n : ℕ) (W : ZMod (q n) → ℝ) : ℝ :=
   ∑ x ∈ evalInterval n, W (x : ZMod (q n)) * c n (x : ZMod (q n))
 
 end

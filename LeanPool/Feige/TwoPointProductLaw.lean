@@ -13,7 +13,7 @@ import LeanPool.Feige.BoundaryNull
 # Product laws for two-point random variables
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 open Set MeasureTheory ProbabilityTheory

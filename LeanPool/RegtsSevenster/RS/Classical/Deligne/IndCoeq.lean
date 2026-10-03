@@ -71,7 +71,7 @@ The acceptance tests confirm that the cokernel and kernel comparison
 isomorphisms of both tensoring functors synthesize.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

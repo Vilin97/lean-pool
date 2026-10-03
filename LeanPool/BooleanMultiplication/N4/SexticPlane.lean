@@ -17,7 +17,7 @@ every term containing an affine factor, so no large exterior-power coordinate
 space or circuit enumeration is needed.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -229,6 +229,7 @@ theorem rationalTripleDet_eq_zero_of_seedUsing_target
     _ = 0 := htargetProbe
 
 /-- The third rational coefficient vector belongs to the span of the first two. -/
+@[expose]
 def InRationalCoeffPlane
     (alpha beta delta : Fin 3 → F₂) : Prop :=
   ∃ p q : F₂, delta = p • alpha + q • beta

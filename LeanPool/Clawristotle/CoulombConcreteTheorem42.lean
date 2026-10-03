@@ -30,7 +30,7 @@ steady state of the VML system with Coulomb collisions is a global Maxwellian
 with E = 0 and B = const.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

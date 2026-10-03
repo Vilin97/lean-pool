@@ -21,7 +21,7 @@ import Mathlib.Data.Int.Star
 /-! # Eisenstein -/
 
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein
@@ -60,12 +60,12 @@ section Definitions
 /- The Eisenstein Series E₄ and E₆ -/
 
 /-- The normalized weight-4 Eisenstein series `E₄`. -/
-def E₄ : ModularForm (CongruenceSubgroup.Gamma ↑1) 4 :=
+@[expose] def E₄ : ModularForm (CongruenceSubgroup.Gamma ↑1) 4 :=
   (1/2 : ℂ) • eisensteinSeriesMF (by norm_num) standardcongruencecondition /-they need 1/2 for the
     normalization to match up (since the sum here is taken over coprime integers).-/
 
 /-- The normalized weight-6 Eisenstein series `E₆`. -/
-def E₆ : ModularForm (CongruenceSubgroup.Gamma ↑1) 6 :=
+@[expose] def E₆ : ModularForm (CongruenceSubgroup.Gamma ↑1) 6 :=
   (1/2 : ℂ) • eisensteinSeriesMF (by norm_num) standardcongruencecondition
 
 lemma E4_eq : E₄ = E 4 (by norm_num) := rfl
@@ -116,14 +116,14 @@ noncomputable section
 
 /- φ₀, φ₋₂ and φ₋₄, except we can't use - signs in subscripts for definitions... -/
 /-- The auxiliary quotient `((E₂ E₄ - E₆) ^ 2) / Δ` on the upper half-plane. -/
-def φ₀ (z : ℍ) := (((E₂ z) * (E₄ z) - (E₆ z)) ^ 2) / (Δ z)
+@[expose] def φ₀ (z : ℍ) := (((E₂ z) * (E₄ z) - (E₆ z)) ^ 2) / (Δ z)
 /-- The auxiliary quotient `E₄ (E₂ E₄ - E₆) / Δ` on the upper half-plane. -/
-def φ₂' (z : ℍ) := (E₄ z) * ((E₂ z) * (E₄ z) - (E₆ z)) / (Δ z)
+@[expose] def φ₂' (z : ℍ) := (E₄ z) * ((E₂ z) * (E₄ z) - (E₆ z)) / (Δ z)
 /-- The auxiliary quotient `E₄ ^ 2 / Δ` on the upper half-plane. -/
-def φ₄' (z : ℍ) := ((E₄ z) ^ 2) / (Δ z)
+@[expose] def φ₄' (z : ℍ) := ((E₄ z) ^ 2) / (Δ z)
 /- We extend these definitions to ℂ for convenience. -/
 /-- The extension of `φ₀` to all of `ℂ`, set to `0` off the upper half-plane. -/
-def φ₀'' (z : ℂ) : ℂ := if hz : 0 < z.im then φ₀ ⟨z, hz⟩ else 0
+@[expose] def φ₀'' (z : ℂ) : ℂ := if hz : 0 < z.im then φ₀ ⟨z, hz⟩ else 0
 /-- The extension of `φ₂'` to all of `ℂ`, set to `0` off the upper half-plane. -/
 def φ₂'' (z : ℂ) : ℂ := if hz : 0 < z.im then φ₂' ⟨z, hz⟩ else 0
 /-- The extension of `φ₄'` to all of `ℂ`, set to `0` off the upper half-plane. -/
@@ -610,7 +610,7 @@ theorem E4E6_coeff_zero_eq_zero :
   simp
 
 /-- The discriminant cusp form built from `E₄` and `E₆` via `(E₄ ^ 3 - E₆ ^ 2) / 1728`. -/
-def DeltaE4E6Aux : CuspForm (CongruenceSubgroup.Gamma 1) 12 :=
+@[expose] def DeltaE4E6Aux : CuspForm (CongruenceSubgroup.Gamma 1) 12 :=
   let F := DirectSum.of _ 4 E₄
   let G := DirectSum.of _ 6 E₆
   cuspFormOfCoeffZero ((1 / 1728 : ℂ) • (F ^ 3 - G ^ 2) 12) E4E6_coeff_zero_eq_zero
@@ -655,7 +655,8 @@ lemma Delta_cuspFuntion_eq : Set.EqOn (cuspFunction 1 Delta)
     exact hyn0
 
 lemma Delta_ne_zero : Delta ≠ 0 :=
-  DFunLike.ne_iff.mpr ⟨UpperHalfPlane.I, Δ_ne_zero UpperHalfPlane.I⟩
+  DFunLike.ne_iff.mpr ⟨UpperHalfPlane.I, by
+    simpa only [Delta_apply, zero_apply] using Δ_ne_zero UpperHalfPlane.I⟩
 
 lemma asdf : TendstoLocallyUniformlyOn
     (fun n : ℕ ↦ fun y : ℂ => ∏ x ∈ Finset.range n, (1 - y ^ (x + 1)))

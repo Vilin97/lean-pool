@@ -20,7 +20,7 @@ infinite) to a statement about arbitrary models of a sentence, where a finite mo
 otherwise escape.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

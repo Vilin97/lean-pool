@@ -18,7 +18,7 @@ isomorphism is pure index bookkeeping: the first line index is
 peeled off and the remaining indices are shifted down by one.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

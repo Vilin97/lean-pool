@@ -31,7 +31,7 @@ specifically expanding the hit counts into frequencies and isolating the main te
 and the key third harmonic contribution.
 -/
 
-@[expose] public section
+public section
 
 namespace KrafftSieve
 

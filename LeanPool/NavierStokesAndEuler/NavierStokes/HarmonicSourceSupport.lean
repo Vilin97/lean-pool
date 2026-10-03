@@ -17,7 +17,7 @@ Only nonzero input harmonics need be localized: a spatially global zero
 mode, such as an axisymmetric pressure alias, does not create a new slot.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,6 +31,7 @@ variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Every nonzero harmonic vanishes outside the specified spatial set.
 The zero coefficient is unrestricted. -/
+@[expose]
 def NonzeroSupported (K : Set D) (c : HarmonicFields.Coefficients D) : Prop :=
   ∀ j : ℤ, j ≠ 0 → ∀ x : D, x ∉ K → c j x = 0
 
@@ -447,7 +448,7 @@ open CommonCoverSolve TorusInverse TorusAverages
 variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Native union, given by `⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k`. -/
-noncomputable def nativeUnion (g : Geometry) (K : Set Plane) : Set (P × Plane) :=
+@[expose] noncomputable def nativeUnion (g : Geometry) (K : Set Plane) : Set (P × Plane) :=
   ⋃ k : Frequency, PeriodizedWaveBounds.nativeCell g K k
 
 omit [NormedSpace ℝ P] in
@@ -638,6 +639,7 @@ end ColoredSlots
 
 /-- Nonzero coefficients are supported in `K` relative to `U`.  Values
 outside `U` are not constrained. -/
+@[expose]
 def NonzeroSupportedOn (U K : Set D) (c : HarmonicFields.Coefficients D) : Prop :=
   ∀ j : ℤ, j ≠ 0 → ∀ x : D, x ∈ U → x ∉ K → c j x = 0
 

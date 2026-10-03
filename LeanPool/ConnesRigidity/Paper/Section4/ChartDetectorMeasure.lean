@@ -17,7 +17,7 @@ Concrete §4 chart detector transport and the invariant-measure bound for
 Zhou's dual kernel. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperChartDetectorMeasure
@@ -64,7 +64,7 @@ abbrev CharacterSpace := PaperDualTopology.CharacterSpace
 /--
 The `paperThetaOneAddAction` construction used in the Connes rigidity formalization.
 -/
-def paperThetaOneAddAction : H →* Multiplicative (AddAut D) :=
+@[expose] def paperThetaOneAddAction : H →* Multiplicative (AddAut D) :=
   (MulAutMultiplicative D).toMonoidHom.comp
     PaperKernel.paperThetaOneHom
 
@@ -75,7 +75,7 @@ def paperThetaOneAddAction : H →* Multiplicative (AddAut D) :=
 
 /-- The second paper kernel action reserved for the companion detector. Paper: §4.
 -/
-def paperThetaTwoAddAction : H →* Multiplicative (AddAut D) :=
+@[expose] def paperThetaTwoAddAction : H →* Multiplicative (AddAut D) :=
   (MulAutMultiplicative D).toMonoidHom.comp
     PaperKernel.paperThetaTwoHom
 
@@ -86,7 +86,7 @@ def paperThetaTwoAddAction : H →* Multiplicative (AddAut D) :=
 
 /-- In Zhou's detector corollary only the SL₃ subgroup is used. Paper: §4.
 -/
-def IsInvariantPaperSL3SpectralMeasure
+@[expose] def IsInvariantPaperSL3SpectralMeasure
     (μ : ProbabilityMeasure CharacterSpace) : Prop :=
   ∀ g : SpecialLinear.SL3,
     (μ : Measure CharacterSpace).map
@@ -126,12 +126,12 @@ lemma paperThetaOne_inverse_transport (g : SpecialLinear.SL3) (e : C)
 /--
 The `chartLinear` construction used in the Connes rigidity formalization.
 -/
-def chartLinear (χ : CharacterSpace) : C →ₗ[k] k :=
+@[expose] def chartLinear (χ : CharacterSpace) : C →ₗ[k] k :=
   (PaperDualHaar.characterCoordinatesEquiv χ).2
 
 /-- The detector set associated with one C-coordinate. Paper: §4.
 -/
-def chartDetector (c : C) : Set CharacterSpace :=
+@[expose] def chartDetector (c : C) : Set CharacterSpace :=
   linearDetector (0, c)
 
 /-- The C-coordinate agrees with direct character evaluation. Paper: §4. -/
@@ -195,7 +195,7 @@ theorem chartSquareDetector_measure_eq_base
 /--
 The `chartEvalIndexEquiv` construction used in the Connes rigidity formalization.
 -/
-def chartEvalIndexEquiv (N : ℕ) : ChartIndex N ≃ ChartEvalIndex N where
+@[expose] def chartEvalIndexEquiv (N : ℕ) : ChartIndex N ≃ ChartEvalIndex N where
   toFun i := (i.1, fun x => Sum.elim i.2.1 i.2.2 x)
   invFun j := (j.1, (fun x => j.2 (Sum.inl x)), (fun x => j.2 (Sum.inr x)))
   left_inv i := by
@@ -238,7 +238,7 @@ theorem chartEvalValue_of_chartIndex (χ : CharacterSpace)
 /--
 The `chartDetectorSupport` construction used in the Connes rigidity formalization.
 -/
-def chartDetectorSupport (χ : CharacterSpace) (N : ℕ) :
+@[expose] def chartDetectorSupport (χ : CharacterSpace) (N : ℕ) :
     Finset (ChartIndex N) := by
   classical
   exact Finset.univ.filter
@@ -394,7 +394,7 @@ theorem chartDetectorUnion_mono {N M : ℕ} (hNM : N ≤ M) :
 /--
 The `chartNonzeroLocus` construction used in the Connes rigidity formalization.
 -/
-def chartNonzeroLocus : Set CharacterSpace :=
+@[expose] def chartNonzeroLocus : Set CharacterSpace :=
   {χ : CharacterSpace | chartLinear χ ≠ 0}
 
 /- The chart unions exhaust the characters with nonzero C-coordinate. Paper: §4. -/

@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 
 /-! Genuine ordinary-space L² translations and closedness of their full derivative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ abbrev L2Space (V : Type*) [NormedAddCommGroup V] := Lp V 2 (volume : Measure Sp
 
 /-- Translation, given by `Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x+a)
 (measurePreserving_add_right volume a)`. -/
-def translation (a : Space) : L2Space V →ₗᵢ[ℝ] L2Space V :=
+@[expose] def translation (a : Space) : L2Space V →ₗᵢ[ℝ] L2Space V :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : Space => x+a) (measurePreserving_add_right volume a)
 
 theorem translation_ae (a : Space) (u : L2Space V) :

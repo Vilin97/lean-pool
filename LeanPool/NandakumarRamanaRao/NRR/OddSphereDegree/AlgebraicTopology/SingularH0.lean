@@ -12,7 +12,7 @@ public import LeanPool.NandakumarRamanaRao.NRR.OddSphereDegree.AlgebraicTopology
 
 /-! # Singular H0 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits
 open SphereOddDegree

@@ -18,7 +18,7 @@ of the two flag enumerations, so the reindexing sign transports
 between them, and the block enumeration is key-sorted.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

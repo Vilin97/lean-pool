@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Kripke.Closure
 
 /-! # Preservation -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -43,6 +43,7 @@ end «lp_section_1»
 section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ModalEquivalent {M₁ M₂ : Model} (w₁ : M₁.World) (w₂ : M₂.World) : Prop := ∀ {φ}, w₁ ⊧ φ ↔ w₂ ⊧ φ
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:50 " ↭ " => ModalEquivalent
@@ -95,6 +96,7 @@ def id : F →ₚ F where
   back := by simp;
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def TransitiveClosure (f : F₁ →ₚ F₂) (F₂_trans : IsTrans F₂.World F₂.Rel) : F₁^+ →ₚ F₂ where
   toFun := f.toFun
   forth := by
@@ -149,7 +151,7 @@ def id : M →ₚ M where
   atomic := by simp;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ofAtomic (f : M₁.toFrame →ₚ M₂.toFrame) (atomic : ∀ {w a}, (M₁ w a) ↔ (M₂ (f w) a)) :
+@[expose] def ofAtomic (f : M₁.toFrame →ₚ M₂.toFrame) (atomic : ∀ {w a}, (M₁ w a) ↔ (M₂ (f w) a)) :
     M₁ →ₚ M₂ where
   toFun := f
   forth := f.forth
@@ -214,6 +216,7 @@ end «lp_section_3»
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Modal.Kripke.Frame.isRooted (F : Frame) (r : F.World) : Prop := ∀ w ≠ r, r ≺ w
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -228,7 +231,8 @@ structure RootedFrame extends Kripke.Frame where
 section «lp_section_4»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Modal.Kripke.Frame.PointGenerated (F : Kripke.Frame) (r : F.World) :
+@[expose] def _root_.LO.Modal.Kripke.Frame.PointGenerated
+    (F : Kripke.Frame) (r : F.World) :
     Kripke.RootedFrame where
   World := { w | w = r ∨ r ≺ w }
   Rel x y := x.1 ≺ y.1
@@ -279,7 +283,8 @@ add_decl_doc LO.Modal.Kripke.RootedModel.toRootedFrame
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Modal.Kripke.Model.PointGenerated (M : Kripke.Model) (r : M.World) :
+@[expose] def _root_.LO.Modal.Kripke.Model.PointGenerated
+    (M : Kripke.Model) (r : M.World) :
     Kripke.RootedModel :=
   letI rF := M.toFrame↾r;
   {

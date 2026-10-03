@@ -23,7 +23,7 @@ summand well-defined; the corrected value chooses among canonical
 data, and the corrected independence interface quantifies over it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,6 +37,7 @@ namespace EdgeSubset
 boundary-to-boundary chain is directed from its lower-labelled end
 to its higher-labelled one — the entry edge at the lower end is
 incoming. -/
+@[expose]
 def PathCanonical [LinearOrder α] {W : Fragment α}
     {F : EdgeSubset W} {κ : F.RelTransitionSystem}
     (o : κ.Orientation) : Prop :=
@@ -60,6 +61,7 @@ theorem pathCanonical_of_allInternal [LinearOrder α] {W : Fragment α}
 /-- The chord-interleaving condition between two boundary chains:
 both chords are recorded at their lower-labelled ends and
 interleave. -/
+@[expose]
 def ChordCross [LinearOrder α] {W : Fragment α}
     {F : EdgeSubset W} (κ : F.RelTransitionSystem)
     (b b' : {x : W.Flag // x ∈ F.boundaryFlags}) : Prop :=
@@ -73,6 +75,7 @@ def ChordCross [LinearOrder α] {W : Fragment α}
 open Classical in
 /-- The number of interleaving chain-chord pairs of a transition
 system. -/
+@[expose]
 noncomputable def chordCrossingCount [LinearOrder α] {W : Fragment α}
     {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) : ℕ :=
@@ -82,6 +85,7 @@ noncomputable def chordCrossingCount [LinearOrder α] {W : Fragment α}
 /-- **The path-sector sign**: the crossing sign of the boundary
 chain pairing — the Pfaffian chord-diagram sign forced by the
 two-path repair obstruction. -/
+@[expose]
 noncomputable def pathSign [LinearOrder α] {W : Fragment α}
     {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) : ℂ :=
@@ -104,6 +108,7 @@ theorem pathSign_of_allInternal [LinearOrder α] {W : Fragment α}
 
 /-- Canonical transition data: a relative system with a
 path-canonical orientation. -/
+@[expose]
 def CanonData [LinearOrder α] {W : Fragment α}
     (F : EdgeSubset W) : Type :=
   (κ : F.RelTransitionSystem) × {o : κ.Orientation // PathCanonical o}
@@ -111,6 +116,7 @@ def CanonData [LinearOrder α] {W : Fragment α}
 open Classical in
 /-- **The canonical constrained value**: the through summand at the
 open circuit count, chosen among path-canonical data. -/
+@[expose]
 noncomputable def throughValueC [LinearOrder α] {W : Fragment α}
     (F : EdgeSubset W) {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (st : GenBoundaryState k ℓ α)
@@ -126,6 +132,7 @@ end EdgeSubset
 open Classical in
 /-- **The canonical state-constrained partition value** of an open
 fragment. -/
+@[expose]
 noncomputable def throughMixedPartitionC [LinearOrder α]
     {k ℓ : ℕ}
     (h : MixedFunctional k ℓ) (W : Fragment α)
@@ -165,6 +172,7 @@ end EdgeSubset
 /-- **The corrected independence interface**: the constrained
 summand at the open circuit count is independent of the choice of
 relative transition system and *path-canonical* orientation. -/
+@[expose]
 def ThroughIndependenceC : Prop :=
   ∀ {α : Type} [LinearOrder α] {W : Fragment α} (F : EdgeSubset W)
     {k ℓ : ℕ} (h : MixedFunctional k ℓ)

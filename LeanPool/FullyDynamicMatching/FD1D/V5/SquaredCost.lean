@@ -17,7 +17,7 @@ bounds while allowing arbitrary occupied locations inside their certified
 dyadic cells.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Transport
 
@@ -29,6 +29,7 @@ open Set MeasureTheory
 variable {L m : ℕ}
 
 /-- Conditional squared distance to the actual selected supply point. -/
+@[expose]
 def expectedActualSquaredDistance
     (C : SupplyConfiguration L m) (q : DyadicMass L)
     (fallback : Fin m) : ℝ :=
@@ -205,6 +206,7 @@ theorem expectedActualSquaredDistance_le
       rfl
 
 /-- Count-state envelope for the actual conditional squared matching cost. -/
+@[expose]
 def stateSquaredCostEnvelope
     (a : ℝ) (x : InventoryState (DyadicNode L) m) : ℝ :=
   (dyadicCellWidth L +

@@ -27,4 +27,4 @@ formalization: standard Borel spaces, packing of measurable spaces, randomizatio
 of probability measures, and quantile / CDF infrastructure.
 -/
 
-@[expose] public section
+public section

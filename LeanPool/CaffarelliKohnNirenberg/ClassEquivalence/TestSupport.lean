@@ -32,7 +32,7 @@ Boundedness is the form in which the test function enters: an integrand of
 function.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

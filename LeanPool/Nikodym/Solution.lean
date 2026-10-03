@@ -28,7 +28,7 @@ The `example`s below are a readable local witness of the same facts: they type-c
 the proved theorems have the advertised types.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym
 

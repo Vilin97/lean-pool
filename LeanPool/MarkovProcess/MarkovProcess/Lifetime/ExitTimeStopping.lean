@@ -12,7 +12,7 @@ public import LeanPool.MarkovProcess.MarkovProcess.Lifetime.Filtration
 
 /-! # Exit times as stopping times -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

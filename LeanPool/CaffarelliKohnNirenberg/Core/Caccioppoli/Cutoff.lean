@@ -17,7 +17,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Caccioppoli.CutoffBase
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -404,6 +404,7 @@ theorem caccioppoli_asymmetricTimeCutoff_abs_deriv_le_on_left
 
 /-- Product cutoff used to test the local energy inequality with a regularized backward heat
 kernel. -/
+@[expose]
 def caccioppoliHeatCutoff (x₀ : Vec3) (t₀ ρ ε : ℝ)
     (hρ : 0 < ρ) (_hε : 0 < ε) (z : Vec3 × ℝ) : ℝ :=
   mollifiedBallCutoff x₀ hρ z.1 *

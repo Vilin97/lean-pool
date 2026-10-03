@@ -16,7 +16,7 @@ The coordinate of a colour basis vector is the equality
 indicator: the coordinate calculus closes on basis input.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ These lemmas reconstruct identities lost during the accidental deletion.
 They support the recovered convexity and spectrum-inclusion proofs.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

@@ -51,7 +51,7 @@ section
 /-! Conservation of the antisymmetric frame pairing for a particle flow
 whose acceleration gradient is a symmetric operator. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -124,7 +124,7 @@ section
 # Curl Matrix Symmetry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -188,7 +188,7 @@ section
 because its actual gradient is smooth. Its curvature operator is therefore
 symmetric, as required by the particle-map vorticity transport argument. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -225,7 +225,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -309,7 +309,7 @@ bound on its velocity or velocity gradients. Vorticity confinement additionally
 requires its transport identity along these particle maps.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -460,7 +460,7 @@ The hypotheses below are explicit: this file does not yet assert their
 instantiation for the packet choices made by the development.
 -/
 
-@[expose] public section
+public section
 
 namespace Euler.ComparatorBridge
 
@@ -578,7 +578,7 @@ section
 /-! The curl of a differentiable field has support inside the support of that
 field. This elementary locality fact does not assume spatial norm bounds. -/
 
-@[expose] public section
+public section
 
 namespace EulerMeanCutoffCurl
 
@@ -600,7 +600,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -686,7 +686,7 @@ with the tail of the packet family would bound the divergent activation
 gradients. This applies the proved varying-horizon H³ stability theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -776,7 +776,7 @@ section
 /-! Convergence of ordinary Euler velocities in the initial H³ norm gives
 pointwise convergence of their curls at every time in their common interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -854,7 +854,7 @@ section
 throughout its horizon. Initial support, the actual vorticity transport law,
 and the summable particle-map displacement bound supply the three ingredients. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -883,7 +883,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

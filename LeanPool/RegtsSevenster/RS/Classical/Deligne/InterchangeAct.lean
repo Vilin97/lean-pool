@@ -21,7 +21,7 @@ structure morphism of the splitting-chain algebra multiplies
 through.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

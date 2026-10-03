@@ -13,7 +13,7 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

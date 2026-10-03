@@ -25,7 +25,7 @@ The harmonic term is taken from the interior gradient display, whose
 integrated over the half ball.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

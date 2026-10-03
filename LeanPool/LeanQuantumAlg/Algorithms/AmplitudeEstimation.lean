@@ -19,7 +19,7 @@ phase-register basis vector, and the estimate `sin^2(pi*j/2^t)` equals the
 good-state probability in the two-dimensional amplitude-amplification model.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

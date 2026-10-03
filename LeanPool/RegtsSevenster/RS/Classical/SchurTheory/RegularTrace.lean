@@ -17,7 +17,7 @@ idempotents this computes block dimensions without any
 decomposition theory.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

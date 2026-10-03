@@ -29,4 +29,4 @@ Tags: analysis, measure-theory, probability, mathematical-physics
 MSC: 81T08, 60G15, 46G12
 -/
 
-@[expose] public section
+public section

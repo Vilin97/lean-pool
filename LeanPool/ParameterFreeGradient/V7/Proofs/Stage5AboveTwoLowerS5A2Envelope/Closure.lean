@@ -14,7 +14,7 @@ The selected envelope gradient closes the smoothing kernel's derivative, smoothn
 locality properties.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

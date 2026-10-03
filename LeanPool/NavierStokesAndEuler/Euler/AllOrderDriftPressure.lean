@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CorrectionAssemblyPressureParity
 /-! Actual common pressure and a canonically normalized scalar graph pressure
 constructed from all-order drift-aware input budgets. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,6 +30,7 @@ variable (period : ℝ) [Fact (0 < period)]
 variable {T : ℝ} {hT : 0 < T} {A : Data period T}
 
 /-- The actual signed L² pressure of the family constructed from drift-aware budgets. -/
+@[expose]
 def Budget.commonPressure (B : Budget period hT A) :
     C(Icc (0 : ℝ) T, LiftL2 period) :=
   (B.family period).commonPressure period
@@ -47,6 +48,7 @@ theorem Budget.commonPressure_gradient (B : Budget period hT A) (t : Icc (0 : �
   (B.family period).commonPressure_gradient period t
 
 /-- Actual continuous Sobolev realizations at every order of the same constructed pressure. -/
+@[expose]
 def Budget.pressureTower (B : Budget period hT A) : FieldTower period T :=
   (B.family period).pressureTower period (B.comparisonData period)
 

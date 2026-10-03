@@ -21,7 +21,7 @@ section
 
 /-! Constructed compatible inviscid corrections at every finite Sobolev order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -113,7 +113,7 @@ section
 /-! The actual nonlinear source and signed coercive pressure agree across the constructed Sobolev
 solutions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -217,7 +217,7 @@ section
 /-! A common actual lifted inviscid correction with genuine jets of every order and smooth spatial
 representatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -322,7 +322,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -396,7 +396,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

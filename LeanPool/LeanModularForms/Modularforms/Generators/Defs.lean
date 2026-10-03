@@ -19,7 +19,7 @@ along with basic API lemmas (evaluation on generators, odd-weight vanishing,
 monomial weight existence, and `Δ ∈ range evalE₄E₆`).
 -/
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein
@@ -32,11 +32,11 @@ open scoped Interval Real NNReal ENNReal Topology BigOperators Nat
 noncomputable section
 
 /-- Weight function assigning weight 4 to E₄ (variable 0) and weight 6 to E₆ (variable 1). -/
-def E₄E₆Weight : Fin 2 → ℕ := ![4, 6]
+@[expose] def E₄E₆Weight : Fin 2 → ℕ := ![4, 6]
 
 /-- Evaluation homomorphism sending `ℂ[X₀, X₁]` to the graded ring of level 1 modular forms
 via `X₀ ↦ E₄` and `X₁ ↦ E₆`. -/
-noncomputable def evalE₄E₆ :
+@[expose] noncomputable def evalE₄E₆ :
     MvPolynomial (Fin 2) ℂ →ₐ[ℂ]
       DirectSum ℤ (fun k => ModularForm (CongruenceSubgroup.Gamma 1) k) :=
   MvPolynomial.aeval
@@ -45,7 +45,7 @@ noncomputable def evalE₄E₆ :
 
 /-- The polynomial `Δ_poly = (1/1728)(X₀³ - X₁²)` in `ℂ[X₀, X₁]`,
 mapping to `Δ` under `evalE₄E₆`. -/
-noncomputable def DeltaPoly : MvPolynomial (Fin 2) ℂ :=
+@[expose] noncomputable def DeltaPoly : MvPolynomial (Fin 2) ℂ :=
   (1 / 1728 : ℂ) • (MvPolynomial.X 0 ^ 3 - MvPolynomial.X 1 ^ 2)
 
 /-! ## Odd-weight vanishing -/

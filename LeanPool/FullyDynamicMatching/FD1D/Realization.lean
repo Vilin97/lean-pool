@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-! # Realization -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -108,6 +108,7 @@ private theorem countAssignment_fiber_card
 The canonical spatial realization of a fixed-total leaf count state.
 Every point is placed at the left endpoint of its declared dyadic cell.
 -/
+@[expose]
 noncomputable def ofCountState
     (x : InventoryState (DyadicNode L) m) :
     SupplyConfiguration L m where
@@ -151,6 +152,7 @@ theorem exists_countState_eq
   ⟨ofCountState x, ofCountState_countState x⟩
 
 /-- A canonical total representative fallback whenever the inventory is nonempty. -/
+@[expose]
 def canonicalFallback (hm : 0 < m) : Fin m :=
   ⟨0, hm⟩
 

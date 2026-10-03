@@ -17,7 +17,7 @@ sum after removing one chip at a bridge endpoint. The loss of one degree is the
 familiar bridge gluing correction.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs
 

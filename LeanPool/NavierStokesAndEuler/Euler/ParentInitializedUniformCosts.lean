@@ -18,7 +18,7 @@ section
 in the parent-to-packet constructor. All three source budgets share one
 radius and retain the growth profile derived from that geometry. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,6 +39,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
 /-- Geometry inputs, constructed using `L.joinedInputs`. -/
+@[expose]
 def geometryInputs :
     JoinedInputs (G.meanData H) (G.transverseData m hm R S hS) τ hτ hτT
       (G.historyOn H m hm R S hS τ hτ hτT) :=
@@ -58,7 +59,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -88,7 +89,7 @@ local notation "BC" => joinedCoefficientBudget period (G.meanData H)
 
 /-- Geometry parameter size, given by `parameterSize L.K Ti TiTotal (560*P.horizon^10/P.epsilon)
 H.L J.δ ‖ξ‖+J.hchild`. -/
-def geometryParameterSize (ξ : U) : ℝ :=
+@[expose] def geometryParameterSize (ξ : U) : ℝ :=
   parameterSize L.K Ti TiTotal (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild
 
 theorem geometry_uniform_primitives (ξ : U) (hδ : 0 < J.δ) (hδ1 : J.δ ≤ 1) :

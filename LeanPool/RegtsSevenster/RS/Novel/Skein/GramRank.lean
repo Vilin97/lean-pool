@@ -22,7 +22,7 @@ Gram matrix: a Gram factorization exhibits each row as a combination
 of the columns indexed by the ambient space's coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

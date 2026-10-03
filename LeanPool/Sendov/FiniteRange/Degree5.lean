@@ -41,7 +41,7 @@ orientation: over the feasible range `α ≤ 1.678` the exact maximum of `R 5 α
 `1`, and would prove nothing.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

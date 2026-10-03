@@ -23,14 +23,14 @@ This file defines some simple yet notable combinatorial games:
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace IGame
 
 /-! ### Star -/
 
 /-- The game `⋆ = {0 | 0}`, which is fuzzy with zero. -/
-def star : IGame :=
+@[expose] def star : IGame :=
   !{fun _ ↦ {0}}
 
 @[inherit_doc] notation "⋆" => star
@@ -58,7 +58,7 @@ protected instance Impartial.star : Impartial ⋆ := by rw [impartial_def]; simp
 /-! ### Half -/
 
 /-- The game `½ = {0 | 1}`, which we prove satisfies `½ + ½ = 1`. -/
-def half : IGame :=
+@[expose] def half : IGame :=
   !{{0} | {1}}
 
 @[inherit_doc] notation "½" => half
@@ -77,7 +77,7 @@ protected instance Short.half : Short ½ := by rw [short_def]; simp
 /-! ### Up and down -/
 
 /-- The game `↑ = {0 | ⋆}`. -/
-def up : IGame :=
+@[expose] def up : IGame :=
   !{{0} | {⋆}}
 
 @[inherit_doc] notation "↑" => up
@@ -94,7 +94,7 @@ protected instance Dicotic.up : Dicotic ↑ := by rw [dicotic_def]; simp
 protected instance Short.up : Short ↑ := by rw [short_def]; simp
 
 /-- The game `↓ = {⋆ | 0}`. -/
-def down : IGame :=
+@[expose] def down : IGame :=
   !{{⋆} | {0}}
 
 @[inherit_doc] notation "↓" => down
@@ -117,7 +117,7 @@ protected instance Short.down : Short ↓ := by rw [short_def]; simp
 
 /-- A tiny game `⧾x` is defined as `{0 | {0 | -x}}`, and is amongst the smallest of the
 infinitesimals. -/
-def tiny (x : IGame) : IGame :=
+@[expose] def tiny (x : IGame) : IGame :=
   !{{0} | {!{{0} | {-x}}}}
 
 @[inherit_doc] prefix:75 "⧾" => tiny

@@ -17,7 +17,7 @@ L² time derivative. Terminal-primitive uniqueness identifies this path with
 the physical velocity already constructed by the strong mean inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable {T : ℝ} {hT : 0 ≤ T}
   (s : StrongMeanEvolution T hT FInv F F₁ A L u f)
 
 /-- The continuous time path constructed from the actual B and B_t. -/
-def continuousVelocity : C(Icc (0 : ℝ) T, L2) :=
+@[expose] def continuousVelocity : C(Icc (0 : ℝ) T, L2) :=
   reconstruction T hT (s.velocityField, s.velocityDerivative)
 
 /-- This reconstruction is exactly the physical representative, at every time. -/

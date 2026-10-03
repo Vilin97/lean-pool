@@ -26,7 +26,7 @@ multivalued function, even though the two signed distances are computed in diffe
 and need not agree pointwise.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -38,6 +38,7 @@ variable {X : Type*} [MetricSpace X] [Nonempty X]
 
 /-- The nice multivalued function attached to a top–bottom separator: its scalar observable is the
 signed distance to the carrier, so its zero set is exactly the carrier. -/
+@[expose]
 noncomputable def toNiceMV
     (S : TopBottomSeparator X) :
     NiceMV X where
@@ -73,6 +74,7 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 
 /-- Pull back a top–bottom separator `S` on `X` along a continuous base map `f : Y → X` through the
 product map `(y, t) ↦ (f y, t)`. Carrier, lower, and upper regions are pulled back by preimage. -/
+@[expose]
 def pullback
     (S : TopBottomSeparator X) (f : C(Y, X)) :
     TopBottomSeparator Y where

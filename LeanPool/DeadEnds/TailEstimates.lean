@@ -19,7 +19,7 @@ import Mathlib.Tactic.Positivity.Finset
 Asymptotic tail estimates that turn finite-prime counts into density bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

@@ -19,7 +19,7 @@ the substantive proof development in this repository. Challenge and Solution
 are separate environments: never import Challenge here.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal
 

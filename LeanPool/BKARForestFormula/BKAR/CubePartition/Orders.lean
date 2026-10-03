@@ -23,7 +23,7 @@ between order-by-order sector contributions and the order-free contribution
 of a forest in the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -366,6 +366,7 @@ theorem sum_edgeSetOrders_eq_sum_cons_of_nonempty
   exact sum_edgeSetOrders_filter_ne_nil_eq_sum_cons S φ
 
 /-- All linear orderings of the edge set of a forest. -/
+@[expose]
 def edgeOrders (F : Forest V) : Finset (List (Edge V)) :=
   edgeSetOrders F.edges
 
@@ -430,6 +431,7 @@ Read a list of simplex parameters as edge parameters for a forest, according
 to a chosen edge order. Missing parameters default to zero; on valid orders
 and simplex-length parameter lists, this default is never used.
 -/
+@[expose]
 def paramsOfOrder (F : Forest V) (order : List (Edge V)) (ts : List ℝ) :
     F.EdgeParam → ℝ :=
   fun e => ts.getD (order.idxOf e.val) 0
@@ -620,6 +622,7 @@ end OrderedGrowth
 The ordered-simplex contribution attached to one concrete ordering of a
 forest edge set.
 -/
+@[expose]
 def orderedContribution (F : Forest V) (order : List (Edge V))
     (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
   orderedSimplexIntegral order

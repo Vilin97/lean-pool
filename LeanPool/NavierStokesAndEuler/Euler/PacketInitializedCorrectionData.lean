@@ -52,7 +52,7 @@ section
 
 /-! Every joined high/corrector pair lies in the actual lifted solenoidal space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -130,7 +130,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -148,6 +148,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
 
 /-- Joined packet pullback field used in packet joined source solenoidal. -/
+@[expose]
 def joinedPacketPullbackField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame z
       (fieldSum (N+1) κ (assembledVelocity N (joinedSourceProfiles P M D τ hτ hτT B primary)) z))
@@ -183,7 +184,8 @@ def joinedPacketPullbackField (N : ℕ) (κ : ℝ) :
 theorem joinedPacketPullbackField_path (N : ℕ) (κ : ℝ) :
     (joinedPacketPullbackField P M D hT τ hτ hτT B primary hprimary N κ).path =
       ∑ i ∈ range N, ((joinedPairField P M D hT τ hτ hτT B primary hprimary κ (i+1)).path +
-        κ^(i+1) • (joinedMeanPullbackField P M D hT τ hτ hτT B primary hprimary (i+1)).path) := rfl
+        κ^(i+1) • (joinedMeanPullbackField P M D hT τ hτ hτT B primary hprimary (i+1)).path) := by
+  rfl
 
 theorem joinedPacketPullbackField_mem
     (hmean : primary.mean = 0)
@@ -231,7 +233,7 @@ the uncancelled tail.  The primary field and its homogeneous equation are
 inputs; every nonprimary regularity and equation is discharged by construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -311,7 +313,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -350,9 +352,10 @@ def joinedLiteralTailGradeField (N n : ℕ) (hn : N + 1 ≤ n) :
 
 theorem joinedLiteralTailGradeField_path (N n : ℕ) (hn : N + 1 ≤ n) :
     (joinedLiteralTailGradeField P M D hT τ hτ hτT B primary hprimary N n hn).path =
-      (joinedTailGradeField P M D hT τ hτ hτT B primary hprimary N n hn).path := rfl
+      (joinedTailGradeField P M D hT τ hτ hτT B primary hprimary N n hn).path := by rfl
 
 /-- Joined tail sum field, constructed using `ProfileRegularity.tailSumField`. -/
+@[expose]
 def joinedTailSumField (N : ℕ) (κ : ℝ) :
     Field P M.T (fun z => ∑ n ∈ Ico (N+1) (2*N+3), κ^n •
       recursiveGrade (joinedSourceOperators P M D τ hτ hτT B) N
@@ -363,6 +366,7 @@ def joinedTailSumField (N : ℕ) (κ : ℝ) :
 
 omit primary hprimary in
 /-- Joined residual field used in packet joined residual fields. -/
+@[expose]
 def joinedResidualField (A : VectorField) (π : ScalarField)
     (hprimary : ProfileRegularity P M.T M.T_pos.le D.support
       (primaryProfile (joinedSourceOperators P M D τ hτ hτT B) A π))
@@ -395,7 +399,7 @@ section
 
 /-! Exponential residual bounds for the actual recursively solved joined packet. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -485,7 +489,7 @@ section
 
 /-! The actual joined packet has a bounded normalized velocity and a small normal drift. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -564,7 +568,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -582,12 +586,14 @@ variable (M : EulerMeanPacketProvider.Data)
   (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
 
 /-- Initialized packet field, constructed using `joinedPacketPullbackField`. -/
+@[expose]
 def initializedPacketField (N : ℕ) (κ : ℝ) :=
   joinedPacketPullbackField period M D hTime τ hτ hτT B
     (joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
     (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs)) N κ
 
 /-- Initialized residual field, constructed using `joinedResidualField`. -/
+@[expose]
 def initializedResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (κ : ℝ) (hκ : κ ≠ 0) :=
   joinedResidualField period M D hTime τ hτ hτT B
@@ -668,7 +674,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -687,10 +693,12 @@ variable (M : EulerMeanPacketProvider.Data)
 
 /-- Initialized normalized field, given by `((initializedPacketField M D hTime τ hτ hτT B δ hδ ξ
 hs α N k⁻¹).smul k).changeTime hTime`. -/
+@[expose]
 def initializedNormalizedField (N : ℕ) (k : ℝ) :=
   ((initializedPacketField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).smul k).changeTime hTime
 
 /-- Initialized normalized residual field used in packet initialized correction data. -/
+@[expose]
 def initializedNormalizedResidualField (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :=
   (((joinedSourceCoefficientData period M D τ hτ hτT B hTime).inverse.multiply
@@ -699,7 +707,7 @@ def initializedNormalizedResidualField (Cagree : SourceCoefficientAgreement M D)
 
 /-- Initialized correction data, constructed using
 `EulerPacketCorrectionCoefficients.correctionDataOfFields`. -/
-def initializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
+@[expose] def initializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     EulerAllOrderCorrectionData.Data period D.T :=
   EulerPacketCorrectionCoefficients.correctionDataOfFields D period k⁻¹
@@ -738,7 +746,10 @@ theorem initializedNormalizedField_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : �
       (normalComponentMap D.m₀)).WordBound 6 (4*L.R) (normal L.R S.H0 BC.multiplierCost/k) 0 := by
   have hh := (initializedPacket_normal_bound M D hTime τ hτ hτT B δ hδ ξ hs α L H NB W LM WM BC
     hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase).changeTime hTime
-  exact hh.ofRawEq _ (fun _ _ _ => rfl)
+  exact hh.ofRawEq
+    ((initializedNormalizedField M D hTime τ hτ hτT B δ hδ ξ hs α N k).map
+      (normalComponentMap D.m₀))
+    (fun _ _ _ => rfl)
 
 theorem initializedNormalizedResidualField_bound (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k X : ℝ) (hk : 4 ≤ k)

@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -188,6 +188,7 @@ instance : construction.Finite V where
     · exact ⟨⟪sndIdx v, i, x⟫ + 1, Or.inr ⟨v, i, x, rfl, h, by simp⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def Graph : V → Prop := construction.fixedPoint ![]
 
 section «lp_section_3»
@@ -606,6 +607,7 @@ section «lp_section_8»
 open Len
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def len (v : V) : V := construction.result ![] v
 
 @[simp] lemma len_nil : len (0 : V) = 0 := by simp [len, construction]
@@ -746,6 +748,7 @@ section «lp_section_10»
 open ListMax
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def listMax (v : V) : V := construction.result ![] v
 
 @[simp] lemma listMax_nil : listMax (0 : V) = 0 := by simp [listMax, construction]
@@ -842,6 +845,7 @@ section «lp_section_12»
 open TakeLast
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def takeLast (v k : V) : V := construction.result ![k] v
 
 @[simp] lemma takeLast_nil : takeLast (0 : V) k = 0 := by simp [takeLast, construction]
@@ -938,6 +942,7 @@ section «lp_section_14»
 open Concat
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def concat (v z : V) : V := construction.result ![z] v
 
 @[simp] lemma concat_nil (z : V) : concat 0 z = ?[z] := by simp [concat, construction]
@@ -1117,6 +1122,7 @@ def _root_.LO.Arith.repeatVec.construction : PR.Construction V repeatVec.bluepri
   succ_defined := by intro v; simp [repeatVec.blueprint]
 
 /-- `repeatVec x k = x ∷ x ∷ x ∷ ... k times ... ∷ 0` -/
+@[expose]
 def repeatVec (x k : V) : V := repeatVec.construction.result ![x] k
 
 @[simp] lemma repeatVec_zero (x : V) : repeatVec x 0 = 0 := by
@@ -1195,6 +1201,7 @@ section «lp_section_22»
 open VecToSet
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def vecToSet (v : V) : V := construction.result ![] v
 
 @[simp] lemma vecToSet_nil : vecToSet (0 : V) = ∅ := by simp [vecToSet, construction]

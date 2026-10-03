@@ -46,7 +46,7 @@ domain and codomain to be complete (so that the adjoint exists); this is automat
 dimensions.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

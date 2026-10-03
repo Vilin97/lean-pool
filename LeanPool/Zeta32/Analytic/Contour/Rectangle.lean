@@ -15,7 +15,7 @@ Proof: `π²/sin²(πt) = -(π cot πt)'`, so by the fundamental theorem of calc
 four edges the boundary integral equals that of `F'(t) π cot(πt)`, which has the single
 simple pole `t = 1` in the rectangle with residue `F'(1)`. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology
 open scoped Interval
@@ -25,6 +25,7 @@ namespace Zeta32.Analytic.Contour
 noncomputable section
 
 /-- `K(t) = π²/sin²(πt)`. -/
+@[expose]
 def Kc (t : ℂ) : ℂ := (Real.pi : ℂ) ^ 2 / Complex.sin ((Real.pi : ℂ) * t) ^ 2
 
 /-- `π cot(πt)`. -/
@@ -32,6 +33,7 @@ def cotK (t : ℂ) : ℂ :=
   (Real.pi : ℂ) * Complex.cos ((Real.pi : ℂ) * t) / Complex.sin ((Real.pi : ℂ) * t)
 
 /-- The open strip `0 < Re t < 2`. -/
+@[expose]
 def strip : Set ℂ := {t | 0 < t.re ∧ t.re < 2}
 
 lemma isOpen_strip : IsOpen strip :=
@@ -214,8 +216,10 @@ end Edges
 /-! ### The rectangle `[1/2, 3/2] × [-T, T]` -/
 
 /-- Lower-left corner. -/
+@[expose]
 def zT (T : ℝ) : ℂ := ⟨1/2, -T⟩
 /-- Upper-right corner. -/
+@[expose]
 def wT (T : ℝ) : ℂ := ⟨3/2, T⟩
 
 lemma one_re_mem (T : ℝ) : (1 : ℂ).re ∈ Ioo (zT T).re (wT T).re := by

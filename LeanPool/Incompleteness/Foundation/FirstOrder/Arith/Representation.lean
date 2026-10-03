@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.CobhamR0
 
 /-! # Representation -/
 
-@[expose] public section
+public section
 
 namespace Part
 
@@ -461,6 +461,7 @@ lemma _root_.LO.FirstOrder.Arith.models_code
     Matrix.comp_vecCons', ←Part.eq_some_iff] using models_codeAux hc y v
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 noncomputable def _root_.LO.FirstOrder.Arith.codeOfPartrec' {k} (f : List.Vector ℕ k →. ℕ) :
     Semisentence ℒₒᵣ (k + 1) :=
   code <| Classical.epsilon (fun c ↦ ∀ y v, Semiformula.Evalbm ℕ (y :> v) (code c) ↔
@@ -477,6 +478,7 @@ lemma _root_.LO.FirstOrder.Arith.codeOfPartrec'_spec
   exact Classical.epsilon_spec this y v
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 noncomputable def _root_.LO.FirstOrder.Arith.codeOfRePred (p : ℕ → Prop) : Semisentence ℒₒᵣ 1 :=
   let f : ℕ →. Unit := fun a ↦ Part.assert (p a) fun _ ↦ Part.some ()
   (codeOfPartrec' (fun v ↦ (f (v.get 0)).map fun _ ↦ 0))/[‘0’, #0]

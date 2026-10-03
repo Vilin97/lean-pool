@@ -16,7 +16,7 @@ packages the only finite-set calculation it needs: a strict total chip versus
 boundary inequality produces the pointwise witness required by `qReduced`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

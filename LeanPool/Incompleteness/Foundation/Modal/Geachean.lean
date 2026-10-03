@@ -14,7 +14,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Geachean -/
 
-@[expose] public section
+public section
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -29,7 +29,7 @@ structure Geachean.Taple where
   n : ℕ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Geachean (t : Geachean.Taple) (R : Rel α α) := ∀ {x y z :
+@[expose] def Geachean (t : Geachean.Taple) (R : Rel α α) := ∀ {x y z :
     α}, (R.iterate t.i x y) ∧ (R.iterate t.j x z) → ∃ u, (R.iterate t.m y u) ∧ (R.iterate t.n z u)
 
 
@@ -96,4 +96,4 @@ end Geachean
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def MultiGeachean (G : Set Geachean.Taple) (R : Rel α α) := ∀ g ∈ G, Geachean g R
+@[expose] def MultiGeachean (G : Set Geachean.Taple) (R : Rel α α) := ∀ g ∈ G, Geachean g R

@@ -34,7 +34,7 @@ From these, `main_estimate` proves Theorem 2.1 with decay rate `c = -800 (A_eff 
 place of the paper's `139/5`. This suffices for the irrationality criterion.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology
 

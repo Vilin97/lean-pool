@@ -62,7 +62,7 @@ gives a product of `M - 1`. Casting back to rationals and cancelling the
 nonzero scaling factors concludes the proof.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.Algebra
 

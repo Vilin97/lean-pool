@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Completeness.Corollaries
 
 /-! # CobhamR0 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -136,7 +136,7 @@ $\omega + 1$ (the structure of order type $\omega + 1$) is a models of $\mathsf{
 namespace Countermodel
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def OmegaAddOne := Option ℕ
+@[expose] def OmegaAddOne := Option ℕ
 
 namespace OmegaAddOne
 

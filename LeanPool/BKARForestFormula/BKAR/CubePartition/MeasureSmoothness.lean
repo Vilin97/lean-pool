@@ -18,7 +18,7 @@ finite sum of its closed ordered sector contributions, with sector overlaps
 null by the collision-hyperplane theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

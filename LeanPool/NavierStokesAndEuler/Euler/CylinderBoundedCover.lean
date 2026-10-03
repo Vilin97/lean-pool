@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderTimeRegularity
 continuous. This construction uses the cylinder norm, never an L² norm on
 the full real covering space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,7 +42,7 @@ synthesis. -/
 local instance instCylinderBoundedCover4 : NormedSpace ℝ (LiftTangent →ᵇ Space) := inferInstance
 
 /-- Cover, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
-def cover (u : SobolevSpace P 3) : LiftTangent →ᵇ Space :=
+@[expose] def cover (u : SobolevSpace P 3) : LiftTangent →ᵇ Space :=
   BoundedContinuousFunction.ofNormedAddCommGroup
     (fun x => EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x) u)
     ((EulerSobolevPointEvaluation.representative_continuous P u).comp
@@ -51,7 +51,7 @@ def cover (u : SobolevSpace P 3) : LiftTangent →ᵇ Space :=
     (fun x => EulerSobolevPointEvaluation.representative_bound P u (coveringMap P x))
 
 @[simp] theorem cover_apply (u : SobolevSpace P 3) (x : LiftTangent) :
-    cover P u x = EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x) u := rfl
+    cover P u x = EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x) u := by rfl
 
 theorem cover_norm_le (u : SobolevSpace P 3) :
     ‖cover P u‖ ≤ sobolevEmbeddingConstant P 3 * ‖u‖ := by
@@ -61,7 +61,7 @@ theorem cover_norm_le (u : SobolevSpace P 3) :
   exact EulerSobolevPointEvaluation.representative_bound P u (coveringMap P x)
 
 /-- Cover linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def coverLinear : SobolevSpace P 3 →ₗ[ℝ] (LiftTangent →ᵇ Space) where
+@[expose] def coverLinear : SobolevSpace P 3 →ₗ[ℝ] (LiftTangent →ᵇ Space) where
   toFun := cover P
   map_add' u v := by
     apply BoundedContinuousFunction.ext
@@ -73,7 +73,7 @@ def coverLinear : SobolevSpace P 3 →ₗ[ℝ] (LiftTangent →ᵇ Space) where
     exact (EulerSobolevPointEvaluation.pointEvaluation P (coveringMap P x)).map_smul c u
 
 /-- Cover map, bundling `toLinearMap`, `cont`. -/
-def coverMap : SobolevSpace P 3 →L[ℝ] (LiftTangent →ᵇ Space) where
+@[expose] def coverMap : SobolevSpace P 3 →L[ℝ] (LiftTangent →ᵇ Space) where
   toLinearMap := coverLinear P
   cont := AddMonoidHomClass.continuous_of_bound (coverLinear P)
     (sobolevEmbeddingConstant P 3) (cover_norm_le P)
@@ -100,7 +100,7 @@ synthesis. -/
 local instance instCylinderBoundedCover8 : NormedSpace ℝ C(K, LiftTangent →ᵇ Space) := inferInstance
 
 /-- Cover path map, given by `(coverMap P).compLeftContinuous ℝ K`. -/
-def coverPathMap : C(K, SobolevSpace P 3) →L[ℝ] C(K, LiftTangent →ᵇ Space) :=
+@[expose] def coverPathMap : C(K, SobolevSpace P 3) →L[ℝ] C(K, LiftTangent →ᵇ Space) :=
   (coverMap P).compLeftContinuous ℝ K
 
 theorem coverPathMap_norm_le :
@@ -114,6 +114,7 @@ theorem coverPathMap_norm_le :
     (mul_le_mul_of_nonneg_left (p.norm_coe_le_norm t) (sobolevEmbeddingConstant_nonneg P 3))
 
 /-- Cover path, given by `coverPathMap P (sobolevPath P 3 p hp)`. -/
+@[expose]
 def coverPath (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
     C(K, LiftTangent →ᵇ Space) := coverPathMap P (sobolevPath P 3 p hp)
@@ -121,7 +122,7 @@ def coverPath (p : C(K, LiftL2 P))
 @[simp] theorem coverPath_apply (p : C(K, LiftL2 P))
     (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
     (t : K) (x : LiftTangent) :
-    coverPath P p hp t x = pointField P p hp t (coveringMap P x) := rfl
+    coverPath P p hp t x = pointField P p hp t (coveringMap P x) := by rfl
 
 /-- Cover orbit, given by `coverPathMap P (sobolevOrbit P 3 p hp a)`. -/
 def coverOrbit (p : C(K, LiftL2 P))

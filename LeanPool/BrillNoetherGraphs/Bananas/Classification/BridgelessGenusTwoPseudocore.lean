@@ -23,7 +23,7 @@ vertices; bivalent semantic-loop markers are retained by the pseudocore
 construction rather than accidentally suppressed.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

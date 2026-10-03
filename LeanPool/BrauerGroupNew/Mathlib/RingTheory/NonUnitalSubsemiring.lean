@@ -14,4 +14,4 @@ public import LeanPool.BrauerGroupNew.Mathlib.RingTheory.NonUnitalSubsemiring.De
 Import index for the Brauer group formalization.
 -/
 
-@[expose] public section
+public section

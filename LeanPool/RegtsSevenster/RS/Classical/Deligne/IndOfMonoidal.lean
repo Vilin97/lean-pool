@@ -48,7 +48,7 @@ and `rightUnitor_hom_unit_app` fields of Mathlib's
 `CategoryTheory.MonoidalCategory.LawfulDayConvolutionMonoidalCategoryStruct`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

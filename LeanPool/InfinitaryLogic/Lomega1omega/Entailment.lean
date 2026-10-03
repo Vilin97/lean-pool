@@ -17,7 +17,7 @@ base structure by constant interpretations, which no empty carrier admits).
 `Language.{0,0}` throughout, per the arc's D2 freeze.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -27,12 +27,12 @@ variable {L : Language.{0, 0}}
 
 /-- **Semantic entailment from a theory** (the primitive form): every nonempty `Type 0` model
 of `T` realizes `ψ`. -/
-def Theoryω.Entails (T : L.Theoryω) (ψ : L.Sentenceω) : Prop :=
+@[expose] def Theoryω.Entails (T : L.Theoryω) (ψ : L.Sentenceω) : Prop :=
   ∀ (M : Type) [L.Structure M] [Nonempty M], T.Model M → Sentenceω.Realize ψ M
 
 /-- **Semantic entailment between sentences** — the headline convention, derived from the
 set-level primitive. -/
-def Sentenceω.Entails (φ ψ : L.Sentenceω) : Prop :=
+@[expose] def Sentenceω.Entails (φ ψ : L.Sentenceω) : Prop :=
   Theoryω.Entails {φ} ψ
 
 namespace Theoryω

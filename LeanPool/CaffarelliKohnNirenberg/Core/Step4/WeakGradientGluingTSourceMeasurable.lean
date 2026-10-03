@@ -15,7 +15,7 @@ restricted to the fixed time window and spatial ball before the completed
 operators are selected.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal BigOperators Topology

@@ -47,7 +47,7 @@ Dhar calculation by a genus-two one with two frozen endpoints.
 may use this directly.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gluing
 

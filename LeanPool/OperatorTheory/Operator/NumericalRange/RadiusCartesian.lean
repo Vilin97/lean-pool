@@ -16,7 +16,7 @@ The selfadjoint and skew-adjoint numerators of an operator are each bounded
 in norm by twice its numerical radius.
 -/
 
-@[expose] public section
+public section
 
 open Complex ContinuousLinearMap
 open scoped InnerProductSpace InnerProduct

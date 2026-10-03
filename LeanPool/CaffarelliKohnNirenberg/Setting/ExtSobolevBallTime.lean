@@ -23,7 +23,7 @@ formalizes that time estimate on Euclidean balls.  Clauses (i)--(iii) of the
 external input are independent and are not changed here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

@@ -12,7 +12,7 @@ public import Mathlib.Tactic.ToAdditive
 # LeanPool.Polylean.ConjInvLength.LengthBound
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 /-- The four generators used for words in the conjugation-invariant length example. -/
@@ -96,7 +96,7 @@ termination_by l => l.length
 namespace Word
 
 /-- Conjugate a word by a letter. -/
-def conj : Word → Letter → Word := fun w l => [l] ++ w ++ [l⁻¹]
+@[expose] def conj : Word → Letter → Word := fun w l => [l] ++ w ++ [l⁻¹]
 
 end Word
 

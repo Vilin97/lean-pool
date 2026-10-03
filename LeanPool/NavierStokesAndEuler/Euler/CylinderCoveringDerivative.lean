@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SmoothLimit
 
 /-! Exact ordinary derivatives of the raw covering field of a smooth cylinder representative. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

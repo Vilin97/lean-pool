@@ -33,7 +33,7 @@ that die after the projection keep dying
 `modPowAlg_compat` follows.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

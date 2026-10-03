@@ -21,7 +21,7 @@ Semantic loops in either genus are discharged uniformly after fossilization
 by splitting off a rigid genus-one wedge factor.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan
 
 open Utilities

@@ -21,7 +21,7 @@ laws assemble the colimit into a commutative algebra through the
 generic chain kit.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,6 +34,7 @@ variable {D : Type u}
 
 /-- The stages of the local splitting chain: the plain symmetric
 powers, one letter up. -/
+@[expose]
 noncomputable def splitStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] [Linear ℂ D]
@@ -43,6 +44,7 @@ noncomputable def splitStage
 
 /-- The seed of the local splitting chain: the point, in the
 singleton power. -/
+@[expose]
 noncomputable def splitSeed
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] [Linear ℂ D]
@@ -51,6 +53,7 @@ noncomputable def splitSeed
 
 /-- The transition of the local splitting chain: multiplication
 by the seed. -/
+@[expose]
 noncomputable def splitDelta
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -64,6 +67,7 @@ noncomputable def splitDelta
     symMul (𝟙_ D) Y (n + 1) 1
 
 /-- The stage multiplication of the local splitting chain. -/
+@[expose]
 noncomputable def splitMu
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -78,6 +82,7 @@ noncomputable def splitMu
 
 /-- The stage units of the local splitting chain: the powers of
 the point. -/
+@[expose]
 noncomputable def splitUnitStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -384,6 +389,7 @@ section Colimit
 
 /-- **The local splitting algebra**: the colimit of the chain of
 symmetric powers along multiplication by the point. -/
+@[expose]
 noncomputable def splitAlgebra
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -393,6 +399,7 @@ noncomputable def splitAlgebra
   chainColimit (splitStage Y) (splitDelta Y pt)
 
 /-- The unit of the local splitting algebra: the included seed. -/
+@[expose]
 noncomputable def splitAlgebraUnit
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -406,7 +413,7 @@ noncomputable def splitAlgebraUnit
 /-- **The local splitting algebra as a monoid object**: the unit is
 the included seed and the multiplication is assembled from the stage
 multiplications through the chain kit. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def splitAlgebraMonObj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

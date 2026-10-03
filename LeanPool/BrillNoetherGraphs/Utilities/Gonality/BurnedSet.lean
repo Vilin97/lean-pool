@@ -42,7 +42,7 @@ No algorithm, no termination proof, no fuel.  `maximalLegal` is `noncomputable`
 and is only ever used propositionally; never `decide` it (blueprint risk R2).
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 
@@ -61,6 +61,7 @@ noncomputable def maximalLegal (G : CFGraph) (D : CFDiv G) (q : G.V) :
 
 /-- The burned set of `(G, D, q)`: the complement of the maximal legal set.
 This is what Dhar's burning algorithm computes. -/
+@[expose]
 noncomputable def burned (G : CFGraph) (D : CFDiv G) (q : G.V) : Finset G.V :=
   (maximalLegal G D q)ᶜ
 

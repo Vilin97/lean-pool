@@ -21,7 +21,7 @@ idempotent generator `e` of `I` and shows that the corner subring `eRe` is a
 division subring.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.ArtinWedderburn
 

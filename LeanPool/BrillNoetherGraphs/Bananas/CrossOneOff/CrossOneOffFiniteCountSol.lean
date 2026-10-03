@@ -19,19 +19,21 @@ immediately preceding row.  This is the combinatorial skeleton behind the
 count `choose (g - 1) 2 + g / (n - 1)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
 open Utilities
 
 /-- The preferred row with compressed coordinate `x`. -/
+@[expose]
 def crossOneOffColumnPosition (n x : ℕ) : ℕ :=
   x + x / (n - 1)
 
 /-- A row strictly before the preferred row over `x`, chosen so that it is
 never a multiple of `n`.  At a multiple of `n-1` it is the exceptional
 `-1`-residue row; otherwise it is the preferred row itself. -/
+@[expose]
 def crossOneOffPredecessorPosition (n x : ℕ) : ℕ :=
   if x % (n - 1) = 0 then crossOneOffColumnPosition n x - 1
   else crossOneOffColumnPosition n x
@@ -421,6 +423,7 @@ private theorem crossOneOffTriangularPair_mem
 
 /-- The additional adjacent high-to-low inversion over the `i`th complete
 column. -/
+@[expose]
 def crossOneOffAdjacentPair (n : ℕ) (i : ℕ) : ℕ × ℕ :=
   ((i + 1) * n - 1, (i + 1) * n)
 

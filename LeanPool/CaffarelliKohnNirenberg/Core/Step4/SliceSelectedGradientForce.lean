@@ -21,7 +21,7 @@ the force section; this file only converts it into the weak-gradient shape
 that display (3.5) consumes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

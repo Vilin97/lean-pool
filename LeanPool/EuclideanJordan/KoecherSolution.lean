@@ -72,7 +72,7 @@ reference library, and discharges the theorem from `EuclideanJordan.orderIso_pre
 local `IsSoS` is the same existential as `EuclideanJordan.IsSoS`, so the bridge is definitional.
 -/
 
-@[expose] public section
+public section
 
 namespace KoecherAlfsenShultz
 

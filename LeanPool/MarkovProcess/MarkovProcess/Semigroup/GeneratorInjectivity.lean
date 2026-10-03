@@ -24,7 +24,7 @@ Since `S` is contractive, an eigenvalue `μ > 0` therefore forces `f = 0`
 `(μ - L)⁻¹` is a well-defined operator.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

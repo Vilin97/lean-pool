@@ -17,7 +17,7 @@ which case the transition is idle, or it is added by the protected one-point
 extension.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

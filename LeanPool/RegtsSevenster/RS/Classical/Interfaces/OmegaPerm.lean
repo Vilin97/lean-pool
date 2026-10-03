@@ -47,7 +47,7 @@ the symmetric-group algebra to `End (ω.obj (SkeinObj.mk n))`, and
 agreeing on the generators `σ` makes it that composite.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

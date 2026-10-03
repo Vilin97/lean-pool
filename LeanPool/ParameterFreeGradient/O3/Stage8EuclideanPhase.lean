@@ -20,12 +20,12 @@ minimizer, query, two oracle observations, literal potential, and guard are
 deterministic definitions, while their correctness properties are theorems.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
 /-- The normalized weighted average of an accelerated point and an estimate minimizer. -/
-noncomputable def euclideanBarycenter {d : ℕ} (A a : ℝ)
+@[expose] noncomputable def euclideanBarycenter {d : ℕ} (A a : ℝ)
     (x z : Vec d) : Vec d :=
   (A + a)⁻¹ • (A • x + a • z)
 
@@ -37,7 +37,7 @@ structure EuclideanEstimateState (d : ℕ) where
   cumulativeGradient : Vec d
 
 /-- The recursively updated Euclidean accelerated iterate and accumulated gradient. -/
-noncomputable def euclideanEstimateState {d : ℕ}
+@[expose] noncomputable def euclideanEstimateState {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) : ℕ → EuclideanEstimateState d
   | 0 => ⟨P.x0, 0⟩
   | k + 1 =>
@@ -53,20 +53,20 @@ noncomputable def euclideanEstimateState {d : ℕ}
       ⟨euclideanBarycenter A a state.accelerated zNext, sNext⟩
 
 /-- The minimizer of the quadratic estimate potential at iteration `k`. -/
-noncomputable def euclideanEstimateMinimizer {d : ℕ}
+@[expose] noncomputable def euclideanEstimateMinimizer {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : Vec d :=
   Stage8EuclideanMinimizer.euclideanPsiMinimizer M P.x0
     (euclideanEstimateState P M k).cumulativeGradient
 
 /-- The Euclidean oracle query obtained by averaging the iterate and estimate minimizer. -/
-noncomputable def euclideanEstimateQuery {d : ℕ}
+@[expose] noncomputable def euclideanEstimateQuery {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : Vec d :=
   euclideanBarycenter (euclideanA k) (euclideanWeight (euclideanA k))
     (euclideanEstimateState P M k).accelerated
     (euclideanEstimateMinimizer P M k)
 
 /-- The value-gradient observation at the Euclidean estimate query. -/
-noncomputable def euclideanEstimateObservation {d : ℕ}
+@[expose] noncomputable def euclideanEstimateObservation {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : Observation d :=
   P.oracle.observe (euclideanEstimateQuery P M k)
 
@@ -82,7 +82,7 @@ noncomputable def euclideanEstimateConstant {d : ℕ}
           pairing observation.gradient (P.x0 - observation.point))
 
 /-- The literal recursively accumulated source potential. -/
-noncomputable def euclideanEstimateFunction {d : ℕ}
+@[expose] noncomputable def euclideanEstimateFunction {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) : ℕ → Vec d → ℝ
   | 0 => fun x => M / 2 * (lpNorm 2 (x - P.x0)) ^ (2 : ℕ)
   | k + 1 => fun x =>
@@ -93,11 +93,12 @@ noncomputable def euclideanEstimateFunction {d : ℕ}
           pairing observation.gradient (x - observation.point))
 
 /-- The Euclidean estimate potential evaluated at its minimizer. -/
-noncomputable def euclideanEstimateMinimum {d : ℕ}
+@[expose] noncomputable def euclideanEstimateMinimum {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : ℝ :=
   euclideanEstimateFunction P M k (euclideanEstimateMinimizer P M k)
 
 /-- The upper-model guard between the estimate query and the next accelerated iterate. -/
+@[expose]
 noncomputable def euclideanEstimateGuard {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (k : ℕ) : GuardCheck :=
   let atY := euclideanEstimateObservation P M k
@@ -108,6 +109,7 @@ noncomputable def euclideanEstimateGuard {d : ℕ}
     ((lpNorm 2 (xNext - atY.point)) ^ (2 : ℕ)) M
 
 /-- Every Euclidean upper-model guard before the given horizon is accepted. -/
+@[expose]
 def EuclideanEstimateAccepted {d : ℕ}
     (P : AdmissibleInstance d 2) (M : ℝ) (m : ℕ) : Prop :=
   ∀ k, k < m → (euclideanEstimateGuard P M k).Holds

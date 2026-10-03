@@ -42,7 +42,7 @@ marginals and independent increments, not through a projective family.  Only one
 Levy characterization, quadratic variation, or stochastic integral is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -107,6 +107,7 @@ end MarkovProperty
 section Increments
 
 /-- The increments of a finite coordinate path, the first one measured from a base point. -/
+@[expose]
 def incrementsMap : {n : ℕ} → ℝ → (Fin n → ℝ) → (Fin n → ℝ)
   | 0, _, _ => fun i ↦ i.elim0
   | _ + 1, x, path => Fin.cons (path 0 - x) (incrementsMap (path 0) (Fin.tail path))
@@ -161,6 +162,7 @@ theorem measurable_incrementsMap {n : ℕ} :
 
 /-- The successive time increments of a finite family of times, the first one measured from
 time zero. -/
+@[expose]
 def timeIncrements : {n : ℕ} → (Fin n → NNReal) → (Fin n → NNReal)
   | 0, _ => fun i ↦ i.elim0
   | _ + 1, s => Fin.cons (s 0) (timeIncrements (fun i ↦ s i.succ - s 0))

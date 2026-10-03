@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.WeightedConvolution
 /-! Actual external pressure commutators controlled by the shifted pressure sum below the velocity
 cutoff. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,7 +25,7 @@ open Finset EulerPacketWeights EulerWeightedConvolution EulerGevrey
   EulerJetProductBounds
 
 /-- Remove the coefficient's zeroth order, which is absent from every commutator. -/
-def positivePart (A : ℕ → ℝ) (n : ℕ) : ℝ := if n = 0 then 0 else A n
+@[expose] def positivePart (A : ℕ → ℝ) (n : ℕ) : ℝ := if n = 0 then 0 else A n
 
 /-- Delay a pressure sequence by one order so the external radius-loss convolution has the source's
 exact index. -/

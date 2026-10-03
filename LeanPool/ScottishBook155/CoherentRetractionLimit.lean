@@ -16,7 +16,7 @@ stage. A coherent family of contractive projections to an earlier component
 extends to a contractive linear map from the completed direct limit.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -100,6 +100,7 @@ structure ProjectionSystem where
     project a i x = e i a hia x
 
 /-- The projection system restricted to one fixed component. -/
+@[expose]
 noncomputable def ProjectionSystem.family (P : ProjectionSystem N e) (a : ι) :
     ProjectionFamily N e a where
   project := P.project a
@@ -111,6 +112,7 @@ noncomputable def ProjectionSystem.family (P : ProjectionSystem N e) (a : ι) :
 
 /-- Project a completed-limit vector to component `a` and include it back
 into the completed limit. -/
+@[expose]
 noncomputable def ProjectionSystem.approx (P : ProjectionSystem N e) (a : ι)
     (z : NormedDirectLimit.CompletedCarrier N e) :
     NormedDirectLimit.CompletedCarrier N e :=

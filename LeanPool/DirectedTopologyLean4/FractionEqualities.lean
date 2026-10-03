@@ -11,7 +11,7 @@ public import LeanPool.DirectedTopologyLean4.Fraction
 # LeanPool.DirectedTopologyLean4.FractionEqualities
 -/
 
-@[expose] public section
+public section
 
 namespace FractionEqualities
 

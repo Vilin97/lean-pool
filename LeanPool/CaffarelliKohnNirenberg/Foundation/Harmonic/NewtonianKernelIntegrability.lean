@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Harmonic.NewtonianRepr
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure CKN.Foundation.Parabolic
 

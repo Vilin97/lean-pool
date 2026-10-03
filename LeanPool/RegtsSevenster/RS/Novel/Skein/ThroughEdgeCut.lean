@@ -21,7 +21,7 @@ transports here are what the colouring recursion needs at such a
 cut.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

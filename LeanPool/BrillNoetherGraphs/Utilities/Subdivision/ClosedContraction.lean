@@ -48,7 +48,7 @@ constant along every face reachable this way, and a loop-carrying row is never
 a face of a loopless one.  See the corresponding closed-row proof module.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.ClosedContraction
 

@@ -31,7 +31,7 @@ least two splits a finite tree into two strictly smaller rooted trees meeting on
 word `l₀` number at most those supporting a rooted copy of the tree plus `(t - 2) · |l₀|!`.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph
 
@@ -77,13 +77,13 @@ lemma attach_single_leaf_copy {U V : Type*} (S : SimpleGraph U) (G : SimpleGraph
 /-! Rooted graph copies in permutation-word prefixes and the leaf-root move. -/
 
 /-- A rooted copy supported on the root image and the displayed outer set. -/
-def RootedWordFamily {U V : Type*} [DecidableEq V]
+@[expose] def RootedWordFamily {U V : Type*} [DecidableEq V]
     (S : SimpleGraph U) (r : U) (G : SimpleGraph V) (b : V) (X : Finset V) : Prop :=
   ∃ f : S.Copy G, f r = b ∧ ∀ x, f x ∈ insert b X
 
 /-- The number of cut permutation words of `l₀` supporting a rooted copy of `S` with root at the
 first letter. -/
-noncomputable def rootedWordCount {U V : Type*} [DecidableEq V]
+@[expose] noncomputable def rootedWordCount {U V : Type*} [DecidableEq V]
     (S : SimpleGraph U) (r : U) (G : SimpleGraph V) (l₀ : List V) : ℕ :=
   fullWordCount l₀ G.Adj (RootedWordFamily S r G)
 
@@ -427,11 +427,11 @@ noncomputable def leafRestoreIso {U : Type} (T : SimpleGraph U) (l p : U)
 
 @[simp] lemma leafRestoreIso_inl {U : Type} (T : SimpleGraph U) (l p : U)
     (hlp : T.Adj l p) (honly : ∀ x, T.Adj l x → x = p) (x : ({l}ᶜ : Set U)) :
-    leafRestoreIso T l p hlp honly (Sum.inl x) = x.val := rfl
+    leafRestoreIso T l p hlp honly (Sum.inl x) = x.val := by rfl
 
 @[simp] lemma leafRestoreIso_inr {U : Type} (T : SimpleGraph U) (l p : U)
     (hlp : T.Adj l p) (honly : ∀ x, T.Adj l x → x = p) :
-    leafRestoreIso T l p hlp honly (Sum.inr 0) = l := rfl
+    leafRestoreIso T l p hlp honly (Sum.inr 0) = l := by rfl
 
 /-! The rooted word-count bound for every finite tree. -/
 
@@ -476,6 +476,7 @@ lemma rooted_word_count_base {U V : Type*} [Fintype U] [DecidableEq V]
     (G : SimpleGraph V) (l₀ : List V) :
     fullWordCount l₀ G.Adj (fun _ _ => True) ≤ rootedWordCount T r G l₀ := by
   classical
+  rw [fullWordCount_eq_card, rootedWordCount, fullWordCount_eq_card]
   apply Finset.card_le_card
   intro p hp
   obtain ⟨hl, hk, b, q, he, hm, _⟩ := (mem_fullGoodWordCuts _ _ _ _ _).mp hp

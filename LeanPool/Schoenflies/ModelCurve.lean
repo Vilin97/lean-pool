@@ -58,7 +58,7 @@ subsequence chase establishes, and it is one line here.
   `IsJordanCurve.modelCurve_homeomorph` — Lemma 3.1, first clause.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology unitInterval
 
@@ -124,7 +124,7 @@ theorem segment_neg_one_one : segment ℝ (-1 : ℝ) 1 = Icc (-1) 1 :=
 
 /-- The model curve `S = ∂Q`, the boundary of the square `Q = [-1,1]²`, described by the sup
 norm. -/
-def modelCurve : Set Plane := {x : Plane | Plane.supNorm x = 1}
+@[expose] def modelCurve : Set Plane := {x : Plane | Plane.supNorm x = 1}
 
 /-- The corner `(1, 1)`. -/
 def cornerNE : Plane := Plane.mk 1 1

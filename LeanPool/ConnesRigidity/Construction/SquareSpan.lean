@@ -17,7 +17,7 @@ import Mathlib.Algebra.Algebra.ZMod
 The square span component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace Construction
@@ -32,7 +32,7 @@ abbrev OrderedBasisIndex := Lex (Fin 3 × Nat)
 abbrev OrderedTensorIndex := Lex (OrderedBasisIndex × OrderedBasisIndex)
 
 /-- The ordered monomial basis of the polynomial module. Paper: §2. -/
-noncomputable def orderedBasis : Module.Basis OrderedBasisIndex k A :=
+@[expose] noncomputable def orderedBasis : Module.Basis OrderedBasisIndex k A :=
   (Pi.basis (fun _ => Polynomial.basisMonomials k)).reindex
     ((Equiv.sigmaEquivProd (Fin 3) Nat).trans toLex)
 

@@ -19,7 +19,7 @@ The algebra of `MeasurableBatchLearner`s is closed under:
 
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -149,6 +149,7 @@ hypothesis space is the union of the component spaces. No measurability requirem
 `sel` is imposed at the definition level; the accompanying
 `measurableBatchLearner_concat` theorem adds that hypothesis to derive closure under
 the uniform-measurable family. The construction underlying the monadic `bind`. -/
+@[expose]
 noncomputable def concatLearner
     {X : Type u}
     (L : ℕ → BatchLearner X Bool)

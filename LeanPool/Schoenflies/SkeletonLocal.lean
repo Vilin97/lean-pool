@@ -71,7 +71,7 @@ sectors in aggregate — as one `Plane.cone` over all free directions at once.
   exterior inside a local disk lies, minus `x`, in that point's face.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -173,7 +173,7 @@ segment issuing from `x`.
 Choice-free and stated for an arbitrary set, so that a consumer never has to name a segment
 decomposition of `S`. Being a *set* of unit vectors, its members are automatically pairwise
 distinct — the blueprint's "with pairwise distinct directions". -/
-def localDirs (S : Set Plane) (x : Plane) : Set Plane :=
+@[expose] def localDirs (S : Set Plane) (x : Plane) : Set Plane :=
   {d | Plane.IsDirection d ∧ ∃ ε : ℝ, 0 < ε ∧ segment ℝ x (x + ε • d) ⊆ S}
 
 theorem isDirection_of_mem_localDirs (h : d ∈ localDirs S x) : Plane.IsDirection d := h.1
@@ -302,7 +302,7 @@ of `x` together with the rays leaving `x` in the local directions.
 This one criterion is the whole local picture; the disk formula, the sector description and
 the star-shapedness are all derived from it below, and each therefore holds at every positive
 radius below a local radius (`IsLocalRadius.mono`). -/
-def IsLocalRadius (S : Set Plane) (x : Plane) (r : ℝ) : Prop :=
+@[expose] def IsLocalRadius (S : Set Plane) (x : Plane) (r : ℝ) : Prop :=
   0 < r ∧ ∀ z, dist z x ≤ r → (z ∈ S ↔ z = x ∨ Plane.dir (z - x) ∈ localDirs S x)
 
 theorem IsLocalRadius.pos (h : IsLocalRadius S x r) : 0 < r := h.1

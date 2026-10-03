@@ -56,7 +56,7 @@ not change treewidth, so nothing is lost.
   achievable widths nonempty; `treewidth_le_card_sub_one`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 
@@ -105,6 +105,7 @@ variable {H : SimpleGraph V}
 The subtraction is truncated `ℕ` subtraction, which is harmless: `sup (card - 1)`
 and `sup card - 1` agree in every case, including the degenerate all-bags-empty
 one. -/
+@[expose]
 def width (D : TreeDecomposition H) : ℕ :=
   (Finset.univ.sup fun t : D.Node => (D.bag t).card) - 1
 
@@ -132,6 +133,7 @@ def widthSet (H : SimpleGraph V) : Set ℕ :=
 This is an `sInf` over `ℕ`, which is total; `widthSet_nonempty` (via
 `trivialDecomposition`) is what makes the value meaningful rather than the
 `sInf ∅ = 0` default. -/
+@[expose]
 noncomputable def treewidth (H : SimpleGraph V) : ℕ :=
   sInf (widthSet H)
 

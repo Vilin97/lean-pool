@@ -18,7 +18,7 @@ pairing of the first collar and lower boundary pairing of the second collar are 
 Fox--Neuwirth chain, hence cancel pointwise after regrouping by combined quotient facets.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -197,6 +197,7 @@ noncomputable def relativeCollar :
       D)).toFoxNeuwirthRelativeAffineCollar
 
 /-- Composition of endpoint-identified relative affine collars. -/
+@[expose]
 noncomputable def endpointIdentifiedCollar :
     EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ (max M₀ M₁) (L₀ + L₁ + 1) :=
   ExplicitAffineRelativeCollarComposeDescribed.endpointIdentifiedCollar

@@ -14,7 +14,7 @@ import Mathlib.Analysis.Normed.Operator.Prod
 /-! A genuinely smooth translated bounded-field family lifts to actual mixed cylinder coefficients.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

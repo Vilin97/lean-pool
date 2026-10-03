@@ -20,7 +20,7 @@ proved vector H3 evaluation theorem to this embedding identifies the actual
 scalar L² primitive with the literal normalized periodic integral.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -15,4 +15,4 @@ public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLoca
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section

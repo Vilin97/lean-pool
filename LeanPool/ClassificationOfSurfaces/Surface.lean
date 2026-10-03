@@ -13,7 +13,7 @@ public import Mathlib.Geometry.Manifold.Instances.Real
 This file records the manifold assumptions used by the Lean Eval target.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold
 

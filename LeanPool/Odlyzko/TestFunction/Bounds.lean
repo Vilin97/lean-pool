@@ -18,7 +18,7 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace NumberField.Odlyzko
 

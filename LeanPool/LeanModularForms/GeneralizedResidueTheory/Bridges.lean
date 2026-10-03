@@ -17,7 +17,7 @@ We provide `PiecewiseC1Curve.toPath` and `PiecewiseC1Curve.toContinuousMap` that
 rescale the domain `[a,b]` to the unit interval `[0,1]` via `iccHomeoI`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Topology unitInterval
 
@@ -59,11 +59,11 @@ def toContinuousMap (γ : PiecewiseC1Curve) : C(I, ℂ) :=
 
 /-- `toPath` agrees with the original curve under rescaling. -/
 theorem toPath_apply (γ : PiecewiseC1Curve) (t : I) :
-    γ.toPath t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := rfl
+    γ.toPath t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := by rfl
 
 /-- `toContinuousMap` agrees with the original curve under rescaling. -/
 theorem toContinuousMap_apply (γ : PiecewiseC1Curve) (t : I) :
-    γ.toContinuousMap t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := rfl
+    γ.toContinuousMap t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := by rfl
 
 /-- A closed `PiecewiseC1Curve` gives a loop, i.e., a `Path` from `γ(a)` to itself. -/
 def toLoop (γ : PiecewiseC1Curve) (hc : γ.IsClosed) :

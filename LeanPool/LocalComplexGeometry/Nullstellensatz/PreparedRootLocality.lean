@@ -18,7 +18,7 @@ bridge which allows ambient germ identities to be applied simultaneously to
 every root of a nearby specialized fiber.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology

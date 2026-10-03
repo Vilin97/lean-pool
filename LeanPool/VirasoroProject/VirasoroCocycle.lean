@@ -41,7 +41,7 @@ Witt algebra, Virasoro algebra, Lie algebra cohomology
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -51,6 +51,7 @@ variable (𝕜 : Type*) [Field 𝕜]
 
 /-- A bilinear map version of the Virasoro cocycle.
 (Defining formula: `γ (lgen n) (lgen m) = (n^3 - n) / 12 * δ[n+m,0]`.) -/
+@[expose]
 noncomputable def virasoroCocycleBilin : (WittAlgebra 𝕜) →ₗ[𝕜] (WittAlgebra 𝕜) →ₗ[𝕜] 𝕜 :=
   (lgen 𝕜).constr 𝕜 <| fun n ↦ (lgen 𝕜).constr 𝕜 <| fun m ↦
       if n + m = 0 then (n^3 - n) / 12 else 0
@@ -99,7 +100,7 @@ lemma virasoroCocycleBilin_eq_neg_flip :
 variable [CharZero 𝕜]
 
 /-- The Virasoro cocycle. -/
-noncomputable def virasoroCocycle :
+@[expose] noncomputable def virasoroCocycle :
     LieTwoCocycle 𝕜 (WittAlgebra 𝕜) 𝕜 where
   toBilin := virasoroCocycleBilin 𝕜
   self' X := by

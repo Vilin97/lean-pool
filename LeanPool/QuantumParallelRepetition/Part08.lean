@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part07
 
 /-! # Quantum parallel repetition, part 08 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -107,7 +107,7 @@ theorem exactPermutationOutputUniformExpectation
           denominator numerator normalized nonempty]
 
 /-- The product encoding of exact source alice sample. -/
-def exactSourceAliceSampleTuple
+@[expose] def exactSourceAliceSampleTuple
     {n : ℕ} (D : Finset (Fin n)) (denominator : ℕ)
     (numerator : ExactLocalSamplerIndex X Y D →
       ExactHistoryFlag X Y A B D → ℕ)
@@ -2117,7 +2117,7 @@ theorem exactLocallySampleableLaw_psi_ne_zero_of_ne_zero
     zero_div]
 
 /-- The positive operator-valued measurement implementing dependent block. -/
-def dependentBlockPOVM
+@[expose] def dependentBlockPOVM
     {R C : Type*} [Fintype R] [DecidableEq R] [Fintype C]
     {ι : R → Type*}
     [∀ r, Fintype (ι r)] [∀ r, DecidableEq (ι r)]
@@ -2142,7 +2142,7 @@ def dependentBlockPOVM
         Sigma.mk.injEq, false_and, not_false_eq_true, one_apply_ne]
 
 /-- The positive operator-valued measurement implementing reindexed. -/
-def reindexedPOVM
+@[expose] def reindexedPOVM
     {C d e : Type*} [Fintype C]
     [Fintype d] [Fintype e] [DecidableEq d] [DecidableEq e]
     (basis : d ≃ e) (P : POVM C d) : POVM C e where
@@ -2284,7 +2284,7 @@ def exactSourceGlobalBobPOVM
     actual
 
 /-- The positive operator-valued measurement implementing exact source global catalyst alice. -/
-def exactSourceGlobalCatalystAlicePOVM
+@[expose] def exactSourceGlobalCatalystAlicePOVM
     [DecidableEq A]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (e : ℕ) (a₀ : A) (x : X) :
@@ -2585,7 +2585,7 @@ variable {X Y A B : Type}
 variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 
 /-- The measurement effect for exact source global winning. -/
-def exactSourceGlobalWinningEffect
+@[expose] def exactSourceGlobalWinningEffect
     [DecidableEq A] [DecidableEq B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n)) (a₀ : A) (b₀ : B) (x : X) (y : Y) :
@@ -6826,7 +6826,7 @@ variable [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
 The exact source support preserving classical sampler construction used in the quantum parallel-
 repetition argument.
 -/
-def ExactSourceSupportPreservingClassicalSampler
+@[expose] def ExactSourceSupportPreservingClassicalSampler
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D : Finset (Fin n))
     (base : ExactHistoryFlag X Y A B D)

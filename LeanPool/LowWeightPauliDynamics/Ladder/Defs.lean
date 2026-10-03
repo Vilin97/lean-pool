@@ -47,7 +47,7 @@ inflow from the rung below.
 * `Ladder`: the damped ladder with damping factor `a` and total mass `M`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -67,6 +67,7 @@ right-hand side. With rung `0` distinguished, the model (`PauliString.ladderN`) 
 `N 0 g := ‖O^{(g)}‖_{2,normalized} = ‖O‖_{2,normalized}`, satisfies `reservoir` with equality,
 makes `step` at `m = 1`
 weaker than the true flow bound and hence implied by it, and reads only real rungs at `m ≥ 2`. -/
+@[expose]
 def rungWeight (ko kh m : ℕ) : ℕ := ko + (m - 1) * (kh - 1)
 
 @[simp] lemma rungWeight_one (ko kh : ℕ) : rungWeight ko kh 1 = ko := by

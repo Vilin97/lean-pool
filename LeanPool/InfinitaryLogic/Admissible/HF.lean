@@ -37,7 +37,7 @@ returns Mathlib's canonical model in `Type (max u v)`.  The compatibility theore
 placeholder; nothing here uses it, and nothing here may be proved from it.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

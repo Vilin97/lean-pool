@@ -50,7 +50,7 @@ section
 into every complete Sobolev space are bounded by the closed graph
 theorem, rather than by an assumed derivative estimate. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,7 +117,7 @@ def lift (q : ℕ) : L2 →L[ℝ] SobolevSpace 1 q :=
     exact tendsto_nhds_unique hl hr)
 
 @[simp] theorem lift_apply (q : ℕ) (u : L2) :
-    S.lift q u=ordinarySobolev q (S.op u) (S.smooth u) := rfl
+    S.lift q u=ordinarySobolev q (S.op u) (S.smooth u) := by rfl
 
 /-- Jet map, given by `(ordinaryTensorOperator n).comp (S.lift n)`. -/
 def jetMap (n : ℕ) : L2 →L[ℝ] Lp (Space [×n]→L[ℝ] Space) 2 (volume : Measure Space) :=
@@ -202,7 +202,7 @@ a genuine global flow on a real Hilbert space. Radial normalization
 first gives a globally Lipschitz equation; its conserved norm then
 removes the normalization by a constant rescaling of time. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,7 +339,7 @@ section
 equation. The vector field is a bounded bilinear map and its actual
 L² energy vanishes by noncompact transport cancellation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -419,14 +419,14 @@ def advection : L2 →L[ℝ] L2 →L[ℝ] L2 :=
   S.advectionLinear.mkContinuous₂ S.advectionCost S.advectionLinear_bound
 
 @[simp] theorem advection_apply (u v : L2) :
-    S.advection u v=(advectionField (S.field u) (S.field v)).toLp := rfl
+    S.advection u v=(advectionField (S.field u) (S.field v)).toLp := by rfl
 
 /-- Quadratic, given by `(ContinuousLinearMap.compL ℝ L2 L2 L2 (-S.op)).comp S.advection`. -/
 def quadratic : L2 →L[ℝ] L2 →L[ℝ] L2 :=
   (ContinuousLinearMap.compL ℝ L2 L2 L2 (-S.op)).comp S.advection
 
 @[simp] theorem quadratic_apply (u v : L2) :
-    S.quadratic u v= -S.op (advectionField (S.field u) (S.field v)).toLp := rfl
+    S.quadratic u v= -S.op (advectionField (S.field u) (S.field v)).toLp := by rfl
 
 theorem field_divergence (u : L2) (x : Space) : divergence (S.field u).field x=0 :=
   solenoidal_representative_divergence _ (S.solenoidal u) _ (S.field u).smooth
@@ -449,7 +449,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -543,11 +543,13 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
         exact (hu (s : ℝ)).hasDerivWithinAt) t
     have hi : integral T hT ((-S.op).compLeftContinuous ℝ (Icc (0 : ℝ) T) a) t =
         S.op (z t) := by
+      rw [EulerContinuousTimeIntegral.integral_apply]
       change (∫ r in (0 : ℝ)..(t : ℝ), (-S.op) (extendPath T hT a r))=S.op (z t)
       rw [(-S.op).intervalIntegral_comp_comm
         ((extendPath_continuous T hT a).intervalIntegrable 0 t)]
-      change -S.op (realIntegral T hT a t)=S.op (-realIntegral T hT a t)
-      rw [map_neg]
+      change (-S.op) (realIntegral T hT a t)=S.op (-integral T hT a t)
+      rw [EulerContinuousTimeIntegral.integral_apply,map_neg]
+      simp only [neg_apply]
     have he' := he.trans (congrArg₂ (fun x y : L2 => x + y) hu0 hi)
     simpa only [v,toLp_addField,field_toLp] using he'.symm
   have hvcont : ∀ n, Continuous (fun t => (v t).jetLp n) :=
@@ -588,7 +590,7 @@ section
 
 /-! A true orbit derivative gives a global increment bound for a linear isometric action. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -620,7 +622,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -707,7 +709,7 @@ def mollifier (n : ℕ) : L2 →L[ℝ] L2 :=
     change ‖mollify n u‖ ≤ 1*‖u‖
     simpa only [one_mul] using mollify_norm_le n u)
 
-@[simp] theorem mollifier_apply (n : ℕ) (u : L2) : mollifier n u=mollify n u := rfl
+@[simp] theorem mollifier_apply (n : ℕ) (u : L2) : mollifier n u=mollify n u := by rfl
 
 theorem mollify_translation (n : ℕ) (a : Space) (u : L2) :
     translation a (mollify n u)=mollify n (translation a u) := by
@@ -796,7 +798,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -821,7 +823,7 @@ def regularizerMap (n : ℕ) : L2 →L[ℝ] L2 :=
   solenoidalProjection.comp ((mollifier n).comp solenoidalProjection)
 
 @[simp] theorem regularizerMap_apply (n : ℕ) (u : L2) :
-    regularizerMap n u=solenoidalProjection (mollify n (solenoidalProjection u)) := rfl
+    regularizerMap n u=solenoidalProjection (mollify n (solenoidalProjection u)) := by rfl
 
 theorem regularizerMap_translation (n : ℕ) (a : Space) (u : L2) :
     EulerMeanSolenoidal.translation a (regularizerMap n u) =
@@ -916,7 +918,7 @@ section
 /-! The actual regularized Euler right-hand side converges to the
 projected Euler right-hand side, uniformly on bounded H⁴ sets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1013,7 +1015,7 @@ section
 /-! Actual L² stability of projected Euler with a small additive
 defect. The reference gradient is the only solution coefficient. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1098,7 +1100,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1207,7 +1209,7 @@ section
 /-! A uniform short-time bound for a nonnegative genuine energy with
 a quadratic differential upper bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1262,7 +1264,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1439,7 +1441,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -16,7 +16,7 @@ We define positive Boolean formulas (`PositiveBool`), alternating Büchi automat
 (`ABW`), their run DAGs (`RunDAG`), and the language they accept.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanModelChecking
 
@@ -31,7 +31,7 @@ inductive PositiveBool (Q : Type) where
 
 /-- `PositiveBool.Sat Y f` holds when the set `Y` of atoms satisfies the positive
 Boolean formula `f` (reading atoms as "is a member of `Y`"). -/
-def PositiveBool.Sat {Q} (Y : Set Q) : PositiveBool Q → Prop
+@[expose] def PositiveBool.Sat {Q} (Y : Set Q) : PositiveBool Q → Prop
 | atom q => q ∈ Y
 | true => True
 | false => False
@@ -66,7 +66,7 @@ structure DAG Q extends DAG.Base Q where
   edge_closure : ∀ e ∈ E, e.1 ∈ V ∧ (e.2, e.1.2 + 1) ∈ V
 
 /-- Infinite path, with an arbitrary starting level. -/
-def DAG.path {Q} (G : DAG Q) (p : ℕ → Q) :=
+@[expose] def DAG.path {Q} (G : DAG Q) (p : ℕ → Q) :=
   ∃ n, ∀ i, ((p i, n + i), p (i + 1)) ∈ G.E
 
 /-- A run DAG of the automaton `A` on the word `w`: a `DAG` rooted at the initial
@@ -83,11 +83,11 @@ structure RunDAG {S Q} (A : ABW S Q) (w : ℕ → S) extends DAG Q where
 
 /-- A run DAG is accepting when every infinite path through it visits an
 accepting state infinitely often. -/
-def RunDAG.accepting {S Q} {A : ABW S Q} {w : ℕ → S} (G : RunDAG A w) :=
+@[expose] def RunDAG.accepting {S Q} {A : ABW S Q} {w : ℕ → S} (G : RunDAG A w) :=
   ∀ p, G.path p → ∀ i, ∃ j ≥ i, p j ∈ A.F
 
 /-- The automaton `A` accepts the word `w` when it admits an accepting run DAG. -/
-def ABW.language {S Q} (A : ABW S Q) (w : Nat → S) :=
+@[expose] def ABW.language {S Q} (A : ABW S Q) (w : Nat → S) :=
   ∃ (G : RunDAG A w), G.accepting
 
 end LeanModelChecking

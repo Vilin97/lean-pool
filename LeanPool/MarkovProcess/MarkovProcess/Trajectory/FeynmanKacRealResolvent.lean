@@ -29,7 +29,7 @@ Feynman--Kac resolvent among bounded measurable resolvent families solving the s
 equation at all sufficiently large shifts.  No model-specific realization is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

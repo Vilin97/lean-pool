@@ -25,7 +25,7 @@ the theorems below establish the properties themselves.
   as [LM24].
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Hahn
 
@@ -34,7 +34,7 @@ universe u
 variable (K : Type u) [Field K]
 
 /-- `K((ℝ^{≤0}))`: Hahn series with real exponents `≤ 0` [LM24, §1.2]. -/
-def nonpos : Subring (HahnSeries ℝ K) where
+@[expose] def nonpos : Subring (HahnSeries ℝ K) where
   carrier := {x | x.support ⊆ Set.Iic 0}
   zero_mem' := by simp
   one_mem' := fun _ hg ↦ (HahnSeries.support_single_subset hg).le

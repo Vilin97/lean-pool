@@ -17,7 +17,7 @@ proper points.  These maps preserve reducedness, realized faces, and
 completeness of individual elements.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Rechart
 
@@ -64,6 +64,7 @@ theorem inverseChart_transition {x y : Φ.flag.Node} (h : x ≤ y)
     chart_inverseChart Φ C x q hq]
 
 /-- Map a point in the new coordinates to its original flag point. -/
+@[expose]
 noncomputable def forwardPoint (q : (flag Φ C).Point) : Φ.flag.Point :=
   q.map (SupHom.id _) (fun x ↦ (chart Φ C x).real) (chart_mem_polytope Φ C)
 
@@ -146,6 +147,7 @@ theorem inversePoint_mem_omega {q : Φ.flag.Point} (hq : q ∈ Φ.omega) :
 
 /-- The new decomposition is a subdivision of the old one through its
 coordinate charts. -/
+@[expose]
 noncomputable def subdivisionMap :
     SubdivisionMap Φ (decomposition Φ C hp hinj hcenter) :=
   SubdivisionMap.ofLocalGenerators (SupHom.id _) (fun x ↦ (chart Φ C x).real)

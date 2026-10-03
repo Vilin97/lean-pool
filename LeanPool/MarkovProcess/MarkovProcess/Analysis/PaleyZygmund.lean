@@ -29,7 +29,7 @@ supplied by the second moment through the Cauchy--Schwarz inequality
 Everything is stated for `ℝ≥0∞`-valued functions and carries no integrability side condition.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal
 

@@ -37,7 +37,7 @@ targeted expanded-language equivariance (`carrierEquiv_funMap` under the renamed
 infinitary formula is invariant under the induced automorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 
@@ -46,7 +46,7 @@ namespace Language
 variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J]
 
 /-- The skeleton-constant renaming action of an order automorphism on closed `Λ[[J]]`-terms. -/
-def locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) : Λ[[J]].Term α :=
+@[expose] def locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) : Λ[[J]].Term α :=
   (Λ.lhomWithConstantsMap (e : J → J)).onTerm t
 
 /-- Renaming carries each function symbol's skeleton constant by `Finset.image e`. -/
@@ -213,8 +213,8 @@ noncomputable def LocalEMContext.carrierEquiv (ctx : LocalEMContext Λ J (M := M
 
 theorem LocalEMContext.carrierEquiv_mkClass (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) (t : Λ[[J]].Term Empty) :
-    ctx.carrierEquiv e (ctx.mkClass (t := t)) = ctx.mkClass (t := locJRename Λ J e t) :=
-  rfl
+    ctx.carrierEquiv e (ctx.mkClass (t := t)) = ctx.mkClass (t := locJRename Λ J e t) := by
+  exact rfl
 
 /-- Equivariance of function interpretation under the language renaming induced by `e`: the
 targeted expanded-language fact (the base-reduct automorphism consumes its `Sum.inl` case). -/

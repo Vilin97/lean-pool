@@ -17,7 +17,7 @@ performs that construction at the level of explicit affine cells, quotient facet
 incidence, and endpoint-chain identification.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -33,6 +33,7 @@ variable {p N₀ N₁ M L : Nat}
 variable {hp : Nat.Prime p}
 
 /-- Reflection of the realization cylinder in its interval coordinate. -/
+@[expose]
 def reflectPoint (z : CylinderPoint p) : CylinderPoint p :=
   ⟨z.spatial, ⟨1 - z.time.1, by constructor <;> linarith [z.time.2.1, z.time.2.2]⟩⟩
 
@@ -123,6 +124,7 @@ theorem reverse_facetSetoid_iff
     simpa [reverse_facetSignature] using congrArg reflectPoint (congrFun h i)
 
 /-- Canonical equivalence between reflected and original quotient facets. -/
+@[expose]
 noncomputable def facetEquiv
     (C : RelativeAffineCellSystem hp N₀ N₁ M L) :
     (reverseCells C).Facet ≃ C.Facet :=
@@ -179,6 +181,7 @@ theorem reverse_isUpper_iff_isLower
   · linarith [h i]
 
 /-- Reverse a pointwise relative affine collar. -/
+@[expose]
 noncomputable def reverseCollar
     (C : FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L) :
     FoxNeuwirthRelativeAffineCollar hp N₁ N₀ M L where
@@ -215,6 +218,7 @@ noncomputable def reverseCollar
   simp [reflectPoint, lowerCylinderPoint, upperCylinderPoint]
 
 /-- Reverse an endpoint-identified collar. -/
+@[expose]
 noncomputable def reverseEndpointCollar
     (C : EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ M L) :
     EndpointIdentifiedRelativeAffineCollar hp N₁ N₀ M L where

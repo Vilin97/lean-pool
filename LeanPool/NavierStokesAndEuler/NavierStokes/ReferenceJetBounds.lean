@@ -17,7 +17,7 @@ Coefficient-space norm bounds first give constants independent of the
 normalization C. Only afterwards is the short REF transition chosen.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -268,7 +268,7 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
 end Natural
 
 /-- Hold set, given by `Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1`. -/
-def holdSet : Set Point := Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1
+@[expose] def holdSet : Set Point := Icc (0 : ℝ) 110 ×ˢ Icc (-1 : ℝ) 1
 
 theorem reference_mem (N : ReferencePath.Input) {p : Point} (hX : 0 ≤ p.1)
     (hη : p.2 ∈ Icc (-1 : ℝ) 1) : p ∈ N.radialDomain.carrier := by

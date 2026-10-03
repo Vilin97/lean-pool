@@ -27,7 +27,7 @@ section
 
 /-! The actual continuous-time integral agrees with both Bochner primitive constructions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,6 +44,7 @@ theorem initialPrimitive_pathLp (f : C(Icc (0 : ℝ) T, E)) :
   apply ContinuousMap.ext
   intro t
   rw [initialPrimitive_apply,initialRealPrimitive_eq_integral]
+  rw [EulerContinuousTimeIntegral.integral_apply]
   change (∫ s in (0 : ℝ)..(t : ℝ), zeroExtension T (pathLp T hT f) s) =
     ∫ s in (0 : ℝ)..(t : ℝ), extendPath T hT f s
   rw [intervalIntegral.integral_of_le t.property.1,intervalIntegral.integral_of_le t.property.1]
@@ -132,7 +133,7 @@ need only be orthogonal to the displacement, as for a constrained frame
 equation. No inverse or uniqueness assertion is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -207,7 +208,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -342,7 +343,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

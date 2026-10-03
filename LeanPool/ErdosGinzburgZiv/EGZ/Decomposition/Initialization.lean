@@ -17,7 +17,7 @@ It retains all the input mass and is reduced and minimal.  This is the
 starting object for the refinement argument.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -118,6 +118,7 @@ private theorem initial_localLift (f : FpCoord p d → ℕ) (hf : f ≠ 0)
 
 /-- The singleton initial decomposition retains all of a nonzero input
 weight.  No lower bound on the modulus is needed for its rank-zero lifts. -/
+@[expose]
 noncomputable def initial (f : FpCoord p d → ℕ) (hf : f ≠ 0) :
     FlagDecomposition p d f := by
   classical

@@ -19,7 +19,7 @@ The unrestricted coordinate formula gives the pairing identities for the canonic
 Hilbert-space inclusion directly.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support.Symplectic

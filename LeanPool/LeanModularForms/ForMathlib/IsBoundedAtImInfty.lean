@@ -22,4 +22,4 @@ All of the lemmas formerly defined here have been upstreamed into
 a re-export.
 -/
 
-@[expose] public section
+public section

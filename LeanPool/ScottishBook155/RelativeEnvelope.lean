@@ -26,7 +26,7 @@ admissible functionals to prove that the induced linear copy of the old space
 is isometric.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -47,6 +47,7 @@ structure RelativeFunctional (P : Type u) (N : Type v) [MetricSpace P]
   agree : ∀ n, value (j n) = linear n
 
 /-- Evaluation on all admissible relative functionals, normalized at `j 0`. -/
+@[expose]
 noncomputable def relativeEvaluation {P : Type u} {N : Type v} [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) (p : P) :
     ℓ^∞(RelativeFunctional P N j, ℝ) :=
@@ -92,6 +93,7 @@ theorem relativeEvaluation_target_apply {P : Type u} {N : Type v} [MetricSpace P
   simp [relativeEvaluation_apply, φ.agree]
 
 /-- The distinguished old space maps linearly into the relative coordinate. -/
+@[expose]
 noncomputable def relativeTargetLinear {P : Type u} {N : Type v} [MetricSpace P]
     [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     N →ₗ[ℝ] ℓ^∞(RelativeFunctional P N j, ℝ) where

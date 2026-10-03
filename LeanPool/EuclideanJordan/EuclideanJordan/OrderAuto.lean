@@ -88,7 +88,7 @@ automorphism, and the fixing and cocycle properties (vdW Props 5.5, 5.7).  **Onl
 proved here.**  The other two are cited, not formalized, and nothing below establishes them.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

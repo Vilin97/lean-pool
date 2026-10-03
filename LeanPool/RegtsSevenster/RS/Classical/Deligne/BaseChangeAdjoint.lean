@@ -19,7 +19,7 @@ the base morphism.  This is the working form for the adjointness
 of the split idempotents.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

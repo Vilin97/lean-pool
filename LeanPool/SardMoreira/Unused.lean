@@ -23,7 +23,7 @@ import Mathlib.Tactic.NormNum.GCD
 # LeanPool.SardMoreira.Unused
 -/
 
-@[expose] public section
+public section
 
 open scoped Topology
 open Filter Set
@@ -41,7 +41,7 @@ theorem HasFDerivWithinAt.of_local_leftInverse {𝕜 E F : Type*}
   HasFDerivWithinAt.of_local_left_inverse hg hf ha hfg
 
 /-- Continuous linear equivalence between a submodule of a submodule and its mapped subtype. -/
-@[simps! -fullyApplied apply_coe symm_apply_coe_coe]
+@[expose, simps! -fullyApplied apply_coe symm_apply_coe_coe]
 def Submodule.continuousEquivSubtypeMap {R M : Type*} [Semiring R] [AddCommMonoid M]
     [Module R M] [TopologicalSpace M] (p : Submodule R M) (q : Submodule R p) :
     q ≃L[R] q.map p.subtype where
@@ -50,7 +50,7 @@ def Submodule.continuousEquivSubtypeMap {R M : Type*} [Semiring R] [AddCommMonoi
   continuous_invFun := .codRestrict (.codRestrict continuous_subtype_val _) _
 
 /-- Continuous linear equivalence from the top submodule to the ambient module. -/
-@[simps!]
+@[expose, simps!]
 def Submodule.topContinuousEquiv {R M : Type*} [Semiring R] [AddCommMonoid M]
     [Module R M] [TopologicalSpace M] :
     (⊤ : Submodule R M) ≃L[R] M where
@@ -159,8 +159,7 @@ variable {𝕜 E F G : Type*}
 variable {n : ℕ} (c : OrderedFinpartition n)
 
 /-- Cover `[0, n)`, `n ≠ 0`, by a single subset. -/
-@[simps -fullyApplied]
-def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
+@[expose] def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
   length := 1
   partSize _ := n
   partSize_pos _ := hn.bot_lt
@@ -169,6 +168,14 @@ def single (n : ℕ) (hn : n ≠ 0) : OrderedFinpartition n where
   parts_strictMono := Subsingleton.strictMono _
   disjoint := subsingleton_univ.pairwise _
   cover x := ⟨0, x, rfl⟩
+
+@[simp] theorem single_length (n : ℕ) (hn : n ≠ 0) : (single n hn).length = 1 := by rfl
+
+@[simp] theorem single_partSize (n : ℕ) (hn : n ≠ 0) :
+    (single n hn).partSize = fun _ => n := by rfl
+
+@[simp] theorem single_emb (n : ℕ) (hn : n ≠ 0) :
+    (single n hn).emb = fun _ => id := by rfl
 
 @[simp]
 theorem applyOrderedFinpartition_single (hn : n ≠ 0)

@@ -16,7 +16,7 @@ Generated shared data for the chamber-restricted AR row-06 cover:
 the fixed divisor and the pooled anchor witnesses.  Imported by every
 cell chunk and by the assembling module. -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow06CoverBase
 
@@ -29,12 +29,14 @@ open GenusFiveCoreAtlas GenusFiveClosedCover Configurations
 
 /-- Decode an integer coefficient list as a twelve-variable affine form: the first entry is the
 constant and missing entries are zero. -/
+@[expose]
 def aff (data : List ℤ) : ExplicitPotential.AffineForm 12 where
   fixedValue := data.getD 0 0
   coefficient := fun coordinate => data.getD (coordinate.val + 1) 0
 
 /-- The fixed degree-four row-06 divisor, with two chips at each of the hub vertices two and
 three. -/
+@[expose]
 def rowDivisor : Fin 8 → ℤ := fun vertex =>
   ([0, 0, 2, 2, 0, 0, 0, 0] : List ℤ).getD vertex.val 0
 
@@ -46,6 +48,7 @@ def defaultWitness : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 0 for the row-06 closed cover: `alpha` is -1 at slots 2, and zero
 elsewhere. `beta` is -1 at slots 3; 1 at slots 2, and zero elsewhere. The nonzero affine
 potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness0 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -55,6 +58,7 @@ def witness0 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 1 for the row-06 closed cover: `alpha` is -1 at slots 2; 1 at slots
 3, and zero elsewhere. `beta` is -1 at slots 3, and zero elsewhere. The nonzero affine
 potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness1 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -63,6 +67,7 @@ def witness1 : AnchorWitness 12 8 12 :=
 
 /-- Endpoint-slope witness 2 for the row-06 closed cover: `alpha` is zero. `beta` is zero. The
 affine potential is zero. -/
+@[expose]
 def witness2 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -72,6 +77,7 @@ def witness2 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 3 for the row-06 closed cover: `alpha` is -1 at slots 8, 9, and zero
 elsewhere. `beta` is 1 at slots 9, and zero elsewhere. The nonzero affine potentials occur at
 vertices 4, 5. -/
+@[expose]
 def witness3 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0] : List ℤ).getD edge.val 0,
@@ -81,6 +87,7 @@ def witness3 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 4 for the row-06 closed cover: `alpha` is -1 at slots 8, 9, and zero
 elsewhere. `beta` is 1 at slots 8, and zero elsewhere. The nonzero affine potentials occur at
 vertices 4, 5. -/
+@[expose]
 def witness4 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -90,6 +97,7 @@ def witness4 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 5 for the row-06 closed cover: `alpha` is -1 at slots 4; 1 at slots
 7, and zero elsewhere. `beta` is -1 at slots 7, and zero elsewhere. The nonzero affine
 potentials occur at vertices 6, 7. -/
+@[expose]
 def witness5 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -99,6 +107,7 @@ def witness5 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 6 for the row-06 closed cover: `alpha` is -1 at slots 4, and zero
 elsewhere. `beta` is -1 at slots 7; 1 at slots 4, and zero elsewhere. The nonzero affine
 potentials occur at vertices 6, 7. -/
+@[expose]
 def witness6 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -108,6 +117,7 @@ def witness6 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 7 for the row-06 closed cover: `alpha` is -2 at slots 2; 2 at slots
 3, and zero elsewhere. `beta` is -2 at slots 3, and zero elsewhere. The nonzero affine
 potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness7 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -2, 2, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -117,6 +127,7 @@ def witness7 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 8 for the row-06 closed cover: `alpha` is -2 at slots 2; 1 at slots
 3, and zero elsewhere. `beta` is -1 at slots 3, and zero elsewhere. The nonzero affine
 potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness8 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -2, 1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -126,6 +137,7 @@ def witness8 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 9 for the row-06 closed cover: `alpha` is -2 at slots 2; -1 at slots
 0, 1, and zero elsewhere. `beta` is -1 at slots 3; 1 at slots 0; 2 at slots 2, and zero
 elsewhere. The nonzero affine potentials occur at vertices 1, 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness9 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, -1, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -135,6 +147,7 @@ def witness9 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 10 for the row-06 closed cover: `alpha` is -2 at slots 2; -1 at slots
 0, 1, and zero elsewhere. `beta` is -2 at slots 3; 1 at slots 0; 2 at slots 2, and zero
 elsewhere. The nonzero affine potentials occur at vertices 1, 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness10 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, -1, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -144,6 +157,7 @@ def witness10 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 11 for the row-06 closed cover: `alpha` is -2 at slots 2; -1 at slots
 0, 1; 2 at slots 3, and zero elsewhere. `beta` is -2 at slots 3; 2 at slots 2, and zero
 elsewhere. The nonzero affine potentials occur at vertices 1, 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness11 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, -1, -2, 2, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -153,6 +167,7 @@ def witness11 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 12 for the row-06 closed cover: `alpha` is -1 at slots 4, and zero
 elsewhere. `beta` is -2 at slots 7; 1 at slots 4, and zero elsewhere. The nonzero affine
 potentials occur at vertices 6, 7. -/
+@[expose]
 def witness12 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -162,6 +177,7 @@ def witness12 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 13 for the row-06 closed cover: `alpha` is -1 at slots 4; 1 at slots
 5; 2 at slots 7, and zero elsewhere. `beta` is -2 at slots 7; -1 at slots 5, 6, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness13 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -1, 1, 0, 2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -171,6 +187,7 @@ def witness13 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 14 for the row-06 closed cover: `alpha` is -2 at slots 4; 1 at slots
 5; 2 at slots 7, and zero elsewhere. `beta` is -2 at slots 7; -1 at slots 5, 6, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness14 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -2, 1, 0, 2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -180,6 +197,7 @@ def witness14 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 15 for the row-06 closed cover: `alpha` is -1 at slots 2, 4; 1 at
 slots 3, and zero elsewhere. `beta` is -1 at slots 3, 7; 1 at slots 2, 4, and zero elsewhere.
 The nonzero affine potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness15 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, -1, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 1, 0, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -189,6 +207,7 @@ def witness15 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 16 for the row-06 closed cover: `alpha` is -1 at slots 4; 2 at slots
 7, and zero elsewhere. `beta` is -2 at slots 7; -1 at slots 5, 6; 1 at slots 4, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness16 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 1, -1, -1, -2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -198,6 +217,7 @@ def witness16 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 17 for the row-06 closed cover: `alpha` is -2 at slots 9; -1 at slots
 8, and zero elsewhere. `beta` is 1 at slots 8, and zero elsewhere. The nonzero affine potentials
 occur at vertices 4, 5. -/
+@[expose]
 def witness17 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -1, -2, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -207,6 +227,7 @@ def witness17 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 18 for the row-06 closed cover: `alpha` is -2 at slots 9; -1 at slots
 8, 10, 11, and zero elsewhere. `beta` is 1 at slots 10; 2 at slots 9, and zero elsewhere. The
 nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness18 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -1, -2, -1, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0] : List ℤ).getD edge.val 0,
@@ -216,6 +237,7 @@ def witness18 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 19 for the row-06 closed cover: `alpha` is -2 at slots 8, 9; -1 at
 slots 10, 11, and zero elsewhere. `beta` is 1 at slots 10; 2 at slots 9, and zero elsewhere. The
 nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness19 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -2, -2, -1, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0] : List ℤ).getD edge.val 0,
@@ -225,6 +247,7 @@ def witness19 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 20 for the row-06 closed cover: `alpha` is -1 at slots 2, 8, 9; 1 at
 slots 3, and zero elsewhere. `beta` is -1 at slots 3; 1 at slots 2, 8, and zero elsewhere. The
 nonzero affine potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness20 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 0, 0, -1, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -235,6 +258,7 @@ def witness20 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 21 for the row-06 closed cover: `alpha` is -2 at slots 9; -1 at slots
 8, 10, 11, and zero elsewhere. `beta` is 1 at slots 8; 2 at slots 9, and zero elsewhere. The
 nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness21 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -1, -2, -1, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0] : List ℤ).getD edge.val 0,
@@ -244,6 +268,7 @@ def witness21 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 22 for the row-06 closed cover: `alpha` is -2 at slots 8; -1 at slots
 9, and zero elsewhere. `beta` is 1 at slots 9, and zero elsewhere. The nonzero affine potentials
 occur at vertices 4, 5. -/
+@[expose]
 def witness22 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -2, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0] : List ℤ).getD edge.val 0,
@@ -253,6 +278,7 @@ def witness22 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 23 for the row-06 closed cover: `alpha` is -2 at slots 8; -1 at slots
 9; 1 at slots 10, and zero elsewhere. `beta` is -1 at slots 10, 11; 2 at slots 8, and zero
 elsewhere. The nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness23 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -2, -1, 1, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 2, 0, -1, -1] : List ℤ).getD edge.val 0,
@@ -262,6 +288,7 @@ def witness23 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 24 for the row-06 closed cover: `alpha` is -2 at slots 8, 9; 1 at
 slots 10, and zero elsewhere. `beta` is -1 at slots 10, 11; 2 at slots 8, and zero elsewhere.
 The nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness24 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -2, -2, 1, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 2, 0, -1, -1] : List ℤ).getD edge.val 0,
@@ -271,6 +298,7 @@ def witness24 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 25 for the row-06 closed cover: `alpha` is -1 at slots 2, 8, 9; 1 at
 slots 3, and zero elsewhere. `beta` is -1 at slots 3; 1 at slots 2, 9, and zero elsewhere. The
 nonzero affine potentials occur at vertices 2, 3, 4, 5, 6, 7. -/
+@[expose]
 def witness25 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 0, 0, -1, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, 0, 0, 0, 1, 0, 0] : List ℤ).getD edge.val 0,
@@ -281,6 +309,7 @@ def witness25 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 26 for the row-06 closed cover: `alpha` is -2 at slots 8; -1 at slots
 9, and zero elsewhere. `beta` is -1 at slots 10, 11; 1 at slots 9; 2 at slots 8, and zero
 elsewhere. The nonzero affine potentials occur at vertices 4, 5. -/
+@[expose]
 def witness26 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, -2, -1, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 2, 1, -1, -1] : List ℤ).getD edge.val 0,
@@ -290,6 +319,7 @@ def witness26 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 27 for the row-06 closed cover: `alpha` is -2 at slots 4; 1 at slots
 7, and zero elsewhere. `beta` is -1 at slots 7, and zero elsewhere. The nonzero affine
 potentials occur at vertices 6, 7. -/
+@[expose]
 def witness27 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -299,6 +329,7 @@ def witness27 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 28 for the row-06 closed cover: `alpha` is -2 at slots 4; -1 at slots
 5, 6, and zero elsewhere. `beta` is -1 at slots 7; 1 at slots 5; 2 at slots 4, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness28 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -2, -1, -1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 2, 1, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -308,6 +339,7 @@ def witness28 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 29 for the row-06 closed cover: `alpha` is -2 at slots 4; -1 at slots
 5, 6, and zero elsewhere. `beta` is -2 at slots 7; 1 at slots 5; 2 at slots 4, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness29 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -2, -1, -1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 2, 1, 0, -2, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -317,6 +349,7 @@ def witness29 : AnchorWitness 12 8 12 :=
 /-- Endpoint-slope witness 30 for the row-06 closed cover: `alpha` is -2 at slots 4; -1 at slots
 5, 6; 1 at slots 7, and zero elsewhere. `beta` is -1 at slots 7; 2 at slots 4, and zero
 elsewhere. The nonzero affine potentials occur at vertices 6, 7. -/
+@[expose]
 def witness30 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, -2, -1, -1, 1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
@@ -325,6 +358,7 @@ def witness30 : AnchorWitness 12 8 12 :=
 
 /-- The thirty-one endpoint-slope and affine-potential witnesses shared by the row-06
 closed-cover cells. -/
+@[expose]
 def witnesses : List (AnchorWitness 12 8 12) :=
   [witness0, witness1, witness2, witness3, witness4, witness5, witness6, witness7, witness8,
   witness9, witness10, witness11, witness12, witness13, witness14, witness15, witness16, witness17,

@@ -18,7 +18,7 @@ This constructor uses one extra host node; it does not claim a minimal or
 maximal-clique-indexed host tree.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

@@ -12,7 +12,7 @@ public import Mathlib.Tactic.NormNum.Prime
 its determinant `p^{Σπ} · (unit)`. Blocks: `Ref_{⟨b,i⟩,⟨b,k⟩} = p^{c_b+i+k} w_b V⁰(u^{i+k}
 r_type)`. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

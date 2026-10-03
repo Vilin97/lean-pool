@@ -20,7 +20,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -34,7 +34,7 @@ abbrev n : Nat := N1000000Data.n
 abbrev SymN := Sym n
 
 /-- Symbols `≥ s` inside `Fin n`. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def AvailFrom (s : Nat) : Type :=
   { x : SymN // s ≤ x.1 }
 

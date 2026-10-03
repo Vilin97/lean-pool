@@ -21,7 +21,7 @@ for power series.
 
 -/
 
-@[expose] public section
+public section
 
 open PowerSeries Filter
 open scoped PowerSeries.WithPiTopology

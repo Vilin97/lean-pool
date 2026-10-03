@@ -15,7 +15,7 @@ import LeanPool.QuasiBorelSpaces.MeasureTheory.Sum
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.MeasureTheory.Option`.
 -/
 
-@[expose] public section
+public section
 
 
 variable {A B C : Type*} [MeasurableSpace A] [MeasurableSpace B] [MeasurableSpace C]

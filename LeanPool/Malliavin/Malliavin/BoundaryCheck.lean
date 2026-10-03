@@ -15,7 +15,7 @@ declaration. A changed source signature therefore breaks elaboration, while
 the manifest separately audits the production declaration's axioms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal Real Topology InnerProductSpace

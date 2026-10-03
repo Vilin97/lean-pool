@@ -10,7 +10,7 @@ public import Mathlib.Analysis.RCLike.Basic
 
 /-! The positive semidefinite order and associated norm bounds on Hermitian matrices. -/
 
-@[expose] public section
+public section
 
 namespace HermitianMat
 

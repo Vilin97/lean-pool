@@ -16,7 +16,7 @@ formula the
 arcsine part. Outside `[-a, a]` the inequality reduces to `ψ(q) ≥ 0` for `q ≥ 1`, proved by `ψ′
 ≥ 0`. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set Filter
 open scoped Interval

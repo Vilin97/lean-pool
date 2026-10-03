@@ -21,7 +21,7 @@ corrections as a `FirstCoordinateRecurrence`.  The separate height identity
 supplies the one remaining arithmetic input.
 -/
 
-@[expose] public section
+public section
 
 namespace BooleanIsoperimetry.CoherentGap
 

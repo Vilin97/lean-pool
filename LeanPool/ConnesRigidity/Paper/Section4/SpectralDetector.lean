@@ -12,7 +12,7 @@ The paper-facing spectral-energy form of Zhou's five-detector estimate.
 Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperSpectralDetector
@@ -47,20 +47,20 @@ abbrev CharacterSpace := PaperDualHaar.PaperCharacterSpace
 /--
 The `detectorValue` construction used in the Connes rigidity formalization.
 -/
-def detectorValue (χ : CharacterSpace) (d : D) : k :=
+@[expose] def detectorValue (χ : CharacterSpace) (d : D) : k :=
   BinaryPontryaginDual.characterLinear (M := D) (Additive.toMul χ) d
 
 /-- The squared displacement of a character at one kernel element. Its exact
 detector-mass value is proved immediately below. Paper: §4.
 -/
-def spectralEnergy (μ : ProbabilityMeasure CharacterSpace) (d : D) : ℝ :=
+@[expose] def spectralEnergy (μ : ProbabilityMeasure CharacterSpace) (d : D) : ℝ :=
   ∫ χ : CharacterSpace,
     ‖((ZMod.toCircle (detectorValue χ d) : Circle) : ℂ) - 1‖ ^ 2
       ∂(μ : Measure CharacterSpace)
 
 /-- The mass of the trivial character in the additive dual model. Paper: §4.
 -/
-def trivialAtom (μ : ProbabilityMeasure CharacterSpace) : ℝ :=
+@[expose] def trivialAtom (μ : ProbabilityMeasure CharacterSpace) : ℝ :=
   (μ : Measure CharacterSpace).real ({0} : Set CharacterSpace)
 
 /- Every binary detector value is one of the two field elements. Paper: §4. -/

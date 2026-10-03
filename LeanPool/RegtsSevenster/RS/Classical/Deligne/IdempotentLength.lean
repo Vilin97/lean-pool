@@ -26,7 +26,7 @@ increasing: a collapse of consecutive kernels would factor
 orthogonality, contradicting `f (n + 1) ≠ 0`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

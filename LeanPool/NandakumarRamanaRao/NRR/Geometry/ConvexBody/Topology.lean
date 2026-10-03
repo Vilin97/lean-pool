@@ -28,7 +28,7 @@ imports are required here; the topological lemmas used
 `interior_subset`) are all available transitively.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

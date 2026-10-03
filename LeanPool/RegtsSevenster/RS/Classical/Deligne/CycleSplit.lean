@@ -26,7 +26,7 @@ expansion of a product of binomials, with subsets of the orbit set
 enumerating exactly the invariant subsets of the carrier.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

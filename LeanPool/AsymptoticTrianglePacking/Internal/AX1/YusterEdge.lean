@@ -33,7 +33,7 @@ import Mathlib.Tactic.Bound
 
 /-! # Edge-based triangle hypergraph -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph
 
@@ -43,7 +43,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableR
 
 /-- The **edge-based triangle hypergraph**: ground set = edges of `G` (as `2`-subsets), hyperedges =
 the three edges of each triangle. Its matchings are the edge-disjoint triangle packings (`ν₃`). -/
-def triangleHypergraphE : Finset (Finset (Finset V)) :=
+@[expose] def triangleHypergraphE : Finset (Finset (Finset V)) :=
   (G.cliqueFinset 3).image (fun t => t.powersetCard 2)
 
 /-- **The edge-based triangle hypergraph is 3-uniform** (every triangle has exactly three edges). -/
@@ -145,7 +145,7 @@ theorem triangleHypergraphE_degree (e : Finset V) :
 
 /-- **Y4 — the integral triangle-packing number `ν₃(G)`**: the maximum size of a matching of the
 edge-based triangle hypergraph, i.e. the maximum number of edge-disjoint triangles. -/
-noncomputable def nu3 (G : SimpleGraph V) [DecidableRel G.Adj] : ℕ := by
+@[expose] noncomputable def nu3 (G : SimpleGraph V) [DecidableRel G.Adj] : ℕ := by
   classical
   exact ((triangleHypergraphE G).powerset.filter
     (fun M => IsMatching (triangleHypergraphE G) M)).sup Finset.card
@@ -162,12 +162,12 @@ theorem nu3_ge {M : Finset (Finset (Finset V))}
 
 /-- A **fractional triangle packing**: nonnegative weights on the triangle hyperedges with total
 weight through every edge `≤ 1` (Paper III §2.2). -/
-def IsFracPacking (w : Finset (Finset V) → ℝ) : Prop :=
+@[expose] def IsFracPacking (w : Finset (Finset V) → ℝ) : Prop :=
   (∀ T, 0 ≤ w T) ∧ (∀ T ∉ triangleHypergraphE G, w T = 0)
     ∧ ∀ e : Finset V, ∑ T ∈ (triangleHypergraphE G).filter (fun T => e ∈ T), w T ≤ 1
 
 /-- **Y4 — the fractional triangle-packing number `ν₃*(G)`.** -/
-noncomputable def nu3star (G : SimpleGraph V) [DecidableRel G.Adj] : ℝ :=
+@[expose] noncomputable def nu3star (G : SimpleGraph V) [DecidableRel G.Adj] : ℝ :=
   sSup {x : ℝ | ∃ w, IsFracPacking G w ∧ x = ∑ T ∈ triangleHypergraphE G, w T}
 
 /-- The fractional-packing value set is bounded above by `|H|` (each weight is `≤ 1`). -/

@@ -16,7 +16,7 @@ the local recursion step behind the BKAR forest interpolation formula (see
 `BKAR.Formula`) consumes the branch integral.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

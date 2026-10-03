@@ -17,7 +17,7 @@ so in the `±`-dichotomy of `jtChar_pm_simple` only the positive
 sign survives: the Jacobi–Trudi character IS a native character.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

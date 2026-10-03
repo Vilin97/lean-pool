@@ -20,7 +20,7 @@ is repartitioned exactly, and the physical carrier uses the midpoint of
 each actual lattice-translated slot.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -160,11 +160,13 @@ variable {D h : ℝ}
 
 /-- Geometry, given by `ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det
 label gap`. -/
+@[expose]
 noncomputable def geometry (label : SlotColoring.Label) (gap : ℕ) : CommonCoverSolve.Geometry :=
   ActualSignedGeometry.slotGeometry sys ActualSignedGeometry.vectors_det label gap
 
 /-- The carrier center is the midpoint of the physical slot, including
 this copy's own lattice translation. -/
+@[expose]
 noncomputable def center (label : SlotColoring.Label) (k : Frequency) : Plane :=
   PartitionedCovariance.slotCenter h label + TorusAverages.latticePoint k
 
@@ -227,6 +229,7 @@ theorem width_on_core (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (
 
 /-- Native mask, given by `PartitionedCovariance.cutoff sys.radius z.1 *
 PrimaryCopyBounds.outerCutoff (z.2 / ChartScales.slotLength sys.radius h label.1)`. -/
+@[expose]
 noncomputable def nativeMask (label : SlotColoring.Label) (z : Plane) : ℝ :=
   PartitionedCovariance.cutoff sys.radius z.1 *
     PrimaryCopyBounds.outerCutoff (z.2 / ChartScales.slotLength sys.radius h label.1)
@@ -255,6 +258,7 @@ theorem nativeMask_support (label : SlotColoring.Label) :
 
 /-- The concrete compact native layout used to periodize the same signed
 reference.  Its geometry is the existing selected slot geometry. -/
+@[expose]
 noncomputable def layout (hh : 0 ≤ h) (label : SlotColoring.Label) (hl : 4 ≤ label.1)
     (gap : ℕ) : ActualPeriodizedSignedRealization.Layout where
   geometry _ := geometry sys label gap
@@ -269,7 +273,7 @@ noncomputable def layout (hh : 0 ≤ h) (label : SlotColoring.Label) (hl : 4 ≤
       hl gap
 
 /-- The actual native carrier, retaining the individual lattice midpoint. -/
-noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
+@[expose] noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
     (p pz x0 : ℝ) (F G : PhysicalGraphBounds.Slow → ℝ) : PhysicalWaveSum.CarrierData where
   chart := 0
   center := center (h := h) label k
@@ -281,6 +285,7 @@ noncomputable def carrier (label : SlotColoring.Label) (k : Frequency)
 
 /-- Polar coordinates are used only as a chart for the actual Cartesian
 lift; the free torus coordinate remains unchanged. -/
+@[expose]
 noncomputable def cylinderAt (a : ℝ) (chart : PolarCharts.Index) (x : LiftPoint) : Cylinder :=
   (((PolarCharts.chart a chart (PhysicalGraphBounds.liftXY x)).1,
     (PhysicalGraphBounds.liftZT x, x.2)),
@@ -329,6 +334,7 @@ variable {D h : ℝ}
 
 /-- Dynamic coefficients, constructed using
 `ActualPeriodizedSignedRealization.coefficientsWith`. -/
+@[expose]
 noncomputable def dynamicCoefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) (k : Frequency) :
     WaveCoefficients Cylinder :=
   ActualPeriodizedSignedRealization.coefficientsWith B (layout sys hh label hl gap) V request j
@@ -337,7 +343,7 @@ noncomputable def dynamicCoefficients (request : ℕ → Cylinder → Vec2) (j :
 
 /-- The raw mask carries only the slow cutoff.  The transverse mask and
 Gaussian together form the final compact native cutoff. -/
-noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
+@[expose] noncomputable def dynamicCopyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     PeriodizedWaveBounds.CopyData Cylinder Frequency where
   background := (ActualPeriodizedSignedRealization.periodizedPrimary B (layout sys hh label hl
       gap)).viewBase
@@ -425,11 +431,13 @@ structure SignedFamily (U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow) where
   column : NativeLabel active → Fin 2
 
 /-- Positive index, given by `(L, ⟨1, by decide⟩)`. -/
+@[expose]
 noncomputable def positiveIndex (L : PhysicalWaveSum.BandLabel) : PhysicalWaveSum.WaveIndex 1 :=
   (L, ⟨1, by decide⟩)
 
 /-- Cylinder zero, given by `((PolarCharts.radius (PhysicalGraphBounds.liftXY x),
 (PhysicalGraphBounds.liftZT x, x.2)), 0)`. -/
+@[expose]
 noncomputable def cylinderZero (x : LiftPoint) : Cylinder :=
   ((PolarCharts.radius (PhysicalGraphBounds.liftXY x), (PhysicalGraphBounds.liftZT x, x.2)), 0)
 
@@ -595,6 +603,7 @@ variable {D h : ℝ}
 
 /-- Wave mask, given by `PartitionedCovariance.cutoff sys.radius z.1 * GaussianTailFlat.profile
 (z.2 / ChartScales.slotLength sys.radius h label.1)`. -/
+@[expose]
 noncomputable def waveMask (label : SlotColoring.Label) (z : Plane) : ℝ :=
   PartitionedCovariance.cutoff sys.radius z.1 *
     GaussianTailFlat.profile (z.2 / ChartScales.slotLength sys.radius h label.1)
@@ -618,6 +627,7 @@ theorem waveMask_support (label : SlotColoring.Label) :
   exact hz (by rw [waveMask_eq_compact, hn, zero_mul])
 
 /-- Selected carrier, constructed using `carrier`. -/
+@[expose]
 noncomputable def selectedCarrier (L : NativeLabel f.active) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   carrier (h := h) L.val k
@@ -628,7 +638,7 @@ noncomputable def selectedCarrier (L : NativeLabel f.active) (k : Frequency) :
     (((f.primary L).pulse (f.column L)).phase.G L.val.1)
 
 /-- Extended carrier, with branches according to `hL : L ∈ f.active`. -/
-noncomputable def extendedCarrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
+@[expose] noncomputable def extendedCarrier (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
     PhysicalWaveSum.CarrierData :=
   if hL : L ∈ f.active then
     selectedCarrier (h := h) f ⟨L.val, L.property, hL⟩ k
@@ -644,6 +654,7 @@ theorem extendedCarrier_center (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
   split_ifs <;> rfl
 
 /-- Raw signed amplitude, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
+@[expose]
 noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
@@ -652,7 +663,7 @@ noncomputable def rawSignedAmplitude (L : NativeLabel f.active) (k : Frequency) 
         (layout sys hh L.val L.property 0) (f.column L) L.val.1 k x)
 
 /-- Raw potential, constructed using `CurlClassBounds.inverseCarrier`. -/
-noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
+@[expose] noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) :
     ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
     CurlClassBounds.normalCoefficient
@@ -660,6 +671,7 @@ noncomputable def rawPotential (L : NativeLabel f.active) (k : Frequency) (x : C
       (rawSignedAmplitude sys hh f L k x)
 
 /-- Raw pressure, constructed using `ActualPeriodizedSignedRealization.referenceScalar`. -/
+@[expose]
 noncomputable def rawPressure (L : NativeLabel f.active) (k : Frequency) (x : Cylinder) : ℂ :=
   ActualPeriodizedSignedRealization.referenceScalar (f.primary L) (f.state L).referenceRequest
     (f.column L) L.val.1 x •
@@ -671,6 +683,7 @@ noncomputable def rawPressure (L : NativeLabel f.active) (k : Frequency) (x : Cy
 
 /-- One positive harmonic suffices because the physical field takes the
 real part.  Its native copies retain their individual centers and phases. -/
+@[expose]
 noncomputable def potentialFamily (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap _ := 0
   carrier k L := extendedCarrier (h := h) f L k
@@ -684,7 +697,7 @@ noncomputable def potentialFamily (i : Fin 3) : PhysicalCopyBounds.CopyFamily 1 
   else 0
 
 /-- Pressure family, bundling `gap`, `carrier`, `amplitude`. -/
-noncomputable def pressureFamily : PhysicalCopyBounds.CopyFamily 1 Frequency where
+@[expose] noncomputable def pressureFamily : PhysicalCopyBounds.CopyFamily 1 Frequency where
   gap _ := 0
   carrier k L := extendedCarrier (h := h) f L k
   amplitude k I x := if hL : I.1 ∈ f.active then
@@ -787,6 +800,7 @@ theorem signed_raw_eq_sum (L : NativeLabel f.active) (x : Cylinder) :
 
 /-- Potential map, given by `CurlClassBounds.inverseCarrier K • ((‖N‖ ^ 2)⁻¹ •
 CurlClassBounds.complexCrossLinear (CurlClassBounds.complexify N))`. -/
+@[expose]
 noncomputable def potentialMap (K : ℝ) (N : Space) : ComplexVector →L[ℝ] ComplexVector :=
   CurlClassBounds.inverseCarrier K •
     ((‖N‖ ^ 2)⁻¹ • CurlClassBounds.complexCrossLinear (CurlClassBounds.complexify N))
@@ -1044,6 +1058,7 @@ theorem potential_commonWave (L : NativeLabel f.active) (k : Frequency) (i : Fin
 
 omit G in
 /-- Reference potential coefficient, constructed using `CurlClassBounds.inverseCarrier`. -/
+@[expose]
 noncomputable def referencePotentialCoefficient (L : NativeLabel f.active) (x : Cylinder) :
     ComplexVector :=
   CurlClassBounds.inverseCarrier ((f.primary L).base.frequency L.val.1) •
@@ -1313,6 +1328,7 @@ abbrev Native := CartesianCopySource.Native
 abbrev SourceIndex := PhysicalWaveSum.WaveIndex 1 × Frequency
 
 /-- Native cylinder, given by `((y.1, ((y.2.1.2, y.2.1.1), y.2.2)), 0)`. -/
+@[expose]
 noncomputable def nativeCylinder (y : Native) : Cylinder :=
   ((y.1, ((y.2.1.2, y.2.1.1), y.2.2)), 0)
 
@@ -1332,6 +1348,7 @@ variable {D h : ℝ}
   (hh : 0 ≤ h) {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow} (f : SignedFamily U)
 
 /-- Native potential source, with branches according to `hL : I.1.1 ∈ f.active`. -/
+@[expose]
 noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native) : ComplexVector :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
@@ -1341,7 +1358,7 @@ noncomputable def nativePotentialSource (I : SourceIndex) (n : ℕ) (y : Native)
   else 0
 
 /-- Native pressure source, with branches according to `hL : I.1.1 ∈ f.active`. -/
-noncomputable def nativePressureSource (I : SourceIndex) (n : ℕ) (y : Native) : ℂ :=
+@[expose] noncomputable def nativePressureSource (I : SourceIndex) (n : ℕ) (y : Native) : ℂ :=
   if hL : I.1.1 ∈ f.active then
     if I.1.2.val = 1 ∧ n = I.1.1.val.1 then
       waveMask sys I.1.1.val ((geometry sys I.1.1.val 0).coordinates I.2 y.2.2) •
@@ -1612,6 +1629,7 @@ theorem pressure_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 
 
 /-- The actual vector-potential sum is an axis-preserving copy potential,
 with the same fixed outer radius used by the physical stage estimates. -/
+@[expose]
 noncomputable def copyPotential (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hb : 0 < b) : MixedAxisPreservation.CopyPotential h where
   Copy := Frequency
@@ -1701,6 +1719,7 @@ theorem term_tsupport_labelRegion {H : ℕ} {K : Type*}
 
 
 /-- Native slow, given by `(y.1, (y.2.1.2, y.2.1.1))`. -/
+@[expose]
 noncomputable def nativeSlow (y : Native) : PhysicalGraphBounds.Slow := (y.1, (y.2.1.2, y.2.1.1))
 
 theorem slotSlow_eq_nativeSlow {a : ℝ} (ha : 0 < a) (c : PhysicalWaveSum.CarrierData)
@@ -1721,12 +1740,14 @@ theorem slotSlow_eq_nativeSlow {a : ℝ} (ha : 0 < a) (c : PhysicalWaveSum.Carri
   rfl
 
 /-- Native past, given by `{y | 0 < y.2.1.1}`. -/
+@[expose]
 noncomputable def nativePast : Set Native := {y | 0 < y.2.1.1}
 
 theorem nativePast_open : IsOpen nativePast := isOpen_lt continuous_const continuous_snd.fst.fst
 
 /-- Intersecting native cells with one closed slow support retains their
 actual local finiteness and their disjointness. -/
+@[expose]
 noncomputable def restrictCells {E K : Type*} [TopologicalSpace E]
     (c : PeriodizedWaveBounds.Cells E K) (s : Set E) (hs : IsClosed s) :
     PeriodizedWaveBounds.Cells E K where
@@ -1736,6 +1757,7 @@ noncomputable def restrictCells {E K : Type*} [TopologicalSpace E]
   unique n i j x hi hj := c.unique n i j x hi.1 hj.1
 
 /-- Primitive core as an element of `Set LiftPoint`. -/
+@[expose]
 noncomputable def primitiveCore {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (f : SignedFamily U) (L : PhysicalWaveSum.BandLabel) : Set LiftPoint :=
   {x | ∃ hL : L ∈ f.active,
@@ -1752,6 +1774,7 @@ variable {D h : ℝ}
 /-- The native cell is narrowed only by the support of the original mask
 and target. This avoids asking for phase estimates outside their Prepared
 region and does not change any coefficient. -/
+@[expose]
 noncomputable def localizedPotentialCells (i : Fin 3) :
     PhysicalCopyBounds.SupportCells (potentialFamily sys hh f i) where
   cells L := restrictCells ((potentialCells sys hh f i).cells L)
@@ -1762,6 +1785,7 @@ noncomputable def localizedPotentialCells (i : Fin 3) :
       subset_closure ⟨hL, hm, ht⟩⟩
 
 /-- Localized pressure cells, bundling `cells`, `support`, `obtain`. -/
+@[expose]
 noncomputable def localizedPressureCells :
     PhysicalCopyBounds.SupportCells (pressureFamily sys hh f) where
   cells L := restrictCells ((pressureCells sys hh f).cells L)
@@ -1830,6 +1854,7 @@ noncomputable def pressureCarrier :
 
 /-- Lifted native past, given by `PhysicalClassBounds.cylindricalDomain (a / 4) (2 * b) ∩
 PhysicalClassBounds.cylindricalMap ⁻¹' nativePast`. -/
+@[expose]
 noncomputable def liftedNativePast (a b : ℝ) : Set LiftPoint :=
   PhysicalClassBounds.cylindricalDomain (a / 4) (2 * b) ∩
     PhysicalClassBounds.cylindricalMap ⁻¹' nativePast
@@ -1973,6 +1998,7 @@ theorem componentSourceBounds {ι X : Type} [NormedAddCommGroup X] [NormedSpace 
 
 /-- An identity source chart, with its closure property derived from the
 actual amplitude support. No physical derivative bound is an input. -/
+@[expose]
 noncomputable def identitySourceChart {N : ℕ} {K I : Type}
     (f : PhysicalCopyBounds.CopyFamily N K) (cells : PhysicalCopyBounds.SupportCells f)
     {a b h r Z σ : ℝ} {gap : ℕ} (ha : 0 < a)
@@ -2063,6 +2089,7 @@ variable (hp : NativeProfiles (h := h) f) (hn : NativeRegular sys hh f)
 
 /-- The physical potential estimate is constructed from the literal cut
 native potential, Cartesian rotation, and the actual copy geometry. -/
+@[expose]
 noncomputable def potentialWaveData
     (hs : LocalPhysicalCopyBounds.LocalSourceBounds s h α w (nativePotentialSource sys hh f)) :
     PhysicalStageBounds.WaveData h LiftPoint (Fin 3 × SourceIndex) Frequency (Fin 3) where
@@ -2097,6 +2124,7 @@ noncomputable def potentialWaveData
   frequencies _ := carrier_frequencies f hP hf
 
 /-- Pressure retains its own physical factor, exactly once. -/
+@[expose]
 noncomputable def pressureWaveData
     (hs : LocalPhysicalCopyBounds.LocalSourceBounds s h α w (nativePressureSource sys hh f)) :
     PhysicalStageBounds.WaveData h LiftPoint SourceIndex Frequency Unit where

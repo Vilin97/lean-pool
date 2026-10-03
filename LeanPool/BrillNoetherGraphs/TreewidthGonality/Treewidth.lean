@@ -16,4 +16,4 @@ public import LeanPool.BrillNoetherGraphs.TreewidthGonality.Treewidth.TreePath
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

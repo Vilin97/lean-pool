@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketForwardInitialSupport
 /-! The same forward correction used by the actual child has the
 literal compact initial support when the mean boundary parameter is zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -58,7 +58,8 @@ theorem normalizedPacketVelocity_forwardInitialized (t : Icc (0 : ℝ) A.T) :
     forwardInitializedExactPhysicalVelocity (A.meanData H) (A.transverseData m hm J support
         hSupport) rfl
       δ hδ ξ hs α
-      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := rfl
+      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := by
+  rfl
 
 theorem normalizedPacketPressure_forwardInitialized (t : Icc (0 : ℝ) A.T) :
     A.normalizedPacketPressure m hm J support hSupport Q
@@ -69,7 +70,8 @@ theorem normalizedPacketPressure_forwardInitialized (t : Icc (0 : ℝ) A.T) :
     forwardInitializedExactPhysicalPressure (A.meanData H) (A.transverseData m hm J support
         hSupport) rfl
       δ hδ ξ hs α
-      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := rfl
+      (A.sourceAgreement m hm J support hSupport H) N hN k hk Q t (I.normalized t) := by
+  rfl
 
 
 theorem exactForwardPacket_initial_increment_support (hL : H.L = 0)

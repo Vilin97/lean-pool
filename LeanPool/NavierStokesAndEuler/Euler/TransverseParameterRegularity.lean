@@ -20,7 +20,7 @@ constructed transverse solution. Smoothness of every finite order follows from
 coefficient smoothness; no regularity of a pre-existing inverse is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -129,7 +129,8 @@ theorem contDiff_transverse_coordinates
   funext x
   have heq := fixedFrameSolver_eq_transverse T hT (Q x) (Q₁ x) (H x) c hc (hLower x) (hd x)
     K hK (hPotential x) hsmall (m x) (hTangent x) (hRange x) (f x)
-  exact congrArg (fun v : zeroTraceDerivatives (U := U) T hT => (v : TimeLp T U)) heq.symm
+  simpa only [transverseBackward_coe, Function.comp_apply, Submodule.subtypeL_apply] using
+    congrArg (fun v : zeroTraceDerivatives (U := U) T hT => (v : TimeLp T U)) heq.symm
 
 include hd in
 /-- The physical velocity of the original constructed inverse has the actual

@@ -34,7 +34,7 @@ Both run on the flat-map presentations of the three lists and on
 the index arithmetic of a list of pairs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -15,7 +15,7 @@ This module defines nontrivial elementary embeddings of a model of ZF into itsel
 critical points, and the basic properties of the iterates of the critical point.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,7 +109,7 @@ lemma crit_exists : ∃ α, IsOrdinal α ∧ j α ≠ α := by
 
 variable (j) in
 /-- The `crit` declaration. -/
-def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
+@[expose] def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
 
 lemma crit_eq_ordinal_sInf : crit j = (sInf {α : Ordinals M | j α ≠ α}).1 := by
   rw [crit, show {α | j α ≠ α ∧ IsOrdinal α} = (·.1) '' {α : Ordinals M | j α ≠ α} by ext; simp,
@@ -231,7 +231,7 @@ lemma isStrongLimit_crit_iter (n : ℕ) : IsStrongLimit (j^[n] (crit j)) := by
 
 variable (j) in
 /-- The `hasOmegaOfNontrivialSelfEmbedding` declaration. -/
-@[reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
+@[expose, reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
   split_vonNeumann hM
   · suffices ω < μ from .vonNeumann μ hμ this rfl
     by_contra! μ_le_omega

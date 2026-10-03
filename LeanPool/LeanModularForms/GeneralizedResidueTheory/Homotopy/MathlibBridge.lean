@@ -39,7 +39,7 @@ which in turn equals `(2πi)⁻¹ * circleIntegral (· - w)⁻¹ c R`.
     equals 1, via mathlib's `integral_sub_inv_of_mem_ball`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

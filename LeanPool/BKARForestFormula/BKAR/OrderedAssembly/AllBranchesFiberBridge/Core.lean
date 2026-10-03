@@ -16,7 +16,7 @@ extensions, and, when `followOrder` succeeds, the root fiber equals the
 recursive ordered contribution of the grown forest.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

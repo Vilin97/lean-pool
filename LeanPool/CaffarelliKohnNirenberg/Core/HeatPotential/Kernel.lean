@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Heat.Bounds
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -30,18 +30,22 @@ open CKN.Foundation.Heat CKN.Foundation.Parabolic
 kernel and its spatial derivatives have one common interface. -/
 
 /-- Space-time displacement used as the argument of the translation-invariant heat kernel. -/
+@[expose]
 def pointSub (w v : ParabolicPoint) : ParabolicPoint :=
   (w.1 - v.1, w.2 - v.2)
 
 /-- Causal heat kernel evaluated at the space-time displacement of two points. -/
+@[expose]
 def heatPotentialKernel (w v : ParabolicPoint) : ℝ :=
   heatKernelPlus (pointSub w v)
 
 /-- Spatial derivative of the causal heat kernel at a space-time displacement. -/
+@[expose]
 def heatPotentialSpatialKernel (i : Fin 3) (w v : ParabolicPoint) : ℝ :=
   heatKernelSpaceDerivative (w.1 - v.1) (w.2 - v.2) i
 
 /-- Heat potential of a scalar source and spatial divergence sources. -/
+@[expose]
 def heatPotential (F : ParabolicPoint → ℝ)
     (G : Fin 3 → ParabolicPoint → ℝ) (w : ParabolicPoint) : ℝ :=
   (∫ v, heatPotentialKernel w v * F v) +

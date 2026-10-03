@@ -14,7 +14,7 @@ public import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 This file contains the p-socle and its interaction with the Ulm filtration.
 -/
 
-@[expose] public section
+public section
 
 namespace UlmsTheorem
 
@@ -23,6 +23,7 @@ open Ordinal
 variable (p : ℕ)
 
 /-- The `p`-socle `P = {x | p • x = 0}`. -/
+@[expose]
 def pSocle {G : Type*} [AddCommGroup G] : AddSubgroup G where
   carrier   := {x | p • x = 0}
   zero_mem' := by simp
@@ -42,6 +43,7 @@ variable {G : Type*} [AddCommGroup G]
 @[simp] lemma mem_pSocle (x : G) : x ∈ pSocle p (G := G) ↔ p • x = 0 := Iff.rfl
 
 /-- The filtered socle `P_α = P ∩ G_α`. -/
+@[expose]
 noncomputable def pSocleAt (α : Ordinal) : AddSubgroup G :=
   pSocle p ⊓ ulmSubgroup p α
 
@@ -68,7 +70,8 @@ noncomputable instance pSocleZModModule :
   refine AddCommGroup.zmodModule (n := p) (G := pSocle p (G := G)) ?_
   intro x
   apply Subtype.ext
-  exact x.property
+  change p • (x : G) = 0
+  exact (mem_pSocle p (x : G)).mp x.property
 
 noncomputable instance pSocleAtZModModule (α : Ordinal) :
     Module (ZMod p) (pSocleAt p α (G := G)) := by
@@ -80,7 +83,7 @@ noncomputable instance pSocleAtZModModule (α : Ordinal) :
   simp [hx]
 
 /-- `P_{α+1}` viewed as a subgroup of `P_α`. -/
-noncomputable def pSocleAtSuccSubgroupOf (α : Ordinal) :
+@[expose] noncomputable def pSocleAtSuccSubgroupOf (α : Ordinal) :
     AddSubgroup (pSocleAt p α (G := G)) :=
   (pSocleAt p (Order.succ α) (G := G)).comap
     (AddSubgroup.subtype (pSocleAt p α))

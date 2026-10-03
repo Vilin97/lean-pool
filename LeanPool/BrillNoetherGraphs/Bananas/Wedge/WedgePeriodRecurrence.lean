@@ -17,7 +17,7 @@ Theorem 4.13.  The generic residue contradiction is kept in
 `NonrecurrenceWitness`; this file supplies the wedge rank witnesses.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

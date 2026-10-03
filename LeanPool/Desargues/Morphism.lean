@@ -17,7 +17,7 @@ Defines isomorphisms of projective geometries as bijections preserving the
 collinearity relation.
 -/
 
-@[expose] public section
+public section
 
 open Basic
 

@@ -19,7 +19,7 @@ and D(f) = 0 at each spatial point, applies Corollary 1 to conclude f(x, .) is
 Maxwellian for each x.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

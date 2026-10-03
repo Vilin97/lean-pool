@@ -18,7 +18,7 @@ additional coordinates along lower transitions, and commute with scalar
 extension and reduction modulo every modulus.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 
@@ -27,10 +27,12 @@ namespace Coord
 variable {R : Type*} [CommRing R]
 
 /-- Linear projection onto the first block of coordinates. -/
+@[expose]
 def first (m k : ℕ) : (Fin (m + k) → R) →ₗ[R] (Fin m → R) :=
   LinearMap.pi fun i ↦ LinearMap.proj (Fin.castAdd k i)
 
 /-- Linear projection onto the last block of coordinates. -/
+@[expose]
 def last (m k : ℕ) : (Fin (m + k) → R) →ₗ[R] (Fin k → R) :=
   LinearMap.pi fun i ↦ LinearMap.proj (Fin.natAdd m i)
 
@@ -115,6 +117,7 @@ end Coord
 namespace IntegralAffineMap
 
 /-- Forget the extra coordinates of an augmented lattice fibre. -/
+@[expose]
 def first (m k : ℕ) : IntegralAffineMap (m + k) m where
   real := (Coord.first m k).toAffineMap
   integer := Coord.first m k
@@ -202,6 +205,7 @@ namespace EGZ.Coord
 variable {R : Type*} [CommRing R]
 
 /-- Keep the initial coordinates of a finite coordinate vector. -/
+@[expose]
 def prefixMap (es et : ℕ) (h : et ≤ es) : (Fin es → R) →ₗ[R] (Fin et → R) :=
   LinearMap.pi fun i ↦ LinearMap.proj (Fin.castLE h i)
 
@@ -257,6 +261,7 @@ namespace EGZ.IntegralAffineMap
 
 /-- Extend an integral-affine map while retaining an initial segment of its
 additional coordinates. -/
+@[expose]
 noncomputable def extendPrefix {m n : ℕ} (A : IntegralAffineMap m n)
     (es et : ℕ) (h : et ≤ es) : IntegralAffineMap (m + es) (n + et) where
   real := Coord.extendPrefix A.real es et h

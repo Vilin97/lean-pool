@@ -13,7 +13,7 @@ public import LeanPool.Zeta32.PrimeEdge.Dist.Val
 * `dl_far` : on the other discs it is far: `dl = V^loc(trunc (near(u) / ((j - b) + p u)))`;
 * `VG_far` : the far value is `p`-integral (Tate coefficients `v ≥ e`, von Staudt). -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

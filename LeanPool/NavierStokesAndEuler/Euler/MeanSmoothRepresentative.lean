@@ -23,7 +23,7 @@ section
 /-! An isometric embedding of ordinary R³ L² into the angle-independent part of the unit cylinder.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -97,7 +97,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -166,7 +166,7 @@ theorem ordinaryLift_hasDerivAt (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u
   exact H
 
 /-- Every finite cylinder derivative tree is constructed from genuine ordinary L² derivatives. -/
-def ordinarySpatialJet (s : ℕ) (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) :
+@[expose] def ordinarySpatialJet (s : ℕ) (u : EulerMeanSolenoidal.L2) (hu : SmoothOrbit u) :
     SpatialJet 1 standardDirection s (ordinaryLift u) :=
   match s with
   | 0 => .zero (ordinaryLift u)

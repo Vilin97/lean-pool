@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderWeightedAdvection
 
 /-! A single coefficient cost bounds every elementary nonlinear packet term. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -46,15 +46,15 @@ namespace CoefficientBudget
 variable {C : CoefficientData P T O} (B : CoefficientBudget C)
 
 /-- Multiplier cost, given by `3*sobolevCoefficientAmplitude (Fin 4) 6 B.Rc B.amplitude`. -/
-def multiplierCost : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) 6 B.Rc B.amplitude
+@[expose] def multiplierCost : ℝ := 3*sobolevCoefficientAmplitude (Fin 4) 6 B.Rc B.amplitude
 /-- Slow cost, given by `9*productBlockConstant P*B.multiplierCost`. -/
-def slowCost : ℝ := 9*productBlockConstant P*B.multiplierCost
+@[expose] def slowCost : ℝ := 9*productBlockConstant P*B.multiplierCost
 /-- Fast cost, given by `3*productBlockConstant P*B.multiplierCost`. -/
-def fastCost : ℝ := 3*productBlockConstant P*B.multiplierCost
+@[expose] def fastCost : ℝ := 3*productBlockConstant P*B.multiplierCost
 /-- Linear cost, given by `1+B.multiplierCost`. -/
-def linearCost : ℝ := 1+B.multiplierCost
+@[expose] def linearCost : ℝ := 1+B.multiplierCost
 /-- Term cost, given by `2*(1+B.multiplierCost+B.slowCost)`. -/
-def termCost : ℝ := 2*(1+B.multiplierCost+B.slowCost)
+@[expose] def termCost : ℝ := 2*(1+B.multiplierCost+B.slowCost)
 
 omit [Fact (0 < P)] in
 theorem multiplierCost_nonneg : 0 ≤ B.multiplierCost :=

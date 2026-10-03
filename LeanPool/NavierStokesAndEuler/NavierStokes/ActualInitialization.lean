@@ -20,7 +20,7 @@ This consumer uses the single primary family selected by
 Gaussian errors and common-cover chart representations.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,23 +38,26 @@ abbrev Index (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 variable {B N0 : ℕ}
 
 /-- Primary piece, given by `ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1`. -/
-noncomputable def primaryPiece (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
+@[expose] noncomputable def primaryPiece (l : Index B N0) : PrimaryPiece (Point × ℝ) :=
   ActualPrimary.piece ActualPrimary.standardRegion l.2 l.1
 
 /-- Phase, given by `(primaryPiece l).coefficients.phase n (x, 0)`. -/
-noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def phase (l : Index B N0) (n : ℕ) (x : Point) : ℝ :=
   (primaryPiece l).coefficients.phase n (x, 0)
 
 /-- Angular mode, constructed using `PrimaryGeometryAssembly.angularMode`. -/
+@[expose]
 noncomputable def angularMode (l : Index B N0) (_n : ℕ) : ℤ :=
   PrimaryGeometryAssembly.angularMode ActualPrimary.certificate ActualPrimary.modulation
       (ActualPrimary.choice B N0).prepared l.2 l.1
 
 /-- Primary block, given by `(primaryPiece l).harmonicBlock (phase l) (angularMode l)`. -/
+@[expose]
 noncomputable def primaryBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).harmonicBlock (phase l) (angularMode l)
 
 /-- Tangent block, given by `(primaryPiece l).tangentBlock (phase l) (angularMode l)`. -/
+@[expose]
 noncomputable def tangentBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).tangentBlock (phase l) (angularMode l)
 
@@ -63,6 +66,7 @@ noncomputable def curlBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).differenceBlock (phase l) (angularMode l)
 
 /-- Gaussian block, given by `(primaryPiece l).excludedBlock (phase l) (angularMode l)`. -/
+@[expose]
 noncomputable def gaussianBlock (l : Index B N0) : HarmonicBlock Point :=
   (primaryPiece l).excludedBlock (phase l) (angularMode l)
 
@@ -153,6 +157,7 @@ theorem gaussianBlock_band (l : Index B N0) : (gaussianBlock l).BandLimited 1 :=
 
 /-- Coefficients, bundling `labels`, `blocks`, `gaussian`, `aliasCoefficients` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def coefficients (B N0 : ℕ) : CorrectionStep.CycleCoefficients (Index B N0) where
   labels := ActualPrimary.activeLabels ActualPrimary.standardRegion B N0
   blocks := primaryBlock
@@ -179,40 +184,43 @@ theorem gaussian_coefficientField (l : Index B N0) :
 
 /-- Base error, given by `ActualBaseResidual.baseError ActualPrimary.certificate
 ActualPrimary.modulation ActualPrimary.upper B`. -/
+@[expose]
 noncomputable def baseError (B : ℕ) : Oscillation Point :=
   ActualBaseResidual.baseError ActualPrimary.certificate ActualPrimary.modulation
       ActualPrimary.upper B
 
 /-- Source state, given by `bandSeed (coefficients B N0).labels primaryPiece (baseError B)`. -/
-noncomputable def sourceState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def sourceState (B N0 : ℕ) : State Point :=
   bandSeed (coefficients B N0).labels primaryPiece (baseError B)
 
 /-- Primary state, given by `VariableGaugeMean.reconstructState ActualPrimary.commonGauge
 (ActualPrimary.commonContext B) (sourceState B N0)`. -/
-noncomputable def primaryState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def primaryState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.reconstructState ActualPrimary.commonGauge (ActualPrimary.commonContext B)
       (sourceState B N0)
 
 /-- Axial, given by `((0, 1), 0)`. -/
+@[expose]
 noncomputable def axial : TorusInverse.Plane × TorusInverse.Plane := ((0, 1), 0)
 
 /-- Temporal state, constructed using `VariableGaugeMean.temporalStageState`. -/
-noncomputable def temporalState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def temporalState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.temporalStageState ActualPrimary.commonGauge ActualPrimary.h
     (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B) (primaryState B N0)
 
 /-- Rank state, constructed using `VariableGaugeMean.rankStageState`. -/
-noncomputable def rankState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def rankState (B N0 : ℕ) : State Point :=
   VariableGaugeMean.rankStageState ActualPrimary.commonGauge ActualPrimary.rankData axial
     (ActualPrimary.commonContext B) (temporalState B N0)
 
 /-- Initial state, given by `GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge
 (ActualPrimary.commonContext B) (rankState B N0)`. -/
-noncomputable def initialState (B N0 : ℕ) : State Point :=
+@[expose] noncomputable def initialState (B N0 : ℕ) : State Point :=
   GaugeInitialization.retainPressureAlias ActualPrimary.commonGauge (ActualPrimary.commonContext B)
     (rankState B N0)
 
 /-- Initial alias as an element of `CorrectionStep.AxisymmetricAlias`. -/
+@[expose]
 noncomputable def initialAlias (B N0 : ℕ) : CorrectionStep.AxisymmetricAlias :=
   fun n x i => VariableGaugeMean.temporalAliasState ActualPrimary.commonGauge ActualPrimary.h
       (CommonWindow.index ActualPrimary.h) (ActualPrimary.commonContext B) (primaryState B N0) n
@@ -222,6 +230,7 @@ noncomputable def initialAlias (B N0 : ℕ) : CorrectionStep.AxisymmetricAlias :
 
 /-- The initial state and its actual harmonic data are constructed together;
 all later iterations retain these physical labels. -/
+@[expose]
 noncomputable def initialCycleState (B N0 : ℕ) : CorrectionStep.CycleState (Index B N0) where
   state := initialState B N0
   coefficients := coefficients B N0
@@ -232,6 +241,35 @@ theorem initialState_eq_bands (B N0 : ℕ) :
         ActualPrimary.rankData
       ActualPrimary.h (CommonWindow.index ActualPrimary.h) axial (ActualPrimary.commonContext B)
       (coefficients B N0).labels primaryPiece (baseError B) := rfl
+
+theorem sourceState_eq_mean_seed (B N0 : ℕ) :
+    sourceState B N0 = ActualInitialMean.seed B N0 := by
+  rfl
+
+theorem primaryState_eq_mean_primary (B N0 : ℕ) :
+    primaryState B N0 = ActualInitialMean.primary B N0 := by
+  rw [primaryState, ActualInitialMean.primary, sourceState_eq_mean_seed]
+
+theorem temporalState_eq_mean_temporal (B N0 : ℕ) :
+    temporalState B N0 = ActualInitialMean.temporal B N0 := by
+  rw [temporalState, ActualInitialMean.temporal, primaryState_eq_mean_primary]
+  rfl
+
+theorem rankState_eq_mean_ranked (B N0 : ℕ) :
+    rankState B N0 = ActualInitialMean.ranked B N0 := by
+  rw [rankState, ActualInitialMean.ranked, temporalState_eq_mean_temporal]
+  rfl
+
+theorem initialAlias_eq_mean_alias (B N0 : ℕ) :
+    initialAlias B N0 = ActualInitialMean.initialAlias B N0 := by
+  funext n x i
+  simp only [initialAlias, ActualInitialMean.initialAlias, Pi.add_apply,
+    primaryState_eq_mean_primary, rankState_eq_mean_ranked]
+
+theorem initialState_eq_mean_initialized (B N0 : ℕ) :
+    initialState B N0 = ActualInitialMean.initialized B N0 := by
+  rw [initialState_eq_bands]
+  rfl
 
 theorem initialState_error_components (B N0 : ℕ) :
     (initialState B N0).errors.base = baseError B ∧
@@ -427,10 +465,12 @@ open scoped ContDiff Topology BigOperators
 
 /-- Strip, given by `BaseContextAssembly.nativeStrip ActualPrimary.nominal
 ActualPrimary.standardRegion`. -/
+@[expose]
 noncomputable def strip : StripData Point :=
   BaseContextAssembly.nativeStrip ActualPrimary.nominal ActualPrimary.standardRegion
 
 /-- Slow strip, constructed using `PhysicalMeanDomain.localSlowStripData`. -/
+@[expose]
 noncomputable def slowStrip : StripData TorusInverse.Plane :=
   PhysicalMeanDomain.localSlowStripData ActualPrimary.standardRegion.carrier
     ActualPrimary.standardRegion.isOpen (ChartScales.epsilon ActualPrimary.h)
@@ -439,6 +479,7 @@ noncomputable def slowStrip : StripData TorusInverse.Plane :=
     BaseContextAssembly.one_le_slowScale
 
 /-- Envelope, given by `ActualPrimaryBounds.meanEnvelope (l.2,l.1)`. -/
+@[expose]
 noncomputable def envelope {B N0 : ℕ} (l : Index B N0) : ℕ → Point → ℝ :=
   ActualPrimaryBounds.meanEnvelope (l.2,l.1)
 
@@ -688,6 +729,7 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionInitializatio
 open scoped ContDiff Topology
 
 /-- The signed request uses the same active annulus and reserved mean patch. -/
+@[expose]
 noncomputable def patch : SignedStressPrimitive.Patch where
   a := PrimaryTargetBounds.leftRadius ActualPrimary.nominal
   b := PrimaryTargetBounds.rightRadius ActualPrimary.nominal
@@ -699,6 +741,7 @@ noncomputable def patch : SignedStressPrimitive.Patch where
   right_lt_b := ActualPrimary.rank_before_active_right
 
 /-- All stages use one moving strip, common index, and pressure gauge. -/
+@[expose]
 noncomputable def geometry : SignedMeanGain.Geometry where
   coord := 2 * ActualPrimary.h
   region := ActualPrimary.standardRegion
@@ -805,8 +848,33 @@ theorem exact_pressure_smooth_full {B N0 : ℕ} (l : Index B N0) (n : ℕ) :
 theorem initial_meanGood (B N0 n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (i : Fin 3) :
     (initialState B N0).meanGoodResidual (ActualPrimary.commonContext B) n x i =
       (initialState B N0).reducedMeanResidual (ActualPrimary.commonContext B) n x i -
-        initialAlias B N0 n x i :=
-  ActualInitialMean.initialized_meanGood B N0 n hT i
+        initialAlias B N0 n x i := by
+  obtain ⟨hb, hg, ha⟩ := initialState_error_components B N0
+  have hbc : Continuous (fun theta : ℝ => (initialState B N0).errors.base n (x, theta) i) := by
+    rw [hb]
+    exact ActualBaseResidual.baseError_angular_continuous ActualPrimary.certificate
+      ActualPrimary.modulation ActualPrimary.upper B n hT i
+  have hgc : Continuous (fun theta : ℝ =>
+      (initialState B N0).errors.gaussian n (x, theta) i) := by
+    rw [hg]
+    exact continuous_finsetSum _ (fun l _ => gaussian_angularContinuous l n x i)
+  have hac : Continuous (fun theta : ℝ =>
+      (initialState B N0).errors.aliasError n (x, theta) i) := by
+    rw [ha]
+    change Continuous (fun _ : ℝ => initialAlias B N0 n x i)
+    exact continuous_const
+  rw [ActualInitialMean.meanGoodResidual_at _ _ n x i hbc hgc hac]
+  have hgz : HarmonicResidual.realAngularMean
+      (fun theta => (initialState B N0).errors.gaussian n (x, theta) i) = 0 := by
+    change CorrectionStep.angularMeanVector (initialState B N0).errors.gaussian n x i = 0
+    rw [hg, angularMeanVector_fieldSum _ _
+      (fun n l _ x i => gaussian_angularContinuous l n x i)]
+    simp only [gaussian_mean_zero, Pi.zero_apply, Finset.sum_const_zero]
+  rw [hgz, sub_zero]
+  congr 1
+  rw [ha]
+  change HarmonicResidual.realAngularMean (fun _ : ℝ => initialAlias B N0 n x i) = _
+  exact HarmonicResidual.realAngularMean_const _
 
 theorem initialAlias_radial (B N0 n : ℕ) (x : Point) :
     initialAlias B N0 n x 0 = VariableGaugeMean.pressureAliasState ActualPrimary.commonGauge
@@ -1087,6 +1155,7 @@ open scoped ContDiff Topology
 
 /-- Mean control cell, given by `{x | ∃ k : TorusInverse.Frequency, (x,0) ∈
 ActualPrimaryBounds.controlCell n ((l.2,l.1), k)}`. -/
+@[expose]
 noncomputable def meanControlCell {B N0 : ℕ} (n : ℕ) (l : Index B N0) : Set Point :=
   {x | ∃ k : TorusInverse.Frequency, (x,0) ∈ ActualPrimaryBounds.controlCell n ((l.2,l.1), k)}
 
@@ -1220,6 +1289,7 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionInitializatio
 open scoped ContDiff Topology
 
 /-- Label carrier, given by `ActualInitialExcluded.labelCarrier (l.2, l.1) n`. -/
+@[expose]
 noncomputable def labelCarrier {B N0 : ℕ} (l : Index B N0) (n : ℕ) : Set Point :=
   ActualInitialExcluded.labelCarrier (l.2, l.1) n
 
@@ -1482,28 +1552,33 @@ open Set Function Filter WeightedClasses CorrectionState CorrectionInitializatio
 open HarmonicWaveInteraction UniformHarmonicInteraction
 open scoped ContDiff Topology BigOperators
 
-theorem initial_cumulative (B N0 : ℕ) : CumulativeBounds strip (initialState B N0) :=
-  ActualInitialMean.initial_cumulative_bounds B N0
+theorem initial_cumulative (B N0 : ℕ) : CumulativeBounds strip (initialState B N0) := by
+  rw [initialState_eq_mean_initialized]
+  exact ActualInitialMean.initial_cumulative_bounds B N0
 
 theorem initial_mean (B N0 : ℕ) :
-    MeanResidualBounds strip (1/5) (ActualPrimary.commonContext B) (initialState B N0) :=
-  ActualInitialMean.initial_mean_bounds B N0
+    MeanResidualBounds strip (1/5) (ActualPrimary.commonContext B) (initialState B N0) := by
+  rw [initialState_eq_mean_initialized]
+  exact ActualInitialMean.initial_mean_bounds B N0
 
 theorem initial_debt (B N0 : ℕ) :
-    DefectBounds slowStrip (1/5) (ActualPrimary.commonContext B) (initialState B N0) :=
-  ActualInitialMean.initial_debt_bounds B N0
+    DefectBounds slowStrip (1/5) (ActualPrimary.commonContext B) (initialState B N0) := by
+  rw [initialState_eq_mean_initialized]
+  exact ActualInitialMean.initial_debt_bounds B N0
 
 theorem initial_zeroMasses (B N0 : ℕ) :
-    GaugeMassPreservation.ZeroMassesOn geometry.region.carrier (initialState B N0) :=
-  ActualInitialMean.initial_zeroMasses B N0
+    GaugeMassPreservation.ZeroMassesOn geometry.region.carrier (initialState B N0) := by
+  rw [initialState_eq_mean_initialized]
+  exact ActualInitialMean.initial_zeroMasses B N0
 
 theorem initial_covariance (B N0 : ℕ) (i j : Fin 3) :
     MeanClass strip 1 ((initialState B N0).covariance i j) := by
-  rw [initialState_covariance]
+  rw [initialState_covariance, sourceState_eq_mean_seed]
   exact (ActualInitialMean.covariance_bounds B N0).1 i j
 
-theorem initial_axis_flat (B N0 : ℕ) (beta : ℝ) : MeanClass strip beta (initialAlias B N0) :=
-  ActualInitialExcluded.initialAlias_all_gains B N0 beta
+theorem initial_axis_flat (B N0 : ℕ) (beta : ℝ) : MeanClass strip beta (initialAlias B N0) := by
+  rw [initialAlias_eq_mean_alias]
+  exact ActualInitialExcluded.initialAlias_all_gains B N0 beta
 
 theorem initial_meanHypotheses (B N0 : ℕ) :
     LiftedMeanResidual.MeanHypotheses strip.domain (ActualPrimary.commonContext B) (initialState B

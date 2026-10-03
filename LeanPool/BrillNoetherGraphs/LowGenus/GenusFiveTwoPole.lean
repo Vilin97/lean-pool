@@ -23,7 +23,7 @@ The theorem here concerns positive subdivisions. `GenusFiveTwoPoleClosed`
 extends the same weights to contraction faces by discrete specialization.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveTwoPole
 

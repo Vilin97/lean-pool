@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GaussianHeatSmoothing
 
 /-! The genuine four-coordinate cylinder heat semigroup and simultaneous derivative gain. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,6 +27,7 @@ open scoped ENNReal NNReal Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- A finite product of commuting directional Gaussian averages. -/
+@[expose]
 def heatList (directions : List LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period :=
   match directions with
   | [] => f
@@ -52,7 +53,8 @@ theorem heatList_smul (directions : List LiftTangent) (v : ℝ≥0) (c : ℝ) (f
   | cons a tail ih => simp only [heatList, ih, lineHeat_smul]
 
 /-- Heat list operator, constructed using `LinearMap.mkContinuous`. -/
-def heatListOperator (directions : List LiftTangent) (v : ℝ≥0) : LiftL2 period →L[ℝ] LiftL2 period
+@[expose] def heatListOperator (directions : List LiftTangent) (v : ℝ≥0) :
+    LiftL2 period →L[ℝ] LiftL2 period
     :=
   LinearMap.mkContinuous
     { toFun := heatList period directions v
@@ -62,7 +64,7 @@ def heatListOperator (directions : List LiftTangent) (v : ℝ≥0) : LiftL2 peri
 
 @[simp] theorem heatListOperator_apply (directions : List LiftTangent) (v : ℝ≥0) (f : LiftL2
     period) :
-    heatListOperator period directions v f = heatList period directions v f := rfl
+    heatListOperator period directions v f = heatList period directions v f := by rfl
 
 theorem heatList_translation (directions : List LiftTangent) (v : ℝ≥0) (b : LiftDomain period) (f :
     LiftL2 period) :
@@ -99,9 +101,9 @@ theorem heatList_semigroup (directions : List LiftTangent) (v w : ℝ≥0) (f : 
 /-- A Lipschitz estimate for the Gaussian operator in its input field. -/
 theorem lineHeat_dist_le (a : LiftTangent) (v : ℝ≥0) (f g : LiftL2 period) :
     dist (lineHeat period a v f) (lineHeat period a v g) ≤ dist f g := by
-  change dist (lineHeatOperator period a v f) (lineHeatOperator period a v g) ≤ dist f g
+  rw [← lineHeatOperator_apply, ← lineHeatOperator_apply]
   rw [dist_eq_norm, ← map_sub, dist_eq_norm]
-  exact lineHeat_norm_le period a v (f-g)
+  simpa only [lineHeatOperator_apply] using lineHeat_norm_le period a v (f-g)
 
 /-- Joint continuity follows from contraction in the field and strong continuity in variance. -/
 theorem lineHeat_joint_continuous (a : LiftTangent) :
@@ -152,11 +154,15 @@ theorem heatList_one_derivative (directions : List LiftTangent) (a : LiftTangent
       exact (lineHeat_norm_le period b v g).trans hgb
 
 /-- The four actual commuting standard coordinate directions on R³×T. -/
-def cylinderDirections : List LiftTangent := List.ofFn standardDirection
+@[expose] def cylinderDirections : List LiftTangent := List.ofFn standardDirection
 
 /-- The actual cylinder heat semigroup, parameterized by Gaussian variance. -/
-def cylinderHeat (v : ℝ≥0) : LiftL2 period →L[ℝ] LiftL2 period :=
+@[expose] def cylinderHeat (v : ℝ≥0) : LiftL2 period →L[ℝ] LiftL2 period :=
   heatListOperator period cylinderDirections v
+
+@[simp] theorem cylinderHeat_apply (v : ℝ≥0) (f : LiftL2 period) :
+    cylinderHeat period v f = heatList period cylinderDirections v f := by
+  exact heatListOperator_apply period cylinderDirections v f
 
 theorem cylinderHeat_norm_le (v : ℝ≥0) (f : LiftL2 period) : ‖cylinderHeat period v f‖ ≤ ‖f‖ :=
   heatList_norm_le period cylinderDirections v f

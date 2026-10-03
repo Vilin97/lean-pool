@@ -19,7 +19,7 @@ public import Mathlib.Tactic
 
 /-! Rearranging a conditionally convergent series through Baire category. -/
 
-@[expose] public section
+public section
 
 open Filter Finset Set Topology
 open scoped BigOperators

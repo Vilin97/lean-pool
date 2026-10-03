@@ -83,7 +83,7 @@ repository root, and is checked again during the build by `BicausalOT/AxiomsAudi
 (line 35); both report only `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Uniformization
 

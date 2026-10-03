@@ -23,7 +23,7 @@ it needs each surviving label's new index as an explicit natural
 number.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

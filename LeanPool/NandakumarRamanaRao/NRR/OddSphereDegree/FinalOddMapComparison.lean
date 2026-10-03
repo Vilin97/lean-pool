@@ -20,7 +20,7 @@ are used by later assembly modules; the stable public theorem is the uncondition
 `SphereOddDegree.Final`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

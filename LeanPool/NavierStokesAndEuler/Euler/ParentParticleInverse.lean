@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.DeformationVolume
 volume follows from the actual determinant, and both time restriction
 and the packet child propagate the two inverse laws. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -79,7 +79,7 @@ theorem field_measurePreserving (t : Icc (0 : ℝ) A.T) :
     (Continuous.uncurry_left t I.continuous) (A.displacement_det_one t)
 
 /-- Normalized, given by `A.packetInverse I.field (t,x)`. -/
-def normalized (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
+@[expose] def normalized (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   A.packetInverse I.field (t,x)
 
 theorem normalized_left (t : Icc (0 : ℝ) A.T) (x : Space) :

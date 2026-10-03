@@ -26,7 +26,7 @@ graph with the size of the largest bag, and shows that some bag is a maximum cli
   elimination order
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

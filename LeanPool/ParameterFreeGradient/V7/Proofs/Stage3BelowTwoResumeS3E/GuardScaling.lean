@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwo.Dual
 Observable below-two guards transported through the trial's affine normalization.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

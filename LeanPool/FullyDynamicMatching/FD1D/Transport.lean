@@ -12,7 +12,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Transport -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -42,6 +42,7 @@ inductive DyadicMass : ℕ → Type
 namespace DyadicMass
 
 /-- Total mass below the root. -/
+@[expose]
 def total : {L : ℕ} → DyadicMass L → ℝ
   | 0, leaf m => m
   | _ + 1, branch l r => total l + total r
@@ -86,6 +87,7 @@ def ofLeafVector : (L : ℕ) → (Fin (2 ^ L) → ℝ) → DyadicMass L
       exact (Fin.sum_univ_add (fun i => f (e i))).symm
 
 /-- Every leaf mass is nonnegative. -/
+@[expose]
 def allNonneg : {L : ℕ} → DyadicMass L → Prop
   | 0, leaf m => 0 ≤ m
   | _ + 1, branch l r => allNonneg l ∧ allNonneg r
@@ -129,6 +131,7 @@ The explicit piecewise-linear CDF. Outside `[0,1]` this is merely a
 piecewise-linear extension; all CDF statements below are restricted to the
 unit interval.
 -/
+@[expose]
 def piecewiseCDF : {L : ℕ} → DyadicMass L → ℝ → ℝ
   | 0, leaf m => fun z => m * z
   | _ + 1, branch l r => fun z =>
@@ -219,6 +222,7 @@ theorem piecewiseCDF_monotoneOn {L : ℕ} (q : DyadicMass L) (hq : q.allNonneg) 
 The explicit generalized inverse in mass coordinates. Its input ranges
 from `0` to `q.total`; at a branch the interval is split at the left mass.
 -/
+@[expose]
 def quantile : {L : ℕ} → DyadicMass L → ℝ → ℝ
   | 0, leaf m => fun u => u / m
   | _ + 1, branch l r => fun u =>
@@ -229,6 +233,7 @@ def quantile : {L : ℕ} → DyadicMass L → ℝ → ℝ
 The actual selected-leaf policy. It returns the left endpoint of the leaf
 whose cumulative-mass interval contains `u`.
 -/
+@[expose]
 def selectedLeaf : {L : ℕ} → DyadicMass L → ℝ → ℝ
   | 0, leaf _ => fun _ => 0
   | _ + 1, branch l r => fun u =>
@@ -708,6 +713,7 @@ def value (t : HaarTerm) (z : ℝ) : ℝ :=
 end HaarTerm
 
 /-- Pointwise value of a finite list of integrated Haar terms. -/
+@[expose]
 def haarTermSum (ts : List HaarTerm) (z : ℝ) : ℝ :=
   (ts.map (fun t => t.value z)).sum
 
@@ -909,10 +915,12 @@ theorem DyadicMass.haarSeries_eq_haarTermSum
 abbrev CompleteHaarNode (L : ℕ) := Σ d : Fin L, Fin (2 ^ d.val)
 
 /-- Left endpoint of the dyadic interval indexed by a complete Haar node. -/
+@[expose]
 def haarNodeLeft {L : ℕ} (v : CompleteHaarNode L) : ℝ :=
   (v.2.val : ℝ) / (2 ^ v.1.val : ℕ)
 
 /-- Width of the dyadic interval indexed by a complete Haar node. -/
+@[expose]
 def haarNodeWidth {L : ℕ} (v : CompleteHaarNode L) : ℝ :=
   1 / (2 ^ v.1.val : ℕ)
 
@@ -947,6 +955,7 @@ namespace DyadicMass
 The masses of the two children of an internal node `v = ⟨d,k⟩`.
 At positive depth, `k` selects the appropriate half-tree recursively.
 -/
+@[expose]
 def nodeChildMasses : {L : ℕ} → DyadicMass L → CompleteHaarNode L → ℝ × ℝ
   | 0, .leaf _, v => Fin.elim0 v.1
   | _ + 1, .branch l r, ⟨⟨0, _⟩, _⟩ => (l.total, r.total)
@@ -959,6 +968,7 @@ def nodeChildMasses : {L : ℕ} → DyadicMass L → CompleteHaarNode L → ℝ 
         (fun vr => nodeChildMasses r ⟨d', vr⟩) w
 
 /-- The Haar coefficient at a node is its left-child mass minus its right-child mass. -/
+@[expose]
 def nodeCoefficient {L : ℕ} (q : DyadicMass L) (v : CompleteHaarNode L) : ℝ :=
   (q.nodeChildMasses v).1 - (q.nodeChildMasses v).2
 
@@ -979,6 +989,7 @@ theorem nodeCoefficient_eq_childMass_sub {L : ℕ} (q : DyadicMass L)
   rfl
 
 /-- Embed a node into the left half-tree one level below a new root. -/
+@[expose]
 def leftNode {L : ℕ} (v : CompleteHaarNode L) : CompleteHaarNode (L + 1) :=
   ⟨v.1.succ, ⟨v.2.val, by
     change v.2.val < 2 ^ (v.1.val + 1)
@@ -986,6 +997,7 @@ def leftNode {L : ℕ} (v : CompleteHaarNode L) : CompleteHaarNode (L + 1) :=
     omega⟩⟩
 
 /-- Embed a node into the right half-tree one level below a new root. -/
+@[expose]
 def rightNode {L : ℕ} (v : CompleteHaarNode L) : CompleteHaarNode (L + 1) :=
   ⟨v.1.succ, ⟨2 ^ v.1.val + v.2.val, by
     change 2 ^ v.1.val + v.2.val < 2 ^ (v.1.val + 1)
@@ -1059,6 +1071,7 @@ namespace FiniteLaw
 variable {Ω : Type*} [Fintype Ω]
 
 /-- A finite law is invariant under a state-space equivalence. -/
+@[expose]
 def InvariantUnder (μ : FiniteLaw Ω) (e : Ω ≃ Ω) : Prop :=
   ∀ ω, μ.mass (e ω) = μ.mass ω
 
@@ -1067,6 +1080,7 @@ An observable has an odd symmetry if a mass-preserving child swap changes
 its sign. A local tree automorphism supplies precisely such an equivalence
 for an ancestor-descendant coefficient product.
 -/
+@[expose]
 def OddSymmetry (μ : FiniteLaw Ω) (f : Ω → ℝ) : Prop :=
   ∃ e : Ω ≃ Ω, InvariantUnder μ e ∧ ∀ ω, f (e ω) = -f ω
 
@@ -1099,6 +1113,7 @@ theorem expect_eq_zero_of_oddSymmetry (μ : FiniteLaw Ω) (f : Ω → ℝ)
 end FiniteLaw
 
 /-- The interiors of two tent supports are disjoint (endpoints may coincide). -/
+@[expose]
 def IntervalsSeparated {ι : Type*} (l p : ι → ℝ) (i j : ι) : Prop :=
   l i + p i ≤ l j ∨ l j + p j ≤ l i
 
@@ -1329,6 +1344,7 @@ theorem cdf_sub_linear_eq_haarCombination {L : ℕ} (q : DyadicMass L)
 end DyadicMass
 
 /-- Squared `L²` norm of a finite integrated Haar expansion. -/
+@[expose]
 def haarL2 (l p : ι → ℝ) (b : ι → ℝ) : ℝ :=
   ∫ z, haarCombination l p b z ^ 2
 
@@ -1423,6 +1439,7 @@ The elementary one-dimensional monotone-transport cost: the area between
 the source and target CDFs. This representation avoids introducing a
 separate Wasserstein API.
 -/
+@[expose]
 def cdfTransportArea (f : ℝ → ℝ) : ℝ :=
   ∫ z in Icc (0 : ℝ) 1, |f z|
 
@@ -1618,6 +1635,7 @@ def expectedDistance {F : ℝ → ℝ} (P : MonotoneQuantilePolicy F) : ℝ :=
   ∫ u in Icc (0 : ℝ) 1, |P.selectedPoint u - u|
 
 /-- Cost of the continuous generalized inverse before leaf rounding. -/
+@[expose]
 def quantileDistance {F : ℝ → ℝ} (P : MonotoneQuantilePolicy F) : ℝ :=
   ∫ u in Icc (0 : ℝ) 1, |P.quantileMap u - u|
 
@@ -1682,6 +1700,7 @@ theorem expectedDistance_le {F : ℝ → ℝ} (P : MonotoneQuantilePolicy F)
 end MonotoneQuantilePolicy
 
 /-- The explicit dyadic CDF, inverse, and leaf endpoint form an actual policy. -/
+@[expose]
 def DyadicMass.quantilePolicy {L : ℕ} (q : DyadicMass L)
     (hq : q.IsProbability) :
     MonotoneQuantilePolicy q.piecewiseCDF where

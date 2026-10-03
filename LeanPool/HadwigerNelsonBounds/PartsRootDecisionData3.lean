@@ -9,12 +9,12 @@ public import LeanPool.HadwigerNelsonBounds.PartsRootDecisionCore
 
 /-! Generated root-decision chunks 12 through 15. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
 /-- Root-decision data chunk 12. -/
-def partsRootDecisionChunk12 : Array PartsRootNode := #[
+@[expose] def partsRootDecisionChunk12 : Array PartsRootNode := #[
   PartsRootNode.leaf 29 1 true,
   PartsRootNode.leaf 33 1 true,
   PartsRootNode.branch 75 ![0, 772, 0, 0],
@@ -82,7 +82,7 @@ def partsRootDecisionChunk12 : Array PartsRootNode := #[
 ]
 
 /-- Root-decision data chunk 13. -/
-def partsRootDecisionChunk13 : Array PartsRootNode := #[
+@[expose] def partsRootDecisionChunk13 : Array PartsRootNode := #[
   PartsRootNode.branch 84 ![0, 0, 0, 834],
   PartsRootNode.branch 81 ![835, 841, 0, 848],
   PartsRootNode.branch 69 ![0, 836, 0, 839],
@@ -150,7 +150,7 @@ def partsRootDecisionChunk13 : Array PartsRootNode := #[
 ]
 
 /-- Root-decision data chunk 14. -/
-def partsRootDecisionChunk14 : Array PartsRootNode := #[
+@[expose] def partsRootDecisionChunk14 : Array PartsRootNode := #[
   PartsRootNode.branch 84 ![0, 898, 0, 0],
   PartsRootNode.branch 81 ![899, 905, 0, 912],
   PartsRootNode.branch 69 ![0, 900, 0, 903],
@@ -218,7 +218,7 @@ def partsRootDecisionChunk14 : Array PartsRootNode := #[
 ]
 
 /-- Root-decision data chunk 15. -/
-def partsRootDecisionChunk15 : Array PartsRootNode := #[
+@[expose] def partsRootDecisionChunk15 : Array PartsRootNode := #[
   PartsRootNode.leaf 1 0 true,
   PartsRootNode.branch 69 ![963, 0, 0, 965],
   PartsRootNode.branch 75 ![0, 0, 0, 964],

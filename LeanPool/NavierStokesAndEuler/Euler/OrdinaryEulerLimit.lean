@@ -15,7 +15,7 @@ evolutions. The only compactness inputs are actual uniform Sobolev
 bounds and L² Cauchy convergence. The nonlinear term, pressure, and
 time equation are all recovered in the proof. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -132,7 +132,7 @@ namespace Evolution
 
 /-- Scalar pressure, given by `EulerCanonicalGraphPotential.radialPotential (U.pressureForce
 t).field`. -/
-def scalarPressure (U : Evolution T hT) (t : Icc (0 : ℝ) T) : Space → ℝ :=
+@[expose] def scalarPressure (U : Evolution T hT) (t : Icc (0 : ℝ) T) : Space → ℝ :=
   EulerCanonicalGraphPotential.radialPotential (U.pressureForce t).field
 
 theorem scalarPressure_spec (U : Evolution T hT) (t : Icc (0 : ℝ) T) :

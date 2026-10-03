@@ -20,7 +20,7 @@ separator with weights `1, 1, 2`.  Three scalar norm tangents reduce it to one f
 Gram certificate; radial secants use only the sibling separation and the unit-ball bounds.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -29,7 +29,7 @@ open scoped InnerProductSpace
 namespace LeanPool.Besicovitch
 
 /-- Failure slack of the crossed `(1,2)` term for a red root--second-child edge. -/
-def redRootEdgeType12Slack
+@[expose] def redRootEdgeType12Slack
     (c M r₂ b₁ b₂ rootToBlueFirst secondCross : ℝ) : ℝ :=
   r₂ + rootToBlueFirst + secondCross + M -
     2 * c * (r₂ + (b₁ + b₂ + M) / 2)

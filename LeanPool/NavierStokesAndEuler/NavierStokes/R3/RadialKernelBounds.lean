@@ -18,7 +18,7 @@ The cancellation factor `min (‖z‖ / R) 1` makes the singular kernel belong t
 volume of balls, so no principal-value integral occurs in this module.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -32,7 +32,7 @@ namespace NavierStokesR3.Comparison
 open ProblemStatement
 
 /-- The positive radial majorant after inserting the cutoff difference. -/
-def radialCommutatorKernel (R : ℝ) (z : Space) : ℝ :=
+@[expose] def radialCommutatorKernel (R : ℝ) (z : Space) : ℝ :=
   ‖z‖ ^ (-3 : ℝ) * min (‖z‖ / R) 1
 
 theorem radialCommutatorKernel_nonneg {R : ℝ} (hR : 0 < R) (z : Space) :

@@ -29,7 +29,7 @@ bounded-difference material from Section 7, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DemazureProduct
 
@@ -38,14 +38,14 @@ namespace LeanPool.DemazureProduct
 \tau(u) > \tau(v)\}$.
 *Definition 2.5 (`defn:Inv`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def invSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
+@[expose] def invSet (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   {(i,j) : ℤ × ℤ | i < j ∧ τ j < τ i}
 
 /-- The southeast quadrant below value `m` and weakly to the right of index `n`. -/
-def southeastSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
+@[expose] def southeastSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | n ≤ k ∧ τ k < m }
 
 /-- The northwest quadrant above value `m` and strictly to the left of index `n`. -/
-def northwestSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
+@[expose] def northwestSet (τ : ℤ → ℤ) (m n : ℤ) : Set ℤ := { k : ℤ | k < n ∧ m ≤ τ k }
 
 /-- Reflect an integer function by the order-reversing involution `n ↦ -1 - n`. -/
 abbrev flipFunc (f : ℤ → ℤ) : ℤ → ℤ := fun k => -1 - f (-1 - k)
@@ -118,6 +118,7 @@ private lemma nw_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
 $\{ n \in \mathbb{Z} : n \tau(n) < 0 \}$ is finite.
 
 Equivalently, only finitely many integers change sign under `τ`. -/
+@[expose]
 def isAsp (τ : ℤ → ℤ) : Prop :=
   { n : ℤ | n * (τ n) < 0 }.Finite
 
@@ -274,6 +275,7 @@ noncomputable def inv (τ : AspPerm) : AspPerm where
     simp only [Set.preimage_ofPred_eq, Set.mem_ofPred_eq, this, mul_comm]
 
 /-- The identity ASP permutation. -/
+@[expose]
 def id : AspPerm where
   func := _root_.id
   bijective := ⟨Function.injective_id, Function.surjective_id⟩
@@ -298,7 +300,10 @@ noncomputable instance : Group AspPerm where
     exact Function.leftInverse_invFun τ.injective n
 
 /-- Ordinary multiplication of ASP permutations is function composition. -/
-@[simp] lemma mul_apply (σ τ : AspPerm) (n : ℤ) : (σ * τ) n = σ (τ n) := rfl
+@[simp] lemma mul_apply (σ τ : AspPerm) (n : ℤ) : (σ * τ) n = σ (τ n) := by rfl
+
+/-- The inverse ASP permutation evaluates using the inverse underlying function. -/
+lemma inv_func (τ : AspPerm) (n : ℤ) : (τ⁻¹).func n = Function.invFun τ.func n := by rfl
 
 @[simp] lemma inv_mul_cancel_eval (n : ℤ) : τ⁻¹ (τ n) = n := by
   change Function.invFun τ.func (τ.func n) = n
@@ -315,14 +320,14 @@ lemma nw_finite (a b : ℤ) : (northwestSet τ a b).Finite :=
   nw_finite_of_asp τ.injective a b τ.asp
 
 /-- The finite southeast quadrant for an ASP permutation. -/
-noncomputable def seFinset (a b : ℤ) : Finset ℤ := (τ.se_finite a b).toFinset
+@[expose] noncomputable def seFinset (a b : ℤ) : Finset ℤ := (τ.se_finite a b).toFinset
 
 @[simp] lemma mem_se (a b n : ℤ) : n ∈ (τ.seFinset a b) ↔ n ≥ b ∧ τ n < a := by
   unfold seFinset
   simp [southeastSet]
 
 /-- The finite northwest quadrant for an ASP permutation. -/
-noncomputable def nwFinset (a b : ℤ) : Finset ℤ := (τ.nw_finite a b).toFinset
+@[expose] noncomputable def nwFinset (a b : ℤ) : Finset ℤ := (τ.nw_finite a b).toFinset
 
 @[simp] lemma mem_nw (a b n : ℤ) : n ∈ (τ.nwFinset a b) ↔ n < b ∧ τ n ≥ a := by
   unfold nwFinset
@@ -341,7 +346,7 @@ lemma inv_set_inverse (u v : ℤ) :
     exact ⟨u_lt_v, τv_lt_τu⟩
 
 /-- Reverse an inversion box through an ASP permutation. -/
-def revMap : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
+@[expose] def revMap : ℤ × ℤ → ℤ × ℤ := fun ⟨i, j⟩ => ⟨τ j, τ i⟩
 
 /-- The slipface associated to an ASP permutation is defined by
 $s_\tau(a,b) = \#\{n \geq b : \tau(n) < a\}$, in the notation of
@@ -1048,6 +1053,7 @@ lemma a_step_eq_iff' (u b : ℤ) : τ.s (τ u + 1) b = τ.s (τ u) b ↔ u < b :
   simpa [τ.mul_inv_cancel_eval] using this
 
 /-- The set of inversion sources ending at `v`. -/
+@[expose]
 def inset (v : ℤ) : Set ℤ := {u | ⟨u, v⟩ ∈ invSet τ}
 
 lemma inset_eq_nw (v : ℤ) : τ.inset v = northwestSet τ (τ v) v := by
@@ -1073,6 +1079,7 @@ lemma inset_finite (v : ℤ) : (τ.inset v).Finite := by
   apply τ.nw_finite
 
 /-- The set of inversion targets starting at `u`. -/
+@[expose]
 def outset (u : ℤ) : Set ℤ := {v | ⟨u, v⟩ ∈ invSet τ}
 
 lemma outset_eq_se (u : ℤ) : τ.outset u = southeastSet τ (τ u) u := by
@@ -1154,7 +1161,7 @@ lemma inv_set_id : invSet AspPerm.id = ∅ := by
   intro u_lt_v
   exact le_of_lt u_lt_v
 
-@[simp] lemma s_chi_eq : τ.s.χ = τ.χ := rfl
+@[simp] lemma s_chi_eq : τ.s.χ = τ.χ := by rfl
 
 lemma s_dual : τ.s.dual = (τ⁻¹).s := by
   apply (SF_ext τ.s.dual τ⁻¹.s).mpr
@@ -1550,12 +1557,13 @@ $\operatorname{Inv}(\alpha) \cap \operatorname{Inv}(\beta^{-1})$ is empty.
 
 *Definition 2.7 (`defn:reducedProduct`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
-def ReducedProduct (α β : AspPerm) : Prop :=
+@[expose] def ReducedProduct (α β : AspPerm) : Prop :=
   Disjoint (invSet α) (invSet (β⁻¹).func)
 
 /-- The left weak order: `σ ≤L τ` if and only if $\operatorname{Inv} \sigma \subseteq
 \operatorname{Inv} \tau$. *Definition 2.6 (`defn:weakOrders`), part 1/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def leWeakL (σ τ : AspPerm) : Prop := invSet σ ⊆ invSet τ
 /-- Infix notation for the left weak order on ASP permutations. -/
 infix:50 " ≤L " => leWeakL
@@ -1564,6 +1572,7 @@ infix:50 " ≤L " => leWeakL
 $\operatorname{Inv}(\sigma^{-1}) \subseteq \operatorname{Inv}(\tau^{-1})$.
 *Definition 2.6 (`defn:weakOrders`), part 2/2, of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 def leWeakR (σ τ : AspPerm) : Prop := invSet (σ⁻¹).func ⊆ invSet (τ⁻¹).func
 /-- Infix notation for the right weak order on ASP permutations. -/
 infix:50 " ≤R " => leWeakR
@@ -1687,22 +1696,24 @@ lemma sr_subset (τ α : AspPerm) (h_R : α ≤R τ) : (τ.sr α) '' invSet α �
   exact ⟨u_lt_v, τu_gt_τv⟩
 
 /-- The min-plus Demazure-product value is at least `n` at `(a, b)`. -/
-def dprodValGe (α β : AspPerm) (a b n : ℤ) : Prop :=
+@[expose] def dprodValGe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∀ l : ℤ, α.s a l + β.s l b ≥ n
 
 /-- Pointwise lower-bound predicate for a candidate Demazure product. -/
+@[expose]
 def leDprod (τ α β : AspPerm) : Prop :=
   ∀ a b : ℤ, dprodValGe α β a b (τ.s a b)
 
 /-- The min-plus Demazure-product value is at most `n` at `(a, b)`. -/
-def dprodValLe (α β : AspPerm) (a b n : ℤ) : Prop :=
+@[expose] def dprodValLe (α β : AspPerm) (a b n : ℤ) : Prop :=
   ∃ l : ℤ, α.s a l + β.s l b ≤ n
 
 /-- Pointwise upper-bound predicate for a candidate Demazure product. -/
-def geDprod (τ α β : AspPerm) : Prop :=
+@[expose] def geDprod (τ α β : AspPerm) : Prop :=
   ∀ a b : ℤ, dprodValLe α β a b (τ.s a b)
 
 /-- Pointwise equality predicate for a candidate Demazure product. -/
+@[expose]
 def eqDprod (τ α β : AspPerm) : Prop :=
   τ.leDprod α β ∧ τ.geDprod α β
 

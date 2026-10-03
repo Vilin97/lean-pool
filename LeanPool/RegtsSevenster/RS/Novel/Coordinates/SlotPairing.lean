@@ -17,7 +17,7 @@ slots `i` and `edgeCount + i`.  The general-flag glue for the
 Eulerian reindex.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

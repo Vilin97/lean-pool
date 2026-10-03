@@ -67,7 +67,7 @@ weight is smooth and compactly supported; the vector field is smooth but is
 not required to have compact support or globally integrable derivatives.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -222,7 +222,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -458,7 +458,7 @@ nonnegative quantity that will represent a weighted gradient norm. All
 fractional powers have real exponents.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -613,7 +613,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -769,7 +769,7 @@ derivatives. The compact cutoff supplies local integrability; the estimates
 use its weighted `L⁶` norm and the unweighted `L²` norm of the difference.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1043,7 +1043,7 @@ the closed interval and derivatives on its interior. In particular,
 no energy inequality at a time endpoint is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1162,7 +1162,7 @@ At a fixed time, square integrability gives an integrable dominating function.
 This module removes the cutoff only after that hypothesis has been supplied.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1248,7 +1248,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1413,7 +1413,7 @@ These bounds are consequences of joint smoothness and one fixed compact
 spatial support. They impose no condition on the competing solution.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1566,7 +1566,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

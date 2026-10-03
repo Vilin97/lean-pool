@@ -45,7 +45,7 @@ then falls out (`rerootBag_card_le`).  Mathlib has no Menger's theorem, no
 vertex separators, and no treewidth, so this is what makes the campaign finite.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Treewidth
 
@@ -106,7 +106,7 @@ theorem admissible_join (𝔅 : Bramble H) {k : ℕ} {U₁ U₂ X : Finset V}
 
 /-- The empty bramble.  Every set covers it, which is what makes the base case
 of the induction say something. -/
-def empty (H : SimpleGraph V) : Bramble H where
+@[expose] def empty (H : SimpleGraph V) : Bramble H where
   members := ∅
   connected_mem := by simp
   touching := by simp
@@ -154,7 +154,7 @@ theorem one_le_order_singletonBramble [Finite V] (H : SimpleGraph V) (v : V) :
 /-! ### Adding one member -/
 
 /-- Adjoin a connected set touching every member. -/
-def insertMember (𝔅 : Bramble H) (C : Finset V)
+@[expose] def insertMember (𝔅 : Bramble H) (C : Finset V)
     (hC : (H.induce (↑C : Set V)).Connected)
     (htouch : ∀ B ∈ 𝔅.members, (H.induce (↑(C ∪ B) : Set V)).Connected) : Bramble H where
   members := insert C 𝔅.members
@@ -387,7 +387,7 @@ theorem rerootBag_card_le (𝔅 : Bramble H)
 
 /-- **`𝒟_s(H)`**: the same tree, the same `isTree`, only the bags change.  This
 is why the campaign never needs to re-root a tree. -/
-noncomputable def rerootDecomp (hhome : ∀ x ∈ X, x ∈ D.bag (home x))
+@[expose] noncomputable def rerootDecomp (hhome : ∀ x ∈ X, x ∈ D.bag (home x))
     (_hsC : ∀ v ∈ D.bag s, v ∉ C) (_hC : IsComponent H X C) :
     PartialDecomposition H (C ∪ X) where
   Node := D.Node

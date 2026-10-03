@@ -30,7 +30,7 @@ Unit: planar-stokes-atoms (`docs/design/planar-stokes.md` §5.1). Mathlib-only (
   `integral_eq_intervalIntegral_of_tsupport_subset_reProdIm`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter
 

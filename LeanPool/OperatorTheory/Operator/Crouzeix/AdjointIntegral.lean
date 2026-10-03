@@ -30,7 +30,7 @@ theorem and records the resulting contour formula.
   symmetrization of an operator kernel and its adjoint.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped InnerProductSpace Interval

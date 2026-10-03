@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.V7.StrictModel
 Smoothing kernels, resisting oracle completions, and known-parameter lower-bound statements.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -29,6 +29,7 @@ structure DeterministicExactPairAlgorithm (d : ℕ) where
   output : Point d → List (Observation d) → Point d
 
 /-- Each trace point is the deterministic algorithm's query for the preceding history. -/
+@[expose]
 def GeneratedBy (algorithm : DeterministicExactPairAlgorithm d) (x0 : Point d)
     (trace : List (Observation d)) : Prop :=
   ∀ (t : ℕ) (ht : t < trace.length),
@@ -49,16 +50,18 @@ structure SmoothingKernelData (p : ℝ) (d : ℕ) where
   smooth : ℝ → (Point d → ℝ) → PairOracle d
 
 /-- The infimal convolution of the objective with the rescaled smoothing potential. -/
-noncomputable def localSmoothingValue (kernel : SmoothingKernelData p d)
+@[expose] noncomputable def localSmoothingValue (kernel : SmoothingKernelData p d)
     (chi : ℝ) (ell : Point d → ℝ) (x : Point d) : ℝ :=
   sInf {r : ℝ | ∃ v : Point d,
     r = ell (x + v) + chi * kernel.phi ((1 / chi) • v)}
 
 /-- The objective is one-Lipschitz with respect to the `ℓp` norm. -/
+@[expose]
 def IsOneLipschitz (p : ℝ) (f : Point d → ℝ) : Prop :=
   ∀ x y, |f x - f y| ≤ lpNorm p (x - y)
 
 /-- The primal and dual transformations preserve their norms and mutual pairing. -/
+@[expose]
 def SignedLpSymmetry (p : ℝ) (Q Qdual : Point d → Point d) : Prop :=
   (∀ x, lpNorm p (Q x) = lpNorm p x) ∧
   (∀ s, lpNorm (conjugateExponent p) (Qdual s) =
@@ -66,6 +69,7 @@ def SignedLpSymmetry (p : ℝ) (Q Qdual : Point d → Point d) : Prop :=
   (∀ s x, pairing (Qdual s) (Q x) = pairing s x)
 
 /-- The regularity, curvature, normalization, and smoothing properties required of a kernel. -/
+@[expose]
 def SmoothingKernelAssumptions (kernel : SmoothingKernelData p d) : Prop :=
   0 < kernel.Mpd ∧
   O3.IsConvexObjective kernel.phi ∧
@@ -106,10 +110,11 @@ def SmoothingKernelAssumptions (kernel : SmoothingKernelData p d) : Prop :=
         (kernel.smooth chi ell).value (Q x)
 
 /-- The signed-coordinate-invariant power kernel used in the lower-bound construction. -/
-noncomputable def lowerKernelPhi (r0 theta : ℝ) (x : Point d) : ℝ :=
+@[expose] noncomputable def lowerKernelPhi (r0 theta : ℝ) (x : Point d) : ℝ :=
   2 * (∑ j, |x j| ^ r0) ^ (2 * theta / r0)
 
 /-- A smoothing kernel exists with the prescribed power formula and dimension-dependent bounds. -/
+@[expose]
 noncomputable def SmoothingKernelConstructionStatement : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (p : ℝ), 2 < p → ∀ (d : ℕ), 2 ≤ d →
     ∃ (r0 theta : ℝ) (kernel : SmoothingKernelData p d),
@@ -156,6 +161,7 @@ structure LowerCompletionData (p : ℝ) (d T : ℕ) where
   xi : ℕ → ℝ
 
 /-- The partial objective is exactly the maximum of the affine pieces selected through `t`. -/
+@[expose]
 def ResistingMaximumAt (data : LowerCompletionData p d T) (t : ℕ) : Prop :=
   ∀ x,
     (∀ i ≤ t,
@@ -167,6 +173,7 @@ def ResistingMaximumAt (data : LowerCompletionData p d T) (t : ℕ) : Prop :=
 
 /-- The scales, fresh coordinates, oracle consistency, and adaptive queries of the resisting
 construction. -/
+@[expose]
 def LowerCompletionAssumptions (data : LowerCompletionData p d T) : Prop :=
   2 < p ∧ 2 ≤ d ∧ 1 ≤ T ∧ T ≤ d ∧
   data.x0 = 0 ∧
@@ -200,6 +207,7 @@ def LowerCompletionAssumptions (data : LowerCompletionData p d T) : Prop :=
 
 /-- Source carrier for `lem:above-lower-completion` (L01--L04): both value
 and gradient agree at every chronological query. -/
+@[expose]
 def AboveLowerExactPairCompletionStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ) (data : LowerCompletionData p d T),
     LowerCompletionAssumptions data →
@@ -212,17 +220,20 @@ structure LowerObjectiveData (p : ℝ) (d T : ℕ)
     extends LowerCompletionData p d T
 
 /-- The objective eventually exceeds every real bound outside a sufficiently large `ℓp` ball. -/
+@[expose]
 def IsCoerciveLp (p : ℝ) (f : Point d → ℝ) : Prop :=
   ∀ B : ℝ, ∃ radius : ℝ, 0 ≤ radius ∧
     ∀ x, radius ≤ lpNorm p x → B ≤ f x
 
 /-- The completion conditions together with convexity and the exact coordinate gradient. -/
+@[expose]
 def LowerObjectiveAssumptions (data : LowerObjectiveData p d T) : Prop :=
   LowerCompletionAssumptions data.toLowerCompletionData ∧
   O3.IsConvexObjective data.completedOracle.value ∧
   O3.IsCoordinateGradient data.completedOracle.value data.completedOracle.gradient
 
 /-- Source carrier for `lem:above-lower-gap` (L05). -/
+@[expose]
 noncomputable def AboveLowerQueryGapStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ) (data : LowerObjectiveData p d T),
     LowerObjectiveAssumptions data →
@@ -235,6 +246,7 @@ noncomputable def AboveLowerQueryGapStatement : Prop :=
         1 / (16 * data.kernel.Mpd * (T : ℝ) ^ (1 + 2 / p))
 
 /-- Source carrier for `lem:above-lower-outside` (L06). -/
+@[expose]
 noncomputable def AboveLowerOutsideGradientStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ) (data : LowerObjectiveData p d T),
     LowerObjectiveAssumptions data →
@@ -247,6 +259,7 @@ noncomputable def AboveLowerOutsideGradientStatement : Prop :=
       lpNorm p x < 4
 
 /-- Source carrier for `prop:above-lower-base-gradient` (L07). -/
+@[expose]
 noncomputable def AboveLowerBaseGradientStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ) (data : LowerObjectiveData p d T),
     LowerObjectiveAssumptions data →
@@ -256,6 +269,7 @@ noncomputable def AboveLowerBaseGradientStatement : Prop :=
       1 / (128 * data.kernel.Mpd * (T : ℝ) ^ (1 + 2 / p))
 
 /-- Source carrier for `lem:above-lower-radius` (L08). -/
+@[expose]
 noncomputable def AboveLowerOptimizerRadiusStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ), 2 ≤ d → 1 ≤ T → T ≤ d →
     ∀ kernel : SmoothingKernelData p d, SmoothingKernelAssumptions kernel →
@@ -265,6 +279,7 @@ noncomputable def AboveLowerOptimizerRadiusStatement : Prop :=
         rT = minimizerDistance p data.completedOracle data.x0
 
 /-- An exact deterministic run with a nonempty trace charging its initial query. -/
+@[expose]
 def ChargedKnownParameterRun (algorithm : DeterministicExactPairAlgorithm d)
     (x0 : Point d) (oracle : PairOracle d) (trace : List (Observation d)) : Prop :=
   GeneratedBy algorithm x0 trace ∧ TraceExact oracle trace ∧
@@ -272,6 +287,7 @@ def ChargedKnownParameterRun (algorithm : DeterministicExactPairAlgorithm d)
 
 /-- Upper half of the current known-parameter proposition.  `Cp` occurs
 after `p` and before dimension and instance data. -/
+@[expose]
 noncomputable def KnownParameterAboveTwoUpperStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∃ Cp : ℝ, 0 < Cp ∧
     ∀ (d : ℕ) (eps L R : ℝ), 0 < eps → 0 < L → 0 < R →
@@ -289,6 +305,7 @@ noncomputable def KnownParameterAboveTwoUpperStatement : Prop :=
 
 /-- Lower half of the current proposition: deterministic, exact-pair,
 every first-`T` query, `T ≤ d`, and explicit `Mpd`. -/
+@[expose]
 noncomputable def KnownParameterAboveTwoLowerStatement : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (p : ℝ), 2 < p → ∀ (d T : ℕ),
     2 ≤ d → 1 ≤ T → T ≤ d → ∀ (L R : ℝ), 0 < L → 0 < R →
@@ -324,6 +341,7 @@ noncomputable def KnownParameterAboveTwoLowerStatement : Prop :=
 
 /-- Source carrier for `prop:pgtwo-optimality` (U11--U12, A01--A13,
 L01--L09).  The upper and lower halves remain separately inspectable. -/
+@[expose]
 noncomputable def KnownParameterAboveTwoOptimalityStatement : Prop :=
   KnownParameterAboveTwoUpperStatement ∧ KnownParameterAboveTwoLowerStatement
 

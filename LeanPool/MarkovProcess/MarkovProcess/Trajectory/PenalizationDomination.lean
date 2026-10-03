@@ -20,7 +20,7 @@ Polish space.
 Main result: `IsFellerKernelSemigroup.killedResolvent_le_of_perturbed_resolventFamily`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -20,7 +20,7 @@ scalar endomorphisms, which is simple because monomorphisms split
 in the envelope, and the object is the biproduct of its corners.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

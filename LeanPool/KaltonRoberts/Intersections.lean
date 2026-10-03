@@ -29,7 +29,7 @@ Product and mixed intersection collections with the frequency and deficit
 bounds needed for the mixed-intersection step.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 

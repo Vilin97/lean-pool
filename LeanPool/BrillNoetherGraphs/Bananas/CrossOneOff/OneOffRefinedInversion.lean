@@ -26,7 +26,7 @@ immediately before it whenever `(n-1) | x`.  Every ordered pair of compressed
 coordinates gives an inversion, as does each additional adjacent pair.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -16,4 +16,4 @@ name) into Mathlib (`Mathlib.Analysis.Series.LocallyUniform`,
 `Mathlib.Analysis.Complex.LocallyUniformLimit`, etc.).  The remaining purely-local helpers
 were not imported by any other file in this project, so we retire this file as a stub.
 The original lemmas remain in git history for reference.
--/@[expose] public section
+-/public section

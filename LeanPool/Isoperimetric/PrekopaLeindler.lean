@@ -19,7 +19,7 @@ proceeds by reducing to the one-dimensional case via the layer-cake formula and
 then induction on the dimension.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped Pointwise
@@ -602,7 +602,7 @@ lemma lintegral_fix_lintegral_eq_lintegral
     (fun _ : Fin (d + 2) ↦ ℝ) (Fin.last (d + 1))).symm.map_eq
 
 /-- The hypotheses of the Prékopa–Leindler inequality bundled together. -/
-def PLConditions (n : ℕ) (θ : ℝ) (f g h : (Fin n → ℝ) → ENNReal) : Prop :=
+@[expose] def PLConditions (n : ℕ) (θ : ℝ) (f g h : (Fin n → ℝ) → ENNReal) : Prop :=
   0 < θ ∧ θ < 1 ∧
   Measurable f ∧ Measurable g ∧ Measurable h ∧
   (∀ x y, (f x)^(1-θ) * (g y)^θ ≤ h (x + y))

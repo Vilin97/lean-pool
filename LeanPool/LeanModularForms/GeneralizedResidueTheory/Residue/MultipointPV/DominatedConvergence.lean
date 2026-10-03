@@ -27,7 +27,7 @@ a.e. limit, norm bounds, measurability, and the main convergence theorems.
   single-point PVs when regular integral vanishes
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval

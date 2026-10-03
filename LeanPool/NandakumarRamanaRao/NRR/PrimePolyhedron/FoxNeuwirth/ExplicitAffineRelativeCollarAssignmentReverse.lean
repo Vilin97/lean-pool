@@ -18,7 +18,7 @@ to reversed global vertices.  Local vertex maps are unchanged, so origin avoidan
 literally.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -37,6 +37,7 @@ variable {p N₀ N₁ M L : Nat}
 variable {hp : Nat.Prime p}
 
 /-- A reversed local occurrence, viewed as the corresponding original occurrence. -/
+@[expose]
 def originalCoverVertex
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (s : CoverVertexSlot hp (reverseCells C)) : CoverVertexSlot hp C :=
@@ -51,12 +52,14 @@ def originalCoverVertex
   rfl
 
 /-- The original global vertex represented by a reversed local occurrence. -/
+@[expose]
 noncomputable def originalGlobalVertex
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (s : CoverVertexSlot hp (reverseCells C)) : GlobalVertex hp C :=
   Quotient.mk _ (originalCoverVertex C s)
 
 /-- Piecewise value used for descent to reversed global vertices. -/
+@[expose]
 noncomputable def reverseCoverVector
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (a : Assignment hp C)
@@ -77,6 +80,7 @@ theorem reverseCoverVector_eq_of_coverPoint_eq
   simpa [coverPoint_reverse] using hst
 
 /-- Descended vector assignment on the reversed collar. -/
+@[expose]
 noncomputable def reverseGlobalVector
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (a : Assignment hp C) :
@@ -113,6 +117,7 @@ theorem reverseGlobalVector_smul
   exact vectorValue_smul hp C a g (Quotient.mk _ (h, (q, i)))
 
 /-- Assignment transported to the reversed cell system. -/
+@[expose]
 noncomputable def reverseAssignment
     (C : RelativeAffineCellSystem hp N₀ N₁ M L)
     (a : Assignment hp C) : Assignment hp (reverseCells C) :=

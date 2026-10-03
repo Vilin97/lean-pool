@@ -27,7 +27,7 @@ Tags: combinatorics, boolean-functions, computational-complexity
 MSC: 06E30, 68Q17
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

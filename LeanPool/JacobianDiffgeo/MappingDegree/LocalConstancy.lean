@@ -32,7 +32,7 @@ connected `Y` — the well-definedness theorem for `degree`.
   `y : Y` (needs `[ConnectedSpace Y]`).
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

@@ -43,7 +43,7 @@ For the massive scalar field in 4D Euclidean space, the exact formula is:
   C(x,y) = (m / (4π² |x-y|)) · K₁(m |x-y|)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Asymptotics Real
 
@@ -51,7 +51,7 @@ open MeasureTheory Set Filter Asymptotics Real
     K₁(z) = ∫₀^∞ exp(-z cosh(t)) cosh(t) dt
     This is well-defined and positive for z > 0.
 -/
-noncomputable def besselK1 (z : ℝ) : ℝ :=
+@[expose] noncomputable def besselK1 (z : ℝ) : ℝ :=
   ∫ t : ℝ in Ici 0, exp (-z * cosh t) * cosh t
 
 /-- The integrand `t ↦ exp(-z cosh t) cosh t` is continuous. -/

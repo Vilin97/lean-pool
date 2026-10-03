@@ -20,7 +20,7 @@ sum itself is smooth and divergence-free on the whole preterminal region.
 No global smooth replacement of the raw scalar is chosen.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,10 +32,12 @@ open scoped Topology ContDiff BigOperators
 
 /-- The actual similarity parameter depends only on physical time and the
 axial coordinate, and not on radius or angle. -/
+@[expose]
 noncomputable def slowQ (h : ℝ) (s : DirectAngularDiagonal.Slow) : ℝ :=
   SimilarityCoordinates.coordinateQ (2 * h) (1 - s.1, s.2)
 
 /-- Local slow domain, given by `{s | s.1 < 1 ∧ slowQ h s < qbig}`. -/
+@[expose]
 noncomputable def localSlowDomain (h qbig : ℝ) : Set DirectAngularDiagonal.Slow :=
   {s | s.1 < 1 ∧ slowQ h s < qbig}
 
@@ -69,6 +71,7 @@ theorem localSlowDomain_subset (h qbig : ℝ) :
 variable {h qbig : ℝ}
 
 /-- The literal uncut direct angular fields used in the diagonal. -/
+@[expose]
 noncomputable def rawSeries
     (D : ℕ → DirectAngularDiagonal.AngularData (localSlowDomain h qbig)) : ℕ → VelocityField :=
   fun j => DirectAngularDiagonal.angularField (D j).scalar
@@ -84,6 +87,7 @@ theorem rawSeries_smooth (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- Axis preservation uses exactly the same local scalars and support,
 without imposing global raw smoothness. -/
+@[expose]
 noncomputable def angularSupport
     (D : ℕ → DirectAngularDiagonal.AngularData (localSlowDomain h qbig)) :
     ℕ → MixedAxisPreservation.AngularSupport (MixedAxisPreservation.localDomain h qbig) :=

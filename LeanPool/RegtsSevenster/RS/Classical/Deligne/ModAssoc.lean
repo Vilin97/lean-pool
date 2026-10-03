@@ -31,7 +31,7 @@ target.
   forward map.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -118,6 +118,7 @@ theorem modTensor_condition_left
 
 /-- The cover of the associator: reassociate and project through
 both tensor products of the right-nested side. -/
+@[expose]
 noncomputable def modTensorAssocCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -250,6 +251,7 @@ theorem modTensorπ_assocHom
 
 /-- The cover of the inverse associator: reassociate backwards and
 project through both tensor products of the left-nested side. -/
+@[expose]
 noncomputable def modTensorAssocInvCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -433,6 +435,7 @@ theorem modTensorAssocInv_assocHom
 /-- **The associator isomorphism of the tensor product of
 modules** (Deligne 2002, §2.3): the relative tensor is associative
 up to the descended ambient associator. -/
+@[expose]
 noncomputable def modTensorAssocIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -532,6 +535,7 @@ theorem modTensorAssocInv_act
     Category.id_comp]
 
 /-- The associator as a morphism of bundled modules. -/
+@[expose]
 noncomputable def modTensorAssocModHom
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -545,6 +549,7 @@ noncomputable def modTensorAssocModHom
     (modTensorAssocHom_act A M N P)
 
 /-- The inverse associator as a morphism of bundled modules. -/
+@[expose]
 noncomputable def modTensorAssocModInv
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -559,6 +564,7 @@ noncomputable def modTensorAssocModInv
 
 /-- **The associator of the tensor product of modules, as an
 isomorphism of bundled modules.** -/
+@[expose]
 noncomputable def modTensorAssocModIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

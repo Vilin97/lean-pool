@@ -25,7 +25,7 @@ sets, over which the final forest sum ranges; and the working type
 extension characterization.
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -42,6 +42,7 @@ namespace Edge
 variable {V} [DecidableEq V]
 
 /-- The edge with endpoints `i` and `j`. -/
+@[expose]
 def mk (i j : V) (hij : i ≠ j) : Edge V :=
   ⟨Sym2.mk i j, by
     intro hdiag
@@ -58,6 +59,7 @@ theorem not_isDiag (e : Edge V) : ¬ e.val.IsDiag :=
   e.property
 
 /-- `e.Between i j` says that `e` is the unordered pair `{i, j}`. -/
+@[expose]
 def Between (e : Edge V) (i j : V) : Prop :=
   e.val = Sym2.mk i j
 
@@ -72,10 +74,12 @@ theorem mk_comm (i j : V) (hij : i ≠ j) :
   exact Sym2.eq_swap
 
 /-- A fixed first endpoint of an unordered edge. -/
+@[expose]
 noncomputable def left (e : Edge V) : V :=
   e.val.out.1
 
 /-- A fixed second endpoint of an unordered edge. -/
+@[expose]
 noncomputable def right (e : Edge V) : V :=
   e.val.out.2
 
@@ -131,6 +135,7 @@ inductive IsPath (S : Finset (Edge V)) :
         IsPath S (e :: γ) i k
 
 /-- A graph-level simple path: an edge walk with no repeated edges. -/
+@[expose]
 def IsSimplePath (S : Finset (Edge V))
     (γ : List (Edge V)) (i j : V) : Prop :=
   IsPath S γ i j ∧ γ.Nodup
@@ -339,6 +344,7 @@ structure AcyclicEdgeSetData {V : Type*} [Fintype V] [DecidableEq V]
     ∀ {e : Edge V}, e ∈ S → isSimplePath [e] e.left e.right
 
 /-- A custom acyclicity predicate for finite edge sets. -/
+@[expose]
 def IsAcyclicEdgeSet {V : Type*} [Fintype V] [DecidableEq V]
     (S : Finset (Edge V)) : Prop :=
   Nonempty (AcyclicEdgeSetData S)
@@ -611,6 +617,7 @@ def singletonAcyclicEdgeSetData (e₀ : Edge V) :
     exact Or.inr ⟨rfl, e₀.between_left_right⟩
 
 /-- The empty forest, with equality as its component relation. -/
+@[expose]
 def empty (V : Type*) [Fintype V] [DecidableEq V] : Forest V where
   edges := ∅
   acyclic := emptyAcyclicEdgeSetData
@@ -631,6 +638,7 @@ theorem isAcyclicEdgeSet (F : Forest V) : IsAcyclicEdgeSet F.edges :=
   ⟨F.acyclic⟩
 
 /-- Forget the path data of a `Forest` representative, retaining only its finite edge-set index. -/
+@[expose]
 def support (F : Forest V) : ForestIndex V where
   edges := F.edges
   acyclic := F.isAcyclicEdgeSet
@@ -644,6 +652,7 @@ theorem empty_support :
   rfl
 
 /-- The component relation of a forest. -/
+@[expose]
 def inSameComponent (F : Forest V) (i j : V) : Prop :=
   F.acyclic.inSameComponent i j
 
@@ -663,6 +672,7 @@ def pathInF (F : Forest V) (i j : V) (h : F.inSameComponent i j) :
 end Forest
 
 /-- Simple paths in a forest, as exposed by its acyclicity certificate. -/
+@[expose]
 def IsSimplePath {V : Type*} [Fintype V] [DecidableEq V]
     (F : Forest V) (γ : List (Edge V)) (i j : V) : Prop :=
   F.acyclic.isSimplePath γ i j
@@ -801,6 +811,7 @@ namespace ForestIndex
 variable {V} [Fintype V] [DecidableEq V]
 
 /-- The finite forest index consisting of one edge. -/
+@[expose]
 def singleton (e : Edge V) : ForestIndex V where
   edges := {e}
   acyclic := ⟨Forest.singletonAcyclicEdgeSetData e⟩

@@ -15,7 +15,7 @@ This module extends pointwise convergence of uniformly contractive continuous
 linear maps from the range of a dense map to the whole ambient space.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

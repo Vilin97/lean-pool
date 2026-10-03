@@ -11,7 +11,7 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.CauchyCrofton.Theor
 
 /-! # Equal Area Equal Perimeter Partition Wrapper -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 

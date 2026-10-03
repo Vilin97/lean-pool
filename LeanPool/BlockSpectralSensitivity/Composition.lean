@@ -29,7 +29,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -39,7 +39,7 @@ universe u
 
 /-- Block composition `f ∘ g`: `N` disjoint `M`-bit inputs, `g` applied to each, the `N`
 resulting bits fed to `f` (Section 14 of `bs_lambda.txt`). -/
-def comp {W V : Type*} (f : Input W → Bool) (g : Input V → Bool) :
+@[expose] def comp {W V : Type*} (f : Input W → Bool) (g : Input V → Bool) :
     Input (W × V) → Bool := fun x => f fun w => g fun v => x (w, v)
 
 /-- The defining equation of `comp`. -/
@@ -50,7 +50,7 @@ theorem comp_apply {W V : Type*} (f : Input W → Bool) (g : Input V → Bool)
 `IterCoord V (m + 1) = V × IterCoord V m` holds definitionally (Section 14).  It is used
 both as the coordinate set of `iterFun f m` and, at `V := ι`, as the index set of the
 product blocks `iterBlock blk m`. -/
-def IterCoord (V : Type u) : ℕ → Type u
+@[expose] def IterCoord (V : Type u) : ℕ → Type u
   | 0 => PUnit
   | m + 1 => V × IterCoord V m
 
@@ -77,6 +77,7 @@ theorem card_iterCoord (V : Type*) [Fintype V] :
       rw [Fintype.card_prod, card_iterCoord V m, pow_succ']
 
 /-- The Cartesian-product block `B_{i_1} × ⋯ × B_{i_m}` (Section 14). -/
+@[expose]
 def iterBlock {V ι : Type*} [DecidableEq V] (blk : ι → Finset V) :
     (m : ℕ) → IterCoord ι m → Finset (IterCoord V m)
   | 0 => fun _ => (Finset.univ : Finset PUnit)
@@ -92,6 +93,7 @@ theorem iterBlock_succ {V ι : Type*} [DecidableEq V] (blk : ι → Finset V) (m
 
 /-- `F_m = f^{∘ m}`, the `m`-fold self-composition (Section 14). `F_0` is the one-bit
 identity function. -/
+@[expose]
 def iterFun {V : Type*} (f : Input V → Bool) : (m : ℕ) → Input (IterCoord V m) → Bool
   | 0 => fun x => x PUnit.unit
   | m + 1 => comp f (iterFun f m)

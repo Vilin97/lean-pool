@@ -21,7 +21,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SelbergSieve4.MainResults
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega
   Sieve Nat Nat.Prime

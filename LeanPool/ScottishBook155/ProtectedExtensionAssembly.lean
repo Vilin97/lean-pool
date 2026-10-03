@@ -18,7 +18,7 @@ target embeddings and the linear recovery map together with the properties
 used by the successor construction.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -29,6 +29,7 @@ noncomputable section
 universe u v
 
 /-- The canonical copy of the old source as the zero-height hyperplane. -/
+@[expose]
 noncomputable def protectedSourceBaseLinearIsometry
     {M : Type u} [NormedAddCommGroup M] [NormedSpace ℝ M] :
     M →ₗᵢ[ℝ] OneSum M where
@@ -49,6 +50,7 @@ abbrev ProtectedExtensionSpace
     (adjunctionTargetMk V a y H hattach)
 
 /-- The map from the extended source into the protected envelope of the adjunction. -/
+@[expose]
 noncomputable def protectedExtensionSourceEmbedding
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)
@@ -63,6 +65,7 @@ noncomputable def protectedExtensionSourceEmbedding
     (adjunctionSourceMk V a y H hattach x)
 
 /-- The linear embedding of the original target into the protected extension space. -/
+@[expose]
 noncomputable def protectedExtensionTargetLinear
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
@@ -73,6 +76,7 @@ noncomputable def protectedExtensionTargetLinear
 
 /-- The continuous linear projection from the protected extension back to the original
 target. -/
+@[expose]
 noncomputable def protectedExtensionProjection
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)
@@ -90,6 +94,7 @@ theorem protectedExtensionTargetLinear_norm
   exact norm_protectedTargetLinear_eq _ n
 
 /-- The assembled old-target map is a linear isometric embedding. -/
+@[expose]
 noncomputable def protectedExtensionTargetLinearIsometry
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (H : ℝ)

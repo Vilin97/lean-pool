@@ -57,7 +57,7 @@ excluded by the hypotheses or settled outright, and that case split lives inside
   of merely overlapping.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

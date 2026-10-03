@@ -18,7 +18,7 @@ transferred to that plane complex and the ordinary plane one-skeleton approximat
 be applied at an arbitrary tolerance.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -108,14 +108,14 @@ noncomputable def replacementGraphArrangement : BrokenLineData (Set.univ : Set P
       (hcont := hcont) (hinj := hinj) (D := D) (C := C))
 
 /-- Restrict the common arrangement to the actual replacement segments. -/
-noncomputable def replacementGraphBaseComplex : PlaneComplex :=
+@[expose] noncomputable def replacementGraphBaseComplex : PlaneComplex :=
   (K.replacementGraphArrangement
       (hcont := hcont) (hinj := hinj) (D := D) (C := C)).arrangementMesh.toPlaneComplex
     |>.restrictToSet (K.replacementGraphCarrier
       (hcont := hcont) (hinj := hinj) (D := D) (C := C))
 
 /-- The conforming finite plane graph complex of the simultaneous intrinsic replacement. -/
-noncomputable def replacementGraphComplex : PlaneComplex :=
+@[expose] noncomputable def replacementGraphComplex : PlaneComplex :=
   (K.replacementGraphBaseComplex
     (hcont := hcont) (hinj := hinj) (D := D) (C := C)).oneSkeleton
 
@@ -308,7 +308,7 @@ theorem replacementGraphComplex_support_eq_range :
 
 /-- The intrinsic one-skeleton is homeomorphic to the support of its conforming polygonal plane
 graph model. -/
-noncomputable def replacementGraphHomeomorph :
+@[expose] noncomputable def replacementGraphHomeomorph :
     K.oneSkeleton ≃ₜ
       (K.replacementGraphComplex
         (hcont := hcont) (hinj := hinj) (D := D) (C := C)).support :=

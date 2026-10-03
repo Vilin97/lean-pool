@@ -17,7 +17,7 @@ bridges into the signed double-sum identity: the signed count of
 margin-constrained Sym-tuples over shifted compositions is `1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

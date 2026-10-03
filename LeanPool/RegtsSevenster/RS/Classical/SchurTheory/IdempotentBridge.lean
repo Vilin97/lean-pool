@@ -18,7 +18,7 @@ normalizations agree, identifying `charIdempotent (nDim S) (nChar S)`
 with `nProjector S` over the symmetric group.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

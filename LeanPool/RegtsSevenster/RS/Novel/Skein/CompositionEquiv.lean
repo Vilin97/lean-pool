@@ -17,7 +17,7 @@ equivalent outputs.  These are the transport lemmas through which
 every up-to-isomorphism identity about composition is proved.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

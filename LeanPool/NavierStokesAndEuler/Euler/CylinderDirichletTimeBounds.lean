@@ -22,7 +22,7 @@ jets lift to L² operator paths with constant one, and the true fixed-space
 inverse adds one shift while preserving the external radius.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

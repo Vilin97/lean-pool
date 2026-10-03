@@ -16,7 +16,7 @@ Those three coefficient equations are exactly the inputs consumed by
 `no_typeA_active_slice_pair` and `no_typeB_active_slice_pair`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

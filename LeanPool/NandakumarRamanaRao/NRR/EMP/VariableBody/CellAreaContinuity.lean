@@ -25,7 +25,7 @@ dominating function.
   `sites : C(X, Config n)`, needing only continuity of `X`, not compactness.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology
 open NRR NRR.Geometry NRR.Geometry.ConvexBody

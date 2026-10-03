@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanPacketContract
 
 /-! The actual inverse-frame mean profiles satisfy the closed lifted divergence constraint. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

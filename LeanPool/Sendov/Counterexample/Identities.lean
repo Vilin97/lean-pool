@@ -35,7 +35,7 @@ formalized: no junk value of `0⁻¹` is ever evaluated.
 * `Sendov.second_origin_identity`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
@@ -44,6 +44,7 @@ open Polynomial Multiset
 open scoped Classical in
 /-- `∑ⱼ ∏_{k≠j} sₖ`.  This is `(∏ s) · (∑ⱼ 1/sⱼ)` with the denominators cleared, and unlike
 that expression it is well defined when some `sⱼ` vanishes. -/
+@[expose]
 noncomputable def sumEraseProd (s : Multiset ℂ) : ℂ :=
   (s.map (fun j => (s.erase j).prod)).sum
 

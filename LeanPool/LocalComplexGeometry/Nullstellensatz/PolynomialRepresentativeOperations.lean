@@ -19,7 +19,7 @@ polynomial shapes occurring in Weierstrass division and records independence
 of an inessential larger degree bound.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators Topology

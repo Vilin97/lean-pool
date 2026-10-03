@@ -48,7 +48,7 @@ the product estimate.
   from unit sup norm to every polynomial with positive sup norm.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial
 

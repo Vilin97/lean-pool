@@ -16,7 +16,7 @@ fields. On good times only the negative part of f' can increase the
 upper pressure bound; history and early times use the exponentially
 small target ratio. No child low bound is assumed. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -115,7 +115,7 @@ variable {τ : ℝ} {hτ : 0 < τ} {hτT : τ < A.T}
 /-- The exact source (20) errors, expressed on the same normalized
 packet that defines the physical child. These are precisely the two
 errors supplied by the same-Q packet choice. -/
-def SourceErrors (ev ep : ℝ) : Prop :=
+@[expose] def SourceErrors (ev ep : ℝ) : Prop :=
   ∀ (t : Icc (0 : ℝ) A.T) (x : Space),
     ‖fderiv ℝ (A.normalizedPacketVelocity m hm J support hSupport B residual k E.inverse t) x -
       shearTerm (G.primaryAmplitude hball) (deriv (profile G.δ) (k*⟪m,E.inverse.normalized t x⟫_ℝ))

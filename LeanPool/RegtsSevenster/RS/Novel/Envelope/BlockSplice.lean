@@ -26,7 +26,7 @@ rotation as through-strands tensored with `K` cups, and the same
 after the outer relabel is collapsed.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

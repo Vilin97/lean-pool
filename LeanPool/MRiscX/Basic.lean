@@ -19,4 +19,4 @@ public import LeanPool.MRiscX.Tactics.CodeProofTactics
 This module provides the top-level entry point gathering the MRiscX modules.
 -/
 
-@[expose] public section
+public section

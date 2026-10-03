@@ -23,7 +23,7 @@ The `IsMaximalSelfAdjoint` class is used so that (for example) for matrices over
 it uses the real part.
 -/
 
-@[expose] public section
+public section
 
 namespace HermitianMat
 
@@ -38,6 +38,7 @@ variable [Ring α] [StarAddMonoid α] [CommSemiring R] [Algebra R α] [IsMaximal
   but that the trace of a `HermitianMat n ℂ` gives values in ℝ. The fact that traces are
   "automatically"
   real reduces coercions down the line. -/
+@[expose]
 def trace (A : HermitianMat n α) : R :=
   IsMaximalSelfAdjoint.selfadjMap (A.mat.trace)
 

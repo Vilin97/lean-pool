@@ -21,7 +21,7 @@ The key bookkeeping is a tiny (34-element) map from directed indices to the uniq
 transpose-orbit contains it (with `idDirIdx` handled separately).
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 

@@ -25,7 +25,7 @@ geometric stack vertex in different refined top cells. This overlap compatibilit
 `Assignment` on the quotient of global collar vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

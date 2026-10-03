@@ -21,7 +21,7 @@ Support comes from the canonical source carrier and the actual native
 mask/cutoff product.  Quantitative wave bounds are separate inputs.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,6 +38,7 @@ abbrev Point := ActualInitialization.Point
 abbrev Index (B N0 : ℕ) := ActualInitialization.Index B N0
 
 /-- The same label map used by the actual primary covariance. -/
+@[expose]
 noncomputable def label {B N0 : ℕ} (_n : ℕ) (l : Index B N0) : SlotColoring.Label :=
   ActualPrimaryCovariance.signedLabelOf l
 
@@ -1080,6 +1081,7 @@ theorem primary_tangent_band (l : Index B N0) : (ActualInitialization.tangentBlo
 
 /-- The family is the literal cycle constructor, using the current
 coefficients and the fixed primary choice. -/
+@[expose]
 noncomputable def family :
     LabelSumBounds.SignedFamily ActualInitialization.geometry.strip P
       (1/2) (17/25) (1/2+σ-κ) (1+σ-2*κ) :=
@@ -1132,6 +1134,7 @@ theorem particular_supported_of_inputSupport :
 
 /-- The geometric record uses the same fixed slots and the current
 finite label set.  The particular support adapter is supplied below. -/
+@[expose]
 noncomputable def assemblyOfParticularSupport :
     SignedMeanGain.Assembly (family x H hσ hpart htangent hcurl hP0 hP1) where
   width := CoordinateAlgebra.D ActualPrimary.h
@@ -1173,6 +1176,7 @@ theorem assemblyOfParticularSupport_labels :
 
 /-- The actual geometric constructor. Incoming primitive support is
 transported through the particular solve; signed support is proved above. -/
+@[expose]
 noncomputable def assembly :
     SignedMeanGain.Assembly (family x H hσ hpart htangent hcurl hP0 hP1) :=
   assemblyOfParticularSupport x H hσ hpart htangent hcurl hP0 hP1 hN hcarrier

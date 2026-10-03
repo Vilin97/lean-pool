@@ -22,7 +22,7 @@ Only the inner positive derivatives are bounded in sup norm.  The outer
 L² norm is transported by a measure-preserving map, so it is not replaced
 by a pointwise bound or by a volume of the ambient domain. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -39,7 +39,7 @@ variable {E F : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Inner partition bound, given by `∏ i, B*R^(c.partSize i)*((c.partSize i).factorial : ℝ)^2`. -/
-def innerPartitionBound {n : ℕ} (B R : ℝ) (c : OrderedFinpartition n) : ℝ :=
+@[expose] def innerPartitionBound {n : ℕ} (B R : ℝ) (c : OrderedFinpartition n) : ℝ :=
   ∏ i, B*R^(c.partSize i)*((c.partSize i).factorial : ℝ)^2
 
 lemma innerPartitionBound_nonneg {n : ℕ} (B R : ℝ) (hB : 0 ≤ B) (hR : 0 ≤ R)

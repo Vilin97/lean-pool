@@ -10,7 +10,7 @@ public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 /-! # Incidence counts in finite simple graphs -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

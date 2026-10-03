@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 frequency losses as the velocity correction. The inverse-transpose
 coefficient bounds follow from the actual determinant-one deformation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 /-- Graph pressure force, given by `κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t)
 x)`. -/
-def graphPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
+@[expose] def graphPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t) x)
 
 include he in
@@ -94,7 +94,7 @@ variable (X Y : Icc (0 : ℝ) D.T → Space → Space)
   (hXY : ∀ t x, X t (Y t x) = x)
 
 /-- Physical pressure force, given by `graphPressureForce D P κ k e t (Y t x)`. -/
-def physicalPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
+@[expose] def physicalPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   graphPressureForce D P κ k e t (Y t x)
 
 include he hR hC hA hS hF hb hX hY hXY hdet in

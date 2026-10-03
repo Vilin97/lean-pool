@@ -22,7 +22,7 @@ section
 /-! Pullback of a bounded field by identity plus a bounded displacement.
 Uniform spatial Lipschitz control proves continuity in the genuine sup norm. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,13 +33,13 @@ namespace EulerBoundedFieldPullback
 variable {E V : Type*} [NormedAddCommGroup E] [NormedAddCommGroup V]
 
 /-- Pullback, constructed using `BoundedContinuousFunction.ofNormedAddCommGroup`. -/
-def pullback (A : E →ᵇ V) (d : E →ᵇ E) : E →ᵇ V :=
+@[expose] def pullback (A : E →ᵇ V) (d : E →ᵇ E) : E →ᵇ V :=
   BoundedContinuousFunction.ofNormedAddCommGroup (fun x => A (x+d x))
     (A.continuous.comp (continuous_id.add d.continuous)) ‖A‖
     (fun x => A.norm_coe_le_norm (x+d x))
 
 @[simp] theorem pullback_apply (A : E →ᵇ V) (d : E →ᵇ E) (x : E) :
-    pullback A d x = A (x+d x) := rfl
+    pullback A d x = A (x+d x) := by rfl
 
 theorem pullback_norm (A : E →ᵇ V) (d : E →ᵇ E) :
     ‖pullback A d‖ ≤ ‖A‖ :=
@@ -81,13 +81,13 @@ theorem continuous_pullback (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
   exact hzero
 
 /-- Path pullback, given by `⟨fun t => pullback (A t) (d t), continuous_pullback A d L hL⟩`. -/
-def pathPullback (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
+@[expose] def pathPullback (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
     (L : ℝ≥0) (hL : ∀ t, LipschitzWith L (A t)) : C(K,E →ᵇ V) :=
   ⟨fun t => pullback (A t) (d t), continuous_pullback A d L hL⟩
 
 @[simp] theorem pathPullback_apply (A : C(K, E →ᵇ V)) (d : C(K, E →ᵇ E))
     (L : ℝ≥0) (hL : ∀ t, LipschitzWith L (A t)) (t : K) (x : E) :
-    pathPullback A d L hL t x = A t (x+d t x) := rfl
+    pathPullback A d L hL t x = A t (x+d t x) := by rfl
 
 end EulerBoundedFieldPullback
 
@@ -138,7 +138,7 @@ section
 /-! A continuous multilinear operation acts on genuine bounded fields in
 the uniform norm. This includes the finite Faà di Bruno operations. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -171,7 +171,7 @@ def multilinearValue (L : ContinuousMultilinearMap ℝ V W)
 
 @[simp] theorem multilinearValue_apply (L : ContinuousMultilinearMap ℝ V W)
     (f : ∀ i, α →ᵇ V i) (x : α) :
-    multilinearValue L f x = L (fun i => f i x) := rfl
+    multilinearValue L f x = L (fun i => f i x) := by rfl
 
 theorem multilinearValue_norm (L : ContinuousMultilinearMap ℝ V W)
     (f : ∀ i, α →ᵇ V i) :
@@ -221,7 +221,7 @@ def multilinearMap (L : ContinuousMultilinearMap ℝ V W) :
 
 @[simp] theorem multilinearMap_apply (L : ContinuousMultilinearMap ℝ V W)
     (f : ∀ i, α →ᵇ V i) (x : α) :
-    multilinearMap L f x = L (fun i => f i x) := rfl
+    multilinearMap L f x = L (fun i => f i x) := by rfl
 
 theorem multilinearMap_norm (L : ContinuousMultilinearMap ℝ V W) :
     ‖multilinearMap (α := α) L‖ ≤ ‖L‖ :=
@@ -234,7 +234,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -339,7 +339,7 @@ theorem partitionJet_apply (A : SmoothTimeField K E V) (D : SmoothTimeField K E 
 
 /-- Comp displacement, bundling `field`, `smooth`, `jet`, `jet_eq` and the required
 compatibility proofs. -/
-def compDisplacement (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) :
+@[expose] def compDisplacement (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) :
     SmoothTimeField K E V where
   field := pathPullback A.field D.field ‖A.jet 1‖₊ A.field_lipschitz
   smooth t := (A.smooth t).comp (contDiff_id.add (D.smooth t))
@@ -359,6 +359,6 @@ def compDisplacement (A : SmoothTimeField K E V) (D : SmoothTimeField K E E) :
 
 @[simp] theorem compDisplacement_apply (A : SmoothTimeField K E V) (D : SmoothTimeField K E E)
     (t : K) (x : E) :
-    (A.compDisplacement D).field t x = A.field t (x+D.field t x) := rfl
+    (A.compDisplacement D).field t x = A.field t (x+D.field t x) := by rfl
 
 end SmoothTimeField

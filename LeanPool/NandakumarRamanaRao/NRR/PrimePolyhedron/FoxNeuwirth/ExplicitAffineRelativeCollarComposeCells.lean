@@ -18,7 +18,7 @@ pairing of the first collar and lower boundary pairing of the second collar are 
 Fox--Neuwirth chain, hence cancel pointwise after regrouping by combined quotient facets.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -44,10 +44,12 @@ theorem cylinderPoint_ext {z w : CylinderPoint p}
   exact Subtype.ext ht
 
 /-- Place a cylinder point in the lower half-cylinder. -/
+@[expose]
 noncomputable def leftPoint (z : CylinderPoint p) : CylinderPoint p :=
   ⟨z.spatial, ⟨z.time.1 / 2, by constructor <;> linarith [z.time.2.1, z.time.2.2]⟩⟩
 
 /-- Place a cylinder point in the upper half-cylinder. -/
+@[expose]
 noncomputable def rightPoint (z : CylinderPoint p) : CylinderPoint p :=
   ⟨z.spatial, ⟨(1 + z.time.1) / 2, by constructor <;> linarith [z.time.2.1, z.time.2.2]⟩⟩
 
@@ -114,6 +116,7 @@ noncomputable def middlePoint (x : Realization p) : CylinderPoint p :=
   simp [rightPoint, upperCylinderPoint]
 
 /-- Combined affine cell system. -/
+@[expose]
 noncomputable def combinedCells
     (C : RelativeAffineCellSystem hp N₀ Nmid M₀ L₀)
     (D : RelativeAffineCellSystem hp Nmid N₁ M₁ L₁) :
@@ -200,10 +203,12 @@ variable
     (D : RelativeAffineCellSystem hp Nmid N₁ M₁ L₁)
 
 /-- Embed a left local facet occurrence into the combined cell family. -/
+@[expose]
 def leftOccurrence (o : C.FacetOccurrence) : (combinedCells C D).FacetOccurrence :=
   (Sum.inl o.1, o.2)
 
 /-- Embed a right local facet occurrence into the combined cell family. -/
+@[expose]
 def rightOccurrence (o : D.FacetOccurrence) : (combinedCells C D).FacetOccurrence :=
   (Sum.inr o.1, o.2)
 
@@ -216,6 +221,7 @@ def rightOccurrence (o : D.FacetOccurrence) : (combinedCells C D).FacetOccurrenc
       fun i => rightPoint (D.facetSignature o i) := rfl
 
 /-- Push a left quotient facet into the combined quotient. -/
+@[expose]
 noncomputable def leftFacet (s : C.Facet) : (combinedCells C D).Facet :=
   Quotient.map (leftOccurrence C D) (by
     intro a b hab
@@ -223,6 +229,7 @@ noncomputable def leftFacet (s : C.Facet) : (combinedCells C D).Facet :=
     exact ⟨g, by funext i; simpa using congrArg leftPoint (congrFun hg i)⟩) s
 
 /-- Push a right quotient facet into the combined quotient. -/
+@[expose]
 noncomputable def rightFacet (s : D.Facet) : (combinedCells C D).Facet :=
   Quotient.map (rightOccurrence C D) (by
     intro a b hab
@@ -262,11 +269,13 @@ theorem rightFacet_injective : Function.Injective (rightFacet C D) := by
   simpa using congrFun hg i
 
 /-- Kronecker weight for the image of one combined quotient facet. -/
+@[expose]
 noncomputable def leftIndicator
     (s : (combinedCells C D).Facet) (t : C.Facet) : ZMod p :=
   if leftFacet C D t = s then 1 else 0
 
 /-- Kronecker weight for the right image. -/
+@[expose]
 noncomputable def rightIndicator
     (s : (combinedCells C D).Facet) (t : D.Facet) : ZMod p :=
   if rightFacet C D t = s then 1 else 0

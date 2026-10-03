@@ -71,7 +71,7 @@ Herglotz theorem, Herglotz–Riesz theorem, Poisson integral, positive harmonic 
 positive real part, unit disc
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.LeanComplexAnalysis
 

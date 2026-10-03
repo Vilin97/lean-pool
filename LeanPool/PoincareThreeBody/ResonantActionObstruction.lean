@@ -26,7 +26,7 @@ disturbing average.  The bridge is the pointwise factorization of the leading di
 the physical Delaunay action map.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -248,7 +248,7 @@ theorem IsFirstIntegralFamily.resonantCandidateForcing_eq_neg_dot_actionPoisson
     hposition henergy hfactor
 
 /-- The leading action differential at the actions carried by a resonant eccentric ellipse. -/
-noncomputable def resonantLeadingActionDifferential
+@[expose] noncomputable def resonantLeadingActionDifferential
     (F : ℝ → PhaseSpace → ℝ) (p q : ℕ) (eccentricity : ℝ) : ActionSpace :=
   leadingActionDifferential F
     ![resonantFirstAction p q,

@@ -39,4 +39,4 @@ meets the carrier. Over a nonempty metric base, signed distance converts such a 
 continuous pullback.
 -/
 
-@[expose] public section
+public section

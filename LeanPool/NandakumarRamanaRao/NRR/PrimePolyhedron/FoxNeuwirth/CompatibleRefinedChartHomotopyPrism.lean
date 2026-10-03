@@ -23,7 +23,7 @@ interpolation of the samples remain within half that margin.  The resulting midd
 assignment is origin-free and its two horizontal boundaries are the exact endpoint chart maps.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -145,6 +145,7 @@ noncomputable def localVector
     (StandardSimplex.ofDelta (SphereOddDegree.FiniteSimplex.vertex (S := Real) s.2))
 
 /-- Prime-decorated local prism sample. -/
+@[expose]
 noncomputable def decoratedVector
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1)
@@ -196,6 +197,7 @@ theorem decoratedVector_eq_of_coverPoint_eq
     za.1 zb.1 za.2 hzspatial
 
 /-- Global prism vector by quotient descent. -/
+@[expose]
 noncomputable def globalVector
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1) (L : Nat) :
@@ -215,6 +217,7 @@ theorem globalVector_smul
   rfl
 
 /-- Compatible assignment obtained from chart-homotopy samples. -/
+@[expose]
 noncomputable def assignment
     (hp : Nat.Prime p) {N : Nat} {K0 K1 : ChartMap hp N}
     (J : ChartHomotopy hp N K0 K1) (L : Nat) :

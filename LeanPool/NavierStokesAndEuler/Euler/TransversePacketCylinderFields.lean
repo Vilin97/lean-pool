@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketCorrectorSupport
 
 /-! Actual cylinder-path witnesses for the constructed transverse solution and corrector. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,7 +28,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
 
 /-- Vector field, bundling `path`, `orbit`, `raw_eq`. -/
-def vectorField : Field P D.T (G.vector I) where
+@[expose] def vectorField : Field P D.T (G.vector I) where
   path := G.fullVelocityPath I
   orbit := G.velocityPath_orbit I
   raw_eq t x θ := by
@@ -37,7 +37,7 @@ def vectorField : Field P D.T (G.vector I) where
     rw [Data.clamp_coe]
 
 /-- Vector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
-def vectorDerivativeField : Field P D.T (G.vectorDerivative I) where
+@[expose] def vectorDerivativeField : Field P D.T (G.vectorDerivative I) where
   path := G.fullDerivativePath I
   orbit := G.derivativePath_orbit I
   raw_eq t x θ := by
@@ -50,7 +50,7 @@ theorem vectorField_time : TimeDerivative D.T_pos.le (G.vectorField I) (G.vector
   G.fullVelocityPath_time I
 
 /-- Corrector field, bundling `path`, `orbit`, `raw_eq`. -/
-def correctorField : Field P D.T (G.corrector I) where
+@[expose] def correctorField : Field P D.T (G.corrector I) where
   path := G.correctorPath I
   orbit := G.correctorPath_orbit I
   raw_eq t x θ := by
@@ -59,7 +59,7 @@ def correctorField : Field P D.T (G.corrector I) where
     rw [Data.clamp_coe]
 
 /-- Corrector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
-def correctorDerivativeField : Field P D.T (G.correctorDerivative I) where
+@[expose] def correctorDerivativeField : Field P D.T (G.correctorDerivative I) where
   path := G.correctorTimePath I
   orbit := G.correctorTimePath_orbit I
   raw_eq t x θ := by

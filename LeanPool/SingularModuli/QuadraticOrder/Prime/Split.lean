@@ -32,7 +32,7 @@ of the quotient `O/(p) ≅ 𝔽ₚ × 𝔽ₚ` is the Lean-idiomatic restatement
 thesis's "p factors as two distinct primes".
 -/
 
-@[expose] public section
+public section
 
 namespace QuadraticOrder
 

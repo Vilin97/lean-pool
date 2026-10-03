@@ -16,7 +16,7 @@ This file provides utilities for working with chains in sum types,
 which are used to construct the ωCPO instance for coproducts.
 -/
 
-@[expose] public section
+public section
 
 namespace OmegaCompletePartialOrder.Chain.Sum
 
@@ -65,7 +65,7 @@ def swapOrderHom : A ⊕ B →o B ⊕ A where
     simp_all
 
 @[simp]
-lemma swapOrderHom_apply (x : A ⊕ B) : swapOrderHom x = Sum.swap x := rfl
+lemma swapOrderHom_apply (x : A ⊕ B) : swapOrderHom x = Sum.swap x := by rfl
 
 /-- Projects right values out of a chain. -/
 def projr [hB : Inhabited B] (c : Chain (A ⊕ B)) : Chain B :=
@@ -83,7 +83,7 @@ lemma projr_coe [Inhabited B] (c : Chain (A ⊕ B)) (n : ℕ) :
       Sum.swap_inr, Sum.elim_inl, id_eq, Sum.elim_inr]
 
 /-- Splits a chain of sums into a sum of chains. -/
-def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=
+@[expose] def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=
   Sum.elim
     (fun d ↦
       let : Inhabited A := ⟨d⟩

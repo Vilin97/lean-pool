@@ -35,7 +35,7 @@ field by uniqueness. Finite covering supplies its whole-carrier integral,
 and the two cell regimes give the pressure-gradient input of the criterion.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal Topology

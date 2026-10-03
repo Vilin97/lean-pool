@@ -19,7 +19,7 @@ The finite-block description is combined with the explicit pasting of
 separated blocks. All cardinal estimates use images of actual families.
 -/
 
-@[expose] public section
+public section
 
 open Set Filter Cardinal
 
@@ -27,11 +27,12 @@ namespace NonMRR
 
 /-- A family meeting each prescribed function infinitely often along
 each infinite set of coordinates. -/
-def StronglyCoincident (F : Set (ℕ → ℕ)) : Prop :=
+@[expose] def StronglyCoincident (F : Set (ℕ → ℕ)) : Prop :=
   ∀ W : Set ℕ, W.Infinite → ∀ c : ℕ → ℕ,
     ∃ f ∈ F, ∃ᶠ n in atTop, n ∈ W ∧ f n = c n
 
 /-- A family of increasing sequences with gaps escaping each bound. -/
+@[expose]
 def GapUnbounded (B : Set (ℕ → ℕ)) : Prop :=
   (∀ t ∈ B, StrictMono t) ∧ ∀ g : ℕ → ℕ,
     ∃ t ∈ B, ∃ᶠ k in atTop, g (t k) < t (k + 1)

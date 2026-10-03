@@ -16,7 +16,7 @@ This file builds the clean bridge from Hadamard order-`≤ 1` hypotheses for `ri
 to the genus-one summability statements used by the Li-criterion development.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped Topology

@@ -11,7 +11,7 @@ public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 /-! # ForMathlibUpperHalfPlane -/
 
 
-@[expose] public section
+public section
 
 -- Probably put it at LinearAlgebra/Matrix/SpecialLinearGroup.lean
 

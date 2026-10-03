@@ -17,7 +17,7 @@ of fibre-constant affine functionals. A functional distinguishing them lies
 outside that space, where maximality supplies thickness after slab pruning.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ
 

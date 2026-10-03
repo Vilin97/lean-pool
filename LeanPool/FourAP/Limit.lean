@@ -26,7 +26,7 @@ in the paper's remark: stop at *any* stage long enough to contain the position.
 Neither direction of the equivalence uses a choice of preimage.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
@@ -34,7 +34,7 @@ namespace FourAP
 at increasing positions form a nonconstant arithmetic progression.  Because
 `IsAP4` uses equations rather than natural subtraction, decreasing arithmetic
 progressions are excluded as well. -/
-def SequenceAPFree (f : ℕ → ℕ) : Prop :=
+@[expose] def SequenceAPFree (f : ℕ → ℕ) : Prop :=
   ∀ ⦃i j k l : ℕ⦄, i < j → j < k → k < l →
     ¬ IsAP4 (f i) (f j) (f k) (f l)
 
@@ -94,7 +94,7 @@ theorem safeStages_idxOf_eq (P : ℕ → List ℕ)
 paper from computable safe stages. Its forward map reads a bounded stage,
 and its inverse searches a bounded finite word; the proofs below verify
 that these explicitly given maps are mutually inverse. -/
-def permutationOfSafeStages (R : ℕ → ℕ → Prop) (P : ℕ → List ℕ)
+@[expose] def permutationOfSafeStages (R : ℕ → ℕ → Prop) (P : ℕ → List ℕ)
     (hsafe : ∀ n, Safe R (P n))
     (hstep : ∀ n, (P n).IsPrefix (P (n + 1)))
     (hcover : ∀ n t, t < n → t ∈ P n) : ℕ ≃ ℕ where

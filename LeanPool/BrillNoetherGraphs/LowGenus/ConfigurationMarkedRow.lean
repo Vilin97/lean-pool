@@ -48,7 +48,7 @@ the height is constant across collapsed slots.  Those five facts give
 costs a chamber nothing beyond declaring its profile.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationMarkedRow
 
@@ -459,10 +459,12 @@ def markedDivisorOne (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e : Fin 12) :
   d.coreClassDivisor W + oneChip (d.pathAt e (mark e))
 
 /-- The core-class weight of a two-mark divisor. -/
+@[expose]
 def baseTwo (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e f : Fin 12) (v : Fin 8) : ℤ :=
   W v + markChipWeight d mark e v + markChipWeight d mark f v
 
 /-- The core-class weight of a one-mark divisor. -/
+@[expose]
 def baseOne (W : Fin 8 → ℤ) (mark : Fin 12 → ℕ) (e : Fin 12) (v : Fin 8) : ℤ :=
   W v + markChipWeight d mark e v
 

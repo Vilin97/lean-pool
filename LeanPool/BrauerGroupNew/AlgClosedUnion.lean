@@ -16,7 +16,7 @@ This file ports auxiliary results about finite intermediate fields inside an alg
 closure and tensor products over their directed union.
 -/
 
-@[expose] public section
+public section
 
 suppress_compilation
 

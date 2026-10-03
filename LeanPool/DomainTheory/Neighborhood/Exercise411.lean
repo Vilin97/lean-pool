@@ -52,7 +52,7 @@ the project's permitted `Element.ext`; the inclusion data `inclMap` is
 **choice-free**.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -104,7 +104,7 @@ theorem fixElement_uniform {β γ : Type*} {W₀ : NeighborhoodSystem β} {W₁ 
 relates to any larger
 `𝒟`-neighbourhood `Y ⊇ X`. Its elementwise action is `embed a`
 (`inclMap_toElementMap`). -/
-def inclMap (a : V.Element) : ApproximableMap (relSystem a) V where
+@[expose] def inclMap (a : V.Element) : ApproximableMap (relSystem a) V where
   rel X Y := a.mem X ∧ V.mem Y ∧ X ⊆ Y
   rel_dom := fun h => h.1
   rel_cod := fun h => h.2.1

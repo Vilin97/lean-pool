@@ -15,7 +15,7 @@ Value lemmas for the tensor swap, the braiding-naturality label
 meets, and the fragment-level naturality squares.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

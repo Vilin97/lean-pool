@@ -37,7 +37,7 @@ argument.
 Axiom-clean; elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.EuclideanPacking
 

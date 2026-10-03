@@ -34,7 +34,7 @@ picture, or Core 095, has been encoded.  It gives the reusable checked moves
 to which such incidence data must eventually be connected.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.Configurations
 
@@ -138,6 +138,7 @@ theorem bnExists_one_three_of_dharMoves_off_support
 
 /-- The degree-three divisor used throughout the genus-four pictures.  The
 three vertices need not be distinct. -/
+@[expose]
 def threeChipDivisor (first second third : G.V) : CFDiv G :=
   oneChip first + oneChip second + oneChip third
 
@@ -276,6 +277,7 @@ end MovingDivisor
 
 /-- An exact reflection starting with one chip at each of two endpoints.  The
 second output chip is allowed to coincide with the requested target. -/
+@[expose]
 def TwoEndpointReflection (left right target : G.V) : Prop :=
   ∃ (reflected : G.V) (script : firingScript G),
     prin G script =
@@ -328,6 +330,7 @@ variable {n p : ℕ} (spec : SubdivisionGraph.Spec n p)
 
 /-- Exact geometric obligation for a subdivided segment: its two endpoint
 chips reflect to a named path position and one further effective chip. -/
+@[expose]
 def ReflectsTo (edge : Fin p) (position : spec.PathPosition edge) : Prop :=
   TwoEndpointReflection (G := spec.graph)
     (spec.coreVertex (spec.core.tail edge))

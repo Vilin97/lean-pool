@@ -27,7 +27,7 @@ Forward acceptance gate (`subset_pcClass`): `c ∈ B → ∃ d, codeReduct d = c
 d ∈ ModelsOf (pcSentence side T)` — **without** `IsomorphismInvariant`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

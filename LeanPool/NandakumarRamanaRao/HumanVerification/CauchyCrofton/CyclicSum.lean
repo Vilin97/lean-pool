@@ -25,7 +25,7 @@ steps are pairwise disjoint (two of them would produce two up-crossings of a com
 they cover the range interval `[N, M)` up to the single point `0`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 

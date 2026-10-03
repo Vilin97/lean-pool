@@ -13,7 +13,7 @@ import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
 
 /-! Classical divergence and pressure identities for the reconstructed mean fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

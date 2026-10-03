@@ -40,7 +40,7 @@ This file isolates the fully-proven angular crux; the packing count on top of it
 geometric step (sharp form = Romanov). Axiom-clean; elementary.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.EuclideanAngle
 

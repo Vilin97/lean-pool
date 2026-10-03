@@ -23,7 +23,7 @@ principal graded ring or a chosen generating system.
 
 open Cardinal
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.HahnPolynomial
 
@@ -32,7 +32,7 @@ universe u
 variable (K : Type u) [Field K]
 
 /-- The Hahn-series ring `K((ℝ^{≤0}))`. -/
-def Series : Subring (HahnSeries ℝ K) where
+@[expose] def Series : Subring (HahnSeries ℝ K) where
   carrier := {x | x.support ⊆ Set.Iic 0}
   zero_mem' := by simp
   one_mem' := fun _ hg ↦ (HahnSeries.support_single_subset hg).le

@@ -19,7 +19,7 @@ smoothness is proved with the inverse function theorem applied to the triangular
 map `(p, θ) ↦ (p, Φ(p, θ))`; no smooth inverse is postulated.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,21 +34,22 @@ open SmoothLoop
 variable {E : Type*}
 
 /-- Family rate, given by `(d z.1).rate z.2`. -/
-def familyRate (d : E → CircleDensity) (z : E × ℝ) : ℝ := (d z.1).rate z.2
+@[expose] def familyRate (d : E → CircleDensity) (z : E × ℝ) : ℝ := (d z.1).rate z.2
 
 /-- Family phase, given by `phaseMap (d z.1) z.2`. -/
-def familyPhase (d : E → CircleDensity) (z : E × ℝ) : ℝ := phaseMap (d z.1) z.2
+@[expose] def familyPhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
+  phaseMap (d z.1) z.2
 
 /-- Inverse phase, given by `(phaseHomeomorph (d z.1)).symm z.2`. -/
-def inversePhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
+@[expose] def inversePhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
   (phaseHomeomorph (d z.1)).symm z.2
 
 /-- Forward map, given by `(z.1, familyPhase d z)`. -/
-def forwardMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
+@[expose] def forwardMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, familyPhase d z)
 
 /-- Inverse map, given by `(z.1, inversePhase d z)`. -/
-def inverseMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
+@[expose] def inverseMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, inversePhase d z)
 
 theorem inverseMap_forwardMap (d : E → CircleDensity) (z : E × ℝ) :
@@ -165,7 +166,7 @@ end InverseSmoothness
 variable {V : Type*}
 
 /-- Rephase family, given by `f (inverseMap d z)`. -/
-def rephaseFamily (d : E → CircleDensity) (f : E × ℝ → V) (z : E × ℝ) : V :=
+@[expose] def rephaseFamily (d : E → CircleDensity) (f : E × ℝ → V) (z : E × ℝ) : V :=
   f (inverseMap d z)
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
@@ -202,7 +203,7 @@ theorem rephaseFamily_contDiffOn_of_phase [CompleteSpace E]
 
 /-- Genuine iterated derivatives in the parameter while the last variable is
 held fixed. This is not a separately postulated family of jets. -/
-def parameterJet (F : E × ℝ → V) (k : ℕ) (z : E × ℝ) : E [×k]→L[ℝ] V :=
+@[expose] def parameterJet (F : E × ℝ → V) (k : ℕ) (z : E × ℝ) : E [×k]→L[ℝ] V :=
   iteratedFDeriv ℝ k (fun p : E => F (p, z.2)) z.1
 
 /-- Joint smoothness implies joint smoothness of every genuine parameter jet.

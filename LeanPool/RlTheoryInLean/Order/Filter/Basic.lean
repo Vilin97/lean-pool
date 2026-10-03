@@ -17,7 +17,7 @@ import Mathlib.Order.Filter.Basic
 # LeanPool.RlTheoryInLean.Order.Filter.Basic
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped BigOperators

@@ -48,7 +48,7 @@ These definitions reproduce the independent reference exactly. This module
 contains no challenge theorem or proof placeholder and does not import `Euler`.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -60,7 +60,7 @@ open ContDiff Set InnerProductSpace MeasureTheory
 namespace Euler
 
 /-- The divergence of a vector field, computed as the trace of its derivative. -/
-noncomputable def divergence (v : ℝ³ → ℝ³) (x : ℝ³) : ℝ :=
+@[expose] noncomputable def divergence (v : ℝ³ → ℝ³) (x : ℝ³) : ℝ :=
   (fderiv ℝ v x).trace ℝ ℝ³
 
 local notation "∇⬝" => divergence
@@ -100,7 +100,7 @@ open scoped ENNReal Topology
 /-- The L² equivalence class of a square-integrable function. The fallback makes
 this a total function; the solution conditions require square integrability
 wherever it is used. -/
-noncomputable def toL2 {V : Type*} [NormedAddCommGroup V] (f : ℝ³ → V) :
+@[expose] noncomputable def toL2 {V : Type*} [NormedAddCommGroup V] (f : ℝ³ → V) :
     Lp V 2 (volume : Measure ℝ³) := by
   classical
   exact if h : MemLp f 2 volume then h.toLp f else 0
@@ -137,17 +137,17 @@ structure EulerSobolevExistenceAndSmoothnessR3On (I : Set ℝ)
 
 /-- The ordinary curl of a velocity field, expressed through its spatial derivative.
 Indices in `Fin 3` are cyclic. -/
-noncomputable def vorticity (v : ℝ³ → ℝ³) (x : ℝ³) : ℝ³ :=
+@[expose] noncomputable def vorticity (v : ℝ³ → ℝ³) (x : ℝ³) : ℝ³ :=
   WithLp.toLp 2 (fun i : Fin 3 =>
     (fderiv ℝ v x (EuclideanSpace.single (i + 1) 1)) (i + 2) -
       (fderiv ℝ v x (EuclideanSpace.single (i + 2) 1)) (i + 1))
 
 /-- The sum of the spatial suprema of the velocity norm and derivative operator norm. -/
-noncomputable def velocityC1Norm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
+@[expose] noncomputable def velocityC1Norm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
   (⨆ x, ENNReal.ofReal ‖v x‖) + (⨆ x, ENNReal.ofReal ‖fderiv ℝ v x‖)
 
 /-- The spatial supremum of the Euclidean norm of the actual vorticity. -/
-noncomputable def vorticityNorm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
+@[expose] noncomputable def vorticityNorm (v : ℝ³ → ℝ³) : ℝ≥0∞ :=
   ⨆ x, ENNReal.ofReal ‖vorticity v x‖
 
 

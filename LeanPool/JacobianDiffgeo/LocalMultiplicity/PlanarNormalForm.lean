@@ -28,7 +28,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 * `RS.image_pow_ball`: `(· ^ k)` maps `ball 0 ρ` onto `ball 0 (ρ ^ k)`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Complex Metric
 open scoped Topology

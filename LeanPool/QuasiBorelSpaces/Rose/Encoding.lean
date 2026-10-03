@@ -13,7 +13,7 @@ public import LeanPool.QuasiBorelSpaces.RoseTree.Defs
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Rose.Encoding`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Rose
@@ -30,14 +30,14 @@ abbrev Encoding (A : Type*) :=
 namespace Encoding
 
 /-- The encoded version of `Rose.mk`. -/
-def mk (x : A) (xs : List (Encoding A)) : Encoding A where
+@[expose] def mk (x : A) (xs : List (Encoding A)) : Encoding A where
   fst := ⟨(), List.map Sigma.fst xs⟩
   snd := fun
     | [] => x
     | i :: is => (xs[i]?.map fun k ↦ k.2 is).getD x
 
 /-- The encoded version of `Rose.foldr`. -/
-def fold (mk : A → List B → B) : Encoding A → B
+@[expose] def fold (mk : A → List B → B) : Encoding A → B
   | ⟨⟨(), xs⟩, k⟩ => mk
     (k [])
     (List.ofFn fun i : Fin xs.length ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)

@@ -15,7 +15,7 @@ Transitivity of the label action forces fixed coordinate vectors to be constant.
 fixed subspace with the zero-sum representation leaves only the origin.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

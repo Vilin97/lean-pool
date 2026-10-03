@@ -31,7 +31,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapRegularFami
 
 /-! # CoreGapDesign -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -41,6 +41,7 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 
 /-- The exceptional-edge budget of a sub-triple at uniformity scale `ε₂`: the bound
 `4ε₂(|A||B| + |A||C| + |B||C|)` of `Nibble.AX1.tripleGraph_near_regular`. -/
+@[expose]
 noncomputable def designBad (ε₂ : ℝ) (A B C : Finset V) : ℝ :=
   4 * ε₂ * ((#A : ℝ) * (#B : ℝ) + (#A : ℝ) * (#C : ℝ) + (#B : ℝ) * (#C : ℝ))
 
@@ -50,6 +51,7 @@ noncomputable def designBad (ε₂ : ℝ) (A B C : Finset V) : ℝ :=
 no probability and no regularity argument, only explicit inequalities about the `k` sub-triples
 `(A i, B i, C i)`, their common triangle-degree scales `d i` and the lower bounds `Elo i` for their
 edge counts. -/
+@[expose]
 def IsSubTripleDesign (G : SimpleGraph V) [DecidableRel G.Adj] (ε μ η d₀ ε₂ μ₂ t : ℝ) (k : ℕ)
     (A B C : ℕ → Finset V) (d Elo : ℕ → ℝ) : Prop :=
   0 < ε₂ ∧ ε₂ ≤ 1 ∧ 0 < t ∧ 0 ≤ η ∧ μ₂ ≤ μ ∧

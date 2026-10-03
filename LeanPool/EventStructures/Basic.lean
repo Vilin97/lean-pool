@@ -17,7 +17,7 @@ with the derived consistency, concurrency, minimal-conflict and past/future
 notions used throughout the development, and decidability data for events.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -43,7 +43,7 @@ instance : PartialOrder es.Event := es.poEvent
 local infixl:50 " # " => es.conflict
 
 /-- Consistency relation: two events are consistent if they are not in conflict. -/
-@[simp]
+@[expose, simp]
 def consistent (e₁ e₂ : es.Event) : Prop := ¬ (e₁ # e₂)
 
 /-- Consistency is reflexive. -/
@@ -71,7 +71,7 @@ lemma concurrent_symm : ∀ ⦃e₁ e₂⦄, es.concurrent e₁ e₂ → es.conc
 /-- Minimal conflict relation: (e₁, e₂) is a minimal conflicting pair if they conflict
     and there is no proper reduction of either that still produces a conflict.
     Formally: e₁ # e₂ and for all e₁' ≤ e₁, e₂' ≤ e₂, if e₁' # e₂' then e₁' = e₁ ∧ e₂' = e₂ -/
-@[simp]
+@[expose, simp]
 def minimalConflict (e₁ e₂ : es.Event) : Prop :=
   es.conflict e₁ e₂ ∧
   ∀ e₁' e₂', e₁' ≤ e₁ → e₂' ≤ e₂ → es.conflict e₁' e₂' → e₁' = e₁ ∧ e₂' = e₂
@@ -98,10 +98,10 @@ lemma minimalConflict_minimal {e₁ e₂ e₁' e₂' : es.Event} (h : es.minimal
   h.2 e₁' e₂' he₁ he₂ hConf
 
 /-- The strict past of an event: all events strictly preceding it. -/
-@[simp] def past (e : es.Event) : Set es.Event := {x | x < e}
+@[expose, simp] def past (e : es.Event) : Set es.Event := {x | x < e}
 
 /-- The future (upset) of an event: all events causally succeeding it. -/
-@[simp] def future (e : es.Event) : Set es.Event := {x | e ≤ x}
+@[expose, simp] def future (e : es.Event) : Set es.Event := {x | e ≤ x}
 
 end EventStructure
 

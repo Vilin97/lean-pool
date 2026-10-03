@@ -34,12 +34,12 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Deduplicated repeated-pair row-mask covers -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Conflict covers in shallow 64-entry groups. -/
-def conflictCoverGroups : Array (Array ConflictCover) :=
+@[expose] def conflictCoverGroups : Array (Array ConflictCover) :=
   #[conflictCovers00, conflictCovers01, conflictCovers02, conflictCovers03, conflictCovers04,
   conflictCovers05, conflictCovers06, conflictCovers07, conflictCovers08, conflictCovers09,
   conflictCovers10, conflictCovers11, conflictCovers12, conflictCovers13, conflictCovers14,

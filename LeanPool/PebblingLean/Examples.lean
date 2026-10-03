@@ -15,7 +15,7 @@ These definitions give named vertices and distributions for testing the basic
 API on low-dimensional cubes.
 -/
 
-@[expose] public section
+public section
 
 namespace PebblingLean
 

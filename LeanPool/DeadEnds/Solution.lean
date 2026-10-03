@@ -24,4 +24,4 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.DeadEnds.Solution`.
 -/
 
-@[expose] public section
+public section

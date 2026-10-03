@@ -19,7 +19,7 @@ section
 /-! The actual scalar pressure of the corrected source packet has the
 constructed continuous physical pressure force, at every time. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,6 +80,7 @@ variable {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1}
       hSupport) P κ hκ Z R))
 
 /-- Exact packet force, constructed using `force`. -/
+@[expose]
 def exactPacketForce (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
   force t x + A.ell • (A.inverse.field t (A.ell⁻¹ • Y t x)).adjoint
@@ -169,7 +170,7 @@ section
 normalized packet uses the parent's genuine determinant-one Jacobian,
 and the final physical rescaling preserves divergence exactly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -300,7 +301,7 @@ section
 velocity, and its acceleration is minus the actual constructed pressure
 force. Both matches are derived from the existing parent law and Euler. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -374,7 +375,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -401,7 +402,7 @@ variable {A : Parent} (E : Evolution A)
 
 /-- Child, bundling `inverse`, `velocity`, `pressure`, `force` and the required compatibility
 proofs. -/
-def child : Evolution (A.child G k m hgraph nextEll hnext hnext1) where
+@[expose] def child : Evolution (A.child G k m hgraph nextEll hnext hnext1) where
   inverse := E.inverse.child G k m hgraph nextEll hnext hnext1
   velocity := A.exactPacketVelocity m hm J support hSupport B residual k E.inverse.field E.velocity
   pressure := A.exactPacketPressure m hm J support hSupport B residual k E.inverse.field E.pressure
@@ -434,15 +435,18 @@ def child : Evolution (A.child G k m hgraph nextEll hnext hnext1) where
 @[simp] theorem child_velocity :
     (E.child m hm J support hSupport B residual V hV G hG k hk hgraph nextEll hnext
         hnext1).velocity =
-      A.exactPacketVelocity m hm J support hSupport B residual k E.inverse.field E.velocity := rfl
+      A.exactPacketVelocity m hm J support hSupport B residual k E.inverse.field E.velocity := by
+  rfl
 
 @[simp] theorem child_pressure :
     (E.child m hm J support hSupport B residual V hV G hG k hk hgraph nextEll hnext
         hnext1).pressure =
-      A.exactPacketPressure m hm J support hSupport B residual k E.inverse.field E.pressure := rfl
+      A.exactPacketPressure m hm J support hSupport B residual k E.inverse.field E.pressure := by
+  rfl
 
 @[simp] theorem child_force :
     (E.child m hm J support hSupport B residual V hV G hG k hk hgraph nextEll hnext hnext1).force =
-      A.exactPacketForce m hm J support hSupport B residual k E.inverse.field E.force := rfl
+      A.exactPacketForce m hm J support hSupport B residual k E.inverse.field E.force := by
+  rfl
 
 end EulerParentPacketFrames.Evolution

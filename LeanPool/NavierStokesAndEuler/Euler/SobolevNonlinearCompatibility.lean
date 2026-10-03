@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CorrectionOperators
 
 /-! Exact consistency of actual products, transport, and pressure across the Sobolev scale. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

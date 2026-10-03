@@ -27,27 +27,32 @@ chip-firing application: at an interior path vertex, `prin` will be the next
 slope minus the previous slope.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionArithmetic
 
 /-- The lower of the two slopes used to realize rise `T` over length `L`. -/
+@[expose]
 def quotient (L : ℕ) (T : ℤ) : ℤ :=
   T / (L : ℤ)
 
 /-- The number of final steps on which the slope is `quotient L T + 1`. -/
+@[expose]
 def remainder (L : ℕ) (T : ℤ) : ℤ :=
   T % (L : ℤ)
 
 /-- The integral offset at which the slope changes from `q` to `q + 1`. -/
+@[expose]
 def bend (L : ℕ) (T : ℤ) : ℤ :=
   (L : ℤ) - remainder L T
 
 /-- The two-slope potential at integral offset `i` from the tail endpoint. -/
+@[expose]
 def potential (L : ℕ) (T : ℤ) (i : ℕ) : ℤ :=
   quotient L T * (i : ℤ) + max 0 ((i : ℤ) - bend L T)
 
 /-- The slope on the unit step from offset `i` to offset `i + 1`. -/
+@[expose]
 def step (L : ℕ) (T : ℤ) (i : ℕ) : ℤ :=
   potential L T (i + 1) - potential L T i
 

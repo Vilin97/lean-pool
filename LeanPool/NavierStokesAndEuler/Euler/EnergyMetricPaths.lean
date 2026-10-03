@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevEnergyPaths
 /-! Actual metric Gevrey energy and radius loss as continuous paths, with exact
 higher-representative compatibility. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,6 +32,7 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The genuine finite Gevrey metric energy along an actual continuous Sobolev solution. -/
+@[expose]
 def energyPath {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ)
     (R : C(Icc (0 : ℝ) T, ℝ)) (K : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, ℝ) :=
@@ -39,6 +40,7 @@ def energyPath {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ)
     (energyValueFamily period energyLength energyWord (energyLength_le hN) T e)
 
 /-- The genuine radius-loss metric quantity along the same actual solution. -/
+@[expose]
 def lossPath {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ)
     (R : C(Icc (0 : ℝ) T, ℝ)) (K : C(Icc (0 : ℝ) T, LiftL2 period →L[ℝ] LiftL2 period))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, ℝ) :=

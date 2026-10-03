@@ -32,7 +32,7 @@ digit radius is `ρ = 1 / (100 (k+1) √n)` and the trace-fiber radius is `T = �
   `q^(k+1) - |N| ≥ E01const n k K₀ · q^((k+1) - 2⁻¹^k - 3(k+1)/n)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Real
 

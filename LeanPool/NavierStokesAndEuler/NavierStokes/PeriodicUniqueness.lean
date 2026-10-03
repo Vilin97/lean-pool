@@ -19,7 +19,7 @@ The differential operators are those of `ProblemStatement`. The energy
 estimate is derived from the equations and periodic integration by parts.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,6 +38,7 @@ private theorem infty_add_one_le : (∞ : WithTop ℕ∞) + 1 ≤ ∞ := by
   simpa only [ENat.coe_top_add_one] using (le_rfl : (∞ : WithTop ℕ∞) ≤ ∞)
 
 /-- Slab, given by `Icc a b ×ˢ univ`. -/
+@[expose]
 noncomputable def slab (a b : ℝ) : Set SpaceTime := Icc a b ×ˢ univ
 
 theorem spatial_smooth {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]

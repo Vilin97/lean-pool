@@ -27,7 +27,7 @@ cited theorem are discharged for that envelope in
 `RS/Novel/Envelope/EnvDelignePackage.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

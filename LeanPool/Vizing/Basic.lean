@@ -16,7 +16,7 @@ public import Mathlib.Tactic.Tauto
 Basic definitions and extension operations for the fan-and-Kempe proof of Vizing's theorem.
 -/
 
-@[expose] public section
+public section
 
 section
 /-!
@@ -46,9 +46,11 @@ namespace PEC
 variable {G : SimpleGraph V}
 
 /-- A colour is free at a vertex if no edge at that vertex carries it. -/
+@[expose]
 def IsFree (c : PEC G C) (v : V) (γ : C) : Prop := ∀ u, c.col v u ≠ some γ
 
 /-- `c'` colours at least the edges that `c` colours. -/
+@[expose]
 def Extends (c c' : PEC G C) : Prop := ∀ u v, c.col u v ≠ none → c'.col u v ≠ none
 
 omit [DecidableEq V] in
@@ -101,6 +103,7 @@ lemma updFun_of_ne {f : V → V → Option C} {x y u v : V} (o : Option C)
     updFun f x y o y x = o := ite_eq_left (Or.inr ⟨rfl, rfl⟩)
 
 /-- Colour the (possibly already coloured) edge `x y` with a colour free at both endpoints. -/
+@[expose]
 def setEdge (c : PEC G C) {x y : V} (γ : C) (hadj : G.Adj x y)
     (hx : c.IsFree x γ) (hy : c.IsFree y γ) : PEC G C where
   col := updFun c.col x y (some γ)

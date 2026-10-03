@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseEndpointCoordinates
 
 /-! Evaluation of the actual cylinder coefficients at a spatial label. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,13 +29,14 @@ variable {T : ℝ} {U E : Type*}
   (D : Coefficients T U E)
 
 /-- Label frame, given by `pathEvaluation x D.Q`. -/
-def labelFrame (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q
+@[expose] def labelFrame (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q
 /-- Label frame derivative, given by `pathEvaluation x D.Q₁`. -/
-def labelFrameDerivative (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q₁
+@[expose] def labelFrameDerivative (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) :=
+  pathEvaluation x D.Q₁
 /-- Label frame second, given by `pathEvaluation x D.Q₂`. -/
 def labelFrameSecond (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q₂
 /-- Label hessian, given by `pathEvaluation x D.H`. -/
-def labelHessian (x : Space) : C(Icc (0 : ℝ) T,E →L[ℝ] E) := pathEvaluation x D.H
+@[expose] def labelHessian (x : Space) : C(Icc (0 : ℝ) T,E →L[ℝ] E) := pathEvaluation x D.H
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem labelFrame_lower (x : Space) (t : Icc (0 : ℝ) T) (v : U) :
@@ -71,13 +72,13 @@ theorem labelHessian_upper (x : Space) (t : Icc (0 : ℝ) T) (v : E) :
 
 /-- The already constructed finite-dimensional stationary history, at this
 label, applied to an ordinary terminal coordinate. -/
-def labelCoordinate (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,U) :=
+@[expose] def labelCoordinate (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,U) :=
   continuousCoordinateVelocity T D.time_pos.le (D.labelFrame x) (D.labelFrameDerivative x)
     (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
     D.potential D.potential_nonneg (D.labelHessian_upper x) D.small
 
 /-- Label velocity, constructed using `historyVelocity`. -/
-def labelVelocity (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,E) :=
+@[expose] def labelVelocity (x : Space) : U →L[ℝ] C(Icc (0 : ℝ) T,E) :=
   historyVelocity T D.time_pos.le (D.labelFrame x) (D.labelFrameDerivative x)
     (D.labelHessian x) D.lower D.lower_pos (D.labelFrame_lower x) (D.labelFrame_derivative x)
     D.potential D.potential_nonneg (D.labelHessian_upper x) D.small

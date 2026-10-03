@@ -18,14 +18,14 @@ Conway--Guy distinct-subset-sum sequence.  The recurrence and notation follow
 Section 2 of Tom Bohman's 1996 paper on the Conway--Guy sequence.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace BooleanIsoperimetry.CoherentGap
 
 /-- The triangular numbers, indexed from zero. -/
-def triangular : ℕ → ℕ
+@[expose] def triangular : ℕ → ℕ
   | 0 => 0
   | index + 1 => triangular index + index + 1
 
@@ -60,7 +60,7 @@ theorem guideWitness (dimension : ℕ) :
   ⟨dimension, (Nat.sub_le dimension 1).trans (self_le_triangular dimension)⟩
 
 /-- The least triangular block containing `dimension - 1`. -/
-noncomputable def guide (dimension : ℕ) : ℕ :=
+@[expose] noncomputable def guide (dimension : ℕ) : ℕ :=
   Nat.find (guideWitness dimension)
 
 lemma guide_upper (dimension : ℕ) :
@@ -409,7 +409,7 @@ lemma principal_corrections_decomposition (offset : ℕ) :
   abel
 
 /-- The one-indexed Conway--Guy recurrence, stored with zero-based indices. -/
-def difference (blockGuide : ℕ → ℕ) : ℕ → ℕ
+@[expose] def difference (blockGuide : ℕ → ℕ) : ℕ → ℕ
   | 0 => 1
   | index + 1 =>
       ∑ offset ∈ Finset.range (blockGuide (index + 2)),
@@ -418,11 +418,11 @@ termination_by index => index
 decreasing_by omega
 
 /-- The Conway--Guy difference sequence using the triangular block guide. -/
-noncomputable def conwayGuyDifference (index : ℕ) : ℕ :=
+@[expose] noncomputable def conwayGuyDifference (index : ℕ) : ℕ :=
   difference guide index
 
 /-- The cumulative Conway--Guy heights. -/
-noncomputable def conwayGuyHeight (dimension : ℕ) : ℤ :=
+@[expose] noncomputable def conwayGuyHeight (dimension : ℕ) : ℤ :=
   ∑ index ∈ Finset.range dimension, (conwayGuyDifference index : ℤ)
 
 @[simp]
@@ -448,13 +448,13 @@ structure ConwayGuyArithmetic where
   height_zero : height 0 = 0
 
 /-- The arithmetic data of the actual Conway--Guy sequence. -/
-noncomputable def conwayGuyArithmetic : ConwayGuyArithmetic where
+@[expose] noncomputable def conwayGuyArithmetic : ConwayGuyArithmetic where
   guide := guide
   height := conwayGuyHeight
   height_zero := conwayGuyHeight_zero
 
 /-- The increasing Conway--Guy-style row obtained from cumulative heights. -/
-def ConwayGuyArithmetic.weights (data : ConwayGuyArithmetic)
+@[expose] def ConwayGuyArithmetic.weights (data : ConwayGuyArithmetic)
     (dimension : ℕ) : Relation dimension :=
   fun coordinate =>
     data.height dimension -
@@ -484,7 +484,7 @@ lemma ConwayGuyArithmetic.weights_step (data : ConwayGuyArithmetic)
     ring
 
 /-- The exact Conway--Guy-style dimension-lift tower. -/
-def ConwayGuyArithmetic.tower (data : ConwayGuyArithmetic) : WeightTower where
+@[expose] def ConwayGuyArithmetic.tower (data : ConwayGuyArithmetic) : WeightTower where
   weights := data.weights
   head := data.head
   step := data.weights_step

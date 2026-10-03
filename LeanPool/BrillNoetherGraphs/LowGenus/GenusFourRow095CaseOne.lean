@@ -22,7 +22,7 @@ the rather complicated firing scripts on arbitrary subdivisions are never
 expanded vertex-by-vertex.
 -/
 
-@[expose] public section
+public section
 
 namespace LowGenus.GenusFourRow095.CaseOne
 open Utilities.Certificate
@@ -75,6 +75,7 @@ def xStart : (Spec length hLength).Vertex :=
       omega⟩
 
 /-- The signed-window profile reaching the vertex `d=1`. -/
+@[expose]
 def dProfile (_hBC : C length ≤ B length) :
     WindowProfile.Data (Spec length hLength) where
   coreValue := ![m length, 0, m length, m length, m length, m length]
@@ -98,6 +99,7 @@ def dProfile (_hBC : C length ≤ B length) :
     fin_cases edge <;> simp [core, P, m, B, C, Delta, X]
 
 /-- The profile used for both `e=2` and `f=3`. -/
+@[expose]
 def efProfile (hBC : C length ≤ B length) :
     WindowProfile.Data (Spec length hLength) where
   coreValue := ![C length, C length, 0, 0, C length, C length]

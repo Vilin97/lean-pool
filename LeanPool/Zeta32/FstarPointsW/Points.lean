@@ -13,7 +13,7 @@ were attributed upstream to `tools/choose_params.py` and `tools/gen_points.py`.
 Those scripts are not distributed upstream; see `CertificateReproduction.lean` for the exact
 inputs and a self-contained rational reproduction procedure. -/
 
-@[expose] public section
+public section
 
 open Real
 

@@ -21,7 +21,7 @@ section
 
 /-! Genuine one-derivative L² smoothing lifts to the complete cylinder Sobolev scale. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -142,13 +142,13 @@ theorem gain_bound {q : ℕ} (hC : 0 ≤ C)
   rintro ⟨⟨n, hn⟩, w⟩
   cases n with
   | zero =>
-    change ‖(gainJet period A C hD hA (toJet period u)).word w‖ ≤ _
+    rw [gain, ofJet_apply]
     rw [SpatialJet.word_zero]
     exact (A.le_opNorm _).trans ((mul_le_mul_of_nonneg_left (value_norm_le period u) (norm_nonneg
         A)).trans
       (mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg u)))
   | succ n =>
-    change ‖(gainJet period A C hD hA (toJet period u)).word w‖ ≤ _
+    rw [gain, ofJet_apply]
     rw [gainJet, SpatialJet.word_succ, EulerPressureJetIdentities.SpatialJet.map_word]
     have h := smoothingDerivativeOperator_bound period A C hD (w (Fin.last n))
       ((toJet period u).word (Fin.init w))
@@ -190,7 +190,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -203,13 +203,14 @@ open scoped Topology NNReal
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The genuine cylinder heat semigroup lifted to the complete Sobolev space. -/
-def heatOperator (q : ℕ) (v : ℝ≥0) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
+@[expose] def heatOperator (q : ℕ) (v : ℝ≥0) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   liftOperator period q (cylinderHeat period v) (cylinderHeat_translation period v)
 
 /-- Every Sobolev derivative coordinate evolves by the actual L² heat semigroup. -/
 @[simp]
 theorem heatOperator_apply {q : ℕ} (v : ℝ≥0) (u : SobolevSpace period q) (w : SobolevWord q) :
-    (heatOperator period q v u).val w = cylinderHeat period v (u.val w) := rfl
+    (heatOperator period q v u).val w = cylinderHeat period v (u.val w) := by
+  exact liftOperator_apply period (cylinderHeat period v) (cylinderHeat_translation period v) u w
 
 /-- The heat semigroup is contractive in every complete Sobolev norm. -/
 theorem heatOperator_bound {q : ℕ} (v : ℝ≥0) (u : SobolevSpace period q) :
@@ -217,12 +218,14 @@ theorem heatOperator_bound {q : ℕ} (v : ℝ≥0) (u : SobolevSpace period q) :
   change ‖(heatOperator period q v u).val‖ ≤ _
   apply (pi_norm_le_iff_of_nonneg (norm_nonneg u)).mpr
   intro w
+  rw [heatOperator_apply]
   exact (cylinderHeat_norm_le period v _).trans (word_norm_le period u w)
 
 /-- The underlying L² field evolves by exactly the original heat operator. -/
 @[simp]
 theorem heatOperator_value {q : ℕ} (v : ℝ≥0) (u : SobolevSpace period q) :
-    value period (heatOperator period q v u) = cylinderHeat period v (value period u) := rfl
+    value period (heatOperator period q v u) = cylinderHeat period v (value period u) := by
+  exact heatOperator_apply period v u (emptyWord q)
 
 /-- Zero variance is the identity on the complete Sobolev space. -/
 @[simp]
@@ -242,10 +245,11 @@ theorem heatOperator_continuous {q : ℕ} (u : SobolevSpace period q) :
   apply Continuous.subtype_mk
   apply continuous_pi
   intro w
-  exact cylinderHeat_continuous period (u.val w)
+  change Continuous (fun v : ℝ≥0 => (heatOperator period q v u).val w)
+  simpa only [heatOperator_apply] using cylinderHeat_continuous period (u.val w)
 
 /-- The explicit parabolic derivative constant of the Gaussian heat operator. -/
-def heatDerivativeConstant (v : ℝ≥0) : ℝ := gaussianAbsMoment 1 / Real.sqrt (v : ℝ)
+@[expose] def heatDerivativeConstant (v : ℝ≥0) : ℝ := gaussianAbsMoment 1 / Real.sqrt (v : ℝ)
 
 /-- The Gaussian derivative constant is nonnegative. -/
 theorem heatDerivativeConstant_nonneg (v : ℝ≥0) : 0 ≤ heatDerivativeConstant v :=

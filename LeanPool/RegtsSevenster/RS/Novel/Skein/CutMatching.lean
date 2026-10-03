@@ -31,7 +31,7 @@ order.  That is the same orientation the mixed partition function's
 own through-edge product uses.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -41,6 +41,7 @@ variable {α : Type}
 
 /-- A used label whose trail is a single edge: its entry edge is
 another used label's flag. -/
+@[expose]
 def IsThroughLabel {W : Fragment α}
     (F : EdgeSubset W) (i : α) : Prop :=
   W.pairing (W.boundaryFlag i) ∈ F.boundaryFlags
@@ -83,6 +84,7 @@ labels** — RS21's `M(ω,κ)`.  Partners are the two ends of a trail;
 the direction is the trail's own, read from the orientation where
 the trail has an internal step and from the label order where it is
 a single edge. -/
+@[expose]
 noncomputable def cutMatching [LinearOrder α] {W : Fragment α}
     (F : EdgeSubset W)
     (κ : F.RelTransitionSystem) (o : κ.Orientation) :
@@ -169,6 +171,7 @@ theorem chordInv_relabelUp [LinearOrder α] {W : Fragment α}
     exact (e.apply_symm_apply b).symm
 
 /-- **The used labels shift through the relabel.** -/
+@[expose]
 noncomputable def usedLabRelabelEquiv [LinearOrder α] {W : Fragment α}
     {β : Type} [LinearOrder β]
     (e : α ≃o β) (F : EdgeSubset W) :
@@ -226,6 +229,7 @@ abbrev UsedLab {W : Fragment α}
 
 open Classical in
 /-- Undo the dual basis against a given set of arc directions. -/
+@[expose]
 noncomputable def untwistD {W : Fragment α}
     {k ℓ : ℕ} (F : EdgeSubset W)
     (tl : UsedLab F → Bool) (x : GenBoundaryState k ℓ α) :
@@ -242,6 +246,7 @@ noncomputable def untwistD {W : Fragment α}
 open Classical in
 /-- The dual basis's weight against a given set of arc
 directions. -/
+@[expose]
 noncomputable def dualWeightD {W : Fragment α}
     [Fintype α] {k ℓ : ℕ}
     (F : EdgeSubset W) (tl : UsedLab F → Bool)
@@ -258,6 +263,7 @@ noncomputable def dualWeightD {W : Fragment α}
 open Classical in
 /-- Undo the dual basis: partner the colour at each leg the trail
 leaves. -/
+@[expose]
 noncomputable def untwist [LinearOrder α] {W : Fragment α}
     {k ℓ : ℕ} (F : EdgeSubset W)
     (κ : F.RelTransitionSystem) (o : κ.Orientation)
@@ -274,6 +280,7 @@ noncomputable def untwist [LinearOrder α] {W : Fragment α}
 open Classical in
 /-- **The dual basis's weight**: the partner signs at the legs the
 trail leaves. -/
+@[expose]
 noncomputable def dualWeight [LinearOrder α] {W : Fragment α}
     [Fintype α] {k ℓ : ℕ}
     (F : EdgeSubset W) (κ : F.RelTransitionSystem)

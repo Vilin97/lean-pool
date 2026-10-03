@@ -42,7 +42,7 @@ verification.
   `3 ≤ k ≤ L` inside `S`, in the `ZMod k` cyclic-map form.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

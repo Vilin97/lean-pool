@@ -36,7 +36,7 @@ structure (absolute value, positive/negative parts).
 - Courant-Hilbert, *Methods of Mathematical Physics*, Ch. VI
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

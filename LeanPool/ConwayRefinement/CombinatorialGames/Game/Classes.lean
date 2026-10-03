@@ -47,7 +47,7 @@ on combinatorial games. This functionality is now implemented through the `game_
 
 universe u
 
-@[expose] public section
+public section
 
 namespace IGame
 

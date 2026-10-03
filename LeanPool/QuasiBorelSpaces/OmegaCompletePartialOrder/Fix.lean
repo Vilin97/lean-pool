@@ -18,7 +18,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Fix`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace OmegaCompletePartialOrder

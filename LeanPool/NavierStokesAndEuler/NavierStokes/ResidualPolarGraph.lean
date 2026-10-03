@@ -18,7 +18,7 @@ point maps back to the original Cartesian point and to the exact common
 graph used by the physical mean estimates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,12 +30,12 @@ open AxisymmetricResidual (pack pack_zero pack_one pack_two)
 open scoped Topology
 
 /-- The local angle of the scaled physical radial projection. -/
-noncomputable def angle (a : ℝ) (j : PolarCharts.Index) (n : ℕ) (w : SpaceTime) : ℝ :=
+@[expose] noncomputable def angle (a : ℝ) (j : PolarCharts.Index) (n : ℕ) (w : SpaceTime) : ℝ :=
   (PolarCharts.chart a j (PhysicalGraphBounds.scaledRadial n w)).2
 
 /-- The actual unscaled cylindrical point associated with a local polar
 chart. Its spatial coordinates are physical radius, angle, and axial position. -/
-noncomputable def cylindricalPoint (a : ℝ) (j : PolarCharts.Index) (n : ℕ)
+@[expose] noncomputable def cylindricalPoint (a : ℝ) (j : PolarCharts.Index) (n : ℕ)
     (w : SpaceTime) : SpaceTime :=
   (w.1, pack (PolarCharts.radius (PhysicalGraphBounds.radialProjection w))
     (angle a j n w) (w.2 2))

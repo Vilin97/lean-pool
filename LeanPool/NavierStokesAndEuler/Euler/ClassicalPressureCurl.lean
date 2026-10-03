@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! Classical lifted closedness of actual smooth representatives of the closed L² gradient space. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

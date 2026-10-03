@@ -14,7 +14,7 @@ Explicit construction of the type-`Aₙ` root pairing on the weight lattice `Fin
 exhibited as a crystallographic, reduced Mathlib `RootPairing`.
 -/
 
-@[expose] public section
+public section
 
 namespace An
 
@@ -236,6 +236,8 @@ theorem pairing_formula {n : ℕ} [NeZero n] (J K : SignedInterval n) :
       aesop;
     · lia;
   rw [← Finset.mul_sum _ _ _]
+  have hJ : J.i ≤ J.j := J.hij
+  have hK : K.i ≤ K.j := K.hij
   simp_all +decide [Finset.sum_add_distrib, Finset.sum_sub_distrib]
   grind +suggestions
 

@@ -58,7 +58,7 @@ structurally from the truth domain `T` of Example 1.2 exactly as
 `Example23.parityMap` does.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Example43
 
@@ -69,6 +69,7 @@ open Domain.Neighborhood NeighborhoodSystem ApproximableMap
 /-- Membership in Scott's natural-number system: a neighbourhood is the whole
 space `ℕ` or a
 singleton `{n}`. -/
+@[expose]
 def memN (X : Set ℕ) : Prop := X = Set.univ ∨ ∃ n, X = {n}
 
 theorem memN_univ : memN (Set.univ : Set ℕ) := Or.inl rfl
@@ -102,13 +103,14 @@ theorem nestedOrDisjoint : NestedOrDisjoint memN := by
 
 /-- **Example 4.3 (Scott 1981, PRG-19).** The natural-number neighbourhood system
 `N` on `Δ = ℕ`. -/
+@[expose]
 def N : NeighborhoodSystem ℕ :=
   NeighborhoodSystem.ofNestedOrDisjoint memN Set.univ memN_univ nestedOrDisjoint
     (fun _ => Set.subset_univ _)
 
 @[simp] theorem N_mem {X : Set ℕ} : N.mem X ↔ memN X := Iff.rfl
 
-@[simp] theorem N_master : N.master = (Set.univ : Set ℕ) := rfl
+@[simp] theorem N_master : N.master = (Set.univ : Set ℕ) := by rfl
 
 /-- `⊥ ∈ N` reads: a neighbourhood lies in `⊥` iff it is the whole space `ℕ`. -/
 theorem N_bot_mem {X : Set ℕ} : N.bot.mem X ↔ X = Set.univ := NeighborhoodSystem.mem_bot N
@@ -117,6 +119,7 @@ theorem N_bot_mem {X : Set ℕ} : N.bot.mem X ↔ X = Set.univ := NeighborhoodSy
 
 /-- Scott's total element `n̂ = ↑{n} = {{n}, ℕ}`, the principal filter of the
 singleton `{n}`. -/
+@[expose]
 def natElem (n : ℕ) : N.Element := N.principal (N_mem.mpr (memN_singleton n))
 
 /-- A neighbourhood belongs to `n̂` iff it is `ℕ` (the master) or the singleton
@@ -135,6 +138,7 @@ theorem mem_natElem_iff {n : ℕ} {Y : Set ℕ} :
     · exact ⟨memN_singleton n, subset_rfl⟩
 
 /-- Scott's `0 ∈ |N|`, the distinguished zero of the structured domain. -/
+@[expose]
 def zeroElt : N.Element := natElem 0
 
 /-! ### The strict lifting combinator `n̂ ↦ val n`, `⊥ ↦ ⊥`. -/

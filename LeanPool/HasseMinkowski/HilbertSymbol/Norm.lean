@@ -24,7 +24,7 @@ reads `z² = b y²`, which forces `b` to be a square unless `y = z = 0`, contrad
 nontriviality.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

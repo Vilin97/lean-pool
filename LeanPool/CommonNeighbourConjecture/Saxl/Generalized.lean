@@ -19,7 +19,7 @@ irrelevant: generalized adjacency is exactly membership of two distinct
 vertices in a common set-like base of the required size.
 -/
 
-@[expose] public section
+public section
 
 namespace Saxl
 

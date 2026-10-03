@@ -19,7 +19,7 @@ stationary Sobolev map hypothesis, even though the formula only depends on
 test-function interface as the distributional weak-gradient bridge.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

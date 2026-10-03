@@ -12,12 +12,12 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage6StrictDeterministic
 Selection of a hard-family scale beyond every query and output in a finite transcript.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage6StrictDeterministic
 
 /-- Oriented finite displacement maximum, with zero included explicitly. -/
-def traceDisplacementBound (x0 : StrictPoint) : StrictTranscript → ℝ
+@[expose] def traceDisplacementBound (x0 : StrictPoint) : StrictTranscript → ℝ
   | [] => 0
   | obs :: trace => max (obs.point 0 - x0 0) (traceDisplacementBound x0 trace)
 

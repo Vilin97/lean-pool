@@ -103,7 +103,7 @@ general and belong in `Schoenflies/Graph/Walk.lean` and `Schoenflies/Graph/Cycle
 * `Graph.face_cycles` — `lem:face-cycles`, modulo `Schoenflies.CrosscutSplitsRegion`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph
@@ -685,7 +685,7 @@ end IsFaceCycle
 
 /-- **`lem:face-cycles`, as a property of a plane graph**: every face has a cycle as its
 boundary and is one of the two complementary regions of that cycle. -/
-def HasFaceCycles (G : Graph Plane β) (drawing : β → ℝ → Plane) : Prop :=
+@[expose] def HasFaceCycles (G : Graph Plane β) (drawing : β → ℝ → Plane) : Prop :=
   ∀ z ∈ exterior G drawing, ∃ (e : β) (u v : Plane) (D : List β), IsFaceCycle G drawing z e u v D
 
 /-! ## The base case: the faces of a single cycle
@@ -790,7 +790,7 @@ blueprint's "Theorem 2.8 replaces `F` by exactly two regions, both bounded by cy
 
 This is **assumed**, not proved; see the section docstring for why `main`'s Theorem 2.8 does
 not apply. -/
-def CrosscutSplitsRegion : Prop :=
+@[expose] def CrosscutSplitsRegion : Prop :=
   ∀ (J A₁ A₂ P Ω : Set Plane) (p q : Plane),
     IsSeparating J → IsPolygonal J → IsPolygonal P →
     IsArcBetween A₁ p q → IsArcBetween A₂ p q → A₁ ∪ A₂ = J → A₁ ∩ A₂ = {p, q} →

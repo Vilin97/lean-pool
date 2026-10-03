@@ -29,7 +29,7 @@ space, even when its scalar potential is not square-integrable. The
 solenoidal remainder is both curl-free and harmonic, hence zero by the
 actual L² integration-by-parts identity. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -150,7 +150,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -235,10 +235,11 @@ theorem derivative_continuous (U : Evolution T hT) (n : ℕ) :
     U.pressureForce U.pressure_continuous n
 
 /-- Difference, given by `fieldSub (V.velocity t) (U.velocity t)`. -/
-def difference (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
+@[expose] def difference (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
   fieldSub (V.velocity t) (U.velocity t)
 
 /-- Pressure difference, given by `fieldSub (V.pressureForce t) (U.pressureForce t)`. -/
+@[expose]
 def pressureDifference (U V : Evolution T hT) (t : Icc (0 : ℝ) T) : SmoothL2Field Space :=
   fieldSub (V.pressureForce t) (U.pressureForce t)
 
@@ -279,6 +280,7 @@ theorem difference_time_law (U V : Evolution T hT) :
 
 /-- Energy path, given by `⟨fun t => wordEnergy 3 (U.difference V t),wordEnergy_continuous _
 (U.difference_continuous V) 3⟩`. -/
+@[expose]
 def energyPath (U V : Evolution T hT) : C(Icc (0 : ℝ) T,ℝ) :=
   ⟨fun t => wordEnergy 3 (U.difference V t),wordEnergy_continuous _ (U.difference_continuous V) 3⟩
 

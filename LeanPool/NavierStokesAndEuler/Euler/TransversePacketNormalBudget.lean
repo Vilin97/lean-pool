@@ -18,7 +18,7 @@ section
 
 /-! Explicit polynomial coefficient budgets for the actual transverse potential and slow curl. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,10 +30,10 @@ open Set EulerSmoothLimit EulerMeanCoefficients EulerGevrey EulerOperatorGevreyC
 open scoped ContDiff BoundedContinuousFunction
 
 /-- Corrector coefficient radius, given by `R+4*Ri+1`. -/
-def correctorCoefficientRadius (R Ri : ℝ) : ℝ := R+4*Ri+1
+@[expose] def correctorCoefficientRadius (R Ri : ℝ) : ℝ := R+4*Ri+1
 
 /-- Corrector coefficient amplitude, given by `1+C+3*C^2+3*Ri*C+27*(3*Ri*C)^2*(3*C^2)`. -/
-def correctorCoefficientAmplitude (C Ri : ℝ) : ℝ :=
+@[expose] def correctorCoefficientAmplitude (C Ri : ℝ) : ℝ :=
   1+C+3*C^2+3*Ri*C+27*(3*Ri*C)^2*(3*C^2)
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
@@ -183,7 +183,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -222,12 +222,12 @@ theorem Ri_nonneg : 0 ≤ N.Ri :=
       N.inverse_radius).1
 
 /-- Coefficient radius, given by `correctorCoefficientRadius N.Rc N.Ri`. -/
-def coefficientRadius : ℝ := correctorCoefficientRadius N.Rc N.Ri
+@[expose] def coefficientRadius : ℝ := correctorCoefficientRadius N.Rc N.Ri
 /-- Coefficient amplitude, given by `correctorCoefficientAmplitude N.C N.Ri`. -/
-def coefficientAmplitude : ℝ := correctorCoefficientAmplitude N.C N.Ri
+@[expose] def coefficientAmplitude : ℝ := correctorCoefficientAmplitude N.C N.Ri
 /-- Block amplitude, given by `sobolevCoefficientAmplitude (Fin 4) q N.coefficientRadius
 N.coefficientAmplitude`. -/
-def blockAmplitude : ℝ := sobolevCoefficientAmplitude (Fin 4) q N.coefficientRadius
+@[expose] def blockAmplitude : ℝ := sobolevCoefficientAmplitude (Fin 4) q N.coefficientRadius
     N.coefficientAmplitude
 
 theorem coefficient_bounds :
@@ -293,7 +293,7 @@ theorem derivativeCost_nonneg : 0 ≤ L.derivativeCost := by
   positivity
 
 /-- Common cost, given by `L.velocityCost+L.derivativeCost`. -/
-def commonCost : ℝ := L.velocityCost+L.derivativeCost
+@[expose] def commonCost : ℝ := L.velocityCost+L.derivativeCost
 
 theorem commonCost_nonneg : 0 ≤ L.commonCost := add_nonneg L.velocityCost_nonneg
     L.derivativeCost_nonneg

@@ -19,7 +19,7 @@ then supplies the resulting concrete lists here. A zero-length slot has no
 steps; `BreakData.balance` consequently forces its endpoint potential to agree.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate

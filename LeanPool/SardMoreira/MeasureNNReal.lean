@@ -12,7 +12,7 @@ import LeanPool.SardMoreira.MeasureComap
 # LeanPool.SardMoreira.MeasureNNReal
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology

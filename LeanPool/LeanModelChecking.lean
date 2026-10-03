@@ -26,4 +26,4 @@ Tags: model-checking, linear-temporal-logic, buchi-automaton, safety-liveness, o
 MSC: 68Q60, 03B44, 68Q45
 -/
 
-@[expose] public section
+public section

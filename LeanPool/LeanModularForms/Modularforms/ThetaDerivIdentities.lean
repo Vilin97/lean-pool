@@ -16,7 +16,7 @@ import Mathlib.Data.Int.Star
 /-! # ThetaDerivIdentities -/
 
 
-@[expose] public section
+public section
 
 /-!
 # Theta Derivative Identities

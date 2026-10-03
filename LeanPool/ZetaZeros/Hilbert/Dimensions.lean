@@ -24,7 +24,7 @@ This is the bound that turns the source's second-range estimate into a statement
 simple real elements — the quantity the whole proposition is about.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

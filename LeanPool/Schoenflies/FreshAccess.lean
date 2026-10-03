@@ -79,7 +79,7 @@ cone, and the induction is what will discharge it.
   domain-restricted absorption interface.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -194,7 +194,7 @@ theorem exists_accessCone_disjoint (h : StronglyAccessible D a) (hK : IsCompact 
 /-- Absorption by cells for connected sets already known to lie in an ambient domain.  This is
 the precise form needed for a tangent cone inside a Jordan domain when `K` contains only the
 closed nonboundary edges and not the wild boundary itself. -/
-def CellsAbsorbIn (D K : Set Plane) (cells : Set (Set Plane)) : Prop :=
+@[expose] def CellsAbsorbIn (D K : Set Plane) (cells : Set (Set Plane)) : Prop :=
   ∀ N : Set Plane, N ⊆ D → IsPreconnected N → Disjoint N K →
     ∀ R ∈ cells, (N ∩ R).Nonempty → N ⊆ R
 

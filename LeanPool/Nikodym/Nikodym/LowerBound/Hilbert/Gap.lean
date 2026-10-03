@@ -31,7 +31,7 @@ The intermediate step `hilbert_gap_aux`, `r * H_I(U) ≤ r * H_I(T) + 4 d² * H_
 every ideal `I` and needs no algebraic input.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

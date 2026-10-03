@@ -38,7 +38,7 @@ The fixed-strategy iteration is recovered by specializing this sequence in
 Must be placeholder-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -48,6 +48,7 @@ variable {V : Type*} [DecidableEq V]
 
 /-- Run `k` nibble rounds from `H`, using the strategy `R i` in round `i`; returns
 `(accumulated matching, current residual)`. -/
+@[expose]
 def nibbleIterSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
     ℕ → Finset (Finset V) × Finset (Finset V)
   | 0 => (∅, H)
@@ -56,10 +57,12 @@ def nibbleIterSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H : Fin
         residual (nibbleIterSeq R H k).2 (R k (nibbleIterSeq R H k).2))
 
 /-- The residual hypergraph after `k` rounds of a strategy sequence. -/
+@[expose]
 def nibbleResidualSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V))
     (k : ℕ) : Finset (Finset V) := (nibbleIterSeq R H k).2
 
 /-- The matching accumulated over `k` rounds of a strategy sequence. -/
+@[expose]
 def nibbleMatchingSeq (R : ℕ → Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V))
     (k : ℕ) : Finset (Finset V) := (nibbleIterSeq R H k).1
 

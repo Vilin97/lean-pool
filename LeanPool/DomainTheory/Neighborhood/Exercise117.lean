@@ -38,7 +38,7 @@ The constructions are `[propext, Quot.sound]`; injectivity uses `exists_rat_btwn
 classical).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

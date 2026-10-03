@@ -33,7 +33,7 @@ The proof combines:
   is kept as a standalone lemma.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 

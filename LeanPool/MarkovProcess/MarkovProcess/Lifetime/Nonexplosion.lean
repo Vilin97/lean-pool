@@ -17,7 +17,7 @@ almost-sure coordinate statements. This is the measure-theoretic reduction later
 conservativity of transition laws into nonexplosion.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

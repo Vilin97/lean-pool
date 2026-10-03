@@ -21,7 +21,7 @@ Hilbert-algebra coalgebra instance and tensor-product infrastructure that are no
 in the current monlib4 slice.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct BigOperators
 
@@ -31,8 +31,7 @@ local notation x " ⊗ₘ " y => TensorProduct.map x y
 open Coalgebra
 
 /-- Schur product `x •ₛ y := m ∘ (x ⊗ y) ∘ comul`. -/
-@[simps]
-noncomputable def schurMul {B C : Type*}
+@[expose] noncomputable def schurMul {B C : Type*}
     [AddCommMonoid B] [NonUnitalNonAssocSemiring C]
     [Module ℂ B] [Module ℂ C] [CoalgebraStruct ℂ B]
     [SMulCommClass ℂ C C] [IsScalarTower ℂ C C] :
@@ -52,6 +51,13 @@ noncomputable def schurMul {B C : Type*}
     simp only [TensorProduct.map_smul_left, LinearMap.smul_comp, LinearMap.comp_smul,
       LinearMap.ext_iff, LinearMap.smul_apply, LinearMap.coe_mk, RingHom.id_apply]
     simp_all
+
+@[simp] theorem schurMul_apply_apply {B C : Type*}
+    [AddCommMonoid B] [NonUnitalNonAssocSemiring C]
+    [Module ℂ B] [Module ℂ C] [CoalgebraStruct ℂ B]
+    [SMulCommClass ℂ C C] [IsScalarTower ℂ C C]
+    (x y : B →ₗ[ℂ] C) :
+    schurMul x y = (m C) ∘ₗ (x ⊗ₘ y) ∘ₗ comul := by rfl
 
 @[inherit_doc schurMul]
 notation3:80 (name := schurMulNotation) x:81 " •ₛ " y:80 => schurMul x y
@@ -214,7 +220,7 @@ theorem schurMul_one_right_rankOne (a b : A) :
     apply Finset.sum_congr rfl
     intro i _
     rw [schurMul.apply_rankOne, LinearMap.rankOne_comp', LinearMap.comp_rankOne]
-    rfl
+    simp only [lmul_apply]
   · rfl
 
 theorem schurMul_one_left_rankOne (a b : A) :
@@ -226,7 +232,7 @@ theorem schurMul_one_left_rankOne (a b : A) :
     apply Finset.sum_congr rfl
     intro i _
     rw [schurMul.apply_rankOne, LinearMap.rankOne_comp', LinearMap.comp_rankOne]
-    rfl
+    simp only [rmul_apply]
   · rfl
 
 theorem schurMul_adjoint (x y : A →ₗ[ℂ] B) :

@@ -41,7 +41,7 @@ Write `relabel σ adj` for `adj` with its vertices renamed along `σ`.  Two stat
   `IsoGraph/Canon/Correct.lean` obtains from the soundness and optimality of the search.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph.Canon
 
@@ -112,12 +112,12 @@ is the canonical one.
 **This is the specification, not the way to compute.**  Lean η-expands every function-typed
 definition, so each query `canonAdj n adj i j` re-runs the whole search.  To compute, use
 `canonMatrix`, whose result is a structure and therefore shares the search across queries. -/
-def canonAdj (n : Nat) (adj : Fin n → Fin n → Bool) : Fin n → Fin n → Bool :=
+@[expose] def canonAdj (n : Nat) (adj : Fin n → Fin n → Bool) : Fin n → Fin n → Bool :=
   let σ := canonPerm n adj
   fun i j ↦ adj (σ i) (σ j)
 
 /-- `Fin m ≃ Fin n` from `m = n`.  Unlike `Equiv.cast` this has a definitional `val`. -/
-def finEq {m n : Nat} (h : m = n) : Fin m ≃ Fin n where
+@[expose] def finEq {m n : Nat} (h : m = n) : Fin m ≃ Fin n where
   toFun i := ⟨i.1, h ▸ i.2⟩
   invFun j := ⟨j.1, h ▸ j.2⟩
   left_inv _ := rfl
@@ -170,7 +170,7 @@ theorem ext' {n : Nat} {M N : AdjMatrix n} (h : M.adj = N.adj) : M = N := by
   cases M; cases N; cases h; rfl
 
 /-- Query a matrix at plain naturals; `false` out of range. -/
-def get {n : Nat} (M : AdjMatrix n) (a b : Nat) : Bool := oracleOfFin n M.adj a b
+@[expose] def get {n : Nat} (M : AdjMatrix n) (a b : Nat) : Bool := oracleOfFin n M.adj a b
 
 theorem get_eq {n : Nat} (M : AdjMatrix n) {a b : Nat} (ha : a < n) (hb : b < n) :
     M.get a b = M.adj ⟨a, ha⟩ ⟨b, hb⟩ := oracleOfFin_apply _ ha hb
@@ -180,7 +180,7 @@ theorem get_eq {n : Nat} (M : AdjMatrix n) {a b : Nat} (ha : a < n) (hb : b < n)
 This is the one place where an index set of the "wrong" size is tolerated, and it is what lets
 the canonical form of a graph be stated on `Fin (Fintype.card V)` while being computed from a
 listing whose length is only *provably* that. -/
-def reindex {n : Nat} (M : AdjMatrix n) (m : Nat) : AdjMatrix m :=
+@[expose] def reindex {n : Nat} (M : AdjMatrix n) (m : Nat) : AdjMatrix m :=
   ⟨fun i j ↦ M.get i.1 j.1⟩
 
 @[simp] theorem reindex_adj {n m : Nat} (M : AdjMatrix n) (i j : Fin m) :
@@ -206,13 +206,14 @@ theorem heq_of_adj {m n : Nat} (h : m = n) {M : AdjMatrix m} {N : AdjMatrix n}
 end AdjMatrix
 
 /-- The graph `adj` read through the permutation `σ`, as a matrix. -/
+@[expose]
 def matrixOfPerm (n : Nat) (adj : Fin n → Fin n → Bool) (σ : Equiv.Perm (Fin n)) : AdjMatrix n :=
   ⟨fun i j ↦ adj (σ i) (σ j)⟩
 
 /-- **The canonical form of a graph on `Fin n`, computed.**  The search runs once, when this is
 forced — `σ` is an argument of `matrixOfPerm`, so it is evaluated before the closure is built —
 and each query of the resulting `adj` is then `O(1)`. -/
-def canonMatrix (n : Nat) (adj : Fin n → Fin n → Bool) : AdjMatrix n :=
+@[expose] def canonMatrix (n : Nat) (adj : Fin n → Fin n → Bool) : AdjMatrix n :=
   matrixOfPerm n adj (canonPerm n adj)
 
 @[simp] theorem canonMatrix_adj (n : Nat) (adj : Fin n → Fin n → Bool) :
@@ -227,6 +228,7 @@ variable {n : Nat}
 
 /-- `adj` with its vertices renamed along `σ`: the vertex `i` of `relabel σ adj` plays the role of
 the vertex `σ i` of `adj`. -/
+@[expose]
 def relabel (σ : Equiv.Perm (Fin n)) (adj : Fin n → Fin n → Bool) : Fin n → Fin n → Bool :=
   fun i j ↦ adj (σ i) (σ j)
 

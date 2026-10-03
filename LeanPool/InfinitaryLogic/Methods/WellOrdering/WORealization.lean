@@ -31,7 +31,7 @@ The shared semantic tools the fifteen closure fields consume, isolated per revie
   `lift_eq_falsum_reflect`).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

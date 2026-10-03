@@ -34,7 +34,7 @@ This file packages the notion of a common-denominator point and relates it to
 - `CencovPetz.Simplex.IsRational.isSplitRepresentable`
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -58,7 +58,7 @@ variable {α : Type u} [Fintype α]
 
 /-- A simplex point whose coordinates have a finite common-denominator representation
 `p(a) = m(a) / (∑ m)` for some strictly positive `m : α → ℕ`. -/
-def IsRational (p : Simplex α) : Prop :=
+@[expose] def IsRational (p : Simplex α) : Prop :=
   ∃ m : α → ℕ,
     (∀ a, 0 < m a) ∧
       ∀ a, p.p a = (m a : ℝ) / ((∑ a : α, m a : ℕ) : ℝ)

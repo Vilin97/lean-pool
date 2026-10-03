@@ -27,7 +27,7 @@ restriction to shifted Grassmannian permutations is exactly the once-marked
 Brill--Noether existence predicate.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -35,11 +35,13 @@ universe uTransmission
 
 /-- The inversion set of `tau` is finite.  Keeping this named avoids the
 incorrect convention that `Set.ncard` alone detects finite ASP length. -/
+@[expose]
 def FiniteTransmissionPerm (tau : AspPerm) : Prop :=
   (invSet tau).Finite
 
 /-- Every finite-length ASP transmission problem allowed by the genus has a
 witness on the twice-marked graph `(G,u,v)`. -/
+@[expose]
 def TransmissionExistence (G : CFGraph) (u v : G.V) : Prop :=
   forall tau : AspPerm,
     FiniteTransmissionPerm tau ->

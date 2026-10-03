@@ -18,7 +18,7 @@ primitive of `η` along `f ∘ K` pulls back to a primitive of `Form1.pullback f
 and its corollary `pathIntegral_pullback` (naturality of `pathIntegral` under pullback).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology unitInterval
 open Set Filter IsManifold

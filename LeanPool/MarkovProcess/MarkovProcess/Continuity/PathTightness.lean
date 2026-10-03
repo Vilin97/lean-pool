@@ -41,7 +41,7 @@ Nothing here constructs a law, and no compactness theorem for measures (Prokhoro
 proved or used.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory Metric Topology
 open scoped ENNReal NNReal

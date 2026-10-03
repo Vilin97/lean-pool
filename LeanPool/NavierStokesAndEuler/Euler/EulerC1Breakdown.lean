@@ -22,7 +22,7 @@ section
 /-! The full smooth initial datum retains the common support of its
 finite initial base and its actual summable packet increments. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -80,7 +80,7 @@ section
 whose ordinary smooth Euler solutions have a finite maximal horizon.
 The separate continuation and vorticity criteria are not asserted here. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -134,7 +134,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -146,13 +146,13 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 variable {A : SmoothL2Field Space} (L : FiniteLifespan A)
 
 /-- Maximal velocity norm, given by `‖finiteField (L.maximalField t)‖`. -/
-def maximalVelocityNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t)‖
+@[expose] def maximalVelocityNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t)‖
 
 /-- Maximal gradient norm, given by `‖finiteField (L.maximalField t).derivative‖`. -/
-def maximalGradientNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t).derivative‖
+@[expose] def maximalGradientNorm (t : L.Time) : ℝ := ‖finiteField (L.maximalField t).derivative‖
 
 /-- Maximal C1 norm, given by `L.maximalVelocityNorm t+L.maximalGradientNorm t`. -/
-def maximalC1Norm (t : L.Time) : ℝ := L.maximalVelocityNorm t+L.maximalGradientNorm t
+@[expose] def maximalC1Norm (t : L.Time) : ℝ := L.maximalVelocityNorm t+L.maximalGradientNorm t
 
 theorem maximalVelocityNorm_nonneg (t : L.Time) : 0 ≤ L.maximalVelocityNorm t := norm_nonneg _
 
@@ -214,6 +214,7 @@ open scoped ContDiff
 abbrev MaximalTime : Type := lifespan.Time
 
 /-- Maximal velocity, given by `lifespan.maximalVelocity t`. -/
+@[expose]
 def maximalVelocity (t : MaximalTime) : Space → Space := lifespan.maximalVelocity t
 
 /-- Maximal pressure, given by `lifespan.maximalPressure t`. -/
@@ -223,9 +224,11 @@ def maximalPressure (t : MaximalTime) : Space → ℝ := lifespan.maximalPressur
 def maximalVelocityNorm (t : MaximalTime) : ℝ := lifespan.maximalVelocityNorm t
 
 /-- Maximal gradient norm, given by `lifespan.maximalGradientNorm t`. -/
+@[expose]
 def maximalGradientNorm (t : MaximalTime) : ℝ := lifespan.maximalGradientNorm t
 
 /-- Maximal C1 norm, given by `lifespan.maximalC1Norm t`. -/
+@[expose]
 def maximalC1Norm (t : MaximalTime) : ℝ := lifespan.maximalC1Norm t
 
 theorem initialDatum_no_endpoint : ¬ HasSmoothEulerSolution initialDatum.field lifespan.duration :=

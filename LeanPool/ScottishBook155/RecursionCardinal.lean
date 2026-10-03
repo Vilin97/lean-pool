@@ -17,7 +17,7 @@ for the recursion.  The identities below are precisely the cardinal arithmetic
 used in the manuscript.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -26,6 +26,7 @@ open scoped Cardinal
 universe u
 
 /-- Uniform cardinal bound for every Banach stage. -/
+@[expose]
 def stageCardinal : Cardinal := 2 ^ Cardinal.continuum
 
 /-- Regular successor cardinal indexing the final recursion. -/

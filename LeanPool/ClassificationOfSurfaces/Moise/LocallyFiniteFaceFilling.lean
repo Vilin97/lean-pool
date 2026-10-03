@@ -18,7 +18,7 @@ triangular frontier onto a simple polygonal circle. Polygonal Schoenflies fills 
 finite PL homeomorphism without changing its shared-edge boundary values.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -66,7 +66,7 @@ theorem exists_facePLFilling (f : K.Face) :
   }⟩
 
 /-- A fixed certified PL filling for downstream locally finite gluing. -/
-noncomputable def facePLFilling (f : K.Face) :
+@[expose] noncomputable def facePLFilling (f : K.Face) :
     K.FacePLFilling (G := G) f :=
   Classical.choice (K.exists_facePLFilling (G := G) f)
 

@@ -11,7 +11,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.CrossOneOff.CrossStrandNegativ
 /-! Normalized-coordinate adapter for the verified cross-strand negative-rank
 calculation. -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

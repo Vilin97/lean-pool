@@ -24,7 +24,7 @@ identity deviation matrix.  Evaluation at the corresponding assignments proves t
 polynomial families, and hence the combined family, are nonzero.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -465,6 +465,7 @@ theorem prism_vertex_orbit_injective
 /-! ## Local scalar-site independence and assignment realization -/
 
 /-- Parameter represented by one scalar coordinate at one local prism vertex. -/
+@[expose]
 noncomputable def localParameter
     (hp : Nat.Prime p) (N L : Nat) (q : PrismCell hp N L)
     (i : Fin (p + 1)) (j : Fin p) : Parameter hp N L :=

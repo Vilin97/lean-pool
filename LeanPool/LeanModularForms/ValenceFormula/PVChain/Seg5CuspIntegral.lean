@@ -39,7 +39,7 @@ circle integral using the factorization `F(q) = q^m · g(q)`:
     `PVChain.Assembly`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups

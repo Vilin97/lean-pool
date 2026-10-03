@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 /-! The literal source truncation floor(k^ϑ), ϑ=10⁻⁶, meets the packet
 and correction guards from finitely many fixed-cost bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -25,13 +25,14 @@ namespace EulerPacketSourceFrequency
 open Real Filter EulerPacketCoarseMajorant EulerPacketCorrectionScalar
 
 /-- Theta, given by `1/1000000`. -/
+@[expose]
 def theta : ℝ := 1/1000000
 /-- Expansion, given by `k^theta`. -/
-def expansion (k : ℝ) : ℝ := k^theta
+@[expose] def expansion (k : ℝ) : ℝ := k^theta
 /-- Truncation, given by `Nat.floor (expansion k)`. -/
 def truncation (k : ℝ) : ℕ := Nat.floor (expansion k)
 /-- Small power, given by `k^(theta/100)`. -/
-def smallPower (k : ℝ) : ℝ := k^(theta/100)
+@[expose] def smallPower (k : ℝ) : ℝ := k^(theta/100)
 
 theorem expansion_pos (k : ℝ) (hk : 0 < k) : 0 < expansion k :=
   Real.rpow_pos_of_pos hk _

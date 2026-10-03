@@ -15,7 +15,7 @@ negative divergence of the cutoff tensor. The force belongs to the seventh
 and eighth potentials.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

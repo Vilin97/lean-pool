@@ -18,7 +18,7 @@ supported atoms. Injective modular lattice charts then give a surjective
 representation of the charted flag on its minimal ambient affine spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.LatticeSupportDiagram
 
@@ -28,6 +28,7 @@ variable {p d : ℕ} [NeZero p] [Fact p.Prime]
     (φ : (x : D.Node) → FpCoord p d →ᵃ[ZMod p] FpCoord p (D.rank x))
 
 /-- Express the old coordinate map through the modular chart's left inverse. -/
+@[expose]
 noncomputable def coordinateMap (x : D.Node) :
     FpCoord p d →ᵃ[ZMod p] FpCoord p (C x).rank := (C x).rechartMap (φ x)
 
@@ -112,6 +113,7 @@ theorem coordinateMap_compatible {x y : D.Node} (h : x ≤ y) {v : FpCoord p d}
   exact hcompat h hv
 
 /-- The actual representation of the charted support diagram. -/
+@[expose]
 noncomputable def chartedRepresentation : FpRepresentation p d (D.chartedFlag C) :=
   FpRepresentation.ofCumulativeSupport w (coordinateMap D C φ)
     (fun x ↦ (C x).coordinateSupport)

@@ -37,7 +37,7 @@ having to argue that the integrand is strictly smaller on a set of positive meas
 * `Sendov.polar_exp`: `(1Q) ⟹ (lt)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

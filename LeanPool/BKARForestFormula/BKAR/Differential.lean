@@ -18,7 +18,7 @@ the direction data `activeDirection` used by the one-edge expansion step of
 the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 namespace BKAR
 
@@ -57,6 +57,7 @@ theorem empty_activeEdges :
     exact e.left_ne_right (Forest.empty_inSameComponent_iff.mp hcomp)
 
 /-- View any edge as an active edge of the empty forest. -/
+@[expose]
 noncomputable def emptyActiveEdge (e : Edge V) :
     {e // e ∈ (Forest.empty V).activeEdges} :=
   ⟨e, by
@@ -218,6 +219,7 @@ theorem hasDerivAt_interpWithFill (F : Forest V)
     exact F.hasDerivAt_interpWithFill_apply_of_not_mem_activeEdges u he t
 
 /-- Right-hand side of the differential identity. -/
+@[expose]
 noncomputable def activeEdgePartialSum (F : Forest V)
     (u : F.EdgeParam → ℝ) (ρ : (Edge V → ℝ) → ℝ) (t : ℝ) : ℝ :=
   Finset.sum F.activeEdges fun e => partialDeriv e ρ (F.interpWithFill u t)

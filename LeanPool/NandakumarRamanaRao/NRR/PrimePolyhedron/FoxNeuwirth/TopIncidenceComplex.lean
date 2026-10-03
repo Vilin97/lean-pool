@@ -21,7 +21,7 @@ Fox--Neuwirth incidences.  The nontrivial statement is that the oriented top cha
 kernel of the genuine top-to-facet incidence map; this is supplied by the facet--shuffle theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -42,12 +42,14 @@ abbrev FacetChain (p : Nat) (R : Type*) :=
   BarredPermutation p → R
 
 /-- The genuine top-to-facet incidence map. -/
+@[expose]
 noncomputable def topIncidenceBoundary
     (chain : TopCellChain p R) : FacetChain p R :=
   fun a => ∑ c : BarredPermutation.TopCell p,
     (signedIncidence a (c : BarredPermutation p) : R) * chain c
 
 /-- The next differential in the minimal two-term obstruction complex. -/
+@[expose]
 def zeroFacetBoundary
     (_chain : FacetChain p R) : PUnit.{0} → R :=
   fun _ => 0
@@ -66,6 +68,7 @@ theorem zeroFacetBoundary_comp_topIncidenceBoundary
   rfl
 
 /-- The oriented sum of all top cells. -/
+@[expose]
 noncomputable def orientedTopChain
     (p : Nat) : TopCellChain p (ZMod p) :=
   fun c => orientedTopCoefficient (c : BarredPermutation p)

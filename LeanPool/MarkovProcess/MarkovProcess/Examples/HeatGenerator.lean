@@ -46,7 +46,7 @@ contained), and nothing is claimed in dimension greater than one or for a functi
 stated smoothness class.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

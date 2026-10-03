@@ -24,7 +24,7 @@ common annular radius for all stages, or blow-up of the resulting diagonal
 is postulated.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -98,6 +98,7 @@ structure CopyPotential (h : ℝ) where
   cells : ∀ i, PhysicalCopyBounds.SupportCells (family i)
 
 /-- Field, given by `PhysicalCopyBounds.vectorSum p.family p.inner h p.width`. -/
+@[expose]
 noncomputable def CopyPotential.field {h : ℝ} (p : CopyPotential.{u} h) : VelocityField :=
   PhysicalCopyBounds.vectorSum p.family p.inner h p.width
 
@@ -124,6 +125,7 @@ structure AngularSupport (Ω : Set SpaceTime) where
     scalar (DirectAngularDiagonal.cylPoint w) = 0
 
 /-- Field, given by `DirectAngularDiagonal.angularField D.scalar`. -/
+@[expose]
 noncomputable def AngularSupport.field {Ω : Set SpaceTime} (D : AngularSupport Ω) : VelocityField :=
   DirectAngularDiagonal.angularField D.scalar
 
@@ -159,6 +161,7 @@ theorem AngularSupport.field_add {Ω : Set SpaceTime} (D E : AngularSupport Ω) 
 
 /-- Existing mean-field `AngularData` restricts to the required physical
 domain.  Its actual scalar, normalization, and graph are unchanged. -/
+@[expose]
 noncomputable def AngularSupport.ofAngularData {U : Set DirectAngularDiagonal.Slow}
     (D : DirectAngularDiagonal.AngularData U) {Ω : Set SpaceTime}
     (hΩ : Ω ⊆ DirectAngularDiagonal.physicalDomain U) : AngularSupport Ω where
@@ -203,6 +206,7 @@ structure PotentialStage (h : ℝ) (Ω : Set SpaceTime) where
 
 /-- Field, defined pointwise by `(∑ i : Fin p.waveCount, (p.waves i).field w) + ∑ i : Fin
 p.streamCount, (p.streams i).field w`. -/
+@[expose]
 noncomputable def PotentialStage.field {h : ℝ} {Ω : Set SpaceTime}
     (p : PotentialStage.{u} h Ω) : VelocityField :=
   fun w => (∑ i : Fin p.waveCount, (p.waves i).field w) +
@@ -223,6 +227,7 @@ theorem PotentialStage.zero_germ {h : ℝ} {Ω : Set SpaceTime}
 
 /-- The zeroth potential is the anchored base; all positive stages are the
 constructed copy/mean increments. -/
+@[expose]
 noncomputable def potentialSeries {h : ℝ} {Ω : Set SpaceTime} (base : VelocityField)
     (p : ℕ → PotentialStage.{u} h Ω) : ℕ → VelocityField
   | 0 => base
@@ -243,18 +248,21 @@ theorem potentialSeries_zero_germ {h : ℝ} {Ω : Set SpaceTime} (base : Velocit
 
 /-- Potential diagonal, given by `SolenoidalDiagonal.potentialSum scales
 (PhysicalWaveSum.physicalQ h) (potentialSeries base p)`. -/
+@[expose]
 noncomputable def potentialDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (p : ℕ → PotentialStage.{u} h Ω) (scales : ℕ → ℝ) : VelocityField :=
   SolenoidalDiagonal.potentialSum scales (PhysicalWaveSum.physicalQ h) (potentialSeries base p)
 
 /-- Direct diagonal, given by `DirectAngularDiagonal.angularSum scales
 (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)`. -/
+@[expose]
 noncomputable def directDiagonal (h : ℝ) {Ω : Set SpaceTime}
     (D : ℕ → AngularSupport Ω) (scales : ℕ → ℝ) : VelocityField :=
   DirectAngularDiagonal.angularSum scales (PhysicalWaveSum.physicalQ h) (fun j => (D j).scalar)
 
 /-- Mixed diagonal, given by `DirectAngularDiagonal.mixedVelocity scales
 (PhysicalWaveSum.physicalQ h) (potentialSeries base p) (fun j => (D j).scalar)`. -/
+@[expose]
 noncomputable def mixedDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (p : ℕ → PotentialStage.{u} h Ω)
     (D : ℕ → AngularSupport Ω) (scales : ℕ → ℝ) : VelocityField :=
@@ -393,18 +401,21 @@ theorem origin_blowup {h : ℝ} {Ω : Set SpaceTime}
 /-! ## Finite initialization stays in stage zero -/
 
 /-- Initialized base, defined pointwise by `base w + initial.field w`. -/
+@[expose]
 noncomputable def initializedBase {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω) : VelocityField :=
   fun w => base w + initial.field w
 
 /-- This is the manuscript's stage numbering: the finite initialization
 and base share cutoff zero; each subsequent stage has its own cutoff. -/
+@[expose]
 noncomputable def initializedSeries {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω)
     (p : ℕ → PotentialStage.{u} h Ω) : ℕ → VelocityField :=
   potentialSeries (initializedBase base initial) p
 
 /-- Initialized diagonal, given by `mixedDiagonal (initializedBase base initial) p D scales`. -/
+@[expose]
 noncomputable def initializedDiagonal {h : ℝ} {Ω : Set SpaceTime}
     (base : VelocityField) (initial : PotentialStage.{u} h Ω)
     (p : ℕ → PotentialStage.{u} h Ω) (D : ℕ → AngularSupport Ω)
@@ -494,6 +505,7 @@ theorem initialized_origin_blowup {h : ℝ} {Ω : Set SpaceTime}
 /-! ## The actual small-similarity-parameter domain -/
 
 /-- Local domain, given by `{w | w.1 < 1 ∧ PhysicalWaveSum.physicalQ h w < qbig}`. -/
+@[expose]
 noncomputable def localDomain (h qbig : ℝ) : Set SpaceTime :=
   {w | w.1 < 1 ∧ PhysicalWaveSum.physicalQ h w < qbig}
 
@@ -630,6 +642,7 @@ theorem local_initialized_final_speedUnbounded (upper : ℝ) (B : ℕ)
 end FinalBase
 
 /-- The exponent belongs to the already selected, constructed profile. -/
+@[expose]
 noncomputable def constructedExponent : ℝ := FinalSlowBase.actualProfile.outgoing.data.h
 
 theorem constructed_origin_blowup (upper : ℝ) (B : ℕ) {qbig : ℝ} (hqbig : 0 < qbig)

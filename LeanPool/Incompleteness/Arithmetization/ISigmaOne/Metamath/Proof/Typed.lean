@@ -16,7 +16,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section «lp_nc_section_1»
 
@@ -177,6 +177,7 @@ structure _root_.LO.Arith.Language.Theory.TDerivation (T : Language.TTheory L) (
 scoped infix:45 " ⊢¹ " => Language.Theory.TDerivation
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def _root_.LO.Arith.Language.Theory.TProof (T : Language.TTheory L) (p :
     L.Formula) :=
   T ⊢¹ insert p ∅
@@ -191,8 +192,7 @@ variable {T U : L.TTheory}
 def _root_.LO.Arith.Language.Theory.Derivable.toTDerivation (Γ : L.Sequent) (h :
     T.thy.Derivable Γ.val) :
     T ⊢¹ Γ := by
-  choose a ha using h; choose d hd using ha.2
-  exact ⟨a, ha.1, d, hd⟩
+  exact ⟨Classical.choose h, Classical.choose_spec h⟩
 
 lemma _root_.LO.Arith.Language.Theory.TDerivation.toDerivable {Γ : L.Sequent} (d : T ⊢¹ Γ) :
     T.thy.Derivable Γ.val :=

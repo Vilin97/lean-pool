@@ -17,7 +17,7 @@ import LeanPool.FormalizationOfBoundedArithmetic.Register
 # LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
 -/
 
-@[expose] public section
+public section
 
 open Lean Elab Command
 

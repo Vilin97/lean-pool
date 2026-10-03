@@ -23,7 +23,7 @@ then proves the electric field vanishes (E = 0) and the magnetic field is
 spatially constant using harmonic function theory on the torus.
 -/
 
-@[expose] public section
+public section
 
 open Matrix Finset BigOperators Real MeasureTheory
 noncomputable section

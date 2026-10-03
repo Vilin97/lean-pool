@@ -16,7 +16,7 @@ This file defines real projection-valued measures through strong-operator counta
 and proves monotonicity of their associated scalar quadratic forms.
 -/
 
-@[expose] public section
+public section
 
 open Function
 

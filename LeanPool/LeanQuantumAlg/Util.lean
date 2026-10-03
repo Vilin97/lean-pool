@@ -22,4 +22,4 @@ import Mathlib.Tactic.Positivity.Finset
 This module re-exports the quantum-free utility layer.
 -/
 
-@[expose] public section
+public section

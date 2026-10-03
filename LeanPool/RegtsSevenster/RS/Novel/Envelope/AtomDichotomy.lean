@@ -20,7 +20,7 @@ isomorphism.  This is the engine turning the atomic idempotent
 decomposition into a semisimple-category structure.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -115,7 +115,7 @@ theorem atom_iso_of_ne_zero {S T : Karoubi (SkeinObj f)}
 
 /-- The Karoubi object cut out of `X` by an idempotent of its
 endomorphism algebra. -/
-@[reducible] noncomputable def cutBy (X : Karoubi (SkeinObj f))
+@[expose, reducible] noncomputable def cutBy (X : Karoubi (SkeinObj f))
     {eK : End X} (he : IsIdempotentElem eK) :
     Karoubi (SkeinObj f) where
   X := X.X

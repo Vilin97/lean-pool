@@ -110,7 +110,7 @@ Root `Graph`, as fixed by `Schoenflies/Graph/Walk.lean`. The two arc lemmas are 
   side".
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -264,7 +264,7 @@ theorem pathGraphOf_mono (h : W ⊆ D) : G.pathGraphOf u W ≤ G.pathGraphOf u D
 /-- The subgraph of `G` drawn by a cycle: the detour followed by the edge, as a closed walk.
 Exported as the object rather than hidden behind an existential — the consumer of
 `lem:face-cycles` needs the graph itself, to feed it to the ear decomposition. -/
-def cycleGraph (G : Graph α β) (u : α) (e : β) (D : List β) : Graph α β :=
+@[expose] def cycleGraph (G : Graph α β) (u : α) (e : β) (D : List β) : Graph α β :=
   G.pathGraphOf u (D ++ [e])
 
 /-- The detour spans a path subgraph of the cycle. -/

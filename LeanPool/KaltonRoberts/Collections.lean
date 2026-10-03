@@ -31,7 +31,7 @@ Weighted collections and the positive/negative mass decomposition of a dual
 certificate for the low-frequency construction and recombination pipeline.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonRoberts
 
@@ -68,7 +68,7 @@ structure WeightedCollection (U : Type v) [DecidableEq U] where
 attribute [instance] WeightedCollection.finJ WeightedCollection.decJ
 
 /-- Total weight of a weighted collection. -/
-noncomputable def WeightedCollection.totalWeight (C : WeightedCollection U) : ℝ :=
+@[expose] noncomputable def WeightedCollection.totalWeight (C : WeightedCollection U) : ℝ :=
   ∑ j : C.J, C.weight j
 
 omit [Fintype U] in
@@ -76,16 +76,16 @@ lemma WeightedCollection.totalWeight_pos (C : WeightedCollection U) :
     0 < C.totalWeight := C.total_pos
 
 /-- Item frequency: the weighted fraction of sets containing item `i`. -/
-noncomputable def WeightedCollection.itemFreq (C : WeightedCollection U) (i : U) : ℝ :=
+@[expose] noncomputable def WeightedCollection.itemFreq (C : WeightedCollection U) (i : U) : ℝ :=
   (∑ j : C.J, C.weight j * if i ∈ C.sets j then 1 else 0) / C.totalWeight
 
 /-- Weighted average deficit. -/
-noncomputable def WeightedCollection.avgDeficit
+@[expose] noncomputable def WeightedCollection.avgDeficit
     (C : WeightedCollection U) (f : Finset U → ℝ) (M : ℝ) : ℝ :=
   (∑ j : C.J, C.weight j * deficit f M (C.sets j)) / C.totalWeight
 
 /-- Weighted average surplus. -/
-noncomputable def WeightedCollection.avgSurplus
+@[expose] noncomputable def WeightedCollection.avgSurplus
     (C : WeightedCollection U) (f : Finset U → ℝ) (M : ℝ) : ℝ :=
   (∑ j : C.J, C.weight j * surplus f M (C.sets j)) / C.totalWeight
 
@@ -109,12 +109,12 @@ lemma WeightedCollection.itemFreq_le_one (C : WeightedCollection U) (i : U) :
 /-! ## Certificate mass decomposition -/
 
 /-- Positive mass of a dual certificate: `p = ∑_S max(λ(S), 0)`. -/
-noncomputable def DualCertificate.posMass
+@[expose] noncomputable def DualCertificate.posMass
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) : ℝ :=
   ∑ S : Finset U, max (cert.lam S) 0
 
 /-- Negative mass of a dual certificate: `q = ∑_S max(−λ(S), 0)`. -/
-noncomputable def DualCertificate.negMass
+@[expose] noncomputable def DualCertificate.negMass
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M) : ℝ :=
   ∑ S : Finset U, max (-cert.lam S) 0
 
@@ -230,7 +230,7 @@ lemma DualCertificate.neg_item_sum_le_posMass
 /-! ## Positive and negative weighted collections from a certificate -/
 
 /-- The positive weighted collection from a dual certificate. -/
-noncomputable def DualCertificate.posCollection
+@[expose] noncomputable def DualCertificate.posCollection
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M)
     (hp : 0 < cert.posMass) :
     WeightedCollection U where
@@ -241,7 +241,7 @@ noncomputable def DualCertificate.posCollection
   total_pos := hp
 
 /-- The negative weighted collection from a dual certificate. -/
-noncomputable def DualCertificate.negCollection
+@[expose] noncomputable def DualCertificate.negCollection
     {f : Finset U → ℝ} {M : ℝ} (cert : DualCertificate f M)
     (hq : 0 < cert.negMass) :
     WeightedCollection U where

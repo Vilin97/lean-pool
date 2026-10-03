@@ -15,7 +15,7 @@ Lebesgue differentiation lets us choose the point outside the seven-diameter enl
 the mass missing from the compact core is linearly small in every sufficiently small ball.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

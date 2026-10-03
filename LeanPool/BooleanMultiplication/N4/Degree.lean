@@ -16,7 +16,7 @@ quotient API.  This file supplies the high-part predicates used by the seed
 and defect arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -45,6 +45,7 @@ def homogeneousProjection {m : Nat} (d : Nat) : ANF m →ₗ[F₂] ANF m where
     simp [homogeneousPart]
 
 /-- The ANF has no monomial above degree `d`. -/
+@[expose]
 def DegreeLE {m : Nat} (d : Nat) (p : ANF m) : Prop :=
   ∀ s : Monomial m, d < s.vars.card → p.coeff s = 0
 
@@ -96,6 +97,7 @@ theorem DegreeLE.mono {m d e : Nat} {p : ANF m}
   exact hp s (lt_of_le_of_lt hde hes)
 
 /-- There is a genuinely high monomial (degree at least three). -/
+@[expose]
 def HasNonzeroHigh {m : Nat} (p : ANF m) : Prop :=
   ∃ s : Monomial m, 3 ≤ s.vars.card ∧ p.coeff s ≠ 0
 
@@ -104,17 +106,21 @@ def QuarticFree {m : Nat} (p : ANF m) : Prop :=
   homogeneousPart 4 p = 0
 
 /-- A seed whose only possible nonzero high component is cubic. -/
+@[expose]
 def IsCubicSeed {m : Nat} (p : ANF m) : Prop :=
   HasNonzeroHigh p ∧ DegreeLE 3 p
 
 /-- The fourth gate has a nonzero component of degree greater than two. -/
+@[expose]
 def SeedHighNonzero (C : Circuit 8 8) : Prop := HasNonzeroHigh (C.gate 3)
 /-- The fourth gate has no degree-four homogeneous component. -/
 def SeedQuarticFree (C : Circuit 8 8) : Prop := QuarticFree (C.gate 3)
 /-- The fourth gate is a cubic seed. -/
+@[expose]
 def CubicSeedState (C : Circuit 8 8) : Prop := IsCubicSeed (C.gate 3)
 
 /-- The linear subspace of Boolean ANFs of degree at most two. -/
+@[expose]
 def quadraticANFSpace (m : Nat) : Submodule F₂ (ANF m) where
   carrier := {p | DegreeLE 2 p}
   zero_mem' := by intro s hs; simp

@@ -11,7 +11,7 @@ public import LeanPool.TuttePath.ConnectedPartitions
 
 /-! `lem:separation` in its literal set-theoretic form. Direct-sum background
 is expanded using rank partitions; the source cocircuit criterion is not audited. -/
-@[expose] public section
+public section
 
 namespace TutteFormalization
 open scoped Matroid

@@ -26,7 +26,7 @@ calculations.
 - `IsUniform`: predicate asserting a function is uniform.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 

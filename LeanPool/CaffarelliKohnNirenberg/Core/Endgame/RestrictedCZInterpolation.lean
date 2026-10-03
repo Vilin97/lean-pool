@@ -17,7 +17,7 @@ the strong endpoint. Only its restricted weak estimate remains an analytic
 input to the intermediate-exponent estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal

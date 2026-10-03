@@ -52,7 +52,7 @@ factor and the case analysis that controls it.
   `SeparatedParity.lean` and `NonSeparatedStep.lean` respectively.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -66,11 +66,13 @@ variable {γ : Type*}
 
 /-- Two chords of a linear order, each recorded low-to-high,
 interleave (in either relative position). -/
+@[expose]
 def ChordPairCross [LinearOrder γ]
     (x y u w : γ) : Prop :=
   (x < u ∧ u < y ∧ y < w) ∨ (u < x ∧ x < w ∧ w < y)
 
 /-- A point lies strictly inside a chord. -/
+@[expose]
 def InsideChord [LinearOrder γ]
     (x y p : γ) : Prop := x < p ∧ p < y
 
@@ -440,6 +442,7 @@ variable {F : EdgeSubset W}
 /-- Membership on the boundary chain of `β`: the flag appears on
 the walk from `β` (on either side of an edge) before the chain
 exits. -/
+@[expose]
 def OnBoundaryChain (κ : F.RelTransitionSystem) (β f : W.Flag) :
     Prop :=
   ∃ k t : ℕ, t ≤ k ∧
@@ -617,6 +620,7 @@ variable {F : EdgeSubset W}
 two re-paired edges lie on periodic components, or each of the four
 flags is periodic or on the chain of a single boundary flag.  The
 complement is the genuine two-path case (case 4). -/
+@[expose]
 def SquareLocalized (κ : F.RelTransitionSystem)
     (a b c d : W.Flag) : Prop :=
   (κ.PeriodicFlag a ∧ κ.PeriodicFlag c) ∨
@@ -882,6 +886,7 @@ variable {F : EdgeSubset W} {κ : F.RelTransitionSystem}
 
 /-- The flags of the walk orbit through `g`, on both sides of each
 visited edge. -/
+@[expose]
 def OrbitFlag (κ : F.RelTransitionSystem) (g f : W.Flag) : Prop :=
   ∃ m, f = iterWalk κ g m ∨ f = W.pairing (iterWalk κ g m)
 
@@ -1021,6 +1026,7 @@ end EdgeSubset
 square on a localized configuration flips the circuit-count parity
 (the splice merges two circuits, Δ = −1, or splits one component,
 Δ = +1).  Discharged in `SeparatedParity.lean`. -/
+@[expose]
 def SeparatedCountParity : Prop :=
   ∀ {α : Type} {W : Fragment α} {F : EdgeSubset W}
     {κ : F.RelTransitionSystem} {a b c d : W.Flag} {v : W.Vertex}

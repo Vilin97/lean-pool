@@ -19,7 +19,7 @@ public import LeanPool.ConnesRigidity.Core
 The split abelian extension component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 

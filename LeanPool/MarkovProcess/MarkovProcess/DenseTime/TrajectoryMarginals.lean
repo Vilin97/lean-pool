@@ -15,7 +15,7 @@ This file identifies every coordinate marginal of the dense-time trajectory kern
 corresponding transition kernel.  The result is derived from the exact finite-prefix identity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

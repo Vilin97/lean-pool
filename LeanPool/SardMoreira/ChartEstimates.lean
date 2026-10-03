@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.SardMoreira.ChartEstimates
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology NNReal
 open Asymptotics Filter Set Metric Function MeasureTheory Measure
@@ -140,7 +140,7 @@ theorem isBigO_main_aux
         simpa [Function.comp_def, Prod.sub_def] using this
       _ = _ := by simp
   | succ k ihk =>
-    simp only [main, mem_iUnion, mem_image] at hψ
+    simp only [main_succ_charts, mem_iUnion, mem_image] at hψ
     rcases hψ with ⟨ψ, hψ, φ, hφ, rfl⟩
     suffices (fun y ↦ f (ψ (φ (x.1, y)))) =O[𝓝 x.2] fun y ↦ ‖y - x.2‖ ^ (k + α + 1 : ℝ) by
       simpa [add_right_comm _ (1 : ℝ)]

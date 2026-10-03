@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SobolevHeatGenerator
 /-! The actual viscous term vanishes uniformly for a uniformly Sobolev-bounded approximation family.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ theorem viscositySequence_tendsto : Filter.Tendsto viscositySequence Filter.atTo
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The literal viscosity times the spatial Laplacian, as a continuous L² time path. -/
-def viscousDefect {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ)
+@[expose] def viscousDefect {q : ℕ} (hq : 2 ≤ q) (ν T : ℝ)
     (e : C(Icc (0 : ℝ) T, SobolevSpace period q)) : C(Icc (0 : ℝ) T,LiftL2 period) :=
   ν • (laplacianEvaluation period q hq).compLeftContinuous ℝ (Icc (0 : ℝ) T) e
 

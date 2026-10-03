@@ -24,7 +24,7 @@ the combinatorial heart of lowering a closed construction on a trivalent
 expansion back to the smaller core.
 -/
 
-@[expose] public section
+public section
 namespace Utilities.Subdivision.CoreExpansion
 
 open Utilities

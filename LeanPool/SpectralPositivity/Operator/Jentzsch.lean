@@ -35,4 +35,4 @@ generalized from L²(ℝⁿ) to L²(Ω, volume) for any MeasureSpace Ω.
 - Reed-Simon IV, Theorems XIII.43–44
 -/
 
-@[expose] public section
+public section

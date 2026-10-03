@@ -30,7 +30,7 @@ the requested bound.
   face-mesh estimate.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

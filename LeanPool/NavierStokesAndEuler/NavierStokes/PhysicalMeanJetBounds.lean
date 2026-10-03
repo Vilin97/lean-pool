@@ -19,7 +19,7 @@ derivative estimates are derived from the actual physical graph and radius map.
 The final restriction is a single coherent physical field, not a sum over bands.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,13 +33,13 @@ open scoped Topology ContDiff BigOperators
 abbrev Point := PressureStream.Lift PhysicalGraphBounds.Plane
 
 /-- The unscaled physical cylindrical point with the actual auxiliary graph. -/
-noncomputable def physicalPoint (h : ℝ) (w : SpaceTime) : Point :=
+@[expose] noncomputable def physicalPoint (h : ℝ) (w : SpaceTime) : Point :=
   (PhysicalClassBounds.cartesianRadius (PhysicalGraphBounds.radialProjection w),
     ((1 - w.1, w.2 2), PhysicalGraphBounds.radialProfile (ChartScales.radialExponent h)
       (PhysicalGraphBounds.radialProjection w) + w.1 • PhysicalGraphBounds.timeDirection))
 
 /-- A bounded-gap common-cover graph, in the mean-field coordinate order. -/
-noncomputable def graph (h : ℝ) (n d : ℕ) : SpaceTime → Point :=
+@[expose] noncomputable def graph (h : ℝ) (n d : ℕ) : SpaceTime → Point :=
   PhysicalClassBounds.cylindricalMap ∘ commonLift h n d
 
 theorem cartesianRadius_smul {c : ℝ} (hc : 0 ≤ c) (y : PhysicalGraphBounds.Plane) :
@@ -141,11 +141,12 @@ theorem common_stripped_physical_bound_local {h a b : ℝ}
   exact hjet i hi
 
 /-- Band field, defined pointwise by `(ChartScales.Q n ^ (-degree)) • f (graph h n d w)`. -/
+@[expose]
 noncomputable def bandField (h : ℝ) (n d : ℕ) (degree : ℝ) (f : Point → E) : SpaceTime → E :=
   fun w => (ChartScales.Q n ^ (-degree)) • f (graph h n d w)
 
 /-- Loss, given by `PhysicalGraphBounds.graphLoss m + 1 + degree`. -/
-noncomputable def loss (degree : ℝ) (m : ℕ) : ℝ :=
+@[expose] noncomputable def loss (degree : ℝ) (m : ℕ) : ℝ :=
   PhysicalGraphBounds.graphLoss m + 1 + degree
 
 /-- Actual cylindrical mean-field restriction.  Both graph stages are
@@ -329,6 +330,7 @@ structure CoherentFamily (h degree : ℝ) (N Δ : ℕ) (U : Set PhysicalGraphBou
       native n (VariableGaugeMean.physicalToChartTZ h n (ChartScales.nativeIndex h n - gap n) z)
 
 /-- Field, given by `D.physical ∘ physicalPoint h`. -/
+@[expose]
 noncomputable def CoherentFamily.field {h degree : ℝ} {N Δ : ℕ} {U : Set PhysicalGraphBounds.Plane}
     (D : CoherentFamily h degree N Δ U E) : SpaceTime → E := D.physical ∘ physicalPoint h
 
@@ -353,6 +355,7 @@ theorem CoherentFamily.field_germ (D : CoherentFamily h degree N Δ U E)
 
 /-- Supported native coefficients, stated for an arbitrary normed target.
 For real-valued coefficients this is the actual `SupportedGauge` condition. -/
+@[expose]
 def NativeSupport (h a b : ℝ) (N : ℕ) (U : Set PhysicalGraphBounds.Plane)
     (f : ℕ → Point → E) : Prop :=
   ∀ n ≥ N, ∀ z, z.2.1 ∈ U → f n z ≠ 0 →
@@ -405,6 +408,7 @@ theorem CoherentFamily.annulus_on_tsupport (D : CoherentFamily h degree N Δ U E
     linarith only [haR, PolarCharts.radius_le_two_norm (PhysicalGraphBounds.scaledRadial n w)]
 
 /-- Band-independent native jets after absorbing the actual flat weight. -/
+@[expose]
 def NativeJets (N : ℕ) (U : Set PhysicalGraphBounds.Plane) (gain : ℝ)
     (f : ℕ → Point → E) : Prop :=
   ∀ m : ℕ, ∃ A : ℝ, 0 ≤ A ∧ ∃ e : ℕ, ∀ n ≥ N, ∀ z, z.2.1 ∈ U → ∀ j ≤ m,
@@ -503,6 +507,7 @@ theorem CoherentFamily.field_jet_bound_of_localBandJets (D : CoherentFamily h de
 
 /-- The open physical region on which the local native hypotheses imply
 smoothness, including the zero neighborhood at the spatial axis. -/
+@[expose]
 noncomputable def physicalDomain (h : ℝ) (N : ℕ) : Set SpaceTime :=
   {w | w ∈ preterminal ∧ physicalQ h w < ChartScales.Q N}
 
@@ -540,7 +545,7 @@ theorem loss_stream (h : ℝ) (m : ℕ) :
 
 /-- The Cartesian unit angular direction, with the usual totalized value
 at the axis.  Axis regularity below comes from the supported coefficient. -/
-noncomputable def angularVector (y : PhysicalGraphBounds.Plane) : Space :=
+@[expose] noncomputable def angularVector (y : PhysicalGraphBounds.Plane) : Space :=
   (-y.2 / PhysicalClassBounds.cartesianRadius y) • coordinateVector 0 +
     (y.1 / PhysicalClassBounds.cartesianRadius y) • coordinateVector 1
 
@@ -629,7 +634,7 @@ theorem angularVector_scaledRadial (n : ℕ) (w : SpaceTime) :
 
 /-- This is the direct angular vector when `degree = A h`, and the
 azimuthal stream potential when `degree = A h - 1/2`. -/
-noncomputable def bandAngularField (h : ℝ) (n d : ℕ) (degree : ℝ)
+@[expose] noncomputable def bandAngularField (h : ℝ) (n d : ℕ) (degree : ℝ)
     (f : Point → ℝ) : VelocityField :=
   fun w => bandField h n d degree f w • angularVector (PhysicalGraphBounds.radialProjection w)
 
@@ -717,6 +722,7 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
 
 /-- The actual Cartesian vector associated with the coherent scalar
 field.  The formula applies both to angular velocity and stream potential. -/
+@[expose]
 noncomputable def CoherentFamily.angularField (D : CoherentFamily h degree N Δ U ℝ) : VelocityField
     :=
   fun w => D.field w • angularVector (PhysicalGraphBounds.radialProjection w)
@@ -728,8 +734,8 @@ theorem CoherentFamily.angularField_formula (D : CoherentFamily h degree N Δ U 
       (w.2 0 / PhysicalClassBounds.cartesianRadius (PhysicalGraphBounds.radialProjection w) *
         D.field w) • coordinateVector 1 := by
   simp only [CoherentFamily.angularField, angularVector, smul_add, smul_smul]
-  change (D.field w * (-w.2 1 / _)) • _ + (D.field w * (w.2 0 / _)) • _ = _
-  rw [mul_comm (D.field w), mul_comm (D.field w)]
+  simp only [PhysicalGraphBounds.radialProjection_apply]
+  simp only [mul_comm (D.field w)]
 
 theorem CoherentFamily.angularField_germ (D : CoherentFamily h degree N Δ U ℝ)
     (hU : IsOpen U) (n : ℕ) (hn : N ≤ n) {w : SpaceTime} (hw : w ∈ preterminal)
@@ -914,6 +920,7 @@ noncomputable def CoherentFamily.reconstructPressure
 
 /-- Reconstruct the azimuthal stream potential from a coherent axial
 source.  Its physical degree is exactly `A h - 1/2`. -/
+@[expose]
 noncomputable def CoherentFamily.reconstructStream
     (D : CoherentFamily h (CoordinateAlgebra.A h) N Δ U ℝ)
     (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hab : a < b)

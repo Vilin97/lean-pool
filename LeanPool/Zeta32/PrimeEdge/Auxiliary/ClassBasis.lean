@@ -14,7 +14,7 @@ Apery/Arith/Unimodular.lean in mo271/Zeta5 by Moritz Firsching (https://github.c
 commit f19a1960609f7d38e7b63fd2acb05e6f60a7b741), Apache-2.0), restated for
 `Zeta32.Arith.Local.coeffMat`. -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

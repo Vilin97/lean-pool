@@ -19,7 +19,7 @@ pair list, up to fragment equivalence composed with the canonical
 relabelling.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -30,6 +30,7 @@ variable {α : Type}
 /-! ### Well-formedness of pair lists -/
 
 /-- All 2n components of a list of pairs are pairwise distinct. -/
+@[expose]
 def PairsWF (ps : List (α × α)) : Prop :=
   (ps.flatMap (fun p => [p.1, p.2])).Nodup
 
@@ -83,10 +84,12 @@ theorem PairsWF.perm {ps qs : List (α × α)} (h : PairsWF ps)
 
 /-- The labels surviving all glues in a pair list: those not
 appearing as any component of any pair. -/
+@[expose]
 def FoldSurviving (α : Type) (ps : List (α × α)) : Type :=
   {x : α // ∀ p ∈ ps, x ≠ p.1 ∧ x ≠ p.2}
 
 /-- The vacuous surviving equivalence for the empty list. -/
+@[expose]
 def foldSurvivingNilEquiv : FoldSurviving α [] ≃ α where
   toFun x := x.val
   invFun x := ⟨x, fun _ h => absurd h List.not_mem_nil⟩
@@ -96,6 +99,7 @@ def foldSurvivingNilEquiv : FoldSurviving α [] ≃ α where
 /-- The surviving-set equivalence induced by a permutation of pairs:
 the membership condition is ∀-quantified over ∈, so a permutation
 preserving membership gives an equivalence. -/
+@[expose]
 def foldSurvivingPermEquiv {ps qs : List (α × α)}
     (hperm : ps.Perm qs) :
     FoldSurviving α ps ≃ FoldSurviving α qs where
@@ -116,6 +120,7 @@ theorem PairsWF.sep {i j : α} {ps : List (α × α)}
   h.head_disjoint_of
 
 /-- Coerce a well-formed tail into pairs of surviving labels. -/
+@[expose]
 def coercePairsList (i j : α) :
     (ps : List (α × α)) →
     PairsSep i j ps →
@@ -187,6 +192,7 @@ theorem coercePairsList_mem (i j : α) :
 (first remove i, j from α to get SurvivingLabel; then remove
 the coerced tail pairs) and the flat surviving type (remove
 (i, j) :: ps at once). -/
+@[expose]
 def foldFlatten (i j : α) (ps : List (α × α))
     (h : PairsSep i j ps) :
     FoldSurviving (SurvivingLabel α i j) (coercePairsList i j ps h) ≃
@@ -214,6 +220,7 @@ def foldFlatten (i j : α) (ps : List (α × α))
 /-! ### The fold: iterated single-pair gluing -/
 
 /-- Fold a well-formed pair list using a bound on its length as structural fuel. -/
+@[expose]
 noncomputable def glueListAux :
     (n : ℕ) → {α : Type} → (W : Fragment α) →
     (ps : List (α × α)) → PairsWF ps →
@@ -233,6 +240,7 @@ noncomputable def glueListAux :
 /-- Iterated single-pair gluing along a list of distinct pairs.
 Glues each pair in order; the result is labelled by the elements of
 α not appearing in any pair. -/
+@[expose]
 noncomputable def glueList {α : Type} (W : Fragment α)
     (ps : List (α × α)) (h : PairsWF ps) :
     Fragment (FoldSurviving α ps) :=
@@ -310,6 +318,7 @@ noncomputable def glueListCongr {α : Type}
 /-! ### Relabelling commutes with the fold -/
 
 /-- Map a pair list through an equivalence. -/
+@[expose]
 def mapPairs (e : α ≃ β) (ps : List (α × α)) : List (β × β) :=
   ps.map (Prod.map e e)
 
@@ -332,6 +341,7 @@ theorem mapPairs_wf (e : α ≃ β) (ps : List (α × α))
 
 /-- The canonical equivalence on FoldSurviving induced by a
 label equivalence. -/
+@[expose]
 def foldSurvivingMapEquiv (e : α ≃ β) (ps : List (α × α)) :
     FoldSurviving α ps ≃ FoldSurviving β (mapPairs e ps) where
   toFun x := ⟨e x.val, fun p hp => by
@@ -787,6 +797,7 @@ abbrev PairsSepAll (ps qs : List (α × α)) : Prop :=
 
 /-- Pairs avoiding an earlier pair list lift into its surviving
 labels. -/
+@[expose]
 def liftPairs (ps : List (α × α)) :
     (qs : List (α × α)) → PairsSepAll ps qs →
     List (FoldSurviving α ps × FoldSurviving α ps)
@@ -882,6 +893,7 @@ theorem liftPairs_mem (ps : List (α × α)) :
 
 /-- The two-stage surviving labels flatten to the concatenation's
 surviving labels. -/
+@[expose]
 def appendFlatten (ps qs : List (α × α)) (h : PairsSepAll ps qs) :
     FoldSurviving (FoldSurviving α ps) (liftPairs ps qs h) ≃
       FoldSurviving α (ps ++ qs) where
@@ -1140,6 +1152,7 @@ noncomputable def glueListAppend (W : Fragment α)
 
 /-- Embed a pair list into the left summand of a disjoint
 union. -/
+@[expose]
 def inlPairs (ps : List (α × α)) :
     List ((α ⊕ β) × (α ⊕ β)) :=
   ps.map (Prod.map Sum.inl Sum.inl)
@@ -1166,6 +1179,7 @@ theorem inlPairs_wf (ps : List (α × α))
 /-- The surviving-label equivalence for left-embedded
 pairs: inl-labels survive iff they survive the original
 list; all inr-labels survive. -/
+@[expose]
 def inlFoldEquiv (ps : List (α × α)) :
     FoldSurviving (α ⊕ β)
       (inlPairs (β := β) ps) ≃
@@ -1216,6 +1230,7 @@ def inlFoldEquiv (ps : List (α × α)) :
 
 /-- Embed a pair list into the right summand of a disjoint
 union. -/
+@[expose]
 def inrPairs (qs : List (β × β)) :
     List ((α ⊕ β) × (α ⊕ β)) :=
   qs.map (Prod.map Sum.inr Sum.inr)
@@ -1242,6 +1257,7 @@ theorem inrPairs_wf (qs : List (β × β))
 /-- The surviving-label equivalence for right-embedded
 pairs: inr-labels survive iff they survive the original
 list; all inl-labels survive. -/
+@[expose]
 def inrFoldEquiv (qs : List (β × β)) :
     FoldSurviving (α ⊕ β)
       (inrPairs (α := α) qs) ≃
@@ -1783,6 +1799,7 @@ theorem swapPairs_wf (ps : List (α × α))
 /-- Surviving labels are invariant under swapping pair
 components: `x ≠ p.1 ∧ x ≠ p.2` iff
 `x ≠ p.2 ∧ x ≠ p.1`. -/
+@[expose]
 def swapFoldEquiv (ps : List (α × α)) :
     FoldSurviving α (ps.map Prod.swap) ≃
       FoldSurviving α ps where

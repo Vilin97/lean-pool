@@ -14,7 +14,7 @@ import Mathlib.Tactic.Bound
 
 /-! Exact shift gains and the final coarse factorial splitting for finite packets. -/
 
-@[expose] public section
+public section
 
 
 namespace EulerGevrey

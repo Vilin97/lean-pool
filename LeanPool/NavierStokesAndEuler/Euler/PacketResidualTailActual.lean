@@ -15,7 +15,7 @@ only finite velocity regularity. No regularity of the lower scalar pressures
 is needed, because their coefficients are already outside the tail support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -84,6 +84,7 @@ open Set EulerSmoothLimit EulerPacketPointJets EulerPacketProfileRecursion
 variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {N : ℕ} {a : ℕ → Profile} {S : Set Space}
 
 /-- Literal tail grade field used in packet residual tail actual. -/
+@[expose]
 def literalTailGradeField (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
     (C : CoefficientData P T O) (ha : a 0 = 0) (n : ℕ) (hn : N + 1 ≤ n) :
@@ -107,6 +108,6 @@ def literalTailGradeField (hT : 0 < T)
 theorem literalTailGradeField_path (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
     (C : CoefficientData P T O) (ha : a 0 = 0) (n : ℕ) (hn : N + 1 ≤ n) :
-    (literalTailGradeField hT G C ha n hn).path = (tailGradeField hT G C ha n hn).path := rfl
+    (literalTailGradeField hT G C ha n hn).path = (tailGradeField hT G C ha n hn).path := by rfl
 
 end EulerPacketCylinderField.ProfileRegularity

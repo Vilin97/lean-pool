@@ -16,13 +16,14 @@ Specializes the general genus-1 Hadamard factorization to `riemannXi`, with mult
 the zero set of `ξ` as a `Hadamard.ZeroSetMultiplicity`, and the resulting `E₁` product.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 
 namespace LiCriterion
 
 /-- The nontrivial zeros of `riemannXi`, indexed once each and weighted by their analytic order. -/
+@[expose]
 noncomputable def xiZeroSetMultiplicity : Hadamard.ZeroSetMultiplicity riemannXi where
   Zero := NontrivialZero
   z := fun ρ => ρ.val
@@ -60,6 +61,7 @@ noncomputable instance : Countable xiZeroSetMultiplicity.Zero := by
   simpa [xiZeroSetMultiplicity] using (inferInstance : Countable NontrivialZero)
 
 /-- The honest genus-1 canonical product for `riemannXi`, counted with multiplicity. -/
+@[expose]
 noncomputable def xiMultiplicityE1Prod (s : ℂ) : ℂ :=
   xiZeroSetMultiplicity.canonicalProductZeroSetMultiplicity s
 

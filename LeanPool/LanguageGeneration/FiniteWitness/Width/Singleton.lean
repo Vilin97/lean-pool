@@ -14,7 +14,7 @@ public import Mathlib.Tactic.Push
 # Singleton witnesses for countable language families
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 

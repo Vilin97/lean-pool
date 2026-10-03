@@ -20,7 +20,7 @@ both rows of the arity-zero pairing are multiples of the empty
 row, with ratio `f(W)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

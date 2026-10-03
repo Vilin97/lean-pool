@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Coding -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -27,10 +27,10 @@ def finsetArithmetizeAux : List V → V
   | []      => ∅
   | x :: xs => insert x (finsetArithmetizeAux xs)
 
-@[simp] lemma finsetArithmetizeAux_nil : finsetArithmetizeAux ([] : List V) = ∅ := rfl
+@[simp] lemma finsetArithmetizeAux_nil : finsetArithmetizeAux ([] : List V) = ∅ := by exact rfl
 
 @[simp] lemma finsetArithmetizeAux_cons (x : V) (xs) :
-    finsetArithmetizeAux (x :: xs) = insert x (finsetArithmetizeAux xs) := rfl
+    finsetArithmetizeAux (x :: xs) = insert x (finsetArithmetizeAux xs) := by exact rfl
 
 @[simp] lemma mem_finsetArithmetizeAux_iff {x : V} {s : List V} :
     x ∈ finsetArithmetizeAux s ↔ x ∈ s := by induction s <;> simp [*]

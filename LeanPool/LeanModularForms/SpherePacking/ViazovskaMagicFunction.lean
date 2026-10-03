@@ -87,7 +87,7 @@ singularities directly:
   residue theorem." arXiv:1808.00997v2.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Filter Topology MeasureTheory
 open scoped Interval
@@ -198,7 +198,7 @@ theorem φ₀''_differentiableOn : DifferentiableOn ℂ φ₀'' {z : ℂ | 0 < z
     ((isOpen_lt continuous_const Complex.continuous_im).mem_nhds hz')
   have hΔ_ne : (Delta.toSlashInvariantForm ∘ UpperHalfPlane.ofComplex) z ≠ 0 := by
     simp only [Function.comp, UpperHalfPlane.ofComplex_apply_of_im_pos hz',
-      CuspForm.toSlashInvariantForm_coe, ne_eq]
+      CuspForm.toSlashInvariantForm_coe, Delta_apply, ne_eq]
     exact Δ_ne_zero ⟨z, hz'⟩
   have hdiff := ((hE₂z.mul hE₄z).sub hE₆z).pow 2 |>.div hΔz hΔ_ne
   have hopen := (isOpen_lt continuous_const Complex.continuous_im).mem_nhds hz'
@@ -207,10 +207,14 @@ theorem φ₀''_differentiableOn : DifferentiableOn ℂ φ₀'' {z : ℂ | 0 < z
     filter_upwards [hopen] with w hw
     simp only [φ₀'', hw, dite_eq_left, φ₀, Function.comp,
       UpperHalfPlane.ofComplex_apply_of_im_pos hw, Pi.mul_apply, Pi.sub_apply,
-      Pi.pow_apply, Pi.div_apply]; rfl
+      Pi.pow_apply, Pi.div_apply]
+    simp only [ModularForm.toSlashInvariantForm_coe,
+      CuspForm.toSlashInvariantForm_coe, Delta_apply]
   · simp only [φ₀'', hz', dite_eq_left, φ₀, Function.comp,
       UpperHalfPlane.ofComplex_apply_of_im_pos hz', Pi.mul_apply, Pi.sub_apply,
-      Pi.pow_apply, Pi.div_apply]; rfl
+      Pi.pow_apply, Pi.div_apply]
+    simp only [ModularForm.toSlashInvariantForm_coe,
+      CuspForm.toSlashInvariantForm_coe, Delta_apply]
 
 /-! ## Upper half-plane: convexity and openness -/
 

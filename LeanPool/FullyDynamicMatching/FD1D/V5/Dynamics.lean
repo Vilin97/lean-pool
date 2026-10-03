@@ -17,7 +17,7 @@ the v5 deletion masses and connects it to the harmonic potential with
 regularizer `a / 2`.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Dynamics
 
@@ -45,6 +45,7 @@ theorem aggregatedInventory_count
   FD1D.HierarchicalDynamics.aggregatedInventory_count x hdL v
 
 /-- The v5 leaf deletion probabilities. -/
+@[expose]
 def deletionRule (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
     DeletionRule (DyadicNode L) m where
   prob x w :=
@@ -70,6 +71,7 @@ def deletionRule (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
   rfl
 
 /-- Delete according to the v5 rule and add an independent uniform leaf. -/
+@[expose]
 def kernel (a : ℝ) (ha : 0 < a) (hm : 0 < m) :
     FiniteKernel (InventoryState (DyadicNode L) m) :=
   (deletionRule a ha hm).kernel
@@ -227,11 +229,13 @@ theorem kernel_expected_nodePotentialChange
 /-! ## State observables and exact harmonic drift -/
 
 /-- Aggregated inventory counts viewed as labels on every dyadic level. -/
+@[expose]
 def countLabel (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℕ :=
   (aggregatedInventory x).count
 
 /-- Deletion mass at every node of the aggregated inventory tree. -/
+@[expose]
 def deletionLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
     ∀ d, DyadicNode d → ℝ :=
   TreePolicy.deletionMass (aggregatedInventory x) a
@@ -242,6 +246,7 @@ def rateLabel (a : ℝ) (x : InventoryState (DyadicNode L) m) :
   TreePolicy.rate (aggregatedInventory x) a
 
 /-- The manuscript potential `Φ`, whose harmonic shift is `a/2`. -/
+@[expose]
 def statePotential (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   globalHarmonicPotential L (a / 2) (countLabel x)
@@ -257,11 +262,13 @@ def stateRemainder (a : ℝ)
   potentialRemainder L (a / 2) (countLabel x) (deletionLabel a x)
 
 /-- Hazard energy of the state rate labels at the selected dyadic level. -/
+@[expose]
 def stateRateEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) (d : ℕ) : ℝ :=
   hazardEnergy (rateLabel a x) d
 
 /-- Transport energy of the aggregated inventory state. -/
+@[expose]
 def stateTransportEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   TreePolicy.transportEnergy (aggregatedInventory x) a

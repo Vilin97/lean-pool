@@ -16,7 +16,7 @@ The structures and finite rank-drop sum used by the formal statements of the
 marked-point symmetry section.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -39,6 +39,7 @@ structure MarkedPointSwap (M : TwiceMarked) extends MarkedPointAutomorphism M wh
 /-- The finite rank-drop sum in the final, unlabelled proposition of Section
 5.  This is the paper's sum over a fundamental domain `[k]`, encoded by
 `Fin k`. -/
+@[expose]
 noncomputable def sectionFiveRankDropSum
     (M : TwiceMarked) (D : CFDiv M.graph) (k : ℕ) : ℤ :=
   ∑ m : Fin k,

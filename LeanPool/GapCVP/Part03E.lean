@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03D
 
 /-! # GapCVP proof, part 03, continuation 05 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -39,7 +39,7 @@ structure DelimitedPairComparisonState where
   deriving Fintype
 
 /-- GapCVP reduction support. -/
-def delimitedComparePeekFirst (stack : Fin 10)
+@[expose] def delimitedComparePeekFirst (stack : Fin 10)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -49,7 +49,7 @@ def delimitedComparePeekFirst (stack : Fin 10)
     (.branch (fun state => state.first.isSome) present absent)
 
 /-- GapCVP reduction support. -/
-def delimitedComparePeekSecond (stack : Fin 10)
+@[expose] def delimitedComparePeekSecond (stack : Fin 10)
     (present absent : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -59,7 +59,7 @@ def delimitedComparePeekSecond (stack : Fin 10)
     (.branch (fun state => state.second.isSome) present absent)
 
 /-- GapCVP reduction support. -/
-def delimitedComparePop (stack : Fin 10)
+@[expose] def delimitedComparePop (stack : Fin 10)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -68,7 +68,7 @@ def delimitedComparePop (stack : Fin 10)
   .pop stack (fun state _ => state) continuation
 
 /-- GapCVP reduction support. -/
-def delimitedComparePushFirst (stack : Fin 10)
+@[expose] def delimitedComparePushFirst (stack : Fin 10)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -77,7 +77,7 @@ def delimitedComparePushFirst (stack : Fin 10)
   .push stack (fun state => state.first.getD false) continuation
 
 /-- GapCVP reduction support. -/
-def delimitedComparePushConstant (stack : Fin 10) (bit : Bool)
+@[expose] def delimitedComparePushConstant (stack : Fin 10) (bit : Bool)
     (continuation : Turing.TM2.Stmt
       (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState) :
@@ -86,14 +86,14 @@ def delimitedComparePushConstant (stack : Fin 10) (bit : Bool)
   .push stack (fun _ => bit) continuation
 
 /-- GapCVP reduction support. -/
-def delimitedCompareGoto (phase : Fin 12) :
+@[expose] def delimitedCompareGoto (phase : Fin 12) :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   .load (fun state => ⟨none, none, state.outcome⟩)
     (.goto (fun _ => phase))
 
 /-- GapCVP reduction support. -/
-def delimitedCompareSetOutcome
+@[expose] def delimitedCompareSetOutcome
     (outcome : EncodedWordOrdering) (phase : Fin 12) :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
@@ -101,7 +101,7 @@ def delimitedCompareSetOutcome
     (.goto (fun _ => phase))
 
 /-- GapCVP reduction support. -/
-def delimitedCompareFirstPrefixStatement :
+@[expose] def delimitedCompareFirstPrefixStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 0
@@ -115,7 +115,7 @@ def delimitedCompareFirstPrefixStatement :
     (delimitedCompareSetOutcome .invalid 7)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareFirstPayloadStatement :
+@[expose] def delimitedCompareFirstPayloadStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 1
@@ -130,7 +130,7 @@ def delimitedCompareFirstPayloadStatement :
     (delimitedCompareGoto 2)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareSecondPrefixStatement :
+@[expose] def delimitedCompareSecondPrefixStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 0
@@ -144,7 +144,7 @@ def delimitedCompareSecondPrefixStatement :
     (delimitedCompareSetOutcome .invalid 7)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareSecondPayloadStatement :
+@[expose] def delimitedCompareSecondPayloadStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 3
@@ -159,7 +159,7 @@ def delimitedCompareSecondPayloadStatement :
     (delimitedCompareGoto 4)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareReverseFirstStatement :
+@[expose] def delimitedCompareReverseFirstStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 2
@@ -168,7 +168,7 @@ def delimitedCompareReverseFirstStatement :
     (delimitedCompareGoto 5)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareReverseSecondStatement :
+@[expose] def delimitedCompareReverseSecondStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 4
@@ -194,7 +194,7 @@ def delimitedCompareWordsStatement :
       (delimitedCompareSetOutcome .equal 7))
 
 /-- GapCVP reduction support. -/
-def delimitedCompareCleanupStatement :
+@[expose] def delimitedCompareCleanupStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 1
@@ -212,7 +212,7 @@ def delimitedCompareCleanupStatement :
               (delimitedCompareGoto 8))))))
 
 /-- GapCVP reduction support. -/
-def delimitedCompareTrailingStatement :
+@[expose] def delimitedCompareTrailingStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 0
@@ -223,7 +223,7 @@ def delimitedCompareTrailingStatement :
     (delimitedCompareGoto 9)
 
 /-- GapCVP reduction support. -/
-def delimitedCompareOutcomeStatement :
+@[expose] def delimitedCompareOutcomeStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   .push 9 (fun state => encodedWordOrderingSecond state.outcome)
@@ -231,7 +231,7 @@ def delimitedCompareOutcomeStatement :
       (delimitedCompareGoto 10))
 
 /-- GapCVP reduction support. -/
-def delimitedCompareSourceStatement :
+@[expose] def delimitedCompareSourceStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 7
@@ -241,7 +241,7 @@ def delimitedCompareSourceStatement :
       (delimitedCompareGoto 11))
 
 /-- GapCVP reduction support. -/
-def delimitedComparePrefixStatement :
+@[expose] def delimitedComparePrefixStatement :
     Turing.TM2.Stmt (fun _ : Fin 10 => Bool) (Fin 12)
       DelimitedPairComparisonState :=
   delimitedComparePeekFirst 8
@@ -287,7 +287,7 @@ abbrev delimitedPairComparisonMachine : Turing.FinTM2 where
       delimitedComparePrefixStatement
 
 /-- GapCVP reduction support. -/
-def delimitedCompareConfiguration (phase : Fin 12)
+@[expose] def delimitedCompareConfiguration (phase : Fin 12)
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :

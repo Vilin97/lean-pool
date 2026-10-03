@@ -18,4 +18,4 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Sections.SectionSixFoundation
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

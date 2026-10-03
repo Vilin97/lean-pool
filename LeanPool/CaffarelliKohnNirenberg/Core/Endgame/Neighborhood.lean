@@ -14,7 +14,7 @@ The smallness premise stays in the extended nonnegative reals. The only
 additional estimate is the pair of one-step inequalities in `lem:theta-decay`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

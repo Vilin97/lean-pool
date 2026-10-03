@@ -38,7 +38,7 @@ and is one of the theorems covered by the repository's `#print axioms` audit
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open TopologicalSpace
 

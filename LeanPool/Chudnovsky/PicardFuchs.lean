@@ -37,7 +37,7 @@ which bypasses the Picard–Fuchs equation entirely and proves the chapter-8 out
 theorem for the periods is not needed on the main chain and is omitted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,6 +47,7 @@ open UpperHalfPlane Complex
 
 /-- The **Picard–Fuchs differential equation** (paper Thm. `picardfuchs`):
 `Ω` satisfies `d²Ω/dJ² + (1/J)·dΩ/dJ + (31J - 4)/(144·J²·(J-1)²)·Ω = 0` at every point of `S`. -/
+@[expose]
 def SatisfiesPicardFuchs (Ω : ℂ → ℂ) (S : Set ℂ) : Prop :=
   ∀ z ∈ S,
     deriv (deriv Ω) z + 1 / z * deriv Ω z

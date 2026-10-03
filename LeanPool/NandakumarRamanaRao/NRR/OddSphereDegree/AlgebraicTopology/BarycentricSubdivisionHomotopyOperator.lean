@@ -16,7 +16,7 @@ public import Mathlib.Tactic
 
 /-! # Barycentric Subdivision Homotopy Operator -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -28,13 +28,13 @@ namespace AffineBarycentricSubdivision
 /-! ## 1. Pushforward of singular chains along a continuous map -/
 
 /-- The degreewise singular-chain map induced by a continuous map. -/
-noncomputable def singularChainMap (R : Type) [CommRing R] {X Y : TopCat.{0}}
+@[expose] noncomputable def singularChainMap (R : Type) [CommRing R] {X Y : TopCat.{0}}
     (f : X ⟶ Y) (n : ℕ) :
     singularChainGroup R X n ⟶ singularChainGroup R Y n :=
   (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).map f).f n
 
 /-- Postcompose a singular simplex with a continuous map. -/
-noncomputable def pushSimplex {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)
+@[expose] noncomputable def pushSimplex {X Y : TopCat.{0}} (f : X ⟶ Y) (n : ℕ)
     (σ : singularSimplices X n) : singularSimplices Y n :=
   (TopCat.toSSet.map f).app (Opposite.op (SimplexCategory.mk n)) σ
 
@@ -66,11 +66,11 @@ theorem singularChainMap_boundary (R : Type) [CommRing R] {X Y : TopCat.{0}}
 /-! ## 2. The barycenter and the identity singular simplex of `Δⁿ` -/
 
 /-- The barycenter of the standard real simplex. -/
-noncomputable def deltaBarycenter (n : ℕ) : Delta n :=
+@[expose] noncomputable def deltaBarycenter (n : ℕ) : Delta n :=
   SphereOddDegree.FiniteSimplex.barycenter (X := Fin (n + 1)) (𝕜 := ℝ)
 
 /-- The identity map of the standard simplex viewed as a singular simplex. -/
-noncomputable def stdSimplexIdSingularSimplex (n : ℕ) :
+@[expose] noncomputable def stdSimplexIdSingularSimplex (n : ℕ) :
     singularSimplices (TopCat.of (Delta n)) n :=
   continuousMapAsSingularSimplex (TopCat.of (Delta n)) n (ContinuousMap.id (Delta n))
 
@@ -114,6 +114,7 @@ theorem homotopyFromUniversal_generator (R : Type) [CommRing R] (X : TopCat.{0})
 /-! ## 4. The universal homotopy chain `T_n(ι_n)` -/
 
 /-- The recursively coned universal chain witnessing homotopy to barycentric subdivision. -/
+@[expose]
 noncomputable def barycentricHomotopyUniversal (R : Type) [CommRing R] (n : ℕ) :
     singularChainGroup R (TopCat.of (Delta n)) (n + 1) :=
   match n with
@@ -137,6 +138,7 @@ noncomputable def barycentricHomotopyUniversal (R : Type) [CommRing R] (n : ℕ)
 /-! ## 5. The degree-wise homotopy operator -/
 
 /-- The degree-raising chain homotopy map induced by the universal subdivision chain. -/
+@[expose]
 noncomputable def barycentricSubdivisionHomotopyLinearMap (R : Type) [CommRing R]
     (X : TopCat.{0}) (n : ℕ) :
     singularChainGroup R X n ⟶ singularChainGroup R X (n + 1) :=

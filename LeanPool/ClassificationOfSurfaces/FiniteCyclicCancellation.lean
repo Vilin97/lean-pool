@@ -20,7 +20,7 @@ the P1 expansion of the one-sided split of the word with the pair removed.  Thus
 one P1 contraction, and one one-sided P2 merge cancel the pair.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -31,13 +31,13 @@ open SurfaceCellComplex
 namespace Cancellation
 
 /-- The word after deleting the displayed inverse pair. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ} (X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace X
 
 /-- The base cancellation spelling, with the cancellable edge named last. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ} (X : List (SignedDart (Fin n))) :
     FiniteCyclicPresentation :=
   Dyck.oneFace
@@ -97,18 +97,18 @@ theorem retainWord_contractWord_of_fresh_not_mem {n : ℕ}
                 P1.castSuccDart_neg, ih']
 
 /-- Move a chosen edge name to the fresh-last position. -/
-def moveToLast {n : ℕ} (a : Fin (n + 1)) :
+@[expose] def moveToLast {n : ℕ} (a : Fin (n + 1)) :
     Fin (n + 1) ≃ Fin (n + 1) :=
   Equiv.swap a (Fin.last n)
 
 /-- Rename a tail so that the displayed cancellable edge becomes last. -/
-def renamedTail {n : ℕ} (a : Fin (n + 1))
+@[expose] def renamedTail {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     List (SignedDart (Fin (n + 1))) :=
   X.map (SignedDart.mapEquiv (moveToLast a))
 
 /-- Delete the now-unused last edge name from a renamed tail. -/
-def lowerTail {n : ℕ} (a : Fin (n + 1))
+@[expose] def lowerTail {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     List (SignedDart (Fin n)) :=
   P1.contractWord (renamedTail a X)
@@ -139,7 +139,7 @@ theorem retainWord_lowerTail {n : ℕ}
     (renamedTail a X) (freshEdge_not_mem_renamedTail a X ha)
 
 /-- A one-face word with a displayed positive inverse pair. -/
-@[reducible]
+@[expose, reducible]
 def namedSource {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     FiniteCyclicPresentation :=
@@ -173,6 +173,7 @@ def namedSourceSignedIso {n : ℕ}
           .neg (P1.freshEdge n) by simp [hmove]]
 
 /-- Split the inverse pair from the remaining word. -/
+@[expose]
 def sourceCut {n : ℕ} (X : List (SignedDart (Fin n))) :
     P2Cut (source X) where
   face := ⟨0, false⟩
@@ -182,6 +183,7 @@ def sourceCut {n : ℕ} (X : List (SignedDart (Fin n))) :
     exact List.IsRotated.refl _
 
 /-- Split the target at position zero, producing a monogon and the target word. -/
+@[expose]
 def targetCut {n : ℕ} (X : List (SignedDart (Fin n))) :
     P2Cut (target X) :=
   P2Cut.canonical ⟨0, false⟩ 0
@@ -403,7 +405,7 @@ theorem sphereNormalizationEquivalent
 namespace Context
 
 /-- Delete the displayed pair in the first face and retain all other faces. -/
-@[reducible]
+@[expose, reducible]
 def target {n : ℕ}
     (X : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -412,7 +414,7 @@ def target {n : ℕ}
   faces := X :: W
 
 /-- The base contextual cancellation spelling, with the cancellable edge named last. -/
-@[reducible]
+@[expose, reducible]
 def source {n : ℕ}
     (X : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -423,6 +425,7 @@ def source {n : ℕ}
       P2.retainWord X) :: W.map P2.retainWord
 
 /-- Split the displayed inverse pair from the rest of the first source face. -/
+@[expose]
 def sourceCut {n : ℕ}
     (X : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -433,6 +436,7 @@ def sourceCut {n : ℕ}
   boundary_rotated := List.IsRotated.refl _
 
 /-- Split the first target face at position zero. -/
+@[expose]
 def targetCut {n : ℕ}
     (X : List (SignedDart (Fin n)))
     (W : List (List (SignedDart (Fin n)))) :
@@ -826,7 +830,7 @@ theorem namedNormalizationEquivalent {n : ℕ}
       (normalizationEquivalent (lowerTail a X) hlower validBase)
 
 /-- A one-face word with a negatively displayed inverse pair. -/
-@[reducible]
+@[expose, reducible]
 def negativeNamedSource {n : ℕ} (a : Fin (n + 1))
     (X : List (SignedDart (Fin (n + 1)))) :
     FiniteCyclicPresentation :=

@@ -11,7 +11,7 @@ public import LeanPool.Polylean.ConjInvLength.Length
 # Cached proof nodes for conjugacy-invariant length bounds
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 

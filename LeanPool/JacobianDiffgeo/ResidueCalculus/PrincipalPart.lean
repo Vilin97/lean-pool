@@ -27,7 +27,7 @@ Main exports:
 * `RS.eq_principalPart_of_eventuallyEq` — uniqueness of tail + analytic decompositions.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 
@@ -38,7 +38,7 @@ variable {f g h : ℂ → ℂ} {z₀ : ℂ} {k n : ℤ}
 /-- The principal part of `f` at `z₀`: the finite sum of the negative-exponent Laurent terms.
 An honest function `ℂ → ℂ`, analytic on `ℂ \ {z₀}`, meromorphic at `z₀`. Zero (empty sum)
 when `f` is analytic-after-repair at `z₀`, not meromorphic there, or locally `0`. -/
-noncomputable def principalPartAt (f : ℂ → ℂ) (z₀ : ℂ) : ℂ → ℂ := fun z =>
+@[expose] noncomputable def principalPartAt (f : ℂ → ℂ) (z₀ : ℂ) : ℂ → ℂ := fun z =>
   ∑ k ∈ Finset.Icc (meromorphicOrderAt f z₀).untop₀ (-1),
     laurentCoeffAt f z₀ k * (z - z₀) ^ k
 

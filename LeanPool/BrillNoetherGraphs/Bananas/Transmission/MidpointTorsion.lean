@@ -23,7 +23,7 @@ the reflected case without choosing an orientation. In fact the even-period
 argument only needs the first mark to be a midpoint, of any strand length.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

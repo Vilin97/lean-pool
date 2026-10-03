@@ -38,7 +38,7 @@ need only be checked at one point of each carrier.
   corresponding exterior winding normalization.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped Interval Real

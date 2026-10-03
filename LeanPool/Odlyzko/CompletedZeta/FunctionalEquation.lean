@@ -12,7 +12,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -206,7 +206,7 @@ theorem centeredFractionalClassContribution_eq_partialDedekindZeta
 
 open Classical in
 /-- A pole cleared centered fractional class contribution used in the Odlyzko-bound argument. -/
-noncomputable def poleClearedCenteredFractionalClassContribution
+@[expose] noncomputable def poleClearedCenteredFractionalClassContribution
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ) : ℂ :=
   (torsionOrder K : ℂ)⁻¹ *
     (2 : ℂ) ^ nrComplexPlaces K *
@@ -316,7 +316,7 @@ theorem poleClearedCenteredFractionalClassContribution_functionalEquation
 
 open Classical in
 /-- A pole cleared completed dedekind zeta continuation used in the Odlyzko-bound argument. -/
-noncomputable def poleClearedCompletedDedekindZetaContinuation (s : ℂ) : ℂ :=
+@[expose] noncomputable def poleClearedCompletedDedekindZetaContinuation (s : ℂ) : ℂ :=
   ∑ C : ClassGroup (𝓞 K),
     poleClearedCenteredFractionalClassContribution K
       (FractionalIdeal.mk0 K (inverseClassIdealRepresentative K C)) s

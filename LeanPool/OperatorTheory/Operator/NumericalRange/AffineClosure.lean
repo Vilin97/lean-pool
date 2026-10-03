@@ -18,7 +18,7 @@ The raw numerical-range covariance extends to the standard affine form
 also commutes exactly with closure.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace

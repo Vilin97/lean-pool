@@ -24,7 +24,7 @@ Riemann--Roch/tau-characteristic argument needs it; the paper has a global
 connected-graph convention.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

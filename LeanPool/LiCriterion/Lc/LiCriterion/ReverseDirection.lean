@@ -24,7 +24,7 @@ part then `φ = ξ ∘ (z ↦ 1/(1-z))` is zero-free on the unit disk, by a Prin
 and the functional equation pins every nontrivial zero to the critical line.
 -/
 
-@[expose] public section
+public section
 
 open Complex Real Set Function Filter
 open scoped Topology

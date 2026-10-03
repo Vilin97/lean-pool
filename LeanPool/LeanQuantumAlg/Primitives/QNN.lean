@@ -33,4 +33,4 @@ Umbrella module for the quantum-neural-network and barren-plateau development.
 - `QNN.PauliPropagation` — Pauli-propagation truncation error.
 -/
 
-@[expose] public section
+public section

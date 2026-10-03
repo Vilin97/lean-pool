@@ -18,7 +18,7 @@ edge-rank-bounded parameter.  With it the characterization and the
 quantitative round trip rest on Deligne alone.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

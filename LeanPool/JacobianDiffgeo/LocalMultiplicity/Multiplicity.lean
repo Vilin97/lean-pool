@@ -30,7 +30,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 * CC3 compatibility: `RS.meromorphicOrderAt_chart_sub`, `RS.meromorphicOrderAt_chart_of_eq_zero`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set OpenPartialHomeomorph
 open scoped ContDiff Manifold Topology
@@ -43,15 +43,16 @@ variable {X Y : Type*}
 
 /-- ℕ∞-valued local multiplicity (CC4). `⊤` iff `F` is holomorphic and locally constant at `x`;
 `0` iff `inChartAt F x` is not analytic (junk). Honest value: the vanishing order `k ≥ 1`. -/
-noncomputable def multiplicityENat (F : X → Y) (x : X) : ℕ∞ :=
+@[expose] noncomputable def multiplicityENat (F : X → Y) (x : X) : ℕ∞ :=
   analyticOrderAt (inChartAt F x) (chartAt ℂ x x)
 
 /-- CC4's `multiplicity F x : ℕ`: the order when finite; junk `0` when `F` is locally constant
 at `x` (order `⊤`) or not holomorphic at `x` (order junk `0`). -/
+@[expose]
 noncomputable def multiplicity (F : X → Y) (x : X) : ℕ := (multiplicityENat F x).toNat
 
 /-- `F` is ramified at `x` iff its local multiplicity is at least `2`. -/
-def IsRamifiedAt (F : X → Y) (x : X) : Prop := 2 ≤ multiplicity F x
+@[expose] def IsRamifiedAt (F : X → Y) (x : X) : Prop := 2 ≤ multiplicity F x
 
 theorem multiplicityENat_def (F : X → Y) (x : X) :
     multiplicityENat F x = analyticOrderAt (inChartAt F x) (chartAt ℂ x x) := rfl

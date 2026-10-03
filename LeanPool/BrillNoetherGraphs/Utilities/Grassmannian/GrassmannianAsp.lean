@@ -27,7 +27,7 @@ The exact slipface/corner-envelope theorem is completed in
 below.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -131,6 +131,7 @@ def grassmannianAspSet (lambda : YoungDiagram) : AspSet where
   prop := grassmannianInvSet_prop lambda
 
 /-- The shift-zero Grassmannian ASP permutation associated to a Young diagram. -/
+@[expose]
 noncomputable def grassmannianPermOfYoungDiagram
     (lambda : YoungDiagram) : AspPerm :=
   (grassmannianAspSet lambda).toAspPerm 0

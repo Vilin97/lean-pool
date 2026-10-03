@@ -15,7 +15,7 @@ decomposition structure.  The good and bad parts are integrated directly over
 the disjoint cube family.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

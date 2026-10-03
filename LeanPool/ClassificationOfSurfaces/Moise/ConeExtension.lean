@@ -23,7 +23,7 @@ endpoints on the frontier.  It is the face-to-face lemma behind the cone extensi
 on a triangle boundary.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -391,7 +391,7 @@ abbrev ActiveVertex := {v : K.Vertex // K.position v ∈ K.support}
 noncomputable instance activeVertexFintype : Fintype K.ActiveVertex := Fintype.ofFinite _
 
 /-- The `activeEmbedding` declaration. -/
-def activeEmbedding : K.ActiveVertex ↪ K.Vertex := Function.Embedding.subtype _
+@[expose] def activeEmbedding : K.ActiveVertex ↪ K.Vertex := Function.Embedding.subtype _
 
 /-- The `activeSimplexes` declaration. -/
 noncomputable def activeSimplexes : Finset (Finset K.ActiveVertex) :=
@@ -408,7 +408,7 @@ theorem active_position_image (s : Finset K.ActiveVertex) :
   simp [activeEmbedding]
 
 /-- Delete all unused vertices without changing the support or any face geometry. -/
-noncomputable def active : PlaneComplex where
+@[expose] noncomputable def active : PlaneComplex where
   Vertex := K.ActiveVertex
   position := fun v => K.position v.1
   position_injective := fun v w h => Subtype.ext (K.position_injective h)
@@ -560,7 +560,7 @@ theorem used_position_image (s : Finset K.UsedVertex) :
   simp [usedEmbedding]
 
 /-- Delete vertices unused by every face, without changing the represented complex. -/
-noncomputable def used : PlaneComplex where
+@[expose] noncomputable def used : PlaneComplex where
   Vertex := K.UsedVertex
   position := fun v => K.position v.1
   position_injective := fun v w h => Subtype.ext (K.position_injective h)
@@ -745,7 +745,7 @@ theorem exists_affineMap_eqOn_affineIndependent {ι : Type*} [Nonempty ι]
 
 /-- Map a one-dimensional complex by a function affine on every face and injective on its
 support. -/
-noncomputable def mapGraph (f : Plane → Plane)
+@[expose] noncomputable def mapGraph (f : Plane → Plane)
     (hvertex : ∀ v, K.position v ∈ K.support)
     (hinj : Set.InjOn f K.support)
     (hgraph : ∀ s ∈ K.simplexes, s.card ≤ 2)
@@ -904,10 +904,10 @@ noncomputable def realizationHomeomorphAll :
 
 @[simp] theorem realizationHomeomorphAll_apply
     (x : GeometricRealization K.Vertex K.simplexes) :
-    (K.realizationHomeomorphAll x).1 = K.baryEval x.1 := rfl
+    (K.realizationHomeomorphAll x).1 = K.baryEval x.1 := by rfl
 
 /-- Reposition a plane complex while retaining its abstract simplexes. -/
-noncomputable def reposition (position' : K.Vertex → Plane)
+@[expose] noncomputable def reposition (position' : K.Vertex → Plane)
     (hinj : Function.Injective position')
     (haff : ∀ s ∈ K.simplexes, AffineIndependent ℝ fun v : s => position' v)
     (hface : ∀ s ∈ K.simplexes, ∀ t ∈ K.simplexes,
@@ -939,7 +939,7 @@ noncomputable def repositionHomeomorphAll (position' : K.Vertex → Plane)
 
 /-- The ambient function underlying barycentric repositioning, set to zero off the source
 support. -/
-noncomputable def repositionMap (position' : K.Vertex → Plane)
+@[expose] noncomputable def repositionMap (position' : K.Vertex → Plane)
     (hinj : Function.Injective position')
     (haff : ∀ s ∈ K.simplexes, AffineIndependent ℝ fun v : s => position' v)
     (hface : ∀ s ∈ K.simplexes, ∀ t ∈ K.simplexes,
@@ -1066,26 +1066,26 @@ theorem repositionMap_isPL (position' : K.Vertex → Plane)
   exact K.repositionMap_affineOn_face position' hinj haff hface hs
 
 /-- Vertex positions for the cone on `K`, with `none` as the cone vertex. -/
-def conePosition (c : Plane) : Option K.Vertex → Plane
+@[expose] def conePosition (c : Plane) : Option K.Vertex → Plane
   | none => c
   | some v => K.position v
 
 /-- The `coneWeights` declaration. -/
-def coneWeights (z : K.Vertex → ℝ) : Option K.Vertex → ℝ
+@[expose] def coneWeights (z : K.Vertex → ℝ) : Option K.Vertex → ℝ
   | none => 0
   | some v => z v
 
-@[simp] theorem coneWeights_none (z : K.Vertex → ℝ) : K.coneWeights z none = 0 := rfl
+@[simp] theorem coneWeights_none (z : K.Vertex → ℝ) : K.coneWeights z none = 0 := by rfl
 
 @[simp] theorem coneWeights_some (z : K.Vertex → ℝ) (v : K.Vertex) :
-    K.coneWeights z (some v) = z v := rfl
+    K.coneWeights z (some v) = z v := by rfl
 
 theorem sum_coneWeights (z : K.Vertex → ℝ) :
     ∑ v, K.coneWeights z v = ∑ v, z v := by
   simp
 
 /-- Lift a base face to the non-cone vertices. -/
-def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
+@[expose] def liftFace (s : Finset K.Vertex) : Finset (Option K.Vertex) :=
   s.map Function.Embedding.some
 
 /-- Remove the cone vertex from a cone face. -/
@@ -1158,7 +1158,7 @@ theorem conePosition_injective {c : Plane} (hc : c ∉ Set.range K.position) :
       | some w => exact congrArg some (K.position_injective h)
 
 /-- All nonempty faces of cones on the faces of `K`. -/
-def coneSimplexes : Finset (Finset (Option K.Vertex)) :=
+@[expose] def coneSimplexes : Finset (Finset (Option K.Vertex)) :=
   K.simplexes.biUnion fun s =>
     (insert none (K.liftFace s)).powerset.filter (·.Nonempty)
 
@@ -1207,7 +1207,7 @@ theorem baseCarrier_inter {t u : Finset (Option K.Vertex)}
     (K.baseFace_mem_of_nonempty hu hune)
 
 /-- Cone a finite one-dimensional complex supported on the frontier of a convex set. -/
-noncomputable def cone (S : Set Plane) (hS : Convex ℝ S) (c : Plane)
+@[expose] noncomputable def cone (S : Set Plane) (hS : Convex ℝ S) (c : Plane)
     (hc : c ∈ interior S) (havoid : c ∉ Set.range K.position)
     (hgraph : ∀ s ∈ K.simplexes, s.card ≤ 2)
     (hsupport : K.support = frontier S) : PlaneComplex where

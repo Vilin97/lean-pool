@@ -23,7 +23,7 @@ is only extended at nonzero axial coordinate here; a central-plane gauge
 correction is a separate construction.
 -/
 
-@[expose] public section
+public section
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -42,6 +42,7 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- The same coefficient series evaluated at the actual stable coordinate
 extension, including the original leading power. -/
+@[expose]
 noncomputable def profileExtension (a : ℕ → ℕ) (h b : ℝ) (f : ℕ → Inner → V)
     (p : PhysicalPoint) : V :=
   (EndpointCoordinates.chartExtension h p).1 ^ b •
@@ -247,6 +248,7 @@ noncomputable def pressureNonzeroAxial {a : ℕ → ℕ} (ha : StrictMono a) {h 
   agrees := fun _ hz => (pressureExtension_eventuallyEq a hh hh1 C d hz.2.1).self_of_nhds
 
 /-- The fixed physical radial anchor used for the exact gauge correction. -/
+@[expose]
 noncomputable def radialAnchor (p : PhysicalPoint) : PhysicalPoint := (p.1, (1, p.2.2))
 
 theorem radialAnchor_smooth : ContDiff ℝ ∞ radialAnchor :=
@@ -254,6 +256,7 @@ theorem radialAnchor_smooth : ContDiff ℝ ∞ radialAnchor :=
 
 /-- This is the literal anchored-potential formula.  Equality of its curl
 with the original velocity is proved in the separate gauge module. -/
+@[expose]
 noncomputable def anchoredPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamFactor a h C d)
     (fun p => swirlPotential a h C d p - swirlPotential a h C d (radialAnchor p))

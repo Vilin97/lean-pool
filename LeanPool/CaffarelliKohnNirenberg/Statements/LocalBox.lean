@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open CKN.Foundation.Parabolic
@@ -22,6 +22,7 @@ open CKN.Foundation.Parabolic
 namespace CKN
 
 /-- Compactly interior spatial and time subdomains used by paper label `def:sws`. -/
+@[expose]
 def localBox (Ω : Set Vec3) (I : Set ℝ) (Ω' : Set Vec3) (J : Set ℝ) : Prop :=
   IsOpen Ω' ∧ IsCompact (closure Ω') ∧ closure Ω' ⊆ Ω ∧
     OrdConnected J ∧ IsCompact (closure J) ∧ closure J ⊆ I

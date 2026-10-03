@@ -30,7 +30,7 @@ The conversion to fixed-Hq word sums is performed once on the initial
 datum, before any same-radius inverse estimate is applied.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -151,7 +151,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -164,10 +164,10 @@ open Set MeasureTheory ContinuousLinearMap EulerSmoothLimit EulerLiftedGradientS
 open scoped ContDiff
 
 /-- Jet radius, given by `64 + 40 * (δ^2)⁻¹`. -/
-def jetRadius (δ : ℝ) : ℝ := 64 + 40 * (δ^2)⁻¹
+@[expose] def jetRadius (δ : ℝ) : ℝ := 64 + 40 * (δ^2)⁻¹
 
 /-- Scalar jet cost, given by `3 * (9 / rawBump 0)^3 * (100 * (δ^2)⁻¹)`. -/
-def scalarJetCost (δ : ℝ) : ℝ := 3 * (9 / rawBump 0)^3 * (100 * (δ^2)⁻¹)
+@[expose] def scalarJetCost (δ : ℝ) : ℝ := 3 * (9 / rawBump 0)^3 * (100 * (δ^2)⁻¹)
 
 theorem jetRadius_nonneg (δ : ℝ) : 0 ≤ jetRadius δ := by
   unfold jetRadius
@@ -251,12 +251,12 @@ theorem terminal_jet_bound {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U
     (jetRadius δ) (scalarJetCost δ * ‖ξ‖) (fun k x => field_jet_bound δ hδ hδ1 ξ k x 0) n a
 
 /-- Word radius, given by `sobolevCoefficientRadius ι (jetRadius δ)`. -/
-def wordRadius (ι : Type*) [Fintype ι] (δ : ℝ) : ℝ :=
+@[expose] def wordRadius (ι : Type*) [Fintype ι] (δ : ℝ) : ℝ :=
   sobolevCoefficientRadius ι (jetRadius δ)
 
 /-- Word cost, given by `sobolevCoefficientAmplitude ι q (jetRadius δ) (scalarJetCost δ *
 terminalMass)`. -/
-def wordCost (ι : Type*) [Fintype ι] (q : ℕ) (δ : ℝ) : ℝ :=
+@[expose] def wordCost (ι : Type*) [Fintype ι] (q : ℕ) (δ : ℝ) : ℝ :=
   sobolevCoefficientAmplitude ι q (jetRadius δ) (scalarJetCost δ * terminalMass)
 
 theorem terminal_block_bound {ι U : Type*} [Fintype ι]

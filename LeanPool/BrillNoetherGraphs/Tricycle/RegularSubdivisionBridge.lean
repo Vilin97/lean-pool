@@ -33,7 +33,7 @@ The payoff is that the tricycle gap can be stated for
 `regularSubdivisionGonality : CFGraph → ℕ`, with no `Spec` in the statement.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 
@@ -47,6 +47,7 @@ variable {n p : ℕ}
 
 /-- **The slot correspondence.**  The edge multiset of a subdivision, viewed as
 a type, enumerates the unit steps — compatibly with `unitEdge`. -/
+@[expose]
 noncomputable def stepEquivEdges (spec : Spec n p) :
     spec.Step ≃ (spec.graph.edges : Type) := by
   classical
@@ -67,6 +68,7 @@ noncomputable def stepEquivEdges (spec : Spec n p) :
 variable (spec : Spec n p) (hlen : ∀ e : Fin p, spec.length e = 1)
 
 /-- With all lengths one there are no interior vertices. -/
+@[expose]
 def unitVertexEquiv : Fin n ≃ spec.Vertex where
   toFun := spec.coreVertex
   invFun := Sum.elim id fun y => absurd y.2.isLt (by have := hlen y.1; omega)

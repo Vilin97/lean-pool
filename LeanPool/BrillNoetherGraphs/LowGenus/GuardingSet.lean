@@ -87,7 +87,7 @@ a weight function.  `coreClassDivisor_eq_fourChipDivisor` below is that
 translation, proved for four pairwise-distinct chips.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.Guarding
 

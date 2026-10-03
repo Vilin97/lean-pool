@@ -16,7 +16,7 @@ permutation followed by the degree-sum cast, feeding the
 braiding-word transport and the cast transport respectively.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

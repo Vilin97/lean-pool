@@ -18,7 +18,7 @@ bound. Its positive pairing with the first potential selects the negatively
 signed weak gradient, without any classical representative identification.
 -/
 
-@[expose] public section
+public section
 
 section
 

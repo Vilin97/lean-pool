@@ -39,7 +39,7 @@ ring `ℤ[X₁,...,Xₙ]` in `n` variables.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2, Theorem 3.20
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset
 
@@ -57,7 +57,7 @@ variable (p : ℕ) (hp : p.Prime)
 
 /-- The diagonal for the k-th generator: `(1,...,1,p,...,p)` with `n-1-k` ones
     followed by `k+1` entries of `p`. Here `k : Fin n`, giving `n` generators. -/
-def TGenDiag (k : Fin n) : Fin n → ℕ :=
+@[expose] def TGenDiag (k : Fin n) : Fin n → ℕ :=
   fun i => if (i : ℕ) < n - 1 - (k : ℕ) then 1 else p
 
 @[simp]

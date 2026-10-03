@@ -18,7 +18,7 @@ integrals as the observation time varies.  This is the base case for a recursive
 continuity argument; no higher-dimensional continuity is asserted here.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty

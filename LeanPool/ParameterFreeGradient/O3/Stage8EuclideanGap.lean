@@ -17,7 +17,7 @@ recursive Phase-A execution and evaluates it at the internally constructed
 closest optimizer.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -185,6 +185,7 @@ theorem euclideanEstimate_potential {d : ℕ}
 /-- Exact frozen carrier for TeX Lemma `lem:euclideangap`.  The optimizer is
 proof-side and universally quantified in the conclusion; it is not supplied
 to the algorithm or used by its recursion. -/
+@[expose]
 def EuclideanGapStatement : Prop :=
   ∀ (d : ℕ) (P : AdmissibleInstance d 2) (M D : ℝ) (m : ℕ),
     0 < M → 1 ≤ m → EuclideanEstimateAccepted P M m → P.radius ≤ D →

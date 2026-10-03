@@ -22,7 +22,7 @@ identifies the local affine interpolation with evaluation of the same chart map 
 image of the cell, so zero-freeness is inherited without a new estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -133,6 +133,7 @@ noncomputable abbrev Cells (hp : Nat.Prime p) (N : Nat) :=
 
 /-- Spatial coordinate, in the current top-simplex chart, represented by one local cylinder
 vertex. -/
+@[expose]
 noncomputable def localSpatialWeight
     (hp : Nat.Prime p) (N : Nat)
     (s : (Cells hp N).VertexSlot) : StandardSimplex (p - 1) :=
@@ -141,13 +142,13 @@ noncomputable def localSpatialWeight
       (S := Real) s.2)).1
 
 /-- Local value supplied by a compatible chart map. -/
-noncomputable def localVector
+@[expose] noncomputable def localVector
     (hp : Nat.Prime p) {N : Nat} (K : ChartMap hp N)
     (s : (Cells hp N).VertexSlot) : Fin p → Real :=
   K.value s.1.1 (localSpatialWeight hp N s)
 
 /-- Prime-decorated local value. -/
-noncomputable def decoratedVector
+@[expose] noncomputable def decoratedVector
     (hp : Nat.Prime p) {N : Nat} (K : ChartMap hp N)
     (s : CoverVertexSlot hp (Cells hp N)) : Fin p → Real :=
   s.1 • localVector hp K s.2
@@ -168,6 +169,7 @@ theorem decoratedVector_eq_of_coverPoint_eq
     EquivariantPrismVertexParameters.CylinderPoint.ofProd] using hspatial
 
 /-- Global vector obtained by quotient descent. -/
+@[expose]
 noncomputable def globalVector
     (hp : Nat.Prime p) {N : Nat} (K : ChartMap hp N) :
     GlobalVertex hp (Cells hp N) → Fin p → Real :=
@@ -190,6 +192,7 @@ theorem globalVector_smul
   rfl
 
 /-- Canonical one-step assignment associated with a compatible chart map. -/
+@[expose]
 noncomputable def assignment
     (hp : Nat.Prime p) {N : Nat} (K : ChartMap hp N) :
     Assignment hp (Cells hp N) :=

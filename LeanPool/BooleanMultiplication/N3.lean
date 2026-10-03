@@ -11,7 +11,7 @@ public import LeanPool.BooleanMultiplication.N3Certificate
 # N3 for unrestricted Boolean polynomial multiplication
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 
@@ -20,24 +20,24 @@ open N3Certificate
 noncomputable section
 
 /-- Sum of the five output coefficients for three-term multiplication. -/
-def targetSum : ANF 6 := ∑ i : Fin 5, UnrestrictedBooleanMul.Mul 3 i
+@[expose] def targetSum : ANF 6 := ∑ i : Fin 5, UnrestrictedBooleanMul.Mul 3 i
 
 /-- Affine inputs followed by the three rational-place evaluations for three-term products. -/
-def rationalBasis : Fin 10 → ANF 6 :=
+@[expose] def rationalBasis : Fin 10 → ANF 6 :=
   ![1, X 0, X 1, X 2, X 3, X 4, X 5,
     UnrestrictedBooleanMul.Mul 3 0, UnrestrictedBooleanMul.Mul 3 4, targetSum]
 
 /-- Affine inputs followed by the five output coefficients for three-term products. -/
-def ambientBasis : Fin 12 → ANF 6 :=
+@[expose] def ambientBasis : Fin 12 → ANF 6 :=
   ![1, X 0, X 1, X 2, X 3, X 4, X 5,
     UnrestrictedBooleanMul.Mul 3 0, UnrestrictedBooleanMul.Mul 3 1,
     UnrestrictedBooleanMul.Mul 3 2, UnrestrictedBooleanMul.Mul 3 3,
     UnrestrictedBooleanMul.Mul 3 4]
 
 /-- The ANF represented by a coefficient vector in the rational-place basis. -/
-def rationalRep (c : Fin 10 → F₂) : ANF 6 := ∑ i, c i • rationalBasis i
+@[expose] def rationalRep (c : Fin 10 → F₂) : ANF 6 := ∑ i, c i • rationalBasis i
 /-- The ANF represented by a coefficient vector in the affine-plus-target basis. -/
-def ambientRep (c : Fin 12 → F₂) : ANF 6 := ∑ i, c i • ambientBasis i
+@[expose] def ambientRep (c : Fin 12 → F₂) : ANF 6 := ∑ i, c i • ambientBasis i
 
 /-- Extract coefficients bilinearly, then normalize the resulting scalar polynomial. -/
 macro (name := solveProductCoeff) "solve_product_coeff" : tactic =>

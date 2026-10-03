@@ -20,7 +20,7 @@ with the truncation
 error `K ≥ 0`, `K = 0` for `|x_i − t| ≥ ε`, and `∫ ρK ≤ √ε(N²/2 + 2)` by AM–GM and `∫ K² ≤ 4ε`
 (this replaces the rearrangement step of the proof notes (13′); only `ρ ∈ L²` is used). -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set Filter
 open scoped Interval

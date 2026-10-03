@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 
 /-! ### Concrete tree and fork regions -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -26,6 +26,7 @@ noncomputable section
 
 /-- An order-compatible fork `(a,b,c)` with `a < b < c`; `a` is its center and
 `b,c` are its two leaves. -/
+@[expose]
 def hardSphereFork {k : Nat} (T : Finset (Sym2 (Fin k)))
     (a b c : Fin k) : Prop :=
   a < b ∧ b < c ∧ s(a, b) ∈ T ∧ s(a, c) ∈ T
@@ -186,7 +187,7 @@ lemma hardSphere_nbc_region_excludes_fork_chord
 
 
 /-- The volume of the open unit ball in the three-dimensional position space. -/
-def hardSphereKappa : ℝ :=
+@[expose] def hardSphereKappa : ℝ :=
   let : Fintype (Fin 3) := Fin.fintype 3
   (volume : Measure (HSPosition 3)).real (ball (0 : HSPosition 3) 1)
 
@@ -200,12 +201,13 @@ lemma hardSphereKappa_eq : hardSphereKappa = 4 * Real.pi / 3 := by
   ring
 
 /-- The hard-sphere configuration region owned by a fixed edge set. -/
-def hardSphereTreeRegion {k : Nat} [NeZero k]
+@[expose] def hardSphereTreeRegion {k : Nat} [NeZero k]
     (T : Finset (Sym2 (Fin k))) : Set (HardSphereConfiguration k 3) :=
   {r | ∀ e ∈ T, hardSphereActiveExact r e = true}
 
 /-- The part of a tree region where the two leaves of an order-compatible fork
 are also within range. -/
+@[expose]
 def hardSphereForkEvent {k : Nat} [NeZero k]
     (T : Finset (Sym2 (Fin k))) (_a b c : Fin k) : Set (HardSphereConfiguration k 3) :=
   hardSphereTreeRegion T ∩ {r |

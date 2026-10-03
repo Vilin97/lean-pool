@@ -14,12 +14,12 @@ import Mathlib.Tactic.NormNum.Pow
 /-! # `ζ(5)` as a real number
 -/
 
-@[expose] public section
+public section
 
 namespace Zeta5Irrational
 
 /-- `ζ(5)` as a real number. -/
-noncomputable def zeta5 : ℝ :=
+@[expose] noncomputable def zeta5 : ℝ :=
   ∑' n : ℕ, 1 / (n : ℝ) ^ 5
 
 /-- Mathlib's `riemannZeta 5` is the real number `zeta5`. -/

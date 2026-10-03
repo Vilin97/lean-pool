@@ -545,15 +545,16 @@ lemma single_fibres {G H Ω Ω' : Type*}
         rintro h ⟨a, ha, rfl⟩
         exact h (h_BY ⟨a, ha⟩)
     unfold M
-    unfold entropy
+    simp only [entropy_def]
     have : IsProbabilityMeasure (.map (φ ∘ UA) ℙ) :=
       inferInstance
     have : IsProbabilityMeasure (.map (φ ∘ UB) ℙ) :=
       inferInstance
     rewrite [← Finset.sum_product',
       ← tsum_eq_sum (L := SummationFilter.unconditional _) fun _ ↦ h_compl, ← measureEntropy_prod]
+    rw [measureEntropy_of_isProbabilityMeasure]
     apply tsum_congr; intro; congr
-    rewrite [← Set.singleton_prod_singleton, measureReal_ennreal_smul_apply, measureReal_def,
+    rewrite [← Set.singleton_prod_singleton, measureReal_def,
       Measure.prod_prod,
       Measure.map_apply (.comp .of_discrete hUA') (MeasurableSet.singleton _),
       Measure.map_apply (.comp .of_discrete hUB') (MeasurableSet.singleton _),

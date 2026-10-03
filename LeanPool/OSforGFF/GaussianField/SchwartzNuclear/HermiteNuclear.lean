@@ -23,7 +23,7 @@ isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq` constructed in
   on any nontrivial finite-dimensional real normed space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

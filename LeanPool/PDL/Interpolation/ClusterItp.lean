@@ -18,7 +18,7 @@ This file continues the development of `Pdl.PreInterpolant` with
 Definition 10.2 and Lemma 10.3 are in `Pdl.ClusterRho`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -38,7 +38,7 @@ lemma Program.voc_steps : ∀ as : List Program, (Program.steps as).voc = as.pdl
 /-! ## Entailment from the left component of a node -/
 
 /-- `Λ₁(t) ⊨ φ`: the formula `φ` follows from the left component of the fine node `t`. -/
-def FinePathIn.leftEntails {Hist} {Y : Sequent} {tab : Tableau Hist Y}
+@[expose] def FinePathIn.leftEntails {Hist} {Y : Sequent} {tab : Tableau Hist Y}
     (t : FinePathIn tab) (φ : Formula) : Prop :=
   ∀ (W : Type) (M : KripkeModel W) (w : W),
     (∀ ψ ∈ t.label.left, evaluate M w ψ) → evaluate M w φ
@@ -60,7 +60,7 @@ variable {Var : Type}
 /-- The ordinary vocabulary of a Q-formula, i.e. the proposition letters and atomic
 programs occurring in it. The internal variables are *not* included; they are given by
 `QFormula.vars`. -/
-def voc : QFormula Var → Vocab
+@[expose] def voc : QFormula Var → Vocab
   | .fma ψ => ψ.voc
   | .var _ => ∅
   | .and ι1 ι2 => ι1.voc ∪ ι2.voc
@@ -364,7 +364,7 @@ and otherwise `θ_r` is the pre-interpolant `ι_{r_Q}` of the root of the quasi-
 The latter is a `QFormula`, i.e. it may still contain internal variables; by Lemma 10.1
 (`iitp_vars`) it does not, so it does not matter which substitution we use to read it as a
 `Formula`, and we simply substitute `⊤`. -/
-noncomputable def itp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula) : Formula :=
+@[expose] noncomputable def itp (C : LoadedCluster tab) (θ : FinePathIn tab → Formula) : Formula :=
   if (nodeAt C.root).left = {} then ⊤ else (C.rootIitp θ).subst (fun _ => ⊤)
 
 /-! ## Cluster facts used to construct interpolants -/

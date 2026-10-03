@@ -14,7 +14,7 @@ import Mathlib.Tactic.Lemma
 Imported Lean Pool material for `LeanPool.EcTateLean.Init.Data.Int.Lemmas`.
 -/
 
-@[expose] public section
+public section
 
 lemma mod_neg_right (m k : Int) : m % (-k) = m % k := by simp
 lemma div_neg_right (m k : Int) : m / (-k) = -(m / k) := by simp

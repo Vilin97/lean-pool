@@ -23,7 +23,7 @@ terms of the existing `P2Cut` data, so the presentation-level quotient compariso
 same side indices and no second formulation of P2 is introduced.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -67,6 +67,7 @@ theorem rotate_cutBoundary_eq_sourceBoundary
     simpa [orientedBoundary, horientation] using h)
 
 /-- The linear cut-word index carrying a stored source side. -/
+@[expose]
 noncomputable def positiveCutSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -188,6 +189,7 @@ theorem positiveSelectedCellHomeomorph_side
     (Nat.add_pos_left hl _) (positiveCutRotation P cut horientation) i t
 
 /-- A rotated source side lying in the left cut piece, viewed with its local left index. -/
+@[expose]
 noncomputable def positiveLeftSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -213,6 +215,7 @@ theorem positiveLeftSideIndex_val
   rfl
 
 /-- A rotated source side lying in the right cut piece, viewed with its local right index. -/
+@[expose]
 noncomputable def positiveRightSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -371,6 +374,7 @@ theorem positive_split_boundary_right_length
       simp [retainWord, Nat.add_comm]
 
 /-- Stored target index of the positive fresh dart in the selected child. -/
+@[expose]
 def positiveSelectedFreshIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -389,6 +393,7 @@ theorem positiveSelectedFreshIndex_val
   rfl
 
 /-- Stored target index of the negative fresh dart in the right child. -/
+@[expose]
 def positiveRightFreshIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -405,6 +410,7 @@ theorem positiveRightFreshIndex_val
   rfl
 
 /-- The selected child's fresh-edge boundary occurrence. -/
+@[expose]
 def positiveSelectedFreshOccurrence
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -413,6 +419,7 @@ def positiveSelectedFreshOccurrence
     positiveSelectedFreshIndex P cut horientation⟩
 
 /-- The right child's fresh-edge boundary occurrence. -/
+@[expose]
 def positiveRightFreshOccurrence
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -520,6 +527,7 @@ theorem positiveFresh_not_boundary
   norm_num
 
 /-- The exact reversed-parameter pairing carried by the fresh P2 seam. -/
+@[expose]
 def positiveFreshPairing
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -597,7 +605,7 @@ def positiveSelectedChildSideIndex
     exact i.isLt⟩
 
 /-- The target right-child index corresponding to a local child side. -/
-def positiveRightChildSideIndex
+@[expose] def positiveRightChildSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
     (i : Fin (cut.right.length + 1)) :
@@ -660,6 +668,7 @@ theorem positiveRightChildCellHomeomorph_side
 
 /-- Include the two local child cells into the corresponding two faces of the split
 pre-realization. -/
+@[expose]
 noncomputable def positiveChildPairPreMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false) :
@@ -712,7 +721,7 @@ theorem positiveChildPairPreMap_inr
   rfl
 
 /-- Send a local child point to its class in the complete split realization. -/
-noncomputable def positiveChildPairMap
+@[expose] noncomputable def positiveChildPairMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
     (validP : P.IsSurfaceValid) :
@@ -807,6 +816,7 @@ theorem positiveChildPairMap_respects
   | trans _ _ _ _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
 /-- Include the locally glued pair of P2 children into the complete target realization. -/
+@[expose]
 noncomputable def positiveChildGluingMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -950,7 +960,7 @@ noncomputable def retainedCellHomeomorph
     (split_boundary_old_length_of_ne P cut hface).symm 0
 
 /-- Target index corresponding to a side of a retained source face. -/
-def retainedSideIndex
+@[expose] def retainedSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     {f : P.Face} (hface : f ≠ cut.face.face)
     (i : Fin (P.boundary f).length) :
@@ -982,7 +992,7 @@ theorem retainedCellHomeomorph_side
   exact i.isLt
 
 /-- A retained face maps directly to its unchanged target face class. -/
-noncomputable def retainedFaceMap
+@[expose] noncomputable def retainedFaceMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     {f : P.Face} (hface : f ≠ cut.face.face)
     (validP : P.IsSurfaceValid) :
@@ -1573,6 +1583,7 @@ theorem positiveMapOccurrence_injective
       rfl
 
 /-- Transport an old-edge source pairing to the corresponding pairing of target occurrences. -/
+@[expose]
 noncomputable def positiveMapPairing
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -1898,6 +1909,7 @@ theorem continuous_positiveRightChildInvFaceMap
       P cut horientation)
 
 /-- Inverse map on a retained target face. -/
+@[expose]
 noncomputable def retainedInvFaceMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     {f : P.Face} (hface : f ≠ cut.face.face)
@@ -2838,6 +2850,7 @@ theorem positiveInvPreMap_respects
   | trans _ _ _ _ _ ih₁ ih₂ => exact ih₁.trans ih₂
 
 /-- Forward map after descent through the source polygonal quotient. -/
+@[expose]
 noncomputable def positiveRealizationMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -2853,6 +2866,7 @@ noncomputable def positiveRealizationMap
         P cut horientation hl hr validP hxy)
 
 /-- Inverse map after descent through the target polygonal quotient. -/
+@[expose]
 noncomputable def positiveRealizationInvMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -3232,6 +3246,7 @@ theorem swapFaceEquiv_old_of_ne
       hselected hlast]
 
 /-- The raw edge relabeling for a swapped cut reverses precisely the fresh edge. -/
+@[expose]
 def swapRawEdgeRelabeling
     (P : FiniteCyclicPresentation) (_cut : P2Cut P) :
     EdgeRelabeling (Fin (P.edgeCount + 1))
@@ -3433,6 +3448,7 @@ def swapSignedPresentationIso
 
 /-- Identity edge relabeling between the definitionally equal edge types of the two reversed-cut
 splits. Naming the transport keeps the signed-isomorphism boundary proof transparent. -/
+@[expose]
 def flipEdgeRelabeling
     (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     EdgeRelabeling (split P cut.flip).Edge (split P cut).Edge := by

@@ -15,7 +15,7 @@ of the planar diameter bound.  Working with dot products and signed areas
 keeps all collinear cases explicit and avoids a general-position assumption.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132N14
 
@@ -30,7 +30,7 @@ def planeCross (z w : ℂ) : ℝ :=
   z.re * w.im - z.im * w.re
 
 /-- The signed turn from the ray `a ⟶ b` to the ray `a ⟶ c`. -/
-def planeTurn (a b c : ℂ) : ℝ :=
+@[expose] def planeTurn (a b c : ℂ) : ℝ :=
   planeCross (b - a) (c - a)
 
 theorem planeDot_self (z : ℂ) :

@@ -19,7 +19,7 @@ Some of them might actually already exists in the mathlib but
 i had trouble finding them.
 -/
 
-@[expose] public section
+public section
 
 theorem excluded_middle_implication : ∀ (P Q C : Prop),
   (P ∧ Q → C) ∧ (P ∧ ¬Q → C) →

@@ -34,7 +34,7 @@ topology that HermitianMat inherits from the topology on Matrix. This can be don
 
 -/
 
-@[expose] public section
+public section
 
 namespace HermitianMat
 
@@ -317,7 +317,7 @@ This disagrees slightly with Mathlib convention on the `Matrix` type, which avoi
     norm
 as there are several reasonable ones; for Hermitian matrices, though, this seem to be the right
     choice. -/
-@[reducible]
+@[reducible, expose]
 noncomputable def InnerProductCore : InnerProductSpace.Core ℝ (HermitianMat d 𝕜) :=
    {
     inner A B := ⟪A, B⟫

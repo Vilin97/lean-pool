@@ -19,7 +19,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 This file provides the `OmegaCompletePartialOrder` instance for `Sum α β`.
 -/
 
-@[expose] public section
+public section
 
 namespace OmegaCompletePartialOrder.Sum
 

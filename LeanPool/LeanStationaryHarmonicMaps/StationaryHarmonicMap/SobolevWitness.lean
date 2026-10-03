@@ -19,7 +19,7 @@ No stationarity or monotonicity theorem is defined here; those live in
 `StationaryMap.lean` and `MainTheorem.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -49,7 +49,7 @@ structure W12LocMapWitness {n m : Nat}
 namespace W12LocMapWitness
 
 /-- Build a local Sobolev witness from its component hypotheses. -/
-def ofComponents {n m : Nat}
+@[expose] def ofComponents {n m : Nat}
     {u : Domain n -> Target m} {Du : Domain n -> Gradient n m}
     {Omega : Set (Domain n)}
     (hu_memLp : LocallyMemLpTwoIn u Omega)

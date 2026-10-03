@@ -11,7 +11,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Refresh
 
 /-! # Joined Trajectory -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -35,6 +35,7 @@ live on one path space, with a pathwise (not merely count-law) phase boundary.
 
 /-- A continuous coordinate state, viewed as the supply used by
 initialization. -/
+@[expose]
 def coordinateRefreshSupply (L : ℕ) (s : SpatialState m) :
     RefreshSupply L m where
   location j := s j
@@ -189,6 +190,7 @@ theorem pathProcessCost_integrable
 The average cost of initialization followed by the main policy, as one random
 variable on the single infinite continuous trajectory.
 -/
+@[expose]
 def joinedTrajectoryAverageCost
     (initial : RefreshSupply L m) (demand : Fin m → ℝ)
     (a : ℝ) (hm : 0 < m) (N : ℕ)

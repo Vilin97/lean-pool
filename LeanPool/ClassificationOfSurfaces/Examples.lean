@@ -20,7 +20,7 @@ The examples are concrete one-face boundary-word presentations in the shared `Su
 API. Their topology is supplied by the faithful polygonal quotient layer.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -108,7 +108,7 @@ def diskCellComplex : SurfaceCellComplex :=
 The `dᵢ` pairs are internal seams and the single occurrences `cᵢ` are the two boundary
 contours. This is a renaming of the genus-zero, two-contour normal form from Gallier--Xu
 Definition 6.5. -/
-def annulusCellComplex : SurfaceCellComplex :=
+@[expose] def annulusCellComplex : SurfaceCellComplex :=
   SurfaceCellComplex.oneFacePresentation AnnulusEdge
     [pos AnnulusEdge.d₀, pos AnnulusEdge.c₀, neg AnnulusEdge.d₀,
       pos AnnulusEdge.d₁, pos AnnulusEdge.c₁, neg AnnulusEdge.d₁]
@@ -220,7 +220,7 @@ theorem mobiusStripCellComplex_isSurfaceValid : mobiusStripCellComplex.IsSurface
   mobiusStripCellComplex_occurrencePairingValid.surface_valid
 
 /-- A minimal one-triangle triangulation of `PUnit`, used only to test the data conversion API. -/
-def oneTriangleTriangulation : FiniteSurfaceTriangulation PUnit where
+@[expose] def oneTriangleTriangulation : FiniteSurfaceTriangulation PUnit where
   Vertex := Fin 3
   Edge := Fin 3
   Triangle := PUnit
@@ -280,7 +280,7 @@ example :
   rfl
 
 /-- A one-triangle fixture with one reversed side, used to test oriented conversion. -/
-def reversedSideTriangulation : FiniteSurfaceTriangulation PUnit where
+@[expose] def reversedSideTriangulation : FiniteSurfaceTriangulation PUnit where
   Vertex := Fin 3
   Edge := Fin 3
   Triangle := PUnit

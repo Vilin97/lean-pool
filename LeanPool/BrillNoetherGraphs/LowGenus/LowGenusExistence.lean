@@ -29,15 +29,17 @@ The library's `BNExists G r d` uses the equivalent convenient convention
 inequality exposed as an implication.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
 /-- The genus-four geometric heart of the Atanasov--Ranganathan theorem. -/
+@[expose]
 def GenusFourRankOneExistence : Prop :=
   ∀ (G : CFGraph.{0}), graphConnected G → CFGraph.genus G = 4 → BNExists G 1 3
 
 /-- The genus-five geometric heart of the Atanasov--Ranganathan theorem. -/
+@[expose]
 def GenusFiveRankOneExistence : Prop :=
   ∀ (G : CFGraph.{0}), graphConnected G → CFGraph.genus G = 5 → BNExists G 1 4
 

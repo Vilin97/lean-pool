@@ -25,7 +25,7 @@ section
 
 /-! Coordinate realization of the actual slow curl and its bounded coefficients. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,13 +43,13 @@ synthesis. -/
 local instance instPacketCurlCoordinates2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 /-- The coefficient of one genuine spatial derivative in the slow curl. -/
-def curlCoefficient (i : Fin 3) : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space) :=
+@[expose] def curlCoefficient (i : Fin 3) : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space) :=
   crossOperator.comp ((ContinuousLinearMap.apply ℝ Space (EuclideanSpace.single i 1)).comp
     (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap
       : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space)))
 
 @[simp] theorem curlCoefficient_apply (i : Fin 3) (G : Space →L[ℝ] Space) :
-    curlCoefficient i G = crossLeft (G.adjoint (EuclideanSpace.single i 1)) := rfl
+    curlCoefficient i G = crossLeft (G.adjoint (EuclideanSpace.single i 1)) := by rfl
 
 theorem curlCoefficient_norm (i : Fin 3) : ‖curlCoefficient i‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -104,14 +104,14 @@ local instance instPacketCurlCoordinates4 : NormedSpace ℝ (Space →ᵇ Space 
 
 /-- Curl coefficient path, given by `((curlCoefficient i).compLeftContinuousBounded
 Space).compLeftContinuous ℝ K`. -/
-def curlCoefficientPath (i : Fin 3) :
+@[expose] def curlCoefficientPath (i : Fin 3) :
     C(K,Space →ᵇ Space →L[ℝ] Space) →L[ℝ] C(K,Space →ᵇ Space →L[ℝ] Space) :=
   ((curlCoefficient i).compLeftContinuousBounded Space).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem curlCoefficientPath_apply (i : Fin 3)
     (G : C(K, Space →ᵇ Space →L[ℝ] Space)) (t : K) (y : Space) :
-    curlCoefficientPath i G t y = curlCoefficient i (G t y) := rfl
+    curlCoefficientPath i G t y = curlCoefficient i (G t y) := by rfl
 
 theorem curlCoefficientPath_norm (i : Fin 3) : ‖curlCoefficientPath (K := K) i‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -165,7 +165,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +223,7 @@ variable
   (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
 
 /-- Term, given by `fullMultiplierMap P (curlCoefficientPath i G) (derivativePath P p i.succ)`. -/
-def term (i : Fin 3) : C(K,LiftL2 P) :=
+@[expose] def term (i : Fin 3) : C(K,LiftL2 P) :=
   fullMultiplierMap P (curlCoefficientPath i G) (derivativePath P p i.succ)
 
 include hG hp in
@@ -233,7 +233,7 @@ theorem term_orbit (i : Fin 3) :
     (derivativePath P p i.succ) (derivativePath_orbit P p hp i.succ)
 
 /-- Path, given by `∑ i : Fin 3, term P G p i`. -/
-def path : C(K,LiftL2 P) := ∑ i : Fin 3, term P G p i
+@[expose] def path : C(K,LiftL2 P) := ∑ i : Fin 3, term P G p i
 
 include hG hp in
 theorem path_orbit :
@@ -267,7 +267,7 @@ theorem path_ae (t : K) :
   exact Finset.sum_congr rfl (fun i _ => ht i)
 
 /-- Field, given by `pointField P (path P G p) (path_orbit P G hG p hp) t`. -/
-def field (t : K) : LiftDomain P → Space :=
+@[expose] def field (t : K) : LiftDomain P → Space :=
   pointField P (path P G p) (path_orbit P G hG p hp) t
 
 /-- The reconstructed L² path is exactly the classical curl used in the packet. -/

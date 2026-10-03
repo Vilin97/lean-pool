@@ -14,7 +14,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Operations
 /-! Actual smooth representatives of the closed divergence-free space have pointwise lifted
 divergence zero. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # ProductAnnulusCircle -/
 
-@[expose] public section
+public section
 
 
 

@@ -55,7 +55,7 @@ of pp = 0.
 * Mathlib `MeromorphicAt`, `meromorphicOrderAt`
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Metric
 open scoped Real Interval
@@ -92,7 +92,7 @@ noncomputable def meromorphicFactor (f : ℂ → ℂ) (s : ℂ)
 If `f` has a pole of order `N` at `s` (i.e., `meromorphicOrderAt f s = -(N : ℤ)` with N > 0),
 the principal part is a rational function that captures the singular behavior.
 If `f` is analytic at `s` or not meromorphic, returns 0. -/
-noncomputable def meromorphicPrincipalPart (f : ℂ → ℂ) (s : ℂ) : ℂ → ℂ :=
+@[expose] noncomputable def meromorphicPrincipalPart (f : ℂ → ℂ) (s : ℂ) : ℂ → ℂ :=
   if h : MeromorphicAt f s ∧ meromorphicOrderAt f s < 0 then
     fun z => (Finset.range (poleOrderNat f s)).sum fun k =>
       (iteratedDeriv k (meromorphicFactor f s h.1 h.2.ne_top) s /

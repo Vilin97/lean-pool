@@ -25,7 +25,7 @@ For an explicit level `k` (the rounded minimiser of the quadratic majorant) the 
 `F(x) = 4λ + 2λ{x} - 12λ{αx}`, `λ = 37/40`, `α = 3/40`, `x = K/p`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -250,11 +250,11 @@ lemma diff_le {hR SR p : ℝ} (hp : 1 < p) (hh0 : 0 ≤ hR) (hhS : 0 ≤ hR + SR
   · positivity
 
 /-- `F(x) = 4λ + 2λ{x} - 12λ{αx}`. -/
-noncomputable def Ftail (x : ℝ) : ℝ :=
+@[expose] noncomputable def Ftail (x : ℝ) : ℝ :=
   4 * (37 / 40) + 2 * (37 / 40) * Int.fract x - 12 * (37 / 40) * Int.fract (3 / 40 * x)
 
 /-- The additive error of the tail bound. -/
-noncomputable def Ctail (n p : ℕ) : ℝ :=
+@[expose] noncomputable def Ctail (n p : ℕ) : ℝ :=
   4 * (37 * n : ℝ) / p + ((ktopI n p - kloI n p : ℤ) : ℝ) * (L0I n p : ℝ) + 2 * Bmax n p + 1
 
 /-- Sum the quadratic class bound using the seven-unit range of the counts. -/

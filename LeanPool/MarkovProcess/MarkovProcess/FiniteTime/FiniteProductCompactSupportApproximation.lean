@@ -16,7 +16,7 @@ whole product.  The key device is a product of one-coordinate compactly supporte
 coordinate cutoff is one on the corresponding projection of the target's compact support.
 -/
 
-@[expose] public section
+public section
 
 open Topology
 open scoped CompactlySupported ZeroAtInfty

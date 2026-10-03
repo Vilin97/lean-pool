@@ -46,7 +46,7 @@ Tags: information-geometry, fisher-information, markov-morphisms, finite-simplex
 MSC: 62B10, 53C21
 -/
 
-@[expose] public section
+public section
 
 /-!
 This project formalizes the finite/discrete Čencov-Petz uniqueness theorem:

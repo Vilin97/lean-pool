@@ -19,4 +19,4 @@ Tags: game-theory, nash-equilibrium, brouwer-fixed-point, scarf-lemma, simplex
 MSC: 91A06, 91A10, 47H10
 -/
 
-@[expose] public section
+public section

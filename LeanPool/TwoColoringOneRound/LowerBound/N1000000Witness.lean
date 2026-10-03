@@ -18,7 +18,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -35,6 +35,7 @@ abbrev tTr : Array Nat :=
   #[0, 1, 4, 13, 2, 5, 14, 7, 8, 16, 20, 21, 23, 3, 6, 15, 9, 17, 22, 24, 10, 11, 18, 12, 19,
     25, 26, 27, 28, 30, 29, 31, 32, 33]
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def idIndex : Nat := 33
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/

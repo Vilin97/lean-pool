@@ -46,7 +46,7 @@ hypothesis is needed.
   tensor product of super vector spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -72,6 +72,7 @@ open scoped TensorProduct
 variable {S : SuperCommAlgebra.{u, u}} (P : SuperPoint S)
 
 /-- The unit of the residue module. -/
+@[expose]
 noncomputable def pointOne : (pointMod P : S.Mod.{u, u, u, u}).even :=
   ULift.up 1
 
@@ -79,6 +80,7 @@ noncomputable def pointOne : (pointMod P : S.Mod.{u, u, u, u}).even :=
 complex vector space by its underlying complex number.  The residue
 module being one dimensional in even degree, this describes every
 linear map out of it. -/
+@[expose]
 noncomputable def pointScale (X : Type u) [AddCommGroup X]
     [Module ℂ X] :
     X →ₗ[ℂ] ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ] X) where
@@ -152,6 +154,7 @@ open scoped TensorProduct
 
 /-- **The graded comparison in even degree**: the quotient map
 onto the even part of the tensor product. -/
+@[expose]
 noncomputable def gradedTensorEven :
     (A.even ⊗[ℂ] B.even) × (A.odd ⊗[ℂ] B.odd) →ₗ[ℂ]
       (A.tensor B : S.Mod.{u, u, u, u}).even :=
@@ -159,6 +162,7 @@ noncomputable def gradedTensorEven :
 
 /-- **The graded comparison in odd degree**: the quotient map onto
 the odd part of the tensor product. -/
+@[expose]
 noncomputable def gradedTensorOdd :
     (A.even ⊗[ℂ] B.odd) × (A.odd ⊗[ℂ] B.even) →ₗ[ℂ]
       (A.tensor B : S.Mod.{u, u, u, u}).odd :=
@@ -255,6 +259,7 @@ abbrev basePairOdd : Type u :=
       (N.tensor (pointMod P)).even)
 
 /-- The even-even block of the inverse comparison. -/
+@[expose]
 noncomputable def baseNuFee :
     M.even →ₗ[ℂ] N.even →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -269,6 +274,7 @@ noncomputable def baseNuFee :
     (pointScale P (basePairEven P M N))
 
 /-- The odd-odd block of the inverse comparison. -/
+@[expose]
 noncomputable def baseNuFoo :
     M.odd →ₗ[ℂ] N.odd →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -283,6 +289,7 @@ noncomputable def baseNuFoo :
     (pointScale P (basePairEven P M N))
 
 /-- The even-odd block of the inverse comparison. -/
+@[expose]
 noncomputable def baseNuFeo :
     M.even →ₗ[ℂ] N.odd →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -297,6 +304,7 @@ noncomputable def baseNuFeo :
     (pointScale P (basePairOdd P M N))
 
 /-- The odd-even block of the inverse comparison. -/
+@[expose]
 noncomputable def baseNuFoe :
     M.odd →ₗ[ℂ] N.even →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -426,6 +434,7 @@ variable (M N)
 /-- **The inner lift of the inverse comparison**, in even degree:
 the two even blocks descend to the tensor product of the two
 modules. -/
+@[expose]
 noncomputable def baseNuInnerEven :
     (M.tensor N : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -435,6 +444,7 @@ noncomputable def baseNuInnerEven :
     (baseNuFoo_balanced_oeo P) (baseNuFee_balanced_ooe P)
 
 /-- **The inner lift of the inverse comparison**, in odd degree. -/
+@[expose]
 noncomputable def baseNuInnerOdd :
     (M.tensor N : S.Mod.{u, u, u, u}).odd →ₗ[ℂ]
       ((pointMod P : S.Mod.{u, u, u, u}).even →ₗ[ℂ]
@@ -615,6 +625,7 @@ variable (M N : S.Mod.{u, u, u, u})
 
 /-- **The comparison morphism in super vector spaces**, in even
 degree, before the coordinates are installed. -/
+@[expose]
 noncomputable def superVectMuEvenRaw :
     ((M.tensor (pointMod P)).even ⊗[ℂ]
         (N.tensor (pointMod P)).even) ×
@@ -626,6 +637,7 @@ noncomputable def superVectMuEvenRaw :
 
 /-- **The comparison morphism in super vector spaces**, in odd
 degree, before the coordinates are installed. -/
+@[expose]
 noncomputable def superVectMuOddRaw :
     ((M.tensor (pointMod P)).even ⊗[ℂ]
         (N.tensor (pointMod P)).odd) ×
@@ -637,6 +649,7 @@ noncomputable def superVectMuOddRaw :
 
 /-- The coordinates on the even part of the tensor product of the
 two base changes. -/
+@[expose]
 noncomputable def superVectPairEvenEquiv
     [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
@@ -652,6 +665,7 @@ noncomputable def superVectPairEvenEquiv
 
 /-- The coordinates on the odd part of the tensor product of the
 two base changes. -/
+@[expose]
 noncomputable def superVectPairOddEquiv
     [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
@@ -669,6 +683,7 @@ noncomputable def superVectPairOddEquiv
 product of the base changes maps to the base change of the tensor
 product.  It is the raw comparison, read in the coordinates that
 `RS.toSuperVect` installs. -/
+@[expose]
 noncomputable def superVectMu [FiniteDimensional ℂ (M.tensor (pointMod P)).even]
     [FiniteDimensional ℂ (M.tensor (pointMod P)).odd]
     [FiniteDimensional ℂ (N.tensor (pointMod P)).even]
@@ -699,18 +714,22 @@ section Summands
 open scoped TensorProduct
 
 /-- The even-even block of the even part. -/
+@[expose]
 def svEvenInl {V W : SuperVect} (t : V.even ⊗[ℂ] W.even) :
     (V ⊗ W).even := (t, 0)
 
 /-- The odd-odd block of the even part. -/
+@[expose]
 def svEvenInr {V W : SuperVect} (t : V.odd ⊗[ℂ] W.odd) :
     (V ⊗ W).even := (0, t)
 
 /-- The even-odd block of the odd part. -/
+@[expose]
 def svOddInl {V W : SuperVect} (t : V.even ⊗[ℂ] W.odd) :
     (V ⊗ W).odd := (t, 0)
 
 /-- The odd-even block of the odd part. -/
+@[expose]
 def svOddInr {V W : SuperVect} (t : V.odd ⊗[ℂ] W.even) :
     (V ⊗ W).odd := (0, t)
 

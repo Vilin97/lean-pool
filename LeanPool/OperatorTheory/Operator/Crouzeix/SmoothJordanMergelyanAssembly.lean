@@ -18,7 +18,7 @@ smooth Jordan exhaustion, or realize the explicit convex thickenings by such
 domains.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped InnerProductSpace

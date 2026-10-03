@@ -22,7 +22,7 @@ coordinate is at most `1 / N`, and no coordinate increases in absolute value. In
 the approximation does not increase the Euclidean norm.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

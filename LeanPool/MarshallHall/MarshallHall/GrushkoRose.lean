@@ -19,7 +19,7 @@ later induction can use it as a genuine finite marked graph rather than as a
 picture of a word.
 -/
 
-@[expose] public section
+public section
 
 
 

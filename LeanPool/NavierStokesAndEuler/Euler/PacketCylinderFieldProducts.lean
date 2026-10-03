@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! Actual nonlinear and coefficient operations on raw cylinder-path witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open scoped ContDiff BoundedContinuousFunction
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
 /-- Map, constructed using `ofLifted`. -/
-def map (G : Field P T raw) (L : Space →L[ℝ] Space) :
+@[expose] def map (G : Field P T raw) (L : Space →L[ℝ] Space) :
     Field P T (fun z => L (raw z)) :=
   ofLifted (pathMap P L G.path) (pathMap_orbit_contDiff P L G.path G.orbit)
     (fun t x => L (pointField P G.path G.orbit t x))
@@ -40,7 +40,7 @@ def map (G : Field P T raw) (L : Space →L[ℝ] Space) :
     (fun t x θ => congrArg L (G.raw_eq t x θ))
 
 /-- The literal mixed derivative is represented by the actual derivative path. -/
-def derivative (G : Field P T raw) (i : Fin 4) :
+@[expose] def derivative (G : Field P T raw) (i : Fin 4) :
     Field P T (fun z => fderiv ℝ (fun y => raw (z.1,y)) z.2 (standardDirection i)) where
   path := derivativePath P G.path i
   orbit := derivativePath_orbit P G.path G.orbit i
@@ -49,7 +49,7 @@ def derivative (G : Field P T raw) (i : Fin 4) :
     exact (pointField_derivativePath P G.path G.orbit i t (x,(θ : AddCircle P))).symm
 
 /-- Scalar product, bundling `path`, `orbit`, `raw_eq`. -/
-def scalarProduct (G : Field P T raw) (H : Field P T raw')
+@[expose] def scalarProduct (G : Field P T raw) (H : Field P T raw')
     (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) : Field P T (fun z => L (raw z) • raw' z) where
   path := scalarProductPath P L hL G.path H.path G.orbit H.orbit
   orbit := scalarProductPath_orbit P L hL G.path H.path G.orbit H.orbit
@@ -59,7 +59,7 @@ def scalarProduct (G : Field P T raw) (H : Field P T raw')
         P))).symm
 
 /-- Bilinear, bundling `path`, `orbit`, `raw_eq`. -/
-def bilinear (G : Field P T raw) (H : Field P T raw')
+@[expose] def bilinear (G : Field P T raw) (H : Field P T raw')
     (B : Space →L[ℝ] Space →L[ℝ] Space) : Field P T (fun z => B (raw z) (raw' z)) where
   path := bilinearProductPath P B G.path H.path G.orbit H.orbit
   orbit := bilinearProductPath_orbit P B G.path H.path G.orbit H.orbit
@@ -98,7 +98,7 @@ local instance instPacketCylinderFieldProducts4 : NormedSpace ℝ (Space →ᵇ 
     inferInstance
 
 /-- A genuine smooth coefficient path multiplies a raw field without a new regularity premise. -/
-def multiply (G : Field P T raw) (A : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
+@[expose] def multiply (G : Field P T raw) (A : C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
     (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
     (coef : EulerPacketPointJets.Domain → Space →L[ℝ] Space)
     (hcoef : ∀ (t : Icc (0 : ℝ) T) x θ, coef (t, (x, θ)) = A t x) :

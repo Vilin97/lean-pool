@@ -18,20 +18,20 @@ the native finite algebraic certificate.  In particular, the certificate is
 proved from the actual recursion; it is not an input field or hypothesis.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace O3
 
 /-- The scalar OGM-G potential instantiated with an actual oracle execution. -/
-noncomputable def stage9ActualPsi (cfg : OGMGExecutionConfig d)
+@[expose] noncomputable def stage9ActualPsi (cfg : OGMGExecutionConfig d)
     (fstar : ℝ) (i : ℕ) : ℝ :=
   Stage9Certificate.ogmgPsi cfg.M fstar
     (ogmgFunctionValue cfg) (ogmgGradientSq cfg) i
 
 /-- The two-point interpolation certificate instantiated with an actual oracle execution. -/
-noncomputable def stage9ActualI (cfg : OGMGExecutionConfig d)
+@[expose] noncomputable def stage9ActualI (cfg : OGMGExecutionConfig d)
     (fstar : ℝ) (i j : ℕ) : ℝ :=
   Stage9Certificate.ogmgI (stage9ActualPsi cfg fstar)
     (ogmgPairTerm cfg) i j
@@ -192,6 +192,7 @@ theorem stage9Actual_certificate_audit_n3
 
 /-- Exact source-level proposition carrier.  The oracle and all method data
 precede the proof-only lower bound; no certificate is supplied by the caller. -/
+@[expose]
 def FiniteDataOGMGStatement : Prop :=
   ∀ (d : ℕ) (oracle : PairOracle d) (U : Vec d) (M fstar : ℝ) (n : ℕ),
     0 < M → 1 ≤ n →

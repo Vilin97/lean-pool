@@ -38,7 +38,7 @@ needs only `C^{|V|-1}` — a deliberate strengthening of the hypothesis.
   Lecture Notes in Physics 446, Springer, 1995.  arXiv:hep-th/9409094.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

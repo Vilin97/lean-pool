@@ -18,7 +18,7 @@ The ordinary Newtonian kernel expression is an exterior tail object and is not
 used by the global identification.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology
@@ -31,7 +31,7 @@ namespace CKN
 open CKN.Foundation.Euclidean
 
 /-- Pressure reconstruction operator from the continuous second-Riesz tensor extension. -/
-def pressureSecondExtensionOperator
+@[expose] def pressureSecondExtensionOperator
     (hL2 : ∀ i j : Fin 3, RieszSecondL2Input i j)
     (hWeak11 : ∀ i j : Fin 3, ∀ f, Measurable f → Integrable f volume →
       MemLp f 2 volume → ∀ l : ℝ, 0 < l →

@@ -20,4 +20,4 @@ Tags: kinetic-theory, mean-field-limit, optimal-transport, wasserstein-distance,
 MSC: 35Q83, 82C22, 49Q22
 -/
 
-@[expose] public section
+public section

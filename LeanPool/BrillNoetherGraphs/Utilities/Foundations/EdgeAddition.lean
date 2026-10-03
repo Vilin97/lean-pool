@@ -17,7 +17,7 @@ unchanged, so divisors and firing scripts on the old and new graphs are the
 same functions.
 -/
 
-@[expose] public section
+public section
 
 open Multiset Finset
 
@@ -137,6 +137,7 @@ theorem graph_connected_addEdge
   simp [hvx, hvy]
 
 /-- The degree-zero divisor supported with opposite signs at the new edge's endpoints. -/
+@[expose]
 def seamDivisor {H : CFGraph} (x y : H.V) : CFDiv H :=
   oneChip x - oneChip y
 

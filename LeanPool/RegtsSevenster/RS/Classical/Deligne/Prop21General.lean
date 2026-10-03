@@ -37,7 +37,7 @@ functor — is supplied by the growth dichotomy
 `RS.forall_exists_schurKilled`, applied to the doubling.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -53,6 +53,7 @@ variable {A : Type v}
 /-- **The scalar unit of the doubling**, as the ring isomorphism
 that Proposition 2.1 consumes: the unit of the doubling is the unit
 of `A` in even degree, so its endomorphisms are the scalars. -/
+@[expose]
 def doubledScalarUnit [SmallCategory A] [MonoidalCategory A] [Abelian A]
     [MonoidalPreadditive A] [CategoryTheory.Linear ℂ A]
     (hu : HasScalarUnit A) :

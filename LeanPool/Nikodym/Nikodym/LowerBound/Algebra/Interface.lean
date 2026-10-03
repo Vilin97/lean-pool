@@ -45,7 +45,7 @@ one containing a line ideal is that line ideal) is proved here unconditionally f
 kept only for compatibility with the blueprint node list.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -60,6 +60,7 @@ section QuotDim
 /-- Blueprint A01/C08: the Krull dimension `dim (P_d ⧸ I)` of the coordinate ring, as a natural
 number. The values `⊥` (zero ring) and `⊤` are sent to `0`; for a proper ideal neither occurs
 (`coe_quotDim`). -/
+@[expose]
 noncomputable def quotDim (I : Ideal (MvPolynomial (Fin d) K)) : ℕ :=
   ((ringKrullDim (MvPolynomial (Fin d) K ⧸ I)).unbotD 0).toNat
 
@@ -208,6 +209,7 @@ theorem evPoly_congr (h₁ h₂ : ℕ → ℕ) (e : h₁ = h₂) : evPoly h₁ =
 
 /-- Blueprint A03: the eventual polynomial of the affine Hilbert function `t ↦ hilbert I t`
 (junk `0` if none exists); definitionally `evPoly (hilbert I)`. -/
+@[expose]
 noncomputable def affineHilbertPoly (I : Ideal (MvPolynomial (Fin d) K)) : Polynomial ℚ :=
   evPoly (hilbert I)
 
@@ -218,6 +220,7 @@ theorem affineHilbertPoly_eq_evPoly (I : Ideal (MvPolynomial (Fin d) K)) :
 
 /-- Blueprint A03/A04: the degree `deg I = (leading coefficient of the affine Hilbert polynomial)
 times `(natDegree)!`, as a natural number. -/
+@[expose]
 noncomputable def degree (I : Ideal (MvPolynomial (Fin d) K)) : ℕ :=
   ⌊(affineHilbertPoly I).leadingCoeff * ((affineHilbertPoly I).natDegree.factorial : ℚ)⌋₊
 

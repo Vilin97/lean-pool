@@ -208,7 +208,8 @@ lemma ent_ofsum_le
     linarith
   have rw₂ : H[X₁ + X₂'] = k + H[X₁]/2 + H[X₂]/2 := by
     have HX₂_eq : H[X₂] = H[X₂'] :=
-      congr_arg (fun (μ : Measure G) ↦ measureEntropy (μ := μ)) h₂.map_eq
+      by simpa only [entropy_def] using
+        congr_arg (fun (μ : Measure G) ↦ measureEntropy (μ := μ)) h₂.map_eq
     have k_eq : k = H[X₁ - X₂'] - H[X₁] / 2 - H[X₂'] / 2 := by
       have k_eq_aux : k = d[X₁ # X₂'] := h₂.rdist_congr_right hX₁.aemeasurable
       rw [k_eq_aux]
@@ -217,7 +218,8 @@ lemma ent_ofsum_le
     ring
   have rw₃ : H[X₂ + X₁'] = k + H[X₁]/2 + H[X₂]/2 := by
     have HX₁_eq : H[X₁] = H[X₁'] :=
-      congr_arg (fun (μ : Measure G) ↦ measureEntropy (μ := μ)) h₁.map_eq
+      by simpa only [entropy_def] using
+        congr_arg (fun (μ : Measure G) ↦ measureEntropy (μ := μ)) h₁.map_eq
     have k_eq' : k = H[X₁' - X₂] - H[X₁'] / 2 - H[X₂] / 2 := by
       have k_eq_aux : k = d[X₁' # X₂] := h₁.rdist_congr_left hX₂.aemeasurable
       rw [k_eq_aux]

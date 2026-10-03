@@ -16,7 +16,7 @@ of the potential norm in time. This applies to the force-growth constants
 in `eq:pressure-gradient-morrey` without assuming temporal regularity.
 -/
 
-@[expose] public section
+public section
 
 section
 

@@ -16,7 +16,7 @@ by the same convention, and extensionality lifts carrier equality to `ConvexSubb
 `BodySpace`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

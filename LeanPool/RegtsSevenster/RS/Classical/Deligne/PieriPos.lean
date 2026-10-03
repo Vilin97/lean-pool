@@ -37,7 +37,7 @@ specialisations.
    the nonvanishing direction of Deligne 1.9 on the character side.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

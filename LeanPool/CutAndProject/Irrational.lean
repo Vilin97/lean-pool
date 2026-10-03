@@ -27,7 +27,7 @@ The proof has three steps:
      this out, forcing `v = 0` and contradicting Step 2.
 -/
 
-@[expose] public section
+public section
 
 open Set Function
 
@@ -39,10 +39,10 @@ variable (a ω : ℝ)
 
 /-- Physical (signed-position) projection used in the irrational
 case: `tildeP(x,y) = x + a*y`. -/
-def tildeP : ℤ × ℤ → ℝ := fun z => (z.1 : ℝ) + a * (z.2 : ℝ)
+@[expose] def tildeP : ℤ × ℤ → ℝ := fun z => (z.1 : ℝ) + a * (z.2 : ℝ)
 
 /-- Internal coordinate: `s(x,y) = y - a*x`. -/
-def sInternal : ℤ × ℤ → ℝ := fun z => (z.2 : ℝ) - a * (z.1 : ℝ)
+@[expose] def sInternal : ℤ × ℤ → ℝ := fun z => (z.2 : ℝ) - a * (z.1 : ℝ)
 
 /-- Internal window `W = [-a*ω, ω]`. -/
 def W : Set ℝ := Set.Icc (-(a * ω)) ω

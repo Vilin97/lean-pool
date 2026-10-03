@@ -15,7 +15,7 @@ import Mathlib.Probability.Kernel.Condexp
 # LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
 -/
 
-@[expose] public section
+public section
 
 open Filter ProbabilityTheory
 open scoped RealInnerProductSpace

@@ -26,7 +26,7 @@ that error after applying the algebraic Crouzeix--Palencia balance estimate.
   suited to a smooth exhaustion.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped InnerProductSpace

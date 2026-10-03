@@ -27,7 +27,7 @@ This file: the three-summand shuffle, the ground computation
 inner-pair identification.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -87,6 +87,7 @@ noncomputable def disjUnionShuffle {α β γ : Type}
 
 /-- The closure pairs of `z` against `z'`, over the pair of
 `(u + v)`-boundaries: high block, then low block. -/
+@[expose]
 def innerClosePairs (u v : ℕ) :
     List ((Fin (u + v) ⊕ Fin (u + v)) ×
       (Fin (u + v) ⊕ Fin (u + v))) :=
@@ -302,6 +303,7 @@ noncomputable def innerNormal {u v : ℕ}
 /-! ### The main chain -/
 
 /-- The clean label of the partial closure of a tensor. -/
+@[expose]
 noncomputable def pcTensorClose (s t : ℕ) :
     (Fin (s + t) ⊕ Fin (0 + 0)) ≃ Fin (s + t) :=
   (_root_.Equiv.sumCongr (_root_.Equiv.refl (Fin (s + t)))

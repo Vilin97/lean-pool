@@ -20,7 +20,7 @@ Main result: `ContinuousPath.measurable_clampedCoordinate`.
 No stochastic-process law or stopping-time identity is asserted.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped NNReal

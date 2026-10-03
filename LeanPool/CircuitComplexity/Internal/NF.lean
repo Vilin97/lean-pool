@@ -26,7 +26,7 @@ This internal module contains the proof infrastructure for CNF/DNF:
 The public interface re-exports the main theorems from `Circ.NF`.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

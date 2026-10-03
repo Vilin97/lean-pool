@@ -19,7 +19,7 @@ and the Frobenius formula for the Jacobi–Trudi character hold
 unconditionally.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

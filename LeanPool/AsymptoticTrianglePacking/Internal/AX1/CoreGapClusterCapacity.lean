@@ -31,7 +31,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Density
 
 /-! # CoreGapClusterCapacity -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 

@@ -19,7 +19,7 @@ functor; the composite of that functor with the fibre functor is
 then strong monoidal.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,6 +34,7 @@ variable {D : Type u}
 /-- **The algebra splits the image of a functor**: every object in
 the image becomes a mixed sum of copies of the unit and of the odd
 line after base change. -/
+@[expose]
 def SplitsOn [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D] (L : OddLine D) (R : D)
     [MonObj R] {C : Type u₂} [Category.{v₂} C] (F : C ⥤ D) : Prop :=
@@ -41,7 +42,7 @@ def SplitsOn [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     Nonempty (freeMod R (F.obj X) ≅ freeMod R (L.mix p q))
 
 /-- **The restricted fibre functor is strong monoidal.** -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def fibreRestrictMonoidal
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]

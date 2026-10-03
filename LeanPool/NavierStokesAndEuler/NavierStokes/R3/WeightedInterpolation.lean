@@ -28,7 +28,7 @@ measurability and finite endpoint norms. In fact, the interpolation identities
 only require a nonnegative weight; an upper bound of one is unnecessary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -265,7 +265,7 @@ Only the scalar weight has compact support. The velocity, transported field,
 and pressure may be arbitrary smooth functions on Euclidean three-space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -365,7 +365,7 @@ measurability. In particular, the comparison field need not have compact
 support or any globally bounded derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -20,7 +20,7 @@ unit with braiding `−1`; local means after base change to some
 nonzero commutative algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -48,6 +48,7 @@ variable {D}
 
 /-- The mixed sum of `p` copies of the unit and `q` copies of the
 line. -/
+@[expose]
 noncomputable def OddLine.mix
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D]
@@ -68,6 +69,7 @@ theorem OddLine.isZero_mix_zero
 /-- **Locally mixed**: after base change to some nonzero
 commutative algebra, the object becomes a sum of copies of the
 unit and the line. -/
+@[expose]
 def OddLine.LocallyMixed
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D]
@@ -96,6 +98,7 @@ theorem OddLine.isZero_tensor_iff
 /-- **The trichotomy statement of record** (Deligne 2.9, the
 consumed direction): an object killed by some Schur functor is
 locally a mixed sum of the unit and the odd line. -/
+@[expose]
 def Prop29Statement [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [CategoryTheory.Linear ℂ D]
     (P : SchurPackage.{v}) (L : OddLine D)

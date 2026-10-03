@@ -9,7 +9,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Setting.Examples.ShearFlowEnergyD
 
 /-! # Divergence and momentum identities for the viscous shear -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open CKN.Foundation.Parabolic CKN.ShearCalculus

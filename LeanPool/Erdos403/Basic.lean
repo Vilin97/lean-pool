@@ -37,14 +37,14 @@ A "sum of distinct factorials" is modelled by a `Finset ℕ` of indices (distinc
 automatic). Note `0! = 1! = 1`, so e.g. `{0,1}` sums to `2`.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos403
 
 open scoped Nat
 
 /-- The sum of distinct factorials indexed by `S`: `∑_{a ∈ S} a!`. -/
-def factSum (S : Finset ℕ) : ℕ := ∑ a ∈ S, a !
+@[expose] def factSum (S : Finset ℕ) : ℕ := ∑ a ∈ S, a !
 
 /-- The extremal witness: `factSum {2, 3, 5} = 2! + 3! + 5! = 2 + 6 + 120 = 128 = 2⁷`. -/
 theorem witness : factSum {2, 3, 5} = 2 ^ 7 := by

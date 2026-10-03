@@ -30,7 +30,7 @@ which the translated data lie in one fixed larger supported space. This
 margin is qualitative and does not occur in any operator-norm constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -43,7 +43,7 @@ open scoped BoundedContinuousFunction
 variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 /-- The exact support set of a translated field. -/
-def shiftedSet (a : Space) (S : Set Space) : Set Space := {x | x+a ∈ S}
+@[expose] def shiftedSet (a : Space) (S : Set Space) : Set Space := {x | x+a ∈ S}
 
 /-- Translated supports remain measurable. -/
 theorem shiftedSet_measurable (a : Space) (S : Set Space) (hS : MeasurableSet S) :
@@ -75,7 +75,7 @@ def intoLarger (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : Meas
 @[simp] theorem intoLarger_coe (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
     MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (u : supportedSpace (V := V) volume S hS) :
-    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := rfl
+    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := by rfl
 
 /-- The translated coefficient is the literal original field at `x+a`. -/
 def translatedField (A : Field (α := Space) (V := V)) (a : Space) : Field (α := Space) (V := V) :=
@@ -97,7 +97,7 @@ theorem operator_intertwines (a : Space) (S Ω : Set Space) (hS : MeasurableSet 
   change (full volume (translatedField A a) (translation a (u : L2Space V))) x =
     (translation a (full volume A (u : L2Space V))) x
   rw [hl, hu, hr, ha]
-  rfl
+  simp only [translatedField, EulerMeanCoefficients.translated_apply]
 
 /-- Compactly supported data have a qualitative translation neighborhood
 inside any prescribed larger open support region. -/
@@ -118,7 +118,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -138,7 +138,7 @@ section Translation
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Actual translation by a real covering-space parameter. -/
-def translate (a : LiftTangent) : CylinderL2 period V →ₗᵢ[ℝ] CylinderL2 period V :=
+@[expose] def translate (a : LiftTangent) : CylinderL2 period V →ₗᵢ[ℝ] CylinderL2 period V :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain period => x+coveringMap period a)
     (measurePreserving_translation period (coveringMap period a))
 
@@ -180,12 +180,13 @@ theorem translate_continuous (u : CylinderL2 period V) :
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The same mixed translation on actual continuous time paths. -/
-def pathTranslate (a : LiftTangent) : C(K,CylinderL2 period V) →L[ℝ] C(K,CylinderL2 period V) :=
+@[expose] def pathTranslate (a : LiftTangent) :
+    C(K,CylinderL2 period V) →L[ℝ] C(K,CylinderL2 period V) :=
   (translate period a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathTranslate_apply (a : LiftTangent) (u : C(K, CylinderL2 period V)) (t : K) :
-    pathTranslate period a u t = translate period a (u t) := rfl
+    pathTranslate period a u t = translate period a (u t) := by rfl
 
 theorem pathTranslate_norm (a : LiftTangent) : ‖pathTranslate (K := K) (V := V) period a‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -204,12 +205,12 @@ section Fields
 variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- An angle-independent coefficient on the actual cylinder. -/
-def fieldLift : (Space →ᵇ W) →L[ℝ] (LiftDomain period →ᵇ W) :=
+@[expose] def fieldLift : (Space →ᵇ W) →L[ℝ] (LiftDomain period →ᵇ W) :=
   BoundedContinuousFunction.compContinuousCLM W ℝ ⟨Prod.fst,continuous_fst⟩
 
 omit [Fact (0 < period)] in
 @[simp] theorem fieldLift_apply (A : Space →ᵇ W) (x : LiftDomain period) :
-    fieldLift period A x = A x.1 := rfl
+    fieldLift period A x = A x.1 := by rfl
 
 omit [Fact (0 < period)] in
 theorem fieldLift_norm : ‖fieldLift (W := W) period‖ ≤ 1 := by
@@ -223,12 +224,12 @@ theorem fieldLift_norm : ‖fieldLift (W := W) period‖ ≤ 1 := by
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The bounded linear lift of an entire coefficient time path. -/
-def fieldPathLift : C(K,Space →ᵇ W) →L[ℝ] C(K,LiftDomain period →ᵇ W) :=
+@[expose] def fieldPathLift : C(K,Space →ᵇ W) →L[ℝ] C(K,LiftDomain period →ᵇ W) :=
   (fieldLift period).compLeftContinuous ℝ K
 
 omit [CompactSpace K] [Fact (0 < period)] in
 @[simp] theorem fieldPathLift_apply (A : C(K, Space →ᵇ W)) (t : K) (x : LiftDomain period) :
-    fieldPathLift period A t x = A t x.1 := rfl
+    fieldPathLift period A t x = A t x.1 := by rfl
 
 omit [Fact (0 < period)] in
 theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 := by
@@ -244,7 +245,7 @@ theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 
 end Fields
 
 /-- Support in a set of spatial labels, with arbitrary angular coordinate. -/
-def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
+@[expose] def spatialSet (S : Set Space) : Set (LiftDomain period) := Prod.fst ⁻¹' S
 
 omit [Fact (0 < period)] in
 theorem spatialSet_measurable (S : Set Space) (hS : MeasurableSet S) :
@@ -274,7 +275,8 @@ theorem translate_mem (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S
   exact hnot (hsub hs)
 
 /-- Actual isometric mixed translation into a fixed spatial support region. -/
-def intoLarger (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
+@[expose] def intoLarger (a : LiftTangent) (S Ω : Set Space)
+    (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
     (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω) :
     supportedSpace (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
         period S hS) →ₗᵢ[ℝ]
@@ -287,6 +289,14 @@ def intoLarger (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ 
           hΩ))
       (translate_mem period a S Ω hS hΩ hsub)
   norm_map' := fun u => (translate period a).norm_map (u : CylinderL2 period V)
+
+@[simp] theorem intoLarger_coe (a : LiftTangent) (S Ω : Set Space)
+    (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
+    (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω)
+    (u : supportedSpace (V := V) (liftMeasure period) (spatialSet period S)
+      (spatialSet_measurable period S hS)) :
+    (intoLarger period a S Ω hS hΩ hsub u : CylinderL2 period V) =
+      translate period a (u : CylinderL2 period V) := by rfl
 
 end Supported
 

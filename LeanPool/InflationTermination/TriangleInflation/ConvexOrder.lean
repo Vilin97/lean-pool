@@ -38,7 +38,7 @@ The theorem `rate_triangle` retains its separate collision-counting proof. The s
 estimate below matches the current manuscript corollary, including its coefficient `1/n`.
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation
 

@@ -18,7 +18,7 @@ satisfies `1-t = q - z^2*q^(2*h)`.  The quadratic-coordinate helper with
 edit to the terminal angular velocity, including its normalization.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -57,13 +57,14 @@ theorem normalization_pos (d : OutgoingTail.TailData) {K : ℝ} (hK : 0 < K) :
 
 /-- Edited angular, given by `q d.h p ^ (-HeatTailEdit.exponent d.h) *
 ParametricHeatTail.physicalEdit d K (eta d.h p) (X d.h p)`. -/
+@[expose]
 noncomputable def editedAngular (d : OutgoingTail.TailData) (K : ℝ)
     (p : PhysicalPoint) : ℝ :=
   q d.h p ^ (-HeatTailEdit.exponent d.h) *
     ParametricHeatTail.physicalEdit d K (eta d.h p) (X d.h p)
 
 /-- Shape, given by `OutgoingTail.tailShape d (y - Real.log K + 1 / 5)`. -/
-noncomputable def shape (d : OutgoingTail.TailData) (K y : ℝ) : ℝ :=
+@[expose] noncomputable def shape (d : OutgoingTail.TailData) (K y : ℝ) : ℝ :=
   OutgoingTail.tailShape d (y - Real.log K + 1 / 5)
 
 theorem editedAngular_eq_heat (d : OutgoingTail.TailData) {K : ℝ}
@@ -104,6 +105,7 @@ theorem editedAngular_div_radius (d : OutgoingTail.TailData) {K : ℝ}
 /-- The normalized section is used only inside the physical time domain.
 It supplies a direct profile-parameter comparison without `log(1-eta^2)`.
 Endpoint extensions of profile factors are proved separately. -/
+@[expose]
 noncomputable def normalizedSection (x e : ℝ) : PhysicalPoint := (e ^ 2, (x, e))
 
 theorem q_normalizedSection {h e : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)

@@ -21,7 +21,7 @@ This file develops coordinate presentations of the real Kalton--Peck space, cons
 canonical model and quotient map, and compares arbitrary complete presented models.
 -/
 
-@[expose] public section
+public section
 
 
 namespace KaltonPeck.Support
@@ -30,22 +30,27 @@ noncomputable
 section
 
 /-- A real sequence is square-summable. -/
+@[expose]
 def IsSquareSummable (x : ℕ → ℝ) : Prop :=
   Summable fun n ↦ x n ^ 2
 
 /-- The usual `ℓ₂` norm, defined on all real sequences and used on square-summable ones. -/
+@[expose]
 def l2Norm (x : ℕ → ℝ) : ℝ :=
   Real.sqrt (∑' n, x n ^ 2)
 
 /-- The Kalton--Peck centralizer, with Lean's `Real.log 0 = 0` supplying the zero convention. -/
+@[expose]
 def centralizer (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   2 * x n * Real.log (|x n| / l2Norm x)
 
 /-- The admissible coordinate pairs in the usual real Kalton--Peck presentation. -/
+@[expose]
 def IsAdmissiblePair (p : (ℕ → ℝ) × (ℕ → ℝ)) : Prop :=
   IsSquareSummable p.2 ∧ IsSquareSummable (p.1 - centralizer p.2)
 
 /-- The standard quasi-norm used to present the real Kalton--Peck space. -/
+@[expose]
 def kaltonPeckQuasiNorm (p : (ℕ → ℝ) × (ℕ → ℝ)) : ℝ :=
   l2Norm (p.1 - centralizer p.2) + l2Norm p.2
 
@@ -311,11 +316,13 @@ lemma kpNormalization :
 
 /-- Both coordinates of a pair have finite support.
 Support definition for blueprint label `thm:kp-canonical-banach`. -/
+@[expose]
 def IsFiniteCoordinatePair (p : (ℕ → ℝ) × (ℕ → ℝ)) : Prop := by
   exact Set.Finite {n | p.1 n ≠ 0} ∧ Set.Finite {n | p.2 n ≠ 0}
 
 /-- The fixed project-normalized canonical real Kalton--Peck carrier.
 Blueprint label: `thm:kp-canonical-banach`; audit ID `INF-KP-CANONICAL-MODEL`. -/
+@[expose]
 def CanonicalRealKaltonPeck : Type := by
   exact {p : (ℕ → ℝ) × (ℕ → ℝ) // IsAdmissiblePair p}
 
@@ -596,6 +603,7 @@ private lemma abs_mul_log_sub_log_le_sq_add_sq (a b : ℝ) :
       _ ≤ a ^ 2 + b ^ 2 := by nlinarith [sq_nonneg b]
 
 /-- The linear subspace of admissible Kalton–Peck coordinate pairs. -/
+@[expose]
 def rawSubmodule : Submodule ℝ ((ℕ → ℝ) × (ℕ → ℝ)) where
   carrier := {p | IsAdmissiblePair p}
   zero_mem' := by exact admissible_zero
@@ -984,7 +992,7 @@ private lemma modelLinear_injective : Function.Injective modelLinear := by
   rw [map_sub, hpq, sub_self]
 
 /-- The norm on admissible pairs induced by the coordinate-and-pairing embedding. -/
-@[reducible] noncomputable def rawNormedAddCommGroup : NormedAddCommGroup Raw :=
+@[expose, reducible] noncomputable def rawNormedAddCommGroup : NormedAddCommGroup Raw :=
   NormedAddCommGroup.induced Raw (L2 × Features) modelLinear (by exact modelLinear_injective)
 
 /-- The induced normed additive structure during construction of the canonical carrier. -/
@@ -1004,7 +1012,7 @@ local instance rawTopologicalSpaceInst : TopologicalSpace Raw :=
   rawNormedAddCommGroup.toMetricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
 
 /-- The real normed-space structure induced by the coordinate-and-pairing embedding. -/
-@[reducible] noncomputable def rawNormedSpace : NormedSpace ℝ Raw :=
+@[expose, reducible] noncomputable def rawNormedSpace : NormedSpace ℝ Raw :=
   NormedSpace.induced ℝ Raw (L2 × Features) modelLinear
 
 /-- The induced real normed-space structure during construction of the canonical carrier. -/
@@ -1088,7 +1096,7 @@ private lemma quasiNorm_le_model_norm (p : Raw) :
     feature_norm_le_model_norm p]
 
 /-- The linear second-coordinate map on the normed admissible-pair model. -/
-def secondLinear : Raw →ₗ[ℝ] L2 where
+@[expose] def secondLinear : Raw →ₗ[ℝ] L2 where
   toFun p := toL2 p.1.2 p.2.1
   map_add' p q := by
     apply Subtype.ext
@@ -1098,7 +1106,7 @@ def secondLinear : Raw →ₗ[ℝ] L2 where
     rfl
 
 /-- The bounded second-coordinate map from the admissible-pair model to Hilbert space. -/
-def secondCLM : Raw →L[ℝ] L2 :=
+@[expose] def secondCLM : Raw →L[ℝ] L2 :=
   secondLinear.mkContinuous 1 fun p ↦ by
     rw [one_mul]
     change ‖toL2 p.1.2 p.2.1‖ ≤ ‖p‖
@@ -1327,7 +1335,7 @@ theorem canonicalPairingData :
     exact h
 
 /-- The canonical coordinate presentation with the proved two-sided norm bounds. -/
-def rawPresentation : RealKaltonPeckPresentation Raw := by
+@[expose] def rawPresentation : RealKaltonPeckPresentation Raw := by
   let coords : Raw →ₗ[ℝ] (ℕ → ℝ) × (ℕ → ℝ) :=
     { toFun := fun p ↦ p.1
       map_add' := by intro p q; rfl
@@ -1377,6 +1385,7 @@ instance instCompleteSpaceCanonicalRealKaltonPeck :
 
 /-- The coordinate presentation of the fixed canonical model.
 Blueprint label: `thm:kp-canonical-banach`. -/
+@[expose]
 def canonicalRealKaltonPeckPresentation :
     RealKaltonPeckPresentation CanonicalRealKaltonPeck := by
   exact rawPresentation
@@ -1387,6 +1396,7 @@ abbrev CanonicalL2 := lp (fun _ : ℕ ↦ ℝ) 2
 
 /-- The canonical quotient `Z₂ → ℓ₂`, given by the second coordinate.
 Blueprint support for `thm:kp-canonical-banach`; audit ID `EXT-CGP-UPPER-SEMI-PRIMARY`. -/
+@[expose]
 def canonicalL2Quotient : CanonicalRealKaltonPeck →L[ℝ] CanonicalL2 := by
   exact secondCLM
 

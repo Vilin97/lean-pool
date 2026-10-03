@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanCoefficientSpatial
 
 /-! All-order parameter regularity of actual bounded smooth coefficient translations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -54,7 +54,7 @@ def derivativeBundling : (Space →ᵇ (Space →L[ℝ] V)) →L[ℝ]
     simpa only [one_mul] using fieldDerivativeMap_norm_le A)
 
 @[simp] theorem derivativeBundling_apply (A : Space →ᵇ (Space →L[ℝ] V)) :
-    derivativeBundling A = fieldDerivativeMap A := rfl
+    derivativeBundling A = fieldDerivativeMap A := by rfl
 
 /-- A concrete smooth coefficient with globally bounded actual derivatives of every order. -/
 structure BoundedSmoothField (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] where
@@ -76,7 +76,7 @@ def derivative (A : BoundedSmoothField V) : BoundedSmoothField (Space →L[ℝ] 
     simpa only [norm_iteratedFDeriv_fderiv] using A.bounded (n+1)
 
 @[simp] theorem derivative_field_apply (A : BoundedSmoothField V) (x : Space) :
-    A.derivative.field x = fderiv ℝ (A.field : Space → V) x := rfl
+    A.derivative.field x = fderiv ℝ (A.field : Space → V) x := by rfl
 
 theorem translation_hasFDerivAt (A : BoundedSmoothField V) (a : Space) :
     HasFDerivAt (translated A.field) (fieldDerivativeMap (translated A.derivative.field a)) a := by

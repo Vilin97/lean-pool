@@ -23,7 +23,7 @@ verified length hypotheses for its endpoint, one-off, and cross-one-off
 families.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -32,6 +32,7 @@ open Utilities
 /-- A marked graph has a transmission permutation with at least `q`
 normalized `k`-inversion classes.  This is the existential lower-bound form
 of the paper's maximum `M`. -/
+@[expose]
 def HasInversionLowerBound (M : TwiceMarked) (k q : ℕ) : Prop :=
   ∃ D : CFDiv M.graph, ∃ tau : ℤ → ℤ,
     IsTransmissionPermutation M D tau ∧ IsKAffine k tau ∧

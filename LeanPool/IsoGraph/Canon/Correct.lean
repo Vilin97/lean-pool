@@ -33,7 +33,7 @@ That is exactly what `Spec.LabellingInvariant` needs, once `certOf_get` is used 
 adjacency matrix back out of the packed certificate (`canonical_get`).
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon

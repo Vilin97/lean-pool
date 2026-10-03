@@ -28,7 +28,7 @@ Schur specialisation as the dimension of an equivariant Hom
 space.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -40,6 +40,7 @@ open Finset Equiv MonoidAlgebra
 
 /-- The colour space: all colourings of `n` sites in `p` colours,
 the basis of the `n`-th tensor power of `ℂ^p`. -/
+@[expose]
 def colourSpace (n p : ℕ) : Type := Fin n → Fin p
 
 /-- The colour space is finite. -/

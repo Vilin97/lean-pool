@@ -23,7 +23,7 @@ genus-three side at vertex `0`.  The occurrence-level core cut checker and
 the factor-genus calculator verify this finite structural data directly.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFiveBridgeRows
 
 open Utilities

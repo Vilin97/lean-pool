@@ -21,7 +21,7 @@ slices carry `finCongr` casts because `n·(a+b) = n·a + n·b` is
 propositional, managed by the arity-cast transport `endCast`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

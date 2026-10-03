@@ -19,7 +19,7 @@ joint-law factorization.  It does not assert that any particular stochastic proc
 finite-dimensional identities.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -38,6 +38,7 @@ variable [StandardBorelSpace (ContinuousPath alpha)]
 
 /-- Encode a finite-coordinate past and the dense restriction of a continuous future as one path
 indexed by the disjoint union of the past and future coordinate types. -/
+@[expose]
 def finitePastDenseFuture
     (z : (index → alpha) × ContinuousPath alpha) : index ⊕ DenseTime → alpha
   | Sum.inl i => z.1 i

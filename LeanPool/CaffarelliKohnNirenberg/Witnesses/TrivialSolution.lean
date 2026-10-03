@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Statements.SuitableWeakSolutionIn
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open MeasureTheory

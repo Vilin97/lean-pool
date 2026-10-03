@@ -17,7 +17,7 @@ square-integrability, symmetry, and Hilbert-space formulas.  These are the deter
 for identifying generalized Hermite values with canonical Brownian multiple integrals.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal NNReal InnerProductSpace
@@ -28,6 +28,7 @@ section
 namespace Malliavin
 
 /-- The pointwise `n`-fold pure product of a deterministic time function. -/
+@[expose]
 def iteratedKernelPurePowerFun (n : ℕ) (f : ℝ≥0 → ℝ) : (Fin n → ℝ≥0) → ℝ :=
   fun t ↦ ∏ i, f (t i)
 

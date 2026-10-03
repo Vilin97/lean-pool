@@ -28,7 +28,7 @@ it is affine on every face of some subdivision.  A generic continuous map is *no
 complex with a 2-face, in contrast to the vacuous `IsPLOnSimplexes` this replaces.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -44,7 +44,7 @@ abbrev Plane : Type :=
   EuclideanSpace ℝ (Fin 2)
 
 /-- A closed triangle in the plane: the convex hull of three affinely independent points. -/
-def IsTriangle (C : Set Plane) : Prop :=
+@[expose] def IsTriangle (C : Set Plane) : Prop :=
   ∃ p : Fin 3 → Plane, AffineIndependent ℝ p ∧ C = convexHull ℝ (Set.range p)
 
 /-- Two plane points with equal coordinates are equal. -/
@@ -362,6 +362,7 @@ namespace TriangleMesh
 variable (M : TriangleMesh)
 
 /-- The mesh consisting of one geometric triangle. -/
+@[expose]
 noncomputable def single (p : Fin 3 → Plane) (hp : AffineIndependent ℝ p) : TriangleMesh where
   Vertex := Fin 3
   position := p
@@ -404,7 +405,7 @@ noncomputable abbrev mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : TriangleMesh
 
 /-- Reposition the vertices of a triangle mesh while retaining its abstract triangles.  The
 caller supplies the geometric nondegeneracy and face-to-face proofs for the new positions. -/
-noncomputable def reposition (position' : M.Vertex → Plane)
+@[expose] noncomputable def reposition (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')
     (haffineIndependent : ∀ t ∈ M.triangles,
       AffineIndependent ℝ fun v : t => position' v)
@@ -432,7 +433,7 @@ noncomputable def reposition (position' : M.Vertex → Plane)
 
 /-- Delete one maximal triangle from a mesh.  Vertices no longer used by any triangle are retained;
 this keeps the vertex type and geometric positions definitionally unchanged. -/
-noncomputable def eraseTriangle (t : Finset M.Vertex) : TriangleMesh where
+@[expose] noncomputable def eraseTriangle (t : Finset M.Vertex) : TriangleMesh where
   Vertex := M.Vertex
   position := M.position
   position_injective := M.position_injective
@@ -459,7 +460,7 @@ theorem card_eraseTriangle_triangles {t : Finset M.Vertex} (ht : t ∈ M.triangl
 
 /-- Reindex a triangle mesh inside a larger finite vertex type without changing any geometric
 positions.  Extra vertices of the target type may be unused. -/
-noncomputable def reindex {V' : Type} [Fintype V'] [DecidableEq V']
+@[expose] noncomputable def reindex {V' : Type} [Fintype V'] [DecidableEq V']
     (position' : V' → Plane) (hposition_injective : Function.Injective position')
     (e : M.Vertex ↪ V')
     (hposition : ∀ v, position' (e v) = M.position v) : TriangleMesh where
@@ -527,7 +528,7 @@ theorem mapAffineEquiv_triangles (e : Plane ≃ᵃ[ℝ] Plane) :
     (M.mapAffineEquiv e).triangles = M.triangles := rfl
 
 /-- The nonempty subfaces of all maximal triangles in a triangle mesh. -/
-def faces : Finset (Finset M.Vertex) :=
+@[expose] def faces : Finset (Finset M.Vertex) :=
   M.triangles.biUnion fun t => t.powerset.filter (·.Nonempty)
 
 theorem mem_faces_iff {s : Finset M.Vertex} :
@@ -623,11 +624,11 @@ namespace PlaneComplex
 variable (K : PlaneComplex)
 
 /-- The carrier of a face: the convex hull of its vertex positions. -/
-def cellCarrier (s : Finset K.Vertex) : Set Plane :=
+@[expose] def cellCarrier (s : Finset K.Vertex) : Set Plane :=
   convexHull ℝ (K.position '' s)
 
 /-- The support of the complex: the union of its face carriers. -/
-def support : Set Plane :=
+@[expose] def support : Set Plane :=
   ⋃ s ∈ K.simplexes, K.cellCarrier s
 
 theorem cellCarrier_subset_support {s : Finset K.Vertex} (hs : s ∈ K.simplexes) :
@@ -642,7 +643,7 @@ theorem isCompact_support : IsCompact K.support :=
   K.simplexes.finite_toSet.isCompact_biUnion fun s _ => K.isCompact_cellCarrier s
 
 /-- Transport a finite plane complex through an affine equivalence. -/
-noncomputable def mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : PlaneComplex where
+@[expose] noncomputable def mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : PlaneComplex where
   Vertex := K.Vertex
   position := e ∘ K.position
   position_injective := e.injective.comp K.position_injective
@@ -705,11 +706,11 @@ theorem mapAffineEquiv_support (e : Plane ≃ᵃ[ℝ] Plane) :
     exact ⟨_, hy, rfl⟩
 
 /-- The two-dimensional faces. -/
-def cells : Finset (Finset K.Vertex) :=
+@[expose] def cells : Finset (Finset K.Vertex) :=
   K.simplexes.filter fun s => s.card = 3
 
 /-- The edges (one-dimensional faces). -/
-def edges : Finset (Finset K.Vertex) :=
+@[expose] def edges : Finset (Finset K.Vertex) :=
   K.simplexes.filter fun s => s.card = 2
 
 /-- The subcomplex consisting of the vertices and edges of `K`. -/
@@ -770,7 +771,7 @@ theorem oneSkeleton_isGraph :
 
 /-- Keep the faces of `L` which lie in a face of `K`.  This is the standard way to turn an
 ambient line arrangement into a subdivision subordinate to a pre-existing complex. -/
-noncomputable def subordinateTo (L K : PlaneComplex) : PlaneComplex := by
+@[expose] noncomputable def subordinateTo (L K : PlaneComplex) : PlaneComplex := by
   classical
   exact {
     Vertex := L.Vertex
@@ -819,7 +820,7 @@ theorem subordinateTo_support_subset (L K : PlaneComplex) :
   exact ⟨t, ht, hst hxs⟩
 
 /-- Keep precisely the faces whose carriers lie in a prescribed geometric set. -/
-noncomputable def restrictToSet (K : PlaneComplex) (A : Set Plane) : PlaneComplex := by
+@[expose] noncomputable def restrictToSet (K : PlaneComplex) (A : Set Plane) : PlaneComplex := by
   classical
   exact {
     Vertex := K.Vertex
@@ -857,7 +858,7 @@ theorem restrictToSet_support_subset (K : PlaneComplex) (A : Set Plane) :
   exact (K.mem_restrictToSet_simplexes_iff A).mp hs |>.2 hxs
 
 /-- A complex is purely two-dimensional when every face lies in a two-dimensional one. -/
-def IsPure2 : Prop :=
+@[expose] def IsPure2 : Prop :=
   ∀ s ∈ K.simplexes, ∃ t ∈ K.simplexes, s ⊆ t ∧ t.card = 3
 
 end PlaneComplex
@@ -1022,7 +1023,7 @@ variable (K : PlaneComplex)
 
 /-- `K'` subdivides `K`: same support, and every face carrier of `K'` lies inside some face
 carrier of `K`. -/
-def Subdivides (K' K : PlaneComplex) : Prop :=
+@[expose] def Subdivides (K' K : PlaneComplex) : Prop :=
   K'.support = K.support ∧
     ∀ s' ∈ K'.simplexes, ∃ s ∈ K.simplexes, K'.cellCarrier s' ⊆ K.cellCarrier s
 
@@ -1065,7 +1066,7 @@ theorem subordinateTo_subdivides (L K : PlaneComplex)
 end PlaneComplex
 
 /-- `f` agrees with an affine map on `A`. -/
-def IsAffineOn (f : Plane → Plane) (A : Set Plane) : Prop :=
+@[expose] def IsAffineOn (f : Plane → Plane) (A : Set Plane) : Prop :=
   ∃ g : Plane →ᵃ[ℝ] Plane, Set.EqOn f g A
 
 /-- `f` is piecewise linear on the complex `K`: affine on every face of some subdivision.
@@ -1073,17 +1074,17 @@ def IsAffineOn (f : Plane → Plane) (A : Set Plane) : Prop :=
 This is the honest PL predicate: a map that is not affine on any neighborhood of a point interior
 to a 2-cell of `K` cannot satisfy it, in contrast to the vacuous `IsPLOnSimplexes` of the
 retiring `PL.lean` layer. -/
-def IsPLOn (K : PlaneComplex) (f : Plane → Plane) : Prop :=
+@[expose] def IsPLOn (K : PlaneComplex) (f : Plane → Plane) : Prop :=
   ∃ K' : PlaneComplex, K'.Subdivides K ∧
     ∀ s' ∈ K'.simplexes, IsAffineOn f (K'.cellCarrier s')
 
 /-- `f` is a PL embedding of the support of `K`: piecewise linear and injective on the support. -/
-def IsPLEmbeddingOn (K : PlaneComplex) (f : Plane → Plane) : Prop :=
+@[expose] def IsPLEmbeddingOn (K : PlaneComplex) (f : Plane → Plane) : Prop :=
   IsPLOn K f ∧ Set.InjOn f K.support
 
 /-- A function is PL on a geometric set when the set is the support of a finite plane complex
 on which the function is PL. -/
-def IsPLOnSet (A : Set Plane) (f : Plane → Plane) : Prop :=
+@[expose] def IsPLOnSet (A : Set Plane) (f : Plane → Plane) : Prop :=
   ∃ K : PlaneComplex, K.support = A ∧ IsPLOn K f
 
 namespace IsAffineOn
@@ -1200,7 +1201,7 @@ theorem card_of_mem_cells {t : Finset K.Vertex} (ht : t ∈ K.cells) : t.card = 
   (Finset.mem_filter.mp ht).2
 
 /-- Barycentric evaluation: the point of the plane with the given barycentric weights. -/
-noncomputable def baryEval (x : K.Vertex → ℝ) : Plane :=
+@[expose] noncomputable def baryEval (x : K.Vertex → ℝ) : Plane :=
   ∑ v, x v • K.position v
 
 theorem continuous_baryEval :
@@ -1296,6 +1297,7 @@ end PlaneComplex
 
 /-- The canonical barycentric homeomorphism from the abstract realization of a pure plane
 complex to its geometric support. -/
+@[expose]
 noncomputable def PlaneComplex.realizationHomeomorph (K : PlaneComplex) (hpure : K.IsPure2) :
     GeometricRealization K.Vertex K.cells ≃ₜ K.support := by
   classical
@@ -1346,7 +1348,7 @@ noncomputable def PlaneComplex.realizationHomeomorph (K : PlaneComplex) (hpure :
 
 @[simp] theorem PlaneComplex.realizationHomeomorph_apply (K : PlaneComplex)
     (hpure : K.IsPure2) (x : GeometricRealization K.Vertex K.cells) :
-    ((K.realizationHomeomorph hpure) x).1 = K.baryEval x.1 := rfl
+    ((K.realizationHomeomorph hpure) x).1 = K.baryEval x.1 := by rfl
 
 /-- **Realization bridge** (elementary): a purely two-dimensional plane complex induces a
 geometric triangulation of its support, by barycentric coordinates in the face containing each

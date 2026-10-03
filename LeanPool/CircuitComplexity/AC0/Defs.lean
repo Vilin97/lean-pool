@@ -17,7 +17,7 @@ This module defines the AC0 circuit complexity class.
   unbounded fan-in AND/OR)
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

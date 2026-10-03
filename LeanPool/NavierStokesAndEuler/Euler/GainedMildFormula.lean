@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MildEquationBridge
 
 /-! Equivalence between genuine gained-derivative and ordinary heat-Duhamel solution formulas. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ theorem truncate_injective (q : ℕ) : Function.Injective (truncateOperator peri
   exact congrArg (value period (q := q)) h
 
 /-- The genuine heat-plus-gained-Duhamel construction as an actual continuous Sobolev path. -/
-def mildPath (q : ℕ) (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 ≤ T)
+@[expose] def mildPath (q : ℕ) (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 ≤ T)
     (u₀ : SobolevSpace period (q + 1)) (f : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
     C(Icc (0 : ℝ) T, SobolevSpace period (q+1)) :=
   freeHeatPath period (q+1) ν T u₀ +

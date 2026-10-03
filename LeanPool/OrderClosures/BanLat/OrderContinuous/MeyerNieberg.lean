@@ -19,7 +19,7 @@ an order continuous Banach lattice every order-bounded set of pairwise
 disjoint non-zero elements is at most countable.
 -/
 
-@[expose] public section
+public section
 
 variable {X : Type*} [NormedAddCommGroup X] [Lattice X] [IsOrderedAddMonoid X]
 

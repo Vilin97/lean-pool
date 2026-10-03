@@ -37,7 +37,7 @@ topological modules but without operator-norm information; the lemmas here
 add the missing norm bounds in the normed setting.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

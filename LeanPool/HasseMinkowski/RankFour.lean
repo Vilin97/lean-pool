@@ -25,7 +25,7 @@ behaviour, and then `isotropic_of_rank_three'` shows each half represents `x` ov
 (WP4.3).
 -/
 
-@[expose] public section
+public section
 
 open Module QuadraticMap
 

@@ -18,7 +18,7 @@ imports this file and keeps the genus-bounded consequences) so that the
 genus-generic transmission layer does not depend on the low-genus census.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -26,6 +26,7 @@ namespace Utilities
 a witness.  The second mark is retained because it belongs to the
 transmission presentation, although the Grassmannian locus depends only on
 the first mark up to existence. -/
+@[expose]
 def GrassmannianTransmissionExistence
     (G : CFGraph) (u v : G.V) : Prop :=
   ∀ lambda : YoungDiagram,

@@ -18,7 +18,7 @@ transition system: the choice in the Definition 5 value is
 always inhabited.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

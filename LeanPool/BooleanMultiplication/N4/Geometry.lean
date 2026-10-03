@@ -16,7 +16,7 @@ vectors dependent, so the cross block is an outer product and every Hankel
 minor vanishes.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,21 +24,22 @@ namespace N4
 noncomputable section
 
 /-- Coordinate of an input coefficient in the first polynomial. -/
-def aCoord (i : Fin 4) : Fin 8 := ⟨i.val, by omega⟩
+@[expose] def aCoord (i : Fin 4) : Fin 8 := ⟨i.val, by omega⟩
 /-- Coordinate of an input coefficient in the second polynomial. -/
-def bCoord (j : Fin 4) : Fin 8 := ⟨4 + j.val, by omega⟩
+@[expose] def bCoord (j : Fin 4) : Fin 8 := ⟨4 + j.val, by omega⟩
 
 /-- Restrict a linear form to the first polynomial input. -/
-def aPart (u : LinearForm) : Fin 4 → F₂ := fun i => u (aCoord i)
+@[expose] def aPart (u : LinearForm) : Fin 4 → F₂ := fun i => u (aCoord i)
 /-- Restrict a linear form to the second polynomial input. -/
-def bPart (u : LinearForm) : Fin 4 → F₂ := fun j => u (bCoord j)
+@[expose] def bPart (u : LinearForm) : Fin 4 → F₂ := fun j => u (bCoord j)
 
 /-- The mixed input coordinates of the exterior product of two linear forms. -/
-def crossPart (u v : LinearForm) (i j : Fin 4) : F₂ :=
+@[expose] def crossPart (u v : LinearForm) (i j : Fin 4) : F₂ :=
   vectorWedge u v (aCoord i) (bCoord j)
 
 /-- A target coefficient word is decomposable when it is the quadratic cross
 part of two linear forms and their same-side exterior components vanish. -/
+@[expose]
 def IsDecomposableTarget (c : TargetCoeff) : Prop :=
   ∃ u v : LinearForm,
     (∀ i j : Fin 4, vectorWedge u v (aCoord i) (aCoord j) = 0) ∧
@@ -83,7 +84,7 @@ theorem decomposableTarget_classification {c : TargetCoeff}
   rankOne_target_classification (decomposableTarget_rankOne hdec) hc
 
 /-- Represent a linear combination of evaluations at zero, one, and infinity. -/
-def rationalCoeffRep (α : Fin 3 → F₂) : TargetCoeff :=
+@[expose] def rationalCoeffRep (α : Fin 3 → F₂) : TargetCoeff :=
   α 0 • rZeroCoeff + α 1 • rOneCoeff + α 2 • rInfinityCoeff
 
 theorem rationalCoeffRep_mem (α : Fin 3 → F₂) :

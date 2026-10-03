@@ -29,7 +29,7 @@ The output is kept in `Fin n → ℝ`; no projection to a zero-sum representatio
 and no common zero, equivariance, or obstruction result is assumed.
 -/
 
-@[expose] public section
+public section
 
 open NRR.Geometry
 
@@ -43,6 +43,7 @@ variable {X : Type*} [MetricSpace X] [CompactSpace X]
 /-- The **child evaluation** of a nice multivalued function `φ` at parameter `z = ((C, x), t)` and
 site index `i`: evaluate `φ` at the canonical child `child sites hA hn (C, x) i` and the signed
 interval coordinate `t`. -/
+@[expose]
 noncomputable def childEval
     (sites : EMP.VariableBody.SiteFamily X n)
     (hA : 0 < A) (hn : 0 < n)

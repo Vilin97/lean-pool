@@ -15,7 +15,7 @@ import Mathlib.Analysis.SpecialFunctions.Bernstein
 /-! # IsCuspForm -/
 
 
-@[expose] public section
+public section
 
 open ModularForm UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups
@@ -35,7 +35,7 @@ variable {k : ℤ} {F : Type*} [FunLike F ℍ ℂ] {Γ : Subgroup SL(2, ℤ)} (n
 open scoped Real MatrixGroups CongruenceSubgroup
 
 /-- Views a cusp form as a modular form. -/
-def ModFormMk (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : CuspForm Γ k) : ModularForm Γ k where
+@[expose] def ModFormMk (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : CuspForm Γ k) : ModularForm Γ k where
   toFun := f
   slash_action_eq' := f.slash_action_eq'
   holo' := f.holo'
@@ -50,6 +50,7 @@ lemma ModForm_mk_inj (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : CuspForm Γ k) (h
   exact hx
 
 /-- The linear inclusion of cusp forms into modular forms. -/
+@[expose]
 def CuspFormToModularForm (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : CuspForm Γ k →ₗ[ℂ] ModularForm Γ k
   where
   toFun f := ModFormMk Γ k f
@@ -57,7 +58,7 @@ def CuspFormToModularForm (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : CuspForm Γ k �
   map_smul' _ _ := rfl
 
 /-- The submodule of modular forms that are cusp forms. -/
-def CuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : Submodule ℂ (ModularForm Γ k) :=
+@[expose] def CuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : Submodule ℂ (ModularForm Γ k) :=
   LinearMap.range (CuspFormToModularForm Γ k)
 
 /-- The linear isomorphism between cusp forms and the cusp-form submodule. -/
@@ -89,7 +90,7 @@ instance (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : CuspFormClass (CuspFormSubmodule
     exact g.zero_at_cusps' hc
 
 /-- The predicate that a modular form lies in the cusp-form submodule. -/
-def IsCuspForm (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : ModularForm Γ k) : Prop :=
+@[expose] def IsCuspForm (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : ModularForm Γ k) : Prop :=
   f ∈ CuspFormSubmodule Γ k
 
 /-- Promotes a modular form satisfying `IsCuspForm` to a cusp form. -/
@@ -117,7 +118,7 @@ lemma CuspForm_to_ModularForm_Fun_coe (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : 
   exact congr_arg (fun x ↦ x.toFun) hg
 
 /-- Build a `CuspForm` from a `SlashInvariantForm` that is holomorphic and tends to 0. -/
-noncomputable def cuspFormOfSIFTendstoZero {k : ℤ}
+@[expose] noncomputable def cuspFormOfSIFTendstoZero {k : ℤ}
     (f_SIF : SlashInvariantForm Γ(1) k)
     (h_mdiff : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) f_SIF.toFun)
     (h_zero : Tendsto f_SIF.toFun atImInfty (𝓝 0)) : CuspForm Γ(1) k where
@@ -150,7 +151,7 @@ private lemma isZeroAtImInfty_of_coeffZero {k : ℤ}
   simp_all
 
 /-- Build a `CuspForm` from a modular form whose q-expansion has vanishing constant term. -/
-noncomputable def cuspFormOfCoeffZero {k : ℤ}
+@[expose] noncomputable def cuspFormOfCoeffZero {k : ℤ}
     (f : ModularForm Γ(1) k)
     (h : (qExpansion 1 f).coeff 0 = 0) : CuspForm Γ(1) k where
   toSlashInvariantForm := f.toSlashInvariantForm
@@ -180,4 +181,3 @@ lemma IsCuspForm_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
 lemma CuspFormSubmodule_mem_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
     f ∈ CuspFormSubmodule Γ(1) k ↔ (qExpansion 1 f).coeff 0 = 0 :=
   IsCuspForm_iff_coeffZero_eq_zero k f
-

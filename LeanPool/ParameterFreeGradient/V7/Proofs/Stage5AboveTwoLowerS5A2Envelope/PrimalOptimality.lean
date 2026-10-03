@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 First-order optimality of an infimal-convolution minimizer gives a supporting inequality.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

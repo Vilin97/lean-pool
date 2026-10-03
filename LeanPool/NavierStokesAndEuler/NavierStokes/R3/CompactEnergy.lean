@@ -37,7 +37,7 @@ the energy plus a constant. Only derivatives in the interior of the time
 interval are required.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -108,7 +108,7 @@ Continuity of the parameterized integral then supplies a finite bound on the
 closed time interval `[0, 1]`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -161,7 +161,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

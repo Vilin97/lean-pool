@@ -17,7 +17,7 @@ odd parts (the unit has no odd part).  This disposes of the
 cross-split odd basis terms in the cap recursion.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

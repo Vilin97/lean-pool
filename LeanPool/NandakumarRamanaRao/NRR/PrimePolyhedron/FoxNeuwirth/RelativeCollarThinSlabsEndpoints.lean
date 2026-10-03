@@ -18,7 +18,7 @@ pairing identities, exhaustiveness, and representative geometry required by
 `EndpointIdentifiedRelativeAffineCollar`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -44,6 +44,7 @@ open RefinedAffineMap
 variable {p : Nat}
 
 /-- First slab of a positive stack. -/
+@[expose]
 def firstSlab (m : Nat) (hm : 0 < m) : Fin m :=
   ⟨0, hm⟩
 

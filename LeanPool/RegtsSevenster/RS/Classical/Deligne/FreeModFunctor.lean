@@ -20,7 +20,7 @@ comparison of the ambient category, and realization carries the
 comparison of (2.11.1).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -47,6 +47,7 @@ theorem freeModMap_comp [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
   exact MonoidalCategory.whiskerLeft_comp A f g
 
 /-- **Base change to an algebra, as a functor.** -/
+@[expose]
 noncomputable def freeModFunctor
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] : D ⥤ Mod D A where
   obj V := freeMod A V

@@ -22,7 +22,7 @@ norm of any fixed vector to within a factor `1 ± ε`, except with the stated fa
 probability.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 

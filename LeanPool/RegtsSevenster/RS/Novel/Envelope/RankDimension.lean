@@ -17,7 +17,7 @@ with the skein Hom space. At even arity this is the endomorphism
 algebra used by the commutant estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

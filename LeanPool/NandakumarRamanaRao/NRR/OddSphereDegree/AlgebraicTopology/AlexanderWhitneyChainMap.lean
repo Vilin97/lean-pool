@@ -49,7 +49,7 @@ degree equality via the cochain degree cast `cochainCast`.
 * `aw_cochain_leibniz_zmod2` — the Leibniz / chain-map identity over `ZMod 2`.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory MonoidalCategory AlgebraicTopology Simplicial SimplexCategory
 open SphereOddDegree.AlexanderWhitney
@@ -61,6 +61,7 @@ namespace SphereOddDegree
 /-- The free `R`-module simplicial object whose alternating face map complex is
 the singular chain complex `C_•(Z; R)`. Its value in degree `n` is the coproduct
 `∐_{σ : n-simplex} R`. -/
+@[expose]
 noncomputable def singularChainSimplicialModule (R : Type) [CommRing R] (Z : TopCat.{0}) :
     SimplicialObject (ModuleCat.{0} R) :=
   ((Limits.sigmaConst ⋙ SimplicialObject.whiskering (Type 0) (ModuleCat.{0} R)).obj
@@ -101,7 +102,7 @@ theorem singularChainSimplicialModule_δ_generator (R : Type) [CommRing R] (Z : 
 /-- The **cochain coboundary** `δ = d^p : C^p(Z; R) → C^{p+1}(Z; R)`, the
 differential of the singular cochain complex. By construction it is
 precomposition with the singular chain boundary. -/
-noncomputable def cochainCoboundary (R : Type) [CommRing R] (Z : TopCat.{0}) (p : ℕ)
+@[expose] noncomputable def cochainCoboundary (R : Type) [CommRing R] (Z : TopCat.{0}) (p : ℕ)
     (φ : singularCochainGroup R Z p) : singularCochainGroup R Z (p + 1) :=
   (((singularCochainComplexFunctor R (ModuleCat.of R R)).obj (Opposite.op Z)).d p (p + 1)).hom φ
 
@@ -146,7 +147,7 @@ theorem cochainCoboundary_eval (R : Type) [CommRing R] (Z : TopCat.{0}) (n : ℕ
 /-- The **cochain degree cast** transporting a cochain along an equality of
 degrees `m = m'`. Needed because `(p+1)+q` and `(p+q)+1` are only
 propositionally equal. -/
-noncomputable def cochainCast {R : Type} [CommRing R] {Z : TopCat.{0}} {m m' : ℕ}
+@[expose] noncomputable def cochainCast {R : Type} [CommRing R] {Z : TopCat.{0}} {m m' : ℕ}
     (h : m = m') (φ : singularCochainGroup R Z m) : singularCochainGroup R Z m' :=
   (eqToHom (by rw [h]) :
       (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj Z).X m'
@@ -168,20 +169,21 @@ theorem cochainCast_eval_awCastSimplex (R : Type) [CommRing R] (X : TopCat.{0}) 
     (χ : singularCochainGroup R X (p + 1 + q)) (σ : singularSimplices X (p + q + 1)) :
     cochainEval (p + q + 1) (cochainCast (aw_degree_left_succ p q) χ) σ
       = cochainEval (p + 1 + q) χ (awCastSimplex X p q σ) := by
-  have hgen := singularChainSimplicialModule_map_generator R X (p + 1 + q) (p + q + 1)
-    ((awCastLeft p q).op) σ
-  have hmap : ((singularChainSimplicialModule R X).map (awCastLeft p q).op)
-      = (eqToHom (by rw [aw_degree_left_succ p q]) :
-          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p
-            + q + 1) ⟶
-          (((singularChainComplexFunctor (ModuleCat.{0} R)).obj (ModuleCat.of R R)).obj X).X (p
-            + 1 + q)) := by
-    dsimp [awCastLeft]
-    rw [eqToHom_op, eqToHom_map]
+  have hcast : ∀ {m m' : ℕ} (h : m = m')
+      (φ : singularCochainGroup R X m) (τ : singularSimplices X m'),
+      cochainEval m' (cochainCast h φ) τ =
+        cochainEval m φ ((TopCat.toSSet.obj X).map
+          (eqToHom (congrArg SimplexCategory.mk h)).op τ) := by
+    intro m m' h φ τ
+    cases h
+    simp [cochainCast]
+  have hmap : awCastLeft p q =
+      eqToHom (congrArg SimplexCategory.mk (aw_degree_left_succ p q)) := by
+    ext x : 3
+    apply Fin.ext
+    rw [awCastLeft_val, SimplexCategory.eqToHom_toOrderHom]
     rfl
-  dsimp [cochainEval, cochainCast, awCastSimplex]
-  rw [← hmap]
-  exact congrArg (ModuleCat.Hom.hom χ) hgen
+  simpa only [awCastSimplex, hmap] using hcast (aw_degree_left_succ p q) χ σ
 
 /-- **Evaluation of the right (definitional) degree cast.** Since `p+(q+1)` is
 definitionally `(p+q)+1`, the `φ ⌣ δψ` cast is the identity. -/

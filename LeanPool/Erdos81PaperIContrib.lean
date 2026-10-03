@@ -20,7 +20,7 @@ Tags: convex-geometry, linear-programming, duality, farkas-lemma
 MSC: 52A20, 90C05
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderScalarRepresentative
 
 /-! The actual scalar average-zero condition gives literal pointwise zero angular mean. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

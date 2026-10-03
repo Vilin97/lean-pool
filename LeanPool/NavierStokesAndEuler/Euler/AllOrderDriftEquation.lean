@@ -25,7 +25,7 @@ They neither construct the approximate packet nor identify arbitrary coefficient
 with the physical Euler equation in parent-flow coordinates.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -58,6 +58,7 @@ structure ApproximationResidual (hT : 0 < T) (A : Data period T) where
           (pressure.realization q ⟨t, ht.1.le, ht.2.le⟩)) t
 
 /-- The approximation plus the actually constructed correction, in every order. -/
+@[expose]
 def Budget.correctedFieldTower (B : Budget period hT A) : FieldTower period T where
   field := A.approximation.field + B.commonPath period
   realization q := A.approximation.realization q + (B.fieldTower period).realization q
@@ -70,6 +71,7 @@ def Budget.correctedFieldTower (B : Budget period hT A) : FieldTower period T wh
 
 /-- The total pressure is the given approximate pressure plus the constructed
 signed correction pressure, with no independent choice at different orders. -/
+@[expose]
 def Budget.correctedPressureTower (B : Budget period hT A)
     (R : ApproximationResidual period hT A) : FieldTower period T where
   field := R.pressure.field + (B.pressureTower period).field

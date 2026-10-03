@@ -50,7 +50,7 @@ The system and `Ici` lemmas are `[propext, Quot.sound]`; the classification's
 surjectivity uses
 the well-ordering (`WellFounded.has_min`), so it is classical. -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -90,7 +90,7 @@ variable {Δ : Type*} [LinearOrder Δ] [Nonempty Δ]
 @[simp] theorem mem_def {X : Set Δ} :
     (finalSegmentSystem Δ).mem X ↔ X.Nonempty ∧ IsUpperSet X := Iff.rfl
 
-@[simp] theorem master_eq : (finalSegmentSystem Δ).master = Set.univ := rfl
+@[simp] theorem master_eq : (finalSegmentSystem Δ).master = Set.univ := by rfl
 
 /-- Each `Set.Ici a` is a (non-empty, upper) neighbourhood. -/
 theorem Ici_mem (a : Δ) : (finalSegmentSystem Δ).mem (Set.Ici a) :=

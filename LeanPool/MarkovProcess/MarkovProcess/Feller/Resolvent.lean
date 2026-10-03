@@ -41,7 +41,7 @@ The bridge to `SubMarkovKernelSemigroup.kernelResolvent` is pointwise on nonnega
 no kernel-valued resolvent is constructed.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped NNReal ZeroAtInfty

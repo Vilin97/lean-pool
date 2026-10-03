@@ -16,7 +16,7 @@ coefficient function is central — pure coefficient algebra, no
 representation theory.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -26,6 +26,7 @@ variable {G : Type*}
 
 /-- The group-algebra element attached to a coefficient
 function. -/
+@[expose]
 noncomputable def classElem [Group G] [Fintype G]
     (c : G → ℂ) : MonoidAlgebra ℂ G :=
   ∑ g : G, c g • MonoidAlgebra.single g 1

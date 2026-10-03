@@ -34,7 +34,7 @@ Write `K` for `canonicalDivisor G` and `g` for `genus G`.
 4. `F - E ~ (K - F*) - E = K - (E + F*) = K - M ~ K - (K - γ) = γ`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

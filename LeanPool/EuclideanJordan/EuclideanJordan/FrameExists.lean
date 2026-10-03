@@ -75,7 +75,7 @@ frame conjugacy.  Nothing here is a step towards it.  Do not read `exists_jordan
 "`J` has rank `n`".
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

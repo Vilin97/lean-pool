@@ -15,7 +15,7 @@ coordinate; with
 `|Q_n(C_r)| ≤ exp(9(3/2 − log 3)n² + C n log(n+1)) ∫ D` for every integrable `D` dominating
 `∏_l (1+|x_l|)^7 e^{−3n W(x_l)} · Δ(x)²`. -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Polynomial
 open scoped BigOperators
@@ -24,6 +24,7 @@ namespace Zeta32.Analytic.EnergyI
 noncomputable section
 
 /-- The squared Vandermonde product in the form of `heineIntegrand`. -/
+@[expose]
 def vdm {m : ℕ} (x : Fin m → ℝ) : ℝ :=
   ∏ l, ∏ l' ∈ Finset.univ.filter (fun l' => l < l'), (x l - x l') ^ 2
 

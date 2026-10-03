@@ -16,7 +16,7 @@ while the termination flag indicates whether the machine state has halted or if 
 evaluation should continue.
 -/
 
-@[expose] public section
+public section
 /-- The state of the abstract machine: its memory, registers, program counter,
 loaded code, and termination flag. -/
 structure MState where
@@ -44,27 +44,27 @@ functions.
 namespace MState
 
   /-- The instruction at the current program counter. -/
-  def currInstruction (ms:MState) : Instr :=
+  @[expose] def currInstruction (ms:MState) : Instr :=
     ms.code.instructionMap.get (ms.pc)
 
   /-- Increment the program counter by one. -/
-  def incPc (ms:MState) : MState :=
+  @[expose] def incPc (ms:MState) : MState :=
     {ms with pc := ms.pc + 1}
 
   /-- Set the program counter to `p`. -/
-  def setPc (ms:MState) (p:UInt64) : MState :=
+  @[expose] def setPc (ms:MState) (p:UInt64) : MState :=
     {ms with pc := p}
 
   /-- Replace the register file with `r`. -/
-  def setRegister (ms:MState) (r:Registers) : MState :=
+  @[expose] def setRegister (ms:MState) (r:Registers) : MState :=
     {ms with registers := r}
 
   /-- Set register `i` to value `v`. -/
-  def addRegister (ms:MState) (i:UInt64) (v:UInt64): MState :=
+  @[expose] def addRegister (ms:MState) (i:UInt64) (v:UInt64): MState :=
     {ms with registers := (i ↦ v; ms.registers)}
 
   /-- Read the value of register `i`. -/
-  def getRegisterAt (ms:MState) (i:UInt64) : UInt64 :=
+  @[expose] def getRegisterAt (ms:MState) (i:UInt64) : UInt64 :=
     ms.registers.get (i)
 
   /-- Replace the memory with `m`. -/
@@ -72,11 +72,11 @@ namespace MState
     {ms with memory := m}
 
   /-- Set memory address `i` to value `v`. -/
-  def addMemory (ms:MState) (i:UInt64) (v:UInt64) : MState :=
+  @[expose] def addMemory (ms:MState) (i:UInt64) (v:UInt64) : MState :=
     {ms with memory := (i ↦ v; ms.memory)}
 
   /-- Read the value at memory address `i`. -/
-  def getMemoryAt (ms:MState) (i:UInt64) : UInt64 :=
+  @[expose] def getMemoryAt (ms:MState) (i:UInt64) : UInt64 :=
     ms.memory.get (i)
 
   /-- Replace the instruction map of the loaded code. -/
@@ -92,11 +92,11 @@ namespace MState
     {ms with code.labels := l}
 
   /-- Set the termination flag. -/
-  def setTerminated (ms:MState) (bool:Bool) : MState :=
+  @[expose] def setTerminated (ms:MState) (bool:Bool) : MState :=
     {ms with terminated := bool}
 
   /-- Look up the target index of label `s`, if present. -/
-  def getLabelAt (ms:MState) (s:String) : Option UInt64 :=
+  @[expose] def getLabelAt (ms:MState) (s:String) : Option UInt64 :=
     ms.code.labels.get s
 
   /-- Build a fresh machine state running the code `c`. -/
@@ -107,7 +107,7 @@ namespace MState
   This creates a Machine state with the pointer which the label [s] points to.
   If there is no label [s] in code.labels, terminated is set to true.
   -/
-  def jump (ms:MState) (s:String) : MState :=
+  @[expose] def jump (ms:MState) (s:String) : MState :=
     match ms.code.labels.get s with
     | some i => {ms with pc := i}
     | none => {ms with terminated := true}

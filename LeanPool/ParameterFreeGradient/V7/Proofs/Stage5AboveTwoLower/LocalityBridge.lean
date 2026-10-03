@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.LowerBoundStatements
 Neighborhood equality of smooth objective values determines the complete exact oracle pair.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLower
 
@@ -44,6 +44,7 @@ convolution: equality of the original objectives on the closed smoothing ball
 must make the two smoothed value functions equal on a neighbourhood of the
 centre.  The strict boundary inequality of the kernel is what supplies the
 required interior slack. -/
+@[expose]
 def LocalSmoothingNeighborhoodStability (kernel : SmoothingKernelData p d) : Prop :=
   ∀ (chi : ℝ), 0 < chi → ∀ ell₁ ell₂ : Point d → ℝ,
     O3.IsConvexObjective ell₁ → IsOneLipschitz p ell₁ →
@@ -54,6 +55,7 @@ def LocalSmoothingNeighborhoodStability (kernel : SmoothingKernelData p d) : Pro
 
 /-- Smoothing a convex one-Lipschitz objective produces an oracle with the exact coordinate
 gradient. -/
+@[expose]
 def SmoothingCoordinateGradientCore (kernel : SmoothingKernelData p d) : Prop :=
   ∀ (chi : ℝ), 0 < chi → ∀ ell : Point d → ℝ,
     O3.IsConvexObjective ell → IsOneLipschitz p ell →

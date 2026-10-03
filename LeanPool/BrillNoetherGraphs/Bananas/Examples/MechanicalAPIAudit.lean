@@ -18,7 +18,7 @@ library.  It records the strongest reductions available from the current API;
 the remaining hypotheses are the graph-specific arithmetic/counting lemmas.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

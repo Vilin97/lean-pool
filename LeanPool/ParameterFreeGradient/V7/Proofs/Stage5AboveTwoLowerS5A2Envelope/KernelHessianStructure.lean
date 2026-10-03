@@ -13,7 +13,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
 Symmetry, positivity, and Cauchy-Schwarz estimates for the kernel Hessian.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 

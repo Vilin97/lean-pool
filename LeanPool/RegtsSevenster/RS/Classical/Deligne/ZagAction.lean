@@ -17,7 +17,7 @@ both carriers on the left and projecting is multiplying the
 scalars and acting on the projected pair.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

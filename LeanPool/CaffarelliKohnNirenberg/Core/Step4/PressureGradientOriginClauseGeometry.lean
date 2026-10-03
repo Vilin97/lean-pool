@@ -28,7 +28,7 @@ transfer: cell bounds for the gradient *restricted to the backward carrier*
 give the Morrey cell output the estimate consumes.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal

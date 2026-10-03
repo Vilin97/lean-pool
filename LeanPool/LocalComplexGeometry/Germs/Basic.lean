@@ -22,7 +22,7 @@ the same `Filter.Germ` model and `AnalyticAt` predicate as the pinned WPT
 project.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -40,7 +40,7 @@ abbrev FunctionGerm (n : ℕ) :=
   Filter.Germ (𝓝 (0 : ComplexEuclidean n)) ℂ
 
 /-- Function germs which have a representative analytic at the origin. -/
-def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
+@[expose] def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
   carrier := {φ | ∃ f : ComplexEuclidean n → ℂ,
     AnalyticAt ℂ f 0 ∧ (f : FunctionGerm n) = φ}
   zero_mem' := ⟨0, analyticAt_const, rfl⟩
@@ -59,7 +59,7 @@ def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
 abbrev HolomorphicGerm (n : ℕ) := holomorphicGermSubring n
 
 /-- Pass from an analytic representative to its holomorphic germ. -/
-def HolomorphicGerm.ofFunction {n : ℕ} (f : ComplexEuclidean n → ℂ)
+@[expose] def HolomorphicGerm.ofFunction {n : ℕ} (f : ComplexEuclidean n → ℂ)
     (hf : AnalyticAt ℂ f 0) : HolomorphicGerm n :=
   ⟨(f : FunctionGerm n), ⟨f, hf, rfl⟩⟩
 
@@ -76,7 +76,7 @@ theorem HolomorphicGerm.exists_rep {n : ℕ} (φ : HolomorphicGerm n) :
   φ.property
 
 /-- Evaluation at the origin, as a ring homomorphism. -/
-def evalAtOriginHom (n : ℕ) : HolomorphicGerm n →+* ℂ :=
+@[expose] def evalAtOriginHom (n : ℕ) : HolomorphicGerm n →+* ℂ :=
   (Filter.Germ.valueRingHom : FunctionGerm n →+* ℂ).comp
     (holomorphicGermSubring n).subtype
 

@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Basic -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -25,28 +25,29 @@ variable {V : Type*} [ORingStruc V] [V ⊧ₘ* 𝐈Sg1]
 variable {L : Arith.Language V} {pL : LDef} [Arith.Language.Defined L pL]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqRel (k r v : V) : V := ⟪0, k, r, v⟫ + 1
+@[expose] def qqRel (k r v : V) : V := ⟪0, k, r, v⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def qqNRel (k r v : V) : V := ⟪1, k, r, v⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqVerum : V := ⟪2, 0⟫ + 1
+@[expose] def qqVerum : V := ⟪2, 0⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqFalsum : V := ⟪3, 0⟫ + 1
+@[expose] def qqFalsum : V := ⟪3, 0⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqAnd (p q : V) : V := ⟪4, p, q⟫ + 1
+@[expose] def qqAnd (p q : V) : V := ⟪4, p, q⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqOr (p q : V) : V := ⟪5, p, q⟫ + 1
+@[expose] def qqOr (p q : V) : V := ⟪5, p, q⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqAll (p : V) : V := ⟪6, p⟫ + 1
+@[expose] def qqAll (p : V) : V := ⟪6, p⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qqEx (p : V) : V := ⟪7, p⟫ + 1
+@[expose] def qqEx (p : V) : V := ⟪7, p⟫ + 1
 
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped prefix:max "^rel " => qqRel
@@ -1167,6 +1168,7 @@ lemma exists_unique_all (p : V) :
   by_cases hp : L.IsUFormula p <;> simp [hp, exists_unique]
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def result (p : V) : V := Classical.choose! (c.exists_unique_all param p)
 
 lemma result_prop {p : V} (hp : L.IsUFormula p) : c.Graph param p (c.result param p) :=

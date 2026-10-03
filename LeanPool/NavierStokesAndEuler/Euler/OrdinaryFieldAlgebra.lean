@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Genuine smooth L² sums, scalar products, and ordinary advection. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -31,7 +31,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Sum field, bundling `field`, `smooth`, `integrable`, `have` and the required compatibility
 proofs. -/
-def sumField {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) : SmoothL2Field V where
+@[expose] def sumField {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) : SmoothL2Field V where
   field x := ∑ i ∈ I, (A i).field x
   smooth := ContDiff.sum (fun i _ => (A i).smooth)
   integrable n := by
@@ -41,7 +41,8 @@ def sumField {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) : SmoothL
       (iteratedFDeriv_fun_sum_apply (fun i _ => (A i).smooth.contDiffAt.of_le (by simp))).symm))
 
 @[simp] theorem sumField_field {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) (x : Space) :
-    (sumField I A).field x = ∑ i ∈ I, (A i).field x := rfl
+    (sumField I A).field x = ∑ i ∈ I, (A i).field x := by
+  rfl
 
 theorem toLp_sumField {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V) :
     (sumField I A).toLp = ∑ i ∈ I, (A i).toLp := by
@@ -65,13 +66,15 @@ theorem wordField_sum {ι : Type*} (I : Finset ι) (A : ι → SmoothL2Field V)
   simp only [_root_.sum_apply]
 
 /-- Field neg, given by `mapField (-(ContinuousLinearMap.id ℝ V)) A`. -/
+@[expose]
 def fieldNeg (A : SmoothL2Field V) : SmoothL2Field V := mapField (-(ContinuousLinearMap.id ℝ V)) A
 
 @[simp] theorem fieldNeg_field (A : SmoothL2Field V) (x : Space) :
-    (fieldNeg A).field x = -A.field x := rfl
+    (fieldNeg A).field x = -A.field x := by
+  rfl
 
 /-- Field sub, given by `addField A (fieldNeg B)`. -/
-def fieldSub (A B : SmoothL2Field V) : SmoothL2Field V := addField A (fieldNeg B)
+@[expose] def fieldSub (A B : SmoothL2Field V) : SmoothL2Field V := addField A (fieldNeg B)
 
 @[simp] theorem fieldSub_field (A B : SmoothL2Field V) (x : Space) :
     (fieldSub A B).field x = A.field x-B.field x := by
@@ -129,6 +132,7 @@ theorem scalarProduct_norm_right (A : SmoothL2Field ℝ) (B : SmoothL2Field V)
   exact mul_le_mul_of_nonneg_right (hM x) (norm_nonneg _)
 
 /-- Coordinate product, given by `scalarProduct (mapField (EuclideanSpace.proj i) A) B`. -/
+@[expose]
 def coordinateProduct (i : Fin 3) (A : SmoothL2Field Space) (B : SmoothL2Field V) : SmoothL2Field V
     :=
   scalarProduct (mapField (EuclideanSpace.proj i) A) B
@@ -141,6 +145,7 @@ def coordinateProduct (i : Fin 3) (A : SmoothL2Field Space) (B : SmoothL2Field V
 
 /-- Advection field, given by `sumField univ (fun i : Fin 3 => coordinateProduct i A
 (B.directionalField (axis i)))`. -/
+@[expose]
 def advectionField (A : SmoothL2Field Space) (B : SmoothL2Field V) : SmoothL2Field V :=
   sumField univ (fun i : Fin 3 => coordinateProduct i A (B.directionalField (axis i)))
 

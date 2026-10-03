@@ -21,7 +21,7 @@ Equation (10), already proved for that solution, provides its genuine time
 derivative; the bounded H¹ reconstruction recovers the actual history path.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,7 +53,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
 
 /-- The actual derivative of the fixed terminal-coordinate solution. -/
-def coordinateSlope : U →L[ℝ] TimeLp T U :=
+@[expose] def coordinateSlope : U →L[ℝ] TimeLp T U :=
   (constantFieldOperator T hT).comp (T⁻¹ • ContinuousLinearMap.id ℝ U) -
     (zeroTraceDerivatives (U := U) T hT).subtypeL.comp
       (fixedEndpointCorrection T hT Q Q₁ H c hc hQ hd K hK hH hsmall (affineTrial T hT Q Q₁))
@@ -103,17 +103,17 @@ theorem coordinateSlope_ae (hTpos : 0 < T) (ξ : U) :
       (affineTrial_tangent T hT Q Q₁ hd m hm) ξ t)
 
 /-- The literal right side of equation (10), in Bochner L². -/
-def coordinateAcceleration : U →L[ℝ] TimeLp T U :=
+@[expose] def coordinateAcceleration : U →L[ℝ] TimeLp T U :=
   (timeMultiplier T hT (generator T Q Q₁ c hc hQ)).comp
     (coordinateSlope T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 /-- Bounded time reconstruction of the actual coordinate history. -/
-def continuousCoordinateVelocity : U →L[ℝ] C(Icc (0 : ℝ) T, U) :=
+@[expose] def continuousCoordinateVelocity : U →L[ℝ] C(Icc (0 : ℝ) T, U) :=
   (valuePart T hT).comp (coordinateSlope T hT Q Q₁ H c hc hQ hd K hK hH hsmall) +
     (derivativePart T hT).comp (coordinateAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 /-- The source history velocity `Q ξ_t` with the fixed terminal coordinate. -/
-def historyVelocity : U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
+@[expose] def historyVelocity : U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
   (multiplier Q).comp (continuousCoordinateVelocity T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
 
 section Regularity

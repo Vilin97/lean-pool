@@ -23,7 +23,7 @@ maximal unwinnable divisors:
 - Every maximal unwinnable divisor has degree $g - 1$ (`maximal_unwinnable_deg`).
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 

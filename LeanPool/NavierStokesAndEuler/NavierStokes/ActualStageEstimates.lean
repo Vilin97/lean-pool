@@ -18,7 +18,7 @@ assembled into the finite-stage obligations of the mixed diagonal theorem.
 No estimate of the output physical residual is an input.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,6 +35,7 @@ open scoped ContDiff Topology BigOperators
 
 /-- Add an unused tag to native source indices. The actual copies, their
 carriers, and their physical fields are unchanged. -/
+@[expose]
 noncomputable def taggedSource {h : ℝ} {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     {I K J T : Type*} (tag : T) (W : PhysicalStageBounds.WaveData h D I K J) :
     PhysicalStageBounds.WaveData h D (T × I) K J where
@@ -90,7 +91,7 @@ noncomputable def taggedSource {h : ℝ} {D : Type} [NormedAddCommGroup D] [Norm
 /-! ## One fixed native iteration -/
 
 /-- Step data, constructed using `CorrectionAnalyticStep.StepData`. -/
-noncomputable def StepData (B N0 j : ℕ)
+@[expose] noncomputable def StepData (B N0 j : ℕ)
     (H : ActualCyclePreservation.Invariant (ActualIterationLedger.sigma j)
       (ActualCyclePreservation.state B N0 j)) : Type :=
   CorrectionAnalyticStep.StepData ActualInitialization.geometry h (CommonWindow.index h)
@@ -157,6 +158,7 @@ theorem nativePressure_eq_ledger (j : ℕ) :
 variable {B N0 N : ℕ}
 
 /-- Temporal input, given by `actualCycleTemporalInput M j hN (R.result j).afterSignedAxial`. -/
+@[expose]
 noncomputable def temporalInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
@@ -164,6 +166,7 @@ noncomputable def temporalInput (R : RunData B N0)
   actualCycleTemporalInput M j hN (R.result j).afterSignedAxial
 
 /-- Rank input, given by `actualCycleRankInput M j hN (R.rank_class j)`. -/
+@[expose]
 noncomputable def rankInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
@@ -172,6 +175,7 @@ noncomputable def rankInput (R : RunData B N0)
 
 /-- Angular input, given by `actualCycleAngularInput M j hN (R.result j).temporal (R.result
 j).rank`. -/
+@[expose]
 noncomputable def angularInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
@@ -180,6 +184,7 @@ noncomputable def angularInput (R : RunData B N0)
 
 /-- Pressure input, given by `actualCyclePressureInput M j hN (R.result j).pressure /-! ##
 Actual wave records and their native exponents -/`. -/
+@[expose]
 noncomputable def pressureInput (R : RunData B N0)
     (M : ActualMeanPhysicalData.InitialCycleInput B N0 N
       (fun _ => ActualCycleParameters.fixedParameters B N0))
@@ -229,7 +234,7 @@ variable {DP DS : Type} [NormedAddCommGroup DP] [NormedSpace ℝ DP]
 
 /-- Cycle inputs, bundling `particularPotential`, `signedPotential`, `particularPressure`,
 `signedPressure` and the required compatibility proofs. -/
-noncomputable def cycleInputs : CycleInputs h DP (Fin 3 × IP) KP DS (Fin 3 × IS) KS where
+@[expose] noncomputable def cycleInputs : CycleInputs h DP (Fin 3 × IP) KP DS (Fin 3 × IS) KS where
   particularPotential := W.particularPotential
   signedPotential := W.signedPotential
   particularPressure j := taggedSource (0 : Fin 3) (W.particularPressure j)
@@ -291,7 +296,7 @@ end CycleInputs
 
 /-- The initialized background loss is fixed before the number of
 correction stages is chosen. -/
-noncomputable def backgroundLoss (waveAlpha waveShift : ℝ) : ℕ → ℝ :=
+@[expose] noncomputable def backgroundLoss (waveAlpha waveShift : ℝ) : ℕ → ℝ :=
   MixedFiniteBackground.initialBackgroundLoss
     (InitializedPhysicalBackground.initialLoss h waveAlpha waveShift
       (1 - ChartScales.kappa) (9 / 10))

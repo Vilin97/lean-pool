@@ -70,7 +70,7 @@ orientation ledger extends `ConfigurationThreeChain.ChainLedger` by the one fact
 proofs below need that it does not carry.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.ConfigurationBananaTail
 

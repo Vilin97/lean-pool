@@ -18,7 +18,7 @@ State increment.  A fixed containing shell is used only to estimate the
 integral; the final class retains the original moving profile weight.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.RankStateBounds
@@ -114,6 +114,7 @@ structure NormalizedParameters (coord A B : ℝ) (r : CorrectionState.RankData P
 
 /-- Normalized data, bundling `lambda`, `inner`, `outer`, `length` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def normalizedData (coord A B lam a b : ℝ) : CorrectionState.RankData Plane where
   lambda := lam
   inner := a

@@ -18,7 +18,7 @@ section
 
 /-! Zero angular mean of the actual transverse potential, corrector, and time derivatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -83,7 +83,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,12 +98,12 @@ namespace Data
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
 
 /-- The specified mean-zero angular primitive, applied directly to a raw field. -/
-def rawPotential (P : ℝ) (A : VectorField) : VectorField := fun z =>
+@[expose] def rawPotential (P : ℝ) (A : VectorField) : VectorField := fun z =>
   EulerPacketAngularPotential.potential P (D.normal.field (D.clamp z.1) z.2.1)
     (fun θ => A (z.1,(z.2.1,θ))) z.2.2
 
 /-- The actual slow curl in deformation coordinates; this defines a total raw-field operator. -/
-def curlCorrector (P : ℝ) (A : VectorField) : VectorField := fun z =>
+@[expose] def curlCorrector (P : ℝ) (A : VectorField) : VectorField := fun z =>
   EulerMeanBoundary.curlMatrix
     ((fderiv ℝ (fun y : LiftTangent => D.rawPotential P A (z.1,y)) z.2).comp
       ((ContinuousLinearMap.inl ℝ Space ℝ).comp (D.FInv.field (D.clamp z.1) z.2.1)))
@@ -136,7 +136,7 @@ theorem curlCorrector_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
   rw [Data.curlCorrector, Data.clamp_coe, he, coverField_fderiv, G.corrector_formula I t x θ]
 
 /-- The literal recursion operator has the already-constructed continuous L² witness. -/
-def curlCorrectorField : Field P D.T (D.curlCorrector P (G.vector I)) where
+@[expose] def curlCorrectorField : Field P D.T (D.curlCorrector P (G.vector I)) where
   path := G.correctorPath I
   orbit := G.correctorPath_orbit I
   raw_eq t x θ := (G.curlCorrector_eq I t x θ).trans ((G.correctorField I).raw_eq t x θ)

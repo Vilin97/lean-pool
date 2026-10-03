@@ -19,7 +19,7 @@ The nonlinear estimate uses exact mode solenoidality to remove the phase
 normal. Only the fixed signed harmonic ratio remains in that cancellation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -34,6 +34,7 @@ variable {D : Type} {ι : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- Uniform input classes for each fixed signed Fourier mode and physical
 component. The label and band are inside the uniform estimate. -/
+@[expose]
 noncomputable def UniformVelocity (s : StripData D) (P : ι → ℕ → D → ℝ) (α : ℝ)
     (a : ι → CorrectionState.HarmonicBlock D) : Prop :=
   ∀ i j, j ≠ 0 → UniformWaveClass s P α (fun l n x => (a l).velocity n i j x)

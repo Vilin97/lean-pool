@@ -19,7 +19,7 @@ Kummer's digit-sum formula is specialized to `Nat.centralBinom`.  The resulting
 bridge turns digit and carry estimates into divisibility statements.
 -/
 
-@[expose] public section
+public section
 
 namespace GKPCarry
 

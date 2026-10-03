@@ -15,7 +15,7 @@ The two induced graphs associated with a one-vertex cut inherit connectivity
 from the ambient graph.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -139,6 +139,7 @@ theorem graph_connected_left_of_connected
     exact heq.symm ▸ hpositive
 
 /-- The same cut with its two factors exchanged. -/
+@[expose]
 def swap : OneVertexCut K where
   left := cut.right
   right := cut.left

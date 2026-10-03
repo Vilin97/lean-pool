@@ -22,7 +22,7 @@ This file provides two Hilbert-space facts about compact operators:
 These are used downstream to turn “no eigenvalues above `ε`” into an operator-norm estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 

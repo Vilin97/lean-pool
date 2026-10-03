@@ -21,7 +21,7 @@ arguments, edge partitions by first-differing bit, etc.) lives in
 `Circ.Internal.Valiant`.
 -/
 
-@[expose] public section
+public section
 
 namespace Digraph
 
@@ -29,11 +29,13 @@ variable {V : Type*}
 
 /-- `G.IsDirectedPath p` says that `p : Fin m → V` is a directed walk
 in the digraph `G`: consecutive vertices are joined by an edge. -/
+@[expose]
 def IsDirectedPath (G : Digraph V) {m : Nat} (p : Fin m → V) : Prop :=
   ∀ i : Fin m, ∀ h : i.val + 1 < m, G.Adj (p i) (p ⟨i.val + 1, h⟩)
 
 /-- `G.IsSimplePath p` says that `p : Fin m → V` is a *simple* directed
 path: an injective directed walk. -/
+@[expose]
 def IsSimplePath (G : Digraph V) {m : Nat} (p : Fin m → V) : Prop :=
   G.IsDirectedPath p ∧ Function.Injective p
 
@@ -41,7 +43,7 @@ def IsSimplePath (G : Digraph V) {m : Nat} (p : Fin m → V) : Prop :=
 longest directed walk in it. Walks are not required to be injective,
 so cyclic graphs have `depth = 0` by the `Nat.sSup` convention on
 unbounded sets. -/
-noncomputable def depth (G : Digraph V) : Nat :=
+@[expose] noncomputable def depth (G : Digraph V) : Nat :=
   sSup { m | ∃ p : Fin m → V, G.IsDirectedPath p }
 
 /-- The directed edge set of a digraph with decidable adjacency on a
@@ -57,7 +59,7 @@ lemma mem_edgeFinset [Fintype V] [DecidableEq V] {G : Digraph V}
 
 /-- The digraph obtained from `G` by deleting a finite set of directed
 edges `F`. -/
-def deleteEdges (G : Digraph V) (F : Finset (V × V)) : Digraph V where
+@[expose] def deleteEdges (G : Digraph V) (F : Finset (V × V)) : Digraph V where
   Adj u v := G.Adj u v ∧ (u, v) ∉ F
 
 instance [DecidableEq V] (G : Digraph V) [DecidableRel G.Adj]
@@ -67,6 +69,7 @@ instance [DecidableEq V] (G : Digraph V) [DecidableRel G.Adj]
 /-- A digraph is **acyclic** when its set of directed-walk lengths is
 bounded. For finite vertex types this is equivalent to having no
 directed cycles. -/
+@[expose]
 def IsAcyclic (G : Digraph V) : Prop :=
   BddAbove { m | ∃ p : Fin m → V, G.IsDirectedPath p }
 

@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! The actual nonlinear viscous correction closes its shrinking-radius Gevrey bootstrap from the
 constructed mild equation. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

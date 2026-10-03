@@ -33,7 +33,7 @@ identities. Their propagator norm uses only the pointwise bound on that set,
 so the source's `C g(t)/g(s)` estimate is preserved exactly.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -88,13 +88,13 @@ local instance instLpSupportedEvolution11 : NormedSpace ℝ (supportedSpace (V :
     V) μ S hS) := inferInstance
 
 /-- The actual supported-space operator associated with a continuous field path. -/
-def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V))) :
+@[expose] def operatorPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V))) :
     C(Icc (0 : ℝ) T,supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V := V) μ S hS) :=
   ⟨fun t => operator μ S hS (A t), (operatorMap μ S hS).continuous.comp A.continuous⟩
 
 omit [CompleteSpace V] in
 @[simp] theorem operatorPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
-    (t : Icc (0 : ℝ) T) : operatorPath μ S hS T A t = operator μ S hS (A t) := rfl
+    (t : Icc (0 : ℝ) T) : operatorPath μ S hS T A t = operator μ S hS (A t) := by rfl
 
 /-- Actual pointwise time derivatives lift to supported-L² operator derivatives. -/
 theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
@@ -132,7 +132,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The actual pointwise homogeneous fields give a homogeneous evolution on
 the genuine supported spatial L² space. -/
-def liftEvolution : Evolution T hT (operatorPath μ S hS T B) where
+@[expose] def liftEvolution : Evolution T hT (operatorPath μ S hS T B) where
   forward := operatorPath μ S hS T Φ
   backward := operatorPath μ S hS T Ψ
   forward_backward := by
@@ -211,7 +211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -17,7 +17,7 @@ A complete Noetherian local ring is quasi-complete
 (Anderson, 2014, Theorem 3).
 -/
 
-@[expose] public section
+public section
 
 open scoped Pointwise
 

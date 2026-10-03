@@ -18,7 +18,7 @@ ind-completion this supplies the hypothesis upstairs from the one
 downstairs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

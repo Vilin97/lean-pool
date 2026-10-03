@@ -19,7 +19,7 @@ public import LeanPool.KaltonPeck.KaltonPeck.Support.FiniteCodim.StrongQuotient
 The corresponding construction from the complete finite-codimensional symplectic reduction.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.FiniteCodim
 

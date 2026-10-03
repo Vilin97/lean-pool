@@ -73,7 +73,7 @@ outer-chain lemma (`lem:outer-chain`), so that the theorem itself becomes a shor
   squares".
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph
@@ -111,16 +111,16 @@ theorem mem_frontier_closedSquare_of_snd (h1 : |z 1 - c 1| = r) (h0 : |z 0 - c 0
   mem_frontier_closedSquare.2 (by rw [max_eq_right (h1 ▸ h0), h1])
 
 /-- The north-east corner of the square of radius `r` about `c`. -/
-def sqNE (c : Plane) (r : ℝ) : Plane := mk (c 0 + r) (c 1 + r)
+@[expose] def sqNE (c : Plane) (r : ℝ) : Plane := mk (c 0 + r) (c 1 + r)
 
 /-- The north-west corner. -/
-def sqNW (c : Plane) (r : ℝ) : Plane := mk (c 0 - r) (c 1 + r)
+@[expose] def sqNW (c : Plane) (r : ℝ) : Plane := mk (c 0 - r) (c 1 + r)
 
 /-- The south-west corner. -/
-def sqSW (c : Plane) (r : ℝ) : Plane := mk (c 0 - r) (c 1 - r)
+@[expose] def sqSW (c : Plane) (r : ℝ) : Plane := mk (c 0 - r) (c 1 - r)
 
 /-- The south-east corner. -/
-def sqSE (c : Plane) (r : ℝ) : Plane := mk (c 0 + r) (c 1 - r)
+@[expose] def sqSE (c : Plane) (r : ℝ) : Plane := mk (c 0 + r) (c 1 - r)
 
 @[simp] theorem sqNE_zero : sqNE c r 0 = c 0 + r := rfl
 @[simp] theorem sqNE_one : sqNE c r 1 = c 1 + r := rfl
@@ -208,7 +208,7 @@ variable {c : Plane} {r : ℝ}
 /-- **The boundary of the axis-parallel square of `ℓ^∞`-radius `r` about `c`, as a closed
 polygon.**This is the presentation the overlay and parity machinery consume;
 `Schoenflies.modelCurve` is the case `c = 0`, `r = 1` but only as a set. -/
-def squarePolygon (c : Plane) {r : ℝ} (hr : 0 < r) : ClosedPolygon 1 where
+@[expose] def squarePolygon (c : Plane) {r : ℝ} (hr : 0 < r) : ClosedPolygon 1 where
   vertex := ![sqNE c r, sqNW c r, sqSW c r, sqSE c r]
   vertex_inj := by
     -- Any two of the four corners differ in a coordinate; `r > 0` is what makes them differ.
@@ -584,7 +584,7 @@ common vertices; see `exists_two_common_vertices`. -/
 
 /-- The four sides of the square of `ℓ^∞`-radius `r` about `c`, as `Piece`s, in the same cyclic
 order as `squarePolygon`. -/
-def squarePieces (c : Plane) (r : ℝ) : List Piece :=
+@[expose] def squarePieces (c : Plane) (r : ℝ) : List Piece :=
   [(sqNE c r, sqNW c r), (sqNW c r, sqSW c r), (sqSW c r, sqSE c r), (sqSE c r, sqNE c r)]
 
 theorem cover_squarePieces (c : Plane) (hr : 0 ≤ r) :
@@ -1004,7 +1004,7 @@ theorem exists_mesh {α : ℝ → Plane} (hα : ContinuousOn α I) {ε : ℝ} (h
 /-! ## Part 4: nonadjacent subarcs are at positive distance -/
 
 /-- The `i`-th subarc of the even partition of an arc into `n` pieces. -/
-def subarcCell (α : ℝ → Plane) (n i : ℕ) : Set Plane :=
+@[expose] def subarcCell (α : ℝ → Plane) (n i : ℕ) : Set Plane :=
   α '' Icc (sample n i) (sample n (i + 1))
 
 theorem isCompact_subarcCell {α : ℝ → Plane} (hα : ContinuousOn α I) {n i : ℕ}

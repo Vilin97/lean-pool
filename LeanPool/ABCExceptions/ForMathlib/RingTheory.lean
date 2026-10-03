@@ -15,4 +15,4 @@ Import-only index for ring-theoretic support files used by the ABC exceptions
 development.
 -/
 
-@[expose] public section
+public section

@@ -12,7 +12,7 @@ public import LeanPool.ScottishBook155.ProtectedChain
 # Reindexing coherent protected chains
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -25,6 +25,7 @@ variable {r L : ℝ}
 
 /-- The canonical inclusion of an ordered type into the same type with a new
 top element. -/
+@[expose]
 noncomputable def withTopCoeOrderEmbedding {ι : Type u} [LinearOrder ι] :
     ι ↪o WithTop ι where
   toFun := fun i => i
@@ -32,6 +33,7 @@ noncomputable def withTopCoeOrderEmbedding {ι : Type u} [LinearOrder ι] :
   map_rel_iff' := by intro i j; simp
 
 /-- Pull a protected chain back along an order embedding. -/
+@[expose]
 noncomputable def reindex (C : ProtectedChain (ι := ι) r L)
     (e : κ ↪o ι) : ProtectedChain (ι := κ) r L where
   stage k := C.stage (e k)

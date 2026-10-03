@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.Hilbert.Soundness
 
 /-! # Geach -/
 
-@[expose] public section
+public section
 
 
 namespace LO

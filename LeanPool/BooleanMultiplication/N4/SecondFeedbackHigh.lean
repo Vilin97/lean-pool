@@ -16,7 +16,7 @@ supported on `K₀` and at most two exterior directions.  Jet separation sends
 the resulting target back to the feedback state.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

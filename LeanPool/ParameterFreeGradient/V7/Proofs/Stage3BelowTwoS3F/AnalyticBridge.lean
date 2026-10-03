@@ -13,7 +13,7 @@ public import Mathlib.Topology.MetricSpace.HausdorffDistance
 The completed below-two phases imply the requested physical terminal-gradient bound.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage3BelowTwoS3F
 

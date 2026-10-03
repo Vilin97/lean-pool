@@ -37,4 +37,4 @@ Tags: number-theory, central-binomial-coefficients, digit-representations, erdos
 MSC: 11A63, 11B65
 -/
 
-@[expose] public section
+public section

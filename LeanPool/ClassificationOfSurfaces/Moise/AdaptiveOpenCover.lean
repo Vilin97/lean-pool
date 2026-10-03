@@ -17,7 +17,7 @@ one prescribed control neighborhood.  Quantitative chart approximation can there
 the neighborhoods first and reuse the conforming triangulation unchanged.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -43,7 +43,7 @@ namespace AdaptiveOpenCover
 variable (C : K.AdaptiveOpenCover U)
 
 /-- A level face is cover-safe when its complete carrier lies in one cover member. -/
-@[reducible]
+@[reducible, expose]
 def safety : K.AdaptiveSafety U where
   safe t := ∃ i, K.levelFaceCarrier t ⊆ C.set i
   carrier_subset := by
@@ -97,21 +97,21 @@ theorem safety_isAdmissible :
 noncomputable abbrev locallyFiniteTriangleComplex (hU : IsOpen U) :
     LocallyFiniteTriangleComplex U := by
   letI : K.AdaptiveSafety U := C.safety
-  letI : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  letI : @AdaptiveSafety.IsAdmissible K U C.safety := C.safety_isAdmissible
   exact K.adaptiveLocallyFiniteTriangleComplex U hU
 
 /-- The cover-subordinate adaptive complex covers all of `U`. -/
 theorem locallyFiniteTriangleComplex_support (hU : IsOpen U) :
     (locallyFiniteTriangleComplex K U C hU).support = Set.univ := by
   let : K.AdaptiveSafety U := C.safety
-  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : @AdaptiveSafety.IsAdmissible K U C.safety := C.safety_isAdmissible
   exact K.adaptiveLocallyFiniteTriangleComplex_support U hU
 
 /-- Distinct faces of the cover-subordinate adaptive complex carry distinct vertex triples. -/
 theorem faceVertices_injective (hU : IsOpen U) :
     Function.Injective (locallyFiniteTriangleComplex K U C hU).faceVertices := by
   let : K.AdaptiveSafety U := C.safety
-  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : @AdaptiveSafety.IsAdmissible K U C.safety := C.safety_isAdmissible
   exact K.adaptiveGlobalFanFaceVertices_injective U hU
 
 /-- Every adaptive tile selected by `C` lies in one member of the cover. -/
@@ -129,7 +129,7 @@ theorem exists_cover_set_of_complex_face (hU : IsOpen U)
     ∃ i, Subtype.val ''
         ((locallyFiniteTriangleComplex K U C hU).faceCarrier f) ⊆ C.set i := by
   let : K.AdaptiveSafety U := C.safety
-  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : @AdaptiveSafety.IsAdmissible K U C.safety := C.safety_isAdmissible
   obtain ⟨i, hi⟩ := exists_cover_set_of_adaptiveFace K U C f.1
   refine ⟨i, ?_⟩
   rintro p ⟨q, hq, rfl⟩

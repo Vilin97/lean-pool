@@ -33,7 +33,7 @@ No Markov, strong Markov, Feller, equivariance, annealed or killed statement is 
 of those is a separate transport through the fibre identity.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -52,6 +52,7 @@ variable {Theta alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 /-- Fibrewise conservativity of a measurably parameterized sub-Markov kernel semigroup: every
 parameter slice is a conservative sub-Markov kernel semigroup, so that no mass is lost at any
 time from any state for any parameter. -/
+@[expose]
 def IsConservative (P : ParameterizedSubMarkovKernelSemigroup Theta alpha) : Prop :=
   ∀ theta, (P.toSubMarkovKernelSemigroup theta).IsConservative
 
@@ -65,6 +66,7 @@ variable {Theta alpha : Type*} [MeasurableSpace Theta] [PseudoEMetricSpace alpha
 /-- Fibrewise Kolmogorov moment bounds with parameter-independent constants: every parameter slice
 satisfies the intrinsic displacement estimate `∫ edist z y ^ p ∂(P theta h y) ≤ M * h ^ q`, with
 the same exponents `p`, `q` and the same constant `M` for every parameter. -/
+@[expose]
 def HasKolmogorovMoments (P : ParameterizedSubMarkovKernelSemigroup Theta alpha)
     (p q : ℝ) (M : ℝ≥0) : Prop :=
   ∀ theta, (P.toSubMarkovKernelSemigroup theta).HasKolmogorovMoments p q M
@@ -141,6 +143,7 @@ variable (P : ParameterizedSubMarkovKernelSemigroup Theta alpha) (hP : P.IsConse
 that parameter's semigroup satisfies a Kolmogorov--Chentsov moment bound with an admissible
 Hölder exponent at every starting point.  The exponents and constants may depend on the parameter
 and on the starting point. -/
+@[expose]
 def KolmogorovRegular : Prop :=
   ∀ theta, (P.toSubMarkovKernelSemigroup theta).KolmogorovRegular (hP theta)
 
@@ -157,6 +160,7 @@ used by the unparameterized `continuousProcess`.
 
 Joint measurability in the parameter and the starting state is carried by the kernel structure.
 Under `P.KolmogorovRegular hP` the choice of fallback is immaterial, by `continuousProcess_eq`. -/
+@[expose]
 def IsConservative.continuousProcess : Kernel (Theta × alpha) (ContinuousPath alpha) :=
   Kernel.toContinuousPathKernel
     (P.parameterizedDenseTimeTrajectory hP DenseTime.enumeration

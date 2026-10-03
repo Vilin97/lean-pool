@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Geometry
 Positivity of the constants and scales used by the above-two phases.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage4AboveTwo
 

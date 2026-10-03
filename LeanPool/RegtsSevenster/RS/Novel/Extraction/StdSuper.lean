@@ -26,7 +26,7 @@ the accompanying paper writes `ξ i` and `η i` for the same
 vectors, `f` being reserved there for the graph parameter.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,30 +34,36 @@ open scoped BigOperators
 
 /-- The standard super vector space with even dimension `k` and
 odd dimension `2ℓ`. -/
+@[expose]
 noncomputable def stdSuperPair (k ℓ : ℕ) : SuperVect where
   even := Fin k → ℂ
   odd := Fin (2 * ℓ) → ℂ
 
 /-- The standard even basis vectors `e i`. -/
+@[expose]
 noncomputable def stdE (k : ℕ) (i : Fin k) : Fin k → ℂ :=
   Pi.single i 1
 
 /-- The standard odd basis vectors `f i`. -/
+@[expose]
 noncomputable def stdF (ℓ : ℕ) (i : Fin (2 * ℓ)) : Fin (2 * ℓ) → ℂ :=
   Pi.single i 1
 
 /-- The even part of the standard form: the orthonormal pairing. -/
+@[expose]
 noncomputable def stdFormEven (k : ℕ) (x y : Fin k → ℂ) : ℂ :=
   ∑ i, x i * y i
 
 /-- The odd part of the standard form: the antisymmetric pairing
 with `b (f m) (f (m + ℓ)) = 1` for `m ≤ ℓ` and all other basis
 values forced by antisymmetry. -/
+@[expose]
 noncomputable def stdFormOdd (ℓ : ℕ) (x y : Fin (2 * ℓ) → ℂ) : ℂ :=
   ∑ i, -(oddPartnerSign ℓ i : ℂ) * x i * y (oddPartner ℓ i)
 
 /-- The Regts–Sevenster dual odd vectors: `g i = −f (i + ℓ)` for
 `i < ℓ` and `g i = f (i − ℓ)` otherwise. -/
+@[expose]
 noncomputable def stdG (ℓ : ℕ) (i : Fin (2 * ℓ)) : Fin (2 * ℓ) → ℂ :=
   (oddPartnerSign ℓ i : ℂ) • stdF ℓ (oddPartner ℓ i)
 

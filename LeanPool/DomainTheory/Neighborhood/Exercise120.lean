@@ -39,7 +39,7 @@ unlike Def 1.7's
 `principal`. Everything is `[propext, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -78,6 +78,7 @@ theorem upSet_injective {X Y : Set α} (hX : V.mem X) (hY : V.mem Y)
 master is `↑Δ`; the intersection law uses the consistency witness `Z ∈ ↑Z ⊆ ↑X ∩
 ↑Y` to get
 `Z ⊆ X ∩ Y`, hence `X ∩ Y ∈ 𝒟` and `↑X ∩ ↑Y = ↑(X∩Y)`. -/
+@[expose]
 def powerSystem : NeighborhoodSystem (Set α) where
   mem S := ∃ X, V.mem X ∧ S = V.upSet X
   master := V.upSet V.master

@@ -28,7 +28,7 @@ Leaves L1–L4 (symmetry, positivity, von Neumann boundedness, section smoothnes
 proved by Aristotle (project c61ad094, 2026-08-30); `inducedMetric` packages them.
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Bornology Metric
@@ -46,6 +46,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
   {E' : Type*} [NormedAddCommGroup E'] [InnerProductSpace ℝ E'] [FiniteDimensional ℝ E']
 
 /-- The induced bilinear form at `x`, on the model space `E`: `(v, w) ↦ ⟪du_x v, du_x w⟫`. -/
+@[expose]
 def inducedForm (u : M → E') (x : M) : E →L[ℝ] E →L[ℝ] ℝ :=
   (innerBilin E').bilinearComp (diff (I := I) u x) (diff (I := I) u x)
 
@@ -149,6 +150,7 @@ theorem inducedForm_contMDiff {u : M → E'} (hu : ContMDiff I 𝓘(ℝ, E') ∞
   rfl
 
 /-- The induced Riemannian metric of a smooth immersion `u : M → E'`. -/
+@[expose]
 def inducedMetric {u : M → E'} (hu : ContMDiff I 𝓘(ℝ, E') ∞ u)
     (hinj : ∀ x, Injective (mfderiv I 𝓘(ℝ, E') u x)) :
     ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _) where

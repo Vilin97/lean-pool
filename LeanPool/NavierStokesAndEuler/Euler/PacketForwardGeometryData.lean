@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryDynamics
 the actual homogeneous forward solution with a fixed initial coordinate;
 no stationary-history solve is used in this stage. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   {D : Data U}
 
 /-- Forward error, given by `P.error+‖D.M.derivative.field‖*radius`. -/
-def ParentFrame.forwardError (P : ParentFrame D 0) (radius : ℝ) : ℝ :=
+@[expose] def ParentFrame.forwardError (P : ParentFrame D 0) (radius : ℝ) : ℝ :=
   P.error+‖D.M.derivative.field‖*radius
 
 /-- Forward guards data, collecting `radius`, `y`, `δ`, `hchild`, `radius_nonneg`,
@@ -117,6 +117,7 @@ variable [CompleteSpace U]
 
 /-- Source velocity, given by `EulerPacketForwardFactorization.uncutVelocity D
 G.initialCoordinate t x`. -/
+@[expose]
 def sourceVelocity (x : Space) (t : ℝ) : Space :=
   EulerPacketForwardFactorization.uncutVelocity D G.initialCoordinate t x
 

@@ -57,7 +57,7 @@ therefore carried as a hypothesis, as in
 `RS.Classical.Deligne.SuperRealize`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

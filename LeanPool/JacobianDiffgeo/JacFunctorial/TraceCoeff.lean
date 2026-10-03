@@ -35,7 +35,7 @@ proves the repair is genuinely analytic across `0`:
   `ℂ`-linearity in `h`, including at the repaired point `0` (by uniqueness of limits).
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set
 open RS.FormTrace RS.MTrace

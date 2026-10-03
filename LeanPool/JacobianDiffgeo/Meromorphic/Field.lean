@@ -21,7 +21,7 @@ Unit: meromorphic-and-divisors (`docs/design/meromorphic-and-divisors.md` §4.5)
   zero class (`Mero.ord_eq_top_iff`) and gives `mul_inv_cancel₀`, assembling `Field (ℳ X)`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set Filter Topology

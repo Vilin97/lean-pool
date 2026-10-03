@@ -18,7 +18,7 @@ only local suitable-solution data. Its support and Morrey bound follow
 from the cutoff support, its derivative bound, and initial velocity norms.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal Topology
@@ -31,6 +31,7 @@ noncomputable section
 namespace CKN.Core.Endgame
 
 /-- A scalar component of the differentiated cutoff source in the past. -/
+@[expose]
 def causalDerivativeComponent (φ : Vec3 × ℝ → ℝ) (u : ParabolicPoint → Vec3)
     (j i : Fin 3) : ParabolicPoint → ℝ :=
   {z : ParabolicPoint | z.2 ≤ 0}.indicator

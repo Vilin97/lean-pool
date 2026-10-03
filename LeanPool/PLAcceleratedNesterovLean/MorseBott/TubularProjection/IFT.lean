@@ -17,7 +17,7 @@ IFT-based proof that the nearest-point projection is C¹ at every point of
 the submanifold S.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric NNReal
 

@@ -16,7 +16,7 @@ import Mathlib.Tactic.ArithMult.Init
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -49,7 +49,7 @@ theorem mk_traceDualIdealUnit
 
 open Classical in
 /-- A trace dual class equiv used in the Odlyzko-bound argument. -/
-noncomputable def traceDualClassEquiv :
+@[expose] noncomputable def traceDualClassEquiv :
     ClassGroup (𝓞 K) ≃ ClassGroup (𝓞 K) where
   toFun C := codifferentClass K * C⁻¹
   invFun C := codifferentClass K * C⁻¹
@@ -60,7 +60,7 @@ noncomputable def traceDualClassEquiv :
 
 open Classical in
 /-- A class group inv equiv used in the Odlyzko-bound argument. -/
-noncomputable def classGroupInvEquiv :
+@[expose] noncomputable def classGroupInvEquiv :
     ClassGroup (𝓞 K) ≃ ClassGroup (𝓞 K) where
   toFun C := C⁻¹
   invFun C := C⁻¹
@@ -69,7 +69,7 @@ noncomputable def classGroupInvEquiv :
 
 open Classical in
 /-- A trace dual inverse class equiv used in the Odlyzko-bound argument. -/
-noncomputable def traceDualInverseClassEquiv :
+@[expose] noncomputable def traceDualInverseClassEquiv :
     ClassGroup (𝓞 K) ≃ ClassGroup (𝓞 K) :=
   (classGroupInvEquiv K).trans
     ((traceDualClassEquiv K).trans (classGroupInvEquiv K))

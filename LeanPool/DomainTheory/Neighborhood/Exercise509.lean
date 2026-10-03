@@ -46,7 +46,7 @@ leastness.
 All maps and elements are choice-free; the equalities use only the order on `|𝒟|`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

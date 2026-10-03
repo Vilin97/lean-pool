@@ -17,7 +17,7 @@ zero-free equivariant homotopy.  The pointwise equality is then packaged into th
 `StableHomotopyInvarianceTheorem` interface.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

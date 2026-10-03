@@ -15,12 +15,12 @@ The first homological equation differentiates phase derivatives with respect to 
 parameter.  This file packages the needed Schwarz theorem for a jointly `C²` scalar function.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 /-- The derivative in the distinguished real parameter direction at parameter zero. -/
-noncomputable def parameterCoefficient
+@[expose] noncomputable def parameterCoefficient
     {B : Type*} [NormedAddCommGroup B] [NormedSpace ℝ B]
     (G : ℝ × B → ℝ) (b : B) : ℝ :=
   fderiv ℝ G (0, b) (1, 0)

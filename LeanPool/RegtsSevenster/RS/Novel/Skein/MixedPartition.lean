@@ -20,7 +20,7 @@ repeated colours evaluate to zero — and the transport of the
 Definition 5 summand along fragment equivalences.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

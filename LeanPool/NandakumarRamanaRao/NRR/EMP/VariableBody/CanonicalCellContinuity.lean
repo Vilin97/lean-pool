@@ -32,7 +32,7 @@ compact closed-graph criterion `continuous_of_isClosed_graph_of_compact` (both t
 family continuity from `continuous_pi`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 open Filter Topology

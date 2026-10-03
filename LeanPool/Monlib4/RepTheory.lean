@@ -13,4 +13,4 @@ public import LeanPool.Monlib4.RepTheory.AutMat
 Import-only index for the `RepTheory` directory of the monlib4 import.
 -/
 
-@[expose] public section
+public section

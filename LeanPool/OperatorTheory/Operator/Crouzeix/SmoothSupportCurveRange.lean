@@ -17,7 +17,7 @@ the support curve.  The key local fact is that an active support inequality
 recovers both normal and tangent coordinates of the contact point.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff

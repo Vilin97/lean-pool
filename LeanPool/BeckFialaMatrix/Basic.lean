@@ -31,7 +31,7 @@ Ported from the separate Paper IV contribution working copy. The paper freeze
 is unchanged. This candidate introduces no dependency on the paper library.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

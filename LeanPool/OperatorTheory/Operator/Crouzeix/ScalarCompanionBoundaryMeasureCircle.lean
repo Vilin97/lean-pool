@@ -31,7 +31,7 @@ polynomial through the general boundary-measure theorem.
   sharp phase contractivity on every positive-radius disk.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped ComplexConjugate Interval Real

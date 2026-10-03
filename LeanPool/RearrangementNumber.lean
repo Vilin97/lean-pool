@@ -46,4 +46,4 @@ Tags: set-theory, cardinal-characteristics, series
 MSC: 03E17, 40A05
 -/
 
-@[expose] public section
+public section

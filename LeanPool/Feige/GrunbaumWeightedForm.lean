@@ -20,7 +20,7 @@ with the positive-dimensional Euclidean model used by the Grünbaum
 formalization.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Set

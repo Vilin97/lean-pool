@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderDirichletParity
 
 /-! Actual odd terminal data give odd endpoint histories under even coefficients. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

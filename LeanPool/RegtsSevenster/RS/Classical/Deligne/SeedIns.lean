@@ -19,7 +19,7 @@ of the `ofBase`, `ins` and `ins'` fields of the splitting data of
 the Key Lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ variable {D : Type u}
 
 /-- **The base entry**: the base algebra acts on the seed element
 in the bottom stage. -/
+@[expose]
 noncomputable def chainBaseStage
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -838,6 +839,7 @@ private theorem tensor_whiskerL [Category.{v} D] [MonoidalCategory D]
 
 /-- **The raw pair product**: both entries enter and multiply
 into the diagonal stage two levels up. -/
+@[expose]
 noncomputable def chainPairRaw
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

@@ -17,7 +17,7 @@ generates the full endomorphism algebra in the sense that it can be
 `U i`, `W i` such that `∑ i, U i * A * W i = 1`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -24,7 +24,7 @@ Banach-algebra fundamental fields. Its H3 bound is used only on spatial
 support; no angular regularity or global extension of H3 is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -77,7 +77,8 @@ local instance instLpCylinderCoefficients8 : NormedRing (Supported period V S hS
     inferInstance
 
 /-- The actual cylinder operator of a spatial coefficient. -/
-def liftedOperator (A : Space →ᵇ V →L[ℝ] V) : Supported period V S hS →L[ℝ] Supported period V S hS
+@[expose] def liftedOperator (A : Space →ᵇ V →L[ℝ] V) :
+    Supported period V S hS →L[ℝ] Supported period V S hS
     :=
   operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
       (fieldLift period A)
@@ -111,7 +112,7 @@ theorem operator_intertwines (Ω : Set Space) (hΩ : MeasurableSet Ω)
 variable (T : ℝ)
 
 /-- The entire coefficient time path, acting on the supported cylinder. -/
-def liftedOperatorPath (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
+@[expose] def liftedOperatorPath (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) :=
   operatorPath (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS) T
     (fieldPathLift period A)
@@ -128,7 +129,7 @@ theorem liftedOperatorPath_norm (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ]
     (fun x _ => (A t).norm_coe_le_norm x.1)).trans (A.norm_coe_le_norm t)
 
 /-- The literal linear map underlying coefficient-path lifting. -/
-def liftedOperatorPathLinear : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →ₗ[ℝ]
+@[expose] def liftedOperatorPathLinear : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →ₗ[ℝ]
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) where
   toFun := liftedOperatorPath period S hS T
   map_add' A D := by
@@ -145,7 +146,7 @@ def liftedOperatorPathLinear : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →
       r (fieldLift period (A t))
 
 /-- Lifting spatial coefficient paths to actual cylinder operators is a linear contraction. -/
-def liftedOperatorPathMap : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →L[ℝ]
+@[expose] def liftedOperatorPathMap : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →L[ℝ]
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) :=
   (liftedOperatorPathLinear period S hS T).mkContinuous 1 (fun A => by
     change ‖liftedOperatorPath period S hS T A‖ ≤ 1*‖A‖
@@ -153,7 +154,7 @@ def liftedOperatorPathMap : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →L[�
 
 omit [CompleteSpace V] in
 @[simp] theorem liftedOperatorPathMap_apply (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
-    liftedOperatorPathMap (V := V) period S hS T A = liftedOperatorPath period S hS T A := rfl
+    liftedOperatorPathMap (V := V) period S hS T A = liftedOperatorPath period S hS T A := by rfl
 
 omit [CompleteSpace V] in
 /-- No coefficient amplitude is lost in the actual L² lifting. -/
@@ -206,7 +207,7 @@ theorem mixedOperator_bound (B : SmoothCoefficientPath (Icc (0 : ℝ) T) (V →L
 variable (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
 
 /-- The cylinder evolution is constructed from the genuine spatial fundamental fields. -/
-def constructedEvolution : Evolution T hT (liftedOperatorPath (V := V) period S hS T B) :=
+@[expose] def constructedEvolution : Evolution T hT (liftedOperatorPath (V := V) period S hS T B) :=
   liftEvolution (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
       hS) T hT
     (fieldPathLift period B)

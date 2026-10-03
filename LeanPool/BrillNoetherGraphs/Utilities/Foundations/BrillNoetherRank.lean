@@ -52,7 +52,7 @@ The descent of this predicate along an odd subdivision lives in
 `Utilities/Subdivision/SubdivisionChipDescent.lean` and is not imported here.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 
@@ -69,6 +69,7 @@ The literature says "`E` is contained in an effective divisor `D` of degree `d`
 and rank at least `r`"; since rank is a class invariant, that is the same as
 asking for `D - E` to be winnable, which is the form stated here.  The
 containment form is recovered by `bnRankGe_iff_contained`. -/
+@[expose]
 def BNRankGe (G : CFGraph) (r d k : ℤ) : Prop :=
   ∀ E : CFDiv G, effective E → CFDiv.degree E = r + k →
     ∃ D : CFDiv G, CFDiv.degree D = d ∧ rank G D ≥ r ∧ winnable G (D - E)

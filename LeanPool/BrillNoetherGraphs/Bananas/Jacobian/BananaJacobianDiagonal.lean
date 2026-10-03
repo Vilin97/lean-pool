@@ -19,7 +19,7 @@ normalized strand slopes, so it treats arbitrary storage orientations and
 length-one strands uniformly.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

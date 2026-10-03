@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Kernel checks for hard-case certificate group 3. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

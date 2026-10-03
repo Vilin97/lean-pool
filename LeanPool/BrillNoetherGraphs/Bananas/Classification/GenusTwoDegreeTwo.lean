@@ -17,7 +17,7 @@ them at an abstract graph prevents later theta proofs from unfolding concrete
 subdivision vertices during divisor algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

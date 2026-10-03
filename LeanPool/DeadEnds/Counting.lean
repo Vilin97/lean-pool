@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 Finite-prime counting bounds and comparison with the Euler product density.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.DeadEnds
 

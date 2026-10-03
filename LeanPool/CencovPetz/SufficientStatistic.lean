@@ -40,7 +40,7 @@ reduces to Titu's lemma / Engel form of Cauchy–Schwarz on each fiber.
   surjective map (finite sufficient statistic).
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -51,7 +51,7 @@ namespace Simplex
 
 /-- Pushforward of a strictly positive distribution along a surjective map,
 by summing over fibers. -/
-noncomputable def pushforward (g : α → β) (hg : Function.Surjective g) (p : Simplex α) :
+@[expose] noncomputable def pushforward (g : α → β) (hg : Function.Surjective g) (p : Simplex α) :
     Simplex β := by
   classical
   refine
@@ -80,7 +80,7 @@ noncomputable def pushforward (g : α → β) (hg : Function.Surjective g) (p : 
 end Simplex
 
 /-- Pushforward of a tangent vector along a map, by summing over fibers. -/
-noncomputable def tangentPushforward (g : α → β) (u : tangentSpace (α := α)) :
+@[expose] noncomputable def tangentPushforward (g : α → β) (u : tangentSpace (α := α)) :
     tangentSpace (α := β) := by
   classical
   refine ⟨fun b => ∑ a with g a = b, ((u : α → ℝ) a), ?_⟩

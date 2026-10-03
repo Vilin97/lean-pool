@@ -42,7 +42,7 @@ with the rigidity of the twin population it controls.
   bipartite incidence counts feeding the hub-cross coverage argument.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

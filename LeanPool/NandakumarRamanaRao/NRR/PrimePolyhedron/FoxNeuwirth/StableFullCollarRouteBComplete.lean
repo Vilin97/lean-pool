@@ -23,7 +23,7 @@ theorem then produces a small, frozen-boundary-preserving, prime-equivariant per
 positive-ray general position while retaining half of the Step 5 origin margin.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

@@ -51,7 +51,7 @@ arguments below allow any fixed selector belonging to that set, a slightly
 stronger formulation which includes the paper's choice.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -64,7 +64,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 /-- Proposition 5.3's coefficients `λ_i`: four times the nonconstant Fourier
 mass assigned to coordinate `i`. The selector is fixed independently of the
 weight or hereditary family under consideration. -/
-def spectralWeights (g : Finset ι → ℝ) (select : Finset ι → ι) (i : ι) : ℝ :=
+@[expose] def spectralWeights (g : Finset ι → ℝ) (select : Finset ι → ι) (i : ι) : ℝ :=
   4 * ∑ S ∈ Finset.univ.erase ∅, if select S = i then fourier g S ^ 2 else 0
 
 /-- Nonnegativity of every coefficient in Proposition 5.3. -/

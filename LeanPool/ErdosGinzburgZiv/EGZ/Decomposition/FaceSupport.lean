@@ -17,7 +17,7 @@ The support/polytope invariant nevertheless identifies every face with the
 convex hull of precisely the lifted support points lying on that face.
 -/
 
-@[expose] public section
+public section
 
 
 namespace EGZ.FlagDecomposition

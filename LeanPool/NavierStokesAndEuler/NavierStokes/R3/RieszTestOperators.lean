@@ -39,7 +39,7 @@ energy. Fatou's lemma then proves both square integrability and the global
 bound, without extending the Fourier transform to arbitrary `L²` functions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -211,7 +211,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

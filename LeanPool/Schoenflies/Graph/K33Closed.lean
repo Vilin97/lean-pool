@@ -63,7 +63,7 @@ genuinely about changing the drawing, not about presentations. `Graph.Bendable` 
 statement in the shape the theorems below consume; nothing here proves it.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set unitInterval
 open scoped Graph
@@ -88,7 +88,7 @@ namespace ClosedPolygon
 variable {m : ℕ}
 
 /-- **The same closed polygon, traversed the other way.** -/
-def reverse (P : ClosedPolygon m) : ClosedPolygon m where
+@[expose] def reverse (P : ClosedPolygon m) : ClosedPolygon m where
   vertex j := P.vertex (-j)
   vertex_inj _ _ h := neg_injective (P.vertex_inj h)
   edges_meet i j hij := by

@@ -24,7 +24,7 @@ velocity alone. Pressure regularity follows from the projected equation.
 Every solution has one continuous strong time derivative in every
 spatial Sobolev order. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -36,6 +36,7 @@ open Set EulerSmoothLimit EulerLpTranslation EulerLpTranslation.SmoothL2Field
 variable {T : ℝ} {hT : 0 ≤ T}
 
 /-- Is smooth projected euler as an element of `Prop`. -/
+@[expose]
 def IsSmoothProjectedEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop :=
   (∀ n, Continuous (fun t => (A t).jetLp n)) ∧
   (∀ t, (A t).toLp ∈ solenoidalSpace) ∧
@@ -101,7 +102,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -217,7 +218,7 @@ variable (A B : Icc (0 : ℝ) T → SmoothL2Field Space)
  0)
 
 theorem evolutionOfScalarEuler_velocity :
-    (evolutionOfScalarEuler A B hA hd p hdiv hp he).velocity=A := rfl
+    (evolutionOfScalarEuler A B hA hd p hdiv hp he).velocity=A := by rfl
 
 include hB in
 theorem evolutionOfScalarEuler_derivative (hpos : 0 < T) (t : Icc (0 : ℝ) T) :
@@ -297,7 +298,7 @@ all-order spatial paths represent `C H^m` for every finite `m`. A single
 strong L² time law and the continuous all-order derivative paths imply
 the strong time law in every Sobolev order by `sobolev_derivative_of_l2`.
 No norm, time regularity, or normalization is imposed on the scalar pressure. -/
-def IsSmoothScalarEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop :=
+@[expose] def IsSmoothScalarEuler (A : Icc (0 : ℝ) T → SmoothL2Field Space) : Prop :=
   (∀ n, Continuous (fun t => (A t).jetLp n)) ∧
     ∃ (B : Icc (0 : ℝ) T → SmoothL2Field Space) (p : ℝ → Space → ℝ),
       (∀ n, Continuous (fun t => (B t).jetLp n)) ∧

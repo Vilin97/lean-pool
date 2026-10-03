@@ -30,7 +30,7 @@ arbitrary dimensions.  The two sides are joined exactly as before,
 giving the nonvanishing statement for all counts `r s : ℕ`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

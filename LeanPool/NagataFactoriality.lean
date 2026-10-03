@@ -38,4 +38,4 @@ Tags: commutative-algebra
 MSC: 13F15
 -/
 
-@[expose] public section
+public section

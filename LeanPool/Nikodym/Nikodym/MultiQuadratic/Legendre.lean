@@ -16,7 +16,7 @@ of odd prime cardinality, and a choice of square roots of the `rⱼ` induces a r
 `𝒪_r → F`.
 -/
 
-@[expose] public section
+public section
 
 open MvPolynomial
 

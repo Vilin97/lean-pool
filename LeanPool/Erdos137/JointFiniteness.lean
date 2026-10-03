@@ -81,7 +81,7 @@ unconditional squarefree-value count for `n < k^{5+δ}` would give full joint `(
 That last unconditional input (Pandey) is not formalized here.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 

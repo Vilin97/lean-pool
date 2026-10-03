@@ -29,4 +29,4 @@ Tags: additive-combinatorics, erdos-problems, sum-free-sets, combinatorics
 MSC: 11B75, 11B13
 -/
 
-@[expose] public section
+public section

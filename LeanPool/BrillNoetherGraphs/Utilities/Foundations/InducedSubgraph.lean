@@ -16,7 +16,7 @@ Raw edge occurrences are filtered before their endpoints are bundled into the
 subtype, so parallel edges are retained without identification.
 -/
 
-@[expose] public section
+public section
 
 open Multiset Finset
 
@@ -77,6 +77,7 @@ noncomputable abbrev inducedSubgraph (G : CFGraph.{u}) (S : Finset G.V)
       (inducedEdges G S).pmap (restrictInducedEdge G S) (by exact inducedEdges_all G S) := rfl
 
 /-- The inclusion of the induced vertex set into the original graph. -/
+@[expose]
 def inducedSubgraphInclusion (G : CFGraph.{u}) (S : Finset G.V)
     (hS : S.Nonempty) : (inducedSubgraph G S hS).V → G.V :=
   fun x => x.val

@@ -17,7 +17,7 @@ This neutral module defines the two closing operations by the auxiliary constant
   constants `c_{τ i}`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -27,11 +27,11 @@ variable {L : Language.{0, 0}}
 
 /-- The constant instance `ψ(c)`: open the bound variable of `ψ` and substitute the constant
 `c_c`. -/
-def instConst (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1) : L[[ℕ]].Sentenceω :=
+@[expose] def instConst (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1) : L[[ℕ]].Sentenceω :=
   (ψ.openBounds).subst (fun _ => constTerm c)
 
 /-- The closing substitution of a bounded formula by constants. -/
-noncomputable def closeBy {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
+@[expose] noncomputable def closeBy {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
     L[[ℕ]].Sentenceω :=
   (φ.openBounds).subst (fun i => constTerm (τ i))
 

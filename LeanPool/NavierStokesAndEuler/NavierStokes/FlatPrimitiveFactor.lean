@@ -20,7 +20,7 @@ Natural powers of the square root encode the real power `(j - 3) / 2`
 without truncating subtraction in the natural numbers.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,19 +32,19 @@ open NavierStokes.FlatCutoff NavierStokes.FlatPrimitive
 namespace NavierStokes.FlatPrimitiveFactor
 
 /-- Denominator, given by `Real.sqrt (1 + x ^ 2 * t)`. -/
-def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
+@[expose] def denominator (x t : ℝ) : ℝ := Real.sqrt (1 + x ^ 2 * t)
 
 /-- Coordinate, given by `x / denominator x t`. -/
-def coordinate (x t : ℝ) : ℝ := x / denominator x t
+@[expose] def coordinate (x t : ℝ) : ℝ := x / denominator x t
 
 /-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator x t ^ j / denominator x t ^
 3) * b (coordinate x t)`. -/
-def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
+@[expose] def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator x t ^ j / denominator x t ^ 3) * b (coordinate x t)
 
 /-- Factor, given by `∫ t in Ioi (0 : ℝ), kernel c j b x t`. -/
-def factor (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
+@[expose] def factor (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ t in Ioi (0 : ℝ), kernel c j b x t
 
 theorem denominator_inner_pos (x : ℝ) {t : ℝ} (ht : 0 ≤ t) : 0 < 1 + x ^ 2 * t := by

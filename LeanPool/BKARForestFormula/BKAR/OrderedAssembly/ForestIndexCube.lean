@@ -17,7 +17,7 @@ system used to realize it.  This is the right-hand side of the flagship
 form of the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

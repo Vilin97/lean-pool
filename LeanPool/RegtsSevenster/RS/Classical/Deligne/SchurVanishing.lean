@@ -25,7 +25,7 @@ block, and `permAlg_compat` carries the vanishing of `e λ`'s
 action up the standard embedding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -39,6 +39,7 @@ variable {A : Type u}
 idempotent of its block acts as zero on the `μ.card`-th tensor
 power of `X`.  This is the vanishing of the `μ`-isotypic summand
 of `X ^ ⊗ μ.card`, i.e. of Deligne's Schur functor `S_μ(X)`. -/
+@[expose]
 def SchurKilled [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     [Preadditive A] [Linear ℂ A]
     (P : SchurPackage.{v}) (X : A) (μ : YoungDiagram) :

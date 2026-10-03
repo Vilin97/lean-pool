@@ -21,7 +21,7 @@ section
 
 /-! Direct two-input linear bounds for genuine fixed Sobolev word blocks. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -103,7 +103,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

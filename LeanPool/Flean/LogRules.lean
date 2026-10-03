@@ -16,7 +16,7 @@ This module proves facts in ℚ about the sizes and properties of
 values like x * b^e where x is in [1, b) and e is an integer.
 -/
 
-@[expose] public section
+public section
 
 variable {C : FloatCfg}
 

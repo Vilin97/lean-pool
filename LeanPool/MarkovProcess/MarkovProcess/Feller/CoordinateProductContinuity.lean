@@ -23,7 +23,7 @@ it never attempts to construct a constant-one element of `C₀`.  This is finite
 analytic infrastructure; no statement about path space is proved here.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators

@@ -77,7 +77,7 @@ the tensor product `P₁ ⊗ ⋯ ⊗ Pₙ` of one-qubit Pauli matrices is `toMat
 `Pauli/Tensor.lean`; the one-qubit case is also checked entry by entry in `Pauli/Matrix.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 

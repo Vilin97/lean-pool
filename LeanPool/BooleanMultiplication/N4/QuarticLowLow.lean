@@ -16,7 +16,7 @@ the two linear differences.  Their quadratic wedge shadow therefore lies in
 one of the three support-pair spaces certified in `QuarticAllPairs`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,7 +24,7 @@ namespace N4
 noncomputable section
 
 /-- A two-by-two minor of two rational coefficient vectors. -/
-def rationalCoeffMinor (α β : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
+@[expose] def rationalCoeffMinor (α β : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
   α i * β j + α j * β i
 
 @[simp] theorem f2_mul_self_quartic (u : F₂) : u * u = u := by

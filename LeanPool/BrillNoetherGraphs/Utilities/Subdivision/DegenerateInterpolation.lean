@@ -46,7 +46,7 @@ definitionally, so the certificate's endpoint bounds apply verbatim.  Under
 (`coreRise_eq_zero_of_length_zero`).
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
@@ -62,6 +62,7 @@ variable {n p : ℕ} (d : DegSpec n p)
 /-! ## Potentials constant on the contracted classes -/
 
 /-- A core potential that is constant on every contracted class. -/
+@[expose]
 def RepInvariant (potential : Fin n → ℤ) : Prop :=
   ∀ v : Fin n, potential (d.rep v) = potential v
 
@@ -77,6 +78,7 @@ theorem repInvariant_of_pos (hpos : ∀ e : Fin p, 0 < d.length e)
 
 /-- Rise of a core potential along an oriented edge slot.  Verbatim the `Spec`
 definition; no `rep` appears. -/
+@[expose]
 def coreRise (potential : Fin n → ℤ) (e : Fin p) : ℤ :=
   potential (d.core.head e) - potential (d.core.tail e)
 
@@ -134,6 +136,7 @@ def pathValue (potential : Fin n → ℤ) (e : Fin p) (k : ℕ) : ℤ :=
 /-- Extend a rep-invariant core potential over every surviving slot by the
 canonical convex interpolation.  Collapsed slots contribute nothing: they carry
 no interior vertex and their two endpoints are already one class. -/
+@[expose]
 def interpolatedScript (potential : Fin n → ℤ) : firingScript d.graph :=
   d.slotValueScript potential (d.pathValue potential)
 
@@ -253,6 +256,7 @@ consumer-facing difference is the trichotomy: `pathVertex_zero`,
 collapsed slot the first two coincide. -/
 
 /-- The path position at a numerical offset known not to pass the head. -/
+@[expose]
 def pathPosition (e : Fin p) (offset : ℕ) (hOffset : offset ≤ d.length e) :
     d.PathPosition e := ⟨offset, by omega⟩
 

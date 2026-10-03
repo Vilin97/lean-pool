@@ -20,7 +20,7 @@ relative tensor this yields the projection formula: base change
 commutes with the tensor product of modules.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -32,6 +32,7 @@ universe v u
 variable {D : Type u}
 
 /-- Scalar restriction of a module along the base morphism. -/
+@[expose]
 noncomputable def restrictMod
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] (B : D)
     [MonObj B] (φ : A ⟶ B) [IsMonHom φ] (P : Mod D B) :
@@ -57,6 +58,7 @@ lemma actRight_restrictMod
 the carrier of the unrestricted module.  All statements of this
 development use this spelling, so that goals remain type-correct
 at the instances transparency level. -/
+@[expose]
 noncomputable def restrictπ
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] (B : D) [MonObj B] (φ : A ⟶ B)
@@ -82,6 +84,7 @@ theorem restrictπ_cond
 
 /-- The cover of the collapse: act the middle base into the
 module and project. -/
+@[expose]
 noncomputable def collapseCover
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] (B : D) [MonObj B] (φ : A ⟶ B)
@@ -347,6 +350,7 @@ theorem whiskerLeft_unitSlot_baseChangeAct
 
 /-- The projection of the new-base tensor, retyped at the
 induced-module carrier. -/
+@[expose]
 noncomputable def bcπ
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -586,6 +590,7 @@ theorem collapseHom_collapseInv
     (whiskerLeft_unitSlot_baseChangeAct A B φ N)) _
 
 /-- **The change-of-rings collapse**, packaged. -/
+@[expose]
 noncomputable def collapseIso
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -664,6 +669,7 @@ theorem restrictMod_baseChange_eq
 /-- **The projection formula**: the relative tensor over the new
 base of two base changes is the base change of the relative
 tensor. -/
+@[expose]
 noncomputable def projFormula
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -683,6 +689,7 @@ section Datum
 
 /-- **The base change of the pairing**: collapse, apply the
 pairing under the base, and collapse the regular module. -/
+@[expose]
 noncomputable def baseChangePair
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -698,6 +705,7 @@ noncomputable def baseChangePair
     (modTensorUnitRight A (restrictRegular φ)).hom
 
 /-- **The base change of the copairing.** -/
+@[expose]
 noncomputable def baseChangeCopair
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

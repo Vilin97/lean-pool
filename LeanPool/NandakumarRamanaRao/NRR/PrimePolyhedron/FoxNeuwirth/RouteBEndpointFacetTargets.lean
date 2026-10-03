@@ -20,7 +20,7 @@ remaining movable columns with the missing coarse-simplex values makes the selec
 permutation of the regular endpoint matrix.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 open FoxNeuwirthOrderComplex
@@ -329,6 +329,7 @@ theorem oneStepLowerFacetTarget_respects_lower
       Finset.sum_ite_eq']
 
 /-- Lower-relative facet target property used by stack composition. -/
+@[expose]
 def LowerFacetTargets
     (hp : Nat.Prime p)
     {N₀ N₁ M L : Nat}

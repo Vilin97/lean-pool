@@ -33,7 +33,7 @@ at the *same* slope: Frobenius acts on the coefficients, hence on the slope,
 as well.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

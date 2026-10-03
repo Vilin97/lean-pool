@@ -20,7 +20,7 @@ point.  Its intersection with any cell of level `m ≥ n` is order-connected, be
 level-`n` grid point is a level-`m` grid point and hence lies outside the interior of that cell.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,13 +30,13 @@ open scoped NNReal
 namespace LeanPool.Besicovitch.Example
 
 /-- Half the width of the strip around a level-`n` grid point that `A` cannot straddle. -/
-def margin (L : ℝ) (n : ℕ) : ℝ := cellLength n / (2 * n * (L + 1))
+@[expose] def margin (L : ℝ) (n : ℕ) : ℝ := cellLength n / (2 * n * (L + 1))
 
 /-- The level-`n` grid point with index `i`. -/
-def gridPoint (n : ℕ) (i : ℤ) : ℝ := i * cellLength n
+@[expose] def gridPoint (n : ℕ) (i : ℤ) : ℝ := i * cellLength n
 
 /-- Points at distance at least `margin L n` from every level-`n` grid point. -/
-def avoid (L : ℝ) (n : ℕ) : Set ℝ := {x | ∀ i : ℤ, margin L n ≤ |x - gridPoint n i|}
+@[expose] def avoid (L : ℝ) (n : ℕ) : Set ℝ := {x | ∀ i : ℤ, margin L n ≤ |x - gridPoint n i|}
 
 theorem margin_pos {L : ℝ} (hL : 0 ≤ L) {n : ℕ} (hn : 1 ≤ n) : 0 < margin L n := by
   unfold margin

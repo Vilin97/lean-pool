@@ -118,7 +118,7 @@ carried explicitly by every theorem below that needs it.
   unions are concatenations.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -204,7 +204,7 @@ opposite sides of the square meet nothing of each other. The two statements are 
 the integrator may want them beside each other. -/
 
 /-- The hub `K` with the pieces `Γ 0, …, Γ (m-1)` glued on, one at a time. -/
-def attachUnion (K : Graph α β) (Γ : ℕ → Graph α β) : ℕ → Graph α β
+@[expose] def attachUnion (K : Graph α β) (Γ : ℕ → Graph α β) : ℕ → Graph α β
   | 0 => K
   | (m + 1) => (attachUnion K Γ m).union (Γ m)
 
@@ -308,7 +308,7 @@ the list and the other's on the set. If a third consumer appears, hoist the set 
 `Schoenflies/OverlayGraph.lean` beside `endSet` and derive this one from it. -/
 
 /-- The graph whose edges are the listed segments and whose vertices are their ends. -/
-def pieceListGraph (edges : List Piece) : Graph Plane Piece where
+@[expose] def pieceListGraph (edges : List Piece) : Graph Plane Piece where
   vertexSet := endSet edges
   IsLink P x y := P ∈ edges ∧ ((x = P.1 ∧ y = P.2) ∨ (x = P.2 ∧ y = P.1))
   edgeSet := {P | P ∈ edges}
@@ -429,13 +429,15 @@ each cell a genuine quadrilateral. Sortedness enters only with the geometry of t
 cycle. -/
 
 /-- The grid point with coordinate indices `(i, j)`. -/
-def gridPt (xc yc : ℕ → ℝ) (i j : ℕ) : Plane := Plane.mk (xc i) (yc j)
+@[expose] def gridPt (xc yc : ℕ → ℝ) (i j : ℕ) : Plane := Plane.mk (xc i) (yc j)
 
 /-- The horizontal grid edge from `(i, j)` to `(i+1, j)`. -/
+@[expose]
 def gridHEdge (xc yc : ℕ → ℝ) (i j : ℕ) : Piece := (gridPt xc yc i j, gridPt xc yc (i + 1) j)
 
 /-- The vertical grid edge from `(i, j)` to `(i, j+1)`. -/
-def gridVEdge (xc yc : ℕ → ℝ) (i j : ℕ) : Piece := (gridPt xc yc i j, gridPt xc yc i (j + 1))
+@[expose] def gridVEdge (xc yc : ℕ → ℝ) (i j : ℕ) : Piece :=
+  (gridPt xc yc i j, gridPt xc yc i (j + 1))
 
 theorem gridPt_ne_of_fst {xc yc : ℕ → ℝ} {i i' j j' : ℕ} (h : xc i ≠ xc i') :
     gridPt xc yc i j ≠ gridPt xc yc i' j' := fun he => by
@@ -460,12 +462,13 @@ def stripEdges (xc yc : ℕ → ℝ) (i n : ℕ) : List Piece :=
   (List.range n).flatMap (cellEdges xc yc i)
 
 /-- The `m × n` grid: `m` columns of `n` cells. -/
-def gridEdges (xc yc : ℕ → ℝ) (m n : ℕ) : List Piece :=
+@[expose] def gridEdges (xc yc : ℕ → ℝ) (m n : ℕ) : List Piece :=
   (List.range m).flatMap fun i => stripEdges xc yc i n
 
 /-- **The grid graph**: the `m × n` rectangular grid on the coordinates `xc`, `yc`, as a plane
 graph with straight edges. -/
-def gridGraph (xc yc : ℕ → ℝ) (m n : ℕ) : Graph Plane Piece := pieceListGraph (gridEdges xc yc m n)
+@[expose] def gridGraph (xc yc : ℕ → ℝ) (m n : ℕ) : Graph Plane Piece :=
+  pieceListGraph (gridEdges xc yc m n)
 
 theorem stripEdges_succ (xc yc : ℕ → ℝ) (i n : ℕ) :
     stripEdges xc yc i (n + 1) = stripEdges xc yc i n ++ cellEdges xc yc i n := by

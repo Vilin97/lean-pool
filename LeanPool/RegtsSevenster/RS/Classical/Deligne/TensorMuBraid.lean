@@ -27,7 +27,7 @@ exchange of the disjoint crossings `β_ a c` and `β_ b d` produces the
 right-hand side.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

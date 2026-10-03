@@ -18,7 +18,7 @@ Completing squares in coordinates `2,1,0` yields `eq:bilinear`, and
 substituting `U` yields the factorization `eq:factor` of `docs/sol.tex` §3.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 

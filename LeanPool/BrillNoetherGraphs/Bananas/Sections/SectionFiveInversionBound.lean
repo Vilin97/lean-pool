@@ -18,7 +18,7 @@ in Section 5.  Its remaining graph-theoretic input is the identification of
 the displayed rank-drop sum with the cardinality of the finite fibres below.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

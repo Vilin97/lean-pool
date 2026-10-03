@@ -20,7 +20,7 @@ only an unconditional distributional identity and is not enough for this conclus
 No stochastic process, Markov property, or path-space construction is asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

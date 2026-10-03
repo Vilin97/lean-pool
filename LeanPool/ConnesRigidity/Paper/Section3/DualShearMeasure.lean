@@ -18,7 +18,7 @@ public import LeanPool.ConnesRigidity.Paper.Section3.DualTopology
 The dual shear measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualShearMeasure
@@ -169,7 +169,7 @@ def characterToProduct (χ : CharacterSpace) : Additive PChar × Additive QChar 
 /--
 The `characterProductEquiv` construction used in the Connes rigidity formalization.
 -/
-def characterProductEquiv : CharacterSpace ≃+
+@[expose] def characterProductEquiv : CharacterSpace ≃+
     (Additive PChar × Additive QChar) where
   toFun := characterToProduct
   invFun := productToCharacter
@@ -260,7 +260,7 @@ theorem continuous_productToCharacter : Continuous (productToCharacter :
 /--
 The `characterProductHomeomorph` construction used in the Connes rigidity formalization.
 -/
-def characterProductHomeomorph :
+@[expose] def characterProductHomeomorph :
     CharacterSpace ≃ₜ (Additive PChar × Additive QChar) :=
   Homeomorph.mk characterProductEquiv.toEquiv
     (by exact continuous_characterToProduct)
@@ -463,14 +463,14 @@ abbrev Coordinates := PaperFactorIsomorphism.DualCoordinates
 /--
 The `coordinateProductEquiv` construction used in the Connes rigidity formalization.
 -/
-def coordinateProductEquiv : Coordinates ≃+
+@[expose] def coordinateProductEquiv : Coordinates ≃+
     (Additive PChar × Additive QChar) :=
   PaperDualHaar.characterCoordinatesEquiv.symm.trans characterProductEquiv
 
 /--
 The `coordinateProductHomeomorph` construction used in the Connes rigidity formalization.
 -/
-def coordinateProductHomeomorph : Coordinates ≃ₜ
+@[expose] def coordinateProductHomeomorph : Coordinates ≃ₜ
     (Additive PChar × Additive QChar) :=
   PaperDualTopology.characterCoordinatesHomeomorph.symm.trans
     characterProductHomeomorph

@@ -44,7 +44,7 @@ The proof assembles the following results from `chip-firing-with-lean`:
 
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

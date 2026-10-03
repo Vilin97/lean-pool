@@ -115,7 +115,7 @@ Shannon entropy, conditional mutual information, copy lemma, conditional indepen
 Zhang-Yeung
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeung
 

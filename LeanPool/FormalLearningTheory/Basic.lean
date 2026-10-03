@@ -24,7 +24,7 @@ commented-out variants for different proof contexts (decidable, RE, measurable,
 multiclass, Bayesian).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 
@@ -161,10 +161,11 @@ They are universal across paradigms (PAC uses expected loss, online uses cumulat
 -/
 
 /-- A loss function measures the discrepancy between a prediction and true label. -/
+@[expose]
 def LossFunction (Y : Type v) := Y → Y → ℝ
 
 /-- The 0-1 loss for classification. -/
-noncomputable def zeroOneLoss (Y : Type v) [DecidableEq Y] : LossFunction Y :=
+@[expose] noncomputable def zeroOneLoss (Y : Type v) [DecidableEq Y] : LossFunction Y :=
   fun y₁ y₂ => if y₁ = y₂ then 0 else 1
 
 /-- Squared loss for regression (Y = ℝ). -/

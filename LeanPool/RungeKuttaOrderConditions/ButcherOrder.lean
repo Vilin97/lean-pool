@@ -11,9 +11,9 @@ public meta import Mathlib.Tactic.ToAdditive
 public meta import Mathlib.Tactic.ToDual
 import Mathlib.Data.Rat.Cast.Order
 import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.NormNum.Abs
-import Mathlib.Tactic.NormNum.DivMod
-import Mathlib.Tactic.NormNum.OfScientific
+public meta import Mathlib.Tactic.NormNum.Abs
+public meta import Mathlib.Tactic.NormNum.DivMod
+public meta import Mathlib.Tactic.NormNum.OfScientific
 import Mathlib.Tactic.Ring.RingNF
 
 /-!
@@ -26,7 +26,7 @@ keystone for order conditions, and verifies Euler, Heun, RK4, Dormand-Prince,
 and Gauss-Legendre certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace RungeKuttaOrderConditions
 
@@ -152,7 +152,7 @@ abbrev Forest := List RTree
 
 -- the building blocks: • and grafting
 /-- The one-node rooted tree. -/
-def leaf : RTree := .node []
+@[expose] def leaf : RTree := .node []
 /-- Graft a forest below a new root. -/
 def graft (F : Forest) : RTree := .node F
 
@@ -160,9 +160,9 @@ def graft (F : Forest) : RTree := .node F
 
 mutual
   /-- Number of vertices in a rooted tree. -/
-  def order : RTree → Nat | .node F => 1 + orderF F
+  @[expose] def order : RTree → Nat | .node F => 1 + orderF F
   /-- Total number of vertices in a forest. -/
-  def orderF : Forest → Nat | [] => 0 | t :: ts => order t + orderF ts
+  @[expose] def orderF : Forest → Nat | [] => 0 | t :: ts => order t + orderF ts
 end
 
 end Butcher
@@ -173,9 +173,9 @@ namespace RungeKuttaOrderConditions.Butcher
 mutual
   /-- density γ(t) = |t| · ∏_children γ.  γ(•)=1, γ(•–•)=2,
       γ(cherry)=3, γ(ladder₃)=6. -/
-  def gamma : RTree → Nat | .node F => order (.node F) * gammaF F
+  @[expose] def gamma : RTree → Nat | .node F => order (.node F) * gammaF F
   /-- Product of the densities of the trees in a forest. -/
-  def gammaF : Forest → Nat | [] => 1 | t :: ts => gamma t * gammaF ts
+  @[expose] def gammaF : Forest → Nat | [] => 1 | t :: ts => gamma t * gammaF ts
 end
 
 end Butcher
@@ -194,18 +194,18 @@ namespace RungeKuttaOrderConditions.Butcher
 variable {K : Type*} [CommRing K]
 
 /-- Dot product of two coefficient vectors, truncated to the shorter length. -/
-def dot (u v : List K) : K := (List.zipWith (· * ·) u v).sum
+@[expose] def dot (u v : List K) : K := (List.zipWith (· * ·) u v).sum
 /-- Pointwise product of two coefficient vectors, truncated to the shorter length. -/
-def pmul (u v : List K) : List K := List.zipWith (· * ·) u v
+@[expose] def pmul (u v : List K) : List K := List.zipWith (· * ·) u v
 /-- Matrix-vector product for a list-of-rows matrix. -/
-def mulMatVec (A : List (List K)) (v : List K) : List K := A.map (fun row => dot row v)
+@[expose] def mulMatVec (A : List (List K)) (v : List K) : List K := A.map (fun row => dot row v)
 
 mutual
   /-- Internal elementary weight vector for a rooted tree. -/
-  def phiVec (A : List (List K)) : RTree → List K
+  @[expose] def phiVec (A : List (List K)) : RTree → List K
     | .node F => phiForest A F
   /-- ∏ over children of (A · phiVec child), pointwise; empty forest ↦ all-ones (length s). -/
-  def phiForest (A : List (List K)) : Forest → List K
+  @[expose] def phiForest (A : List (List K)) : Forest → List K
     | []      => A.map (fun _ => 1)
     | t :: ts => pmul (mulMatVec A (phiVec A t)) (phiForest A ts)
 end
@@ -218,7 +218,7 @@ namespace RungeKuttaOrderConditions.Butcher
 variable {K : Type*} [CommRing K]
 
 /-- elementary weight Φ(t) = bᵀ·g(t). -/
-def Phi (A : List (List K)) (b : List K) (t : RTree) : K := dot b (phiVec A t)
+@[expose] def Phi (A : List (List K)) (b : List K) (t : RTree) : K := dot b (phiVec A t)
 
 /-- the order condition at a single tree, in MULTIPLICATIVE form `γ(t)·Φ(t) = 1`
     (iff Φ(t)=1/γ(t) since γ(t) ≥ 1); stated this way it needs only a commutative
@@ -230,44 +230,44 @@ abbrev orderCond (A : List (List K)) (b : List K) (t : RTree) : Prop :=
 
 -- explicit Forester sugar
 /-- The unique tree of order 1. -/
-def t1 : RTree := leaf                                  -- •            |t|=1  γ=1
+@[expose] def t1 : RTree := leaf                                  -- •            |t|=1  γ=1
 /-- The ladder tree of order 2. -/
-def t2 : RTree := .node [leaf]                          -- •–•          |t|=2  γ=2
+@[expose] def t2 : RTree := .node [leaf]                          -- •–•          |t|=2  γ=2
 /-- The two-leaf cherry tree of order 3. -/
-def t31 : RTree := .node [leaf, leaf]                   -- cherry       |t|=3  γ=3
+@[expose] def t31 : RTree := .node [leaf, leaf]                   -- cherry       |t|=3  γ=3
 /-- The ladder tree of order 3. -/
-def t32 : RTree := .node [.node [leaf]]                 -- ladder₃      |t|=3  γ=6
+@[expose] def t32 : RTree := .node [.node [leaf]]                 -- ladder₃      |t|=3  γ=6
 -- order 4
 /-- The four-vertex bushy tree. -/
-def t41 : RTree := .node [leaf, leaf, leaf]             -- γ=4
+@[expose] def t41 : RTree := .node [leaf, leaf, leaf]             -- γ=4
 /-- A mixed order-4 tree with one leaf and one order-2 child. -/
-def t42 : RTree := .node [leaf, .node [leaf]]           -- γ=8
+@[expose] def t42 : RTree := .node [leaf, .node [leaf]]           -- γ=8
 /-- The order-4 tree with a cherry child. -/
-def t43 : RTree := .node [.node [leaf, leaf]]           -- γ=12
+@[expose] def t43 : RTree := .node [.node [leaf, leaf]]           -- γ=12
 /-- The ladder tree of order 4. -/
-def t44 : RTree := .node [.node [.node [leaf]]]         -- ladder₄  γ=24
+@[expose] def t44 : RTree := .node [.node [.node [leaf]]]         -- ladder₄  γ=24
 -- one order-5 tree (to witness RK4 is NOT order 5)
 /-- The five-vertex bushy tree used to witness RK4's order-5 failure. -/
-def t5bushy : RTree := .node [leaf, leaf, leaf, leaf]   -- γ=5
+@[expose] def t5bushy : RTree := .node [leaf, leaf, leaf, leaf]   -- γ=5
 
 /-- Stage matrix for the Euler method. -/
-def eulerA : List (List ℚ) := [[0]]
+@[expose] def eulerA : List (List ℚ) := [[0]]
 /-- Weights for the Euler method. -/
-def eulerB : List ℚ := [1]
+@[expose] def eulerB : List ℚ := [1]
 
 /-- Stage matrix for Heun's explicit trapezoid method. -/
-def heunA : List (List ℚ) := [[0,0],[1,0]]
+@[expose] def heunA : List (List ℚ) := [[0,0],[1,0]]
 /-- Weights for Heun's explicit trapezoid method. -/
-def heunB : List ℚ := [1/2, 1/2]
+@[expose] def heunB : List ℚ := [1/2, 1/2]
 
 /-- Stage matrix for the classical four-stage Runge-Kutta method. -/
-def rk4A : List (List ℚ) := [[0,0,0,0],[1/2,0,0,0],[0,1/2,0,0],[0,0,1,0]]
+@[expose] def rk4A : List (List ℚ) := [[0,0,0,0],[1/2,0,0,0],[0,1/2,0,0],[0,0,1,0]]
 /-- Weights for the classical four-stage Runge-Kutta method. -/
-def rk4B : List ℚ := [1/6, 1/3, 1/3, 1/6]
+@[expose] def rk4B : List ℚ := [1/6, 1/3, 1/3, 1/6]
 
 -- Dormand–Prince RK45 (DOPRI5): 7 stages (FSAL), the 5th-order solution weights.
 /-- Stage matrix for the Dormand-Prince RK45 method. -/
-def dpA : List (List ℚ) :=
+@[expose] def dpA : List (List ℚ) :=
   [[0,0,0,0,0,0,0],
    [1/5,0,0,0,0,0,0],
    [3/40,9/40,0,0,0,0,0],
@@ -276,17 +276,17 @@ def dpA : List (List ℚ) :=
    [9017/3168,-355/33,46732/5247,49/176,-5103/18656,0,0],
    [35/384,0,500/1113,125/192,-2187/6784,11/84,0]]
 /-- Fifth-order solution weights for the Dormand-Prince RK45 method. -/
-def dpB : List ℚ := [35/384, 0, 500/1113, 125/192, -2187/6784, 11/84, 0]
+@[expose] def dpB : List ℚ := [35/384, 0, 500/1113, 125/192, -2187/6784, 11/84, 0]
 
 -- Gauss–Legendre s=3 (order 6), fully implicit, with coefficients in ℚ(√15):
 -- ⟨a,b⟩ = a + b·√15.
 /-- Stage matrix for the three-stage Gauss-Legendre method over ℚ(√15). -/
-def gaussA : List (List Q15) :=
+@[expose] def gaussA : List (List Q15) :=
   [[⟨5/36, 0⟩,     ⟨2/9, -1/15⟩, ⟨5/36, -1/30⟩],
    [⟨5/36, 1/24⟩,  ⟨2/9, 0⟩,     ⟨5/36, -1/24⟩],
    [⟨5/36, 1/30⟩,  ⟨2/9, 1/15⟩,  ⟨5/36, 0⟩]]
 /-- Weights for the three-stage Gauss-Legendre method over ℚ(√15). -/
-def gaussB : List Q15 := [⟨5/18, 0⟩, ⟨4/9, 0⟩, ⟨5/18, 0⟩]
+@[expose] def gaussB : List Q15 := [⟨5/18, 0⟩, ⟨4/9, 0⟩, ⟨5/18, 0⟩]
 
 /-- discharge a Q15 order condition: unfold the engine + cast, split into ℚ components,
     `norm_num`. -/

@@ -41,7 +41,7 @@ theorem EGRS75 (1975); three primes is Erdős #376 (OPEN) — not attempted.
 Recon: ~/Knowledge/Construct/recon/erdos_376.md.
 -/
 
-@[expose] public section
+public section
 
 namespace Egrs75.SeedWindow
 

@@ -19,7 +19,7 @@ Euler-formula expansion of `exp(θ * I)` and exact values at `2π/3`,
 used by both `WindingWeights/Common.lean` and `RectHomotopy/HomotopyDef.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 

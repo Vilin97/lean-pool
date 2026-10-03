@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.Deriv.Prod
 Sobolev norm once the actual velocity and pressure-gradient L² jets are
 continuous. The advection field and its regularity are constructed here. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

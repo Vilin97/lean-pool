@@ -31,7 +31,7 @@ marker counts, looplessness, core connectivity, and every unordered edge
 multiplicity are all replayed by finite Boolean folds.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.GenusFourPseudocore
 
@@ -51,24 +51,29 @@ namespace Pseudocore
 variable {n : ℕ} (core : Pseudocore n)
 
 /-- Total number of semantic loop occurrences. -/
+@[expose]
 def loopCount : ℕ :=
   ∑ vertex : Fin n, core.loops vertex
 
 /-- Number of nonloop edge occurrences, counted in the strict upper triangle. -/
+@[expose]
 def nonloopEdgeCount : ℕ :=
   ∑ first : Fin n, ∑ second : Fin n,
     if first < second then core.multiplicity first second else 0
 
 /-- Total number of topological edge occurrences. -/
+@[expose]
 def edgeCount : ℕ :=
   core.loopCount + core.nonloopEdgeCount
 
 /-- Loop-aware valence: a loop contributes two and a nonloop occurrence one. -/
+@[expose]
 def valence (vertex : Fin n) : ℕ :=
   2 * core.loops vertex +
     ∑ neighbor : Fin n, core.multiplicity vertex neighbor
 
 /-- The redundant multiplicity matrix really represents unordered nonloops. -/
+@[expose]
 def MatrixWellFormed : Prop :=
   (∀ vertex : Fin n, core.multiplicity vertex vertex = 0) ∧
   ∀ first second : Fin n,
@@ -76,6 +81,7 @@ def MatrixWellFormed : Prop :=
 
 /-- Connectedness of the nonloop support, in the same cut form used by
 `graphConnected`.  Semantic loops do not cross cuts. -/
+@[expose]
 def Connected : Prop :=
   ∀ S : Finset (Fin n),
     (∃ inside outside : Fin n, inside ∈ S ∧ outside ∉ S) →
@@ -83,6 +89,7 @@ def Connected : Prop :=
         0 < core.multiplicity inside outside
 
 /-- Every topological vertex has valence at least three. -/
+@[expose]
 def Stable : Prop :=
   ∀ vertex : Fin n, 3 ≤ core.valence vertex
 
@@ -90,6 +97,7 @@ def Stable : Prop :=
 
 The edge equation is written without truncated natural subtraction, so it is
 the exact Euler-characteristic identity at every genus. -/
+@[expose]
 def ValidAt (g : ℕ) : Prop :=
   core.MatrixWellFormed ∧
   core.Connected ∧
@@ -97,6 +105,7 @@ def ValidAt (g : ℕ) : Prop :=
   core.edgeCount + 1 = n + g
 
 /-- Backwards-compatible genus-four specialization of `ValidAt`. -/
+@[expose]
 def Valid : Prop :=
   core.ValidAt 4
 
@@ -187,6 +196,7 @@ theorem vertexCount_pos_of_valid (hValid : core.Valid) : 0 < n := by
 
 /-- Number of edge slots after replacing each semantic loop by two parallel
 edges from its base vertex to a fresh marker. -/
+@[expose]
 def splitEdgeCount : ℕ :=
   core.nonloopEdgeCount + 2 * core.loopCount
 
@@ -197,6 +207,7 @@ theorem splitEdgeCount_eq_edgeCount_add_loopCount :
   omega
 
 /-- Cyclomatic genus of the loopless split incidence data. -/
+@[expose]
 def splitTopologicalGenus : ℤ :=
   (core.splitEdgeCount : ℤ) - (n + core.loopCount : ℕ) + 1
 
@@ -215,15 +226,18 @@ theorem splitTopologicalGenus_eq_four (hValid : core.Valid) :
   core.splitTopologicalGenus_eq hValid
 
 /-- Original base vertices occupy the left summand of the split vertex type. -/
+@[expose]
 def baseVertex (vertex : Fin n) : Fin (n + core.loopCount) :=
   Fin.castAdd core.loopCount vertex
 
 /-- Loop markers occupy the right summand of the split vertex type. -/
+@[expose]
 def markerVertex (marker : Fin core.loopCount) :
     Fin (n + core.loopCount) :=
   Fin.natAdd n marker
 
 /-- Unordered edge multiplicity of an ordered-slot explicit-potential core. -/
+@[expose]
 def explicitCoreMultiplicity {vertexCount edgeCount : ℕ}
     (splitCore : ExplicitPotential.Core vertexCount edgeCount)
     (first second : Fin vertexCount) : ℕ :=
@@ -247,11 +261,13 @@ namespace SplitMetadata
 variable {core : Pseudocore n} (data : SplitMetadata core)
 
 /-- Number of displayed markers attached to a base vertex. -/
+@[expose]
 def markerMultiplicity (vertex : Fin n) : ℕ :=
   (Finset.univ.filter fun marker : Fin core.loopCount =>
     data.markerBase marker = vertex).card
 
 /-- Expected split multiplicity between two displayed split vertices. -/
+@[expose]
 def expectedMultiplicity
     (first second : Fin (n + core.loopCount)) : ℕ :=
   match (@finSumFinEquiv n core.loopCount).symm first,
@@ -266,6 +282,7 @@ def expectedMultiplicity
 
 /-- Exact mathematical relation between loop-aware data and its displayed
 loopless ordered-slot split core at genus `g`. -/
+@[expose]
 def ValidAt (g : ℕ) : Prop :=
   core.ValidAt g ∧
   (∀ vertex : Fin n,
@@ -279,6 +296,7 @@ def ValidAt (g : ℕ) : Prop :=
 
 /-- Backwards-compatible genus-four specialization of `SplitMetadata.ValidAt`.
 -/
+@[expose]
 def Valid : Prop :=
   data.ValidAt 4
 

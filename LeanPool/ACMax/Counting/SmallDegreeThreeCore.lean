@@ -18,7 +18,7 @@ good-triangle certificate; if the core is triangle-free, the standard
 small-degree lemma supplies an induced `2K₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

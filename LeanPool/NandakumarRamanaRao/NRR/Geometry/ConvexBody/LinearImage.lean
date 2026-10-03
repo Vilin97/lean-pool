@@ -50,7 +50,7 @@ Following the library-wide policy, `Basic.lean` already pulls in `import Mathlib
 imports are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 
@@ -72,6 +72,7 @@ theorem continuousLinearEquiv_image_interior (e : E ≃L[ℝ] F) (s : Set E) :
 /-- The image of a convex body under a continuous linear equivalence, as a convex body with
 carrier `e '' K`. Solidity is preserved because a continuous linear equivalence is a
 homeomorphism. -/
+@[expose]
 def imageLinearEquiv (K : ConvexBody E) (e : E ≃L[ℝ] F) : ConvexBody F where
   carrier := e '' (K : Set E)
   convex' := K.convex.linear_image (e : E →ₗ[ℝ] F)

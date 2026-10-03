@@ -44,7 +44,7 @@ Main declarations:
   in `Differential.lean`), offered for future covering-family constructions (e.g. laurent-tails).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set IsManifold

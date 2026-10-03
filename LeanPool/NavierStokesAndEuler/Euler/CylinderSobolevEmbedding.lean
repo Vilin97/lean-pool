@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Genuine L∞ control of finite-order cylinder Sobolev fields, obtained by smooth density. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

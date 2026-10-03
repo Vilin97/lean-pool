@@ -26,7 +26,7 @@ fields below come from these primitive identities; no equality of output
 physical fields or native regularity is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -219,7 +219,7 @@ They hold on the whole native coordinate space, before any smoothness claim
 or own-band/harmonic gate is applied.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -247,6 +247,7 @@ variable {B N0 : ℕ}
 
 /-- Request, given by `LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 *
 ActualPrimary.h) (ActualPrimary.commonContext B) u`. -/
+@[expose]
 noncomputable def request (P : SignedStressPrimitive.Patch) (u : State Point) :=
   LocalSignedRequest.fullRequest ActualPrimaryBounds.strip P (2 * ActualPrimary.h)
     (ActualPrimary.commonContext B) u
@@ -257,10 +258,12 @@ variable (P : SignedStressPrimitive.Patch) (u : State Point)
     (hp : GaugeMomentBalances.MovingField ActualPrimary.standardRegion P.a P.b u.pressure)
 
 /-- States, given by `ActualSignedPhysicalBinding.nativeStateData l P u H hp`. -/
+@[expose]
 noncomputable def states (l : Label B N0) : (ActualSignedPhysicalBinding.nativeViews l).StateData :=
   ActualSignedPhysicalBinding.nativeStateData l P u H hp
 
 /-- Branch, given by `(ActualSignedExterior.family (states P u H hp)).singleton L`. -/
+@[expose]
 noncomputable def branch (L : NativeLabel B N0) :=
   (ActualSignedExterior.family (states P u H hp)).singleton L
 
@@ -383,6 +386,20 @@ theorem branch_pressure_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinde
         (ActualSignedPhysicalData.layout ActualPrimary.slots ActualPrimary.outgoing.data.h_pos.le
           L.val L.property 0) _ L.val.1 k x) = _
   rw [layout_eq, ← ActualSignedExterior.actualLabel_reference L]
+  let f := ActualSignedExterior.family (B := B) (N0 := N0)
+    (states (B := B) (N0 := N0) P u H hp)
+  have hprimary : (f.singleton L).primary (f.singletonLabel L) =
+      ActualSignedPhysicalBinding.primary (ActualSignedExterior.actualLabel L) := by
+    rfl
+  have hcolumn : (f.singleton L).column (f.singletonLabel L) =
+      (ActualSignedExterior.actualLabel L).2 := by
+    rfl
+  have hlabel : (f.singletonLabel L).val.1 =
+      ActualSignedPhysicalBinding.reference (ActualSignedExterior.actualLabel L) := by
+    change L.val.1 = _
+    exact (ActualSignedExterior.actualLabel_reference L).symm
+  unfold branch branchLabel
+  rw [hprimary, hcolumn, hlabel]
   rfl
 
 theorem branch_potential_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
@@ -518,7 +535,7 @@ then proves smoothness and vanishing of all jets of the literal product,
 without assigning new values to the unmasked factor outside the band.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -781,7 +798,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -971,6 +988,7 @@ abbrev Native := ActualSignedPhysicalData.Native
 abbrev Label (B N0 : ℕ) := ActualSignedPhysicalBinding.Label B N0
 
 /-- Native cylinder map as an element of `Native →L[ℝ] PhysicalSignedWave.Cylinder`. -/
+@[expose]
 noncomputable def nativeCylinderMap : Native →L[ℝ] PhysicalSignedWave.Cylinder :=
   let r := ContinuousLinearMap.fst ℝ ℝ (TorusInverse.Plane × TorusInverse.Plane)
   let s := ContinuousLinearMap.snd ℝ ℝ (TorusInverse.Plane × TorusInverse.Plane)
@@ -984,6 +1002,7 @@ theorem nativeCylinderMap_apply (y : Native) :
 
 /-- Native to common, given by `(ActualSignedPhysicalBinding.toCommonCylinder
 l).toContinuousLinearMap.comp nativeCylinderMap`. -/
+@[expose]
 noncomputable def nativeToCommon {B N0 : ℕ} (l : Label B N0) : Native →L[ℝ] FullPoint :=
   (ActualSignedPhysicalBinding.toCommonCylinder l).toContinuousLinearMap.comp nativeCylinderMap
 

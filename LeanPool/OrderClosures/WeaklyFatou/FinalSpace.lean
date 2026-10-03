@@ -13,7 +13,7 @@ public import LeanPool.OrderClosures.WeaklyFatou.Moderated
 # Component adherence and the final `c₀`-sum
 -/
 
-@[expose] public section
+public section
 
 namespace OrderClosures
 

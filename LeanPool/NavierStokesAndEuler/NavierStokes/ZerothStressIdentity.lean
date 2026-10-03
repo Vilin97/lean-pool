@@ -17,7 +17,7 @@ derivatives are the negative weighted residuals, so the lower integration
 endpoint fixes the constant and identifies the constructed stress.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

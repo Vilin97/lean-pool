@@ -25,7 +25,7 @@ then becomes a nonzero univariate polynomial because its value at parameter one 
 small positive parameter avoiding the finitely many roots gives the required perturbation.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FiniteMultivariateGenericPerturbation

@@ -21,7 +21,7 @@ number of entries taken from column `b` before step `i`.
   class of `-b` (`Adm_gbasis`).
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -40,11 +40,13 @@ noncomputable def gchoice (κ : ℕ → ℕ) : ℕ :=
   if h : 0 < p then (exists_greedy_choice n p h κ).choose else 0
 
 /-- The allocation before step `i`. -/
+@[expose]
 noncomputable def galloc : ℕ → ℕ → ℕ
   | 0 => fun _ => 0
   | i + 1 => fun b => galloc i b + if b = gchoice n p (galloc i) then 1 else 0
 
 /-- The column chosen at step `i`. -/
+@[expose]
 noncomputable def gpick (i : ℕ) : ℕ := gchoice n p (galloc n p i)
 
 /-- The entry taken at step `i`. -/

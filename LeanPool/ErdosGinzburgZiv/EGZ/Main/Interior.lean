@@ -17,7 +17,7 @@ functional suppresses all points outside that face.  This gives the
 halfspaces needed to show that the centerpoint's least face is large.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

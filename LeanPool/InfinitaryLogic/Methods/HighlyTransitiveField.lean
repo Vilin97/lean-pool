@@ -32,7 +32,7 @@ The automorphism is built as a piecewise strictly monotone surjection
 (`StrictMono.orderIsoOfSurjective`) — no order-sum gluing needed.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder
 

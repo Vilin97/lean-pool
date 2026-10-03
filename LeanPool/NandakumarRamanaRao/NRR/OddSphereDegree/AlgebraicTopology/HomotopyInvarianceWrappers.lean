@@ -16,7 +16,7 @@ Composition, symmetry, and homotopy-equivalence wrappers around
 particular construction of the singular prism operator.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

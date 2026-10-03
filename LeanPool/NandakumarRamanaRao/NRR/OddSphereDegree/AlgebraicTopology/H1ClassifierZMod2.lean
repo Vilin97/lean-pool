@@ -62,7 +62,7 @@ producing a class `α ∈ H¹(RPⁿ; F₂)` from the monodromy character, togeth
 degree-one Hurewicz comparison `π₁(X)ᵃᵇ ≅ H₁(X; ℤ)`).
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology Limits
 
@@ -228,7 +228,7 @@ theorem kroneckerFunctional_iCycles_smul (X : TopCat.{0}) (n : ℕ) (s : ZMod 2)
   rfl
 
 /-- Evaluate cocycles on homology classes through the Kronecker pairing. -/
-def kroneckerCyclesMap (X : TopCat.{0}) (n : ℕ) :
+@[expose] def kroneckerCyclesMap (X : TopCat.{0}) (n : ℕ) :
     (cochainCxZMod2 X).cycles n ⟶ homologyDualZMod2 X n :=
   ModuleCat.ofHom
     { toFun := fun c =>

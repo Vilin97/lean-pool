@@ -18,7 +18,7 @@ is the least face containing the point.  Independently, finiteness of the
 face poset constructs such a least face for every point of the polytope.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -109,6 +109,7 @@ theorem eq_of_mem_relInterior {d : ℕ} {P : RationalPolytope d}
   · exact le_of_mem_relInterior hqG (intrinsicInterior_subset hqF)
 
 /-- Order-theoretic minimality among the faces which contain a point. -/
+@[expose]
 def IsLeastFaceAt {d : ℕ} (P : RationalPolytope d)
     (q : RealCoord d) (F : P.Face) : Prop :=
   q ∈ F.carrier ∧ ∀ G : P.Face, q ∈ G.carrier → F ≤ G

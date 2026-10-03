@@ -32,4 +32,4 @@ It does not assert existence of the concrete polyhedral model and does not conta
 transversality, orbit-count, or separation theorem.
 -/
 
-@[expose] public section
+public section

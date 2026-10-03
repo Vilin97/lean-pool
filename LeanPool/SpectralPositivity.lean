@@ -28,4 +28,4 @@ Tags: linear-algebra, perron-frobenius, positivity
 MSC: 15B48, 15A18
 -/
 
-@[expose] public section
+public section

@@ -19,7 +19,7 @@ Proves integrability of the Landau collision flux, Schwartz partial decay,
 and AEStronglyMeasurability of flux components for the Coulomb kernel.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Matrix Finset BigOperators Real
 

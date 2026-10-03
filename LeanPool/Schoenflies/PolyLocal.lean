@@ -59,7 +59,7 @@ Brick B5 ↔ brick B6 of `lem:polygonal-redrawing` (H6), and the interface B7 us
   payoff: two points of a connected relatively open piece are joined *inside that piece*.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 
@@ -129,7 +129,7 @@ Two strengthenings over `IsLocallyPolyConnAt`, and both are needed by brick B7. 
 confined to the neighbourhood, not merely to `S`, because a replacement arc has to stay in its
 tube; and the neighbourhoods run through a basis at `p`, because otherwise the property does
 not survive intersecting `S` with an open set (`IsLocallyPolyConn'.inter_isOpen`). -/
-def IsLocallyPolyConnAt' (S : Set Plane) (p : Plane) : Prop :=
+@[expose] def IsLocallyPolyConnAt' (S : Set Plane) (p : Plane) : Prop :=
   ∀ W : Set Plane, IsOpen W → p ∈ W →
     ∃ U : Set Plane, IsOpen U ∧ p ∈ U ∧ U ⊆ W ∧
       ∀ x ∈ U ∩ S, ∀ y ∈ U ∩ S, PolyReaches (U ∩ S) x y
@@ -332,7 +332,7 @@ theorem IsLocallyPolyConn'.inter_isOpen (h : IsLocallyPolyConn' S) (hW : IsOpen 
 /-! ### Relatively open subsets and their components -/
 
 /-- `A` is relatively open in `S`: cut out of `S` by an ambient open set. -/
-def IsRelOpenIn (S A : Set Plane) : Prop := ∃ W : Set Plane, IsOpen W ∧ A = S ∩ W
+@[expose] def IsRelOpenIn (S A : Set Plane) : Prop := ∃ W : Set Plane, IsOpen W ∧ A = S ∩ W
 
 theorem IsRelOpenIn.subset (h : IsRelOpenIn S A) : A ⊆ S := by
   obtain ⟨W, -, rfl⟩ := h

@@ -22,7 +22,7 @@ nothing about any other semigroup, and it makes no claim about a semigroup that 
 (see `MarkovProcess.Examples.Drift` for that).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -39,6 +39,7 @@ variable {alpha : Type*} [MeasurableSpace alpha]
 
 /-- The identity kernel semigroup: the transition kernel at every time is the identity kernel,
 so the associated process never moves. -/
+@[expose]
 def idSemigroup : SubMarkovKernelSemigroup alpha where
   kernel := fun _ ↦ Kernel.id
   measurable_kernel := (Kernel.id : Kernel alpha alpha).measurable.comp measurable_snd

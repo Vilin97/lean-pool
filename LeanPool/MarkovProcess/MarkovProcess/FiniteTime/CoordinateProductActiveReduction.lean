@@ -22,7 +22,7 @@ product is one.  No constant-one element of `C₀` is constructed.  This is pure
 finite-product infrastructure: it involves no measure and no kernel.
 -/
 
-@[expose] public section
+public section
 
 open scoped CompactlySupported ZeroAtInfty BigOperators
 
@@ -92,6 +92,7 @@ theorem normalizedCoordinateFactors_evaluation_active
 
 /-- Scalar evaluation of a normalized term on only its active coordinates.  For an empty active
 set this is the coefficient times the empty scalar product, hence just the coefficient. -/
+@[expose]
 def CoordinateProductTerm.activeEvaluation
     (t : CoordinateProductTerm (Fin n) alpha)
     (y : Fin (activeCoordinates t.factors).card → alpha) : ℝ :=

@@ -16,7 +16,7 @@ This module isolates the elementary push-forward identity relating the
 measure.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory ProbabilityTheory
 

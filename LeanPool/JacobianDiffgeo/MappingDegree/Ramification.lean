@@ -29,7 +29,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
   existence `RS.exists_isRegularValue`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology
@@ -44,15 +44,17 @@ variable {X Y : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
   [TopologicalSpace Y] [ChartedSpace ℂ Y]
 
 /-- Points where `F` is ramified (local multiplicity `≥ 2`, CC4's `IsRamifiedAt`). -/
+@[expose]
 def ramificationLocus (F : X → Y) : Set X := {x | IsRamifiedAt F x}
 
 /-- Branch values (critical values): images of ramification points. -/
-def branchLocus (F : X → Y) : Set Y := F '' ramificationLocus F
+@[expose] def branchLocus (F : X → Y) : Set Y := F '' ramificationLocus F
 
 /-- `y` is a regular value iff every point of its fiber is unramified. (For holomorphic
 nonconstant `F` this is equivalent to `y ∉ branchLocus F`, and then every fiber point has
 multiplicity exactly `1`.) Values NOT attained are regular (empty fiber) — harmless, since for
 nonconstant `F` every value is attained. -/
+@[expose]
 def IsRegularValue (F : X → Y) (y : Y) : Prop := ∀ x ∈ F ⁻¹' {y}, ¬ IsRamifiedAt F x
 
 theorem mem_ramificationLocus_iff {F : X → Y} {x : X} :

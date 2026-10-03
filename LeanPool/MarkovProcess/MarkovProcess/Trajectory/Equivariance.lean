@@ -38,7 +38,7 @@ No scaling limit is asserted: `c` is a fixed positive factor and both semigroups
 advance.  The two state spaces may coincide; the degenerate corollaries are stated on one space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -55,6 +55,7 @@ variable {alpha beta gamma : Type*} [TopologicalSpace alpha] [TopologicalSpace b
   [TopologicalSpace gamma]
 
 /-- Multiplication of nonnegative time by a fixed factor, as a continuous self-map of `NNReal`. -/
+@[expose]
 def timeScaling (c : NNReal) : C(NNReal, NNReal) where
   toFun t := c * t
   continuous_toFun := continuous_const.mul continuous_id
@@ -65,6 +66,7 @@ theorem timeScaling_apply (c t : NNReal) : timeScaling c t = c * t := rfl
 
 /-- Speed a continuous path up by the factor `c` and conjugate its state by the homeomorphism
 `e`. -/
+@[expose]
 def rescale (e : alpha ≃ₜ beta) (c : NNReal) (omega : ContinuousPath alpha) :
     ContinuousPath beta :=
   (e : C(alpha, beta)).comp (omega.comp (timeScaling c))

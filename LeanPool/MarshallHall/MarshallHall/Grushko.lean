@@ -23,7 +23,7 @@ calculation is obtained from abelianization, so the result is not merely a
 cardinality calculation transported through an unproved presentation.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -150,6 +150,7 @@ theorem binaryFreeProductEquiv_inl {α β : Type u} (x : FreeGroup α) :
   exact congrArg (fun f : FreeGroup α →* FreeGroup (α ⊕ β) => f x) hmap
 
 /-- The image of a free-group element in the free abelian group on its generators. -/
+@[expose]
 def abelianizedValue {α : Type u} (x : FreeGroup α) : FreeAbelianGroup α :=
   Additive.ofMul (Abelianization.of x)
 

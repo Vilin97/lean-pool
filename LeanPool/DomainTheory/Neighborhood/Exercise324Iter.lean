@@ -41,7 +41,7 @@ from `Element.ext`,
 §3.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 

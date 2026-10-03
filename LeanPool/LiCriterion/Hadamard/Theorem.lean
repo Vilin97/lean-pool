@@ -16,7 +16,7 @@ This file intentionally contains no global axioms: the deep factorization theore
 handled elsewhere; here we only record consequences and clean lemmas that downstream files use.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set Metric
 

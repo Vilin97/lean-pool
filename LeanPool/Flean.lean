@@ -20,7 +20,7 @@ Tags: floating-point, numerical-analysis, ieee-754, rounding
 MSC: 65G50, 65G30, 68V20
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

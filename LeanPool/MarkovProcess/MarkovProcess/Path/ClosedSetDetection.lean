@@ -12,7 +12,7 @@ public import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 /-! # Detecting closed sets from countably many path coordinates -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -27,6 +27,7 @@ namespace ContinuousPath
 variable {alpha : Type*} [PseudoMetricSpace alpha]
 
 /-- The positive thresholds used to detect zero distance to a closed set. -/
+@[expose]
 def detectionThreshold (n : ℕ) : ℝ := 1 / (n + 1 : ℝ)
 
 private theorem detectionThreshold_pos (n : ℕ) : 0 < detectionThreshold n := by
@@ -34,6 +35,7 @@ private theorem detectionThreshold_pos (n : ℕ) : 0 < detectionThreshold n := b
 
 /-- A countable test for whether a path on `[0, t]` meets `F`.  The endpoint `t` is included
 separately, while all earlier samples use the fixed enumeration of nonnegative rational times. -/
+@[expose]
 def DetectsClosedSetOnIic (t : NNReal) (F : Set alpha) (f : C(Set.Iic t, alpha)) : Prop :=
   F.Nonempty ∧ ∀ n : ℕ,
     Metric.infDist (f ⟨t, Set.mem_Iic.mpr le_rfl⟩) F < detectionThreshold n ∨
@@ -143,6 +145,7 @@ private theorem closedSetDetectionThreshold_pos (n : ℕ) :
   exact one_div_pos.mpr (Nat.cast_add_one_pos n)
 
 /-- A countable test for whether a continuous map on `[u, t]` meets `F`. -/
+@[expose]
 def DetectsClosedSetOnIcc (u t : NNReal) (hut : u ≤ t) (F : Set alpha)
     (f : C(Set.Icc u t, alpha)) : Prop :=
   F.Nonempty ∧ ∀ n : ℕ,
@@ -250,11 +253,13 @@ theorem detectsClosedSetOnIcc_iff
         (lt_of_le_of_ne s.property.2 hst) (closedSetDetectionThreshold_pos n) hzero
 
 /-- Restrict an ordinary continuous path to a compact initial time interval. -/
+@[expose]
 def restrictIic (t : NNReal) (omega : ContinuousPath alpha) : C(Set.Iic t, alpha) where
   toFun s := omega s
   continuous_toFun := omega.continuous.comp continuous_subtype_val
 
 /-- The event that a continuous path meets `F` at or before time `t`. -/
+@[expose]
 def hitsSetBy (t : NNReal) (F : Set alpha) : Set (ContinuousPath alpha) :=
   {omega | ∃ s : Set.Iic t, omega s ∈ F}
 

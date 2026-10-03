@@ -23,7 +23,7 @@ face lies on that face, and a positive summand of a combination equal to a
 vertex must be that vertex.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

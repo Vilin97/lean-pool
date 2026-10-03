@@ -19,7 +19,7 @@ The resulting overlay is automatically a plane subdivision of the old overlay.  
 finite straight-line engine needed before the wild outer graph and the joining ear are glued.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph
@@ -60,6 +60,7 @@ theorem trans (hGH : IsPlaneSubdivisionExtension G Gdraw H Hdraw)
 end IsPlaneSubdivisionExtension
 
 /-- The already-subdivided edges of a finite straight overlay, listed as pieces. -/
+@[expose]
 noncomputable def currentOverlayPieces (pieces : List Piece) (extra : List Plane) : List Piece :=
   (attachGraph pieces extra).edgeFinset.toList
 
@@ -68,13 +69,13 @@ noncomputable def currentOverlayPieces (pieces : List Piece) (extra : List Plane
   rw [currentOverlayPieces, Finset.mem_toList, Graph.mem_edgeFinset]
 
 /-- Append further straight pieces to the current overlay edge list. -/
-noncomputable def extendedOverlayPieces
+@[expose] noncomputable def extendedOverlayPieces
     (pieces : List Piece) (extra : List Plane) (joins : List Piece) : List Piece :=
   currentOverlayPieces pieces extra ++ joins
 
 /-- Re-overlay the current straight graph together with the joining pieces, retaining every
 old vertex as a cut point. -/
-noncomputable def extendOverlay
+@[expose] noncomputable def extendOverlay
     (pieces : List Piece) (extra : List Plane) (joins : List Piece) : Graph Plane Piece :=
   attachGraph (extendedOverlayPieces pieces extra joins)
     (attachGraph pieces extra).vertexFinset.toList

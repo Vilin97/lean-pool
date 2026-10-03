@@ -137,4 +137,4 @@ spike-verified here) and citing `exists_tail_pair_ne_zero`'s shape directly; `Ta
   offered but not required.
 -/
 
-@[expose] public section
+public section

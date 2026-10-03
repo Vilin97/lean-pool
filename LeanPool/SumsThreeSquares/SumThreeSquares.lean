@@ -26,7 +26,7 @@ Minkowski's theorem (see `LeanPool.SumsThreeSquares.MinkowskiConvex`).
 The main result is `blueprint_case_mod8_eq3`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.SumsThreeSquares
 

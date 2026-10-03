@@ -19,7 +19,7 @@ of the e–h convolution and the bialternant Jacobi–Trudi identity.
 The `hSub` recurrence is proven in `HInsert.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -36,7 +36,7 @@ noncomputable def eSub (A : Finset (Fin k)) (r : ℕ) :
 open scoped Classical in
 /-- The complete homogeneous polynomial supported in a subset of
 the variables. -/
-noncomputable def hSub (A : Finset (Fin k)) (m : ℕ) :
+@[expose] noncomputable def hSub (A : Finset (Fin k)) (m : ℕ) :
     MvPolynomial (Fin k) ℂ :=
   ∑ w ∈ Finset.univ.filter
     (fun w : Sym (Fin k) m => ∀ i ∈ w.1, i ∈ A),

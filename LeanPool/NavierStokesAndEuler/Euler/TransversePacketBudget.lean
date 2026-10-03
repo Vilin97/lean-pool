@@ -21,7 +21,7 @@ the forcing, its amplitude, its derivative shift, or the recursive grade.
 Coercivity is required only on the actual history interval [0,τ].
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -118,6 +118,7 @@ variable {D τ hτ hτT B ι q} (L : Budget D τ hτ hτT B ι q)
 
 /-- Full profile, given by `EulerElapsedTimePathGluing.profile D.T τ hτ.le hτT.le L.g
 L.initial_one`. -/
+@[expose]
 def fullProfile : C(Icc (0 : ℝ) D.T,ℝ) :=
   EulerElapsedTimePathGluing.profile D.T τ hτ.le hτT.le L.g L.initial_one
 
@@ -130,12 +131,12 @@ theorem radius_bounds : 1 ≤ L.R ∧ sobolevCoefficientRadius ι L.Rc ≤ L.R :
 
 /-- Velocity cost, given by `3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*traceCost τ +
 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀`. -/
-def velocityCost : ℝ :=
+@[expose] def velocityCost : ℝ :=
   3*sobolevCoefficientAmplitude ι q L.Rc L.C₀*traceCost τ +
     3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
 
 /-- Derivative cost as an element of `ℝ`. -/
-def derivativeCost : ℝ :=
+@[expose] def derivativeCost : ℝ :=
   3*sobolevCoefficientAmplitude ι q L.Rc L.C₁*traceCost τ +
     3*sobolevCoefficientAmplitude ι q L.Rc L.C₀ +
       physicalCost ι q L.Ri L.C₀ L.C₁ 1 1

@@ -15,7 +15,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SardMoreira.OuterMeasureDeriv
 -/
 
-@[expose] public section
+public section
 
 namespace MeasureTheory.Measure
 

@@ -16,7 +16,7 @@ import Mathlib.Tactic.Ring.Basic
 of `y₁², …, y_h²` and `ν(y) = D_N(y²)^6 / D_K(y²) · w(y)`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Finset Polynomial
 

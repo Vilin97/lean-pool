@@ -34,7 +34,7 @@ large natural logarithmic gradient is retained in the growing term rather
 than estimated by an absolute constant.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1026,7 +1026,7 @@ structure PreparedWitness (F : OutgoingProfile.Profile) (N : ℕ) (delta radiusF
 
 /-- Controls, given by `NominalProfile.Controls.ofContinuation W.axis W.continuation W.shapeTime
 W.shapeTime_pos`. -/
-noncomputable def PreparedWitness.controls {F : OutgoingProfile.Profile} {N : ℕ}
+@[expose] noncomputable def PreparedWitness.controls {F : OutgoingProfile.Profile} {N : ℕ}
     {delta radiusFloor : ℝ} (W : PreparedWitness F N delta radiusFloor) :
     NominalProfile.Controls W.axis :=
   NominalProfile.Controls.ofContinuation W.axis W.continuation W.shapeTime W.shapeTime_pos
@@ -1074,7 +1074,7 @@ cap is intersected with the existing reset and energy thresholds before any
 profile is constructed. The actual core is then fixed before choosing h.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1214,7 +1214,7 @@ The clean cone below belongs to the unedited outgoing profile. Identification
 with the complete edited nominal stress is a separate construction.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1339,7 +1339,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1353,6 +1353,7 @@ open NavierStokes.StressActivation
 namespace NavierStokes.NominalConeAssembly
 
 /-- Is true, constructed using `ActivationContinuation.IsRelaxed`. -/
+@[expose]
 noncomputable def IsTrue {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) : Prop :=
   ActivationContinuation.IsRelaxed P h p ∧
     2 < ActivationContinuation.shearSize
@@ -1379,7 +1380,7 @@ theorem p2_eq_stock {D : RadialDomain} (P : Profiles D) (h : ℝ) (p : Point) :
 /-! ## Local smooth coordinates for the modulation annulus -/
 
 /-- Tilt, given by `ActivationContinuation.shearB P p / ActivationContinuation.shearA P p`. -/
-noncomputable def tilt {D : RadialDomain} (P : Profiles D) (p : Point) : ℝ :=
+@[expose] noncomputable def tilt {D : RadialDomain} (P : Profiles D) (p : Point) : ℝ :=
   ActivationContinuation.shearB P p / ActivationContinuation.shearA P p
 
 theorem physicalE_smoothAt {D : RadialDomain} (P : Profiles D) {p : Point}
@@ -1664,7 +1665,7 @@ end Witness
 /-! ## Literal physical moments in the logarithmic chart -/
 
 /-- Chart, given by `(XR * Real.exp p.1, p.2)`. -/
-noncomputable def chart (XR : ℝ) (p : Point) : Point := (XR * Real.exp p.1, p.2)
+@[expose] noncomputable def chart (XR : ℝ) (p : Point) : Point := (XR * Real.exp p.1, p.2)
 
 theorem chart_positive {XR : ℝ} (hXR : 0 < XR) (p : Point) : 0 < (chart XR p).1 :=
   mul_pos hXR (Real.exp_pos _)
@@ -2347,7 +2348,7 @@ variable {F : Profile} (G : CompensatedFamily F)
 
 /-- The actual heat witness and the nominal fields are constructed only after
 the same physical radius has met the previously fixed bound. -/
-noncomputable def assemble {D : ℝ} (hF : OutgoingProfile.Specification F D)
+@[expose] noncomputable def assemble {D : ℝ} (hF : OutgoingProfile.Specification F D)
     (A : AxisStage F) (c : Controls A) (hr : G.radiusFloor ≤ c.radius)
     (hsep : c.separation ≤ Real.exp (-8))
     (hs : ∀ eta ∈ HeatedOutgoing.parameterDomain, SmallDebt F c.debt eta) : NominalProfile.Witness
@@ -2697,10 +2698,11 @@ end Initial
 /-! ## The active annulus and one common ordered choice -/
 
 /-- Active left, given by `4 / W.axis.scale`. -/
+@[expose]
 noncomputable def activeLeft {F : Profile} (W : NominalProfile.Witness F) : ℝ := 4 / W.axis.scale
 
 /-- Active right, given by `W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)`. -/
-noncomputable def activeRight {F : Profile} (W : NominalProfile.Witness F) : ℝ :=
+@[expose] noncomputable def activeRight {F : Profile} (W : NominalProfile.Witness F) : ℝ :=
   W.controls.radius * Real.exp (OutgoingTail.tailEnd F.data)
 
 theorem activeLeft_pos {F : Profile} (W : NominalProfile.Witness F) : 0 < activeLeft W :=

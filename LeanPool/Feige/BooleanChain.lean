@@ -20,7 +20,7 @@ chain structure and the exact one-element insertion step needed by the mass
 transport argument.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

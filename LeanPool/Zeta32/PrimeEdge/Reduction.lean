@@ -9,7 +9,7 @@ public import LeanPool.Zeta32.PrimeEdge.Congruence
 /-! the proof notes, §6 Proposition 6. `exceptional` is defined in `Zeta32.PrimeEdge.Reference`
 (same name, same value). the proof is the S5 assembly (primitive reduction). -/
 
-@[expose] public section
+public section
 namespace Zeta32.PrimeEdge
 
 open Polynomial Zeta32.Arith.Local

@@ -29,7 +29,7 @@ No finite-dimensional distribution of the killed process is identified here, and
 regularity property of the killed family is claimed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

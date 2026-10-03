@@ -54,7 +54,7 @@ below is the resulting one-call wrapper, shaped to exactly match
 conclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 open Utilities.Certificate
@@ -81,6 +81,7 @@ variable {m n p : ℕ}
 
 /-- The slots that vanish at `point`: exactly the `Finset` a contraction
 census classifies. -/
+@[expose]
 def zeroSlots (certificate : CertificateData m n p) (point : Fin m → ℤ) : Finset (Fin p) :=
   Finset.univ.filter (fun edge => certificate.segmentNat point edge = 0)
 
@@ -98,6 +99,7 @@ theorem not_mem_zeroSlots_of_pos (certificate : CertificateData m n p) (point : 
 
 /-- **The census-produced `rep`.** No row ever writes this by hand: it is the
 union-find component map of the vanishing-slot set. -/
+@[expose]
 def censusRep (certificate : CertificateData m n p) (point : Fin m → ℤ) : Fin n → Fin n :=
   compFold certificate.core (certificate.zeroSlots point)
 

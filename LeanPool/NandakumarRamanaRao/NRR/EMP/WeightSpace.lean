@@ -39,7 +39,7 @@ the vocabulary used to pin down the additive‑constant freedom in equal‑area 
 This file must not depend on optimal transport; it imports only `Mathlib`.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -48,21 +48,21 @@ variable {n : ℕ}
 namespace EMP
 
 /-- **Weight sum.** The total `∑ i, w i` of a weight vector. -/
-noncomputable def weightSum (w : Fin n → ℝ) : ℝ :=
+@[expose] noncomputable def weightSum (w : Fin n → ℝ) : ℝ :=
   ∑ i, w i
 
 /-- **Normalized weights.** The affine normalization `∑ i, w i = 0`, used to remove the
 additive‑constant freedom in the weights. -/
-def WeightNormalized (w : Fin n → ℝ) : Prop :=
+@[expose] def WeightNormalized (w : Fin n → ℝ) : Prop :=
   EMP.weightSum w = 0
 
 /-- **Weight mean.** The arithmetic mean `(∑ i, w i) / n` of a weight vector. -/
-noncomputable def weightMean (w : Fin n → ℝ) : ℝ :=
+@[expose] noncomputable def weightMean (w : Fin n → ℝ) : ℝ :=
   EMP.weightSum w / n
 
 /-- **Mean‑subtraction normalization.** Subtract the mean from every weight, producing a
 zero‑sum weight vector. -/
-noncomputable def normalizeWeight (w : Fin n → ℝ) : Fin n → ℝ :=
+@[expose] noncomputable def normalizeWeight (w : Fin n → ℝ) : Fin n → ℝ :=
   fun i => w i - EMP.weightMean w
 
 @[simp] theorem normalizeWeight_apply (w : Fin n → ℝ) (i : Fin n) :

@@ -18,7 +18,7 @@ are unchanged. The spatial mask is replaced by its actual native grid factor.
 All estimates are on the original native control cells.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -276,6 +276,7 @@ theorem potential_jets {β : ℝ} {request : ℕ → Full → SignedWaveUpdate.V
 /-! ## Removing the cutoff preserves the literal own-band zero germs -/
 
 /-- Reference, given by `BaseChartJets.cellBand l.1`. -/
+@[expose]
 noncomputable def reference (l : Label B N0) : ℕ := BaseChartJets.cellBand l.1
 
 theorem dyadicFactor_reference (l : Label B N0) (k : Copy) (x : Full) :
@@ -331,7 +332,7 @@ theorem own_phaseCell_or_zero (request : ℕ → Full → SignedWaveUpdate.Vec2)
 
 /-- The band index is frozen only discretely, at the original label's own
 reference. This is not an extension of a fixed reference to all bands. -/
-noncomputable def ownField {E : Type} [Zero E]
+@[expose] noncomputable def ownField {E : Type} [Zero E]
     (f : Label B N0 → Copy → ℕ → Full → E)
     (i : Label B N0 × Copy) (n : ℕ) (x : Full) : E :=
   if n = reference i.1 then f i.1 i.2 n x else 0

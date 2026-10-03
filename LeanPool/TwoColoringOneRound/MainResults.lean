@@ -22,7 +22,7 @@ This file collects the public-facing theorems connecting:
 We also package these bounds as statements about an infimum `p⋆` over all measurable local rules.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 

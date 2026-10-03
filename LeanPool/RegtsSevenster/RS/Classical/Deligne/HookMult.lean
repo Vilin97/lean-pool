@@ -22,7 +22,7 @@ number, so every term vanishes; hook positivity makes the two
 specialisation factors nonzero, killing the multiplicity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

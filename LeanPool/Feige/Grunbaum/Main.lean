@@ -21,7 +21,7 @@ proof.  The public theorem `grunbaum_centroid_halfspace` has only the
 assumptions in the mathematical statement.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Set
 open scoped ENNReal Topology

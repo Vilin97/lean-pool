@@ -28,7 +28,7 @@ with the torus integral of `|f|²`, which `integral_periodCube_eq_torus` convert
 cube integral.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Real MeasureTheory

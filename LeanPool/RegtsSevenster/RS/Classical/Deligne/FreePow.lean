@@ -26,7 +26,7 @@ for the whole file; the statements of record are spelt at the
 carrier `A ⊗ V` with that instance.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ section Fold
 /-- **The multiplication fold**: the left-to-right product
 `tensorPow D A n ⟶ A`, one factor at a time; the empty product is
 the unit. -/
+@[expose]
 noncomputable def muFold
     [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A] :
     (n : ℕ) → tensorPow D A n ⟶ A
@@ -157,6 +158,7 @@ section Collect
 
 /-- **The free collapse**: multiply all the heads of a power of
 free letters to the front of the word. -/
+@[expose]
 noncomputable def freeCollapse
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (V : D) : (n : ℕ) →

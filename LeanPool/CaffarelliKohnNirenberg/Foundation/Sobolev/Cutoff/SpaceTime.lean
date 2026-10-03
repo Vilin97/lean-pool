@@ -37,7 +37,7 @@ one-dimensional time cutoff in the `CKN` namespace.
   `spaceTimeCutoff_support_subset` give the product cutoff properties.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

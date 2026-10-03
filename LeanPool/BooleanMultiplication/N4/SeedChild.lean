@@ -17,7 +17,7 @@ to one of two forms: a low--low product, or a product with exactly one
 both the quartic and cubic feedback arguments.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -25,11 +25,13 @@ namespace N4
 noncomputable section
 
 /-- A product of two ANFs in the affine-plus-rational-target space. -/
+@[expose]
 def IsLowLowProduct (f : ANF 8) : Prop :=
   ∃ p q : ANF 8,
     p ∈ rationalLowSpace ∧ q ∈ rationalLowSpace ∧ f = p * q
 
 /-- A product whose first input is the seed plus a low term and whose second input is low. -/
+@[expose]
 def IsSeedUsingProduct (g f : ANF 8) : Prop :=
   ∃ p c : ANF 8,
     p ∈ rationalLowSpace ∧ c ∈ rationalLowSpace ∧
@@ -104,6 +106,7 @@ theorem normalize_seed_state_product {C : Circuit 8 8}
     · exact Submodule.add_mem _ hp hq
 
 /-- A new target at the fifth gate, represented modulo the fourth-gate flag by a seed child. -/
+@[expose]
 def UsefulSeedChildData (C : Circuit 8 8) : Prop :=
   ∃ (target representative shift : ANF 8),
     target ∈ targetAmbient 8 (mulTarget 4) ∧

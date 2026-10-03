@@ -19,7 +19,7 @@ safe.  The final half-cylinder composition therefore satisfies Route B's exact f
 condition.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex

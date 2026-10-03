@@ -18,7 +18,7 @@ the constant function `1`; in particular the representation treats constants and
 coordinate type without exceptional cases.
 -/
 
-@[expose] public section
+public section
 
 open scoped CompactlySupported ZeroAtInfty
 
@@ -51,6 +51,7 @@ theorem CoordinateProductTerm.toContinuousMap_apply
       exact congrArg (fun z ↦ p.2 (x p.1) * z) ih
 
 /-- Evaluate a finite list of coordinate-product terms by summing its terms. -/
+@[expose]
 def coordinatePolynomial (terms : List (CoordinateProductTerm I α)) : C(I → α, ℝ) :=
   (terms.map CoordinateProductTerm.toContinuousMap).sum
 

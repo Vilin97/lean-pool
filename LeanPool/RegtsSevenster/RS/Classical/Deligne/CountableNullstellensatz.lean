@@ -34,7 +34,7 @@ The finite-type predecessor is `RS.exists_algHom_complex` in
 Zariski's lemma instead of the dimension count.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

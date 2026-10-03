@@ -14,7 +14,7 @@ Auxiliary material for the formalization of M. Stoll, *Galois groups over ℚ of
 polynomials*, Arch. Math. 59 (1992), 239-244; upstreaming candidates for Mathlib.
 -/
 
-@[expose] public section
+public section
 
 /-- Between finite groups, an injective homomorphism extends to an isomorphism iff the two groups
 have the same cardinality. -/

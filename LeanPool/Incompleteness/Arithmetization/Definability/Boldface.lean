@@ -11,7 +11,7 @@ import Mathlib.Algebra.Order.Sub.Basic
 
 /-! # Boldface -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -21,10 +21,11 @@ namespace Arith
 end Arith
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Defined {k} (R : (Fin k → V) → Prop) [Structure L V] (φ : Semisentence L k) : Prop :=
+@[expose] def Defined {k} (R : (Fin k → V) → Prop) [Structure L V] (φ : Semisentence L k) : Prop :=
   ∀ v, R v ↔ Semiformula.Evalbm V v φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def DefinedWithParam {k} (R : (Fin k → V) → Prop) [Structure L V] (φ : Semiformula L V k) : Prop :=
   ∀ v, R v ↔ Semiformula.Evalm V v id φ
 
@@ -48,12 +49,13 @@ open LO.Arith
 variable {V : Type*} [ORingStruc V]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Defined (R : (Fin k → V) → Prop) : {ℌ : HierarchySymbol} → ℌ.Semisentence k → Prop
+@[expose] def Defined (R : (Fin k → V) → Prop) : {ℌ : HierarchySymbol} → ℌ.Semisentence k → Prop
   | Sg-[_], φ => FirstOrder.Defined R φ.val
   | Pg-[_], φ => FirstOrder.Defined R φ.val
   | Dlt-[_], φ => φ.ProperOn V ∧ FirstOrder.Defined R φ.val
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def DefinedWithParam (R : (Fin k → V) → Prop) : {ℌ : HierarchySymbol} → ℌ.Semiformula V k → Prop
   | Sg-[_], φ => FirstOrder.DefinedWithParam R φ.val
   | Pg-[_], φ => FirstOrder.DefinedWithParam R φ.val

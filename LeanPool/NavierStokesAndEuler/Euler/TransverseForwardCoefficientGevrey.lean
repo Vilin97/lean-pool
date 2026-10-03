@@ -38,7 +38,7 @@ in the uniform time norm, without assuming parameter regularity of the
 homogeneous evolution supplied by (H3).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

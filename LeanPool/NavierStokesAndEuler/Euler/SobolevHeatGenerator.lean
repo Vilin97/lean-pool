@@ -31,7 +31,7 @@ section
 
 /-! The Gaussian variance generator is one half of the genuine squared translation derivative. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -204,7 +204,7 @@ section
 /-! Differentiation of jointly continuous operator families without operator-norm differentiability.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -271,8 +271,9 @@ def realLineHeatOperator (a : LiftTangent) (t : ℝ) : LiftL2 period →L[ℝ] L
   lineHeatOperator period a t.toNNReal
 
 @[simp] theorem realLineHeatOperator_apply (a : LiftTangent) (t : ℝ) (f : LiftL2 period) :
-    realLineHeatOperator period a t f = realLineHeat period a t f :=
-  (realLineHeat_eq_toNNReal period a t f).symm
+    realLineHeatOperator period a t f = realLineHeat period a t f := by
+  simpa only [realLineHeatOperator, lineHeatOperator_apply] using
+    (realLineHeat_eq_toNNReal period a t f).symm
 
 theorem realLineHeat_joint_continuous (a : LiftTangent) :
     Continuous (fun p : ℝ × LiftL2 period => realLineHeat period a p.1 p.2) := by
@@ -304,7 +305,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -458,7 +459,7 @@ section
 
 /-! Exact identification of the Gaussian cylinder generator with the actual strong-jet Laplacian. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -495,8 +496,9 @@ theorem cylinderHeatJet_laplacian {f : LiftL2 period} (J : SpatialJet period sta
 def realCylinderHeat (t : ℝ) : LiftL2 period →L[ℝ] LiftL2 period := cylinderHeat period t.toNNReal
 
 theorem realCylinderHeat_apply (t : ℝ) (f : LiftL2 period) :
-    realCylinderHeat period t f = realHeatList period cylinderDirections t f :=
-  (realHeatList_eq_toNNReal period cylinderDirections t f).symm
+    realCylinderHeat period t f = realHeatList period cylinderDirections t f := by
+  simpa only [realCylinderHeat, cylinderHeat_apply] using
+    (realHeatList_eq_toNNReal period cylinderDirections t f).symm
 
 /-- The actual cylinder heat generator at positive variance is one half of the Laplacian. -/
 theorem realCylinderHeat_generator_pos {f : LiftL2 period} (J : SpatialJet period standardDirection
@@ -577,7 +579,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -590,6 +592,7 @@ open scoped Topology NNReal
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual spatial Laplacian evaluated as a bounded map from Hq to L², q≥2. -/
+@[expose]
 def laplacianEvaluation (q : ℕ) (hq : 2 ≤ q) : SobolevSpace period q →L[ℝ] LiftL2 period :=
   ∑ i : Fin 4, wordOperator period (⟨⟨2, Nat.lt_succ_of_le hq⟩, fun _ : Fin 2 => i⟩ : SobolevWord q)
 
@@ -630,17 +633,18 @@ theorem laplacianEvaluation_heat {q : ℕ} (hq : 2 ≤ q) (v : ℝ≥0) (u : Sob
   rw [laplacianEvaluation_apply, laplacianEvaluation_apply, map_sum]
   apply Finset.sum_congr rfl
   intro i _
-  rfl
+  simp only [word, heatOperator_apply]
 
 /-- Actual viscous heat on the complete Sobolev space, extended constantly to negative physical
 time. -/
-def heatFlow (q : ℕ) (ν t : ℝ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
+@[expose] def heatFlow (q : ℕ) (ν t : ℝ) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   heatOperator period q (2 * ν * t).toNNReal
 
 /-- The Sobolev flow has exactly the original genuine L² viscous heat value. -/
 @[simp]
 theorem heatFlow_value {q : ℕ} (ν t : ℝ) (u : SobolevSpace period q) :
-    value period (heatFlow period q ν t u) = viscousCylinderHeat period ν t (value period u) := rfl
+    value period (heatFlow period q ν t u) = viscousCylinderHeat period ν t (value period u) := by
+  exact heatOperator_value period (2 * ν * t).toNNReal u
 
 /-- Positive-time heat is differentiable in L² with the actual bounded Laplacian evaluation. -/
 theorem heatFlow_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 < ν)
@@ -650,6 +654,7 @@ theorem heatFlow_value_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 <
   have h := viscousCylinderHeat_equation period (EulerH6Pressure.SpatialJet.restrict (toJet period
       u) 2 hq) hν ht
   rw [cylinderHeatJet_laplacian, ← laplacianEvaluation_eq_jet period hq u] at h
+  simp only [heatFlow_value]
   change HasDerivAt (fun s => viscousCylinderHeat period ν s (value period u))
     (ν • laplacianEvaluation period q hq (heatOperator period q (2 * ν * t).toNNReal u)) t
   rw [laplacianEvaluation_heat]
@@ -710,6 +715,7 @@ theorem heatFlow_value_norm_sub_le {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 
   have h := (realHeat_value_lipschitz period hq u).dist_le_mul (2 * ν * s) (2 * ν * t)
   simp only [dist_eq_norm, Real.coe_nnabs, Real.norm_eq_abs,
     abs_of_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (norm_nonneg u))] at h
+  rw [heatFlow_value, heatFlow_value]
   change ‖realCylinderHeat period (2 * ν * s) (value period u) -
     realCylinderHeat period (2 * ν * t) (value period u)‖ ≤ _
   have he : |2 * ν * s - 2 * ν * t| = (2 * ν) * |s - t| := by

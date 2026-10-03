@@ -16,7 +16,7 @@ extension requires no progress certificate, event, or unsatisfied condition
 at the constant stages.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition
 

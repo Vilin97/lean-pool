@@ -17,4 +17,4 @@ Bundles the directed-path splitting modules used by the Van Kampen theorem
 development.
 -/
 
-@[expose] public section
+public section

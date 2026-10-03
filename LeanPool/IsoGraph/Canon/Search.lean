@@ -32,7 +32,7 @@ largest key, i.e. that none of the three pruning rules ever discards it — is `
 `IsoGraph/Canon/Optimal.lean`; the two are joined in `IsoGraph/Canon/Correct.lean`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace IsoGraph
@@ -111,7 +111,8 @@ theorem lexCmpU64_refl (a : Array UInt64) : lexCmpU64 a a = .eq :=
 /-- The key a leaf is judged by: its node-invariant path first, its certificate second.  Packing
 the two as a `List (List UInt64)` makes lexicographic `compare` on the pair — exactly the
 comparison `leafUpdate` performs — available with all of Std's order lemmas. -/
-def leafKey (invPath cert : Array UInt64) : List (List UInt64) := [invPath.toList, cert.toList]
+@[expose] def leafKey (invPath cert : Array UInt64) : List (List UInt64) :=
+  [invPath.toList, cert.toList]
 
 /-- `compare` on keys is the two-stage comparison of `leafUpdate`. -/
 theorem compare_leafKey (i c i' c' : Array UInt64) :
@@ -137,12 +138,12 @@ tree, in which every vertex of the target cell is individualised in turn — has
 
 /-- The child of `p` obtained by individualising `v` and re-refining, with the trace of the
 refinement.  This is exactly the step `dfsChildren` takes. -/
-def child (G : Graph) (p : Part) (v : Nat) : Part × UInt64 :=
+@[expose] def child (G : Graph) (p : Part) (v : Nat) : Part × UInt64 :=
   refine G (individualize p v).1
     ((Array.replicate G.n false).set! (individualize p v).2 true) hashSeed
 
 /-- The node invariant of that child, appended to the path invariant. -/
-def childInv (G : Graph) (invPath : Array UInt64) (p : Part) (v : Nat) : Array UInt64 :=
+@[expose] def childInv (G : Graph) (invPath : Array UInt64) (p : Part) (v : Nat) : Array UInt64 :=
   invPath.push (mix (child G p v).2 ((child G p v).1.shapeHash G.n))
 
 /-- The leaves of the unpruned search tree below `p`, described by their keys. -/
@@ -228,19 +229,19 @@ theorem reach_transfer' {n : Nat} {σ : Nat → Nat} {f : Nat → Nat → Bool} 
 /-! ### The specification, and its invariance -/
 
 /-- The root of the search: the initially refined partition and its one-entry invariant path. -/
-def rootPart (n : Nat) (f : Nat → Nat → Bool) : Part :=
+@[expose] def rootPart (n : Nat) (f : Nat → Nat → Bool) : Part :=
   (initialRefine (Graph.ofOracle n f)).1
 
 /-- The invariant path at the root. -/
-def rootInv (n : Nat) (f : Nat → Nat → Bool) : Array UInt64 :=
+@[expose] def rootInv (n : Nat) (f : Nat → Nat → Bool) : Array UInt64 :=
   #[mix (initialRefine (Graph.ofOracle n f)).2 ((rootPart n f).shapeHash n)]
 
 /-- `k` is the key of a leaf of the whole (unpruned) search tree. -/
-def Leafkey (n : Nat) (f : Nat → Nat → Bool) (k : List (List UInt64)) : Prop :=
+@[expose] def Leafkey (n : Nat) (f : Nat → Nat → Bool) (k : List (List UInt64)) : Prop :=
   Reach n f (rootInv n f) (rootPart n f) k
 
 /-- **The specification of `canonical`**: the largest key of any leaf. -/
-def BestKey (n : Nat) (f : Nat → Nat → Bool) (k : List (List UInt64)) : Prop :=
+@[expose] def BestKey (n : Nat) (f : Nat → Nat → Bool) (k : List (List UInt64)) : Prop :=
   Leafkey n f k ∧ ∀ k', Leafkey n f k' → compare k' k ≠ .gt
 
 theorem bestKey_unique {n : Nat} {f : Nat → Nat → Bool} {k k' : List (List UInt64)}
@@ -324,7 +325,7 @@ the state holds afterwards.  Taking `P` to be "is a leaf key of the whole tree" 
 `canonical_leafkey`. -/
 
 /-- Every leaf the state holds satisfies `P`. -/
-def StP (P : List (List UInt64) → Prop) (st : St) : Prop :=
+@[expose] def StP (P : List (List UInt64) → Prop) (st : St) : Prop :=
   ∀ l, st.best = some l → P (leafKey l.invPath l.cert)
 
 theorem pruneNode_P {P : List (List UInt64) → Prop} {invPath : Array UInt64} {st st' : St}
@@ -442,7 +443,7 @@ theorem dfsNode_reach (n : Nat) (f : Nat → Nat → Bool) (P : List (List UInt6
 /-! ### The winner is a leaf of the whole tree -/
 
 /-- The final state of the search on `Graph.ofOracle n f`. -/
-def canonSt (n : Nat) (f : Nat → Nat → Bool) : St :=
+@[expose] def canonSt (n : Nat) (f : Nat → Nat → Bool) : St :=
   dfsNode (Graph.ofOracle n f) (n + 1) #[] (rootInv n f) (rootPart n f)
     { best := none, first := none, autos := #[], nodes := 0, abortTo := none }
 
@@ -452,7 +453,7 @@ theorem canonical_eq (n : Nat) (f : Nat → Nat → Bool) :
       | none => { lab := Array.range n, cert := certOf (Graph.ofOracle n f) (Array.range n),
                   autos := #[], nodes := (canonSt n f).nodes }
       | some b => { lab := b.lab, cert := b.cert, autos := (canonSt n f).autos,
-                    nodes := (canonSt n f).nodes } := rfl
+                    nodes := (canonSt n f).nodes } := by rfl
 
 /-- **Soundness of the search.**  Whatever leaf the search ends up holding really is a leaf of
 the (unpruned) tree. -/
@@ -504,7 +505,7 @@ theorem compare_leafKey_lt {ip b tail c c' : List UInt64}
 /-! ### Invariant pruning is sound -/
 
 /-- `k` is beaten by the leaf the state currently holds. -/
-def Beaten (st : St) (k : List (List UInt64)) : Prop :=
+@[expose] def Beaten (st : St) (k : List (List UInt64)) : Prop :=
   ∃ l, st.best = some l ∧ compare k (leafKey l.invPath l.cert) = .lt
 
 theorem lexCmpU64_extract {a b : Array UInt64} :

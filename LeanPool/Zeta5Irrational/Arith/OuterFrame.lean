@@ -32,7 +32,7 @@ an integral product `U V`; with weights `w ≤ 0` for the integral part this giv
 `v_p^G(Δ) ≥ 2 ∑ w - r`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -41,7 +41,7 @@ namespace Zeta5Irrational
 variable {p : ℕ} [hp : Fact p.Prime]
 
 /-- The moments `e ≥ 2p - 3` of a polynomial. -/
-noncomputable def μGe (p : ℕ) (Q : ℚ[X]) : ℚ :=
+@[expose] noncomputable def μGe (p : ℕ) (Q : ℚ[X]) : ℚ :=
   ∑ e ∈ range (Q.natDegree + 1), if 2 * p ≤ e + 3 then Q.coeff e * μmono e else 0
 
 lemma μGe_eq (p : ℕ) (Q : ℚ[X]) {N : ℕ} (hN : Q.natDegree < N) :

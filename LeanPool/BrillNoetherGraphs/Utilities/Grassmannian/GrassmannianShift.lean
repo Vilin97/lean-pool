@@ -18,7 +18,7 @@ family from the shift-zero Grassmannian constructor without reconstructing its
 inversion set a second time.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

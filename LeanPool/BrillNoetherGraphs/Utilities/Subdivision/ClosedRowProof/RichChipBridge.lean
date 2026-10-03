@@ -41,7 +41,7 @@ declared slack, which is what the `minOver` in `tailContribution` /
 `headContribution` needs.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

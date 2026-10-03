@@ -26,7 +26,7 @@ into a single space-time statement.
   obtained by transporting along the measure-preserving coordinate swap.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure
 

@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # OrthogonalCoercivity -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex
@@ -48,10 +48,10 @@ local notation "Pk" => Pkappa d kappa
 def coeffPk (H : Pk) (alpha : Idx d) : ℂ := coeffPkappa H alpha
 
 /-- `OrthogonalToPk`: Orthogonal To Pk. -/
-def OrthogonalToPk (F G : Pk) : Prop := orthogonalToPk F G
+@[expose] def OrthogonalToPk (F G : Pk) : Prop := orthogonalToPk F G
 
 /-- `defectPk`: defect Pk. -/
-def defectPk (F G : Pk) : ℝ := defect F G
+@[expose] def defectPk (F G : Pk) : ℝ := defect F G
 
 /-- `lowAnnulusMassPk`: low Annulus Mass Pk. -/
 def lowAnnulusMassPk (J : Nat) (H : Pk) : ℝ := lowAnnulusMass J (ofPkappa kappa H)

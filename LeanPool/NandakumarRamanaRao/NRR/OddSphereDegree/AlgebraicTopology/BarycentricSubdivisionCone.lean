@@ -14,7 +14,7 @@ public import Mathlib.Topology.GDelta.MetrizableSpace
 
 /-! # Barycentric Subdivision Cone -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open CategoryTheory AlgebraicTopology Simplicial SimplexCategory Limits
@@ -47,7 +47,7 @@ theorem coneTailFun_mem {k : ℕ} (x : Delta (k + 1))
     rw [← Finset.sum_div, h_sum, div_self (sub_ne_zero_of_ne (Ne.symm hx))]
 
 /-- The normalized base point of a cone simplex, choosing the first vertex at the apex. -/
-noncomputable def coneTail {k : ℕ} (x : Delta (k + 1)) : Delta k :=
+@[expose] noncomputable def coneTail {k : ℕ} (x : Delta (k + 1)) : Delta k :=
   if h : (x : Fin (k + 1 + 1) → ℝ) 0 = 1 then SphereOddDegree.FiniteSimplex.vertex (0 : Fin (k + 1))
   else ⟨coneTailFun x, coneTailFun_mem x h⟩
 
@@ -63,7 +63,7 @@ theorem coneTail_apply {k : ℕ} (x : Delta (k + 1))
 /-! ## 2. The affine cone map -/
 
 /-- Barycentric coordinates of the cone from a vertex over a simplex map. -/
-noncomputable def affineConeMapFun {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
+@[expose] noncomputable def affineConeMapFun {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n)
     (x : Delta (k + 1)) : Fin (n + 1) → ℝ :=
   fun j => (x : Fin (k + 1 + 1) → ℝ) 0 * (v : Fin (n + 1) → ℝ) j
       + (1 - (x : Fin (k + 1 + 1) → ℝ) 0) * ((τ (coneTail x)) : Fin (n + 1) → ℝ) j
@@ -81,7 +81,7 @@ theorem affineConeMapFun_mem {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n
     ring
 
 /-- The simplex map obtained by coning a given map to the chosen vertex. -/
-noncomputable def affineConeMap {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
+@[expose] noncomputable def affineConeMap {n k : ℕ} (v : Delta n) (τ : Delta k → Delta n) :
     Delta (k + 1) → Delta n :=
   fun x => ⟨affineConeMapFun v τ x, affineConeMapFun_mem v τ x⟩
 
@@ -195,6 +195,7 @@ theorem continuous_affineConeMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delt
   exact hA_cont.add hB_cont
 
 /-- The affine cone construction bundled as a continuous map. -/
+@[expose]
 noncomputable def affineConeContinuousMap {n k : ℕ} (v : Delta n) (τ : C(Delta k, Delta n)) :
     C(Delta (k + 1), Delta n) :=
   ⟨affineConeMap v (⇑τ), continuous_affineConeMap v τ⟩

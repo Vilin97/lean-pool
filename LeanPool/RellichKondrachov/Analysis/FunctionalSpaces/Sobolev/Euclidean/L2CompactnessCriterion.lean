@@ -26,4 +26,4 @@ machinery used in the Euclidean Rellich–Kondrachov proof stack.
 This is tracked under Beads `lean-103.5.2.26.5.3.2.2.*`.
 -/
 
-@[expose] public section
+public section

@@ -18,7 +18,7 @@ Under μ-PŁ at a local min x₀, proves `fderiv(x) = 0 ↔ fderiv(x)|_{T⊥} = 
 for x near x₀. Uses Taylor remainder bounds and a Hessian perturbation argument.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology InnerProductSpace Submodule Set
 

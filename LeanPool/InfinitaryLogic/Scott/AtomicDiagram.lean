@@ -25,7 +25,7 @@ We restrict to relational languages (`L.IsRelational`) so that the atomic diagra
 tuple is determined by equality and relation holding information.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 
@@ -65,7 +65,7 @@ instance [Countable (Σ l, L.Relations l)] : Countable (L.AtomicIdx n) := by
 
 omit [L.IsRelational] in
 /-- Evaluates whether an atomic formula indexed by `idx` holds for a tuple `a`. -/
-def holds (idx : L.AtomicIdx n) (a : Fin n → M) : Prop :=
+@[expose] def holds (idx : L.AtomicIdx n) (a : Fin n → M) : Prop :=
   match idx with
   | eq i j => a i = a j
   | rel R f => RelMap R (a ∘ f)
@@ -138,7 +138,7 @@ the notion of "same atomic type" only captures the full atomic equivalence for r
 languages. With function symbols, `AtomicIdx` doesn't cover terms built from functions,
 so this would be a weaker notion than the standard "same atomic type" in model theory.
 For Scott analysis, we restrict to relational languages where this captures the full notion. -/
-def SameAtomicType {N : Type w'} [L.Structure N] (a : Fin n → M) (b : Fin n → N) : Prop :=
+@[expose] def SameAtomicType {N : Type w'} [L.Structure N] (a : Fin n → M) (b : Fin n → N) : Prop :=
   ∀ idx : L.AtomicIdx n, idx.holds a ↔ idx.holds b
 
 omit [L.IsRelational] in

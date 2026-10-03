@@ -35,7 +35,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 /-- A finite sum of reals that are each at most one is at most the number of nonzero terms.
 This is a general `Finset` fact, stated here because Mathlib does not have it. -/
@@ -61,10 +61,12 @@ noncomputable def diagMat : Matrix (Ones F.ind) (Ones F.ind) ℝ :=
 
 /-- The oriented off-diagonal part `R` of the Gram matrix: the entry `G x y` is kept only
 when `x` lies at distance one from `y`'s certificate (Section 11.3). -/
+@[expose]
 noncomputable def offMat : Matrix (Ones F.ind) (Ones F.ind) ℝ := Matrix.of fun x y =>
   if F.owner x ≠ F.owner y ∧ (F.P (F.owner y)).dist x.1 = 1 then gram F.ind x y else 0
 
 /-- The Schur-test bound `√(A (c-1) B)` on the oriented part (Section 11.3). -/
+@[expose]
 noncomputable def offBound : ℝ :=
   Real.sqrt (((F.A * (F.c - 1) : ℕ) : ℝ) * (F.B : ℝ))
 

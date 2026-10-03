@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ParentPacketParity
 /-! The physical velocity and pressure force inherit the genuine
 particle symmetry, so their values vanish at the fixed origin. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -23,7 +23,7 @@ section
 
 /-! Actual compact mollification on R³ is smooth and contractive on scalar L². -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,7 +33,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit
 open scoped ContDiff Convolution
 
 /-- Scalar mollification, given by `φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f`. -/
-def scalarMollification (φ : ContDiffBump (0 : Space)) (f : Space → ℝ) : Space → ℝ :=
+@[expose] def scalarMollification (φ : ContDiffBump (0 : Space)) (f : Space → ℝ) : Space → ℝ :=
   φ.normed volume ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] f
 
 theorem scalarMollification_smooth (φ : ContDiffBump (0 : Space))
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -131,7 +131,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerNoncompactT
 open scoped ContDiff Convolution Topology
 
 /-- Harmonicity tested against genuine smooth compactly supported scalar functions. -/
-def ScalarWeakHarmonicOn (U : Set Space) (f : Space → ℝ) : Prop :=
+@[expose] def ScalarWeakHarmonicOn (U : Set Space) (f : Space → ℝ) : Prop :=
   ∀ φ : Space → ℝ, HasCompactSupport φ → ContDiff ℝ ∞ φ → tsupport φ ⊆ U →
     (∫ x, f x * Δ φ x) = 0
 

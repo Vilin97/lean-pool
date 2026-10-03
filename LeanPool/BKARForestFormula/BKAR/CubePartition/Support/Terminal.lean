@@ -17,7 +17,7 @@ boundary cases closing the support/order recursion of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

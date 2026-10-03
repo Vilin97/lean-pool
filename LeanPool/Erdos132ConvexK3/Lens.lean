@@ -25,13 +25,13 @@ The P5-1 correction is explicit in the theorem statement: the lower point
 does not by itself supply `0 < X < 2c`; the diameter bound does.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 
 /-- The intersection of the two closed radius-`d₁` disks centered at
 `(0,0)` and `(2c,0)`, where `d₁² = c² + H²`. -/
-def InSharedDiameterLens (c H : ℝ) (v : Point ℝ) : Prop :=
+@[expose] def InSharedDiameterLens (c H : ℝ) (v : Point ℝ) : Prop :=
   sqDist (0, 0) v ≤ c ^ 2 + H ^ 2 ∧
     sqDist (2 * c, 0) v ≤ c ^ 2 + H ^ 2
 

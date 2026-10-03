@@ -18,7 +18,7 @@ section
 /-! Time restriction and changes of time variable commute with actual smooth cylinder
 representatives. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -89,7 +89,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -105,6 +105,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {D : Data U} {raw : VectorField}
 
 /-- Shifted raw, defined pointwise by `raw (τ+z.1,z.2)`. -/
+@[expose]
 def shiftedRaw (τ : ℝ) (raw : VectorField) : VectorField := fun z => raw (τ+z.1,z.2)
 
 namespace Forcing
@@ -112,7 +113,8 @@ namespace Forcing
 variable (G : Forcing P D raw)
 
 /-- Restriction keeps the literal original forcing on the history interval. -/
-def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Forcing P (D.initial τ hτ hτT) raw where
+@[expose] def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) :
+    Forcing P (D.initial τ hτ hτT) raw where
   path := G.path.comp (initialInclusion D.T τ hτT)
   path_orbit := timeComp_orbit_contDiff P
     (includePath P D.support D.support_measurable G.path) G.path_orbit (initialInclusion D.T τ hτT)
@@ -125,7 +127,7 @@ def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Forcing P (D.initial
   mean_zero t := G.mean_zero (initialInclusion D.T τ hτT t)
 
 /-- The forward forcing uses elapsed time s and the literal source time τ+s. -/
-def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) :
+@[expose] def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) :
     Forcing P (D.tail τ hτ hτT) (shiftedRaw τ raw) where
   path := G.path.comp (tailInclusion D.T τ hτ)
   path_orbit := timeComp_orbit_contDiff P
@@ -146,7 +148,7 @@ variable (B : HistoryData D) (G : Forcing P D raw)
 
 /-- The genuine terminal coordinate velocity of the history problem,
 with its actual support, mixed smoothness, and zero angular mean. -/
-def terminalInitial : InitialData P D where
+@[expose] def terminalInitial : InitialData P D where
   value := ⟨B.coordinatePath G ⟨D.T,D.T_pos.le,le_rfl⟩,
     B.coordinatePath_supported G ⟨D.T,D.T_pos.le,le_rfl⟩⟩
   orbit := (ContinuousMap.evalCLM ℝ ⟨D.T,D.T_pos.le,le_rfl⟩ :
@@ -155,7 +157,7 @@ def terminalInitial : InitialData P D where
 
 /-- The history trace in the same fixed reference-plane coordinates is the
 actual initial datum passed to the forward interval. -/
-def forwardInitial (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T) :
+@[expose] def forwardInitial (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T) :
     InitialData P (D.tail τ hτ.le hτT) where
   value := ((B.initial τ hτ hτT.le).terminalInitial (G.initial τ hτ hτT.le)).value
   orbit := ((B.initial τ hτ hτT.le).terminalInitial (G.initial τ hτ hτT.le)).orbit
@@ -163,7 +165,7 @@ def forwardInitial (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T) :
 
 theorem forwardInitial_eq (τ : ℝ) (hτ : 0 < τ) (hτT : τ < D.T) :
     ((B.forwardInitial G τ hτ hτT).value : CylinderL2 P U) =
-      (B.initial τ hτ hτT.le).coordinatePath (G.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩ := rfl
+      (B.initial τ hτ hτT.le).coordinatePath (G.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩ := by rfl
 
 end HistoryData
 end EulerTransversePacketProvider

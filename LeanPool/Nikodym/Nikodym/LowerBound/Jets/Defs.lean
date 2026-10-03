@@ -37,7 +37,7 @@ The main results are
 No localizations appear: everything is phrased with global quotients of `P_d`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -117,6 +117,7 @@ section Translate
 
 /-- Blueprint F03: the translation automorphism `τₓ : X i ↦ X i - x i` of `P_d`. It satisfies
 `ev_x ∘ τₓ = ev_0` and carries `𝔪₀` onto `𝔪ₓ`. -/
+@[expose]
 noncomputable def translate (x : Fin d → K) :
     MvPolynomial (Fin d) K ≃ₐ[K] MvPolynomial (Fin d) K :=
   AlgEquiv.ofAlgHom (aeval fun i ↦ X i - C (x i)) (aeval fun i ↦ X i + C (x i))
@@ -289,6 +290,7 @@ section Jets
 variable (I : Ideal (MvPolynomial (Fin d) K)) (x : Fin d → K) (r : ℕ)
 
 /-- Blueprint F03: the jet ideal `I + 𝔪ₓ ^ r` (ideal supremum). -/
+@[expose]
 noncomputable def jetIdeal : Ideal (MvPolynomial (Fin d) K) :=
   I ⊔ pointIdeal x ^ r
 
@@ -297,6 +299,7 @@ abbrev JetSpace : Type _ :=
   MvPolynomial (Fin d) K ⧸ jetIdeal I x r
 
 /-- Blueprint F03: the jet dimension `j_{I,x}(r) = dim_K Q_{I,x}(r)`. -/
+@[expose]
 noncomputable def jetDim : ℕ :=
   Module.finrank K (JetSpace I x r)
 

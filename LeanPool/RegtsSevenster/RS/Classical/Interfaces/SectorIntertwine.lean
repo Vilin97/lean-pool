@@ -51,7 +51,7 @@ follows from `superPermAction_zero_imp_evenPermRep_zero` in
 `KoszulAction.lean`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

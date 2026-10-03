@@ -28,7 +28,7 @@ the (negation normal form of the) input formula, and the Miyano–Hayashi
 breakpoint construction squares that state space to pairs of subsets.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanModelChecking
 

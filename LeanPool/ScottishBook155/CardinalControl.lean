@@ -17,7 +17,7 @@ successor target is controlled by its explicit dense set of finite linear
 combinations, followed by the generic sequence encoding of metric closure.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

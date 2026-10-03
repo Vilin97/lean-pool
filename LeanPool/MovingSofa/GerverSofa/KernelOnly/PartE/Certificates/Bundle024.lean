@@ -12,7 +12,7 @@ public import LeanPool.MovingSofa.GerverSofa.KernelOnly.Core.Bundle005
 * `GerverSofa.KernelOnly.PartE.Certificates.Batch037`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4024,7 +4024,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.PhiBelow.Leaf00259`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4034,7 +4034,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c1_c0_7_00161
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4334,7 +4334,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c1_c1_7_00162
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4595,7 +4595,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c1_c2_7_00163
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4674,7 +4674,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c1_c3_7_00164
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4753,7 +4753,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c2_8_00166
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4806,7 +4806,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1101111_c3_8_00167
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4859,7 +4859,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c0_c0_7_00174
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5042,7 +5042,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c0_c1_7_00175
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5147,7 +5147,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c0_c2_7_00176
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5226,7 +5226,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c0_c3_7_00177
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5305,7 +5305,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c1_8_00179
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5566,7 +5566,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c2_8_00180
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5619,7 +5619,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110000_c3_8_00181
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5672,7 +5672,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110001_c0_8_00187
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5946,7 +5946,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110001_c1_8_00188
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6259,7 +6259,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110001_c2_8_00189
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6338,7 +6338,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110001_c3_8_00190
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6417,7 +6417,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110010_c0_8_00196
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6704,7 +6704,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110010_c1_8_00197
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6965,7 +6965,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110010_c2_8_00198
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7044,7 +7044,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110010_c3_8_00199
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7123,7 +7123,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110011_c0_8_00204
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7384,7 +7384,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110011_c1_8_00205
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7567,7 +7567,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110011_c2_8_00206
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7646,7 +7646,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Above Leaf1110011_c3_8_00207
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7725,7 +7725,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33203_c0_8_00242
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7830,7 +7830,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33203_c1_8_00243
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7974,7 +7974,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33203_c2_8_00244
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8079,7 +8079,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33203_c3_8_00245
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8288,7 +8288,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33221_c0_8_00256
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8393,7 +8393,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33221_c1_8_00257
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8628,7 +8628,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33221_c2_8_00258
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8733,7 +8733,7 @@ section
 # Gerver Sofa / Kernel Only / Part E / E24KC5Direct_e24KC2Phi Below Leaf33221_c3_8_00259
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

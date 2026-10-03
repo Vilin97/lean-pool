@@ -16,7 +16,7 @@ The only finite certificate here is the fixed subset identity on three
 indices; it contains no circuit data.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,6 +24,7 @@ namespace N4
 noncomputable section
 
 /-- The third finite difference at zero in three coordinate directions. -/
+@[expose]
 def triplePolarMap (i j k : Fin 8) : ANF 8 →ₗ[F₂] F₂ :=
   sparseEvalMap ∅ + sparseEvalMap {i} + sparseEvalMap {j} +
     sparseEvalMap {k} + sparseEvalMap {i, j} +
@@ -31,6 +32,7 @@ def triplePolarMap (i j k : Fin 8) : ANF 8 →ₗ[F₂] F₂ :=
     sparseEvalMap {i, j, k}
 
 /-- Extract the coefficient supported on the specified three variables. -/
+@[expose]
 def tripleCoeffMap (i j k : Fin 8) : ANF 8 →ₗ[F₂] F₂ where
   toFun p := p.coeff ⟨{i, j, k}⟩
   map_add' p q := by simp

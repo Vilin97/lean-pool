@@ -48,7 +48,7 @@ induction gluing `SingleChart` pieces at every interior breakpoint via a fully g
 order-additive `IsWeakSolutionAt.mul`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open IsManifold Metric Set Filter Topology

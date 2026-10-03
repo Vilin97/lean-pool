@@ -15,7 +15,7 @@ Different characterizations of proof.
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder

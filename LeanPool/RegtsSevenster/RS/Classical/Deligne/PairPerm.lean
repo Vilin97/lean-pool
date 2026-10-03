@@ -39,7 +39,7 @@ into the *order-reversing adjoint* permutation of the `M'`-slots.
   symmetric powers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

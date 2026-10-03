@@ -52,7 +52,7 @@ public import Mathlib.Tactic
 Supporting results for BicausalOT.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Set Topology
 open scoped ENNReal

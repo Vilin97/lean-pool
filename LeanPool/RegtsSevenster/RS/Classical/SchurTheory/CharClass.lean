@@ -17,7 +17,7 @@ under inversion (a permutation is conjugate to its inverse, having
 the same cycle type).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -14,7 +14,7 @@ import Mathlib.Control.Traversable.Instances
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.RoseTree.Basic`.
 -/
 
-@[expose] public section
+public section
 
 
 universe u

@@ -20,7 +20,7 @@ most `(R+1)^(2m)`; tensor powers multiply index cardinalities and
 add arities, so the total bound is exponential in the power.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

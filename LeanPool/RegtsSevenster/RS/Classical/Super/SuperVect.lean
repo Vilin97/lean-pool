@@ -21,7 +21,7 @@ blocks, and the braiding on the four generator shapes, including
 the Koszul sign on odd⊗odd.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

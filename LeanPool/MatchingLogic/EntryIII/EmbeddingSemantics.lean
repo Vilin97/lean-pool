@@ -18,4 +18,4 @@ import Mathlib.Tactic.SetLike
 # MatchingLogic.EntryIII.EmbeddingSemantics
 -/
 
-@[expose] public section
+public section

@@ -34,7 +34,7 @@ rewire.
   linked and none otherwise.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

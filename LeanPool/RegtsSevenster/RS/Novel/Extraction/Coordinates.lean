@@ -34,7 +34,7 @@ The route:
 * `exists_coordinates` assembles the graded statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,6 +48,7 @@ open Module
 
 /-- The even component of a form morphism `V ⊗ V ⟶ 𝟙`, with its
 domain and codomain presented in reduced form. -/
+@[expose]
 def formEvenMap {V : SuperVect}
     (b : SuperVect.Hom (SuperVect.tensorObj V V) SuperVect.tensorUnit) :
     ((V.even ⊗[ℂ] V.even) × (V.odd ⊗[ℂ] V.odd)) →ₗ[ℂ] ℂ :=
@@ -55,6 +56,7 @@ def formEvenMap {V : SuperVect}
 
 /-- The even block of a form morphism, as a bilinear form on
 `V.even`. -/
+@[expose]
 def formEvenBlock {V : SuperVect}
     (b : SuperVect.Hom (SuperVect.tensorObj V V) SuperVect.tensorUnit) :
     BilinForm ℂ V.even :=
@@ -62,6 +64,7 @@ def formEvenBlock {V : SuperVect}
 
 /-- The odd block of a form morphism, as a bilinear form on
 `V.odd`. -/
+@[expose]
 def formOddBlock {V : SuperVect}
     (b : SuperVect.Hom (SuperVect.tensorObj V V) SuperVect.tensorUnit) :
     BilinForm ℂ V.odd :=

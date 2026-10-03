@@ -25,7 +25,7 @@ Tags: phase-retrieval, hermite-fock, gaussian-measure, complex-analysis
 MSC: 42C05, 46E22, 94A12
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## References

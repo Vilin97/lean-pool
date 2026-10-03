@@ -18,7 +18,7 @@ Each by one generic statement (`integral_gtil`): `g = 1/3 + (4/3)1_{c≥1} − (
 x²/c²) + |x| atan(c/|x|)`
 and `−J` (FstarDefs). -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set Filter Topology
 

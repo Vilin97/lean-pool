@@ -47,7 +47,7 @@ Sites are held fixed throughout; nothing here assumes cells are nonempty, and no
 statement is proved.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody MeasureTheory
 
@@ -57,7 +57,7 @@ variable {n : ℕ}
 
 /-- **Restricted power‑cell area vector.** With sites `s` and weights `w`, the `i`‑th component
 is the restricted‑cell area `bodyCellArea K s w i`. -/
-noncomputable def areaVec
+@[expose] noncomputable def areaVec
     (K : Geometry.ConvexBody Plane) (s : Fin n → Plane) (w : Fin n → ℝ) : Fin n → ℝ :=
   fun i => bodyCellArea K s w i
 

@@ -18,7 +18,7 @@ equal.  Hence there is exactly one zero corner and exactly three active
 slices.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -26,7 +26,7 @@ namespace N4
 noncomputable section
 
 /-- Embed six complementary values between the two anchor variables. -/
-def sliceAssignment (x y : F₂) (z : Fin 6 → F₂) : Fin 8 → F₂ :=
+@[expose] def sliceAssignment (x y : F₂) (z : Fin 6 → F₂) : Fin 8 → F₂ :=
   ![x, z 0, z 1, z 2, y, z 3, z 4, z 5]
 
 /-- The zero assignment on the six complementary slice inputs. -/
@@ -153,6 +153,7 @@ theorem feedbackCorner_has_zero (delta rho sigma : F₂) :
   decide
 
 /-- The feedback factor vanishes at exactly one of the four Boolean anchor corners. -/
+@[expose]
 def ExactlyThreeActiveCorners (delta rho sigma : F₂) : Prop :=
   ∃ x₀ y₀ : F₂,
     feedbackCorner delta rho sigma x₀ y₀ = 0 ∧

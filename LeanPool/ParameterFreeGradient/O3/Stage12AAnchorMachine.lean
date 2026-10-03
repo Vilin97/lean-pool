@@ -17,12 +17,13 @@ transition function contains no oracle or admissible instance; objective data
 enters only through the continuation of `Action.query`.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
 /-- Runtime-only anchor configuration reconstructed after the counted query at
 `x0`.  This definition has no proof-side problem parameters. -/
+@[expose]
 noncomputable def anchorPrefixConfig (input : MethodInput d)
     (f0 : ℝ) (g0 : Vec d) (G : ℝ) : AnchorConfig d :=
   { q := conjugateExponent input.p
@@ -71,7 +72,7 @@ noncomputable def anchorPrefixAction : AnchorPrefixState d →
 
 /-- The one dimension-indexed concrete first-order method for the causal
 prefix.  The real exponent is read only from runtime input. -/
-noncomputable def anchorPrefixMethod (d : ℕ) : FirstOrderMethod d where
+@[expose] noncomputable def anchorPrefixMethod (d : ℕ) : FirstOrderMethod d where
   State := AnchorPrefixState d
   initial := AnchorPrefixState.needX0
   action := anchorPrefixAction

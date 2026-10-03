@@ -18,7 +18,7 @@ This module contains the transparent definitions used by the solution.  They are
 `Challenge.lean`, whose statement is checked independently by the comparator.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,16 +30,19 @@ namespace LeanPool.Besicovitch
 variable {X : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
 
 /-- The lower one-density of `s` at `x`, normalized by the diameter `2 * r` of a ball. -/
+@[expose]
 def lowerOneDensity (s : Set X) (x : X) : ℝ≥0∞ :=
   liminf (fun r : ℝ ↦ μH[1] (s ∩ Metric.ball x r) / ENNReal.ofReal (2 * r))
     (nhdsWithin 0 (Ioi 0))
 
 /-- A set is countably one-rectifiable if Lipschitz curves cover it up to Hausdorff null measure. -/
+@[expose]
 def IsCountablyOneRectifiable (s : Set X) : Prop :=
   ∃ f : ℕ → ℝ → X,
     (∀ i, ∃ K : ℝ≥0, LipschitzWith K (f i)) ∧ μH[1] (s \ ⋃ i, range (f i)) = 0
 
 /-- Every finite-measure set with lower density at least `β` is one-rectifiable. -/
+@[expose]
 def ForcesOneRectifiability (X : Type*) [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
     (β : ℝ≥0∞) : Prop :=
   ∀ s : Set X, MeasurableSet s → μH[1] s < ∞ →
@@ -47,10 +50,12 @@ def ForcesOneRectifiability (X : Type*) [MetricSpace X] [MeasurableSpace X] [Bor
       IsCountablyOneRectifiable s
 
 /-- The infimum of the nonnegative thresholds forcing one-rectifiability in `X`. -/
+@[expose]
 def sigmaOne (X : Type*) [MetricSpace X] [MeasurableSpace X] [BorelSpace X] : ℝ :=
   sInf {β : ℝ | 0 ≤ β ∧ ForcesOneRectifiability X (ENNReal.ofReal β)}
 
 /-- The isolated radical system whose first coordinate is twice the six-point endpoint. -/
+@[expose]
 def IsEndpointPair (c B : ℝ) : Prop :=
   let D := 4 * c ^ 2 - 2 * c - B
   let b := (2 * B - 3 * c ^ 2 + 2 * c - 1) / (c + 1)
@@ -66,10 +71,12 @@ def IsEndpointPair (c B : ℝ) : Prop :=
     x < 0 ∧ z < 0 ∧ k - x * z < 0
 
 /-- Twice the optimal six-point constant, defined by its isolated exact system. -/
+@[expose]
 def cStar : ℝ :=
   sInf {c : ℝ | ∃ B : ℝ, IsEndpointPair c B}
 
 /-- The optimal two-colour six-point constant. -/
+@[expose]
 def sStar : ℝ :=
   cStar / 2
 

@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-! Genuine time derivatives for the full-cylinder rectangular products. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -67,8 +67,11 @@ theorem fullPath_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
       (fullOperatorMap P) (extendPath T hT A t) :=
     (fullOperatorMap P).hasFDerivAt
   have hd := hlinear.comp_hasDerivWithinAt (t : ℝ) hfield
-  change HasDerivWithinAt (fun s => fullOperatorMap P (A (projIcc 0 T hT s)))
-    (fullOperatorMap P (A₁ t)) (Icc (0 : ℝ) T) t
+  have hpath : extendPath T hT (fullPathMap P A) =
+      fun s => fullOperatorMap P (A (projIcc 0 T hT s)) := by
+    funext s
+    simp only [extendPath, fullPathMap_apply]
+  rw [hpath, fullPathMap_apply]
   change HasDerivWithinAt (fun s => fullOperatorMap P (A (projIcc 0 T hT s)))
     (fullOperatorMap P (A₁ (projIcc 0 T hT t))) (Icc (0 : ℝ) T) t at hd
   rwa [projIcc_of_mem hT t.property] at hd
@@ -82,10 +85,13 @@ theorem fullProduct_hasDerivWithinAt
       (fullMultiplierMap P A₁ u t + fullMultiplierMap P A u₁ t)
       (Icc (0 : ℝ) T) t := by
   have hd := (fullPath_hasDerivWithinAt P T hT A A₁ hA t).clm_apply (hu t)
-  change HasDerivWithinAt
-    (fun s => fullOperatorMap P (A (projIcc 0 T hT s)) (u (projIcc 0 T hT s)))
-    (fullOperatorMap P (A₁ t) (u t) + fullOperatorMap P (A t) (u₁ t))
-    (Icc (0 : ℝ) T) t
+  have hproduct : extendPath T hT (fullMultiplierMap P A u) =
+      fun s => fullOperatorMap P (A (projIcc 0 T hT s)) (u (projIcc 0 T hT s)) := by
+    funext s
+    simp only [extendPath, fullMultiplierMap_apply]
+  rw [hproduct]
+  simp only [fullMultiplierMap_apply]
+  simp only [extendPath, fullPathMap_apply] at hd
   change HasDerivWithinAt
     (fun s => fullOperatorMap P (A (projIcc 0 T hT s)) (u (projIcc 0 T hT s)))
     (fullOperatorMap P (A₁ t) (u (projIcc 0 T hT t)) +

@@ -20,7 +20,7 @@ the super form pairing of the two fragments' tensors — the tensor
 side of the Gram identity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -54,7 +54,7 @@ this vocabulary, and because `commuteAt_two` is what made the general pattern vi
 above and nothing more.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 
@@ -64,6 +64,7 @@ variable {J : Type*} [NonUnitalNonAssocCommRing J] [IsCommJordan J]
 
 /-- `jpow x n = x^{n+1}`. Indexed from `1` rather than `0` so that no unit is assumed —
 the Peirce layer of this development is unit-free and this stays so. -/
+@[expose]
 def jpow (x : J) : ℕ → J
   | 0 => x
   | (n + 1) => x * jpow x n
@@ -80,6 +81,7 @@ theorem jpow_succ' (x : J) (n : ℕ) : jpow x (n + 1) = jpow x n * x := by
 
 /-- `L_{x^{m+1}}` commutes with `L_x`. Power associativity is exactly `∀ m, CommuteAt x m`
 (see `jpow_mul_jpow_of_commuteAt`). -/
+@[expose]
 def CommuteAt (x : J) (m : ℕ) : Prop := ∀ w : J, x * (jpow x m * w) = jpow x m * (x * w)
 
 omit [IsCommJordan J] in

@@ -43,7 +43,7 @@ At `κ = ℶ₁` every level sits below `ℶ_{ω₁}` (`finiteERBound_le_beth_om
 `succ ∘ (2 ^ ·)` is absorbed by two beth steps (`finiteERBound_beth_one_le`).
 -/
 
-@[expose] public section
+public section
 
 open FirstOrder.Combinatorics.PairERGen
 open FirstOrder.Combinatorics.EndHomogER

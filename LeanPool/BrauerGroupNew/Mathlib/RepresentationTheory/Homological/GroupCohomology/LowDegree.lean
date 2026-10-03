@@ -13,7 +13,7 @@ public import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 This file restores upstream aliases and multiplicative cocycle closure lemmas.
 -/
 
-@[expose] public section
+public section
 
 variable {G M : Type*} [Group G] [CommGroup M] [MulDistribMulAction G M] {f g : G × G → M}
 

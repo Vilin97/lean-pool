@@ -19,7 +19,7 @@ Those properties live in the separate proposition `TrialValid` and must be
 proved by the regime-specific trial modules.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 
@@ -30,11 +30,11 @@ abbrev OracleTrace (d : ℕ) := List (Observation d)
 def oracleCallCount (trace : OracleTrace d) : ℕ := trace.length
 
 /-- Every recorded observation is the exact answer returned at its point. -/
-def TraceExact (oracle : PairOracle d) (trace : OracleTrace d) : Prop :=
+@[expose] def TraceExact (oracle : PairOracle d) (trace : OracleTrace d) : Prop :=
   ∀ o ∈ trace, o = oracle.observe o.point
 
 /-- A point was actually queried in the given trace. -/
-def WasQueried (trace : OracleTrace d) (x : Vec d) : Prop :=
+@[expose] def WasQueried (trace : OracleTrace d) (x : Vec d) : Prop :=
   ∃ o ∈ trace, o.point = x
 
 theorem traceExact_nil (oracle : PairOracle d) :
@@ -71,9 +71,10 @@ structure GuardCheck where
   margin : ℝ
 
 /-- The guard's inequality holds exactly when its signed margin is nonnegative. -/
-def GuardCheck.Holds (check : GuardCheck) : Prop := 0 ≤ check.margin
+@[expose] def GuardCheck.Holds (check : GuardCheck) : Prop := 0 ≤ check.margin
 
 /-- Margin for `f(y) ≤ f(x) + linear + (M/2) * stepSq`. -/
+@[expose]
 noncomputable def upperModelGuard (fx fy linear stepSq M : ℝ) : GuardCheck :=
   { kind := .upperModel
     margin := fx + linear + (M / 2) * stepSq - fy }
@@ -87,7 +88,7 @@ def gradientGuard (gradDiff stepNorm M : ℝ) : GuardCheck :=
 Margin for the ordered Euclidean finite-data interpolation guard
 `f_i-f_j-pairing-(2M)^{-1} gradDiffSq ≥ 0`.
 -/
-noncomputable def interpolationGuard
+@[expose] noncomputable def interpolationGuard
     (fi fj pairing gradDiffSq M : ℝ) : GuardCheck :=
   { kind := .interpolation
     margin := fi - fj - pairing - gradDiffSq / (2 * M) }
@@ -108,7 +109,7 @@ theorem interpolationGuard_holds_iff (fi fj pairing gradDiffSq M : ℝ) :
   rfl
 
 /-- Every guard recorded in the list has a nonnegative margin. -/
-def allGuardsPass (guards : List GuardCheck) : Prop :=
+@[expose] def allGuardsPass (guards : List GuardCheck) : Prop :=
   ∀ check ∈ guards, check.Holds
 
 /-- The list contains a failed guard of the specified kind. -/
@@ -138,7 +139,7 @@ def TrialReport.calls (report : TrialReport d) : ℕ :=
   oracleCallCount report.observations
 
 /-- Purely data-level consistency of the recorded outcome. -/
-def TrialReport.OutcomeRecorded (report : TrialReport d) : Prop :=
+@[expose] def TrialReport.OutcomeRecorded (report : TrialReport d) : Prop :=
   match report.outcome with
   | .success x => WasQueried report.observations x
   | .scale kind => HasFailedGuard report.guards kind
@@ -150,7 +151,7 @@ proposition, not a certificate field.  The scale and radius conclusions are
 exactly the directional implications used by the frozen outer-controller
 lemma.
 -/
-def TrialValid
+@[expose] def TrialValid
     (oracle : PairOracle d) (gradientSize : Vec d → ℝ)
     (eps L R M D : ℝ) (report : TrialReport d) : Prop :=
   TraceExact oracle report.observations ∧

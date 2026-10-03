@@ -16,7 +16,7 @@ Expresses the colour character of a lifted permutation as a convolution
 over tail-content vectors.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

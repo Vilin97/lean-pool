@@ -13,7 +13,7 @@ public import LeanPool.PDL.Completeness.Theorem
 
 /-! # Interpolation (Section 7) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -21,7 +21,7 @@ open vDash HasSat
 
 /-- An interpolant θ for φ and ψ only uses the vocabulary
 in both, is implied by φ and implies ψ. -/
-def Interpolant (φ : Formula) (ψ : Formula) (θ : Formula) :=
+@[expose] def Interpolant (φ : Formula) (ψ : Formula) (θ : Formula) :=
   θ.voc ⊆ φ.voc ∩ ψ.voc  ∧  tautology (φ ↣ θ)  ∧  tautology (θ ↣ ψ)
 
 theorem interpolation {φ ψ : Formula} :

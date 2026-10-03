@@ -15,7 +15,7 @@ The set `uniformDensitySet μ A γ m` consists of the points of `A` where the lo
 bound at level `γ` holds at every positive rational radius below `1 / (m + 1)`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -40,7 +40,7 @@ theorem measurable_measure_ball (mu : Measure (EuclideanSpace ℝ (Fin 2))) [SFi
   rw [dist_comm]
 
 /-- Points with a uniform rational-radius lower mass bound. -/
-def uniformDensitySet (mu : Measure (EuclideanSpace ℝ (Fin 2)))
+@[expose] def uniformDensitySet (mu : Measure (EuclideanSpace ℝ (Fin 2)))
     (A : Set (EuclideanSpace ℝ (Fin 2))) (γ : ℝ) (m : ℕ) :
     Set (EuclideanSpace ℝ (Fin 2)) :=
   {x ∈ A | ∀ q : ℚ, 0 < (q : ℝ) → (q : ℝ) < 1 / (m + 1 : ℝ) →

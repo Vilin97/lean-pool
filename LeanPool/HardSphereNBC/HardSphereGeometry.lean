@@ -15,7 +15,7 @@ public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -112,7 +112,7 @@ lemma hardSphereSeparatedVolume_ratio_identity :
   ring
 
 /-- Independent unit-ball constraints on a finite product of position spaces. -/
-def hardSphereProductBallRegion (n : Nat) :
+@[expose] def hardSphereProductBallRegion (n : Nat) :
     Set (Fin n → HSPosition 3) :=
   {r | ∀ i, r i ∈ Metric.ball 0 1}
 

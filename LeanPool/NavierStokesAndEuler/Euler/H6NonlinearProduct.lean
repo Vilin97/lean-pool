@@ -15,7 +15,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 
 /-! Fixed H⁶ algebra estimates at every external derivative order, for actual nonlinear fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -49,25 +49,27 @@ theorem word_add {n : ℕ} (w : Fin n → Fin 4) (f g : LiftDomain period → F)
     iteratedFieldDerivative period w (f + g) =
       iteratedFieldDerivative period w f + iteratedFieldDerivative period w g := by
   induction n with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ n ih =>
     rw [iteratedFieldDerivative_succ, ih (Fin.tail w), fieldDerivative_add period _ _ _
       (iteratedFieldDerivative_smooth period _ f hf) (iteratedFieldDerivative_smooth period _ g hg)]
-    rfl
+    simp only [iteratedFieldDerivative_succ]
 
 omit [Fact (0 < period)] in
 theorem word_init_last {n : ℕ} (w : Fin (n + 1) → Fin 4) (f : LiftDomain period → F) :
     iteratedFieldDerivative period w f = iteratedFieldDerivative period (Fin.init w)
       (fieldDerivative period (standardDirection (w (Fin.last n))) f) := by
   induction n with
-  | zero => rfl
+  | zero =>
+    simp only [iteratedFieldDerivative_zero, iteratedFieldDerivative_succ]
+    have hw : (0 : Fin 1) = Fin.last 0 := by decide
+    exact congrArg (fun k : Fin 1 => fieldDerivative period (standardDirection (w k)) f)
+      hw
   | succ n ih =>
-    change fieldDerivative period (standardDirection (w 0))
-      (iteratedFieldDerivative period (Fin.tail w) f) =
-      fieldDerivative period (standardDirection (w 0))
-        (iteratedFieldDerivative period (Fin.tail (Fin.init w))
-          (fieldDerivative period (standardDirection (w (Fin.last (n+1)))) f))
+    conv_lhs => rw [iteratedFieldDerivative_succ]
     rw [ih (Fin.tail w)]
+    conv_rhs => rw [iteratedFieldDerivative_succ]
+    rw [Fin.tail_init_eq_init_tail]
     rfl
 
 theorem derivative_all_memLp (f : LiftDomain period → F)
@@ -80,7 +82,7 @@ theorem derivative_all_memLp (f : LiftDomain period → F)
   let v : Fin 1 → Fin 4 := fun _ => i
   have h := word_memLp period (show 1+j ≤ 1+j by omega) w v f
     (fun r _ z => hfL2 r z)
-  exact h
+  simpa only [iteratedFieldDerivative_succ, iteratedFieldDerivative_zero] using h
 
 theorem word_all_memLp {n : ℕ} (w : Fin n → Fin 4) (f : LiftDomain period → F)
     (hfL2 : ∀ j, ∀ v : Fin j → Fin 4,
@@ -114,7 +116,7 @@ theorem sobolev_add_le (q : ℕ) (f g : LiftDomain period → F)
   simpa only [ENNReal.toReal_add hfj.eLpNorm_ne_top hgj.eLpNorm_ne_top] using he
 
 /-- Sum of actual Hq norms of all external derivative words of exactly order n. -/
-def wordSobolevNorm (q n : ℕ) (f : LiftDomain period → F) : ℝ :=
+@[expose] def wordSobolevNorm (q n : ℕ) (f : LiftDomain period → F) : ℝ :=
   ∑ w : Fin n → Fin 4, liftSobolevNorm period q (iteratedFieldDerivative period w f)
 
 theorem wordSobolevNorm_nonneg (q n : ℕ) (f : LiftDomain period → F) :
@@ -195,7 +197,13 @@ theorem product_all_memLp (q : ℕ) (f : LiftDomain period → ℝ) (g : LiftDom
       hf (postcomp_smooth period _ g hg) (fun r _ v => hfL2 r v)
       (fun r _ v => postcomp_word_memLp period (show r ≤ r by
           omega) _ g hg (fun a _ z => hgL2 a z) v)
-    exact h
+    rw [← coordinate_smul] at h
+    have heq : (coordinate q i ∘ fun x => f x • g x) =
+        (fun x => (f x • g x).ofLp i) := by
+      funext x
+      exact coordinate_apply q i (f x • g x)
+    rw [heq] at h
+    simpa only [iteratedFieldDerivative_zero] using h
   | succ j ih =>
     intro w
     rw [word_init_last period w, fieldDerivative_smul period _ f g hf hg]

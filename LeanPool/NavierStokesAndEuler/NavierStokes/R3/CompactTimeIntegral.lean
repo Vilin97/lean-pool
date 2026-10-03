@@ -17,7 +17,7 @@ The public statements use the ordinary volume integral over all of R³.
 Uniform compact support supplies integrability and a local dominating function.
 -/
 
-@[expose] public section
+public section
 
 
 

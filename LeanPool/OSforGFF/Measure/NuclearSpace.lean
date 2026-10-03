@@ -33,7 +33,7 @@ the bochner library (Minlos theorem).
 - Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. 3-4
 -/
 
-@[expose] public section
+public section
 
 /-! ### WithSeminorms reindexing
 

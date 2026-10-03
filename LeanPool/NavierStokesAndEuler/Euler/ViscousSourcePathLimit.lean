@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.SobolevPathLimits
 
 /-! Strong convergence of the actual nonlinear and viscous right-hand sides. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ local instance sourceLimitSpace (s : ℕ) : NormedSpace ℝ (SobolevSpace period
 
 /-- The literal continuous viscous right-hand side with the source evaluated one Sobolev order
 lower. -/
-def viscousSourcePath {q : ℕ} (hq : 2 ≤ (q + 1) + 1) (ν T : ℝ)
+@[expose] def viscousSourcePath {q : ℕ} (hq : 2 ≤ (q + 1) + 1) (ν T : ℝ)
     (C : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q + 1)) (SobolevSpace period q))
     (u : C(Icc (0 : ℝ) T, SobolevSpace period ((q + 1) + 1))) :
     C(Icc (0 : ℝ) T,LiftL2 period) :=

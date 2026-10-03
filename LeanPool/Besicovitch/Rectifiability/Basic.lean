@@ -14,7 +14,7 @@ public import Mathlib.Data.Nat.Pairing
 Countable one-rectifiability is inherited by subsets and countable unions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -26,7 +26,7 @@ namespace LeanPool.Besicovitch
 variable {X : Type*} [MetricSpace X] [MeasurableSpace X] [BorelSpace X]
 
 /-- A set is purely one-unrectifiable if it meets every rectifiable set in a null set. -/
-def IsPurelyOneUnrectifiable (s : Set X) : Prop :=
+@[expose] def IsPurelyOneUnrectifiable (s : Set X) : Prop :=
   ∀ t, IsCountablyOneRectifiable t → μH[1] (s ∩ t) = 0
 
 /-- A subset of a countably one-rectifiable set is countably one-rectifiable. -/

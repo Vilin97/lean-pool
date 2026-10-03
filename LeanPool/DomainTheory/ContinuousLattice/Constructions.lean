@@ -28,7 +28,7 @@ the Milner
 correction and remain open.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 

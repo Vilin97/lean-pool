@@ -16,7 +16,7 @@ calculation.  A real-analytic function on a connected open set that is nonzero a
 nonzero on a dense subset of that set.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

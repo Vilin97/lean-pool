@@ -17,7 +17,7 @@ segment is the distance between its endpoints.  Hence the Hausdorff perimeter of
 the sum of its edge lengths.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise
@@ -29,7 +29,7 @@ namespace HumanVerification.CauchyCrofton
 variable {K : Body} {A : AngleSystem}
 
 /-- The cyclic sum of edge lengths of the inscribed polygon. -/
-def edgeLengthSum (K : Body) (A : AngleSystem) : ℝ :=
+@[expose] def edgeLengthSum (K : Body) (A : AngleSystem) : ℝ :=
   ∑ j ∈ Finset.range A.m, dist (vtx K A (j : ℤ)) (vtx K A ((j : ℤ) + 1))
 
 theorem edgeLengthSum_nonneg (K : Body) (A : AngleSystem) : 0 ≤ edgeLengthSum K A :=

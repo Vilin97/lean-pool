@@ -33,7 +33,7 @@ Main declarations: `RS.exists_isolating_nhds_periodSubgroup`, `RS.discreteTopolo
 `RS.periodSubgroup_topologicalClosure_eq`, `RS.discreteTopology_periodSubgroup_topologicalClosure`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold  Topology
 open Set Filter Metric IsManifold
@@ -132,6 +132,7 @@ private theorem resAt_twisted_eq {a x : Fin (genus X) → X}
   have hcoeffAt : (MFormData.smul F (MFormData.ofForm1 (basis X k))).coeffAt (a j)
       =ᶠ[𝓝 (c₀ j)] fun z => F.holoRepr ((e j).symm z) * coeffIn (e j) (basis X k) z := by
     filter_upwards [(e j).open_target.mem_nhds (mem_chart_target ℂ (a j))] with z hz
+    rw [MFormData.coeffAt_smul_meromorphic]
     change F.holoRepr ((e j).symm z) *
       (if z ∈ (e j).target then coeffIn (e j) (basis X k) z else 0) = _
     rw [ite_eq_left hz]

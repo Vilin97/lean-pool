@@ -54,7 +54,7 @@ file is imported.  Keeping these four here is what lets the marked programmes
 consume the row-proof checker without maintaining a second copy of it.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 

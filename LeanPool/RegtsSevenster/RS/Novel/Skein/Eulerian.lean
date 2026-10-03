@@ -20,7 +20,7 @@ edge subsets, the Eulerian condition, transition systems and the
 circuit count all transport along fragment equivalences.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,6 +37,7 @@ theorem ext {F₁ F₂ : EdgeSubset W} (h : F₁.flags = F₂.flags) :
   cases F₁; cases F₂; simpa using h
 
 /-- Transport of edge subsets along a fragment equivalence. -/
+@[expose]
 noncomputable def transport {W₁ W₂ : Fragment α} (e : W₁.Equiv W₂) :
     EdgeSubset W₁ ≃ EdgeSubset W₂ where
   toFun F :=
@@ -113,6 +114,7 @@ theorem transport_symm_transport {W₁ W₂ : Fragment α}
 
 /-- Transport of a transition system along a fragment
 equivalence: the conjugated matching. -/
+@[expose]
 noncomputable def TransitionSystem.transport {W₁ W₂ : Fragment α}
     (e : W₁.Equiv W₂) {F : EdgeSubset W₁} (κ : F.TransitionSystem) :
     (EdgeSubset.transport e F).TransitionSystem where
@@ -152,6 +154,7 @@ noncomputable def TransitionSystem.transport {W₁ W₂ : Fragment α}
 
 /-- The flag equivalence restricted to a transported edge
 subset. -/
+@[expose]
 noncomputable def transportFlagsEquiv {W₁ W₂ : Fragment α}
     (e : W₁.Equiv W₂) (F : EdgeSubset W₁) :
     {f : W₁.Flag // f ∈ F.flags} ≃

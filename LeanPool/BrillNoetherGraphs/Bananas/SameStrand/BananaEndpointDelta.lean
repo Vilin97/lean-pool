@@ -16,7 +16,7 @@ rank second difference of the `a`-fold endpoint pencil is one through genus
 and zero afterwards.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

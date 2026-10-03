@@ -22,7 +22,7 @@ norms, weak gradients, and zero trace used in `eq:pressure-gradient-decompositio
 The exceptional set is chosen before quantifying over spatial test functions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

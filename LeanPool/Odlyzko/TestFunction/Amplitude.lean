@@ -11,7 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 open Set Filter
 

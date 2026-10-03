@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! A finite packet sum keeps its first two grades separate from the geometric tail. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -51,7 +51,7 @@ theorem weighted_low_high_sum_le (N : ℕ) (hN : 1 ≤ N) (κ B C₁ C₂ : ℝ)
   exact add_le_add hlow hhigh
 
 /-- Low high envelope, with branches according to `n=0`. -/
-def lowHighEnvelope (B C₁ C₂ : ℝ) (n : ℕ) : ℝ :=
+@[expose] def lowHighEnvelope (B C₁ C₂ : ℝ) (n : ℕ) : ℝ :=
   if n=0 then 0 else if n=1 then C₁ else if n=2 then C₂ else B^(n+1)
 
 namespace Field

@@ -18,7 +18,7 @@ and uses an orbit-stabilizer argument.  The stabiliser count enters as
 a hypothesis, discharged as `card_fixing_perms` in `StabCount.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

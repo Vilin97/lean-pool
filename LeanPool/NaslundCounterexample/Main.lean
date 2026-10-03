@@ -29,7 +29,7 @@ it is `3^{6e+3} = 27 · 729^e < 27 · 810^e`. The growth rate is the theorem of
 The statements below are proved from the explicit polynomial families.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

@@ -21,7 +21,7 @@ existence.  The single-step disjunct is a theorem
 the paired step in value form.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

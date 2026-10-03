@@ -11,7 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.CylinderSobolevOperators
 
 /-! Actual pointwise multiplication as a bounded bilinear map Hq × L² → L². -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -38,7 +38,7 @@ theorem scalarProduct_memLp {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ)
     exact (mul_le_mul_of_nonneg_right hL (norm_nonneg (v x))).trans_eq (by ring)
 
 /-- The actual almost-everywhere scalar-vector product represented in cylinder L². -/
-def scalarProduct {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ)
+@[expose] def scalarProduct {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ)
     (u : SobolevSpace period q) (v : LiftL2 period) : LiftL2 period :=
   (scalarProduct_memLp period hq L u v).toLp (fun x => L (value period u x) • v x)
 
@@ -141,7 +141,7 @@ def scalarProductBilinear {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ) :
 
 @[simp] theorem scalarProductBilinear_apply {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ)
     (u : SobolevSpace period q) (v : LiftL2 period) :
-    scalarProductBilinear period hq L u v = scalarProduct period hq L u v := rfl
+    scalarProductBilinear period hq L u v = scalarProduct period hq L u v := by rfl
 
 /-- The actual product is equivariant under simultaneous cylinder translation. -/
 theorem scalarProduct_translation {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ] ℝ)
@@ -155,7 +155,7 @@ theorem scalarProduct_translation {q : ℕ} (hq : 3 ≤ q) (L : Vector3 →L[ℝ
       period a v),
     translation_ae period a (value period u), translation_ae period a v,
     translation_ae period a (scalarProduct period hq L u v), hp] with x h1 h2 h3 h4 h5
-  change value period (sobolevTranslation period q a u) x = value period u (x+a) at h2
+  rw [value_sobolevTranslation] at h1
   rw [h1, h2, h3, h4, h5]
 
 end EulerSobolevL2Product

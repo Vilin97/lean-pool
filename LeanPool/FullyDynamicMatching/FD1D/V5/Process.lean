@@ -12,7 +12,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Realization
 
 /-! # Process -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -52,6 +52,7 @@ theorem stateDyadicMass_leafMass_eq_deletionRule
   Transport.stateDyadicMass_leafMass_eq_deletionRule a ha hm x w
 
 /-- The concrete supply label selected from the hierarchical dyadic mass. -/
+@[expose]
 def selectedSupplyLabel (a : ℝ) (C : SupplyConfiguration L m)
     (fallback : Fin m) (u : ℝ) : Fin m :=
   C.selectedSupplyIndex (stateDyadicMass a C.countState) fallback u
@@ -351,6 +352,7 @@ theorem actualStep_eq_actualLeafStep
   rfl
 
 /-- Pathwise cost of the actual match made in one hierarchical step. -/
+@[expose]
 def actualStepCost (a : ℝ) (C : SupplyConfiguration L m)
     (fallback : Fin m) (u : ℝ) : ℝ :=
   |C.location (selectedSupplyLabel a C fallback u) - u|
@@ -360,7 +362,7 @@ theorem actualStepCost_eq_selectedSupplyPoint
     (fallback : Fin m) (u : ℝ) :
     actualStepCost a C fallback u =
       |C.selectedSupplyPoint (stateDyadicMass a C.countState)
-          fallback u - u| :=
+          fallback u - u| := by
   rfl
 
 /-- Integrating the pathwise one-step cost is exactly the existing configured
@@ -372,6 +374,7 @@ theorem integral_actualStepCost_eq_expectedActualDistance
   rfl
 
 /-- Squared pathwise cost of the actual v5 match. -/
+@[expose]
 def actualStepSquaredCost (a : ℝ) (C : SupplyConfiguration L m)
     (fallback : Fin m) (u : ℝ) : ℝ :=
   (C.location (selectedSupplyLabel a C fallback u) - u) ^ 2
@@ -381,7 +384,7 @@ theorem actualStepSquaredCost_eq_selectedSupplyPoint
     (fallback : Fin m) (u : ℝ) :
     actualStepSquaredCost a C fallback u =
       (C.selectedSupplyPoint (stateDyadicMass a C.countState)
-        fallback u - u) ^ 2 :=
+        fallback u - u) ^ 2 := by
   rfl
 
 theorem integral_actualStepSquaredCost_eq_expected
@@ -392,12 +395,14 @@ theorem integral_actualStepSquaredCost_eq_expected
   rfl
 
 /-- The actual one-period expected distance of a concrete configuration. -/
+@[expose]
 def actualConfigurationCost (a : ℝ) (hm : 0 < m)
     (C : SupplyConfiguration L m) : ℝ :=
   C.expectedActualDistance (stateDyadicMass a C.countState)
     (SupplyConfiguration.canonicalFallback hm)
 
 /-- The actual one-period expected squared distance. -/
+@[expose]
 def actualConfigurationSquaredCost (a : ℝ) (hm : 0 < m)
     (C : SupplyConfiguration L m) : ℝ :=
   Transport.expectedActualSquaredDistance C

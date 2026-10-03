@@ -43,7 +43,7 @@ nonnegativity of the test function that the clause also assumes is not
 needed for integrability and is omitted here.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

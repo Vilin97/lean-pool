@@ -22,7 +22,7 @@ something in the library needed them, and they are collected in `ForMathlib` so 
 can be contributed upstream, or deleted when Mathlib grows its own.
 -/
 
-@[expose] public section
+public section
 
 
 theorem array_extD {α : Type _} [Inhabited α] {a b : Array α} (hs : a.size = b.size)

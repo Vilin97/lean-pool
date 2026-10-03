@@ -26,7 +26,7 @@ Scott sentence.
 - `canonicalScottSentence_qrank`: Quantifier rank bounded by scottHeight + ω.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 
@@ -45,7 +45,7 @@ height level for the empty tuple.
 This is the "optimal" Scott sentence in the sense that its quantifier rank is minimized
 (among Scott formulas). It characterizes the structure up to potential isomorphism,
 and for countable structures, up to isomorphism. -/
-noncomputable def canonicalScottSentence (M : Type w) [L.Structure M] [Countable M] :
+@[expose] noncomputable def canonicalScottSentence (M : Type w) [L.Structure M] [Countable M] :
     L.Formulaω (Fin 0) :=
   scottFormula (L := L) (M := M) Fin.elim0 (scottHeight (L := L) M)
 

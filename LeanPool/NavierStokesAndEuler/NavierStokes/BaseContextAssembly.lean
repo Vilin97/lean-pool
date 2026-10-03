@@ -34,7 +34,7 @@ construction. The improved nonlinear bound uses the exact divergence of that
 curl, before projecting the literal residual into its finite harmonics.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -47,7 +47,7 @@ open scoped Topology ContDiff BigOperators ComplexConjugate
 variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 /-- The context's literal graph directions lifted to the explicit angle. -/
-noncomputable def directions (c : CorrectionState.Context D) :
+@[expose] noncomputable def directions (c : CorrectionState.Context D) :
     LinearWaveBounds.GraphDirections (D × ℝ) where
   radial := (c.operators.eR, 0)
   auxiliary := (c.operators.vR, 0)
@@ -236,17 +236,20 @@ structure Inputs (s : StripData D) (P : ℕ → D → ℝ) (κ : ℝ)
   radius_pos : ∀ x ∈ s.domain, 0 < c.operators.radius x
 
 /-- Corrected, given by `a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ`. -/
+@[expose]
 noncomputable def corrected (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :=
   a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ
 
 /-- Primary block, given by `SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp`. -/
+@[expose]
 noncomputable def primaryBlock (s : StripData D) (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) (kp : ℕ → ℤ) :=
   SignedWaveUpdate.blockOfCoefficients (corrected s c a ψ) kp
 
 /-- Gaussian coefficients, defined pointwise by `ErrorHarmonics.conjugatePair 1 (fun x =>
 LinearWaveBounds.excludedSlotError (directions c) ψ a.amplitude 0 n (x, 0) i)`. -/
+@[expose]
 noncomputable def gaussianCoefficients (c : CorrectionState.Context D)
     (a : LinearWaveBounds.WaveCoefficients (D × ℝ)) (ψ : ℕ → D × ℝ → ℝ) :
     HarmonicResidual.BlockCoefficients D :=
@@ -381,6 +384,7 @@ theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
 end Inputs
 
 /-- Real projection, given by `Complex.ofRealCLM.comp Complex.reCLM`. -/
+@[expose]
 noncomputable def realProjection : ℂ →L[ℝ] ℂ := Complex.ofRealCLM.comp Complex.reCLM
 
 @[simp] theorem realProjection_apply (z : ℂ) : realProjection z = (z.re : ℂ) := rfl
@@ -804,7 +808,7 @@ slot coordinate require polynomial bounds; the angular coordinate and
 the unstripped phase itself need no such bound.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -931,7 +935,7 @@ theorem differentiableAt_phase (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot
       (hi.snd.snd.mul ((hFl.const_mul p).add (hGl.const_mul pz)))
 
 /-- The algebraic expression after exact material cancellation. -/
-noncomputable def expression (ε p pz x0 v b G FR GR FT GT FZ GZ : ℝ) : ℝ :=
+@[expose] noncomputable def expression (ε p pz x0 v b G FR GR FT GT FZ GZ : ℝ) : ℝ :=
   b * x0 - v * (b * (p * FR + pz * GR) - ε * (p * FT + pz * GT) +
     ε * G * (p * FZ + pz * GZ))
 
@@ -1109,7 +1113,7 @@ variable {U : PhaseJetBounds.Domain ℕ Slow}
 
 /-- Pulled phase, given by `PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n)
 (P.phase.x0 n) (P.phase.F n) (P.phase.G n) (χ n x)`. -/
-noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
+@[expose] noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
     (χ : ℕ → E → Slot) (n : ℕ) (x : E) : ℝ :=
   PhaseCalculus.phase (P.phase.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
     (P.phase.F n) (P.phase.G n) (χ n x)
@@ -1117,7 +1121,7 @@ noncomputable def pulledPhase (P : PrimaryPulseBounds.PhaseConstruction U)
 /-- Canonical raw geometry with arbitrary amplitude/pressure.  Those two
 fields do not enter the material defect.  The angular base field here is
 the frequency `F`, as required by `LinearWaveResidual`, not `R*F`. -/
-noncomputable def coefficients (P : PrimaryPulseBounds.PhaseConstruction U)
+@[expose] noncomputable def coefficients (P : PrimaryPulseBounds.PhaseConstruction U)
     (b : ℕ → Slow → ℝ) (χ : ℕ → E → Slot)
     (amplitude : ℕ → E → HarmonicCalculus.ComplexVector)
     (pressure : ℕ → E → ℂ) (frequency : ℕ → ℝ) : WaveCoefficients E where
@@ -1271,7 +1275,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1288,15 +1292,17 @@ abbrev Point := PressureStream.Lift Plane
 abbrev Slow := PhaseCalculus.Slow
 
 /-- Common index, given by `ChartScales.nativeIndex h n`. -/
+@[expose]
 noncomputable def commonIndex (h : ℝ) (n : ℕ) : ℕ := ChartScales.nativeIndex h n
 
 /-- Slow scale, given by `max 1 (ChartScales.S n)`. -/
-noncomputable def slowScale (n : ℕ) : ℝ := max 1 (ChartScales.S n)
+@[expose] noncomputable def slowScale (n : ℕ) : ℝ := max 1 (ChartScales.S n)
 
 theorem one_le_slowScale (n : ℕ) : 1 ≤ slowScale n := le_max_left _ _
 
 /-- Reconstruction, bundling `exponent`, `inner`, `outer`, `inner_lt_outer` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def reconstruction (h a b : ℝ) (hab : a < b) : CorrectionState.ReconstructionData
     where
   exponent := ChartScales.radialExponent h
@@ -1308,6 +1314,7 @@ noncomputable def reconstruction (h a b : ℝ) (hab : a < b) : CorrectionState.R
   radialDirection := TorusInverse.vector .radial
 
 /-- Operators, constructed using `CorrectionState.graphOperators`. -/
+@[expose]
 noncomputable def operators (h a b : ℝ) (hab : a < b) : MeanIncrementBounds.Operators Point :=
   CorrectionState.graphOperators (reconstruction h a b hab) (ChartScales.epsilon h)
     (fun n => ChartScales.Tg ^ commonIndex h n * ChartScales.Q n ^ (1 + h))
@@ -1326,7 +1333,7 @@ noncomputable def operators (h a b : ℝ) (hab : a < b) : MeanIncrementBounds.Op
     (operators h a b hab).radius = Prod.fst := rfl
 
 /-- The actual fixed `TZ -> ZT` permutation, discarding auxiliary variables. -/
-noncomputable def slowCoordinates : Point →L[ℝ] Slow where
+@[expose] noncomputable def slowCoordinates : Point →L[ℝ] Slow where
   toFun x := (x.1, (x.2.1.2, x.2.1.1))
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -1342,6 +1349,7 @@ theorem slowCoordinates_norm_le : ‖slowCoordinates‖ ≤ 1 := by
   exact max_le_max le_rfl ((max_comm _ _).le.trans (le_max_left _ _))
 
 /-- Physical point, given by `BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)`. -/
+@[expose]
 noncomputable def physicalPoint (h : ℝ) (n : ℕ) (x : Point) : ProblemStatement.SpaceTime :=
   BaseChartJets.bandPoint h (ChartScales.Q n) (slowCoordinates x)
 
@@ -1419,6 +1427,7 @@ theorem radialCoefficient_uniform (h : ℝ) (hh : 0 ≤ h) :
         (le_mul_of_one_le_left (Real.rpow_nonneg (ChartScales.epsilon_pos h n).le _) hC)
 
 /-- Moving strip, constructed using `LocalSignedRequest.movingStripData`. -/
+@[expose]
 noncomputable def movingStrip {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowRegion (2 * h))
     (a b cL cR : ℝ) (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR) : StripData Point :=
   LocalSignedRequest.movingStripData U a b cL cR ha hcL hcR
@@ -1501,6 +1510,7 @@ section NativeGeometry
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Native strip, constructed using `movingStrip`. -/
+@[expose]
 noncomputable def nativeStrip (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : StripData Point
     :=
   movingStrip F.data.h_pos.le U (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius
@@ -1561,7 +1571,7 @@ theorem nativeStrip_weight (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
   exact PrimaryTargetBounds.movingWeight_eq W (nativeStrip_time W U hx) (nativeStrip_radius W U hx)
 
 /-- Insert zero auxiliary variables, retaining the explicit coordinate order. -/
-noncomputable def insertSlow : Slow →L[ℝ] Point where
+@[expose] noncomputable def insertSlow : Slow →L[ℝ] Point where
   toFun p := (p.1, ((p.2.2, p.2.1), 0))
   map_add' _ _ := by ext <;> simp
   map_smul' _ _ := by ext <;> simp
@@ -1571,6 +1581,7 @@ noncomputable def insertSlow : Slow →L[ℝ] Point where
 theorem slowCoordinates_insert (p : Slow) : slowCoordinates (insertSlow p) = p := rfl
 
 /-- Slow carrier, given by `insertSlow ⁻¹' (nativeStrip W U).domain`. -/
+@[expose]
 noncomputable def slowCarrier (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : Set Slow :=
   insertSlow ⁻¹' (nativeStrip W U).domain
 
@@ -1579,6 +1590,7 @@ theorem slowCarrier_open (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
 
 /-- Phase domain, given by `BaseChartJets.oneDomain ι (fun _ => slowCarrier W U) (fun _ =>
 slowCarrier_open W U)`. -/
+@[expose]
 noncomputable def phaseDomain (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     (ι : Type*) : PhaseJetBounds.Domain ι Slow :=
   BaseChartJets.oneDomain ι (fun _ => slowCarrier W U) (fun _ => slowCarrier_open W U)
@@ -1590,6 +1602,7 @@ theorem slowCoordinates_maps (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) 
   exact (nativeStrip_mem W U x).mp hx
 
 /-- Geometry radius, given by `Real.sqrt U.qlo * PrimaryTargetBounds.leftRadius W`. -/
+@[expose]
 noncomputable def geometryRadius (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) : ℝ :=
   Real.sqrt U.qlo * PrimaryTargetBounds.leftRadius W
 
@@ -1715,28 +1728,28 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- Radial base, given by `ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
 FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0`. -/
-noncomputable def radialBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def radialBase (n : ℕ) (x : Point) : ℝ :=
   ChartScales.Q n ^ CoordinateAlgebra.A F.data.h *
     FinalSlowBase.velocity H v upper B (physicalPoint F.data.h n x) 0
 
 /-- Frequency base, constructed using `BaseChartJets.frequency`. -/
-noncomputable def frequencyBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def frequencyBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
 /-- Axial base, constructed using `BaseChartJets.axial`. -/
-noncomputable def axialBase (n : ℕ) (x : Point) : ℝ :=
+@[expose] noncomputable def axialBase (n : ℕ) (x : Point) : ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) (slowCoordinates x)
 
 /-- Base, bundling `radial`, `angular`, `axial`. -/
-noncomputable def base : MeanIncrementBounds.Triple Point where
+@[expose] noncomputable def base : MeanIncrementBounds.Triple Point where
   radial := radialBase H v upper B
   angular n x := x.1 * frequencyBase H v upper B n x
   axial := axialBase H v upper B
 
 /-- Raw stress as an element of `ℝ × ℝ`. -/
-noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
+@[expose] noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   let p := AxisymmetricFields.profilePoint (physicalPoint F.data.h n x).1
     (physicalPoint F.data.h n x).2
   ChartScales.Q n ^ (2 * CoordinateAlgebra.A F.data.h) •
@@ -1747,6 +1760,7 @@ noncomputable def rawStress (n : ℕ) (x : Point) : ℝ × ℝ :=
 
 /-- The physical stress on positive radius, extended by zero to the other
 half-line. Its actual inner zero region makes this extension smooth. -/
+@[expose]
 noncomputable def virtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   if 0 < x.1 then rawStress H v upper B n x else 0
 
@@ -1759,7 +1773,7 @@ noncomputable def virtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   simp only [virtualStress, ite_eq_right (not_lt.mpr hR)]
 
 /-- Context, bundling `operators`, `base`, `virtualTheta`, `virtualAxial`. -/
-noncomputable def context (a b : ℝ) (hab : a < b) : CorrectionState.Context Point where
+@[expose] noncomputable def context (a b : ℝ) (hab : a < b) : CorrectionState.Context Point where
   operators := operators F.data.h a b hab
   base := base H v upper B
   virtualTheta n x := (virtualStress H v upper B n x).1
@@ -2005,6 +2019,7 @@ theorem virtualStress_movingSupport (U : LocalSignedRequest.SlowRegion (2 * F.da
     intro he <;> simp only [he, Prod.fst_zero, Prod.snd_zero, ne_eq, not_true_eq_false] at hn
 
 /-- Leading virtual stress, with branches according to `0 < x.1`. -/
+@[expose]
 noncomputable def leadingVirtualStress (n : ℕ) (x : Point) : ℝ × ℝ :=
   if 0 < x.1 then
     (ChartScales.epsilon F.data.h n *
@@ -2059,18 +2074,18 @@ theorem waveCoefficients_match (U : LocalSignedRequest.SlowRegion (2 * F.data.h)
   fin_cases i <;> rfl
 
 /-- Radial slow, constructed using `BaseRadialJets.radial`. -/
-noncomputable def radialSlow (n : ℕ) (p : Slow) : ℝ :=
+@[expose] noncomputable def radialSlow (n : ℕ) (p : Slow) : ℝ :=
   BaseRadialJets.radial (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n) p
 
 /-- Frequency slow, constructed using `BaseChartJets.frequency`. -/
-noncomputable def frequencySlow (n : ℕ) : Slow → ℝ :=
+@[expose] noncomputable def frequencySlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.frequency (FinalSlowBase.scales H v upper B) F.data.h W.axis.normalization
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
 /-- Axial slow, given by `BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
 (FinalSlowBase.coefficients H v) (ChartScales.Q n)`. -/
-noncomputable def axialSlow (n : ℕ) : Slow → ℝ :=
+@[expose] noncomputable def axialSlow (n : ℕ) : Slow → ℝ :=
   BaseChartJets.axial (FinalSlowBase.scales H v upper B) F.data.h
     (FinalSlowBase.coefficients H v) (ChartScales.Q n)
 
@@ -2150,7 +2165,7 @@ theorem radialSlow_productClass (U : LocalSignedRequest.SlowRegion (2 * F.data.h
 
 /-- Native context, given by `context H v upper B (PrimaryTargetBounds.leftRadius W)
 (PrimaryTargetBounds.rightRadius W) (PrimaryTargetBounds.radii_ordered W)`. -/
-noncomputable def nativeContext : CorrectionState.Context Point :=
+@[expose] noncomputable def nativeContext : CorrectionState.Context Point :=
   context H v upper B (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W)
     (PrimaryTargetBounds.radii_ordered W)
 

@@ -17,7 +17,7 @@ degree-`d` monomial in the ordinary complex `ℓ¹` norm.  This is the
 Archimedean tail-scaling estimate needed by the Banach-algebra proof.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -42,7 +42,7 @@ noncomputable def monomialSeq (d : ℕ) : OriginSeq := lp.single 1 d 1
   simp [monomialSeq, lp.single_apply, h]
 
 /-- Diagonal rescaling of an `ℓ¹` sequence by powers of `t ≤ 1`. -/
-noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : OriginSeq :=
+@[expose] noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : OriginSeq :=
   ⟨fun k ↦ (t : ℂ) ^ k * f k, by
     apply memℓp_gen
     have hs : Summable (fun k ↦ ‖(t : ℂ) ^ k * f k‖) :=
@@ -57,7 +57,7 @@ noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : Origin
     scaleSeq t ht f k = (t : ℂ) ^ k * f k := rfl
 
 /-- Rescale a sequence and normalize its coefficient in degree `d` to one. -/
-noncomputable def normalizedScale (t : ℝ≥0) (ht : t ≤ 1)
+@[expose] noncomputable def normalizedScale (t : ℝ≥0) (ht : t ≤ 1)
     (f : OriginSeq) (d : ℕ) : OriginSeq :=
   ((scaleSeq t ht f d)⁻¹) • scaleSeq t ht f
 
@@ -155,7 +155,7 @@ theorem exists_scale_normalized_close_half (f : OriginSeq) (d : ℕ)
       nlinarith
 
 /-- Distinguished-variable coefficients at the base origin, weighted by `R^k`. -/
-noncomputable def originWeightedCoeffs {n : ℕ}
+@[expose] noncomputable def originWeightedCoeffs {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (R : ℝ≥0)
     (hR : (R : ℝ≥0∞) < p.radius) : OriginSeq :=
   ⟨fun k ↦ (R : ℂ) ^ k * lastTaylorCoefficient p k 0, by
@@ -220,7 +220,7 @@ lemma scaleSeq_originWeightedCoeffs {n : ℕ}
   ring
 
 /-- Normalize the radially weighted Taylor coefficients at the origin. -/
-noncomputable def normalizedOriginCoeffs {n : ℕ}
+@[expose] noncomputable def normalizedOriginCoeffs {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (hr : (r : ℝ≥0∞) < p.radius) (d : ℕ) : OriginSeq :=
   ((originWeightedCoeffs p r hr d)⁻¹) • originWeightedCoeffs p r hr
@@ -262,7 +262,7 @@ theorem exists_radius_normalizedOrigin_close_half {n d : ℕ} {f : Ambient n →
   exact hclose
 
 /-- Normalize any analytic coefficient map by a fixed scalar. -/
-noncomputable def normalizedCoefficientMap {n : ℕ}
+@[expose] noncomputable def normalizedCoefficientMap {n : ℕ}
     (C : Base n → OriginSeq) (denom : ℂ) : Base n → OriginSeq :=
   fun z ↦ denom⁻¹ • C z
 
@@ -291,7 +291,7 @@ theorem eventually_norm_normalizedCoefficientMap_sub_monomial_lt_one {n d : ℕ}
 
 /-- The analytic weighted coefficient map normalized by its degree-`d`
 coefficient at the base origin. -/
-noncomputable def analyticNormalizedCoefficientMap {n : ℕ}
+@[expose] noncomputable def analyticNormalizedCoefficientMap {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (hr : (r : ℝ≥0∞) < p.radius) (d : ℕ) : Base n → OriginSeq :=
   normalizedCoefficientMap (weightedCoefficientSeries p r).sum

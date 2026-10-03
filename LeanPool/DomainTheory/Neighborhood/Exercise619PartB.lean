@@ -94,7 +94,7 @@ needs.
 Everything is **choice-free** (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -117,12 +117,12 @@ structure ScottSys where
 
 /-- The **sum object** `𝒟₀ + 𝒟₁` of Part A, repackaged as an object of the
 category. -/
-def ScottSys.sum (A₀ A₁ : ScottSys) : ScottSys :=
+@[expose] def ScottSys.sum (A₀ A₁ : ScottSys) : ScottSys :=
   ⟨sumTok A₀.sys A₁.sys A₀.ne A₁.ne, sumTok_nonempty⟩
 
 /-- The **product object** `𝒟₀ × 𝒟₁` of Part A, repackaged as an object of the
 category. -/
-def ScottSys.prod (A₀ A₁ : ScottSys) : ScottSys :=
+@[expose] def ScottSys.prod (A₀ A₁ : ScottSys) : ScottSys :=
   ⟨prodTok A₀.sys A₁.sys, prodTok_nonempty⟩
 
 variable {A₀ A₁ B₀ B₁ C₀ C₁ : ScottSys}
@@ -143,7 +143,7 @@ to the
 master (so it is strict), a left copy `0X` to `0X'` whenever `X f₀ X'`, and a
 right copy `1Y` to
 `1Y'` whenever `Y f₁ Y'`. -/
-def sumMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
+@[expose] def sumMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
     ApproximableMap (A₀.sum A₁).sys (B₀.sum B₁).sys where
   rel W W' :=
     ((sumTok A₀.sys A₁.sys A₀.ne A₁.ne).mem W ∧ W' = sumTokMaster B₀.sys B₁.sys) ∨
@@ -225,7 +225,7 @@ theorem sumMapTok_isStrict (f₀ : ApproximableMap A₀.sys B₀.sys)
 product
 neighbourhood `{Λ} ∪ 0X ∪ 1Y` is sent to `{Λ} ∪ 0X' ∪ 1Y'` whenever `X f₀ X'` and
 `Y f₁ Y'`. -/
-def prodMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
+@[expose] def prodMapTok (f₀ : ApproximableMap A₀.sys B₀.sys) (f₁ : ApproximableMap A₁.sys B₁.sys) :
     ApproximableMap (A₀.prod A₁).sys (B₀.prod B₁).sys where
   rel W W' := ∃ X Y X' Y', f₀.rel X X' ∧ f₁.rel Y Y' ∧
     W = prodTokNbhd X Y ∧ W' = prodTokNbhd X' Y'
@@ -663,7 +663,7 @@ def ScottSys.tok (D : ScottSys) : Set Str := D.sys.master
 /-- **The one-neighbourhood system `{Γ}`** over `{0,1}*`: its only neighbourhood
 is `Γ` itself, and
 its master (token set) is `Γ`. It is `∅`-free precisely because `Γ` is non-empty. -/
-def singletonSys (Γ : Set Str) (h : Γ.Nonempty) : ScottSys where
+@[expose] def singletonSys (Γ : Set Str) (h : Γ.Nonempty) : ScottSys where
   sys :=
     { mem := fun X => X = Γ
       master := Γ

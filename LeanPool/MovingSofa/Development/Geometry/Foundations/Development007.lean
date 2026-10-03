@@ -42,7 +42,7 @@ public import Mathlib.Topology.Order.ProjIcc
 * `Sofa.Foundations.Development002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Polygon.Height.PositiveIncrement`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -91,7 +91,7 @@ Authors: Dean Cureton
 # Polygon / Approximation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -378,7 +378,7 @@ Authors: Dean Cureton
 # Polygon / Cap Width Bound
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -571,27 +571,31 @@ Authors: Dean Cureton
 # Polygon / Discrete Cap Data
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- The uniformly spaced interior directions for a right-angle polygonal approximation. -/
+@[expose]
 def rightAngleSet (n : ℕ) (hn : 2 ≤ n) : AngleSet :=
   uniformAngleSet (Real.pi / 2) (by positivity) le_rfl n hn
 
 /-- The angular mesh size `π/(2n)`. -/
+@[expose]
 def polygonStepSize (n : ℕ) : ℝ := (Real.pi / 2) / n
 
 /-- The cap maximizes the polygonal functional on a uniform mesh with a power-of-two step
 count. -/
+@[expose]
 def IsMaximumPolygonCapSteps (n : ℕ) (K : RightAngleCapSpace) : Prop :=
   ∃ hn : 2 ≤ n, (∃ k : ℕ, n = 2 ^ k) ∧
     ∃ P : PolygonCapSpace (rightAngleSet n hn),
       P.val = K ∧ IsMaximumPolygonCap (rightAngleSet n hn) P
 
 /-- The two piecewise scalar functions used in the arm-length inequalities. -/
+@[expose]
 def magicFunctions : (NNReal → ℝ) × (NNReal → ℝ) :=
   (fun x ↦ max |(x : ℝ) - 1| ((|(x : ℝ) - 1| + 1) / 2),
    fun x ↦ (x : ℝ) - max |(x : ℝ) - 1| ((|(x : ℝ) - 1| + 1) / 2))
@@ -625,7 +629,7 @@ Authors: Dean Cureton
 # Polygon / Height / Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -840,7 +844,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Slices
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1413,7 +1417,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Variation / Local Slices
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1792,7 +1796,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Variation / Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2012,7 +2016,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Variation / Boundary
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2336,7 +2340,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2414,7 +2418,7 @@ Authors: Dean Cureton
 # Polygon / Nef / Signed Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -2526,7 +2530,7 @@ Authors: Dean Cureton
 # Polygon / Height / Wall Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -3244,7 +3248,7 @@ Authors: Dean Cureton
 # Polygon / Right Angle Grid
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3403,7 +3407,7 @@ Authors: Dean Cureton
 # Polygon / Translation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3600,7 +3604,7 @@ Authors: Dean Cureton
 # Polygon / Height / Reconstruction
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3775,7 +3779,7 @@ Authors: Dean Cureton
 # Polygon / Height / Positive Increment / Contacts
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4680,7 +4684,7 @@ Authors: Dean Cureton
 # Polygon / Height / Positive Increment
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4725,7 +4729,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.NicheLimits`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4741,7 +4745,7 @@ Authors: Dean Cureton
 # Bounds / Leg Computation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5235,13 +5239,14 @@ Authors: Dean Cureton
 # Bounds / Lower / Profile
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Integrate the reflected arm profile through the second magic function and add one. -/
+@[expose]
 def armIntegralOperator (f : C(Set.Icc (0 : ℝ) (Real.pi / 2), NNReal)) :
     C(Set.Icc (0 : ℝ) (Real.pi / 2), ℝ) where
   toFun x := 1 + ∫ u in (0 : ℝ)..(x : ℝ),
@@ -5258,6 +5263,7 @@ def armIntegralOperator (f : C(Set.Icc (0 : ℝ) (Real.pi / 2), NNReal)) :
 
 /-- Iteratively improve the nonnegative arm lower bound by taking the maximum with its
 integral update. -/
+@[expose]
 def armLowerBoundSequence : ℕ → C(Set.Icc (0 : ℝ) (Real.pi / 2), NNReal)
   | 0 => ⟨fun _ ↦ 0, continuous_const⟩
   | n + 1 =>
@@ -5268,6 +5274,7 @@ def armLowerBoundSequence : ℕ → C(Set.Icc (0 : ℝ) (Real.pi / 2), NNReal)
             n)).continuous)⟩
 
 /-- The continuous profile `max (1 - x) c` on the quarter-turn interval. -/
+@[expose]
 def lowerBoundProfile (c : Set.Icc (0 : ℝ) 1) :
     C(Set.Icc (0 : ℝ) (Real.pi / 2), ℝ) where
   toFun x := max (1 - (x : ℝ)) (c : ℝ)
@@ -5292,7 +5299,7 @@ Authors: Dean Cureton
 # Bounds / Niche Limits
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5697,7 +5704,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Reflection`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5713,7 +5720,7 @@ Authors: Dean Cureton
 # Cap / Niche Limit
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5772,19 +5779,21 @@ Authors: Dean Cureton
 # Cap / Reflection
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace MovingSofa
 
 /-- Reflect about the line through the origin and the distinguished parallelogram point. -/
+@[expose]
 def mirrorReflection (ω : ℝ) (p : Point) : Point :=
   (2 * inner ℝ p (stripParallelogram ω).2.2 /
     inner ℝ (stripParallelogram ω).2.2 (stripParallelogram ω).2.2) •
       (stripParallelogram ω).2.2 - p
 
 /-- Reflect every interior wall direction about half the terminal angle. -/
+@[expose]
 def reflectedAngleSet (Θ : AngleSet) : AngleSet where
   angle := Θ.angle
   angle_pos := Θ.angle_pos
@@ -6078,7 +6087,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Sofa.Cap`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6094,7 +6103,7 @@ Authors: Dean Cureton
 # Sofa / Support
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6209,7 +6218,7 @@ Authors: Dean Cureton
 # Sofa / Cap
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6736,7 +6745,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.MirrorFeatures`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6752,7 +6761,7 @@ Authors: Dean Cureton
 # Cap / Connectedness
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7438,7 +7447,7 @@ Authors: Dean Cureton
 # Cap / Mirror Features
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8253,7 +8262,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.Arm.Geometry`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8269,7 +8278,7 @@ Authors: Dean Cureton
 # Bounds / Arm / Geometry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8585,7 +8594,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Tail.Separation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8601,7 +8610,7 @@ Authors: Dean Cureton
 # Cap / Regularity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8880,7 +8889,7 @@ upper boundary avoids the niche; that inference fails for the stated class of ca
 `NOTES.md`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9407,7 +9416,7 @@ Authors: Dean Cureton
 # Cap / Tail / Bodies
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9425,6 +9434,7 @@ structure DistinguishedCapSide where
   corner : Point
 
 /-- The right and left cap geometry at the two distinguished Gerver angles. -/
+@[expose]
 def distinguishedCapSides (K : RightAngleCapSpace) : DistinguishedCapSide × DistinguishedCapSide :=
   let r := paperGerverConstants.2.1
   let l := paperGerverConstants.2.2
@@ -9703,7 +9713,7 @@ Authors: Dean Cureton
 # Cap / Tail / Extension
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9745,7 +9755,7 @@ Authors: Dean Cureton
 # Cap / Tail / Separation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9875,7 +9885,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.NicheDecomposition`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9891,7 +9901,7 @@ Authors: Dean Cureton
 # Area / Niche Decomposition
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9980,7 +9990,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.WedgeEndpoints`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10001,7 +10011,7 @@ wall `b(t)`; symmetrically on `[0, π/2 - φ)` for the left side.  Intersecting
 with the fan gives the two wedge forms.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10376,7 +10386,7 @@ Authors: Dean Cureton
 # Bounds / Wedge Endpoints
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10699,7 +10709,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.Upper.Q`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10715,7 +10725,7 @@ Authors: Dean Cureton
 # Bounds / Upper / Q
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10723,6 +10733,7 @@ namespace MovingSofa
 
 /-- The cap-tail upper-bound functional Q assembled from cap area, tail arcs and endpoint
 segments. -/
+@[expose]
 def upperBoundQ (T : CapTailSpace) : ℝ :=
   ClassicalResults.area (T.cap.val.val : Set Point) +
     convexArcArea T.leftBody (3 * Real.pi / 2)
@@ -10761,7 +10772,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Motion.Monotonization`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10777,7 +10788,7 @@ Authors: Dean Cureton
 # Motion / Monotonization
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 open Set
@@ -10879,7 +10890,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Sofa.Area`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10895,7 +10906,7 @@ Authors: Dean Cureton
 # Sofa / Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

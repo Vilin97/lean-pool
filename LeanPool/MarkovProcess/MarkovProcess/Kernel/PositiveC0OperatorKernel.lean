@@ -18,7 +18,7 @@ A positive contraction on real continuous functions vanishing at infinity determ
 sub-Markov kernel.  Its values are the pointwise Riesz measures of the evaluation functionals.
 -/
 
-@[expose] public section
+public section
 
 open CompactlySupported Filter MeasureTheory ProbabilityTheory Set
 open scoped ZeroAtInfty
@@ -65,6 +65,7 @@ private lemma exists_compactlySupported_norm_sub_le (f : C₀(α, ℝ)) {ε : �
         exact (houtside (mem_compl hx)).le
 
 /-- The kernel whose value at `x` is the Riesz measure representing evaluation of `T` at `x`. -/
+@[expose]
 noncomputable def kernel (hT_norm : ‖T‖ ≤ 1) : Kernel α α := by
   letI : ∀ x, IsFiniteMeasure (PositiveC0OperatorMeasure.measure T hT x) :=
     fun x ↦ PositiveC0OperatorMeasure.isFiniteMeasure_measure T hT hT_norm x

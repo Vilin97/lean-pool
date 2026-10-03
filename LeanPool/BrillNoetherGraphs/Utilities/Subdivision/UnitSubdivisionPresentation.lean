@@ -25,7 +25,7 @@ of `G.edges`, hence two different slots.  No conversion through `toFinset` is
 used, so parallel edges are never collapsed.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.UnitSubdivisionPresentation
 
@@ -50,10 +50,12 @@ noncomputable def edgeEquiv : G.edges ≃ Fin G.edges.card := by
   simpa using Fintype.equivFin G.edges
 
 /-- The actual multiset occurrence occupying an ordered edge slot. -/
+@[expose]
 noncomputable def edgeOccurrence (slot : Fin G.edges.card) : G.edges :=
   (edgeEquiv G).symm slot
 
 /-- The endpoint pair underlying an ordered edge slot. -/
+@[expose]
 noncomputable def edgeAt (slot : Fin G.edges.card) : G.V × G.V :=
   (edgeOccurrence G slot : G.V × G.V)
 
@@ -90,6 +92,7 @@ theorem edgeAt_fst_ne_snd (slot : Fin G.edges.card) :
   exact G.loopless tail hMember
 
 /-- The ordered loopless core having one slot for every edge occurrence. -/
+@[expose]
 noncomputable def core :
     ExplicitPotential.Core (Fintype.card G.V) G.edges.card where
   tail slot := vertexEquiv G (edgeAt G slot).1
@@ -112,12 +115,14 @@ theorem core_head_edgeEquiv (occurrence : G.edges) :
   simp
 
 /-- Every edge occurrence receives length one. -/
+@[expose]
 def unitLength : Fin G.edges.card → ℕ := fun _slot => 1
 
 @[simp] theorem unitLength_apply (slot : Fin G.edges.card) :
     unitLength G slot = 1 := rfl
 
 /-- The unit-length subdivision presentation of an arbitrary `CFGraph`. -/
+@[expose]
 noncomputable def spec :
     SubdivisionGraph.Spec (Fintype.card G.V) G.edges.card where
   core := core G
@@ -133,6 +138,7 @@ noncomputable def spec :
     (spec G).length slot = 1 := rfl
 
 /-- With unit lengths, a unit step is exactly an original edge occurrence. -/
+@[expose]
 noncomputable def stepEquiv : (spec G).Step ≃ G.edges where
   toFun step := edgeOccurrence G step.1
   invFun occurrence :=
@@ -163,6 +169,7 @@ theorem noInterior (interior : (spec G).Interior) : False := by
   exact Fin.elim0 interior.2
 
 /-- The original vertices are exactly all vertices of the unit subdivision. -/
+@[expose]
 noncomputable def graphVertexEquiv : G.V ≃ (spec G).graph.V where
   toFun vertex := (spec G).coreVertex (vertexEquiv G vertex)
   invFun vertex :=

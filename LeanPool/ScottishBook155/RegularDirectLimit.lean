@@ -17,7 +17,7 @@ the manuscript's assertion that a countable Cauchy sequence is contained in
 one earlier stage.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

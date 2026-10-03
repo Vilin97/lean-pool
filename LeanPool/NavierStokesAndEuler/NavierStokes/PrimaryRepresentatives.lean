@@ -20,7 +20,7 @@ support and the fixed closed active set. The enlarged-box distance is then a
 consequence of the mesh, rather than a hypothesis on the selected point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -42,9 +42,9 @@ abbrev Label := PartitionedCovariance.UnsignedLabel
 abbrev Position := SlotColoring.Position
 
 /-- Position, given by `![q.1, q.2.1, q.2.2]`. -/
-noncomputable def position (q : Slow) : Position := ![q.1, q.2.1, q.2.2]
+@[expose] noncomputable def position (q : Slow) : Position := ![q.1, q.2.1, q.2.2]
 /-- Slow, given by `(x 0, (x 1, x 2))`. -/
-noncomputable def slow (x : Position) : Slow := (x 0, (x 1, x 2))
+@[expose] noncomputable def slow (x : Position) : Slow := (x 0, (x 1, x 2))
 
 @[simp] theorem position_slow (x : Position) : position (slow x) = x := by
   ext j
@@ -70,12 +70,13 @@ theorem norm_slow_sub_le {x y : Position} {c : ℝ}
   exact max_le (h 0) (max_le (h 1) (h 2))
 
 /-- Native mask, given by `SquaredPartition.slowMask n k (position q)`. -/
+@[expose]
 noncomputable def nativeMask (n : ℕ) (k : Grid) (q : Slow) : ℝ :=
   SquaredPartition.slowMask n k (position q)
 
 /-- Grid box, given by `{q | ∀ j, |position q j - SquaredPartition.nativeSpacing n * (k j : ℝ)|
 ≤ a * SquaredPartition.nativeSpacing n}`. -/
-noncomputable def gridBox (n : ℕ) (k : Grid) (a : ℝ) : Set Slow :=
+@[expose] noncomputable def gridBox (n : ℕ) (k : Grid) (a : ℝ) : Set Slow :=
   {q | ∀ j, |position q j - SquaredPartition.nativeSpacing n * (k j : ℝ)| ≤
     a * SquaredPartition.nativeSpacing n}
 
@@ -111,7 +112,7 @@ theorem gridBox_distance {n : ℕ} {k : Grid} {a b : ℝ} {q q₀ : Slow}
   linarith [hq j, h₀ j]
 
 /-- Exactly the labels whose closed mask support meets the closed active set. -/
-noncomputable def ActiveLabel (K : Set Slow) :=
+@[expose] noncomputable def ActiveLabel (K : Set Slow) :=
   {L : Label // 1 ≤ L.1 ∧ (K ∩ tsupport (nativeMask L.1 L.2)).Nonempty}
 
 /-- Representative, given by `Classical.choose L.property.2`. -/
@@ -142,7 +143,7 @@ theorem representative_support_distance (K : Set Slow) (L : ActiveLabel K)
     div_eq_mul_inv] using gridBox_distance hq' h₀
 
 /-- Normalized slow, given by `slow (SquaredPartition.slowCoordinates D n x)`. -/
-noncomputable def normalizedSlow (D : ℝ) (n : ℕ) (x : Position) : Slow :=
+@[expose] noncomputable def normalizedSlow (D : ℝ) (n : ℕ) (x : Position) : Slow :=
   slow (SquaredPartition.slowCoordinates D n x)
 
 theorem width_eq_scaled_spacing (D : ℝ) (n : ℕ) (j : Fin 3) :
@@ -213,17 +214,18 @@ theorem enlarged_eventually_in_chart {K U : Set Slow} (hK : IsCompact K)
 /-! ## Reference frame and exact unstable-mode parameters -/
 
 /-- Normal direction, given by `‖g‖⁻¹ • g`. -/
-noncomputable def normalDirection (g : Plane) : Plane := ‖g‖⁻¹ • g
+@[expose] noncomputable def normalDirection (g : Plane) : Plane := ‖g‖⁻¹ • g
 /-- Transverse direction, given by `-MovingFrameODE.quarterTurn (normalDirection g)`. -/
-noncomputable def transverseDirection (g : Plane) : Plane :=
+@[expose] noncomputable def transverseDirection (g : Plane) : Plane :=
   -MovingFrameODE.quarterTurn (normalDirection g)
 /-- Coupling, given by `2 * F * normalDirection g 0`. -/
 noncomputable def coupling (F : ℝ) (g : Plane) : ℝ := 2 * F * normalDirection g 0
 /-- Lambda0, given by `Real.sqrt (-(coupling F g) * (coupling F g + ‖g‖))`. -/
+@[expose]
 noncomputable def lambda0 (F : ℝ) (g : Plane) : ℝ :=
   Real.sqrt (-(coupling F g) * (coupling F g + ‖g‖))
 /-- C0, given by `lambda0 F g / coupling F g`. -/
-noncomputable def c0 (F : ℝ) (g : Plane) : ℝ := lambda0 F g / coupling F g
+@[expose] noncomputable def c0 (F : ℝ) (g : Plane) : ℝ := lambda0 F g / coupling F g
 
 /-- Primitive strict shear conditions. The last inequality is the positive
 opening of the unstable two-dimensional reference system. -/
@@ -442,17 +444,18 @@ theorem representative_parameter_bounds {K : Set Slow} (hK : IsCompact K)
 /-! ## A fixed compact set from the actual normalized similarity range -/
 
 /-- Normalized active points, including the limiting time face `T = 0`. -/
-noncomputable def activeReference (h a b : ℝ) : Set Slow :=
+@[expose] noncomputable def activeReference (h a b : ℝ) : Set Slow :=
   {p | 0 ≤ p.1 ∧ 0 ≤ p.2.2 ∧ ∃ q ∈ Icc (1 / 2 : ℝ) 2,
     SimilarityCoordinates.forwardScalar (2 * h) p.2.1 q = p.2.2 ∧
       p.1 ^ 2 / (2 * q) ∈ Icc a b}
 
 /-- Reference box, given by `Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ (Icc (-2 : ℝ) 2 ×ˢ Icc (0 :
 ℝ) 2)`. -/
-noncomputable def referenceBox (a b : ℝ) : Set Slow :=
+@[expose] noncomputable def referenceBox (a b : ℝ) : Set Slow :=
   Icc (Real.sqrt a) (2 * Real.sqrt b) ×ˢ (Icc (-2 : ℝ) 2 ×ˢ Icc (0 : ℝ) 2)
 
 /-- Reference compact, given by `closure (activeReference h a b)`. -/
+@[expose]
 noncomputable def referenceCompact (h a b : ℝ) : Set Slow := closure (activeReference h a b)
 
 theorem activeReference_subset_box {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
@@ -502,7 +505,7 @@ theorem referenceCompact_radius_pos {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 
   (Real.sqrt_pos.mpr ha).trans_le (referenceCompact_subset_box hh hh1 ha hab hq).1.1
 
 /-- One explicit convex chart containing the whole normalized compact set. -/
-noncomputable def baseChart (a b : ℝ) : Set Slow :=
+@[expose] noncomputable def baseChart (a b : ℝ) : Set Slow :=
   Ioo (Real.sqrt a / 2) (2 * Real.sqrt b + 1) ×ˢ
     (Ioo (-3 : ℝ) 3 ×ˢ Ioo (-1 : ℝ) 3)
 
@@ -588,7 +591,7 @@ theorem physicalMask_has_representative {h a b : ℝ} (L : Label) (hL : 1 ≤ L.
 /-! ## One target-direction parameter, with uniform mixed-point slack -/
 
 /-- Target ratio, given by `|c0 F g * ⟪T, transverseDirection g⟫_ℝ / ⟪T, normalDirection g⟫_ℝ|`. -/
-noncomputable def targetRatio (F : ℝ) (g T : Plane) : ℝ :=
+@[expose] noncomputable def targetRatio (F : ℝ) (g T : Plane) : ℝ :=
   |c0 F g * ⟪T, transverseDirection g⟫_ℝ / ⟪T, normalDirection g⟫_ℝ|
 
 /-- `T` is a continuous target direction, including at zero-amplitude edges. -/
@@ -597,6 +600,7 @@ structure TargetCone (F : ℝ) (g T : Plane) : Prop where
   ratio_lt_one : targetRatio F g T < 1
 
 /-- Slope ratio, given by `u / Real.sqrt (1 + u ^ 2)`. -/
+@[expose]
 noncomputable def slopeRatio (u : ℝ) : ℝ := u / Real.sqrt (1 + u ^ 2)
 
 theorem exists_slopeRatio_gt {r : ℝ} (hr : 0 ≤ r) (hr1 : r < 1) :

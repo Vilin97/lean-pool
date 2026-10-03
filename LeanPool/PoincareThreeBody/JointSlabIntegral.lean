@@ -18,7 +18,7 @@ This file turns the uniform fiber series supplied by a joint analytic ball into 
 for its parameter integral over any closed time interval contained in a smaller slab.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

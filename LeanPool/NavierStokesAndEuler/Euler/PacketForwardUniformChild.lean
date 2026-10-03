@@ -33,7 +33,7 @@ section
 has a source-dependent Gevrey bound uniform in the truncation frequency.
 The time derivative of the inverse deformation is included explicitly. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -144,7 +144,7 @@ section
 the physical shear and pressure errors, and the three flow fields. Only
 the displayed numerical frequency margins are independent extra guards. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -382,7 +382,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

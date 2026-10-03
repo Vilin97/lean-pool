@@ -37,7 +37,7 @@ Lie algebra, central extension, short exact sequence
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -82,7 +82,7 @@ namespace LieTwoCocycle.CentralExtension
 
 /-- If `𝓮` is the (central) extension of `𝓰` by `𝓪` defined by a 2-cocycle `γ ∈ Z²(𝓰,𝓪)`,
 then `LieTwoCocycle.CentralExtension.emb` gives the corresponding embedding `𝓪 ⟶ 𝓮`. -/
-def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.emb
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.emb
     [IsLieAbelian 𝓪] : 𝓪 →ₗ⁅𝕜⁆ γ.CentralExtension where
   toFun := fun A ↦ ⟨0, A⟩
   map_add' A₁ A₂ := by
@@ -114,7 +114,8 @@ def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.emb
 
 /-- If `𝓮` is the (central) extension of `𝓰` by `𝓪` defined by a 2-cocycle `γ ∈ Z²(𝓰,𝓪)`,
 then `LieTwoCocycle.CentralExtension.proj` gives the corresponding projection `𝓮 ⟶ 𝓰`. -/
-def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.proj : γ.CentralExtension →ₗ⁅𝕜⁆ 𝓰 where
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.proj :
+    γ.CentralExtension →ₗ⁅𝕜⁆ 𝓰 where
   toFun := fun ⟨X, _⟩ ↦ X
   map_add' := by intro ⟨X₁, A₁⟩ ⟨X₂, A₂⟩; rfl
   map_smul' := by intro c ⟨X, A⟩; rfl
@@ -185,7 +186,7 @@ theorem _root_.VirasoroProject.LieTwoCocycle.CentralExtension.isCentralExtension
       simp
 
 /-- A standard section of a Lie algebra central extension associated to a Lie 2-cocycle. -/
-noncomputable def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSection
+@[expose] noncomputable def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSection
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
     𝓰 →ₗ[𝕜] γ.CentralExtension where
   toFun X := ⟨X, 0⟩
@@ -201,7 +202,7 @@ noncomputable def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSecti
 lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSection_prop
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
     proj γ ∘ₗ stdSection γ = (1 : 𝓰 →ₗ[𝕜] 𝓰) :=
-  rfl
+  by rfl
 
 end LieTwoCocycle.CentralExtension --namespace
 

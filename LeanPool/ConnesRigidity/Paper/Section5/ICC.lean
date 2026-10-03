@@ -16,7 +16,7 @@ ICC transfer for Zhou §5. Since the acting group is
 concrete product quotient.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperICC

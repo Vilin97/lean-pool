@@ -22,7 +22,7 @@ zero denotes the preceding gap, while Euler-tour side zero denotes the current d
 half-edge; the bridge therefore precomposes occurrence sides with `Fin.rev`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 namespace LoopMultigraph
@@ -34,6 +34,7 @@ variable {V E : Type*} [Fintype V] [Fintype E] [DecidableEq V] [DecidableEq E]
   {G : LoopMultigraph V E}
 
 /-- The cyclic transition word read from an Euler tour. -/
+@[expose]
 def EulerTour.eulerWord (T : G.EulerTour) : Sabidussi.CyclicWord.Word (V := V) where
   n := T.n
   letter := T.vertexAt
@@ -70,10 +71,13 @@ theorem incidentColor_eq_halfEdgeColor
       x (T.edge.symm ((T.wordOccurrenceSideEquivHalfEdgesAt v os).1.1)) := by
   rcases os with ⟨o, s⟩
   fin_cases s
-  · change x (T.prev o.1) = x (T.edge.symm (T.edge (T.prev o.1)))
+  · change x (T.prev o.1) =
+      x (T.edge.symm (T.occurrenceSideEquivHalfEdgesAt v (o, 1)).1.1)
+    rw [T.occurrenceSideEquivHalfEdgesAt_edge]
     simp
-  · change x o.1 = x (T.edge.symm (T.edge o.1))
-    exact (congrArg x (T.edge.symm_apply_apply (show T.Pos from o.1))).symm
+  · change x o.1 = x (T.edge.symm (T.occurrenceSideEquivHalfEdgesAt v (o, 0)).1.1)
+    rw [T.occurrenceSideEquivHalfEdgesAt_edge]
+    simp
 
 /-- The coloured occurrence sides of the word and the correspondingly coloured half-edges at a
 vertex are equinumerous. -/

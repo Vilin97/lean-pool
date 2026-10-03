@@ -54,7 +54,7 @@ a smooth expression in `L_tilde x` and `g_tilde x` (leaves L1–L4 for `pinv`).
 Leaves L1–L7 and the assembly L8 were proved by Aristotle (project 6f927eaf, 2026-08-30).
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff Topology InnerProduct
 open Set Function ContinuousLinearMap Bundle
@@ -175,15 +175,15 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
   {E' : Type*} [NormedAddCommGroup E'] [NormedSpace ℝ E']
 
 /-- The differential `mfderiv u x`, read as a map `E →L E'` (definitional cast). -/
-def diff (u : M → E') (x : M) : E →L[ℝ] E' := mfderiv I 𝓘(ℝ, E') u x
+@[expose] def diff (u : M → E') (x : M) : E →L[ℝ] E' := mfderiv I 𝓘(ℝ, E') u x
 
 /-- The metric at `x`, read as a bilinear form on `E` (definitional cast). -/
-def metricAt (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _)) (x : M) :
+@[expose] def metricAt (g : ContMDiffRiemannianMetric I ∞ E (TangentSpace I : M → Type _)) (x : M) :
     E →L[ℝ] E →L[ℝ] ℝ := g.inner x
 
 /-- Coordinate change from the model fibre to `T_xM ≅ E`, in the trivialization at `x₀`
   (definitional cast of `symmL`). -/
-def tcoord (I : ModelWithCorners ℝ E H) [IsManifold I ∞ M] (x₀ x : M) : E →L[ℝ] E :=
+@[expose] def tcoord (I : ModelWithCorners ℝ E H) [IsManifold I ∞ M] (x₀ x : M) : E →L[ℝ] E :=
   (trivializationAt E (TangentSpace I) x₀).symmL ℝ x
 
 omit [FiniteDimensional ℝ E] in
@@ -255,7 +255,7 @@ end Coordinates
 
 /-- The Euclidean inner product of `E'` as a real bilinear form (over `ℝ` the conjugate
   linearity of `innerSL` is trivial). -/
-def innerBilin (E' : Type*) [NormedAddCommGroup E'] [InnerProductSpace ℝ E'] :
+@[expose] def innerBilin (E' : Type*) [NormedAddCommGroup E'] [InnerProductSpace ℝ E'] :
     E' →L[ℝ] E' →L[ℝ] ℝ :=
   innerSL ℝ
 

@@ -19,7 +19,7 @@ mean operations.  Agreement of primitive data is on whole slow fibers,
 because radial and torus integrals are nonlocal on each such fiber.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -162,11 +162,13 @@ theorem FiberAgreement.eventuallyEq {V : Type*} {U : Set Slow} (hU : IsOpen U) {
 
 /-- A primitive model retains the fast torus coordinate and the physical
 radial variable; only the time coordinate is replaced by `q`. -/
+@[expose]
 noncomputable def stableModel (coord : ℝ) (p : Lift) : Model :=
   ((stableQ coord p.2.1, (p.1, p.2.1.2)), p.2.2)
 
 /-- Physical model, given by `((SimilarityCoordinates.coordinateQ coord p.2.1, (p.1, p.2.1.2)),
 p.2.2)`. -/
+@[expose]
 noncomputable def physicalModel (coord : ℝ) (p : Lift) : Model :=
   ((SimilarityCoordinates.coordinateQ coord p.2.1, (p.1, p.2.1.2)), p.2.2)
 
@@ -193,6 +195,7 @@ noncomputable def continuedSource (coord : ℝ) (F : Model → ℝ) : Lift → �
   F ∘ stableModel coord
 
 /-- Physical source, given by `F ∘ physicalModel coord`. -/
+@[expose]
 noncomputable def physicalSource (coord : ℝ) (F : Model → ℝ) : Lift → ℝ :=
   F ∘ physicalModel coord
 
@@ -513,6 +516,7 @@ variable {P Q V E : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- Reparameterize primitive ODE coefficients and forcing, while keeping
 the native-copy path and its entry point unchanged. -/
+@[expose]
 noncomputable def pullLinearData (φ : P → Q) (d : CommonCoverSolve.LinearData Q V E) :
     CommonCoverSolve.LinearData P V E where
   coefficient := fun p => d.coefficient (φ p.1, p.2)
@@ -555,15 +559,18 @@ variable {V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Stable parameter, given by `(stableQ coord p.2, (p.1, p.2.2))`. -/
+@[expose]
 noncomputable def stableParameter (coord : ℝ) (p : ℝ × Slow) : MeanRankUpdate.ModelPoint :=
   (stableQ coord p.2, (p.1, p.2.2))
 
 /-- Physical parameter, given by `(SimilarityCoordinates.coordinateQ coord p.2, (p.1, p.2.2))`. -/
+@[expose]
 noncomputable def physicalParameter (coord : ℝ) (p : ℝ × Slow) : MeanRankUpdate.ModelPoint :=
   (SimilarityCoordinates.coordinateQ coord p.2, (p.1, p.2.2))
 
 /-- Continued reference solve, defined pointwise by `(pullLinearData (stableParameter coord)
 d).commonSolve g hab κ ((p.1, p.2.1), p.2.2)`. -/
+@[expose]
 noncomputable def continuedReferenceSolve (coord : ℝ)
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Slow → ℝ) : Lift → E :=
@@ -571,6 +578,7 @@ noncomputable def continuedReferenceSolve (coord : ℝ)
 
 /-- Physical reference solve, defined pointwise by `(pullLinearData (physicalParameter coord)
 d).commonSolve g hab κ ((p.1, p.2.1), p.2.2)`. -/
+@[expose]
 noncomputable def physicalReferenceSolve (coord : ℝ)
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {a b : ℝ} (hab : a ≤ b) (κ : Slow → ℝ) : Lift → E :=
@@ -681,6 +689,7 @@ variable {V E : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Reference carrier model, given by `(HarmonicCalculus.mode frequency
 (PeriodicPhaseAssembly.phase g w.cutoff A B) (fun z => L (d.commonSolve g hst κ z)) y).re`. -/
+@[expose]
 noncomputable def referenceCarrierModel
     (d : CommonCoverSolve.LinearData MeanRankUpdate.ModelPoint V E)
     (g : CommonCoverSolve.Geometry) {s t : ℝ} (hst : s ≤ t) (κ : Slow → ℝ)
@@ -792,7 +801,7 @@ abbrev Space := ProblemStatement.Space
 abbrev SpaceTime := ProblemStatement.SpaceTime
 
 /-- Physical slow, given by `(1 - w.1, w.2 2)`. -/
-noncomputable def physicalSlow (w : SpaceTime) : Slow := (1 - w.1, w.2 2)
+@[expose] noncomputable def physicalSlow (w : SpaceTime) : Slow := (1 - w.1, w.2 2)
 
 theorem physicalSlow_contDiff : ContDiff ℝ ∞ physicalSlow :=
   (contDiff_const.sub contDiff_fst).prodMk
@@ -800,11 +809,11 @@ theorem physicalSlow_contDiff : ContDiff ℝ ∞ physicalSlow :=
 
 /-- The actual radial/slow/native-graph restriction of a full-fiber mean
 field.  The common covering level remains the supplied `n`. -/
-noncomputable def physicalLift (h : ℝ) (n : ℕ) (w : SpaceTime) : Lift :=
+@[expose] noncomputable def physicalLift (h : ℝ) (n : ℕ) (w : SpaceTime) : Lift :=
   (AnnularEndpoint.radius w, (physicalSlow w, PhysicalGraphBounds.nativeGraph h n w))
 
 /-- Physical domain, given by `physicalSlow ⁻¹' U`. -/
-noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := physicalSlow ⁻¹' U
+@[expose] noncomputable def physicalDomain (U : Set Slow) : Set SpaceTime := physicalSlow ⁻¹' U
 
 theorem physicalDomain_open {U : Set Slow} (hU : IsOpen U) : IsOpen (physicalDomain U) :=
   hU.preimage physicalSlow_contDiff.continuous
@@ -833,7 +842,7 @@ theorem physicalLift_contDiffAt (h : ℝ) (n : ℕ) {w : SpaceTime}
     (PhysicalGraphBounds.contDiffAt_nativeGraph h n hw))
 
 /-- Physical scalar, given by `f ∘ physicalLift h n`. -/
-noncomputable def physicalScalar (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → ℝ :=
+@[expose] noncomputable def physicalScalar (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → ℝ :=
   f ∘ physicalLift h n
 
 theorem physicalScalar_zero_germ (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
@@ -864,6 +873,7 @@ theorem physicalScalar_smooth (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
 
 /-- `streamPotential` is already the azimuthal component of the vector
 potential, including its division by the radial variable. -/
+@[expose]
 noncomputable def azimuthalPotential (h : ℝ) (n : ℕ) (f : Lift → ℝ) (w : SpaceTime) : Space :=
   (-w.2 1 / AnnularEndpoint.radius w * physicalScalar h n f w) • ProblemStatement.coordinateVector
       0 +
@@ -872,7 +882,7 @@ noncomputable def azimuthalPotential (h : ℝ) (n : ℕ) (f : Lift → ℝ) (w :
 
 /-- A direct angular velocity uses the same Cartesian multiplication by
 `e_theta`.  This definition does not apply a curl or a radial primitive. -/
-noncomputable def angularField (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → Space :=
+@[expose] noncomputable def angularField (h : ℝ) (n : ℕ) (f : Lift → ℝ) : SpaceTime → Space :=
   azimuthalPotential h n f
 
 theorem azimuthalPotential_smooth (h : ℝ) (n : ℕ) {U : Set Slow} (hU : IsOpen U)
@@ -1037,6 +1047,7 @@ section DiagonalCutoffs
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Physical Q extension, given by `(EndpointCoordinates.cartesianExtension h w).1`. -/
+@[expose]
 noncomputable def physicalQExtension (h : ℝ) (w : SpaceTime) : ℝ :=
   (EndpointCoordinates.cartesianExtension h w).1
 

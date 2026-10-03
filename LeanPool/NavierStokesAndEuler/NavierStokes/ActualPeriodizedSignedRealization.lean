@@ -17,7 +17,7 @@ copies are summed before curl, and equality with the same reference output
 is proved from the periodic-clock identity on their compact supports.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -64,6 +64,7 @@ namespace Layout
 variable (l : Layout)
 
 /-- Native mask, given by `l.cutoff n ((l.geometry n).coordinates k Y)`. -/
+@[expose]
 noncomputable def nativeMask (n : ℕ) (k : Frequency) (Y : Plane) : ℝ :=
   l.cutoff n ((l.geometry n).coordinates k Y)
 
@@ -76,13 +77,16 @@ noncomputable def clock (n : ℕ) (Y : Plane) : ℝ :=
   PeriodicPhaseAssembly.periodicClock (l.geometry n) (l.window n).cutoff Y / l.length n
 
 /-- Native clock, given by `((l.geometry n).coordinates k Y).2 / l.length n`. -/
+@[expose]
 noncomputable def nativeClock (n : ℕ) (k : Frequency) (Y : Plane) : ℝ :=
   ((l.geometry n).coordinates k Y).2 / l.length n
 
 /-- Gaussian, given by `GaussianTailFlat.profile (l.clock n Y)`. -/
+@[expose]
 noncomputable def gaussian (n : ℕ) (Y : Plane) : ℝ := GaussianTailFlat.profile (l.clock n Y)
 
 /-- Native gaussian, given by `GaussianTailFlat.profile (l.nativeClock n k Y)`. -/
+@[expose]
 noncomputable def nativeGaussian (n : ℕ) (k : Frequency) (Y : Plane) : ℝ :=
   GaussianTailFlat.profile (l.nativeClock n k Y)
 
@@ -177,7 +181,7 @@ end Layout
 
 /-- Homogeneous pressure, given by `Complex.I * (TangentProjection.pressureCoefficient N Ndot u
 (A u) 0 : ℂ) / (K : ℂ)`. -/
-noncomputable def homogeneousPressure (K : ℝ) (N Ndot : Space) (A : Space →L[ℝ] Space)
+@[expose] noncomputable def homogeneousPressure (K : ℝ) (N Ndot : Space) (A : Space →L[ℝ] Space)
     (u : Space) : ℂ :=
   Complex.I * (TangentProjection.pressureCoefficient N Ndot u (A u) 0 : ℂ) / (K : ℂ)
 
@@ -230,6 +234,7 @@ variable {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
 
 /-- Periodized primary, given by `{B with coordinate := fun n x => ((B.coordinate n x).1,
 l.clock n x.1.2.2) mask := fun n x => B.mask n x * l.mask n x.1.2.2}`. -/
+@[expose]
 noncomputable def periodizedPrimary : PhysicalSignedWave.PrimaryData U :=
   {B with
     coordinate := fun n x => ((B.coordinate n x).1, l.clock n x.1.2.2)
@@ -240,7 +245,7 @@ noncomputable def periodizedPrimary : PhysicalSignedWave.PrimaryData U :=
 @[simp] theorem periodizedPrimary_matrix : (periodizedPrimary B l).matrix = B.matrix := rfl
 
 /-- All view scales, integer covers, backgrounds, and operators are retained. -/
-noncomputable def views {reference : ℕ} (V : B.Views reference) :
+@[expose] noncomputable def views {reference : ℕ} (V : B.Views reference) :
     (periodizedPrimary B l).Views reference where
   exponent := V.exponent
   referenceScale := V.referenceScale
@@ -261,6 +266,7 @@ noncomputable def views {reference : ℕ} (V : B.Views reference) :
 
 /-- Reuse the actual current state, reference state, and their full-fiber
 coherence. There is no second signed choice or request. -/
+@[expose]
 noncomputable def stateData {reference : ℕ} {V : B.Views reference} (D : V.StateData) :
     (views B l V).StateData where
   patch := D.patch
@@ -294,22 +300,25 @@ noncomputable def stateData {reference : ℕ} {V : B.Views reference} (D : V.Sta
 variable {reference : ℕ} (V : B.Views reference)
 
 /-- Shared mask, given by `B.mask reference (V.map n x)`. -/
-noncomputable def sharedMask (n : ℕ) (x : Cylinder) : ℝ := B.mask reference (V.map n x)
+@[expose] noncomputable def sharedMask (n : ℕ) (x : Cylinder) : ℝ := B.mask reference (V.map n x)
 
 /-- Total mask, given by `sharedMask B V n x * l.mask reference (V.map n x).1.2.2`. -/
+@[expose]
 noncomputable def totalMask (n : ℕ) (x : Cylinder) : ℝ :=
   sharedMask B V n x * l.mask reference (V.map n x).1.2.2
 
 /-- Copy mask, given by `sharedMask B V n x * l.nativeMask reference k (V.map n x).1.2.2`. -/
+@[expose]
 noncomputable def copyMask (k : Frequency) (n : ℕ) (x : Cylinder) : ℝ :=
   sharedMask B V n x * l.nativeMask reference k (V.map n x).1.2.2
 
 /-- Common unit, given by `(periodizedPrimary B l).fundamental j reference (V.map n x)`. -/
+@[expose]
 noncomputable def commonUnit (j : Fin 2) (n : ℕ) (x : Cylinder) : Space :=
   (periodizedPrimary B l).fundamental j reference (V.map n x)
 
 /-- Native unit, constructed using `PrimaryPulseBounds.normalizedPulse`. -/
-noncomputable def nativeUnit (j : Fin 2) (k : Frequency) (n : ℕ) (x : Cylinder) : Space :=
+@[expose] noncomputable def nativeUnit (j : Fin 2) (k : Frequency) (n : ℕ) (x : Cylinder) : Space :=
   PrimaryPulseBounds.normalizedPulse ((B.pulse j).frame reference)
     ((B.pulse j).lam reference) ((B.pulse j).u reference) ((B.pulse j).L reference)
     ((B.coordinate reference (V.map n x)).1, l.nativeClock reference k (V.map n x).1.2.2)
@@ -322,7 +331,7 @@ theorem commonUnit_eq_native (j : Fin 2) (k : Frequency) (n : ℕ) (x : Cylinder
   rfl
 
 /-- One call to the original homogeneous signed quotient constructor. -/
-noncomputable def coefficientsWith (request : ℕ → Cylinder → Vec2) (j : Fin 2)
+@[expose] noncomputable def coefficientsWith (request : ℕ → Cylinder → Vec2) (j : Fin 2)
     (mask : ℕ → Cylinder → ℝ) (unit : ℕ → Cylinder → Space) : WaveCoefficients Cylinder :=
   SignedWaveUpdate.coefficients ((periodizedPrimary B l).viewBase V.background V.frequency (fun n
       => V.map n) reference)
@@ -340,6 +349,7 @@ noncomputable def commonCoefficients (request : ℕ → Cylinder → Vec2) (j : 
 
 /-- Native coefficients, given by `coefficientsWith B l V request j (copyMask B l V k)
 (nativeUnit B l V j k)`. -/
+@[expose]
 noncomputable def nativeCoefficients (request : ℕ → Cylinder → Vec2) (j : Fin 2) (k : Frequency) :
     WaveCoefficients Cylinder :=
   coefficientsWith B l V request j (copyMask B l V k) (nativeUnit B l V j k)
@@ -436,6 +446,7 @@ theorem view_pressure (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ
 
 /-- Every lattice copy is built by the actual native signed quotient and
 projected homogeneous pressure; the cutoff is applied before summation. -/
+@[expose]
 noncomputable def copyData (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
     PeriodizedWaveBounds.CopyData Cylinder Frequency where
   background := (periodizedPrimary B l).viewBase V.background V.frequency (fun n => V.map n)
@@ -494,6 +505,7 @@ theorem commonCorrected_eq (request : ℕ → Cylinder → Vec2) (j : Fin 2) :
 /-! ## The literal current-state request and one physical reference -/
 
 /-- The native copies use the current state's actual signed request. -/
+@[expose]
 noncomputable def actualCopyData (D : V.StateData) (j : Fin 2) :
     PeriodizedWaveBounds.CopyData Cylinder Frequency :=
   copyData B l V D.request j
@@ -539,14 +551,17 @@ theorem actual_pressure_transport (D : V.StateData) (j : Fin 2) (n : ℕ)
 
 /-- One genuine periodized Cartesian potential, retaining the same pulse,
 reference state, scales, and integer covers as the native copies. -/
+@[expose]
 noncomputable def physicalPotential (D : V.StateData) (j : Fin 2) (delta : ℝ) : VelocityField :=
   (views B l V).physicalPotential D.referenceRequest j delta
 
 /-- Physical velocity, given by `SpatialCurl.spatialCurl (physicalPotential B l V D j delta)`. -/
+@[expose]
 noncomputable def physicalVelocity (D : V.StateData) (j : Fin 2) (delta : ℝ) : VelocityField :=
   SpatialCurl.spatialCurl (physicalPotential B l V D j delta)
 
 /-- Physical pressure, given by `(views B l V).physicalPressure D.referenceRequest j delta`. -/
+@[expose]
 noncomputable def physicalPressure (D : V.StateData) (j : Fin 2) (delta : ℝ) : PressureField :=
   (views B l V).physicalPressure D.referenceRequest j delta
 
@@ -619,6 +634,7 @@ variable {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
   (B : PhysicalSignedWave.PrimaryData U) (l : Layout)
 
 /-- Reference native unit, constructed using `PrimaryPulseBounds.normalizedPulse`. -/
+@[expose]
 noncomputable def referenceNativeUnit (j : Fin 2) (n : ℕ) (k : Frequency) (x : Cylinder) : Space :=
   PrimaryPulseBounds.normalizedPulse ((B.pulse j).frame n)
     ((B.pulse j).lam n) ((B.pulse j).u n) ((B.pulse j).L n)
@@ -633,7 +649,7 @@ theorem referenceUnit_eq_native (j : Fin 2) (n : ℕ) (k : Frequency) (x : Cylin
 
 /-- Reference scalar, given by `SignedWaveUpdate.signedScalar B.strip B.matrix B.target request
 B.mask j n x`. -/
-noncomputable def referenceScalar (request : ℕ → Cylinder → Vec2) (j : Fin 2)
+@[expose] noncomputable def referenceScalar (request : ℕ → Cylinder → Vec2) (j : Fin 2)
     (n : ℕ) (x : Cylinder) : ℝ :=
   SignedWaveUpdate.signedScalar B.strip B.matrix B.target request B.mask j n x
 

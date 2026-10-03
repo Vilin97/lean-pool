@@ -16,7 +16,7 @@ parameters `(t, t1, t2)`. Later files will prove the quantitative bound
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 
@@ -28,15 +28,15 @@ namespace Recursive3Param
 
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def t : Rand :=
+@[expose] noncomputable def t : Rand :=
   (⟨(5 / 8 : ℝ), by constructor <;> norm_num⟩ : I)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def t1 : Rand :=
+@[expose] noncomputable def t1 : Rand :=
   (⟨(3 / 8 : ℝ), by constructor <;> norm_num⟩ : I)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def t2 : Rand :=
+@[expose] noncomputable def t2 : Rand :=
   (⟨(17 / 32 : ℝ), by constructor <;> norm_num⟩ : I)
 
 lemma t1_lt_t2 : (t1 : ℝ) < t2 := by norm_num [t1, t2]
@@ -57,7 +57,7 @@ This is the base cutoff surface `z_base(x,y;t)` described in the project write-u
 -/
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def zBase (x y : Rand) : ℝ :=
+@[expose] noncomputable def zBase (x y : Rand) : ℝ :=
   if (y : ℝ) ∈ Set.Ici (t : ℝ) then
     if (x : ℝ) ∈ Set.Iio (t : ℝ) then 1 else (t : ℝ)
   else
@@ -75,7 +75,7 @@ We implement the recursive surface directly using the induced partition (this is
 -/
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def z0 (x y : Rand) : ℝ :=
+@[expose] noncomputable def z0 (x y : Rand) : ℝ :=
   if ((x : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (y : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) then
     -- Inside `[t1,t] × [t1,t]`, the recursion collapses to the base rule with threshold `t2`.
     if (y : ℝ) ∈ Set.Iio (t2 : ℝ) then
@@ -87,7 +87,7 @@ noncomputable def z0 (x y : Rand) : ℝ :=
     zBase x y
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def g (x y z : Rand) : Color :=
+@[expose] noncomputable def g (x y z : Rand) : Color :=
   if (z : ℝ) < z0 x y then 1 else 0
 
 lemma measurable_zBase : Measurable fun xy : Rand × Rand => zBase xy.1 xy.2 := by
@@ -181,7 +181,7 @@ lemma measurable_g : Measurable fun xyz : Rand × Rand × Rand => g xyz.1 xyz.2.
   · exact measurable_const
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def recursive3ParamAlg : ClassicalAlgorithm where
+@[expose] noncomputable def recursive3ParamAlg : ClassicalAlgorithm where
   f := fun xyz => g xyz.1 xyz.2.1 xyz.2.2
   measurable_f := measurable_g
 
@@ -227,7 +227,7 @@ lemma z0_mem_Icc (x y : Rand) : z0 x y ∈ Set.Icc (0 : ℝ) 1 := by
     exact zBase_mem_Icc x y
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def z0I (x y : Rand) : Rand :=
+@[expose] noncomputable def z0I (x y : Rand) : Rand :=
   ⟨z0 x y, z0_mem_Icc x y⟩
 
 lemma g_eq_one_iff (x y z : Rand) : g x y z = 1 ↔ (z : ℝ) < z0 x y := by

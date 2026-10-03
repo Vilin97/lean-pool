@@ -46,7 +46,7 @@ whole economic argument for the closed-orthant layer, and it is a theorem
 here.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
@@ -195,6 +195,7 @@ theorem prin_eq_sum_steps (script : firingScript d.graph) (v : d.Vertex) :
 /-- A slope datum for a firing script: the script rises by `slope edge k`
 across the `k`-th unit step of slot `edge`.  Vanishing slots impose no
 condition, since they carry no unit step. -/
+@[expose]
 def IsStepSlope (script : firingScript d.graph) (slope : Fin p → ℕ → ℤ) :
     Prop :=
   ∀ (e : Fin p) (o : Fin (d.length e)),
@@ -373,6 +374,7 @@ theorem le_sum_of_member {F : Fin n → ℤ} (r u : Fin n)
 
 /-- The script whose value at path position `k` of slot `edge` is
 `value edge k`, and `potential (rep v)` at the class of the core vertex `v`. -/
+@[expose]
 def slotValueScript (potential : Fin n → ℤ) (value : Fin p → ℕ → ℤ) :
     firingScript d.graph
   | Sum.inl c => potential c.val

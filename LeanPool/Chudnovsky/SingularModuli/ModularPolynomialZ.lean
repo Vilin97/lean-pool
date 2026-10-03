@@ -85,7 +85,7 @@ lives in `CMRelations.lean` (a two-line Möbius computation), consumed via `diag
 / `PhiQ_eval_j_root`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

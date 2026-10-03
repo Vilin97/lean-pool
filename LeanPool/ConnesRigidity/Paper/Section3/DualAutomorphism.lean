@@ -17,7 +17,7 @@ and proves continuity and Haar preservation. It is the common §3 input for
 the crossed-action conjugacy and the §4 spectral detector.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperDualAutomorphism
@@ -42,7 +42,7 @@ abbrev CharacterSpace := PaperDualTopology.CharacterSpace
 /--
 The `continuousMulAut` construction used in the Connes rigidity formalization.
 -/
-def continuousMulAut (e : AddAut D) :
+@[expose] def continuousMulAut (e : AddAut D) :
     Multiplicative D →ₜ* Multiplicative D where
   toFun x := Multiplicative.ofAdd (e x.toAdd)
   map_one' := by simp

@@ -22,7 +22,7 @@ that let the trace of a permutation-and-endomorphism word be
 computed block by block.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -39,6 +39,7 @@ by recursion on the upper block.  At `q = 0` it is the right
 unitor's inverse; each further factor is carried across by the
 associator, so the isomorphism is built from unitors and
 associators alone. -/
+@[expose]
 noncomputable def splitPow [Category.{v} A] [MonoidalCategory A]
     (X : A) : (p q : ℕ) →
     (tensorPow A X (p + q) ≅ tensorPow A X p ⊗ tensorPow A X q)
@@ -66,6 +67,7 @@ theorem splitPow_succ [Category.{v} A] [MonoidalCategory A]
 /-- The block sum of two permutations: `σ` acts on the lower `p`
 slots and `τ` on the upper `q`, with no interaction between the
 blocks. -/
+@[expose]
 def blockSum {p q : ℕ} (σ : Equiv.Perm (Fin p))
     (τ : Equiv.Perm (Fin q)) : Equiv.Perm (Fin (p + q)) :=
   finSumFinEquiv.permCongr (Equiv.sumCongr σ τ)

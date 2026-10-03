@@ -15,7 +15,7 @@ A positive vanishing exponent transports through a multiplicative
 map even when that map does not preserve the identity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -12,7 +12,7 @@ public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 
 /-! ### Elementary tree-coordinate shears -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -25,7 +25,7 @@ open scoped BigOperators ENNReal
 noncomputable section
 
 /-- The graph induced by a finite set of particle edges. -/
-def hardSphereTreeGraph {k : Nat}
+@[expose] def hardSphereTreeGraph {k : Nat}
     (T : Finset (Sym2 (Fin k))) : SimpleGraph (Fin k) :=
   SimpleGraph.fromEdgeSet (T : Set (Sym2 (Fin k)))
 
@@ -166,7 +166,7 @@ lemma hardSphereTreeParent_index_lt {k : Nat} [NeZero k]
     omega)
 
 /-- The position difference along the rooted parent edge of a free particle. -/
-def hardSphereTreeDifference {k : Nat} [NeZero k]
+@[expose] def hardSphereTreeDifference {k : Nat} [NeZero k]
     {T : Finset (Sym2 (Fin k))}
     (hT : T ∈ treeUniverse (V := Fin k))
     (r : HardSphereConfiguration k 3) (i : Fin (k - 1)) : HSPosition 3 :=

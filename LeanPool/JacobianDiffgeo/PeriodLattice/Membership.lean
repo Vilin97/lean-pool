@@ -24,7 +24,7 @@ Main declarations: `RS.periodRange X`, `RS.periodSubgroup_eq_periodRange`,
 `RS.mem_periodSubgroup_iff`.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 

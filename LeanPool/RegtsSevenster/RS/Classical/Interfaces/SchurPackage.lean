@@ -34,7 +34,7 @@ constructed from mathlib's linear algebra as `RS.schurPackage` in
 `RS/Classical/SchurTheory/Package.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -49,6 +49,7 @@ abbrev SymGroupAlgebra (n : ℕ) : Type :=
 /-- Extension of scalars of the group algebra along the standard
 embedding `S_m ↪ S_n` (permutations extended by the identity),
 for `m ≤ n`. -/
+@[expose]
 noncomputable def symCast {m n : ℕ} (h : m ≤ n) :
     SymGroupAlgebra m →ₐ[ℂ] SymGroupAlgebra n :=
   MonoidAlgebra.mapDomainAlgHom ℂ ℂ
@@ -56,6 +57,7 @@ noncomputable def symCast {m n : ℕ} (h : m ≤ n) :
 
 /-- The group-algebra element `(d / n!) • ∑ π, χ π • π` attached to
 a prospective dimension `d` and character `χ`. -/
+@[expose]
 noncomputable def charIdempotent {n : ℕ} (d : ℕ) (χ : Perm (Fin n) → ℂ) :
     SymGroupAlgebra n :=
   ((d : ℂ) / (n.factorial : ℂ)) •
@@ -120,7 +122,7 @@ structure SchurPackage where
 namespace SchurPackage
 
 /-- The central idempotent of shape `μ`. -/
-noncomputable def e (P : SchurPackage) (μ : YoungDiagram) :
+@[expose] noncomputable def e (P : SchurPackage) (μ : YoungDiagram) :
     SymGroupAlgebra μ.card :=
   charIdempotent (P.dim μ) (P.char μ)
 

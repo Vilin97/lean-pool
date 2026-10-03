@@ -10,7 +10,7 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 
 /-! # Quantum parallel repetition, part 10 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ theorem unconditionalActualC485RetainedPureWorkReindexBorn
     whole (winning ⊗ₖ (1 : Matrix v v ℂ)) z
 
 /-- The finite equivalence encoding unconditional actual c 485 retained history pair. -/
-def unconditionalActualC485RetainedHistoryPairEquiv
+@[expose] def unconditionalActualC485RetainedHistoryPairEquiv
     {P N d L : ℕ} (j : Fin L) :
     (UnconditionalSourceFlagControlledRetainedIndex
         (N := N) (d := d) j
@@ -1257,7 +1257,7 @@ theorem unconditionalActualFairSourceVerifier_historyBorn_bounded
 The unconditional actual c 485 fair source diagonal work construction used in the quantum
 parallel-repetition argument.
 -/
-def unconditionalActualC485FairSourceDiagonalWork
+@[expose] def unconditionalActualC485FairSourceDiagonalWork
     {X Y A B : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
@@ -1279,7 +1279,7 @@ def unconditionalActualC485FairSourceDiagonalWork
     (exactGlobalHistoryFinPhi G n S D u.2.2.2 u.2.2.1) j
 
 /-- The energy quantity for unconditional actual c 485 fair source clip. -/
-def unconditionalActualC485FairSourceClipEnergy
+@[expose] def unconditionalActualC485FairSourceClipEnergy
     {X Y A B : Type*}
     [Fintype X] [Fintype Y] [Fintype A] [Fintype B]
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))

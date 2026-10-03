@@ -23,7 +23,7 @@ Archimedean magnitude, then this germ ring is a polynomial algebra over `K`. Con
 four-factor refinement.
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.CompleteHahnGerm
 
@@ -34,7 +34,7 @@ variable [AddCommGroup G] [LinearOrder G] [IsOrderedAddMonoid G]
 variable [NoMinOrder G] [Field K]
 
 /-- The Hahn-series `K`-algebra `K((G^{≤ 0}))`. -/
-def NonpositiveSeries : Subalgebra K (HahnSeries G K) where
+@[expose] def NonpositiveSeries : Subalgebra K (HahnSeries G K) where
   carrier := {x | x.support ⊆ Set.Iic 0}
   algebraMap_mem' k := by
     intro g hg
@@ -47,7 +47,7 @@ def NonpositiveSeries : Subalgebra K (HahnSeries G K) where
     h ▸ show i + j ≤ 0 from add_nonpos (hx hi) (hy hj)
 
 /-- The ideal of series whose support is bounded away from zero. -/
-def BoundedAwayIdeal : Ideal (NonpositiveSeries G K) where
+@[expose] def BoundedAwayIdeal : Ideal (NonpositiveSeries G K) where
   carrier := {x | ∃ r < (0 : G), (x : HahnSeries G K).support ⊆ Set.Iic r}
   zero_mem' := by
     obtain ⟨r, hr⟩ := exists_lt (0 : G)

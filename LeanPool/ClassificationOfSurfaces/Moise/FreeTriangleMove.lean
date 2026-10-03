@@ -15,7 +15,7 @@ This file transports the normalized thin-kite move to an arbitrary plane triangl
 supplies the small positive thickness required by the relative polygonal Schoenflies theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -23,29 +23,29 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- An affine equivalence of the plane, regarded as a homeomorphism. -/
-noncomputable def affineEquivHomeomorph (e : Plane ≃ᵃ[ℝ] Plane) : Plane ≃ₜ Plane where
+@[expose] noncomputable def affineEquivHomeomorph (e : Plane ≃ᵃ[ℝ] Plane) : Plane ≃ₜ Plane where
   toEquiv := e.toEquiv
   continuous_toFun := e.toAffineMap.continuous_of_finiteDimensional
   continuous_invFun := e.symm.toAffineMap.continuous_of_finiteDimensional
 
 @[simp] theorem affineEquivHomeomorph_apply (e : Plane ≃ᵃ[ℝ] Plane) (p : Plane) :
-    affineEquivHomeomorph e p = e p := rfl
+    affineEquivHomeomorph e p = e p := by rfl
 
 @[simp] theorem affineEquivHomeomorph_symm_apply (e : Plane ≃ᵃ[ℝ] Plane) (p : Plane) :
-    (affineEquivHomeomorph e).symm p = e.symm p := rfl
+    (affineEquivHomeomorph e).symm p = e.symm p := by rfl
 
 theorem affineEquivHomeomorph_image_segment (e : Plane ≃ᵃ[ℝ] Plane) (a b : Plane) :
     affineEquivHomeomorph e '' segment ℝ a b = segment ℝ (e a) (e b) := by
   exact image_segment ℝ e.toAffineMap a b
 
 /-- Conjugate the normalized kite move by an affine coordinate system. -/
-noncomputable def transportedThinKiteHomeomorph (e : Plane ≃ᵃ[ℝ] Plane)
+@[expose] noncomputable def transportedThinKiteHomeomorph (e : Plane ≃ᵃ[ℝ] Plane)
     (δ : ℝ) (hδ : 0 < δ) : Plane ≃ₜ Plane :=
   (affineEquivHomeomorph e).symm.trans
     ((thinKiteAmbientHomeomorph δ hδ).trans (affineEquivHomeomorph e))
 
 /-- The `transportedThinKitePatch` declaration. -/
-def transportedThinKitePatch (e : Plane ≃ᵃ[ℝ] Plane) (δ : ℝ) : Set Plane :=
+@[expose] def transportedThinKitePatch (e : Plane ≃ᵃ[ℝ] Plane) (δ : ℝ) : Set Plane :=
   e '' thinKitePatch δ
 
 theorem transportedThinKiteHomeomorph_eqOn_compl (e : Plane ≃ᵃ[ℝ] Plane)
@@ -132,7 +132,7 @@ namespace TriangleMesh
 variable (M : TriangleMesh)
 
 /-- Order a triangle so that index `2` is a specified opposite vertex. -/
-noncomputable def freeTriangleOrder (T : M.Triangle) (k : Fin 3) : Fin 3 → Plane :=
+@[expose] noncomputable def freeTriangleOrder (T : M.Triangle) (k : Fin 3) : Fin 3 → Plane :=
   fun i => M.position (M.orderedVertex T ((Equiv.swap 2 k) i))
 
 theorem freeTriangleOrder_affineIndependent (T : M.Triangle) (k : Fin 3) :
@@ -193,19 +193,19 @@ theorem triangleEdges_eq_orderedEdges (T : M.Triangle) :
       · simp_all
 
 /-- Moise's first free-triangle case: the frontier meets the triangle in exactly its base edge. -/
-def IsOneEdgeFreeTriangle (T : M.Triangle) (k : Fin 3) : Prop :=
+@[expose] def IsOneEdgeFreeTriangle (T : M.Triangle) (k : Fin 3) : Prop :=
   frontier M.toPlaneComplex.support ∩ M.triangleCarrier T.1 =
     segment ℝ (M.freeTriangleOrder T k 0) (M.freeTriangleOrder T k 1)
 
 /-- Moise's second free-triangle case: the frontier meets the triangle in exactly the two edges
 through the apex. -/
-def IsTwoEdgeFreeTriangle (T : M.Triangle) (k : Fin 3) : Prop :=
+@[expose] def IsTwoEdgeFreeTriangle (T : M.Triangle) (k : Fin 3) : Prop :=
   frontier M.toPlaneComplex.support ∩ M.triangleCarrier T.1 =
     segment ℝ (M.freeTriangleOrder T k 0) (M.freeTriangleOrder T k 2) ∪
       segment ℝ (M.freeTriangleOrder T k 1) (M.freeTriangleOrder T k 2)
 
 /-- The `IsGeometricallyFreeTriangle` declaration. -/
-def IsGeometricallyFreeTriangle (T : M.Triangle) : Prop :=
+@[expose] def IsGeometricallyFreeTriangle (T : M.Triangle) : Prop :=
   ∃ k : Fin 3, M.IsOneEdgeFreeTriangle T k ∨ M.IsTwoEdgeFreeTriangle T k
 
 /-- The relative interior of the base in the Figure 3.3 ordering misses both apex edges. -/

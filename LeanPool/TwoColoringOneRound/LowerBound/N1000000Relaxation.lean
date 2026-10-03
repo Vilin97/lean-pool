@@ -14,7 +14,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -48,7 +48,7 @@ instance : NeZero n := ⟨by
   decide⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def symOfNat (k : Nat) : SymN :=
+@[expose] def symOfNat (k : Nat) : SymN :=
   Fin.ofNat n k
 
 lemma symOfNat_injective_of_lt {a b : Nat} (ha : a < n) (hb : b < n) :
@@ -58,14 +58,14 @@ lemma symOfNat_injective_of_lt {a b : Nat} (ha : a < n) (hb : b < n) :
   rwa [Nat.mod_eq_of_lt ha, Nat.mod_eq_of_lt hb] at hval
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def labelGet (t : LabelTriple) (i : Fin 3) : SymN :=
+@[expose] def labelGet (t : LabelTriple) (i : Fin 3) : SymN :=
   match i.1 with
   | 0 => symOfNat t.1
   | 1 => symOfNat t.2.1
   | _ => symOfNat t.2.2
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def tupleOfLabels (t : LabelTriple) : Tuple 3 n :=
+@[expose] def tupleOfLabels (t : LabelTriple) : Tuple 3 n :=
   fun i => labelGet t i
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -80,6 +80,7 @@ lemma labelGet_eq_symOfNat_labelGetNat (t : LabelTriple) (i : Fin 3) :
   fin_cases i <;> rfl
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def LabelsDistinct (t : LabelTriple) : Prop :=
   t.1 ≠ t.2.1 ∧ t.1 ≠ t.2.2 ∧ t.2.1 ≠ t.2.2
 
@@ -88,6 +89,7 @@ instance (t : LabelTriple) : Decidable (LabelsDistinct t) := by
   infer_instance
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def LabelsInRange (t : LabelTriple) : Prop :=
   t.1 < n ∧ t.2.1 < n ∧ t.2.2 < n
 
@@ -153,18 +155,19 @@ theorem varRepVAt_injective : ∀ i : Var, Function.Injective (tupleOfLabels (va
   fin_cases i <;> exact tupleOfLabels_injective_of_labelsDistinct _ (by decide) (by decide)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def varRepVertexU (i : Var) : Vertex n :=
+@[expose] def varRepVertexU (i : Var) : Vertex n :=
   ⟨tupleOfLabels (varRepUAt i), varRepUAt_injective i⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def varRepVertexV (i : Var) : Vertex n :=
+@[expose] def varRepVertexV (i : Var) : Vertex n :=
   ⟨tupleOfLabels (varRepVAt i), varRepVAt_injective i⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def xFromColoring (f : Coloring n) : Var → Q :=
+@[expose] noncomputable def xFromColoring (f : Coloring n) : Var → Q :=
   fun i => corrAvg (n := n) f (varRepVertexU i) (varRepVertexV i)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def edgeVarVar : Var :=
   ⟨edgeVar, by decide⟩
 

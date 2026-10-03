@@ -31,7 +31,7 @@ agree pointwise with `‖f ·‖ₑ`.  The results are:
   (`integrable_of_lintegral_absE_lt_top`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

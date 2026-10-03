@@ -50,7 +50,7 @@ the hub-cross law, bound the cloud by the apex-tie law, and sharpen the constant
 hubs with a positive private-twin gap is non-adjacent (adjacency already costs
 `1 + 1 + 1 + 2 = 5 > 4`). -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

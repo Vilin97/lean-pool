@@ -20,7 +20,7 @@ finsets used by `valence_formula_orbit_sum_s₀`.
   there exists `p ∈ repCanon f hf` with `orb p = q`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
@@ -32,19 +32,19 @@ noncomputable section
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
 /-- Strict interior representatives: points in s₀ with ‖p‖ > 1, |re| < 1/2, not elliptic. -/
-noncomputable def repStrict : Finset ℍ :=
+@[expose] noncomputable def repStrict : Finset ℍ :=
   (s₀ f hf).filter (fun p => p ≠ ellipticPointI' ∧ p ≠ ellipticPointRho' ∧
     p ≠ ellipticPointRhoPlusOne' ∧ ‖(p : ℂ)‖ > 1 ∧ |(p : ℂ).re| < 1/2)
 
 /-- Left vertical edge representatives: points in s₀ with re = -1/2, ‖p‖ > 1. -/
-noncomputable def repLeftVert : Finset ℍ := sLeftVert (s₀ f hf)
+@[expose] noncomputable def repLeftVert : Finset ℍ := sLeftVert (s₀ f hf)
 
 /-- Left arc representatives: points in s₀ with ‖p‖ = 1, re < 0, not ρ. -/
-noncomputable def repLeftArc : Finset ℍ :=
+@[expose] noncomputable def repLeftArc : Finset ℍ :=
   (s₀ f hf).filter (fun p => p ≠ ellipticPointRho' ∧ ‖(p : ℂ)‖ = 1 ∧ (p : ℂ).re < 0)
 
 /-- The canonical representative finset: union of strict interior, left vertical, and left arc. -/
-noncomputable def repCanon : Finset ℍ :=
+@[expose] noncomputable def repCanon : Finset ℍ :=
   repStrict f hf ∪ repLeftVert f hf ∪ repLeftArc f hf
 
 lemma repStrict_mem_s₀ {p : ℍ} (hp : p ∈ repStrict f hf) : p ∈ s₀ f hf :=

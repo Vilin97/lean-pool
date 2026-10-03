@@ -32,7 +32,7 @@ antitone in the shift (`IsConservative.killedResolvent_antitone`), because a lar
 discounts the future more.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal
@@ -47,6 +47,7 @@ variable (U : Set alpha) (hU : IsOpen U)
 
 /-- The killed resolvent at the shift `lam`, applied to a nonnegative extended function: the
 Laplace transform in time of the killed kernels. -/
+@[expose]
 noncomputable def IsConservative.killedResolvent (lam : ℝ) (f : alpha → ℝ≥0∞) (x : alpha) :
     ℝ≥0∞ :=
   ∫⁻ t in Set.Ioi (0 : ℝ), ENNReal.ofReal (Real.exp (-lam * t)) *

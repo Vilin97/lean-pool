@@ -20,7 +20,7 @@ quotient of paths by trace equivalence (asynchronous paths), and the resulting
 (synchronous and asynchronous) path categories.
 -/
 
-@[expose] public section
+public section
 
 namespace EventStructures
 
@@ -49,18 +49,18 @@ inductive Path : Conf es → Conf es → Type _
 namespace Path
 
 /-- Identity path. -/
-def pathId (c : Conf es) : Path es c c :=
+@[expose] def pathId (c : Conf es) : Path es c c :=
   Path.refl
 
 /-- Composition of paths. -/
-def pathComp {c₁ c₂ c₃ : Conf es} (h₁₂ : Path es c₁ c₂) (h₂₃ : Path es c₂ c₃) :
+@[expose] def pathComp {c₁ c₂ c₃ : Conf es} (h₁₂ : Path es c₁ c₂) (h₂₃ : Path es c₂ c₃) :
     Path es c₁ c₃ :=
   match h₁₂ with
   | refl => h₂₃
   | step hEdge hPath => Path.step hEdge (pathComp hPath h₂₃)
 
 /-- Next configuration after executing an enabled event. -/
-def nextConf (c : Conf es) (e : es.Event) (h : c.val ⊢ e) : Conf es :=
+@[expose] def nextConf (c : Conf es) (e : es.Event) (h : c.val ⊢ e) : Conf es :=
   ⟨c.val ∪ {e}, enables_extension (es:=es) h⟩
 
 /-- Execute a list of events from a configuration. -/
@@ -94,13 +94,13 @@ lemma path_comp_assoc {c₁ c₂ c₃ c₄ : Conf es}
     simp only [pathComp, ih]
 
 /-- Trace of the path -/
-def trace {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : List es.Event :=
+@[expose] def trace {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : List es.Event :=
   match hPath with
   | refl => []
   | step hEdge hPath' => hEdge.event :: trace hPath'
 
 /-- Length of a path, defined as the length of its trace. -/
-def length {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : Nat :=
+@[expose] def length {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : Nat :=
   (trace es hPath).length
 
 @[simp] lemma length_refl {c : Conf es} : length es (Path.refl (c:=c)) = 0 :=
@@ -279,7 +279,7 @@ lemma trace_comp {c₁ c₂ c₃ : Conf es} (p₁₂ : Path es c₁ c₂) (p₂�
     simp only [pathComp, trace, ih, List.cons_append]
 
 /-- Asynchronous path: paths quotiented by path equivalence. -/
-def Async (c₁ c₂ : Conf es) : Type _ :=
+@[expose] def Async (c₁ c₂ : Conf es) : Type _ :=
   Quotient (pathSetoid es c₁ c₂)
 
 namespace Async

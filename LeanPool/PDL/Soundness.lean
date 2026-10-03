@@ -12,7 +12,7 @@ public import LeanPool.PDL.TableauPath
 
 /-! # Soundness (Section 6) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -117,14 +117,14 @@ theorem pdlRuleSat (r : PdlRule X Y) (satX : satisfiable X) : satisfiable Y := b
 /-- To get the companion of a `LoadedPathRepeat` we rewind the path with the lpr value.
 The `succ` is there because the lpr values are indices of the history starting with 0, but
 `PathIn.rewind 0` would do nothing. -/
-def companionOf {X} {tab : Tableau .nil X} (s : PathIn tab) lpr
+@[expose] def companionOf {X} {tab : Tableau .nil X} (s : PathIn tab) lpr
   (_ : (tabAt s).2.2 = .lrep lpr) : PathIn tab :=
     s.rewind ((Fin.cast (tabAt_fst_length_eq_toHistory_length s) lpr.val).succ)
 
 -- maybe use Fin.cast?
 
 /-- `s ♥ t` means `s` is a `LoadedPathRepeat` and the `companionOf s` is `t`. -/
-def companion {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def companion {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   ∃ (lpr : _) (h : (tabAt s).2.2 = .lrep lpr), t = companionOf s lpr h
 
 /-- The companion relation connecting a loaded repeat to its earlier node. -/
@@ -348,7 +348,7 @@ lemma not_edge_and_heart {X} {tab : Tableau .nil X} {a b : PathIn tab} : ¬ (a �
   exact node_ne node_eq
 
 /-- An ordinary tableau edge or an edge to a repeat's companion. -/
-def cEdge {X} {ctX : Tableau .nil X} (s t : PathIn ctX) : Prop :=
+@[expose] def cEdge {X} {ctX : Tableau .nil X} (s t : PathIn ctX) : Prop :=
   (s ⋖_ t) ∨ s ♥ t
 
 /-- One ordinary or companion edge. -/
@@ -381,7 +381,7 @@ instance instDecidablecEdgeTransGen {X} {tab : Tableau .nil X} (p q : PathIn tab
 
 /-- Nodes are c-equivalent iff there are `◃` paths both ways.
 Note that this is not a closure, so we do not want `Relation.EqvGen` here. -/
-def cEquiv {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def cEquiv {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   s ◃* t  ∧  t ◃* s
 
 /-- Membership in the same cluster. -/
@@ -400,7 +400,7 @@ def clusterOf {X} {tab : Tableau .nil X} (p : PathIn tab) :=
 /-- We have `before s t` iff there is a path from s to t but not from t to s.
 This means the cluster of `s` comes before the cluster of `t` in `tab`.
 NB: The notes use ◃* here but we use ◃⁺. The definitions are equivalent. -/
-def before {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
+@[expose] def before {X} {tab : Tableau .nil X} (s t : PathIn tab) : Prop :=
   s ◃⁺ t  ∧  ¬ t ◃⁺ s
 
 /-- `s <ᶜ t` means there is a ◃-path from `s` to `t` but not from `t` to `s`.

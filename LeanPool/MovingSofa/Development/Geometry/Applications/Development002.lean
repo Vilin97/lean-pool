@@ -42,7 +42,7 @@ public import LeanPool.MovingSofa.Development.Geometry.Foundations.Development00
 * `Area.Applications.Development004`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -62,7 +62,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.WedgeGap.Limit`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -78,7 +78,7 @@ Authors: Dean Cureton
 # Bounds / Arm / Estimates
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1051,7 +1051,7 @@ Authors: Dean Cureton
 # Bounds / Wedge Gap / Infimum
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1061,6 +1061,7 @@ open scoped Topology
 namespace MovingSofa
 
 /-- The two infima of the wedge-gap components over interior rotation angles. -/
+@[expose]
 def wedgeGapInfimum {ω : ℝ} (K : CapSpace ω) : ℝ × ℝ :=
   (sInf ((fun t ↦ (wedgeGaps K t).1) '' Set.Ioo 0 ω),
     sInf ((fun t ↦ (wedgeGaps K t).2) '' Set.Ioo 0 ω))
@@ -1427,7 +1428,7 @@ Authors: Dean Cureton
 # Bounds / Wedge Gap / Limit
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1696,7 +1697,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.BalancedExistence`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1712,7 +1713,7 @@ Authors: Dean Cureton
 # Cap / Balanced Existence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2567,7 +2568,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Polygon.BalancedInequalities`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -2583,7 +2584,7 @@ Authors: Dean Cureton
 # Polygon / Balanced Inequalities
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3880,7 +3881,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Interpolation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -3911,7 +3912,7 @@ On the first arc the domination inequality also bounds the density: the real den
 
 /-! ### A continuous section of the angular projection -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4314,7 +4315,7 @@ interpolation, so that it applies both to the cap produced by `isCap_convexBodyC
 and to an interpolated cap obtained by choice.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4461,7 +4462,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Bounds.Lower.Sequence`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4494,7 +4495,7 @@ length functions of a nondegenerate cap are nonnegative, and the right one has i
 `f_K(0) = 1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4743,7 +4744,7 @@ Authors: Dean Cureton
 # Bounds / Lower / Sequence
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5166,7 +5167,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Injectivity`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5190,7 +5191,7 @@ The theorem lives downstream of `MovingSofa/Cap/Regularity.lean` because its inp
 `balancedMaximumCap_hasDensities` and `balancedMaximumCap_arm_gt_one` depend on that module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5242,7 +5243,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Gerver.Injectivity`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5258,7 +5259,7 @@ Authors: Dean Cureton
 # Gerver / Injectivity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5339,7 +5340,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.Tail.Interpolation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5355,7 +5356,7 @@ Authors: Dean Cureton
 # Cap / Special / Domain
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5467,7 +5468,7 @@ Authors: Dean Cureton
 # Cap / Special / Area Variation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5556,7 +5557,7 @@ Authors: Dean Cureton
 # Cap / Tail / Interpolation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5565,6 +5566,7 @@ open scoped unitInterval
 namespace MovingSofa
 
 /-- The cap and both tail bodies are the corresponding convex body combinations. -/
+@[expose]
 def IsCapTailCombination (t : I) (X Y Z : CapTailSpace) : Prop :=
   Z.cap.val.val = convexBodyCombination t X.cap.val.val Y.cap.val.val ∧
     Z.rightBody = convexBodyCombination t X.rightBody Y.rightBody ∧
@@ -5698,7 +5700,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Cap.UpperBoundaryTracing`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5729,7 +5731,7 @@ separately.
 
 /-! ### The middle window -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6088,7 +6090,7 @@ inner corner, hence convex-linear in `K` as well.
 
 /-! ### The outer corner path on the middle window -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6274,7 +6276,7 @@ Authors: Dean Cureton
 # Cap / Tail / Area Bounds
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6494,7 +6496,7 @@ area agrees with the sum of the four arc areas modulo convex-linear functionals
 (`MovingSofa.specialCapArea_equivalent_upper_arcs`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6749,7 +6751,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Area.QVariation`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6784,7 +6786,7 @@ corner, so the two segments cancel (`middleMamikon_segments_cancel_left`).  What
 the three comparisons of `cornerArea_equivalent_modulo_linear`, the last of them reversed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7092,7 +7094,7 @@ supporting line at its own path parameter.  Mamikon convexity therefore makes th
 does the same for `tangentMamikonValue`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7186,7 +7188,7 @@ Authors: Dean Cureton
 # Area / Mamikon / Sofa Convex
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7340,7 +7342,7 @@ the horizontal axis.  What survives is `qVariationIntegral`: the cap surface int
 inner-corner integral, and the two tail integrals rewritten in opposite-angle coordinates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7349,6 +7351,7 @@ open MeasureTheory
 namespace MovingSofa
 
 /-- The support-function variation integral for the cap and its two tail bodies. -/
+@[expose]
 def qVariationIntegral (X Y : CapTailSpace) : ℝ :=
   (∫ t in (fun s : ℝ ↦ (s : Real.Angle)) '' Set.Icc 0 Real.pi,
     (supportValue Y.cap.val.val t - supportValue X.cap.val.val t)

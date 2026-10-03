@@ -12,7 +12,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 # Weak Stationarity
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -44,7 +44,7 @@ def SmoothStationaryIn {n m : ℕ} (u : Domain n → Target m) (Ω : Set (Domain
 
 /-- Stationarity integrand written directly in terms of an arbitrary gradient
 field `Du`.  This is the expression used for `W^{1,2}_{loc}` maps. -/
-def weakStationarityIntegrand {n m : ℕ}
+@[expose] def weakStationarityIntegrand {n m : ℕ}
     (Du : Domain n → Gradient n m) (X : Domain n → Domain n) (x : Domain n) : ℝ :=
   weakEnergyDensity Du x * divergence X x -
     2 * ∑ i : Fin n, ∑ j : Fin n,
@@ -63,7 +63,7 @@ theorem weakStationarityIntegrand_eq_zero_of_notMem_tsupport {n m : ℕ}
 
 /-- Weak stationarity in the domain-variation sense, stated in terms of the
 weak gradient field `Du`. -/
-def WeakStationaryIn {n m : ℕ}
+@[expose] def WeakStationaryIn {n m : ℕ}
     (Du : Domain n → Gradient n m) (Ω : Set (Domain n)) : Prop :=
   ∀ X : Domain n → Domain n,
     ContDiff ℝ 1 X →
@@ -99,26 +99,26 @@ theorem weakStationaryIn_of_subset {n m : ℕ}
   rwa [heq] at hzero_Ω
 
 /-- Local integrability of a scalar function on compact subsets of `Ω`. -/
-def LocallyIntegrableScalarIn {n : ℕ}
+@[expose] def LocallyIntegrableScalarIn {n : ℕ}
     (f : Domain n → ℝ) (Ω : Set (Domain n)) : Prop :=
   ∀ K : Set (Domain n), IsCompact K → K ⊆ Ω → IntegrableOn f K volume
 
 /-- The `L²_loc` requirement for the map itself, stated as local integrability
 of `|u|²`. -/
-def MapLocallyL2In {n m : ℕ}
+@[expose] def MapLocallyL2In {n m : ℕ}
     (u : Domain n → Target m) (Ω : Set (Domain n)) : Prop :=
   LocallyIntegrableScalarIn (fun x => ‖u x‖ ^ 2) Ω
 
 /-- The `L²_loc` requirement for a gradient field, stated as local integrability
 of its Hilbert-Schmidt energy. -/
-def GradientLocallyL2In {n m : ℕ}
+@[expose] def GradientLocallyL2In {n m : ℕ}
     (Du : Domain n → Gradient n m) (Ω : Set (Domain n)) : Prop :=
   LocallyIntegrableScalarIn (fun x => weakEnergyDensity Du x) Ω
 
 /-- The chosen weak gradient is a.e. strongly measurable on the domain.  This is
 kept separate from local `L²` control: integrability of the scalar energy
 density alone does not imply measurability of the full gradient field. -/
-def GradientAEStronglyMeasurableIn {n m : ℕ}
+@[expose] def GradientAEStronglyMeasurableIn {n m : ℕ}
     (Du : Domain n → Gradient n m) (Ω : Set (Domain n)) : Prop :=
   AEStronglyMeasurable Du (volume.restrict Ω)
 
@@ -159,7 +159,7 @@ theorem gradientLocallyL2In_integrableOn_ball {n m : ℕ}
 For each coordinate direction `i`, the `i`-th component of `Du` is the weak
 derivative of `u` if integration by parts holds against every compactly
 supported target-valued test map. -/
-def HasWeakGradientIn {n m : ℕ}
+@[expose] def HasWeakGradientIn {n m : ℕ}
     (u : Domain n → Target m) (Du : Domain n → Gradient n m)
     (Ω : Set (Domain n)) : Prop :=
   ∀ i : Fin n, ∀ ψ : Domain n → Target m,
@@ -171,7 +171,7 @@ def HasWeakGradientIn {n m : ℕ}
           -∫ x in Ω, inner ℝ (Du x i) (ψ x)
 
 /-- A concrete `W^{1,2}_{loc}` interface for maps with a chosen weak gradient. -/
-def W12LocIn {n m : ℕ}
+@[expose] def W12LocIn {n m : ℕ}
     (u : Domain n → Target m) (Du : Domain n → Gradient n m)
     (Ω : Set (Domain n)) : Prop :=
   MapLocallyL2In u Ω ∧
@@ -181,7 +181,7 @@ def W12LocIn {n m : ℕ}
 
 /-- A weak stationary map: `u ∈ W^{1,2}_{loc}` with weak gradient `Du`, and the
 domain-variation stationarity identity holds in terms of `Du`. -/
-def WeakStationaryMapIn {n m : ℕ}
+@[expose] def WeakStationaryMapIn {n m : ℕ}
     (u : Domain n → Target m) (Du : Domain n → Gradient n m)
     (Ω : Set (Domain n)) : Prop :=
   W12LocIn u Du Ω ∧ WeakStationaryIn Du Ω

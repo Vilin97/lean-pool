@@ -40,7 +40,7 @@ carrier is spelt `(freeMod A V).X` so that instance synthesis finds
 it.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

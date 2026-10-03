@@ -25,4 +25,4 @@ Tags: number-theory, function-fields, zeta-functions
 MSC: 11M38, 11T55, 11G09
 -/
 
-@[expose] public section
+public section

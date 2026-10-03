@@ -19,7 +19,7 @@ Proves a uniform bound `‖deriv_t H(t,s)‖ ≤ 5` for all `(t,s) ∈ [0,5] × 
 handling each segment case and the non-differentiable fallback.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

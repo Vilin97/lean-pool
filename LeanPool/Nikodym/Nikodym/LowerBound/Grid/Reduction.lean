@@ -39,7 +39,7 @@ For the finite grid `F ⊆ K` we also define the grid polynomial
 the grid polynomials `Z i` lie in the point ideal of every grid point.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 
@@ -57,6 +57,7 @@ noncomputable def Z (g : Fin d → Polynomial K) (i : Fin d) : MvPolynomial (Fin
   Polynomial.aeval (X i) (g i)
 
 /-- Blueprint G01: the grid ideal `J = (Z 1, …, Z d)`. -/
+@[expose]
 noncomputable def gridIdeal (g : Fin d → Polynomial K) : Ideal (MvPolynomial (Fin d) K) :=
   Ideal.span (Set.range (Z g))
 

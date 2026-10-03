@@ -28,7 +28,7 @@ positive sign only.  Nothing here mentions interpolation; the set-level versions
 the separator budgets are stated against.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -39,7 +39,7 @@ variable {L : Language.{0, 0}} {α β : Type}
 /-- **Signed quantifier occurrence.**  `hasQuantSigned true φ` says a quantifier occurs
 *universally* in `φ`; `hasQuantSigned false φ` says one occurs *existentially* (a negatively
 occurring `all`). -/
-def hasQuantSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
+@[expose] def hasQuantSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
   | _, _, .falsum => False
   | _, _, .equal _ _ => False
   | _, _, .rel _ _ => False
@@ -169,6 +169,7 @@ open BoundedFormulaω
 variable {L : Language.{0, 0}}
 
 /-- A quantifier of sign `s` occurs somewhere in the set — the *source* of a separator budget. -/
+@[expose]
 def HasQuantSigned (s : Bool) (T : Set L.Sentenceω) : Prop := ∃ σ ∈ T, hasQuantSigned s σ
 
 /-- An existential quantifier occurs somewhere in `T`. -/

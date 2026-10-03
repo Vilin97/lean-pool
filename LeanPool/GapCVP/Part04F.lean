@@ -11,7 +11,7 @@ import all Mathlib.Logic.Equiv.Multiset
 
 /-! # GapCVP proof, part 04, continuation 06 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -520,7 +520,7 @@ noncomputable def actualFlatLiteralRecordFoldComputable :
     flatLiteralRecordStep_polynomiallyBoundedFoldStates
 
 /-- GapCVP reduction support. -/
-def flatThreeClauseLiterals (clauses : ThreeCNF) : List Literal :=
+@[expose] def flatThreeClauseLiterals (clauses : ThreeCNF) : List Literal :=
   clauses.flatMap (fun clause => [clause 0, clause 1, clause 2])
 
 @[simp] private theorem flatThreeClauseLiterals_length
@@ -569,7 +569,7 @@ private theorem flatSourceListValue_map_encode
           Encodable.encode_list_cons]
 
 /-- GapCVP reduction support. -/
-def cappedFlatSourceListValue (cap : ℕ) : List ℕ → ℕ
+@[expose] def cappedFlatSourceListValue (cap : ℕ) : List ℕ → ℕ
   | [] => 0
   | head :: tail =>
       min cap
@@ -601,7 +601,7 @@ private theorem cappedFlatSourceListValue_eq_min
         simp only [Nat.min_eq_right hle, Nat.succ_eq_add_one]
 
 /-- GapCVP reduction support. -/
-def flatSourceNaturalOrdering (first second : ℕ) : EncodedWordOrdering :=
+@[expose] def flatSourceNaturalOrdering (first second : ℕ) : EncodedWordOrdering :=
   if first < second then .less
   else if second < first then .greater
   else .equal
@@ -649,7 +649,7 @@ private theorem flatSourceNaturalOrdering_capped_left
         Order.lt_one_iff, hlt, right_eq_ite_iff, reduceCtorEq, imp_false, not_lt, Nat.le_of_lt hlt]
 
 /-- GapCVP reduction support. -/
-def resolveFlatSourceOrder
+@[expose] def resolveFlatSourceOrder
     (major : EncodedWordOrdering) (first second : ℕ) :
     EncodedWordOrdering :=
   match major with
@@ -733,7 +733,7 @@ private theorem flatSourceListValue_cons_eq_square
       rw [Nat.pair, ite_eq_left hlt, pow_two]
 
 /-- GapCVP reduction support. -/
-def flatSortedSourceListOrdering :
+@[expose] def flatSortedSourceListOrdering :
     List ℕ → List ℕ → EncodedWordOrdering
   | [], [] => .equal
   | [], _ :: _ => .less
@@ -822,7 +822,7 @@ private theorem flatSortedSourceListOrdering_eq_godel
                     hfirstTail hsecondTail]
 
 /-- GapCVP reduction support. -/
-def flatSourceFinsetCodes
+@[expose] def flatSourceFinsetCodes
     {α : Type} [Encodable α] (records : Finset α) : List ℕ :=
   (sortedElements records).map Encodable.encode
 
@@ -917,7 +917,7 @@ private theorem flatLiteralRecordStep_iterate_preservedSuffix
           encodeLiteral literal)
 
 /-- GapCVP reduction support. -/
-def structuralThreeCNFFlatFoldInput
+@[expose] def structuralThreeCNFFlatFoldInput
     (clauses : ThreeCNF) : List Bool :=
   unaryBoundedFoldWord (3 * clauses.length)
     (flatSignedLiteralDescriptorStream
@@ -937,7 +937,7 @@ private theorem boundedRecordFoldOutput_structuralThreeCNF
   rfl
 
 /-- GapCVP reduction support. -/
-def totalVerifierSortedFiveFamilyFlatFoldInput
+@[expose] def totalVerifierSortedFiveFamilyFlatFoldInput
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -992,7 +992,7 @@ namespace CNFFlatSourceOrderPolynomialBounds
 open GapCVP.CL GapCVP.CLStructuralCNFVariableBounds GapCVP.CNFFlatSourceOrder
 
 /-- GapCVP reduction support. -/
-def tableauSignedLiteralCodeBound (time symbols : ℕ) : ℕ :=
+@[expose] def tableauSignedLiteralCodeBound (time symbols : ℕ) : ℕ :=
   (tableauFiniteVariableCodeBound time symbols + 2) ^ 2
 
 private theorem tableauSignedLiteral_encode_lt
@@ -1031,7 +1031,7 @@ open GapCVP.SourceMachineCert GapCVP.CNFBoundedRecordFoldTM
 open GapCVP.CNFFlatStructuralRecordWorkerTM
 
 /-- GapCVP reduction support. -/
-def polynomialSignedLiteralDescriptorWord
+@[expose] def polynomialSignedLiteralDescriptorWord
     (polynomial : Polynomial ℕ) (sign : Bool)
     (input : List Bool) : List Bool :=
   lengthPrefixedWord
@@ -1080,7 +1080,7 @@ noncomputable def tableauSourceSignedLiteralDescriptorComputable
       sourceVariable]
 
 /-- GapCVP reduction support. -/
-def accumulatorSignedLiteralDescriptorWord
+@[expose] def accumulatorSignedLiteralDescriptorWord
     (sign : Bool) : List Bool → List Bool :=
   polynomialSignedLiteralDescriptorWord
     (4 * Polynomial.X + 1) sign
@@ -1133,12 +1133,12 @@ namespace CNFUnaryPairIndexTM
 open Computability Turing GapCVP.BinaryEncoding
 
 /-- GapCVP reduction support. -/
-def unarySourcePairWord (first second : ℕ) : List Bool :=
+@[expose] def unarySourcePairWord (first second : ℕ) : List Bool :=
   List.replicate first true ++
     false :: (List.replicate second true ++ [false])
 
 /-- GapCVP reduction support. -/
-def unarySourcePairOutput (input : List Bool) : List Bool :=
+@[expose] def unarySourcePairOutput (input : List Bool) : List Bool :=
   match readUnaryPrefix input with
   | none => []
   | some (first, remaining) =>

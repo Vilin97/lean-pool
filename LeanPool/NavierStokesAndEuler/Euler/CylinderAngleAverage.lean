@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpCylinderRectangular
 
 /-! Actual angular averaging on the cylinder, including its supported spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ section Average
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
 
 /-- Angle curve, given by `translate P (0,s) u`. -/
-def angleCurve (u : CylinderL2 P V) (s : ℝ) : CylinderL2 P V :=
+@[expose] def angleCurve (u : CylinderL2 P V) (s : ℝ) : CylinderL2 P V :=
   translate P (0,s) u
 
 omit [CompleteSpace V] in
@@ -37,7 +37,7 @@ theorem angleCurve_continuous (u : CylinderL2 P V) : Continuous (angleCurve P u)
   (translate_continuous P u).comp (continuous_const.prodMk continuous_id)
 
 /-- Average integral, given by `P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s)`. -/
-def averageIntegral (u : CylinderL2 P V) : CylinderL2 P V :=
+@[expose] def averageIntegral (u : CylinderL2 P V) : CylinderL2 P V :=
   P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s)
 
 omit [CompleteSpace V] in
@@ -79,20 +79,26 @@ theorem averageIntegral_norm (u : CylinderL2 P V) : ‖averageIntegral P u‖ �
     _ = ‖u‖ := by field_simp
 
 /-- Average linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def averageLinear : CylinderL2 P V →ₗ[ℝ] CylinderL2 P V where
+@[expose] def averageLinear : CylinderL2 P V →ₗ[ℝ] CylinderL2 P V where
   toFun := averageIntegral P
   map_add' := averageIntegral_add P
   map_smul' := averageIntegral_smul P
 
 /-- The Bochner average of genuine angular translations. -/
-def average : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
+@[expose] def average : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
   (averageLinear P).mkContinuous 1 (fun u => by
     change ‖averageIntegral P u‖ ≤ (1 : ℝ)*‖u‖
     simpa only [one_mul] using averageIntegral_norm P u)
 
 omit [CompleteSpace V] in
 @[simp] theorem average_apply (u : CylinderL2 P V) :
-    average P u = averageIntegral P u := rfl
+    average P u = averageIntegral P u := by rfl
+
+omit [CompleteSpace V] in
+theorem average_eq_integral (u : CylinderL2 P V) :
+    average P u = P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s) := by
+  rw [average_apply]
+  rfl
 
 omit [CompleteSpace V] in
 theorem average_norm : ‖average (V := V) P‖ ≤ 1 :=
@@ -117,12 +123,12 @@ theorem average_translation (a : LiftTangent) (u : CylinderL2 P V) :
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Path average, given by `(average P).compLeftContinuous ℝ K`. -/
-def pathAverage : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
+@[expose] def pathAverage : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
   (average P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] [CompleteSpace V] in
 @[simp] theorem pathAverage_apply (u : C(K, CylinderL2 P V)) (t : K) :
-    pathAverage P u t = average P (u t) := rfl
+    pathAverage P u t = average P (u t) := by rfl
 
 omit [CompleteSpace V] in
 theorem pathAverage_norm : ‖pathAverage (K := K) (V := V) P‖ ≤ 1 := by
@@ -181,7 +187,8 @@ theorem pathAverage_fullMultiplier (A : C(K, Space →ᵇ E →L[ℝ] F))
     pathAverage P (fullMultiplierMap P A u) = fullMultiplierMap P A (pathAverage P u) := by
   apply ContinuousMap.ext
   intro t
-  exact average_fullOperator P (A t) (u t)
+  simpa only [pathAverage_apply, fullMultiplierMap_apply] using
+    average_fullOperator P (A t) (u t)
 
 end Coefficients
 
@@ -212,12 +219,12 @@ theorem average_mem (u : Supported P V S hS) :
 
 /-- Supported average, given by `((average P).comp (Supported P V S hS).subtypeL).codRestrict
 (Supported P V S hS) (average_mem P S hS)`. -/
-def supportedAverage : Supported P V S hS →L[ℝ] Supported P V S hS :=
+@[expose] def supportedAverage : Supported P V S hS →L[ℝ] Supported P V S hS :=
   ((average P).comp (Supported P V S hS).subtypeL).codRestrict
     (Supported P V S hS) (average_mem P S hS)
 
 @[simp] theorem supportedAverage_coe (u : Supported P V S hS) :
-    (supportedAverage P S hS u : CylinderL2 P V) = average P (u : CylinderL2 P V) := rfl
+    (supportedAverage P S hS u : CylinderL2 P V) = average P (u : CylinderL2 P V) := by rfl
 
 theorem supportedAverage_norm : ‖supportedAverage (V := V) P S hS‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one

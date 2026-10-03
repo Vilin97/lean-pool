@@ -26,7 +26,7 @@ Three ingredients, all generic in the vertex count:
   the classifier to one generated tree per *sorted* degree sequence.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.GenusFourPseudocore
 
@@ -36,6 +36,7 @@ variable {n : ℕ}
 
 /-- Transport of a pseudocore along a vertex permutation: vertex `v` of the
 relabeled pseudocore carries the data of vertex `σ v`. -/
+@[expose]
 def relabel (core : Pseudocore n) (σ : Equiv.Perm (Fin n)) : Pseudocore n where
   loops := fun v => core.loops (σ v)
   multiplicity := fun v w => core.multiplicity (σ v) (σ w)

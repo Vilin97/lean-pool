@@ -18,7 +18,7 @@ where every rewrite fires — and the strictness of the skein unit
 is exploited only in two small concrete bridging steps.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

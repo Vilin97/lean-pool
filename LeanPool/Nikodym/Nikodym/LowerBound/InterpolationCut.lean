@@ -36,7 +36,7 @@ The blueprint hypothesis `k ≤ d` is automatic (`quotDim_le`) and `2 ≤ q` fol
 `32 ≤ 8 d² ≤ r ≤ q`; neither is assumed.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

@@ -35,7 +35,7 @@ proved via a self-contained parallelogram residue theorem built from Mathlib's r
 Cauchy--Goursat primitives.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -231,11 +231,13 @@ variable (L : PeriodPair)
 /-- An elliptic function for the lattice of the period pair `L`: a meromorphic function
 `ℂ → ℂ` which is periodic with respect to every lattice point (paper Def. of "elliptic
 function", ch. 1). -/
+@[expose]
 def IsEllipticWith (f : ℂ → ℂ) : Prop :=
   Meromorphic f ∧ ∀ (z : ℂ) (l : L.lattice), f (z + l) = f z
 
 /-- The fundamental parallelogram `𝒫 = {s·ω₁ + t·ω₂ | 0 ≤ s, t < 1}` (paper Def. `fund`).
 Every `z : ℂ` is equivalent modulo `L.lattice` to exactly one point of `𝒫`. -/
+@[expose]
 def fundamentalParallelogram : Set ℂ :=
   {z : ℂ | ∃ s ∈ Set.Ico (0 : ℝ) 1, ∃ t ∈ Set.Ico (0 : ℝ) 1, z = s • L.ω₁ + t • L.ω₂}
 

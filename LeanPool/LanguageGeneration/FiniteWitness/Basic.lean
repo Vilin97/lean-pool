@@ -14,7 +14,7 @@ This extension uses the upstream sequence-input model without redefining it.
 `SetDriven` below refers to dependence on the input set, not set-valued output.
 -/
 
-@[expose] public section
+public section
 
 namespace GenLimit.FiniteWitness
 
@@ -31,6 +31,7 @@ noncomputable def ofSet (g : Finset α → α) : Generator α :=
   simp [output, ofSet, sequenceSample_prefix]
 
 /-- A finite set after which every consistent finite extension is good. -/
+@[expose]
 def Locks (g : Finset α → α) (L : Language α) : Prop :=
   ∃ T : Finset α, (↑T : Set α) ⊆ L ∧
     ∀ S : Finset α, T ⊆ S → (↑S : Set α) ⊆ L → g S ∈ L ∧ g S ∉ S
@@ -40,16 +41,18 @@ def SetDrivenGeneratable (H : LanguageClass α) : Prop :=
   ∃ g : Finset α → α, IsLimitGenerator (ofSet g) H
 
 /-- Consistent targets whose assigned positive witnesses have been observed. -/
+@[expose]
 def active (H : LanguageClass α) (T : Language α → Finset α)
     (S : Finset α) : Set (Language α) :=
   {L | L ∈ H ∧ T L ⊆ S ∧ (↑S : Set α) ⊆ L}
 
 /-- The simultaneous common intersection of all active targets. -/
-def activeCore (H : LanguageClass α) (T : Language α → Finset α)
+@[expose] def activeCore (H : LanguageClass α) (T : Language α → Finset α)
     (S : Finset α) : Set α :=
   {x | ∀ L, L ∈ active H T S → x ∈ L}
 
 /-- The paper's condition, with an assignment extended arbitrarily off `H`. -/
+@[expose]
 def HasFiniteWitnesses (H : LanguageClass α) : Prop :=
   ∃ T : Language α → Finset α,
     (∀ L, L ∈ H → (↑(T L) : Set α) ⊆ L) ∧

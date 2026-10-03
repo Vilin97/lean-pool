@@ -40,7 +40,7 @@ a formula φ(x₀,...,xₙ) with n+1 free variables and want to existentially qu
 over the last variable, we use `relabel` to move it into a bound position.
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 

@@ -17,7 +17,7 @@ supplies the separate distributional pairing and does not identify a rough
 classical representative.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 open scoped ENNReal

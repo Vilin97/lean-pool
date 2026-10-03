@@ -15,7 +15,7 @@ the compact core uncovered.  The number `15 = 2 * 7 + 1` is exactly the diameter
 factor.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

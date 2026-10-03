@@ -21,7 +21,7 @@ monomorphism are monomorphisms.  The substrate of the
 nonvanishing of the local splitting algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

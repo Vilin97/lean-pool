@@ -20,7 +20,7 @@ lies in its slot are required literally in its local cone.  Cone soundness
 then supplies the bounds needed to construct a typed path position.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate
@@ -149,6 +149,7 @@ theorem rawOffset_le_segmentNat
 
 /-- Tail-oriented numerical coordinate of a code in the concrete
 subdivision. -/
+@[expose]
 def coordinate (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) : ℕ :=
   if code.fromHead then
@@ -169,6 +170,7 @@ theorem coordinate_le_segmentNat
   · exact code.rawOffset_le_segmentNat certificate point hValid hBounds hCone
 
 /-- Typed path position decoded from a cone-certified affine position. -/
+@[expose]
 def decodePosition (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
@@ -180,6 +182,7 @@ def decodePosition (certificate : ExplicitPotential.CertificateData m n p)
     (code.coordinate_le_segmentNat certificate point hValid hBounds hCone)
 
 /-- The actual subdivision vertex named by an affine position code. -/
+@[expose]
 def decodeVertex (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)

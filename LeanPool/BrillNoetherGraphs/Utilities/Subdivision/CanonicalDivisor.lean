@@ -25,7 +25,7 @@ All statements here concern positive `SubdivisionGraph.Spec` objects, not
 contracted zero-length faces.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

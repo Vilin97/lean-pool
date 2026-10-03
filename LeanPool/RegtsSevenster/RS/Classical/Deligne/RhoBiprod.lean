@@ -16,7 +16,7 @@ the summands, ℂ-linearly.  With the distribution of a tensor over
 a biproduct this computes `ρ` on a mixed sum.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

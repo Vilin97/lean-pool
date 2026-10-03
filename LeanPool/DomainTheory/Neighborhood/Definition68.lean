@@ -92,7 +92,7 @@ representing `Φ` is the identity on the function space. Everything here is
 (`#print axioms ⊆ {propext, Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood
 
@@ -104,6 +104,7 @@ universe u
 (A convenient
 witness that `Endofunctor` is inhabited; used to show Definition 6.8 is
 non-vacuous.) -/
+@[expose]
 def idEndofunctor (Obj : Type u) [Category Obj] : Endofunctor Obj where
   obj X := X
   map f := f
@@ -125,7 +126,7 @@ action `λf. T(f)` on the
 `(D →⊥ E)` to `(T(D) →⊥ T(E))` whose elementwise action (read through the
 representation
 `strictFunEquiv`) sends each strict map `f` to `T(f)`. -/
-def ContinuousOnMaps (T : Endofunctor DomainObj) : Prop :=
+@[expose] def ContinuousOnMaps (T : Endofunctor DomainObj) : Prop :=
   ∀ D E : DomainObj,
     ∃ Φ : ApproximableMap (strictFun D.sys E.sys) (strictFun (T.obj D).sys (T.obj E).sys),
       ∀ f : StrictMap D.sys E.sys,

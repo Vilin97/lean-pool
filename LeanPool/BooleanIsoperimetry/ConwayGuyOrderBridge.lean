@@ -28,7 +28,7 @@ order.  The bridge itself only uses integrality: two subset sums differing by
 one have no integer subset sum strictly between them.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

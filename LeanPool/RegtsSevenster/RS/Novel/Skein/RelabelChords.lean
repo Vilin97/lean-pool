@@ -18,7 +18,7 @@ and the path matching are untouched, the labels shift through `e`,
 and `e` preserves the sorting.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

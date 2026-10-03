@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OrdinaryWordConstraints
 fields and continuous paths of all their jets. Euler pressure and time
 derivatives are recovered from velocity, not supplied as estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -157,7 +157,7 @@ theorem derivative_toLp_projected (U : Evolution T hT) (hpos : 0 < T) (t : Icc (
 
 /-- Projected path, given by `fieldPath (fun t => projectedRhs (U.velocity t))
 (projectedRhs_continuous U.velocity U.velocity_continuous)`. -/
-def projectedPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
+@[expose] def projectedPath (U : Evolution T hT) : C(Icc (0 : ℝ) T,L2) :=
   fieldPath (fun t => projectedRhs (U.velocity t)) (projectedRhs_continuous U.velocity
       U.velocity_continuous)
 

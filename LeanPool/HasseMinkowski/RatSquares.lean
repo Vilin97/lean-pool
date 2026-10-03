@@ -26,7 +26,7 @@ divisible by any given prime, so the evenness of the difference
 forces the two exponents to be even individually.
 -/
 
-@[expose] public section
+public section
 
 namespace HasseMinkowski
 

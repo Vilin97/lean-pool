@@ -21,7 +21,7 @@ depth T >= 2, associated primes of T have height at most 1.
 Heitmann, "Characterization of completions of UFDs", 1993, Prop. 1.
 -/
 
-@[expose] public section
+public section
 
 universe u
 

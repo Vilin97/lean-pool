@@ -38,7 +38,7 @@ This file builds the chain:
   by `omegaPow`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -143,6 +143,7 @@ theorem omegaPow_hom_inv :
 /-- **The iterated tensorator**: the `n`-th monoidal power of the
 strand image is isomorphic to `ω.obj (SkeinObj.mk n)`, built by
 iterating the tensorator `μ`/`δ`. -/
+@[expose]
 noncomputable def omegaPow (n : ℕ) :
     superPow (strandImage f P) n ≅ P.ω.obj (SkeinObj.mk n) where
   hom := omegaPowHom f P n
@@ -155,6 +156,7 @@ noncomputable def omegaPow (n : ℕ) :
 /-- Conjugation of an endomorphism by an isomorphism:
 `e.hom ≫ f ≫ e.inv`, transporting `f : End Y` to `End X`
 via `e : X ≅ Y`. -/
+@[expose]
 def isoConj {C : Type*} [Category C] {X Y : C} (e : X ≅ Y)
     (f : End Y) : End X :=
   e.hom ≫ f ≫ e.inv

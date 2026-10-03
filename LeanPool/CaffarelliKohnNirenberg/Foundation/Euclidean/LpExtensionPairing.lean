@@ -30,7 +30,7 @@ which is the smooth case of the distributional adjointness used for the
 `L^(6/5)` Calderón--Zygmund endpoint.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped BigOperators ENNReal NNReal Topology

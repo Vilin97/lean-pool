@@ -23,7 +23,7 @@ The radial-facet cancellation and the recursive-side vanishing over the Fox--Neu
 are proved in the boundary-cancellation module.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -40,12 +40,14 @@ open RefinedAffineMap
 variable {p : Nat}
 
 /-- The base facet occurrence of a coned top cell. -/
+@[expose]
 noncomputable def baseOccurrence
     (hp : Nat.Prime p) (N : Nat) (q : RelativeSubdivisionOneStepCells.Cell hp N) :
     (RelativeSubdivisionOneStepCells.cellSystem hp N).FacetOccurrence :=
   (q, 0)
 
 /-- Pairing of all cone-base facets against an arbitrary quotient-facet weight. -/
+@[expose]
 noncomputable def basePairing
     (hp : Nat.Prime p) (N : Nat)
     (W : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet → ZMod p) : ZMod p :=
@@ -54,6 +56,7 @@ noncomputable def basePairing
       W ((RelativeSubdivisionOneStepCells.cellSystem hp N).facetClass (baseOccurrence hp N q))
 
 /-- A local base cell belongs to one of the two external horizontal boundaries. -/
+@[expose]
 def IsEndpointCell
     (hp : Nat.Prime p) (q : RelativeSubdivisionCylinderCombinatorics.Cell (p - 1)) : Prop :=
   q = RelativeSubdivisionCylinderCombinatorics.lowerCell (p - 1) ∨
@@ -76,7 +79,7 @@ noncomputable def endpointBasePairing
     else 0
 
 /-- Recursive spatial-side part of the cone-base pairing. -/
-noncomputable def sideBasePairing
+@[expose] noncomputable def sideBasePairing
     (hp : Nat.Prime p) (N : Nat)
     (W : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet → ZMod p) : ZMod p :=
   ∑ q : RelativeSubdivisionOneStepCells.Cell hp N,
@@ -97,6 +100,7 @@ theorem basePairing_eq_endpoint_add_side
   by_cases h : IsEndpointCell hp q.2 <;> simp [h]
 
 /-- The lower endpoint contribution of the cone-base chain. -/
+@[expose]
 noncomputable def lowerEndpointPairing
     (hp : Nat.Prime p) (N : Nat)
     (W : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet → ZMod p) : ZMod p :=
@@ -104,6 +108,7 @@ noncomputable def lowerEndpointPairing
     RefinedAffineMap.coefficient hp N q * W (RelativeSubdivisionOneStepEndpoints.lowerFacet hp N q)
 
 /-- The upper endpoint contribution of the cone-base chain. -/
+@[expose]
 noncomputable def upperEndpointPairing
     (hp : Nat.Prime p) (N : Nat)
     (W : (RelativeSubdivisionOneStepCells.cellSystem hp N).Facet → ZMod p) : ZMod p :=

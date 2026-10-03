@@ -22,7 +22,7 @@ trigonometric identities, old-style segment selectors, the unified arc
 formula, and FTC lemmas for log-derivative integrals.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

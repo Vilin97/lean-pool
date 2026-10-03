@@ -17,5 +17,5 @@ Thin re-export of the Riemannian Rellich–Kondrachov proof, split into focused 
 * `RellichKondrachovRiemannian.Global`: finite-atlas assembly and the final compactness theorem.
 -/
 
-@[expose] public section
+public section
 

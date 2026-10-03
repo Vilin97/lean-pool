@@ -32,7 +32,7 @@ the uniform insertion lemma) needs the chain to be long enough to contain rank `
 `GapWitness.mono` is the downward closure in `α` consumed by the `ω₁` fiber argument (C4).
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -43,13 +43,13 @@ variable {L : Language.{0, 0}}
 /-! ## The base diagram -/
 
 /-- The positive order atom `d_q < d_r` (over the rational constants of the coding layer). -/
-def ratLtAtom (lt : L.Relations 2) (q r : ℚ) : L[[ℕ]].Sentenceω :=
+@[expose] def ratLtAtom (lt : L.Relations 2) (q r : ℚ) : L[[ℕ]].Sentenceω :=
   relInst lt ![ratConstIdx q, ratConstIdx r]
 
 /-- **The base diagram** `Bφ = {φ} ∪ {d_q < d_r : q < r}`: the lifted sentence together with
 the full positive rational diagram.  Per the frozen member shape (D4), `Bφ` literally belongs
 to every consistency-property member. -/
-def baseDiagram (φ : L.Sentenceω) (lt : L.Relations 2) : Set L[[ℕ]].Sentenceω :=
+@[expose] def baseDiagram (φ : L.Sentenceω) (lt : L.Relations 2) : Set L[[ℕ]].Sentenceω :=
   insert (φ.mapLanguage (L.lhomWithConstants ℕ)) {χ | ∃ q r : ℚ, q < r ∧ χ = ratLtAtom lt q r}
 
 theorem mapLanguage_mem_baseDiagram (φ : L.Sentenceω) (lt : L.Relations 2) :
@@ -66,16 +66,16 @@ variable {M : Type} [L.Structure M]
 
 /-- An ordinal-indexed chain in `M`, strictly increasing for the interpreted relation `lt` —
 the raw positive form (no injectivity packaged). -/
-def RelChain (lt : L.Relations 2) (γ : Ordinal.{0}) (w : γ.ToType → M) : Prop :=
+@[expose] def RelChain (lt : L.Relations 2) (γ : Ordinal.{0}) (w : γ.ToType → M) : Prop :=
   ∀ x y : γ.ToType, x < y → RelMap lt ![w x, w y]
 
 /-- A relation-preserving map from `ℚ` — the raw positive conclusion form (D2). -/
-def RelPreserving (lt : L.Relations 2) (f : ℚ → M) : Prop :=
+@[expose] def RelPreserving (lt : L.Relations 2) (f : ℚ → M) : Prop :=
   ∀ q r : ℚ, q < r → RelMap lt ![f q, f r]
 
 /-- **The hypothesis form (D1)**: for every countable ordinal, a model of `φ` with an
 `α`-length `lt`-chain. -/
-def HasWellOrderedChains (φ : L.Sentenceω) (lt : L.Relations 2) : Prop :=
+@[expose] def HasWellOrderedChains (φ : L.Sentenceω) (lt : L.Relations 2) : Prop :=
   ∀ α : Ordinal.{0}, α < (Cardinal.aleph 1).ord →
     ∃ (M : Type) (_ : L.Structure M) (_ : Nonempty M),
       Sentenceω.Realize φ M ∧ ∃ w : α.ToType → M, RelChain lt α w

@@ -16,7 +16,7 @@ helpers.  It records only reductions that compile from the current API.  In
 particular, it is not an attempted proof of the theorem-level gaps.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

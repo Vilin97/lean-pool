@@ -19,7 +19,7 @@ interior point.  The extra hypothesis `2 < B.length beta` excludes precisely
 the corrected length-two midpoint exception; without it the theorem is false.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

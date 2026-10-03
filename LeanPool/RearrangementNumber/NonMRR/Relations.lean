@@ -20,7 +20,7 @@ The direction of a morphism agrees with that section: a morphism from `A` to `B`
 gives `B.norm ≤ A.norm`.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal Set
 
@@ -41,11 +41,11 @@ structure Relation where
 namespace Relation
 
 /-- A family of responses solving every challenge. -/
-def Dominating (A : Relation.{u}) (s : Set A.Response) : Prop :=
+@[expose] def Dominating (A : Relation.{u}) (s : Set A.Response) : Prop :=
   ∀ x, ∃ y ∈ s, A.relates x y
 
 /-- The least cardinality of a dominating family. -/
-noncomputable def norm (A : Relation.{u}) : Cardinal.{u} :=
+@[expose] noncomputable def norm (A : Relation.{u}) : Cardinal.{u} :=
   sInf {κ | ∃ s : Set A.Response, A.Dominating s ∧ #s = κ}
 
 theorem dominating_univ (A : Relation.{u}) : A.Dominating univ := by
@@ -87,7 +87,7 @@ theorem Morphism.norm_le {A B : Relation.{u}} (f : Morphism A B) : B.norm ≤ A.
     _ = A.norm := hcard
 
 /-- The second challenge in a sequential composition depends on the first response. -/
-def sequential (A B : Relation.{u}) : Relation.{u} where
+@[expose] def sequential (A B : Relation.{u}) : Relation.{u} where
   Challenge := A.Challenge × (A.Response → B.Challenge)
   Response := A.Response × B.Response
   relates x y := A.relates x.1 y.1 ∧ B.relates (x.2 y.1) y.2

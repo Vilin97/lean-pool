@@ -33,7 +33,7 @@ This file proves that satisfaction of Lω₁ω formulas is measurable on
 - `modelsOfOn_measurableSet`: Satisfaction of any Lω₁ω sentence is measurable.
 -/
 
-@[expose] public section
+public section
 
 universe u v u'
 
@@ -58,14 +58,14 @@ variable [L.IsRelational] {α : Type*}
 
 /-- The set of codes in `StructureSpaceOn L α` where a bounded formula is realized,
 given variable assignments. -/
-def ModelsOfBoundedOn
+@[expose] def ModelsOfBoundedOn
     {β : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω β n) (v : β → α) (xs : Fin n → α) :
     Set (StructureSpaceOn L α) :=
   {c | @BoundedFormulaω.Realize L α (StructureSpaceOn.toStructure c) β n φ v xs}
 
 /-- The set of codes in `StructureSpaceOn L α` where a sentence is realized. -/
-def ModelsOfOn (φ : L.Sentenceω) : Set (StructureSpaceOn L α) :=
+@[expose] def ModelsOfOn (φ : L.Sentenceω) : Set (StructureSpaceOn L α) :=
   ModelsOfBoundedOn φ Empty.elim Fin.elim0
 
 private theorem modelsOfBoundedOn_falsum {β : Type u'} {n : ℕ}

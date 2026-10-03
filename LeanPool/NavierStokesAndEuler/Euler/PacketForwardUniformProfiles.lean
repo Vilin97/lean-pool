@@ -35,7 +35,7 @@ section
 /-! Every forced direct-forward grade starts from zero and obeys the genuine
 five-field grade budget at the common radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -236,7 +236,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -251,6 +251,7 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
 
 /-- Forward source primary witness, given by `(homogeneousPrimaryRegularity D Y (sourceOperators
 P M D (InitialData.zero P D)) rfl).changeTime hTime.symm M.T_pos.le`. -/
+@[expose]
 def forwardSourcePrimaryWitness :
     ProfileRegularity P M.T M.T_pos.le D.support
       (homogeneousPrimary D Y (sourceOperators P M D (InitialData.zero P D))) :=

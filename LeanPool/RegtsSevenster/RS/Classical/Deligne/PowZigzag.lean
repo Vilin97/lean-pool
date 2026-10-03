@@ -19,7 +19,7 @@ step peels one inserted couple off the onion-aligned copairing
 power against the outermost ring of the nested pairing.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

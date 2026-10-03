@@ -23,7 +23,7 @@ later boundary reparameterization only needs to construct a circle homeomorphism
 action on marked arcs; `PolygonCell.radialHomeomorph` then supplies the disk homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -41,7 +41,7 @@ noncomputable def direction (z : ℂ) (hz : z ≠ 0) : Circle :=
 @[simp]
 theorem coe_direction (z : ℂ) (hz : z ≠ 0) :
     (direction z hz : ℂ) = z / ‖z‖ :=
-  rfl
+  by rfl
 
 theorem continuous_direction :
     Continuous (fun w : {w : ℂ // w ≠ 0} =>
@@ -192,7 +192,7 @@ theorem radialHomeomorph_apply_val {n m : ℕ} (h : Circle ≃ₜ Circle)
     (z : PolygonCell n) :
     (radialHomeomorph (n := n) (m := m) h z).val =
       Circle.radialMap h z.val :=
-  rfl
+  by rfl
 
 /-- The radial cell homeomorphism restricts to the selected circle homeomorphism. -/
 @[simp]

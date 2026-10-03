@@ -33,7 +33,7 @@ it does not claim to preserve the old positive stored orientation. This conventi
 reversing a cut exchange the two children exactly.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -61,6 +61,7 @@ namespace P2Cut
 
 The raw `P2Cut` structure also represents the exceptional empty-word-sphere conversion, for which
 both pieces are necessarily empty. -/
+@[expose]
 def IsNondegenerate {P : FiniteCyclicPresentation} (cut : P2Cut P) : Prop :=
   cut.left ≠ [] ∧ cut.right ≠ []
 
@@ -70,7 +71,7 @@ theorem isNondegenerate_iff_lengths_pos {P : FiniteCyclicPresentation}
   simp only [IsNondegenerate, List.length_pos_iff_ne_nil]
 
 /-- Cut a chosen oriented representative at a linear position. -/
-def canonical {P : FiniteCyclicPresentation} (face : P.OrientedFace)
+@[expose] def canonical {P : FiniteCyclicPresentation} (face : P.OrientedFace)
     (position : Fin ((P.orientedBoundary face).length + 1)) : P2Cut P where
   face := face
   left := (P.orientedBoundary face).take position
@@ -107,7 +108,7 @@ theorem canonical_last_right {P : FiniteCyclicPresentation} (face : P.OrientedFa
   simp [canonical]
 
 /-- Move the cyclic cut point to the other end of the two pieces. -/
-def swap {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
+@[expose] def swap {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
   face := cut.face
   left := cut.right
   right := cut.left
@@ -115,7 +116,7 @@ def swap {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
     cut.boundary_rotated.trans List.isRotated_append
 
 /-- Reverse the traversal orientation of a cut. -/
-def flip {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
+@[expose] def flip {P : FiniteCyclicPresentation} (cut : P2Cut P) : P2Cut P where
   face := cut.face.flip
   left := inverseWord cut.right
   right := inverseWord cut.left
@@ -176,16 +177,16 @@ end P2Cut
 namespace P2
 
 /-- The fresh cutting edge. -/
-def freshEdge (P : FiniteCyclicPresentation) : Fin (P.edgeCount + 1) :=
+@[expose] def freshEdge (P : FiniteCyclicPresentation) : Fin (P.edgeCount + 1) :=
   P1.freshEdge P.edgeCount
 
 /-- Retain an old boundary word in the enlarged edge type. -/
-def retainWord {n : ℕ} (word : List (SignedDart (Fin n))) :
+@[expose] def retainWord {n : ℕ} (word : List (SignedDart (Fin n))) :
     List (SignedDart (Fin (n + 1))) :=
   word.map P1.castSuccDart
 
 /-- Store a displayed oriented boundary in the presentation's positive orientation. -/
-def storedWord {α : Type*} (orientation : Bool)
+@[expose] def storedWord {α : Type*} (orientation : Bool)
     (word : List (SignedDart α)) : List (SignedDart α) :=
   if orientation then inverseWord word else word
 
@@ -247,27 +248,27 @@ theorem contractWord_retainWord {n : ℕ}
       exact congrArg (List.cons d) ih
 
 /-- The first displayed child boundary. -/
-def selectedOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def selectedOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   retainWord cut.left ++ [.pos (freshEdge P)]
 
 /-- The second displayed child boundary. -/
-def rightOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightOrientedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   .neg (freshEdge P) :: retainWord cut.right
 
 /-- The first child boundary in its stored orientation. -/
-def selectedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def selectedBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   storedWord cut.face.orientation (selectedOrientedBoundary P cut)
 
 /-- The second child boundary in its stored orientation. -/
-def rightBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightBoundary (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     List (SignedDart (Fin (P.edgeCount + 1))) :=
   storedWord cut.face.orientation (rightOrientedBoundary P cut)
 
 /-- The word stored at a target face index. -/
-def faceWord (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def faceWord (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     Fin (P.faces.length + 1) → List (SignedDart (Fin (P.edgeCount + 1))) :=
   Fin.lastCases (rightBoundary P cut) fun f ↦
     if f = cut.face.face then
@@ -291,17 +292,17 @@ theorem split_faces_length (P : FiniteCyclicPresentation) (cut : P2Cut P) :
   simp [split]
 
 /-- Identify the explicit target indexing type with the presentation's face type. -/
-def faceEquiv (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def faceEquiv (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     Fin (P.faces.length + 1) ≃ (split P cut).Face :=
   finCongr (split_faces_length P cut).symm
 
 /-- The target face occupying an old source-face position. -/
-def oldFace (P : FiniteCyclicPresentation) (cut : P2Cut P) (f : P.Face) :
+@[expose] def oldFace (P : FiniteCyclicPresentation) (cut : P2Cut P) (f : P.Face) :
     (split P cut).Face :=
   faceEquiv P cut f.castSucc
 
 /-- The fresh second child face. -/
-def rightFace (P : FiniteCyclicPresentation) (cut : P2Cut P) :
+@[expose] def rightFace (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     (split P cut).Face :=
   faceEquiv P cut (Fin.last P.faces.length)
 
@@ -1295,10 +1296,12 @@ theorem split_isGallierValid
         split_isConnected P cut hempty.isConnected⟩
 
 /-- The zero-position P2 cut of Gallier--Xu's exceptional sphere presentation. -/
+@[expose]
 def emptyWordSphereCut : P2Cut emptyWordSphere :=
   P2Cut.canonical (.pos 0) 0
 
 /-- The last-position spelling of the same empty boundary cut. -/
+@[expose]
 def emptyWordSphereLastCut : P2Cut emptyWordSphere :=
   P2Cut.canonical (.pos 0) (Fin.last 0)
 
@@ -1328,6 +1331,7 @@ boundary pieces are nonempty. The sole degenerate case admitted here is Gallier-
 empty-word sphere, whose conversion to the ordinary-valid two-monogon presentation is also
 represented by the raw `P2.split` construction. This is a syntactic move relation and
 deliberately does not bundle source validity. -/
+@[expose]
 def P2Subdivision (P Q : FiniteCyclicPresentation) : Prop :=
   ∃ cut : P2Cut P,
     (cut.IsNondegenerate ∨ P.IsEmptyWordSphere) ∧

@@ -26,7 +26,7 @@ the converse's per-cut splitting carries.
   cut chords.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

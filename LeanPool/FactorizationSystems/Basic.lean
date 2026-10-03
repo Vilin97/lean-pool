@@ -12,14 +12,14 @@ import Mathlib.Tactic.Attr.Core
 # LeanPool.FactorizationSystems.Basic
 -/
 
-@[expose] public section
+public section
 
 namespace CategoryTheory
 universe u v u' v'
 variable {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
 
 /-- The predicate that a class of morphism contains the isomorphisms -/
-def containsIsos (W : MorphismProperty C) : Prop :=
+@[expose] def containsIsos (W : MorphismProperty C) : Prop :=
   ∀ ⦃X Y : C⦄ (f : X ≅ Y) , W f.hom
 
 /-- The predicate of a class of morphisms being closed under compositin -/

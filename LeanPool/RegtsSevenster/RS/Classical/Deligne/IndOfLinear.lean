@@ -50,7 +50,7 @@ both actions are defined from the same `ψ`, and the proof uses only
 the unitality of the strong monoidal structure of the embedding.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

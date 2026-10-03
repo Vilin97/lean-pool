@@ -12,7 +12,7 @@ import Mathlib.CategoryTheory.Category.Init
 
 /-! ### General -/
 
-@[expose] public section
+public section
 
 /-
   This file contains many lemmas about relations that the parts of a split path satisfy.

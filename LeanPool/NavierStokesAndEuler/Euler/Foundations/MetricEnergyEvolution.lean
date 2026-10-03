@@ -18,7 +18,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 # Metric Energy Evolution
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -45,7 +45,7 @@ Neither statement mentions anything Sendov-specific; both are candidates for ups
 * `Sendov.Multiset.esymm_card_pred_le`: `e_{N-1}(s) ≤ N (mean s)^{N-1}`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

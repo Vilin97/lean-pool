@@ -21,7 +21,7 @@ states that a symmetric convex set of volume greater than `2 ^ n` contains a non
 point all of whose coordinates are integers.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.SumsThreeSquares
 

@@ -18,7 +18,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Endgame.SourceComponents
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Metric
 open scoped ENNReal

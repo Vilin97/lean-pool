@@ -11,7 +11,7 @@ public import LeanPool.Zeta32.Fstar.Rho
 "density near 0"): `rhoA a t = fc a |t| − log|t|/(6π)` with `fc` continuous (Fstar/Rho.lean), hence
 `rhoA`, `rhoA²` and `log|x − ·| · rhoA` are integrable (via `log²` integrable, AM–GM). -/
 
-@[expose] public section
+public section
 
 open Real MeasureTheory Set Filter
 open scoped Interval

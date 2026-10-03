@@ -30,7 +30,7 @@ back-and-forth equivalence at all ordinal levels.
 - [KK04], Theorem 1.2.1
 -/
 
-@[expose] public section
+public section
 
 universe u v w w'
 

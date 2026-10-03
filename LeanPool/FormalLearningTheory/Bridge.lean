@@ -33,7 +33,7 @@ paradigm-specific types:
 | B₇ | BatchLearner ↔ GoldLearner | Cross-paradigm | No common parent (BP₁) |
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

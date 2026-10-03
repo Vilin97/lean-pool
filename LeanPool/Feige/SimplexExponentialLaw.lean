@@ -18,7 +18,7 @@ the normalized-exponential calculation with the project's existing uniform
 simplex probability measure.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 open MeasureTheory Set
@@ -36,13 +36,14 @@ theorem normalizedExponentialSimplexMeasure_eq_uniform :
   rw [inv_inv]
 
 /-- The normalized-coordinate map on real product coordinates. -/
+@[expose]
 noncomputable def normalizedExponentialCoordinates
     (e : ℝ × (Fin n → ℝ)) : Fin n → ℝ :=
   (exponentialSimplexInverse e).2
 
 /-- Independent unit exponentials on the positive real orthant, written as
 an absolutely continuous measure in real product coordinates. -/
-noncomputable def realExponentialProductMeasure :
+@[expose] noncomputable def realExponentialProductMeasure :
     Measure (ℝ × (Fin n → ℝ)) :=
   (volume.restrict (positiveExponentialOrthant (n := n))).withDensity
     (fun e ↦ ENNReal.ofReal (Real.exp (-exponentialTotal e)))

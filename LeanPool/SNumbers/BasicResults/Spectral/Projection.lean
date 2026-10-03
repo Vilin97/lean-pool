@@ -32,7 +32,7 @@ elementary properties (continuity, `0 ≤ · ≤ 1`, antitone in `n`, value `1`
 above the threshold).
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap
 

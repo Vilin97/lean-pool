@@ -51,7 +51,7 @@ names the face and the certificate does not.  `ZeroReach` and
 chain; that is the exact join with the contraction census.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate
 open Utilities.Certificate
@@ -255,6 +255,7 @@ theorem classEndpointContribution_eq_of_rep_id (certificate : CertificateData m 
 /-! ## Rep-invariance of the anchor potential -/
 
 /-- Two core vertices joined by one collapsed slot. -/
+@[expose]
 def ZeroLink (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (u v : Fin n) : Prop :=
   ∃ e : Fin p, certificate.segmentNat point e = 0 ∧
@@ -263,6 +264,7 @@ def ZeroLink (certificate : CertificateData m n p) (point : Fin m → ℤ)
 
 /-- Joined by a chain of collapsed slots.  This is the relation a contraction
 census decides; `rep` is meant to be its component map. -/
+@[expose]
 def ZeroReach (certificate : CertificateData m n p) (point : Fin m → ℤ) :
     Fin n → Fin n → Prop :=
   Relation.ReflTransGen (certificate.ZeroLink point)
@@ -365,6 +367,7 @@ end Face
 of its members' chips, and every interior vertex carries none.
 
 This is the shape change forced by non-injectivity of `coreVertex`. -/
+@[expose]
 def degenerateDivisor (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) : CFDiv d.graph :=
   d.coreClassDivisor certificate.divisor
@@ -561,6 +564,7 @@ end Assembly
 
 /-- The embedded core classes of a contracted subdivision.  `coreVertex` is not
 injective, so this image can be strictly smaller than `n`. -/
+@[expose]
 def degenerateCoreVertices (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) : Finset d.graph.V
   :=
   Finset.univ.image d.coreVertex

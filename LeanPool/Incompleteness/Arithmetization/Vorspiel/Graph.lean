@@ -13,7 +13,7 @@ import Mathlib.Tactic.SetLike
 
 /-! # Graph -/
 
-@[expose] public section
+public section
 
 
 namespace Function
@@ -24,13 +24,13 @@ variable {σ α β : Sort*}
 def Graphᵥ (f : (Fin k → α) → α) : (Fin (k + 1) → α) → Prop := fun v ↦ v 0 = f (v ·.succ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph (f : α → σ) : σ → α → Prop := fun y x ↦ y = f x
+@[expose] def Graph (f : α → σ) : σ → α → Prop := fun y x ↦ y = f x
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph₂ (f : α → β → σ) : σ → α → β → Prop := fun y x₁ x₂ ↦ y = f x₁ x₂
+@[expose] def Graph₂ (f : α → β → σ) : σ → α → β → Prop := fun y x₁ x₂ ↦ y = f x₁ x₂
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph₃ (f : α → β → γ → σ) : σ → α → β → γ → Prop := fun y x₁ x₂ x₃ ↦ y = f x₁ x₂ x₃
+@[expose] def Graph₃ (f : α → β → γ → σ) : σ → α → β → γ → Prop := fun y x₁ x₂ x₃ ↦ y = f x₁ x₂ x₃
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Graph₄ (f : α → β → γ → δ → σ) :

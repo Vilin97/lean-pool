@@ -33,7 +33,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ProbabilityMea
 not the Borel σ-algebra of the weak topology; the type synonym `WeakP`
 installs the Borel structure (Polish by W1). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set ENNReal
 
@@ -43,6 +43,7 @@ noncomputable section
 
 /-- Probability measures on `W`, considered with the topology of weak
     convergence and its Borel σ-algebra. -/
+@[expose]
 def WeakP (W : Type*) [MeasurableSpace W] : Type _ := ProbabilityMeasure W
 
 namespace WeakP
@@ -61,6 +62,7 @@ instance [PolishSpace W] [BorelSpace W] : PolishSpace (WeakP W) :=
   ProbabilityMeasure.instPolishSpace (X := W)
 
 /-- The underlying measure. -/
+@[expose]
 def toMeasure (γ : WeakP W) : Measure W :=
   ProbabilityMeasure.toMeasure γ
 
@@ -90,6 +92,7 @@ variable (c : (t : ℕ) → PairHist X Y t → ℝ≥0∞)
 
 /-- The feasibility correspondence, as a subset of the product of the
     history space with the Polish space of probability measures. -/
+@[expose]
 def FeasGraph (t : ℕ) :
     Set (PairHist X Y t × WeakP (X (t + 1) × Y (t + 1))) :=
   {p | p.2.toMeasure ∈ Feas κμ κν t p.1}

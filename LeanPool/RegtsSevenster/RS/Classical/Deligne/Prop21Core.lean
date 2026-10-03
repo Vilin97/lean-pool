@@ -22,7 +22,7 @@ algebra of `RS.exists_splitting_algebra` splits every embedded
 object and every embedded short exact sequence at once.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

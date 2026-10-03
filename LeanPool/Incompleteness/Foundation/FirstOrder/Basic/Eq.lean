@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
 
 /-! # Eq -/
 
-@[expose] public section
+public section
 
 namespace Matrix
 
@@ -179,7 +179,7 @@ variable (L M)
 def eqvSetoid : Setoid M := Setoid.mk (eqv L) eqv_equivalence
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def QuotEq := Quotient (eqvSetoid L M)
+@[expose] def QuotEq := Quotient (eqvSetoid L M)
 
 variable {L M}
 
@@ -368,6 +368,7 @@ instance {T : Theory L} [𝐄𝐐 wkn T] (sat : Semantics.Satisfiable (Struc.{v,
     ModelOfSat sat ⊧ₘ* (𝐄𝐐 : Theory L) := models_of_subtheory (ModelOfSat.models sat)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ModelOfSatEq {T : Theory L} [𝐄𝐐 wkn T] (sat : Semantics.Satisfiable (Struc.{v, u} L) T) :
     Type _ := Structure.Eq.QuotEq L (ModelOfSat sat)
 

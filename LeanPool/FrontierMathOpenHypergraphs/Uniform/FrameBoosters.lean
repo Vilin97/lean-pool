@@ -20,7 +20,7 @@ The larger checks are split into blocks of 128 masks to bound kernel memory.
 Each block is evaluated directly by the kernel.
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

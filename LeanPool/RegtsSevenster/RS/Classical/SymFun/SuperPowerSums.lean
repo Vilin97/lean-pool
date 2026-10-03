@@ -24,7 +24,7 @@ the shifted power-sum series; this is immediate from the Newton
 recursion that defines `newtonH`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -34,10 +34,12 @@ open Finset PowerSeries
 
 /-- The generating power series of the complete homogeneous sequence:
 `H = PowerSeries.mk (newtonH t)`. -/
+@[expose]
 noncomputable def newtonHSeries (t : ℕ → ℂ) : ℂ⟦X⟧ :=
   PowerSeries.mk (newtonH t)
 
 /-- The shifted power-sum series: coefficient `n` is `t (n + 1)`. -/
+@[expose]
 noncomputable def powerSumSeries (t : ℕ → ℂ) : ℂ⟦X⟧ :=
   PowerSeries.mk (fun n => t (n + 1))
 

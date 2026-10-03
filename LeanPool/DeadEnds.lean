@@ -23,7 +23,7 @@ Tags: number-theory, combinatorics
 MSC: 11N25
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

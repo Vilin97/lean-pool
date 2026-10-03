@@ -17,7 +17,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSourcePrimitiveBounds
 /-! The direct-forward branch uses the identical fixed polynomial cost
 envelope as the positive-history branch. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

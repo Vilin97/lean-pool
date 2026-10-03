@@ -14,7 +14,7 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
 
 /-! Local energies of actual L² fields, including the decomposition estimate. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -24,7 +24,7 @@ namespace EulerMeanHarmonic
 open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanSolenoidal
 
 /-- Local L² energy, given by `∫ x in s, ‖u x‖ ^ 2`. -/
-def localL2Energy (s : Set Space) (u : L2) : ℝ := ∫ x in s, ‖u x‖ ^ 2
+@[expose] def localL2Energy (s : Set Space) (u : L2) : ℝ := ∫ x in s, ‖u x‖ ^ 2
 
 theorem lpNorm_coe_L2 (u : L2) : lpNorm (u : Space → Space) 2 volume = ‖u‖ := by
   rw [Lp.norm_def, toReal_eLpNorm]

@@ -13,7 +13,7 @@ The geometric series and maximal-function constants are finite under the
 same strict exponent conditions as the potential estimate.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

@@ -30,7 +30,7 @@ therefore vanish past the same outer radius, uniformly over positive orders
 moment; no renormalized order-zero moment is used in this module.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,6 +46,7 @@ noncomputable def axialHistory {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n :
   SlowResidualMatching.toRadius ((asSlowProfiles s).axial n)
 
 /-- The actual angular velocity coefficients in signed radius. -/
+@[expose]
 noncomputable def angularHistory {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) : Field :=
   SlowResidualMatching.swirlRadius C ((asSlowProfiles s).phi n)
 
@@ -533,7 +534,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -984,6 +985,7 @@ noncomputable def terminalAmplitude {F : OutgoingProfile.Profile} (W : NominalPr
   TerminalHistoryBridge.normalization F W.controls.radius
 
 /-- Terminal shift, given by `TerminalHistoryBridge.shift F W.controls.radius`. -/
+@[expose]
 noncomputable def terminalShift {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) : ℝ :=
   TerminalHistoryBridge.shift F W.controls.radius
 

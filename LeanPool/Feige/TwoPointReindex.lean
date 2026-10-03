@@ -12,7 +12,7 @@ public import Mathlib.Data.Fin.Tuple.Sort
 # Reindexing and sorting finite two-point systems
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped BigOperators

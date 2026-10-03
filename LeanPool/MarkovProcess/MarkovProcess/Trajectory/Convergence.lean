@@ -32,7 +32,7 @@ Convergence of the finite-dimensional distributions is not convergence on path s
 in addition a tightness estimate for the family of laws; that is not asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

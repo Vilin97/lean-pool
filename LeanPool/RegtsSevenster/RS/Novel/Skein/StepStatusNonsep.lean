@@ -39,7 +39,7 @@ No swap-end data is consumed: the identity holds for the anchored
 transported frame of *any* repair from a canonical source.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

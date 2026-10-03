@@ -12,7 +12,7 @@ import LeanPool.Zeta5Irrational.Criterion
 /-! Generic criterion adapted from the Li₂ light-certificate project and the
 Apéry criterion in mo271/Zeta5 (Apache-2.0), with attribution retained. -/
 
-@[expose] public section
+public section
 
 open Polynomial Filter Topology
 namespace Zeta32

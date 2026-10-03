@@ -29,7 +29,7 @@ interchange, and the folded unit word contributes only a left
 unitor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ variable {D : Type u}
 
 /-- The unit word: the empty product of units in an ambient
 power. -/
+@[expose]
 noncomputable def unitWord [Category.{v} D] [MonoidalCategory D]
     (A : D) [MonObj A] :
     (n : ℕ) → (𝟙_ D ⟶ tensorPow D A n)
@@ -56,6 +57,7 @@ noncomputable def unitWord [Category.{v} D] [MonoidalCategory D]
 
 /-- Insert the monoid unit into every letter of an ambient
 power. -/
+@[expose]
 noncomputable def freeUnitPow [Category.{v} D] [MonoidalCategory D]
     (A : D) [MonObj A] (V : D) :
     (n : ℕ) → (tensorPow D V n ⟶ tensorPow D (A ⊗ V) n)
@@ -174,6 +176,7 @@ private theorem unitTensorμ
 
 /-- **The free insertion**: carry the head into the top letter of
 the word and fill every other letter with the unit. -/
+@[expose]
 noncomputable def freeInsert
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     (A : D) [MonObj A] (V : D) (n : ℕ) :

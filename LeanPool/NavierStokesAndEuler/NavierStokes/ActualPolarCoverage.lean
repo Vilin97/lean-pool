@@ -32,7 +32,7 @@ mean residuals and excluded errors are combined before the physical graph
 restriction.  Phase regularity is needed only on coefficient support.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -132,6 +132,7 @@ noncomputable def vectorMap : Components →L[ℝ] Space :=
   fin_cases i <;> simp [vectorMap, coordinateVector]
 
 /-- Residual degree, given by `2 * CoordinateAlgebra.A h + 1 / 2`. -/
+@[expose]
 noncomputable def residualDegree (h : ℝ) : ℝ := 2 * CoordinateAlgebra.A h + 1 / 2
 
 /-- Invert the actual residual scaling and cylindrical frame. -/
@@ -682,6 +683,7 @@ theorem NativeBounds.pull_linear {D E F ι : Type} [NormedAddCommGroup D] [Norme
 
 /-- Full phase, given by `(j : ℝ) * (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ)
 * x.2)`. -/
+@[expose]
 noncomputable def fullPhase (b : CorrectionState.HarmonicBlock Point) (j : ℤ)
     (n : ℕ) (x : Cylinder) : ℝ :=
   (j : ℝ) * (b.frequency n * b.phase n x.1 + (b.angularFrequency n : ℝ) * x.2)
@@ -764,6 +766,7 @@ theorem state_nativeBounds {ι : Type} {N : ℕ} {V : Set Point}
 /-! ## One physical residual, selected comparable bands, and the base patch -/
 
 /-- Residual, defined pointwise by `navierStokesResidual u p w.1 w.2`. -/
+@[expose]
 noncomputable def residual (u : VelocityField) (p : PressureField) : SpaceTime → Space :=
   fun w => navierStokesResidual u p w.1 w.2
 
@@ -786,6 +789,7 @@ theorem residual_germ_off_changedSupport {u u₀ : VelocityField} {p p₀ : Pres
 
 /-- The loss contains the actual physical residual degree, graph derivative
 loss, one polynomial-in-band absorption, and the fixed phase loss. -/
+@[expose]
 noncomputable def physicalLoss (h β : ℝ) (m : ℕ) : ℝ :=
   PhysicalMeanJetBounds.loss (residualDegree h) m + β * m
 
@@ -914,7 +918,7 @@ theorem ResidualChartData.residual_jetRate {a b h gain β : ℝ} {N Δ : ℕ} {U
 
 /-- Band graph, given by `PhysicalResidualBridge.commonGraph (ChartScales.Q n) h
 (ChartScales.nativeIndex h n - d)`. -/
-noncomputable def bandGraph (h : ℝ) (n d : ℕ) : PhysicalResidualBridge.ScaledGraph :=
+@[expose] noncomputable def bandGraph (h : ℝ) (n d : ℕ) : PhysicalResidualBridge.ScaledGraph :=
   PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (ChartScales.nativeIndex h n - d)
 
 theorem polarGraph_eq_meanGraph {a : ℝ} (ha : 0 < a) (h : ℝ) (j : PolarCharts.Index)
@@ -1121,7 +1125,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1137,21 +1141,23 @@ abbrev Point := PhysicalMeanJetBounds.Point
 abbrev Cylinder := PhysicalResidualJetBounds.Cylinder
 
 /-- Active as an element of `Set SpaceTime`. -/
-noncomputable def active : Set SpaceTime :=
+@[expose] noncomputable def active : Set SpaceTime :=
   {w | (SlowBorelBase.cartesianChart ActualPrimary.h w).2.1 ∈
     Icc (NominalConeAssembly.activeLeft ActualPrimary.nominal)
       (NominalConeAssembly.activeRight ActualPrimary.nominal)}
 
 /-- Inner, given by `PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4`. -/
+@[expose]
 noncomputable def inner : ℝ :=
   PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4
 
 /-- Outer, given by `2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal`. -/
-noncomputable def outer : ℝ :=
+@[expose] noncomputable def outer : ℝ :=
   2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal
 
 /-- Native domain, given by `HarmonicResidual.liftDomain (ActualInitialization.geometry.domain ∩
 {x : Point | 0 < x.1})`. -/
+@[expose]
 noncomputable def nativeDomain : Set Cylinder :=
   HarmonicResidual.liftDomain
     (ActualInitialization.geometry.domain ∩ {x : Point | 0 < x.1})

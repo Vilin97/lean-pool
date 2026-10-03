@@ -18,7 +18,7 @@ equal first-coordinate sums.  Its shift lies in the remaining coordinates.
 Injective samples of a balanced pattern produce such exchanges.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -29,6 +29,7 @@ variable {p r t : ℕ} {A : Type*} [Fintype A]
 open Classical in
 /-- The finite collection of exchanges of bounded size in a fixed atom
 family.  Multiplicity is represented by distinct atom positions. -/
+@[expose]
 def Exchange (point : A → FpCoord p (r + t)) (B : ℕ) :=
   {J : Finset A × Finset A // Disjoint J.1 J.2 ∧ J.1.card = J.2.card ∧
     (∑ x ∈ J.1, Coord.first r t (point x)) = (∑ x ∈ J.2, Coord.first r t (point x)) ∧
@@ -51,13 +52,16 @@ open Classical in
 def right (E : Exchange point B) : Finset A := E.val.2
 open Classical in
 /-- The atoms used by either side of an exchange. -/
+@[expose]
 noncomputable def support (E : Exchange point B) : Finset A := E.left ∪ E.right
 open Classical in
 /-- The difference between the vector sums of the left and right sides of an exchange. -/
+@[expose]
 noncomputable def difference (E : Exchange point B) : FpCoord p (r + t) :=
   (∑ x ∈ E.left, point x) - ∑ x ∈ E.right, point x
 open Classical in
 /-- The final coordinate block of the exchange difference. -/
+@[expose]
 noncomputable def shift (E : Exchange point B) : FpCoord p t := Coord.last r t E.difference
 
 omit [Fintype A] in

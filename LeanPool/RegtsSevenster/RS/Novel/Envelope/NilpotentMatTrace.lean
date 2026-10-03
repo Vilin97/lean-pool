@@ -22,7 +22,7 @@ inherits nilpotency — so each class block has vanishing complex
 trace, and the diagonal trace is the class-weighted sum of those.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -116,11 +116,11 @@ theorem matTrace_resolution
 variable {f} {M : Mat_ (Karoubi (SkeinObj f))}
 
 /-- The total atom index. -/
-@[reducible] def AtomResolution.κ (A : AtomResolution f M) :=
+@[expose, reducible] def AtomResolution.κ (A : AtomResolution f M) :=
   Σ i : M.ι, A.idx i
 
 /-- The atom at a total index. -/
-@[reducible] noncomputable def AtomResolution.S
+@[expose, reducible] noncomputable def AtomResolution.S
     (A : AtomResolution f M) (p : A.κ) :
     Karoubi (SkeinObj f) :=
   cutBy (f := f) (M.X p.1) (A.atomic p.1 p.2).idem
@@ -259,6 +259,7 @@ noncomputable def AtomResolution.w (A : AtomResolution f M)
 /-! ### The matrix elements -/
 
 /-- The matrix element of an endomorphism at a pair of atoms. -/
+@[expose]
 noncomputable def AtomResolution.t (A : AtomResolution f M)
     (φ : End M) (p q : A.κ) : A.S p ⟶ A.S q :=
   ⟨(A.e p.1 p.2).f ≫ (φ p.1 q.1).f ≫ (A.e q.1 q.2).f, by

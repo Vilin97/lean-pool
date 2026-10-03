@@ -22,17 +22,19 @@ This compatibility module re-exports the implemented convex-body support functio
 stable public names. All substantive proofs live under `NRR.Geometry.ConvexBody`.
 -/
 
-@[expose] public section
+public section
 
 open scoped RealInnerProductSpace
 
 namespace NRR.Geometry.ConvexBody
 
 /-- **Support function** (compatibility alias). `supportFn K u = h_K(u) = ⨆ x ∈ K, ⟪x, u⟫`. -/
+@[expose]
 noncomputable def supportFn (K : ConvexBody Plane) (u : Plane) : ℝ :=
   supportFunction K u
 
 /-- **Width** (compatibility alias). `width K u = w_K(u) = h_K(u) + h_K(-u)`. -/
+@[expose]
 noncomputable def width (K : ConvexBody Plane) (u : Plane) : ℝ :=
   widthFunction K u
 

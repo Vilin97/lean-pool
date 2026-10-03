@@ -20,7 +20,7 @@ system. We construct this property directly, without needing a matrix inverse
 or a nilpotence assumption on the ambient algebra.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -34,7 +34,7 @@ universe u v
 variable {k : Type u} [Field k] {R : Type v} [Ring R] [Algebra k R]
 
 /-- Evaluate one homogeneous-linear edge, as a constant polynomial. -/
-def edge (a : Fin 3 → R) (c : Triple k) : Polynomial R :=
+@[expose] def edge (a : Fin 3 → R) (c : Triple k) : Polynomial R :=
   Polynomial.C (∑ i : Fin 3, algebraMap k R (c i) * a i)
 
 @[simp] theorem edge_zero (a : Fin 3 → R) : edge a (0 : Triple k) = 0 := by
@@ -77,6 +77,7 @@ attribute [instance] System.fintype System.decEq
 /-- Every solution of the internal equations gives the specified output.
 All equations take place in the polynomial ring over the possibly
 noncommutative algebra `R`. -/
+@[expose]
 def Represents (S : System k) (a : Fin 3 → R) (x : R) : Prop :=
   ∀ (q₀ : Polynomial R) (q : S.State → Polynomial R),
     (∀ i, q i = edge a (S.input i) * q₀ +
@@ -85,6 +86,7 @@ def Represents (S : System k) (a : Fin 3 → R) (x : R) : Prop :=
       Polynomial.C x * q₀
 
 /-- The elements admitting one of these finite linearizations. -/
+@[expose]
 def Linearizable (a : Fin 3 → R) (x : R) : Prop :=
   ∃ S : System k, Represents S a x
 
@@ -101,7 +103,7 @@ def atom (c : Triple k) : System k where
   step := Empty.elim
 
 /-- Disjoint union of systems, adding their output rows. -/
-def add (S T : System k) : System k where
+@[expose] def add (S T : System k) : System k where
   State := S.State ⊕ T.State
   fintype := inferInstance
   decEq := inferInstance
@@ -125,7 +127,7 @@ def smul (r : k) (S : System k) : System k where
 
 /-- Prepend a generator: a new internal state computes the old output, and
 one generator edge joins the new output to that state. -/
-def prepend (i : Fin 3) (S : System k) : System k where
+@[expose] def prepend (i : Fin 3) (S : System k) : System k where
   State := Option S.State
   fintype := inferInstance
   decEq := inferInstance

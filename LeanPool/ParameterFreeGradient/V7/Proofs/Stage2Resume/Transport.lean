@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage2Resume.Positivity
 Transport of sums over the realized geometric visits into chronological report-call bounds.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2Resume

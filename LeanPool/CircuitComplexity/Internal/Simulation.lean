@@ -31,7 +31,7 @@ gates followed by chains for all original output gates. The new output gates
 are trivial passthroughs reading the last wire of each output chain.
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -94,7 +94,7 @@ namespace CompileAON
 /-! ## Chain length and prefix sums -/
 
 /-- Number of fan-in-2 gates needed to simulate one gate with `k` inputs. -/
-def chainLen (k : Nat) : Nat := if k ≤ 1 then 1 else k - 1
+@[expose] def chainLen (k : Nat) : Nat := if k ≤ 1 then 1 else k - 1
 
 @[simp] lemma chainLen_zero : chainLen 0 = 1 := rfl
 @[simp] lemma chainLen_one : chainLen 1 = 1 := rfl
@@ -106,7 +106,7 @@ lemma chainLen_of_ge_two {k : Nat} (hk : 2 ≤ k) : chainLen k = k - 1 := by
   rw [chainLen, ite_eq_right (by omega)]
 
 /-- Prefix sum: `prefixSum f n = f 0 + f 1 + ⋯ + f (n-1)`. -/
-def prefixSum (f : Nat → Nat) : Nat → Nat
+@[expose] def prefixSum (f : Nat → Nat) : Nat → Nat
   | 0 => 0
   | n + 1 => prefixSum f n + f n
 
@@ -268,7 +268,7 @@ lemma remapWire_lt_oOffset (c : Circuit Basis.unboundedAON N M G) (w : Fin (N + 
 /-! ## Chain gate construction -/
 
 /-- Helper: construct a function `Fin 2 → α` from two values. -/
-def fin2 (a b : α) : Fin 2 → α := fun i => if i.val = 0 then a else b
+@[expose] def fin2 (a b : α) : Fin 2 → α := fun i => if i.val = 0 then a else b
 
 @[simp] lemma fin2_zero (a b : α) : fin2 a b 0 = a := rfl
 @[simp] lemma fin2_one (a b : α) : fin2 a b 1 = b := rfl

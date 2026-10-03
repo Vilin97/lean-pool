@@ -21,7 +21,7 @@ activation time of the next parent frame. These factories are the checked
 `SmoothState` renewals with the source-selected amplitude and primary;
 all target matching is proved from their definitions. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -68,7 +68,7 @@ variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error
 
 /-- The next actual frame, using exactly the forward source primary and
 its target-normalized amplitude. -/
-def forwardTargetRenewal : ParentFrame DNext tNext :=
+@[expose] def forwardTargetRenewal : ParentFrame DNext tNext :=
   S.forwardRenewal T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext
     tNext ((G.lowGeometry hball).target_time_mem).1 CM CH K error
@@ -170,7 +170,7 @@ variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error
 
 /-- The joined renewal retains the activation-selected endpoint and
 its actual stationary-history initial trace. -/
-def joinedTargetRenewal : ParentFrame DNext tNext :=
+@[expose] def joinedTargetRenewal : ParentFrame DNext tNext :=
   S.joinedRenewal T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext
     tNext (hs.le.trans ((G.lowGeometry hball).target_time_mem).1) CM CH K error
@@ -251,7 +251,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -297,7 +297,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (support : Set Space) (hSupport : IsCompact support)
 
 /-- Renewal, constructed using `S.forwardTargetRenewal`. -/
-def renewal : ParentFrame (F.parent.transverseData m hm R support hSupport)
+@[expose] def renewal : ParentFrame (F.parent.transverseData m hm R support hSupport)
     (I.geometry.lowGeometry I.halfBall).targetTime :=
   S.forwardTargetRenewal (state I S k hk nextEll hnext hnext1 F hSym) rfl
     I.normal I.normal_unit I.coordinates I.support I.support_compact
@@ -356,7 +356,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (support : Set Space) (hSupport : IsCompact support)
 
 /-- Renewal, constructed using `S.joinedTargetRenewal`. -/
-def renewal : ParentFrame (F.parent.transverseData m hm R support hSupport)
+@[expose] def renewal : ParentFrame (F.parent.transverseData m hm R support hSupport)
     (I.geometry.lowGeometry I.halfBall).targetTime :=
   S.joinedTargetRenewal (state I S k hk nextEll hnext hnext1 F hSym) rfl
     I.normal I.normal_unit I.coordinates I.support I.support_compact

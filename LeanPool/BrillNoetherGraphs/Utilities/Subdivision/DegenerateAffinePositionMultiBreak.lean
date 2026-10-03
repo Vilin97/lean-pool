@@ -35,7 +35,7 @@ certificates remain the existing `Code.BoundsCertified` facts, so all affine
 arithmetic is shared with the positive decoder.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs.Certificate.AffinePosition
 open Utilities.Certificate

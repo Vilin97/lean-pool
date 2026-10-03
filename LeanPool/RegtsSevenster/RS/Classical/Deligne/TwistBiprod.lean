@@ -24,7 +24,7 @@ projection is a module map and the twist of a module map is again
 a module map.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -242,6 +242,7 @@ theorem twistBiprodActR_inv
     MonoidalCategory.whiskerLeft_id, Category.id_comp]
 
 /-- The distributivity map, as a module map. -/
+@[expose]
 noncomputable def tensorLeftBiprodModHom
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [HasBinaryBiproducts D] [SymmetricCategory D] (A : D) [MonObj A] (V : D)
@@ -253,6 +254,7 @@ noncomputable def tensorLeftBiprodModHom
     (by exact twistBiprodActL_hom A V P Q)
 
 /-- The inverse distributivity map, as a module map. -/
+@[expose]
 noncomputable def tensorLeftBiprodModInv
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D] [HasBinaryBiproducts D] [SymmetricCategory D]

@@ -13,7 +13,7 @@ public import LeanPool.DirectedTopologyLean4.CoverLemma
 # LeanPool.DirectedTopologyLean4.DihomotopyCover
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of a (n, m)-covered (dipath) dihomotopy, covered by X₁ and X₂:
@@ -36,7 +36,7 @@ variable {X : dTopCat} {f g : D(I,X)} {X₀ X₁ : Set X}
 
 /-- A dihomotopy of directed maps is covered if its image lies entirely in X₀ or in X₁.
 -/
-def covered (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) : Prop :=
+@[expose] def covered (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) : Prop :=
   let _ : X₀ ∪ X₁ = univ := hX
   range F ⊆ X₀ ∨ range F ⊆ X₁
 
@@ -389,7 +389,7 @@ lemma range_right_subset (F : Dihomotopy γ₁ γ₂) : range γ₂ ⊆ range F 
 
 /-- A dihomotopy of directed paths is covered if its image lies entirely in X₀ or in X₁.
 -/
-def covered (hX : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop :=
+@[expose] def covered (hX : X₀ ∪ X₁ = univ) (F : Dihomotopy γ₁ γ₂) : Prop :=
   let _ : X₀ ∪ X₁ = univ := hX
   range F ⊆ X₀ ∨ range F ⊆ X₁
 
@@ -412,7 +412,7 @@ lemma covered_right_of_covered {F : Dihomotopy γ₁ γ₂} {hX : X₀ ∪ X₁ 
 /-- Two paths are `m × n`-dihomotopic if there is a dihomotopy between them that can be covered by
 `m × n` rectangles.
 -/
-def dihomotopicCovered (hX : X₀ ∪ X₁ = univ) (γ₁ γ₂ : Dipath x y) (n m : ℕ) : Prop :=
+@[expose] def dihomotopicCovered (hX : X₀ ∪ X₁ = univ) (γ₁ γ₂ : Dipath x y) (n m : ℕ) : Prop :=
   ∃ (F : Dihomotopy γ₁ γ₂), DirectedMap.Dihomotopy.coveredPartwise hX F.toDihomotopy n m
 
 /-- If `γ₁` and `γ₂` are two paths connected by a path-dihomotopy `F` that is covered by `m × (n +

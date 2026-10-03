@@ -25,7 +25,7 @@ convex subset of `ℝ`, hence a closed interval; pushing that interval forward i
 * `segment_inter_segment` — the meet dichotomy used by Lemma 3.7.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 

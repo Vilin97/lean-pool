@@ -20,7 +20,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Foundation.Parabolic.Integration.
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal NNReal Topology
 
@@ -48,6 +48,7 @@ lemma heatPotentialSpatialKernel_abs_le_riesz₁ (i : Fin 3)
   exact _root_.CKN.Core.HeatPotential.heatPotentialSpatialKernel_abs_le_riesz₁ i z w
 
 /-- Riesz-potential majorant for the localized scalar and divergence heat sources. -/
+@[expose]
 def pointwisePotentialMajorant (g : ParabolicPoint → Vec3)
     (h : Fin 3 → ParabolicPoint → Vec3) : ParabolicPoint → ℝ :=
   fun z =>

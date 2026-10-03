@@ -31,7 +31,7 @@ Acceptance gates of Unit 0 (all in this file or its Core companion):
 No semantics and no inseparability notions appear in Unit 0.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

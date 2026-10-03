@@ -32,7 +32,7 @@ coordinate identification follows unconditionally
 (`exists_coordinates_of_snake`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -53,6 +53,7 @@ def formOddMap {V : SuperVect}
 
 /-- The even component of a copairing morphism `𝟙 ⟶ V ⊗ V`, with
 its domain and codomain presented in reduced form. -/
+@[expose]
 def formCoevMap {V : SuperVect}
     (C : SuperVect.Hom SuperVect.tensorUnit (SuperVect.tensorObj V V)) :
     ℂ →ₗ[ℂ] ((V.even ⊗[ℂ] V.even) × (V.odd ⊗[ℂ] V.odd)) :=

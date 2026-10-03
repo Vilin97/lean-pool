@@ -14,7 +14,7 @@ This module iterates the two-sided quantitative successor. Window centres are
 read from a recurrent sequence and all three quantitative parameters use a dyadic scale.
 -/
 
-@[expose] public section
+public section
 
 open Filter Metric Set
 
@@ -91,13 +91,13 @@ noncomputable def scheduledQuantitativeSuccessor
       (dyadicTargetBound_pos n))
 
 /-- The recursively chosen generated pairs. -/
-noncomputable def quantitativeStage : ℕ →
+@[expose] noncomputable def quantitativeStage : ℕ →
     GeneratedPair S₀ C (C ∪ inside C) modelCurve (Plane.closedSquare 0 1) :=
   fun n => Nat.rec P₀
     (fun k P => (scheduledQuantitativeSuccessor hC hcycle q k P).pair) n
 
 @[simp] theorem quantitativeStage_zero :
-    quantitativeStage P₀ hC hcycle q 0 = P₀ := rfl
+    quantitativeStage P₀ hC hcycle q 0 = P₀ := by exact rfl
 
 @[simp] theorem quantitativeStage_succ (n : ℕ) :
     quantitativeStage P₀ hC hcycle q (n + 1) =
@@ -247,7 +247,7 @@ theorem tendsto_quantitativeStage_diam_sourceStar
 
 /-- The complete quantitative recursion, in the exact interface consumed by the limit-map
 construction. -/
-noncomputable def quantitativeStageSequence
+@[expose] noncomputable def quantitativeStageSequence
     (hbase : S₀.CombInvariants) (hdense : q.CentresDense) :
     StageSequence γ S₀ C where
   stage := quantitativeStage P₀ hC hcycle q
@@ -264,7 +264,7 @@ noncomputable def quantitativeStageSequence
 
 /-- The recursion with its canonical dense schedule.  No convergence hypothesis remains in
 this interface. -/
-noncomputable def denseQuantitativeStageSequence (hbase : S₀.CombInvariants) :
+@[expose] noncomputable def denseQuantitativeStageSequence (hbase : S₀.CombInvariants) :
     StageSequence γ S₀ C :=
   quantitativeStageSequence P₀ hC hcycle (denseQuantitativeSchedule hC) hbase
     (denseQuantitativeSchedule_centresDense hC)

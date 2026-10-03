@@ -30,7 +30,7 @@ The harmonic representation of `Trajectory/HarmonicRepresentation.lean` reads, i
 (`integral_exitLawTrunc_eq_of_generator_eq_zero`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal ZeroAtInfty

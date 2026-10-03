@@ -22,14 +22,14 @@ ideal (x^2-yz). It is a two-dimensional Noetherian complete local
 domain with a height-one prime Q = (x,y) that is not principal.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 open MvPowerSeries in
 /-- Q = (x, y)T, the height-1 prime that is not principal.
 Here x = image of X 0, y = image of X 1 in T. -/
-def Q : Ideal T :=
+@[expose] def Q : Ideal T :=
   Ideal.span {Ideal.Quotient.mk conjI (X 0), Ideal.Quotient.mk conjI (X 1)}
 
 /-- Ring hom from MvPowerSeries (Fin 3) ℂ to PowerSeries ℂ that "projects onto X₂":

@@ -15,7 +15,7 @@ Shared definitions for the cycle sums: the fibre counts of
 a function `Fin n → Fin N` and its content multiset.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -24,11 +24,13 @@ open Finset
 variable {n N : ℕ}
 
 /-- The size of the fibre of a colouring over a colour. -/
+@[expose]
 noncomputable def fibreCard (f : Fin n → Fin N) (j : Fin N) : ℕ := by
   classical
   exact (Finset.univ.filter (fun i => f i = j)).card
 
 /-- The content of a colouring: the multiset of its values. -/
+@[expose]
 def content (f : Fin n → Fin N) : Sym (Fin N) n :=
   ⟨Finset.univ.val.map f, by
     rw [Multiset.card_map]

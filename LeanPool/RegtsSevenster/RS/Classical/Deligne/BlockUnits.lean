@@ -29,7 +29,7 @@ rank-one projections attached to a basis of the carrier
 (`basisProj`) pull back to the required family of units.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

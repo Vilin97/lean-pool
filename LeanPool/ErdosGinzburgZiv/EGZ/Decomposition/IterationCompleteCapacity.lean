@@ -18,7 +18,7 @@ return. A finite family of such events therefore has cardinality bounded by
 the initial node population.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

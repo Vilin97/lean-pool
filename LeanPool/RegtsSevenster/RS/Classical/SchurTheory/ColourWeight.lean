@@ -20,7 +20,7 @@ weighted permutation sum as a sum of stabilizer weights over the
 class.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -103,6 +103,7 @@ theorem card_colourClass (α : Fin N → ℕ)
 open scoped Classical in
 /-- The permutation character of the colour class `α`: the number
 of colourings with fibre sizes `α` fixed by `π`. -/
+@[expose]
 noncomputable def colourChar (α : Fin N → ℕ)
     (π : Equiv.Perm (Fin n)) : ℕ :=
   (Finset.univ.filter

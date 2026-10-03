@@ -22,7 +22,7 @@ public import Mathlib.Algebra.Group.PUnit
   semigroup homomorphism, then `S` divides `W`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 

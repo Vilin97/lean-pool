@@ -20,7 +20,7 @@ kernel-checked validity.  Exhaustiveness is proved separately by
 `LowGenus.GenusFourCanonicalClassifier`.
 -/
 
-@[expose] public section
+public section
 namespace AtanasovRanganathan.GenusFourCubicAtlas
 
 open Utilities.Certificate
@@ -44,36 +44,42 @@ catalog from which these six terminal loopless cubic rows were extracted. -/
 
 /-- The six-vertex cubic core for genus-four atlas row 095, with oriented slots `0→4, 0→5, 0→5,
 1→3, 1→4, 1→5, 2→3, 2→3, 2→4` in index order. -/
+@[expose]
 def row095Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 2]
   head := ![4, 5, 5, 3, 4, 5, 3, 3, 4]
 
 /-- The six-vertex cubic core for genus-four atlas row 096, with oriented slots `0→4, 0→5, 0→5,
 1→3, 1→4, 1→4, 2→3, 2→3, 2→5` in index order. -/
+@[expose]
 def row096Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 2]
   head := ![4, 5, 5, 3, 4, 4, 3, 3, 5]
 
 /-- The six-vertex cubic core for genus-four atlas row 097, with oriented slots `0→4, 0→5, 0→5,
 1→2, 1→3, 1→5, 2→3, 2→4, 3→4` in index order. -/
+@[expose]
 def row097Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 3]
   head := ![4, 5, 5, 2, 3, 5, 3, 4, 4]
 
 /-- The six-vertex cubic core for genus-four atlas row 098, with oriented slots `0→4, 0→5, 0→5,
 1→2, 1→3, 1→4, 2→3, 2→3, 4→5` in index order. -/
+@[expose]
 def row098Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 4]
   head := ![4, 5, 5, 2, 3, 4, 3, 3, 5]
 
 /-- The six-vertex cubic core for genus-four atlas row 099, with oriented slots `0→3, 0→4, 0→5,
 1→3, 1→4, 1→5, 2→3, 2→4, 2→5` in index order. -/
+@[expose]
 def row099Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 2]
   head := ![3, 4, 5, 3, 4, 5, 3, 4, 5]
 
 /-- The six-vertex cubic core for genus-four atlas row 100, with oriented slots `0→3, 0→4, 0→5,
 1→2, 1→4, 1→5, 2→3, 2→5, 3→4` in index order. -/
+@[expose]
 def row100Core : Core 6 9 where
   tail := ![0, 0, 0, 1, 1, 1, 2, 2, 3]
   head := ![3, 4, 5, 2, 4, 5, 3, 5, 4]
@@ -122,30 +128,37 @@ private theorem row100_cubic : row100Core.Cubic := by
 
 /-- Genus-four atlas row 095, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row095 : Row := ⟨row095Core, by exact row095_loopless,
   by exact connected row095Core (by decide +kernel), by exact row095_cubic⟩
 /-- Genus-four atlas row 096, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row096 : Row := ⟨row096Core, by exact row096_loopless,
   by exact connected row096Core (by decide +kernel), by exact row096_cubic⟩
 /-- Genus-four atlas row 097, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row097 : Row := ⟨row097Core, by exact row097_loopless,
   by exact connected row097Core (by decide +kernel), by exact row097_cubic⟩
 /-- Genus-four atlas row 098, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row098 : Row := ⟨row098Core, by exact row098_loopless,
   by exact connected row098Core (by decide +kernel), by exact row098_cubic⟩
 /-- Genus-four atlas row 099, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row099 : Row := ⟨row099Core, by exact row099_loopless,
   by exact connected row099Core (by decide +kernel), by exact row099_cubic⟩
 /-- Genus-four atlas row 100, packaging its concrete core with proofs that it is loopless,
 connected, and cubic. -/
+@[expose]
 def row100 : Row := ⟨row100Core, by exact row100_loopless,
   by exact connected row100Core (by decide +kernel), by exact row100_cubic⟩
 
 /-- The exact atlas order used by the emitted canonical-classifier payload. -/
+@[expose]
 def atlas : List Row := [row095, row096, row097, row098, row099, row100]
 
 @[simp] theorem atlas_length : atlas.length = 6 := by

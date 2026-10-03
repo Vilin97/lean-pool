@@ -20,7 +20,7 @@ bounded velocity and Grönwall estimate will give joint continuity in both
 times and the initial point.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,7 +61,7 @@ theorem curve_exists (s : ℝ) (x : E) :
   simpa only [Function.comp_def, id_eq, sub_add_cancel, one_smul] using h
 
 /-- Flow, given by `(V.curve_exists s x).choose t`. -/
-def flow (s t : ℝ) (x : E) : E := (V.curve_exists s x).choose t
+@[expose] def flow (s t : ℝ) (x : E) : E := (V.curve_exists s x).choose t
 
 @[simp] theorem flow_initial (s : ℝ) (x : E) : V.flow s s x = x :=
   (V.curve_exists s x).choose_spec.1

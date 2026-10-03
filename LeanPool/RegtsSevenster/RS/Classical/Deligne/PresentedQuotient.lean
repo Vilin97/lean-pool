@@ -50,7 +50,7 @@ of a countably presented ind-object is of at most countable dimension
 any of its quotients (`RS.rank_hom_unit_le_aleph0_of_epi`).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -117,6 +117,7 @@ variable {C : Type v}
 
 /-- A compatible family of maps into a fixed object, read as a
 diagram in the arrow category. -/
+@[expose]
 noncomputable def arrowDiagram
     [SmallCategory C] {I : Type v} [SmallCategory I] {D : I ⥤ Ind C}
     {Q : Ind C}
@@ -137,6 +138,7 @@ noncomputable def arrowDiagram
 
 /-- **The diagram of images** of a compatible family of maps into a
 fixed object. -/
+@[expose]
 noncomputable def imageDiag
     [SmallCategory C] [Abelian C] {I : Type v} [SmallCategory I]
     {D : I ⥤ Ind C} {Q : Ind C}

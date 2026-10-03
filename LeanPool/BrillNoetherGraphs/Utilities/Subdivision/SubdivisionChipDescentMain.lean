@@ -18,7 +18,7 @@ The vertex inequalities for the rounded script, and the descent theorems
 the overall argument.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph.Spec
 

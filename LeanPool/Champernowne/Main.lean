@@ -13,7 +13,7 @@ public import LeanPool.Champernowne.Asymptotics
 The base-`b` Champernowne sequence is normal in base `b`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 

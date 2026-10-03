@@ -36,7 +36,7 @@ For a field extension `K ⊆ K'` (an arbitrary `[Algebra K K']` between fields) 
 All statements are generic in `[Algebra K K']`; they are applied with `K' = RatFunc K` in TR7.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

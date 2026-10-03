@@ -25,7 +25,7 @@ slots, increasing the outgoing endpoint contributions preserves effectivity.
 This isolates the graph bookkeeping from the integer rounding argument.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DiscreteSpecialization
 
@@ -230,6 +230,7 @@ open Utilities.CommonOffsetRounding
 variable {n p : ℕ}
 
 /-- The positive graph used to prove a specified contraction face. -/
+@[expose]
 def stretch (d : DegSpec n p) (N : ℕ) (hN : 0 < N)
     (hLoopless : ∀ e, d.core.tail e ≠ d.core.head e) : Spec n p where
   core := d.core

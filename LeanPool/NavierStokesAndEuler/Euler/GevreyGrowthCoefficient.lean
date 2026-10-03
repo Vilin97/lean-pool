@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Star.Real
 /-! Actual metric-energy growth coefficients bounded uniformly for artificial viscosities at most
 one. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,12 +26,13 @@ open scoped Topology
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- The viscosity-uniform constant part of the actual metric growth coefficient. -/
+@[expose]
 def growthBase (K : SmoothCoefficient period) (K' : LiftL2 period →L[ℝ] LiftL2 period) (c : ℝ) : ℝ
     :=
   (‖K'‖+2*heatEnergyConstant period K c)/(2*c^2)
 
 /-- The exact slope of the actual metric growth coefficient with respect to the velocity bound. -/
-def growthSlope (K : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) : ℝ :=
+@[expose] def growthSlope (K : SmoothCoefficient period) (κ : ℝ) (m : Vector3) (c : ℝ) : ℝ :=
   (K.firstBound : ℝ)*(|κ|+‖m‖)/(2*c^2)
 
 theorem growthBase_nonneg (K : SmoothCoefficient period) (K' : LiftL2 period →L[ℝ] LiftL2 period)

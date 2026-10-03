@@ -31,7 +31,7 @@ most one containing a line ideal is that line ideal), proved unconditionally in
 combinatorial input is the injectivity of `e ↦ P.lineIdeal e` (node F05).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

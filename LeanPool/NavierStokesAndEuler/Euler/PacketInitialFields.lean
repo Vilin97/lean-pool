@@ -21,7 +21,7 @@ section
 word bound. Restoring a time weight uses its value at that time, retaining
 the source's initial alpha factor. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -33,11 +33,11 @@ variable {K E : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Freeze path, given by `(ContinuousLinearMap.const ℝ K).comp (ContinuousMap.evalCLM ℝ t)`. -/
-def freezePath (t : K) : C(K,E) →L[ℝ] C(K,E) :=
+@[expose] def freezePath (t : K) : C(K,E) →L[ℝ] C(K,E) :=
   (ContinuousLinearMap.const ℝ K).comp (ContinuousMap.evalCLM ℝ t)
 
 omit [CompactSpace K] in
-@[simp] theorem freezePath_apply (t s : K) (p : C(K, E)) : freezePath t p s = p t := rfl
+@[simp] theorem freezePath_apply (t s : K) (p : C(K, E)) : freezePath t p s = p t := by rfl
 
 theorem freezePath_norm (t : K) : ‖freezePath (E := E) t‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
@@ -65,7 +65,7 @@ theorem freezePath_translate (t : Icc (0 : ℝ) T) (p : C(Icc (0 : ℝ) T, LiftL
   rfl
 
 /-- Freeze, constructed using `ofLifted`. -/
-def freeze (G : Field P T raw) (t : Icc (0 : ℝ) T) :
+@[expose] def freeze (G : Field P T raw) (t : Icc (0 : ℝ) T) :
     Field P T (fun z => raw (t,z.2)) :=
   ofLifted (freezePath t G.path)
     (by
@@ -81,7 +81,7 @@ def freeze (G : Field P T raw) (t : Icc (0 : ℝ) T) :
     (fun _ x θ => G.raw_eq t x θ)
 
 @[simp] theorem freeze_path (G : Field P T raw) (t : Icc (0 : ℝ) T) :
-    (G.freeze t).path = freezePath t G.path := rfl
+    (G.freeze t).path = freezePath t G.path := by rfl
 
 theorem WordBound.freeze {G : Field P T raw} {q d : ℕ} {R A : ℝ}
     (hG : G.WordBound q R A d) (t : Icc (0 : ℝ) T) :
@@ -147,7 +147,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -157,23 +157,24 @@ open Set Finset EulerSmoothLimit EulerPacketProfileRecursion EulerPacketPointJet
   EulerPacketCylinderField EulerFiniteGrades
 
 /-- Time slice, defined pointwise by `f (t,z.2)`. -/
-def timeSlice (t : ℝ) (f : VectorField) : VectorField := fun z => f (t,z.2)
+@[expose] def timeSlice (t : ℝ) (f : VectorField) : VectorField := fun z => f (t,z.2)
 
 /-- High grade, given by `assemble N (fun i => timeSlice t (a i).high) (fun i => timeSlice t (a
 i).corrector)`. -/
+@[expose]
 def highGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
   assemble N (fun i => timeSlice t (a i).high) (fun i => timeSlice t (a i).corrector)
 
 /-- Mean grade, given by `truncate N (fun i => timeSlice t (a i).mean)`. -/
-def meanGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
+@[expose] def meanGrade (N : ℕ) (t : ℝ) (a : ℕ → Profile) : ℕ → VectorField :=
   truncate N (fun i => timeSlice t (a i).mean)
 
 /-- High, given by `fieldSum (N+1) κ (highGrade N t a)`. -/
-def high (N : ℕ) (κ t : ℝ) (a : ℕ → Profile) : VectorField :=
+@[expose] def high (N : ℕ) (κ t : ℝ) (a : ℕ → Profile) : VectorField :=
   fieldSum (N+1) κ (highGrade N t a)
 
 /-- Mean, given by `fieldSum (N+1) κ (meanGrade N t a)`. -/
-def mean (N : ℕ) (κ t : ℝ) (a : ℕ → Profile) : VectorField :=
+@[expose] def mean (N : ℕ) (κ t : ℝ) (a : ℕ → Profile) : VectorField :=
   fieldSum (N+1) κ (meanGrade N t a)
 
 theorem high_eq (N : ℕ) (κ t : ℝ) (a : ℕ → Profile) :
@@ -206,24 +207,24 @@ variable {P T : ℝ} [Fact (0 < P)] {hT : 0 ≤ T} {N : ℕ}
 
 /-- High grade field, given by `Field.assembleFamily N _ _ (fun i hi => (G i hi).high.freeze t)
 (fun i hi => (G i hi).corrector.freeze t) n`. -/
-def highGradeField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
+@[expose] def highGradeField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
     (t : Icc (0 : ℝ) T) (n : ℕ) : Field P T (highGrade N t a n) :=
   Field.assembleFamily N _ _ (fun i hi => (G i hi).high.freeze t)
     (fun i hi => (G i hi).corrector.freeze t) n
 
 /-- Mean grade field, given by `Field.truncateFamily N _ (fun i hi => (G i hi).mean.freeze t)
 n`. -/
-def meanGradeField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
+@[expose] def meanGradeField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
     (t : Icc (0 : ℝ) T) (n : ℕ) : Field P T (meanGrade N t a n) :=
   Field.truncateFamily N _ (fun i hi => (G i hi).mean.freeze t) n
 
 /-- High field, given by `Field.evaluateFamily (N+1) κ _ (highGradeField G t)`. -/
-def highField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
+@[expose] def highField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
     (t : Icc (0 : ℝ) T) (κ : ℝ) : Field P T (high N κ t a) :=
   Field.evaluateFamily (N+1) κ _ (highGradeField G t)
 
 /-- Mean field, given by `Field.evaluateFamily (N+1) κ _ (meanGradeField G t)`. -/
-def meanField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
+@[expose] def meanField (G : ∀ i, i ≤ N → ProfileRegularity P T hT support (a i))
     (t : Icc (0 : ℝ) T) (κ : ℝ) : Field P T (mean N κ t a) :=
   Field.evaluateFamily (N+1) κ _ (meanGradeField G t)
 

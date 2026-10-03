@@ -9,7 +9,7 @@ public import LeanPool.Erdos97ConvexOctagon.Basic
 
 /-! # Erdős 97 convex-octagon formalization: Gram -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 

@@ -18,7 +18,7 @@ observation. The resulting conditional kernel is one jointly measurable version.
 with separately chosen fixed-parameter conditional versions is asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -32,6 +32,7 @@ section
 variable {Theta D alpha : Type*} [MeasurableSpace Theta] [MeasurableSpace alpha]
 
 /-- The jointly parameterized law of an `n`-prefix and its next enumerated observation. -/
+@[expose]
 def parameterizedNextObservationJoint
     (P : ParameterizedSubMarkovKernelSemigroup Theta alpha) (e : ℕ ≃ D)
     (iota : D ↪ NNReal) (n : ℕ) :

@@ -20,7 +20,7 @@ profile. All differentiated kernels and their integrable majorants are
 derived from that extension.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,7 +43,7 @@ variable {α : Type*} [MeasurableSpace α] {μ : Measure α} {J : ℕ → ℝ �
 
 /-- Chain dominated, given by `∀ n L, 0 < L → ∃ b : α → ℝ, Integrable b μ ∧ ∀ᵐ t ∂μ, ∀ ν : ℝ,
 |ν| ≤ L → ‖J n ν t‖ ≤ b t`. -/
-noncomputable def ChainDominated (J : ℕ → ℝ → α → ℝ) (μ : Measure α) : Prop :=
+@[expose] noncomputable def ChainDominated (J : ℕ → ℝ → α → ℝ) (μ : Measure α) : Prop :=
   ∀ n L, 0 < L → ∃ b : α → ℝ, Integrable b μ ∧
     ∀ᵐ t ∂μ, ∀ ν : ℝ, |ν| ≤ L → ‖J n ν t‖ ≤ b t
 
@@ -95,20 +95,20 @@ end IntegralChain
 /-! ## The actual extended edit and all its diffusion derivatives -/
 
 /-- Correction, given by `switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)`. -/
-noncomputable def correction (h K ν X : ℝ) : ℝ :=
+@[expose] noncomputable def correction (h K ν X : ℝ) : ℝ :=
   switch K X * (HeatProfileExtension.scaledProfile (1 + h) X ν - 1)
 
 /-- Multiplier, given by `1 + correction h K ν X`. -/
-noncomputable def multiplier (h ν K X : ℝ) : ℝ := 1 + correction h K ν X
+@[expose] noncomputable def multiplier (h ν K X : ℝ) : ℝ := 1 + correction h K ν X
 
 /-- Edit, given by `E X * multiplier h ν K X`. -/
-noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := E X * multiplier h ν K X
+@[expose] noncomputable def edit (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := E X * multiplier h ν K X
 
 /-- Change, given by `edit E h ν K X - E X`. -/
-noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := edit E h ν K X - E X
+@[expose] noncomputable def change (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ := edit E h ν K X - E X
 
 /-- Square change, given by `edit E h ν K X ^ 2 - E X ^ 2`. -/
-noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
+@[expose] noncomputable def squareChange (E : ℝ → ℝ) (h ν K X : ℝ) : ℝ :=
   edit E h ν K X ^ 2 - E X ^ 2
 
 /-- Correction jet, given by `iteratedDeriv n (fun u => correction h K u X) ν`. -/
@@ -140,7 +140,7 @@ theorem correctionJet_hasDerivAt {h : ℝ} (hh : 0 < h) (K X : ℝ) (n : ℕ) (�
     (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n) ν
   simpa only [correctionJet, iteratedDeriv_succ] using hd.hasDerivAt
 
-theorem correctionJet_zero (h K ν X : ℝ) : correctionJet h K 0 ν X = correction h K ν X := rfl
+theorem correctionJet_zero (h K ν X : ℝ) : correctionJet h K 0 ν X = correction h K ν X := by rfl
 
 theorem correctionJet_succ {h : ℝ} (hh : 0 < h) (K X ν : ℝ) (n : ℕ) :
     correctionJet h K (n + 1) ν X = switch K X * (2 / X) ^ (n + 1) *
@@ -274,7 +274,7 @@ theorem squareCorrectionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
     _ = _ := by unfold squareCorrectionBound; ring
 
 /-- Edit jet, with branches according to `square`. -/
-noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
+@[expose] noncomputable def editJet (square : Bool) (h K : ℝ) (n : ℕ) (ν X : ℝ) : ℝ :=
   if square then squareCorrectionJet h K n ν X else correctionJet h K n ν X
 
 /-- Edit bound, with branches according to `square`. -/
@@ -463,22 +463,22 @@ theorem nuDebtJet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
   ring
 
 /-- The literal extended outgoing edit. -/
-noncomputable def physicalEdit (d : TailData) (K η X : ℝ) : ℝ :=
+@[expose] noncomputable def physicalEdit (d : TailData) (K η X : ℝ) : ℝ :=
   edit (outgoingProfile d K η) d.h (diffusion η) K X
 
 /-- Physical pressure, given by `∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h
 (diffusion η) K X / X`. -/
-noncomputable def physicalPressure (d : TailData) (K η : ℝ) : ℝ :=
+@[expose] noncomputable def physicalPressure (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion η) K X / X
 
 /-- Physical energy, given by `∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion
 η) K X`. -/
-noncomputable def physicalEnergy (d : TailData) (K η : ℝ) : ℝ :=
+@[expose] noncomputable def physicalEnergy (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, squareChange (outgoingProfile d K η) d.h (diffusion η) K X
 
 /-- Physical angular, given by `∫ X in Ioi K, Real.sqrt (2 * X) * change (outgoingProfile d K η)
 d.h (diffusion η) K X`. -/
-noncomputable def physicalAngular (d : TailData) (K η : ℝ) : ℝ :=
+@[expose] noncomputable def physicalAngular (d : TailData) (K η : ℝ) : ℝ :=
   ∫ X in Ioi K, Real.sqrt (2 * X) * change (outgoingProfile d K η) d.h (diffusion η) K X
 
 theorem physicalPressure_eq (d : TailData) {K : ℝ} (hK : 0 < K) (η : ℝ) :
@@ -664,7 +664,7 @@ theorem physicalAngular_joint_contDiffOn (d : TailData) :
 /-! ## Uniform estimates on a fixed enlarged physical band -/
 
 /-- Enlarged band, given by `Icc (-(3 / 2 : ℝ)) (3 / 2)`. -/
-noncomputable def enlargedBand : Set ℝ := Icc (-(3 / 2 : ℝ)) (3 / 2)
+@[expose] noncomputable def enlargedBand : Set ℝ := Icc (-(3 / 2 : ℝ)) (3 / 2)
 
 theorem physicalBand_subset_enlargedBand : Icc (-1 : ℝ) 1 ⊆ enlargedBand := by
   intro η hη
@@ -826,11 +826,11 @@ theorem exists_physical_debt_C1_bounds (d : TailData) :
 
 /-- Physical debt, given by `![physicalPressure d K η, physicalEnergy d K η, physicalAngular d K
 η]`. -/
-noncomputable def physicalDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
+@[expose] noncomputable def physicalDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
   ![physicalPressure d K η, physicalEnergy d K η, physicalAngular d K η]
 
 /-- Normalized debt, given by `TerminalCompensation.scaledDebt K (physicalDebt d K η)`. -/
-noncomputable def normalizedDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
+@[expose] noncomputable def normalizedDebt (d : TailData) (K η : ℝ) : TerminalCompensation.Coeff :=
   TerminalCompensation.scaledDebt K (physicalDebt d K η)
 
 theorem normalizedDebt_contDiff (d : TailData) {K : ℝ} (hK : 1 ≤ K) :

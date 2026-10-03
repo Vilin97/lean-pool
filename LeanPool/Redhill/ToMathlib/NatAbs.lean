@@ -13,7 +13,7 @@ import Mathlib.Data.Int.Order.Basic
 # Lemmas on `Int.natAbs`
 -/
 
-@[expose] public section
+public section
 
 
 lemma Int.sub_le_add_natAbs {a b : ℤ} : a.natAbs - b.natAbs ≤ (a + b).natAbs := by lia

@@ -30,7 +30,7 @@ triangulation level.  The original generic prism assignment is then a relative p
 those two boundary maps fixed by construction; no second generic perturbation is required.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -71,6 +71,7 @@ instance : Fintype EndpointSide where
 namespace EndpointSide
 
 /-- Numerical time attached to an endpoint side. -/
+@[expose]
 def time : EndpointSide → Real
   | lower => 0
   | upper => 1
@@ -474,6 +475,7 @@ theorem endpointInterpolant_regular
 
 /-- Strong skeleton transversality: no deviation-zero point lies on the boundary of a refined top
 simplex, without imposing a sign condition on the common coordinate mean. -/
+@[expose]
 def DeviationSkeletonFree
     (hp : Nat.Prime p) (N : Nat) (F : ContinuousCoordinateMap p) : Prop :=
   ∀ (q : TopCell hp N) (w : StandardSimplex (p - 1)),
@@ -666,6 +668,7 @@ noncomputable def Result.upperStableApproximation
 
 /-- An assignment is relative to two endpoint approximations when its horizontal samples agree
 exactly with their sampled maps. -/
+@[expose]
 def BoundaryFixed
     (hp : Nat.Prime p) (N L : Nat)
     {F₀ F₁ : ZeroFreeMap hp}

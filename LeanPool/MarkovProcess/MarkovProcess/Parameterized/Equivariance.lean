@@ -35,7 +35,7 @@ No scaling limit and no ergodic statement is asserted: the environment map `g`, 
 and both families are given in advance, and nothing is claimed about the law of the environment.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -17,7 +17,7 @@ tensor of the vertex-star class with the tail, composed with the
 sum cast.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

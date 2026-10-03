@@ -26,7 +26,7 @@ Tags: distributed-computing, graph-coloring, randomized-algorithms, formal-verif
 MSC: 68W15, 05C15
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

@@ -9,7 +9,7 @@ public import LeanPool.Zeta32.Arith.Local.Val
 /-! `VG.ratDen`, formerly only in the duplicate `Arith/Small/Val.lean`
 (adapted from dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/Valuation.lean). -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

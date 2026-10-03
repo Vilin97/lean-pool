@@ -51,7 +51,7 @@ ledger of `PathLedger.lean`, whose statements weigh the summand by
 the boundary pairing's chord sign.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

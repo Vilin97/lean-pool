@@ -48,7 +48,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.AX1.CoreGapPrune
 
 /-! # CoreGapPruneLocal -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 
@@ -206,7 +206,7 @@ end
 
 /-! # CoreGapDesignLocal -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -216,11 +216,13 @@ variable {V : Type} [Fintype V] [DecidableEq V]
 
 /-- The support size `|A| + |B| + |C|` of a sub-triple: the localised replacement for `|V|` in the
 exceptional-edge clause of a design. -/
+@[expose]
 noncomputable def designSupport (A B C : Finset V) : ℝ := (#A : ℝ) + (#B : ℝ) + (#C : ℝ)
 
 /-- **A local sub-triple design.**  The shape of `Nibble.AX1.IsSubTripleShape` together with the
 global clauses, the exceptional-edge clause now being charged against the *support* of the
 sub-triple rather than against the whole vertex set. -/
+@[expose]
 def IsSubTripleDesignLocal (G : SimpleGraph V) [DecidableRel G.Adj] (ε μ η d₀ ε₂ μ₂ t : ℝ) (k : ℕ)
     (A B C : ℕ → Finset V) (d Elo : ℕ → ℝ) : Prop :=
   IsSubTripleShape G ε₂ μ₂ k A B C d ∧
@@ -324,7 +326,7 @@ end
 
 /-! # CoreGapGridResidual -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -379,7 +381,7 @@ end
 
 /-! # CoreGapGridLocalResidual -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph Hypergraph Nibble.YusterE
 
@@ -388,6 +390,7 @@ namespace Nibble.AX1
 /-- **The local design form of the reduced residual at parameters `(ε, μ, η, d₀)` and regularity
 scale `ε₁`**: every triangle-rich regularity-reduced graph carries a sub-triple design in the sense
 of `Nibble.AX1.IsSubTripleDesignLocal`. -/
+@[expose]
 def SubTripleDesignLocalAt (ε μ η d₀ ε₁ : ℝ) : Prop :=
   ∃ n₀ : ℕ, ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj]
     (P : Finpartition (univ : Finset V)),
@@ -404,6 +407,7 @@ def SubTripleDesignLocalAt (ε μ η d₀ ε₁ : ℝ) : Prop :=
 
 /-- **The local design residual**: a local sub-triple design at every window of parameters, for
 some regularity scale `ε₁` as small as one likes. -/
+@[expose]
 def SubTripleDesignLocalResidual : Prop :=
   ∀ ε : ℝ, 0 < ε → ∀ μ : ℝ, 0 < μ → ∀ η : ℝ, 0 < η → ∀ d₀ : ℝ, 0 < d₀ →
     ∃ ε₁ : ℝ, 0 < ε₁ ∧ ε₁ ≤ ε ∧ ε₁ ≤ 1 ∧ SubTripleDesignLocalAt ε μ η d₀ ε₁

@@ -20,7 +20,7 @@ Incidence validity and dual connectivity then pass to the resulting
 `FiniteCyclicPresentation`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -29,6 +29,7 @@ namespace ClassificationOfSurfaces
 namespace SurfaceCellComplex
 
 /-- Oriented triangulation edges and signed cell-complex darts carry the same data. -/
+@[expose]
 def orientedEdgeSignedDartEquiv {Edge : Type*} :
     OrientedEdge Edge ≃ SignedDart Edge where
   toFun := signedDartOfOrientedEdge
@@ -59,7 +60,7 @@ open SurfaceCellComplex
 variable {S : Type*} [TopologicalSpace S]
 
 /-- Relabel an oriented triangulation edge by a signed `Fin` edge name. -/
-noncomputable def finiteCyclicDartEquiv (T : FiniteSurfaceTriangulation S) :
+@[expose] noncomputable def finiteCyclicDartEquiv (T : FiniteSurfaceTriangulation S) :
     OrientedEdge T.Edge ≃ SignedDart (Fin (Fintype.card T.Edge)) :=
   SurfaceCellComplex.orientedEdgeSignedDartEquiv.trans
     (SignedDart.mapEquiv (Fintype.equivFin T.Edge))
@@ -73,7 +74,7 @@ theorem edgeOfDart_finiteCyclicDartEquiv
 
 /-- Enumerate the faces and unoriented edges of a finite triangulation and retain its cyclic
 signed triangle boundaries. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def toFiniteCyclicPresentation (T : FiniteSurfaceTriangulation S) :
     FiniteCyclicPresentation where
   edgeCount := Fintype.card T.Edge
@@ -101,7 +102,7 @@ theorem edgeOfDart_finiteCyclicDartEquiv_eq_edgeEquiv
   exact T.edgeOfDart_finiteCyclicDartEquiv d
 
 /-- The original triangles are equivalent to positions in the presentation's face list. -/
-noncomputable def finiteCyclicFaceEquiv (T : FiniteSurfaceTriangulation S) :
+@[expose] noncomputable def finiteCyclicFaceEquiv (T : FiniteSurfaceTriangulation S) :
     T.Triangle ≃ T.toFiniteCyclicPresentation.Face :=
   (Fintype.equivFin T.Triangle).trans
     (Fin.castOrderIso T.toFiniteCyclicPresentation_faces_length.symm).toEquiv
@@ -167,7 +168,7 @@ theorem toFiniteCyclicPresentation_boundary_faceEquiv_get
 
 /-- Original triangle-boundary positions are canonically the boundary occurrences of the
 enumerated cyclic presentation. -/
-noncomputable def finiteCyclicOccurrenceEquiv (T : FiniteSurfaceTriangulation S) :
+@[expose] noncomputable def finiteCyclicOccurrenceEquiv (T : FiniteSurfaceTriangulation S) :
     T.BoundaryPosition ≃
       (Σ f : T.toFiniteCyclicPresentation.Face,
         Fin (T.toFiniteCyclicPresentation.boundary f).length) :=
@@ -430,7 +431,7 @@ namespace GeometricTriangulation
 variable {S : Type*} [TopologicalSpace S]
 
 /-- The finite cyclic presentation underlying a geometric triangulation. -/
-@[reducible] noncomputable def toFiniteCyclicPresentation (T : GeometricTriangulation S) :
+@[expose, reducible] noncomputable def toFiniteCyclicPresentation (T : GeometricTriangulation S) :
     FiniteCyclicPresentation :=
   T.toFiniteSurfaceTriangulation.toFiniteCyclicPresentation
 
@@ -474,6 +475,7 @@ variable [IsManifold (modelWithCornersEuclideanHalfSpace 2) 0 S]
 
 /-- The named finite cyclic presentation obtained by enumerating the Radó triangulation of a
 compact connected Eval surface. -/
+@[expose]
 noncomputable def compactEvalSurfaceFiniteCyclicPresentation :
     FiniteCyclicPresentation :=
   (compactEvalSurfaceGeometricTriangulation S).toFiniteCyclicPresentation

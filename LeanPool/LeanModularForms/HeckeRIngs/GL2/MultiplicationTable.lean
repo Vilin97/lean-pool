@@ -38,7 +38,7 @@ Degree formulas (identities 6--7) are in `GL2.Degree`.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, Theorem 3.24
 -/
 
-@[expose] public section
+public section
 
 open HeckeRing HeckeRing.GLn HeckeRing.GL2
 open scoped ArithmeticFunction.sigma
@@ -102,7 +102,8 @@ private theorem HA_mul_assoc (a b c : HeckeAlgebra 2) :
 
 private theorem HA_mul_comm (a b : HeckeAlgebra 2) :
     a * b = b * a :=
-  (instCommRingHeckeAlgebra (n := 2)).mul_comm a b
+  (GLPairAntiInvolution 2).mul_comm_of_antiInvolution
+    (GL_pair_onHeckeCoset_eq 2) a b
 
 end HeckeAlgRing
 
@@ -998,7 +999,7 @@ theorem T_sum_mul_coprime (m n : ℕ+) (hcop : Nat.Coprime m n) :
 end CoprimeMultiplicativity
 
 /-- TSum extended to ℕ: agrees with `TSum` for positive arguments, zero for 0. -/
-noncomputable def TSumNat (k : ℕ) : HeckeAlgebra 2 :=
+@[expose] noncomputable def TSumNat (k : ℕ) : HeckeAlgebra 2 :=
   ∑ a ∈ k.divisors, TAd a (k / a)
 
 /-- `TSumNat` agrees with `TSum` on positive naturals. -/

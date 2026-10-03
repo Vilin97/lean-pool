@@ -67,7 +67,7 @@ boundary, a number in `[0, 8r)`.  It is affine on each side, and it is the order
   `lem:polygonal-overlay`'s cut points into an ordered cycle.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -817,7 +817,7 @@ theorem missing from `main` — "the subdivision of a segment at a finite point 
 that blocks `prop:anchored-square-mesh` from being carried over to `Schoenflies.squareMesh`. -/
 
 /-- The edges of an overlay lying inside one of its source segments. -/
-def insideEdges (pieces : List Piece) (points : List Plane) (P₀ : Piece) : Set Piece :=
+@[expose] def insideEdges (pieces : List Piece) (points : List Plane) (P₀ : Piece) : Set Piece :=
   {Q | Q ∈ overlayPieces pieces points ∧ Q.seg ⊆ P₀.seg}
 
 /-- **The edges inside one source segment tile it.**  Every clause is a property of the

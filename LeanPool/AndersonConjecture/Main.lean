@@ -32,7 +32,7 @@ Anderson's theorems
 reduce the problem to a quotient that fails weak quasi-completeness.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

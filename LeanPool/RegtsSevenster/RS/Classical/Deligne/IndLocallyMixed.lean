@@ -19,7 +19,7 @@ makes it a mixed sum of the unit and the odd line after base change
 to some nonzero commutative algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

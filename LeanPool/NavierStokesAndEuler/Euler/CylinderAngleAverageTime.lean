@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderAngleAverageRepresentative
 
 /-! Actual angular means of the reconstructed continuous-time cylinder fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

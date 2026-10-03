@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketFiniteSumBounds
 
 /-! Removing the literal leading coefficient before bounding the packet remainder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

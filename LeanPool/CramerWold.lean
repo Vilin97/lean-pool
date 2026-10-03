@@ -20,7 +20,7 @@ Tags: probability, measure-theory, characteristic-functions, cramer-wold
 MSC: 60B11, 60E10, 28A33
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

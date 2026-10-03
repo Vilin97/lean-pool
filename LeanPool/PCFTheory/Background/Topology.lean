@@ -14,7 +14,7 @@ public import Mathlib.Topology.DerivedSet
 A handful of order-topological facts used to set up the theory of clubs.
 -/
 
-@[expose] public section
+public section
 
 open Set Order Cardinal Filter Set.Notation
 
@@ -33,6 +33,7 @@ API the rest of the development relies on.
 
 /-- An ordinal is an accumulation point of a set of ordinals if it is positive and there
 are elements in the set arbitrarily close to the ordinal from below. -/
+@[expose]
 def IsAccPt (o : Ordinal) (S : Set Ordinal) : Prop :=
   AccPt o (𝓟 S)
 

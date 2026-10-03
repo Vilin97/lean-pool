@@ -25,7 +25,7 @@ suffices); assuming `C^∞` is a deliberate strengthening of the hypothesis
 that keeps the analytic bookkeeping uniform in the induction.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff
 
@@ -40,6 +40,7 @@ conditions in the BKAR induction.
 It is deliberately only `C^∞` smoothness on the finite edge-parameter space;
 the order/support conditions remain separate combinatorial obligations.
 -/
+@[expose]
 def BKARContDiff (ρ : (Edge V → ℝ) → ℝ) : Prop :=
   ContDiff ℝ (∞ : WithTop ℕ∞) ρ
 
@@ -162,6 +163,7 @@ A path of finite parameter lists with fixed length whose coordinates are all
 continuous. This is the small API needed for recursive ordered-simplex
 diagonals such as `prefixTs ++ [t₁] ++ [t₂]`.
 -/
+@[expose]
 def ListPathContinuous {X : Type*} [TopologicalSpace X]
     (n : Nat) (tsPath : X → List ℝ) : Prop :=
   (∀ x, (tsPath x).length = n) ∧

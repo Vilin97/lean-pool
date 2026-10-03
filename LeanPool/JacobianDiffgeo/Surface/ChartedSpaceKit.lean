@@ -26,7 +26,7 @@ Toolkit for projective-line (CC5: two charts on `OnePoint ℂ`) and jacobian-con
 This file is standalone (it does not assume a pre-existing surface).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set
@@ -36,7 +36,7 @@ namespace RS
 variable {Z : Type*} [TopologicalSpace Z] {ι : Type*}
 
 /-- Package a covering family of ℂ-charts as a `ChartedSpace`. -/
-@[reducible] def chartedSpaceOfFamily (c : ι → OpenPartialHomeomorph Z ℂ) (idx : Z → ι)
+@[expose, reducible] def chartedSpaceOfFamily (c : ι → OpenPartialHomeomorph Z ℂ) (idx : Z → ι)
     (h : ∀ z, z ∈ (c (idx z)).source) : ChartedSpace ℂ Z where
   atlas := Set.range c
   chartAt z := c (idx z)

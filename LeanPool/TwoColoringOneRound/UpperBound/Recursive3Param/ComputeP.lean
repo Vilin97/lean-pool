@@ -16,7 +16,7 @@ This file will prove that the 3-parameter recursive cutoff algorithm from
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring
 
@@ -123,6 +123,7 @@ lemma lmarginal_D (x : Samples 4) :
   split_ifs <;> simp
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 noncomputable def aSlice (b c : Rand) : Set Rand :=
   {a | c < z0I a b}
 
@@ -314,7 +315,7 @@ lemma lmarginal_AD (x : Samples 4) :
               (ENNReal.ofReal (1 - (z0I (x 1) (x 2) : ℝ))))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def innerBC (b c : Rand) : ℝ≥0∞ :=
+@[expose] noncomputable def innerBC (b c : Rand) : ℝ≥0∞ :=
   ENNReal.ofReal (z0I b c) * (volume : Measure Rand) (aSlice b c) +
     ENNReal.ofReal (1 - (z0I b c : ℝ)) * (volume : Measure Rand) (aSlice b c)ᶜ
 

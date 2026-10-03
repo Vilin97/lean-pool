@@ -18,7 +18,7 @@ by the outgoing slope of the first connector at its attachment pole. The
 second connector is constant, so its stored orientation has no effect.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.TwoPoleSubdivision.Data
 
@@ -102,12 +102,14 @@ variable (s : Spec n p) (d : TwoPoleSubdivision.Data s.core nA pA nB pB)
 
 /-- The left subdivision's ordered attachment poles, obtained from the two designated left core
 vertices. -/
+@[expose]
 def leftPoles : Utilities.TwoPole (d.leftSpec s).graph where
   first := (d.leftSpec s).coreVertex (d.leftPole 0)
   second := (d.leftSpec s).coreVertex (d.leftPole 1)
 
 /-- The right subdivision's ordered attachment poles, obtained from the two designated right
 core vertices. -/
+@[expose]
 def rightPoles : Utilities.TwoPole (d.rightSpec s).graph where
   first := (d.rightSpec s).coreVertex (d.rightPole 0)
   second := (d.rightSpec s).coreVertex (d.rightPole 1)
@@ -147,6 +149,7 @@ theorem prin_script_nonneg_outside
 
 /-- Finite incidence data realize the abstract path-gluing interface. The
 interface hypotheses are discharged by actual global firing scripts. -/
+@[expose]
 def scriptGluing : Utilities.TwoPole.ScriptGluing
     (d.leftSpec s).graph (d.rightSpec s).graph s.graph
     (d.leftPoles s) (d.rightPoles s) (s.length (d.slots (.inr 0))) where

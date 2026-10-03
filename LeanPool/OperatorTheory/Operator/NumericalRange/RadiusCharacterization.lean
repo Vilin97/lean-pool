@@ -15,7 +15,7 @@ The inequality `w(A) ≤ r` is equivalent to containment of the numerical
 range, or its closure, in the closed disk of radius `r` about zero.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped InnerProductSpace

@@ -30,7 +30,7 @@ Unit: serre-duality-tails (`docs/design/serre-duality-tails.md` §6 P5, addendum
 * `exists_mul_functional_eq`: **MIRANDA LEMMA 3.4**.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold
 open Set TopologicalSpace
@@ -48,12 +48,13 @@ noncomputable instance instFiniteDimensional_H1Tail (D : RS.Divisor X) :
   FiniteDimensional.of_injective (H1Tail.toH1 D) (H1Tail.toH1_injective D)
 
 /-- The tail-level `h¹`. -/
-noncomputable def h1T (D : RS.Divisor X) : ℕ := Module.finrank ℂ (H1Tail D)
+@[expose] noncomputable def h1T (D : RS.Divisor X) : ℕ := Module.finrank ℂ (H1Tail D)
 
 /-- `h1T D ≤ h1 D` (Čech), via the injection `H1Tail.toH1` — the ONE fact Lemma 3.4's
 arithmetic borrows from the Čech side (no tail-level six-term ledger needed). -/
-theorem h1T_le_h1 (D : RS.Divisor X) : h1T D ≤ RS.Finiteness.h1 D :=
-  LinearMap.finrank_le_finrank_of_injective (H1Tail.toH1_injective D)
+theorem h1T_le_h1 (D : RS.Divisor X) : h1T D ≤ RS.Finiteness.h1 D := by
+  rw [RS.Finiteness.h1_eq_finrank]
+  exact LinearMap.finrank_le_finrank_of_injective (H1Tail.toH1_injective D)
 
 /-! ### `nuPairDual`: the pair map into `Dual (H1Tail (A - C))` -/
 

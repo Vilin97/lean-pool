@@ -48,7 +48,7 @@ degree-one cohomological classifier.
  trivially on the abelianized character, the `H₁`-level form of `fbar^*(α) = α`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

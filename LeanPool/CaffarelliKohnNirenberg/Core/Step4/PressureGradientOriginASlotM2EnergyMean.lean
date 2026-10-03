@@ -20,7 +20,7 @@ the ratio of the two ball volumes as the only coefficient. No covering of
 the averaging ball by cells of the running radius is needed.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal BigOperators

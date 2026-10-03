@@ -38,7 +38,7 @@ one-bit key quantization. It is built in three increasing layers:
    product: `E[estimator] = ⟪key/‖key‖, q⟫`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Real
 open scoped ENNReal NNReal RealInnerProductSpace
@@ -247,7 +247,7 @@ theorem integral_eval_pi {m : ℕ} {E : Type*} [MeasurableSpace E] (P : Measure 
 /-- **The QJL asymmetric 1-bit estimator.** Given an `m × d` sketch `S` whose rows `S i` are
 i.i.d. standard Gaussian vectors, a `key` and a `query` `q`,
 `estimator = √(π/2) · (1/m) · Σᵢ sign ⟪key/‖key‖, sᵢ⟫ · ⟪q, sᵢ⟫`. -/
-noncomputable def qjlEstimator {m d : ℕ} (key q : EuclideanSpace ℝ (Fin d))
+@[expose] noncomputable def qjlEstimator {m d : ℕ} (key q : EuclideanSpace ℝ (Fin d))
     (S : Fin m → EuclideanSpace ℝ (Fin d)) : ℝ :=
   Real.sqrt (π / 2) *
     ((m : ℝ)⁻¹ * ∑ i, Real.sign (⟪‖key‖⁻¹ • key, S i⟫) * ⟪q, S i⟫)

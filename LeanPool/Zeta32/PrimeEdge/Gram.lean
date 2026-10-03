@@ -10,7 +10,7 @@ public import LeanPool.Zeta32.PrimeEdge.Basis
 `det[U_r(φ_a φ_c R_n)] = det(T)^2 · Q_n` for any family of degree `< h`
 (adapted from `det_basis_change` in Arith/Local/Entry.lean and Li₂ Base/Gram.lean). -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

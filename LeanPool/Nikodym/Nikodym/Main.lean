@@ -34,7 +34,7 @@ Let `F` be a finite field with `q` elements, `d ≥ 2`, and `N ⊆ F^d` a Nikody
   `|N| ≤ q ^ d - q ^ (d - 2 ^ (1 - d) - ε)`.
 -/
 
-@[expose] public section
+public section
 
 open Real
 

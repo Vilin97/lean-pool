@@ -18,7 +18,7 @@ actually carry those three edges, resolves all their segments simultaneously, an
 resulting simple polygonal cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -113,7 +113,7 @@ noncomputable def faceBoundaryRight (t : K.Face)
     (fun i => h (K.vertexPoint (K.faceUsedVertex t i))) p
 
 /-- The union of the three complete replacement-edge carriers around one intrinsic face. -/
-def faceReplacementCarrier (t : K.Face) : Set Plane :=
+@[expose] def faceReplacementCarrier (t : K.Face) : Set Plane :=
   ⋃ i : ZMod 3,
     (faceReplacementArc (hcont := hcont) (hinj := hinj) (D := D) (C := C) t i
       |>.completeCarrier)

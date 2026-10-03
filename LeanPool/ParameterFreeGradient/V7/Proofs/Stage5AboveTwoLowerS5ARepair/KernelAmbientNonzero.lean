@@ -12,14 +12,14 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5ARep
 The ambient Fréchet derivative and coordinate gradient of the power kernel away from zero.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace V7.Stage5AboveTwoLower.S5ARepair
 
 /-- The continuous linear functional given by pairing with a fixed vector. -/
-noncomputable def pairingCLM (g : Point d) : Point d →L[ℝ] ℝ :=
+@[expose] noncomputable def pairingCLM (g : Point d) : Point d →L[ℝ] ℝ :=
   ∑ i : Fin d, (g i) • ContinuousLinearMap.proj i
 
 @[simp] lemma pairingCLM_apply (g h : Point d) :
@@ -27,7 +27,7 @@ noncomputable def pairingCLM (g : Point d) : Point d →L[ℝ] ℝ :=
   simp [pairingCLM, O3.pairing]
 
 /-- The Fréchet derivative formula for the sum of coordinate absolute powers. -/
-noncomputable def lpPowerFDeriv (r : ℝ) (x : Point d) : Point d →L[ℝ] ℝ :=
+@[expose] noncomputable def lpPowerFDeriv (r : ℝ) (x : Point d) : Point d →L[ℝ] ℝ :=
   r • pairingCLM (O3.powerDualityMap r x)
 
 lemma hasFDerivAt_lpPower {r : ℝ} (hr : 1 < r) (x : Point d) :
@@ -61,12 +61,12 @@ lemma hasFDerivAt_lpPower {r : ℝ} (hr : 1 < r) (x : Point d) :
   ring
 
 /-- The explicit coordinate gradient of the power smoothing kernel. -/
-noncomputable def kernelGradientVector (r theta : ℝ) (x : Point d) : Point d :=
+@[expose] noncomputable def kernelGradientVector (r theta : ℝ) (x : Point d) : Point d :=
   (4 * theta * (O3.lpPower r x) ^ (2 * theta / r - 1)) •
     O3.powerDualityMap r x
 
 /-- The kernel gradient represented as a continuous linear functional. -/
-noncomputable def kernelFDeriv (r theta : ℝ) (x : Point d) :
+@[expose] noncomputable def kernelFDeriv (r theta : ℝ) (x : Point d) :
     Point d →L[ℝ] ℝ := pairingCLM (kernelGradientVector r theta x)
 
 lemma hasFDerivAt_lowerKernelPhi_of_ne_zero {r theta : ℝ}

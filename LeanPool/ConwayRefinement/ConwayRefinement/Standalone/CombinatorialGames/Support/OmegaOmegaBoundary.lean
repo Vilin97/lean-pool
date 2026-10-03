@@ -39,7 +39,7 @@ primality theorem. No primality or nonprimality assertion is made about this bou
   integers*, Adv. Math. 442 (2024) 109513, cited as [LM24].
 -/
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz.OmegaOmegaBoundary
 

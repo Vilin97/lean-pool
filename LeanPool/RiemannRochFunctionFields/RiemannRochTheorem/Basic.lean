@@ -14,7 +14,7 @@ This is pure packaging of the duality theorem together with the definition of th
 specialty.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

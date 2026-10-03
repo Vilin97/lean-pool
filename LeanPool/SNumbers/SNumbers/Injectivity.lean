@@ -60,7 +60,7 @@ an isometry / a metric surjection (`‖J ∘ T‖ = ‖T‖`, `‖T ∘ Q‖ = �
 the infimum sets coincide.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -80,6 +80,7 @@ variable [NormedAddCommGroup Z] [NormedSpace 𝕜 Z]
 
 /-- A **metric injection** is a norm-preserving (isometric) continuous
 linear map: `‖J y‖ = ‖y‖` for all `y`. -/
+@[expose]
 def IsMetricInjection (J : Y →L[𝕜] Z) : Prop :=
   ∀ y, ‖J y‖ = ‖y‖
 
@@ -144,6 +145,7 @@ lemma IsMetricSurjection.norm_comp {Q : W →L[𝕜] X} (hQ : IsMetricSurjection
 
 /-- An `s`-number sequence is **injective** if post-composition with any
 metric injection leaves it unchanged: `sₙ(J ∘ S) = sₙ(S)`. -/
+@[expose]
 def Injective (s : Family 𝕜) : Prop :=
   ∀ {X Y Z : Type u} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
       [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]

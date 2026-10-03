@@ -38,13 +38,14 @@ Proc. Amer. Math. Soc. 134 (2006), 1277–1287, cited as [PS06].
 
 universe u
 
-@[expose] public noncomputable section
+public noncomputable section
 
 namespace ConwayRefinement.Standalone.Oz.DegreeTwoExample
 
 open Ordinal
 
 /-- The exponents displayed in the normal form: zero and the row-column exponents above. -/
+@[expose]
 def IsDisplayedExponent (i : Surreal.{u}) : Prop :=
   i = 0 ∨ ∃ m n : ℕ,
     i = ((1 / (m + 1 : ℝ) +
@@ -52,27 +53,33 @@ def IsDisplayedExponent (i : Surreal.{u}) : Prop :=
 
 /-- The named omnific integer is exactly the normal form displayed above: its coefficients are
 one at zero and at the row-column exponents, and zero everywhere else. -/
+@[expose]
 def HasDisplayedCoefficients : Prop :=
   (∀ i : Surreal.{u}, IsDisplayedExponent i → degreeTwoOz.{u}.1.coeff i = 1) ∧
     ∀ i : Surreal.{u}, ¬ IsDisplayedExponent i → degreeTwoOz.{u}.1.coeff i = 0
 
 /-- The displayed normal form has exact support order type `ω ^ 2 + 1`. -/
+@[expose]
 def HasExactSupportOrderType : Prop :=
   degreeTwoOz.{u}.1.length = ω ^ (2 : Ordinal) + 1
 
 /-- The displayed omnific integer is prime. -/
+@[expose]
 def IsPrime : Prop :=
   Prime degreeTwoOz.{u}
 
 /-- The coefficient-doubled foil still has exact support order type `ω ^ 2 + 1`. -/
+@[expose]
 def FoilHasExactSupportOrderType : Prop :=
   degreeTwoFoil.{u}.1.length = ω ^ (2 : Ordinal) + 1
 
 /-- The comparison element is literally twice the displayed prime. -/
+@[expose]
 def FoilIsCoefficientDouble : Prop :=
   degreeTwoFoil.{u} = 2 * degreeTwoOz.{u}
 
 /-- The coefficient-doubled foil admits a factorisation into two nonunits. -/
+@[expose]
 def FoilHasNontrivialFactorization : Prop :=
   ∃ a b : Oz.OmnificInteger.{u},
     degreeTwoFoil = a * b ∧ ¬ IsUnit a ∧ ¬ IsUnit b

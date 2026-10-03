@@ -23,7 +23,7 @@ package. The constant here comes from the block dimensions of the
 assembled package, through `square_growth_sharp`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

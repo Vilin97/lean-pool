@@ -17,7 +17,7 @@ The base coefficients are identified through their common physical field
 before the native material cancellation is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -378,6 +378,7 @@ open CorrectionInitialization CorrectionInitialization.ActualPrimary
 variable {B N0 : ℕ}
 
 /-- Native copy, constructed using `ActualSignedGeometry.copyPoint`. -/
+@[expose]
 noncomputable def nativeCopy (j : Fin 2) (L : Label B N0) (n : ℕ) (k : TorusInverse.Frequency)
     (x : FullPoint) : Slow × Plane :=
   ActualSignedGeometry.copyPoint slots vectors_det
@@ -446,7 +447,7 @@ theorem chart_phase_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   rw [view_slot]
 
 /-- Defect as an element of `FullPoint → ℝ`. -/
-noncomputable def defect (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint → ℝ :=
+@[expose] noncomputable def defect (j : Fin 2) (L : Label B N0) (n : ℕ) : FullPoint → ℝ :=
   (chartCoefficients j L).defect
     (HarmonicWaveInteraction.productStrip (BaseContextAssembly.nativeStrip nominal standardRegion))
     (PrimaryResidualClass.directions (commonContext B)) n
@@ -589,6 +590,7 @@ theorem chart_defect_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   exact congrArg (fun z : ℝ => _ * z) hy
 
 /-- Reduced expression as an element of `ℝ`. -/
+@[expose]
 noncomputable def reducedExpression (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) (x : FullPoint) : ℝ :=
   let z := nativeCopy j L n k x
@@ -679,7 +681,7 @@ theorem materialWeight_normal (L : Label B N0) (n : ℕ) :
 
 /-- Material weight bound, given by `2*ActualSignedGeometry.powerBound (h/2+1/2) *
 ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)`. -/
-noncomputable def materialWeightBound : ℝ :=
+@[expose] noncomputable def materialWeightBound : ℝ :=
   2*ActualSignedGeometry.powerBound (h/2+1/2) *
     ActualSignedGeometry.powerBound (CoordinateAlgebra.A h-h)
 
@@ -759,6 +761,7 @@ theorem active_materialWeight_bound (L : Label B N0) (n : ℕ)
 
 /-- Padded region, bundling `carrier`, `isOpen`, `have`, `coord_pos` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def paddedRegion : LocalSignedRequest.SlowRegion (2*h) where
   carrier := {z | 0 < z.1 ∧ SimilarityCoordinates.coordinateQ (2*h) z ∈ Ioo (1/4 : ℝ) 4}
   isOpen := by
@@ -789,6 +792,7 @@ theorem padded_slow_mem {p : Slow} (hT : 0 < p.2.2)
   · exact hq.2.trans_lt (by norm_num)
 
 /-- Reduced slow domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+@[expose]
 noncomputable def reducedSlowDomain (U : LocalSignedRequest.SlowRegion (2 * h)) :
     PhaseJetBounds.Domain (Fin 2 × Label B N0) Slow where
   scale i := ChartScales.S (BaseChartJets.cellBand i.2)
@@ -801,12 +805,14 @@ noncomputable def reducedSlowDomain (U : LocalSignedRequest.SlowRegion (2 * h)) 
 
 /-- Reduced jet domain, given by `(reducedSlowDomain U).slot (fun i => (phases B N0 i.1).V i.2)
 (fun i => (phases B N0 i.1).openV i.2)`. -/
+@[expose]
 noncomputable def reducedJetDomain (U : LocalSignedRequest.SlowRegion (2 * h)) :
     PhaseJetBounds.Domain (Fin 2 × Label B N0) (Slow × ℝ) :=
   (reducedSlowDomain U).slot (fun i => (phases B N0 i.1).V i.2)
     (fun i => (phases B N0 i.1).openV i.2)
 
 /-- Native reduced, constructed using `PrimaryMaterialDefect.expression`. -/
+@[expose]
 noncomputable def nativeReduced (i : Fin 2 × Label B N0) (z : Slow × ℝ) : ℝ :=
   PrimaryMaterialDefect.expression 1
     ((phases B N0 i.1).phase.p i.2) ((phases B N0 i.1).phase.pz i.2)

@@ -33,7 +33,7 @@ each α, the iso classes with height ≤ α inject into BFEquiv_α classes, givi
   by `SilverBurgessDichotomy` (proved in this repository).
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

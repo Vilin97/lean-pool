@@ -20,7 +20,7 @@ public import LeanPool.ConnesRigidity.Foundation.OperatorAlgebra.NormalFixed
 The valued spectral measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -213,7 +213,7 @@ step. Paper: §4.
 /--
 The `HasQuotientFixedApproximation` construction used in the Connes rigidity formalization.
 -/
-def HasQuotientFixedApproximation
+@[expose] def HasQuotientFixedApproximation
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G K) : Prop :=
   HasKazhdanPropertyT.{u, v} H →

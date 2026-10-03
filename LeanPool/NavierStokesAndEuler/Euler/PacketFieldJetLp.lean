@@ -25,7 +25,7 @@ section
 /-! Actual cylinder L² tensor bounds from the finite packet's ordered-word
 budgets. The single coordinate conversion affects only the input radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -67,7 +67,7 @@ section
 /-! Addition and transport of the actual cylinder derivative tensors.
 All norm statements concern genuine L² functions on the cylinder. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

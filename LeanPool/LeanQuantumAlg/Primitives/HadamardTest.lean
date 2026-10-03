@@ -21,7 +21,7 @@ Pure-state normalization and gate unitarity are carried by the `PureState` and
 `Gate` types themselves.
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 

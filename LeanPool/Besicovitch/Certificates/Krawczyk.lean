@@ -16,7 +16,7 @@ which preserves a complete nonempty set has a unique fixed point there. If the c
 preconditioned Newton map, that fixed point is the unique zero in the set.
 -/
 
-@[expose] public section
+public section
 
 open Function NNReal Set
 

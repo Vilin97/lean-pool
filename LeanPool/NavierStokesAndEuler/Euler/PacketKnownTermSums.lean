@@ -17,7 +17,7 @@ mean force, and the angle-constant BB term is absent from the high force.
 Every summand is the genuine continuous cylinder L² path already constructed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

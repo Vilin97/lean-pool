@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Polynomial.Content
 # LeanPool.LeanPolyABC.MasonStothers
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

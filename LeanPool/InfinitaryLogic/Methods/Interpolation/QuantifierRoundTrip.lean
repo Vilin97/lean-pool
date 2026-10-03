@@ -22,7 +22,7 @@ The Henkin truth lemma will meet an arbitrary existential `ψ.ex` (or negated un
   C7 consumers for arbitrary existential / negated-universal parents.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

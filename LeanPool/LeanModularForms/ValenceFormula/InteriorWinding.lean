@@ -32,7 +32,7 @@ around any strict interior point equals -1.
     for any strict interior point with im < H
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

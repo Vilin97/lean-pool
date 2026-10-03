@@ -15,7 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 The proof uses the supremum norm and the mean value inequality, so the
 constant is two under the stated smallness condition. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

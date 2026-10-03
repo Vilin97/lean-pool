@@ -102,7 +102,7 @@ subgraphs of the union.
   have at least two vertices in common, their union is 2-connected".
 -/
 
-@[expose] public section
+public section
 
 open Set
 
@@ -186,7 +186,7 @@ def IsCutVertex (G : Graph α β) (x : α) : Prop :=
 
 /-- The graph has three pairwise distinct vertices. Stated existentially rather than as
 `3 ≤ V(G).ncard` so that it is monotone with no finiteness hypothesis. -/
-def HasThreeVertices (G : Graph α β) : Prop :=
+@[expose] def HasThreeVertices (G : Graph α β) : Prop :=
   ∃ a ∈ V(G), ∃ b ∈ V(G), ∃ c ∈ V(G), a ≠ b ∧ a ≠ c ∧ b ≠ c
 
 /-- On a graph with finitely many vertices the clause is the count it is named for. Kept so
@@ -276,7 +276,7 @@ theorem IsTwoConnected.no_bridge (h : G.IsTwoConnected) (hl : G.IsLink e u v) :
 needed, since two graphs may disagree about the ends of a shared edge name; for
 `Graph.Compatible` graphs, which is the only case the development forms, the disjunction
 collapses to the naive one. -/
-protected def union (G H : Graph α β) : Graph α β where
+@[expose] protected def union (G H : Graph α β) : Graph α β where
   vertexSet := V(G) ∪ V(H)
   edgeSet := E(G) ∪ E(H)
   IsLink e x y := G.IsLink e x y ∨ (e ∉ E(G) ∧ H.IsLink e x y)

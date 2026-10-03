@@ -21,7 +21,7 @@ supersymmetry by the braided-functor axiom, and
 `exists_std_model` produces the coordinates.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

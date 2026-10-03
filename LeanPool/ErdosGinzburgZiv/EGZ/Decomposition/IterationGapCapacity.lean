@@ -10,7 +10,7 @@ public import LeanPool.ErdosGinzburgZiv.EGZ.Decomposition.IterationBounds
 
 /-! # A gap cleanup cannot be followed by another gap cleanup -/
 
-@[expose] public section
+public section
 
 namespace EGZ.FlagDecomposition.Iteration
 

@@ -35,7 +35,7 @@ Adapted for Lean Pool from `Timeroot/BS_Lam` at commit
 `7bd39a8d41ee7910d3296d0477ad18f8fff9d870`; ported to Lean Pool with proof and dependency cleanup.
 -/
 
-@[expose] public section
+public section
 
 namespace BSLambda
 
@@ -52,6 +52,7 @@ variable {r : ℕ} {Arc : ι → ι → Bool}
 support carrying the consolidated radius-two obstruction.  Inactive flags and supports of
 the wrong size are excluded, because the dependency counts of Section 10.1 count only the
 active patterns. -/
+@[expose]
 def BadIdx (Arc : ι → ι → Bool) : Type _ :=
   {F : Flag1 ι // F.Active Arc} ⊕ {S : Finset ι // S.card = 9}
 
@@ -323,6 +324,7 @@ theorem card_nbr_type_one_le (i : BadIdx Arc) :
 the owner `q.1` and, when it is present, by the top vertex `q.2`.  The bottom set of an active
 flag is a subset of this (`Flag1.Active.bot_subset_headOut`), and its size is `d = 7005` for a
 Type-A head and `t = 3502` for a Type-B head. -/
+@[expose]
 def headOut (Arc : ι → ι → Bool) (q : ι × Option ι) : Finset ι :=
   q.2.elim (outNbrs Arc q.1) (commonOut Arc q.1)
 

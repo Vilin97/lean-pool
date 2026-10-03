@@ -35,7 +35,7 @@ is a proof about AR's own divisor and not merely a similar one.  As of
 deleted, and `GenusFiveConstructions.row12_straightforward` points here.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow12Guarding
 

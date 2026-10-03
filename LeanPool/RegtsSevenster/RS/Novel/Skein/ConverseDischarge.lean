@@ -16,7 +16,7 @@ the choice-free value lemma and equivalence invariance of the
 mixed partition value hold unconditionally.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

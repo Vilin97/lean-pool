@@ -25,7 +25,7 @@ attached to the two fragments bounds the edge-rank by `(k + 2ℓ)^t`,
 because that is how many boundary states there are.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -67,12 +67,14 @@ factor depends on the boundary state alone.
 -/
 
 /-- The number of legs a boundary state colours oddly. -/
+@[expose]
 noncomputable def oddCount {k ℓ t : ℕ}
     (x : GenBoundaryState k ℓ (Fin t)) : ℕ :=
   (Finset.univ.filter (fun i => ∃ c, x i = Sum.inr c)).card
 
 /-- **The fragment tensor's normalising root**: a fourth root of
 unity, one quarter turn for every two odd legs. -/
+@[expose]
 noncomputable def stateTwist {k ℓ t : ℕ}
     (x : GenBoundaryState k ℓ (Fin t)) : ℂ :=
   Complex.I ^ (oddCount x / 2)
@@ -153,12 +155,14 @@ collapses to a single one.
 
 /-- **The dual of one leg's colour**: itself on an even colour, the
 partner on an odd one. -/
+@[expose]
 noncomputable def dualLeg {k ℓ : ℕ} :
     (Fin k ⊕ Fin (2 * ℓ)) → (Fin k ⊕ Fin (2 * ℓ))
   | Sum.inl a => Sum.inl a
   | Sum.inr c => Sum.inr (oddPartner ℓ c)
 
 /-- **The dual state**: the dual colour at every leg. -/
+@[expose]
 noncomputable def dualState {k ℓ : ℕ} {α : Type}
     (x : GenBoundaryState k ℓ α) : GenBoundaryState k ℓ α :=
   fun i => dualLeg (x i)
@@ -200,6 +204,7 @@ theorem superForm_eq_zero_of_ne_dualState {k ℓ t : ℕ}
 
 /-- **One leg's form against its own dual**: `1` on an even colour,
 and on an odd one the negated dual sign — RS21's `⟨f_c, g_c⟩`. -/
+@[expose]
 noncomputable def legSelf {k ℓ : ℕ} :
     (Fin k ⊕ Fin (2 * ℓ)) → ℂ
   | Sum.inl _ => 1
@@ -292,6 +297,7 @@ count.
 -/
 
 /-- One leg's dual-basis weight, as it occurs in `dualWeight`. -/
+@[expose]
 noncomputable def legWeight {k ℓ : ℕ} (b : Bool)
     (v : Fin k ⊕ Fin (2 * ℓ)) : ℂ :=
   match v with
@@ -354,6 +360,7 @@ theorem dualLeg_involutive {k ℓ : ℕ} :
     rw [oddPartner_invol]
 
 /-- **Undoing the dual basis at the legs whose arc leaves.** -/
+@[expose]
 noncomputable def untwistState {k ℓ t : ℕ} (b : Fin t → Bool)
     (x : GenBoundaryState k ℓ (Fin t)) :
     GenBoundaryState k ℓ (Fin t) :=

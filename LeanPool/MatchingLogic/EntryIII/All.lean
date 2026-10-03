@@ -19,4 +19,4 @@ import Mathlib.Tactic.SetLike
 # MatchingLogic.EntryIII.All
 -/
 
-@[expose] public section
+public section

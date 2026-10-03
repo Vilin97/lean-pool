@@ -42,7 +42,7 @@ closures, the `ConsistencyPropertyEqOn` instance over the union, and the `{r₁,
 endpoint yielding `M ⊨ r₁ ∧ ¬ M ⊨ r₂`) is assembled on top of these gates in the next tranche.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

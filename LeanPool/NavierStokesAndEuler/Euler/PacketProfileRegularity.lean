@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketSlicedAssembly
 
 /-! Genuine regularity and locality data carried by each recursively constructed profile. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -102,7 +102,7 @@ def zero (P T : ℝ) [Fact (0 < P)] (hT : 0 ≤ T) (S : Set Space) :
   mean_angle _ _ _ := rfl
 
 /-- Prefix fields, bundling `high`, `mean`, `corrector`. -/
-def prefixFields {p : ℕ} {a : ℕ → Profile}
+@[expose] def prefixFields {p : ℕ} {a : ℕ → Profile}
     (G : ∀ i, i < p → ProfileRegularity P T hT S (a i)) : PrefixFields P T p a where
   high i hi := (G i hi).high
   mean i hi := (G i hi).mean

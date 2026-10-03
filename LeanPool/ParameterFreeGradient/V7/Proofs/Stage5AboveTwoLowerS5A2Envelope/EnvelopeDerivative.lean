@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerS5A2En
 Selection of minimizing displacements and differentiation of the resulting envelope.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerS5A2Envelope
 
@@ -44,7 +44,7 @@ lemma selectedDisplacement_spec (kernel : SmoothingKernelData p d)
   exact Classical.choose_spec hex
 
 /-- The envelope gradient obtained from a selected minimizing displacement. -/
-noncomputable def selectedEnvelopeGradient
+@[expose] noncomputable def selectedEnvelopeGradient
     (kernel : SmoothingKernelData p d) (chi : ℝ)
     (ell : Point d → ℝ) (x : Point d) : Point d :=
   -kernel.gradPhi ((1 / chi) • selectedDisplacement kernel chi ell x)

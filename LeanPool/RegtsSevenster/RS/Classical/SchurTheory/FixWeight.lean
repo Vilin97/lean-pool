@@ -21,7 +21,7 @@ additivity over `sigmaCongrRight`) enter as explicit hypotheses,
 discharged in `ColourCycleSum.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

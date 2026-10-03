@@ -17,7 +17,7 @@ bookkeeping to the per-order sector integrals of the BKAR forest
 interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

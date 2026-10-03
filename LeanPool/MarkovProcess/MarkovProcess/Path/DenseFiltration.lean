@@ -17,7 +17,7 @@ fact is the filtration bridge needed to extend finite-cylinder restart identitie
 events. No probability law or Markov property is asserted here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -40,6 +40,7 @@ def denseCanonicalFiltration (S : DenseTime) : MeasurableSpace (ContinuousPath a
       inferInstance
 
 /-- Restrict a continuous path to the rational times at most `S`. -/
+@[expose]
 def densePastRestriction (S : DenseTime) (omega : ContinuousPath alpha) : Set.Iic S → alpha :=
   fun r ↦ coordinateProcess (alpha := alpha) (DenseTime.castOrderEmbedding r) omega
 

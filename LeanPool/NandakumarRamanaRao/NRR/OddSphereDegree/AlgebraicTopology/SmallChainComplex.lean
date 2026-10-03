@@ -51,7 +51,7 @@ C_*^𝒰(X; R) ⟶ C_*(X; R).
 We do **not** prove here that `smallChainsInclusion` is a quasi-isomorphism.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 open SphereOddDegree.AffineBarycentricSubdivision
@@ -65,7 +65,7 @@ variable {R : Type} [CommRing R] {X : TopCat.{0}}
 /-- The restriction of the singular boundary `∂ : C_{n+1}(X; R) → C_n(X; R)` to
 the small-chain submodules. Well-defined by
 `singularBoundary_maps_smallChainSubmodule`. -/
-noncomputable def smallBoundary (R : Type) [CommRing R] (X : TopCat.{0})
+@[expose] noncomputable def smallBoundary (R : Type) [CommRing R] (X : TopCat.{0})
     (𝒰 : OpenCoverData X) (n : ℕ) :
     ModuleCat.of R (smallChainSubmodule R X 𝒰 (n + 1)) ⟶
       ModuleCat.of R (smallChainSubmodule R X 𝒰 n) :=
@@ -98,7 +98,7 @@ theorem smallBoundary_comp_smallBoundary
 /-- **The small-chain complex** `C_*^𝒰(X; R)`. In degree `n` the object is the
 small-chain submodule `smallChainSubmodule R X 𝒰 n`; the differential is the
 restricted singular boundary `smallBoundary`. -/
-noncomputable def smallChainComplex (R : Type) [CommRing R] (X : TopCat.{0})
+@[expose] noncomputable def smallChainComplex (R : Type) [CommRing R] (X : TopCat.{0})
     (𝒰 : OpenCoverData X) : ChainComplex (ModuleCat.{0} R) ℕ :=
   ChainComplex.of (fun n => ModuleCat.of R (smallChainSubmodule R X 𝒰 n))
     (fun n => smallBoundary R X 𝒰 n)
@@ -120,7 +120,7 @@ noncomputable def smallChainComplex (R : Type) [CommRing R] (X : TopCat.{0})
 
 /-- The small generator associated to a `𝒰`-small singular simplex `σ`, as an
 element of the degree-`n` small-chain submodule. -/
-noncomputable def smallGenerator {𝒰 : OpenCoverData X} {n : ℕ}
+@[expose] noncomputable def smallGenerator {𝒰 : OpenCoverData X} {n : ℕ}
     (σ : singularSimplices X n) (hσ : IsSmallSimplex 𝒰 σ) :
     smallChainSubmodule R X 𝒰 n :=
   ⟨chainGenerator R X n σ, chainGenerator_mem_smallChainSubmodule hσ⟩
@@ -134,7 +134,7 @@ noncomputable def smallGenerator {𝒰 : OpenCoverData X} {n : ℕ}
 
 /-- **The inclusion chain map** `C_*^𝒰(X; R) ⟶ C_*(X; R)`. Degreewise it is the
 natural inclusion of the small-chain submodule into the singular chain group. -/
-noncomputable def smallChainsInclusion (R : Type) [CommRing R] (X : TopCat.{0})
+@[expose] noncomputable def smallChainsInclusion (R : Type) [CommRing R] (X : TopCat.{0})
     (𝒰 : OpenCoverData X) : smallChainComplex R X 𝒰 ⟶ singularChainComplex R X where
   f n := ModuleCat.ofHom (smallChainSubmodule R X 𝒰 n).subtype
   comm' i j hij := by

@@ -22,7 +22,7 @@ below acts on this space, rather than on the lifted cylinder used by the
 oscillatory correction construction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,11 +61,13 @@ theorem testGradient_ae (φ : Space → ℝ) (hc : HasCompactSupport φ)
 
 /-- Gradient generators, given by `{g | ∃ φ : Space → ℝ, HasCompactSupport φ ∧ ContDiff ℝ ∞ φ ∧
 g =ᵐ[volume] gradient φ}`. -/
+@[expose]
 def gradientGenerators : Set L2 :=
   {g | ∃ φ : Space → ℝ, HasCompactSupport φ ∧ ContDiff ℝ ∞ φ ∧
     g =ᵐ[volume] gradient φ}
 
 /-- Gradient space, given by `(Submodule.span ℝ gradientGenerators).topologicalClosure`. -/
+@[expose]
 def gradientSpace : Submodule ℝ L2 :=
   (Submodule.span ℝ gradientGenerators).topologicalClosure
 
@@ -76,7 +78,7 @@ instance : CompleteSpace gradientSpace := gradientSpace_closed.completeSpace_coe
 
 /-- Solenoidal space, given by `gradientSpace.orthogonal instance : CompleteSpace
 solenoidalSpace := gradientSpace.isClosed_orthogonal.completeSpace_coe`. -/
-def solenoidalSpace : Submodule ℝ L2 := gradientSpace.orthogonal
+@[expose] def solenoidalSpace : Submodule ℝ L2 := gradientSpace.orthogonal
 
 instance : CompleteSpace solenoidalSpace :=
   gradientSpace.isClosed_orthogonal.completeSpace_coe
@@ -123,7 +125,7 @@ theorem mem_solenoidal_iff (u : L2) : u ∈ solenoidalSpace ↔
     exact hclosure hg
 
 /-- Solenoidal projection, given by `solenoidalSpace.starProjection`. -/
-def solenoidalProjection : L2 →L[ℝ] L2 := solenoidalSpace.starProjection
+@[expose] def solenoidalProjection : L2 →L[ℝ] L2 := solenoidalSpace.starProjection
 
 theorem solenoidalProjection_mem (u : L2) :
     solenoidalProjection u ∈ solenoidalSpace := solenoidalSpace.starProjection_apply_mem u

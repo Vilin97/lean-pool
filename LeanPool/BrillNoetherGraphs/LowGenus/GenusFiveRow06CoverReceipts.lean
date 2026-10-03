@@ -14,7 +14,7 @@ These passive row multipliers are replayed by the corresponding fixed-cover modu
 The ordered blocks and their concatenation retain the global receipt indices used by its tree.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow06FixedCover
 

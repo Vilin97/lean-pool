@@ -40,7 +40,7 @@ Generated classifier data
 with `--n 8 --deg 3 --layout bucket`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.Generated.GenusFiveCanonicalClassifierData
 
@@ -60,6 +60,7 @@ with a vertex permutation matching the leaf table against that row. -/
 abbrev Payload := Fin 20 × List (Fin 8)
 
 /-- The pair-multiplicity tables of the 20 atlas rows. -/
+@[expose]
 def atlasTable : List (List (List ℕ)) :=
   [[[0, 2, 1, 0, 0, 0, 0, 0], [2, 0, 0, 1, 0, 0, 0, 0], [1, 0, 0, 1, 1, 0, 0, 0], [0, 1, 1, 0, 0,
     1, 0, 0], [0, 0, 1, 0, 0, 1, 1, 0], [0, 0, 0, 1, 1, 0, 0, 1], [0, 0, 0, 0, 1, 0, 0, 2], [0, 0,
@@ -123,10 +124,12 @@ def atlasTable : List (List (List ℕ)) :=
      0, 0, 0, 2, 1, 0]]]
 
 /-- One entry of one atlas table. -/
+@[expose]
 def atlasEntry (idx : Fin 20) (a b : Fin 8) : ℕ :=
   ((atlasTable.getD idx.val []).getD a.val []).getD b.val 0
 
 /-- A stored permutation, read as a function. -/
+@[expose]
 def permOf (p : List (Fin 8)) (i : Fin 8) : Fin 8 :=
   p.getD i.val 0
 
@@ -134,14 +137,17 @@ def permOf (p : List (Fin 8)) (i : Fin 8) : Fin 8 :=
 entry is at most `3`.  This is only a lookup key: the checker verifies
 the payload it retrieves entry by entry, so a collision would cause
 `pruned_valid` to fail rather than to prove something false. -/
+@[expose]
 def rowKey (rows : List (List ℕ)) : ℕ :=
   rows.foldl (fun acc row => row.foldl (fun a x => a * 4 + x) acc) 0
 
 /-- The number of payload buckets. -/
+@[expose]
 def bucketCount : ℕ := 251
 
 /-- Buckets 0 through 19 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart0 : List (List (ℕ × Payload)) :=
   [[
     (26414401459200, (6, [6, 5, 2, 0, 3, 1, 7, 4])),
@@ -230,6 +236,7 @@ def payloadBucketPart0 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 20 through 39 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart1 : List (List (ℕ × Payload)) :=
   [[
     (26491635373056, (19, [6, 1, 5, 3, 0, 2, 7, 4])),
@@ -321,6 +328,7 @@ def payloadBucketPart1 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 40 through 59 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart2 : List (List (ℕ × Payload)) :=
   [[
     (26479077425412, (7, [1, 2, 7, 6, 5, 3, 4, 0])),
@@ -421,6 +429,7 @@ def payloadBucketPart2 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 60 through 79 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart3 : List (List (ℕ × Payload)) :=
   [[
     (93802088169744, (8, [0, 3, 7, 4, 5, 1, 2, 6]))],
@@ -520,6 +529,7 @@ def payloadBucketPart3 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 80 through 99 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart4 : List (List (ℕ × Payload)) :=
   [[
     (26491644821760, (7, [1, 7, 3, 2, 5, 6, 4, 0])),
@@ -606,6 +616,7 @@ def payloadBucketPart4 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 100 through 119 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart5 : List (List (ℕ × Payload)) :=
   [[
     (92381878157313, (18, [4, 5, 0, 1, 2, 3, 6, 7])),
@@ -690,6 +701,7 @@ def payloadBucketPart5 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 120 through 139 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart6 : List (List (ℕ × Payload)) :=
   [[
     (92771362881552, (6, [0, 5, 6, 1, 7, 2, 3, 4])),
@@ -778,6 +790,7 @@ def payloadBucketPart6 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 140 through 159 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart7 : List (List (ℕ × Payload)) :=
   [[
     (92703748800513, (8, [0, 4, 7, 5, 3, 6, 2, 1])),
@@ -861,6 +874,7 @@ def payloadBucketPart7 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 160 through 179 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart8 : List (List (ℕ × Payload)) :=
   [[
     (26491710624000, (0, [0, 6, 5, 3, 4, 7, 2, 1])),
@@ -932,6 +946,7 @@ def payloadBucketPart8 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 180 through 199 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart9 : List (List (ℕ × Payload)) :=
   [[
     (26749194813444, (7, [0, 5, 6, 2, 7, 4, 3, 1])),
@@ -1010,6 +1025,7 @@ def payloadBucketPart9 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 200 through 219 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart10 : List (List (ℕ × Payload)) :=
   [[
     (26427336507456, (1, [0, 3, 5, 2, 6, 4, 1, 7])),
@@ -1091,6 +1107,7 @@ def payloadBucketPart10 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 220 through 239 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart11 : List (List (ℕ × Payload)) :=
   [[
     (26414385792000, (6, [6, 5, 0, 2, 3, 1, 7, 4])),
@@ -1177,6 +1194,7 @@ def payloadBucketPart11 : List (List (ℕ × Payload)) :=
 
 /-- Buckets 240 through 250 of the canonical genus-five classifier, storing row-key
 and payload associations for connected canonical leaves. -/
+@[expose]
 def payloadBucketPart12 : List (List (ℕ × Payload)) :=
   [[
     (26414401519680, (6, [6, 5, 2, 3, 0, 1, 7, 4])),
@@ -1224,6 +1242,7 @@ def payloadBucketPart12 : List (List (ℕ × Payload)) :=
 keyed by `rowKey` of that leaf and split into 251 buckets.
 There are 777 payloads in all; the largest bucket holds 9.
 Disconnected leaves are absent by design. -/
+@[expose]
 def payloadBuckets : List (List (ℕ × Payload)) :=
   payloadBucketPart0 ++
     payloadBucketPart1 ++
@@ -1240,6 +1259,7 @@ def payloadBuckets : List (List (ℕ × Payload)) :=
     payloadBucketPart12
 
 /-- Look a leaf key up in its bucket. -/
+@[expose]
 def payloadLookup (key : ℕ) : Option Payload :=
   List.lookup key (payloadBuckets.getD (key % bucketCount) [])
 

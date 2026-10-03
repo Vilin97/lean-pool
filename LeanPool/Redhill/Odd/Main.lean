@@ -17,7 +17,7 @@ import Mathlib.RingTheory.Radical.NatInt
 # The odd case (Theorem 1.13)
 -/
 
-@[expose] public section
+public section
 
 
 namespace OddCase

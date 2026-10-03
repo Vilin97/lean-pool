@@ -28,7 +28,7 @@ point `m := b.symm μ` (that is, `k/(ρ+k) = μ/2` where `ρ := a m`). Glue with
 `[0, μ/2]` and `(μ/2, 1]` unite to the whole interval.
 -/
 
-@[expose] public section
+public section
 
 namespace OneMfld
 

@@ -14,7 +14,7 @@ Basic graph, divisor, and banana path data used by the paper-facing statements.
 These declarations keep their independent `TMB` meanings and storage conventions.
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Standalone mathematical vocabulary
@@ -63,6 +63,7 @@ def numEdges (G : CFGraph) (x y : G.V) : ℕ :=
   Multiset.card (G.edges.filter fun e => e = (x, y) ∨ e = (y, x))
 
 /-- Connectivity in cut form. -/
+@[expose]
 def graphConnected (G : CFGraph) : Prop :=
   ∀ S : Finset G.V, (∃ x y : G.V, x ∈ S ∧ y ∉ S) →
     ∃ x ∈ S, ∃ y ∉ S, numEdges G x y > 0
@@ -130,10 +131,12 @@ def effOfDegree (G : CFGraph) (d : ℤ) : Set (CFDiv G) :=
   {E | effective E ∧ deg E = d}
 
 /-- Baker--Norine rank at least `r`, in subtraction-test form. -/
+@[expose]
 def rankGeq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
   ∀ E ∈ effOfDegree G r, winnable G (D - E)
 
 /-- Exact rank as adjacent lower-bound tests. -/
+@[expose]
 def rankEq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
   rankGeq G D r ∧ ¬ rankGeq G D (r + 1)
 
@@ -195,6 +198,7 @@ def wedgeRightVertex (G : CFGraph.{u}) (H : CFGraph.{v})
   fun b => if h : b = y then Sum.inl x else Sum.inr ⟨b, h⟩
 
 /-- Identify `x` and `y` in the disjoint union of two graphs. -/
+@[expose]
 def vertexWedge (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) : CFGraph.{max u v} where
   V := Sum G.V {b : H.V // b ≠ y}
@@ -336,6 +340,7 @@ def stepRight (α : Fin (g + 1)) (offset : Fin (B.length α)) : B.Vertex :=
   else B.interiorVertex α ⟨offset.val, by have := offset.isLt; omega⟩
 
 /-- The ordered pair emitted by one unit step. -/
+@[expose]
 def unitEdge (step : B.Step) : B.Vertex × B.Vertex :=
   (B.stepLeft step.1 step.2, B.stepRight step.1 step.2)
 

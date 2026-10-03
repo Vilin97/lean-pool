@@ -17,7 +17,7 @@ two-by-two incidence matrix. A rational positive-semidefinite factorization then
 two colors, leaving two copies of the three-vertex radial estimate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -25,18 +25,18 @@ import Mathlib.Tactic.Ring.RingNF
 `w(y) ≤ (32 y + 11) e^{-π y}` for `y > 0` (a crude form of (6.11)), and measurability on `(0, ∞)`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology
 
 namespace Zeta5Irrational
 
 /-- The series `∑_{ℓ ≥ 1} ℓ⁴ e^{-2πℓy}`. -/
-noncomputable def wS (y : ℝ) : ℝ :=
+@[expose] noncomputable def wS (y : ℝ) : ℝ :=
   ∑' ℓ : ℕ, ((ℓ : ℝ) + 1) ^ 4 * Real.exp (-(2 * Real.pi * ((ℓ : ℝ) + 1) * y))
 
 /-- The weight `w(y) = (2π)⁴ y⁵ / 12 · ∑_{ℓ ≥ 1} ℓ⁴ e^{-2πℓy}` of (2.10). -/
-noncomputable def w (y : ℝ) : ℝ :=
+@[expose] noncomputable def w (y : ℝ) : ℝ :=
   (2 * Real.pi) ^ 4 * y ^ 5 / 12 * wS y
 
 lemma summable_w_term {y : ℝ} (hy : 0 < y) :

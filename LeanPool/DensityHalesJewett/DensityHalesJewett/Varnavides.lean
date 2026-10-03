@@ -14,7 +14,7 @@ Varnavides' averaging argument upgrades Szemerédi's theorem from the existence 
 progression in a dense set to a quadratic lower bound on the number of such progressions.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

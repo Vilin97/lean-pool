@@ -31,7 +31,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 `fiberMultSum` is locally constant.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set Function
 open scoped ContDiff Manifold Topology

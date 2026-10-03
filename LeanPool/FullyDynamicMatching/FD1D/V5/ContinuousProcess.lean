@@ -17,7 +17,7 @@ public import Mathlib.Probability.Kernel.IonescuTulcea.Traj
 
 /-! # Continuous Process -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -43,6 +43,7 @@ variable {L m : ℕ}
 abbrev Noise := unitInterval × unitInterval
 
 /-- The law of an independent uniform demand/replenishment pair. -/
+@[expose]
 def noiseLaw : Measure Noise :=
   (volume : Measure unitInterval).prod volume
 
@@ -119,6 +120,7 @@ theorem map_noiseLeaves
       measurable_subtype_coe)).symm
 
 /-- Iid continuous coordinates for the refreshed live inventory. -/
+@[expose]
 def initialSpatialLaw (m : ℕ) : Measure (SpatialState m) :=
   Measure.pi fun _ : Fin m => (volume : Measure unitInterval)
 
@@ -363,6 +365,7 @@ private theorem comap_comp_measure
   rw [Measure.deterministic_comp_eq_map hf]
 
 /-- The continuous spatial law after `t` policy steps. -/
+@[expose]
 def spatialLaw (a : ℝ) (fallback : Fin m) :
     ℕ → Measure (SpatialState m)
   | 0 => initialSpatialLaw m
@@ -421,6 +424,7 @@ current independent demand/replenishment pair.
 abbrev ProcessState (m : ℕ) := SpatialState m × Noise
 
 /-- The refreshed inventory and first noise pair are independent. -/
+@[expose]
 def initialProcessLaw (m : ℕ) : Measure (ProcessState m) :=
   (initialSpatialLaw m).prod noiseLaw
 
@@ -433,6 +437,7 @@ instance initialProcessLaw.isProbabilityMeasure :
 Apply the current noise pair to the inventory, then attach the freshly sampled
 noise pair for the following period.
 -/
+@[expose]
 def processAdvance (L : ℕ) (a : ℝ) (fallback : Fin m)
     (p : ProcessState m × Noise) : ProcessState m :=
   (spatialStep L a fallback p.1.1 p.1.2, p.2)
@@ -446,6 +451,7 @@ theorem processAdvance_measurable
         (measurable_snd.comp measurable_fst))).prodMk measurable_snd
 
 /-- The homogeneous transition kernel of the joint process. -/
+@[expose]
 def processKernel (a : ℝ) (fallback : Fin m) :
     Kernel (ProcessState m) (ProcessState m) :=
   (Kernel.id ×ₖ Kernel.const (ProcessState m) noiseLaw).map
@@ -536,7 +542,7 @@ theorem processLaw_eq_product
       rw [ih, processKernel_comp_product, spatialLaw_succ]
 
 /-- One path-space law carrying the entire joint continuous process. -/
-def trajectoryLaw (a : ℝ) (fallback : Fin m) :
+@[expose] def trajectoryLaw (a : ℝ) (fallback : Fin m) :
     Measure (ℕ → ProcessState m) :=
   TrajectoryBridge.trajectoryLaw
     (initialProcessLaw m) (processKernel (L := L) a fallback)
@@ -605,6 +611,7 @@ theorem spatialLookup_measurable :
   exact hswap.comp measurable_swap
 
 /-- The actual matching cost paid at one joint process state. -/
+@[expose]
 def processCost (L : ℕ) (a : ℝ) (fallback : Fin m)
     (z : ProcessState m) : ℝ :=
   Dynamics.actualStepCost a (toConfiguration L z.1)
@@ -896,6 +903,7 @@ theorem integral_processCost_processLaw
   exact integral_processCost_noise_eq_actualConfigurationCost L a hm s
 
 /-- One-period reward, integrated on the single infinite trajectory law. -/
+@[expose]
 def trajectoryExpectedCost
     (a : ℝ) (hm : 0 < m) (fallback : Fin m) (t : ℕ) : ℝ :=
   ∫ path : ℕ → ProcessState m,
@@ -986,6 +994,7 @@ theorem integral_processSquaredCost_processLaw
 
 /-- One-period squared reward, integrated on the single infinite trajectory
 law. -/
+@[expose]
 def trajectoryExpectedSquaredCost
     (a : ℝ) (hm : 0 < m) (fallback : Fin m) (t : ℕ) : ℝ :=
   ∫ path : ℕ → ProcessState m,

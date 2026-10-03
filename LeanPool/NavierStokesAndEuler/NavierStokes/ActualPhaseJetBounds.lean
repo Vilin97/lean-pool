@@ -19,7 +19,7 @@ bound.  The remaining expression has polynomial slow jets on the same
 native phase cells used to construct the primary waves.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -159,6 +159,7 @@ abbrev CopyIndex (B N0 : ℕ) := SignedLabel B N0 × TorusInverse.Frequency
 
 /-- Only the genuine analytic cell and clock core are required.  In
 particular, this also allows the larger geometric source window. -/
+@[expose]
 noncomputable def phaseCell (n : ℕ) (i : CopyIndex B N0) : Set ActualPrimary.FullPoint :=
   {x | ActualPrimaryBounds.near i.1 n ∧
     (ActualPrimaryBounds.fullCopy i.1 n i.2 x).1 ∈
@@ -433,7 +434,7 @@ theorem localPhase_positive_jets (m : ℕ) :
     _ = _ := by ring
 
 /-- The full frequency-weighted phase, with the literal chosen carrier. -/
-noncomputable def weightedPhase (l : SignedLabel B N0) (n : ℕ)
+@[expose] noncomputable def weightedPhase (l : SignedLabel B N0) (n : ℕ)
     (x : ActualPrimary.FullPoint) : ℝ :=
   (ActualPrimary.chartCoefficients l.1 l.2).frequency n *
     (ActualPrimary.chartCoefficients l.1 l.2).phase n x

@@ -25,7 +25,7 @@ element of T/M² and meeting a given nonzero prime, while closing
 all finitely generated ideals (Heitmann, 1993, Lemma 7).
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -75,7 +75,8 @@ include T in theorem build_union_isNSubring
         ≤ Cardinal.mk ι' * ⨆ α, Cardinal.mk ↑((chain.ring α).carrier : Set T) := h1
       _ ≤ κ * κ := mul_le_mul' h_ι_card (ciSup_le fun α => h_card α)
       _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq (max_self κ)
-  exact ⟨chain.unionNSubring hU_card, rfl, chain.le_union⟩
+  refine ⟨chain.unionNSubring hU_card, chain.unionNSubring_carrier hU_card, ?_⟩
+  simpa only [NSubringChain.unionNSubring_carrier] using chain.le_union
 
 /- Process one (gens, c) pair: given NSubring Sk with R' ≤ Sk and #Sk < #T,
 produce an A-extension Sk1 that closes the pair if c ∈ I·T. -/
@@ -468,7 +469,8 @@ include T in theorem build_union_isNSubring_nat
         ≤ Cardinal.aleph0 * ⨆ n, Cardinal.mk ((chain.ring n).carrier : Set T) := h_lift
       _ ≤ κ * κ := mul_le_mul' (le_max_left ..) (ciSup_le fun n => h_card n)
       _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq (max_self κ)
-  exact ⟨chain.unionNSubring hU_card, rfl, chain.le_union⟩
+  refine ⟨chain.unionNSubring hU_card, chain.unionNSubring_carrier hU_card, ?_⟩
+  simpa only [NSubringChain.unionNSubring_carrier] using chain.le_union
 
 /- ω-iteration: given a one-pass close-up procedure, iterate it to close all f.g. ideals. -/
 include T in theorem close_up_all_omega

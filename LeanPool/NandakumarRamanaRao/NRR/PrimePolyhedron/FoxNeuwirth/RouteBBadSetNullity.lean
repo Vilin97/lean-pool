@@ -35,7 +35,7 @@ system of deviation equations (or an equivalent nonzero elimination
 polynomial), rather than only one fixed-witness scalar equation.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

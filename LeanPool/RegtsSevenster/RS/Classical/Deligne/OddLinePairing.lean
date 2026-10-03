@@ -19,7 +19,7 @@ the hexagon turns that cyclic rearrangement into a braiding past
 the trivialisation, which the unit coherences absorb.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -149,7 +149,7 @@ theorem OddLine.coevaluation_evaluation
 
 /-- **The odd line is self-dual**: the square trivialisation is
 an exact pairing of the line with itself. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def OddLine.exactPairing
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] (L : OddLine D) :

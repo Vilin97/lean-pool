@@ -20,7 +20,7 @@ exponentials on `ℝ≥0`, so their nonnegativity is encoded by the type and the
 coordinatewise antitonicity of `K` is a pointwise set inclusion.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ENNReal
 
@@ -36,6 +36,7 @@ The source exponential law is already supported on the nonnegative reals.
 Using the push-forward makes nonnegativity definitional in all later finite
 sum arguments.
 -/
+@[expose]
 noncomputable def nnexpMeasure : Measure NNReal :=
   (expMeasure 1).map Real.toNNReal
 
@@ -48,7 +49,7 @@ noncomputable instance nnexpMeasure.isProbabilityMeasure :
 
 /-- The joint law of `E₀` and an `ι`-indexed family of independent
 rate-one exponentials. -/
-noncomputable def expProductMeasure (ι : Type*) [Fintype ι] :
+@[expose] noncomputable def expProductMeasure (ι : Type*) [Fintype ι] :
     Measure (Option ι → NNReal) :=
   Measure.pi fun _ ↦ nnexpMeasure
 
@@ -65,7 +66,7 @@ section Statistic
 variable {ι : Type*} [Fintype ι]
 
 /-- The exponential event corresponding to the simplex event in (2.1). -/
-def kEvent (y : ι → ℝ) : Set (Option ι → NNReal) :=
+@[expose] def kEvent (y : ι → ℝ) : Set (Option ι → NNReal) :=
   {e | ∑ i, (y i - 1) * (e (some i) : ℝ) ≤ (e none : ℝ)}
 
 theorem measurableSet_kEvent (y : ι → ℝ) : MeasurableSet (kEvent y) := by
@@ -77,7 +78,7 @@ theorem measurableSet_kEvent (y : ι → ℝ) : MeasurableSet (kEvent y) := by
 
 /-- The Dirichlet statistic from (2.1), represented internally by
 independent rate-one exponentials. -/
-noncomputable def dirichletK (y : ι → ℝ) : ℝ :=
+@[expose] noncomputable def dirichletK (y : ι → ℝ) : ℝ :=
   (expProductMeasure ι).real (kEvent y)
 
 theorem dirichletK_nonneg (y : ι → ℝ) : 0 ≤ dirichletK y :=

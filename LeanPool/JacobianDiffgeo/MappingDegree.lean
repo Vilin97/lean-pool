@@ -56,4 +56,4 @@ structure; paths-and-integrals/abel-weak consume `branchLocus_finite` and
 `isCoveringMapOn_compl_branchLocus`.
 -/
 
-@[expose] public section
+public section

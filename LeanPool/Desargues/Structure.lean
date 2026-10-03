@@ -21,7 +21,7 @@ Defines subspaces of an axiomatic projective geometry and the induced
 projective subgeometry structure on a closed subset.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open Basic

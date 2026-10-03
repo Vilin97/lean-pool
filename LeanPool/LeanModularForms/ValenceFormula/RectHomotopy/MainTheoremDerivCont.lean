@@ -18,7 +18,7 @@ on each partition piece `(p₁, p₂) × [0, 1]`, where `(p₁, p₂)` avoids th
 partition points `{1, 2, 3, 4}`.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set Metric Filter Topology
 

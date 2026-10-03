@@ -21,7 +21,7 @@ The extension from product tests to arbitrary compactly supported tests on a fin
 not asserted here.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory Topology
 open scoped NNReal ZeroAtInfty

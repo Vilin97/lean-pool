@@ -18,7 +18,7 @@ obtained by radially contracting into the open disk and taking a diagonal
 sequence of Taylor partial sums.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Metric Set
 open scoped Topology

@@ -13,7 +13,7 @@ import Mathlib.CategoryTheory.Category.Init
 # LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
 -/
 
-@[expose] public section
+public section
 
 /- This file contains definitions for splitting a path `γ : Path x y` at some point `T : I`
   yielding two different paths:
@@ -32,13 +32,13 @@ variable {X : Type u} [DirectedSpace X] {x₀ x₁ : X}
 namespace SplitPath
 
 /-- The part of a path on the interval [0, T] -/
-def FirstPart (γ : Path x₀ x₁) (T : I) : Path x₀ (γ T) where
+@[expose] def FirstPart (γ : Path x₀ x₁) (T : I) : Path x₀ (γ T) where
   toFun := fun t => γ ⟨(T : ℝ) * ↑t, unitInterval.mul_mem T.2 t.2⟩
   source' := by simp
   target' := by simp
 
 /-- The part of a path on the interval [T, 1] -/
-def SecondPart (γ : Path x₀ x₁) (T : I) : Path (γ T) x₁ where
+@[expose] def SecondPart (γ : Path x₀ x₁) (T : I) : Path (γ T) x₁ where
   toFun := fun t => γ ⟨(σ T : ℝ) * ↑t + ↑T, interp_left_mem_I T t⟩
   source' := by simp
   target' := by simp

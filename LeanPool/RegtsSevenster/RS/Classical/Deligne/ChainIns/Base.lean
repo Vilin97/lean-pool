@@ -34,7 +34,7 @@ the subject of [FirstSlot.lean](FirstSlot.lean) and
   symmetric multiplication, up to the arity transport.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -51,6 +51,7 @@ section SymIns
 
 /-- **Left insertion into a symmetric power**: the module enters
 through the singleton power and multiplies. -/
+@[expose]
 noncomputable def symInsL
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

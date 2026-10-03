@@ -17,7 +17,7 @@ identity on the old target it is nonexpansive for the adjunction predistance,
 so it descends through metric separation.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -27,6 +27,7 @@ universe u v
 
 /-- The source retraction expressed on the one-sum model of the source and its added real
 coordinate. -/
+@[expose]
 noncomputable def sourceRetractionOne
     {M : Type u} {N : Type v} [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ) (x : OneSum M) : N :=
@@ -34,6 +35,7 @@ noncomputable def sourceRetractionOne
 
 /-- The map on the disjoint union that retracts the source component and fixes the target
 component. -/
+@[expose]
 noncomputable def adjunctionRetractionPre
     {M : Type u} {N : Type v} [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ) : OneSum M ⊕ N → N
@@ -149,6 +151,7 @@ theorem adjunctionRetractionPre_dist_le
 
 /-- The pointed nonexpansive retraction from the metric adjunction to the old
 target. -/
+@[expose]
 noncomputable def adjunctionRetraction
     {M : Type u} {N : Type v} [NormedAddCommGroup M] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (V : M → N) (a : M) (y : N) (L H : ℝ)

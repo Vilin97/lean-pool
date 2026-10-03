@@ -41,7 +41,7 @@ commute with the constructed coercive solve. This covers translations and
 spatial support projections on actual L², not just pointwise model solutions.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -68,7 +68,7 @@ def zeroTraceMap (A : U →L[ℝ] V) :
       rw [initialTrace_timeLift,hu,map_zero])
 
 @[simp] theorem zeroTraceMap_coe (A : U →L[ℝ] V) (u : zeroTraceDerivatives (U := U) T hT) :
-    (zeroTraceMap T hT A u : TimeLp T V) = timeLift T A (u : TimeLp T U) := rfl
+    (zeroTraceMap T hT A u : TimeLp T V) = timeLift T A (u : TimeLp T U) := by rfl
 
 theorem zeroTraceMap_norm (A : U →L[ℝ] V) : ‖zeroTraceMap T hT A‖ ≤ ‖A‖ := by
   apply opNorm_le_bound _ (norm_nonneg A)
@@ -158,7 +158,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -287,7 +287,7 @@ section
 
 /-! Compatible spatial maps commute with the genuine positive Gram inverse. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -353,7 +353,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

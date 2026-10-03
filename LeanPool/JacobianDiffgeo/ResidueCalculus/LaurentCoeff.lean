@@ -31,7 +31,7 @@ Main exports:
 * `RS.forall_neg_laurentCoeffAt_eq_zero_iff` — vanishing tail ↔ analytic-after-repair.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Metric Function
 

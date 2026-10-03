@@ -18,7 +18,7 @@ complement of the split unit factor, and carries the descended
 action.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {D : Type u}
 
 /-- **The split idempotent** on the base change: evaluate, then
 coevaluate. -/
+@[expose]
 noncomputable def splitIdem
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A] {M : Mod D A}
@@ -93,6 +94,7 @@ section Complement
 
 /-- **The complement carrier**: the kernel of the split
 idempotent. -/
+@[expose]
 noncomputable def splitCompl
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A]
@@ -107,6 +109,7 @@ noncomputable def splitCompl
   kernel (splitIdem A B φ v w d hv hw)
 
 /-- The action of the algebra descends to the complement. -/
+@[expose]
 noncomputable def splitComplAct
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasCoequalizers D] (A : D)
@@ -248,7 +251,7 @@ theorem splitComplAct_mul
     (kernel.ι (splitIdem A B φ v w d hv hw))).mp hι
 
 /-- The complement, as a module over the algebra. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def splitComplModObj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasCoequalizers D] (A : D)
@@ -266,6 +269,7 @@ noncomputable def splitComplModObj
   mul_smul := splitComplAct_mul A B φ v w d hv hw
 
 /-- The complement, bundled. -/
+@[expose]
 noncomputable def splitComplMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasCoequalizers D] (A : D)
@@ -282,6 +286,7 @@ noncomputable def splitComplMod
 
 /-- The projection onto the complement: the complementary
 idempotent, corestricted to the kernel. -/
+@[expose]
 noncomputable def splitComplProj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [HasCoequalizers D] (A : D) [MonObj A] [IsCommMonObj A]
@@ -649,6 +654,7 @@ end Complement
 section Retract
 
 /-- The kernel inclusion of the complement, as a module map. -/
+@[expose]
 noncomputable def splitComplIncl
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasCoequalizers D] (A : D)
@@ -665,6 +671,7 @@ noncomputable def splitComplIncl
     exact splitComplAct_ι A B φ v w d hv hw)
 
 /-- The projection onto the complement, as a module map. -/
+@[expose]
 noncomputable def splitComplProjMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasCoequalizers D] (A : D)

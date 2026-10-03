@@ -20,7 +20,7 @@ fixed-degree family of chosen representatives therefore specializes to equal
 complex polynomials on the ideal's local zero set, on one common neighborhood.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped Topology
@@ -31,7 +31,7 @@ namespace LocalComplexGeometry
 noncomputable section
 
 /-- Chosen representatives of all coefficients through a fixed degree bound. -/
-def germPolynomialCoefficientRepresentatives {n m : ℕ}
+@[expose] def germPolynomialCoefficientRepresentatives {n m : ℕ}
     (p : Polynomial (HolomorphicGerm n)) :
     Fin (m + 1) → ComplexEuclidean n → ℂ :=
   fun i ↦ HolomorphicGerm.representative (p.coeff (i : ℕ))
@@ -43,7 +43,7 @@ theorem analyticAt_germPolynomialCoefficientRepresentatives {n m : ℕ}
 
 /-- The fixed-degree complex polynomial obtained by specializing the chosen
 coefficient representatives at a base point. -/
-def germPolynomialRepresentativeAt {n : ℕ} (m : ℕ)
+@[expose] def germPolynomialRepresentativeAt {n : ℕ} (m : ℕ)
     (p : Polynomial (HolomorphicGerm n)) (z : ComplexEuclidean n) :
     Polynomial ℂ :=
   fixedDegreePolynomialAt

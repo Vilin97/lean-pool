@@ -17,7 +17,7 @@ colouring data at those flags: participating flags carry the odd
 colour (or its partner on partner slots), the rest the even colour.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -31,7 +31,7 @@ canonical improper-integral pressure. All stream cutoffs are retained until
 their coefficients are shown to vanish in an exterior neighborhood.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,10 +48,12 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
 section PureHeat
 
 /-- The regular Cartesian swirl coefficient of the physical heat solution. -/
+@[expose]
 noncomputable def heatCoefficient (C h : ℝ) : PhysicalProfile :=
   TerminalStress.swirlCoefficient C h (fun _ => 1)
 
 /-- The pressure is the literal canonical radial integral. -/
+@[expose]
 noncomputable def heatPressure (C h : ℝ) : PhysicalProfile :=
   TerminalStress.canonicalPressure (heatCoefficient C h)
 
@@ -207,10 +209,12 @@ theorem physical_eta_mem {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     hh hh1 ht ⟨le_rfl, le_rfl⟩).2
 
 /-- Exterior domain, given by `{p | p.1 < 1 ∧ R < (physicalChart h p).2.1}`. -/
+@[expose]
 noncomputable def exteriorDomain (h R : ℝ) : Set PhysicalPoint :=
   {p | p.1 < 1 ∧ R < (physicalChart h p).2.1}
 
 /-- Cartesian exterior, given by `{z | z.1 < 1 ∧ R < (cartesianChart h z).2.1}`. -/
+@[expose]
 noncomputable def cartesianExterior (h R : ℝ) : Set SpaceTime :=
   {z | z.1 < 1 ∧ R < (cartesianChart h z).2.1}
 
@@ -251,12 +255,12 @@ theorem exterior_stream_germ {a : ℕ → ℕ} {h C R : ℝ} {d : Coefficients}
 
 /-- Leading angular, defined pointwise by `C⁻¹ * SimilarityProfile.pullback h
 (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p`. -/
-noncomputable def leadingAngular (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
+@[expose] noncomputable def leadingAngular (h C : ℝ) (d : Coefficients) : PhysicalProfile :=
   fun p => C⁻¹ * SimilarityProfile.pullback h (-CoordinateAlgebra.A h - 1 / 2) (d.phi 0) p
 
 /-- Leading pressure, given by `SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h)
 (d.pressure 0)`. -/
-noncomputable def leadingPressure (h : ℝ) (d : Coefficients) : PhysicalProfile :=
+@[expose] noncomputable def leadingPressure (h : ℝ) (d : Coefficients) : PhysicalProfile :=
   SimilarityProfile.pullback h (-2 * CoordinateAlgebra.A h) (d.pressure 0)
 
 theorem exterior_swirl_derivative {a : ℕ → ℕ} (ha : StrictMono a) {h C R : ℝ}
@@ -496,10 +500,12 @@ open AssembledSlowBase
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- Nominal heat switch, given by `OutgoingDilation.switchRadius F W.controls.radius`. -/
+@[expose]
 noncomputable def nominalHeatSwitch : ℝ := OutgoingDilation.switchRadius F W.controls.radius
 
 /-- Nominal exterior radius, given by `max (nominalOuterX W) (max W.controls.radius
 (nominalHeatSwitch W * Real.exp 3))`. -/
+@[expose]
 noncomputable def nominalExteriorRadius : ℝ :=
   max (nominalOuterX W) (max W.controls.radius (nominalHeatSwitch W * Real.exp 3))
 
@@ -700,6 +706,7 @@ section TerminalExtension
 
 /-- Closed cartesian heat domain, given by `{z | z.1 ≤ 1 ∧ 0 < AxisymmetricFields.radialEnergy
 z.2}`. -/
+@[expose]
 noncomputable def closedCartesianHeatDomain : Set SpaceTime :=
   {z | z.1 ≤ 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}
 
@@ -807,7 +814,7 @@ primitive of the angular coefficient.  Their curl is identified here with
 the finite slow field, using the actual radial flux formula and FTC.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1008,6 +1015,7 @@ theorem prefixVelocity_eq_profiles {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     exact hu
 
 /-- The physical similarity coordinates range inside this open half strip. -/
+@[expose]
 noncomputable def profileWindow : Set Inner := Ioi 0 ×ˢ Ioo (-1) 1
 
 theorem profileWindow_open : IsOpen profileWindow := isOpen_Ioi.prod isOpen_Ioo
@@ -1211,7 +1219,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1236,6 +1244,7 @@ theorem admissibleScales_mono {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ
   blown := fun j hj m hm q hq hq1 w hw => ha.blown j hj m hm q hq hq1 w (hK hw)
 
 /-- The genuine smooth vector potential of the summed base. -/
+@[expose]
 noncomputable def potential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) :
     ProblemStatement.VelocityField :=
   AxisymmetricFields.potential (streamFactor a h C d) (swirlPotential a h C d)
@@ -1641,6 +1650,7 @@ open BaseResidual ActiveAnnulusWeight
 
 /-- The actual two-slot, all-order weighted estimate, used only as an output
 of the coefficient construction and common schedule selection. -/
+@[expose]
 def WeightedStressBound (a : ℕ → ℕ) (h : ℝ) (d : Coefficients) (c left right : ℝ) : Prop :=
   ∀ m : ℕ, ∃ D : ℝ, 0 < D ∧ ∃ N : ℕ, ∀ q : ℝ, 0 < q → q ≤ 1 →
     ∀ w ∈ activeWindow left right,
@@ -1723,16 +1733,16 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 noncomputable def activeLeft : ℝ := Real.log (nominalInner W / 16)
 
 /-- Terminal shift, given by `TerminalHistoryBridge.shift F W.controls.radius`. -/
-noncomputable def terminalShift : ℝ := TerminalHistoryBridge.shift F W.controls.radius
+@[expose] noncomputable def terminalShift : ℝ := TerminalHistoryBridge.shift F W.controls.radius
 
 /-- Active right, given by `terminalShift W + 3`. -/
-noncomputable def activeRight : ℝ := terminalShift W + 3
+@[expose] noncomputable def activeRight : ℝ := terminalShift W + 3
 
 /-- Active upper, given by `Real.exp (activeRight W)`. -/
-noncomputable def activeUpper : ℝ := Real.exp (activeRight W)
+@[expose] noncomputable def activeUpper : ℝ := Real.exp (activeRight W)
 
 /-- Scale upper, given by `max upper (activeUpper W)`. -/
-noncomputable def scaleUpper (upper : ℝ) : ℝ := max upper (activeUpper W)
+@[expose] noncomputable def scaleUpper (upper : ℝ) : ℝ := max upper (activeUpper W)
 
 theorem exp_activeLeft : Real.exp (activeLeft W) = nominalInner W / 16 :=
   Real.exp_log (div_pos (nominalInner_pos W) (by norm_num))
@@ -2057,6 +2067,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
 
 /-- The coefficients are rebuilt from this particular solved finite
 modulation, using its preserved histories and its original nominal witness. -/
+@[expose]
 noncomputable def coefficients : Coefficients :=
   modifiedCoefficients W v.profiles v.finiteModification
 
@@ -2085,12 +2096,14 @@ theorem scales_strictMono (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
 
 /-- Velocity, given by `baseVelocity (scales v c hc upper B) F.data.h W.axis.normalization
 (coefficients v)`. -/
+@[expose]
 noncomputable def velocity (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.VelocityField :=
   baseVelocity (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
 
 /-- Pressure, given by `basePressure (scales v c hc upper B) F.data.h W.axis.normalization
 (coefficients v)`. -/
+@[expose]
 noncomputable def pressure (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.PressureField :=
   basePressure (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)
@@ -2110,6 +2123,7 @@ noncomputable def error (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
 
 /-- Vector potential, given by `potential (scales v c hc upper B) F.data.h W.axis.normalization
 (coefficients v)`. -/
+@[expose]
 noncomputable def vectorPotential (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ProblemStatement.VelocityField :=
   potential (scales v c hc upper B) F.data.h W.axis.normalization (coefficients v)

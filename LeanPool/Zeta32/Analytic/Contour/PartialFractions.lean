@@ -17,7 +17,7 @@ The generic part (`piPl`, `polyPart`, `resP`, `partial_fractionsP`) is
 (itself extracted from Apery/Arith/PoleFun.lean in mo271/Zeta5 by Moritz Firsching, Apache-2.0);
 the specialization to `D (5*n)` follows Li2 `OriginalPartialFractions.lean`. -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 open scoped BigOperators

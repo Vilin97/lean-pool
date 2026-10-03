@@ -16,7 +16,7 @@ import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 # LeanPool.RiemannMappingTheorem.ToMathlib
 -/
 
-@[expose] public section
+public section
 
 open intervalIntegral Real MeasureTheory Filter Topology Set Metric Interval
 

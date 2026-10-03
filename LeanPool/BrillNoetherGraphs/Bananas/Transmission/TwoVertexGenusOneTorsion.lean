@@ -17,7 +17,7 @@ two parallel edges.  Firing either vertex therefore doubles the marked
 difference, while rigidity excludes order one.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -19,14 +19,14 @@ approximation problem, culminating in the exact polynomial
 Crouzeix--Palencia theorem.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ContDiff InnerProductSpace
 
 /-- Package a rounded support envelope as a smooth Jordan domain once its
 support curve has been identified with the envelope frontier. -/
-noncomputable def polytopeRoundedSupportDomainOfRange
+@[expose] noncomputable def polytopeRoundedSupportDomainOfRange
     {u : Finset ℂ} (hu : u.Nonempty) {delta rho : ℝ}
     (hdelta : 0 < delta) (hrho : 0 < rho)
     (hrange : Set.range (polytopeRoundedSupportCurve u delta rho) =
@@ -105,7 +105,7 @@ theorem hasSmoothJordanOuterApproximationForPolytopes_of_supportCurve_range
 
 /-- The smooth Jordan domain canonically associated with a nonempty rounded
 finite support function. -/
-noncomputable def polytopeRoundedSupportDomain
+@[expose] noncomputable def polytopeRoundedSupportDomain
     {u : Finset ℂ} (hu : u.Nonempty) {delta rho : ℝ}
     (hdelta : 0 < delta) (hrho : 0 < rho) :
     SmoothJordanDomain :=

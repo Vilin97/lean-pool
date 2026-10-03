@@ -54,7 +54,7 @@ The fraction-field part is proved first for an arbitrary pair of domains `S → 
   a bare `lake env lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

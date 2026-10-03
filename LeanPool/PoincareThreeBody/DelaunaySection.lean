@@ -20,17 +20,17 @@ physical action map and supplies the action-space representative of the leading 
 integral.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
 
 /-- Eccentricity reconstructed from prograde planar actions `(L,G)`. -/
-noncomputable def eccentricityFromActions (action : ActionSpace) : ℝ :=
+@[expose] noncomputable def eccentricityFromActions (action : ActionSpace) : ℝ :=
   Real.sqrt (1 - (action 1 / action 0) ^ 2)
 
 /-- The open prograde elliptic action region. -/
-def ProgradeEllipticActions : Set ActionSpace :=
+@[expose] def ProgradeEllipticActions : Set ActionSpace :=
   {action | 0 < action 1 ∧ action 1 < action 0}
 
 lemma isOpen_progradeEllipticActions : IsOpen ProgradeEllipticActions := by
@@ -261,7 +261,7 @@ theorem analyticAt_delaunayActionSection
 /-- An action section through a prescribed eccentric anomaly and periapsis angle.  Fixing the
 eccentric anomaly, rather than the mean anomaly, makes the dependence on the two actions
 explicitly analytic. -/
-noncomputable def delaunayActionSectionAtAnomaly
+@[expose] noncomputable def delaunayActionSectionAtAnomaly
     (anomaly periapsisAngle : ℝ) (action : ActionSpace) : PhaseSpace :=
   let eccentricity := eccentricityFromActions action
   positionMomentumPhasePoint
@@ -596,12 +596,12 @@ theorem IsJointlyAnalytic.analyticAt_leadingActionDifferential
       hderivative
 
 /-- The action pair `(L, L sqrt(1-e²))` along a fixed-eccentricity family. -/
-noncomputable def fixedEccentricityAction
+@[expose] noncomputable def fixedEccentricityAction
     (eccentricity firstAction : ℝ) : ActionSpace :=
   ![firstAction, angularActionFromEccentricity firstAction eccentricity]
 
 /-- The leading action differential restricted to a fixed-eccentricity interior family. -/
-noncomputable def leadingActionDifferentialAtEccentricity
+@[expose] noncomputable def leadingActionDifferentialAtEccentricity
     (F : ℝ → PhaseSpace → ℝ) (eccentricity : ℝ)
     (firstAction : InteriorPositiveAction eccentricity) : ActionSpace :=
   leadingActionDifferential F

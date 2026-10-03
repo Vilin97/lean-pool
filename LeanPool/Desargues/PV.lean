@@ -17,7 +17,7 @@ Proves that Mathlib projectivizations satisfy the projective-geometry axioms
 for the dependence-based collinearity relation.
 -/
 
-@[expose] public section
+public section
 
 open Finset Set Submodule FiniteDimensional Projectivization
 open scoped LinearAlgebra.Projectivization

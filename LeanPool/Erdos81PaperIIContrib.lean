@@ -18,7 +18,7 @@ Tags: graph-theory, chordal-graphs, induced-subgraphs, minimal-separators, simpl
 MSC: 05C75
 -/
 
-@[expose] public section
+public section
 
 /-!
 ## Mathematical overview

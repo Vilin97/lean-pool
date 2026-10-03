@@ -12,7 +12,7 @@ public import LeanPool.ScottishBook155.RecursionCardinal
 # Closed initial segments as an open segment with a new top
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 

@@ -24,4 +24,4 @@ Tags: combinatorics, catalan-numbers, noncrossing-partitions
 MSC: 05A15, 05A18
 -/
 
-@[expose] public section
+public section

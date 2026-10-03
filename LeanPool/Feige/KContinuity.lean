@@ -18,7 +18,7 @@ that `dirichletK` is sequentially continuous at every parameter whose
 boundary hyperplane has zero product-exponential measure.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Filter MeasureTheory ProbabilityTheory Set Topology
@@ -30,7 +30,7 @@ section
 variable {ι : Type*} [Fintype ι]
 
 /-- The affine functional defining the moving halfspace in `kEvent`. -/
-def kLinear (y : ι → ℝ) (e : Option ι → NNReal) : ℝ :=
+@[expose] def kLinear (y : ι → ℝ) (e : Option ι → NNReal) : ℝ :=
   ∑ i, (y i - 1) * (e (some i) : ℝ)
 
 theorem continuous_kLinear (e : Option ι → NNReal) :
@@ -58,7 +58,7 @@ theorem eventually_mem_kEvent_iff
       fun h ↦ False.elim ((not_lt_of_ge h) hgt)⟩
 
 /-- The boundary set for a fixed parameter. -/
-def kBoundary (y : ι → ℝ) : Set (Option ι → NNReal) :=
+@[expose] def kBoundary (y : ι → ℝ) : Set (Option ι → NNReal) :=
   {e | kLinear y e = (e none : ℝ)}
 
 theorem measurableSet_kBoundary (y : ι → ℝ) :

@@ -16,7 +16,7 @@ Differentiating the actual normalized ray and primary velocity.  The rates
 are derived from the physical ODEs; no normalized-frame equation is assumed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open InnerProductSpace ContinuousLinearMap
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Unit, given by `‖x‖⁻¹ • x`. -/
-def unit (x : E) : E := ‖x‖⁻¹ • x
+@[expose] def unit (x : E) : E := ‖x‖⁻¹ • x
 
 theorem unit_norm {x : E} (hx : x ≠ 0) : ‖unit x‖ = 1 := by
   rw [unit, norm_smul, norm_inv, Real.norm_of_nonneg (norm_nonneg _), inv_mul_cancel₀]
@@ -95,10 +95,10 @@ theorem unit_hasDerivWithinAt {f : ℝ → E} {f' : E} {t : ℝ} {S : Set ℝ}
 variable [CompleteSpace E]
 
 /-- Ray rate, given by `-B.adjoint p + ⟪p,B p⟫_ℝ • p`. -/
-def rayRate (B : E →L[ℝ] E) (p : E) : E := -B.adjoint p + ⟪p,B p⟫_ℝ • p
+@[expose] def rayRate (B : E →L[ℝ] E) (p : E) : E := -B.adjoint p + ⟪p,B p⟫_ℝ • p
 
 /-- Velocity rate, given by `-B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q`. -/
-def velocityRate (B : E →L[ℝ] E) (p q : E) : E :=
+@[expose] def velocityRate (B : E →L[ℝ] E) (p q : E) : E :=
   -B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q
 
 theorem normalized_ray_hasDerivAt (B : E →L[ℝ] E) {m : ℝ → E} {t : ℝ}

@@ -11,7 +11,7 @@ public import LeanPool.NandakumarRamanaRao.HumanVerification.EqualAreaEqualPerim
 
 /-! # Main -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -31,6 +31,7 @@ structure ConvexFigure where
 namespace ConvexFigure
 
 /-- Convert a public figure to the solid convex-body type used by the proof. -/
+@[expose]
 def toBody (F : ConvexFigure) : NRR.Geometry.ConvexBody Plane where
   carrier := F.carrier
   convex' := F.isConvex
@@ -38,6 +39,7 @@ def toBody (F : ConvexFigure) : NRR.Geometry.ConvexBody Plane where
   interior_nonempty' := F.hasNonemptyInterior
 
 /-- Present an internal solid convex body as a public figure. -/
+@[expose]
 def ofBody (K : NRR.Geometry.ConvexBody Plane) : ConvexFigure where
   carrier := K
   isConvex := K.convex
@@ -75,11 +77,11 @@ instance instConvexFigureModel : NRR.HumanExport.ConvexFigureModel ConvexFigure 
   carrier_ofBody := by exact ofBody_carrier
 
 /-- Lebesgue area of the figure's carrier. -/
-def area (F : ConvexFigure) : ENNReal :=
+@[expose] def area (F : ConvexFigure) : ENNReal :=
   MeasureTheory.volume F.carrier
 
 /-- One-dimensional Hausdorff measure of the figure's boundary. -/
-def perimeter (F : ConvexFigure) : ENNReal :=
+@[expose] def perimeter (F : ConvexFigure) : ENNReal :=
   (MeasureTheory.Measure.hausdorffMeasure (1 : ℝ) :
       MeasureTheory.Measure Plane)
     (frontier F.carrier)
@@ -87,7 +89,7 @@ def perimeter (F : ConvexFigure) : ENNReal :=
 end ConvexFigure
 
 /-- A finite family covers the figure and has pairwise disjoint interiors. -/
-def IsConvexPartition {n : ℕ}
+@[expose] def IsConvexPartition {n : ℕ}
     (F : ConvexFigure) (pieces : Fin n → ConvexFigure) : Prop :=
   F.carrier = ⋃ i, (pieces i).carrier ∧
   ∀ i j, i ≠ j →

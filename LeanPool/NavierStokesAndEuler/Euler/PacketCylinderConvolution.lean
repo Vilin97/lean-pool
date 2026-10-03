@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderFieldAlgebra
 
 /-! Finite grade convolution of actual raw cylinder fields. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

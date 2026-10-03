@@ -24,7 +24,7 @@ collects quotient-facet incidences: side facets cancel inside each slab, adjacen
 cancel between consecutive slabs, and only the first lower and final upper boundary remain.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -44,6 +44,7 @@ open RelativeCollarMiddlePrism
 variable {p : Nat}
 
 /-- Affine rescaling of the unit interval onto slab `r` of a positive `m`-slab partition. -/
+@[expose]
 noncomputable def slabTime
     (m : Nat) (hm : 0 < m) (r : Fin m) (t : Set.Icc (0 : Real) 1) :
     Set.Icc (0 : Real) 1 := by
@@ -66,6 +67,7 @@ noncomputable def slabTime
   rfl
 
 /-- Embed one cylinder point into a specified thin time slab. -/
+@[expose]
 noncomputable def slabPoint
     (m : Nat) (hm : 0 < m) (r : Fin m) (z : CylinderPoint p) : CylinderPoint p where
   spatial := z.spatial
@@ -129,6 +131,7 @@ noncomputable def defaultCell
   (⟨0, hm⟩, RelativeCollarMiddlePrism.defaultPrismCell hp N 0)
 
 /-- Geometric vertex of a thin-stack cell. -/
+@[expose]
 noncomputable def vertex
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m)
     (q : Cell hp N m) (i : Fin (p + 1)) : CylinderPoint p :=
@@ -150,6 +153,7 @@ noncomputable def chart
   simp [chart, vertex]
 
 /-- The thin stack is a genuine affine cell system with unchanged spatial endpoint level `N`. -/
+@[expose]
 noncomputable def cellSystem
     (hp : Nat.Prime p) (N m : Nat) (hm : 0 < m) :
     RelativeAffineCellSystem hp N N N m where

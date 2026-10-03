@@ -16,7 +16,7 @@ The participating flags of an edge subset, enumerated in slot order,
 and the link between the pattern inversion count and list inversions.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -37,6 +37,7 @@ theorem mem_partSlots {W : ClosedFragment} {F : EdgeSubset W}
   exact ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
 
 /-- The global slot list: participating flags in slot order. -/
+@[expose]
 noncomputable def globalSlotList (W : ClosedFragment) (F : EdgeSubset W) :
     List {f : W.Flag // f ∈ F.flags} :=
   ((partSlots W F).sort (· ≤ ·)).pmap

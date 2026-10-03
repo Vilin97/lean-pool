@@ -16,7 +16,7 @@ Ported from the corresponding upstream modules listed by the source sections bel
 References beginning with `Source` name these retained sections.
 -/
 
-@[expose] public section
+public section
 
 section SourceQuantumChordGap
 
@@ -1091,6 +1091,7 @@ variable {ι σ V W : Type} [Fintype ι] [DecidableEq ι] [Fintype σ] [Decidabl
 namespace QRoutine
 
 /-- **Lift a routine along a workspace extension.** -/
+@[expose]
 def liftReg (V : Type) [Fintype V] [DecidableEq V] (R : QRoutine ι σ W) :
     QRoutine ι σ (V × W) where
   len := R.len
@@ -2237,6 +2238,7 @@ open Matrix
 variable {X O : Type} [Fintype X] [DecidableEq O] {f : X → O}
 
 /-- The attained output of `x`, as an element of the finite workspace. -/
+@[expose]
 def rangeElem (f : X → O) (x : X) : ↥(Set.range f) := ⟨f x, ⟨x, rfl⟩⟩
 
 omit [DecidableEq O] [Fintype X] in
@@ -2326,11 +2328,13 @@ readout measures — one coherent conversion, never one detector per
 output. -/
 
 /-- The common initial vector: the constant coordinate alone. -/
+@[expose]
 def commonVec {R : Type} : Option R → ℝ
   | none => 1
   | some _ => 0
 
 /-- The output-labelled vector: the coordinate of one attained output. -/
+@[expose]
 def outVec {R : Type} [DecidableEq R] (r : R) : Option R → ℝ
   | none => 0
   | some s => if s = r then 1 else 0
@@ -2832,6 +2836,7 @@ abbrev UQBasis (R ι σ K : Type) : Type := QBasis ι σ (UWork R ι K)
 
 /-- The realization: place an abstract vector in the query basis, extending
 by zero off the embedded coordinates. -/
+@[expose]
 def uRealize (ψ : UBasis R ι σ K → ℂ) : UQBasis R ι σ K → ℂ := fun q =>
   match q with
   | (none, none, Sum.inl s) => ψ (Sum.inl s)
@@ -3759,6 +3764,7 @@ points.  Proving the inner product and the norm once, for this shape, is what
 keeps the rest of the file free of basis manipulation. -/
 
 /-- A state of the construction's shape. -/
+@[expose]
 def scState (α : ℂ) (A : ι → σ → K → ℂ) : QBasis ι σ (Option K) → ℂ
   | (none, none, none) => α
   | (some i, some s, some k) => A i s k
@@ -4131,6 +4137,7 @@ variable {ι σ X O K : Type} [Fintype ι] [DecidableEq ι] [Fintype σ]
 /-- **Rescaling a dual pair**: `u ↦ αu`, `v ↦ α⁻¹v`.  Feasibility is
 scale-invariant, and the two sides' masses trade against each other — the
 balancing device of the algorithm extraction. -/
+@[expose]
 noncomputable def scale (P : DualPairOn read K f) {α : ℝ} (hα : α ≠ 0) :
     DualPairOn read K f where
   u x i k := α * P.u x i k
@@ -4247,6 +4254,7 @@ theorem qNormSq_posWitness_le [Nonempty σ] {cu : ℝ} (P : DualPairOn read K f)
 /-- **The detector for output `o`**: the uniform-clock phase detector of the
 reflection product built from the witness construction's generators and the
 span of the positive witnesses of `f⁻¹(o)`.  Cost: `4(T−1)` queries. -/
+@[expose]
 noncomputable def scDetector (P : DualPairOn read K f) (o : O) (T : ℕ) :
     QRoutine ι σ (ClockWork ι T (Option K)) :=
   clockPhaseRefl (inputReflProduct scGen (scKer read f P o)
@@ -4528,6 +4536,7 @@ variable {ι σ K X O : Type} [Fintype ι] [DecidableEq ι] [Fintype σ]
 /-- **The uniform detector**: the clocked phase reflection of the reflection
 product `R_P·R_L`, for the physical generators and the global projector
 `uniformL P α`. -/
+@[expose]
 noncomputable def uniformDetector (P : DualPairOn read K f) (α : ℝ) (T : ℕ) :
     QRoutine ι σ (ClockWork ι T (UWork ↥(Set.range f) ι K)) :=
   clockPhaseRefl (inputReflProduct
@@ -5073,12 +5082,14 @@ variable {ι σ K X O : Type} [Fintype ι] [DecidableEq ι] [Fintype σ]
 
 /-- **The uniform extraction constant** — one fixed absolute constant, never
 a free variable. -/
+@[expose]
 def uniformExtractionConstant : ℝ := 8192
 
 /-! ## The readout -/
 
 /-- The label of one workspace coordinate: the output held in the target
 register, or the junk label `o₀` anywhere else. -/
+@[expose]
 def uniformLabel (f : X → O) (o₀ : O) :
     UWork ↥(Set.range f) ι K → O
   | Sum.inl (some r) => (r : O)

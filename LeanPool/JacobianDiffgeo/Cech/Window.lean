@@ -28,7 +28,7 @@ inputs) are exported from `WindowRank.lean` instead, via a one-step splitting
 needed); the *structural* exactness in this file does not depend on them.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Topology
 open Set TopologicalSpace Filter
@@ -40,6 +40,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-! ### `ordGe` -/
 
 /-- Germs at the chart source of `p` with order `≥ m` at `p`. -/
+@[expose]
 noncomputable def ordGe (p : X) (m : ℤ) : Submodule ℂ (RS.MeroGermOn X ((chartAt ℂ p).source)) where
   carrier := {ψ | (m : WithTop ℤ) ≤ ψ.ord p}
   zero_mem' := by
@@ -83,7 +84,7 @@ theorem meromorphicOnX_tailGerm (p : X) (m : ℤ) :
   rw [(chartAt ℂ p).right_inv hz]
 
 /-- The local tail germ `(z − z_p)^m` (junk off the chart source). -/
-noncomputable def tailGerm (p : X) (m : ℤ) : RS.MeroGermOn X ((chartAt ℂ p).source) :=
+@[expose] noncomputable def tailGerm (p : X) (m : ℤ) : RS.MeroGermOn X ((chartAt ℂ p).source) :=
   RS.MeroGermOn.mk (fun y => (chartAt ℂ p y - chartAt ℂ p p) ^ m) (meromorphicOnX_tailGerm p m)
 
 theorem ord_tailGerm_self (p : X) (m : ℤ) : (tailGerm p m).ord p = (m : WithTop ℤ) := by
@@ -101,7 +102,7 @@ theorem ord_tailGerm_self (p : X) (m : ℤ) : (tailGerm p m).ord p = (m : WithTo
 
 /-- The one-step leading-coefficient functional (D7): `ψ ↦ (θ_{p,−m}·ψ).evalAt p` on
 `ordGe p m`. -/
-noncomputable def leadCoeff (p : X) (m : ℤ) : ordGe p m →ₗ[ℂ] ℂ where
+@[expose] noncomputable def leadCoeff (p : X) (m : ℤ) : ordGe p m →ₗ[ℂ] ℂ where
   toFun ψ := ((tailGerm p (-m)) * (ψ : RS.MeroGermOn X ((chartAt ℂ p).source))).evalAt p
   map_add' ψ ψ' := by
     have h1 : (0 : WithTop ℤ) ≤ (tailGerm p (-m) * (ψ : RS.MeroGermOn X _)).ord p := by
@@ -143,7 +144,7 @@ noncomputable abbrev WindowAt (p : X) (d d' : ℤ) : Type _ :=
 
 /-- The quotient map onto the window at `p`: a germ of order at least `-d'`, taken modulo those of
 order at least `-d`. -/
-noncomputable def WindowAt.mk (p : X) (d d' : ℤ) : ordGe p (-d') →ₗ[ℂ] WindowAt p d d' :=
+@[expose] noncomputable def WindowAt.mk (p : X) (d d' : ℤ) : ordGe p (-d') →ₗ[ℂ] WindowAt p d d' :=
   Submodule.mkQ _
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -191,7 +192,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space X] [CompactSpace X] in
 theorem restrictToChart_apply_coe (D' : RS.Divisor X) (q : X) (φ : RS.LinSys D') :
     (restrictToChart D' q φ : RS.MeroGermOn X ((chartAt ℂ q).source)) =
       RS.MeroGermOn.restrict (Set.subset_univ (chartAt ℂ q).source)
-        (φ : RS.MeroGermOn X (Set.univ : Set X)) := rfl
+        (φ : RS.MeroGermOn X (Set.univ : Set X)) := by rfl
 
 /-- Truncation `β : L(D') → Window D D'` — purely structural (D7). -/
 noncomputable def windowMap {D D' : RS.Divisor X} (_h : D ≤ D') :
@@ -201,7 +202,7 @@ noncomputable def windowMap {D D' : RS.Divisor X} (_h : D ≤ D') :
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowMap_apply {D D' : RS.Divisor X} (h : D ≤ D') (φ : RS.LinSys D')
     (q : diffSupp D D') :
-    windowMap h φ q = WindowAt.mk (q : X) (D q) (D' q) (restrictToChart D' q φ) := rfl
+    windowMap h φ q = WindowAt.mk (q : X) (D q) (D' q) (restrictToChart D' q φ) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowMap_eq_zero_iff {D D' : RS.Divisor X} (h : D ≤ D') (φ : RS.LinSys D') :

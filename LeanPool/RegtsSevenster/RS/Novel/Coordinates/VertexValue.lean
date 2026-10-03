@@ -18,7 +18,7 @@ the canonical colouring, whose star coordinate the functional
 `hRS` evaluates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

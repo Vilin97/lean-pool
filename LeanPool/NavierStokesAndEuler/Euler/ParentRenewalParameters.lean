@@ -17,7 +17,7 @@ certificate below is proved for the actual state renewal constructors in
 `ParentTargetRenewal`; it records equality of the physical matrix and the
 two physical vectors, rather than postulating their scalar estimates. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,11 +30,11 @@ variable {ι : Type*} (G : PhysicalGeometryData ι)
 
 /-- Coupling error, given by `G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3 +
 30000000*neighborStabilityConstant*G.error*G.Θ^40`. -/
-def couplingError : ℝ := G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3 +
+@[expose] def couplingError : ℝ := G.y^4+G.σ^2*G.y^2+8*G.σ*G.y^3 +
   30000000*neighborStabilityConstant*G.error*G.Θ^40
 
 /-- Tilt error, given by `1500*G.σ+30000000*neighborStabilityConstant*G.error*G.Θ^40`. -/
-def tiltError : ℝ := 1500*G.σ+30000000*neighborStabilityConstant*G.error*G.Θ^40
+@[expose] def tiltError : ℝ := 1500*G.σ+30000000*neighborStabilityConstant*G.error*G.Θ^40
 
 /-- A lower bound for the magnitude of the leading compressive term. -/
 def compressionScale : ℝ := G.a/(20*G.ε*G.target)

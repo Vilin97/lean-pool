@@ -22,7 +22,7 @@ import Mathlib.Tactic.NormNum.Pow
 Auxiliary declarations for the Borel determinacy formalization.
 -/
 
-@[expose] public section
+public section
 
 
 namespace GaleStewartGame.BorelDet.Zero
@@ -35,7 +35,7 @@ noncomputable section «Section1»
 
 variable {R : Strategy (gameAsTrees hyp).2 Player.zero} (y : body (stratMap' R).pre.subtree)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def bodyTake (n : ℕ) : TreeLift hyp where
+@[expose, simps] def bodyTake (n : ℕ) : TreeLift hyp where
   R := R
   x := body.take (2 * k + 2 + n) y
   hlvl := by simp; omega
@@ -49,7 +49,7 @@ variable {R : Strategy (gameAsTrees hyp).2 Player.zero} (y : body (stratMap' R).
     congr 1
     omega
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps!] def takeLift (n : ℕ) := (bodyTake y n).lift (by simp)
+@[expose, simps!] def takeLift (n : ℕ) := (bodyTake y n).lift (by simp)
 attribute [simp_lengths] bodyTake_x takeLift_x_coe
 @[simp] lemma takeLift_mono : takeLift y m ≤ takeLift y n ↔ m ≤ n := by
   constructor <;> intro h
@@ -164,6 +164,8 @@ lemma body_lost_of_losable n (h : (takeLift y n).Losable) (h' : ∀ m, ¬ (takeL
         (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
         (by as_aux_lemma => change _ = (takeLift y _).game; simp) rfl
     convert (hsub ▸ this) using 3
+    · simp only [Game.residual_tree]
+    · rfl
     · symm; apply WinningPrefix.prefix_num _
         (((Stream'.take_prefix _ _ _).mpr (by synthIsPosition)).drop _)
         (by change _ = (takeLift y _).game; simp) rfl

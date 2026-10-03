@@ -13,7 +13,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Spatial
 
 /-! # Concrete Transport -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -35,6 +35,7 @@ namespace HierarchicalDynamics
 variable {L m : ℕ}
 
 /-- The deletion-mass tree below `v`, with `k` levels still to descend. -/
+@[expose]
 def stateDyadicMassAt (a : ℝ)
     (x : InventoryState (DyadicNode L) m) :
     (d k : ℕ) → DyadicNode d → DyadicMass k
@@ -258,6 +259,7 @@ theorem stateDyadicMass_haarSeries_eq
   exact stateDyadicMass_nodeCoefficient a ha x i
 
 /-- The concrete coefficient family in the canonical complete-tree index. -/
+@[expose]
 def stateHaarCoefficient (a : ℝ)
     (x : InventoryState (DyadicNode L) m)
     (i : CompleteHaarNode L) : ℝ :=

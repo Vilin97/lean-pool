@@ -24,7 +24,7 @@ marked point.  This is the useful normalization convention because both the
 slipface inequality and the prescribed degree move by the same integer `c`.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

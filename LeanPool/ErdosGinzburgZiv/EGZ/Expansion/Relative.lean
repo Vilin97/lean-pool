@@ -25,7 +25,7 @@ The paper's "linear functions" are affine functionals, consistently with
 its slab definition and with the functional constructed in its proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -34,6 +34,7 @@ namespace Expansion
 
 /-- A single instance of the relative expansion conclusion, at the stated
 dimension, box, thickness, width, and prime. -/
+@[expose]
 def RelativeExpansionAt (r t K : ℕ) (δ : ℝ) (T p : ℕ) [NeZero p] : Prop :=
   ∀ (S : Finset (IntCoord r)) (w : FpCoord p (r + t) → ℕ) (α : S → ℤ),
     (∀ q ∈ S, latticeSupNorm q ≤ K) →
@@ -49,6 +50,7 @@ def RelativeExpansionAt (r t K : ℕ) (δ : ℝ) (T p : ℕ) [NeZero p] : Prop :
 /-- The relative expansion theorem, with its uniform quantifier order.
 Neither threshold depends on `T`, `p`, the support, the multiplicities,
 or the selected coefficients. -/
+@[expose]
 def RelativeExpansionStatement : Prop :=
   ∀ r t K : ℕ, 1 ≤ K → ∀ δ : ℝ, 0 < δ →
     ∃ T₀ p₀ : ℕ, ∀ T : ℕ, T₀ ≤ T →

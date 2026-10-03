@@ -27,7 +27,7 @@ The proof uses:
 * `QSeries.jacobiTripleProduct` — the Jacobi triple product identity.
 -/
 
-@[expose] public section
+public section
 
 open Finset Filter
 open scoped Topology
@@ -78,20 +78,20 @@ theorem summable_inv_pow_mul_pow_choose_two {q z : ℂ} (hq : ‖q‖ < 1) :
 
 /-- The Jacobi triple product function
 $f(z) = (q;q)_\infty \cdot (-z;q)_\infty \cdot (-q/z;q)_\infty$. -/
-def jacobiProd (q z : ℂ) : ℂ :=
+@[expose] def jacobiProd (q z : ℂ) : ℂ :=
   qPochhammerInf q q * qPochhammerInf (-z) q * qPochhammerInf (-q / z) q
 
 /-- The bilateral Jacobi series (non-negative part). -/
-def jacobiBilateralPos (q z : ℂ) : ℂ :=
+@[expose] def jacobiBilateralPos (q z : ℂ) : ℂ :=
   ∑' k : ℕ, z ^ k * q ^ k.choose 2
 
 /-- The bilateral Jacobi series (negative part).
 For $k = -(m+1)$ with $m \geq 0$, the exponent is $\binom{m+2}{2} = (m+1)(m+2)/2$. -/
-def jacobiBilateralNeg (q z : ℂ) : ℂ :=
+@[expose] def jacobiBilateralNeg (q z : ℂ) : ℂ :=
   ∑' m : ℕ, (z⁻¹) ^ (m + 1) * q ^ (m + 2).choose 2
 
 /-- The full bilateral Jacobi series. -/
-def jacobiBilateral (q z : ℂ) : ℂ :=
+@[expose] def jacobiBilateral (q z : ℂ) : ℂ :=
   jacobiBilateralPos q z + jacobiBilateralNeg q z
 
 /-- **Telescoping for $(-z;q)_\infty$**: $(-z;q)_\infty = (1+z)(-zq;q)_\infty$. -/

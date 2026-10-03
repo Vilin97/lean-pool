@@ -22,4 +22,4 @@ Tags: analytic-number-theory, riemann-zeta-function, critical-line, simple-zeros
 MSC: 11M06, 11M26
 -/
 
-@[expose] public section
+public section

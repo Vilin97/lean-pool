@@ -30,7 +30,7 @@ lattice-shift computation as `Torus.contMDiff_add_torus`/`ULift.contMDiff_uliftU
 chart composite affine in `g (e z)`, hence analytic.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Convex Topology
 open IsManifold Metric Set Filter

@@ -18,7 +18,7 @@ on the angle torus.  This file proves directly that a continuous invariant of th
 constant, using irrational rotations on a circle.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

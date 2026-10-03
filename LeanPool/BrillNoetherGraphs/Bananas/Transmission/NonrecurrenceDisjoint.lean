@@ -19,7 +19,7 @@ paper's nonrecurrence condition is exactly pairwise disjointness of those
 canonical supports.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

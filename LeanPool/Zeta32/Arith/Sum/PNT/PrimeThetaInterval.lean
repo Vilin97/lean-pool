@@ -13,7 +13,7 @@ public import LeanPool.Zeta5Irrational.PrimeSum
 -- dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/PrimeThetaInterval.lean
 -- (namespace Li2 -> Zeta32.ArithSum, imports renamed; proof and style updated for Lean Pool)
 
-@[expose] public section
+public section
 
 open Finset Filter Topology Asymptotics
 namespace Zeta32.ArithSum.PrimeSums
@@ -22,6 +22,7 @@ noncomputable section
 export Zeta5Irrational (cPrime)
 
 /-- Sum of prime logarithms over the integer indices in the interval `(a, b]`. -/
+@[expose]
 def logSum (a b : ℝ) : ℝ := ∑ k ∈ Finset.Ioc ⌊a⌋₊ ⌊b⌋₊, cPrime k
 
 lemma theta_eq_sum_cPrime (t : ℝ) :

@@ -17,7 +17,7 @@ and the odd-before-even comparison in equation (2) holds. We isolate this
 argument so that the subsequent recursive construction can be read separately
 from its safety proof.
 -/
-@[expose] public section
+public section
 
 namespace FourAP
 

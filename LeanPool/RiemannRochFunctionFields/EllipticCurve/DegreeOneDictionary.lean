@@ -16,7 +16,7 @@ Unlike the all-place dichotomy over an algebraically closed field, this directio
 the residue field has dimension one over the base field.
 -/
 
-@[expose] public section
+public section
 
 open FunctionField
 open FunctionField.Chart

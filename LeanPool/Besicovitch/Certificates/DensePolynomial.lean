@@ -15,7 +15,7 @@ The outer list records increasing powers of `x`; each inner list records increas
 `y`. Transparent list arithmetic lets the kernel normalize small polynomial certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Besicovitch
 
@@ -25,21 +25,21 @@ abbrev DenseUnivariate := List ℚ
 namespace DenseUnivariate
 
 /-- Add coefficient lists, padding the shorter list by zeros. -/
-def add : DenseUnivariate → DenseUnivariate → DenseUnivariate
+@[expose] def add : DenseUnivariate → DenseUnivariate → DenseUnivariate
   | [], q => q
   | p, [] => p
   | a :: p, b :: q => (a + b) :: add p q
 
 /-- Multiply every coefficient by a rational scalar. -/
-def scale (a : ℚ) (p : DenseUnivariate) : DenseUnivariate :=
+@[expose] def scale (a : ℚ) (p : DenseUnivariate) : DenseUnivariate :=
   p.map (a * ·)
 
 /-- Negate every coefficient. -/
-def neg (p : DenseUnivariate) : DenseUnivariate :=
+@[expose] def neg (p : DenseUnivariate) : DenseUnivariate :=
   p.map (-·)
 
 /-- Exact polynomial multiplication by coefficient convolution. -/
-def mul : DenseUnivariate → DenseUnivariate → DenseUnivariate
+@[expose] def mul : DenseUnivariate → DenseUnivariate → DenseUnivariate
   | [], _ => []
   | a :: p, q => add (scale a q) (0 :: mul p q)
 
@@ -49,11 +49,11 @@ noncomputable def eval : DenseUnivariate → ℝ → ℝ
   | a :: p, x => a + x * eval p x
 
 /-- The sum of the absolute values of the coefficients. -/
-def coefficientL1Norm (p : DenseUnivariate) : ℚ :=
+@[expose] def coefficientL1Norm (p : DenseUnivariate) : ℚ :=
   (p.map abs).sum
 
 /-- Formal differentiation, using `P = a + x Q` and `P' = Q + x Q'`. -/
-def deriv : DenseUnivariate → DenseUnivariate
+@[expose] def deriv : DenseUnivariate → DenseUnivariate
   | [] => []
   | _ :: p => add p (0 :: deriv p)
 
@@ -138,39 +138,40 @@ abbrev DenseBivariatePolynomial := List DenseUnivariate
 namespace DenseBivariatePolynomial
 
 /-- Add two dense bivariate polynomials. -/
-def add : DenseBivariatePolynomial → DenseBivariatePolynomial → DenseBivariatePolynomial
+@[expose] def add : DenseBivariatePolynomial → DenseBivariatePolynomial → DenseBivariatePolynomial
   | [], q => q
   | p, [] => p
   | a :: p, b :: q => DenseUnivariate.add a b :: add p q
 
 /-- Multiply by a rational scalar. -/
-def scale (a : ℚ) (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
+@[expose] def scale (a : ℚ) (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
   p.map (DenseUnivariate.scale a)
 
 /-- Negate a dense bivariate polynomial. -/
-def neg (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
+@[expose] def neg (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
   p.map DenseUnivariate.neg
 
 /-- Multiply each outer coefficient by a univariate polynomial. -/
+@[expose]
 def scaleRow (a : DenseUnivariate) (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
   p.map (DenseUnivariate.mul a)
 
 /-- Exact bivariate polynomial multiplication. -/
-def mul : DenseBivariatePolynomial → DenseBivariatePolynomial → DenseBivariatePolynomial
+@[expose] def mul : DenseBivariatePolynomial → DenseBivariatePolynomial → DenseBivariatePolynomial
   | [], _ => []
   | a :: p, q => add (scaleRow a q) ([] :: mul p q)
 
 /-- A constant bivariate polynomial. -/
-def literal (a : ℚ) : DenseBivariatePolynomial := [[a]]
+@[expose] def literal (a : ℚ) : DenseBivariatePolynomial := [[a]]
 
 /-- The first variable. -/
-def first : DenseBivariatePolynomial := [[0], [1]]
+@[expose] def first : DenseBivariatePolynomial := [[0], [1]]
 
 /-- The second variable. -/
-def second : DenseBivariatePolynomial := [[0, 1]]
+@[expose] def second : DenseBivariatePolynomial := [[0, 1]]
 
 /-- Natural powers of a dense bivariate polynomial. -/
-def pow (p : DenseBivariatePolynomial) : ℕ → DenseBivariatePolynomial
+@[expose] def pow (p : DenseBivariatePolynomial) : ℕ → DenseBivariatePolynomial
   | 0 => literal 1
   | n + 1 => mul (pow p n) p
 
@@ -180,16 +181,16 @@ noncomputable def eval : DenseBivariatePolynomial → ℝ → ℝ → ℝ
   | a :: p, x, y => DenseUnivariate.eval a y + x * eval p x y
 
 /-- The sum of the absolute values of all coefficients. -/
-def coefficientL1Norm (p : DenseBivariatePolynomial) : ℚ :=
+@[expose] def coefficientL1Norm (p : DenseBivariatePolynomial) : ℚ :=
   (p.map DenseUnivariate.coefficientL1Norm).sum
 
 /-- Formal differentiation with respect to the first variable. -/
-def derivFirst : DenseBivariatePolynomial → DenseBivariatePolynomial
+@[expose] def derivFirst : DenseBivariatePolynomial → DenseBivariatePolynomial
   | [] => []
   | _ :: p => add p ([] :: derivFirst p)
 
 /-- Formal differentiation with respect to the second variable. -/
-def derivSecond (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
+@[expose] def derivSecond (p : DenseBivariatePolynomial) : DenseBivariatePolynomial :=
   p.map DenseUnivariate.deriv
 
 theorem coefficientL1Norm_nonneg (p : DenseBivariatePolynomial) : 0 ≤ coefficientL1Norm p := by

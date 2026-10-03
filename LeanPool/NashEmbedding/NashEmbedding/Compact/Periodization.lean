@@ -38,7 +38,7 @@ Wassermann §13):
 All leaves were proved by Aristotle (project bf61e09c, 2026-08-30).
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff Manifold Topology
 open Matrix NashEmbedding.Sobolev Set
@@ -202,7 +202,7 @@ theorem contDiff_symmetrize :
 /-! ## C. Real and matrix periodization -/
 
 /-- The open cube `(-π, π)ᴺ`. -/
-def openCube (N : ℕ) : Set (Fin N → ℝ) := {x | ∀ j, |x j| < Real.pi}
+@[expose] def openCube (N : ℕ) : Set (Fin N → ℝ) := {x | ∀ j, |x j| < Real.pi}
 
 /-- Real-valued periodic extension, via the complex one. -/
 def periodicExtR (N : ℕ) (φ : (Fin N → ℝ) → ℝ) (x : Fin N → ℝ) : ℝ :=
@@ -331,7 +331,7 @@ lemma euclideanSpace_eq_sum_single (a : EuclideanSpace ℝ (Fin N)) :
   simp [Pi.single_apply]
 
 /-- The matrix `B (eᵢ) (eⱼ)` of a bilinear form on `ℝᴺ`. -/
-def formMatrix (B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpace ℝ (Fin N) →L[ℝ] ℝ) :
+@[expose] def formMatrix (B : EuclideanSpace ℝ (Fin N) →L[ℝ] EuclideanSpace ℝ (Fin N) →L[ℝ] ℝ) :
     Matrix (Fin N) (Fin N) ℝ :=
   Matrix.of fun i j => B (EuclideanSpace.single i 1) (EuclideanSpace.single j 1)
 

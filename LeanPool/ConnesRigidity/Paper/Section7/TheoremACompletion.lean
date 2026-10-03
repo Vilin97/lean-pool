@@ -17,7 +17,7 @@ import LeanPool.ConnesRigidity.Paper.Section6.ModuleSemisimpleTransport
 Concrete completion boundary for Zhou's Theorem A. Paper: §§3--7.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperTheoremACompletion

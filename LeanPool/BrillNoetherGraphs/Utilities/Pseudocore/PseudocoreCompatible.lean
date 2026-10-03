@@ -19,7 +19,7 @@ The marker-fibre counting lemma below supports comparison of two compatible
 presentations.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.PseudocoreSplitGlue
 

@@ -21,7 +21,7 @@ quotient term model (the relational-core collapse of closed terms to constants),
 the later transport step, not done here.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

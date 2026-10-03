@@ -16,7 +16,7 @@ inside a fixed diamond.  Repositioning the fan point while fixing the four diamo
 a PL homeomorphism of the diamond, and hence an ambient homeomorphism by identity extension.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -24,11 +24,11 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- Vertices `0,1,2,3` are left, right, top, bottom; vertex `4` is the fan point. -/
-def diamondFanPosition (a : ℝ) : Fin 5 → Plane :=
+@[expose] def diamondFanPosition (a : ℝ) : Fin 5 → Plane :=
   ![planePoint (-1) 0, planePoint 1 0, planePoint 0 2, planePoint 0 (-2), planePoint 0 a]
 
 /-- The four maximal triangles in the fan of the diamond. -/
-def diamondFanTriangles : Finset (Finset (Fin 5)) :=
+@[expose] def diamondFanTriangles : Finset (Finset (Fin 5)) :=
   {{0, 4, 2}, {1, 2, 4}, {0, 3, 4}, {1, 4, 3}}
 
 @[simp] theorem diamondFanPosition_apply_zero (a : ℝ) :
@@ -146,19 +146,19 @@ noncomputable def diamondUpDiagonalAffine (a : ℝ) : Plane →ᵃ[ℝ] ℝ :=
   cartesianX + cartesianY - AffineMap.const ℝ Plane a
 
 @[simp] theorem diamondVerticalAffine_apply (x y : ℝ) :
-    diamondVerticalAffine (planePoint x y) = x := rfl
+    diamondVerticalAffine (planePoint x y) = x := by rfl
 
 @[simp] theorem diamondLeftAffine_apply (a x y : ℝ) :
-    diamondLeftAffine a (planePoint x y) = a * x - y + a := rfl
+    diamondLeftAffine a (planePoint x y) = a * x - y + a := by rfl
 
 @[simp] theorem diamondRightAffine_apply (a x y : ℝ) :
-    diamondRightAffine a (planePoint x y) = a * x + y - a := rfl
+    diamondRightAffine a (planePoint x y) = a * x + y - a := by rfl
 
 @[simp] theorem diamondDownDiagonalAffine_apply (a x y : ℝ) :
-    diamondDownDiagonalAffine a (planePoint x y) = x - y + a := rfl
+    diamondDownDiagonalAffine a (planePoint x y) = x - y + a := by rfl
 
 @[simp] theorem diamondUpDiagonalAffine_apply (a x y : ℝ) :
-    diamondUpDiagonalAffine a (planePoint x y) = x + y - a := rfl
+    diamondUpDiagonalAffine a (planePoint x y) = x + y - a := by rfl
 
 /-- Splitting one edge of a nondegenerate triangle at an interior parameter covers the original
 triangle by the two resulting triangles. -/
@@ -258,15 +258,15 @@ theorem triangle_edge_split_union (p : Fin 3 → Plane) (hp : AffineIndependent 
   exact himage
 
 /-- The left triangular half of the fixed diamond. -/
-def diamondLeftRegion : Set Plane :=
+@[expose] def diamondLeftRegion : Set Plane :=
   convexHull ℝ (Set.range ![planePoint 0 2, planePoint 0 (-2), planePoint (-1) 0])
 
 /-- The right triangular half of the fixed diamond. -/
-def diamondRightRegion : Set Plane :=
+@[expose] def diamondRightRegion : Set Plane :=
   convexHull ℝ (Set.range ![planePoint 0 2, planePoint 0 (-2), planePoint 1 0])
 
 /-- The fixed closed patch supporting the elementary move. -/
-def diamondPatch : Set Plane := diamondLeftRegion ∪ diamondRightRegion
+@[expose] def diamondPatch : Set Plane := diamondLeftRegion ∪ diamondRightRegion
 
 theorem isClosed_diamondPatch : IsClosed diamondPatch := by
   apply IsClosed.union
@@ -554,7 +554,7 @@ theorem diamondSlackLL_baryEval (a : ℝ) (ha0 : -2 < a) (ha1 : a < 2)
   linarith
 
 /-- Closed four-halfspace description of the diamond. -/
-def InDiamond (p : Plane) : Prop :=
+@[expose] def InDiamond (p : Plane) : Prop :=
   0 ≤ diamondSlackUR p ∧ 0 ≤ diamondSlackUL p ∧
     0 ≤ diamondSlackLR p ∧ 0 ≤ diamondSlackLL p
 
@@ -603,7 +603,7 @@ theorem diamondPatch_eq_inDiamond : diamondPatch = {p | InDiamond p} := by
         all_goals ring
 
 /-- Points satisfying all four diamond inequalities strictly form an open subset of the patch. -/
-def StrictlyInDiamond : Set Plane :=
+@[expose] def StrictlyInDiamond : Set Plane :=
   {p | 0 < diamondSlackUR p ∧ 0 < diamondSlackUL p ∧
     0 < diamondSlackLR p ∧ 0 < diamondSlackLL p}
 
@@ -638,7 +638,7 @@ theorem strictlyInDiamond_subset_interior : StrictlyInDiamond ⊆ interior diamo
   interior_maximal strictlyInDiamond_subset_patch isOpen_strictlyInDiamond
 
 /-- The fixed abstract diamond fan with its center repositioned from height `a` to height `b`. -/
-noncomputable def diamondFanReposition (a b : ℝ)
+@[expose] noncomputable def diamondFanReposition (a b : ℝ)
     (ha0 : -2 < a) (ha1 : a < 2) (hb0 : -2 < b) (hb1 : b < 2) : TriangleMesh :=
   (diamondFanMesh a ha0 ha1).reposition (diamondFanPosition b)
     (diamondFanPosition_injective hb0 hb1)
@@ -671,7 +671,7 @@ theorem diamondFanReposition_baryEval_eq_of_center_zero (a b : ℝ)
   simp [diamondFanPosition, Fin.sum_univ_succ, h4]
 
 /-- Preserve barycentric coordinates while moving the fan point from `(0,a)` to `(0,b)`. -/
-noncomputable def diamondFanSupportHomeomorph (a b : ℝ)
+@[expose] noncomputable def diamondFanSupportHomeomorph (a b : ℝ)
     (ha0 : -2 < a) (ha1 : a < 2) (hb0 : -2 < b) (hb1 : b < 2) :
     (diamondFanMesh a ha0 ha1).toPlaneComplex.support ≃ₜ
       (diamondFanReposition a b ha0 ha1 hb0 hb1).toPlaneComplex.support :=
@@ -722,6 +722,7 @@ theorem diamondFanSupportHomeomorph_center (a b : ℝ)
         simp [InDiamond]
         constructor <;> linarith⟩ := by
     apply Subtype.ext
+    rw [PlaneComplex.realizationHomeomorph_apply]
     exact diamondFanCenterRealization_baryEval a ha0 ha1
   change ((diamondFanMesh a ha0 ha1).repositionHomeomorph (diamondFanPosition b)
       (diamondFanPosition_injective hb0 hb1)
@@ -765,7 +766,7 @@ theorem diamondFanSupportHomeomorph_center (a b : ℝ)
   simp [Pi.single_apply]
 
 /-- The barycentric fan move, viewed as a self-homeomorphism of the original diamond support. -/
-noncomputable def diamondFanPatchHomeomorph (a b : ℝ)
+@[expose] noncomputable def diamondFanPatchHomeomorph (a b : ℝ)
     (ha0 : -2 < a) (ha1 : a < 2) (hb0 : -2 < b) (hb1 : b < 2) :
     (diamondFanMesh a ha0 ha1).toPlaneComplex.support ≃ₜ
       (diamondFanMesh a ha0 ha1).toPlaneComplex.support :=
@@ -837,7 +838,7 @@ theorem diamondFanPatchHomeomorph_fixed_frontier (a b : ℝ)
     _ = p := by simpa only [weights, x, e] using hbary
 
 /-- The elementary fan move extended by the identity to the whole plane. -/
-noncomputable def diamondFanAmbientHomeomorph (a b : ℝ)
+@[expose] noncomputable def diamondFanAmbientHomeomorph (a b : ℝ)
     (ha0 : -2 < a) (ha1 : a < 2) (hb0 : -2 < b) (hb1 : b < 2) : Plane ≃ₜ Plane :=
   (diamondFanMesh a ha0 ha1).ambientRepositionHomeomorph (diamondFanPosition b)
     (diamondFanPosition_injective hb0 hb1)

@@ -23,7 +23,7 @@ and the sum of the two means are preserved. `Komlos.mean_mem_convexHull` places 
 probability distribution in the convex hull of its support.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 
@@ -32,9 +32,10 @@ open Finsupp Finset
 variable {E : Type*}
 
 /-- Total weight of a finitely supported real-valued function. -/
-noncomputable def mass (P : E →₀ ℝ) : ℝ := P.sum fun _ r ↦ r
+@[expose] noncomputable def mass (P : E →₀ ℝ) : ℝ := P.sum fun _ r ↦ r
 
 /-- The weighted sum of the support points, without dividing by the total mass. -/
+@[expose]
 noncomputable def mean [AddCommGroup E] [Module ℝ E] (P : E →₀ ℝ) : E := P.sum fun x r ↦ r • x
 
 /-- A finitely supported probability distribution: nonnegative weights with total mass one. -/

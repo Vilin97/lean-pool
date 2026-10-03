@@ -19,7 +19,7 @@ section
 state: the physical Euler solution, all Sobolev orders, particle labels,
 and odd symmetry all refer to the same solution. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -28,6 +28,7 @@ namespace EulerBaseDatum
 open EulerParentPacketFrames
 
 /-- Initial state, bundling `evolution`, `regularity`, `labels`, `odd`. -/
+@[expose]
 def initialState (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ)
     (hell : 0 < ell) (hell1 : ell ≤ 1) :
     SmoothState (initialParent β hβ ell hell hell1) where
@@ -43,7 +44,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -52,7 +53,7 @@ namespace EulerPacketSupport
 open Set EulerSmoothLimit EulerSpatialCutoffs
 
 /-- Support, given by `tsupport innerCutoff`. -/
-def support : Set Space := tsupport innerCutoff
+@[expose] def support : Set Space := tsupport innerCutoff
 
 theorem compact : IsCompact support := innerCutoff_compactSupport
 
@@ -79,7 +80,7 @@ open Set InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
   EulerTransverseFrameCoordinates EulerBaseEulerGuards EulerPacketSupport
 
 /-- First normal, given by `EuclideanSpace.single 0 1`. -/
-def firstNormal : Space := EuclideanSpace.single 0 1
+@[expose] def firstNormal : Space := EuclideanSpace.single 0 1
 
 theorem firstNormal_unit : ‖firstNormal‖=1 := by simp [firstNormal]
 
@@ -87,9 +88,11 @@ theorem firstNormal_unit : ‖firstNormal‖=1 := by simp [firstNormal]
 abbrev FirstPlane := referencePlane firstNormal
 
 /-- First frame, given by `LinearIsometryEquiv.refl ℝ _`. -/
+@[expose]
 def firstFrame : FirstPlane ≃ₗᵢ[ℝ] referencePlane firstNormal := LinearIsometryEquiv.refl ℝ _
 
 /-- First coordinate as an element of `FirstPlane`. -/
+@[expose]
 def firstCoordinate : FirstPlane := ⟨EuclideanSpace.single 1 1,by
   rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
   simp [firstNormal,EuclideanSpace.inner_single_left]⟩
@@ -104,23 +107,30 @@ variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
 
 /-- Packet base parent, given by `(initialParent β hβ ell hell hell1).restrictTime T hT hTB`. -/
+@[expose]
 def packetBaseParent : Parent :=
   (initialParent β hβ ell hell hell1).restrictTime T hT hTB
 
 /-- Packet base state, given by `(initialState β hβ ell hell hell1).restrictTime T hT hTB`. -/
+@[expose]
 def packetBaseState : SmoothState (packetBaseParent β hβ ell hell hell1 T hT hTB) :=
   (initialState β hβ ell hell hell1).restrictTime T hT hTB
 
 /-- Packet base low bounds, given by `(initialLowBounds β hβ ell hell hell1).restrictTime T hT
 hTB`. -/
+@[expose]
 def packetBaseLowBounds : LowBounds (packetBaseParent β hβ ell hell hell1 T hT hTB) :=
   (initialLowBounds β hβ ell hell hell1).restrictTime T hT hTB
 
 theorem packetBase_label_constant :
-    (packetBaseState β hβ ell hell hell1 T hT hTB).labels.K=solutionLabelConstant := rfl
+    (packetBaseState β hβ ell hell hell1 T hT hTB).labels.K=solutionLabelConstant := by
+  change (initialLabelData β hβ ell hell hell1).K = solutionLabelConstant
+  exact initialLabelData_constant β hβ ell hell hell1
 
 theorem packetBase_boundary_zero :
-    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB).L=0 := rfl
+    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB).L=0 := by
+  change (initialLowBounds β hβ ell hell hell1).L = 0
+  exact (initialLowBounds_values β hβ ell hell hell1).2.2.1
 
 include hTB in
 theorem packetBase_short : initialCoefficientCost*T ≤ 1/2 :=
@@ -161,6 +171,7 @@ theorem packetBase_initialStrain (x : Space) (hx : x ∈ support) :
   nlinarith only [hb,hx']
 
 /-- First packet inputs used in base packet setup. -/
+@[expose]
 def firstPacketInputs :
     ForwardInputs
       ((packetBaseParent β hβ ell hell hell1 T hT hTB).meanData
@@ -191,7 +202,9 @@ theorem firstPacket_pressure_numerator (t : Icc (0 : ℝ) T)
     firstNormal firstNormal_unit firstFrame support compact firstCoordinate firstCoordinate_norm x
   · rw [packetBase_initialStrain β hβ ell hell hell1 T hT hTB x hx,firstCoordinate_map,linear_q]
     simp [firstNormal,EuclideanSpace.inner_single_left,PiLp.add_apply,PiLp.smul_apply]
-  · exact packetBase_short T hTB
-  · exact packetBase_sign_short T hTB
+  · simpa only [packetBase_label_constant, packetBaseParent, Parent.restrictTime,
+      initialCoefficientCost] using packetBase_short T hTB
+  · simpa only [packetBase_label_constant, packetBaseParent, Parent.restrictTime,
+      initialCoefficientCost] using packetBase_sign_short T hTB
 
 end EulerBaseDatum

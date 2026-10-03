@@ -80,7 +80,7 @@ report.
   "spanning 2-connected subgraph" form the assembly needs.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set
 open scoped Graph
@@ -415,12 +415,12 @@ noncomputable def localGridY (p : Plane) (s : ℝ) (k : ℕ) : ℕ → ℝ :=
   uniformCoord (p 1 - s) (2 * s / k)
 
 /-- The edges of the local grid, as a list of segments. -/
-noncomputable def localGridEdges (p : Plane) (s : ℝ) (k : ℕ) : List Piece :=
+@[expose] noncomputable def localGridEdges (p : Plane) (s : ℝ) (k : ℕ) : List Piece :=
   gridEdges (localGridX p s k) (localGridY p s k) k k
 
 /-- **The local grid** of `prop:local-grid-attachment`: the uniform `k × k` rectangular grid on
 the closed square `W` of centre `p` and radius `s`. -/
-noncomputable def localGrid (p : Plane) (s : ℝ) (k : ℕ) : Graph Plane Piece :=
+@[expose] noncomputable def localGrid (p : Plane) (s : ℝ) (k : ℕ) : Graph Plane Piece :=
   gridGraph (localGridX p s k) (localGridY p s k) k k
 
 theorem localGrid_eq (p : Plane) (s : ℝ) (k : ℕ) :

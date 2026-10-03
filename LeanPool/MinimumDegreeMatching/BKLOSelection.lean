@@ -23,7 +23,7 @@ keeping all previously selected matching edges disjoint. This is the determinist
 the `r = 2` specialization of BKLO Lemma 10.7.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -34,10 +34,11 @@ variable {V : Type*} [DecidableEq V]
 
 /-- The number of edges of the used set `F` at `y` lying inside the apex neighbourhood `N_H(x,W)`.
 This is exactly the amount by which the Dirac degree of `y` in `H[N_H(x,W)]` has been eroded. -/
-def usedCnt (H : Finset (Sym2 V)) (W : Finset V) (F : Finset (Sym2 V)) (x y : V) : ℕ :=
+@[expose] def usedCnt (H : Finset (Sym2 V)) (W : Finset V) (F : Finset (Sym2 V)) (x y : V) : ℕ :=
   edeg (edgesIn F (nbhdIn H x W)) y
 
 /-- **The pessimistic-estimator potential.**  `R` is the set of apices not yet processed. -/
+@[expose]
 noncomputable def pot (H : Finset (Sym2 V)) (W : Finset V) (q : ℝ) (F : Finset (Sym2 V))
     (R : Finset V) : ℝ :=
   ∑ x ∈ R, ∑ y ∈ nbhdIn H x W, (2 : ℝ) ^ (usedCnt H W F x y) * (1 + q) ^ (degTo H y R)

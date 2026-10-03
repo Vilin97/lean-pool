@@ -25,7 +25,7 @@ Closure properties, injective realization, flat torus, positive-definite metric 
 and stability under perturbation.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Matrix NashEmbedding.Sobolev

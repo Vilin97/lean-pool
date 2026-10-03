@@ -23,7 +23,7 @@ permutations from the rank slipface.  The endpoint-specific rank calculation
 and inversion count are developed separately from this generic layer.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -326,6 +326,7 @@ theorem banana_genus {g : ℕ} (B : Banana g) :
   omega
 
 /-- The literal divisor consisting of one chip at each multivalent endpoint. -/
+@[expose]
 def endpointPencilDivisor {g : ℕ} (B : Banana g) : CFDiv B.graph :=
   oneChip (leftEndpoint B) + oneChip (rightEndpoint B)
 

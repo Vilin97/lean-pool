@@ -21,7 +21,7 @@ The product-cutoff argument below uses the almost-every-time local energy
 inequality and the compactly supported smooth cutoffs from the setting layer.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter Metric
 open scoped ENNReal NNReal Topology

@@ -18,7 +18,7 @@ concrete suspension tower and the resulting unconditional orientation are constr
 Mayer--Vietoris sphere-homology modules.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 
@@ -55,12 +55,12 @@ structural recursion on `k`: the base case `k = 0` is `T.base`, and each success
 composes the suspension isomorphism `T.step` with the identification one dimension
 lower. (`Nat.le_induction` only eliminates into `Prop`, so the data-valued family
 is built on the shifted index instead.) -/
-def isoSucc (k : ℕ) : SphereTopHomologyIso (k + 1) :=
+@[expose] def isoSucc (k : ℕ) : SphereTopHomologyIso (k + 1) :=
   Nat.rec T.base (fun j ih => (T.step (j + 1) (by omega)) ≪≫ ih) k
 
 /-- From a suspension tower, the top-homology identification `Hₙ(Sⁿ; ℤ) ≅ ℤ` for
 every `n ≥ 1`. -/
-def iso : ∀ n : ℕ, 1 ≤ n → SphereTopHomologyIso n
+@[expose] def iso : ∀ n : ℕ, 1 ≤ n → SphereTopHomologyIso n
   | (k + 1), _ => T.isoSucc k
 
 @[simp]
@@ -88,7 +88,7 @@ variable (o : SphereOrientationPos)
 /-- The integer **degree** of a self-map of `Sphere n` (`n ≥ 1`), read off the
 supplied top-homology identification `o.iso n hn`. Honest and unconditional once a
 `SphereOrientationPos` is provided. -/
-def degree {n : ℕ} (hn : 1 ≤ n) (f : C(Sphere n, Sphere n)) : ℤ :=
+@[expose] def degree {n : ℕ} (hn : 1 ≤ n) (f : C(Sphere n, Sphere n)) : ℤ :=
   degreeOfIso (o.iso n hn) f
 
 /-- The degree of the identity map is `1`. -/
@@ -117,7 +117,7 @@ theorem degree_eq_of_homotopic (prism : SingularPrismOperator) {n : ℕ} (hn : 1
 end SphereOrientationPos
 
 /-- A suspension tower yields a genuine (non-vacuous) positive orientation. -/
-def SphereSuspensionTower.orientation (T : SphereSuspensionTower) :
+@[expose] def SphereSuspensionTower.orientation (T : SphereSuspensionTower) :
     SphereOrientationPos :=
   ⟨T.iso⟩
 

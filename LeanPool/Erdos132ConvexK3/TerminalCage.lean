@@ -25,7 +25,7 @@ The finite branch counts are kept explicit, so the equality and `q=d₃`
 boundaries cannot disappear inside prose.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Erdos132ConvexK3
 

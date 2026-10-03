@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketMeanGradeBounds
 
 /-! Removing the bounded time profile and performing the one final coarse factorial split. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

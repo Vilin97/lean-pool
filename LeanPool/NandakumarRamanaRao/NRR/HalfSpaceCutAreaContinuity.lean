@@ -44,7 +44,7 @@ and continuity in `c` follows from `MeasureTheory.continuousAt_of_dominated`:
  slice `{x ∈ K | ⟪u, x⟫ = c₀}`, which is null by `lowerCut_boundary_null` (needs `u ≠ 0`).
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped RealInnerProductSpace

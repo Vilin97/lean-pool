@@ -17,7 +17,7 @@ permission. This port separates the bundled test-function facade from the
 weak-derivative predicates and uses the `CKN` namespace.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 
@@ -34,6 +34,7 @@ instance {d : ℕ} {U : Set (Vec d)} :
   coe φ := φ.toFun
 
 /-- The classical `i`th derivative of a bundled test function. -/
+@[expose]
 noncomputable def WeakTestFunction.partialDeriv
     {d : ℕ} {U : Set (Vec d)}
     (φ : WeakTestFunction U) (i : Fin d) (x : Vec d) : ℝ :=

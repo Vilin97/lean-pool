@@ -21,7 +21,7 @@ is bounded by the dimensions of the quotients `R ⧸ p` over the primes `p ⊇ J
   ideal `J`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

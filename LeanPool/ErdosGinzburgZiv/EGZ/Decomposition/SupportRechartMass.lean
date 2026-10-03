@@ -16,7 +16,7 @@ modular injectivity, and containment of the supported centered lifts in the
 old support. The original finite-field affine map need not be surjective.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

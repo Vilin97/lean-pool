@@ -12,18 +12,18 @@ public import Lean.Elab.Tactic.Omega
 # Binary polynomial multiplication targets
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 
 noncomputable section
 
 /-- The variable `a_i` among the `2n` multiplication inputs. -/
-def aVar (n : Nat) (i : Fin n) : ANF (2 * n) :=
+@[expose] def aVar (n : Nat) (i : Fin n) : ANF (2 * n) :=
   X ⟨i.val, by omega⟩
 
 /-- The variable `b_j` among the `2n` multiplication inputs. -/
-def bVar (n : Nat) (j : Fin n) : ANF (2 * n) :=
+@[expose] def bVar (n : Nat) (j : Fin n) : ANF (2 * n) :=
   X ⟨n + j.val, by omega⟩
 
 @[simp]
@@ -35,20 +35,20 @@ theorem bVar_mem_affine (n : Nat) (j : Fin n) : bVar n j ∈ affine (2 * n) :=
   X_mem_affine _
 
 /-- Coefficient `s` of the product of two `n`-term binary polynomials. -/
-def mulCoefficient (n : Nat) (s : Nat) : ANF (2 * n) :=
+@[expose] def mulCoefficient (n : Nat) (s : Nat) : ANF (2 * n) :=
   ∑ i : Fin n, ∑ j : Fin n,
     if i.val + j.val = s then aVar n i * bVar n j else 0
 
 /-- Binary `n`-term polynomial multiplication in Boolean ANF. -/
-def Mul (n : Nat) : Fin (2 * n - 1) → ANF (2 * n) :=
+@[expose] def Mul (n : Nat) : Fin (2 * n - 1) → ANF (2 * n) :=
   fun s => mulCoefficient n s.val
 
 /-- The linear target space spanned by all multiplication coordinates. -/
-def mulTarget (n : Nat) : Submodule F₂ (ANF (2 * n)) :=
+@[expose] def mulTarget (n : Nat) : Submodule F₂ (ANF (2 * n)) :=
   Submodule.span F₂ (Set.range (Mul n))
 
 /-- Affine functions plus the multiplication target. -/
-def mulAmbient (n : Nat) : Submodule F₂ (ANF (2 * n)) :=
+@[expose] def mulAmbient (n : Nat) : Submodule F₂ (ANF (2 * n)) :=
   affine (2 * n) ⊔ mulTarget n
 
 theorem Mul_mem_target (n : Nat) (s : Fin (2 * n - 1)) : Mul n s ∈ mulTarget n := by
@@ -56,7 +56,7 @@ theorem Mul_mem_target (n : Nat) (s : Fin (2 * n - 1)) : Mul n s ∈ mulTarget n
   exact ⟨s, rfl⟩
 
 /-- Coefficient projection onto a chosen finite family of squarefree monomials. -/
-def coefficientProjection {m d : Nat} (anchor : Fin d → Monomial m) :
+@[expose] def coefficientProjection {m d : Nat} (anchor : Fin d → Monomial m) :
     ANF m →ₗ[F₂] (Fin d → F₂) where
   toFun p i := p.coeff (anchor i)
   map_add' p q := by ext i; simp
@@ -64,7 +64,7 @@ def coefficientProjection {m d : Nat} (anchor : Fin d → Monomial m) :
 
 theorem coefficient_eq_zero_of_mem_affine {m : Nat} {p : ANF m} (hp : p ∈ affine m)
     (s : Monomial m) (hs : s.vars.card = 2) : p.coeff s = 0 := by
-  refine Submodule.span_induction (p := fun p _ => p.coeff s = 0) ?_ ?_ ?_ ?_ hp
+  refine Submodule.span_induction (p := fun (p : ANF m) _ => p.coeff s = 0) ?_ ?_ ?_ ?_ hp
   · intro q hq
     rcases hq with hq | hq
     · have hqone : q = 1 := by simpa only [Set.mem_singleton_iff] using hq

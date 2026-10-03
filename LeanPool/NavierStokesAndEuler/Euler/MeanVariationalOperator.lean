@@ -17,7 +17,7 @@ actual displacement primitive and `R` its initial trace.  The boundary lower
 bound is required only on the trace image, as in the source's solenoidal space.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -33,7 +33,7 @@ variable {V W X : Type*}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
 
 /-- The actual bounded operator representing kinetic, potential, and boundary terms. -/
-def meanOperator (J : V →L[ℝ] W) (R : V →L[ℝ] X)
+@[expose] def meanOperator (J : V →L[ℝ] W) (R : V →L[ℝ] X)
     (H : W →L[ℝ] W) (C : X →L[ℝ] X) : V →L[ℝ] V :=
   dirichletOperator J H + R.adjoint.comp (C.comp R)
 

@@ -22,7 +22,7 @@ import Mathlib.Tactic.Ring.RingNF
 `V(t) = log(1+t) - 6α log(t+α²) - 2 + 12α + 2√t (π + arctan(1/√t) - 6 arctan(α/√t))`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology Set MeasureTheory
 

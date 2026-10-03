@@ -19,4 +19,4 @@ including Poisson integral formulas on the unit disc and arbitrary centered disc
 results about positive harmonic functions on the unit disc.
 -/
 
-@[expose] public section
+public section

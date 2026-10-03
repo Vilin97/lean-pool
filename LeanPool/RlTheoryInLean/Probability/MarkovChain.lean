@@ -15,4 +15,4 @@ public import LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
 Import-only index for the `MarkovChain` directory of the RL-theory-in-Lean import.
 -/
 
-@[expose] public section
+public section

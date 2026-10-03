@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Refinement
 The early-failure and complete shapes of source Euclidean reports.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage1E03
@@ -22,7 +22,7 @@ noncomputable local instance shapesPropDecidable (q : Prop) : Decidable q :=
   Classical.propDecidable q
 
 /-- The alternating query and accelerated-point observations of an estimate-phase segment. -/
-noncomputable def phaseATraceFrom (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def phaseATraceFrom (inst : PositiveInstance 2 d x0)
     (M : ℝ) (k fuel : ℕ) : List (Observation d) :=
   (List.range fuel).flatMap fun j =>
     [inst.oracle.observe (estimateQuery M x0 (k + j)
@@ -31,7 +31,7 @@ noncomputable def phaseATraceFrom (inst : PositiveInstance 2 d x0)
       (sourceEstimateState inst.oracle M x0 (k + j + 1)).accelerated]
 
 /-- The upper-model guards corresponding to an estimate-phase segment. -/
-noncomputable def phaseAGuardsFrom (inst : PositiveInstance 2 d x0)
+@[expose] noncomputable def phaseAGuardsFrom (inst : PositiveInstance 2 d x0)
     (M : ℝ) (k fuel : ℕ) : List (ObservableGuardCheck d) :=
   (List.range fuel).map fun j =>
     upperCheck
@@ -98,6 +98,7 @@ theorem phaseAGuardsFrom_succ (inst : PositiveInstance 2 d x0)
   simp [phaseAGuardsFrom]
 
 /-- The report records precisely the first failed guard after a prefix of accepted guards. -/
+@[expose]
 def FailureLedger (p M : ℝ) (report : TrialReport d)
     (failed : ObservableGuardCheck d) : Prop :=
   report.outcome = .scale failed ∧
@@ -106,6 +107,7 @@ def FailureLedger (p M : ℝ) (report : TrialReport d)
   ¬ CheckHolds p M failed
 
 /-- Every observation used in a checked guard occurs in the report's trace. -/
+@[expose]
 def GuardPairsInTrace (report : TrialReport d) : Prop :=
   ∀ check ∈ report.checkedGuards,
     check.xPair ∈ report.trace ∧ check.yPair ∈ report.trace

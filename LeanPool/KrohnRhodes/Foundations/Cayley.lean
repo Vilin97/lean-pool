@@ -14,7 +14,7 @@ public import Mathlib.Algebra.Group.Action.End
   representation `MulAction.toEndHom : N →* Function.End N` is injective.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 

@@ -34,7 +34,7 @@ strictly longer.
 * `Front.schreier_rank`: the Schreier front has rank `ω`.
 -/
 
-@[expose] public section
+public section
 
 open Set List Ordinal
 
@@ -67,14 +67,14 @@ theorem RelHom.rank_le {α β : Type u} {r : α → α → Prop} {s : β → β 
 namespace Front
 
 /-- The tree of a front `F`: all prefixes (initial segments) of elements of `F`. -/
-def tree (F : Set (List ℕ)) : Set (List ℕ) :=
+@[expose] def tree (F : Set (List ℕ)) : Set (List ℕ) :=
   {s | ∃ t ∈ F, s <+: t}
 
 /-- Proper end-extension inside the tree of `F`: `treeExt F a b` holds when `a` properly extends
 `b` and both lie in the tree. Its well-foundedness is what allows ranking a front. Note the
 recursion direction: `WellFounded.rank (treeExt F) s` is the supremum of `succ (rank s')` over
 the proper extensions `s'` of `s`, matching the usual rank of a front. -/
-def treeExt (F : Set (List ℕ)) (a b : List ℕ) : Prop :=
+@[expose] def treeExt (F : Set (List ℕ)) (a b : List ℕ) : Prop :=
   a ∈ tree F ∧ b ∈ tree F ∧ b <+: a ∧ b ≠ a
 
 /-- If every finite initial segment of `b` is strictly increasing, then `b` is strictly
@@ -175,7 +175,7 @@ theorem IsFront.wellFounded_treeExt {F : Set (List ℕ)} {M : ℕ → ℕ} (hF :
 
 /-- The ordinal **rank of a front**: the rank of the root `[]` in the well-founded tree of proper
 end-extensions. -/
-def IsFront.rank {F : Set (List ℕ)} {M : ℕ → ℕ} (hF : IsFront F M) : Ordinal :=
+@[expose] def IsFront.rank {F : Set (List ℕ)} {M : ℕ → ℕ} (hF : IsFront F M) : Ordinal :=
   have : WellFounded (treeExt F) := hF.wellFounded_treeExt
   WellFounded.rank (treeExt F) []
 

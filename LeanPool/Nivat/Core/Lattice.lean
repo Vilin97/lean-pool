@@ -53,7 +53,7 @@ rational extension permits convex windows to be transported through the same
 coordinate change as the lattice configurations.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat
 
@@ -114,7 +114,7 @@ theorem exists_lattice_basis_for_nonzero (h : Lattice) (hh : h ≠ 0) :
 
 /-- The coordinate embedding of the integer lattice into the rational plane, used to express
 convexity in the coordinate normalization of Theorem 5.1. -/
-def latticeRatCast (z : Lattice) : ℚ × ℚ := (z.1, z.2)
+@[expose] def latticeRatCast (z : Lattice) : ℚ × ℚ := (z.1, z.2)
 
 /-- The rational linear extension of a lattice equivalence, used to transport convex windows in
 the proof of Theorem 5.1. -/

@@ -14,7 +14,7 @@ Marked divisors, transmission permutations, exceptional configurations, and
 finite counting expressions used by the paper-facing theorem statements.
 -/
 
-@[expose] public section
+public section
 
 namespace TMB
 
@@ -27,6 +27,7 @@ namespace Banana
 variable {g : ℕ} (B : Banana g)
 
 /-- Replace every labelled strand by a path of its specified length. -/
+@[expose]
 def graph : CFGraph where
   V := B.Vertex
   instNonempty := ⟨B.coreVertex 0⟩
@@ -64,6 +65,7 @@ def bananaOfLengths (g : ℕ) (length : Fin (g + 1) → ℕ)
 /-- The vertex `v_{α,i}` at normalized position `i` along strand `α`,
 measured from multivalent vertex `0`; the stored orientation of the strand is
 reversed when necessary. -/
+@[expose]
 def strandVertex {g : ℕ} (B : Banana g) (α : Fin (g + 1))
     (i : B.PathPosition α) : B.graph.V :=
   B.pathVertex α
@@ -500,6 +502,7 @@ def effectiveDegreeOneTwistResidues
 
 open Classical in
 /-- Correction term in Lemma 4.10. -/
+@[expose]
 noncomputable def invTauCorrection (M : TwiceMarked) (D : CFDiv M.graph) : ℤ :=
   if (∃ b : ℤ, linearEquiv M.graph (degreeTwistInt M D 0 b) 0) ∧
       linearEquiv M.graph (oneChip M.u + oneChip M.v)

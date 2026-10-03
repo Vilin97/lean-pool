@@ -14,7 +14,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Pressure.DerivativeAdjoint
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -28,43 +28,51 @@ namespace CKN
 /-! The eight explicit potentials in the local pressure decomposition. -/
 
 /-- Newtonian potential of the tensor paired with the second derivatives of the cutoff. -/
+@[expose]
 def pressureP2 (η : Vec3 → ℝ) (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (s : ℝ) : Vec3 → ℝ := fun x =>
   ∑ i, ∑ j, pressureNewtonianPotential
     (fun y => mixedSecond η i j y * pressureUTensor u c (y, s) i j) x
 
 /-- First Newtonian derivative potential for the first tensor-cutoff cross term. -/
+@[expose]
 def pressureP3 (η : Vec3 → ℝ) (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (s : ℝ) : Vec3 → ℝ := fun x =>
   ∑ i, ∑ j, pressureNewtonianDerivativePotential j
     (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η i y) x
 
 /-- First Newtonian derivative potential for the second tensor-cutoff cross term. -/
+@[expose]
 def pressureP4 (η : Vec3 → ℝ) (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (s : ℝ) : Vec3 → ℝ := fun x =>
   ∑ i, ∑ j, pressureNewtonianDerivativePotential i
     (fun y => pressureUTensor u c (y, s) i j * spatialDeriv η j y) x
 
 /-- Pressure correction involving the Laplacian of the cutoff. -/
+@[expose]
 def pressureP5 (η : Vec3 → ℝ) (p : ParabolicPoint → ℝ) (s : ℝ) : Vec3 → ℝ := fun x =>
   -pressureNewtonianPotential (fun y => p (y, s) * spatialLaplacian η y) x
 
 /-- Pressure correction involving the gradient of the cutoff. -/
+@[expose]
 def pressureP6 (η : Vec3 → ℝ) (p : ParabolicPoint → ℝ) (s : ℝ) : Vec3 → ℝ := fun x =>
   -2 * ∑ j, pressureNewtonianDerivativePotential j
     (fun y => spatialDeriv η j y * p (y, s)) x
 
 /-- First Newtonian derivative potential of the cutoff force. -/
+@[expose]
 def pressureP7 (η : Vec3 → ℝ) (f : ParabolicPoint → Vec3) (s : ℝ) : Vec3 → ℝ := fun x =>
   -∑ j, pressureNewtonianDerivativePotential j
     (fun y => η y * f (y, s) j) x
 
 /-- Newtonian potential of the force paired with the cutoff gradient. -/
+@[expose]
 def pressureP8 (η : Vec3 → ℝ) (f : ParabolicPoint → Vec3) (s : ℝ) : Vec3 → ℝ := fun x =>
   -∑ j, pressureNewtonianPotential
     (fun y => spatialDeriv η j y * f (y, s) j) x
 
 /-- Localized pressure after subtracting the seven explicit cutoff and forcing corrections. -/
+@[expose]
 def pressureP1 (η : Vec3 → ℝ) (u : ParabolicPoint → Vec3) (c : ℝ → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) (s : ℝ) : Vec3 → ℝ := fun x =>
   η x * p (x, s) - (pressureP2 η u c s x + pressureP3 η u c s x +

@@ -14,7 +14,7 @@ import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Transform
 /-! # E2 -/
 
 
-@[expose] public section
+public section
 
 open ModularForm UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups
@@ -29,10 +29,10 @@ noncomputable section
 def G₂ : ℍ → ℂ := EisensteinSeries.G2
 
 /-- Compatibility alias for Mathlib's `EisensteinSeries.E2`. -/
-def E₂ : ℍ → ℂ := EisensteinSeries.E2
+@[expose] def E₂ : ℍ → ℂ := EisensteinSeries.E2
 
 /-- Compatibility alias for Mathlib's `EisensteinSeries.D2`. -/
-def D₂ (γ : SL(2, ℤ)) : ℍ → ℂ := EisensteinSeries.D2 γ
+@[expose] def D₂ (γ : SL(2, ℤ)) : ℍ → ℂ := EisensteinSeries.D2 γ
 
 lemma D₂_apply (γ : SL(2, ℤ)) (z : ℍ) :
     D₂ γ z = (2 * π * Complex.I * γ 1 0) / (γ 1 0 * z + γ 1 1) := by rfl

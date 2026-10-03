@@ -30,7 +30,7 @@ The proof proceeds by:
    diagonal entries to `1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

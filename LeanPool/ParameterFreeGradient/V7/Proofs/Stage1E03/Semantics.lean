@@ -13,7 +13,7 @@ Compatibility of source Euclidean states and recorded checks with the original a
 execution.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage1E03
@@ -41,6 +41,7 @@ theorem minimizer_gradient_zero (inst : PositiveInstance 2 d x0)
   exact (O3.lpNorm_eq_zero_iff (by norm_num)).mp hnorm
 
 /-- The current positive instance expressed in the original admissible-instance interface. -/
+@[expose]
 noncomputable def legacyInstance (inst : PositiveInstance 2 d x0)
     (eps : ℝ) (heps : 0 < eps)
     (hG : eps < lpNorm 2 (inst.oracle.gradient x0)) :

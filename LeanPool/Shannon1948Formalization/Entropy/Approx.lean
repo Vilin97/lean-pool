@@ -23,7 +23,7 @@ their convergence to `p`. This is the bridge from the rational formula to the
 full real-probability formula.
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

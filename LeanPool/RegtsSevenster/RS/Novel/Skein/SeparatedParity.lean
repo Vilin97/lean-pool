@@ -50,7 +50,7 @@ moves by exactly `±2`, i.e. the circuit count by `±1`.
 * `separatedCountParity` — the discharged `SeparatedCountParity`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -66,6 +66,7 @@ variable {Y : Type}
 
 /-- The total orbit count of a permutation: nontrivial cycles plus
 fixed points. -/
+@[expose]
 noncomputable def permOrbitCount [Fintype Y] [DecidableEq Y]
     (g : Perm Y) : ℕ :=
   g.cycleType.card + Fintype.card (Function.fixedPoints g)
@@ -751,6 +752,7 @@ namespace EdgeSubset
 variable {α : Type} {W : Fragment α} {F : EdgeSubset W}
 
 /-- The edge pairing as a permutation of the participating flags. -/
+@[expose]
 noncomputable def pairingPermSP (F : EdgeSubset W) :
     Equiv.Perm {f : W.Flag // f ∈ F.flags} where
   toFun x := ⟨W.pairing x.val, F.pairing_mem x.val x.prop⟩
@@ -836,6 +838,7 @@ theorem fullMatchFun_invol (κ : F.RelTransitionSystem)
     exact κ.pathMatch_invol hb
 
 /-- The extended matching as an (involutive) permutation. -/
+@[expose]
 noncomputable def fullMatchPerm (κ : F.RelTransitionSystem) :
     Equiv.Perm {f : W.Flag // f ∈ F.flags} where
   toFun := fullMatchFun κ
@@ -857,6 +860,7 @@ theorem fullMatchPerm_mul_self (κ : F.RelTransitionSystem) :
 
 /-- **The full walk permutation**: pairing followed by extended
 matching, a permutation of all participating flags. -/
+@[expose]
 noncomputable def fullPerm (κ : F.RelTransitionSystem) :
     Equiv.Perm {f : W.Flag // f ∈ F.flags} :=
   fullMatchPerm κ * pairingPermSP F

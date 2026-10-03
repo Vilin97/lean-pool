@@ -16,7 +16,7 @@ section
 
 /-! Exact almost-everywhere restriction of the actual nonlinear source and pressure time fields. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -138,7 +138,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -159,7 +159,7 @@ local instance lowerDataGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace perio
 local instance lowerDataSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) := inferInstance
 
 /-- The same genuine correction coefficients and background restricted by one Sobolev order. -/
-def lowerData {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
+@[expose] def lowerData {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
     (KG : ∀ t, CoefficientJet period standardDirection q (D.metric.coefficient t))
     (KL : ∀ t, CoefficientJet period standardDirection q (D.linear.coefficient t))
     (KQ : ∀ i t, CoefficientJet period standardDirection q ((D.quadratic i).coefficient t))
@@ -182,7 +182,7 @@ def lowerData {q : ℕ} {T : ℝ} (D : CorrectionData period (q + 1) (Icc (0 : �
   residual := (truncateOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) T) D.residual
 
 /-- The actual nonlinear raw source along a continuous Sobolev path is continuous. -/
-def rawPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
+@[expose] def rawPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period q) :=
   ⟨fun t => D.rawSource period hq t (e t),
     (((D.coefficients period hq).forcing.continuous.add
@@ -191,13 +191,14 @@ def rawPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc
           e.continuous))⟩
 
 /-- The actual projected nonlinear mild forcing along the continuous solution. -/
-def forcingPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
+@[expose] def forcingPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period q) :=
   ⟨fun t => (D.coefficients period hq).apply t (e t),
     ((D.coefficients period hq).projection.continuous.clm_apply (rawPath period hq D
         e).continuous).neg⟩
 
 /-- The actual signed coercive pressure along the continuous solution is continuous. -/
+@[expose]
 def pressurePath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period q) :=
   ⟨fun t => D.pressure period hq t (e t),

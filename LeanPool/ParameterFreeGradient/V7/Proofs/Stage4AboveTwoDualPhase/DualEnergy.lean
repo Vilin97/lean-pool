@@ -13,7 +13,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage3Descent
 The above-two dual trajectory satisfies the terminal row, query, and energy identities.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

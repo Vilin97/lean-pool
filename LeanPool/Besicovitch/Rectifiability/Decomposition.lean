@@ -17,7 +17,7 @@ one-unrectifiable remainder.  The proof maximizes the measure captured by counta
 Lipschitz curves; it does not assume a decomposition theorem from outside Mathlib.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

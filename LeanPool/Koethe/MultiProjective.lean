@@ -27,7 +27,7 @@ is homogeneous of every multidegree.  No projective intersection theorem is
 assumed as an axiom.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,7 +42,7 @@ variable {k : Type*} {N : ℕ}
 abbrev Vars (N : ℕ) := Fin N × Fin 3
 
 /-- The degree of an exponent vector in one block. -/
-def blockDegree (d : Vars N →₀ ℕ) (b : Fin N) : ℕ :=
+@[expose] def blockDegree (d : Vars N →₀ ℕ) (b : Fin N) : ℕ :=
   ∑ j : Fin 3, d (b, j)
 
 @[simp] theorem blockDegree_zero (b : Fin N) : blockDegree 0 b = 0 := by
@@ -77,6 +77,7 @@ theorem Balanced.add_iff_right {d e : Vars N →₀ ℕ} (hd : Balanced d) :
   · exact hd.add
 
 /-- Coefficientwise multihomogeneity with a specified degree in each block. -/
+@[expose]
 def IsMultiHomogeneous [CommSemiring k] (f : MvPolynomial (Vars N) k)
     (r : Fin N → ℕ) : Prop :=
   ∀ d, f.coeff d ≠ 0 → ∀ b, blockDegree d b = r b
@@ -415,7 +416,7 @@ theorem balancedPart_mul {p : MvPolynomial (Vars N) k}
     _ = p * balancedPart q := by rw [← Finset.sum_mul, ← p.as_sum]
 
 /-- The same projection with codomain restricted to the balanced algebra. -/
-def balancedRetract : MvPolynomial (Vars N) k →ₗ[k] balancedAlgebra k N :=
+@[expose] def balancedRetract : MvPolynomial (Vars N) k →ₗ[k] balancedAlgebra k N :=
   balancedPart.codRestrict (balancedAlgebra k N).toSubmodule balancedPart_mem
 
 @[simp] theorem coe_balancedRetract (p : MvPolynomial (Vars N) k) :
@@ -477,7 +478,7 @@ section Height
 variable [Field k]
 
 /-- A Segre coordinate as an element of the balanced subalgebra. -/
-def segre (j : Fin N → Fin 3) : balancedAlgebra k N :=
+@[expose] def segre (j : Fin N → Fin 3) : balancedAlgebra k N :=
   ⟨segreMonomial j, segreMonomial_mem j⟩
 
 @[simp] theorem coe_segre (j : Fin N → Fin 3) :

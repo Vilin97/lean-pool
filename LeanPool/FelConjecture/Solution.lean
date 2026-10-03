@@ -8,7 +8,7 @@ module
 public import Mathlib.NumberTheory.Bernoulli
 /-! # Fel's Conjecture for Numerical Semigroups -/
 
-@[expose] public section
+public section
 /-- A *numerical semigroup*: an additive submonoid of `ℕ` with finite complement. -/
 structure NumericalSemigroup where
   /-- The underlying set of natural numbers comprising the semigroup. -/

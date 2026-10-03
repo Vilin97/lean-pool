@@ -51,7 +51,7 @@ a separate matter and is not assumed here, so the strong notions
 `Functor.Monoidal` and `Functor.Braided` are not instantiated.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -415,6 +415,7 @@ open SuperCommAlgebra.Mod
 
 /-- **The fibre functor over an algebra**: base change to the
 algebra followed by realization. -/
+@[expose]
 noncomputable def fibreOver
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [Linear ℂ D]

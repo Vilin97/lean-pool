@@ -15,13 +15,13 @@ import Mathlib.Tactic.Measurability.Init
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.RelHomotopyGroup.Defs`.
 -/
 
-@[expose] public section
+public section
 
 open scoped unitInterval Topology Topology.Homotopy
 
 
 /-- relative generalized loops -/
-def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
+@[expose] def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
     Set C(I^ Fin n, X) :=
   {f | (∀ y ∈ ∂I^n, f y ∈ A) ∧ ∀ y ∈ ⊔I^n, f y = a}
 
@@ -31,7 +31,7 @@ namespace RelGenLoop
 variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 
 /-- The constant `RelGenLoop` at `a`. -/
-def const : RelGenLoop n X A a :=
+@[expose] def const : RelGenLoop n X A a :=
   ⟨ContinuousMap.const (I^ Fin n) a, ⟨by simp, by simp⟩⟩
 
 instance inhabited : Inhabited (RelGenLoop n X A a) :=
@@ -92,7 +92,7 @@ end RelGenLoop
 
 /-- We have defined relative homotopy "groups" as mere sets.
 The group structure is not needed for the Whitehead theorem. -/
-def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
+@[expose] def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
   Quotient (RelGenLoop.Homotopic.setoid n X A a)
 
 -- scoped[Topology] notation "π_" => RelHomotopyGroup
@@ -121,12 +121,12 @@ def equivPi0 : π_rel 0 X A a ≃ π_ 0 X a :=
             fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ⊔I^0) ⟩ } ⟩
 
 /-- `iStar'` -/
-def iStar' (f : Ω^ (Fin n) A a) : π_ n X a :=
+@[expose] def iStar' (f : Ω^ (Fin n) A a) : π_ n X a :=
   Quotient.mk _ ⟨ ⟨Subtype.val ∘ f.val, f.val.continuous_toFun.subtype_val⟩,
     by intro y hy; simp only [ContinuousMap.coe_mk, Function.comp_apply, f.property y hy] ⟩
 
 /-- The inclusion map $i_*$ (of pointed sets) from πₙ(A, a) to πₙ(X, a) -/
-def iStar : π_ n A a → π_ n X a :=
+@[expose] def iStar : π_ n A a → π_ n X a :=
   Quotient.lift (iStar' n X A a) fun f g H ↦   -- if `f ≈ g` by `H`
     Quotient.sound <| Nonempty.intro   -- then `inc f ≈ inc g` by this homotopy:
       { toHomotopy := (ContinuousMap.Homotopy.refl
@@ -140,13 +140,13 @@ def iStar : π_ n A a → π_ n X a :=
           simp_all }
 
 /-- `jStar'` -/
-def jStar' (f : Ω^ (Fin n) X a) : π_rel n X A a :=
+@[expose] def jStar' (f : Ω^ (Fin n) X a) : π_rel n X A a :=
   Quotient.mk _ ⟨f,
     ⟨fun y hy ↦ Set.mem_of_eq_of_mem (f.property y hy) (Subtype.coe_prop a),
       fun y hy ↦ f.property y <| (Cube.boundaryJar_subset_boundary n) hy ⟩ ⟩
 
 /-- The inclusion map $j_*$ (of pointed sets) from πₙ(A, a) to πₙ(X, A, a) -/
-def jStar : π_ n X a → π_rel n X A a :=
+@[expose] def jStar : π_ n X a → π_rel n X A a :=
   Quotient.lift (jStar' n X A a) fun f g H ↦
     Quotient.sound <| Nonempty.intro
       { toHomotopy := H.some.toHomotopy
@@ -169,7 +169,7 @@ def jStar : π_ n X a → π_rel n X A a :=
 
 /-- Restrict `f : C(I^ Fin (n + 1), X)` to the top face
 (where the last coordinate equals `1`). -/
-def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
+@[expose] def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
   Quotient.mk _
     ⟨ { toFun y := ⟨ (f ∘ Cube.inclToTop) y,
           f.property.left _ ⟨Fin.last _, by right; simp [Cube.splitAtLast, Cube.inclToTop]⟩ ⟩
@@ -183,7 +183,7 @@ def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
         exact Cube.inclToTop.mem_boundaryJar_of hy ⟩
 
 /-- The boundary map $∂$ (of pointed sets) from πₙ₊₁(X, A, a) to πₙ(A, a) -/
-def bd : π_rel (n + 1) X A a → π_ n A a :=
+@[expose] def bd : π_rel (n + 1) X A a → π_ n A a :=
   Quotient.lift (bd' n X A a) fun f g H ↦ Quotient.sound <| Nonempty.intro
     { toFun ty :=
         ⟨H.some.toHomotopy.comp (ContinuousMap.Homotopy.refl Cube.inclToTop) ty,
@@ -235,7 +235,7 @@ variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 /-- Let `g` be a continuous function from `I^ Fin n` to `X`.
 If `g` is homotopic rel `∂I^n` to some `f : RelGenLoop n X A a`,
 then `g` itself can be regarded as a `RelGenLoop`. -/
-def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
+@[expose] def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
     (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) : RelGenLoop n X A a :=
   let g_bd : ∀ y ∈ ∂I^n, g y = f.val y :=  -- g maps `∂I^n` in the same way `f` does.

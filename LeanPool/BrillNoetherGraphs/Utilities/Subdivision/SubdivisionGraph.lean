@@ -25,7 +25,7 @@ type of all unit steps, so every unit edge is emitted exactly once even when
 several emitted pairs coincide.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.SubdivisionGraph
 
@@ -45,6 +45,7 @@ structure Spec (n p : ℕ) where
 
 /-- Package a positive length assignment on a fixed finite loopless core as a
 subdivision specification, without repeating the structure fields. -/
+@[expose]
 def Spec.ofCore {n p : ℕ} (core : ExplicitPotential.Core n p)
     (core_nonempty : 0 < n)
     (core_loopless : ∀ edge : Fin p, core.tail edge ≠ core.head edge)
@@ -72,15 +73,18 @@ abbrev Vertex := Fin n ⊕ spec.Interior
 abbrev Step := Σ edge : Fin p, Fin (spec.length edge)
 
 /-- Injection of a core vertex into the subdivision. -/
+@[expose]
 def coreVertex (vertex : Fin n) : spec.Vertex :=
   Sum.inl vertex
 
 /-- Injection of an edge-interior coordinate into the subdivision. -/
+@[expose]
 def interiorVertex (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
     spec.Vertex :=
   Sum.inr ⟨edge, offset⟩
 
 /-- The left endpoint of a unit step. -/
+@[expose]
 def stepLeft (edge : Fin p) (offset : Fin (spec.length edge)) :
     spec.Vertex :=
   if hzero : offset.val = 0 then
@@ -92,6 +96,7 @@ def stepLeft (edge : Fin p) (offset : Fin (spec.length edge)) :
         omega⟩
 
 /-- The right endpoint of a unit step. -/
+@[expose]
 def stepRight (edge : Fin p) (offset : Fin (spec.length edge)) :
     spec.Vertex :=
   if hlast : offset.val + 1 = spec.length edge then
@@ -104,6 +109,7 @@ def stepRight (edge : Fin p) (offset : Fin (spec.length edge)) :
 
 /-- The ordered pair emitted by one unit step.  Its orientation is only a
 storage convention; `numEdges` treats it as undirected. -/
+@[expose]
 def unitEdge (step : spec.Step) : spec.Vertex × spec.Vertex :=
   (spec.stepLeft step.1 step.2, spec.stepRight step.1 step.2)
 
@@ -274,6 +280,7 @@ theorem unitStep_num_edges_pos (edge : Fin p)
   exact ⟨⟨edge, offset⟩, Or.inl rfl⟩
 
 /-- The neighbor of a core tail on its first unit step. -/
+@[expose]
 def tailNeighbor (edge : Fin p) : spec.Vertex :=
   spec.stepRight edge ⟨0, spec.length_pos edge⟩
 
@@ -297,21 +304,25 @@ theorem head_num_edges_pos (edge : Fin p) :
       ⟨spec.length edge - 1, by have := spec.length_pos edge; omega⟩
 
 /-- The step immediately before the interior vertex with coordinate `j`. -/
+@[expose]
 def previousStep (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
     Fin (spec.length edge) :=
   ⟨offset.val, by have := offset.isLt; omega⟩
 
 /-- The step immediately after the interior vertex with coordinate `j`. -/
+@[expose]
 def nextStep (edge : Fin p) (offset : Fin (spec.length edge - 1)) :
     Fin (spec.length edge) :=
   ⟨offset.val + 1, by have := offset.isLt; omega⟩
 
 /-- The preceding path vertex of an interior vertex. -/
+@[expose]
 def previousVertex (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) : spec.Vertex :=
   spec.stepLeft edge (spec.previousStep edge offset)
 
 /-- The following path vertex of an interior vertex. -/
+@[expose]
 def nextVertex (edge : Fin p)
     (offset : Fin (spec.length edge - 1)) : spec.Vertex :=
   spec.stepRight edge (spec.nextStep edge offset)
@@ -470,10 +481,12 @@ theorem prin_eq_sum_step_differences (script : firingScript spec.graph)
 /-! ## Canonical integer interpolation on the constructed graph -/
 
 /-- Rise of a core potential along an oriented edge slot. -/
+@[expose]
 def coreRise (potential : Fin n → ℤ) (edge : Fin p) : ℤ :=
   potential (spec.core.head edge) - potential (spec.core.tail edge)
 
 /-- Value at a numerical path offset, normalized by the tail potential. -/
+@[expose]
 def pathValue (potential : Fin n → ℤ) (edge : Fin p)
     (offset : ℕ) : ℤ :=
   potential (spec.core.tail edge) +
@@ -482,7 +495,7 @@ def pathValue (potential : Fin n → ℤ) (edge : Fin p)
 
 /-- Extend an integral core potential over every subdivided slot by the
 canonical convex interpolation from `SubdivisionArithmetic`. -/
-def interpolatedScript (potential : Fin n → ℤ) : firingScript spec.graph
+@[expose] def interpolatedScript (potential : Fin n → ℤ) : firingScript spec.graph
   | Sum.inl vertex => potential vertex
   | Sum.inr interior =>
       spec.pathValue potential interior.1 (interior.2.val + 1)

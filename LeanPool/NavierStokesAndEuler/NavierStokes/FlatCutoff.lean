@@ -20,7 +20,7 @@ These facts concern this scalar edge function, not the manuscript's stress
 factorization, PDE estimates, or asserted smooth force extension.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -70,7 +70,7 @@ theorem edge_le_glue {c x : ℝ} (hxc : x ≤ c) :
     simpa only [neg_div] using neg_le_neg hi
 
 /-- A family containing the edge and every inverse-power weighted edge. -/
-def polynomialEdge (c : ℝ) (p : ℝ[X]) (x : ℝ) : ℝ :=
+@[expose] def polynomialEdge (c : ℝ) (p : ℝ[X]) (x : ℝ) : ℝ :=
   p.eval x⁻¹ * edge c x
 
 @[simp] theorem polynomialEdge_zero (c : ℝ) (p : ℝ[X]) :
@@ -90,7 +90,7 @@ theorem polynomialEdge_tendsto_zero {c : ℝ} (hc : 0 < c) (p : ℝ[X]) :
 
 /-- The polynomial transformation induced by differentiating an inverse
 polynomial times the edge: `2 c X³ p - X² p'`. -/
-def derivativePolynomial (c : ℝ) (p : ℝ[X]) : ℝ[X] :=
+@[expose] def derivativePolynomial (c : ℝ) (p : ℝ[X]) : ℝ[X] :=
   C (2 * c) * X ^ 3 * p - X ^ 2 * p.derivative
 
 theorem polynomialEdge_hasDerivAt {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (x : ℝ) :

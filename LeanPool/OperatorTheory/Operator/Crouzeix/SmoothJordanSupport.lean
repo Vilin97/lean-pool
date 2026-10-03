@@ -46,7 +46,7 @@ therefore fixes the normal sign on the full frontier.
   trace and its reversal that has the supporting-normal sign.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set
 open scoped Real
@@ -269,6 +269,7 @@ theorem SmoothJordanDomain.frontier_support_of_support_at_mem_carrier
 /-- Reverse the orientation of a smooth Jordan boundary by the affine
 reparametrization `t ↦ 2π - t`.  The carrier and all of its geometric
 properties are unchanged. -/
+@[expose]
 noncomputable def SmoothJordanDomain.reverseOrientation
     (Omega : SmoothJordanDomain) : SmoothJordanDomain where
   carrier := Omega.carrier

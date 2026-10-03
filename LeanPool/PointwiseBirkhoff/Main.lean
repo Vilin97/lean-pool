@@ -16,7 +16,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.PointwiseBirkhoff.Main
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 
@@ -315,7 +315,7 @@ lemma limsup_birkhoffAverage_nonpos_of_condexp_neg (hf : MeasurePreserving f μ 
   exact divergentSet_zero_meas_of_condexp_neg μ h hf hφ hφ'
 
 /-- Conditional expectation of an observable onto the invariant measurable space of `f`. -/
-noncomputable def invCondexp
+@[expose] noncomputable def invCondexp
     (μ : Measure α) (f : α → α) (φ : α → ℝ) : α → ℝ :=
   μ[φ | invariants f]
 

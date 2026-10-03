@@ -19,7 +19,7 @@ C and C_t. The returned Field is for the literal raw curlCorrector used by
 the recursion, including at the history/forward junction.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,10 +40,12 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Potential path, given by `EulerCylinderPotential.potentialPath P D.potentialCoefficientPath
 (velocityPath τ hτ hτT B G)`. -/
+@[expose]
 def potentialPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialPath P D.potentialCoefficientPath (velocityPath τ hτ hτT B G)
 
 /-- Potential time path, constructed using `EulerCylinderPotential.potentialDerivative`. -/
+@[expose]
 def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (velocityPath τ hτ hτT B G) (derivativePath τ hτ hτT B G)
@@ -72,10 +74,12 @@ theorem potentialPath_time (t : Icc (0 : ℝ) D.T) :
 
 /-- Corrector path, given by `EulerCylinderSlowCurl.path P D.FInv.field (potentialPath τ hτ hτT
 B G)`. -/
+@[expose]
 def correctorPath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.path P D.FInv.field (potentialPath τ hτ hτT B G)
 
 /-- Corrector time path, constructed using `EulerCylinderSlowCurl.derivative`. -/
+@[expose]
 def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (potentialPath τ hτ hτT B G) (potentialTimePath τ hτ hτT B G)
@@ -102,12 +106,14 @@ theorem correctorPath_time (t : Icc (0 : ℝ) D.T) :
 
 /-- Corrector, defined pointwise by `pointField P (correctorPath τ hτ hτT B G)
 (correctorPath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
+@[expose]
 def corrector : VectorField := fun z =>
   pointField P (correctorPath τ hτ hτT B G) (correctorPath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
 
 /-- Corrector derivative, defined pointwise by `pointField P (correctorTimePath τ hτ hτT B G)
 (correctorTimePath_orbit τ hτ hτT B G) (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))`. -/
+@[expose]
 def correctorDerivative : VectorField := fun z =>
   pointField P (correctorTimePath τ hτ hτT B G) (correctorTimePath_orbit τ hτ hτT B G)
     (D.clamp z.1) (z.2.1,(z.2.2 : AddCircle P))
@@ -154,6 +160,7 @@ theorem curlCorrector_eq (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
   rw [Data.curlCorrector,Data.clamp_coe,he,coverField_fderiv,corrector_formula τ hτ hτT B G t x θ]
 
 /-- Corrector field, bundling `path`, `orbit`, `raw_eq`. -/
+@[expose]
 def correctorField : Field P D.T (D.curlCorrector P (vector τ hτ hτT B G)) where
   path := correctorPath τ hτ hτT B G
   orbit := correctorPath_orbit τ hτ hτT B G
@@ -161,6 +168,7 @@ def correctorField : Field P D.T (D.curlCorrector P (vector τ hτ hτT B G)) wh
       simp only [corrector,Data.clamp_coe])
 
 /-- Corrector derivative field, bundling `path`, `orbit`, `raw_eq`. -/
+@[expose]
 def correctorDerivativeField : Field P D.T (correctorDerivative τ hτ hτT B G) where
   path := correctorTimePath τ hτ hτT B G
   orbit := correctorTimePath_orbit τ hτ hτT B G

@@ -57,7 +57,7 @@ The development is `sorry`-free and uses only the standard axioms
 `propext`, `Classical.choice`, `Quot.sound`.
 -/
 
-@[expose] public section
+public section
 
 namespace Contrib.MaxFlowMinCut
 
@@ -404,6 +404,7 @@ structure Flow (Net : Network N) where
   conserved : ∀ u, u ≠ Net.s → u ≠ Net.t → ∑ v, f u v = 0
 
 /-- The value of a flow: net flow out of the source. -/
+@[expose]
 def Flow.value {Net : Network N} (F : Flow Net) : ℝ := ∑ v, F.f Net.s v
 
 /-- An s–t cut: a set of nodes containing the source but not the sink. -/
@@ -414,6 +415,7 @@ structure Cut (Net : Network N) where
   ht : Net.t ∉ S
 
 /-- The capacity of a cut: total capacity of edges leaving `S`. -/
+@[expose]
 def Cut.capacity {Net : Network N} (C : Cut Net) : ℝ :=
   ∑ u ∈ C.S, ∑ v ∈ (Finset.univ \ C.S), Net.cap u v
 

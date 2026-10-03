@@ -18,7 +18,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Finite
 Graph, coordinate, and measure constructions for the hard-sphere NBC volume identity.
 -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -140,11 +140,12 @@ lemma forest_edge_formula (H : SimpleGraph V) [DecidableRel H.Adj] (hH : H.IsAcy
     _ = Fintype.card V := componentVerts_card H
 
 /-- An edge subset of the graph whose induced graph is acyclic. -/
-def IsGraphForest (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
+@[expose] def IsGraphForest (G : SimpleGraph V) (A : Finset (Sym2 V)) : Prop :=
   (A : Set (Sym2 V)) ⊆ G.edgeSet ∧
     (SimpleGraph.fromEdgeSet (A : Set (Sym2 V))).IsAcyclic
 
 /-- A nonforest edge subset that becomes a forest after deleting any edge. -/
+@[expose]
 def IsGraphCircuit (G : SimpleGraph V) (C : Finset (Sym2 V)) : Prop :=
   C ⊆ graphEdgeFinset G ∧
     ¬IsGraphForest G C ∧

@@ -22,7 +22,7 @@ Assembles the regime-by-regime constructions into the existence of a Burkholder
 majorant for every exponent `p > 1`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -26,7 +26,7 @@ inversion `(a, 0)`.  Since `k`-general transmission bounds the number of
 new inversion `(a + n, n)` whose normalization forces `k ∣ n`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

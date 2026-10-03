@@ -15,7 +15,7 @@ The endpoint pencil determines a decreasing block in the transmission
 permutation.  This is the algebraic input to the endpoint inversion bound.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

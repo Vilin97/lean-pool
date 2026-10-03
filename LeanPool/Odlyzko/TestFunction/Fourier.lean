@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 section
 

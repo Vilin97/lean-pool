@@ -59,7 +59,7 @@ Verma module, Lie algebra, representation
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -82,7 +82,8 @@ namespace TriangularDecomposition
 
 variable {𝕜 𝓰} in
 /-- The triangular decomposition induced by a basis and a partition of the basis indices. -/
-def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTorsionFree 𝕜 𝓰]
+@[expose] def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜]
+    [Module.IsTorsionFree 𝕜 𝓰]
     (B : Basis ι 𝕜 𝓰) (Bp : SignType → Set ι)
     (Bp_disj : Pairwise (fun ε₁ ε₂ ↦ Disjoint (Bp ε₁) (Bp ε₂)))
     (Bp_cover : ⋃ ε, Bp ε = Set.univ) :
@@ -126,7 +127,8 @@ def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTors
 variable {𝕜 𝓰} in
 /-- The parts of a triangular decomposition determined by a basis have natural bases by
 construction. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.ofBasis.basisPart {ι : Type*}
+@[expose] noncomputable def _root_.VirasoroProject.TriangularDecomposition.ofBasis.basisPart
+    {ι : Type*}
     [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTorsionFree 𝕜 𝓰]
     (B : Basis ι 𝕜 𝓰) (Bp : SignType → Set ι)
     (Bp_disj : Pairwise (fun ε₁ ε₂ ↦ Disjoint (Bp ε₁) (Bp ε₂)))
@@ -160,13 +162,13 @@ noncomputable def weightHW (η : weight tri) (i : tri.cartan ⊕ tri.upper) :
   | Sum.inr E => ⟨ιUEA 𝕜 E, 0⟩
 
 /-- The Verma module of highest weight η. -/
-def VermaHW (η : weight tri) :=
+@[expose] def VermaHW (η : weight tri) :=
   VermaModule (weightHW η)
 
 variable (η : weight tri)
 
 /-- The highest weight vector of the Verma module of highest weight η. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.hwVec
+@[expose] noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.hwVec
     (η : weight tri) : VermaHW η :=
   VermaModule.hwVec _
 
@@ -216,7 +218,7 @@ lemma _root_.VirasoroProject.TriangularDecomposition.VermaHW.cartan_smul_hwVec
 
 /-- The universal map from a Verma module to any module with a vector of the given
 highest weight. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.universalMap
+@[expose] noncomputable def _root_.VirasoroProject.TriangularDecomposition.VermaHW.universalMap
     (η : weight tri)
     (M : Type*) [AddCommGroup M] [Module (𝓤 𝕜 𝓰) M] {hwv : M}
     (hwv_cartan : ∀ {H} (hH : H ∈ tri.cartan),

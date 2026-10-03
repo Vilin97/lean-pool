@@ -15,7 +15,7 @@ seven-dimensional Hankel target.  It is used only for the `D = 0` branch of
 quartic exclusion.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4

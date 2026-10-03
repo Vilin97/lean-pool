@@ -30,7 +30,7 @@ in the constant field, and all products are in the forward word convention
 of `KoethePencilDefs`.  No nilness or countability hypothesis is used.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

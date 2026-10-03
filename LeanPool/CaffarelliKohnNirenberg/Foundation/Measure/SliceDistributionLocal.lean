@@ -26,7 +26,7 @@ in the Caffarelli–Kohn–Nirenberg paper (CKN) when a spatially localised kern
 is slid against a locally integrable density.
 -/
 
-@[expose] public section
+public section
 
 namespace CKN
 

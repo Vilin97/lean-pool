@@ -18,7 +18,7 @@ The online-learning analog of VC dimension.
 Characterizes mistake-bounded learnability.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

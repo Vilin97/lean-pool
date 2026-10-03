@@ -17,7 +17,7 @@ vertex.  This is the converse to the obstruction in
 `SameFactorWedgeSubmodularity`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

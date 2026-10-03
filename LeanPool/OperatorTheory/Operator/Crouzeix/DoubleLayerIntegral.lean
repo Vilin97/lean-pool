@@ -38,7 +38,7 @@ no such boundary-value assertion is hidden in the normalization argument.
   resolvent contour has Cauchy integral `2 * pi * i • 1`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set
 open scoped InnerProductSpace Interval Real

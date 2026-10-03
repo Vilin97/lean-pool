@@ -20,7 +20,7 @@ positive base case has an empty left cut word and a nonempty right cut word.  Re
 swap transport that case to every ordinary-valid one-sided-degenerate cut.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -37,6 +37,7 @@ theorem leftLength_eq_zero
   simp [hleft]
 
 /-- The rotated source side index, specialized to an empty-left cut. -/
+@[expose]
 noncomputable def rightDegenerateCutSideIndex
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -157,6 +158,7 @@ theorem zeroLeftCellHomeomorph_side
   simp [hl]
 
 /-- The `zeroLeftChildPairHomeomorph` declaration. -/
+@[expose]
 noncomputable def zeroLeftChildPairHomeomorph
     {l r : ℕ} (hl : l = 0) :
     DiskSquare.ChildPair 0 r ≃ₜ
@@ -258,6 +260,7 @@ theorem zeroLeftChildPair_eqvGen_iff
       hcomap hxy
 
 /-- The `zeroLeftChildGluingHomeomorph` declaration. -/
+@[expose]
 noncomputable def zeroLeftChildGluingHomeomorph
     {l r : ℕ} (hl : l = 0) :
     DiskSquare.ParamChildGluing 0 r ≃ₜ
@@ -1667,6 +1670,7 @@ theorem rightDegenerateInvPreMap_respects
 /-! ### Descended equivalence -/
 
 /-- Forward map after descent through the source polygonal quotient. -/
+@[expose]
 noncomputable def rightDegenerateRealizationMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)
@@ -1683,6 +1687,7 @@ noncomputable def rightDegenerateRealizationMap
         P cut horientation hleft hr validP hxy)
 
 /-- Inverse map after descent through the target polygonal quotient. -/
+@[expose]
 noncomputable def rightDegenerateRealizationInvMap
     (P : FiniteCyclicPresentation) (cut : P2Cut P)
     (horientation : cut.face.orientation = false)

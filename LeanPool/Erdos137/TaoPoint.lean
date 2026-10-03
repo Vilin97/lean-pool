@@ -45,7 +45,7 @@ relation extraction that is Tao's next step is likewise not formalized.
   factor and exceeds the block length prevents powerfulness.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos137
 
@@ -58,7 +58,7 @@ noncomputable section
 `F k n = ∏_{i<k}(n+i)` is *powerful*. For `k ≥ 2` this is exactly a powerful product of `≥ 2`
 consecutive integers; the difference of two factors being `< k`, together with the resulting
 coprimality of factors away from primes `< k`, is what feeds the Erdős #137 obstruction. -/
-def VeryBad (k n : ℕ) : Prop := Powerful (F k n)
+@[expose] def VeryBad (k n : ℕ) : Prop := Powerful (F k n)
 
 /-- **Prime uniqueness in a block.** If a prime `p` is at least the block length `k`, it divides
 at most one of the `k` consecutive factors `n, n+1, …, n+k-1`: two distinct factors `n+i`, `n+j`

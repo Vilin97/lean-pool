@@ -20,7 +20,7 @@ the summand is named here with the count as a parameter, extended by
 zero off the good subsets, exactly as `termAt` is.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -1249,6 +1249,7 @@ theorem relabel_edgeSum {α : Type} {β : Type} {W : Fragment α} (ee : α ≃ �
     relabel_evenColoursAt ee F ψ v, core_relabel_eq ee F φ]
 
 /-- **The data family pulled back along a relabel.** -/
+@[expose]
 noncomputable def relabelDataDown {α' β' : Type} [LinearOrder α']
     [LinearOrder β'] (e : α' ≃o β') {W' : Fragment α'}
     (𝒟 : DataFamily (W'.relabel e.toEquiv)) : DataFamily W' :=

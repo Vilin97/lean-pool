@@ -17,7 +17,7 @@ to the product L² space, with exactly the same norm.  This realizes nested
 space/angle or time/space estimates without changing any derivative constants.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

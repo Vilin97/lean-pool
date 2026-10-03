@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 
 /-! Harmonicity of actual coordinate derivatives on an open subset of R³. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,7 +63,7 @@ theorem partialDerivative_harmonic_on (f : Space → ℝ) (hf : ContDiff ℝ ∞
   simp
 
 /-- Word derivative as an element of `word, f => partialDerivative (wordDerivative word f) i`. -/
-def wordDerivative : List (Fin 3) → (Space → ℝ) → Space → ℝ
+@[expose] def wordDerivative : List (Fin 3) → (Space → ℝ) → Space → ℝ
   | [], f => f
   | i :: word, f => partialDerivative (wordDerivative word f) i
 

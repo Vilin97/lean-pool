@@ -33,7 +33,7 @@ Scalar double cosets T(c,...,c) act by scaling.
 * Shimura, *Introduction to the Arithmetic Theory of Automorphic Functions*, §3.2
 -/
 
-@[expose] public section
+public section
 
 open Matrix Subgroup.Commensurable Pointwise HeckeRing DoubleCoset Matrix.SpecialLinearGroup
 

@@ -19,7 +19,7 @@ endomorphism of the unit either as a right whiskering or as a left
 whiskering, and whiskerings on opposite sides commute.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

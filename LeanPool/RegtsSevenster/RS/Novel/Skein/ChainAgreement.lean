@@ -47,7 +47,7 @@ whole chain's values are determined by the pinned seed.
    chain.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

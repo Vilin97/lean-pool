@@ -17,7 +17,7 @@ and the specialized one-variable quotient and remainder operators used in
 complex-analytic Weierstrass preparation.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 open scoped ENNReal NNReal Topology
@@ -180,7 +180,7 @@ lemma convolution_smul_right (c : ℂ) (f g : L1Coeff A) :
   rw [convolution_comm f, convolution_smul_left, convolution_comm g]
 
 /-- Right convolution depends continuously and linearly on the coefficient family. -/
-def convolutionRightMap :
+@[expose] def convolutionRightMap :
     L1Coeff A →L[ℂ] (L1Coeff A →L[ℂ] L1Coeff A) :=
   ({
     toFun := convolutionRight
@@ -203,7 +203,7 @@ def convolutionRightMap :
     convolutionRightMap p = convolutionRight p := rfl
 
 /-- The high-shifted convolution perturbation used by division. -/
-def divisionPerturbation (d : ℕ) (p : L1Coeff (A × ℕ)) :
+@[expose] def divisionPerturbation (d : ℕ) (p : L1Coeff (A × ℕ)) :
     L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
   highShiftCLM d ∘L convolutionRight p
 
@@ -220,7 +220,7 @@ theorem norm_divisionPerturbation_le (d : ℕ) (p : L1Coeff (A × ℕ)) :
     _ = ‖p‖ := one_mul _
 
 /-- The operator-valued linear map `p ↦ S_d C_p`. -/
-def divisionPerturbationMap (d : ℕ) :
+@[expose] def divisionPerturbationMap (d : ℕ) :
     L1Coeff (A × ℕ) →L[ℂ] (L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ)) :=
   ({
     toFun := divisionPerturbation d
@@ -281,7 +281,7 @@ noncomputable def divisionQuotient (d : ℕ) (p : L1Coeff (A × ℕ)) (hp : ‖p
   divisionInverse d p hp (highShift d f)
 
 /-- Proof-independent quotient map, defined on all coefficient pairs by total ring inversion. -/
-noncomputable def divisionQuotientGlobal (d : ℕ)
+@[expose] noncomputable def divisionQuotientGlobal (d : ℕ)
     (pf : L1Coeff (A × ℕ) × L1Coeff (A × ℕ)) : L1Coeff (A × ℕ) :=
   Ring.inverse (1 + divisionPerturbation d pf.1) (highShift d pf.2)
 
@@ -319,14 +319,14 @@ theorem analyticAt_inverseOneAdd_apply
   simpa [op, Function.comp_def] using hcomp
 
 /-- Extract the divisor perturbation operator from divisor/dividend input. -/
-def divisionOperatorInput (d : ℕ) :
+@[expose] def divisionOperatorInput (d : ℕ) :
     (L1Coeff (A × ℕ) × L1Coeff (A × ℕ)) →L[ℂ]
       (L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ)) :=
   divisionPerturbationMap d ∘L
     ContinuousLinearMap.fst ℂ (L1Coeff (A × ℕ)) (L1Coeff (A × ℕ))
 
 /-- Extract and high-shift the right-hand side from divisor/dividend input. -/
-def divisionRhsInput (d : ℕ) :
+@[expose] def divisionRhsInput (d : ℕ) :
     (L1Coeff (A × ℕ) × L1Coeff (A × ℕ)) →L[ℂ] L1Coeff (A × ℕ) :=
   highShiftCLM d ∘L
     ContinuousLinearMap.snd ℂ (L1Coeff (A × ℕ)) (L1Coeff (A × ℕ))
@@ -435,7 +435,7 @@ end Division
 section NatDivision
 
 /-- Delete the first `d` coefficients of a one-variable `ℓ¹` sequence. -/
-def seqHighShift (d : ℕ) (f : L1Coeff ℕ) : L1Coeff ℕ :=
+@[expose] def seqHighShift (d : ℕ) (f : L1Coeff ℕ) : L1Coeff ℕ :=
   ⟨fun n ↦ f (n + d), by
     apply memℓp_gen
     simpa [Function.comp_def] using
@@ -467,7 +467,7 @@ lemma seqHighShift_smul (d : ℕ) (c : ℂ) (f : L1Coeff ℕ) :
   rfl
 
 /-- High shift on one-variable sequences as a contraction. -/
-def seqHighShiftCLM (d : ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
+@[expose] def seqHighShiftCLM (d : ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
   ({
     toFun := seqHighShift d
     map_add' := seqHighShift_add d
@@ -572,7 +572,7 @@ theorem seqLowShift_highShift_add_lowCut (d : ℕ) (f : L1Coeff ℕ) :
     simp [Nat.sub_add_cancel (Nat.le_of_not_gt hn)]
 
 /-- The high-shifted convolution perturbation `S_d C_p` on `ℓ¹(ℕ)`. -/
-def seqDivisionPerturbation (d : ℕ) (p : L1Coeff ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
+@[expose] def seqDivisionPerturbation (d : ℕ) (p : L1Coeff ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
   seqHighShiftCLM d ∘L convolutionRight p
 
 @[simp] lemma seqDivisionPerturbation_apply (d : ℕ) (p q : L1Coeff ℕ) :
@@ -595,7 +595,7 @@ theorem norm_seqDivisionPerturbation_le (d : ℕ) (p : L1Coeff ℕ) :
     _ = ‖p‖ := one_mul _
 
 /-- The continuous-linear family of one-variable division perturbations. -/
-def seqDivisionPerturbationMap (d : ℕ) :
+@[expose] def seqDivisionPerturbationMap (d : ℕ) :
     L1Coeff ℕ →L[ℂ] (L1Coeff ℕ →L[ℂ] L1Coeff ℕ) :=
   ({
     toFun := seqDivisionPerturbation d
@@ -657,18 +657,18 @@ noncomputable def seqDivisionQuotient (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ 
   seqDivisionInverse d p hp (seqHighShift d f)
 
 /-- The low-degree remainder sequence produced by division. -/
-noncomputable def seqDivisionRemainder (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)
+@[expose] noncomputable def seqDivisionRemainder (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)
     (f : L1Coeff ℕ) : L1Coeff ℕ :=
   seqLowCut d (f - convolution (seqDivisionQuotient d p hp f) p)
 
 /-- Extract the sequence perturbation operator from paired input. -/
-def seqDivisionOperatorInput (d : ℕ) :
+@[expose] def seqDivisionOperatorInput (d : ℕ) :
     (L1Coeff ℕ × L1Coeff ℕ) →L[ℂ] (L1Coeff ℕ →L[ℂ] L1Coeff ℕ) :=
   seqDivisionPerturbationMap d ∘L
     ContinuousLinearMap.fst ℂ (L1Coeff ℕ) (L1Coeff ℕ)
 
 /-- Extract and high-shift the sequence right-hand side from paired input. -/
-def seqDivisionRhsInput (d : ℕ) :
+@[expose] def seqDivisionRhsInput (d : ℕ) :
     (L1Coeff ℕ × L1Coeff ℕ) →L[ℂ] L1Coeff ℕ :=
   seqHighShiftCLM d ∘L ContinuousLinearMap.snd ℂ (L1Coeff ℕ) (L1Coeff ℕ)
 

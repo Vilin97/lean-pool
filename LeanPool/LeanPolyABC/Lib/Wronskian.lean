@@ -11,7 +11,7 @@ public import Mathlib.Algebra.Polynomial.Derivative
 # LeanPool.LeanPolyABC.Lib.Wronskian
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -24,7 +24,7 @@ namespace LeanPolyABC
 variable {R : Type _} [CommRing R]
 
 /-- Wronskian: W(a, b) = ab' - a'b. -/
-def wronskian (a b : R[X]) : R[X] :=
+@[expose] def wronskian (a b : R[X]) : R[X] :=
   a * derivative b - derivative a * b
 
 @[simp]

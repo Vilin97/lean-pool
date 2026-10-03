@@ -13,7 +13,7 @@ public import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-! # Affine Subdivision Determinant -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open SphereOddDegree
@@ -23,13 +23,13 @@ open SphereOddDegree.BarycentricSubdivisionDiameter
 namespace NRR
 namespace AffineSubdivisionDeterminant
 /-- Matrix whose columns are the vertices of one barycentric subdivision simplex. -/
-noncomputable def stepVertexMatrix
+@[expose] noncomputable def stepVertexMatrix
     (n : Nat) (pi : Equiv.Perm (Fin (n + 1))) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
   fun r k => (prefixBarycenter n pi k).val r
 
 /-- Lower triangular prefix-average matrix before permutation of coordinates. -/
-noncomputable def prefixAverageMatrix (n : Nat) :
+@[expose] noncomputable def prefixAverageMatrix (n : Nat) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
   fun r k => if r.1 ≤ k.1 then (k.1 + 1 : Real)⁻¹ else 0
 
@@ -98,6 +98,7 @@ theorem det_stepVertexMatrix_ne_zero
   exact mul_ne_zero hsign hprod
 
 /-- Vertex matrix of an iterated affine subdivision simplex. -/
+@[expose]
 noncomputable def iterVertexMatrix
     (n N : Nat) (rho : Fin N → Equiv.Perm (Fin (n + 1))) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=

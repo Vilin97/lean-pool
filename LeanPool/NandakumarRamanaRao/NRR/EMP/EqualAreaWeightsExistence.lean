@@ -38,7 +38,7 @@ the core theorem exactly, and the nondegeneracy hypotheses (`hn`, `hs`) are the 
 justified in `OptimalTransportCore`.
 -/
 
-@[expose] public section
+public section
 
 open NRR NRR.Geometry NRR.Geometry.ConvexBody
 

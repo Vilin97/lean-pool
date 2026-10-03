@@ -19,7 +19,7 @@ in both directions.  The only coordinate certificate is the displayed
 `7 × 7` change of Hankel coefficients.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -144,6 +144,7 @@ theorem anfPlaceNormalize_mem_rationalLow_iff
 /-- The correlated first-jet state after moving its selected place to zero.
 The seed representative uses the very same linear form whose nonzero
 first-jet component was obtained in `FirstJetSupport`. -/
+@[expose]
 def ZeroNormalizedFirstJetState (C : Circuit 8 8) : Prop :=
   ∃ (theta : Fin 3) (eps : F₂) (anchorLinear companionLinear : LinearForm)
     (correction : ANF 8) (pa pb ja jb : F₂),
@@ -271,6 +272,7 @@ theorem NormalizedEight.zeroNormalizedFirstJetState
 /-- The degree-at-most-two state after the first feedback, in zero-place
 coordinates.  The choice of tangent representative is immaterial modulo the
 rational place `E₀`. -/
+@[expose]
 def zeroFeedbackLowSpace : Submodule F₂ (ANF 8) :=
   rationalLowSpace ⊔
     Submodule.span F₂ {targetANF (rationalTangentAt 0 0)}

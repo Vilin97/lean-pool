@@ -29,7 +29,7 @@ checked.  This is the Schubert-special locus on which an essential-set theorem
 should operate.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

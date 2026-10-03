@@ -16,7 +16,7 @@ Coordinates of a merged even pair multiply over the halves,
 vanishing when the halves have odd parity.
 -/
 
-@[expose] public section
+public section
 
 open scoped TensorProduct
 

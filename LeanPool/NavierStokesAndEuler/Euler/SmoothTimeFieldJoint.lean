@@ -13,7 +13,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Partial
 /-! Actual time derivatives and the genuine spatial jets give joint C¹
 regularity on the interior of the time interval. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ variable {E V : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
   (T : ℝ) (hT : 0 ≤ T) (A A₁ : SmoothTimeField (Icc (0 : ℝ) T) E V)
 
 /-- Real field, given by `extendPath T hT A.field t x`. -/
-def realField (t : ℝ) (x : E) : V := extendPath T hT A.field t x
+@[expose] def realField (t : ℝ) (x : E) : V := extendPath T hT A.field t x
 
 @[simp] theorem realField_apply (t : Icc (0 : ℝ) T) (x : E) :
     A.realField T hT t x = A.field t x := by
@@ -43,12 +43,12 @@ theorem realField_joint_continuous : Continuous (Function.uncurry (A.realField T
 
 /-- Time derivative, given by `∀ t : Icc (0 : ℝ) T, ∀ x : E, HasDerivWithinAt (fun s =>
 A.realField T hT s x) (A₁.field t x) (Icc (0 : ℝ) T) t`. -/
-def TimeDerivative : Prop := ∀ t : Icc (0 : ℝ) T, ∀ x : E,
+@[expose] def TimeDerivative : Prop := ∀ t : Icc (0 : ℝ) T, ∀ x : E,
   HasDerivWithinAt (fun s => A.realField T hT s x) (A₁.field t x) (Icc (0 : ℝ) T) t
 
 /-- Joint derivative, given by `(ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t
 x)).coprod (A.derivative.realField T hT t x)`. -/
-def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
+@[expose] def jointDerivative (t : ℝ) (x : E) : (ℝ × E) →L[ℝ] V :=
   (ContinuousLinearMap.toSpanSingleton ℝ (A₁.realField T hT t x)).coprod
     (A.derivative.realField T hT t x)
 
@@ -79,8 +79,8 @@ theorem realField_hasFDerivAt (htime : TimeDerivative T hT A A₁)
   · apply Eventually.of_forall
     intro p
     change HasFDerivAt (A.field (projIcc 0 T hT p.1) : E → V)
-      (A.derivativeField (projIcc 0 T hT p.1) p.2) p.2
-    rw [A.derivativeField_eq]
+      (A.derivative.field (projIcc 0 T hT p.1) p.2) p.2
+    rw [A.derivative_apply]
     have hd := ((A.smooth (projIcc 0 T hT p.1)).differentiable (by simp) p.2).hasFDerivAt
     exact hd
   · exact ((ContinuousLinearMap.toSpanSingletonLIE ℝ V).continuous.comp

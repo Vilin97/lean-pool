@@ -17,7 +17,7 @@ difference.  Consequently `rankDelta` is invariant under the involution
 `D ↦ K + u + v - D`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

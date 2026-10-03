@@ -28,7 +28,7 @@ import Mathlib.Tactic.Ring.Basic
 * `newton` : `P = ∑_{k ≤ d} Δ^k P(0) · bin k` for `deg P ≤ d`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
@@ -44,7 +44,7 @@ lemma poly_eq_of_nat {P Q : ℚ[X]} (h : ∀ n : ℕ, P.eval (n : ℚ) = Q.eval 
 /-! ### The Bernoulli functional -/
 
 /-- `Lb Q = ∑_n Q_n B_n`. -/
-noncomputable def Lb (Q : ℚ[X]) : ℚ :=
+@[expose] noncomputable def Lb (Q : ℚ[X]) : ℚ :=
   Q.sum fun n a => a * _root_.bernoulli n
 
 lemma Lb_add (P Q : ℚ[X]) : Lb (P + Q) = Lb P + Lb Q := by
@@ -103,7 +103,7 @@ theorem Lb_shift (Q : ℚ[X]) : Lb (Q.comp (X + 1)) - Lb Q = Q.derivative.eval 0
 /-! ### The binomial basis -/
 
 /-- `bin k = x(x-1)⋯(x-k+1)/k!`. -/
-noncomputable def bin (k : ℕ) : ℚ[X] :=
+@[expose] noncomputable def bin (k : ℕ) : ℚ[X] :=
   C ((k.factorial : ℚ)⁻¹) * descPochhammer ℚ k
 
 lemma bin_eval_nat (k m : ℕ) : (bin k).eval (m : ℚ) = (m.choose k : ℚ) := by
@@ -168,7 +168,7 @@ lemma eq_C_of_comp_add_one {Q : ℚ[X]} (h : Q.comp (X + 1) = Q) : Q = C (Q.eval
     push_cast; rw [this, ih]
 
 /-- The coefficients of the derivative in the binomial basis. -/
-noncomputable def dcoef (j : ℕ) : ℚ :=
+@[expose] noncomputable def dcoef (j : ℕ) : ℚ :=
   (-1) ^ (j - 1) / (j : ℚ)
 
 /-- **Derivative of the binomial polynomials**. -/

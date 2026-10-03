@@ -19,7 +19,7 @@ of the frozen operator. This form applies to continuous path spaces as well
 as Hilbert spaces, without assigning a Hilbert structure to a uniform norm.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

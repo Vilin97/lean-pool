@@ -20,6 +20,6 @@ public import LeanPool.BruhatTits.Utils.ValuationRings
 # Auxiliary lemmas
 -/
 
-@[expose] public section
+public section
 
 open Module

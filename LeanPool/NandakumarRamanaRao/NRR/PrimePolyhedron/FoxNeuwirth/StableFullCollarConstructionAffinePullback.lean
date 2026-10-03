@@ -30,7 +30,7 @@ stacks are transported with `castEndpointCollar`; `castEndpoint_property` moves 
 a collar together with its assignment across such a transport.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -66,6 +66,7 @@ section LevelTransport
 variable {hp : Nat.Prime p}
 
 /-- Transport an endpoint-identified collar along equalities of its two endpoint levels. -/
+@[expose]
 noncomputable def castEndpointCollar
     {N₀ N₀' N₁ N₁' M T : Nat} (h₀ : N₀ = N₀') (h₁ : N₁ = N₁')
     (C : EndpointIdentifiedRelativeAffineCollar hp N₀ N₁ M T) :
@@ -134,6 +135,7 @@ theorem upper_boundary_represents_base_cast
 /-! ### The three collar regions -/
 
 /-- Base level at which the PL-ended chart homotopy is defined. -/
+@[expose]
 def baseLevel
     {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
     (A0 : StableRegularApproximation hp F0.map)
@@ -210,6 +212,7 @@ theorem middleRefinement_avoidsOrigin
     (exists_refinement_avoidsOrigin hp (middleHomotopy hp F0 F1 H A0 A1))
 
 /-- Lower endpoint stack, transported to the common middle level. -/
+@[expose]
 noncomputable def lowerCollar
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -227,6 +230,7 @@ noncomputable def lowerCollar
       (lowerStackIndex A1 L)).collar
 
 /-- Upper endpoint stack, reversed and transported from the common middle level. -/
+@[expose]
 noncomputable def upperCollar
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -245,6 +249,7 @@ noncomputable def upperCollar
         (upperStackIndex A0 L)).collar)
 
 /-- The transported lower stack assignment. -/
+@[expose]
 noncomputable def lowerAssignment
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -258,6 +263,7 @@ noncomputable def lowerAssignment
     (build hp A0.toRegularApproximation (lowerStackIndex A1 L)).assignment
 
 /-- The transported reversed upper stack assignment. -/
+@[expose]
 noncomputable def upperAssignment
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -422,6 +428,7 @@ theorem lowerSeam
     (middle_represents_lower hp F0 F1 H A0 A1 L)
 
 /-- The lower stack composed with the middle prism. -/
+@[expose]
 noncomputable def lowerMiddleCollar
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -441,6 +448,7 @@ noncomputable def lowerMiddleCollar
     (middleCollar hp A0 A1 L)
 
 /-- The assignment of the lower two regions. -/
+@[expose]
 noncomputable def lowerMiddleAssignment
     (hp : Nat.Prime p)
     (F0 F1 : ZeroFreeMap hp)
@@ -506,6 +514,7 @@ theorem upperDescribed_upperFacet_exhaustive
   (upperCollar hp A0 A1 L).upperFacet_exhaustive
 
 /-- The complete three-region collar. -/
+@[expose]
 noncomputable def fullCollar
     (hp : Nat.Prime p)
     {F0 F1 : ZeroFreeMap hp}
@@ -532,6 +541,7 @@ noncomputable def fullCollar
     (upperDescribed_upperFacet_exhaustive hp A0 A1 L)
 
 /-- The complete three-region assignment. -/
+@[expose]
 noncomputable def fullAssignment
     (hp : Nat.Prime p)
     (F0 F1 : ZeroFreeMap hp)
@@ -721,6 +731,7 @@ theorem full_upperFixed
     (upper_upperFixed hp A0 A1 L)
 
 /-- Concrete full fine-collar data. -/
+@[expose]
 noncomputable def fineFullCollarData
     (hp : Nat.Prime p)
     (F0 F1 : ZeroFreeMap hp)

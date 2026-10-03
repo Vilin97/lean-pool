@@ -49,7 +49,7 @@ only that are unaffected.
   rather than indexed, so no face has to be produced before it is spoken about.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Schoenflies unitInterval
 open scoped Graph
@@ -59,7 +59,7 @@ namespace Graph
 variable {β : Type*} {G : Graph Plane β} {drawing : β → ℝ → Plane} {base : Plane}
 
 /-- The point set of a single edge: the image of its parametrization on `[0, 1]`. -/
-def edgeArc (drawing : β → ℝ → Plane) (e : β) : Set Plane := drawing e '' I
+@[expose] def edgeArc (drawing : β → ℝ → Plane) (e : β) : Set Plane := drawing e '' I
 
 /-- A drawing of an abstract graph in the plane.
 
@@ -128,7 +128,7 @@ end IsDrawing
 /-! ### What a plane graph occupies -/
 
 /-- The point set of a plane graph: its vertices together with all of its edge arcs. -/
-def pointSet (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
+@[expose] def pointSet (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
   V(G) ∪ ⋃ e ∈ E(G), edgeArc drawing e
 
 theorem vertexSet_subset_pointSet : V(G) ⊆ pointSet G drawing := subset_union_left
@@ -148,7 +148,7 @@ theorem IsDrawing.isClosed_pointSet [G.Finite] (h : IsDrawing G drawing) :
     IsClosed (pointSet G drawing) := h.isCompact_pointSet.isClosed
 
 /-- The exterior of a plane graph: everything the drawing does not occupy. -/
-def exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
+@[expose] def exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) : Set Plane :=
   (pointSet G drawing)ᶜ
 
 theorem IsDrawing.isOpen_exterior [G.Finite] (h : IsDrawing G drawing) :
@@ -156,7 +156,7 @@ theorem IsDrawing.isOpen_exterior [G.Finite] (h : IsDrawing G drawing) :
 
 /-- A face of a plane graph, named by a point of the exterior rather than indexed: no face has
 to be produced before it can be spoken about. -/
-def face (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) : Set Plane :=
+@[expose] def face (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) : Set Plane :=
   connectedComponentIn (exterior G drawing) base
 
 theorem face_subset_exterior (G : Graph Plane β) (drawing : β → ℝ → Plane) (base : Plane) :

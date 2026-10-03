@@ -24,7 +24,7 @@ so the lower limit of the left side is at least `L/8`. Finally `16/21 ≤ L/8` i
 comparison `3^128 ≤ 810^21`, and `16/21 = 0.76190…` is the stated bound.
 -/
 
-@[expose] public section
+public section
 
 namespace NaslundCounterexample
 

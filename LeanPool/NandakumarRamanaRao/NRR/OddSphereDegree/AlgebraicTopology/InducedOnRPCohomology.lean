@@ -61,7 +61,7 @@ These are the functorial pullback / double-cover-compatibility / descended-map
 naturality facts independent of the cup-product ring computation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -72,18 +72,19 @@ namespace SphereOddDegree
 /-- The `k`-th singular cohomology of `RP n` with `ZMod 2` coefficients, as an
 object of `ModuleCat (ZMod 2)`. This is a genuine object: the constructed functor
 `singularCohomologyZMod2 k` applied to the genuine space `TopCat.of (RP n)`. -/
-noncomputable def rpCohomology (n k : ℕ) : ModuleCat.{0} (ZMod 2) :=
+@[expose] noncomputable def rpCohomology (n k : ℕ) : ModuleCat.{0} (ZMod 2) :=
   (singularCohomologyZMod2 k).obj (Opposite.op (TopCat.of (RP n)))
 
 /-- The `k`-th singular cohomology of `S^n` with `ZMod 2` coefficients, as an
 object of `ModuleCat (ZMod 2)`. -/
-noncomputable def sphereCohomology (n k : ℕ) : ModuleCat.{0} (ZMod 2) :=
+@[expose] noncomputable def sphereCohomology (n k : ℕ) : ModuleCat.{0} (ZMod 2) :=
   (singularCohomologyZMod2 k).obj (Opposite.op (TopCat.of (Sphere n)))
 
 /-- The pullback `fbar^* : H^k(RP n; F₂) → H^k(RP n; F₂)` of the descended odd
 map `fbar = inducedOnRP f hf`. This is the functor's action on the opposite of
 the `TopCat` morphism `TopCat.ofHom (inducedOnRP f hf)`; naturality is
 structural. -/
+@[expose]
 noncomputable def inducedOnRPPullback {n : ℕ} (f : C(Sphere n, Sphere n)) (hf : IsOddMap f)
     (k : ℕ) : rpCohomology n k ⟶ rpCohomology n k :=
   (singularCohomologyZMod2 k).map (TopCat.ofHom (inducedOnRP f hf)).op
@@ -95,7 +96,7 @@ noncomputable def projPullback (n k : ℕ) : rpCohomology n k ⟶ sphereCohomolo
 
 /-- The pullback `f^* : H^k(S^n; F₂) → H^k(S^n; F₂)` of a self-map `f` of the
 sphere. -/
-noncomputable def spherePullback {n : ℕ} (f : C(Sphere n, Sphere n)) (k : ℕ) :
+@[expose] noncomputable def spherePullback {n : ℕ} (f : C(Sphere n, Sphere n)) (k : ℕ) :
     sphereCohomology n k ⟶ sphereCohomology n k :=
   (singularCohomologyZMod2 k).map (TopCat.ofHom f).op
 

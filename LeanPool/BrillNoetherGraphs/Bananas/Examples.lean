@@ -11,4 +11,4 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Examples.MechanicalAPIAudit
 
 /-! Supporting modules for Brill–Noether theory and gonality of finite graphs. -/
 
-@[expose] public section
+public section

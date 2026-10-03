@@ -14,7 +14,7 @@ in the closed inner carrier, so the actual pressure gradient admits the
 raw-source decomposition on that collar.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal Topology BigOperators

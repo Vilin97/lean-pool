@@ -17,7 +17,7 @@ retained. This is not the convention of clique sums allowing separator-edge
 deletion. Edge accounting does not imply additivity of packing optima.
 -/
 
-@[expose] public section
+public section
 
 namespace SimpleGraph
 

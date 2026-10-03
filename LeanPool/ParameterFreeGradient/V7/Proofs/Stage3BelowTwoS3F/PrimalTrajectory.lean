@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage3BelowTwoS3F.Coeffic
 The literal below-two primal trajectory has the required dynamics and exact observations.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage3BelowTwoS3F
 
@@ -26,6 +26,7 @@ structure PrimalState (d : ℕ) where
   x : Point d
 
 /-- The literal below-two primal trajectory starting at the zero normalized state. -/
+@[expose]
 noncomputable def primalState (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
     ℕ → PrimalState d
   | 0 => ⟨0, 0, 0⟩
@@ -59,6 +60,7 @@ noncomputable def primalTrace (p : ℝ) (n : ℕ) (oracle : PairOracle d) :
   (List.range (n + 1)).map fun k => oracle.observe (primalState p n oracle k).x
 
 /-- The concrete primal trajectory packaged with a comparison minimizer and minimum value. -/
+@[expose]
 noncomputable def primalData (p : ℝ) (n : ℕ) (oracle : PairOracle d)
     (z : Point d) (fstar : ℝ) : BelowPrimalData p d n where
   oracle := oracle

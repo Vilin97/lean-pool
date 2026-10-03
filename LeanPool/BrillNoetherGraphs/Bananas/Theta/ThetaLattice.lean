@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Theta.ThetaJacobian
 
 /-! # Theta Lattice -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

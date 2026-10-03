@@ -20,7 +20,7 @@ cyclicity moves the idempotent across products, so ambient
 nondegeneracy restricts to the corner.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

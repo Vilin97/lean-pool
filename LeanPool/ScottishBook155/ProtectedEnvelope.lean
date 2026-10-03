@@ -18,7 +18,7 @@ all selected exact distances.  The collapsed-quotient Kuratowski coordinate
 separates the remaining pairs without changing those metric estimates.
 -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
@@ -37,6 +37,7 @@ abbrev ProtectedEnvelopeAmbient (P : Type u) (N : Type v) [MetricSpace P]
 /-- A generating point with an arbitrary old-target coordinate.  Allowing the
 first coordinate to vary independently ensures that every retractive metric
 embedding lands in the same closed linear span. -/
+@[expose]
 noncomputable def protectedEnvelopeGenerator {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (j : N → P) (z : N × P) : ProtectedEnvelopeAmbient P N j :=
@@ -92,12 +93,14 @@ noncomputable def protectedEnvelopeSequenceEmbedding {P : Type u} {N : Type v}
     (protectedEnvelopeDenseMap_denseRange j)
 
 /-- The raw metric coordinate in the ambient product. -/
+@[expose]
 noncomputable def protectedEnvelopeEmbeddingAmbient {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (j : N → P) (R : P → N) (p : P) : ProtectedEnvelopeAmbient P N j :=
   combinedEmbedding (retractiveEmbedding j R) (Set.range j) (j 0) p
 
 /-- The final metric embedding, based at the zero point of the old target. -/
+@[expose]
 noncomputable def protectedEnvelopeEmbedding {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N]
     (j : N → P) (R : P → N) (p : P) : ProtectedEnvelope P N j :=
@@ -107,6 +110,7 @@ noncomputable def protectedEnvelopeEmbedding {P : Type u} {N : Type v}
     exact Submodule.subset_span ⟨(R p, p), rfl⟩⟩
 
 /-- The raw old-target embedding in the ambient product. -/
+@[expose]
 noncomputable def protectedTargetLinearAmbient {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     N →ₗ[ℝ] ProtectedEnvelopeAmbient P N j where
@@ -128,6 +132,7 @@ theorem protectedEnvelopeGenerator_target {P : Type u} {N : Type v}
   · rfl
 
 /-- The old target embeds linearly into the density-controlled envelope. -/
+@[expose]
 noncomputable def protectedTargetLinear {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     N →ₗ[ℝ] ProtectedEnvelope P N j where
@@ -160,6 +165,7 @@ noncomputable def protectedTargetLinearIsometry {P : Type u} {N : Type v}
   norm_map' := norm_protectedTargetLinear_eq j
 
 /-- Projection through the first two product coordinates. -/
+@[expose]
 noncomputable def protectedEnvelopeProjection {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
     ProtectedEnvelope P N j →L[ℝ] N :=

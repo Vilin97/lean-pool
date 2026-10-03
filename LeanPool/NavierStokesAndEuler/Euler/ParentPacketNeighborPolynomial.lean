@@ -15,7 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentPacketHistoryPolynomial
 including the normal normalization and the selected terminal datum. The
 small label scale is kept outside this polynomial. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -26,12 +26,12 @@ open EulerPacketParentLabelBounds EulerParentHistoryCost EulerPolynomialCost
   EulerTransverseActivationSelection
 
 /-- Formula, given by `27*F^2*V*R+27*F^2*R*(1+F)*Ei + 16*Hist*(5+64*CM^2+2*CH)*(1+3*F^2)*Hi*Ei`. -/
-def formula (F V R Hist Ei Hi CM CH : ℝ) : ℝ :=
+@[expose] def formula (F V R Hist Ei Hi CM CH : ℝ) : ℝ :=
   27*F^2*V*R+27*F^2*R*(1+F)*Ei +
     16*Hist*(5+64*CM^2+2*CH)*(1+3*F^2)*Hi*Ei
 
 /-- Envelope, constructed using `formula`. -/
-def envelope (K Ti Ei Hi CM CH : ℝ) : ℝ :=
+@[expose] def envelope (K Ti Ei Hi CM CH : ℝ) : ℝ :=
   formula (frameAmplitude K) (gradientAmplitude K) (coefficientRadius K)
     (labelHistoryConstant*(1+K+Ti)^labelHistoryPower) Ei Hi CM CH
 

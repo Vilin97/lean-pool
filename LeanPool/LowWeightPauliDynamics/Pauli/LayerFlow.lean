@@ -76,7 +76,7 @@ No `MultiLadder` is constructed here; the passage from the finite inflow sum to 
 with the infinite entry factor is in `LayerLadder.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD.PauliString
 
@@ -87,6 +87,7 @@ variable {n : ℕ}
 
 /-- The unchanged branch of a rotation: identity on commuting coordinates and cosine on
 anticommuting coordinates (`apd:thm:layer_inflow`). -/
+@[expose]
 noncomputable def stayAct (G : PauliString n) (θ : ℝ)
     (y : EuclideanSpace ℂ (PauliIndex n)) : EuclideanSpace ℂ (PauliIndex n) :=
   WithLp.toLp 2 fun p =>
@@ -94,6 +95,7 @@ noncomputable def stayAct (G : PauliString n) (θ : ℝ)
 
 /-- The sine branch, with the coefficient-side partner sign fixed by `coeffVec_conj`.
 Supporting definition for `apd:thm:layer_inflow`. -/
+@[expose]
 noncomputable def jumpAct (G : PauliString n) (θ : ℝ)
     (y : EuclideanSpace ℂ (PauliIndex n)) : EuclideanSpace ℂ (PauliIndex n) :=
   WithLp.toLp 2 fun p =>
@@ -157,6 +159,7 @@ theorem jumpAct_add (G : PauliString n) (θ : ℝ)
 /-- Coefficient action of a finite ordered list of rotations, the composition of their `rotAct`
 (the head of the list acts last). For disjoint supports this is the layer of
 `apd:thm:layer_inflow`. -/
+@[expose]
 noncomputable def layerAct : List (PauliString n × ℝ) →
     EuclideanSpace ℂ (PauliIndex n) → EuclideanSpace ℂ (PauliIndex n)
   | [], y => y
@@ -165,6 +168,7 @@ noncomputable def layerAct : List (PauliString n × ℝ) →
 /-- Matrix conjugation by the rotations of a list, in the same order as `layerAct`. It is
 defined from the rotation matrices `rot`, independently of the branch expansion
 (`apd:thm:layer_inflow`). -/
+@[expose]
 noncomputable def layerConj : List (PauliString n × ℝ) →
     Matrix (Bits n) (Bits n) ℂ → Matrix (Bits n) (Bits n) ℂ
   | [], O => O

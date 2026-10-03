@@ -22,7 +22,7 @@ This file establishes that bound for the initial rose and records the exact
 cardinalities needed to transport it through a fold.
 -/
 
-@[expose] public section
+public section
 
 
 

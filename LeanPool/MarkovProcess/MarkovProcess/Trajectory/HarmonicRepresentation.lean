@@ -30,7 +30,7 @@ The integrand of Dynkin's formula is only ever evaluated strictly before the exi
 path is inside `U`; this is the observation behind all three statements.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal ZeroAtInfty

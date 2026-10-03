@@ -21,7 +21,7 @@ inclusion-exclusion for the finite cover, so no explicit partition or ordering o
 needed.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

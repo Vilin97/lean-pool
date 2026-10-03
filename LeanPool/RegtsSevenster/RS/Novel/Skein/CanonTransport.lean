@@ -16,7 +16,7 @@ orientation — transport along a relabel, down across either branch
 of a single-pair glue, and back up from a closed lift.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

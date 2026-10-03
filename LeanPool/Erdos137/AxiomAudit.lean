@@ -46,4 +46,4 @@ The routes assembled here are:
 * the term-level rough-part anatomy (`RoughPartStructure`).
 -/
 
-@[expose] public section
+public section

@@ -9,7 +9,7 @@ public import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Basic
 
 /-! # Hierarchy -/
 
-@[expose] public section
+public section
 
 
 namespace LO
@@ -48,7 +48,7 @@ inductive Hierarchy : Polarity → ℕ → {n : ℕ} → Semiformula L ξ n → 
     Hierarchy Pg (s + 1 + 1) (∃' φ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def DeltaZero (φ : Semiformula L ξ n) : Prop := Hierarchy Sg 0 φ
+@[expose] def DeltaZero (φ : Semiformula L ξ n) : Prop := Hierarchy Sg 0 φ
 
 attribute [simp] Hierarchy.verum Hierarchy.falsum Hierarchy.rel Hierarchy.nrel
 

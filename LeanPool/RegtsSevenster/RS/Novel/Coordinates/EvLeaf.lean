@@ -18,7 +18,7 @@ evenness; the pure branches route through the one-position basis
 presentations and the standard-form identification.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

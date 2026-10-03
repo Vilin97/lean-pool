@@ -87,7 +87,7 @@ and agreeing with `D` on smooth bounded functionals.
   by parts, derived from the Cameron--Martin theorem.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -396,6 +396,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 /-- The Malliavin derivative of `F : W → ℝ` at `x`: the Riesz representative in the
 Cameron--Martin space of the functional `h ↦ fderiv ℝ F x (inclusion μ h)`.  It is `0` at
 points where `F` is not differentiable. -/
+@[expose]
 noncomputable def mderiv (F : W → ℝ) (x : W) : Space μ :=
   (InnerProductSpace.toDual ℝ (Space μ)).symm ((fderiv ℝ F x).comp (inclusion μ))
 
@@ -609,9 +610,11 @@ theorem memLp_mul_coe (hF : IsSmoothBounded F) (g : Lp ℝ 2 μ) :
   (hF.memLp μ ∞).fun_mul (Lp.memLp g)
 
 /-- The `L²(μ)` class of a smooth bounded functional. -/
+@[expose]
 noncomputable def toLp (hF : IsSmoothBounded F) : Lp ℝ 2 μ := (hF.memLp μ 2).toLp F
 
 /-- The Malliavin derivative of a smooth bounded functional as an element of `L²(μ; H)`. -/
+@[expose]
 noncomputable def mderivLp (hF : IsSmoothBounded F) : Lp (Space μ) 2 μ :=
   (hF.memLp_mderiv μ 2).toLp (mderiv μ F)
 
@@ -654,6 +657,7 @@ theorem mderivLp_smul (hF : IsSmoothBounded F) (c : ℝ) :
   exact mderiv_smul μ (hF.differentiable x) c
 
 /-- The simple `H`-valued random variable `x ↦ G x • h` in `L²(μ; H)`. -/
+@[expose]
 noncomputable def smulLp (hG : IsSmoothBounded G) (h : Space μ) : Lp (Space μ) 2 μ :=
   (hG.memLp_smul μ h 2).toLp (fun x ↦ G x • h)
 
@@ -663,6 +667,7 @@ theorem memLp_divergence (hG : IsSmoothBounded G) (h : Space μ) :
 
 /-- The divergence (Skorokhod integral) of the simple process `G • h`: the `L²` class of
 `G · h - ⟪DG, h⟫`.  It is the formal adjoint of `D` evaluated at `G • h`. -/
+@[expose]
 noncomputable def divergenceLp (hG : IsSmoothBounded G) (h : Space μ) : Lp ℝ 2 μ :=
   (hG.memLp_divergence μ h).toLp (fun x ↦ G x * (h : Lp ℝ 2 μ) x - ⟪mderiv μ G x, h⟫_ℝ)
 
@@ -1095,12 +1100,14 @@ theorem mderiv_closable (F : ℕ → {F : W → ℝ // IsSmoothBounded F}) {η :
 /-! ### The Sobolev space `𝔻₁,₂` and the closed extension of `D` -/
 
 /-- `(F, η)` lies in the closure of the graph of `D` on smooth bounded functionals. -/
+@[expose]
 def InGraphClosure (F : Lp ℝ 2 μ) (η : Lp (Space μ) 2 μ) : Prop :=
   ∃ Fk : ℕ → {F : W → ℝ // IsSmoothBounded F},
     Tendsto (fun k ↦ (Fk k).2.toLp μ) atTop (𝓝 F) ∧
       Tendsto (fun k ↦ (Fk k).2.mderivLp μ) atTop (𝓝 η)
 
 /-- The Sobolev space `𝔻₁,₂`: the domain of the closure of the Malliavin derivative. -/
+@[expose]
 def domD12 : Set (Lp ℝ 2 μ) := {F | ∃ η, InGraphClosure μ F η}
 
 /-- Smooth bounded functionals belong to `𝔻₁,₂`, with derivative `DF`. -/
@@ -1189,6 +1196,7 @@ theorem InGraphClosure.zero : InGraphClosure μ (0 : Lp ℝ 2 μ) 0 := by
   rwa [e1, e2] at h
 
 /-- `𝔻₁,₂` is a linear subspace of `L²(μ)`. -/
+@[expose]
 noncomputable def D12 : Submodule ℝ (Lp ℝ 2 μ) where
   carrier := domD12 μ
   add_mem' := fun ⟨η, hη⟩ ⟨ζ, hζ⟩ ↦ ⟨η + ζ, hη.add μ hζ⟩
@@ -1297,6 +1305,7 @@ theorem isClosed_graph_mderivClosure :
 /-! ### Bundled forms of the closed operator -/
 
 /-- The closed Malliavin derivative as a linear map on the Sobolev space `𝔻₁,₂`. -/
+@[expose]
 noncomputable def mderivD12 : D12 μ →ₗ[ℝ] Lp (Space μ) 2 μ where
   toFun F := mderivClosure μ F
   map_add' F G := mderivClosure_add μ F.2 G.2
@@ -1311,6 +1320,7 @@ theorem mderivD12_toLp {F : W → ℝ} (hF : IsSmoothBounded F) :
 
 /-- The closed Malliavin derivative as a densely defined linear map on the ambient `L²(μ)`
 space.  Its domain is exactly `D12 μ`. -/
+@[expose]
 noncomputable def mderivPMap :
     Lp ℝ 2 μ →ₗ.[ℝ] Lp (Space μ) 2 μ where
   domain := D12 μ
@@ -1368,10 +1378,12 @@ noncomputable instance instCompleteSpaceD12Graph : CompleteSpace (D12Graph μ) :
 namespace D12Graph
 
 /-- The ambient `L²(μ)` coordinate on the complete graph-norm domain. -/
+@[expose]
 noncomputable def toLp : D12Graph μ →L[ℝ] Lp ℝ 2 μ :=
   (ContinuousLinearMap.fst ℝ _ _).comp (D12Graph μ).subtypeL
 
 /-- The derivative coordinate on the complete graph-norm domain. -/
+@[expose]
 noncomputable def mderiv : D12Graph μ →L[ℝ] Lp (Space μ) 2 μ :=
   (ContinuousLinearMap.snd ℝ _ _).comp (D12Graph μ).subtypeL
 
@@ -1392,6 +1404,7 @@ theorem toLp_mem (F : D12Graph μ) : toLp μ F ∈ D12 μ :=
   (mem_mderivPMap_graph_iff μ).mp F.2 |>.1
 
 /-- Forget the derivative coordinate while retaining membership in `D12 μ`. -/
+@[expose]
 noncomputable def toD12 : D12Graph μ →L[ℝ] D12 μ :=
   (toLp μ).codRestrict (D12 μ) (toLp_mem μ)
 

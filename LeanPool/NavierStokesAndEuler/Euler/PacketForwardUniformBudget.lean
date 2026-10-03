@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardUniformCosts
 /-! The actual zero-history correction from the same fixed polynomial
 frequency comparison, together with its uniform weighted output bounds. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -49,6 +49,7 @@ variable (M : EulerMeanPacketProvider.Data)
   (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
 /-- Forward uniform budget used in packet forward uniform budget. -/
+@[expose]
 def forwardUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree
       (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
@@ -74,14 +75,14 @@ def forwardUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
 
 theorem forwardUniformBudget_delta :
     (forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα L NB LM Cagree
-      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).delta=delta (expansion k) := rfl
+      W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).delta=delta (expansion k) := by rfl
 
 theorem forwardUniformBudget_initialRadius :
     (forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα L NB LM Cagree
       W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet).initialRadius =
       initialRadius
         (forwardInitializedRadius LM L NB (forwardCoefficientBudget period M D hTime NB) δ ξ)
-        (L.correctionCoefficients NB period).M (L.correctionCoefficients NB period).Rc := rfl
+        (L.correctionCoefficients NB period).M (L.correctionCoefficients NB period).Rc := by rfl
 
 
 open EulerPacketCorrectionOutput EulerSobolevGevreyOperators EulerAllOrderDriftCorrection

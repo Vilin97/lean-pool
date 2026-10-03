@@ -26,7 +26,7 @@ class-wise partial fractions: `Zeta32.Arith.Local.VG_polynomialMoment` (Local/Bi
 the polynomial part of `U_r`), `Zeta32.Arith.Local.VG_res`, `VG_polyPart_eval`
 (Local/PoleFun.lean) and `Zeta32.Arith.Local.Lfun_GV` (Local/Entry.lean). -/
 
-@[expose] public section
+public section
 
 open Filter Polynomial Finset
 

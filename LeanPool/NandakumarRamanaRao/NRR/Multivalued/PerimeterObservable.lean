@@ -26,7 +26,7 @@ normalizedPerimeter C`, following the fixed sign convention (negative at `-1`, p
 zero relation is exactly `(t : ℝ) = normalizedPerimeter C`.
 -/
 
-@[expose] public section
+public section
 
 open NRR.Geometry
 
@@ -37,6 +37,7 @@ variable {K : Geometry.ConvexBody Plane} {A : ℝ}
 /-- The **normalized perimeter** observable on `BodySpace K A` (`A > 0`): the planar perimeter of
 the solid bridge divided by the strictly positive constant `1 + K.perimeter`. It is continuous, as
 the perimeter of the solid bridge is continuous and the denominator is a positive constant. -/
+@[expose]
 noncomputable def normalizedPerimeter
     (K : Geometry.ConvexBody Plane) (A : ℝ) (hA : 0 < A) :
     C(BodySpace K A, ℝ) :=
@@ -82,6 +83,7 @@ theorem abs_normalizedPerimeter_lt_one
 /-- The **nice multivalued function representing perimeter** on `BodySpace K A`, obtained from the
 normalized perimeter observable via the canonical constructor. It evaluates by `(t : ℝ) -
 normalizedPerimeter C`, so its zero set is the graph `(t : ℝ) = normalizedPerimeter C`. -/
+@[expose]
 noncomputable def perimeterNiceMV
     (K : Geometry.ConvexBody Plane) (A : ℝ) (hA : 0 < A) :
     NiceMV (BodySpace K A) :=

@@ -90,7 +90,7 @@ These geometric facts connect the critical line to the unit circle via the
 Möbius transform z ↦ 1 - 1/z. This is essential in Li's proof.
 -/
 
-@[expose] public section
+public section
 
 open Complex Real Set Function Filter
 open scoped Topology ComplexConjugate
@@ -102,6 +102,7 @@ namespace LiCriterion
 --
 -- NOTE: this is placed near the top so it can be used by early analytic/M-test lemmas.
 /-- The zeros of the Riemann zeta function in the open critical strip. -/
+@[expose]
 noncomputable def NontrivialZero : Type :=
   {ρ : ℂ // riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1}
 
@@ -381,6 +382,7 @@ lemma zeros_conjugate_pairs {f : ℂ → ℂ} (hf : ∀ z, f (star z) = star (f 
 /-! ## The modified function φ and its properties -/
 
 /-- Given an entire function f(s) = ∏(1 - s/ρ), define φ(z) = f(1/(1-z)) -/
+@[expose]
 noncomputable def phi (f : ℂ → ℂ) (z : ℂ) : ℂ := f (1 / (1 - z))
 
 /-- Eta-expanded form of `phi`, for rewriting under a binder. -/
@@ -395,6 +397,7 @@ lemma phi_conj {f : ℂ → ℂ} (hf : ∀ z, f (conj z) = conj (f z)) (z : ℂ)
   simpa [hw] using (hf (1 / (1 - z)))
 
 /-- The logarithmic derivative of φ -/
+@[expose]
 noncomputable def logDeriv (φ : ℂ → ℂ) (z : ℂ) : ℂ :=
   deriv φ z / φ z
 
@@ -527,6 +530,7 @@ lemma logDeriv_holomorphic {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
 /-! ## Taylor coefficients and their properties -/
 
 /-- The Taylor coefficients of the logarithmic derivative -/
+@[expose]
 noncomputable def taylorCoeff (f : ℂ → ℂ) (n : ℕ) : ℂ :=
   (deriv^[n] (logDeriv (phi f))) 0 / n.factorial
 
@@ -1110,6 +1114,7 @@ lemma taylorCoeff_finite_Li (S : Finset ℂ) (hS : 0 ∉ S) (n : ℕ)
 /-! ## Further results -/
 
 /-- The Riemann xi function in an entire form: ξ(s) = 1 / 2 · s(s-1) · Λ₀(s) + 1 / 2. -/
+@[expose]
 noncomputable def riemannXi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta₀ s + (1 / 2 : ℂ)
 
@@ -1541,6 +1546,7 @@ lemma pairedZero_involutive : Function.Involutive pairedZero := by
     _ = ρ.val := by ring
 
 /-- The involutive equivalence of nontrivial zeros induced by reflection `ρ ↦ 1 - ρ`. -/
+@[expose]
 noncomputable def pairedZeroEquiv : NontrivialZero ≃ NontrivialZero :=
   { toFun := pairedZero
     invFun := pairedZero
@@ -1562,6 +1568,7 @@ noncomputable def xiE1ShiftedProd (s : ℂ) : ℂ :=
     Hadamard.weierstrassE 1 ((s - (1 / 2 : ℂ)) / (ρ.val - (1 / 2 : ℂ)))
 
 /-- A convenient “already-centered” ξ factorization hypothesis used by the genus‑1 Li pipeline. -/
+@[expose]
 def xiFactorizationShiftedProd : Prop :=
   ∃ a : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp a * xiE1ShiftedProd s
 
@@ -2483,6 +2490,7 @@ In the shifted genus‑1 Hadamard factorization `xiHadamardGenusOneShifted`, the
 forces the linear coefficient to vanish; see `xi_hadamard_genus_one_shifted_linear_coeff_zero`. -/
 
 /-- The raw Li summand `Aₙ(ρ) = 1 - (1 - 1 / ρ)^{-(n+1)}`. -/
+@[expose]
 noncomputable def liSummand (n : ℕ) (ρ : NontrivialZero) : ℂ :=
   (1 - (1 - 1 / (ρ.val)) ^ (-(n + 1 : ℤ)))
 
@@ -2490,6 +2498,7 @@ noncomputable def liSummand (n : ℕ) (ρ : NontrivialZero) : ℂ :=
 
 This is the genus‑1 replacement for summing `liSummand` termwise: for large `‖ρ‖` the two terms
 cancel to order `‖ρ‖⁻²`. -/
+@[expose]
 noncomputable def liPairedSummand (n : ℕ) (ρ : NontrivialZero) : ℂ :=
   liSummand n ρ + liSummand n (pairedZero ρ)
 
@@ -2845,6 +2854,7 @@ lemma pairedZeroWithMultiplicity_involutive : Function.Involutive pairedZeroWith
       · simp [pairedZeroWithMultiplicity]
 
 /-- Reflection of the indexed xi zeros, preserving each zero’s multiplicity index. -/
+@[expose]
 noncomputable def pairedZeroWithMultiplicityEquiv :
     XiZeroWithMultiplicity ≃ XiZeroWithMultiplicity :=
   { toFun := pairedZeroWithMultiplicity
@@ -2987,6 +2997,7 @@ theorem summable_weighted_Li_paired_summand_of_weighted_genus
           simp [Finset.card_univ, nsmul_eq_mul]
 
 /-- The multiplicity-aware genus-1 canonical product for `ξ`. -/
+@[expose]
 noncomputable def xiE1ProdWithMultiplicity (s : ℂ) : ℂ :=
   ∏' i : XiZeroWithMultiplicity, Hadamard.weierstrassE 1 (s / i.1.val)
 
@@ -3002,6 +3013,7 @@ lemma multipliable_xiE1ProdWithMultiplicity_term_of_genus_one (s : ℂ)
       (z := z) (hz0 := hz0) hgenus s)
 
 /-- The multiplicity-aware order-`≤ 1` Hadamard factorization hypothesis for `ξ`. -/
+@[expose]
 def xiFactorizationProdWithMultiplicity : Prop :=
   ∃ a b : ℂ, ∀ s : ℂ, riemannXi s = Complex.exp (a * s + b) * xiE1ProdWithMultiplicity s
 

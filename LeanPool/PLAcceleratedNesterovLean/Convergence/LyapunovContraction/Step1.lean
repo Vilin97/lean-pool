@@ -28,7 +28,7 @@ If ε·η ≤ a and 0 ≤ a < 1:
   (1-a)(1+a) ≤ (1+a)² = 2(1-a)λ
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

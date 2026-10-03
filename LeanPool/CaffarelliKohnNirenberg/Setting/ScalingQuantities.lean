@@ -24,7 +24,7 @@ the boundedness assumption that makes the transform of an essential supremum
 legitimate; every other quantity is unconditional.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal Pointwise
@@ -39,24 +39,28 @@ namespace CKN
 
 /-- The velocity component of the parabolically rescaled solution of Definition
 `def:rescaling`: `u^{μ,z₀}(y,s) = μ u(x₀ + μ y, t₀ + μ² s)`. -/
+@[expose]
 noncomputable def rescaleVelocity (μ : ℝ) (z₀ : ParabolicPoint)
     (u : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
   fun w => μ • u (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ w))
 
 /-- The pressure component of the parabolically rescaled solution of Definition
 `def:rescaling`: `p^{μ,z₀}(y,s) = μ² p(x₀ + μ y, t₀ + μ² s)`. -/
+@[expose]
 noncomputable def rescalePressure (μ : ℝ) (z₀ : ParabolicPoint)
     (p : ParabolicPoint → ℝ) : ParabolicPoint → ℝ :=
   fun w => μ ^ 2 * p (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ w))
 
 /-- The force component of the parabolically rescaled solution of Definition
 `def:rescaling`: `f^{μ,z₀}(y,s) = μ³ f(x₀ + μ y, t₀ + μ² s)`. -/
+@[expose]
 noncomputable def rescaleForce (μ : ℝ) (z₀ : ParabolicPoint)
     (f : ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
   fun w => μ ^ 3 • f (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ w))
 
 /-- The rescaled spatial gradient datum matching `rescaleVelocity`: the chain
 rule gives `∇(u^{μ,z₀}) = μ² (∇u) ∘ T` for `T(y,s) = (x₀ + μ y, t₀ + μ² s)`. -/
+@[expose]
 noncomputable def rescaleGradient (μ : ℝ) (z₀ : ParabolicPoint)
     (Du : ParabolicPoint → Fin 3 → Vec3) : ParabolicPoint → Fin 3 → Vec3 :=
   fun w i => μ ^ 2 • Du (parabolicTranslate z₀.1 z₀.2 (parabolicScale μ w)) i

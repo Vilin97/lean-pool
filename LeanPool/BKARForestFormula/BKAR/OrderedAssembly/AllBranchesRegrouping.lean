@@ -16,7 +16,7 @@ expansion's boundary terms as sums over supports and their enumerating
 orders.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -119,6 +119,7 @@ theorem localBoundarySupportContribution_def
 Local active-boundary sectors from a recursion node with fixed child support
 and fixed canonical order.
 -/
+@[expose]
 noncomputable def localBoundarySupportOrderContribution
     (choices : ActiveExtensionChoice V)
     (F : Forest V) (pref : List (Edge V)) (prefixTs : List ℝ)
@@ -440,6 +441,7 @@ theorem sum_firstBoundarySupportOrderContribution
 The first recursive boundary remainder after exposing and regrouping all
 one-edge sectors below the empty forest.
 -/
+@[expose]
 noncomputable def firstRecursiveBoundaryRemainder
     (choices : ActiveExtensionChoice V)
     (ρ : (Edge V → ℝ) → ℝ) : ℝ :=

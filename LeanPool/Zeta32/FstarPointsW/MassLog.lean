@@ -10,7 +10,7 @@ public import LeanPool.Zeta32.FstarPointsW.Bounds
 through rational squares; `massA a = (1 + a + 4√(1+a²) - √(25+a²))/6`, margins ≈ 1.2e-6 and 5.7e-6),
 and `549/500 < log 3` from `2 log 3 = 3 log 2 + log (1 + 1/8)`. Written from scratch. -/
 
-@[expose] public section
+public section
 
 open Real
 

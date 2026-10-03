@@ -52,7 +52,7 @@ which keeps `CoreSymmetry.reindexLength` definitionally transparent, the pattern
 of `GenusFiveRow01Symmetry` and `GenusFiveRow05Symmetry`.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveRow10Symmetry
 

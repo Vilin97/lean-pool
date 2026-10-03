@@ -16,7 +16,7 @@ import Mathlib.NumberTheory.Harmonic.Bounds
 # Lubell frames and asymptotic context
 -/
 
-@[expose] public section
+public section
 
 namespace HypergraphLowerBound
 

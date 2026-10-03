@@ -13,7 +13,7 @@ The scalar conversion requires measurability of only the two actual
 functions. A finite input seminorm then gives a finite output seminorm.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

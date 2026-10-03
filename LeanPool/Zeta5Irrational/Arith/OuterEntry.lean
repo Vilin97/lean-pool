@@ -28,7 +28,7 @@ For a numerator `tpol M = ∏_{γ ∈ M} (t + γ²)`:
 * `PV_congr` : `poleValue (p - c) ≡ poleValue c (mod p)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 

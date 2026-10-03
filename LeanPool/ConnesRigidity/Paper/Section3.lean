@@ -16,4 +16,4 @@ The section endpoint constructs the compact-dual shear, its crossed-product
 implementation, and the resulting trace-preserving factor equivalence.
 -/
 
-@[expose] public section
+public section

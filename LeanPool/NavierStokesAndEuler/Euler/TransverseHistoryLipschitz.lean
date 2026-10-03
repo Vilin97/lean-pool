@@ -10,7 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryBounds
 
 /-! The explicit history perturbation estimate yields actual coefficient Lipschitz control. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

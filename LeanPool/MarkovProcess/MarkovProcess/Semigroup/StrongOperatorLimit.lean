@@ -16,7 +16,7 @@ contractions on a complete real normed space and records the small convergence
 API needed to pass algebraic identities to the limit.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 

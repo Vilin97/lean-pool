@@ -21,7 +21,7 @@ to keep track of the set where the minimum value is achieved, and some facts abo
 changes when the valley is modified in simple ways.
 -/
 
-@[expose] public section
+public section
 
 /-- A function on `ℤ` whose sublevel sets are finite. This is the abstraction
 used to talk about minima and rightmost minimizers.
@@ -100,6 +100,7 @@ lemma M_spec : ∀ n : ℤ, v.f n ≥ v.f v.M ∧ (n > v.M → v.f n > v.f v.M) 
     simpa [M] using Finset.le_max' (v.floor v.min) n this
 
 /-- Shift every value of a valley downward by the constant `k`. -/
+@[expose]
 def shiftDown (k : ℤ) : Valley where
   f := fun n => v.f n - k
   rises := by

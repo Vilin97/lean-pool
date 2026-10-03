@@ -17,19 +17,21 @@ propositionally equal.  These pointwise transport operations keep all large
 dependent elimination out of the coherence proofs.
  -/
 
-@[expose] public section
+public section
 
 namespace ScottishBook155
 
 namespace ProtectedStage
 
 /-- Transport a source point along equality of protected stages. -/
+@[expose]
 noncomputable def castSourcePoint {r : ℝ} {A B : ProtectedStage.{0} r}
     (h : A = B) : A.source → B.source := by
   subst B
   exact id
 
 /-- Transport a target point along equality of protected stages. -/
+@[expose]
 noncomputable def castTargetPoint {r : ℝ} {A B : ProtectedStage.{0} r}
     (h : A = B) : A.target → B.target := by
   subst B
@@ -94,6 +96,7 @@ end ProtectedStage
 namespace ProtectedLink
 
 /-- Change the source stage of a protected link along an equality. -/
+@[expose]
 noncomputable def castSource {r L : ℝ}
     {A A' B : ProtectedStage.{0} r} (h : A = A')
     (P : ProtectedLink A B L) : ProtectedLink A' B L := by

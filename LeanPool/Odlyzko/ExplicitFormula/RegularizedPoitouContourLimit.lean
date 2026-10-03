@@ -32,7 +32,7 @@ import Mathlib.Tactic.ArithMult.Init
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -459,7 +459,7 @@ noncomputable def completedZetaPoleFactor (s : ℂ) : ℂ :=
   s * (s - 1)
 
 /-- A completed zeta pole log deriv used in the Odlyzko-bound argument. -/
-noncomputable def completedZetaPoleLogDeriv (s : ℂ) : ℂ :=
+@[expose] noncomputable def completedZetaPoleLogDeriv (s : ℂ) : ℂ :=
   1 / s + 1 / (s - 1)
 
 theorem completedZetaPoleLogDeriv_one_sub (s : ℂ) :
@@ -2986,7 +2986,7 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 /-- A regularized subtracted horizontal vanishing used in the Odlyzko-bound argument. -/
-def RegularizedSubtractedHorizontalVanishing
+@[expose] def RegularizedSubtractedHorizontalVanishing
     (y δ b : ℝ) : Prop :=
   ∃ T : ℕ → ℝ,
     Tendsto T atTop atTop ∧

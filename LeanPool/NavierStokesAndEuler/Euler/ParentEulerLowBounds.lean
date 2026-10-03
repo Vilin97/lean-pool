@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPhysicalLowBounds
 Euler state to the next. The only update costs are the initial velocity
 gradient error and the proved upper pressure bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -70,7 +70,7 @@ theorem initial_gradient_lower_core (H : LowBounds A) (x : Space)
   simpa only [smul_smul,mul_inv_cancel₀ A.ell_pos.ne',one_smul] using h
 
 /-- Low bounds from physical, constructed using `A.lowBoundsOfPhysical`. -/
-def lowBoundsFromPhysical (Be Bc L r K : ℝ)
+@[expose] def lowBoundsFromPhysical (Be Bc L r K : ℝ)
     (hBe : 0 ≤ Be) (hBc : 0 ≤ Bc) (hL : boundaryLocalizationC1 * Bc ≤ L)
     (hr : 0 ≤ r) (hrq : r ≤ 1 / 4) (hK : 0 ≤ K)
     (hexterior : ∀ x, r ≤ ‖x‖ → ∀ z : Space,
@@ -87,7 +87,7 @@ def lowBoundsFromPhysical (Be Bc L r K : ℝ)
     hexterior hcore hpressure hsmall
 
 /-- Update low bounds, constructed using `F.lowBoundsFromPhysical`. -/
-def updateLowBounds {N : Parent} (F : Evolution N) (H : LowBounds A)
+@[expose] def updateLowBounds {N : Parent} (F : Evolution N) (H : LowBounds A)
     (e K : ℝ) (he : 0 ≤ e) (hK : 0 ≤ K)
     (herror : ∀ x, ‖fderiv ℝ (fun y => F.velocity (0, y)) x -
       fderiv ℝ (fun y => E.velocity (0, y)) x‖ ≤ e)

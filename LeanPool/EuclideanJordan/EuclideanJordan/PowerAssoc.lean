@@ -55,7 +55,7 @@ across it is the upstream contribution. **Not done here** — that translation i
 this file should not be read as providing it.
 -/
 
-@[expose] public section
+public section
 
 namespace EuclideanJordan
 

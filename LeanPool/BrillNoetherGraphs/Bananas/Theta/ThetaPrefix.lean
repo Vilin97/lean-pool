@@ -10,7 +10,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.SameStrand.SameStrand
 
 /-! # Theta Prefix -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

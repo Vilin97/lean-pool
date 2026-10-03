@@ -27,7 +27,7 @@ The vanishing of the free module on a zero object completes the
 bookkeeping of the empty mixed sum.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

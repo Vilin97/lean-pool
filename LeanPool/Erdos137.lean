@@ -34,4 +34,4 @@ Tags: number-theory, powerful-numbers, erdos-problems
 MSC: 11A51, 11N25
 -/
 
-@[expose] public section
+public section

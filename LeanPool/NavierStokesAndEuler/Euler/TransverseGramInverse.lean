@@ -23,7 +23,7 @@ bound.  Its inverse identities and derivative follow from the already proved
 coercive operator inverse, not from an assumed matrix inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ variable {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Taking an adjoint is an actual bounded real-linear map. -/
-def realAdjoint : (U →L[ℝ] E) →L[ℝ] (E →L[ℝ] U) :=
+@[expose] def realAdjoint : (U →L[ℝ] E) →L[ℝ] (E →L[ℝ] U) :=
   ({ toFun := fun Q => Q.adjoint
      map_add' := fun A B => map_add ContinuousLinearMap.adjoint A B
      map_smul' := fun a A => by simp } :
@@ -47,7 +47,7 @@ def realAdjoint : (U →L[ℝ] E) →L[ℝ] (E →L[ℝ] U) :=
       rw [LinearIsometryEquiv.norm_map, one_mul])
 
 /-- The transverse Gram matrix as a genuine bounded operator. -/
-def gram (Q : U →L[ℝ] E) : U →L[ℝ] U := Q.adjoint.comp Q
+@[expose] def gram (Q : U →L[ℝ] E) : U →L[ℝ] U := Q.adjoint.comp Q
 
 /-- The Gram quadratic form is precisely the squared physical-frame norm. -/
 theorem gram_inner (Q : U →L[ℝ] E) (x : U) :
@@ -62,7 +62,7 @@ theorem gram_coercive (Q : U →L[ℝ] E) (c : ℝ)
   exact hQ x
 
 /-- The Gram inverse is constructed by the actual coercive solver. -/
-def gramInverse (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
+@[expose] def gramInverse (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hQ : ∀ x, c * ‖x‖ ^ 2 ≤ ‖Q x‖ ^ 2) : U →L[ℝ] U :=
   coerciveInverse (gram Q) c hc (gram_coercive Q c hQ)
 
@@ -85,7 +85,7 @@ theorem gramInverse_norm (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
   coerciveInverse_norm_le (gram Q) c hc (gram_coercive Q c hQ)
 
 /-- A canonical bounded left inverse for the physical transverse frame. -/
-def frameLeftInverse (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
+@[expose] def frameLeftInverse (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hQ : ∀ x, c * ‖x‖ ^ 2 ≤ ‖Q x‖ ^ 2) : E →L[ℝ] U :=
   (gramInverse Q c hc hQ).comp Q.adjoint
 
@@ -122,7 +122,7 @@ theorem hasDerivAt_gramInverse (Q : ℝ → U →L[ℝ] E) (c : ℝ) (hc : 0 < c
 open MeasureTheory Set EulerTimeLp EulerVolterraConvolution
 
 /-- The adjoint of a continuous coefficient path is a continuous coefficient path. -/
-def adjointPath (T : ℝ) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
+@[expose] def adjointPath (T : ℝ) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
     C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
   ⟨fun t => (Q t).adjoint, (realAdjoint (U := U) (E := E)).continuous.comp Q.continuous⟩
 

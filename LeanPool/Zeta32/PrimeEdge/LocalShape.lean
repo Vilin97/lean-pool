@@ -28,7 +28,7 @@ Lemma 3 for such numerators (`LocValue`, `Bernoulli`: von Staudt). Other disc: `
 Own disc: `w_b = K(0)` for `K = R_b / farProd`; subtracting `p^E K(0) u^E` leaves a numerator
 vanishing to order `E + 1`, and `V_{rp}(u^E) ≡ V⁰(u^E) mod p` (degree `E ≤ |near| + p - 2`). -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

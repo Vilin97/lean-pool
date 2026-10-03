@@ -35,7 +35,7 @@ section
 /-! Translation is strongly differentiable in the actual Sobolev topology with one more derivative.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -87,7 +87,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -110,14 +110,12 @@ theorem scalarProduct_hasDerivAt (L : Vector3 →L[ℝ] ℝ) (i : Fin 4)
       (scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v' +
         scalarProduct period (le_refl 3) L (derivativeOperator period 3 i u) v) 0 := by
   let B := scalarProductBilinear period (le_refl 3) L
-  have hU := sobolevTranslation_hasDerivAt period i u
+  have hU := sobolevTranslation_hasDerivAt (q := 3) period i u
   have h := B.hasDerivAt_of_bilinear (fun _ => hU) (fun _ => hv)
   have hzero : sobolevTranslation period 3 (translationPath period (standardDirection i) 0)
       (truncateOperator period 3 u) = truncateOperator period 3 u := by
     apply value_injective period
-    change translation period (translationPath period (standardDirection i) 0) (value period u) =
-        value period u
-    rw [translationPath_zero, translation_zero]
+    rw [value_sobolevTranslation, translationPath_zero, translation_zero]
   have he : (fun t => B (sobolevTranslation period 3 (translationPath period (standardDirection i)
       t)
       (truncateOperator period 3 u)) (translation period (translationPath period (standardDirection
@@ -125,17 +123,25 @@ theorem scalarProduct_hasDerivAt (L : Vector3 →L[ℝ] ℝ) (i : Fin 4)
       fun t => translation period (translationPath period (standardDirection i) t)
         (scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v) := by
     funext t
-    exact scalarProduct_translation period (le_refl 3) L _ _ _
-  change HasDerivAt (fun t => B (sobolevTranslation period 3 (translationPath period
-      (standardDirection i) t)
-      (truncateOperator period 3 u)) (translation period (translationPath period (standardDirection
-          i) t) v))
-      (B (sobolevTranslation period 3 (translationPath period (standardDirection i) 0)
-          (truncateOperator period 3 u)) v' +
-        B (derivativeOperator period 3 i u) (translation period (translationPath period
-            (standardDirection i) 0) v)) 0 at h
-  rw [he, hzero, translationPath_zero, translation_zero] at h
-  exact h
+    simpa only [B, scalarProductBilinear_apply] using
+      scalarProduct_translation period (le_refl 3) L _ _ _
+  have hzeroV : translation period (translationPath period (standardDirection i) 0) v = v := by
+    rw [translationPath_zero, translation_zero]
+  have hderiv :
+      B (sobolevTranslation period 3 (translationPath period (standardDirection i) 0)
+        (truncateOperator period 3 u)) v' +
+        B (derivativeOperator period 3 i u)
+          (translation period (translationPath period (standardDirection i) 0) v) =
+      B (truncateOperator period 3 u) v' + B (derivativeOperator period 3 i u) v := by
+    rw [hzero, hzeroV]
+  have hproduct :
+      B (truncateOperator period 3 u) v' + B (derivativeOperator period 3 i u) v =
+      scalarProduct period (le_refl 3) L (truncateOperator period 3 u) v' +
+        scalarProduct period (le_refl 3) L (derivativeOperator period 3 i u) v := by
+    simp only [B, scalarProductBilinear_apply]
+  have h1 := h.congr_of_eventuallyEq
+    (Filter.Eventually.of_forall (fun t => congrFun he.symm t))
+  exact h1.congr_deriv (hderiv.trans hproduct)
 
 /-- Pointwise multiplication with q+3 coefficient derivatives produces a genuine q-jet. -/
 def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q + 3))
@@ -155,20 +161,17 @@ def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q
             omega : 3 ≤ q+3) u0) (dv i) +
         scalarProduct period (le_refl 3) L (restrictOperator period (by omega : 3 ≤ q+3) (du i)) v
       have hbase : restrictOperator period (by omega : 3 ≤ q+3) u0 = u3 := by
-        apply value_injective period
-        rfl
+        exact restrictOperator_truncate period (by omega : 3 ≤ q+3) u
       have hlower (i : Fin 4) : SpatialJet period standardDirection q (d i) :=
         (ih u0 (lower i)).add (ih (du i) (SpatialJet.succ dv lower hd).truncate)
       refine .succ d hlower ?_
       intro i
       let u4 : SobolevSpace period 4 := restrictOperator period (by omega : 4 ≤ q+1+3) u
       have h0 : truncateOperator period 3 u4 = u3 := by
-        apply value_injective period
-        rfl
+        exact truncate_restrictOperator period (by omega : 4 ≤ q+1+3) u
       have h1 : derivativeOperator period 3 i u4 =
           restrictOperator period (by omega : 3 ≤ q+3) (du i) := by
-        apply value_injective period
-        rfl
+        exact (restrictOperator_derivative period (by omega : 3 ≤ q+3) i u).symm
       have h := scalarProduct_hasDerivAt period L i u4 v (dv i) (hd i)
       rw [h0, h1, ← hbase] at h
       exact h
@@ -196,7 +199,7 @@ section
 
 /-! Actual real and scalar-vector cylinder multiplication at every fixed Sobolev order q≥6. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -321,7 +324,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -385,7 +388,8 @@ theorem productHighLow_bound_smooth {q : ℕ} (hq : 6 ≤ q)
     ‖productHighLow period L u v‖ ≤ sobolevProductConstant period q *
       ‖restrictOperator period (by omega : q ≤ q+3) u‖ * ‖v‖ := by
   let U : SobolevSpace period q := restrictOperator period (by omega : q ≤ q+3) u
-  have hU : (value period U : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f := hu
+  have hU : (value period U : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f := by
+    simpa only [U, value_restrictOperator] using hu
   have hfL : ∀ j ≤ q, ∀ w : Fin j → Fin 4, MemLp (iteratedFieldDerivative period w f) 2
       (liftMeasure period) :=
     fun j hj w => jet_classical_memLp period hj (value period U) (toJet period U) w f hU hf
@@ -454,10 +458,7 @@ theorem productHighLow_sub {q : ℕ} (L : Vector3 →L[ℝ] ℝ)
   simp only [productHighLow_value, map_sub]
   rw [show value period (v-z) = value period v - value period z from map_sub (valueOperator period
       q) v z]
-  change scalarProductBilinear period (le_refl 3) L _ _ - scalarProductBilinear period (le_refl 3)
-      L _ _ =
-    scalarProductBilinear period (le_refl 3) L _ _ + scalarProductBilinear period (le_refl 3) L _ _
-  simp only [map_sub, sub_apply]
+  simp only [← scalarProductBilinear_apply, map_sub, sub_apply]
   abel
 
 end EulerSobolevL2Product
@@ -471,7 +472,7 @@ section
 
 /-! Cauchy convergence of actual smooth cylinder products in the complete Sobolev space. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -614,7 +615,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -638,13 +639,16 @@ theorem productApprox_value_tendsto {q : ℕ} (hq : 6 ≤ q)
     (valueOperator period q).continuous.tendsto v |>.comp (sobolevMollifier_tendsto period v)
   have h := (scalarProductBilinear period (by
       omega : 3 ≤ q) L).continuous₂.tendsto (u, value period v) |>.comp (hU.prodMk_nhds hV)
+  rw [← scalarProductBilinear_apply]
   apply h.congr'
   apply Filter.Eventually.of_forall
   intro n
-  change scalarProduct period (by
-      omega : 3 ≤ q) L (U n) (value period (sobolevMollifier period q n v)) =
-    value period (productApprox period q n L u v)
-  rw [productApprox, productHighLow_value]
+  change scalarProductBilinear period (by omega : 3 ≤ q) L (U n)
+    (value period (sobolevMollifier period q n v)) =
+      value period (productHighLow period L (smoothApprox period q n u)
+        (sobolevMollifier period q n v))
+  conv_lhs => rw [scalarProductBilinear_apply]
+  conv_rhs => rw [productHighLow_value]
   exact scalarProduct_of_value_eq period (by omega : 3 ≤ q) (le_refl 3) L _ _ rfl _
 
 /-- The actual pointwise product lies in Hq and satisfies the proved fixed-order algebra bound. -/
@@ -661,7 +665,7 @@ theorem exists_sobolev_product {q : ℕ} (hq : 6 ≤ q)
       hq n L hL u v))
 
 /-- The genuine product in the complete Sobolev space, uniquely determined by its L² value. -/
-def productHq {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
+@[expose] def productHq {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u v : SobolevSpace period q) : SobolevSpace period q :=
   Classical.choose (exists_sobolev_product period hq L hL u v)
 
@@ -723,7 +727,7 @@ theorem productHq_smul_right {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ
   exact scalarProduct_smul_right period (by omega : 3 ≤ q) L u r (value period v)
 
 /-- Multiplication by a Sobolev scalar component, as an actual bounded Sobolev operator. -/
-def productHqRight {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
+@[expose] def productHqRight {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
     (u : SobolevSpace period q) : SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   LinearMap.mkContinuous
     { toFun := productHq period hq L hL u
@@ -739,7 +743,7 @@ theorem productHqRight_norm {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ)
     (productHq_norm period hq L hL u)
 
 /-- The actual complete Sobolev algebra multiplication is a continuous bilinear map. -/
-def productHqBilinear {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) :
+@[expose] def productHqBilinear {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) :
     SobolevSpace period q →L[ℝ] SobolevSpace period q →L[ℝ] SobolevSpace period q :=
   LinearMap.mkContinuous
     { toFun := productHqRight period hq L hL
@@ -757,6 +761,6 @@ def productHqBilinear {q : ℕ} (hq : 6 ≤ q) (L : Vector3 →L[ℝ] ℝ) (hL :
 
 @[simp] theorem productHqBilinear_apply {q : ℕ} (hq : 6 ≤ q)
     (L : Vector3 →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (u v : SobolevSpace period q) :
-    productHqBilinear period hq L hL u v = productHq period hq L hL u v := rfl
+    productHqBilinear period hq L hL u v = productHq period hq L hL u v := by rfl
 
 end EulerSobolevL2Product

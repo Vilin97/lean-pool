@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Localization.Module
 # LeanPool.BruhatTits.Utils.Subring
 -/
 
-@[expose] public section
+public section
 
 open Module
 

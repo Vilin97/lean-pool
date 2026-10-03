@@ -89,7 +89,7 @@ analogue of the anticommuting case is `CliffordAlgebra.ι_mul_ι_comm_of_isOrtho
 through it would cost more than the direct proof: the conjugator there is a vector, not a rotor.
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -107,7 +107,7 @@ As a definition it is unconditional. When `G * G = 1` its two-sided inverse is `
 and parity of `cos` and `sin` is what supplies that negative-angle expression, so no separate
 inverse definition is needed. Drop the involution hypothesis and there need be no inverse at
 all — `rot (0 : ℂ) π = 0`. -/
-noncomputable def rot (G : A) (θ : ℝ) : A :=
+@[expose] noncomputable def rot (G : A) (θ : ℝ) : A :=
   (Real.cos (θ / 2) : ℂ) • 1 + (Complex.I * Real.sin (θ / 2)) • G
 
 /-- A zero-angle rotation is the identity. -/

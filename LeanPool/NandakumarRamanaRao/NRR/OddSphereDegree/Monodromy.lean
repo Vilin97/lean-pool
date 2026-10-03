@@ -53,7 +53,7 @@ These declarations provide the monodromy permutation action. The associated clas
 homomorphism and degree-one cohomology class are developed in the downstream modules.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -72,7 +72,7 @@ theorem proj_exists_path_lifts (n : ℕ) (γ : C(unitInterval, RP n)) (e : Spher
 /-- The monodromy action of the double cover `proj n`: a homotopy class of paths
 from `x` to `y` in `RP n` sends a lift of `x` to the endpoint of the lifted path,
 giving a map between the fibres over `x` and `y`. -/
-def projMonodromy (n : ℕ) {x y : RP n} (γ : Path.Homotopic.Quotient x y) :
+@[expose] def projMonodromy (n : ℕ) {x y : RP n} (γ : Path.Homotopic.Quotient x y) :
     (proj n ⁻¹' {x}) → (proj n ⁻¹' {y}) :=
   (proj_isCoveringMap n).monodromy γ
 
@@ -121,7 +121,7 @@ theorem projMonodromy_map (n : ℕ) {a b : Sphere n} (γ : Path.Homotopic.Quotie
 packaged as a permutation of the two-element fibre over `x`. This is the action
 of `π₁(RP n, x)` on the fibre by permutations; it preserves the fibre over the
 base point by construction. -/
-def projMonodromyPerm (n : ℕ) {x : RP n} (γ : Path.Homotopic.Quotient x x) :
+@[expose] def projMonodromyPerm (n : ℕ) {x : RP n} (γ : Path.Homotopic.Quotient x x) :
     Equiv.Perm (proj n ⁻¹' {x}) :=
   Equiv.ofBijective _ (projMonodromy_bijective n γ)
 
@@ -165,7 +165,7 @@ variable (n : ℕ) (γ : C(unitInterval, RP n)) (e : Sphere n) (h : γ 0 = proj 
 /-- The canonical lift to `S^n` of a path `γ` in `RP n`, starting at a chosen
 lift `e` of its start point. Specialises `IsCoveringMap.liftPath` to the double
 cover `proj n`. -/
-def projLiftPath : C(unitInterval, Sphere n) :=
+@[expose] def projLiftPath : C(unitInterval, Sphere n) :=
   (proj_isCoveringMap n).liftPath γ e h
 
 /-- `projLiftPath` is a lift of `γ`: composing with `proj n` recovers `γ`. -/
@@ -229,7 +229,7 @@ laws, and `projMonodromyEquiv_symm` identifies the inverse equivalence. -/
 /-- The monodromy of a homotopy class of paths from `x` to `y`, packaged as a
 bundled equivalence between the two fibres of the double cover. This refines
 `projMonodromy_bijective`; on loops it specialises to `projMonodromyPerm`. -/
-def projMonodromyEquiv (n : ℕ) {x y : RP n} (γ : Path.Homotopic.Quotient x y) :
+@[expose] def projMonodromyEquiv (n : ℕ) {x y : RP n} (γ : Path.Homotopic.Quotient x y) :
     (proj n ⁻¹' {x}) ≃ (proj n ⁻¹' {y}) :=
   Equiv.ofBijective _ (projMonodromy_bijective n γ)
 
@@ -291,7 +291,7 @@ two-element fibre over `x`, as a genuine group homomorphism
 `projMonodromyPerm_refl` and its `map_mul` is `projMonodromyPerm_trans`; the
 order-reversal of the `End`-multiplication cancels the order-reversal of
 monodromy under path concatenation, so this is a covariant homomorphism. -/
-def projMonodromyHom (n : ℕ) (x : RP n) :
+@[expose] def projMonodromyHom (n : ℕ) (x : RP n) :
     FundamentalGroup (RP n) x →* Equiv.Perm (proj n ⁻¹' {x}) where
   toFun a := projMonodromyPerm n (FundamentalGroup.toPath a)
   map_one' := projMonodromyPerm_refl n x
@@ -310,7 +310,7 @@ two-element fibre of the double cover, obtained by transporting the canonical
 fundamental-group action that *Route A* toward `H¹(RPⁿ; F₂)` requires; it is
 provided as a `def` (not a global `instance`) so as not to pollute typeclass
 resolution. -/
-@[instance_reducible]
+@[expose, instance_reducible]
 def projMonodromyMulAction (n : ℕ) (x : RP n) :
     MulAction (FundamentalGroup (RP n) x) (proj n ⁻¹' {x}) :=
   MulAction.compHom _ (projMonodromyHom n x)
@@ -335,7 +335,7 @@ the monodromy-naturality of the descended odd map. -/
 /-- The fibrewise map induced by the odd map `f`: it sends the fibre over `q` to
 the fibre over the descended image `inducedOnRP f hf q`. This is the bundled
 form of `inducedOnRP_mapsTo_fiber`. -/
-def inducedOnRPFiberMap (n : ℕ) (f : C(Sphere n, Sphere n)) (hf : IsOddMap f)
+@[expose] def inducedOnRPFiberMap (n : ℕ) (f : C(Sphere n, Sphere n)) (hf : IsOddMap f)
     {q : RP n} (e : proj n ⁻¹' {q}) : proj n ⁻¹' {inducedOnRP f hf q} :=
   ⟨f e.1, by
     have he : proj n e.1 = q := e.2

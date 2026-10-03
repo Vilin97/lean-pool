@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal

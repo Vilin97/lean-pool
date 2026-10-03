@@ -26,7 +26,7 @@ multiplicity pushes a bounding-box cell into `μ'` or `ν'`
 (Deligne 1.12).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -58,7 +58,7 @@ noncomputable def whiskerLeftAlg
 /-- **The double action of a pair of permutations** on
 `X ^ ⊗ n ⊗ Y ^ ⊗ n`, as a monoid homomorphism on the product
 group: `(σ, τ)` acts by the two actions tensored together. -/
-@[simps]
+@[expose, simps]
 noncomputable def pairPermHom
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     [Preadditive A]
@@ -122,7 +122,7 @@ theorem pairAlg_diagEmbed
           ((σ, σ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
       change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
-      exact MonoidAlgebra.mapDomain_single
+      exact MonoidAlgebra.mapDomain_single (R := ℂ)
     rw [hd, pairAlg_single, diagAlg_single]
   exact DFunLike.congr_fun hext x
 
@@ -152,7 +152,7 @@ theorem pairAlg_extFst
           ((σ, 1) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
       change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single σ 1) = _
-      exact MonoidAlgebra.mapDomain_single
+      exact MonoidAlgebra.mapDomain_single (R := ℂ)
     rw [hf, pairAlg_single, permAlg_single, permMor_one,
       MonoidalCategory.tensorHom_id]
     rfl
@@ -184,7 +184,7 @@ theorem pairAlg_extSnd
           ((1, τ) : Equiv.Perm (Fin n) × Equiv.Perm (Fin n))
           (1 : ℂ) := by
       change MonoidAlgebra.mapDomain _ (MonoidAlgebra.single τ 1) = _
-      exact MonoidAlgebra.mapDomain_single
+      exact MonoidAlgebra.mapDomain_single (R := ℂ)
     rw [hs, pairAlg_single, permAlg_single, permMor_one,
       MonoidalCategory.id_tensorHom]
     rfl

@@ -16,7 +16,7 @@ This file records the measure estimate obtained by applying the Vitali
 covering theorem to the metric balls associated with the parabolic cylinders.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 

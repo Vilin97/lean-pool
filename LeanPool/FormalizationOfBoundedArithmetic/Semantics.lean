@@ -20,7 +20,7 @@ import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
 # LeanPool.FormalizationOfBoundedArithmetic.Semantics
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 

@@ -18,7 +18,7 @@ step is conjugation of the whisker through `colourPowerStep`.
 These are the carriers of the braiding-coordinate computation.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,6 +27,7 @@ open CategoryTheory MonoidalCategory
 variable {k ℓ : ℕ}
 
 /-- Conjugating a power endomorphism into the colouring model. -/
+@[expose]
 noncomputable def toColour (n : ℕ)
     (g : superPow (stdSuperPair k ℓ) n ⟶ superPow (stdSuperPair k ℓ) n) :
     colourPower k ℓ n ⟶ colourPower k ℓ n where
@@ -39,6 +40,7 @@ noncomputable def toColour (n : ℕ)
 
 /-- Extending a colour-model endomorphism by one position:
 conjugation of the whisker through the step equivalence. -/
+@[expose]
 noncomputable def colourExtend (n : ℕ)
     (T : colourPower k ℓ n ⟶ colourPower k ℓ n) :
     colourPower k ℓ (n + 1) ⟶ colourPower k ℓ (n + 1) where

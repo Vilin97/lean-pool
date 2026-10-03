@@ -33,7 +33,7 @@ De Morgan duality (`CNF.neg`).
 * `CNF.xorBool_complexity_lb` — any CNF computing XOR has `≥ 2^{N-1}` clauses
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 

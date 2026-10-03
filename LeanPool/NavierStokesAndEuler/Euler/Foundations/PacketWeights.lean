@@ -17,14 +17,14 @@ Exact weight identities used in the proposed packet's Gevrey estimates (18)--(19
 These lemmas do not assert the nonlinear PDE estimates or an Euler blowup theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
 namespace EulerPacketWeights
 
 /-- Factorial weight at radius `ρ` for the Gevrey-two energy series. -/
-noncomputable def weight (ρ : ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def weight (ρ : ℝ) (n : ℕ) : ℝ :=
   ρ ^ n / (n.factorial : ℝ) ^ 2
 
 theorem weight_pos {ρ : ℝ} (hρ : 0 < ρ) (n : ℕ) : 0 < weight ρ n := by

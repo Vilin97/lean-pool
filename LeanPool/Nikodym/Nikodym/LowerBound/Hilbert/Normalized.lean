@@ -36,7 +36,7 @@ The main theorem `hilbert_mul_choose_le` then follows from `hilbert_eq_sum_layer
 with `S = standardSet I`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

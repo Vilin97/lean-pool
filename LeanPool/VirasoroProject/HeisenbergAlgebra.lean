@@ -45,7 +45,7 @@ Heisenberg algebra
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -63,7 +63,7 @@ variable (ι : Type*)
 variable (𝕜 : Type*) [CommRing 𝕜]
 
 /-- An auxiliary construction of an abelian Lie algebra with a given index set for a basis. -/
-def AbelianLieAlgebraOn := ι →₀ 𝕜
+@[expose] def AbelianLieAlgebraOn := ι →₀ 𝕜
 
 noncomputable instance : AddCommGroup (AbelianLieAlgebraOn ι 𝕜) := Finsupp.instAddCommGroup
 
@@ -74,7 +74,7 @@ namespace AbelianLieAlgebraOn
 variable {ι}
 
 /-- The basis of `jᵢ` generators of the abelian Lie algebra (indices `i : ι`). -/
-noncomputable def jgen : Basis ι 𝕜 (AbelianLieAlgebraOn ι 𝕜) := Finsupp.basisFun _ _
+@[expose] noncomputable def jgen : Basis ι 𝕜 (AbelianLieAlgebraOn ι 𝕜) := Finsupp.basisFun _ _
 
 lemma jgen_eq_single (i : ι) : jgen 𝕜 i = Finsupp.single i 1 := rfl
 
@@ -109,7 +109,7 @@ variable (𝕜 : Type*) [Field 𝕜]
 
 /-- A bilinear map version of the Heisenberg cocycle.
 (Defining equation: `γ (jgen k) (jgen l) = k * δ[k+l,0]`.) -/
-noncomputable def _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin :
+@[expose] noncomputable def _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin :
     (AbelianLieAlgebraOn ℤ 𝕜) →ₗ[𝕜] (AbelianLieAlgebraOn ℤ 𝕜) →ₗ[𝕜] 𝕜 :=
   (jgen 𝕜).constr 𝕜 <| fun k ↦ (jgen 𝕜).constr 𝕜 <| fun l ↦ if k + l = 0 then k else 0
 
@@ -129,7 +129,7 @@ lemma _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin_eq_neg_f
 variable [CharZero 𝕜]
 
 /-- The Heisenberg cocycle. -/
-noncomputable def _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle :
+@[expose] noncomputable def _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle :
     LieTwoCocycle 𝕜 (AbelianLieAlgebraOn ℤ 𝕜) 𝕜 where
   toBilin := heisenbergCocycleBilin 𝕜
   self' X := by
@@ -172,7 +172,7 @@ variable (𝕜 : Type*) [Field 𝕜]
 variable [CharZero 𝕜]
 
 /-- The Heisenberg algebra. -/
-def _root_.VirasoroProject.HeisenbergAlgebra
+@[expose] def _root_.VirasoroProject.HeisenbergAlgebra
     := LieTwoCocycle.CentralExtension (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
 namespace HeisenbergAlgebra
@@ -193,14 +193,14 @@ noncomputable instance : LieAlgebra 𝕜 (HeisenbergAlgebra 𝕜) :=
 variable {𝕜}
 
 /-- The projection from Heisenberg algebra to the original abelian Lie algebra. -/
-noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn
+@[expose] noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn
     : HeisenbergAlgebra 𝕜 →ₗ⁅𝕜⁆ AbelianLieAlgebraOn ℤ 𝕜 :=
   LieTwoCocycle.CentralExtension.proj (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
 variable (𝕜)
 
 /-- The embedding of central elements to Heisenberg algebra. -/
-noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.ofCentral
+@[expose] noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.ofCentral
     : 𝕜 →ₗ⁅𝕜⁆ HeisenbergAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.emb (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
@@ -243,12 +243,12 @@ theorem _root_.VirasoroProject.HeisenbergAlgebra.isCentralExtension
   LieTwoCocycle.CentralExtension.isCentralExtension _
 
 /-- The (commonly used) `Jₖ` elements of the Heisenberg algebra, for `k ∈ ℤ`. -/
-noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jgen
+@[expose] noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jgen
     (k : ℤ) : HeisenbergAlgebra 𝕜 := ⟨.jgen 𝕜 k, 0⟩
 
 /-- The `K` central element of the Heisenberg algebra, which is commonly set to 1 (in
 representations). -/
-noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.kgen
+@[expose] noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.kgen
     : HeisenbergAlgebra 𝕜 := ofCentral 𝕜 1
 
 lemma _root_.VirasoroProject.HeisenbergAlgebra.kgen_eq_ofCentral_one : kgen 𝕜 = ofCentral 𝕜 1 := rfl
@@ -289,7 +289,7 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn_kgen :
 
 /-- A section of the standard projection from the Heisenberg algebra to the underlying
 abelian Lie algebra. -/
-noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jsection
+@[expose] noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jsection
     : AbelianLieAlgebraOn ℤ 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 

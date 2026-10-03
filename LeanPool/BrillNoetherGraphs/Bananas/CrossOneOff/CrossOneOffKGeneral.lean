@@ -20,7 +20,7 @@ order-two branch of the corrected torsion dichotomy is impossible, so a
 more than `genus = g` inversions as soon as `g ≥ 7`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -58,4 +58,4 @@ Every export listed in the design doc §4.1–§4.7 and the six hard proof plans
 including gluing) is proved; zero sorries.
 -/
 
-@[expose] public section
+public section

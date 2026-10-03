@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03.Certificate
 Existence of a certified Euclidean two-phase local trial with its query bound.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 

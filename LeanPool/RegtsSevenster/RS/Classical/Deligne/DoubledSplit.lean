@@ -20,7 +20,7 @@ simple algebra that splits the doubling is available, together with
 the complex point of its Γ-algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

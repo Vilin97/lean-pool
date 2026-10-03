@@ -18,7 +18,7 @@ bounds. These extra guards use only the unit terminal-data cost, never the
 terminal amplitude or a recursive derivative shift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -63,6 +63,7 @@ namespace Budget
 variable {L} (H : Budget L)
 
 /-- Endpoint budget, bundling `Rc`, `C₀`, `C₁`, `CH` and the required compatibility proofs. -/
+@[expose]
 def endpointBudget : EndpointBudget B.coefficients ι q where
   Rc := L.Rc
   C₀ := L.C₀
@@ -94,10 +95,12 @@ def endpointBudget : EndpointBudget B.coefficients ι q where
 
 /-- Velocity cost, given by `H.endpointBudget.velocityCost + 3*sobolevCoefficientAmplitude ι q
 L.Rc L.C₀`. -/
+@[expose]
 def velocityCost : ℝ := H.endpointBudget.velocityCost + 3*sobolevCoefficientAmplitude ι q L.Rc L.C₀
 
 /-- Derivative cost, given by `H.endpointBudget.derivativeCost + physicalCost ι q L.Ri L.C₀ L.C₁
 0 1`. -/
+@[expose]
 def derivativeCost : ℝ := H.endpointBudget.derivativeCost + physicalCost ι q L.Ri L.C₀ L.C₁ 0 1
 
 theorem velocityCost_nonneg : 0 ≤ H.velocityCost := by

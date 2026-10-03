@@ -24,7 +24,7 @@ The declarations remain in the established `MarkedGraphs` namespace for API
 compatibility.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -36,6 +36,7 @@ universe u v
 
 /-- Contract the bridge endpoints, using the left endpoint as the vertex of
 the resulting wedge. -/
+@[expose]
 def contractBridgeVertex (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) :
     (bridgeGraph G H x y).V → (vertexWedge G H x y).V :=
@@ -56,6 +57,7 @@ def contractBridgeVertex (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- Push a divisor through bridge contraction.  The coefficients at the two
 bridge endpoints are added; every other coefficient is unchanged. -/
+@[expose]
 def bridgePushforwardHom (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) :
     CFDiv (bridgeGraph G H x y) →+ CFDiv (vertexWedge G H x y) where
@@ -103,6 +105,7 @@ abbrev bridgePushforward (G : CFGraph.{u}) (H : CFGraph.{v})
 
 /-- The canonical lift puts the coefficient of the common wedge vertex at
 the left bridge endpoint and puts zero at the right bridge endpoint. -/
+@[expose]
 def bridgeCanonicalLiftHom (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V) :
     CFDiv (vertexWedge G H x y) →+ CFDiv (bridgeGraph G H x y) where
@@ -222,12 +225,14 @@ theorem effective_bridgePushforward
         · simpa [hb] using hD (Sum.inr ⟨b, hb⟩)
 
 /-- Restrict a firing script on the bridge graph to the left factor. -/
+@[expose]
 def restrictLeftBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
     (σ : firingScript (bridgeGraph G H x y)) : firingScript G :=
   fun a => σ (Sum.inl a)
 
 /-- Restrict a firing script on the bridge graph to the right factor. -/
+@[expose]
 def restrictRightBridgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
     (σ : firingScript (bridgeGraph G H x y)) : firingScript H :=
@@ -498,6 +503,7 @@ theorem linear_equiv_bridgePushforward
 
 /-- Pull a firing script on the wedge back to the bridge graph, assigning the
 common wedge value to both bridge endpoints. -/
+@[expose]
 def expandWedgeScript (G : CFGraph.{u}) (H : CFGraph.{v})
     (x : G.V) (y : H.V)
     (σ : firingScript (vertexWedge G H x y)) :

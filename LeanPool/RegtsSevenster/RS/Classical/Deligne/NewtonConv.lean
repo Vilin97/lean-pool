@@ -28,7 +28,7 @@ Coefficient extraction yields the consumer-facing convolution formula
 for Jacobi–Trudi consumers.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

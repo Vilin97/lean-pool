@@ -14,7 +14,7 @@ public import Mathlib.Order.OmegaCompletePartialOrder
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.OmegaCompletePartialOrder.Chain.Sigma`.
 -/
 
-@[expose] public section
+public section
 
 
 namespace OmegaCompletePartialOrder.Chain.Sigma
@@ -22,17 +22,17 @@ namespace OmegaCompletePartialOrder.Chain.Sigma
 variable {I : Type*} {P : I → Type*} [∀ i, Preorder (P i)]
 
 /-- Injects a chain into a chain of coproducts. -/
-def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
+@[expose] def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
   toFun n := ⟨i, c n⟩
   monotone' n₁ n₂ hn := by
     simp only [Sigma.mk_le_mk_iff]
     apply c.monotone' hn
 
 @[simp]
-lemma inj_coe {i} (c : Chain (P i)) (n : ℕ) : inj c n = ⟨i, c n⟩ := rfl
+lemma inj_coe {i} (c : Chain (P i)) (n : ℕ) : inj c n = ⟨i, c n⟩ := by rfl
 
 /-- Converts a chain of coproducts into a coproduct of chains. -/
-def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
+@[expose] def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
   fst := (c 0).fst
   snd.toFun n :=
     have : (c 0).fst = (c n).fst := by
@@ -51,7 +51,7 @@ def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
     exact h₁
 
 @[simp]
-lemma distrib_inj {i} (c : Chain (P i)) : distrib (inj c) = ⟨i, c⟩ := rfl
+lemma distrib_inj {i} (c : Chain (P i)) : distrib (inj c) = ⟨i, c⟩ := by rfl
 
 @[simp]
 lemma inj_distrib (c : Chain (Sigma P)) : inj (distrib c).snd = c := by

@@ -22,7 +22,7 @@ This file analyzes the kernel of a finite-rank polynomial defect, constructs the
 rank-parity form, and proves evenness of its restricted radical.
 -/
 
-@[expose] public section
+public section
 
 namespace KaltonPeck.Support.GeneralRank
 

@@ -16,7 +16,7 @@ upper margins are an arbitrary positive `δ`.  The two halves of the outer kite 
 two-triangle mesh, so the transport is supplied by the canonical realization homeomorphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -24,7 +24,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 /-- Left, right, top, and bottom vertices of an axis-aligned kite. -/
-def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
+@[expose] def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
   ![planePoint (-1) 0, planePoint 1 0, planePoint 0 hi, planePoint 0 lo]
 
 @[simp] theorem axisKitePosition_zero (lo hi : ℝ) :
@@ -40,7 +40,7 @@ def axisKitePosition (lo hi : ℝ) : Fin 4 → Plane :=
     axisKitePosition lo hi 3 = planePoint 0 lo := rfl
 
 /-- The `axisKiteTriangles` declaration. -/
-def axisKiteTriangles : Finset (Finset (Fin 4)) :=
+@[expose] def axisKiteTriangles : Finset (Finset (Fin 4)) :=
   {{0, 2, 3}, {1, 2, 3}}
 
 /-- The `axisKitePatch` declaration. -/
@@ -116,6 +116,7 @@ theorem axisKite_inter {lo hi : ℝ} (hlo : lo < 0) (hhi : 0 < hi) :
     fin_cases v <;> simp [axisKitePosition] at hv ⊢
 
 /-- The `axisKiteMesh` declaration. -/
+@[expose]
 noncomputable def axisKiteMesh (lo hi : ℝ) (hlo : lo < 0) (hhi : 0 < hi) : TriangleMesh where
   Vertex := Fin 4
   position := axisKitePosition lo hi
@@ -150,15 +151,15 @@ theorem axisKitePatch_negTwo_two : axisKitePatch (-2) 2 = diamondPatch := by
     simp [axisKitePosition] <;> tauto
 
 /-- Vertical scale used to compress the fixed diamond to a kite with margins `δ`. -/
-noncomputable def thinKiteScale (δ : ℝ) : ℝ := (1 + 2 * δ) / 4
+@[expose] noncomputable def thinKiteScale (δ : ℝ) : ℝ := (1 + 2 * δ) / 4
 
 /-- The global piecewise-affine transport.  Writing the two affine pieces with `|x|` makes
 continuity across the vertical diagonal immediate. -/
-noncomputable def thinKiteMap (δ : ℝ) (p : Plane) : Plane :=
+@[expose] noncomputable def thinKiteMap (δ : ℝ) (p : Plane) : Plane :=
   planePoint (p 0) (thinKiteScale δ * p 1 + (1 - |p 0|) / 2)
 
 /-- The `thinKiteInv` declaration. -/
-noncomputable def thinKiteInv (δ : ℝ) (p : Plane) : Plane :=
+@[expose] noncomputable def thinKiteInv (δ : ℝ) (p : Plane) : Plane :=
   planePoint (p 0) ((p 1 - (1 - |p 0|) / 2) / thinKiteScale δ)
 
 theorem thinKiteScale_pos {δ : ℝ} (hδ : 0 < δ) : 0 < thinKiteScale δ := by
@@ -166,7 +167,7 @@ theorem thinKiteScale_pos {δ : ℝ} (hδ : 0 < δ) : 0 < thinKiteScale δ := by
   positivity
 
 /-- The `thinKiteGlobalHomeomorph` declaration. -/
-noncomputable def thinKiteGlobalHomeomorph (δ : ℝ) (hδ : 0 < δ) : Plane ≃ₜ Plane := by
+@[expose] noncomputable def thinKiteGlobalHomeomorph (δ : ℝ) (hδ : 0 < δ) : Plane ≃ₜ Plane := by
   have hs : thinKiteScale δ ≠ 0 := (thinKiteScale_pos hδ).ne'
   have hleft : Function.LeftInverse (thinKiteInv δ) (thinKiteMap δ) := by
     intro p
@@ -193,7 +194,7 @@ noncomputable def thinKiteGlobalHomeomorph (δ : ℝ) (hδ : 0 < δ) : Plane ≃
         fun_prop }
 
 /-- The thin kite is the image of the fixed diamond under the explicit transport. -/
-noncomputable def thinKitePatch (δ : ℝ) : Set Plane := thinKiteMap δ '' diamondPatch
+@[expose] noncomputable def thinKitePatch (δ : ℝ) : Set Plane := thinKiteMap δ '' diamondPatch
 
 /-- Every point of the thin kite lies in the tangent cone at its left base vertex. -/
 theorem thinKitePatch_subset_leftCone {δ : ℝ} (hδ : 0 ≤ δ) {p : Plane}
@@ -262,7 +263,7 @@ theorem thinKitePatch_subset_rightCone {δ : ℝ} (hδ : 0 ≤ δ) {p : Plane}
         nlinarith
 
 /-- The triangle onto which the thin kite collapses when `δ = 0`. -/
-def kiteTrianglePosition : Fin 3 → Plane :=
+@[expose] def kiteTrianglePosition : Fin 3 → Plane :=
   ![planePoint (-1) 0, planePoint 1 0, planePoint 0 1]
 
 theorem kiteTrianglePosition_affineIndependent :
@@ -1008,7 +1009,7 @@ theorem isClosed_thinKitePatch (δ : ℝ) : IsClosed (thinKitePatch δ) := by
     fun_prop)).isClosed
 
 /-- The `thinKiteAmbientHomeomorph` declaration. -/
-noncomputable def thinKiteAmbientHomeomorph (δ : ℝ) (hδ : 0 < δ) : Plane ≃ₜ Plane :=
+@[expose] noncomputable def thinKiteAmbientHomeomorph (δ : ℝ) (hδ : 0 < δ) : Plane ≃ₜ Plane :=
   (thinKiteGlobalHomeomorph δ hδ).symm.trans
     ((diamondFanAmbientHomeomorph (thinKiteSource δ) (thinKiteTarget δ)
       (thinKiteSource_lower hδ) (thinKiteSource_upper hδ)

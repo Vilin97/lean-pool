@@ -19,7 +19,7 @@ constructed vector primitive to scalar pressure. Its mixed-translation
 commutation and fixed-Hq external-word bound have no radius loss.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -37,7 +37,7 @@ def unitVector : Space := EuclideanSpace.single 0 1
 theorem unitVector_norm : ‖unitVector‖ = 1 := by simp [unitVector]
 
 /-- Scalar embed, given by `toSpanSingleton ℝ unitVector`. -/
-def scalarEmbed : ℝ →L[ℝ] Space := toSpanSingleton ℝ unitVector
+@[expose] def scalarEmbed : ℝ →L[ℝ] Space := toSpanSingleton ℝ unitVector
 /-- Scalar project, given by `innerSL ℝ unitVector`. -/
 def scalarProject : Space →L[ℝ] ℝ := innerSL ℝ unitVector
 
@@ -54,9 +54,10 @@ theorem scalarProject_norm : ‖scalarProject‖ = 1 := by
 variable (period : ℝ) [Fact (0 < period)]
 
 /-- Embed, given by `EulerCylinderConstantMap.map period scalarEmbed`. -/
-def embed : CylinderL2 period ℝ →L[ℝ] LiftL2 period := EulerCylinderConstantMap.map period
+@[expose] def embed : CylinderL2 period ℝ →L[ℝ] LiftL2 period := EulerCylinderConstantMap.map period
     scalarEmbed
 /-- Project, given by `EulerCylinderConstantMap.map period scalarProject`. -/
+@[expose]
 def project : LiftL2 period →L[ℝ] CylinderL2 period ℝ := EulerCylinderConstantMap.map period
     scalarProject
 
@@ -68,7 +69,7 @@ theorem project_norm : ‖project period‖ ≤ 1 :=
 
 /-- Primitive, given by `(project period).comp ((EulerCylinderAnglePrimitive.primitive
 period).comp (embed period))`. -/
-def primitive : CylinderL2 period ℝ →L[ℝ] CylinderL2 period ℝ :=
+@[expose] def primitive : CylinderL2 period ℝ →L[ℝ] CylinderL2 period ℝ :=
   (project period).comp ((EulerCylinderAnglePrimitive.primitive period).comp (embed period))
 
 theorem primitive_norm : ‖primitive period‖ ≤ period := by
@@ -124,7 +125,7 @@ local instance instCylinderScalarPrimitive4 : NormedSpace ℝ C(K,CylinderL2 per
     inferInstance
 
 /-- Path primitive, given by `(primitive period).compLeftContinuous ℝ K`. -/
-def pathPrimitive : C(K,CylinderL2 period ℝ) →L[ℝ] C(K,CylinderL2 period ℝ) :=
+@[expose] def pathPrimitive : C(K,CylinderL2 period ℝ) →L[ℝ] C(K,CylinderL2 period ℝ) :=
   (primitive period).compLeftContinuous ℝ K
 
 theorem pathPrimitive_norm : ‖pathPrimitive (K := K) period‖ ≤ period := by

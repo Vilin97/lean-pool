@@ -44,7 +44,7 @@ exactly as Example 4.3's
 **choice-free**.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise418
 

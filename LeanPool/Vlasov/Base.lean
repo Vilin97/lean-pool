@@ -9,4 +9,4 @@ public import LeanPool.Vlasov.Base.Geometry
 
 /-! # Ambient geometry: the physical and phase spaces. -/
 
-@[expose] public section
+public section

@@ -38,7 +38,7 @@ representatives is delicate, so we construct the map as an isometry: on the simp
   `L²(μ; L²(ν)) ≃ L²(ν × μ)` isometrically.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter Topology Function
 open scoped ENNReal NNReal InnerProductSpace
@@ -140,6 +140,7 @@ theorem coeFn_tensorLp [SFinite μ] (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 �
   MemLp.coeFn_toLp _
 
 /-- The `L²(ν)`-valued indicator `1_A • g` in `L²(μ; L²(ν))`. -/
+@[expose]
 noncomputable def indicatorLp (A : FiniteMeasurableSet μ) (g : Lp ℝ 2 ν) : Lp (Lp ℝ 2 ν) 2 μ :=
   indicatorConstLp 2 A.2.1 A.2.2 g
 
@@ -254,6 +255,7 @@ theorem norm_fubiniLiftL (f : Lp (Lp ℝ 2 ν) 2 μ) : ‖fubiniLiftL f‖ = ‖
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h
 
 /-- **The Fubini lift** `L²(μ; L²(ν)) → L²(ν × μ)` as a linear isometry. -/
+@[expose]
 noncomputable def fubiniLift : Lp (Lp ℝ 2 ν) 2 μ →ₗᵢ[ℝ] Lp ℝ 2 (ν.prod μ) :=
   ⟨fubiniLiftL.toLinearMap, norm_fubiniLiftL⟩
 
@@ -291,6 +293,7 @@ variable {Ω T : Type*} [MeasurableSpace Ω] [MeasurableSpace T] {μ : Measure �
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The rank-one element `ω ↦ G ω • e` of `L²(μ; E)`, as a continuous linear map in `G`. -/
+@[expose]
 noncomputable def smulLp (e : E) : Lp ℝ 2 μ →L[ℝ] Lp E 2 μ :=
   (ContinuousLinearMap.toSpanSingleton ℝ e).compLpL 2 μ
 
@@ -420,6 +423,7 @@ theorem norm_tensor [SFinite μ] [SFinite ν] (g : Lp ℝ 2 ν) (G : Lp ℝ 2 μ
   exact (sq_eq_sq₀ (norm_nonneg _) (by positivity)).mp h
 
 /-- `G ↦ g ⊗ G` as a continuous linear map. -/
+@[expose]
 noncomputable def tensorL [SFinite μ] [SFinite ν] (g : Lp ℝ 2 ν) :
     Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 (ν.prod μ) :=
   LinearMap.mkContinuous
@@ -769,6 +773,7 @@ theorem fubiniLift_surjective : Function.Surjective (fubiniLift (μ := μ) (ν :
   exact this
 
 /-- **The Fubini isomorphism** `L²(μ; L²(ν)) ≃ L²(ν × μ)`. -/
+@[expose]
 noncomputable def fubiniEquiv : Lp (Lp ℝ 2 ν) 2 μ ≃ₗᵢ[ℝ] Lp ℝ 2 (ν.prod μ) :=
   LinearIsometryEquiv.ofSurjective fubiniLift fubiniLift_surjective
 
@@ -798,6 +803,7 @@ theorem memLp_boundedSMul {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ) {C :
   exact mul_le_mul_of_nonneg_right (hC x) (norm_nonneg _)
 
 /-- Multiplication by a bounded measurable scalar function as a linear map on `L²(μ; E)`. -/
+@[expose]
 noncomputable def boundedSMulₗ {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ) {C : ℝ}
     (hC : ∀ x, |G x| ≤ C) : Lp E 2 μ →ₗ[ℝ] Lp E 2 μ where
   toFun U := (memLp_boundedSMul hG hC U).toLp _
@@ -823,6 +829,7 @@ theorem norm_boundedSMulₗ_le {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ)
 
 /-- Multiplication by a bounded measurable scalar function as a continuous linear map on
 `L²(μ; E)`. -/
+@[expose]
 noncomputable def boundedSMul {G : Ω → ℝ} (hG : AEStronglyMeasurable G μ) {C : ℝ}
     (hC : ∀ x, |G x| ≤ C) : Lp E 2 μ →L[ℝ] Lp E 2 μ :=
   LinearMap.mkContinuous (boundedSMulₗ hG hC) C (norm_boundedSMulₗ_le hG hC)

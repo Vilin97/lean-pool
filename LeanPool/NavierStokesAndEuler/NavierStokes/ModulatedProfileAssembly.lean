@@ -32,7 +32,7 @@ supported edit differences, including their nonlinear density integrals, are
 unchanged when transplanted back to the original field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -155,7 +155,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -275,6 +275,7 @@ theorem fields_eq {p : Point} (hX : 0 ≤ p.1) (heta : p.2 ∈ d.target) :
     d.extended_eq _ _ hX (abs_lt.mpr heta).le⟩
 
 /-- Profiles, constructed using `ModulatedHistories.profiles`. -/
+@[expose]
 noncomputable def profiles : Profiles (ModulatedHistories.stripDomain univ isOpen_univ) :=
   ModulatedHistories.profiles univ isOpen_univ d.f d.U F.axisDatum d.f_smooth.contDiffOn
       d.U_smooth.contDiffOn
@@ -341,6 +342,7 @@ end ParameterData
 
 /-- The first reserved five-row patch, belonging to the very same outgoing
 schedule and physical dilation as the nominal witness. -/
+@[expose]
 noncomputable def repairPatch {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) :
     FiveProfileMoments.Patch :=
   ReservedPatches.momentPatch F W.controls.radius W.controls.radius_pos .modulation
@@ -559,6 +561,7 @@ theorem domain_nonnegative {p : Point} (hX : 0 ≤ p.1) (heta : p.2 ∈ d.parame
     mem_univ _, heta⟩
 
 /-- Output F, constructed using `AnnularAuxiliary.transplant`. -/
+@[expose]
 noncomputable def outputF (r : d.Realization) (N : ℕ)
     (c : ℝ → ModulatedHistories.Coeff) : Field :=
   AnnularAuxiliary.transplant W.profiles.f d.parameter.f
@@ -567,6 +570,7 @@ noncomputable def outputF (r : d.Realization) (N : ℕ)
       (ModulatedHistories.localizedF d.modulation r d.parameter.f N))
 
 /-- Output U, constructed using `AnnularAuxiliary.transplant`. -/
+@[expose]
 noncomputable def outputU (r : d.Realization) (N : ℕ)
     (c : ℝ → ModulatedHistories.Coeff) : Field :=
   AnnularAuxiliary.transplant W.profiles.U d.parameter.U
@@ -957,6 +961,7 @@ theorem relaxedDomain_open {D : RadialDomain} (P : Profiles D) (h : ℝ) :
   exact ⟨hq, ⟨hq.2.2.2.1, hqpr, hqsp⟩⟩
 
 /-- True domain, given by `{p | p ∈ relaxedDomain P h ∧ NominalConeAssembly.IsTrue P h p}`. -/
+@[expose]
 noncomputable def trueDomain {D : RadialDomain} (P : Profiles D) (h : ℝ) : Set Point :=
   {p | p ∈ relaxedDomain P h ∧ NominalConeAssembly.IsTrue P h p}
 
@@ -1142,6 +1147,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
     {d : LoopData W} (v : Witness d)
 
 /-- Slow parameters, given by `d.parameters ∩ AssembledSlowBase.nominalParameters W`. -/
+@[expose]
 noncomputable def slowParameters (_v : Witness d) : Set ℝ :=
   d.parameters ∩ AssembledSlowBase.nominalParameters W
 

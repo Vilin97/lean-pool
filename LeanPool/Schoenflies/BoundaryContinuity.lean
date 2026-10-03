@@ -49,7 +49,7 @@ An earlier version of this docstring listed those as if they were here; they nev
   target crosscut, is in `Schoenflies/BoundaryContinuity2.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Metric Set Schoenflies
 open scoped Graph
@@ -69,7 +69,7 @@ namespace Graph
 variable {β : Type*} {G : Graph Plane β} {drawing : β → ℝ → Plane} {C D : Set Plane}
 
 /-- An edge is **nonboundary** when its arc is not contained in the outer boundary. -/
-def Nonboundary (drawing : β → ℝ → Plane) (C : Set Plane) (e : β) : Prop :=
+@[expose] def Nonboundary (drawing : β → ℝ → Plane) (C : Set Plane) (e : β) : Prop :=
   ¬ edgeArc drawing e ⊆ C
 
 /-- **One finite stage of the skeleton**, as `lem:skeleton-crosscuts` uses it.
@@ -260,6 +260,7 @@ so `interiorPart` is that set rather than a `Graph`. -/
 
 /-- The point set of the blueprint's interior subgraph `Λ`: the vertices lying in the region,
 together with the edges that run entirely inside it. -/
+@[expose]
 def interiorPart (G : Graph Plane β) (drawing : β → ℝ → Plane) (D : Set Plane) : Set Plane :=
   (V(G) ∩ D) ∪ ⋃ e ∈ {e | e ∈ E(G) ∧ edgeArc drawing e ⊆ D}, edgeArc drawing e
 

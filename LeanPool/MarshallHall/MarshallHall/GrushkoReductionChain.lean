@@ -19,7 +19,7 @@ remaining combinatorial issue is isolated precisely to the unfold case of
 the classical proof.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -170,6 +170,7 @@ theorem safe_null_fold_step {n : ℕ}
 
 /-- Every generating connected marked graph with a reduced null run admits the required reducing
 fold. -/
+@[expose]
 def HasReducedNullFold : Prop :=
   ∀ (n : ℕ) (W : Type) [Fintype W] [qW : Quiver.{0, 0} W]
     [_hW : HasInvolutiveReverse W]

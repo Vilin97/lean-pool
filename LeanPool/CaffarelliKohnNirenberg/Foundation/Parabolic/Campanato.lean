@@ -21,7 +21,7 @@ series, and the comparison of the average of `|f|` on a subset with the
 average on the ambient set.  The oscillations use genuine space-time averages.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal NNReal Topology
 
@@ -53,6 +53,7 @@ def ParabolicCylinderCampanatoBoundOn
     ParabolicCylinderLpOscillation f z.1 z.2 r p ≤ K * r ^ α
 
 /-- Geometric-series coefficient for summing dyadic Campanato oscillations. -/
+@[expose]
 def parabolicCampanatoTailConstant (α : ℝ) : ℝ :=
   1 / (1 - (2 : ℝ) ^ (-α))
 

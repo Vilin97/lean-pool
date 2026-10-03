@@ -25,7 +25,7 @@ that root directory there, so a Solution under `Palomar.*` is never found
 (PalomarSubmission#108).
 -/
 
-@[expose] public section
+public section
 
 namespace TriangleInflation.Graph
 

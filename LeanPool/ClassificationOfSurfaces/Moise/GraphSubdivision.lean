@@ -18,7 +18,7 @@ source edge.  Keeping only arrangement faces subordinate to an original face pro
 subdivision of the graph.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -121,11 +121,11 @@ variable (K : PlaneComplex)
 abbrev EdgeFace := {e : Finset K.Vertex // e ∈ K.edges}
 
 /-- The `edgeEquiv` declaration. -/
-noncomputable def edgeEquiv : K.EdgeFace ≃ Fin (Fintype.card K.EdgeFace) :=
+@[expose] noncomputable def edgeEquiv : K.EdgeFace ≃ Fin (Fintype.card K.EdgeFace) :=
   Fintype.equivFin K.EdgeFace
 
 /-- The `edgeAt` declaration. -/
-noncomputable def edgeAt (i : Fin (Fintype.card K.EdgeFace)) : K.EdgeFace :=
+@[expose] noncomputable def edgeAt (i : Fin (Fintype.card K.EdgeFace)) : K.EdgeFace :=
   K.edgeEquiv.symm i
 
 /-- The `vertexEquiv` declaration. -/
@@ -160,7 +160,7 @@ theorem edgeAt_mem_simplexes (i : Fin (Fintype.card K.EdgeFace)) :
   (Finset.mem_filter.mp (K.edgeAt i).2).1
 
 /-- Affine coordinate from `0` to `1` on an enumerated source edge. -/
-noncomputable def edgeParameter (i : Fin (Fintype.card K.EdgeFace)) :
+@[expose] noncomputable def edgeParameter (i : Fin (Fintype.card K.EdgeFace)) :
     Plane →ᵃ[ℝ] ℝ :=
   if _ : K.position (K.edgeFirst i) 0 ≠ K.position (K.edgeSecond i) 0 then
     (K.position (K.edgeSecond i) 0 - K.position (K.edgeFirst i) 0)⁻¹ •
@@ -233,7 +233,7 @@ theorem exists_vertexAt (v : K.Vertex) : ∃ i, K.vertexAt i = v := by
 
 /-- The auxiliary chain has one genuine edge segment at every even index; odd segments merely
 connect one enumerated edge to the next and are discarded by `subordinateTo`. -/
-noncomputable def edgeChain : BrokenLineData (Set.univ : Set Plane) := by
+@[expose] noncomputable def edgeChain : BrokenLineData (Set.univ : Set Plane) := by
   classical
   let m := Fintype.card K.EdgeFace
   let q := Fintype.card K.Vertex

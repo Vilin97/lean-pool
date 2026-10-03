@@ -28,7 +28,7 @@ through `Q n α t = QQ (c n α) (A n α) t` and `Q n α 1 = α/(3+α)`.
 * `Sendov.integral_le_tail`: the bound above.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
@@ -62,6 +62,7 @@ alone; no integral survives. -/
 
 /-- The elementary bound replacing `Sendov.R`: `(11)` of the informal write-up, but with the
 sharper Beta constant `6/((r+1)(r+2)(r+3)(r+4))` in place of `6/r⁴`. -/
+@[expose]
 noncomputable def U (n : ℕ) (α : ℝ) : ℝ :=
   1 / 6 + 1 / (4 * (3 + α)) + 1 / (2 * M n) + 1 / (4 * M n * (3 + α))
     + A n α ^ 2 * n * M n * ((n : ℝ) - 2) / (4 * (3 + α))

@@ -29,23 +29,26 @@ Numerals beyond 90 digits cannot sit on one line; `Sendov.big` assembles them fr
 chunks.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 
 /-- A large natural number assembled from little-endian chunks of at most 90 decimal
 digits, as an integer. -/
+@[expose]
 def big (chunks : List ℕ) : ℤ := (npev chunks (10 ^ 90) : ℤ)
 
 /-! ### Polynomial arithmetic on coefficient lists -/
 
 /-- Scalar multiple of a dense integer polynomial. -/
+@[expose]
 def pscale (c : ℤ) (p : List ℤ) : List ℤ := p.map (fun a => c * a)
 
 lemma pev_pscale (c : ℤ) (p : List ℤ) (x : ℝ) : pev (pscale c p) x = (c : ℝ) * pev p x :=
   pev_map_mul c p x
 
 /-- Difference of dense integer polynomials. -/
+@[expose]
 def psub (p q : List ℤ) : List ℤ := padd p (pscale (-1) q)
 
 lemma pev_psub (p q : List ℤ) (x : ℝ) : pev (psub p q) x = pev p x - pev q x := by
@@ -54,6 +57,7 @@ lemma pev_psub (p q : List ℤ) (x : ℝ) : pev (psub p q) x = pev p x - pev q x
   ring
 
 /-- Power of a dense integer polynomial. -/
+@[expose]
 def ppow (p : List ℤ) : ℕ → List ℤ
   | 0 => [1]
   | k + 1 => pmul p (ppow p k)
@@ -75,6 +79,7 @@ lemma pev_X (x : ℝ) : pev [0, 1] x = x := by simp [pev]
 
 /-- `bern p q d b` is `∑ⱼ bⱼ Xʲ (p - q X)^(d-j)` as a coefficient list, the entries of `b`
 being listed from `j = 0`. -/
+@[expose]
 def bern (p q : ℤ) : ℕ → List ℤ → List ℤ
   | _, [] => []
   | d, a :: rest => padd (pscale a (ppow [p, -q] d)) (0 :: bern p q (d - 1) rest)
@@ -153,11 +158,13 @@ theorem pev_pos_of_bern (P B : List ℤ) (p q : ℤ) (d : ℕ) (hp : 0 < p) (_hq
 /-- The denominator of the batch bound of `Sendov.R_le_batch`, after the moment
 substitution, as a polynomial in `α`: with `m₀ = n₀ - 1` and `m₁ = n₁ - 1`,
 `12 m₀ m₁² L (2m₀)^k (3+α)^(k+1)`. -/
+@[expose]
 def batchD (n₀ n₁ k : ℕ) (L : ℤ) : List ℤ :=
   pscale (12 * ((n₀ : ℤ) - 1) * ((n₁ : ℤ) - 1) ^ 2 * L * (2 * ((n₀ : ℤ) - 1)) ^ k)
     (ppow [3, 1] (k + 1))
 
 /-- The numerator of the batch bound over the denominator `Sendov.batchD`. -/
+@[expose]
 def batchN (n₀ n₁ k : ℕ) (L : ℤ) (Nmom : List ℤ) : List ℤ :=
   padd (pscale (2 * ((n₀ : ℤ) - 1) * ((n₁ : ℤ) - 1) ^ 2 * (L * (2 * ((n₀ : ℤ) - 1)) ^ k))
       (ppow [3, 1] (k + 1)))
@@ -171,6 +178,7 @@ def batchN (n₀ n₁ k : ℕ) (L : ℤ) (Nmom : List ℤ) : List ℤ :=
             (pmul (ppow [((n₁ : ℤ) - 1), -2] 2) Nmom)))))
 
 /-- The numerator of `1 - bound`: the polynomial that each batch certifies positive. -/
+@[expose]
 def batchP (n₀ n₁ k : ℕ) (L : ℤ) (Nmom : List ℤ) : List ℤ :=
   psub (batchD n₀ n₁ k L) (batchN n₀ n₁ k L Nmom)
 

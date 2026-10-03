@@ -23,7 +23,7 @@ diagrams: `not_throughIndependenceC` exhibits two path-canonical
 data with different boundary pairings whose signed values differ.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

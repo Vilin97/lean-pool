@@ -35,7 +35,7 @@ needed for the Čencov/Chentsov uniqueness story.
   Markov morphism.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.CencovPetz
 open scoped BigOperators
@@ -81,7 +81,7 @@ noncomputable def deterministic (g : α → β) (hg : Function.Surjective g) : M
     simp
 
 /-- Pushforward of a distribution `p` along a Markov morphism `κ`. -/
-noncomputable def pushforward (p : Simplex α) : Simplex β := by
+@[expose] noncomputable def pushforward (p : Simplex α) : Simplex β := by
   classical
   refine
     { p := fun b => ∑ a, p.p a * κ.K a b
@@ -114,7 +114,8 @@ noncomputable def pushforward (p : Simplex α) : Simplex β := by
       _ = 1 := p.sum_eq_one
 
 /-- Pushforward of a tangent vector along a Markov morphism. -/
-noncomputable def tangentPushforward (u : tangentSpace (α := α)) : tangentSpace (α := β) := by
+@[expose] noncomputable def tangentPushforward (u : tangentSpace (α := α)) :
+    tangentSpace (α := β) := by
   classical
   refine ⟨fun b => ∑ a : α, ((u : α → ℝ) a) * κ.K a b, ?_⟩
   -- Prove the pushed-forward vector has total sum `0`.
@@ -145,7 +146,8 @@ noncomputable def tangentPushforward (u : tangentSpace (α := α)) : tangentSpac
   rfl
 
 /-- `tangentPushforward` packaged as a linear map. -/
-noncomputable def tangentPushforwardLinear : tangentSpace (α := α) →ₗ[ℝ] tangentSpace (α := β) := by
+@[expose] noncomputable def tangentPushforwardLinear :
+    tangentSpace (α := α) →ₗ[ℝ] tangentSpace (α := β) := by
   classical
   refine
     { toFun := κ.tangentPushforward

@@ -22,7 +22,7 @@ section
 
 /-! The ordinary curl as a bounded antisymmetrization of actual L² gradient tensors. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -109,6 +109,7 @@ theorem curlTensor_test_ae (f : Test) :
     ae_all_iff.mpr (fun i => derivativeColumn_ae f i)] with x hc hd
   rw [hc, vectorCurl_eq_matrix _ x ((f.smooth.differentiable (by simp)).differentiableAt)]
   ext i
+  simp only [testGradient_apply]
   change (derivativeColumn f (i+1) x) (i+2) - (derivativeColumn f (i+2) x) (i+1) = _
   rw [hd, hd]
   rfl
@@ -128,7 +129,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -149,6 +150,7 @@ theorem test_memLp (f : Test) : MemLp (f : Space → Space) 2 volume :=
   f.smooth.continuous.memLp_of_hasCompactSupport f.compact
 
 /-- Test value, given by `(test_memLp f).toLp (f : Space → Space)`. -/
+@[expose]
 def testValue (f : Test) : L2 := (test_memLp f).toLp (f : Space → Space)
 
 theorem testValue_ae (f : Test) : testValue f =ᵐ[volume] (f : Space → Space) :=
@@ -317,7 +319,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -329,7 +331,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerVectorCalcu
 open scoped ContDiff
 
 /-- Distributional harmonicity of an actual ordinary L² vector field on a set. -/
-def WeakHarmonicOn (U : Set Space) (u : EulerMeanSolenoidal.L2) : Prop :=
+@[expose] def WeakHarmonicOn (U : Set Space) (u : EulerMeanSolenoidal.L2) : Prop :=
   ∀ φ : Space → Space, HasCompactSupport φ → ContDiff ℝ ∞ φ →
     tsupport φ ⊆ U → (∫ x, ⟪u x, Δ φ x⟫_ℝ) = 0
 

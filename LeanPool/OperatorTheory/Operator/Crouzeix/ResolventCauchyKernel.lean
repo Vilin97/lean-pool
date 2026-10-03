@@ -22,7 +22,7 @@ This is the inner-contour calculation needed to identify the scalar companion
 functional calculus with the original conjugate-polynomial auxiliary contour.
 -/
 
-@[expose] public section
+public section
 
 open Complex Set spectrum
 open scoped InnerProductSpace Interval Real

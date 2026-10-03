@@ -19,7 +19,7 @@ case is stated as `SquareBinomialDetPos` and proved by the
 Lindström–Gessel–Viennot argument of `LGVStrict.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

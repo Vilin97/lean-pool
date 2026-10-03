@@ -16,7 +16,7 @@ pointwise positive quadratic bound supplies the Hilbert-space coercivity used
 by the lifted pressure solver.  No multiplication operator is assumed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,7 +41,7 @@ theorem coefficientApply_memLp (A : α → V →L[ℝ] V) (hA : AEStronglyMeasur
         (mul_le_mul_of_nonneg_right (hbound x) (norm_nonneg _))
 
 /-- Pointwise bounded coefficient application represented as an L² element. -/
-def coefficientApply (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
+@[expose] def coefficientApply (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
     (C : ℝ≥0) (hbound : ∀ x, ‖A x‖ ≤ C) (f : Lp V 2 μ) : Lp V 2 μ :=
   (coefficientApply_memLp A hA C hbound f).toLp (fun x => A x (f x))
 
@@ -51,7 +51,7 @@ theorem coefficientApply_ae (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurabl
   (coefficientApply_memLp A hA C hbound f).coeFn_toLp
 
 /-- The linear map induced by pointwise coefficient multiplication. -/
-def coefficientLinearMap (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
+@[expose] def coefficientLinearMap (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
     (C : ℝ≥0) (hbound : ∀ x, ‖A x‖ ≤ C) : Lp V 2 μ →ₗ[ℝ] Lp V 2 μ where
   toFun := coefficientApply A hA C hbound
   map_add' f g := by
@@ -82,10 +82,17 @@ theorem coefficientApply_norm_le (A : α → V →L[ℝ] V) (hA : AEStronglyMeas
     (mul_le_mul_of_nonneg_right (hbound x) (norm_nonneg _))
 
 /-- The bounded operator induced by the actual coefficient field. -/
-def coefficientOperator (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
+@[expose] def coefficientOperator (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
     (C : ℝ≥0) (hbound : ∀ x, ‖A x‖ ≤ C) : Lp V 2 μ →L[ℝ] Lp V 2 μ :=
   (coefficientLinearMap A hA C hbound).mkContinuous C
     (coefficientApply_norm_le A hA C hbound)
+
+/-- The bounded multiplication operator acts by pointwise coefficient application. -/
+@[simp] theorem coefficientOperator_apply (A : α → V →L[ℝ] V)
+    (hA : AEStronglyMeasurable A μ) (C : ℝ≥0)
+    (hbound : ∀ x, ‖A x‖ ≤ C) (f : Lp V 2 μ) :
+    coefficientOperator A hA C hbound f = coefficientApply A hA C hbound f := by
+  rfl
 
 theorem coefficientOperator_ae (A : α → V →L[ℝ] V) (hA : AEStronglyMeasurable A μ)
     (C : ℝ≥0) (hbound : ∀ x, ‖A x‖ ≤ C) (f : Lp V 2 μ) :

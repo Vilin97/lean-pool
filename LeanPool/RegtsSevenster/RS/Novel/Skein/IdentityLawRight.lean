@@ -37,7 +37,7 @@ The stage equivalence maps `Fin (s + u) ⊕ Fin (t' + t')` to
 The shuffle: `((D ⊕ C) ⊕ B) ⊕ (A ⊕ A') ≃ (D ⊕ C) ⊕ ((A ⊕ A') ⊕ B)`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -45,6 +45,7 @@ namespace RS
 output, F's outer labels and the not-yet-glued interface labels; on
 the right output, the strand-bundle labels followed by F's
 already-glued trailing labels. -/
+@[expose]
 def stageEquivR (s t' u : ℕ) (ht : t' ≤ u) :
     Fin (s + u) ⊕ Fin (t' + t') ≃ Fin (s + t') ⊕ Fin (t' + u) where
   toFun x := match x with

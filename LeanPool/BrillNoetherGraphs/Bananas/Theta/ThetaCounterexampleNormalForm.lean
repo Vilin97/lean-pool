@@ -15,7 +15,7 @@ public import LeanPool.BrillNoetherGraphs.Bananas.Basics.DegreeOneRepresentative
 This connects the general rank-theoretic reduction to the strand geometry.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

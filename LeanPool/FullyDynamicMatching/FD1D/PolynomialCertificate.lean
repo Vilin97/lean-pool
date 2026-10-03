@@ -18,7 +18,7 @@ coefficient in the four Bellman charts without materializing enormous
 `ring_nf` goals.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -33,6 +33,7 @@ deriving DecidableEq, Repr
 namespace DPoly
 
 /-- The dense representation of a constant polynomial. -/
+@[expose]
 def const (a : R) : DPoly R := ⟨[a]⟩
 
 /-- Coefficientwise addition, extending the shorter list by zeros. -/
@@ -92,12 +93,14 @@ instance (n : ℕ) [OfNat R (n + 2)] : OfNat (DPoly R) (n + 2) :=
 def X [Zero R] [One R] : DPoly R := ⟨[0, 1]⟩
 
 /-- Horner evaluation of a coefficient list after applying the coefficient map. -/
+@[expose]
 def evalCoeffs [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) : List R → S
   | [] => 0
   | a :: p => f a + x * evalCoeffs f x p
 
 /-- Evaluation of a dense polynomial using the given coefficient map. -/
+@[expose]
 def eval [Zero S] [Add S] [Mul S]
     (f : R → S) (x : S) (p : DPoly R) : S :=
   evalCoeffs f x p.coeffs
@@ -219,14 +222,17 @@ def V : Poly3 := DPoly.const DPoly.X
 def Z : Poly3 := DPoly.const (DPoly.const DPoly.X)
 
 /-- Real evaluation of an integer polynomial at its single argument. -/
+@[expose]
 def eval1 (p : DPoly ℤ) (z : ℝ) : ℝ :=
   DPoly.eval (fun c : ℤ => (c : ℝ)) z p
 
 /-- Real evaluation of a nested polynomial at the middle and innermost variables. -/
+@[expose]
 def eval2 (p : DPoly (DPoly ℤ)) (v z : ℝ) : ℝ :=
   DPoly.eval (fun q => eval1 q z) v p
 
 /-- Real evaluation of a three-variable integer polynomial. -/
+@[expose]
 def eval3 (p : Poly3) (u v z : ℝ) : ℝ :=
   DPoly.eval (fun q => eval2 q v z) u p
 
@@ -452,6 +458,7 @@ def projectiveBellmanAt (den s num v : Poly3) : Poly3 :=
     12 * den ^ 5 * BB ^ 5 * M ^ 5 * (S * (A ^ 2 - 1) + W0)
 
 /-- Real-valued expression corresponding to the affine Bellman polynomial. -/
+@[expose]
 def bellmanRealAt (s r v : ℝ) : ℝ :=
   let A := 1 + v
   let S := s + 2

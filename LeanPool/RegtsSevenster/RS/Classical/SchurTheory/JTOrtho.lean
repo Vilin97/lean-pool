@@ -19,7 +19,7 @@ product of the symmetric group, which is what makes them the
 irreducible characters.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

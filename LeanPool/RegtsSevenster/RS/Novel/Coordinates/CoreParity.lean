@@ -22,7 +22,7 @@ the parity of the core slots' pairing and the parity of the whole
 slot list.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -18,7 +18,7 @@ such an embedding preserves its alternating evaluations on the
 embedded colours and annihilates inputs using any other colour.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

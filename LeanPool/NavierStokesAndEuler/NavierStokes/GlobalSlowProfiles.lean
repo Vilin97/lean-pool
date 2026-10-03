@@ -22,7 +22,7 @@ All integrals and differential operators below are the actual ones.  In
 particular the preceding radial source is retained when pressure is recomputed.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -43,6 +43,7 @@ abbrev Smooth (S : Set ℝ) (f : Field) := ContDiffOn ℝ ∞ f (region S)
 /-- Dr, given by `ProfileHistories.radialPartial`. -/
 noncomputable def dr := ProfileHistories.radialPartial
 /-- De, given by `ProfileHistories.parameterPartial`. -/
+@[expose]
 noncomputable def de := ProfileHistories.parameterPartial
 
 /-- Regular data, collecting `smooth`, `even`. -/
@@ -69,6 +70,7 @@ theorem Regular.mul {S : Set ℝ} {f g : Field} (hf : Regular S f) (hg : Regular
 
 /-- Regular algebra, bundling `carrier`, `zero_mem`, `one_mem`, `add_mem` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def regularAlgebra (S : Set ℝ) : Subalgebra ℝ Field where
   carrier := {f | Regular S f}
   zero_mem' := by exact Regular.const S 0
@@ -112,6 +114,7 @@ theorem slice_smooth {S : Set ℝ} {f : Field} (hf : Smooth S f)
   | @insert a s ha ih => simp only [Finset.sum_insert ha, add_apply, ih]
 
 /-- Bound constant, given by `algebraMap ℝ (EvenProfile S) c`. -/
+@[expose]
 noncomputable def boundConstant (S : Set ℝ) (c : ℝ) : EvenProfile S :=
   algebraMap ℝ (EvenProfile S) c
 
@@ -124,11 +127,13 @@ noncomputable def radiusSquared (S : Set ℝ) : EvenProfile S :=
     fun _ _ _ => by simp only [neg_sq]⟩⟩
 
 /-- Parameter, given by `⟨Prod.snd, ⟨contDiffOn_snd, fun _ _ _ => rfl⟩⟩`. -/
+@[expose]
 noncomputable def parameter (S : Set ℝ) : EvenProfile S :=
   ⟨Prod.snd, ⟨contDiffOn_snd, fun _ _ _ => rfl⟩⟩
 
 /-- Inverse, given by `⟨fun w => (f w)⁻¹, ⟨f.smooth.inv hf, fun _ heta R => congrArg Inv.inv
 (f.even heta R)⟩⟩`. -/
+@[expose]
 noncomputable def inverse {S : Set ℝ} (f : EvenProfile S)
     (hf : ∀ w ∈ region S, f w ≠ 0) : EvenProfile S :=
   ⟨fun w => (f w)⁻¹, ⟨f.smooth.inv hf, fun _ heta R => congrArg Inv.inv (f.even heta R)⟩⟩
@@ -144,6 +149,7 @@ theorem parameter_derivative {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smo
     hf (p := (R, eta)) ⟨mem_univ _, heta⟩
 
 /-- Eta derivative as an element of `EvenProfile S`. -/
+@[expose]
 noncomputable def etaDerivative {S : Set ℝ} (hS : IsOpen S) (f : EvenProfile S) :
     EvenProfile S := by
   refine ⟨de f, ⟨smooth_de hS f.smooth, ?_⟩⟩
@@ -191,6 +197,7 @@ theorem coreCutoff_zero {inner stop : ℝ} (his : inner < stop) {w : ℝ × ℝ}
   simp [coreCutoff, TransportPrimitive.cutoff_one his hw]
 
 /-- A normalized mass average.  There is no division by the radius. -/
+@[expose]
 noncomputable def massAverage {S : Set ℝ} (hS : IsOpen S) (f : EvenProfile S) :
     EvenProfile S := by
   refine ⟨fun w => 2 * ∫ t in (0 : ℝ)..1, t * f (t * w.1, w.2), ⟨?_, ?_⟩⟩
@@ -236,6 +243,7 @@ structure Domain (S : Set ℝ) (h : ℝ) : Prop where
 
 /-- Inverse denominator, given by `inverse (1 - boundConstant S (2 * h) * parameter S ^ 2) (fun
 w hw => d.denominator w.2 hw.2)`. -/
+@[expose]
 noncomputable def inverseDenominator {S : Set ℝ} {h : ℝ} (d : Domain S h) : EvenProfile S :=
   inverse (1 - boundConstant S (2 * h) * parameter S ^ 2)
     (fun w hw => d.denominator w.2 hw.2)
@@ -244,6 +252,7 @@ noncomputable def inverseDenominator {S : Set ℝ} {h : ℝ} (d : Domain S h) : 
     (w : ℝ × ℝ) : inverseDenominator d w = (PositiveAxisSystem.ell h w.2)⁻¹ := rfl
 
 /-- The normalized divergence reconstruction `V = X β`. -/
+@[expose]
 noncomputable def betaFromU {S : Set ℝ} {h : ℝ} (d : Domain S h)
     (lam : ℝ) (u : EvenProfile S) : EvenProfile S :=
   (boundConstant S 2 * parameter S * u -
@@ -295,6 +304,7 @@ noncomputable def axialOp2 {S : Set ℝ} {h : ℝ} (d : Domain S h)
 
 /-- Shifted axial as an element of `ℕ → EvenProfile S | 0 => 0 | k + 1 => axialOp2 d
 (AxisSourceRegularity.slowOrder h k - 1) (beta k)`. -/
+@[expose]
 noncomputable def shiftedAxial {S : Set ℝ} {h : ℝ} (d : Domain S h)
     (beta : ℕ → EvenProfile S) : ℕ → EvenProfile S
   | 0 => 0
@@ -319,6 +329,7 @@ noncomputable def previousOmegaDivX {S : Set ℝ} {h : ℝ} (d : Domain S h)
   | k + 1 => omegaDivX d u beta k
 
 /-- Angular field, given by `w.1 / C * phi w`. -/
+@[expose]
 noncomputable def angularField {S : Set ℝ} (C : ℝ) (phi : EvenProfile S) (w : ℝ × ℝ) : ℝ :=
   w.1 / C * phi w
 
@@ -333,6 +344,7 @@ noncomputable def pressureSource {S : Set ℝ} (C : ℝ) (phi : ℕ → EvenProf
     boundConstant S (1 / 2) * omega
 
 /-- Pressure from source, given by `radiusSquared S * massAverage hS source`. -/
+@[expose]
 noncomputable def pressureFromSource {S : Set ℝ} (hS : IsOpen S)
     (source : EvenProfile S) : EvenProfile S := radiusSquared S * massAverage hS source
 
@@ -453,6 +465,7 @@ theorem patch_zero {a b : ℝ} {f : Field} (hs : PatchSupport a b f)
   exact hR (hs eta (subset_closure hn))
 
 /-- Even correction as an element of `EvenProfile S`. -/
+@[expose]
 noncomputable def evenCorrection {S : Set ℝ} {f : Field} (hf : Smooth S f) : EvenProfile S :=
   ⟨fun w => f w + f (-w.1, w.2), ⟨hf.add (hf.comp
     (contDiffOn_fst.neg.prodMk contDiffOn_snd) (fun w hw => ⟨mem_univ _, hw.2⟩)),
@@ -981,10 +994,12 @@ noncomputable def recursionStep {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) :
 
 /-- A single coherent infinite sequence, constructed by well-founded
 recursion; all coefficient indices used in the radial source are smaller. -/
+@[expose]
 noncomputable def sequence {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) :
     Admissible s n := Nat.lt_wfRel.wf.fix (recursionStep s) n
 
 /-- Profiles, given by `(sequence s n).data`. -/
+@[expose]
 noncomputable def profiles {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) (n : ℕ) : Coefficient S :=
   (sequence s n).data
 
@@ -1180,6 +1195,7 @@ structure BaseData (S : Set ℝ) (C lam a b B : ℝ) where
 
 /-- The common cutoff is chosen strictly inside the hierarchy's proved
 radius; the moment patch begins beyond that cutoff. -/
+@[expose]
 noncomputable def schemeFromHierarchy {rho : ℝ} {U : Set ℂ} {S : Set ℝ}
     {h C lam inner stop a b B : ℝ} {base : Fin 5 → SimilarityProfile.InnerProfile}
     (A : SlowRecursion.LocalHierarchy rho U h C base)
@@ -1222,6 +1238,7 @@ noncomputable def schemeFromHierarchy {rho : ℝ} {U : Set ℂ} {S : Set ℝ}
 
 /-- The actual squared-radius profile.  We use ordinary derivatives only
 at positive X; the axis jets are the right jets of this descent. -/
+@[expose]
 noncomputable def xProfile {S : Set ℝ} (f : EvenProfile S) (w : ℝ × ℝ) : ℝ :=
   f (Real.sqrt (2 * w.1), w.2)
 
@@ -1880,7 +1897,7 @@ theorem betaFromU_x_divergence {S : Set ℝ} {h : ℝ} (d : Domain S h) (lam : �
   linear_combination he
 
 /-- As slow profiles, constructed using `SlowResidualMatching.ofBeta`. -/
-noncomputable def asSlowProfiles {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) :
+@[expose] noncomputable def asSlowProfiles {S : Set ℝ} {h C : ℝ} (s : Scheme S h C) :
     SlowExpansionResidual.SlowProfiles :=
   SlowResidualMatching.ofBeta (fun j => xProfile (profiles s j).phi)
     (fun j => xProfile (profiles s j).axial) (fun j => xProfile (profiles s j).beta)
@@ -1929,6 +1946,7 @@ theorem profiles_pressureCoefficient {S : Set ℝ} {h C : ℝ} (s : Scheme S h C
   ring
 
 /-- Component, given by `![q.phi, q.axial, q.beta, q.pressure] i`. -/
+@[expose]
 noncomputable def component {S : Set ℝ} (q : Coefficient S) (i : Fin 4) : EvenProfile S :=
   ![q.phi, q.axial, q.beta, q.pressure] i
 

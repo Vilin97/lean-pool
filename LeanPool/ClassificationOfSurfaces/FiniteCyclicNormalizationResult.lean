@@ -20,7 +20,7 @@ A result lands only at the existing `NormalForm.canonicalPresentation`; it canno
 second project-owned spelling of the Eval representatives.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval.Topology.ClassificationOfSurfaces
 
@@ -29,6 +29,7 @@ namespace FiniteCyclicPresentation
 open SurfaceCellComplex
 
 /-- The validity-bundled canonical presentation selected by an admissible normal form. -/
+@[expose]
 noncomputable def canonicalValidPresentation
     (N : NormalForm) (hN : N.IsEvalAdmissible) :
     ValidPresentation :=
@@ -56,6 +57,7 @@ structure NormalizationResult (P : ValidPresentation) where
 namespace NormalizationResult
 
 /-- A canonical presentation is already normalized. -/
+@[expose]
 noncomputable def canonical
     (N : NormalForm) (hN : N.IsEvalAdmissible) :
     NormalizationResult (canonicalValidPresentation N hN) where
@@ -64,6 +66,7 @@ noncomputable def canonical
   equivalent := NormalizationEquivalent.refl _
 
 /-- Transport a normalization result backward through a normalization equivalence. -/
+@[expose]
 noncomputable def ofEquivalent
     {P Q : ValidPresentation}
     (hPQ : NormalizationEquivalent P Q)
@@ -74,6 +77,7 @@ noncomputable def ofEquivalent
   equivalent := hPQ.trans result.equivalent
 
 /-- Transport a normalization result across a signed presentation isomorphism. -/
+@[expose]
 noncomputable def ofSignedIso
     {P Q : ValidPresentation}
     (e : SignedPresentationIso P.presentation Q.presentation)

@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientPath
 
 /-! Actual raw slow and normal-weighted angular advection on cylinder-path witnesses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -50,7 +50,7 @@ local instance instPacketCylinderFieldAdvection6 : NormedSpace ℝ (Space →ᵇ
     inferInstance
 
 /-- Embed the actual normal component into a fixed unit vector. -/
-def normalComponentMap : Space →L[ℝ] Space →L[ℝ] Space :=
+@[expose] def normalComponentMap : Space →L[ℝ] Space →L[ℝ] Space :=
   ((ContinuousLinearMap.compL ℝ Space ℝ Space) scalarEmbed).comp
     (toDual ℝ Space).toContinuousLinearMap
 
@@ -64,7 +64,7 @@ theorem normalComponentMap_project (m v : Space) :
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Normal component path, given by `mapCoefficientPath normalComponentMap N`. -/
-def normalComponentPath (N : C(K, Space →ᵇ Space)) : C(K,Space →ᵇ Space →L[ℝ] Space) :=
+@[expose] def normalComponentPath (N : C(K, Space →ᵇ Space)) : C(K,Space →ᵇ Space →L[ℝ] Space) :=
   mapCoefficientPath normalComponentMap N
 
 theorem normalComponentPath_orbit (N : C(K, Space →ᵇ Space))
@@ -86,7 +86,7 @@ namespace Field
 variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
 /-- Spatial transport expressed directly in the full raw covering derivative. -/
-def spatialTransport (G : Field P T raw) (H : Field P T raw') :
+@[expose] def spatialTransport (G : Field P T raw) (H : Field P T raw') :
     Field P T (fun z => fderiv ℝ (fun y => raw' (z.1,y)) z.2 (raw z,0)) where
   path := advectionPath P G.path H.path G.orbit H.orbit
   orbit := advectionPath_orbit P G.path H.path G.orbit H.orbit
@@ -96,7 +96,7 @@ def spatialTransport (G : Field P T raw) (H : Field P T raw') :
 
 /-- The normal factor is a real coefficient operation; no L² integrability of the normal itself is
 needed. -/
-def angularTransport (G : Field P T raw) (H : Field P T raw')
+@[expose] def angularTransport (G : Field P T raw) (H : Field P T raw')
     (N : C(Icc (0 : ℝ) T, Space →ᵇ Space))
     (hN : ContDiff ℝ ∞ (translateCoefficientPath N)) (m : VectorField)
     (hm : ∀ (t : Icc (0 : ℝ) T) x θ, m (t, (x, θ)) = N t x) :

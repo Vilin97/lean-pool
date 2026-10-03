@@ -18,7 +18,7 @@ the peeled colouring times the split factor — the smaller diagonal
 against the two-position form entry, vanishing on odd halves.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -110,6 +110,7 @@ theorem peelColour_pairSnd (m : ℕ)
   omega
 
 /-- **The diagonal cap pairing**: the colour-side cap value. -/
+@[expose]
 noncomputable def betaDiag :
     (m : ℕ) → MixedColouring k ℓ (m + m) → ℂ
   | 0, _ => 1

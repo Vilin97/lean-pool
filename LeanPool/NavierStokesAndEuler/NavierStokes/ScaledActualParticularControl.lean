@@ -30,7 +30,7 @@ geometric separation identifies its grouped Gaussian at every integration
 time.  All finite-jet constants precede the external label and lattice copy.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -154,11 +154,13 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- The transverse copy coordinate is not a slow variable of the selected
 frame.  The linear map also permits forgetting the auxiliary angle. -/
+@[expose]
 noncomputable def nativeFrame (d : PrimaryODE.FrameData PhaseCalculus.Slow)
     (χ : P →L[ℝ] PhaseCalculus.Slow) : PrimaryODE.FrameData (P × ℝ) :=
   PrimaryCopyBridge.reindex d (fun q => χ q.1)
 
 /-- Frame argument as an element of `((P × Plane) × ℝ) →L[ℝ] (PhaseCalculus.Slow × ℝ)`. -/
+@[expose]
 noncomputable def frameArgument (χ : P →L[ℝ] PhaseCalculus.Slow) :
     ((P × Plane) × ℝ) →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (χ.comp ((ContinuousLinearMap.fst ℝ P Plane).comp
@@ -213,6 +215,7 @@ variable {Label : Type*} {P V : Type}
 
 /-- The grouped Gaussian of this label, built from its actual copy
 geometry and its full padded integration rectangle. -/
+@[expose]
 noncomputable def groupedEnvelope (g : Label → ℕ → Geometry)
     (r L : Label → ℕ → ℝ) (W : Label → ℕ → ℝ → ℝ) :
     Label → ℕ → P × Plane → ℝ :=
@@ -491,11 +494,13 @@ theorem residualSource_uniform
   fin_cases i <;> simp [ParticularWaveAssembly.residualSource]
 
 /-- Angle strip, given by `CommonCoverClass.parameterStrip s (ContinuousLinearMap.fst ℝ P ℝ)`. -/
+@[expose]
 noncomputable def angleStrip (s : StripData P) : StripData (P × ℝ) :=
   CommonCoverClass.parameterStrip s (ContinuousLinearMap.fst ℝ P ℝ)
 
 /-- Forget angle, given by `((ContinuousLinearMap.fst ℝ P ℝ).comp (ContinuousLinearMap.fst ℝ (P
 × ℝ) Plane)).prod (ContinuousLinearMap.snd ℝ (P × ℝ) Plane)`. -/
+@[expose]
 noncomputable def forgetAngle : ((P × ℝ) × Plane) →L[ℝ] (P × Plane) :=
   ((ContinuousLinearMap.fst ℝ P ℝ).comp (ContinuousLinearMap.fst ℝ (P × ℝ) Plane)).prod
     (ContinuousLinearMap.snd ℝ (P × ℝ) Plane)
@@ -777,6 +782,7 @@ variable {P Q : Type}
 
 /-- Transport argument, given by `(φ.comp (ContinuousLinearMap.fst ℝ Q ℝ)).prod (rate •
 ContinuousLinearMap.snd ℝ Q ℝ)`. -/
+@[expose]
 noncomputable def transportArgument [NormedAddCommGroup P] [NormedSpace ℝ P]
     [NormedAddCommGroup Q] [NormedSpace ℝ Q] (φ : Q →L[ℝ] P) (rate : ℝ) :
     (Q × ℝ) →L[ℝ] (P × ℝ) :=
@@ -838,6 +844,7 @@ theorem polynomial_affine_family {ι E V : Type*}
 
 /-- Transport all primitive frame fields with the same clock and normal
 factors as `ScaledTangentTransport.transportTangent`. -/
+@[expose]
 noncomputable def transportedFrame (d : PrimaryODE.FrameData P) (φ : Q → P)
     (shift rate normalScale : ℝ) : PrimaryODE.FrameData Q where
   beta z := normalScale * d.beta (φ z.1,shift+rate*z.2)
@@ -1064,6 +1071,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   {D T : PhaseJetBounds.Domain (Label × ℕ) PhaseCalculus.Slow}
 
 /-- The literal selected frame after the zero-entry physical clock change. -/
+@[expose]
 noncomputable def scaledSelectedFrame (F : PhaseConstruction D)
     (φ : (Label × ℕ) → PhaseCalculus.Slow →L[ℝ] PhaseCalculus.Slow)
     (rate normalScale : (Label × ℕ) → ℝ) (i : Label × ℕ) :
@@ -1160,7 +1168,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -1180,6 +1188,7 @@ variable {Label P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
   {D : PhaseJetBounds.Domain (Label × ℕ) Slow}
 
 /-- Target domain, bundling `scale`, `carrier`, `isOpen`, `one_le_scale`. -/
+@[expose]
 noncomputable def targetDomain (s : StripData P)
     (φ : (Label × ℕ) → Slow →L[ℝ] Slow) : PhaseJetBounds.Domain (Label × ℕ) Slow where
   scale i := s.slow i.2
@@ -1197,6 +1206,7 @@ theorem interval_open (F : PhaseConstruction D) (clock : ActualSignedControl.Pos
   (F.openV i).preimage (continuous_const.mul continuous_id)
 
 /-- Length, given by `F.L (l,n)/clock.value l n`. -/
+@[expose]
 noncomputable def length (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale Label)
     (l : Label) (n : ℕ) : ℝ := F.L (l,n)/clock.value l n
 
@@ -1217,12 +1227,14 @@ theorem interval_contains (F : PhaseConstruction D) (clock : ActualSignedControl
 
 /-- Geometry, given by `CopySolveCompatibility.transportGeometry (reference l n) (gap l n) 0
 (clock.value l n) (clock.value_pos l n).ne'`. -/
+@[expose]
 noncomputable def geometry (reference : Label → ℕ → Geometry) (gap : Label → ℕ → ℕ)
     (clock : ActualSignedControl.PositiveScale Label) (l : Label) (n : ℕ) : Geometry :=
   CopySolveCompatibility.transportGeometry (reference l n) (gap l n) 0 (clock.value l n)
     (clock.value_pos l n).ne'
 
 /-- Envelope, given by `referenceP (F.lam (l,n)) (F.u (l,n)) (F.L (l,n)) (clock.value l n*v)`. -/
+@[expose]
 noncomputable def envelope (F : PhaseConstruction D) (clock : ActualSignedControl.PositiveScale
     Label)
     (l : Label) (n : ℕ) (v : ℝ) : ℝ :=
@@ -1230,6 +1242,7 @@ noncomputable def envelope (F : PhaseConstruction D) (clock : ActualSignedContro
 
 /-- Frame, given by `scaledSelectedFrame F φ (fun i => clock.value i.1 i.2) (fun i =>
 normal.value i.1 i.2) i`. -/
+@[expose]
 noncomputable def frame (F : PhaseConstruction D)
     (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock normal : ActualSignedControl.PositiveScale Label) (i : Label × ℕ) :
@@ -1238,6 +1251,7 @@ noncomputable def frame (F : PhaseConstruction D)
 
 /-- Neighborhood, given by `{x | x.1 ∈ s.domain ∧ φ (l,n) (χ x.1) ∈ D.carrier (l,n) ∧ ((g l
 n).coordinates k x.2).2 ∈ Ioo 0 (length F clock l n)}`. -/
+@[expose]
 noncomputable def neighborhood (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] Slow) (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock : ActualSignedControl.PositiveScale Label) (g : Label → ℕ → Geometry)
@@ -1247,6 +1261,7 @@ noncomputable def neighborhood (s : StripData P) (F : PhaseConstruction D)
 
 /-- Patch, given by `neighborhood s F χ φ clock g l n k ∩ {x | ((g l n).coordinates k x.2).1 ∈
 Icc (-(r l n)) (r l n)}`. -/
+@[expose]
 noncomputable def patch (s : StripData P) (F : PhaseConstruction D)
     (χ : P →L[ℝ] Slow) (φ : (Label × ℕ) → Slow →L[ℝ] Slow)
     (clock : ActualSignedControl.PositiveScale Label) (g : Label → ℕ → Geometry)
@@ -1438,6 +1453,7 @@ noncomputable def scaledControl
       hb l n k x hx hcell.1.2.1 hcell.2 i hi v hv⟩
 
 /-- Overwrite only the source, exactly as `realData` and `imagData` do. -/
+@[expose]
 noncomputable def withSource (t : TangentData P ProblemStatement.Space)
     (f : P × Plane → ProblemStatement.Space) : TangentData P ProblemStatement.Space :=
   { t with source := f }
@@ -1482,6 +1498,7 @@ omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
     withSource t (fun x => imagPart (f x)) = imagData t f := rfl
 
 /-- Transported tangent, constructed using `ParticularWaveAssembly.angleTangent`. -/
+@[expose]
 noncomputable def transportedTangent
     (F : PhaseConstruction D) (χ : P →L[ℝ] Slow) (ψ : (Label × ℕ) → P → P)
     (clock normal : ActualSignedControl.PositiveScale Label)
@@ -1707,12 +1724,14 @@ theorem geometry_cost_constant_one (clock : ActualSignedControl.PositiveScale La
 
 /-- Physical phi, given by `ActualSignedGeometry.slowChange h (ChartScales.Q (chart i.2))
 (ChartScales.Q (reference i.1 i.2))`. -/
+@[expose]
 noncomputable def physicalPhi (h : ℝ) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
     (i : Label × ℕ) : Slow →L[ℝ] Slow :=
   ActualSignedGeometry.slowChange h (ChartScales.Q (chart i.2)) (ChartScales.Q (reference i.1 i.2))
 
 /-- Physical psi, given by `PhysicalParticularWave.parameterChange h (ChartScales.Q (chart i.2))
 (ChartScales.Q (reference i.1 i.2))`. -/
+@[expose]
 noncomputable def physicalPsi (h : ℝ) (chart : ℕ → ℕ) (reference : Label → ℕ → ℕ)
     (i : Label × ℕ) : Slow → Slow :=
   PhysicalParticularWave.parameterChange h (ChartScales.Q (chart i.2))
@@ -1764,6 +1783,7 @@ variable {h dimension : ℝ} {vr vt : Plane}
   (slot : Label → ℕ → SlotColoring.Label)
 
 /-- Slot reference, given by `ActualSignedGeometry.slotGeometry sys hdet (slot l n) 0`. -/
+@[expose]
 noncomputable def slotReference (l : Label) (n : ℕ) : Geometry :=
   ActualSignedGeometry.slotGeometry sys hdet (slot l n) 0
 

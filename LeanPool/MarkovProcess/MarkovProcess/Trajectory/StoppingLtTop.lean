@@ -37,7 +37,7 @@ Nothing is asserted about the event `{tau = ⊤}`: on it the shifted path is the
 neither statement constrains it.  No Hunt-process property is claimed.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -148,6 +148,7 @@ variable {Omega : Type*} {mOmega : MeasurableSpace Omega}
 
 /-- A `WithTop ℝ≥0`-valued time truncated at the deterministic horizon `K`: the finite,
 `ℝ≥0`-valued time equal to `tau omega` when that is at most `K`, and to `K` otherwise. -/
+@[expose]
 def truncTime (tau : Omega → WithTop NNReal) (K : NNReal) (omega : Omega) : NNReal :=
   (min (tau omega) (K : WithTop NNReal)).untopD 0
 

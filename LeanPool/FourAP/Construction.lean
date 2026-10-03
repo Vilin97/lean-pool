@@ -23,7 +23,7 @@ The numerical prefixes from the remark are checked separately in
 its upstream numerical examples module, using the stabilization results proved here.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
@@ -102,7 +102,7 @@ theorem explicitPermutation_prefix (n m : ℕ) (hm : m ≤ (algorithmStage n).le
 /-- Add one to the executable permutation, as in the last sentence of the
 proof and the second displayed prefix in the final remark. Positions remain
 zero-based here so the sequence can be read directly using Lean lists. -/
-def explicitPositiveSequence : ℕ ≃ ℕ+ :=
+@[expose] def explicitPositiveSequence : ℕ ≃ ℕ+ :=
   explicitPermutation.trans Equiv.pnatEquivNat.symm
 
 /-- The positive sequence is the nonnegative permutation shifted by one,

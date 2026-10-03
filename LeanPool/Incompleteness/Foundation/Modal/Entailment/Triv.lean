@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Modal.Entailment.Basic
 
 /-! # Triv -/
 
-@[expose] public section
+public section
 
 
 namespace LO

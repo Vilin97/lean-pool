@@ -41,7 +41,7 @@ This file develops the case `1 ≤ p ≤ q < ∞`:
   `SNumbers.Examples.ExHelpers`.
 -/
 
-@[expose] public section
+public section
 
 universe u
 
@@ -123,6 +123,7 @@ lemma piLp_norm_const_one {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞) :
 
 /-- The **identity embedding** `id : ℓ^q_m → ℓ^p_m`: the same underlying vector,
 re-measured in the `p`-norm. -/
+@[expose]
 noncomputable def idEmbed (p q : ℝ≥0∞) [Fact (1 ≤ p)] [Fact (1 ≤ q)] :
     PiLp q (fun _ : Fin m => 𝕜) →L[𝕜] PiLp p (fun _ : Fin m => 𝕜) :=
   LinearMap.toContinuousLinearMap

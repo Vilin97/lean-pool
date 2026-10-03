@@ -18,7 +18,7 @@ Wedderburn–Artin.  These are the atoms along which Karoubi
 objects split into simples.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

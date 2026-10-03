@@ -22,4 +22,4 @@ Index file for the `LeanPool.AndersonConjecture.Jensen.Construction` directory:
 the transfinite construction assembling the final ring.
 -/
 
-@[expose] public section
+public section

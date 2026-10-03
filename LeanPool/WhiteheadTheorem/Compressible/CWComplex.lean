@@ -20,7 +20,7 @@ This is the theorem `IsCompressible.relCWComplex_of_diskBoundaryIncl`.
 Some proofs are similar to the ones in `Mathlib.CategoryTheory.LiftingProperties.Limits`
 -/
 
-@[expose] public section
+public section
 
 
 open CategoryTheory unitInterval

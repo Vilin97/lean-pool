@@ -12,12 +12,12 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage8Main.Controller
 The explicit causal state machine refines the certified finite controller execution.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage8Main
 
 /-- The chronological observation list obtained by concatenating the trial reports. -/
-def reportsTrace (reports : List (TrialReport d)) : List (Observation d) :=
+@[expose] def reportsTrace (reports : List (TrialReport d)) : List (Observation d) :=
   reports.flatMap TrialReport.trace
 
 @[simp] theorem reportsTrace_append_singleton

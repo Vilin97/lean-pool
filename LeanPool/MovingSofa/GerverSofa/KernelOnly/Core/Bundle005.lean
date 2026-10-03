@@ -28,7 +28,7 @@ public import Mathlib.Tactic.Ring
 * `GerverSofa.KernelOnly.PartB.Semantics.Batch003`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -46,7 +46,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertGerverNumericsReduced`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -59,7 +59,7 @@ The kernel verifies every matrix entry against the original automatic differenti
 evaluator. Matrix row bounds can then reuse the certified entries.
 -/
 
-@[expose] public section
+public section
 namespace GerverSofa.PartALeanCert
 open LeanCert.Core LeanCert.Engine
 
@@ -4056,7 +4056,7 @@ section
 # Gerver Sofa / Kernel Only / Lean Cert Gerver Numerics Reduced
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4167,7 +4167,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertNumericsRows.Full05`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4182,7 +4182,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4215,7 +4215,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4258,7 +4258,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4291,7 +4291,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4324,7 +4324,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4367,7 +4367,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4400,7 +4400,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4433,7 +4433,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4476,7 +4476,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4509,7 +4509,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4542,7 +4542,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4585,7 +4585,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4618,7 +4618,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4651,7 +4651,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4694,7 +4694,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4727,7 +4727,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4785,7 +4785,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertNumericsRows.FullPoint10`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4798,7 +4798,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4841,7 +4841,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4874,7 +4874,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4907,7 +4907,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4950,7 +4950,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -4983,7 +4983,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5016,7 +5016,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5059,7 +5059,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5092,7 +5092,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5125,7 +5125,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5168,7 +5168,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5201,7 +5201,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5234,7 +5234,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5277,7 +5277,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5310,7 +5310,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5343,7 +5343,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5410,7 +5410,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertNumericsRows.FullImage15`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5424,7 +5424,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5457,7 +5457,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5490,7 +5490,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5533,7 +5533,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5566,7 +5566,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5599,7 +5599,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5642,7 +5642,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5675,7 +5675,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5708,7 +5708,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5751,7 +5751,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5784,7 +5784,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5817,7 +5817,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5860,7 +5860,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5893,7 +5893,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5926,7 +5926,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5969,7 +5969,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6026,7 +6026,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertNumericsRows.Full21`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6040,7 +6040,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6073,7 +6073,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6116,7 +6116,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6149,7 +6149,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6182,7 +6182,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6225,7 +6225,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6258,7 +6258,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6291,7 +6291,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6334,7 +6334,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6367,7 +6367,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6400,7 +6400,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6443,7 +6443,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6476,7 +6476,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6509,7 +6509,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6552,7 +6552,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6585,7 +6585,7 @@ only one expensive closed kernel proposition at a time instead of launching
 all 22 rows concurrently and exhausting RAM.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6629,7 +6629,7 @@ Authors: Dawid Trela
 * `KernelOnly.LeanCertNumericsRows.FullImage21`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6642,7 +6642,7 @@ The expensive transcendental evaluation is checked once for this single
 coordinate and then replaced by a small rational cache interval downstream.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6685,7 +6685,7 @@ checks one heavy proposition and then releases its memory before the next
 module in the serial chain begins.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6728,7 +6728,7 @@ Authors: Dawid Trela
 * `KernelOnly.ConcreteUniqueZeros`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6742,7 +6742,7 @@ ending at `FullImage21`.  This module only assembles them into the global
 norm/self-map facts and the unique-root theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6863,7 +6863,7 @@ section
 # Gerver Sofa / Kernel Only / Concrete Unique Zeros
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6989,7 +6989,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartE.E24PhiBelowKernelHL`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7009,7 +7009,7 @@ The enclosure target is a proposition passed as an ordinary theorem argument.
 E01 does not claim that the global exclusion step has already been proved.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7017,15 +7017,18 @@ namespace GerverSofa
 namespace PartE
 
 /-- Reduced parameters assembled in the order `(A, B, phi, theta)`. -/
+@[expose]
 def reducedParams (A B phi theta : ℝ) : Reduced.Params :=
   { a := A, b := B, phi := phi, theta := theta }
 
 /-- The physical domain appearing in DeepMind's `ABφθSpec`. -/
+@[expose]
 def PhysicalDomain (p : Reduced.Params) : Prop :=
   0 ≤ p.phi ∧ p.phi ≤ p.theta ∧ p.theta ≤ Real.pi / 4 ∧
     0 ≤ p.a ∧ 0 ≤ p.b
 
 /-- The four displayed equations in DeepMind's `ABφθSpec`. -/
+@[expose]
 def DeepMindEquations (A B phi theta : ℝ) : Prop :=
   A * (Real.cos theta - Real.cos phi) - 2 * B * Real.sin phi
       + (theta - phi - 1) * Real.cos theta - Real.sin theta
@@ -7039,6 +7042,7 @@ def DeepMindEquations (A B phi theta : ℝ) : Prop :=
       - (B - (theta - phi) * (1 + A) / 2 - (theta - phi) ^ 2 / 4) = 0
 
 /-- A local mirror of DeepMind's complete four-constant specification. -/
+@[expose]
 def DeepMindABPhiThetaSpec (A B phi theta : ℝ) : Prop :=
   PhysicalDomain (reducedParams A B phi theta) ∧
     DeepMindEquations A B phi theta
@@ -7167,6 +7171,7 @@ def GlobalEnclosureTarget : Prop :=
 
 /-- Coordinate equivalence between DeepMind's nested tuple and the named
 reduced-parameter record. -/
+@[expose]
 def tupleEquiv : (ℝ × ℝ × ℝ × ℝ) ≃ Reduced.Params where
   toFun x := reducedParams x.1 x.2.1 x.2.2.1 x.2.2.2
   invFun p := (p.a, p.b, p.phi, p.theta)
@@ -7237,7 +7242,7 @@ The remaining enclosure target quantifies only over
 does not declare the interval branch-and-bound conclusion as an axiom.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7570,7 +7575,7 @@ lie in that rectangle.  E03 intentionally does not postulate a global cover;
 the finite branch-and-bound cover is the next data layer.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7725,6 +7730,7 @@ theorem scaledResidualEnclosureTarget_iff_twoAngleEnclosureTarget :
 
 /-- LeanCert AST for the two division-free residuals.  Variable 0 is `phi`
 and variable 1 is `theta`. -/
+@[expose]
 def scaledResidualExprList : List Expr :=
   let phi := ev 0
   let theta := ev 1
@@ -7771,6 +7777,7 @@ def scaledResidualExprList : List Expr :=
   r1 :: r2 :: []
 
 /-- Select one of the two scaled residual expressions for the angle system. -/
+@[expose]
 def scaledResidualExpr (i : Fin 2) : Expr :=
   scaledResidualExprList.getD i.1 (ec 0)
 
@@ -7796,12 +7803,14 @@ theorem scaledResidualExpr_eval_one (phi theta : ℝ) :
     evalFin, finEnv]; ring
 
 /-- Rational interval environment for the two angle variables. -/
+@[expose]
 def angleIntervalEnv (phiI thetaI : IntervalRat) : IntervalEnv
   | 0 => phiI
   | 1 => thetaI
   | _ => default
 
 /-- Executable test that an interval lies strictly on one side of zero. -/
+@[expose]
 def intervalExcludesZero (I : IntervalRat) : Bool :=
   decide (I.hi < 0 ∨ 0 < I.lo)
 
@@ -7850,7 +7859,7 @@ checks the complete path from rational cell data through LeanCert interval
 evaluation to the no-common-zero theorem before the large cover is generated.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7864,6 +7873,7 @@ open PartALeanCert
 /-- Kernel-reducible interval evaluation for one smooth residual.  This uses
 the already certified project-specialized interval for `pi`, avoiding the
 generic named-constant normalization bottleneck in closed `decide` replays. -/
+@[expose]
 def scaledResidualKernelInterval (i : Fin 2)
     (phiI thetaI : IntervalRat) (cfg : EvalConfig := {}) : IntervalRat :=
   kernelPointEvalCore (scaledResidualExpr i)
@@ -7909,6 +7919,7 @@ def Contains (cell : AngleCell) (phi theta : ℝ) : Prop :=
   phi ∈ cell.phiI ∧ theta ∈ cell.thetaI
 
 /-- Executable E03 rejection test for a complete angle cell. -/
+@[expose]
 def rejected (cell : AngleCell) (cfg : EvalConfig := {}) : Bool :=
   intervalExcludesZero
       (scaledResidualKernelInterval (0 : Fin 2) cell.phiI cell.thetaI cfg) ||
@@ -7976,7 +7987,7 @@ theorem therefore needs interval rejection only outside this wide local box.
 
 /-! ## Concrete two-dimensional contraction data -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7990,7 +8001,7 @@ open PartALeanCert
 /-- Local angle box containing the complete unresolved E20 tail and the exact
 angle projection of `Reduced.box`.  E21F narrows the exploratory E21 box to
 the region actually required by the recorded E20 extrema. -/
-def localAngleX : Fin 2 → IntervalRat := ![
+@[expose] def localAngleX : Fin 2 → IntervalRat := ![
   ⟨391 / 10000, 157 / 4000, by norm_num⟩,
   ⟨68113 / 100000, 34069 / 50000, by norm_num⟩
 ]
@@ -8075,7 +8086,7 @@ theorem localAngle_unique_scaled :
 /-! ## Semantic bridge to named angles and the Part A solution -/
 
 /-- The two-angle cell corresponding to the certified local interval box. -/
-def localAngleCell : AngleCell :=
+@[expose] def localAngleCell : AngleCell :=
   ⟨localAngleX (0 : Fin 2), localAngleX (1 : Fin 2)⟩
 
 /-- Package the two switching angles as a two-coordinate real vector. -/
@@ -8270,7 +8281,7 @@ the depth-18 Boolean certificate in sixty-four independent depth-15 modules;
 `ParallelAdaptiveGlobalCoverClosure` recombines them without recomputation.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8280,43 +8291,50 @@ namespace PartE
 open LeanCert.Core
 
 /-- The rational midpoint of an angle interval. -/
+@[expose]
 def angleMid (i : IntervalRat) : ℚ := (i.lo + i.hi) / 2
 
 /-- The closed lower half of a rational interval. -/
+@[expose]
 def intervalLow (i : IntervalRat) : IntervalRat :=
   ⟨i.lo, angleMid i, by
     dsimp [angleMid]
     linarith [i.le]⟩
 
 /-- The closed upper half of a rational interval. -/
+@[expose]
 def intervalHigh (i : IntervalRat) : IntervalRat :=
   ⟨angleMid i, i.hi, by
     dsimp [angleMid]
     linarith [i.le]⟩
 
 /-- Bisect both angle intervals and select the lower φ half and lower θ half. -/
+@[expose]
 def childLL (cell : AngleCell) : AngleCell :=
   ⟨intervalLow cell.phiI, intervalLow cell.thetaI⟩
 
 /-- Bisect both angle intervals and select the lower φ half and upper θ half. -/
+@[expose]
 def childLH (cell : AngleCell) : AngleCell :=
   ⟨intervalLow cell.phiI, intervalHigh cell.thetaI⟩
 
 /-- Bisect both angle intervals and select the upper φ half and lower θ half. -/
+@[expose]
 def childHL (cell : AngleCell) : AngleCell :=
   ⟨intervalHigh cell.phiI, intervalLow cell.thetaI⟩
 
 /-- Bisect both angle intervals and select the upper φ half and upper θ half. -/
+@[expose]
 def childHH (cell : AngleCell) : AngleCell :=
   ⟨intervalHigh cell.phiI, intervalHigh cell.thetaI⟩
 
 /-- A rational cell lies strictly above the physical half-plane `phi ≤ theta`.
 The strict comparison deliberately keeps all cells touching the diagonal. -/
-def physicallyIrrelevant (cell : AngleCell) : Bool :=
+@[expose] def physicallyIrrelevant (cell : AngleCell) : Bool :=
   decide (cell.thetaI.hi < cell.phiI.lo)
 
 /-- Every point of the rational cell lies in the wide E21 local box. -/
-def cellInsideLocal (cell : AngleCell) : Bool :=
+@[expose] def cellInsideLocal (cell : AngleCell) : Bool :=
   decide (
     localAngleCell.phiI.lo ≤ cell.phiI.lo ∧
     cell.phiI.hi ≤ localAngleCell.phiI.hi ∧
@@ -8325,7 +8343,7 @@ def cellInsideLocal (cell : AngleCell) : Bool :=
 
 /-- Adaptive four-way replay.  A node closes when it is irrelevant, local, or
 rejected.  Otherwise all four rational midpoint children must close. -/
-def adaptiveCoverCheck : Nat → AngleCell → Bool
+@[expose] def adaptiveCoverCheck : Nat → AngleCell → Bool
   | 0, cell =>
       if physicallyIrrelevant cell = true then true
       else if cellInsideLocal cell = true then true
@@ -8518,7 +8536,7 @@ wide E21 local angle cell.  Their union covers every point of the global
 physical angle root that is not in the local cell.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8526,21 +8544,25 @@ namespace GerverSofa
 namespace PartE
 
 /-- The exclusion root cell below the local φ interval, with `φ ≤ 391/10000`. -/
+@[expose]
 def e24PhiBelowRoot : AngleCell :=
   ⟨⟨0, 391 / 10000, by norm_num⟩,
     ⟨0, 4 / 5, by norm_num⟩⟩
 
 /-- The exclusion root cell above the local φ interval, with `157/4000 ≤ φ`. -/
+@[expose]
 def e24PhiAboveRoot : AngleCell :=
   ⟨⟨157 / 4000, 4 / 5, by norm_num⟩,
     ⟨0, 4 / 5, by norm_num⟩⟩
 
 /-- The exclusion root cell below the local θ interval, with `θ ≤ 68113/100000`. -/
+@[expose]
 def e24ThetaBelowRoot : AngleCell :=
   ⟨⟨0, 4 / 5, by norm_num⟩,
     ⟨0, 68113 / 100000, by norm_num⟩⟩
 
 /-- The exclusion root cell above the local θ interval, with `34069/50000 ≤ θ`. -/
+@[expose]
 def e24ThetaAboveRoot : AngleCell :=
   ⟨⟨0, 4 / 5, by norm_num⟩,
     ⟨34069 / 50000, 4 / 5, by norm_num⟩⟩
@@ -8565,7 +8587,7 @@ physical triangle and turns four Boolean adaptive-cover certificates into the
 terminal DeepMind-shaped uniqueness theorem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8715,7 +8737,7 @@ These lemmas lift a primitive terminal fact to an `adaptiveCoverCheck` fact at
 arbitrary remaining depth without asking the kernel to explore the subtree.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8751,7 +8773,7 @@ section
 
 /-! E24 kernel child certificate: PhiBelow/HL, remaining depth 13. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9309,7 +9331,7 @@ Authors: Dawid Trela
 * `KernelOnly.PartB.Continuum`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9323,7 +9345,7 @@ parameter vector and the two real support functions whose continuum lower
 bounds are established by the exact cell certificate.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9337,13 +9359,16 @@ def params : Romik.Params :=
   Romik.coordEquiv.symm PartALeanCert.fullRoot
 
 /-- The physical parameter interval. -/
+@[expose]
 def physicalInterval : Set ℝ := Set.Icc (0 : ℝ) (Real.pi / 2)
 
 /-- The two global support functions used in the manuscript's grid lemma. -/
+@[expose]
 def Gu (s t : ℝ) : ℝ :=
   1 + dot (Romik.path params s - Romik.path params t) (u s)
 
 /-- The vertical support slack between two path positions in the frame at `s`. -/
+@[expose]
 def Gv (s t : ℝ) : ℝ :=
   1 + dot (Romik.path params s - Romik.path params t) (v s)
 
@@ -9351,13 +9376,16 @@ def Gv (s t : ℝ) : ℝ :=
 def target : ℝ := (targetQ : ℝ)
 
 /-- Physical mesh node `iπ/128`. -/
+@[expose]
 def nodeTime (i : Nat) : ℝ := (nodeCoeff i : ℝ) * Real.pi
 
 /-- Physical closed cell. -/
+@[expose]
 def cellSet (i : Cell) : Set ℝ :=
   Set.Icc (nodeTime i.1) (nodeTime (i.1 + 1))
 
 /-- Semantic containment in a planar interval box. -/
+@[expose]
 def PointContains (z : RatInterval × RatInterval) (p : Point) : Prop :=
   RatInterval.Contains z.1 p.1 ∧ RatInterval.Contains z.2 p.2
 
@@ -9379,7 +9407,7 @@ Every theorem in this file is a direct consequence of the concrete Part A
 unique zero.  No numerical computation is repeated.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9473,7 +9501,7 @@ independently.
 
 /-! ## Hull and time-cell semantics -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9669,7 +9697,7 @@ section
 
 /-! Semantic enclosure for analytic path phase 1. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9718,7 +9746,7 @@ section
 
 /-! Semantic enclosure for analytic path phase 2. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9769,7 +9797,7 @@ section
 
 /-! Semantic enclosure for analytic path phase 3. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9811,7 +9839,7 @@ section
 
 /-! Semantic enclosure for analytic path phase 4. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9863,7 +9891,7 @@ section
 
 /-! Semantic enclosure for analytic path phase 5. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9919,7 +9947,7 @@ soundness of the two product-cell support expressions.
 
 /-! ## Switches lie in exactly four mesh cells -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10237,7 +10265,7 @@ section
 # Coverage by the 64 exact mesh cells
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -10290,7 +10318,7 @@ The 64×64 cell certificate is now transported to every pair of physical
 angles.  This is the semantic conclusion needed from Part B.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

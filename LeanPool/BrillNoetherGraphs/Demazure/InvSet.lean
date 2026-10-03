@@ -17,7 +17,7 @@ It corresponds to Theorem 2.13 of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).
 -/
 
-@[expose] public section
+public section
 
 /-- The axioms characterizing inversion sets of ASP permutations: directedness,
 closure, coclosure, and finite in/out degree. *Definition 2.12 (`defn:aspSet`) of
@@ -172,6 +172,7 @@ lemma AspSet_InvSet_of_AspPerm (τ : AspPerm) : AspSet_prop (invSet τ) := by
   · exact τ.inset_finite
 
 /-- The abstract inversion set carried by an almost sign-preserving permutation. -/
+@[expose]
 def ofAspPerm (τ : AspPerm) : AspSet :=
   ⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩
 
@@ -227,6 +228,7 @@ private lemma post_Ico_swap_eq_empty_of_post_lt (asps : AspSet) {m n : ℤ} (hmn
 
 /-- Reconstruct a function `ℤ → ℤ` from an abstract ASP inversion set and a
 shift parameter `χ`. -/
+@[expose]
 noncomputable def recon (asps : AspSet) (χ : ℤ) : ℤ → ℤ :=
   fun n => n + (asps.outset n).card - (asps.inset n).card - χ
 
@@ -645,6 +647,7 @@ theorem func_asp : isAsp (asps.recon χ) := by
 
 /-- Package the function reconstructed from an ASP set and a shift as an
 `AspPerm`. -/
+@[expose]
 noncomputable def toAspPerm : AspPerm :=
   ⟨asps.recon χ, by exact func_bijective asps χ, by exact func_asp asps χ⟩
 
@@ -692,6 +695,7 @@ end OfAspSet
 /-- ASP permutations are equivalent to abstract ASP inversion sets together
 with a shift parameter. *Theorem 2.13 (`thm:aspSetReconstruction`) of
 [An extended Demazure product](https://arxiv.org/abs/2206.14227).* -/
+@[expose]
 noncomputable def AspPermEquivAspSet :
   AspPerm ≃ AspSet × ℤ where
   toFun τ := (⟨invSet τ, AspSet_InvSet_of_AspPerm τ⟩, τ.χ)

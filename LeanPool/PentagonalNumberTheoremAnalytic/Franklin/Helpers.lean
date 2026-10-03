@@ -37,7 +37,7 @@ and properties of `αOp`/`βOp`.
   invariants of an interval, which is the shape both pentagonal families `smkSet`/`spkSet` take
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

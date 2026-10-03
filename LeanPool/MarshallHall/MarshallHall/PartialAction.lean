@@ -19,7 +19,7 @@ available even when the subgroup is not normal.  We record it explicitly
 because this is the finite-state action used by the Hall construction.
 -/
 
-@[expose] public section
+public section
 
 open Function
 
@@ -42,6 +42,7 @@ abbrev LeftCosetQuotient (H : Subgroup G) :=
   Quotient (QuotientGroup.leftRel H)
 
 /-- Left multiplication acting on left cosets of a subgroup. -/
+@[expose]
 def leftMul (H : Subgroup G) (a : G) : LeftCosetQuotient H → LeftCosetQuotient H :=
   Quotient.lift (fun x : G => Quotient.mk'' (a * x)) (by
     intro x y hxy
@@ -55,6 +56,7 @@ theorem leftMul_mk (H : Subgroup G) (a x : G) :
     leftMul H a (Quotient.mk'' x) = Quotient.mk'' (a * x) := rfl
 
 /-- Left multiplication as a permutation of the left-coset space. -/
+@[expose]
 def leftMulEquiv (H : Subgroup G) (a : G) :
     LeftCosetQuotient H ≃ LeftCosetQuotient H where
   toFun := leftMul H a
@@ -114,6 +116,7 @@ variable {Q : Type u} (A : Set Q) (e : Q ≃ Q)
 
 /-- The equivalence between points whose image remains in a subset and their image within that
 subset. -/
+@[expose]
 def restrictedEquiv :
     {x : A // e x.1 ∈ A} ≃
       {y : A // ∃ x : A, e x.1 ∈ A ∧ e x.1 = y.1} where
@@ -141,6 +144,7 @@ theorem restrictedEquiv_apply (x : {x : A // e x.1 ∈ A}) :
 end Restricted
 
 /-- Right multiplication acting on right cosets of a subgroup. -/
+@[expose]
 def rightMul (H : Subgroup G) (a : G) : RightCosetQuotient H → RightCosetQuotient H :=
   Quotient.lift (fun x : G => Quotient.mk'' (x * a)) (by
     intro x y hxy
@@ -154,6 +158,7 @@ theorem rightMul_mk (H : Subgroup G) (a x : G) :
     rightMul H a (Quotient.mk'' x) = Quotient.mk'' (x * a) := rfl
 
 /-- Right multiplication as a permutation of the right-coset space. -/
+@[expose]
 def rightMulEquiv (H : Subgroup G) (a : G) :
     RightCosetQuotient H ≃ RightCosetQuotient H where
   toFun := rightMul H a

@@ -34,7 +34,7 @@ actual finite tails.  The resulting coefficient functions contain no division
 by `X`; their finite indices and powers of `q` are unchanged.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -490,7 +490,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -552,7 +552,7 @@ theorem baseVelocity_at_origin {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
   unfold streamFactor swirlPotential
   rw [AxisymmetricFields.velocity_on_axis _ _ t 0 hH hK (by simp) (by simp)]
   change (physicalProfile a h (-CoordinateAlgebra.A h) (bundleComponent C d 0)
-    (t, (0, 0))) • _ = _
+    (t, (0, 0))) • ProblemStatement.coordinateVector 2 = _
   unfold physicalProfile
   rw [physicalChart_origin hh hh1 ht,
     slowSum_eq_leading_of_positive_zero a h (1 - t)]
@@ -691,7 +691,7 @@ open ProblemStatement
 
 /-- Cartesian monomial, given by `SimilarityProfile.pullback h b f
 (AxisymmetricFields.profilePoint z.1 z.2)`. -/
-noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
+@[expose] noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
   SimilarityProfile.pullback h b f (AxisymmetricFields.profilePoint z.1 z.2)
 
 theorem cartesianMonomial_smoothAt {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -1025,6 +1025,7 @@ section PotentialRates
 open ProblemStatement DiagonalResidual
 
 /-- Past, given by `Iio 1 ×ˢ univ`. -/
+@[expose]
 noncomputable def past : Set SpaceTime := Iio 1 ×ˢ univ
 /-- Profile past, given by `Iio 1 ×ˢ univ`. -/
 noncomputable def profilePast : Set Chart := Iio 1 ×ˢ univ
@@ -1095,30 +1096,34 @@ theorem potentialFromScalars_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
 
 /-- Prefix stream, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h) (bundleComponent C d
 0) J`. -/
-noncomputable def prefixStream (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
+@[expose] noncomputable def prefixStream (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h) (bundleComponent C d 0) J
 
 /-- Prefix swirl, given by `physicalUncutPrefix h (1 / 2 - CoordinateAlgebra.A h)
 (bundleComponent C d 1) J`. -/
-noncomputable def prefixSwirl (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
+@[expose] noncomputable def prefixSwirl (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (1 / 2 - CoordinateAlgebra.A h) (bundleComponent C d 1) J
 
 /-- Prefix potential, given by `AxisymmetricFields.potential (prefixStream J h C d) (prefixSwirl
 J h C d)`. -/
+@[expose]
 noncomputable def prefixPotential (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (prefixStream J h C d) (prefixSwirl J h C d)
 
 /-- Summed potential, given by `AxisymmetricFields.potential (streamFactor a h C d)
 (swirlPotential a h C d)`. -/
+@[expose]
 noncomputable def summedPotential (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   AxisymmetricFields.potential (streamFactor a h C d) (swirlPotential a h C d)
 
 /-- Prefix velocity, given by `SpatialCurl.spatialCurl (prefixPotential J h C d)`. -/
+@[expose]
 noncomputable def prefixVelocity (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   SpatialCurl.spatialCurl (prefixPotential J h C d)
 
 /-- Prefix pressure, given by `cartesianUncutPrefix h (-2 * CoordinateAlgebra.A h)
 (bundleComponent C d 2) J`. -/
+@[expose]
 noncomputable def prefixPressure (J : ℕ) (h C : ℝ) (d : Coefficients) : PressureField :=
   cartesianUncutPrefix h (-2 * CoordinateAlgebra.A h) (bundleComponent C d 2) J
 
@@ -1438,6 +1443,7 @@ section AnnularFactors
 open ProblemStatement DiagonalResidual
 
 /-- Annular past, given by `{z | z.1 < 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}`. -/
+@[expose]
 noncomputable def annularPast : Set SpaceTime :=
   {z | z.1 < 1 ∧ 0 < AxisymmetricFields.radialEnergy z.2}
 
@@ -1526,7 +1532,7 @@ section StressOperator
 open ProblemStatement DiagonalResidual
 
 /-- The manuscript's tangential radial stress operator. -/
-noncomputable def stressForce (theta axial : Chart → ℝ) (z : SpaceTime) : Space :=
+@[expose] noncomputable def stressForce (theta axial : Chart → ℝ) (z : SpaceTime) : Space :=
   SlowResidualMatching.tangentialStressForce theta axial z.1 z.2
 
 /-- Lift profile, given by `F (AxisymmetricFields.profilePoint z.1 z.2)`. -/
@@ -1683,21 +1689,25 @@ open ProblemStatement DiagonalResidual
 
 /-- Prefix stress theta, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2)
 (bundleComponent C d 3) J`. -/
+@[expose]
 noncomputable def prefixStressTheta (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 3) J
 
 /-- Prefix stress axial, given by `physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2)
 (bundleComponent C d 4) J`. -/
+@[expose]
 noncomputable def prefixStressAxial (J : ℕ) (h C : ℝ) (d : Coefficients) : Chart → ℝ :=
   physicalUncutPrefix h (-CoordinateAlgebra.A h - 1 / 2) (bundleComponent C d 4) J
 
 /-- Base stress force, given by `stressForce (baseStressTheta a h C d) (baseStressAxial a h C
 d)`. -/
+@[expose]
 noncomputable def baseStressForce (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   stressForce (baseStressTheta a h C d) (baseStressAxial a h C d)
 
 /-- Prefix stress force, given by `stressForce (prefixStressTheta J h C d) (prefixStressAxial J
 h C d)`. -/
+@[expose]
 noncomputable def prefixStressForce (J : ℕ) (h C : ℝ) (d : Coefficients) : VelocityField :=
   stressForce (prefixStressTheta J h C d) (prefixStressAxial J h C d)
 
@@ -1772,6 +1782,7 @@ section FiniteTailRates
 open ProblemStatement DiagonalResidual SlowExpansionResidual SlowResidualMatching
 
 /-- Charted domain, given by `{z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}`. -/
+@[expose]
 noncomputable def chartedDomain (h : ℝ) (U : Set Inner) : Set SpaceTime :=
   {z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}
 
@@ -1825,7 +1836,7 @@ noncomputable def radialVector (z : SpaceTime) : Space :=
   z.2 0 • coordinateVector 0 + z.2 1 • coordinateVector 1
 
 /-- Angular vector, given by `-z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1`. -/
-noncomputable def angularVector (z : SpaceTime) : Space :=
+@[expose] noncomputable def angularVector (z : SpaceTime) : Space :=
   -z.2 1 • coordinateVector 0 + z.2 0 • coordinateVector 1
 
 theorem radialVector_smooth : ContDiff ℝ ∞ radialVector :=
@@ -2022,6 +2033,7 @@ open ProblemStatement DiagonalResidual ResidualStability SlowExpansionResidual
 
 /-- Base residual, given by `navierStokesResidual (baseVelocity a h C d) (basePressure a h C d)
 z.1 z.2 - baseStressForce a h C d z`. -/
+@[expose]
 noncomputable def baseResidual (a : ℕ → ℕ) (h C : ℝ) (d : Coefficients) (z : SpaceTime) : Space :=
   navierStokesResidual (baseVelocity a h C d) (basePressure a h C d) z.1 z.2 -
     baseStressForce a h C d z
@@ -2049,6 +2061,7 @@ theorem jetRate_neg {l : Filter SpaceTime} {q : SpaceTime → ℝ} {F : SpaceTim
 
 /-- The finite identity in this interface is the exact identity for the
 displayed uncut stream prefixes. It contains no asymptotic hypothesis. -/
+@[expose]
 def FiniteIdentities (h C : ℝ) (d : Coefficients) (f : SlowProfiles) : Prop :=
   ∀ J : ℕ, ∀ z ∈ annularPast,
     navierStokesResidual (prefixVelocity J h C d) (prefixPressure J h C d) z.1 z.2 =
@@ -2175,6 +2188,7 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Polynomial losses in the two logarithmic edge distances are allowed.
 The estimate is on the full derivative tensor, including mixed derivatives. -/
+@[expose]
 def PolynomialEdgeJets (W : Set Inner) (zeta delta : Inner → ℝ) (f : Inner → V) : Prop :=
   ∀ m : ℕ, ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, ∀ w ∈ W,
     ‖iteratedFDeriv ℝ m f w‖ ≤ C * zeta w * (delta w)⁻¹ ^ N
@@ -2423,6 +2437,7 @@ end WeightedSum
 section WeightedTensor
 
 /-- Both independent slots of the virtual tangential tensor. -/
+@[expose]
 noncomputable def stressPair (d : Coefficients) (j : ℕ) (w : Inner) : Inner :=
   (d.stressTheta j w, d.stressAxial j w)
 
@@ -2473,6 +2488,7 @@ theorem weightedBundle_quotient_scales {a : ℕ → ℕ} {h C : ℝ} {d : Coeffi
     (ContinuousLinearMap.norm_snd_le _ _ _)
 
 /-- Normalized tensor, given by `slowSum a h (stressPair d)`. -/
+@[expose]
 noncomputable def normalizedTensor (a : ℕ → ℕ) (h : ℝ) (d : Coefficients) : Chart → Inner :=
   slowSum a h (stressPair d)
 
@@ -2588,19 +2604,20 @@ noncomputable def weightRightFactor {a b c : ℝ} (hab : a < b) (hc : 0 < c) (K 
     ring
 
 /-- Swap inner, bundling `toLinearEquiv`, `norm_map`. -/
+@[expose]
 noncomputable def swapInner : Inner ≃ₗᵢ[ℝ] Inner where
   toLinearEquiv := LinearEquiv.prodComm ℝ ℝ ℝ
   norm_map' := by intro w; exact max_comm _ _
 
 /-- Active window, given by `Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1`. -/
-noncomputable def activeWindow (a b : ℝ) : Set Inner :=
+@[expose] noncomputable def activeWindow (a b : ℝ) : Set Inner :=
   Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1
 
 /-- Active zeta, given by `radialWeight c a b w.1`. -/
-noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
+@[expose] noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
 
 /-- Active delta, given by `edgeDistance a b (Real.log w.1)`. -/
-noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
+@[expose] noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
 
 theorem activeZeta_smooth {c : ℝ} (hc : 0 < c) (a b : ℝ) :
     ContDiff ℝ ∞ (activeZeta c a b) := (radialWeight_smooth hc a b).comp contDiff_fst
@@ -2625,8 +2642,10 @@ theorem activeZeta_edgeJets {a b c : ℝ} (hab : a < b) (hc : 0 < c) :
   have hX := (Real.exp_pos a).trans hw.1.1
   have he : activeZeta c a b =ᶠ[𝓝 w] (radialPullback (logWeightProfile c a b) ∘ swapInner) := by
     filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX)] with y hy
+    have hswap : (swapInner y).2 = y.1 := by
+      rfl
     simp [activeZeta, radialWeight, hy, radialPullback, logChart, logWeightProfile,
-      swapInner]
+      hswap]
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq he m).self_of_nhds,
     swapInner.norm_iteratedFDeriv_comp_right]
   have hbound := hb w.2 hw.2 w.1 hw.1
@@ -2640,6 +2659,7 @@ section AxisStress
 open ProblemStatement DiagonalResidual
 
 /-- A common inner zero region for every actual stress coefficient. -/
+@[expose]
 def StressZeroCore (d : Coefficients) (r : ℝ) : Prop :=
   ∀ j : ℕ, ∀ X ∈ Ico (0 : ℝ) r, ∀ eta ∈ Icc (-1 : ℝ) 1,
     d.stressTheta j (X, eta) = 0 ∧ d.stressAxial j (X, eta) = 0
@@ -3197,6 +3217,7 @@ open ActiveAnnulusWeight
 
 /-- Higher-order support is strictly interior to the active annulus.
 The interval and its distance from the edges may depend on the order. -/
+@[expose]
 def HigherInteriorSupport (d : Coefficients) (left right : ℝ) : Prop :=
   ∀ j : ℕ, 2 ≤ j → ∃ a b : ℝ, Icc a b ⊆ Ioo (Real.exp left) (Real.exp right) ∧
     SlowStressSupport.radialSupport univ a b (d.stressTheta j) ∧
@@ -3242,6 +3263,7 @@ theorem compact_weighted_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpac
     (mul_le_mul_of_nonneg_right (by linarith [le_max_left B 0]) (hp w hw).le)
 
 /-- Outer window, given by `Ico cut (Real.exp right) ×ˢ Icc (-1) 1`. -/
+@[expose]
 noncomputable def outerWindow (cut right : ℝ) : Set Inner :=
   Ico cut (Real.exp right) ×ˢ Icc (-1) 1
 

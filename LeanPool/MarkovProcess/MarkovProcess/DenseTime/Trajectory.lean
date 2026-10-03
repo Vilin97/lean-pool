@@ -17,7 +17,7 @@ Mathlib's Ionescu--Tulcea construction, starts the resulting trajectory at a det
 and reindexes its positive coordinates by a countable dense-time enumeration.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -316,6 +316,7 @@ theorem enumeratedDenseTimeTrajectory_map_prefix
   · exact measurable_enumeratedDenseTimePrefix n
 
 /-- Restrict a dense-time-labelled trajectory to the first `n` labels of an enumeration. -/
+@[expose]
 def denseTimeTrajectoryPrefix (e : ℕ ≃ D) (n : ℕ) (path : D → α) : Fin n → α :=
   fun i ↦ path (e i)
 

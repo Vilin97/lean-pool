@@ -24,7 +24,7 @@ Tags: gaussian-measure, polynomial-moments, counterexamples, formal-power-series
 MSC: 60E05, 13F20
 -/
 
-@[expose] public section
+public section
 
 /-
 Upstream: https://github.com/long-mathematics/gaussian-moments-counterexamples

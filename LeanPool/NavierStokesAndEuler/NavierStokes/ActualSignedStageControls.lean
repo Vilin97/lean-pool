@@ -19,7 +19,7 @@ native factors belong to the cutoff, so no time cutoff is declared frozen
 along the fast field.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -50,52 +50,53 @@ abbrev SignedLabel (B N0 : ℕ) := ActualPrimary.Label B N0 × Fin 2
 variable {B N0 : ℕ}
 
 /-- Directions, given by `PrimaryResidualClass.directions (ActualPrimary.commonContext B)`. -/
-noncomputable def directions (B : ℕ) := PrimaryResidualClass.directions
+@[expose] noncomputable def directions (B : ℕ) := PrimaryResidualClass.directions
     (ActualPrimary.commonContext B)
 
 /-- Native point as an element of `Native`. -/
-noncomputable def nativePoint (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
+@[expose] noncomputable def nativePoint (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
     (x : FullPoint) : Native :=
   (ActualPrimary.nativeSlow l.1 (ActualPrimary.toAbsolute n x.1),
     (ActualPrimary.geometry l.2 l.1).coordinates k (ActualPrimary.toAbsolute n x.1).2)
 
 /-- Coefficient scale, constructed using `PhysicalSignedWave.coefficientScale`. -/
-noncomputable def coefficientScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def coefficientScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalSignedWave.coefficientScale (ChartScales.epsilon ActualPrimary.h n)
     (ChartScales.epsilon ActualPrimary.h (BaseChartJets.cellBand l.1))
     (PhysicalParticularWave.velocityWeight ActualPrimary.h (ChartScales.Q n)
       (ChartScales.Q (BaseChartJets.cellBand l.1)))
 
 /-- Normal scale, constructed using `PhysicalParticularWave.normalWeight`. -/
-noncomputable def normalScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
+@[expose] noncomputable def normalScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.normalWeight (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1)) (ChartScales.carrier ActualPrimary.h n)
     (ChartScales.carrier ActualPrimary.h (BaseChartJets.cellBand l.1))
 
 /-- Clock scale, given by `PhysicalParticularWave.clockWeight ActualPrimary.h (ChartScales.Q n)
 (ChartScales.Q (BaseChartJets.cellBand l.1))`. -/
+@[expose]
 noncomputable def clockScale (l : SignedLabel B N0) (n : ℕ) : ℝ :=
   PhysicalParticularWave.clockWeight ActualPrimary.h (ChartScales.Q n)
     (ChartScales.Q (BaseChartJets.cellBand l.1))
 
 /-- Matrix, given by `ActualPrimary.covariance B N0 l.1 (nativePoint l n k x).1`. -/
-noncomputable def matrix (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def matrix (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : SignedWaveUpdate.Mat2 :=
   ActualPrimary.covariance B N0 l.1 (nativePoint l n k x).1
 
 /-- Target, given by `coefficientScale l n ^ 2 • (fun q => PrimaryTargetBounds.actualTarget
 ActualPrimary.modulation (nativePoint l n k x).1 q)`. -/
-noncomputable def target (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def target (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : SignedWaveUpdate.Vec2 :=
   coefficientScale l n ^ 2 •
     (fun q => PrimaryTargetBounds.actualTarget ActualPrimary.modulation (nativePoint l n k x).1 q)
 
 /-- Mask, given by `ActualPrimary.spatialMask l.1 (nativePoint l n k x).1`. -/
-noncomputable def mask (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def mask (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : ℝ := ActualPrimary.spatialMask l.1 (nativePoint l n k x).1
 
 /-- Fundamental, constructed using `PrimaryPulseBounds.normalizedPulse`. -/
-noncomputable def fundamental (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def fundamental (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space :=
   PrimaryPulseBounds.normalizedPulse ((ActualPrimary.phases B N0 l.2).frame l.1)
     ((ActualPrimary.phases B N0 l.2).lam l.1) ((ActualPrimary.phases B N0 l.2).u l.1)
@@ -103,13 +104,13 @@ noncomputable def fundamental (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
         x))
 
 /-- Normal motion as an element of `Space`. -/
-noncomputable def normalMotion (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def normalMotion (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space :=
   (normalScale l n * clockScale l n) • (ActualPrimary.phases B N0 l.2).phase.velocity l.1
     (ActualPrimary.phasePoint l.1 (nativePoint l n k x))
 
 /-- Action, constructed using `clockScale`. -/
-noncomputable def action (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def action (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : Space →L[ℝ] Space :=
   clockScale l n • PrimaryCopyBridge.baseOperator
     ((ActualPrimary.phases B N0 l.2).phase.F l.1 (nativePoint l n k x).1)
@@ -117,13 +118,14 @@ noncomputable def action (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
         k x)))
 
 /-- Cutoff, constructed using `PartitionedCovariance.cutoff`. -/
-noncomputable def cutoff (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
+@[expose] noncomputable def cutoff (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (x : FullPoint) : ℝ :=
   PartitionedCovariance.cutoff ActualPrimary.slots.radius (nativePoint l n k x).2.1 *
     ActualPrimary.gaussian l.1 (nativePoint l n k x)
 
 /-- The literal raw data accepted by the correction stage.  The same
 selected primary frame is used for the matrix, unit pulse, and pressure. -/
+@[expose]
 noncomputable def parameters (l : SignedLabel B N0) : CorrectionStep.PeriodizedSignedParameters
     Point Frequency where
   base := ActualPrimary.chartCoefficients l.2 l.1
@@ -239,6 +241,7 @@ open PhaseJetBounds PrimaryCopyBounds
 abbrev PulseLabel (B N0 : ℕ) := Fin 2 × ActualPrimary.Label B N0
 
 /-- Slow jet domain, bundling `toDomain`, `growth`, `scale_le_growth`. -/
+@[expose]
 noncomputable def slowJetDomain (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.h)) :
     JetDomain (PulseLabel B N0) PhaseCalculus.Slow where
   toDomain := ActualPhaseDefect.reducedSlowDomain U
@@ -361,6 +364,7 @@ noncomputable def nativeUnit (l : PulseLabel B N0) : PhaseCalculus.Slow × ℝ �
     ((ActualPrimary.phases B N0 l.1).L l.2)
 
 /-- Native envelope, constructed using `PrimaryPulseBounds.referenceP`. -/
+@[expose]
 noncomputable def nativeEnvelope (l : PulseLabel B N0) (z : PhaseCalculus.Slow × ℝ) : ℝ :=
   PrimaryPulseBounds.referenceP ((ActualPrimary.phases B N0 l.1).lam l.2)
     ((ActualPrimary.phases B N0 l.1).u l.2) ((ActualPrimary.phases B N0 l.1).L l.2)
@@ -554,6 +558,7 @@ theorem nativePoint_smooth (l : SignedLabel B N0) (n : ℕ) (k : Frequency) :
     ContDiff ℝ ∞ (nativePoint l n k) := ActualPrimaryDynamics.copyPoint_smooth l.2 l.1 n k
 
 /-- Native time, given by `(ActualPrimary.pulseCoordinates l.1 (nativePoint l n k x)).2`. -/
+@[expose]
 noncomputable def nativeTime (l : SignedLabel B N0) (n : ℕ) (k : Frequency) (x : FullPoint) : ℝ :=
   (ActualPrimary.pulseCoordinates l.1 (nativePoint l n k x)).2
 
@@ -612,14 +617,17 @@ theorem cutoff_zero_germ_outside_time (l : SignedLabel B N0) (n : ℕ) (k : Freq
 /-! ## Uniform transport on the actual closed control cells -/
 
 /-- Full strip, given by `ActualPrimaryBounds.fullStrip`. -/
+@[expose]
 noncomputable def fullStrip : StripData FullPoint := ActualPrimaryBounds.fullStrip
 
 /-- Envelope, given by `ActualPrimaryBounds.fullEnvelope (l.2, l.1)`. -/
+@[expose]
 noncomputable def envelope (l : SignedLabel B N0) : ℕ → FullPoint → ℝ :=
   ActualPrimaryBounds.fullEnvelope (l.2, l.1)
 
 /-- Phase cell, given by `{x | x ∈ ActualPrimaryBounds.controlCell n ((l.2, l.1), k) ∧
 nativeTime l n k x ∈ Icc (1 / 10 : ℝ) (9 / 10)}`. -/
+@[expose]
 noncomputable def phaseCell (l : SignedLabel B N0) (n : ℕ) (k : Frequency) : Set FullPoint :=
   {x | x ∈ ActualPrimaryBounds.controlCell n ((l.2, l.1), k) ∧
     nativeTime l n k x ∈ Icc (1 / 10 : ℝ) (9 / 10)}
@@ -724,6 +732,7 @@ theorem matrix_local_jets (r c : Fin 2) :
 
 /-- Slow linear, given by `(ContinuousLinearMap.fst ℝ PhaseCalculus.Slow ℝ).comp
 (ActualPrimaryBounds.slotLinear (l.2, l.1) n)`. -/
+@[expose]
 noncomputable def slowLinear (l : SignedLabel B N0) (n : ℕ) : FullPoint →L[ℝ] PhaseCalculus.Slow :=
   (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow ℝ).comp (ActualPrimaryBounds.slotLinear (l.2, l.1)
       n)
@@ -916,6 +925,7 @@ noncomputable def nativeCovariance (B N0 : ℕ) :
 
 /-- Normalize native, given by `(ContinuousLinearMap.fst ℝ PhaseCalculus.Slow Plane).prod
 (ActualPrimaryBounds.timeProjection L)`. -/
+@[expose]
 noncomputable def normalizeNative (L : ActualPrimary.Label B N0) :
     Native →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (ContinuousLinearMap.fst ℝ PhaseCalculus.Slow Plane).prod
@@ -940,6 +950,7 @@ theorem normalizeNative_norm (L : ActualPrimary.Label B N0) :
 
 /-- Pulse linear, given by `(normalizeNative l.1).comp ((ActualPrimaryBounds.copyLinear (l.2,
 l.1) n).comp ActualPrimaryBounds.nativeOfFull)`. -/
+@[expose]
 noncomputable def pulseLinear (l : SignedLabel B N0) (n : ℕ) :
     FullPoint →L[ℝ] (PhaseCalculus.Slow × ℝ) :=
   (normalizeNative l.1).comp
@@ -1143,6 +1154,7 @@ theorem native_cutoff_jets :
 
 /-- Full copy linear, given by `(ActualPrimaryBounds.copyLinear (l.2, l.1) n).comp
 ActualPrimaryBounds.nativeOfFull`. -/
+@[expose]
 noncomputable def fullCopyLinear (l : SignedLabel B N0) (n : ℕ) : FullPoint →L[ℝ] Native :=
   (ActualPrimaryBounds.copyLinear (l.2, l.1) n).comp ActualPrimaryBounds.nativeOfFull
 

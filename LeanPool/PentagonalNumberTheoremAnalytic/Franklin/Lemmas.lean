@@ -36,7 +36,7 @@ following Franklin's involution argument.
 * `signed_partition_main`: pe(n) - po(n) = (-1)^k for pentagonal n, 0 otherwise
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

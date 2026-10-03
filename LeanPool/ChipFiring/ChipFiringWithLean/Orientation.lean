@@ -34,7 +34,7 @@ The main results are:
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Theorem 4.8.
 -/
 
-@[expose] public section
+public section
 
 namespace ChipFiring
 
@@ -203,7 +203,7 @@ def outdeg (G : CFGraph) (O : CFOrientation G) (v : G.V) : ℕ :=
   Multiset.card (O.directedEdges.filter (fun e => e.fst = v))
 
 /-- A vertex is a source if it has no incoming edges. -/
-def isSource (G : CFGraph) (O : CFOrientation G) (v : G.V) : Prop :=
+@[expose] def isSource (G : CFGraph) (O : CFOrientation G) (v : G.V) : Prop :=
   indeg G O v = 0
 
 /-- The proposition `directedEdge G O u v` holds when there is a directed edge from $u$
@@ -367,7 +367,7 @@ private lemma is_source_of_unique_source {G : CFGraph} (O : CFOrientation G) {q 
 
 /-- The proposition `acyclicWithUniqueSource G O q` means that $\mathcal{O}$ is acyclic
 and every source of $\mathcal{O}$ is equal to $q$. -/
-def acyclicWithUniqueSource (G : CFGraph) (O : CFOrientation G) (q : G.V) : Prop :=
+@[expose] def acyclicWithUniqueSource (G : CFGraph) (O : CFOrientation G) (q : G.V) : Prop :=
   isAcyclic G O ∧ ∀ w, isSource G O w → w = q
 
 /-- In an acyclic orientation with unique source $q$, the vertex $q$ is a source. -/
@@ -412,12 +412,12 @@ See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 4.7.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 4.7,
 part 1; written $D(\mathcal{O})$ there. -/
-def ordiv (G : CFGraph) (O : CFOrientation G) : CFDiv G :=
+@[expose] def ordiv (G : CFGraph) (O : CFOrientation G) : CFDiv G :=
   fun v => indeg G O v - 1
 
 /-- The orientation divisor `ordiv G O` bundled as a $q$-effective divisor, using
 acyclicity to prove $q$-effectivity. -/
-def orqed {G : CFGraph} (O : CFOrientation G) {q : G.V}
+@[expose] def orqed {G : CFGraph} (O : CFOrientation G) {q : G.V}
     (hO : acyclicWithUniqueSource G O q) : qEffDiv G q := {
       D := ordiv G O,
       h_eff := by

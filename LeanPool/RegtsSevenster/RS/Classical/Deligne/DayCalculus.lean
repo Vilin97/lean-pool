@@ -33,7 +33,7 @@ the former preserves colimits pointwise because tensoring in `Type v`
 does, and the latter is a left adjoint.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -49,12 +49,13 @@ variable {D : Type v}
 /-- Evaluation at `d` of the underlying functor, as a `Type`-valued
 functor on `D ⊛⥤ Type v`.  Every corepresentability statement in this
 file corepresents a functor of this shape. -/
-def dayEvaluation [SmallCategory D] [MonoidalCategory D]
+@[expose] def dayEvaluation [SmallCategory D] [MonoidalCategory D]
     (d : D) : (D ⊛⥤ Type v) ⥤ Type v :=
   (equiv D (Type v)).functor ⋙ (evaluation D (Type v)).obj d
 
 /-- The corepresentable Day functor at `c` corepresents evaluation at
 `c`: the Yoneda lemma, read through the `DayFunctor` synonym. -/
+@[expose]
 def coyonedaDayCorepresentableBy [SmallCategory D] [MonoidalCategory D]
     (c : D) :
     (dayEvaluation c).CorepresentableBy
@@ -79,6 +80,7 @@ external product of the two corepresentables, which is definitionally
 the corepresentable of the product category at `(a, b)`, so the Yoneda
 lemma evaluates.  This is the co-Yoneda computation for Day
 convolution. -/
+@[expose]
 def dayCoyonedaCorepresentableBy [SmallCategory D] [MonoidalCategory D]
     (a b : D) :
     (dayEvaluation (a ⊗ b)).CorepresentableBy
@@ -112,6 +114,7 @@ def dayCoyonedaCorepresentableBy [SmallCategory D] [MonoidalCategory D]
 /-- Day convolution of corepresentables: the Day tensor of the
 corepresentable functors at `a` and `b` is the corepresentable functor
 at `a ⊗ b`. -/
+@[expose]
 def dayCoyonedaIso [SmallCategory D] [MonoidalCategory D]
     (a b : D) :
     DayFunctor.mk (coyoneda.obj (Opposite.op a)) ⊗
@@ -124,6 +127,7 @@ def dayCoyonedaIso [SmallCategory D] [MonoidalCategory D]
 determined by an element of `F.functor.obj (𝟙_ D)`, via the universal
 property of the unit as a left Kan extension along
 `fromPUnit (𝟙_ D)`. -/
+@[expose]
 def dayUnitCorepresentableBy [SmallCategory D] [MonoidalCategory D] :
     (dayEvaluation (𝟙_ D)).CorepresentableBy (𝟙_ (D ⊛⥤ Type v)) where
   homEquiv {F} :=
@@ -142,6 +146,7 @@ def dayUnitCorepresentableBy [SmallCategory D] [MonoidalCategory D] :
 variable (D) in
 /-- The Day unit is the corepresentable functor at the monoidal unit of
 `D`. -/
+@[expose]
 def dayUnitIso [SmallCategory D] [MonoidalCategory D] :
     𝟙_ (MonoidalCategory.DayFunctor D (Type v)) ≅
       DayFunctor.mk (coyoneda.obj (Opposite.op (𝟙_ D))) :=
@@ -210,7 +215,7 @@ instance externalRightFunctor_preservesColimits [SmallCategory D]
 
 /-- The Day tensor, on underlying functors, is the left Kan extension
 of the external product along `tensor D`. -/
-@[simps]
+@[expose, simps]
 def tensorObjLanIso [SmallCategory D] [MonoidalCategory D]
     (F G : D ⊛⥤ Type v) :
     (F ⊗ G).functor ≅ (tensor D).lan.obj (F.functor ⊠ G.functor) where

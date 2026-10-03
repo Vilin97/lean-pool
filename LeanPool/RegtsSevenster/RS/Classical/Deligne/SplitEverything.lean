@@ -27,7 +27,7 @@ algebra are the complex numbers, so its Γ-algebra has a complex
 point.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

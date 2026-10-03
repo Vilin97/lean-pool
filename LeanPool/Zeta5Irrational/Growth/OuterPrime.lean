@@ -26,7 +26,7 @@ import Mathlib.Algebra.Order.Floor.Semifield
 For a nonzero class `c`, the number of class members in `(X, Y]` is `SX p Y c - SX p X c`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -93,7 +93,7 @@ lemma card_class_Ioc (hm : 2 * m + 1 = p) {c : Fin (m + 1)} (hc : c ≠ 0) {X Y 
   omega
 
 /-- The per-class outer weight sum `G_q(a, δ)`. -/
-noncomputable def GO (q a d : ℕ) : ℚ :=
+@[expose] noncomputable def GO (q a d : ℕ) : ℚ :=
   ∑ i ∈ range (2 * q + a - 2), min 0 ((i : ℚ) + 3 * d - ((2 * q + a : ℕ) + 4 : ℚ) / 2)
 
 section
@@ -197,17 +197,17 @@ lemma sum_wO_zero : -4 ≤ ∑ i ∈ range (LoC hm n 0), wO hm n 0 i := by
 end
 
 /-- The class-function coefficients of the outer range. -/
-noncomputable def bGO (q : ℕ) (i j : Fin 3) : ℝ :=
+@[expose] noncomputable def bGO (q : ℕ) (i j : Fin 3) : ℝ :=
   bcoef (fun a => bcoef (fun b => (GO q a b : ℝ)) j) i
 
 /-- **The continuous outer function** (in the variable `x = K/p`). -/
-noncomputable def Eout (x : ℝ) : ℝ :=
+@[expose] noncomputable def Eout (x : ℝ) : ℝ :=
   -2 * (37 / 40 * x) * (⌊x⌋₊ : ℝ) + 2 * Jc (37 / 40 * x) -
       2 * ∑ i, ∑ j, bGO ⌊x⌋₊ i j * ccount (Int.fract x) (Int.fract (3 / 40 * x)) i j +
     max 0 (13 / 10 * x - 2)
 
 /-- The additive error of the outer bound. -/
-noncomputable def Cout (n p : ℕ) : ℝ :=
+@[expose] noncomputable def Cout (n p : ℕ) : ℝ :=
   5 * ∑ i, ∑ j, |bGO (40 * n / p) i j| + 11
 
 section

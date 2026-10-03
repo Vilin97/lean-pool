@@ -14,4 +14,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.Coercivity.Step2
 # Lyapunov coercivity estimates
 -/
 
-@[expose] public section
+public section

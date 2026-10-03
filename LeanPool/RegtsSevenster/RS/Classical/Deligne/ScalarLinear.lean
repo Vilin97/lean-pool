@@ -44,7 +44,7 @@ with existing linear structures (and with itself, for two different
 `φ`), so callers install the structure with `letI` at use sites.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -63,6 +63,7 @@ variable {D : Type u}
 /-- The unit endomorphism `φ c`, typed as a morphism rather than as
 an element of the endomorphism ring, so that sums and composites of
 these values elaborate at the hom-set instances. -/
+@[expose]
 def scalarHom [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (φ : ℂ ≃+* End (𝟙_ D)) (c : ℂ) : 𝟙_ D ⟶ 𝟙_ D :=
   φ c
@@ -80,6 +81,7 @@ theorem scalarUnit_map_mul [Category.{v} D] [MonoidalCategory D] [Preadditive D]
 /-- **The scalar `c` as an endomorphism of `X`**: whisker the unit
 endomorphism `φ c` onto `X` and cancel the unit through the left
 unitor. -/
+@[expose]
 def scalarEnd [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (φ : ℂ ≃+* End (𝟙_ D)) (c : ℂ) (X : D) : X ⟶ X :=
   (λ_ X).inv ≫ (scalarHom φ c ▷ X) ≫ (λ_ X).hom
@@ -205,6 +207,7 @@ theorem scalarEnd_zero [Category.{v} D] [MonoidalCategory D] [Preadditive D]
 
 /-- **The scalar action on a hom-set**: whisker the unit
 endomorphism through the left unitor of the source and compose. -/
+@[expose]
 def scalarSmul [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     (φ : ℂ ≃+* End (𝟙_ D)) {X Y : D} (c : ℂ)
     (f : X ⟶ Y) : X ⟶ Y :=
@@ -219,7 +222,7 @@ theorem scalarSmul_eq [Category.{v} D] [MonoidalCategory D] [Preadditive D]
 
 /-- The ℂ-module structure on a hom-set induced by the scalar
 unit. -/
-@[reducible] def scalarModule
+@[expose, reducible] def scalarModule
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D]
     (φ : ℂ ≃+* End (𝟙_ D)) (X Y : D) :
@@ -251,7 +254,7 @@ unit. -/
 `ℂ ≃+* End (𝟙_ D)` makes a preadditive monoidal category ℂ-linear.
 A `def`, not an instance: an unconditional instance would clash with
 every existing linear structure, so callers install it by `letI`. -/
-@[reducible] def linearOfScalarUnit
+@[expose, reducible] def linearOfScalarUnit
     [Category.{v} D] [MonoidalCategory D] [Preadditive D]
     [MonoidalPreadditive D]
     (φ : ℂ ≃+* End (𝟙_ D)) :
@@ -307,6 +310,7 @@ variable {E : Type u'}
 /-- Conjugation by an isomorphism as a ring equivalence of
 endomorphism rings; conjugation preserves the reversed products
 because the connecting isomorphisms cancel in the middle. -/
+@[expose]
 def endCongrRingEquiv [Category.{v'} E] [Preadditive E]
     {X Y : E} (α : X ≅ Y) : End X ≃+* End Y :=
   { α.conj with
@@ -345,6 +349,7 @@ theorem indOf_additive [SmallCategory C] [Preadditive C] [HasFiniteColimits C] :
 /-- Full faithfulness of the embedding on endomorphisms, as a ring
 equivalence; `End`-multiplication is reversed composition on both
 sides, so functoriality preserves it verbatim. -/
+@[expose]
 def indOfEndRingEquiv [SmallCategory C] [Preadditive C] [HasFiniteColimits C]
     (x : C) : End x ≃+* End (indOf.obj x) where
   toFun f := indOf.map f
@@ -360,6 +365,7 @@ def indOfEndRingEquiv [SmallCategory C] [Preadditive C] [HasFiniteColimits C]
 /-- **The scalar unit of `Ind C`**: a ring isomorphism
 `ℂ ≃+* End (𝟙_ C)` transports along the embedding and the unit
 identification to one for `Ind C`. -/
+@[expose]
 def indScalarUnit [SmallCategory C] [MonoidalCategory C] [Preadditive C]
     [HasFiniteColimits C]
     (ψ : ℂ ≃+* End (𝟙_ C)) :

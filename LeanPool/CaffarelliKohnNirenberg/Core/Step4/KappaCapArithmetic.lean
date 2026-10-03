@@ -16,7 +16,7 @@ public import Mathlib.Tactic.NormNum
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -25,14 +25,14 @@ symmetric-group characters is the `frobenius` field of
 `SchurPackage` in `Interfaces/SchurPackage.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The complete homogeneous sequence attached to a sequence of
 power sums, via the Newton recursion
 `(n+1) · h (n+1) = ∑_{i ≤ n} t (i+1) · h (n−i)`; `h 0 = 1`. -/
-noncomputable def newtonH (t : ℕ → ℂ) : ℕ → ℂ
+@[expose] noncomputable def newtonH (t : ℕ → ℂ) : ℕ → ℂ
   | 0 => 1
   | n + 1 =>
       ((n : ℂ) + 1)⁻¹ *
@@ -41,17 +41,19 @@ noncomputable def newtonH (t : ℕ → ℂ) : ℕ → ℂ
 
 /-- Integer-indexed extension of `newtonH`, vanishing in negative
 degrees — the form entering the Jacobi–Trudi determinant. -/
+@[expose]
 noncomputable def newtonHZ (t : ℕ → ℂ) (n : ℤ) : ℂ :=
   if 0 ≤ n then newtonH t n.toNat else 0
 
 /-- The Schur specialization of a row-length list `rows`, defined as
 the Jacobi–Trudi determinant `det (h_{rows i − i + j})_{i,j}`. -/
-noncomputable def schurDet (t : ℕ → ℂ) (rows : List ℕ) : ℂ :=
+@[expose] noncomputable def schurDet (t : ℕ → ℂ) (rows : List ℕ) : ℂ :=
   Matrix.det <| Matrix.of fun i j : Fin rows.length =>
     newtonHZ t ((rows.get i : ℤ) + (j : ℤ) - (i : ℤ))
 
 /-- The Schur specialization of a Young diagram: `schurDet` on its
 row-length list. -/
+@[expose]
 noncomputable def diagramSchur (μ : YoungDiagram) (t : ℕ → ℂ) : ℂ :=
   schurDet t μ.rowLens
 

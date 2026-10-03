@@ -20,7 +20,7 @@ genus-one cycle without adding chips.
 The theorem uses the established `MarkedGraphs` namespace for API compatibility.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkedGraphs
 

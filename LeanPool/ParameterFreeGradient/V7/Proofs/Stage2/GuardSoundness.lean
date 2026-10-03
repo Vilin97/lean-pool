@@ -13,7 +13,7 @@ Cocoercivity guards hold above the true smoothness scale, so failure certifies a
 estimate.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 namespace Stage2

@@ -15,4 +15,4 @@ public import LeanPool.NagataFactoriality.NagataFactoriality.Nagata.Theorem
 Supporting results for Nagata’s factoriality theorem.
 -/
 
-@[expose] public section
+public section

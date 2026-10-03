@@ -37,7 +37,7 @@ The proof proceeds by:
 - Interpolation.lean (piecewise concepts, interpClassFixed)
 -/
 
-@[expose] public section
+public section
 
 universe u
 

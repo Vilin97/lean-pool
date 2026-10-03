@@ -17,7 +17,7 @@ with the inverse.  The resulting `ofMulAction` representation has
 character equal to `colourChar α`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -26,6 +26,7 @@ open Finset Equiv MonoidAlgebra
 
 
 /-- The colour class: colourings with prescribed fibre sizes. -/
+@[expose]
 def colourClass (n : ℕ) {N : ℕ} (α : Fin N → ℕ) : Type :=
   {g : Fin n → Fin N // ∀ j, fibreCard g j = α j}
 

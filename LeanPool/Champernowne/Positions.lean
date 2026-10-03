@@ -21,12 +21,12 @@ two-sided comparison between `b^k · countOccurrences w (champPrefix b n)`
 and `n` with error `O(k)·b^(2k)·b^M`.
 -/
 
-@[expose] public section
+public section
 
 namespace Champernowne
 
 /-- Greatest `N` with `(champBlocks b N).length ≤ n`. -/
-def champIndex (b n : ℕ) : ℕ :=
+@[expose] def champIndex (b n : ℕ) : ℕ :=
   Nat.findGreatest (fun N => (champBlocks b N).length ≤ n) n
 
 theorem length_champBlocks_champIndex_le (b n : ℕ) :

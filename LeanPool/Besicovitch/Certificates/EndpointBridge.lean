@@ -14,7 +14,7 @@ This file transfers the exact polynomial certificate to the natural radical endp
 identifies the constants defined from that endpoint.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

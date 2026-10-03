@@ -17,7 +17,7 @@ the Challenge boundary so the Comparator sees the explicit finite action,
 not only its finite-index stabilizer corollary.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

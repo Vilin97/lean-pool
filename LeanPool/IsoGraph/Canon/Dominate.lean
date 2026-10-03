@@ -29,7 +29,7 @@ dominated by the incumbent, and about moving a subtree along an automorphism.
   `γ w` onto the leaves below the child `w`, so the two children are interchangeable.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
@@ -42,7 +42,7 @@ theorem Beaten.dom {st : St} {k : List (List UInt64)} (h : Beaten st k) : Dom st
 
 /-- The depth to which a returning call guarantees that everything below is dominated:
 the node itself if it finished, the backjump target's child if it was cut short. -/
-def stopDepth (d : Nat) : Option Nat → Nat
+@[expose] def stopDepth (d : Nat) : Option Nat → Nat
   | none => d
   | some j => min (j + 1) d
 

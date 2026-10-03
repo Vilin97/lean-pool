@@ -31,7 +31,7 @@ homotopy invariance of contour integrals.
     zero
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology
 open scoped Real Interval

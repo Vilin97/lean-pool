@@ -24,18 +24,18 @@ For a numerator `A ∈ ℚ[x]` and a finite set `Pl ⊆ ℤ` of poles, `g = A / 
 `partial_fractions` : `A = P Π + ∑_r res_r ∏_{s ≠ r} (x - s)`.
 -/
 
-@[expose] public section
+public section
 
 open Finset Polynomial
 
 namespace Zeta5Irrational
 
 /-- The harmonic index `d(r)`. -/
-def dd (r : ℤ) : ℕ :=
+@[expose] def dd (r : ℤ) : ℕ :=
   if 0 ≤ r then r.toNat else (-r - 1).toNat
 
 /-- The functional `τ_X`. -/
-noncomputable def tauX (A : ℚ[X]) (Pl : Finset ℤ) : ℚ[X] :=
+@[expose] noncomputable def tauX (A : ℚ[X]) (Pl : Finset ℤ) : ℚ[X] :=
   C (tau (polyPart A Pl)) + ∑ r ∈ Pl, C (resP A Pl r) * (C (H5 (dd r)) - X)
 
 

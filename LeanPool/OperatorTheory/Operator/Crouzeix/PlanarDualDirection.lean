@@ -20,7 +20,7 @@ abstract separating hyperplanes be converted to the angle-indexed support
 halfspaces used by the smooth support-curve construction.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 
@@ -40,7 +40,7 @@ theorem realContinuousLinearMap_apply_eq_re_im
 
 /-- The coefficient vector associated with a planar real continuous linear
 functional. -/
-noncomputable def realContinuousLinearMapCoefficient
+@[expose] noncomputable def realContinuousLinearMapCoefficient
     (f : ℂ →L[ℝ] ℝ) : ℂ :=
   ⟨f 1, f I⟩
 

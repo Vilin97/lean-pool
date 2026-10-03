@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! Generated central-inversion checks, group 0. -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

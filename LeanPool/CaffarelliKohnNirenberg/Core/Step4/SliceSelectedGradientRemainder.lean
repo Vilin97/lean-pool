@@ -20,7 +20,7 @@ weak partial derivatives add along an a.e. decomposition of the carrier, and a
 coordinate field obeying a pointwise gradient display is controlled in `L^(6/5)`
 on the half ball. -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology

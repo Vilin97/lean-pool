@@ -61,7 +61,7 @@ object fields must reduce at instance transparency for the
 `show`-retyped colimit proofs below to be stateable.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -79,6 +79,7 @@ section Embedding
 /-- The embedding of `Ind C` into the Day presheaf category: the
 indization equivalence onto the full monoidal subcategory of
 ind-objects, followed by the subcategory inclusion. -/
+@[expose]
 def indToDay [SmallCategory C] [MonoidalCategory C] : Ind C ⥤ (Cᵒᵖ ⊛⥤ Type v) :=
   (indDayEquivalence C).functor ⋙ ObjectProperty.ι _
 
@@ -196,6 +197,7 @@ under `indToDay`, the tensor `indOf.obj x ⊗ indOf.obj y` is the Day
 tensor of the representables at `x` and `y`, which is the
 representable at `x ⊗ y` — that is, the image of
 `indOf.obj (x ⊗ y)`. -/
+@[expose]
 def indToDayTensorIso [SmallCategory C] [MonoidalCategory C]
     (x y : C) :
     (indToDay (C := C)).obj (indOf.obj x ⊗ indOf.obj y) ≅
@@ -212,6 +214,7 @@ def indToDayFullyFaithful [SmallCategory C] [MonoidalCategory C] :
 
 /-- The tensor of two embedded objects of `Ind C` is the embedding
 of the tensor: `indOf` is monoidal up to isomorphism. -/
+@[expose]
 def indOfTensorIso [SmallCategory C] [MonoidalCategory C]
     (x y : C) :
     indOf.obj x ⊗ indOf.obj y ≅ indOf.obj (x ⊗ y) :=
@@ -251,6 +254,7 @@ open scoped CategoryTheory.Prod
 /-- The universal transformation classified by the Day tensor of two
 corepresentables: on a pair of morphisms it takes the tensor,
 `(f, g) ↦ f ⊗ₘ g`. -/
+@[expose]
 def coyonedaTensorHom {D : Type v} [SmallCategory D] [MonoidalCategory D]
     (a b : D) :
     coyoneda.obj (op ((a, b) : D × D)) ⟶
@@ -570,6 +574,7 @@ lemma indOfTensorIso_hom_natural_left [SmallCategory C] [MonoidalCategory C]
 Day unit, identified through `RS.dayUnitIso` with the representable
 at `𝟙_ C` and pulled back through the fully faithful monoidal
 embedding `RS.indToDay`. -/
+@[expose]
 def indOfUnitIso
     [SmallCategory C] [MonoidalCategory C] : (𝟙_ (Ind C)) ≅ indOf.obj (𝟙_ C) :=
   indToDayFullyFaithful.preimageIso
@@ -596,7 +601,7 @@ lemma coconeLeg_w
 
 /-- The pointwise binary coproduct of two diagrams of the same
 shape. -/
-@[reducible, simps]
+@[expose, reducible, simps]
 def coprodDiagram
     {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category.{v₃} ℬ]
     [HasBinaryCoproducts ℬ]
@@ -623,7 +628,7 @@ lemma coprodLeg_w
 /-- The coproduct of two cocones: a cocone over the pointwise
 coproduct diagram, with the coproduct of the two points as its
 point. -/
-@[reducible, simps]
+@[expose, reducible, simps]
 def coprodCocone {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category.{v₃} ℬ]
     [HasBinaryCoproducts ℬ]
     {D₁ D₂ : J ⥤ ℬ} (c₁ : Cocone D₁) (c₂ : Cocone D₂) :
@@ -640,7 +645,7 @@ def coprodCocone {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category
 
 /-- A cocone over the pointwise coproduct, restricted along the
 first inclusion to a cocone over the first diagram. -/
-@[reducible, simps]
+@[expose, reducible, simps]
 def coprodCoconeFst
     {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category.{v₃} ℬ]
     [HasBinaryCoproducts ℬ]
@@ -656,7 +661,7 @@ def coprodCoconeFst
 
 /-- A cocone over the pointwise coproduct, restricted along the
 second inclusion to a cocone over the second diagram. -/
-@[reducible, simps]
+@[expose, reducible, simps]
 def coprodCoconeSnd
     {J : Type v₁} [Category.{v₁} J] {ℬ : Type u₃} [Category.{v₃} ℬ]
     [HasBinaryCoproducts ℬ]
@@ -716,7 +721,7 @@ def isColimitCoprodCocone
       rw [hf, ← hm' j, coprod.inr_map_assoc]
 
 /-- The pointwise binary coproduct of two functors. -/
-@[reducible, simps]
+@[expose, reducible, simps]
 def coprodPairFunctor
     {𝒜 : Type u₂} [Category.{v₂} 𝒜] {ℬ : Type u₃} [Category.{v₃} ℬ]
     [HasBinaryCoproducts ℬ]

@@ -16,7 +16,7 @@ neighbours `f 0 = y, f 1, …, f n` of `x` such that the colour of `x (f (i+1))`
 the edge `x y`.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph Finset
 

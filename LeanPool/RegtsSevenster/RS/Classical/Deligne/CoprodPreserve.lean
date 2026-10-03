@@ -21,7 +21,7 @@ ind-category, which is exact and preserves filtered colimits, and
 must be seen to preserve the coend presentations of §3.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

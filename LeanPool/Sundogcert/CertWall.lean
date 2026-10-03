@@ -51,7 +51,7 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
   `colWeightLb` only — never a claim about the hardness of decoding itself.
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 

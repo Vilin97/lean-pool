@@ -20,7 +20,7 @@ The estimates below adapt the corresponding proofs from that Mathlib revision's
 `MeasureTheory/Measure/Prod.lean` and `MeasureTheory/Integral/Prod.lean`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set
 open scoped ENNReal

@@ -24,7 +24,7 @@ The proof is deliberately stated in terms of reindexing of the prefix domain;
 this is the right form for the later face-map proof.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset

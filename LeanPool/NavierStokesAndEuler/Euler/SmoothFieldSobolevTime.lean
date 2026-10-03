@@ -19,7 +19,7 @@ Sobolev evolution when all spatial L² jets of the field and its prescribed
 time derivative are continuous. The ordinary field is represented by its
 isometric, angle-independent lift to the unit cylinder. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -55,7 +55,7 @@ theorem continuous_sobolev (A : K → SmoothL2Field Space)
 
 /-- Sobolev path, given by `⟨fun t => ordinarySobolev q (A t).toLp (A
 t).translation_contDiff,continuous_sobolev A hA q⟩`. -/
-def sobolevPath (A : K → SmoothL2Field Space)
+@[expose] def sobolevPath (A : K → SmoothL2Field Space)
     (hA : ∀ n, Continuous (fun t => (A t).jetLp n)) (q : ℕ) : C(K,SobolevSpace 1 q) :=
   ⟨fun t => ordinarySobolev q (A t).toLp (A t).translation_contDiff,continuous_sobolev A hA q⟩
 
@@ -68,7 +68,8 @@ theorem restrict_sobolev {p q : ℕ} (h : q ≤ p) (A : SmoothL2Field Space) :
       (ordinarySobolev_value q A.toLp A.translation_contDiff).symm)
 
 /-- Observation, given by `(pointEvaluation 1 x).comp (restrictOperator 1 hq)`. -/
-def observation (q : ℕ) (hq : 3 ≤ q) (x : LiftDomain 1) : SobolevSpace 1 q →L[ℝ] Space :=
+@[expose] def observation (q : ℕ) (hq : 3 ≤ q) (x : LiftDomain 1) :
+    SobolevSpace 1 q →L[ℝ] Space :=
   (pointEvaluation 1 x).comp (restrictOperator 1 hq)
 
 theorem observation_apply (q : ℕ) (hq : 3 ≤ q) (x : LiftDomain 1) (A : SmoothL2Field Space) :

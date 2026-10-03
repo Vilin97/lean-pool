@@ -25,7 +25,7 @@ The arithmetic input for the Mertens partial sums lives in
 * `tailEstimate`
 -/
 
-@[expose] public section
+public section
 
 open scoped ArithmeticFunction BigOperators Topology
 open Filter MeasureTheory

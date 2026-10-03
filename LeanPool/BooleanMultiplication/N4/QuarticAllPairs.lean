@@ -16,7 +16,7 @@ two.  This lets the low--low proof select a nonzero `2 × 2` coefficient
 minor directly, without formalizing a separate `PGL₂(F₂)` action.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -70,11 +70,12 @@ def quarticOtherPairSeparatorTable (i : Fin 288) : Nat :=
 
 /-- Pair zero is `(P₁,P₀)`, pair one `(P₀,P∞)`, and pair two
 `(P₁,P∞)`. -/
+@[expose]
 def quarticSupportPair : Fin 3 → Fin 3 × Fin 3 :=
   ![(1, 0), (0, 2), (1, 2)]
 
 /-- A vector in the two-input support of a chosen rational place. -/
-def quarticSupportVector (theta : Fin 3) (a b : F₂) : LinearForm :=
+@[expose] def quarticSupportVector (theta : Fin 3) (a b : F₂) : LinearForm :=
   a • placeA theta + b • placeB theta
 
 /-- Select a packed separating covector for one of the three rational-place pairs. -/

@@ -18,7 +18,7 @@ The phase, coefficient, cutoff, and chart in this file are the actual
 curl correction and Gaussian term are transported on the whole free lift.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -118,6 +118,7 @@ abbrev Absolute := AbsolutePoint × ℝ
 
 /-- Absolute chart, bundling `toFun`, `invFun`, `left_inv`, `right_inv` and the required
 compatibility proofs. -/
+@[expose]
 noncomputable def absoluteChart (n : ℕ) : ChartPoint ≃L[ℝ] Absolute where
   toFun x := (toAbsolute n x.1, x.2)
   invFun x := (fromAbsolute n x.1, x.2)
@@ -136,19 +137,22 @@ noncomputable def absoluteChart (n : ℕ) : ChartPoint ≃L[ℝ] Absolute where
     (absoluteChart n).symm x = (fromAbsolute n x.1, x.2) := rfl
 
 /-- Absolute radius, given by `x.1.1.1`. -/
+@[expose]
 noncomputable def absoluteRadius (x : Absolute) : ℝ := x.1.1.1
 
 /-- Absolute radial, given by `(((1,(0,0)), RadialPullback.radialJacobian
 (ChartScales.radialExponent h) x.1.1.1 • radialVector), 0)`. -/
+@[expose]
 noncomputable def absoluteRadial (x : Absolute) : Absolute :=
   (((1,(0,0)), RadialPullback.radialJacobian (ChartScales.radialExponent h) x.1.1.1 •
       radialVector), 0)
 
 /-- Absolute axial, given by `(((0,(1,0)),0),0)`. -/
-noncomputable def absoluteAxial (_ : Absolute) : Absolute := (((0,(1,0)),0),0)
+@[expose] noncomputable def absoluteAxial (_ : Absolute) : Absolute := (((0,(1,0)),0),0)
 /-- Absolute angular, given by `(0,1)`. -/
-noncomputable def absoluteAngular (_ : Absolute) : Absolute := (0,1)
+@[expose] noncomputable def absoluteAngular (_ : Absolute) : Absolute := (0,1)
 /-- Absolute fast, given by `(((0,(0,0)),temporalVector),0)`. -/
+@[expose]
 noncomputable def absoluteFast (_ : Absolute) : Absolute := (((0,(0,0)),temporalVector),0)
 
 theorem cover_inverse_radial (i : ℕ) (a : ℝ) :
@@ -256,11 +260,13 @@ theorem absoluteChart_fast (B n : ℕ) (x : ChartPoint) :
 variable {B N0 : ℕ}
 
 /-- Absolute cut amplitude, given by `periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1`. -/
+@[expose]
 noncomputable def absoluteCutAmplitude (j : Fin 2) (L : Label B N0) (x : Absolute) : ComplexVector
     :=
   periodicGaussian j L x.1.2 • absoluteAmplitude j L x.1
 
 /-- Absolute exact amplitude, constructed using `CurlClassBounds.realizedCoefficient`. -/
+@[expose]
 noncomputable def absoluteExactAmplitude (j : Fin 2) (L : Label B N0) : Absolute → ComplexVector :=
   CurlClassBounds.realizedCoefficient 1 absoluteRadius absoluteRadial absoluteAngular absoluteAxial
     (absolutePhase j L) (absoluteCutAmplitude j L)
@@ -455,12 +461,16 @@ theorem piece_excluded_band (U : LocalSignedRequest.SlowRegion (2 * h))
 /-! ## Ordinary regularity before restricting to a bounded strip -/
 
 /-- Positive chart, given by `{x | 0 < x.1.2.1.1}`. -/
+@[expose]
 noncomputable def positiveChart : Set ChartPoint := {x | 0 < x.1.2.1.1}
 /-- Positive radial chart, given by `{x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}`. -/
+@[expose]
 noncomputable def positiveRadialChart : Set ChartPoint := {x | 0 < x.1.1 ∧ 0 < x.1.2.1.1}
 /-- Positive absolute, given by `{x | 0 < x.1.1.2.2}`. -/
+@[expose]
 noncomputable def positiveAbsolute : Set Absolute := {x | 0 < x.1.1.2.2}
 /-- Positive radial absolute, given by `{x | 0 < x.1.1.1 ∧ 0 < x.1.1.2.2}`. -/
+@[expose]
 noncomputable def positiveRadialAbsolute : Set Absolute := {x | 0 < x.1.1.1 ∧ 0 < x.1.1.2.2}
 
 theorem positiveChart_open : IsOpen positiveChart :=
@@ -632,6 +642,7 @@ theorem absoluteVelocity_smooth_radial (j : Fin 2) (L : Label B N0) :
       (contDiffOn_pi.mp (absoluteExactAmplitude_smooth j L) i))
 
 /-- Amplitude radius, given by `PrimaryTargetBounds.profileRadius h (nativeSlow L x.1)`. -/
+@[expose]
 noncomputable def amplitudeRadius (L : Label B N0) (x : Absolute) : ℝ :=
   PrimaryTargetBounds.profileRadius h (nativeSlow L x.1)
 
@@ -951,7 +962,7 @@ theorem realizedCoefficient_translate (w : E) (K : ℝ) {R Φ : E → ℝ}
 end PeriodicCalculus
 
 /-- Chart deck, given by `((0, ((0,0), TorusAverages.latticePoint k)),0)`. -/
-noncomputable def chartDeck (k : TorusInverse.Frequency) : ChartPoint :=
+@[expose] noncomputable def chartDeck (k : TorusInverse.Frequency) : ChartPoint :=
   ((0, ((0,0), TorusAverages.latticePoint k)),0)
 
 theorem native_copy_sum_periodic {E : Type} [NormedAddCommGroup E]
@@ -1421,10 +1432,12 @@ theorem piece_cutAmplitude_tangent (U : LocalSignedRequest.SlowRegion (2 * h))
 
 /-- Chart radius linear, given by `(ContinuousLinearMap.fst ℝ ℝ _).comp (ContinuousLinearMap.fst
 ℝ _ ℝ)`. -/
+@[expose]
 noncomputable def chartRadiusLinear : ChartPoint →L[ℝ] ℝ :=
   (ContinuousLinearMap.fst ℝ ℝ _).comp (ContinuousLinearMap.fst ℝ _ ℝ)
 
 /-- Chart radial curve, constructed using `PhysicalResidualTZ.swapCylinder`. -/
+@[expose]
 noncomputable def chartRadialCurve (n : ℕ) (r : ℝ) : ChartPoint :=
   PhysicalResidualTZ.swapCylinder
     (PhysicalCurlCovariance.ScaledGraph.radialCurve
@@ -1605,6 +1618,7 @@ theorem piece_full_divergence (U : LocalSignedRequest.SlowRegion (2 * h))
     piece_complex_divergence U j L n hx, map_zero]
 
 /-- The absolute free lift evaluated on the actual physical cylindrical graph. -/
+@[expose]
 noncomputable def physicalLift (z : ProblemStatement.SpaceTime) : Absolute :=
   (((z.2 0, (z.2 2, 1-z.1)),
     (z.2 0)^ChartScales.radialExponent h • PhysicalGraphBounds.radialDirection +
@@ -1626,6 +1640,7 @@ theorem absoluteChart_physical (n : ℕ) {z : ProblemStatement.SpaceTime} (hr : 
   ext <;> ring
 
 /-- Physical phase, defined pointwise by `absolutePhase j L (physicalLift z)`. -/
+@[expose]
 noncomputable def physicalPhase (j : Fin 2) (L : Label B N0) : ProblemStatement.SpaceTime → ℝ :=
   fun z => absolutePhase j L (physicalLift z)
 
@@ -1636,11 +1651,13 @@ noncomputable def physicalAmplitude (j : Fin 2) (L : Label B N0) : ProblemStatem
 
 /-- Lifted phase, defined pointwise by `(chartCoefficients j L).phase n
 (PhysicalResidualTZ.swapCylinder x)`. -/
+@[expose]
 noncomputable def liftedPhase (j : Fin 2) (L : Label B N0) (n : ℕ) : ChartPoint → ℝ :=
   fun x => (chartCoefficients j L).phase n (PhysicalResidualTZ.swapCylinder x)
 
 /-- Lifted amplitude, defined pointwise by `((chartCoefficients j L).withCutoff (chartCutoff j
 L)).amplitude n (PhysicalResidualTZ.swapCylinder x)`. -/
+@[expose]
 noncomputable def liftedAmplitude (j : Fin 2) (L : Label B N0) (n : ℕ) : ChartPoint → ComplexVector
     :=
   fun x => ((chartCoefficients j L).withCutoff (chartCutoff j L)).amplitude n
@@ -1733,7 +1750,7 @@ theorem physicalAmplitude_eq (j : Fin 2) (L : Label B N0) (n : ℕ)
   rfl
 
 /-- Physical angular, given by `(0,ProblemStatement.coordinateVector 1)`. -/
-noncomputable def physicalAngular : ProblemStatement.SpaceTime :=
+@[expose] noncomputable def physicalAngular : ProblemStatement.SpaceTime :=
   (0,ProblemStatement.coordinateVector 1)
 
 theorem physicalLift_angular (z : ProblemStatement.SpaceTime) (s : ℝ) :
@@ -1757,6 +1774,7 @@ theorem physicalAmplitude_angular (j : Fin 2) (L : Label B N0) :
 
 /-- Physical potential, given by `PhysicalCurlCovariance.referencePotential 1 (physicalPhase j
 L) (physicalAmplitude j L)`. -/
+@[expose]
 noncomputable def physicalPotential (j : Fin 2) (L : Label B N0) :
     ProblemStatement.SpaceTime → ComplexVector :=
   PhysicalCurlCovariance.referencePotential 1 (physicalPhase j L) (physicalAmplitude j L)
@@ -2009,11 +2027,13 @@ theorem physicalPotential_smooth (j : Fin 2) (L : Label B N0) :
 
 /-- No band index occurs in this Cartesian potential.  The cutoff is the
 original periodic Gaussian, and the polar chart is chosen from its full-turn-compatible values. -/
+@[expose]
 noncomputable def cartesianPotential (j : Fin 2) (L : Label B N0) : ProblemStatement.VelocityField
     :=
   PhysicalCurlCovariance.globalCartesianPotential (physicalAxisRadius L) (physicalPotential j L)
 
 /-- Cartesian velocity, given by `SpatialCurl.spatialCurl (cartesianPotential j L)`. -/
+@[expose]
 noncomputable def cartesianVelocity (j : Fin 2) (L : Label B N0) : ProblemStatement.VelocityField :=
   SpatialCurl.spatialCurl (cartesianPotential j L)
 
@@ -2062,6 +2082,7 @@ theorem piece_cartesian_velocity (U : LocalSignedRequest.SlowRegion (2 * h))
   exact hc
 
 /-- Physical pressure, defined pointwise by `absolutePressureMode j L (physicalLift z)`. -/
+@[expose]
 noncomputable def physicalPressure (j : Fin 2) (L : Label B N0) : ProblemStatement.SpaceTime → ℝ :=
   fun z => absolutePressureMode j L (physicalLift z)
 

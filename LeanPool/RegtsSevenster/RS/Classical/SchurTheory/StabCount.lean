@@ -15,7 +15,7 @@ For `f : Fin n → Fin N`, the number of permutations `π` with `f ∘ π = f`
 equals `∏ j, (fibreCard f j)!`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -39,6 +39,7 @@ def toFibrePerms (f : Fin n → Fin N) (π : Perm (Fin n))
     exact ⟨fun h => key.symm.trans h, fun h => key.trans h⟩
 
 /-- Backward: fibre permutations assemble into a global fixing permutation. -/
+@[expose]
 def ofFibrePerms (f : Fin n → Fin N)
     (σ : ∀ j : Fin N, Perm {i : Fin n // f i = j}) : Perm (Fin n) :=
   (sigmaFiberEquiv f).permCongr (Perm.sigmaCongrRight σ)
@@ -56,6 +57,7 @@ theorem ofFibrePerms_fixes (f : Fin n → Fin N)
 
 /-- The bijection between fixing permutations and families of fibre
 permutations. -/
+@[expose]
 def fixingEquiv (f : Fin n → Fin N) :
     {π : Perm (Fin n) // f ∘ π = f} ≃
     (∀ j : Fin N, Perm {i : Fin n // f i = j}) where

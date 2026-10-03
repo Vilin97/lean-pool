@@ -15,7 +15,7 @@ A diagram extending another by a single cell bumps exactly one row
 length by one; row lengths are monotone in diagram containment.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

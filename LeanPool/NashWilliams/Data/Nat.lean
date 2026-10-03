@@ -12,4 +12,4 @@ import Mathlib.Tactic.SetLike
 
 /-! Strictly monotone enumerations of infinite sets of natural numbers. -/
 
-@[expose] public section
+public section

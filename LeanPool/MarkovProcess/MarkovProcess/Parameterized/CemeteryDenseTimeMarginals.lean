@@ -16,7 +16,7 @@ This file proves a one-time marginal identity.  It makes no simultaneous path-su
 lifetime claim.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

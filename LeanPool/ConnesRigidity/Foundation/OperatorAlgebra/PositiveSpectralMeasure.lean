@@ -36,7 +36,7 @@ import Mathlib.Topology.Order.Hom.Esakia
 The positive spectral measure component of the Connes rigidity formalization.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 
@@ -56,7 +56,7 @@ variable [MeasurableSpace (DiscreteCharacterSpace A)]
 /--
 The `spectralUnitTest` construction used in the Connes rigidity formalization.
 -/
-def spectralUnitTest (A : Type u)
+@[expose] def spectralUnitTest (A : Type u)
     [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A] :
     C_c(DiscreteCharacterSpace A, ℝ) where
   toFun _ := 1
@@ -139,7 +139,7 @@ theorem measure_isProbabilityMeasure
 /--
 The `probabilityMeasure` construction used in the Connes rigidity formalization.
 -/
-def probabilityMeasure
+@[expose] def probabilityMeasure
     (Φ : PositiveSpectralFunctional E V π)
     (x : V) (hx : ‖x‖ = 1) :
     ProbabilityMeasure (DiscreteCharacterSpace A) :=
@@ -573,7 +573,7 @@ theorem character_sub_norm_sq
 /--
 The `spectralFiniteAverageTest` construction used in the Connes rigidity formalization.
 -/
-def spectralFiniteAverageTest
+@[expose] def spectralFiniteAverageTest
     {ι : Type v} (s : Finset ι) (a : ι → A) (w : ι → ℝ) :
     C_c(DiscreteCharacterSpace A, ℝ) where
   toFun χ :=
@@ -913,7 +913,7 @@ variable {V : Type v} [NormedAddCommGroup V]
 /--
 The `spectralOperatorGenerators` construction used in the Connes rigidity formalization.
 -/
-def spectralOperatorGenerators
+@[expose] def spectralOperatorGenerators
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) : Set (V →L[ℂ] V) :=
   Set.range fun a : A ↦
@@ -922,7 +922,7 @@ def spectralOperatorGenerators
 /--
 The `spectralOperatorAlgebra` construction used in the Connes rigidity formalization.
 -/
-def spectralOperatorAlgebra
+@[expose] def spectralOperatorAlgebra
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) : StarSubalgebra ℂ (V →L[ℂ] V) :=
   (StarAlgebra.adjoin ℂ (spectralOperatorGenerators E π)).topologicalClosure
@@ -994,7 +994,7 @@ instance spectralOperatorAlgebraCommCStarAlgebra
 /--
 The `spectralKernelOperator` construction used in the Connes rigidity formalization.
 -/
-def spectralKernelOperator
+@[expose] def spectralKernelOperator
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) (a : A) :
     spectralOperatorAlgebra E π :=
@@ -1064,7 +1064,7 @@ theorem spectralCharacter_generator_mem_circle
 /--
 The `spectralCharacter` construction used in the Connes rigidity formalization.
 -/
-def spectralCharacter
+@[expose] def spectralCharacter
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V)
     (φ : characterSpace ℂ (spectralOperatorAlgebra E π)) :
@@ -1111,7 +1111,7 @@ theorem spectralCharacter_continuous
 /--
 The `spectralCharacterMap` construction used in the Connes rigidity formalization.
 -/
-def spectralCharacterMap
+@[expose] def spectralCharacterMap
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) :
     C(characterSpace ℂ (spectralOperatorAlgebra E π),
@@ -1132,7 +1132,7 @@ def jointFunctionalCalculus
 /--
 The `spectralCharacterEvaluation` construction used in the Connes rigidity formalization.
 -/
-def spectralCharacterEvaluation
+@[expose] def spectralCharacterEvaluation
     (a : A) : C(DiscreteCharacterSpace A, ℂ) :=
   ⟨fun χ ↦ ((χ (Multiplicative.ofAdd a) : Circle) : ℂ),
     continuous_character_evaluation a⟩
@@ -1282,7 +1282,7 @@ theorem dualCharacterAction_mul
 /--
 The `dualCharacterHomeomorph` construction used in the Connes rigidity formalization.
 -/
-def dualCharacterHomeomorph
+@[expose] def dualCharacterHomeomorph
     (action : H →* Multiplicative (AddAut A)) (h : H) :
     DiscreteCharacterSpace A ≃ₜ DiscreteCharacterSpace A where
   toFun := dualCharacterAction action h
@@ -1385,7 +1385,7 @@ variable {V : Type v} [NormedAddCommGroup V]
 /--
 The `quotientOperatorConjugation` construction used in the Connes rigidity formalization.
 -/
-def quotientOperatorConjugation
+@[expose] def quotientOperatorConjugation
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) (h : H) :
     (V →L[ℂ] V) ≃⋆ₐ[ℂ] (V →L[ℂ] V) :=
@@ -1476,7 +1476,7 @@ omit [TopologicalSpace A] [DiscreteTopology A] in
 /--
 The `quotientSpectralOperatorConjugation` construction used in the Connes rigidity formalization.
 -/
-def quotientSpectralOperatorConjugation
+@[expose] def quotientSpectralOperatorConjugation
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G V) (h : H) :
     spectralOperatorAlgebra E π ≃⋆ₐ[ℂ]
@@ -1559,7 +1559,7 @@ theorem spectralCharacter_quotientConjugation
 /--
 The `dualCharacterActionContinuousMap` construction used in the Connes rigidity formalization.
 -/
-def dualCharacterActionContinuousMap
+@[expose] def dualCharacterActionContinuousMap
     (action : H →* Multiplicative (AddAut A)) (h : H) :
     C(DiscreteCharacterSpace A, DiscreteCharacterSpace A) :=
   ⟨dualCharacterAction action h, continuous_dualCharacterAction action h⟩
@@ -1629,7 +1629,7 @@ variable {V : Type v} [NormedAddCommGroup V]
 /--
 The `characterRealComplexification` construction used in the Connes rigidity formalization.
 -/
-def characterRealComplexification
+@[expose] def characterRealComplexification
     (f : C_c(X, ℝ)) : C(X, ℂ) where
   toFun y := (f y : ℂ)
   continuous_toFun := Complex.continuous_ofReal.comp f.continuous
@@ -1659,7 +1659,7 @@ variable [CompactSpace X]
 /--
 The `characterRealSqrt` construction used in the Connes rigidity formalization.
 -/
-def characterRealSqrt (f : C_c(X, ℝ)) : C_c(X, ℝ) where
+@[expose] def characterRealSqrt (f : C_c(X, ℝ)) : C_c(X, ℝ) where
   toFun y := Real.sqrt (f y)
   continuous_toFun := Real.continuous_sqrt.comp f.continuous
   hasCompactSupport' := HasCompactSupport.of_compactSpace _
@@ -1682,7 +1682,7 @@ theorem characterRealComplexification_eq_star_mul_sqrt
 /--
 The `characterVectorFunctionalLinear` construction used in the Connes rigidity formalization.
 -/
-def characterVectorFunctionalLinear
+@[expose] def characterVectorFunctionalLinear
     (calculus : C(X, ℂ) →⋆ₐ[ℂ] (V →L[ℂ] V))
     (x : V) : C_c(X, ℝ) →ₗ[ℝ] ℝ where
   toFun f :=
@@ -1724,7 +1724,7 @@ theorem characterVectorFunctionalLinear_nonneg
 /--
 The `characterVectorFunctional` construction used in the Connes rigidity formalization.
 -/
-def characterVectorFunctional
+@[expose] def characterVectorFunctional
     (calculus : C(X, ℂ) →⋆ₐ[ℂ] (V →L[ℂ] V))
     (x : V) : C_c(X, ℝ) →ₚ[ℝ] ℝ where
   toLinearMap := characterVectorFunctionalLinear calculus x
@@ -1827,7 +1827,7 @@ variable {W : Type v} [NormedAddCommGroup W]
 /--
 The `jointFunctionalCalculusOperator` construction used in the Connes rigidity formalization.
 -/
-def jointFunctionalCalculusOperator
+@[expose] def jointFunctionalCalculusOperator
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G W) :
     C(DiscreteCharacterSpace A, ℂ) →⋆ₐ[ℂ] (W →L[ℂ] W) :=
@@ -1848,7 +1848,7 @@ def jointFunctionalCalculusOperator
 /--
 The `jointCharacterFunctional` construction used in the Connes rigidity formalization.
 -/
-def jointCharacterFunctional
+@[expose] def jointCharacterFunctional
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G W) (x : W) :
     C_c(DiscreteCharacterSpace A, ℝ) →ₚ[ℝ] ℝ :=

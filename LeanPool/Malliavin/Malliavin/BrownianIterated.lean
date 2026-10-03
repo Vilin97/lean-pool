@@ -15,7 +15,7 @@ finite chain of Brownian increments as an element of `L²(P)`.  These terminal v
 required images of ordered-box kernels in `IteratedIntegralFamily.IsBrownian`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal NNReal InnerProductSpace
@@ -123,6 +123,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- A Brownian chain whose endpoints precede `t`, bundled as an `𝓕_t`-measurable `L²` random
 variable. -/
+@[expose]
 noncomputable def adaptedChainIntegralLp
     (hB : IsPreBrownianReal B P) (hsm : ∀ s, StronglyMeasurable (B s))
     {n : ℕ} (u v : Fin n → ℝ≥0) (t : ℝ≥0)
@@ -158,6 +159,7 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- The prefix of an ordered Brownian increment chain, bundled at the starting time of its last
 increment. -/
+@[expose]
 noncomputable def orderedChainPrefixAdapted
     (hB : IsPreBrownianReal B P) (hsm : ∀ s, StronglyMeasurable (B s))
     {n : ℕ} (u v : Fin (n + 1) → ℝ≥0)
@@ -401,6 +403,7 @@ theorem restrictedSimplexMeasure_orderedBox_ne_top {n : ℕ} (a : OrderedBoxInde
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- The indicator of an ordered box in the restricted-simplex kernel space. -/
+@[expose]
 noncomputable def orderedBoxSimplexKernel {n : ℕ} (a : OrderedBoxIndex n) :
     IteratedIntegralConstruction.SimplexKernel n :=
   indicatorConstLp 2 (measurableSet_orderedBox a.u a.v)
@@ -444,6 +447,7 @@ theorem inner_orderedBoxSimplexKernel_eq_chainIntegralLp
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- Formal finite combinations of ordered-box indicators in simplex `L²`. -/
+@[expose]
 noncomputable def orderedBoxToSimplexKernel (n : ℕ) :
     (OrderedBoxIndex n →₀ ℝ) →ₗ[ℝ] IteratedIntegralConstruction.SimplexKernel n :=
   Finsupp.linearCombination ℝ orderedBoxSimplexKernel
@@ -451,6 +455,7 @@ noncomputable def orderedBoxToSimplexKernel (n : ℕ) :
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [BorelSpace W]
     [SecondCountableTopology W] [IsGaussian P] in
 /-- The corresponding formal finite combinations of Brownian chain products. -/
+@[expose]
 noncomputable def orderedBoxToRandom (hB : IsPreBrownianReal B P) (n : ℕ) :
     (OrderedBoxIndex n →₀ ℝ) →ₗ[ℝ] RandomL2 P :=
   Finsupp.linearCombination ℝ fun a ↦ chainIntegralLp hB a.u a.v
@@ -493,6 +498,7 @@ theorem norm_orderedBoxToRandom
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- The deterministic density input needed to complete ordered-box values to the whole simplex. -/
+@[expose]
 def OrderedBoxDense (n : ℕ) : Prop :=
   DenseRange (orderedBoxToSimplexKernel n)
 
@@ -623,7 +629,7 @@ theorem restrictedSimplexMeasure_le (n : ℕ) :
 omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpace W]
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- Restriction of a full product kernel to the strict simplex. -/
-noncomputable def restrictToSimplex (n : ℕ) :
+@[expose] noncomputable def restrictToSimplex (n : ℕ) :
     IteratedKernel n →L[ℝ] IteratedIntegralConstruction.SimplexKernel n :=
   IteratedIntegralConstruction.restrictToSimplex n
 
@@ -667,6 +673,7 @@ theorem norm_restrictToSimplex_le (n : ℕ) (f : IteratedKernel n) :
 omit [CompleteSpace W] [BorelSpace W] in
 /-- The positive-order Brownian integral on full product kernels, obtained by restricting to the
 simplex and applying the completed ordered-box map. -/
+@[expose]
 noncomputable def positiveIntegralCLM (hB : IsPreBrownianReal B P) (n : ℕ) :
     IteratedKernel (n + 1) →L[ℝ] RandomL2 P :=
   (simplexIntegral hB (n + 1)).comp (restrictToSimplex (n + 1))
@@ -731,12 +738,14 @@ omit [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W] [MeasurableSpa
     [BorelSpace W] [SecondCountableTopology W] [IsGaussian P] in
 /-- Density of ordered boxes at every positive order.  This is the sole deterministic analytic
 input to the completed Brownian family below. -/
+@[expose]
 def PositiveOrderedBoxDense : Prop :=
   ∀ n : ℕ, OrderedBoxDense (n + 1)
 
 omit [CompleteSpace W] [BorelSpace W] in
 /-- The completed all-order operator: canonical constants at order zero and Brownian simplex
 integrals at every positive order. -/
+@[expose]
 noncomputable def integralCLM (hB : IsPreBrownianReal B P) :
     (n : ℕ) → IteratedKernel n →L[ℝ] RandomL2 P
   | 0 => iteratedIntegralCLM hB 0
@@ -819,6 +828,7 @@ theorem integralCLM_norm_le
 omit [CompleteSpace W] [BorelSpace W] in
 /-- A completed Brownian iterated-integral family, conditional only on ordered-box density in the
 restricted simplex kernel spaces. -/
+@[expose]
 noncomputable def family
     (hB : IsPreBrownianReal B P) (hsm : ∀ s, StronglyMeasurable (B s))
     (hdense : PositiveOrderedBoxDense) : IteratedIntegralFamily P where

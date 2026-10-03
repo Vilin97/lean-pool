@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransversePacketPressureParity
 
 /-! Support and joint odd parity of the actual high-pressure gradient used in the recursion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

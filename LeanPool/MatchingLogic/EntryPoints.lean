@@ -23,7 +23,7 @@ import Mathlib.Tactic.Finiteness.Attr
 # MatchingLogic.EntryPoints
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

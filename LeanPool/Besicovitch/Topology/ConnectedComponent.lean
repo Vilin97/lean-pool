@@ -15,7 +15,7 @@ A connected component in a compact Hausdorff space has arbitrarily small clopen
 neighborhoods. This is the compact-space separation fact used in the BPC argument.
 -/
 
-@[expose] public section
+public section
 
 open Set
 

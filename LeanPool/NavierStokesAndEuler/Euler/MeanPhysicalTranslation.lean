@@ -23,7 +23,7 @@ bounds. These identities apply to the physical velocity, its actual time
 derivative, and the pressure residual constructed by the strong mean solve.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

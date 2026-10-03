@@ -15,7 +15,7 @@ This file records the exact weighted score and proves that its two second childr
 moved inward until both sibling distances equal the endpoint chord length.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -24,19 +24,22 @@ open Set
 namespace LeanPool.Besicovitch
 
 /-- The coefficient penalizing the first child radii in the weighted score. -/
+@[expose]
 def weightedFirstPenalty (c lambda mu : ℝ) : ℝ :=
   (c - 1) * (lambda / 2 + mu)
 
 /-- The coefficient penalizing the second child radii in the weighted score. -/
+@[expose]
 def weightedSecondPenalty (c lambda mu : ℝ) : ℝ :=
   (c + 1) * lambda / 2 + 3 * c * mu
 
 /-- The constant term in the weighted combination of the three failure slacks. -/
-def weightedConstantTerm (c lambda mu : ℝ) : ℝ :=
+@[expose] def weightedConstantTerm (c lambda mu : ℝ) : ℝ :=
   2 * c * (2 * c - 1) + lambda * (3 * c ^ 2 - 3 * c + 2) / 2 +
     mu * (c ^ 2 - c)
 
 /-- The weighted failure score for two ordered sibling pairs relative to a unit root vector. -/
+@[expose]
 def weightedPairScore {E : Type*} [NormedAddCommGroup E]
     (e : E) (c lambda mu : ℝ) (p₁ p₂ w₁ w₂ : E) : ℝ :=
   (1 + lambda) * ‖e - p₁ - w₁‖ + ‖e - p₂ - w₂‖ +

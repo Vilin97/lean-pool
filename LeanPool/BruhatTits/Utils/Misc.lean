@@ -12,7 +12,7 @@ import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 # LeanPool.BruhatTits.Utils.Misc
 -/
 
-@[expose] public section
+public section
 
 open Module
 
@@ -90,8 +90,7 @@ theorem IsLocalRing.exists_isUnit_of_isUnit_sum {ι R : Type*} [CommRing R] [IsL
   exact (maximalIdeal R).sum_mem h
 
 /-- `Fin (n + 1)` is equivalent to `Fin n ⊕ Unit`. -/
-@[simps]
-def Fin.succEquivUnit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
+@[expose, simps] def Fin.succEquivUnit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
   toFun j := if h : (j : ℕ) < n then Sum.inl ⟨j, h⟩ else Sum.inr ()
   invFun := Sum.elim (fun j ↦ j.castSucc) (fun _ ↦ Fin.last n)
   left_inv j := by

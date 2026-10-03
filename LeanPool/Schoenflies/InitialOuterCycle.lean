@@ -22,7 +22,7 @@ This module supplies its base case for the concrete initial hexagon.
   initial matched cellulation is its six-edge simple cycle.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

@@ -31,7 +31,7 @@ This file constructs no probability law and proves no probabilistic statement; i
 does not claim that the exit time is almost surely finite for any process.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -174,6 +174,7 @@ section WithTopValue
 
 /-- The exit time of a continuous path from `U`, read in `WithTop ℝ≥0`: this is the same value as
 `ContinuousPath.exitTime U`, presented in the type Mathlib's `IsStoppingTime` expects. -/
+@[expose]
 def exitTimeTop (U : Set alpha) (omega : ContinuousPath alpha) : WithTop NNReal :=
   exitTime U omega
 

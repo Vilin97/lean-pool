@@ -17,7 +17,7 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-! Finite sums of genuine Hilbert metric energies, with viscosity and explicit norm comparison. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,16 +30,16 @@ open scoped Topology
 variable {ι H : Type*} [Fintype ι] [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 /-- The square of the Hilbert norm of a finite family. -/
-def familySquaredNorm (v : ι → H) : ℝ := ∑ i, ‖v i‖ ^ 2
+@[expose] def familySquaredNorm (v : ι → H) : ℝ := ∑ i, ‖v i‖ ^ 2
 
 /-- The Hilbert norm of a finite family, expressed without choosing a product-space model. -/
-def familyNorm (v : ι → H) : ℝ := √(familySquaredNorm v)
+@[expose] def familyNorm (v : ι → H) : ℝ := √(familySquaredNorm v)
 
 /-- The actual sum of metric quadratic energies of a finite family. -/
-def familyEnergy (K : H →L[ℝ] H) (v : ι → H) : ℝ := ∑ i, ⟪K (v i), v i⟫_ℝ
+@[expose] def familyEnergy (K : H →L[ℝ] H) (v : ι → H) : ℝ := ∑ i, ⟪K (v i), v i⟫_ℝ
 
 /-- The source's square root of the sum of all base-word metric energies. -/
-def familyMetricNorm (K : H →L[ℝ] H) (v : ι → H) : ℝ := √(familyEnergy K v)
+@[expose] def familyMetricNorm (K : H →L[ℝ] H) (v : ι → H) : ℝ := √(familyEnergy K v)
 
 omit [InnerProductSpace ℝ H] in
 theorem familySquaredNorm_nonneg (v : ι → H) : 0 ≤ familySquaredNorm v :=

@@ -14,7 +14,7 @@ import Mathlib.Tactic.NormNum.GCD
 
 /-! # Soundness of the transposed legal-row pair masks -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon.RawIncidence
 

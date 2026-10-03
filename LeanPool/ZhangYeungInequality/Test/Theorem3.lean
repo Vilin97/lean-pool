@@ -17,7 +17,7 @@ import LeanPool.ZhangYeungInequality.PFR.ForMathlib.Entropy.Basic
 Imported Lean Pool material for `LeanPool.ZhangYeungInequality.Test.Theorem3`.
 -/
 
-@[expose] public section
+public section
 
 namespace ZhangYeungTest
 

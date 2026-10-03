@@ -19,7 +19,7 @@ family of integer relations. Their evaluations measure the discrepancy
 from a function that factors through the original constraint matrix.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Matrix
 

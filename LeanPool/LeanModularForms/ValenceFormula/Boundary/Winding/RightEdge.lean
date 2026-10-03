@@ -25,7 +25,7 @@ Proves `generalizedWindingNumber' (fdBoundaryH H) 0 5 s = -1/2` for points `s`
 on the right vertical edge of the fundamental domain (`s.re = 1/2`, `√3/2 < s.im < H`).
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology CongruenceSubgroup
 open scoped Real Interval UpperHalfPlane ModularForm

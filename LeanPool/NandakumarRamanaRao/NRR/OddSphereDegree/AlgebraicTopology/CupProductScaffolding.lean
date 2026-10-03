@@ -20,7 +20,7 @@ Alexander–Whitney and cup-product modules; the diagonal itself is constructed
 in those later modules rather than in this file.
 -/
 
-@[expose] public section
+public section
 open CategoryTheory MonoidalCategory Limits
 
 namespace SphereOddDegree

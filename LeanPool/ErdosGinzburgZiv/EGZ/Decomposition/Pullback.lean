@@ -19,7 +19,7 @@ can then be rebuilt on their active nodes. This construction permits the
 two-layer face refinement before the subsequent minimalization.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -49,6 +49,7 @@ variable {p d : ℕ} {F : ConvexFlag} {N : Type*}
     [Fintype N] [SemilatticeSup N] [OrderTop N]
 
 /-- Reindex the finite-field representation with the same node map. -/
+@[expose]
 noncomputable def reindex (R : FpRepresentation p d F) (node : N →o F.Node) :
     FpRepresentation p d (F.reindex node) where
   space x := R.space (node x)
@@ -259,6 +260,7 @@ theorem decomposition_card_le (hp : Odd p) :
   (D.rebuildData hp).card_decomposition_le
 
 /-- Every surviving split generator is an old local generator. -/
+@[expose]
 noncomputable def subdivisionMap (hp : Odd p)
     (hsup : ∀ x y, node (x ⊔ y) = node x ⊔ node y) :
     SubdivisionMap Φ (D.decomposition hp) := by

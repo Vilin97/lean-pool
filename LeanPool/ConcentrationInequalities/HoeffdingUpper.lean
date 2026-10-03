@@ -30,7 +30,7 @@ the optimized Chernoff bound.
 Sorry-free and axiom-clean `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Finset
 

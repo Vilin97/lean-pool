@@ -16,7 +16,7 @@ This module proves the stationary and finite-horizon forms of the manuscript's
 master energy inequality.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Dynamics
 
@@ -27,6 +27,7 @@ open scoped BigOperators
 variable {L m : ℕ}
 
 /-- Sum of transport energy and the weighted finest-level rate energy. -/
+@[expose]
 def combinedEnergy (a : ℝ)
     (x : InventoryState (DyadicNode L) m) : ℝ :=
   a ^ 2 / 2 * stateRateEnergy a x L + stateTransportEnergy a x

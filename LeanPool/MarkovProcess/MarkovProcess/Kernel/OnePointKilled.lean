@@ -21,7 +21,7 @@ This file identifies the continuous process of the one-point extension of a posi
 `C₀`-contractive resolvent with the process killed on leaving its live part.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -245,6 +245,7 @@ private instance instCompactSpaceOnePointExhaustion
   infer_instance
 
 /-- The original space is homeomorphic to the live part of its one-point compactification. -/
+@[expose]
 noncomputable def onePointLiveHomeomorph :
     X ≃ₜ Set.range ((↑) : X → OnePoint X) :=
   OnePoint.isOpenEmbedding_coe.isEmbedding.toHomeomorph
@@ -607,6 +608,7 @@ theorem killedKernel_onePointLive_eq_map
   exact and_iff_left ⟨y, rfl⟩
 
 /-- Extend a nonnegative observable on the live space by zero at infinity. -/
+@[expose]
 def onePointLiveExtension (f : X → ℝ≥0∞) : OnePoint X → ℝ≥0∞ :=
   OnePoint.rec 0 f
 

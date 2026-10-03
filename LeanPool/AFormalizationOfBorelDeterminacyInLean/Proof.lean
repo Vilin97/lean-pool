@@ -20,4 +20,4 @@ public import LeanPool.AFormalizationOfBorelDeterminacyInLean.Proof.WinAsap
 Import-only index for the covering and unravelling proof of Borel determinacy.
 -/
 
-@[expose] public section
+public section

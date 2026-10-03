@@ -23,7 +23,7 @@ isomorphisms.  The defining equation on a pair of stages is
 cast-free because the stage inclusions absorb the index transports.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

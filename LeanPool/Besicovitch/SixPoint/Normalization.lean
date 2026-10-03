@@ -13,7 +13,7 @@ public import LeanPool.Besicovitch.SixPoint.Configuration
 This file translates and rescales a configuration for the finite six-point problem.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

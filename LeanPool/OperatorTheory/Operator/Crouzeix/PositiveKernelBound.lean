@@ -48,7 +48,7 @@ Requires `[CompleteSpace E]` for the square root of a positive operator and for 
 Bochner integrals.
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap MeasureTheory
 open scoped InnerProductSpace

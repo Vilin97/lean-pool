@@ -35,7 +35,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.MeasurableSele
 
 /-! ## KRN on the Polish space of probability measures -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter Topology
 open scoped ENNReal

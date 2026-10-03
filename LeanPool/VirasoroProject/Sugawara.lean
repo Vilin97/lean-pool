@@ -61,7 +61,7 @@ Sugawara construction, Virasoro algebra, Heisenberg algebra, bosonic Fock space
 
 -/
 
-@[expose] public section
+public section
 
 namespace VirasoroProject
 
@@ -247,7 +247,7 @@ lemma heiPairNO_trunc_cofinite_sub (n : ℤ) (v : V) :
 open Topology
 
 /-- The basic bosonic Sugawara generators (an auxiliary definition). -/
-noncomputable def sugawaraGenAux (n : ℤ) (v : V) : V :=
+@[expose] noncomputable def sugawaraGenAux (n : ℤ) (v : V) : V :=
   (2 : 𝕜)⁻¹ • ∑ᶠ k, pairNO heiOper (n-k) k v
 
 omit heiTrunc in
@@ -283,7 +283,7 @@ lemma sugawaraGenAux_smul (n : ℤ) (c : 𝕜) (v : V) :
   simp [sugawaraGenAux_def, map_smul, smul_finsum, smul_comm c]
 
 /-- The basic bosonic Sugawara generators (as linear operators). -/
-noncomputable def sugawaraGen (n : ℤ) : V →ₗ[𝕜] V where
+@[expose] noncomputable def sugawaraGen (n : ℤ) : V →ₗ[𝕜] V where
   toFun := sugawaraGenAux heiOper n
   map_add' v w := sugawaraGenAux_add heiTrunc n v w
   map_smul' c v := sugawaraGenAux_smul heiOper n c v
@@ -682,7 +682,7 @@ section representation
 /-- Construct a representation of Virasoro algebra from a central charge value `c` and a
 collection `(Lₙ)`, `n ∈ ℤ`, of operators satisfying the commutation relations of Virasoro
 generators with that central charge. -/
-noncomputable def _root_.VirasoroProject.VirasoroAlgebra.representationOfCentralChargeOfL
+@[expose] noncomputable def _root_.VirasoroProject.VirasoroAlgebra.representationOfCentralChargeOfL
     {𝕂 : Type*} [Field 𝕂] [CharZero 𝕂]
     {V : Type*} [AddCommGroup V] [Module 𝕂 V] (c : 𝕂) {lOper : ℤ → (V →ₗ[𝕂] V)}
     (lComm : ∀ n m, (lOper n).commutator (lOper m)
@@ -747,7 +747,7 @@ variable {heiOper} in
 On a vector space with a representation of the Heisenberg algebra that acts locally truncatedly,
 we get a representation of the Virasoro algebra with central charge 1 by the Sugawara
 construction. -/
-noncomputable def _root_.VirasoroProject.sugawaraRepresentation [CharZero 𝕜] :
+@[expose] noncomputable def _root_.VirasoroProject.sugawaraRepresentation [CharZero 𝕜] :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆ (V →ₗ[𝕜] V) := by
   apply VirasoroAlgebra.representationOfCentralChargeOfL 1 (lOper := sugawaraGen heiTrunc)
   intro n m

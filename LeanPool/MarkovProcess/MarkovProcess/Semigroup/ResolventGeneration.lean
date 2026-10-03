@@ -33,7 +33,7 @@ Nothing is asserted about resolvents that do not come from a semigroup; for thos
 generation theorem of `Semigroup/Generation.lean` is the statement.
 -/
 
-@[expose] public section
+public section
 
 open scoped NNReal
 

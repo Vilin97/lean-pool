@@ -17,7 +17,7 @@ setting all ranks here are finite, so their equations are natural-rank equations
 The pinned matroid API has no connectedness, hyperplane or modular-cut predicate.
 -/
 
-@[expose] public section
+public section
 
 namespace TutteFormalization
 
@@ -25,22 +25,22 @@ variable {α : Type*}
 
 /-- `def:matroid-operations`: no partition into two nonempty additive-rank parts.
 In particular, no nonemptiness of the ground set is required. -/
-def Connected (M : Matroid α) : Prop :=
+@[expose] def Connected (M : Matroid α) : Prop :=
   ¬ ∃ A B : Set α, A.Nonempty ∧ B.Nonempty ∧ Disjoint A B ∧
     A ∪ B = M.E ∧ M.eRk A + M.eRk B = M.eRk M.E
 
 /-- `def:matroid`: a maximal proper flat. Ground containment follows from `IsFlat`. -/
-def IsHyperplane (M : Matroid α) (H : Set α) : Prop :=
+@[expose] def IsHyperplane (M : Matroid α) (H : Set α) : Prop :=
   M.IsFlat H ∧ H ≠ M.E ∧
     ∀ G : Set α, M.IsFlat G → H ⊆ G → G = H ∨ G = M.E
 
 /-- `def:indecomposable`: flatness and source connectedness of the contraction. -/
-def Indecomposable (M : Matroid α) (F : Set α) : Prop :=
+@[expose] def Indecomposable (M : Matroid α) (F : Set α) : Prop :=
   M.IsFlat F ∧ Connected (M.contract F)
 
 /-- `def:modular-cut`: a pair of flats satisfying the modular rank equality.
 Their join is the Mathlib closure of their union. -/
-def ModularPair (M : Matroid α) (F G : Set α) : Prop :=
+@[expose] def ModularPair (M : Matroid α) (F G : Set α) : Prop :=
   M.IsFlat F ∧ M.IsFlat G ∧
     M.eRk F + M.eRk G = M.eRk (F ∩ G) + M.eRk (M.closure (F ∪ G))
 
@@ -53,12 +53,12 @@ structure ModularCut (M : Matroid α) (Γ : Set (Set α)) : Prop where
 
 /-- A corank-two flat: for finite ground set, this rank equation says
 `rk(M.E) - rk(F) = 2`, without truncated subtraction or conversion from `ℕ∞`. -/
-def CorankTwo (M : Matroid α) (F : Set α) : Prop :=
+@[expose] def CorankTwo (M : Matroid α) (F : Set α) : Prop :=
   M.IsFlat F ∧ M.eRk F + 2 = M.eRk M.E
 
 /-- `def:tutte-path`: the condition on two consecutive vertices.
 Hyperplane conditions are imposed on every vertex by `TuttePath`. -/
-def TutteAdjacent (M : Matroid α) (H K : Set α) : Prop :=
+@[expose] def TutteAdjacent (M : Matroid α) (H K : Set α) : Prop :=
   H ≠ K ∧ Indecomposable M (H ∩ K) ∧ CorankTwo M (H ∩ K)
 
 /-- `def:tutte-path`: `length` counts edges, and there are `length + 1` vertices.
@@ -77,16 +77,16 @@ namespace TuttePath
 variable {M : Matroid α}
 
 /-- The first vertex. -/
-def origin (p : TuttePath M) : Set α := p.vertex 0
+@[expose] def origin (p : TuttePath M) : Set α := p.vertex 0
 
 /-- The last vertex. -/
-def terminus (p : TuttePath M) : Set α := p.vertex (Fin.last p.length)
+@[expose] def terminus (p : TuttePath M) : Set α := p.vertex (Fin.last p.length)
 
 /-- Every vertex contains `F`; this does not assert that `F` is the carrier. -/
-def On (p : TuttePath M) (F : Set α) : Prop := ∀ i, F ⊆ p.vertex i
+@[expose] def On (p : TuttePath M) (F : Set α) : Prop := ∀ i, F ⊆ p.vertex i
 
 /-- Every vertex lies outside the cut. -/
-def Off (p : TuttePath M) (Γ : Set (Set α)) : Prop := ∀ i, p.vertex i ∉ Γ
+@[expose] def Off (p : TuttePath M) (Γ : Set (Set α)) : Prop := ∀ i, p.vertex i ∉ Γ
 
 /-- The carrier from `def:tutte-path`. The index type is always nonempty. -/
 def carrier (p : TuttePath M) : Set α := ⋂ i, p.vertex i

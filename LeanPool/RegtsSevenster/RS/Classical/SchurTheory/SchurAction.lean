@@ -18,7 +18,7 @@ image of a class-function element under a representation commutes
 with the action, so it acts as a scalar on every irreducible.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -27,6 +27,7 @@ open Finset LinearMap
 variable {G V : Type*}
 
 /-- Irreducibility, spelled invariant-submodule-theoretically. -/
+@[expose]
 def IsIrredRep [Group G] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ G V) : Prop :=
   Nontrivial V ∧

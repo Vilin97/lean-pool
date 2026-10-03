@@ -19,7 +19,7 @@ degree-one twist determines a unique inversion crossing the corresponding
 row and column of the transmission permutation.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 
@@ -30,12 +30,14 @@ coordinate in the fundamental period.  The proof of Lemma 4.10 sums the
 inversion rows in precisely this normalization.  We retain the original
 `kInversions` definition (which normalizes the first coordinate) for the
 public K-general-transmission contract. -/
+@[expose]
 def kInversionsBySecond (k : ℕ) (τ : ℤ → ℤ) : Set (ℤ × ℤ) :=
   {p | p.1 < p.2 ∧ τ p.1 > τ p.2 ∧ 0 ≤ p.2 ∧ p.2 < k}
 
 /-- The effective degree-one members of the finite torsion orbit of `D`.
 This is the concrete `Fin k` model for the paper's set of effective classes
 in `T_D^1`. -/
+@[expose]
 def effectiveDegreeOneTwistResidues
     (M : TwiceMarked) (D : CFDiv M.graph) (k : ℕ) : Set (Fin k) :=
   {b | 0 ≤ rank M.graph (degreeTwistInt M D 1 b.val)}

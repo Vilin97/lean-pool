@@ -18,7 +18,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 All of the left and right partial interpolation proofs, split apart based on rule application. These
 are split apart since otherwise the file runs very slow. -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 
@@ -30,7 +30,7 @@ private abbrev encodeVar_mem_elems {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 
 
 /-- Given a node `x`, defines what the root of the left interpolation proof should look like,
     i.e. `f(x)ˡ ∣ ιₓ` in on paper work. -/
-noncomputable def leftInterpolantSequent {𝕏 : Split.Proof} [fin_X : Fintype 𝕏.X]
+@[expose] noncomputable def leftInterpolantSequent {𝕏 : Split.Proof} [fin_X : Fintype 𝕏.X]
     (x : 𝕏.X) : SplitSequent :=
   {Sum.inr (interpolant 𝕏 (at (encodeVar x)))} ∪
     SplitSequent.filterLeft (f (r 𝕏.α x))
@@ -45,7 +45,7 @@ noncomputable def leftEquationSequent {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
 
 /-- Given a node `x`, defines what the root of the right interpolation proof should look like,
     i.e. `~ιₓ ∣ f(x)ʳ ` in on paper work. -/
-noncomputable def rightInterpolantSequent {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
+@[expose] noncomputable def rightInterpolantSequent {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
     (x : 𝕏.X) : SplitSequent :=
   {Sum.inl (~ (interpolant 𝕏 (at (encodeVar x))))} ∪
     SplitSequent.filterRight (f (r 𝕏.α x))

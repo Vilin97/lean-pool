@@ -24,7 +24,7 @@ bases, is obtained separately by transport along the linear isometry to
 `EuclideanSpace ℂ (m × m)`.)
 -/
 
-@[expose] public section
+public section
 
 namespace QuantumAlg
 
@@ -35,7 +35,7 @@ variable {m : Type*} [Fintype m]
 
 /-- The Hilbert–Schmidt (Frobenius) inner product `⟪A, B⟫ = Tr[Aᴴ B]`. Conjugate-linear
 in the first argument, linear in the second. -/
-def hsInner (A B : Matrix m m ℂ) : ℂ := (Aᴴ * B).trace
+@[expose] def hsInner (A B : Matrix m m ℂ) : ℂ := (Aᴴ * B).trace
 
 @[simp] theorem hsInner_def (A B : Matrix m m ℂ) : hsInner A B = (Aᴴ * B).trace := rfl
 

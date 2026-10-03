@@ -12,7 +12,7 @@ public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
 The common coefficient API used by both the Hilbert and Krull-dimension base-change proofs.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

@@ -19,7 +19,7 @@ one-parameter unitary group is self-adjoint, via the group's unitarity and
 the fundamental theorem of calculus for the difference quotient.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

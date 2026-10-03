@@ -21,7 +21,7 @@ public import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 Supporting results for bicausal optimal transport and measurable selection.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Set ENNReal
 

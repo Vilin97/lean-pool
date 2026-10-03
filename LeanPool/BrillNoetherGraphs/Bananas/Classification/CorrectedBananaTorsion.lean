@@ -20,7 +20,7 @@ midpoint strands need only have length two; the other may have any even
 length.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

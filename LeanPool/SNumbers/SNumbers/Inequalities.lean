@@ -110,7 +110,7 @@ admissible `(A, B)` yields `hₙ(S) ≤ sₙ(S)`.
   `aₙ ≤ (1+√n)·cₙ` estimate from [Pie87, 2.10.2].
 -/
 
-@[expose] public section
+public section
 
 universe u
 

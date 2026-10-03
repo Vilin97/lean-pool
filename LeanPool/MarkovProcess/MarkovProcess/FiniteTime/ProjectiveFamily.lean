@@ -17,7 +17,7 @@ This file reindexes the ordered finite-time kernels by finite sets of times and 
 Mathlib-native projectivity. It does not assert or construct a projective-limit measure.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 
@@ -27,10 +27,12 @@ namespace SubMarkovKernelSemigroup
 variable {α : Type*} [MeasurableSpace α]
 
 /-- The increasing enumeration of a finite set of nonnegative times. -/
+@[expose]
 noncomputable def finiteSetTimes (I : Finset NNReal) : FiniteOrderedTimes I.card :=
   I.orderEmbOfFin rfl
 
 /-- Reindex an ordered coordinate path by its finite set of times. -/
+@[expose]
 noncomputable def orderedPathToFiniteSet (I : Finset NNReal) (path : Fin I.card → α) : I → α :=
   fun t ↦ path ((I.orderIsoOfFin rfl).symm t)
 

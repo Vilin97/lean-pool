@@ -18,7 +18,7 @@ unequal mass cannot satisfy the hypothesis.
 This is generic measure-theoretic infrastructure and requires no topology.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

@@ -29,7 +29,7 @@ and `b = 1` with the periodicity `τ(n + 2) = τ(n) + 2` to bound the
 `2`-inversion count.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

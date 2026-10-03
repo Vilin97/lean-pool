@@ -17,7 +17,7 @@ space used in `ProblemStatement`. In particular, mixed-partial symmetry is
 proved from C² regularity, rather than assumed for formal derivative symbols.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -32,7 +32,7 @@ def derivativeEntry (i j : Fin 3) : (Space →L[ℝ] Space) →L[ℝ] ℝ :=
   (EuclideanSpace.proj j).comp (ContinuousLinearMap.apply ℝ Space (coordinateVector i))
 
 @[simp] theorem derivativeEntry_apply (i j : Fin 3) (L : Space →L[ℝ] Space) :
-    derivativeEntry i j L = (L (coordinateVector i)) j := rfl
+    derivativeEntry i j L = (L (coordinateVector i)) j := by rfl
 
 /-- The usual antisymmetric part of a Jacobian, identified with a vector. -/
 def curlLinear : (Space →L[ℝ] Space) →L[ℝ] Space :=
@@ -53,10 +53,10 @@ def curlLinear : (Space →L[ℝ] Space) →L[ℝ] Space :=
   simp [curlLinear, coordinateVector]
 
 /-- Curl of a potential on physical Euclidean three-space. -/
-def curl (A : Space → Space) (x : Space) : Space := curlLinear (fderiv ℝ A x)
+@[expose] def curl (A : Space → Space) (x : Space) : Space := curlLinear (fderiv ℝ A x)
 
 /-- Curl taken only in space, with the physical time held fixed. -/
-def spatialCurl (A : VelocityField) : VelocityField :=
+@[expose] def spatialCurl (A : VelocityField) : VelocityField :=
   fun z => curl (fun y => A (z.1, y)) z.2
 
 /-- Actual mixed-partial symmetry, obtained from Schwarz's theorem. -/

@@ -17,7 +17,7 @@ pair contents with those margins: Fubini, the pair stabilizer
 count, content grouping, and orbit–stabilizer.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

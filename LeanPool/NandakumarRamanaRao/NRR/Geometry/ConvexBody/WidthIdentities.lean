@@ -38,7 +38,7 @@ No structure internals or `sSup` are unfolded here.
 pull in `import Mathlib`, so no extra imports are required here.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR.Geometry
 

@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Group.Defs
 # LeanPool.Duality.Common
 -/
 
-@[expose] public section
+public section
 
 section finset_sums
 variable {α β : Type*}

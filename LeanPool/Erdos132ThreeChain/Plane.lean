@@ -30,13 +30,13 @@ identity in the coordinates of the points involved, so each is proved by `ring`.
   with `sq_nonneg_combo` it supplies the five-point obstruction.
 -/
 
-@[expose] public section
+public section
 
 namespace Erdos132ThreeChain
 
 /-- Twice the signed area of the triangle `p q r`; equivalently the two-dimensional cross
 product of `q - p` and `r - p`. -/
-def cross (p q r : Point) : ℝ := (q.1 - p.1) * (r.2 - p.2) - (r.1 - p.1) * (q.2 - p.2)
+@[expose] def cross (p q r : Point) : ℝ := (q.1 - p.1) * (r.2 - p.2) - (r.1 - p.1) * (q.2 - p.2)
 
 /-- Heron's formula in squared-distance form: the Cayley--Menger expression of a triangle is
 four times the square of its doubled signed area. -/
@@ -52,7 +52,7 @@ theorem sq_le_four_mul (p q r : Point) :
   nlinarith [sq_nonneg (cross p q r)]
 
 /-- The inner product of `p - o` and `q - o`. -/
-def dotp (o p q : Point) : ℝ := (p.1 - o.1) * (q.1 - o.1) + (p.2 - o.2) * (q.2 - o.2)
+@[expose] def dotp (o p q : Point) : ℝ := (p.1 - o.1) * (q.1 - o.1) + (p.2 - o.2) * (q.2 - o.2)
 
 theorem dotp_self (o p : Point) : dotp o p p = sqDist p o := by
   simp only [dotp, sqDist]; ring
@@ -63,7 +63,7 @@ theorem two_mul_dotp (o p q : Point) :
 
 /-- The determinant of the doubled Gram matrix of `b - a`, `c - a`, `d - a`, written in the six
 squared distances of `a`, `b`, `c`, `d`. -/
-def gramDet (dab dac dad dbc dbd dcd : ℝ) : ℝ :=
+@[expose] def gramDet (dab dac dad dbc dbd dcd : ℝ) : ℝ :=
   2 * dab * (2 * dac * (2 * dad) - (dac + dad - dcd) ^ 2)
     - (dab + dac - dbc) * ((dab + dac - dbc) * (2 * dad)
         - (dac + dad - dcd) * (dab + dad - dbd))

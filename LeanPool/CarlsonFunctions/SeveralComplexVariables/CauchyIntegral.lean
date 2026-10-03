@@ -14,7 +14,7 @@ The vector-valued iterated Cauchy formula assumes continuity and coordinatewise 
 on the closed polydisc. It does not depend on the several-variable Osgood theorem.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Function MeasureTheory Metric Set
 open scoped ENNReal NNReal Real Topology

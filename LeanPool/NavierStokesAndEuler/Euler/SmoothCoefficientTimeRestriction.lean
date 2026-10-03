@@ -21,7 +21,7 @@ when a source field is restricted to a history interval or shifted to a
 forward interval.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -53,14 +53,14 @@ local instance instSmoothCoefficientTimeRestriction4 (n : ℕ) : NormedSpace ℝ
 namespace SmoothCoefficientPath
 
 /-- Actual time precomposition, including every spatial jet. -/
-def comp (A : SmoothCoefficientPath K V) (φ : C(L, K)) : SmoothCoefficientPath L V where
+@[expose] def comp (A : SmoothCoefficientPath K V) (φ : C(L, K)) : SmoothCoefficientPath L V where
   field := A.field.comp φ
   smooth t := A.smooth (φ t)
   jet n := (A.jet n).comp φ
   jet_eq n t x := A.jet_eq n (φ t) x
 
 @[simp] theorem comp_apply (A : SmoothCoefficientPath K V) (φ : C(L, K)) (t : L) (x : Space) :
-    (A.comp φ).field t x = A.field (φ t) x := rfl
+    (A.comp φ).field t x = A.field (φ t) x := by rfl
 
 theorem comp_norm_le (A : SmoothCoefficientPath K V) (φ : C(L, K)) :
     ‖(A.comp φ).field‖ ≤ ‖A.field‖ := by
@@ -76,7 +76,7 @@ theorem comp_jet_norm_le (A : SmoothCoefficientPath K V) (φ : C(L, K)) (n : ℕ
 
 theorem comp_translation (A : SmoothCoefficientPath K V) (φ : C(L, K)) (a : Space) :
     translateCoefficientPath (A.comp φ).field a =
-      (translateCoefficientPath A.field a).comp φ := rfl
+      (translateCoefficientPath A.field a).comp φ := by rfl
 
 /-- A continuous change of time parameter preserves each literal spatial
 derivative bound with exactly the same constant. -/
@@ -107,22 +107,23 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Initial inclusion, given by `⟨fun t => ⟨t,t.property.1,t.property.2.trans hτS⟩,
 continuous_subtype_val.subtype_mk _⟩`. -/
-def initialInclusion (S τ : ℝ) (hτS : τ ≤ S) : C(Icc (0 : ℝ) τ,Icc (0 : ℝ) S) :=
+@[expose] def initialInclusion (S τ : ℝ) (hτS : τ ≤ S) : C(Icc (0 : ℝ) τ,Icc (0 : ℝ) S) :=
   ⟨fun t => ⟨t,t.property.1,t.property.2.trans hτS⟩,
     continuous_subtype_val.subtype_mk _⟩
 
 /-- Tail inclusion, given by `⟨fun t => ⟨τ+t,add_nonneg hτ t.property.1,by linarith
 [t.property.2]⟩, (continuous_const.add continuous_subtype_val).subtype_mk _⟩`. -/
-def tailInclusion (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) (S-τ),Icc (0 : ℝ) S) :=
+@[expose] def tailInclusion (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) (S-τ),Icc (0 : ℝ) S) :=
   ⟨fun t => ⟨τ+t,add_nonneg hτ t.property.1,by linarith [t.property.2]⟩,
     (continuous_const.add continuous_subtype_val).subtype_mk _⟩
 
 /-- Initial path, given by `ContinuousMap.compCLM ℝ V (initialInclusion S τ hτS)`. -/
-def initialPath (S τ : ℝ) (hτS : τ ≤ S) : C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) τ,V) :=
+@[expose] def initialPath (S τ : ℝ) (hτS : τ ≤ S) :
+    C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) τ,V) :=
   ContinuousMap.compCLM ℝ V (initialInclusion S τ hτS)
 
 /-- Tail path, given by `ContinuousMap.compCLM ℝ V (tailInclusion S τ hτ)`. -/
-def tailPath (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) (S-τ),V) :=
+@[expose] def tailPath (S τ : ℝ) (hτ : 0 ≤ τ) : C(Icc (0 : ℝ) S,V) →L[ℝ] C(Icc (0 : ℝ) (S-τ),V) :=
   ContinuousMap.compCLM ℝ V (tailInclusion S τ hτ)
 
 theorem initialPath_norm (S τ : ℝ) (hτS : τ ≤ S) : ‖initialPath (V := V) S τ hτS‖ ≤ 1 := by

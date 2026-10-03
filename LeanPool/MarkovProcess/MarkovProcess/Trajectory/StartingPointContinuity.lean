@@ -43,7 +43,7 @@ space; that needs tightness on path space itself, which is not proved here.  No 
 a stopping time that can be infinite.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

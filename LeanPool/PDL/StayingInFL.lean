@@ -22,7 +22,7 @@ However, this does *not* mean that `L'` must be in the FL of `L`, because the `O
 contribute to the left part. This makes `Sequent.subseteqFL` tricky to define.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -32,7 +32,7 @@ Note that by component we mean left and right (and not L, R, O).
 WORRY: Is using Sequent.O.L here a problem because it might not be injective?
 (Because it calls `unload` where both ⌊a⌋⌊b⌋p and ⌊a⌋⌈b⌉p become ⌈a⌉⌈b⌉p.)
 -/
-def Sequent.subseteqFL (X : Sequent) (Y : Sequent) : Prop :=
+@[expose] def Sequent.subseteqFL (X : Sequent) (Y : Sequent) : Prop :=
       X.L   ⊆ (Y.L ∪ Y.O.L).FL
     ∧ X.O.L ⊆ (Y.L ∪ Y.O.L).FL
     ∧ X.R   ⊆ (Y.R ∪ Y.O.R).FL

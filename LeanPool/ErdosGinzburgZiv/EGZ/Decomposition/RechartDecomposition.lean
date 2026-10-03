@@ -20,7 +20,7 @@ face. All weights and lifted masses are preserved, and the new decomposition
 has minimal ambient affine spaces and integer lattices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

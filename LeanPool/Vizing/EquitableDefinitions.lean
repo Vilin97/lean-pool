@@ -19,7 +19,7 @@ the termination argument for Kempe recolouring. An equitable colouring also
 has every class bounded by the ceiling of the average size.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Vizing.EquitableDefinitions
 
@@ -29,11 +29,13 @@ variable {V Color : Type*} [DecidableEq V]
   [Fintype Color] [DecidableEq Color]
 
 /-- All literal colour classes differ in cardinality by at most one. -/
+@[expose]
 def IsEquitable (E : Finset (Sym2 V)) (colour : Sym2 V → Color) : Prop :=
   ∀ a b : Color,
     (colourClass E colour a).card ≤ (colourClass E colour b).card + 1
 
 /-- The square-energy used by alternating-component descent. -/
+@[expose]
 def energy (E : Finset (Sym2 V)) (colour : Sym2 V → Color) : ℕ :=
   ∑ a : Color, (colourClass E colour a).card ^ 2
 

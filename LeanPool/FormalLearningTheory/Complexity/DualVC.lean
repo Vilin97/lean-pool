@@ -28,7 +28,7 @@ on the domain `↥C` where each point `x : X` induces a concept `c ↦ c x`.
 * `dual_vcdim_le_pow`  -  Assouad's bound: `VCDim*(C) ≤ 2^(VCDim(C)+1) - 1`
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

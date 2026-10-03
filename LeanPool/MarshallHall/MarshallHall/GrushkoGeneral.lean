@@ -26,7 +26,7 @@ Grushko-specific step is to reduce an arbitrary generating tuple to this
 separated form without increasing its length.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -93,6 +93,7 @@ theorem rank_coprod_le_add [Group.FG G] [Group.FG H] :
 /-! ### The lower bound for separated generating tuples -/
 
 /-- The natural embedding of a tagged factor element into the free product. -/
+@[expose]
 def separatedMap : Sum G H → G ∗ H := fun x => match x with
   | Sum.inl g => inl g
   | Sum.inr h => inr h
@@ -335,6 +336,7 @@ theorem nielsenStep_closure_eq {A : Type*} [Group A] {n : ℕ}
           exact Subgroup.subset_closure ⟨k, rfl⟩
 
 /-- Finite sequences of elementary Nielsen moves. -/
+@[expose]
 def NielsenEquivalent {A : Type*} [Group A] {n : ℕ}
     (x y : Fin n → A) : Prop :=
   Relation.ReflTransGen (fun u v : Fin n → A => NielsenStep u v) x y
@@ -362,6 +364,7 @@ tuple can be replaced, with the same number of entries, by a tuple whose
 entries lie in the two original factors.  The fold/Nielsen argument is the
 substantive theorem still to be supplied; this definition keeps its exact
 interface separate from the rank bookkeeping. -/
+@[expose]
 def HasSeparatedReduction : Prop :=
   ∀ (n : ℕ) (x : Fin n → G ∗ H),
     Subgroup.closure (Set.range x) = ⊤ →
@@ -463,6 +466,7 @@ factor elements have length at most one, and multiplication is subadditive.
 /-- Evaluation of a finite alternating-free word in the binary free product.
 The list is not required to be reduced; `factorWordLength` takes the minimum
 over all such representatives. -/
+@[expose]
 def factorWordProd : List (Sum G H) → G ∗ H
   | [] => 1
   | x :: xs => separatedMap x * factorWordProd xs
@@ -490,6 +494,7 @@ theorem factorWordProd_surjective :
       simp [factorWordProd, separatedMap, hu]
 
 /-- An element has a factor-word representation of the specified length. -/
+@[expose]
 def factorWordRepresented (x : G ∗ H) (n : ℕ) : Prop :=
   ∃ u : List (Sum G H), u.length = n ∧ factorWordProd u = x
 

@@ -21,7 +21,7 @@ of the real line, and `rr` uses rearranging families of permutations of ℕ.
 All preceding construction and category lemmas have been proved over mathlib.
 -/
 
-@[expose] public section
+public section
 
 open Cardinal
 

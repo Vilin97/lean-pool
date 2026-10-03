@@ -29,7 +29,7 @@ The entailment certificates were synthesised by exact rational Farkas and
 re-verified over `ℤ` before emission; the kernel re-checks them anyway.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFourGeneratedRows.G4Row099
 

@@ -27,7 +27,7 @@ already pinned to a choice: the relabel carries one side's data to
 the other's, and the conversions are identity-shaped.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -90,6 +90,7 @@ theorem relabel_boundaryFlag_apply (a : α) :
 
 /-- Transport of an edge subset along a relabel: the flags and the
 pairing are untouched. -/
+@[expose]
 def EdgeSubset.relabelUp (F : EdgeSubset W) : EdgeSubset (W.relabel ee) where
   flags := F.flags
   pairing_mem := fun f hf => F.pairing_mem f hf
@@ -154,6 +155,7 @@ theorem relabel_genBoundarySubsetMatches_iff {k ℓ : ℕ}
 /-! ## Relative transition systems under a relabel -/
 
 /-- Transport of a relative transition system along a relabel. -/
+@[expose]
 def relabelTransUp (F : EdgeSubset W) (κ : F.RelTransitionSystem) :
     (F.relabelUp ee).RelTransitionSystem where
   match_ := κ.match_
@@ -171,6 +173,7 @@ def relabelTransUp (F : EdgeSubset W) (κ : F.RelTransitionSystem) :
 
 /-- Transport of a relative transition system back along a
 relabel. -/
+@[expose]
 def relabelTransDown (F : EdgeSubset W)
     (κ : (F.relabelUp ee).RelTransitionSystem) : F.RelTransitionSystem where
   match_ := κ.match_
@@ -187,6 +190,7 @@ def relabelTransDown (F : EdgeSubset W)
         ((relabel_attach_inl_iff ee f v).mpr hv))
 
 /-- Transport of an orientation along a relabel. -/
+@[expose]
 def relabelOrientUp (F : EdgeSubset W) {κ : F.RelTransitionSystem}
     (o : κ.Orientation) : (relabelTransUp ee F κ).Orientation where
   isOut := o.isOut
@@ -197,6 +201,7 @@ def relabelOrientUp (F : EdgeSubset W) {κ : F.RelTransitionSystem}
       (by rwa [relabelUp_internalFlags ee F] at hp)
 
 /-- Transport of an orientation back along a relabel. -/
+@[expose]
 def relabelOrientDown (F : EdgeSubset W)
     {κ : (F.relabelUp ee).RelTransitionSystem} (o : κ.Orientation) :
     (relabelTransDown ee F κ).Orientation where

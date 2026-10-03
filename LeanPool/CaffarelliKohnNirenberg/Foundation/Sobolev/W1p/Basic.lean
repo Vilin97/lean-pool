@@ -26,7 +26,7 @@ representatives and uses the `CKN` weak-gradient API.
 * `W1pFunction.restrict`: restriction to an open subset.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 
@@ -38,6 +38,7 @@ abbrev MemLpOn {d : ℕ}
   MeasureTheory.MemLp u p (volumeOn U)
 
 /-- Coordinatewise gradient `L^p` membership on a restricted domain. -/
+@[expose]
 def GradMemLpOn {d : ℕ}
     (U : Set (Vec d)) (p : ℝ≥0∞) (Du : Vec d → Vec d) : Prop :=
   ∀ i : Fin d, MemLpOn U p (fun x => Du x i)
@@ -111,6 +112,7 @@ theorem memW1p {d : ℕ}
   ⟨u, rfl⟩
 
 /-- Restrict a representative-level Sobolev function to an open subset. -/
+@[expose]
 def restrict {d : ℕ} {U V : Set (Vec d)} {p : ℝ≥0∞}
     (u : W1pFunction U p) (hVOpen : IsOpen V) (hVU : V ⊆ U) :
     W1pFunction V p where

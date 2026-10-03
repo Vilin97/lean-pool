@@ -41,7 +41,7 @@ strength of base change along an algebra map, in super form.
   are invertible.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -920,6 +920,7 @@ variable {S : SuperCommAlgebra.{u, u}} (P : SuperPoint S)
 /-- **The unit comparison of the fibre functor**, before the
 coordinates are installed: a complex number is scaled into the
 algebra and pushed into the base change. -/
+@[expose]
 noncomputable def superVectEpsRaw :
     ℂ →ₗ[ℂ] ((S.unitMod : S.Mod.{u, u, u, u}).tensor
       (pointMod P)).even :=
@@ -928,6 +929,7 @@ noncomputable def superVectEpsRaw :
 
 /-- **The unit comparison of the fibre functor**: the unit super
 vector space maps to the base change of the unit module. -/
+@[expose]
 noncomputable def superVectEps
     [FiniteDimensional ℂ ((S.unitMod : S.Mod.{u, u, u, u}).tensor (pointMod
       P)).even] :

@@ -16,7 +16,7 @@ determinants in `t_j = 1/2 + i y_j`, and `|t_j − t_l| = |y_j − y_l|`, which 
 The statement `HeineBound` of `Interfaces.lean` is proved literally, for every `r` and `n`
 (including `n = 0`). -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Finset Polynomial Matrix
 

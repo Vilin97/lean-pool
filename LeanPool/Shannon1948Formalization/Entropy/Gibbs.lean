@@ -31,7 +31,7 @@ Mathlib's concavity infrastructure for later proofs.
 - `entropyNat_le_log_card`: `H(p) ≤ log |α|`
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

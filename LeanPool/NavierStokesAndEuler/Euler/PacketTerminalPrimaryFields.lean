@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketPrimaryRegularity
 
 /-! The genuine endpoint primary supplies all qualitative inputs to the joined recursion. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,14 +30,14 @@ variable (P : ℝ) [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (Y : EulerTransversePacketProvider.InitialData P D)
 
 /-- Joined terminal primary, constructed using `primaryProfile`. -/
-def joinedTerminalPrimary : Profile :=
+@[expose] def joinedTerminalPrimary : Profile :=
   primaryProfile (joinedSourceOperators P M D τ hτ hτT B)
     (EulerTransversePacketPrimary.vector τ hτ hτT B Y)
     (EulerTransversePacketPrimary.scalar τ hτ hτT B Y)
 
 /-- Joined terminal primary witness as an element of `ProfileRegularity P M.T M.T_pos.le
 D.support (joinedTerminalPrimary P M D τ hτ hτT B Y)`. -/
-def joinedTerminalPrimaryWitness :
+@[expose] def joinedTerminalPrimaryWitness :
     ProfileRegularity P M.T M.T_pos.le D.support (joinedTerminalPrimary P M D τ hτ hτT B Y) :=
   (EulerTransversePacketPrimary.profileRegularity τ hτ hτT B Y
     (joinedSourceOperators P M D τ hτ hτT B) rfl).changeTime hTime.symm M.T_pos.le

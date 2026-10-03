@@ -16,7 +16,7 @@ exponent using the same moving edge weight. The containing annulus is used
 only to justify the actual integrals and local smoothness.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -126,6 +126,7 @@ section Support
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Support, given by `∀ n, SupportedGauge a b ell U (f n)`. -/
+@[expose]
 def Support (a b : ℝ) (ell : S → ℝ) (U : Set S) (f : ScalarField (PressureStream.Lift S)) : Prop :=
   ∀ n, SupportedGauge a b ell U (f n)
 

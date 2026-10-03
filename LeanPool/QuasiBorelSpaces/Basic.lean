@@ -14,7 +14,7 @@ public import LeanPool.QuasiBorelSpaces.MeasureTheory.Pack
 Imported Lean Pool material for `LeanPool.QuasiBorelSpaces.Basic`.
 -/
 
-@[expose] public section
+public section
 
 open scoped MeasureTheory
 

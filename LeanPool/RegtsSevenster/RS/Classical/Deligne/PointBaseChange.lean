@@ -61,7 +61,7 @@ finite-dimensional spaces is finite-dimensional.
   `RS.freeEvenEquivFin`, `freeOddEquivFin`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -76,6 +76,7 @@ variable {S : SuperCommAlgebra.{u, u}}
 /-! ## The two component functors -/
 
 /-- **The even component as a functor** to complex vector spaces. -/
+@[expose]
 noncomputable def evenModFunctor (S : SuperCommAlgebra.{u, u}) :
     S.Mod.{u, u, u, u} ⥤ ModuleCat.{u} ℂ where
   obj M := ModuleCat.of ℂ M.even
@@ -103,6 +104,7 @@ instance oddModFunctor_additive (S : SuperCommAlgebra.{u, u}) :
 
 /-- An isomorphism of super modules is a linear equivalence on even
 components. -/
+@[expose]
 noncomputable def evenEquiv {M N : S.Mod.{u, u, u, u}} (e : M ≅ N) :
     M.even ≃ₗ[ℂ] N.even :=
   ((evenModFunctor S).mapIso e).toLinearEquiv
@@ -134,6 +136,7 @@ noncomputable def oddBiproductEquiv {J : Type} [Fintype J]
 /-! ## Tensoring on the right -/
 
 /-- **Tensoring on the right by a fixed module**, as a functor. -/
+@[expose]
 noncomputable def tensorRightFunctor (N : S.Mod.{u, u, u, u}) :
     S.Mod.{u, u, u, u} ⥤ S.Mod.{u, u, u, u} where
   obj M := M.tensor N
@@ -162,6 +165,7 @@ variable {S : SuperCommAlgebra.{u, u}}
 /-- **Base change of the unit module**: tensoring the unit with the
 residue module of a point returns the residue module.  This is the
 left unitor. -/
+@[expose]
 noncomputable def unitTensorPoint (P : SuperPoint S) :
     (S.unitMod.tensor (pointMod P) : S.Mod.{u, u, u, u}) ≅
       pointMod P :=
@@ -364,6 +368,7 @@ the space of coordinate vectors of its dimension.  The two
 equivalences `RS.toSuperVectEvenEquiv` and `RS.toSuperVectOddEquiv`
 identify the components of the base change with the components of
 this super vector space. -/
+@[expose]
 noncomputable def toSuperVect (P : SuperPoint S)
     (M : S.Mod.{u, u, u, u})
     :

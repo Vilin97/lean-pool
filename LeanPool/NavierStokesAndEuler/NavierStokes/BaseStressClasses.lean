@@ -18,7 +18,7 @@ of the reciprocal edge distance are enlarged.  All derivatives are actual
 Fréchet derivatives, and every estimate is uniform over the dyadic bands.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -165,7 +165,7 @@ section NativeGeometry
 variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
 
 /-- The exact normalized coordinates in the mean-variable order. -/
-noncomputable def coordinates (x : Point) : Chart :=
+@[expose] noncomputable def coordinates (x : Point) : Chart :=
   BaseChartJets.normalizedCoordinates F.data.h (BaseContextAssembly.slowCoordinates x)
 
 theorem coordinates_unweighted (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
@@ -272,6 +272,7 @@ variable {F : OutgoingProfile.Profile} {W : NominalProfile.Witness F}
   (v : ModulatedProfileAssembly.Witness ld)
 
 /-- The literal positive-order part of the normalized tensor. -/
+@[expose]
 noncomputable def correction (upper : ℝ) (B : ℕ) (y : Chart) : Inner :=
   FinalSlowBase.normalizedStress H v upper B y -
     BaseResidual.stressPair (FinalSlowBase.coefficients H v) 0 y.2

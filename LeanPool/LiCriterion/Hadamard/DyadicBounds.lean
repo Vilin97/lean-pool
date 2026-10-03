@@ -19,7 +19,7 @@ Real-power identities, shell estimates, and cofinal finite-sum bounds shared by
 simple-zero and multiplicity-weighted Hadamard growth estimates.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

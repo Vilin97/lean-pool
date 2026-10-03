@@ -23,7 +23,7 @@ import Mathlib.Tactic.Positivity.Finset
 
 /-! # Poincare -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Real Set intervalIntegral Filter

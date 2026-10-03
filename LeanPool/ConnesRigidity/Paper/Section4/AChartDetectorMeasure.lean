@@ -15,7 +15,7 @@ Concrete §4 A-coordinate detector transport and invariant-measure bound for
 Zhou's dual kernel. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperAChartDetectorMeasure
@@ -55,7 +55,7 @@ abbrev CharacterSpace := PaperDualTopology.CharacterSpace
 
 /-- The A-coordinate embedding into the first kernel summand. Paper: §4.
 -/
-def aCoordinateEmbedding (v : OpenAIPort.SymplecticIndex) :
+@[expose] def aCoordinateEmbedding (v : OpenAIPort.SymplecticIndex) :
     A →ₗ[k] D where
   toFun a := (a ⊗ₜ[k] LinearMap.proj v, 0)
   map_add' a b := by
@@ -71,7 +71,7 @@ def aCoordinateEmbedding (v : OpenAIPort.SymplecticIndex) :
 
 /-- The character's A-coordinate linear functional at one finite dual index. Paper: §4.
 -/
-def aChartLinear (χ : CharacterSpace)
+@[expose] def aChartLinear (χ : CharacterSpace)
     (v : OpenAIPort.SymplecticIndex) : A →ₗ[k] k :=
   (BinaryPontryaginDual.characterLinear (M := D)
     (Additive.toMul χ)).comp (aCoordinateEmbedding v)
@@ -188,7 +188,7 @@ theorem aChart_support_card_bound (χ : CharacterSpace)
 /--
 The `aDetector` construction used in the Connes rigidity formalization.
 -/
-def aDetector (v : OpenAIPort.SymplecticIndex) (a : A) :
+@[expose] def aDetector (v : OpenAIPort.SymplecticIndex) (a : A) :
     Set CharacterSpace :=
   linearDetector (aCoordinateEmbedding v a)
 
@@ -501,7 +501,7 @@ theorem aChartVector_mem_some_chart (a : A) :
 /--
 The `aNonzeroLocus` construction used in the Connes rigidity formalization.
 -/
-def aNonzeroLocus (v : OpenAIPort.SymplecticIndex) :
+@[expose] def aNonzeroLocus (v : OpenAIPort.SymplecticIndex) :
     Set CharacterSpace :=
   {χ : CharacterSpace | aChartLinear χ v ≠ 0}
 

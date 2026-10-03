@@ -32,7 +32,7 @@ Note that no hypothesis on `c`, `A` or `α` is needed here — the identity is a
 one.  Feasibility is required only for the odd-degree reduction, never for the moments.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

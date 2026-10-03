@@ -29,7 +29,7 @@ structure then turns the action into the algebra map `permAlg` that
 a tower's representation field asks for.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -44,6 +44,7 @@ variable {A : Type u}
 /-- **The top transposition**: braid the last two factors of
 `X ^ ⊗ (n + 2)`.  Reassociating exposes the last two tensorands, the
 braiding exchanges them, and the associator is undone. -/
+@[expose]
 noncomputable def swapTop
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) (n : ℕ) :
@@ -76,6 +77,7 @@ one.  It is defined by bubbling one slot at a time, so no word is
 chosen: `insertTop X n n` is the identity, and each further step
 composes one more top transposition, whiskered by the factors above
 it.  The recursion is on the gap `n - p`. -/
+@[expose]
 noncomputable def insertTop
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) : (n : ℕ) → (k : ℕ) →
@@ -350,6 +352,7 @@ generation.
 
 /-- **The permutation action on a tensor power**: `permMor X σ`
 routes the factor in slot `i` to slot `σ i`. -/
+@[expose]
 noncomputable def permMor
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) :
@@ -643,7 +646,7 @@ asks for.  Only this last step needs the linear structure.
 -/
 
 /-- **The action as a monoid homomorphism.** -/
-@[simps]
+@[expose, simps]
 noncomputable def permHom
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     (X : A) (n : ℕ) :
@@ -655,6 +658,7 @@ noncomputable def permHom
 section Linear
 
 /-- **The symmetric-group algebra acting on a tensor power.** -/
+@[expose]
 noncomputable def permAlg
     [Category.{v} A] [MonoidalCategory A] [SymmetricCategory A]
     [Preadditive A] [Linear ℂ A]

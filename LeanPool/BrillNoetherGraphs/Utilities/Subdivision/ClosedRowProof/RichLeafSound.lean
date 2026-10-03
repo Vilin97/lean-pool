@@ -27,7 +27,7 @@ finite-list decoder which supplies `PiecewiseData.covers`,
 two residual comparison lemmas documented at the end of this file.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Subdivision.ClosedRowProof
 
@@ -44,6 +44,7 @@ variable {m n p : ℕ}
 /-- Evaluation of a named point.  This is kept as an integer: W1 first proves
 nonnegativity, after which the lowerer may take `toNat` to obtain a path
 offset. -/
+@[expose]
 def pointValue (w : RichWitness) (x : List ℤ) (a e i : ℕ) : ℤ :=
   eval (w.point a e i) x
 
@@ -466,6 +467,7 @@ blocks) need no special case: they simply enlarge the run.
 
 /-- The chip sum used by W4, written in the same `List.range`/`foldl` form as
 the executable checker. -/
+@[expose]
 def w4ChipSum (chip : ℕ → ℤ) (i j : ℕ) : ℤ :=
   (List.range (j + 1 - i)).foldl (fun z t => z + chip (i + t)) 0
 
@@ -479,6 +481,7 @@ theorem w4Residual_eq_chipSum (w : RichWitness) (a e i j : ℕ) :
 
 /-- The actual coefficient at a collapsed named-endpoint run: chips on the
 run plus outgoing slope minus incoming slope. -/
+@[expose]
 def w4Actual (chip : ℕ → ℤ) (incoming outgoing : ℤ) (i j : ℕ) : ℤ :=
   w4ChipSum chip i j + outgoing - incoming
 

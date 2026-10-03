@@ -17,7 +17,7 @@ form below avoids choosing representatives and is exactly what the later
 reduced-divisor calculation consumes.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

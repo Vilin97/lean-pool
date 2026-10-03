@@ -20,7 +20,7 @@ every inner product formed from symmetric functions is real, because conjugating
 reflecting the interval, and the interval `(-lam, lam)` is reflection-invariant.
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaZeros
 

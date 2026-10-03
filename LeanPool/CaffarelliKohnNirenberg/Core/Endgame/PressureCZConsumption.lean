@@ -17,7 +17,7 @@ real pressure norm bound. Compact support is not needed for this consumption
 step once the component estimates are supplied.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped ENNReal BigOperators

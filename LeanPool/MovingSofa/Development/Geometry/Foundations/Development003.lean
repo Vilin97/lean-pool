@@ -49,7 +49,7 @@ public import Mathlib.Topology.Separation.Hausdorff
 * `Infrastructure.Curves.Foundations.Development002`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -81,7 +81,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `TauCeti.Topology.JordanCurve.Path`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -117,7 +117,7 @@ Main deliverables:
   closed arc `≃ₜ unitInterval`.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanCurve.Arcs
 
@@ -130,11 +130,13 @@ abbrev Plane := EuclideanSpace ℝ (Fin 2)
 
 /-- A linear isometry equivalence `ℂ ≃ₗᵢ[ℝ] Plane`, from the standard orthonormal
 basis of `EuclideanSpace ℝ (Fin 2)`. -/
+@[expose]
 noncomputable def complexLIE : ℂ ≃ₗᵢ[ℝ] Plane :=
   Complex.isometryOfOrthonormal (EuclideanSpace.basisFun (Fin 2) ℝ)
 
 /-- The underlying `Equiv` between Mathlib's `Circle` and the unit sphere of the
 plane, induced by `complexLIE`. -/
+@[expose]
 noncomputable def circleEquivSphere : Circle ≃ sphere (0 : Plane) 1 where
   toFun z := ⟨complexLIE z, by
     rw [mem_sphere_zero_iff_norm, complexLIE.norm_map]; exact z.norm_coe⟩
@@ -146,6 +148,7 @@ noncomputable def circleEquivSphere : Circle ≃ sphere (0 : Plane) 1 where
   right_inv w := by ext; simp [complexLIE.apply_symm_apply]
 
 /-- **Circle model bridge.** `Circle ≃ₜ sphere (0:Plane) 1`. -/
+@[expose]
 noncomputable def circleHomeoSphere : Circle ≃ₜ sphere (0 : Plane) 1 :=
   Continuous.homeoOfEquivCompactToT2 (f := circleEquivSphere) <| by
     apply Continuous.subtype_mk
@@ -582,7 +585,7 @@ point theorem, in four phases:
 * **Phase 4** — the general convex/compact/nonempty statement `brouwerFPT`.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanCurve.Brouwer
 
@@ -599,10 +602,12 @@ theorem cover : IsCoveringMap ((↑) : ℝ → AddCircle (1 : ℝ)) :=
   AddCircle.isCoveringMap_coe 1
 
 /-- The once-around loop `t ↦ ↑t` in `AddCircle 1`. -/
+@[expose]
 noncomputable def acLoop : C(I, AddCircle (1 : ℝ)) :=
   ⟨fun t => ((t : ℝ) : AddCircle (1 : ℝ)), cover.continuous.comp continuous_subtype_val⟩
 
 /-- The lift of `acLoop` to `ℝ` starting at `0`: the identity `t ↦ ↑t`. -/
+@[expose]
 noncomputable def idLift : C(I, ℝ) := ⟨fun t => (t : ℝ), continuous_subtype_val⟩
 
 @[simp] lemma acLoop_apply (t : I) : acLoop t = ((t : ℝ) : AddCircle (1 : ℝ)) := rfl
@@ -630,6 +635,7 @@ theorem acLoop_not_homotopic :
 /-! ## Phase 1.5 — transport to the geometric circle `sphere (0 : ℝ²) 1` -/
 
 /-- The homeomorphism `AddCircle 1 ≃ₜ sphere (0 : ℝ²) 1`, via `Circle`. -/
+@[expose]
 noncomputable def acToSphere : AddCircle (1 : ℝ) ≃ₜ sphere (0 : Plane) 1 :=
   (AddCircle.homeomorphCircle (one_ne_zero)).trans Arcs.circleHomeoSphere
 
@@ -637,6 +643,7 @@ noncomputable def acToSphere : AddCircle (1 : ℝ) ≃ₜ sphere (0 : Plane) 1 :
 noncomputable def sBase : sphere (0 : Plane) 1 := acToSphere 0
 
 /-- The once-around loop on the geometric circle `sphere (0 : ℝ²) 1`. -/
+@[expose]
 noncomputable def sLoop : C(I, sphere (0 : Plane) 1) :=
   (⟨acToSphere, acToSphere.continuous⟩ : C(AddCircle (1 : ℝ), sphere (0 : Plane) 1)).comp acLoop
 
@@ -1071,7 +1078,7 @@ the two components.  This file provides:
   classes of subtype points with equality of `connectedComponentIn`.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanCurve.Counting
 
@@ -1146,7 +1153,7 @@ sorry-free, with `#print axioms JordanCurve.jordan_curve` reporting only
 `[propext, Classical.choice, Quot.sound]`.
 -/
 
-@[expose] public section
+public section
 
 namespace JordanCurve
 
@@ -3912,7 +3919,7 @@ Original authors: The Tau Ceti contributors, Archon Horizon (claude+codex), Axel
 Chunlei Liu, Jinxuan Chen, Wanxu Yang, Zekun Sheng, Yuxuan Liao, Jie Xu.
 -/
 
-@[expose] public section
+public section
 
 open Filter Set MeasureTheory
 open scoped ENNReal NNReal Topology
@@ -4169,7 +4176,7 @@ This is a prerequisite of the planar-separation step of the `ConformalMapping` r
 * Ch. Pommerenke, *Boundary Behaviour of Conformal Maps*, Ch. 2.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -4246,7 +4253,7 @@ than open here.
   half-space is unbounded.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -4321,7 +4328,7 @@ This file transfers eventual upper bounds on the total variations of a family of
   a family of maps bounds the total variation of a pointwise limit by the `liminf` of the bounds.
 -/
 
-@[expose] public section
+public section
 
 open Filter
 open scoped ENNReal
@@ -4367,7 +4374,7 @@ The modules from Mathlib, lean-pool, TauCeti and jordan_pick that the developmen
 own files, collected in one place.
 -/
 
-@[expose] public section
+public section
 
 end
 
@@ -4462,7 +4469,7 @@ alone a holomorphic map.
   closure of a subset exactly where it meets that subset's frontier.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -4633,7 +4640,7 @@ separation, or any other regularity of `K`.
   lies in the filled hull, with no connectivity asked of it.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -4792,7 +4799,7 @@ used, and the separation argument is the general Hahn–Banach one.
   different components, at least one lies in the filled hull (dimension at least two).
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -4984,7 +4991,7 @@ Carathéodory's continuity theorem. That application is in
   topology is locally connected. This is the quotient-map result applied below.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -5102,7 +5109,7 @@ preserved by continuous images, so it is proved here from
 * Ch. Pommerenke, *Boundary Behaviour of Conformal Maps*, Ch. 2.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -5424,7 +5431,7 @@ coincident-end specialization is in `TauCeti/Analysis/Complex/Conformal/Crosscut
 the distinct-end one in `TauCeti/Analysis/Complex/Conformal/Crosscut/Arc.lean`.
 -/
 
-@[expose] public section
+public section
 
 namespace TauCeti
 
@@ -5572,7 +5579,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Curve.Foundations.Development003`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5600,7 +5607,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Curve.Jordan.SubarcArea`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5616,7 +5623,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Separation
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
@@ -5706,7 +5713,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Interior
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
@@ -5763,7 +5770,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Orientation Transport
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace MovingSofa
@@ -5829,7 +5836,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Area Transport
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
@@ -5901,7 +5908,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Closed Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5970,7 +5977,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Signed Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -6333,7 +6340,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Supporting Orientation
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7121,7 +7128,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Subarc
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -7943,7 +7950,7 @@ Authors: Dean Cureton
 # Curve / Reparametrization
 -/
 
-@[expose] public section
+public section
 
 namespace MovingSofa
 
@@ -7992,7 +7999,7 @@ Authors: Dean Cureton
 # Curve / Segment Area Properties
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8118,7 +8125,7 @@ Authors: Dean Cureton
 # Curve / Jordan / Subarc Area
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8527,7 +8534,7 @@ Authors: Dean Cureton, The Moving Sofa contributors
 * `Curve.PositiveGraphRegion`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -8550,7 +8557,7 @@ Jordan parametrization whose bounded complementary component is the open subgrap
 `{p | a < p 0 ∧ p 0 < b ∧ 0 < p 1 ∧ p 1 < f (p 0)}`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -9015,7 +9022,7 @@ the resulting description of the closed subgraph: the loop traces exactly the fr
 region, and the closed subgraph is the open one together with that frontier.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

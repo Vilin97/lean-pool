@@ -15,7 +15,7 @@ import Mathlib.MeasureTheory.Covering.Besicovitch
 # LeanPool.Clawristotle.LogBoundHelpers
 -/
 
-@[expose] public section
+public section
 
 open ContinuousLinearMap Real Set VML
 

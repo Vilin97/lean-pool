@@ -11,7 +11,7 @@ public import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 # LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
 -/
 
-@[expose] public section
+public section
 
 lemma Measurable.of_uncurry
   {α β γ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]

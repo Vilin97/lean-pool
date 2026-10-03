@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExp
 Finite-horizon failure probabilities force an unbounded worst-case expected hitting time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

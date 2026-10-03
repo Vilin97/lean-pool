@@ -18,7 +18,7 @@ that appears in the usual folded covering-graph proof, but expressed directly
 in the free group.
 -/
 
-@[expose] public section
+public section
 
 open Function
 
@@ -34,15 +34,18 @@ variable [DecidableEq α]
 
 
 /-- The free-group element represented by a letter, with `true` denoting the positive sign. -/
+@[expose]
 def signedLetter (x : α × Bool) : FreeGroup α :=
   if x.2 then FreeGroup.of x.1 else (FreeGroup.of x.1)⁻¹
 
 /-- The product in the free group represented by a list of signed letters. -/
+@[expose]
 def wordValue : List (α × Bool) → FreeGroup α
   | [] => 1
   | x :: w => signedLetter x * wordValue w
 
 /-- The successive states obtained by evaluating the word from its rightmost letter. -/
+@[expose]
 def actionStates : List (α × Bool) → List (FreeGroup α)
   | [] => [1]
   | x :: w => actionStates w ++ [signedLetter x * wordValue w]
@@ -147,6 +150,7 @@ the finitely many words under consideration.
 -/
 
 /-- The finite core containing action states of the subgroup generators and the separating word. -/
+@[expose]
 def corePoints [DecidableEq (FreeGroup α)] (S : Finset (FreeGroup α)) (g : FreeGroup α) :
     Finset (FreeGroup α) :=
   S.biUnion (fun s => (allActionStates s.toWord)) ∪ allActionStates g.toWord

@@ -15,7 +15,7 @@ import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 # LeanPool.DirectedTopologyLean4.PathCover
 -/
 
-@[expose] public section
+public section
 
 /-
   This file contains the definition of a directed path being n-covered by two subspaces X₁ and X₂:
@@ -35,7 +35,7 @@ variable {X : dTopCat} {X₀ X₁ : Set X}
 
 /-- A dipath `γ` is *covered* by the cover `X₀ ∪ X₁ = univ` when its range lies inside one of
 the two sets. -/
-def covered {x₀ x₁ : X} (hX : X₀ ∪ X₁ = univ) (γ : Dipath x₀ x₁) : Prop :=
+@[expose] def covered {x₀ x₁ : X} (hX : X₀ ∪ X₁ = univ) (γ : Dipath x₀ x₁) : Prop :=
   let _ : X₀ ∪ X₁ = univ := hX
   (range γ ⊆ X₀) ∨ (range γ ⊆ X₁)
 
@@ -98,7 +98,7 @@ open covered
 /-- We say that `coveredPartwise hX γ n` if a dipath γ can be split into n+1 parts, each of which
 is covered by `X₁` or `X₂`
 -/
-def coveredPartwise (hX : X₀ ∪ X₁ = Set.univ) {x y : X} (γ : Dipath x y) (n : ℕ) : Prop :=
+@[expose] def coveredPartwise (hX : X₀ ∪ X₁ = Set.univ) {x y : X} (γ : Dipath x y) (n : ℕ) : Prop :=
   match n with
   | Nat.zero => covered hX γ
   | Nat.succ n =>

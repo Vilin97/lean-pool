@@ -21,7 +21,7 @@ algebras with nonvanishing units again has a nonvanishing unit —
 the step Deligne asserts without proof in 2.11.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 /-! Genuine linear restriction of smooth coefficient fields, including
 the exact spatial tensors and preservation of actual time derivatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -60,7 +60,7 @@ local instance instSmoothTimeFieldPrecomp8 (n : ℕ) : NormedSpace ℝ (F →ᵇ
 
 /-- Precomp linear, bundling `field`, `smooth`, `jet`, `jet_eq` and the required compatibility
 proofs. -/
-def precompLinear (A : SmoothTimeField K E V) (L : F →L[ℝ] E) :
+@[expose] def precompLinear (A : SmoothTimeField K E V) (L : F →L[ℝ] E) :
     SmoothTimeField K F V where
   field := (BoundedContinuousFunction.compContinuousCLM V ℝ ⟨L,L.continuous⟩).compLeftContinuous ℝ
       K A.field

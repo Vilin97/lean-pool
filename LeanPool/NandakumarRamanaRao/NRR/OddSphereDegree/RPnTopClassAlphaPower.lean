@@ -19,7 +19,7 @@ descended odd sphere map. Later modules identify the actual projective
 cohomology generator and its powers with this model.
 -/
 
-@[expose] public section
+public section
 noncomputable section
 
 open CategoryTheory AlgebraicTopology
@@ -30,9 +30,10 @@ namespace SphereOddDegree
 
 /-- The **top mod-two cohomology** `Hⁿ(RPⁿ; F₂)` of real projective `n`-space, the
 target group of the top class `αⁿ`. A genuine object: `rpCohomology n n`. -/
-noncomputable def rpTopCohomology (n : ℕ) : ModuleCat.{0} (ZMod 2) := rpCohomology n n
+@[expose] noncomputable def rpTopCohomology (n : ℕ) : ModuleCat.{0} (ZMod 2) := rpCohomology n n
 
 /-- The **top mod-two cohomology** `Hⁿ(Sⁿ; F₂)` of the `n`-sphere. -/
+@[expose]
 noncomputable def sphereTopCohomology (n : ℕ) : ModuleCat.{0} (ZMod 2) := sphereCohomology n n
 
 theorem rpTopCohomology_eq (n : ℕ) : rpTopCohomology n = rpCohomology n n := rfl
@@ -65,7 +66,7 @@ instance (n : ℕ) : Nontrivial (RPnCohomologyRingModel n) :=
 
 /-- The **model top class** `αⁿ ∈ F₂[α]/(αⁿ⁺¹)` — the model-side avatar of the
 top class of `Hⁿ(RPⁿ; F₂)`. -/
-noncomputable def modelTopClass (n : ℕ) : RPnCohomologyRingModel n := modelAlpha n ^ n
+@[expose] noncomputable def modelTopClass (n : ℕ) : RPnCohomologyRingModel n := modelAlpha n ^ n
 
 theorem modelTopClass_eq (n : ℕ) : modelTopClass n = modelAlpha n ^ n := rfl
 

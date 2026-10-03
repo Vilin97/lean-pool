@@ -25,7 +25,7 @@ slot has no selected step, and `balance` then forces its two endpoint values to
 coincide.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.DegenerateSpec
 open Utilities.Certificate
@@ -40,10 +40,12 @@ variable {n p : ℕ} (d : DegSpec n p)
 
 /-- The left endpoint of a block.  Block zero starts at the tail; every later
 block starts where its predecessor ended. -/
+@[expose]
 def blockStart (blockEnd : Fin p → ℕ → ℕ) (e : Fin p) (block : ℕ) : ℕ :=
   if block = 0 then 0 else blockEnd e (block - 1)
 
 /-- The canonical slope at a unit step, selected from its containing block. -/
+@[expose]
 def blockSlope (blockAt blockEnd : Fin p → ℕ → ℕ) (blockRise : Fin p → ℕ → ℤ)
     (e : Fin p) (k : ℕ) : ℤ :=
   let block := blockAt e k

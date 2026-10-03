@@ -18,7 +18,7 @@ so `ω` is a functor from the category to the super modules over
 the Γ-algebra of the base.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

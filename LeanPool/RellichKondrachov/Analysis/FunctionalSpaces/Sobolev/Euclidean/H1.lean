@@ -42,7 +42,7 @@ No analytic “Sobolev theorems” are proved here; those are tracked separately
 regularity beads).
 -/
 
-@[expose] public section
+public section
 
 namespace RellichKondrachov
 namespace Analysis
@@ -73,7 +73,7 @@ abbrev L2E : Type _ := ↥(E →₂[μ] E)
 abbrev H1Target : Type _ := L2ℝ (μ := μ) × L2E (μ := μ)
 
 /-- `C¹` real-valued functions on `E` with compact support, as a submodule of `E → ℝ`. -/
-def C1c : Submodule ℝ (E → ℝ) where
+@[expose] def C1c : Submodule ℝ (E → ℝ) where
   carrier := {f | ContDiff ℝ 1 f ∧ HasCompactSupport f}
   zero_mem' := by
     refine ⟨contDiff_const, ?_⟩
@@ -88,7 +88,7 @@ def C1c : Submodule ℝ (E → ℝ) where
     exact (HasCompactSupport.smul_left (f := fun _ : E => c) hf.2)
 
 /-- The pointwise gradient (as an `E`-valued function), via Riesz representation. -/
-noncomputable def grad (f : E → ℝ) : E → E :=
+@[expose] noncomputable def grad (f : E → ℝ) : E → E :=
   fun x => (InnerProductSpace.toDual ℝ E).symm (fderiv ℝ f x)
 
 lemma continuous_grad {f : E → ℝ} (hf : ContDiff ℝ 1 f) : Continuous (grad (E := E) f) := by
@@ -126,11 +126,11 @@ lemma memLp_grad_of_mem_C1c {f : E → ℝ} (hf : f ∈ C1c (E := E)) :
   exact hcont.memLp_of_hasCompactSupport (μ := μ) (p := (2 : ℝ≥0∞)) hcs
 
 /-- The `L²` class of a `C¹` compactly supported function. -/
-noncomputable def toL2 (f : ↥(C1c (E := E))) : L2ℝ (μ := μ) :=
+@[expose] noncomputable def toL2 (f : ↥(C1c (E := E))) : L2ℝ (μ := μ) :=
   (memLp_of_mem_C1c (μ := μ) (E := E) f.2).toLp f.1
 
 /-- The `L²` class of the gradient of a `C¹` compactly supported function. -/
-noncomputable def toL2Grad (f : ↥(C1c (E := E))) : L2E (μ := μ) :=
+@[expose] noncomputable def toL2Grad (f : ↥(C1c (E := E))) : L2E (μ := μ) :=
   (memLp_grad_of_mem_C1c (μ := μ) (E := E) f.2).toLp (grad (E := E) f.1)
 
 omit [CompleteSpace E] in
@@ -170,7 +170,7 @@ private lemma toL2_smul (c : ℝ) (f : ↥(C1c (E := E))) :
   simp [Pi.smul_apply, hxsmul, hxf]
 
 /-- Linear map sending `C¹_c` functions to their `L²` classes. -/
-noncomputable def toL2Linear : ↥(C1c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) where
+@[expose] noncomputable def toL2Linear : ↥(C1c (E := E)) →ₗ[ℝ] L2ℝ (μ := μ) where
   toFun := toL2 (μ := μ) (E := E)
   map_add' := by exact toL2_add (μ := μ) (E := E)
   map_smul' := by exact toL2_smul (μ := μ) (E := E)
@@ -231,17 +231,17 @@ private lemma toL2Grad_smul (c : ℝ) (f : ↥(C1c (E := E))) :
       simpa [Pi.smul_apply] using hxsmul.symm
 
 /-- Linear map sending `C¹_c` functions to the `L²` class of their gradient. -/
-noncomputable def toL2GradLinear : ↥(C1c (E := E)) →ₗ[ℝ] L2E (μ := μ) where
+@[expose] noncomputable def toL2GradLinear : ↥(C1c (E := E)) →ₗ[ℝ] L2E (μ := μ) where
   toFun := toL2Grad (μ := μ) (E := E)
   map_add' := by exact toL2Grad_add (μ := μ) (E := E)
   map_smul' := by exact toL2Grad_smul (μ := μ) (E := E)
 
 /-- The graph map `f ↦ (f, ∇f)` into `L² × L²(E)`. -/
-noncomputable def graph : ↥(C1c (E := E)) →ₗ[ℝ] H1Target (μ := μ) :=
+@[expose] noncomputable def graph : ↥(C1c (E := E)) →ₗ[ℝ] H1Target (μ := μ) :=
   (toL2Linear (μ := μ) (E := E)).prod (toL2GradLinear (μ := μ) (E := E))
 
 /-- The Euclidean `H¹` space (as a closed submodule of `L² × L²(E)`). -/
-noncomputable def h1 : Submodule ℝ (H1Target (μ := μ)) :=
+@[expose] noncomputable def h1 : Submodule ℝ (H1Target (μ := μ)) :=
   (LinearMap.range (graph (μ := μ) (E := E))).topologicalClosure
 
 /-- The Euclidean `H¹` submodule is closed by construction. -/
@@ -255,12 +255,12 @@ instance instCompleteSpaceh1 : CompleteSpace (↥(h1 (μ := μ) (E := E))) := by
   exact (isClosed_h1 (μ := μ) (E := E)).isComplete.completeSpace_coe
 
 /-- The continuous embedding `H¹ → L²`. -/
-noncomputable def h1ToL2 : (↥(h1 (μ := μ) (E := E))) →L[ℝ] L2ℝ (μ := μ) :=
+@[expose] noncomputable def h1ToL2 : (↥(h1 (μ := μ) (E := E))) →L[ℝ] L2ℝ (μ := μ) :=
   (ContinuousLinearMap.fst ℝ (L2ℝ (μ := μ)) (L2E (μ := μ))).comp
     (Submodule.subtypeL (h1 (μ := μ) (E := E)))
 
 /-- The continuous gradient map `H¹ → L²(E)`. -/
-noncomputable def h1ToL2Grad : (↥(h1 (μ := μ) (E := E))) →L[ℝ] L2E (μ := μ) :=
+@[expose] noncomputable def h1ToL2Grad : (↥(h1 (μ := μ) (E := E))) →L[ℝ] L2E (μ := μ) :=
   (ContinuousLinearMap.snd ℝ (L2ℝ (μ := μ)) (L2E (μ := μ))).comp
     (Submodule.subtypeL (h1 (μ := μ) (E := E)))
 

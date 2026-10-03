@@ -20,7 +20,7 @@ noninvertible element.  The paper's printed corollary also says that the witness
 and Tychonoff.  This module makes both properties part of the public proposition.
 -/
 
-@[expose] public section
+public section
 
 namespace Wallace
 

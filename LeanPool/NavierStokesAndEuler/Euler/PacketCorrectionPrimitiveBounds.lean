@@ -21,7 +21,7 @@ section
 /-! Quantitative bounds for the actual inverse metric and its first spatial
 and time derivatives, from the prescribed deformation jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -98,7 +98,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

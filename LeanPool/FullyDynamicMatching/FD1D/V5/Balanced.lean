@@ -19,7 +19,7 @@ maximal, which removes the endpoint term from the finite-horizon energy
 telescope.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.Balanced
 
@@ -159,6 +159,7 @@ theorem potentialMaximizers_nonempty (L m : ℕ) (a : ℝ) :
   exact hmax y (by simp)
 
 /-- Uniform probability law on the finite set of potential maximizers. -/
+@[expose]
 def law (L m : ℕ) (a : ℝ) :
     FiniteLaw (InventoryState (DyadicNode L) m) where
   mass x :=
@@ -197,7 +198,7 @@ theorem law_mass (L m : ℕ) (a : ℝ)
     (law L m a).mass x =
       if x ∈ potentialMaximizers L m a then
         1 / ((potentialMaximizers L m a).card : ℝ)
-      else 0 :=
+      else 0 := by
   rfl
 
 /-- The maximizer law is invariant under every child-subtree swap. -/
@@ -372,6 +373,7 @@ theorem law_average_rms_squaredCostEnvelope_le
             (by norm_num)))
 
 /-- The manuscript-parameter balanced initial count law. -/
+@[expose]
 def parameterizedLaw (m : ℕ) :
     FiniteLaw (InventoryState (DyadicNode (treeDepth m)) m) :=
   law (treeDepth m) m (parameterA m : ℝ)

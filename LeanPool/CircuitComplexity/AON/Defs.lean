@@ -21,7 +21,7 @@ used throughout the circuit complexity library.
 * `Basis.andOr2` — fan-in exactly 2 AND/OR basis (used in Shannon/Schnorr bounds)
 -/
 
-@[expose] public section
+public section
 
 namespace CircuitComplexity
 
@@ -35,12 +35,12 @@ inductive AONOp where
 
 /-- Evaluate an AND or OR operation on `n` input bits by folding.
     AND folds with `&&` starting from `true`; OR folds with `||` from `false`. -/
-def AONOp.eval : (op : AONOp) → (n : Nat) → BitString n → Bool
+@[expose] def AONOp.eval : (op : AONOp) → (n : Nat) → BitString n → Bool
   | .and, n, inputs => Fin.foldl n (fun acc i => acc && inputs i) true
   | .or, n, inputs => Fin.foldl n (fun acc i => acc || inputs i) false
 
 /-- AND/OR basis with unbounded fan-in. Negation is free (per-input flags on gates). -/
-def Basis.unboundedAON : Basis where
+@[expose] def Basis.unboundedAON : Basis where
   Op := AONOp
   arity
     | .and => .unbounded
@@ -48,7 +48,7 @@ def Basis.unboundedAON : Basis where
   eval op n _ inputs := op.eval n inputs
 
 /-- AND/OR basis with fan-in bounded by `k`. Negation is free (per-input flags on gates). -/
-def Basis.boundedAON (k : Nat) : Basis where
+@[expose] def Basis.boundedAON (k : Nat) : Basis where
   Op := AONOp
   arity
     | .and => .upto k
@@ -58,7 +58,7 @@ def Basis.boundedAON (k : Nat) : Basis where
 /-- Fan-in-2 AND/OR basis. Every gate has exactly 2 inputs.
     Negation is free (per-input flags on gates).
     This is the basis used in the Shannon and Schnorr lower bound theorems. -/
-def Basis.andOr2 : Basis where
+@[expose] def Basis.andOr2 : Basis where
   Op := AONOp
   arity _ := .exactly 2
   eval op n _ inputs := op.eval n inputs

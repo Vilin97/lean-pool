@@ -23,7 +23,7 @@ For mollifiers φ_ε (smooth, nonnegative, integral 1, support shrinking to 0):
 For the GFF with covariance kernel C, this equals C(x) by `double_mollifier_convergence`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open scoped MeasureTheory
@@ -48,7 +48,7 @@ noncomputable def bumpToSchwartz (φ : ContDiffBump (0 : SpaceTime)) : OSforGFF.
 /-- bumpToSchwartz produces the L¹-normalized bump function. -/
 @[simp]
 theorem bumpToSchwartz_apply (φ : ContDiffBump (0 : SpaceTime)) (x : SpaceTime) :
-    bumpToSchwartz φ x = φ.normed volume x := rfl
+    bumpToSchwartz φ x = φ.normed volume x := by rfl
 
 /-- Translate a Schwartz function by a vector.
     This is an alias for `SchwartzMap.translate` specialized to SpaceTime.

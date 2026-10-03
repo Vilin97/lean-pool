@@ -18,7 +18,7 @@ This file contains the definition of a quantum graph as a projection, and the pr
 
 -/
 
-@[expose] public section
+public section
 
 
 variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fintype (n i)]
@@ -168,7 +168,7 @@ theorem toMatrix_mulLeft_mulRight_adjoint {φ : ∀ i, Module.Dual ℂ (Matrix (
   rfl
 
 /-- Apply a linear map between dependent products to a selected input and output component. -/
-@[simps]
+@[expose, simps]
 def Pi.LinearMap.apply {ι₁ ι₂ : Type _} {E₁ : ι₁ → Type _} [DecidableEq ι₁]
     [∀ i, AddCommMonoid (E₁ i)] [∀ i, Module ℂ (E₁ i)] {E₂ : ι₂ → Type _}
     [∀ i, AddCommMonoid (E₂ i)] [∀ i, Module ℂ (E₂ i)] (i : ι₁) (j : ι₂) :
@@ -352,7 +352,8 @@ theorem Matrix.star_transpose_eq_star_transpose {R n : Type _} [Star R] (A : Mat
 
 -- Star preservation for this tensor-product algebra equivalence requires deep instance search.
 /-- Star algebra equivalence between a matrix tensor product and matrices on product indices. -/
-noncomputable def oneMapTranspose : ℍ ⊗[ℂ] ℍᵐᵒᵖ ≃⋆ₐ[ℂ] Matrix (p × p) (p × p) ℂ :=
+@[expose] noncomputable def oneMapTranspose :
+    ℍ ⊗[ℂ] ℍᵐᵒᵖ ≃⋆ₐ[ℂ] Matrix (p × p) (p × p) ℂ :=
   StarAlgEquiv.ofAlgEquiv
     ((AlgEquiv.TensorProduct.map (1 : ℍ ≃ₐ[ℂ] ℍ) (transposeAlgEquiv p ℂ ℂ).symm).trans
       tensorToKronecker)

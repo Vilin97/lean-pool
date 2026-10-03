@@ -18,7 +18,7 @@ sibling-incidence ledger. Its endpoint checks use only rational arithmetic and t
 isolation interval for `barC`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -63,13 +63,13 @@ theorem separableQuadratic_le_radial_vertices {a₁ a₂ b₁ b₂ d c t₁ t₂
   simpa [value, v11, v1c, vc1] using hfinal
 
 /-- The scalar upper function for a two-point Gram estimate. -/
-def gramPairValue (c u₁ u₂ g₁ g₂ d₁ d₂ off sigma t₁ t₂ : ℝ) : ℝ :=
+@[expose] def gramPairValue (c u₁ u₂ g₁ g₂ d₁ d₂ off sigma t₁ t₂ : ℝ) : ℝ :=
   (u₁ + (g₁ + g₂) * g₁ / sigma) * t₁ ^ 2 - d₁ * t₁ +
     (u₂ + (g₁ + g₂) * g₂ / sigma) * t₂ ^ 2 - d₂ * t₂ +
     sigma - (off + g₁ * g₂ / sigma) * c ^ 2
 
 /-- The largest radial-vertex value in a two-point Gram estimate. -/
-def gramPairMaximum (c u₁ u₂ g₁ g₂ d₁ d₂ off sigma : ℝ) : ℝ :=
+@[expose] def gramPairMaximum (c u₁ u₂ g₁ g₂ d₁ d₂ off sigma : ℝ) : ℝ :=
   max (gramPairValue c u₁ u₂ g₁ g₂ d₁ d₂ off sigma 1 1)
     (max (gramPairValue c u₁ u₂ g₁ g₂ d₁ d₂ off sigma 1 (c - 1))
       (gramPairValue c u₁ u₂ g₁ g₂ d₁ d₂ off sigma (c - 1) 1))

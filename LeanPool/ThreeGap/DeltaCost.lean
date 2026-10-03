@@ -45,7 +45,7 @@ distance), handled separately.
 Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.DeltaCost
 
@@ -78,7 +78,7 @@ theorem delta_attained (α : Fin d → ℝ) (q : ℤ) :
     _ ≤ ‖rem α q p‖ := norm_le_pi_norm _ k
 
 /-- **The defect cost** as a function of a natural-number denominator: `r q = delta α q`. -/
-noncomputable def deltaCost (α : Fin d → ℝ) : ℕ → ℝ := fun q => delta α (q : ℤ)
+@[expose] noncomputable def deltaCost (α : Fin d → ℝ) : ℕ → ℝ := fun q => delta α (q : ℤ)
 
 /-- `hattain` for the record denominators: at each `q_k = bestDenom`, the defect is attained by the
 nearest integer vector. -/

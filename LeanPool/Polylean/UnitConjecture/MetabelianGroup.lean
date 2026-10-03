@@ -30,7 +30,7 @@ We define the cocycle condition and construct a group structure on a structure e
 The main step is to show that the cocyle condition implies associativity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -42,17 +42,17 @@ variable (c : Q → Q → K) [ccl : Cocycle c]
 
 /-- The multiplication operation defined using the cocycle.
 The cocycle condition is crucially used in showing associativity and other properties. -/
-@[reducible, aesop norm unfold (rule_sets := [Metabelian])]
+@[expose, reducible, aesop norm unfold (rule_sets := [Metabelian])]
 def mul : (K × Q) → (K × Q) → (K × Q)
   | (k, q), (k', q') => (k + ccl.α q k' + c q q', q + q')
 
 /-- The identity element of the Metabelian group,
   which is the ordered pair of the identities of the individual groups. -/
-@[reducible, aesop norm unfold (rule_sets := [Metabelian])]
+@[expose, reducible, aesop norm unfold (rule_sets := [Metabelian])]
 def e : K × Q := (0, 0)
 
 /-- The inverse operation of the Metabelian group. -/
-@[reducible, aesop norm unfold (rule_sets := [Metabelian])]
+@[expose, reducible, aesop norm unfold (rule_sets := [Metabelian])]
 def inv : K × Q → K × Q
   | (k, q) => (- (ccl.α (-q) (k + c q (-q))), -q)
 
@@ -94,7 +94,7 @@ theorem mul_assoc : ∀ (g g' g'' : K × Q), mul c (mul c g g') g'' = mul c g (m
     · apply add_assoc
 
 /-- A group structure on `K × Q` using the above multiplication operation. -/
-@[reducible]
+@[reducible, expose]
 def metabelianGroup : Group (K × Q) :=
     {
       mul := mul c,

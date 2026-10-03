@@ -21,7 +21,7 @@ is the left unitor of `RS.gammaPairComparison_unitLeft`; the odd
 line is passed in as a hypothesis and discharged separately.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

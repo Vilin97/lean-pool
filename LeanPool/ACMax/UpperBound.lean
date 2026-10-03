@@ -23,7 +23,7 @@ two-range assembly in `Band.Final`: the low-order proof handles `4 ≤ n ≤ 31`
 and the incidence-capacity and exact Moore arguments jointly handle `n ≥ 32`.
 -/
 
-@[expose] public section
+public section
 
 namespace ACMax
 

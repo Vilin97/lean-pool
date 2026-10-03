@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCylinder
 
 /-! Uniform control of every classical derivative word by actual strong Sobolev jets. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -82,9 +82,9 @@ theorem word_sub {m : ℕ} (w : Fin m → Fin 4) (f g : LiftDomain period → Ve
     iteratedFieldDerivative period w (fun y => f y - g y) =
       fun x => iteratedFieldDerivative period w f x - iteratedFieldDerivative period w g x := by
   induction m with
-  | zero => rfl
+  | zero => simp only [iteratedFieldDerivative_zero]
   | succ m ih =>
-    rw [iteratedFieldDerivative_succ, ih (Fin.tail w)]
+    simp only [iteratedFieldDerivative_succ, ih (Fin.tail w)]
     funext x
     exact fieldDerivative_sub period (standardDirection (w 0)) _ _
       (iteratedFieldDerivative_smooth period (Fin.tail w) f hf)
@@ -205,7 +205,8 @@ theorem exists_continuous_representative (U : LiftL2 period)
   · apply hg.continuous
     apply Filter.Eventually.frequently
     exact Filter.Eventually.of_forall fun n =>
-      smoothField_continuous period _ (smoothMollifier_smooth period n U)
+      smoothField_continuous period _
+        (iteratedFieldDerivative_smooth period w _ (smoothMollifier_smooth period n U))
   · simpa only [SpatialJet.word_zero] using smoothMollifier_word_limit_ae period U J w g hg
 
 end EulerMollifierUniform

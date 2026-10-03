@@ -26,7 +26,7 @@ We use:
   complex-differentiable.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter Topology
 open scoped Topology

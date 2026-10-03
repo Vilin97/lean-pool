@@ -19,7 +19,7 @@ insertion is inserting after multiplying.  These are the
 compatibility squares consumed by the colimit algebra.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -248,6 +248,7 @@ section Colimit
 
 /-- **The algebra of the splitting chain**: the colimit of the
 symmetric stages along the seed transitions. -/
+@[expose]
 noncomputable def chainB
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]
@@ -318,6 +319,7 @@ theorem chainB_isCommMonObj
 
 /-- **The unit of the splitting-chain algebra**: the seed at the
 bottom stage. -/
+@[expose]
 noncomputable def chainBUnit
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

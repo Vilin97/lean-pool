@@ -25,7 +25,7 @@ needed to reduce “nonnegativity of real parts” to “nonnegativity of coeffi
 that the relevant Taylor coefficients are real.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped ComplexConjugate

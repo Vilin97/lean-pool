@@ -18,7 +18,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Quantitative cutoff energy estimates used in the three-dimensional interior bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

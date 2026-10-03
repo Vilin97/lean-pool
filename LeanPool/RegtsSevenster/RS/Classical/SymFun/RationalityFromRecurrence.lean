@@ -23,7 +23,7 @@ pair, factors both over ℂ, and reads off the power-sum identity
 from the logarithmic derivative of `H = P₀/Q₀`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

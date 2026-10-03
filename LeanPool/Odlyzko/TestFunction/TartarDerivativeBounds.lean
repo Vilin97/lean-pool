@@ -18,7 +18,7 @@ import Mathlib.Data.Nat.Factorial.DoubleFactorial
 Supporting definitions and lemmas for the Odlyzko-bound formalization.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -30,7 +30,7 @@ open scoped Topology
 namespace NumberField.Odlyzko
 
 /-- A tartar amplitude derivative integrand used in the Odlyzko-bound argument. -/
-noncomputable def tartarAmplitudeDerivativeIntegrand (x t : ℝ) : ℝ :=
+@[expose] noncomputable def tartarAmplitudeDerivativeIntegrand (x t : ℝ) : ℝ :=
   -t * Tartar.weight t * Real.sin (x * t)
 
 theorem hasDerivAt_tartarWeight_mul_cos (x t : ℝ) :
@@ -229,7 +229,7 @@ theorem hasDerivAt_scaledTartarTestFunction (y x : ℝ) :
   ring
 
 /-- A regularized scaled tartar derivative used in the Odlyzko-bound argument. -/
-noncomputable def regularizedScaledTartarDerivative
+@[expose] noncomputable def regularizedScaledTartarDerivative
     (y δ x : ℝ) : ℝ :=
   (y * deriv Tartar.testFunction (y * x) -
       2 * δ * x * scaledTartarTestFunction y x) *

@@ -49,7 +49,7 @@ degenerates to `TransitionSystem` and `internalCircuitCount` equals
 `circuitCount`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -66,6 +66,7 @@ variable {W : Fragment α}
 open scoped Classical in
 /-- The internal flags of an edge subset: participating flags attached
 to a vertex. -/
+@[expose]
 noncomputable def internalFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags.filter (fun f => ∃ v : W.Vertex, W.attach f = Sum.inl v)
 
@@ -80,6 +81,7 @@ theorem mem_internalFlags_iff {f : W.Flag} {F : EdgeSubset W} :
 open scoped Classical in
 /-- The boundary flags of an edge subset: participating flags attached
 to a boundary label. -/
+@[expose]
 noncomputable def boundaryFlags (F : EdgeSubset W) : Finset W.Flag :=
   F.flags.filter (fun f => ∃ i : α, W.attach f = Sum.inr i)
 
@@ -137,6 +139,7 @@ theorem boundaryFlag_mem_boundaryFlags {F : EdgeSubset W} {a : α}
   · exact hbd
 
 /-- All participating flags are internal (no boundary flags). -/
+@[expose]
 def allInternal (F : EdgeSubset W) : Prop := F.boundaryFlags = ∅
 
 /-- When all flags are internal, a participating flag is internal. -/
@@ -180,6 +183,7 @@ theorem mem_internalFlags_of {F : EdgeSubset W} {f : W.Flag}
 
 open scoped Classical in
 /-- Every `TransitionSystem` is a `RelTransitionSystem`. -/
+@[expose]
 def TransitionSystem.toRelTransitionSystem {F : EdgeSubset W}
     (κ : F.TransitionSystem) : F.RelTransitionSystem where
   match_ := κ.match_
@@ -196,6 +200,7 @@ def TransitionSystem.toRelTransitionSystem {F : EdgeSubset W}
 
 /-- The walk map on flags via a relative transition: follow pairing
 then matching. -/
+@[expose]
 noncomputable def RelTransitionSystem.internalWalk {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) (f : W.Flag) : W.Flag :=
   κ.match_ (W.pairing f)
@@ -252,6 +257,7 @@ theorem RelTransitionSystem.internalWalk_injOn_of_allInternal
 
 /-- The walk permutation on internal flags, when all flags are
 internal. -/
+@[expose]
 noncomputable def RelTransitionSystem.walkPermInternal
     {F : EdgeSubset W} (κ : F.RelTransitionSystem)
     (hall : F.allInternal) :
@@ -265,6 +271,7 @@ noncomputable def RelTransitionSystem.walkPermInternal
           (congrArg Subtype.val h))))
 
 /-- The internal circuit count when all flags are internal. -/
+@[expose]
 noncomputable def RelTransitionSystem.internalCircuitCount
     {F : EdgeSubset W} (κ : F.RelTransitionSystem)
     (hall : F.allInternal) : ℕ :=
@@ -350,6 +357,7 @@ structure RelTransitionSystem.Orientation {F : EdgeSubset W}
 /-- Follow the chain from a flag: apply pairing, check if boundary;
 if internal, apply matching and recurse.  Returns `none` if the fuel
 runs out. -/
+@[expose]
 noncomputable def traceChain {F : EdgeSubset W}
     (κ : F.RelTransitionSystem) : ℕ → W.Flag → Option W.Flag
   | 0, _ => none

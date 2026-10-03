@@ -20,7 +20,7 @@ two explicit log-barriers on the annuli `1 ≤ |ζ ∓ 4| ≤ 2`: values `≥ 3/
 resp. `≤ 1/4` at the witness points `±4 + 2^(1/4)`.
 -/
 
-@[expose] public section
+public section
 
 open Set Topology Metric MeasureTheory InnerProductSpace Complex Filter
 
@@ -41,6 +41,7 @@ section Config
 variable (e : OpenPartialHomeomorph X ℂ)
 
 /-- The surface `X` minus the two closed configuration disks. -/
+@[expose]
 def configY : Set X :=
   univ \ (e.symm '' closedBall (-4) 1 ∪ e.symm '' closedBall 4 1)
 

@@ -18,7 +18,7 @@ public import Mathlib.Analysis.Convex.Measure
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal
@@ -171,6 +171,7 @@ theorem euclideanClosedBall_one_ae_eq_euclideanBall :
     exact measure_mono_null hsub measure_empty
 
 /-- Explicit L² Poincare coefficient on the unit Euclidean ball. -/
+@[expose]
 noncomputable def euclideanBallPoincareConstant : ℝ≥0∞ :=
   let A : ℝ :=
     (MeasureTheory.volume seeleyUnitEuclideanBall).toReal⁻¹ *

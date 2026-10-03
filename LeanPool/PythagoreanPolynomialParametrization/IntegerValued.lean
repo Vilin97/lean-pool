@@ -21,7 +21,7 @@ This file contains the explicit four-variable integer-valued polynomial triple f
 Frisch and Vaserstein's main theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PythagoreanPolynomialParametrization
 
@@ -30,16 +30,16 @@ open MvPolynomial
 
 
 /-- Variable x (index 0) in the 4-variable rational polynomial ring. -/
-noncomputable def xVar : RatPoly 4 := X 0
+@[expose] noncomputable def xVar : RatPoly 4 := X 0
 
 /-- Variable y (index 1) in the 4-variable rational polynomial ring. -/
-noncomputable def yVar : RatPoly 4 := X 1
+@[expose] noncomputable def yVar : RatPoly 4 := X 1
 
 /-- Variable z (index 2) in the 4-variable rational polynomial ring. -/
-noncomputable def zVar : RatPoly 4 := X 2
+@[expose] noncomputable def zVar : RatPoly 4 := X 2
 
 /-- Variable w (index 3) in the 4-variable rational polynomial ring. -/
-noncomputable def wVar : RatPoly 4 := X 3
+@[expose] noncomputable def wVar : RatPoly 4 := X 3
 
 /-- a = y + z·w -/
 noncomputable def aParam : RatPoly 4 := yVar + zVar * wVar

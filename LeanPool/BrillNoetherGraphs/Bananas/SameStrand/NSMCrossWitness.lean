@@ -18,7 +18,7 @@ records the normal-form calculation abstractly, so the eventual case split
 does not need to unfold a concrete banana divisor.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

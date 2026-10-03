@@ -13,4 +13,4 @@ public import LeanPool.PLAcceleratedNesterovLean.Convergence.Bootstrap.Step2
 # Bootstrap estimates for PL-accelerated Nesterov convergence
 -/
 
-@[expose] public section
+public section

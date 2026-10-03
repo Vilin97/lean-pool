@@ -17,7 +17,7 @@ small transport lemma is useful when nested induced-subgraph cuts introduce
 extra subtype layers around an already-certified marker cycle.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities
 

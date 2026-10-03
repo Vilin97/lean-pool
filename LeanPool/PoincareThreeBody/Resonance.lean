@@ -19,7 +19,7 @@ of a putative first integral annihilate the same nonzero resonance vector. In tw
 two covectors must therefore be linearly dependent.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 
@@ -31,7 +31,7 @@ def dot (u v : ActionSpace) : ℝ :=
   ∑ i, u i * v i
 
 /-- The oriented area spanned by two vectors in the action space. -/
-def wedge (u v : ActionSpace) : ℝ :=
+@[expose] def wedge (u v : ActionSpace) : ℝ :=
   u 0 * v 1 - u 1 * v 0
 
 lemma dot_eq (u v : ActionSpace) : dot u v = u 0 * v 0 + u 1 * v 1 := by

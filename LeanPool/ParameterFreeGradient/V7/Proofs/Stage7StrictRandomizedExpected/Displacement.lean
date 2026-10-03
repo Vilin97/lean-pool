@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage7StrictRandomizedExp
 Measurable finite displacement bounds admit a deterministic threshold with high probability.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 

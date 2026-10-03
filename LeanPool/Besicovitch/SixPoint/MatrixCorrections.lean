@@ -15,7 +15,7 @@ public import LeanPool.Besicovitch.SixPoint.NormEstimates
 Certificate families use these signed corrections to dominate their off-diagonal residuals.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -42,6 +42,7 @@ theorem pairCorrection_posSemidef [Finite ι] (r : ℝ) (i j : ι) :
   (Matrix.posSemidef_vecMulVec_self_star (pairVector r i j)).smul (abs_nonneg r)
 
 /-- Complete a five-vector certificate with positive two-coordinate corrections. -/
+@[expose]
 def fivePairCompletion (base : Matrix (Fin 5) (Fin 5) ℝ)
     (residual : Fin 5 → Fin 5 → ℝ) : Matrix (Fin 5) (Fin 5) ℝ :=
   base +

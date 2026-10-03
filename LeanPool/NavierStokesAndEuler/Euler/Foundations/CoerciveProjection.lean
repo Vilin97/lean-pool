@@ -15,7 +15,7 @@ hypothesis is an explicit quadratic inequality on the given bounded operator.
 This does not assert the Fourier or Sobolev realization of the pressure space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -41,6 +41,7 @@ section Complete
 variable [CompleteSpace E]
 
 /-- Lax--Milgram constructs an equivalence from the operator's coercivity. -/
+@[expose]
 def coerciveEquiv (T : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hT : ∀ x, c * ‖x‖ ^ 2 ≤ ⟪T x, x⟫_ℝ) : E ≃L[ℝ] E :=
   (operatorBilinear_coercive T c hc hT).continuousLinearEquivOfBilin
@@ -54,6 +55,7 @@ theorem coerciveEquiv_apply (T : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
   exact (operatorBilinear_coercive T c hc hT).continuousLinearEquivOfBilin_apply x y
 
 /-- The inverse operator constructed from the coercive Lax–Milgram equivalence. -/
+@[expose]
 def coerciveInverse (T : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hT : ∀ x, c * ‖x‖ ^ 2 ≤ ⟪T x, x⟫_ℝ) : E →L[ℝ] E :=
   (coerciveEquiv T c hc hT).symm.toContinuousLinearMap
@@ -141,7 +143,7 @@ section Subspace
 variable (S : Submodule ℝ E) [CompleteSpace S]
 
 /-- Orthogonal projection of the given ambient operator, restricted to the subspace. -/
-def projectedOperator (G : E →L[ℝ] E) : S →L[ℝ] S :=
+@[expose] def projectedOperator (G : E →L[ℝ] E) : S →L[ℝ] S :=
   S.orthogonalProjectionOnto.comp (G.comp S.subtypeL)
 
 theorem projectedOperator_inner (G : E →L[ℝ] E) (x y : S) :
@@ -155,7 +157,7 @@ theorem projectedOperator_coercive (G : E →L[ℝ] E) (c : ℝ)
   exact hG x
 
 /-- The projected-pressure inverse, constructed by applying Lax--Milgram on `S`. -/
-def projectedInverse (G : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
+@[expose] def projectedInverse (G : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hG : ∀ x, c * ‖x‖ ^ 2 ≤ ⟪G x, x⟫_ℝ) : S →L[ℝ] S :=
   coerciveInverse (projectedOperator S G) c hc (projectedOperator_coercive S G c hG)
 
@@ -203,7 +205,7 @@ theorem projectedInverse_norm_sub_le (G H : E →L[ℝ] E) (c d : ℝ)
         (mul_nonneg (inv_nonneg.2 hc.le) (inv_nonneg.2 hd.le))
 
 /-- Solves the projected equation with an ambient forcing vector. -/
-def pressureSolver (G : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
+@[expose] def pressureSolver (G : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hG : ∀ x, c * ‖x‖ ^ 2 ≤ ⟪G x, x⟫_ℝ) : E →L[ℝ] S :=
   (projectedInverse S G c hc hG).comp S.orthogonalProjectionOnto
 

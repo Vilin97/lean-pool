@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderTranslationAdjoint
 
 /-! The actual history solve commutes with all mixed spatial/angular translations. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -56,7 +56,7 @@ variable {T : ℝ} {U E : Type*}
 
 /-- The actual translated coefficient fields, with their inherited pointwise
 time derivatives and unchanged coercivity constants. -/
-def shifted (a : Space) : Coefficients T U E where
+@[expose] def shifted (a : Space) : Coefficients T U E where
   time_pos := D.time_pos
   Q := translateCoefficientPath D.Q a
   Q₁ := translateCoefficientPath D.Q₁ a

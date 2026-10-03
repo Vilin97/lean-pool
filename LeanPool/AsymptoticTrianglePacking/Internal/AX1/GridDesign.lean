@@ -33,7 +33,7 @@ public import LeanPool.AsymptoticTrianglePacking.Internal.Prelude
 
 /-! # GridShiftUnique -/
 
-@[expose] public section
+public section
 
 open Finset
 
@@ -98,7 +98,7 @@ end
 
 /-! # GridDesign -/
 
-@[expose] public section
+public section
 
 open Finset SimpleGraph
 

@@ -10,7 +10,7 @@ public import LeanPool.GapCVP.Part03C
 
 /-! # GapCVP proof, part 03, continuation 04 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -674,7 +674,7 @@ def canonicalMachineOutput (input : List Bool) : List Bool :=
   simp only [canonicalMachineOutput, BinaryEncoding.readLengthPrefixedWord_append, Fin.isValue]
 
 /-- GapCVP reduction support. -/
-def canonicalInputBudget (input : List Bool) : ℕ :=
+@[expose] def canonicalInputBudget (input : List Bool) : ℕ :=
   64 * (input.length + 1) * (input.length + 1) + 64
 
 /-- A bounded execution parsing a length-prefixed header and its following formula body. -/
@@ -2128,7 +2128,7 @@ open GapCVP.BinaryEncoding GapCVP.CLStructuralPrefixWriter
 open GapCVP.CLStructuralNaturalBinaryWriter
 
 /-- GapCVP reduction support. -/
-def structuralAtomicNaturalWord (input : List Bool) : List Bool :=
+@[expose] def structuralAtomicNaturalWord (input : List Bool) : List Bool :=
   encodeAtomic input.length
 
 theorem structuralAtomicNaturalWord_eq_prefix (input : List Bool) :
@@ -2159,7 +2159,7 @@ open GapCVP.CLCellRowBounds GapCVP.CLCompleteVerifierSimulation
 open GapCVP.CLPaddedAcceptanceCompiler GapCVP.BinaryEncoding GapCVP.ThreeCNFReduction
 
 /-- GapCVP reduction support. -/
-def paddedStructuralTableauSimulation
+@[expose] def paddedStructuralTableauSimulation
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -2168,7 +2168,7 @@ def paddedStructuralTableauSimulation
     (paddedAcceptanceLocalTableauCompiler bound machine)
 
 /-- GapCVP reduction support. -/
-def structuralWholeSourceClauses
+@[expose] def structuralWholeSourceClauses
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -2180,7 +2180,7 @@ def structuralWholeSourceClauses
       bound machine x))
 
 /-- GapCVP reduction support. -/
-def structuralWholeThreeCNF
+@[expose] def structuralWholeThreeCNF
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -2189,7 +2189,7 @@ def structuralWholeThreeCNF
     (structuralWholeSourceClauses bound machine x)
 
 /-- GapCVP reduction support. -/
-def structuralWholeCNFWord
+@[expose] def structuralWholeCNFWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -2295,25 +2295,25 @@ noncomputable instance : Fintype EncodedWordOrdering where
   complete ordering := by cases ordering <;> simp
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingFirst : EncodedWordOrdering → Bool
+@[expose] def encodedWordOrderingFirst : EncodedWordOrdering → Bool
   | .invalid => false
   | .less => false
   | .equal => true
   | .greater => true
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingSecond : EncodedWordOrdering → Bool
+@[expose] def encodedWordOrderingSecond : EncodedWordOrdering → Bool
   | .invalid => false
   | .less => true
   | .equal => false
   | .greater => true
 
 /-- GapCVP reduction support. -/
-def encodedWordOrderingWord (outcome : EncodedWordOrdering) : List Bool :=
+@[expose] def encodedWordOrderingWord (outcome : EncodedWordOrdering) : List Bool :=
   [encodedWordOrderingFirst outcome, encodedWordOrderingSecond outcome]
 
 /-- GapCVP reduction support. -/
-def lexicographicEncodedWordOrdering :
+@[expose] def lexicographicEncodedWordOrdering :
     List Bool → List Bool → EncodedWordOrdering
   | [], [] => .equal
   | [], _ :: _ => .less
@@ -2326,7 +2326,7 @@ def lexicographicEncodedWordOrdering :
       lexicographicEncodedWordOrdering left right
 
 /-- GapCVP reduction support. -/
-def delimitedPairWordOrdering (input : List Bool) : EncodedWordOrdering :=
+@[expose] def delimitedPairWordOrdering (input : List Bool) : EncodedWordOrdering :=
   match readLengthPrefixedWord input with
   | none => .invalid
   | some (first, suffix) =>
@@ -2336,7 +2336,7 @@ def delimitedPairWordOrdering (input : List Bool) : EncodedWordOrdering :=
           lexicographicEncodedWordOrdering first second
 
 /-- GapCVP reduction support. -/
-def sourcePreservingDelimitedPairComparisonWord
+@[expose] def sourcePreservingDelimitedPairComparisonWord
     (input : List Bool) : List Bool :=
   lengthPrefixedWord input ++
     encodedWordOrderingWord (delimitedPairWordOrdering input)

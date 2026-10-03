@@ -20,7 +20,7 @@ ind-category follows from the stage units through the filtered
 criterion.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

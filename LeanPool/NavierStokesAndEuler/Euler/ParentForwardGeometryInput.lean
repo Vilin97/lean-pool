@@ -14,7 +14,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketParentPhysicalBudgets
 actual amplification geometry. The large parent shear needs no short-time
 assumption of the form CM*T≤1/2. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -27,6 +27,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   {D : Data U} {P : ParentFrame D 0} (G : ForwardGuards P) (hball : (1 / 2 : ℝ) ≤ G.radius)
 
 /-- Source growth profile, given by `(G.halfBall_controlledGrowth hball).choose`. -/
+@[expose]
 def sourceGrowthProfile : C(Icc (0 : ℝ) D.T,ℝ) := (G.halfBall_controlledGrowth hball).choose
 
 theorem sourceGrowthProfile_positive (t : Icc (0 : ℝ) D.T) : 0 < G.sourceGrowthProfile hball t :=
@@ -71,6 +72,7 @@ variable {A : Parent} (L : LabelData A) (H : LowBounds A)
   (hsub : support ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
 /-- Geometry forward raw, constructed using `EulerPacketParentPhysicalBudgets.forwardBudget`. -/
+@[expose]
 def geometryForwardRaw :
     EulerTransversePacketForward.Budget (A.transverseData m hm J support hSupport) (Fin 4) 6 :=
   EulerPacketParentPhysicalBudgets.forwardBudget (A.transverseData m hm J support hSupport) 6
@@ -83,6 +85,7 @@ def geometryForwardRaw :
 
 /-- Geometry forward inputs as an element of `ForwardInputs (A.meanData H) (A.transverseData m
 hm J support hSupport)`. -/
+@[expose]
 def geometryForwardInputs (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti) :
     ForwardInputs (A.meanData H) (A.transverseData m hm J support hSupport) := by
   let V := L.geometryForwardRaw m hm J support hSupport P G hball Ω hΩ hΩo hsub hΩball
@@ -100,6 +103,7 @@ def geometryForwardInputs (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti) :
 
 theorem geometryForwardInputs_growth (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti) :
     (L.geometryForwardInputs H m hm J support hSupport P G hball Ω hΩ hΩo hsub hΩball
-      Ti hT1 hTi).linear.g=G.sourceGrowthProfile hball := rfl
+      Ti hT1 hTi).linear.g=G.sourceGrowthProfile hball := by
+  rfl
 
 end EulerParentPacketFrames.LabelData

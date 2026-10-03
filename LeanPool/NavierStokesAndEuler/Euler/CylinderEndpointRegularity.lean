@@ -16,7 +16,7 @@ inverse. The terminal datum's actual translation orbit is the only field
 regularity assumption; output regularity follows from the forced inverse.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

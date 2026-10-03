@@ -117,7 +117,7 @@ which is **not** proved to be the rank — `EuclideanJordan/Rank.lean` proves on
 `card ≤ finrank`.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -356,7 +356,7 @@ noncomputable def diagJordanFrame : JordanFrame (HermitianMat n ℂ) (Fintype.ca
     exact diagFrame_sum
 
 @[simp] theorem diagJordanFrame_p (k : Fin (Fintype.card n)) :
-    (diagJordanFrame (n := n)).p k = diagFrame ((Fintype.equivFin n).symm k) := rfl
+    (diagJordanFrame (n := n)).p k = diagFrame ((Fintype.equivFin n).symm k) := by rfl
 
 /-- **(M4) on a named frame.**  `H_n(ℂ)` is the internal direct sum of the Peirce blocks of the
 diagonal frame — the frame Peirce decomposition with nothing left quantified. -/

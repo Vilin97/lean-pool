@@ -20,7 +20,7 @@ homology functional and its invariance property. The canonical instance used by
 the final proof is constructed later in `RPnMonodromyFunctional`.
 -/
 
-@[expose] public section
+public section
 open CategoryTheory AlgebraicTopology
 
 noncomputable section
@@ -79,7 +79,7 @@ structure MonodromyFunctional (n : ℕ) where
 /-- **The canonical degree-one class** `α ∈ H¹(RPⁿ; F₂)` associated to the
 canonical double cover, built from the monodromy functional `m`. It is a genuine
 element of `rpCohomology n 1`. -/
-noncomputable def rpAlpha (n : ℕ) (m : MonodromyFunctional n) : rpCohomology n 1 :=
+@[expose] noncomputable def rpAlpha (n : ℕ) (m : MonodromyFunctional n) : rpCohomology n 1 :=
   rpAlphaOfFunctional n m.g
 
 /-- `rpAlpha n m` is the class produced by the universal coefficient surjection

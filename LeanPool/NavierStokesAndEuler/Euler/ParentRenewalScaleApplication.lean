@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketForwardGeometryLowBounds
 source branches. Its inputs are the existing frame and neighbor costs,
 with no assumed estimate for the new coupling or tilt. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

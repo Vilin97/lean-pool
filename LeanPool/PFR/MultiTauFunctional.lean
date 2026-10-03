@@ -117,6 +117,7 @@ lemma multiTau_continuous {G Ω₀ : Type u} [MeasurableFinGroup G] [Topological
   apply Continuous.add (Continuous.sub ?_ ?_) ?_
   · let f : (Fin p.m → G) → G := fun x ↦ ∑ i, x i
     have fcont : Continuous f := by fun_prop
+    simp only [entropy_def]
     change Continuous fun (x : Fin p.m → ProbabilityMeasure G) ↦
       Hm[(ProbabilityMeasure.map (ProbabilityMeasure.pi x) f : Measure G)]
     apply continuous_measureEntropy_probabilityMeasure.comp

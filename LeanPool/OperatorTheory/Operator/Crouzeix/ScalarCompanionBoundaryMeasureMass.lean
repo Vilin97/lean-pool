@@ -39,7 +39,7 @@ fundamental theorem then gives the mass identity.
   geometry gives sharp boundary-phase contractivity for every polynomial.
 -/
 
-@[expose] public section
+public section
 
 open Complex Filter MeasureTheory Set
 open scoped Interval Real

@@ -20,7 +20,7 @@ mathematically
 heavier half and is recorded as `proposition_2_1_of_le`.
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.ContinuousLattice
 
@@ -34,6 +34,7 @@ variable {X D : Type*} [TopologicalSpace X] [CompleteLattice D]
 
 /-- **Scott 1972, §2.** The *specialization order*: `x ⊑ y` when `x ∈ U` open
 implies `y ∈ U`. -/
+@[expose]
 def SpecializationLe (x y : X) : Prop :=
   ∀ U, IsOpen U → x ∈ U → y ∈ U
 
@@ -52,7 +53,7 @@ theorem specializationLe_antisymm [T0Space X] {x y : X}
 
 /-- Scott's induced topology on a complete lattice, realized as mathlib's Scott
 topology. -/
-@[reducible] noncomputable def scottTopologicalSpace : TopologicalSpace D :=
+@[expose, reducible] noncomputable def scottTopologicalSpace : TopologicalSpace D :=
   Topology.scott D univ
 
 theorem ScottOpen_iff_dirSupInacc {U : Set D} : ScottOpen U ↔ IsUpperSet U ∧ DirSupInacc U := by

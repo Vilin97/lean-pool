@@ -17,7 +17,7 @@ assembled star vector acted on by the sort's model permutation word
 and the degree-sum cast — pushed forward once.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

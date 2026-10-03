@@ -12,7 +12,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketProfileBudget
 
 /-! Profile budgets and their actual path witnesses transport across equal time endpoints. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

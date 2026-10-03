@@ -15,7 +15,7 @@ This file defines the conjugate of a matrix, `matrix.conj` with the notation `�
 (i.e., `xᴴᵀ i j = star (x i j)`), and shows basic properties about it.
 -/
 
-@[expose] public section
+public section
 
 
 namespace Matrix
@@ -26,6 +26,7 @@ variable {α n₁ n₂ : Type _}
 
 /--
 conjugate of matrix defined as $\bar{x} := {(x^*)}^\top$, i.e., $\bar{x}_{ij}=\overline{x_{ij}}$ -/
+@[expose]
 def conj [Star α] (x : Matrix n₁ n₂ α) : Matrix n₁ n₂ α :=
   xᴴᵀ
 

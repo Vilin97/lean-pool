@@ -101,7 +101,7 @@ arcs of the graph's own edges. It is stated in the root `Graph` namespace next t
 appears it belongs there or in `Schoenflies/Graph/Drawing.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -248,7 +248,7 @@ theorem mapsTo_invFun :
 /-- Reverse a chosen matching of two realized ears.  Direction (b) of finite transfer first
 constructs the ear on the target side, so it naturally obtains the matching in the opposite
 direction from the one consumed by `GeneratedPair.split`. -/
-def symm : d.EarHomeo earPos₂ earDraw₂ earPos₁ earDraw₁ where
+@[expose] def symm : d.EarHomeo earPos₂ earDraw₂ earPos₁ earDraw₁ where
   toFun := m.invFun
   invFun := m.toFun
   continuousOn_toFun := m.continuousOn_invFun
@@ -416,7 +416,7 @@ realizations — `def:matched-pair` clause 3 for the structure `S.splitFace d`.
 
 It is an *extension* of `g`, not a new map: `splitHomeo_eqOn` says it agrees with `g` on the
 whole old realized skeleton, which is precisely the field `StageSequence.skelHomeo_succ`. -/
-noncomputable def splitHomeo (g : SkeletonHomeo R₁ R₂)
+@[expose] noncomputable def splitHomeo (g : SkeletonHomeo R₁ R₂)
     (hE₁ : d.EarCrosscut R₁ earPos₁ earDraw₁) (hE₂ : d.EarCrosscut R₂ earPos₂ earDraw₂)
     (m : d.EarHomeo earPos₁ earDraw₁ earPos₂ earDraw₂) :
     SkeletonHomeo (d.realize R₁ earPos₁ earDraw₁ hE₁) (d.realize R₂ earPos₂ earDraw₂ hE₂) where

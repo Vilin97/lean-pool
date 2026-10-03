@@ -35,7 +35,7 @@ Thus every `StableRegularApproximation` canonically determines the
 `ZeroFreeEndpointInterpolant` required by the exact relative-collar interface.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 

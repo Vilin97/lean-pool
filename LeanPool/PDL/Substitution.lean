@@ -14,7 +14,7 @@ public import LeanPool.PDL.Discon
 The lemmas here are mostly from Sections 2.1 and 2.2.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -22,8 +22,7 @@ namespace PDL
 
 mutual
   /-- Replace atomic proposition `x` by `ψ` in a formula. -/
-  @[simp]
-  def replInF (x : Nat) (ψ : Formula) : Formula → Formula
+  @[expose, simp] def replInF (x : Nat) (ψ : Formula) : Formula → Formula
     | ⊥ => ⊥
     | ·c => if c == x then ψ else ·c
     | ~φ => ~ replInF x ψ φ

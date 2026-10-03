@@ -19,7 +19,7 @@ formula and the monotonicity inequality for the weak energy density associated
 with the package's displayed weak gradient.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

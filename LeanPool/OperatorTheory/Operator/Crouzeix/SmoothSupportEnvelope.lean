@@ -19,7 +19,7 @@ the original convex hull lies in that interior with the explicit rounding
 margin.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 open scoped ComplexConjugate
@@ -41,10 +41,11 @@ noncomputable def smoothSupportDirectionalLinearMap (theta : ℝ) :
   ring
 
 /-- Closed convex envelope cut out by all directional support halfspaces. -/
-def smoothSupportClosedEnvelope (h : ℝ → ℝ) : Set ℂ :=
+@[expose] def smoothSupportClosedEnvelope (h : ℝ → ℝ) : Set ℂ :=
   {z | ∀ theta, polytopeDirectionalValue z theta ≤ h theta}
 
 /-- Open carrier associated with a support function. -/
+@[expose]
 def smoothSupportOpenEnvelope (h : ℝ → ℝ) : Set ℂ :=
   interior (smoothSupportClosedEnvelope h)
 

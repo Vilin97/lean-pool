@@ -15,7 +15,7 @@ seven target directions.  They make the flag ledger numerically usable while
 keeping all proofs in ordinary linear algebra over `F₂`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -23,7 +23,7 @@ namespace N4
 noncomputable section
 
 /-- The linear map from target coefficient vectors to product ANFs. -/
-def targetANFLinear : TargetCoeff →ₗ[F₂] ANF 8 where
+@[expose] def targetANFLinear : TargetCoeff →ₗ[F₂] ANF 8 where
   toFun := targetANF
   map_add' c d := by
     simp only [targetANF, Pi.add_apply, add_smul, Finset.sum_add_distrib]
@@ -32,7 +32,7 @@ def targetANFLinear : TargetCoeff →ₗ[F₂] ANF 8 where
       smul_eq_mul]
 
 @[simp] theorem targetANFLinear_apply (c : TargetCoeff) :
-    targetANFLinear c = targetANF c := rfl
+    targetANFLinear c = targetANF c := by rfl
 
 /-- Seven quadratic monomials, one private to each coordinate of `Mul 4`. -/
 def fourTargetAnchor : Fin 7 → Monomial 8 :=

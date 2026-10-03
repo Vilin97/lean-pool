@@ -36,7 +36,7 @@ survey (§2.4.1, attributed to Lagarias):
 No convex geometry, no kissing number — purely the pigeonhole. Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 

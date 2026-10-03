@@ -16,7 +16,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 # Packet Scale Geometry
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

@@ -17,7 +17,7 @@ The underlying subtree permutations are policy-independent and live in
 rates and deletion masses are equivariant under those permutations.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D.V5.TreeSymmetry
 

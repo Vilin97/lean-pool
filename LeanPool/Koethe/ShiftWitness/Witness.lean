@@ -25,7 +25,7 @@ and its nil ideal is the kernel of the scalar projection. The universe of the
 existential witness is exactly the universe of the ground field.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

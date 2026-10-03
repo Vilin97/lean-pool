@@ -20,7 +20,7 @@ i.e. the interpolant for the root of a proper cluster. Counterexamples to Lemma 
 and (d) as stated in the paper are in `Pdl.ClusterCorrection`.
 -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -108,7 +108,7 @@ cluster along the branch leading to `s`.
 Note that this is *vacuously true* for `.nil`, the root of the whole tableau, which has no
 parent at all. This is why we quantify over all parents instead of demanding that a parent
 exists: the root of a tableau may already be loaded. -/
-def PathIn.isClusterRoot (s : PathIn tab) : Prop :=
+@[expose] def PathIn.isClusterRoot (s : PathIn tab) : Prop :=
   ∀ p : PathIn tab, p ⋖_ s → ¬ s ◃* p
 
 lemma PathIn.isClusterRoot_flip {p : PathIn tab}
@@ -149,7 +149,7 @@ lemma PathIn.isClusterRoot_of_edge_from_free {s t : PathIn tab}
 
 /-- Def 8.14: `e` is an *exit* of the cluster of `s`, i.e. `e ∈ C⁺ \ C` where `C` is the
 cluster of `s`: it is not in the cluster of `s`, but it is a child of a node in it. -/
-def isExitOf (s e : PathIn tab) : Prop :=
+@[expose] def isExitOf (s e : PathIn tab) : Prop :=
   ¬ (e ≡ᶜ s)  ∧  ∃ t : PathIn tab, (t ≡ᶜ s) ∧ t ⋖_ e
 
 lemma isExitOf_flip {s e : PathIn tab} :
@@ -264,7 +264,7 @@ namespace LoadedCluster
 
 /-- Make the `LoadedCluster` of a right-loaded node that is the first node of its cluster.
 This is the way `tabToIntAt` now gets hold of a `LoadedCluster`. -/
-def ofClusterRoot (s : PathIn tab)
+@[expose] def ofClusterRoot (s : PathIn tab)
     (s_cr : s.isClusterRoot) (s_proper : s ◃⁺ s)
     (s_loaded_right : (nodeAt s).2.2.isRight) : LoadedCluster tab where
   root := s
@@ -289,7 +289,7 @@ def ofClusterRoot (s : PathIn tab)
     exact u_in.1
 
 /-- The exits of the cluster, i.e. `C⁺ \ C` from Def 8.14. -/
-def exits (C : LoadedCluster tab) : Finset (PathIn tab) :=
+@[expose] def exits (C : LoadedCluster tab) : Finset (PathIn tab) :=
   (C.CL.biUnion (fun t => t.children.image Subtype.val)).filter (fun e => e ∉ C.CL)
 
 /-- C⁺, the cluster plus its exits. -/
@@ -414,7 +414,7 @@ for the end nodes `Y` of the local tableau at `p`, and they are labelled with `Y
 
 /-- A fine node belongs to the cluster `C` iff its base node is in `C` and either it *is*
 that base node, or one of the children of the base node below it is in `C`. -/
-def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
+@[expose] def memFine (C : LoadedCluster tab) (f : FinePathIn tab) : Prop :=
   f.base ∈ C.CL ∧ ( f.atBigRoot ∨ ∃ q ∈ f.coarseChildrenBelow, q ∈ C.CL )
 
 instance instDecidableMemFine (C : LoadedCluster tab) (f : FinePathIn tab) :
@@ -426,7 +426,7 @@ lemma memFine_toFine (C : LoadedCluster tab) {p : PathIn tab} (p_in : p ∈ C.CL
     C.memFine p.toFine := ⟨by simpa using p_in, Or.inl (by simp)⟩
 
 /-- All fine nodes in the cluster `C`. -/
-def fineCL (C : LoadedCluster tab) : List (FinePathIn tab) :=
+@[expose] def fineCL (C : LoadedCluster tab) : List (FinePathIn tab) :=
   (allFinePaths tab).filter (fun f => decide (C.memFine f))
 
 lemma mem_fineCL (C : LoadedCluster tab) (f : FinePathIn tab) :
@@ -471,15 +471,15 @@ lemma exists_child_memFine_of_not_isLrep (C : LoadedCluster tab)
   · exact C.exists_child_memFine hf hbr
 
 /-- All fine nodes just outside the cluster `C`, i.e. `C⁺ \ C` at the fine level. -/
-def fineExits (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
+@[expose] def fineExits (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
   (C.fineCL.toFinset.sup FinePathIn.children).filter (fun f => decide (¬ C.memFine f))
 
 /-- The fine version of `C⁺`. -/
-def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
+@[expose] def fineCLplus (C : LoadedCluster tab) : Finset (FinePathIn tab) :=
   C.fineCL.toFinset ∪ C.fineExits
 
 /-- `Λ₂[C]`, the right components of the fine nodes of the cluster. -/
-def lambdaTwo (C : LoadedCluster tab) : Finset Sequent :=
+@[expose] def lambdaTwo (C : LoadedCluster tab) : Finset Sequent :=
   (C.fineCL.toFinset.image (fun f => f.label.rightOnly))
 
 /-- `Λ₂[C⁺]`, the right components of the fine nodes of the cluster and of its exits. -/
@@ -487,16 +487,16 @@ def lambdaTwoPlus (C : LoadedCluster tab) : Finset Sequent :=
   (C.fineCLplus.image (fun f => f.label.rightOnly))
 
 /-- `C_Δ` from Def 9.6, at the fine level. -/
-def nodesWithFine (C : LoadedCluster tab) (Δ : Sequent) : List (FinePathIn tab) :=
+@[expose] def nodesWithFine (C : LoadedCluster tab) (Δ : Sequent) : List (FinePathIn tab) :=
   C.fineCL.filter (fun f => decide (f.label.rightOnly = Δ))
 
 /-- `C⁺_Δ` from Def 9.6, at the fine level. -/
-def plusNodesWithFine (C : LoadedCluster tab) (Δ : Sequent) :
+@[expose] def plusNodesWithFine (C : LoadedCluster tab) (Δ : Sequent) :
     Finset (FinePathIn tab) :=
   C.fineCLplus.filter (fun f => decide (f.label.rightOnly = Δ))
 
 /-- `C^R_Δ` from Def 9.6: nodes with right component `Δ` where a right rule is applied. -/
-def nodesWithFineRight (C : LoadedCluster tab) (Δ : Sequent) :
+@[expose] def nodesWithFineRight (C : LoadedCluster tab) (Δ : Sequent) :
     List (FinePathIn tab) :=
   (C.nodesWithFine Δ).filter (fun f => f.usesRightRule)
 
@@ -550,7 +550,7 @@ components of its children. By uniformity (which we do not prove here) this does
 depend on the chosen node. When `C^R_Δ` is empty — which by Lemma 9.7 (d) only happens
 when `C_Δ` is empty, i.e. when `Δ ∉ Λ₂[C]` — we return the empty list, but note that the
 construction of `Q` below never uses `stepOf` in that case. -/
-def stepOf (C : LoadedCluster tab) (Δ : Sequent) : Finset Sequent :=
+@[expose] def stepOf (C : LoadedCluster tab) (Δ : Sequent) : Finset Sequent :=
   match (C.nodesWithFineRight Δ).head? with
   | some f => f.children.image (fun g => g.label.rightOnly)
   | none => {}
@@ -575,7 +575,7 @@ lemma stepOf_ne_nil (C : LoadedCluster tab) {Δ : Sequent}
     simp at g_in
 
 /-- The sorted list of sequents produced by a cluster's step operation. -/
-def stepOfL (C : LoadedCluster tab) : (Δ : Sequent) → List Sequent :=
+@[expose] def stepOfL (C : LoadedCluster tab) : (Δ : Sequent) → List Sequent :=
   Finset.pdlSeqSort ∘ C.stepOf
 
 lemma stepOfL_ne_nil (C : LoadedCluster tab) {Δ : Sequent}
@@ -610,7 +610,7 @@ use of `head?`. -/
 /-- The consequence of uniformity that the quasi-tableau construction needs: any two nodes
 of the cluster with the same right component `Δ` at which a right rule is applied have the
 same right components below them, in the same order. Compare Lemma 9.7 (f). -/
-def HasUniformSteps (C : LoadedCluster tab) : Prop :=
+@[expose] def HasUniformSteps (C : LoadedCluster tab) : Prop :=
   ∀ Δ : Sequent, ∀ f ∈ C.nodesWithFineRight Δ, ∀ g ∈ C.nodesWithFineRight Δ,
     f.children.image (fun h => h.label.rightOnly) = g.children.image (fun h => h.label.rightOnly)
 

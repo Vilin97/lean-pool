@@ -15,7 +15,7 @@ the edges coloured `a` or `b`.  Swapping the two colours on the connected compon
 `x` produces another partial proper edge colouring, colouring exactly the same edges.
 -/
 
-@[expose] public section
+public section
 
 open SimpleGraph Finset
 
@@ -96,6 +96,7 @@ lemma kempeSwapFun_isSome (c : PEC G C) (a b : C) (x u v : V) :
   · rw [kempeSwapFun_of_not_reachable c a b hu v]
 
 /-- Swapping the colours `a` and `b` on the Kempe component of `x`. -/
+@[expose]
 noncomputable def kempeSwap (c : PEC G C) (a b : C) (x : V) : PEC G C where
   col := c.kempeSwapFun a b x
   col_symm := by

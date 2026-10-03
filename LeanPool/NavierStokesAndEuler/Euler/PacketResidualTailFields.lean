@@ -18,7 +18,7 @@ Exact residual-tail grades. Fast pressure is absent beyond degree N, and
 only degree N+1 retains the linear terminal corrector and slow pressure.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -121,7 +121,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -133,6 +133,7 @@ variable {P T : ℝ} [Fact (0 < P)] {O : Operators} {N : ℕ} {a : ℕ → Profi
 
 /-- Tail nonlinear field as an element of `Field P T (fun z => nonlinearGrade (N+1) n
 (O.inverseFrame z) (O.normal z) (knownJets O (N+1) a z))`. -/
+@[expose]
 def PrefixFields.tailNonlinearField (F : PrefixFields P T (N + 1) a)
     (C : CoefficientData P T O) (n : ℕ) :
     Field P T (fun z => nonlinearGrade (N+1) n (O.inverseFrame z) (O.normal z)
@@ -148,6 +149,7 @@ def PrefixFields.tailNonlinearField (F : PrefixFields P T (N + 1) a)
   exact (S.add H).congr (fun _ _ _ => rfl)
 
 /-- Tail linear field used in packet residual tail fields. -/
+@[expose]
 def PrefixFields.tailLinearField (F : PrefixFields P T (N + 1) a)
     (C : CoefficientData P T O) (hT : 0 < T) {correctorT : VectorField}
     (Ct : Field P T correctorT)
@@ -163,7 +165,7 @@ def PrefixFields.tailLinearField (F : PrefixFields P T (N + 1) a)
   · exact (Field.zero P T).congr (fun _ _ _ => by simp [hn])
 
 /-- Tail grade field as an element of `Field P T (fun z => recursiveGrade O N a z n)`. -/
-def PrefixFields.tailGradeField (F : PrefixFields P T (N + 1) a)
+@[expose] def PrefixFields.tailGradeField (F : PrefixFields P T (N + 1) a)
     (C : CoefficientData P T O) (hT : 0 < T) {correctorT : VectorField}
     (Ct : Field P T correctorT)
     (hCt : TimeDerivative hT.le (F.corrector N (Nat.lt_succ_self N)) Ct)
@@ -183,6 +185,7 @@ theorem PrefixFields.tailGradeField_path (F : PrefixFields P T (N + 1) a)
       (F.tailLinearField C hT Ct hCt pressure n).path + (F.tailNonlinearField C n).path := rfl
 
 /-- Tail grades, given by `Ico (N+1) (2*N+3)`. -/
+@[expose]
 def tailGrades (N : ℕ) : Finset ℕ := Ico (N+1) (2*N+3)
 
 theorem tailGrades_card (N : ℕ) : (tailGrades N).card = N+2 := by
@@ -191,6 +194,7 @@ theorem tailGrades_card (N : ℕ) : (tailGrades N).card = N+2 := by
 
 /-- Tail sum field as an element of `Field P T (fun z => ∑ n ∈ tailGrades N, κ^n •
 recursiveGrade O N a z n)`. -/
+@[expose]
 def PrefixFields.tailSumField (F : PrefixFields P T (N + 1) a)
     (C : CoefficientData P T O) (hT : 0 < T) {correctorT : VectorField}
     (Ct : Field P T correctorT)
@@ -214,11 +218,13 @@ namespace ProfileRegularity
 variable {S : Set Space}
 
 /-- Prefix through, given by `prefixFields (fun i hi => G i (by omega))`. -/
+@[expose]
 def prefixThrough (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i)) : PrefixFields P T (N+1) a :=
   prefixFields (fun i hi => G i (by omega))
 
 /-- Tail grade field as an element of `Field P T (fun z => recursiveGrade O N a z n)`. -/
+@[expose]
 def tailGradeField (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
     (C : CoefficientData P T O) (ha : a 0 = 0) (n : ℕ) (hn : N + 1 ≤ n) :
@@ -228,6 +234,7 @@ def tailGradeField (hT : 0 < T)
 
 /-- Tail sum field, given by `(prefixThrough hT G).tailSumField C hT (G N
 le_rfl).correctorDerivative (G N le_rfl).corrector_time (G N le_rfl).pressure ha κ`. -/
+@[expose]
 def tailSumField (hT : 0 < T)
     (G : ∀ i, i ≤ N → ProfileRegularity P T hT.le S (a i))
     (C : CoefficientData P T O) (ha : a 0 = 0) (κ : ℝ) :

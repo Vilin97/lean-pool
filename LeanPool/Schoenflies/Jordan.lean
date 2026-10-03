@@ -89,7 +89,7 @@ blueprint's `Q_j` never appears: only the parameter blocks `[t 0 j, t 2 j]` do.
   `thm:jordan`.
 -/
 
-@[expose] public section
+public section
 
 open Bornology Metric Set unitInterval
 

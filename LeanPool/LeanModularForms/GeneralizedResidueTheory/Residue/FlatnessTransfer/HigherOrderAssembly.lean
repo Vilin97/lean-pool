@@ -33,7 +33,7 @@ The convex-domain specializations (`higherOrderCancel_assembly`,
 `conditionsAB_imply_higherOrderCancel`) are in `FlatnessTransfer.lean`.
 -/
 
-@[expose] public section
+public section
 
 open Complex MeasureTheory Set Filter Topology Finset Real
 open scoped Interval

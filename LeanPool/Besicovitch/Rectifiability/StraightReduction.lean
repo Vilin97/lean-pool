@@ -15,7 +15,7 @@ A hypothetical nonrectifiable finite set has a positive purely unrectifiable par
 piece of that part retains every strictly smaller lower-density threshold almost everywhere.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

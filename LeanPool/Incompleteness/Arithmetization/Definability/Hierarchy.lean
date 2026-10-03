@@ -24,7 +24,7 @@ This file defines the $\Sigma_n / \Pi_n / \Delta_n$ formulas of arithmetic of fi
 
 -/
 
-@[expose] public section
+public section
 
 namespace LO
 namespace FirstOrder
@@ -99,7 +99,7 @@ variable {ξ n}
 namespace Semiformula
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def val {Γ : HierarchySymbol} : Γ.Semiformula ξ n → Semiformula ℒₒᵣ ξ n
+@[expose] def val {Γ : HierarchySymbol} : Γ.Semiformula ξ n → Semiformula ℒₒᵣ ξ n
   | mkSigma φ _ => φ
   | mkPi    φ _ => φ
   | mkDelta φ _ => φ.val
@@ -135,7 +135,7 @@ lemma pi_prop : (φ : Pg-[m].Semiformula ξ n) → Hierarchy Pg m φ.val
   | Pg, φ => φ.pi_prop
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sigma : Dlt-[m].Semiformula ξ n → Sg-[m].Semiformula ξ n
+@[expose] def sigma : Dlt-[m].Semiformula ξ n → Sg-[m].Semiformula ξ n
   | mkDelta φ _ => φ
 
 @[simp] lemma sigma_mkDelta (φ : Sg-[m].Semiformula ξ n) (ψ : Pg-[m].Semiformula ξ n) :
@@ -143,7 +143,7 @@ def sigma : Dlt-[m].Semiformula ξ n → Sg-[m].Semiformula ξ n
   rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pi : Dlt-[m].Semiformula ξ n → Pg-[m].Semiformula ξ n
+@[expose] def pi : Dlt-[m].Semiformula ξ n → Pg-[m].Semiformula ξ n
   | mkDelta _ φ => φ
 
 @[simp] lemma pi_mkDelta (φ : Sg-[m].Semiformula ξ n) (ψ : Pg-[m].Semiformula ξ n) :
@@ -176,11 +176,11 @@ variable {M : Type*} [ORingStruc M]
 variable (M)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ProperOn (φ : Dlt-[m].Semisentence n) : Prop :=
+@[expose] def ProperOn (φ : Dlt-[m].Semisentence n) : Prop :=
   ∀ (e : Fin n → M), Semiformula.Evalbm M e φ.sigma.val ↔ Semiformula.Evalbm M e φ.pi.val
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ProperWithParamOn (φ : Dlt-[m].Semiformula M n) : Prop :=
+@[expose] def ProperWithParamOn (φ : Dlt-[m].Semiformula M n) : Prop :=
   ∀ (e : Fin n → M), Semiformula.Evalm M e id φ.sigma.val ↔ Semiformula.Evalm M e id φ.pi.val
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -234,7 +234,7 @@ lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProvablyProperOn.pr
 end «lp_section_1»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def rew (ω : Rew ℒₒᵣ ξ₁ n₁ ξ₂ n₂) : {Γ :
+@[expose] def rew (ω : Rew ℒₒᵣ ξ₁ n₁ ξ₂ n₂) : {Γ :
     HierarchySymbol} → Γ.Semiformula ξ₁ n₁ → Γ.Semiformula ξ₂ n₂
   | Sg-[_], mkSigma φ hp => mkSigma (ω ▹ φ) (by simpa using hp)
   | Pg-[_], mkPi φ hp    => mkPi (ω ▹ φ) (by simpa using hp)
@@ -323,12 +323,14 @@ lemma sigmaZero {Γ} (φ : Γ-[0].Semiformula ξ k) : Hierarchy Sg 0 φ.val :=
   | Dlt => by simp []
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ofZero {Γ'} (φ : Γ'-[0].Semiformula ξ k) : (Γ : HierarchySymbol) → Γ.Semiformula ξ k
   | Sg-[_] => mkSigma φ.val φ.sigmaZero.of_zero
   | Pg-[_] => mkPi φ.val φ.sigmaZero.of_zero
   | Dlt-[_] => mkDelta (mkSigma φ.val φ.sigmaZero.of_zero) (mkPi φ.val φ.sigmaZero.of_zero)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ofDeltaOne (φ : Dlt1.Semiformula ξ k) : (Γ : SigmaPiDelta) → (m : ℕ) → Γ-[m+1].Semiformula ξ k
   | Sg, m => mkSigma φ.sigma.val (φ.sigma.sigma_prop.mono (by simp))
   | Pg, m => mkPi φ.pi.val (φ.pi.pi_prop.mono (by simp))
@@ -370,6 +372,7 @@ def and : {Γ : HierarchySymbol} → Γ.Semiformula ξ n → Γ.Semiformula ξ n
     mkDelta (mkSigma (φ.sigma.val ⋏ ψ.sigma.val) (by simp)) (mkPi (φ.pi.val ⋏ ψ.pi.val) (by simp))
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def or : {Γ : HierarchySymbol} → Γ.Semiformula ξ n → Γ.Semiformula ξ n → Γ.Semiformula ξ n
   | Sg-[m], φ, ψ => mkSigma (φ.val ⋎ ψ.val) (by simp)
   | Pg-[m], φ, ψ => mkPi (φ.val ⋎ ψ.val) (by simp)
@@ -405,12 +408,12 @@ def bex (t : Semiterm ℒₒᵣ ξ n) : {Γ : HierarchySymbol} → Γ.Semiformul
       !!(Rew.bShift t)”] φ.pi.val) (by simp))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def all (φ : Pg-[m + 1].Semiformula ξ (n + 1)) :
+@[expose] def all (φ : Pg-[m + 1].Semiformula ξ (n + 1)) :
     Pg-[m + 1].Semiformula ξ n :=
   mkPi (∀' φ.val) φ.pi_prop.all
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ex (φ : Sg-[m + 1].Semiformula ξ (n + 1)) :
+@[expose] def ex (φ : Sg-[m + 1].Semiformula ξ (n + 1)) :
     Sg-[m + 1].Semiformula ξ n :=
   mkSigma (∃' φ.val) φ.sigma_prop.ex
 
@@ -572,7 +575,7 @@ lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProperWithParamOn.b
   intro e; simp [Semiformula.bex, hp.iff]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def graphDelta (φ : Sg-[m].Semiformula ξ (k + 1)) : Dlt-[m].Semiformula ξ (k + 1) :=
+@[expose] def graphDelta (φ : Sg-[m].Semiformula ξ (k + 1)) : Dlt-[m].Semiformula ξ (k + 1) :=
   match m with
   | 0     => φ.ofZero _
   | m + 1 => mkDelta φ (mkPi “x. ∀ y, !φ.val y ⋯ → y = x” (by simp))

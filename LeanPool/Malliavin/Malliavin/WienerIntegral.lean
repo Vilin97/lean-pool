@@ -55,7 +55,7 @@ along the dense map `stepToLp` to the Wiener integral `wienerIntegral hB`.
   value as the corresponding product of increments.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -263,6 +263,7 @@ theorem ae_eq_zero_of_forall_setIntegral_Ioc {g : ℝ≥0 → ℝ}
   exact hs ⌈s⌉₊ (Nat.le_ceil s)
 
 /-- The indicator of the interval `(0, t]` as an element of `L²(ℝ≥0)`. -/
+@[expose]
 noncomputable def intervalIndicator (t : ℝ≥0) : Lp ℝ 2 nonnegativeLebesgueMeasure :=
   indicatorConstLp 2 measurableSet_Ioc (nonnegativeLebesgueMeasure_Ioc_ne_top 0 t) (1 : ℝ)
 
@@ -331,6 +332,7 @@ noncomputable def stepToLp : (ℝ≥0 →₀ ℝ) →ₗ[ℝ] Lp ℝ 2 nonnegati
   Finsupp.linearCombination ℝ intervalIndicator
 
 /-- The formal linear combination `v ↦ ∑ₜ vₜ B t` in `L²(P)`. -/
+@[expose]
 noncomputable def stepToRandom (hB : IsPreBrownianReal B P) : (ℝ≥0 →₀ ℝ) →ₗ[ℝ] Lp ℝ 2 P :=
   Finsupp.linearCombination ℝ (brownianLp hB)
 
@@ -362,6 +364,7 @@ theorem denseRange_stepToLp : DenseRange stepToLp := by
 
 /-- **The Wiener integral** `J₁ : L²(ℝ≥0) → L²(P)` of a pre-Brownian process: the continuous
 linear extension of `1_{(0, t]} ↦ B t`. -/
+@[expose]
 noncomputable def wienerIntegral (hB : IsPreBrownianReal B P) :
     Lp ℝ 2 nonnegativeLebesgueMeasure →L[ℝ] Lp ℝ 2 P :=
   (stepToRandom hB).extendOfNorm stepToLp
@@ -414,6 +417,7 @@ theorem norm_wienerIntegral (hB : IsPreBrownianReal B P)
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp h
 
 /-- The Wiener integral as a linear isometry. -/
+@[expose]
 noncomputable def wienerIntegralₗᵢ (hB : IsPreBrownianReal B P) :
     Lp ℝ 2 nonnegativeLebesgueMeasure →ₗᵢ[ℝ] Lp ℝ 2 P :=
   ⟨(wienerIntegral hB).toLinearMap, norm_wienerIntegral hB⟩
@@ -459,6 +463,7 @@ laws; it is the order-one level of any Brownian family. -/
 section BrownianLink
 
 /-- The ordered box `∏ᵢ (u i, v i]` in `Fin n → ℝ≥0`. -/
+@[expose]
 def orderedBox {n : ℕ} (u v : Fin n → ℝ≥0) : Set (Fin n → ℝ≥0) :=
   Set.univ.pi fun i ↦ Set.Ioc (u i) (v i)
 
@@ -472,6 +477,7 @@ theorem iteratedKernelMeasure_orderedBox_ne_top {n : ℕ} (u v : Fin n → ℝ�
   exact ENNReal.prod_ne_top fun i _ ↦ nonnegativeLebesgueMeasure_Ioc_ne_top _ _
 
 /-- The indicator of an ordered box as an order-`n` kernel. -/
+@[expose]
 noncomputable def boxKernel {n : ℕ} (u v : Fin n → ℝ≥0) : IteratedKernel n :=
   indicatorConstLp 2 (measurableSet_orderedBox u v) (iteratedKernelMeasure_orderedBox_ne_top u v)
     (1 : ℝ)
@@ -564,10 +570,12 @@ theorem measurePreserving_funUnique_symm_nnreal :
   (measurePreserving_funUnique nonnegativeLebesgueMeasure (Fin 1)).symm _
 
 /-- Order-one kernels as square-integrable functions of one time variable. -/
+@[expose]
 noncomputable def kernelToLine : IteratedKernel 1 →ₗᵢ[ℝ] Lp ℝ 2 nonnegativeLebesgueMeasure :=
   Lp.compMeasurePreservingₗᵢ ℝ _ measurePreserving_funUnique_symm_nnreal
 
 /-- The genuine order-one iterated Itô integral on `IteratedKernel 1`. -/
+@[expose]
 noncomputable def wienerIntegralKernel (hB : IsPreBrownianReal B P) :
     IteratedKernel 1 →L[ℝ] RandomL2 P :=
   (wienerIntegral hB).comp kernelToLine.toContinuousLinearMap
@@ -857,6 +865,7 @@ section Gaussian
 open CameronMartin
 
 /-- The pointwise formal step sum `∑ₜ vₜ B t`. -/
+@[expose]
 def stepSum (B : ℝ≥0 → Ω → ℝ) (v : ℝ≥0 →₀ ℝ) : Ω → ℝ :=
   fun ω ↦ v.sum fun t c ↦ c * B t ω
 
@@ -939,6 +948,7 @@ section FirstChaos
 /-- The genuine Gaussian first chaos of the process: the closed span of the Brownian
 coordinates.  It is not identified here with the selected order-one range of
 `iteratedIntegralFamily`. -/
+@[expose]
 noncomputable def firstChaos (hB : IsPreBrownianReal B P) : Submodule ℝ (RandomL2 P) :=
   (Submodule.span ℝ (Set.range (brownianLp hB))).topologicalClosure
 

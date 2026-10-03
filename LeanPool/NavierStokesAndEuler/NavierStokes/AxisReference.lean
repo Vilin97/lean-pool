@@ -40,7 +40,7 @@ establish convergence of a formal power series, the nonlinear remainder
 estimates, the contraction argument, or the full profile's cone margin.
 -/
 
-@[expose] public section
+public section
 
 namespace NavierStokes.AxisProfile
 
@@ -57,7 +57,7 @@ def radialInverseCoeff (m : ℕ) (f : ℕ → ℝ) : ℕ → ℝ
   | n + 1 => f n / (((n : ℝ) + 1) * ((n : ℝ) + m))
 
 @[simp] theorem radialInverseCoeff_zero (m : ℕ) (f : ℕ → ℝ) :
-    radialInverseCoeff m f 0 = 0 := rfl
+    radialInverseCoeff m f 0 = 0 := by rfl
 
 /-- For positive `m`, the stated shift really inverts the formal radial
 operator.  No assertion about convergence is implicit in this theorem. -/
@@ -206,7 +206,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -597,7 +597,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -715,8 +715,9 @@ theorem referenceCoefficients_profile_eq_series (I : Window) {ε : ℝ} (hε : 0
     (hd : CompatibleData I ε χ d) {η : ℝ} (hη : η ∈ I.interval) (Y : ℝ) :
     AxisEvaluation.profile I ε (referenceCoefficients I hε χ d).1 (Y, η) =
       AxisSeries.profile (inputValue I ε χ η) Y := by
-  exact reference_profile_eq_series I hε χ d.one hd.chi_radial hd.one_radial
-    hη (hd.one_value η hη) Y
+  simpa only [referenceCoefficients_fst, inputValue] using
+    reference_profile_eq_series I hε χ d.one hd.chi_radial hd.one_radial
+      hη (hd.one_value η hη) Y
 
 theorem referenceCoefficients_deriv_Y_eq (I : Window) {ε : ℝ} (hε : 0 < ε)
     (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε))

@@ -22,7 +22,7 @@ spatial infinity. In particular, no global bound on the pointwise velocity
 or its derivatives is used in the escape estimate.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

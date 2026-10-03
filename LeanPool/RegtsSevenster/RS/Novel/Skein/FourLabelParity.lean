@@ -29,7 +29,7 @@ four vertices is transitive iff it has no directed triangle), and a
 uniform decision of all indicators from the six resolved comparisons.
 -/
 
-@[expose] public section
+public section
 
 /- the closing `simp` argument list is shared by all 64 order
 branches, and each branch uses a different subset of it -/

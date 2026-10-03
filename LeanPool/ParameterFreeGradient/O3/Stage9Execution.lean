@@ -23,7 +23,7 @@ The phase-B trace deliberately omits `u₀ = U`, which is reused from Phase A,
 and contains exactly the newly queried points `u₁, …, uₙ, vₙ`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -47,7 +47,7 @@ structure OGMGExecutionConfig (d : ℕ) where
 
 /-- The source-exact configuration: no theta sequence is supplied by the
 caller; it is the frozen special-zero/backward-tail sequence for horizon `n`. -/
-noncomputable def stage9ExecutionConfig {d : ℕ} (n : ℕ)
+@[expose] noncomputable def stage9ExecutionConfig {d : ℕ} (n : ℕ)
     (oracle : PairOracle d) (M : ℝ) (U : Vec d) : OGMGExecutionConfig d :=
   { horizon := n
     oracle := oracle
@@ -72,6 +72,7 @@ structure OGMGExecutionState (d : ℕ) where
   previousV : Vec d
 
 /-- One literal source step. -/
+@[expose]
 noncomputable def ogmgExecutionStep (cfg : OGMGExecutionConfig d) (i : ℕ)
     (state : OGMGExecutionState d) : OGMGExecutionState d :=
   let v := state.current - cfg.M⁻¹ • (cfg.oracle.observe state.current).gradient
@@ -85,20 +86,24 @@ noncomputable def ogmgExecutionStep (cfg : OGMGExecutionConfig d) (i : ℕ)
 
 /-- Primitive-recursive actual execution, beginning from
 `u_0=U, v_(-1)=U`. -/
-noncomputable def ogmgState (cfg : OGMGExecutionConfig d) : ℕ → OGMGExecutionState d
+@[expose] noncomputable def ogmgState
+    (cfg : OGMGExecutionConfig d) : ℕ → OGMGExecutionState d
   | 0 => ⟨cfg.U, cfg.U⟩
   | i + 1 => ogmgExecutionStep cfg i (ogmgState cfg i)
 
 /-- The actual observation at `u_i`. -/
-noncomputable def ogmgObservation (cfg : OGMGExecutionConfig d) (i : ℕ) : Observation d :=
+@[expose] noncomputable def ogmgObservation
+    (cfg : OGMGExecutionConfig d) (i : ℕ) : Observation d :=
   cfg.oracle.observe (ogmgState cfg i).current
 
 /-- The actual queried gradient `g_i`. -/
-noncomputable def ogmgGradient (cfg : OGMGExecutionConfig d) (i : ℕ) : Vec d :=
+@[expose] noncomputable def ogmgGradient
+    (cfg : OGMGExecutionConfig d) (i : ℕ) : Vec d :=
   (ogmgObservation cfg i).gradient
 
 /-- The literal gradient point `v_i=u_i-g_i/M`. -/
-noncomputable def ogmgV (cfg : OGMGExecutionConfig d) (i : ℕ) : Vec d :=
+@[expose] noncomputable def ogmgV
+    (cfg : OGMGExecutionConfig d) (i : ℕ) : Vec d :=
   (ogmgState cfg i).current - cfg.M⁻¹ • ogmgGradient cfg i
 
 @[simp] theorem ogmgState_zero_current (cfg : OGMGExecutionConfig d) :
@@ -252,6 +257,7 @@ noncomputable def ogmgNewIterates (cfg : OGMGExecutionConfig d) : Fin cfg.horizo
   fun i => (ogmgState cfg (i.val + 1)).current
 
 /-- The final extra query is at exactly `v_n`. -/
+@[expose]
 noncomputable def ogmgTerminalObservation (cfg : OGMGExecutionConfig d) : Observation d :=
   cfg.oracle.observe (ogmgV cfg cfg.horizon)
 
@@ -291,21 +297,21 @@ theorem ogmgExecutionTrace_final_iterate_queried (cfg : OGMGExecutionConfig d)
 
 /-- The reused point `u₀=U` and every subsequently queried `u_i`, including
 `u_n`, as an actual oracle observation. -/
-noncomputable def ogmgDataObservation (cfg : OGMGExecutionConfig d)
+@[expose] noncomputable def ogmgDataObservation (cfg : OGMGExecutionConfig d)
     (i : Fin (cfg.horizon + 1)) : Observation d :=
   ogmgObservation cfg i.val
 
 /-- Scalar/vector projections of the actual finite data, ready for the
 algebraic certificate.  These are definitions, not freely supplied arrays. -/
-noncomputable def ogmgFunctionValue (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
+@[expose] noncomputable def ogmgFunctionValue (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
   (ogmgObservation cfg i).value
 
 /-- The squared Euclidean norm of the gradient at an execution query. -/
-noncomputable def ogmgGradientSq (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
+@[expose] noncomputable def ogmgGradientSq (cfg : OGMGExecutionConfig d) (i : ℕ) : ℝ :=
   (lpNorm 2 (ogmgGradient cfg i)) ^ (2 : ℕ)
 
 /-- The gradient at query `j` paired with the difference of gradient-step points `i` and `j`. -/
-noncomputable def ogmgPairTerm (cfg : OGMGExecutionConfig d)
+@[expose] noncomputable def ogmgPairTerm (cfg : OGMGExecutionConfig d)
     (i j : ℕ) : ℝ :=
   pairing (ogmgGradient cfg j) (ogmgV cfg i - ogmgV cfg j)
 
@@ -317,7 +323,7 @@ noncomputable def ogmgPairTerm (cfg : OGMGExecutionConfig d)
   simp [ogmgPairTerm, pairing]
 
 /-- The observable ordered interpolation check for `(i,j)`. -/
-noncomputable def ogmgInterpolationCheck (cfg : OGMGExecutionConfig d)
+@[expose] noncomputable def ogmgInterpolationCheck (cfg : OGMGExecutionConfig d)
     (i j : Fin (cfg.horizon + 1)) : GuardCheck :=
   let oi := ogmgDataObservation cfg i
   let oj := ogmgDataObservation cfg j
@@ -343,7 +349,7 @@ noncomputable def ogmgAllInterpolationChecks
     (ogmgInterpolationCheck cfg i j).kind = .interpolation := rfl
 
 /-- All ordered-pair finite-data interpolation guards pass. -/
-def OGMGAllInterpolationGuardsHold (cfg : OGMGExecutionConfig d) : Prop :=
+@[expose] def OGMGAllInterpolationGuardsHold (cfg : OGMGExecutionConfig d) : Prop :=
   allGuardsPass (ogmgAllInterpolationChecks cfg)
 
 theorem ogmgAllInterpolationGuardsHold_iff

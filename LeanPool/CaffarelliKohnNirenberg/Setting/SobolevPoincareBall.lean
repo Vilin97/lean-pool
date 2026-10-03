@@ -20,7 +20,7 @@ same-ball estimate.  This module records the localization step explicitly; the
 remaining reduction of its outer-ball terms to the original ball is kept separate.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory
 open scoped ENNReal
@@ -478,6 +478,7 @@ theorem seeleyLocalizedSobolevBound (v : Vec 3 → ℝ) (c : ℝ)
       all_goals norm_num
 
 /-- Finite coefficient in the L⁶ Poincare–Sobolev estimate on a Euclidean ball. -/
+@[expose]
 noncomputable def sobolevPoincareL6Constant : ℝ≥0∞ :=
   let Cg : ℝ≥0∞ :=
     2 * (1 + 2 * 675 ^ 2 * 64 + 2 * 3042 ^ 2 * 648) +

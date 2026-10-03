@@ -18,7 +18,7 @@ with the monoidal product, the entry point for the trace
 multiplicativity (Lemma 3.5(b)).
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

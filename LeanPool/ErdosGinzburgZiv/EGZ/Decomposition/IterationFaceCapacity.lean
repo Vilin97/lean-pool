@@ -22,7 +22,7 @@ and composed subdivisions preserve realization. This is the geometric
 no-repeat input for the uniform face-chain bound.
 -/
 
-@[expose] public section
+public section
 
 namespace EGZ.Lineages
 

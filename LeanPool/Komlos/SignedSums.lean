@@ -21,7 +21,7 @@ The proof is by induction on the number of vectors. Split in the direction of th
 vector, apply the induction hypothesis in `E × ℝ`, and use the pullback lemma.
 -/
 
-@[expose] public section
+public section
 
 namespace Komlos
 

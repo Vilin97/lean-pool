@@ -17,7 +17,7 @@ Lemma 4.4. Its derivative kernels have gamma-integrable bounds on the whole
 closed half-line of nonnegative profile arguments.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -36,7 +36,7 @@ def moment (a : ℝ) (n : ℕ) (z : ℝ) : ℝ :=
   ∫ v in Ioi (0 : ℝ), kernel a n z v
 
 /-- The manuscript's normalized radial heat profile, with `a = 1 + h`. -/
-def profile (a z : ℝ) : ℝ := (Real.Gamma a)⁻¹ * moment a 0 z
+@[expose] def profile (a z : ℝ) : ℝ := (Real.Gamma a)⁻¹ * moment a 0 z
 
 theorem base_one_le {z v : ℝ} (hz : 0 ≤ z) (hv : 0 ≤ v) : 1 ≤ 1 + z * v :=
   le_add_of_nonneg_right (mul_nonneg hz hv)
@@ -209,12 +209,12 @@ theorem moment_hasDerivWithinAt {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 ≤ z
   · exact (moment_hasDerivAt ha n hzpos).hasDerivWithinAt
 
 /-- Falling coefficients of the genuine derivative kernels. -/
-noncomputable def derivativeCoeff (a : ℝ) : ℕ → ℝ
+@[expose] noncomputable def derivativeCoeff (a : ℝ) : ℕ → ℝ
   | 0 => 1
   | n + 1 => derivativeCoeff a n * (1 - a - (n : ℝ))
 
 /-- Profile jet, given by `(Real.Gamma a)⁻¹ * derivativeCoeff a n * moment a n z`. -/
-def profileJet (a : ℝ) (n : ℕ) (z : ℝ) : ℝ :=
+@[expose] def profileJet (a : ℝ) (n : ℕ) (z : ℝ) : ℝ :=
   (Real.Gamma a)⁻¹ * derivativeCoeff a n * moment a n z
 
 theorem profileJet_hasDerivWithinAt {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 ≤ z) :
@@ -485,15 +485,15 @@ theorem profile_sub_one_bound {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
 /-! ## The radial heat equation with the source exponent -/
 
 /-- This is `-A`, since `A = 1/2 + h` and `a = 1 + h`. -/
-def spatialExponent (a : ℝ) : ℝ := 1 / 2 - a
+@[expose] def spatialExponent (a : ℝ) : ℝ := 1 / 2 - a
 
 /-- The physical profile in the coordinate `s = r²/2`, at backward time `τ`. -/
-def spatialProfile (a τ s : ℝ) : ℝ :=
+@[expose] def spatialProfile (a τ s : ℝ) : ℝ :=
   s ^ spatialExponent a * profile a (2 * τ / s)
 
 /-- Spatial first, given by `s ^ (spatialExponent a - 1) * (spatialExponent a * profile a (2 * τ
 / s) - (2 * τ / s) * profileJet a 1 (2 * τ / s))`. -/
-def spatialFirst (a τ s : ℝ) : ℝ :=
+@[expose] def spatialFirst (a τ s : ℝ) : ℝ :=
   s ^ (spatialExponent a - 1) *
     (spatialExponent a * profile a (2 * τ / s) -
       (2 * τ / s) * profileJet a 1 (2 * τ / s))
@@ -590,10 +590,10 @@ theorem spatial_heat_identity {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0
   ring
 
 /-- The radial velocity profile in physical radius and backward time. -/
-def radialProfile (a τ r : ℝ) : ℝ := spatialProfile a τ (r ^ 2 / 2)
+@[expose] def radialProfile (a τ r : ℝ) : ℝ := spatialProfile a τ (r ^ 2 / 2)
 
 /-- Radial first, given by `spatialFirst a τ (r ^ 2 / 2) * r`. -/
-def radialFirst (a τ r : ℝ) : ℝ := spatialFirst a τ (r ^ 2 / 2) * r
+@[expose] def radialFirst (a τ r : ℝ) : ℝ := spatialFirst a τ (r ^ 2 / 2) * r
 
 /-- Radial second, given by `spatialSecond a τ (r ^ 2 / 2) * r ^ 2 + spatialFirst a τ (r ^ 2 /
 2)`. -/

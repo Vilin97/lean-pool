@@ -26,7 +26,7 @@ import Mathlib.Topology.MetricSpace.Bounded
 # Lemma 4.1 for Thakur's hypotheses on power sums
 -/
 
-@[expose] public section
+public section
 
 namespace ZetaH123.Lem41
 

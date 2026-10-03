@@ -26,7 +26,7 @@ inequality is the elementary observation from Pflueger--Solomon Lemma
 zero divisor gives a rank-one divisor `k u`.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

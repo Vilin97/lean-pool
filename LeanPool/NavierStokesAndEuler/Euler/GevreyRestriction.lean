@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.GevreyDifferentiatedEquation
 
 /-! Exact restriction compatibility of actual finite Gevrey energies and derivative losses. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

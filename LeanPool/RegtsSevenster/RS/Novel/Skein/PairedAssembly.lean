@@ -41,7 +41,7 @@ Main results: `chainStatusLedger` (the enriched chain induction),
 `pairedLedgerUnsigned`, and `pairedLedger`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -76,6 +76,7 @@ theorem flipSignProd_mul_self (f : α → Fin (2 * ℓ))
       _ = 1 := by rw [h1, h2, h3, one_mul, one_mul]
 
 /-- The accumulated colour relabel of a flip sequence. -/
+@[expose]
 noncomputable def flipColoursFold (f : α → Fin (2 * ℓ))
     (L : List (α × α)) : α → Fin (2 * ℓ) :=
   L.foldl flipColours f

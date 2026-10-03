@@ -19,6 +19,6 @@ import Mathlib.Tactic.Positivity.Finset
 Imported Lean Pool material for `LeanPool.BrauerGroupNew.AbsoluteIsoH2`.
 -/
 
-@[expose] public section
+public section
 
 variable (F F_star : Type) [Field F] [Field F_star] [Algebra F F_star] [IsSepClosure F F_star]

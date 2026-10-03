@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage4AboveTwo.Identity
 Lower bounds for the mixed gradient and mirror residual in above-two geometry.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage4AboveTwo
 
@@ -195,7 +195,7 @@ theorem mixedVectorResidual_lower {p u d : ℝ} (hp : 2 < p)
   linarith
 
 /-- The sum of quadratic gradient, power mirror, and mixed-pairing residual terms. -/
-noncomputable def aboveMixedResidual (p : ℝ) (n : ℕ)
+@[expose] noncomputable def aboveMixedResidual (p : ℝ) (n : ℕ)
     (u dw : ScalarSeq) (A B : VectorSeq d) : ℝ :=
   ∑ k ∈ Finset.range n,
     ((u k / 2) * (lpNorm (conjugateExponent p) (A k - A (k + 1))) ^ (2 : ℕ) +

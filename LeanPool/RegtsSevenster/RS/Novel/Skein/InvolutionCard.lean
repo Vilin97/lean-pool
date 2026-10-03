@@ -19,7 +19,7 @@ edges match flags in pairs, chords match labels in pairs, and a
 directed matching matches its points in pairs.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

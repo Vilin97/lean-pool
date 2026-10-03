@@ -19,7 +19,7 @@ import Mathlib.Analysis.Convex.Caratheodory
 This file develops the continuum-surgery argument for countably many open convex holes.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

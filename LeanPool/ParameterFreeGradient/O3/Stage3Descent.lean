@@ -19,13 +19,13 @@ model, its derivative is nonpositive on `[0,1]`; this yields the coefficient
 inequalities alone.
 -/
 
-@[expose] public section
+public section
 
 namespace O3
 namespace Stage3Anchor
 
 /-- The objective restricted to the affine line from `x` to `y`. -/
-noncomputable def objectiveLine {d : ℕ} (f : Vec d → ℝ)
+@[expose] noncomputable def objectiveLine {d : ℕ} (f : Vec d → ℝ)
     (x y : Vec d) (t : ℝ) : ℝ :=
   f (AffineMap.lineMap x y t)
 

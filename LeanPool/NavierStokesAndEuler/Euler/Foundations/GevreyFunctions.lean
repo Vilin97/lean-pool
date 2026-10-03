@@ -17,7 +17,7 @@ import Mathlib.Analysis.Calculus.ContDiff.Bounds
 # Gevrey Functions
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

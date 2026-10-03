@@ -57,7 +57,7 @@ All set-level constructions are **choice-free** (`#print axioms ⊆ {propext,
 Quot.sound}`).
 -/
 
-@[expose] public section
+public section
 
 namespace Domain.Neighborhood.Exercise421
 
@@ -178,7 +178,7 @@ def addIso (m : ℕ) : ℕ ≃ {k : ℕ // k ∈ upSet m} where
     simp_all
 
 /-- The isomorphism is given by addition: `addIso m n = m + n`. -/
-theorem addIso_apply (m n : ℕ) : (addIso m n : ℕ) = m + n := rfl
+theorem addIso_apply (m n : ℕ) : (addIso m n : ℕ) = m + n := by rfl
 
 /-- The isomorphism sends `0` to the distinguished element `m` of `[m]`. -/
 theorem addIso_zero (m : ℕ) : (addIso m 0 : ℕ) = m := by simp [addIso]

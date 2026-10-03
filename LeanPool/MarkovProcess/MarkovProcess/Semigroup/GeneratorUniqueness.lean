@@ -28,7 +28,7 @@ and the two difference quotients on the right converge to the common value of th
 and `T t f`.  Density of the generator domain extends the identity to the whole space.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

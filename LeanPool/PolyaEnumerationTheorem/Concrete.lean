@@ -12,7 +12,7 @@ public import LeanPool.PolyaEnumerationTheorem.Basic
 # Numbers of distinct colorings for some concrete examples
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

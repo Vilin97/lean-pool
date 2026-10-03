@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.PacketCylinderCoefficientData
 /-! The literal linear, pressure and nonlinear jet expressions have actual cylinder-path witnesses.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,7 +30,7 @@ variable {P T : ℝ} [Fact (0 < P)] {J K : Domain → VectorJet}
 
 /-- Slow advection as an element of `Field P T (fun z => EulerPacketPointJets.slowAdvection
 (inverse z) (J z) (K z))`. -/
-def slowAdvection {inverse : Domain → Space →L[ℝ] Space}
+@[expose] def slowAdvection {inverse : Domain → Space →L[ℝ] Space}
     (A : MatrixCoefficient T inverse) (G : SpatialJetField P T J) (H : SpatialJetField P T K) :
     Field P T (fun z => EulerPacketPointJets.slowAdvection (inverse z) (J z) (K z)) :=
   ((A.multiply G.field).spatialTransport H.field).congr (fun t x θ => by
@@ -41,7 +41,7 @@ def slowAdvection {inverse : Domain → Space →L[ℝ] Space}
 
 /-- Fast advection as an element of `Field P T (fun z => EulerPacketPointJets.fastAdvection
 (normal z) (J z) (K z))`. -/
-def fastAdvection {normal : VectorField} (N : VectorCoefficient T normal)
+@[expose] def fastAdvection {normal : VectorField} (N : VectorCoefficient T normal)
     (G : SpatialJetField P T J) (H : SpatialJetField P T K) :
     Field P T (fun z => EulerPacketPointJets.fastAdvection (normal z) (J z) (K z)) :=
   (G.field.angularTransport H.field N.path N.orbit normal N.raw_eq).congr (fun t x θ => by
@@ -55,7 +55,7 @@ def fastAdvection {normal : VectorField} (N : VectorCoefficient T normal)
 end SpatialJetField
 
 /-- The actual spatial pressure gradient encoded by the pressure-only jet. -/
-def pressureGradient (p : ScalarField) : VectorField := fun z =>
+@[expose] def pressureGradient (p : ScalarField) : VectorField := fun z =>
   (toDual ℝ Space).symm ((pressureJet p z).2.comp spatialInjection)
 
 namespace Field
@@ -63,13 +63,13 @@ namespace Field
 variable {P T : ℝ} [Fact (0 < P)]
 
 /-- Slow pressure, given by `(A.adjoint.multiply G).congr (fun _ _ _ => rfl)`. -/
-def slowPressure {inverse : Domain → Space →L[ℝ] Space}
+@[expose] def slowPressure {inverse : Domain → Space →L[ℝ] Space}
     (A : MatrixCoefficient T inverse) (p : ScalarField) (G : Field P T (pressureGradient p)) :
     Field P T (fun z => EulerPacketPointJets.slowPressure (inverse z) (pressureJet p z)) :=
   (A.adjoint.multiply G).congr (fun _ _ _ => rfl)
 
 /-- The linear time term uses a genuine L² time derivative of the old corrector. -/
-def linearPart {strain : Domain → Space →L[ℝ] Space}
+@[expose] def linearPart {strain : Domain → Space →L[ℝ] Space}
     (A : MatrixCoefficient T strain) {raw raw_t : VectorField}
     (G : Field P T raw) (H : Field P T raw_t) (hT : 0 < T)
     (hd : TimeDerivative hT.le G H) (s : Set ℝ) (hs : s = Icc (0 : ℝ) T) :

@@ -12,7 +12,7 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 
 /-! A dimensional r³ localization estimate, derived from the interior bound. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

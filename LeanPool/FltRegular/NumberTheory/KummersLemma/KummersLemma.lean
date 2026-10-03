@@ -21,7 +21,7 @@ import LeanPool.FltRegular.NumberTheory.KummersLemma.Field
 This file proves the unit form of Kummer's lemma for regular primes.
 -/
 
-@[expose] public section
+public section
 
 open Polynomial IsCyclotomicExtension.Rat
 open scoped NumberField

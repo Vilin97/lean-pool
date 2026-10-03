@@ -20,7 +20,7 @@ the order-by-order expansion be regrouped into the order-free integrand of
 the BKAR forest interpolation formula (see `BKAR.Formula`).
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff
 

@@ -20,7 +20,7 @@ The concrete formula `stepOne` (subformulas / components / Skolem witnesses / re
 to the lifted EM starting family.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -64,7 +64,7 @@ theorem setClosure_countable (stepOne : α → Set α) {Γ₀ : Set α} (hΓ₀ 
 /-- Immediate subformulas and countable-connective components of a formula, over **any** language:
 `imp` gives both parts, `all` gives the body (one higher arity), `iSup`/`iInf` give all
 countably-many components, and the atomic forms give none. -/
-def bfSubformulas {Λ : Language.{0, 0}} :
+@[expose] def bfSubformulas {Λ : Language.{0, 0}} :
     (Σ n, Λ.BoundedFormulaω Empty n) → Set (Σ n, Λ.BoundedFormulaω Empty n)
   | ⟨_, .imp φ ψ⟩ => {⟨_, φ⟩, ⟨_, ψ⟩}
   | ⟨_, .all φ⟩ => {⟨_, φ⟩}

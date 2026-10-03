@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Guards
 Causal local trial actions, observable reports, guard ledgers, and correctness certificates.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 
@@ -26,6 +26,7 @@ structure ObservableGuardCheck (d : ℕ) where
   yPair : Observation d
 
 /-- The point-based failure witness associated with an observation-based guard check. -/
+@[expose]
 def ObservableGuardCheck.failure (check : ObservableGuardCheck d) : ObservableGuardFailure d :=
   ⟨check.kind, check.xPair.point, check.yPair.point⟩
 
@@ -45,6 +46,7 @@ structure TrialReport (d : ℕ) where
   outcome : TrialOutcome d
 
 /-- The number of new oracle observations recorded by the trial. -/
+@[expose]
 def TrialReport.calls (report : TrialReport d) : ℕ := report.trace.length
 
 /-- An observation retained for reuse without another oracle call. -/
@@ -68,7 +70,7 @@ structure LocalTrial (d : ℕ) where
   action : State → LocalTrialAction d State
 
 /-- The finite-fuel local execution, returning no report if its action budget is exhausted. -/
-def LocalTrial.runFuel (trial : LocalTrial d) (oracle : PairOracle d) :
+@[expose] def LocalTrial.runFuel (trial : LocalTrial d) (oracle : PairOracle d) :
     ℕ → trial.State → List (Observation d) → Option (TrialReport d)
   | 0, _, _ => none
   | fuel + 1, state, history =>
@@ -79,12 +81,13 @@ def LocalTrial.runFuel (trial : LocalTrial d) (oracle : PairOracle d) :
           trial.runFuel oracle fuel (next obs) (history ++ [obs])
 
 /-- Some finite-fuel execution from the prescribed initial state returns this report. -/
-def LocalTrial.Executes (trial : LocalTrial d) (M D : ℝ) (cached : CachedPair d)
+@[expose] def LocalTrial.Executes (trial : LocalTrial d) (M D : ℝ) (cached : CachedPair d)
     (oracle : PairOracle d) (report : TrialReport d) : Prop :=
   ∃ fuel, trial.runFuel oracle fuel (trial.initial M D cached) [] = some report
 
 /-- A success report returns an exact queried point meeting the gradient target after accepted
 guards. -/
+@[expose]
 def SuccessCorrect (eps p M : ℝ) (oracle : PairOracle d)
     (report : TrialReport d) : Prop :=
   ∀ obs, report.outcome = .success obs →
@@ -95,6 +98,7 @@ def SuccessCorrect (eps p M : ℝ) (oracle : PairOracle d)
 
 /-- A scale report identifies the first failed guard and certifies that the smoothness estimate is
 too small. -/
+@[expose]
 def ScaleCorrect (p M L : ℝ) (oracle : PairOracle d)
     (report : TrialReport d) : Prop :=
   ∀ failed, report.outcome = .scale failed →
@@ -105,6 +109,7 @@ def ScaleCorrect (p M L : ℝ) (oracle : PairOracle d)
       GuardFails p M oracle failed.failure ∧ M < L
 
 /-- A radius report has accepted guards and certifies that its radius estimate is too small. -/
+@[expose]
 def RadiusCorrect (eps p M D R : ℝ) (oracle : PairOracle d)
     (report : TrialReport d) : Prop :=
   ∀ terminal, report.outcome = .radius terminal →
@@ -114,12 +119,14 @@ def RadiusCorrect (eps p M D R : ℝ) (oracle : PairOracle d)
     eps < lpNorm (conjugateExponent p) terminal.gradient ∧ D < R
 
 /-- The report belongs to one of the three possible terminal outcome cases. -/
+@[expose]
 def TrialOutcomeExhaustive (report : TrialReport d) : Prop :=
   (∃ x, report.outcome = .success x) ∨
   (∃ g, report.outcome = .scale g) ∨
   ∃ x, report.outcome = .radius x
 
 /-- The numbers of consecutive guard checks and calls agree with the terminal outcome. -/
+@[expose]
 def TrialReport.consecutiveGuardAccounting (report : TrialReport d) : Prop :=
   match report.outcome with
   | .success _ => report.checkedGuards.length + 1 = report.calls
@@ -127,7 +134,7 @@ def TrialReport.consecutiveGuardAccounting (report : TrialReport d) : Prop :=
   | .radius _ => report.checkedGuards.length = report.calls
 
 /-- The observation is either cached or present in the trial's new query trace. -/
-def ObservationAvailable (cached : CachedPair d) (report : TrialReport d)
+@[expose] def ObservationAvailable (cached : CachedPair d) (report : TrialReport d)
     (obs : Observation d) : Prop :=
   obs = cached.observation ∨ obs ∈ report.trace
 
@@ -140,18 +147,20 @@ def ConsecutiveAvailable (cached : CachedPair d) (report : TrialReport d)
       before ++ [check.xPair, check.yPair] ++ after
 
 /-- Every recorded guard has a kind in the allowed list. -/
+@[expose]
 def CheckedGuardsHaveKinds (report : TrialReport d)
     (allowed : List ObservableGuardKind) : Prop :=
   ∀ check ∈ report.checkedGuards, check.kind ∈ allowed
 
 /-- A guard of the specified kind and ordered pair of points occurs in the checked list. -/
+@[expose]
 def GuardRecorded (report : TrialReport d) (kind : ObservableGuardKind)
     (x y : Point d) : Prop :=
   ∃ check ∈ report.checkedGuards,
     check.kind = kind ∧ check.xPair.point = x ∧ check.yPair.point = y
 
 /-- Each guard uses the corresponding consecutive pair in the cached observation and query trace. -/
-def ConsecutiveGuardLedger (cached : CachedPair d)
+@[expose] def ConsecutiveGuardLedger (cached : CachedPair d)
     (report : TrialReport d) : Prop :=
   ∀ i < report.checkedGuards.length, ∃ check,
     (report.checkedGuards.drop i).head? = some check ∧
@@ -160,7 +169,7 @@ def ConsecutiveGuardLedger (cached : CachedPair d)
 
 /-- Every predicate reported by the routine is evaluated on exact pairs that
 the routine actually possesses: the cached pair or a chronological query. -/
-def GuardDataExact (cached : CachedPair d) (oracle : PairOracle d)
+@[expose] def GuardDataExact (cached : CachedPair d) (oracle : PairOracle d)
     (report : TrialReport d) : Prop :=
   cached.observation = oracle.observe cached.observation.point ∧
   ∀ check ∈ report.checkedGuards,
@@ -170,6 +179,7 @@ def GuardDataExact (cached : CachedPair d) (oracle : PairOracle d)
     check.yPair = oracle.observe check.yPair.point
 
 /-- Correctness proposition kept separate from observable trial data. -/
+@[expose]
 def TrialCertificate (eps p M D L R : ℝ) (cached : CachedPair d)
     (oracle : PairOracle d)
     (report : TrialReport d) : Prop :=

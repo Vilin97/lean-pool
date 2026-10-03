@@ -17,7 +17,7 @@ the affine and linear parts preserves the cubic projection; its quadratic
 projection changes only by an explicitly rational form.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -25,19 +25,19 @@ namespace N4
 noncomputable section
 
 /-- The minor computing the first coefficient in a rational-plane basis change. -/
-def basisChangeP (β γ : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
+@[expose] def basisChangeP (β γ : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
   γ i * β j + γ j * β i
 
 /-- The minor computing the second coefficient in a rational-plane basis change. -/
-def basisChangeQ (α γ : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
+@[expose] def basisChangeQ (α γ : Fin 3 → F₂) (i j : Fin 3) : F₂ :=
   α i * γ j + α j * γ i
 
 /-- A two-term linear combination of rational-place coefficient vectors. -/
-def coeffCombination (p q : F₂) (α β : Fin 3 → F₂) : Fin 3 → F₂ :=
+@[expose] def coeffCombination (p q : F₂) (α β : Fin 3 → F₂) : Fin 3 → F₂ :=
   p • α + q • β
 
 /-- The two pairs of rational coefficient vectors have the same three exterior minors. -/
-def SameRationalMinors (α β γ δ : Fin 3 → F₂) : Prop :=
+@[expose] def SameRationalMinors (α β γ δ : Fin 3 → F₂) : Prop :=
   ∀ pair : Fin 3,
     rationalCoeffMinor α β (quarticSupportPair pair).1
         (quarticSupportPair pair).2 =
@@ -119,10 +119,12 @@ theorem same_rational_minors_of_wedge_eq
   · simpa [quarticSupportPair] using h12
 
 /-- The first linear factor after applying the inverse two-dimensional basis change. -/
+@[expose]
 def changedFirstLinear (s q : F₂) (ell m : LinearForm) : LinearForm :=
   s • ell + q • m
 
 /-- The second linear factor after applying the inverse two-dimensional basis change. -/
+@[expose]
 def changedSecondLinear (r p : F₂) (ell m : LinearForm) : LinearForm :=
   r • ell + p • m
 

@@ -32,7 +32,7 @@ section
 /-! Quantitative Hessian errors retain one inverse-frequency factor.
 The coefficient bounds are those of the actual source deformation. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -51,7 +51,7 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Fast hessian cost, given by `sobolevEmbeddingConstant P
 3*A*NB.C^2*(NB.Rc+‖coordinateEquiv.symm.toContinuousLinearMap‖*R)`. -/
-def fastHessianCost (R A : ℝ) : ℝ :=
+@[expose] def fastHessianCost (R A : ℝ) : ℝ :=
   sobolevEmbeddingConstant P 3*A*NB.C^2*(NB.Rc+‖coordinateEquiv.symm.toContinuousLinearMap‖*R)
 
 theorem fastHessianRemainder_bound (a : ScalarField)
@@ -98,6 +98,7 @@ variable (D) {raw : VectorField} (G : Field P D.T raw)
 
 /-- Physical covector, given by `(D.FInv.field t (Y t x)).adjoint (raw (t,(Y t x,k*⟪D.m₀,Y t
 x⟫_ℝ)))`. -/
+@[expose]
 def physicalCovector (_G : Field P D.T raw) (k : ℝ) (Y : Icc (0 : ℝ) D.T → Space → Space)
     (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
   (D.FInv.field t (Y t x)).adjoint (raw (t,(Y t x,k*⟪D.m₀,Y t x⟫_ℝ)))
@@ -146,7 +147,7 @@ section
 primary by an actual O(k⁻²) cylinder field, uniformly in the truncation
 length selected by the source frequency guard. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -223,7 +224,7 @@ theorem covectorGrades_one (hN : 1 ≤ N) (hm : (a 1).meanPressure = 0) :
 
 /-- Covector remainder, given by `fieldSum (N+1) κ (covectorGrades N m a)-κ • angularPressure m
 (a 1).highPressure`. -/
-def covectorRemainder (κ : ℝ) : VectorField :=
+@[expose] def covectorRemainder (κ : ℝ) : VectorField :=
   fieldSum (N+1) κ (covectorGrades N m a)-κ • angularPressure m (a 1).highPressure
 
 /-- Covector remainder field as an element of `Field P T (covectorRemainder (N := N) (a := a) m

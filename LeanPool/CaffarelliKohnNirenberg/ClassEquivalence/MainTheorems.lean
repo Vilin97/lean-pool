@@ -54,7 +54,7 @@ statements assume `CKN.IsSuitableWeakSolution`: exactly what
 `def:sws` assumes, and nothing more.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped ENNReal NNReal Topology

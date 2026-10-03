@@ -20,7 +20,7 @@ map, Fourier coefficients, and uniqueness for the zero-mean periodic
 directional equation. Band factors remain explicit.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -166,7 +166,7 @@ theorem coverLinear_apply (z : Plane) : coverLinear z = TorusAverages.covering z
 
 /-- Cover map as an element of `ℕ → Plane →L[ℝ] Plane | 0 => ContinuousLinearMap.id ℝ Plane | n
 + 1 => coverLinear.comp (coverMap n)`. -/
-noncomputable def coverMap : ℕ → Plane →L[ℝ] Plane
+@[expose] noncomputable def coverMap : ℕ → Plane →L[ℝ] Plane
   | 0 => ContinuousLinearMap.id ℝ Plane
   | n + 1 => coverLinear.comp (coverMap n)
 
@@ -229,7 +229,7 @@ theorem timeDerivative_coverMap {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) (n
   rfl
 
 /-- Absolute inverse, given by `directionalInverse .temporal (SmoothFourierData.coefficient f)`. -/
-noncomputable def absoluteInverse (f : Plane → ℂ) : Plane → ℂ :=
+@[expose] noncomputable def absoluteInverse (f : Plane → ℂ) : Plane → ℂ :=
   directionalInverse .temporal (SmoothFourierData.coefficient f)
 
 theorem absoluteInverse_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
@@ -297,7 +297,7 @@ theorem absoluteInverse_coverMap {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
       absoluteInverse_zeroMean hf hp, smul_zero]
 
 /-- The native chart prefactor, including the physical velocity rescaling. -/
-noncomputable def chartPrefactor (h : ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def chartPrefactor (h : ℝ) (n : ℕ) : ℝ :=
   (ChartScales.timeCoefficient h n)⁻¹
 
 theorem chartPrefactor_pos (h : ℝ) (n : ℕ) : 0 < chartPrefactor h n :=
@@ -374,6 +374,7 @@ section CenteredSource
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Remove exactly the auxiliary torus average, retaining every slow parameter. -/
+@[expose]
 noncomputable def centered (f : PressureStream.Lift S → ℝ) (z : PressureStream.Lift S) : ℝ :=
   f z - PressureStream.torusAverage f (z.1, z.2.1)
 
@@ -435,6 +436,7 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- The source in joint slow-parameter/torus coordinates, with the real
 source embedded isometrically in the complex Fourier construction. -/
+@[expose]
 noncomputable def sourceToFamily (f : PressureStream.Lift S → ℝ)
     (z : (ℝ × S) × Plane) : ℂ := f (z.1.1, (z.1.2, z.2))
 
@@ -459,7 +461,7 @@ theorem sourceToFamily_mean (f : PressureStream.Lift S → ℝ) (p : ℝ × S) :
     ← intervalIntegral.integral_ofReal]
 
 /-- The actual normalized temporal Fourier inverse on a real joint family. -/
-noncomputable def temporalInverse (f : PressureStream.Lift S → ℝ)
+@[expose] noncomputable def temporalInverse (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   (SmoothFamilyTorusInverse.inverse .temporal (sourceToFamily f) ((z.1, z.2.1), z.2.2)).re
 
@@ -564,12 +566,12 @@ theorem temporalInverse_coverMap {f : PressureStream.Lift S → ℝ}
     zero_mul, sub_zero]
 
 /-- The desired angular or axial mean increment in its native chart. -/
-noncomputable def desiredIncrement (h : ℝ) (n : ℕ) (f : PressureStream.Lift S → ℝ)
+@[expose] noncomputable def desiredIncrement (h : ℝ) (n : ℕ) (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   -chartPrefactor h n * temporalInverse (centered f) z
 
 /-- The actual fast-time derivative, including its chart coefficient. -/
-noncomputable def fastDerivative (h : ℝ) (n : ℕ) (f : PressureStream.Lift S → ℝ)
+@[expose] noncomputable def fastDerivative (h : ℝ) (n : ℕ) (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ :=
   ChartScales.timeCoefficient h n * PressureStream.graphDz ((0 : S), vector .temporal) f z
 
@@ -639,6 +641,7 @@ section NativePullback
 variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S]
 
 /-- Pullback cover, given by `f (z.1, (z.2.1, coverMap i z.2.2))`. -/
+@[expose]
 noncomputable def pullbackCover (i : ℕ) (f : PressureStream.Lift S → ℝ)
     (z : PressureStream.Lift S) : ℝ := f (z.1, (z.2.1, coverMap i z.2.2))
 
@@ -699,19 +702,20 @@ variable {S : Type} [NormedAddCommGroup S] [NormedSpace ℝ S] [FiniteDimensiona
 
 /-- Axial potential, given by `PressureStream.streamPotential d a b M ((0 : S), v)
 (desiredIncrement h n f)`. -/
+@[expose]
 noncomputable def axialPotential (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamPotential d a b M ((0 : S), v) (desiredIncrement h n f)
 
 /-- Axial update, given by `PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 :
 S), v) (axialPotential d a b M v h n f)`. -/
-noncomputable def axialUpdate (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
+@[expose] noncomputable def axialUpdate (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 : S), v)
     (axialPotential d a b M v h n f)
 
 /-- Radial update, given by `PressureStream.streamBeta w (axialPotential d a b M v h n f)`. -/
-noncomputable def radialUpdate (d a b M : ℝ) (v : Plane) (w : S × Plane) (h : ℝ) (n : ℕ)
+@[expose] noncomputable def radialUpdate (d a b M : ℝ) (v : Plane) (w : S × Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.streamBeta w (axialPotential d a b M v h n f)
 
@@ -725,6 +729,7 @@ theorem radialUpdate_smul_direction (d a b M : ℝ) (v : Plane) (w : S × Plane)
     smul_eq_mul, mul_neg]
 
 /-- The retained compactification alias, with its physical `1/r` factor. -/
+@[expose]
 noncomputable def axialAlias (d a b M : ℝ) (v : Plane) (h : ℝ) (n : ℕ)
     (f : PressureStream.Lift S → ℝ) : PressureStream.Lift S → ℝ :=
   PressureStream.divideRadius (RadialPullback.physicalAlias d a b M ((0 : S), v)
@@ -1075,8 +1080,12 @@ theorem meanClass_centered {a b cL cR : ℝ}
     (hfc : ∀ n, ContDiff ℝ ∞ (f n)) (hp : ∀ n, PressureStream.TorusPeriodicLift (f n)) :
     WeightedClasses.MeanClass
       (WeightedRadialPrimitive.logStripData a b cL cR ha hcL hcR ε R hε hεone hR) α
-      (fun n => centered (f n)) :=
-  UniformFourierAlias.meanClass_realCenterSource ha hcL hcR ε R hε hεone hR hf hfc hp
+      (fun n => centered (f n)) := by
+  have heq (n : ℕ) : UniformFourierAlias.realCenterSource (f n) = centered (f n) := by
+    funext z
+    exact UniformFourierAlias.realCenterSource_apply (f n) z
+  simpa only [heq] using
+    UniformFourierAlias.meanClass_realCenterSource ha hcL hcR ε R hε hεone hR hf hfc hp
 
 /-- The complete desired temporal update preserves the original exponent in
 every band, including the initial bands. No inverse estimate is assumed. -/

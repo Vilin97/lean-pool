@@ -21,7 +21,7 @@ For a compact self-adjoint operator `T` and `ε > 0`, the “large-eigenvalue”
 * `‖T - T ∘ largeEigenspaceProjector T ε‖ ≤ ε`.
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 

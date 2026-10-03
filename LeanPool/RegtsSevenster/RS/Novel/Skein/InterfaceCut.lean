@@ -29,7 +29,7 @@ condition under which a glued edge is in the Eulerian subset or out
 of it, and it is what the boundary state pins.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -42,6 +42,7 @@ variable {γ δ : Type}
 
 /-- **The subset uses the two halves of every interface pair
 together.** -/
+@[expose]
 def InterfacePaired
     {V : Fragment (γ ⊕ δ)} (F : EdgeSubset V) (e : γ ≃ δ) : Prop :=
   ∀ a : γ, V.boundaryFlag (Sum.inl a) ∈ F.boundaryFlags
@@ -65,6 +66,7 @@ def usedSideEquiv {V : Fragment (γ ⊕ δ)} (F : EdgeSubset V) :
   right_inv := fun x => by cases x <;> rfl
 
 /-- The identification of the two sides' used labels. -/
+@[expose]
 def interfaceSideEquiv {V : Fragment (γ ⊕ δ)} (F : EdgeSubset V) (e : γ ≃ δ)
     (hp : InterfacePaired F e) :
     {a : γ // V.boundaryFlag (Sum.inl a) ∈ F.boundaryFlags}
@@ -284,6 +286,7 @@ is the identity on indices.
 section InterfaceStep
 
 /-- The identification of the two halves at interface size `n`. -/
+@[expose]
 def stepIdent (n : ℕ) : Fin (0 + n) ≃ Fin (n + 0) :=
   finCongr (by omega)
 
@@ -494,6 +497,7 @@ section DisjUnionCut
 variable {α β : Type}
 
 /-- The used labels of the left half. -/
+@[expose]
 def usedLeftEquiv
     {W₁ : Fragment α} {W₂ : Fragment β} (F : EdgeSubset (W₁.disjUnion W₂)) :
     {a : α //
@@ -502,6 +506,7 @@ def usedLeftEquiv
   Equiv.subtypeEquivRight (fun _ => inl_mem_boundary)
 
 /-- The used labels of the right half. -/
+@[expose]
 def usedRightEquiv
     {W₁ : Fragment α} {W₂ : Fragment β} (F : EdgeSubset (W₁.disjUnion W₂)) :
     {b : β //
@@ -600,6 +605,7 @@ theorem cutMatching_disjUnion_edge
 
 /-- The interface identification, read on the two sides' own used
 labels. -/
+@[expose]
 def interfaceSideDisjEquiv
     {W₁ : Fragment α} {W₂ : Fragment β} (F : EdgeSubset (W₁.disjUnion W₂))
     (e : α ≃ β)

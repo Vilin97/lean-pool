@@ -20,7 +20,7 @@ offset. On each leaf it is an elementary polynomial identity. At a branch,
 the two boundary cubic terms cancel.
 -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 

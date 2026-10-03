@@ -19,4 +19,4 @@ import Mathlib.Tactic.SetLike
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Lib.List.Default`.
 -/
 
-@[expose] public section
+public section

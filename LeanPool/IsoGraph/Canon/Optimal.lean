@@ -44,12 +44,13 @@ The other pieces:
   it returned normally, only the part above the backjump target if it asked to jump.
 -/
 
-@[expose] public section
+public section
 
 namespace IsoGraph
 namespace Canon
 
 /-- Dominated by the incumbent, or already accounted for by whoever called us. -/
+@[expose]
 def DomD (D : List (List UInt64) → Prop) (st : St) (k : List (List UInt64)) : Prop :=
   Dom st k ∨ D k
 
@@ -180,6 +181,7 @@ theorem Dchild.self_of {n : Nat} {f : Nat → Nat → Bool} {D : List (List UInt
 /-- What a returning call guarantees: it never asks to jump above the node it was called at, and
 every leaf below the depth it vouches for is accounted for.  `st0` is the state it started from,
 whose incumbent it never loses. -/
+@[expose]
 def Guar (n : Nat) (f : Nat → Nat → Bool) (D : List (List UInt64) → Prop) (path : Array Nat)
     (st0 st : St) : Prop :=
   (∀ j, st.abortTo = some j → j < path.size) ∧

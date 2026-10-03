@@ -18,7 +18,7 @@ ordinary solenoidal coordinate velocity. Its divergence therefore vanishes
 pointwise. The actual initial boundary condition supplies compact support.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -35,7 +35,7 @@ open scoped ContDiff
 variable {D : Data} {raw : VectorField} (G : Forcing D raw)
 
 /-- The actual solenoidal coordinate velocity, regarded in ordinary L². -/
-def coordinateOrdinaryPath : C(Icc (0 : ℝ) D.T,L2) :=
+@[expose] def coordinateOrdinaryPath : C(Icc (0 : ℝ) D.T,L2) :=
   (solenoidalSpace.subtypeL.compLeftContinuous ℝ (Icc (0 : ℝ) D.T))
     G.solution.coordinateVelocityPath
 

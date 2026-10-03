@@ -56,7 +56,7 @@ The geometric simplex is the convex hull of the vertex tuple, and
  subdivision of `Δⁿ` has diameter `< ε`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset Metric
@@ -95,7 +95,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- One barycentric subdivision step applied to a vertex tuple `V`, ordered by the
 permutation `π`. The `k`-th new vertex is the barycenter of the first `k+1`
 old vertices in the order `π`. -/
-noncomputable def stepVertices (n : ℕ) (V : Fin (n + 1) → E)
+@[expose] noncomputable def stepVertices (n : ℕ) (V : Fin (n + 1) → E)
     (π : Equiv.Perm (Fin (n + 1))) : Fin (n + 1) → E :=
   fun k => ((k.val + 1 : ℝ))⁻¹ • ∑ j ∈ Finset.Iic k, V (π j)
 
@@ -193,6 +193,7 @@ theorem stepVertices_diam_le (n : ℕ) (V : Fin (n + 1) → E)
   exact dist_step_step_le n V π a b
 
 /-- Iterate barycentric subdivision of a vertex family along a permutation word. -/
+@[expose]
 noncomputable def iterVertices (n : ℕ) : (N : ℕ) → (Fin N → Equiv.Perm (Fin (n + 1))) →
     (Fin (n + 1) → E) → (Fin (n + 1) → E)
   | 0, _, V => V
@@ -231,7 +232,7 @@ end Normed
 
 /-- The tuple of `n+1` standard basis vertices of `Δⁿ`, as points of
 `Fin (n+1) → ℝ`. -/
-noncomputable def stdVerts (n : ℕ) : Fin (n + 1) → (Fin (n + 1) → ℝ) :=
+@[expose] noncomputable def stdVerts (n : ℕ) : Fin (n + 1) → (Fin (n + 1) → ℝ) :=
   fun k => Pi.single k 1
 
 /-

@@ -21,7 +21,7 @@ sqrt-three triples.  Unary stretches of its coloring trees are stored as
 forced stems, exactly as in the first-stage Parts certificate.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 
@@ -45,7 +45,7 @@ structure PartsGadgetTreeNode where
 namespace PartsGadgetTreeNode
 
 /-- Decode zero as no child and `n + 1` as child index `n`. -/
-def child (node : PartsGadgetTreeNode) (color : Fin 4) : Option Nat :=
+@[expose] def child (node : PartsGadgetTreeNode) (color : Fin 4) : Option Nat :=
   match node.children color with
   | 0 => none
   | index + 1 => some index
@@ -62,28 +62,28 @@ structure PartsGadgetCertificate where
   nodes : Array (Array PartsGadgetTreeNode)
 
 /-- Constant-depth lookup in a tree stored as 64-node chunks. -/
-def partsGadgetTreeNodeAt (nodes : Array (Array PartsGadgetTreeNode))
+@[expose] def partsGadgetTreeNodeAt (nodes : Array (Array PartsGadgetTreeNode))
     (index : Nat) : Option PartsGadgetTreeNode :=
   match nodes[index / 64]? with
   | none => none
   | some chunk => chunk[index % 64]?
 
 /-- Properness on every listed unit edge. -/
-def PartsGadgetProper (coloring : Fin 73 → Fin 4) : Prop :=
+@[expose] def PartsGadgetProper (coloring : Fin 73 → Fin 4) : Prop :=
   ∀ vertex neighbor, neighbor ∈ partsGadgetNeighbors vertex →
     coloring vertex ≠ coloring neighbor
 
 /-- Every listed sqrt-three triangle is non-monochromatic. -/
-def PartsGadgetNoMono (coloring : Fin 73 → Fin 4) : Prop :=
+@[expose] def PartsGadgetNoMono (coloring : Fin 73 → Fin 4) : Prop :=
   ∀ vertex pair, pair ∈ partsGadgetTriplePairs vertex →
     ¬(coloring vertex = coloring pair.1 ∧ coloring pair.1 = coloring pair.2)
 
 /-- The two constraints used by the second-stage checker. -/
-def PartsGadgetValid (coloring : Fin 73 → Fin 4) : Prop :=
+@[expose] def PartsGadgetValid (coloring : Fin 73 → Fin 4) : Prop :=
   PartsGadgetProper coloring ∧ PartsGadgetNoMono coloring
 
 /-- A coloring agrees with every assignment on a certificate path. -/
-def PartsGadgetExtends (coloring : Fin 73 → Fin 4)
+@[expose] def PartsGadgetExtends (coloring : Fin 73 → Fin 4)
     (path : List PartsGadgetAssignment) : Prop :=
   ∀ assignment ∈ path, coloring assignment.vertex = assignment.color
 
@@ -104,13 +104,13 @@ def PartsGadgetBlocks (path : List PartsGadgetAssignment)
         PartsGadgetHasColor path pair.2 color
 
 /-- The four colors, as executable data. -/
-def partsGadgetColors : List (Fin 4) := [0, 1, 2, 3]
+@[expose] def partsGadgetColors : List (Fin 4) := [0, 1, 2, 3]
 
 lemma mem_partsGadgetColors (color : Fin 4) : color ∈ partsGadgetColors := by
   fin_cases color <;> simp [partsGadgetColors]
 
 /-- Executable path-color lookup. -/
-def PartsGadgetHasColorB (path : List PartsGadgetAssignment)
+@[expose] def PartsGadgetHasColorB (path : List PartsGadgetAssignment)
     (vertex : Fin 73) (color : Fin 4) : Bool :=
   path.any fun assignment =>
     assignment.vertex == vertex && assignment.color == color
@@ -128,7 +128,7 @@ lemma partsGadgetHasColorB_eq_true {path : List PartsGadgetAssignment}
     exact ⟨assignment, hin, by simp⟩
 
 /-- Executable counterpart of `PartsGadgetBlocks`. -/
-def PartsGadgetBlocksB (path : List PartsGadgetAssignment)
+@[expose] def PartsGadgetBlocksB (path : List PartsGadgetAssignment)
     (vertex : Fin 73) (color : Fin 4) : Bool :=
   path.any (fun assignment =>
       assignment.color == color &&
@@ -169,14 +169,14 @@ lemma partsGadgetBlocksB_eq_true {path : List PartsGadgetAssignment}
           partsGadgetHasColorB_eq_true.mpr hright⟩⟩
 
 /-- A forced assignment is the only color not blocked by the path. -/
-def PartsGadgetForcedB (path : List PartsGadgetAssignment)
+@[expose] def PartsGadgetForcedB (path : List PartsGadgetAssignment)
     (assignment : PartsGadgetAssignment) : Bool :=
   partsGadgetColors.all fun color =>
     color == assignment.color ||
       PartsGadgetBlocksB path assignment.vertex color
 
 /-- Execute a sequence of forced assignments. -/
-def PartsGadgetRunStemB : List PartsGadgetAssignment →
+@[expose] def PartsGadgetRunStemB : List PartsGadgetAssignment →
     List PartsGadgetAssignment → Option (List PartsGadgetAssignment)
   | [], path => some path
   | assignment :: stem, path =>
@@ -186,7 +186,7 @@ def PartsGadgetRunStemB : List PartsGadgetAssignment →
         none
 
 /-- Executable checker for a compressed contradiction tree. -/
-def PartsGadgetVerifiesNodeB (nodes : Array (Array PartsGadgetTreeNode)) :
+@[expose] def PartsGadgetVerifiesNodeB (nodes : Array (Array PartsGadgetTreeNode)) :
     Nat → List PartsGadgetAssignment → Nat → Bool
   | 0, _, _ => false
   | fuel + 1, path, index =>
@@ -205,7 +205,7 @@ def PartsGadgetVerifiesNodeB (nodes : Array (Array PartsGadgetTreeNode)) :
                         (⟨node.vertex, color⟩ :: extended) child
 
 /-- Check a certificate from node zero with enough acyclic-tree fuel. -/
-def PartsGadgetCertificate.Verifies
+@[expose] def PartsGadgetCertificate.Verifies
     (certificate : PartsGadgetCertificate) : Prop :=
   PartsGadgetVerifiesNodeB certificate.nodes (certificate.nodeCount + 1)
     certificate.roots 0 = true

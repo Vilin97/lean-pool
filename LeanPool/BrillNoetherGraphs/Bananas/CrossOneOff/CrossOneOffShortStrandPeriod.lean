@@ -29,7 +29,7 @@ strands, then a ray/primitivity argument on the two integers
 (`L := lcm` of the other lengths).
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

@@ -25,7 +25,7 @@ import Mathlib.Order.BooleanAlgebra.Set
 # MatchingLogic.BoxesControl
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 namespace BoxesControl

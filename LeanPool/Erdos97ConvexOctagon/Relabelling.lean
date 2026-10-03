@@ -9,12 +9,12 @@ public import LeanPool.Erdos97ConvexOctagon.GeometryReduction
 
 /-! # Erdős 97 convex-octagon formalization: Relabelling -/
 
-@[expose] public section
+public section
 
 namespace Erdos97Octagon
 
 /-- The canonical first witness row used by the finite classification. -/
-def standardTargets : Finset Vertex := {1, 2, 3, 4}
+@[expose] def standardTargets : Finset Vertex := {1, 2, 3, 4}
 
 /-- The canonical witness row has four vertices. -/
 @[simp] theorem card_standardTargets : standardTargets.card = 4 := by
@@ -27,12 +27,14 @@ def standardTargets : Finset Vertex := {1, 2, 3, 4}
 namespace OctagonIncidence
 
 /-- Simultaneously relabel the centres and every entry of their witness rows. -/
+@[expose]
 def relabel (Q : OctagonIncidence) (e : Vertex ≃ Vertex) : OctagonIncidence where
   targets v := (Q.targets (e.symm v)).map e.toEmbedding
   card_targets v := by simp [Q.card_targets]
   centre_not_mem v := by simpa using Q.centre_not_mem (e.symm v)
 
 /-- A system is normalized when row zero is the canonical four-set. -/
+@[expose]
 def Normalized (Q : OctagonIncidence) : Prop :=
   Q.targets 0 = standardTargets
 

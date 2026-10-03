@@ -21,7 +21,7 @@ import Mathlib.Tactic.NormNum.Pow
 Imported Lean Pool material for `LeanPool.ErdosTuzaValtr.Config.Lemmas`.
 -/
 
-@[expose] public section
+public section
 
 
 variable {α : Type _} [LinearOrder α] {C : Config α}

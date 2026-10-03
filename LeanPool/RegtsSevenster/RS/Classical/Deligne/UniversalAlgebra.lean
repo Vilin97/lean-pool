@@ -19,7 +19,7 @@ gives a single nonzero algebra over which every object is a mixed
 sum and every short exact sequence splits.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

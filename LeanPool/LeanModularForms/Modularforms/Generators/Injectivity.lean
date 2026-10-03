@@ -23,7 +23,7 @@ the algebra isomorphism `modularFormsEquivMvPolynomial` and the generation
 theorem `E₄E₆_generate`.
 -/
 
-@[expose] public section
+public section
 
 open ModularForm hiding E₄ E₆
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
@@ -471,8 +471,10 @@ private lemma eval_Delta_mul_zero_imp {n : ℕ} (hn12 : 12 ≤ n)
   simp only [SlashInvariantForm.toFun_eq_coe, ModularForm.toSlashInvariantForm_coe,
     _root_.zero_apply] at hpw
   change (D 12) z * (S (↑(n-12))) z = 0 at hpw
-  exact (mul_eq_zero.mp hpw).resolve_left
-    (show (D 12) z ≠ 0 from evalE₄E₆_Delta_poly_grade ▸ Δ_ne_zero z)
+  exact (mul_eq_zero.mp hpw).resolve_left (by
+    rw [show D 12 = ModFormMk Γ(1) 12 Delta from evalE₄E₆_Delta_poly_grade]
+    have hDelta : (ModFormMk Γ(1) 12 Delta) z = Delta z := rfl
+    simpa only [hDelta, Delta_apply] using Δ_ne_zero z)
 
 private lemma div_Delta_poly {n : ℕ} (hn12 : 12 ≤ n)
     (p : MvPolynomial (Fin 2) ℂ)

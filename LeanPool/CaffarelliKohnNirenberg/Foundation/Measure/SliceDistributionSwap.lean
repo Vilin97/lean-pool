@@ -21,7 +21,7 @@ uses two ingredients that are independent of the differential operator at hand.
   function against a compactly supported continuous kernel.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Metric Filter Topology
 

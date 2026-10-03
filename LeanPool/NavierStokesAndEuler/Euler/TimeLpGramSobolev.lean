@@ -17,7 +17,7 @@ The coefficient family alone pays a fixed Sobolev cost. The actual right
 side and solution are measured in the identical ordered-word blocks.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ open Set InnerProductSpace ContinuousLinearMap EulerTimeLp EulerCoerciveProjecti
 open scoped ContDiff
 
 /-- Polynomial cost of the actual Gram inverse at one fixed Sobolev order. -/
-def gramBlockCost (ι : Type*) [Fintype ι] (q : ℕ) (c Rc C D : ℝ) : ℝ :=
+@[expose] def gramBlockCost (ι : Type*) [Fintype ι] (q : ℕ) (c Rc C D : ℝ) : ℝ :=
   inverseBlockCost ι q c⁻¹ Rc (3*C^2) D
 
 variable {P U E ι : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]

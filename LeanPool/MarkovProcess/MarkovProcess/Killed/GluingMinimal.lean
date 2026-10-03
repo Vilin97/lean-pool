@@ -41,7 +41,7 @@ No transition semigroup, no process on the ambient space, and no conservativity 
 here.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 
@@ -164,6 +164,7 @@ end Compatible
 /-- **The minimal resolvent** of a family of local resolvents: the pointwise supremum of the
 transported local kernel resolvents.  Monotonicity in `m`, under which the supremum is an
 increasing limit, is the content of `localResolvent_le_succ`. -/
+@[expose]
 noncomputable def minimalResolvent (lam : ℝ) (f : alpha → ℝ≥0∞) (x : alpha) : ℝ≥0∞ :=
   ⨆ m, localResolvent R emb m lam f x
 

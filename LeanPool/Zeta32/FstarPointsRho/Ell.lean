@@ -14,7 +14,7 @@ monotonicity in `a`
 `log_le`/`log_ge'`.
 Upper bound obtained: `−1.60135`. Data: `tools/b2_numerics.py`. -/
 
-@[expose] public section
+public section
 
 open Real
 namespace Zeta32.Fstar.B2

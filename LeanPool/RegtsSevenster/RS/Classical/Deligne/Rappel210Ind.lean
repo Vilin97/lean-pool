@@ -20,7 +20,7 @@ vanishes.  The local splitting statement therefore holds for
 every short exact sequence whose relevant objects carry duals.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

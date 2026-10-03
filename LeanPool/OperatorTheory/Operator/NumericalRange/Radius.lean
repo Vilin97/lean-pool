@@ -29,7 +29,7 @@ the complex polarization identity to the quadratic form
 `x ↦ ⟪x, A x⟫_ℂ`.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped InnerProductSpace
@@ -281,6 +281,7 @@ theorem numericalRadius_sub_le (A B : E →L[ℂ] E) :
 
 /-- The numerical radius bundled as a complex seminorm on bounded operators.
 Definiteness is supplied separately by `numericalRadius_eq_zero_iff`. -/
+@[expose]
 noncomputable def numericalRadiusSeminorm :
     Seminorm ℂ (E →L[ℂ] E) :=
   Seminorm.of numericalRadius numericalRadius_add_le numericalRadius_smul

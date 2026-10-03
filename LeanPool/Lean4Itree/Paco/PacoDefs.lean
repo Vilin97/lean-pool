@@ -9,7 +9,7 @@ import all Init.Internal.Order.Basic
 import Std.Data.DTreeMap.Internal.Balancing
 import Std.Tactic.BVDecide.Normalize.Prop
 
-@[expose] public section
+public section
 
 namespace Lean.Order.CompleteLattice
 

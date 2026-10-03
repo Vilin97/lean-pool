@@ -81,7 +81,7 @@ Three facts about drawings and paths had no home on `main` and are proved here i
   what rules out the returning point that would break `IsArcBetween.concatenate`.
 -/
 
-@[expose] public section
+public section
 
 open Set Schoenflies
 open scoped Graph
@@ -372,6 +372,7 @@ theorem subcells_face_diff : S.subcells d.face \ {d.face} = d.cells₁ ∪ d.cel
       exacts [d.cells₁_ne_face h, d.cells₂_ne_face h]
 
 /-- The drawn ear: the abstract ear pushed into the plane along the chosen positions. -/
+@[expose]
 def earGraph (d : S.SplitData) (earPos : γ → Plane) : Graph Plane γ := d.ear.map earPos
 
 @[simp] theorem vertexSet_earGraph (earPos : γ → Plane) :
@@ -381,7 +382,7 @@ def earGraph (d : S.SplitData) (earPos : γ → Plane) : Graph Plane γ := d.ear
     E(d.earGraph earPos) = E(d.ear) := Graph.edgeSet_map _ _
 
 /-- The point set the drawn ear occupies: the crosscut `P` of `thm:general-crosscut`. -/
-def earSet (d : S.SplitData) (earPos : γ → Plane) (earDraw : γ → ℝ → Plane) : Set Plane :=
+@[expose] def earSet (d : S.SplitData) (earPos : γ → Plane) (earDraw : γ → ℝ → Plane) : Set Plane :=
   Graph.pointSet (d.earGraph earPos) earDraw
 
 /-- **The geometric input of one 2-cell split.** A position for each vertex of the abstract
@@ -843,7 +844,7 @@ and assertion (i) at the old stage produce a realization of `S.splitFace d`:
 This is the object the whole split step of `lem:cellulation-invariants` was missing:
 `SplitData.isCrosscutSplit_realize` puts it in the relation `IsCrosscutSplit` to `R`, and
 `IsCrosscutSplit.isCellDecomposition_and_isFaceJordan` then propagates both invariants. -/
-noncomputable def realize (R : S.Realization) (d : S.SplitData) (earPos : γ → Plane)
+@[expose] noncomputable def realize (R : S.Realization) (d : S.SplitData) (earPos : γ → Plane)
     (earDraw : γ → ℝ → Plane) (hE : d.EarCrosscut R earPos earDraw) :
     (S.splitFace d).Realization where
   pos := d.splitPos R earPos

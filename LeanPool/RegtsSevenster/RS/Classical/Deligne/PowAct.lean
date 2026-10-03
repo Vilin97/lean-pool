@@ -35,7 +35,7 @@ symmetric power a module again.
 * `modPowMod`/`symPowMod`: the bundled modules.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -52,6 +52,7 @@ section BraidPast
 
 /-- Carry an object across a context: the isomorphism
 `A ⊗ (V ⊗ T) ≅ V ⊗ (A ⊗ T)` braiding `A` past `V`. -/
+@[expose]
 def braidPast [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     (A V T : D) : A ⊗ (V ⊗ T) ≅ V ⊗ (A ⊗ T) :=
   (α_ A V T).symm ≪≫ whiskerRightIso (β_ A V) T ≪≫ α_ V A T
@@ -126,6 +127,7 @@ section ActAcross
 
 /-- The action of a monoid on `V ⊗ X` through the right factor:
 braid `A` past `V`, then act on `X`. -/
+@[expose]
 def actAcross [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A]
     (V X : D) [ModObj A X] : A ⊗ (V ⊗ X) ⟶ V ⊗ X :=
@@ -199,7 +201,7 @@ theorem mul_actAcross
 
 /-- A left module tensored with an object on the left: the action
 of `A` on `V ⊗ X` through the right factor. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def tensorLeftModObj
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A]
@@ -297,6 +299,7 @@ section PowTail
 
 /-- The raw tail action on a positive tensor power: the monoid acts
 on the last factor, braided past the lower power. -/
+@[expose]
 def powTailAct [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X]
     (n : ℕ) :
@@ -721,7 +724,7 @@ theorem modPowAct_mul
 
 /-- **The module power of a module is a module**, in every positive
 arity. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def modPowModObj
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -734,6 +737,7 @@ noncomputable def modPowModObj
   mul_smul := modPowAct_mul A X n
 
 /-- The module power of a module, bundled as a module. -/
+@[expose]
 noncomputable def modPowMod
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1038,6 +1042,7 @@ section SymAct
 
 /-- **The monoid action on the symmetric power**, through the
 section and the descended action. -/
+@[expose]
 noncomputable def symPowAct
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1101,7 +1106,7 @@ theorem symPowAct_mul
 
 /-- **The symmetric power of a module is a module**, in every
 positive arity. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 noncomputable def symPowModObj
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -1135,6 +1140,7 @@ theorem symPowσ_modPowAct
   rw [symPowπ_symPowσ, h', ← whiskerLeft_comp_assoc, hσI]
 
 /-- The symmetric power of a module, bundled as a module. -/
+@[expose]
 noncomputable def symPowMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]

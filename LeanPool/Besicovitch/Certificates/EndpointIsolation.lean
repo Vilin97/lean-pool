@@ -16,7 +16,7 @@ This file encodes the two polynomial equations in centered coordinates. All numb
 preconditioner are rational, and the coefficient-norm estimates are checked by the kernel.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

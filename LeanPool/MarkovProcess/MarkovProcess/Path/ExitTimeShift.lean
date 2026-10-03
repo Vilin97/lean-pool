@@ -26,7 +26,7 @@ shift `ContinuousPath.shift t`, and the measurability of the survival events the
 Nothing here involves a probability law.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped ENNReal NNReal

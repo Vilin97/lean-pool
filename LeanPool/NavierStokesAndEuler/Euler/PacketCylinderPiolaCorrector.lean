@@ -12,7 +12,7 @@ import LeanPool.NavierStokesAndEuler.Euler.CylinderCoveringDerivative
 
 /-! The literal raw curl-corrector equals the genuine periodic Piola corrector. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -61,6 +61,8 @@ theorem rawCorrector_eq_lifted
     ((fderiv ℝ (fun y : LiftTangent => D.rawPotential P raw (t,y)) (x,θ)).comp
       ((ContinuousLinearMap.inl ℝ Space ℝ).comp (D.FInv.field (D.clamp t) x))) = _
   rw [EulerTransversePacketProvider.Data.clamp_coe,hQ,coverField_fderiv]
+  simp only [EulerPacketConstructedPiola.corrector,
+    EulerTransversePacketProvider.Data.deformationEquiv_normal]
   rfl
 
 end EulerPacketCylinderField

@@ -37,7 +37,7 @@ bounded and continuous, which needs the tightness of the limiting law and is the
 uniform in the starting point.
 -/
 
-@[expose] public section
+public section
 
 open Filter MeasureTheory ProbabilityTheory Topology
 open scoped NNReal ZeroAtInfty BigOperators CompactlySupported

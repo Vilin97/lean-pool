@@ -18,7 +18,7 @@ prescribed compatible pair. Extension by zero then gives a model on
 exactly that pair of colour spaces.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

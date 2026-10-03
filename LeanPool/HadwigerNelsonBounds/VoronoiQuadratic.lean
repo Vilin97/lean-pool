@@ -15,7 +15,7 @@ This module proves that one of the four corners of a lattice-coordinate unit
 square lies within the required quadratic-form radius.
 -/
 
-@[expose] public section
+public section
 
 namespace HadwigerNelsonBounds
 

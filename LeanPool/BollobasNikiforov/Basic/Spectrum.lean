@@ -19,7 +19,7 @@ conventions in `docs/sol.tex`. The ordered family is Mathlib's antitone
 terms replaced by zero.
 -/
 
-@[expose] public section
+public section
 
 namespace BollobasNikiforov
 
@@ -30,23 +30,23 @@ variable {A : Matrix n n ℝ}
 
 /-- The eigenvalues of a Hermitian matrix in nonincreasing order. The value at
 `i` is the paper's `λ_{i+1}`. -/
-noncomputable def eigs₀ (hA : A.IsHermitian) : Fin (Fintype.card n) → ℝ :=
+@[expose] noncomputable def eigs₀ (hA : A.IsHermitian) : Fin (Fintype.card n) → ℝ :=
   hA.eigenvalues₀
 
 lemma eigs₀_antitone (hA : A.IsHermitian) : Antitone (eigs₀ hA) :=
   hA.eigenvalues₀_antitone
 
 /-- The largest eigenvalue `λ₁(A)`. -/
-noncomputable def lambdaMax (hA : A.IsHermitian) [Nonempty n] : ℝ :=
+@[expose] noncomputable def lambdaMax (hA : A.IsHermitian) [Nonempty n] : ℝ :=
   eigs₀ hA ⟨0, Fintype.card_pos⟩
 
 /-- The second-largest eigenvalue `λ₂(A)`. -/
-noncomputable def lambdaSecond (hA : A.IsHermitian) [Nontrivial n] : ℝ :=
+@[expose] noncomputable def lambdaSecond (hA : A.IsHermitian) [Nontrivial n] : ℝ :=
   eigs₀ hA ⟨1, Fintype.one_lt_card⟩
 
 /-- The sum of squares of the two largest positive eigenvalues of a Hermitian
 matrix, with missing terms replaced by zero. -/
-noncomputable def F (hA : A.IsHermitian) : ℝ :=
+@[expose] noncomputable def F (hA : A.IsHermitian) : ℝ :=
   if h0 : 0 < Fintype.card n then
     let t0 := (max (hA.eigenvalues₀ ⟨0, h0⟩) 0) ^ 2
     if h1 : 1 < Fintype.card n then

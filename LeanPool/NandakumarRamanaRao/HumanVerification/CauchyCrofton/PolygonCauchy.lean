@@ -25,7 +25,7 @@ Integrating this identity over the circle and using `∫₀^{2π} |⟪e, circleV
 identifies the Cauchy perimeter of the polygon with the sum of its edge lengths.
 -/
 
-@[expose] public section
+public section
 
 open Set MeasureTheory NRR.Geometry
 open scoped ENNReal NNReal Pointwise

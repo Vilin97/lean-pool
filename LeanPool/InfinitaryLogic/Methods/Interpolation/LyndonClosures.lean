@@ -46,7 +46,7 @@ projections this file consumes now live in the neutral
 universe.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -57,7 +57,7 @@ variable {L : Language.{0, 0}}
 /-! ## The polarity side bound -/
 
 /-- **Side vocabulary bound, polarity-refined.** -/
-def SentBndPol (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n)) :
+@[expose] def SentBndPol (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n)) :
     Set L[[ℕ]].Sentenceω :=
   {σ | σ.baseFunctionsIn ⊆ F ∧ σ.basePositiveRelations ⊆ P ∧ σ.baseNegativeRelations ⊆ N}
 

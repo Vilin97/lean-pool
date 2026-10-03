@@ -21,7 +21,7 @@ neighborhood.  The compact parameter-integral theorem then gives analyticity of 
 through the collision eccentricity.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.PoincareThreeBody
 

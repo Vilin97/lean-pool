@@ -23,7 +23,7 @@ coefficient is nonzero, the bad fiber is contained in a singleton and therefore
 has Lebesgue measure zero.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -46,6 +46,7 @@ variable (hp : Nat.Prime p)
 variable (C : RelativeAffineCellSystem hp N₀ N₁ M L)
 
 /-- The movable parameter selected by a mixed-face case. -/
+@[expose]
 noncomputable def MixedFaceCase.selectedParameter
     (κ : MixedFaceCase hp C) : MovableParameter hp C :=
   ⟨localParameter hp C κ.cell κ.retained κ.coordinate, κ.movable⟩

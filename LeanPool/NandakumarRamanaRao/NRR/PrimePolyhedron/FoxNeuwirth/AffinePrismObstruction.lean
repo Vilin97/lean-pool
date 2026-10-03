@@ -31,7 +31,7 @@ upper-end prism from the S5 reference map.  It does not contain a separator or a
 constancy as a field.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 
@@ -65,6 +65,7 @@ structure CoordinateAffineVertexMap (p : Nat) where
 namespace CoordinateAffineVertexMap
 
 /-- Affine interpolation of the full coordinate vector on one maximal simplex. -/
+@[expose]
 noncomputable def value
     (F : CoordinateAffineVertexMap p)
     (s : Simplex p (p - 1))
@@ -73,7 +74,7 @@ noncomputable def value
 
 
 /-- Global piecewise-affine coordinate map on the barycentric realization. -/
-noncomputable def globalValue
+@[expose] noncomputable def globalValue
     (F : CoordinateAffineVertexMap p)
     (x : Realization p) : Fin p → Real :=
   fun i => ∑ c : BarredPermutation p, x c * F.vertexValue c i
@@ -95,7 +96,7 @@ theorem continuous_globalValue
       ((continuous_apply c).comp continuous_subtype_val).mul continuous_const
 
 /-- Fixed difference-coordinate representation of the zero-sum/deviation part. -/
-noncomputable def deviation
+@[expose] noncomputable def deviation
     (hp : Nat.Prime p) (F : CoordinateAffineVertexMap p) :
     AffineVertexMap p (p - 1) where
   vertexValue c r :=
@@ -103,7 +104,7 @@ noncomputable def deviation
       F.vertexValue c (ReferenceAffineOrbitCount.lastLabel hp)
 
 /-- Mean of the affine coordinate vector. -/
-noncomputable def mean
+@[expose] noncomputable def mean
     (p : Nat)
     (F : CoordinateAffineVertexMap p)
     (s : Simplex p (p - 1))
@@ -124,6 +125,7 @@ theorem deviation_value_apply
 
 /-- A positive zero is a relative-interior zero of the deviation map at which the common
 coordinate mean is positive. -/
+@[expose]
 def HasPositiveInteriorZero
     (hp : Nat.Prime p)
     (F : CoordinateAffineVertexMap p)
@@ -141,7 +143,7 @@ noncomputable instance hasPositiveInteriorZeroDecidable
   Classical.propDecidable _
 
 /-- Signed local contribution of a positive deviation zero. -/
-noncomputable def positiveLocalZeroIndex
+@[expose] noncomputable def positiveLocalZeroIndex
     (hp : Nat.Prime p)
     (F : CoordinateAffineVertexMap p)
     (s : Simplex p (p - 1)) : ZMod p :=
@@ -247,7 +249,7 @@ namespace AffinePrismObstruction
 open CoordinateAffineVertexMap
 
 /-- Positive local-index cochain on the S4 top-orbit representatives. -/
-noncomputable def positiveIndex
+@[expose] noncomputable def positiveIndex
     (hp : Nat.Prime p)
     (F : CoordinateAffineVertexMap p) :
     PrimeOrbitCycle.TopOrbit hp → ZMod p :=

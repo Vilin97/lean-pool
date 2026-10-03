@@ -25,7 +25,7 @@ Main results: `intervalIntegral.integral_mul_exp_primitive`,
 No probabilistic structure is used or asserted.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section PortComputability
 

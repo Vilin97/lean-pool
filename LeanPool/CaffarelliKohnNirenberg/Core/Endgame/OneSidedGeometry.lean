@@ -21,7 +21,7 @@ centres, and `𝒞_ϱ(w) ∩ {t ≤ 0} ⊆ 𝒞_{2ϱ}(w'')`. The covering itself
 upper bound on the radius.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open CKN.Foundation.Parabolic
@@ -33,6 +33,7 @@ namespace CKN.Core.Endgame
 
 /-- Shift the time coordinate forward by the squared radius, stopping at
 the prescribed upper time, and use the selected point as spatial center. -/
+@[expose]
 def truncatedCylinderCenter (w w' : ParabolicPoint) (ρ T : ℝ) : ParabolicPoint :=
   (w'.1, min (w.2 + ρ ^ 2) T)
 

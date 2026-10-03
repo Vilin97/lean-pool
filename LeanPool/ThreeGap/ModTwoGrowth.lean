@@ -34,7 +34,7 @@ five-distance theorem.
 Axiom-clean.
 -/
 
-@[expose] public section
+public section
 
 namespace ThreeGap.SimApprox
 

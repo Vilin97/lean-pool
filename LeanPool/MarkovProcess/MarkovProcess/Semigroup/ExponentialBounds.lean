@@ -16,7 +16,7 @@ This file records elementary estimates for the exponential in a real Banach alge
 contraction estimate is tailored to exponentials of bounded Yosida-type generators.
 -/
 
-@[expose] public section
+public section
 
 namespace MarkovProcess.Semigroup
 

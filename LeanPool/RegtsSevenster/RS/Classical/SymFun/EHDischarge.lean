@@ -18,7 +18,7 @@ so the resolvent identity and the shifted forms hold
 unconditionally.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -38,7 +38,7 @@ Smooth compactly supported infrastructure on ℝⁿ:
   `φ` is integrable and `u ∈ H^s_*`.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators ContDiff
 open Complex Real MeasureTheory

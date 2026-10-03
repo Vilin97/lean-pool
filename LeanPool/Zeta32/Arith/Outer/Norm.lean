@@ -14,7 +14,7 @@ bounds over all classes. `normScale_val` and the floor sums are adapted from
 dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/
 DecayMediumClosed.lean and MediumFloorSum.lean (layout `2n, 4n, 3` there, `3n, 5n, 4` here). -/
 
-@[expose] public section
+public section
 
 open Zeta32.Arith.Local
 

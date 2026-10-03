@@ -18,7 +18,7 @@ those Wick values belong to the closed span of ordered, disjoint increment produ
 that this exact assertion implies canonical-chaos totality and natural martingale representation.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory Filter Topology
 open scoped ENNReal NNReal InnerProductSpace
@@ -36,6 +36,7 @@ variable {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- The generalized Hermite value of a finite Brownian step sum, assembled from its powers.
 The variance parameter is the squared norm of the corresponding deterministic step kernel. -/
+@[expose]
 noncomputable def brownianWickPowerLp (hB : IsPreBrownianReal B P)
     (v : ℝ≥0 →₀ ℝ) (n : ℕ) : RandomL2 P :=
   polynomialFamilyLinearMap (brownianStepPowerLp hB v)
@@ -134,11 +135,13 @@ theorem stepToRandom_mem_orderedChainSpan (hB : IsPreBrownianReal B P)
 
 /-- The exact remaining stochastic Hermite input: every generalized Hermite value of a finite
 Brownian step sum is approximable by finite products of ordered, disjoint increments. -/
+@[expose]
 def BrownianWickChainCompatible (hB : IsPreBrownianReal B P) : Prop :=
   ∀ v n, brownianWickPowerLp hB v n ∈
     (brownianOrderedChainSpan hB).topologicalClosure
 
 /-- The genuinely higher-order part of stochastic Wick-chain compatibility. -/
+@[expose]
 def BrownianHigherWickChainCompatible (hB : IsPreBrownianReal B P) : Prop :=
   ∀ v n, 2 ≤ n → brownianWickPowerLp hB v n ∈
     (brownianOrderedChainSpan hB).topologicalClosure

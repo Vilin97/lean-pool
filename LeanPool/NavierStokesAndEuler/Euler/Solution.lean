@@ -23,7 +23,7 @@ section
 
 /-! Compact smooth data satisfy the independent challenge's rapid-decay condition. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -57,7 +57,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 

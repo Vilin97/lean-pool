@@ -38,7 +38,7 @@ finite and `1/(ax) ≥ 1`.
 * `Sendov.one_le_of_origin`: `(origin-exact) + (beta-bound) ⟹ (1le)`.
 -/
 
-@[expose] public section
+public section
 
 namespace Sendov
 

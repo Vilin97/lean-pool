@@ -21,7 +21,7 @@ constant polynomial `1` and clear the nonzero scalar `2πi`.
   derives the raw resolvent contour identity from polynomial Cauchy data.
 -/
 
-@[expose] public section
+public section
 
 open Complex
 open scoped InnerProductSpace

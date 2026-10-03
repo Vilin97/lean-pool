@@ -12,7 +12,7 @@ public import Mathlib.LinearAlgebra.Matrix.Block
 
 /-! ### Triangular difference maps -/
 
-@[expose] public section
+public section
 
 namespace HsVirial
 
@@ -246,6 +246,7 @@ lemma measurePreserving_hardSphereCoordinateEquiv (k : Nat) :
   exact h₁.trans h₂
 
 /-- Flattened position arrays with every three-dimensional block in the unit ball. -/
+@[expose]
 def hardSphereFlatProductBallRegion (n : Nat) :
     Set (Fin n × Fin 3 → ℝ) :=
   {x | ∀ i, (MeasurableEquiv.toLp 2 (Fin 3 → ℝ)) (fun a => x (i, a)) ∈
@@ -381,7 +382,7 @@ lemma hardSphereFlatProductBallRegion_volume (n : Nat) :
 /-! ### The separated two-member block -/
 
 /-- Pairs of unit-ball positions separated by distance at least one. -/
-def hardSphereSeparatedPairRegion : Set (HSPosition 3 × HSPosition 3) :=
+@[expose] def hardSphereSeparatedPairRegion : Set (HSPosition 3 × HSPosition 3) :=
   {p | p.1 ∈ ball (0 : HSPosition 3) 1 ∧
     p.2 ∈ ball (0 : HSPosition 3) 1 ∧
     1 ≤ ‖p.1 - p.2‖}
@@ -551,7 +552,7 @@ lemma hardSphereSeparatedPairRegion_flatten_volume_eq_flat :
   rw [hardSpherePairCoordinateEquiv_image_separatedPairRegion]
 
 /-- Pairs of unit-ball positions separated by distance less than one. -/
-def hardSphereClosePairRegion : Set (HSPosition 3 × HSPosition 3) :=
+@[expose] def hardSphereClosePairRegion : Set (HSPosition 3 × HSPosition 3) :=
   {p | p.1 ∈ ball (0 : HSPosition 3) 1 ∧
     p.2 ∈ ball (0 : HSPosition 3) 1 ∧
     ‖p.1 - p.2‖ < 1}
@@ -654,7 +655,7 @@ lemma hardSphereSeparatedPairRegion_real_add_close_volume :
   exact h.trans htotal
 
 /-- The parent relation implementing the difference of the second position from the first. -/
-def hardSpherePairParent (q : Fin 2 × Fin 3) : Option (Fin 2 × Fin 3) :=
+@[expose] def hardSpherePairParent (q : Fin 2 × Fin 3) : Option (Fin 2 × Fin 3) :=
   if q.1 = 0 then none else some (0, q.2)
 
 /-- The lexicographic order on particle and spatial indices for a pair. -/
@@ -690,7 +691,7 @@ lemma hardSpherePairParent_lt : ∀ q p, hardSpherePairParent q = some p →
     exact hqpos
 
 /-- The linear parent-difference map on a flattened pair of positions. -/
-def hardSpherePairDifferenceLinearMap :
+@[expose] def hardSpherePairDifferenceLinearMap :
     ((Fin 2 × Fin 3) → ℝ) →ₗ[ℝ] ((Fin 2 × Fin 3) → ℝ) :=
   hardSphereParentDifferenceLinearMap hardSpherePairParent
 
@@ -700,7 +701,7 @@ lemma measurePreserving_hardSpherePairDifferenceLinearMap :
     hardSpherePairIndexOrder hardSpherePairParent_lt
 
 /-- The two leaf positions relative to the common center of a fork. -/
-def hardSphereForkRelativePair {k : Nat} [NeZero k]
+@[expose] def hardSphereForkRelativePair {k : Nat} [NeZero k]
     (r : HardSphereConfiguration k 3) (a b c : Fin k) :
     HSPosition 3 × HSPosition 3 :=
   (hardSpherePosition r b - hardSpherePosition r a,
@@ -738,7 +739,7 @@ lemma hardSphere_nbc_region_mem_separatedPair
     simpa [sub_zero] using hacnorm
 
 /-- Families of separated pairs, each lying in the unit ball. -/
-def hardSphereSeparatedPairProductRegion (m : Nat) :
+@[expose] def hardSphereSeparatedPairProductRegion (m : Nat) :
     Set (Fin m → (HSPosition 3 × HSPosition 3)) :=
   {x | ∀ i, x i ∈ hardSphereSeparatedPairRegion}
 
@@ -765,7 +766,7 @@ lemma hardSphereSeparatedPairProductRegion_volume (m : Nat) :
   simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin, Measure.real]
 
 /-- A product of separated-pair regions and unconstrained unit-ball positions. -/
-def hardSphereSeparatedBlockProductRegion (m q : Nat) :
+@[expose] def hardSphereSeparatedBlockProductRegion (m q : Nat) :
     Set ((Fin m → (HSPosition 3 × HSPosition 3)) ×
       (Fin q → HSPosition 3)) :=
   hardSphereSeparatedPairProductRegion m ×ˢ hardSphereProductBallRegion q
@@ -794,6 +795,7 @@ lemma hardSphereSeparatedBlockProductRegion_volume (m q : Nat) :
 /-! ### Canonical separated-block coordinates -/
 
 /-- Split a position array into paired blocks and remaining single positions. -/
+@[expose]
 def hardSphereBlockCoordinateEquiv (m q : Nat) :
     (Fin (m * 2 + q) → HSPosition 3) ≃ᵐ
       ((Fin m → (HSPosition 3 × HSPosition 3)) ×
@@ -915,7 +917,7 @@ lemma hardSphereBlockCoordinateEquiv_preimage_separatedBlockProductRegion_volume
       hardSphereSeparatedBlockProductRegion_volume m q
 
 /-- Reindex a position array before separating paired and single blocks. -/
-def hardSphereReindexedBlockCoordinateEquiv
+@[expose] def hardSphereReindexedBlockCoordinateEquiv
     {n m q : Nat} (e : Fin (m * 2 + q) ≃ Fin n) :
     (Fin n → HSPosition 3) ≃ᵐ
       ((Fin m → (HSPosition 3 × HSPosition 3)) ×

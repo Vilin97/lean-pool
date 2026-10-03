@@ -23,7 +23,7 @@ public import Mathlib.Data.Fintype.EquivFin
   Fundamenta Informaticae 116 (2012); arXiv:1111.1585]
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.KrohnRhodes
 
@@ -35,6 +35,7 @@ variable {α : Type u}
 
 /-- A monoid `M` divides a monoid `N` if `M` is a quotient of a submonoid of `N`.
 Equivalently, there exists a surjective monoid homomorphism from a submonoid of `N` onto `M`. -/
+@[expose]
 def MonoidDivides (M : Type*) (N : Type*) [Monoid M] [Monoid N] : Prop :=
   ∃ (S : Submonoid N) (φ : S →* M), Function.Surjective φ
 
@@ -77,6 +78,7 @@ submonoid `cMc ∪ {c}`. -/
 
 /-- The carrier of the **local divisor** of a monoid `M` at `c`: the two-sided set
 `cM ∩ Mc = {x | (∃ a, x = c*a) ∧ (∃ b, x = b*c)}`. As a subtype of `M`. -/
+@[expose]
 def LocalDivisor (M : Type*) [Monoid M] (c : M) : Type _ :=
   {x : M // (∃ a : M, x = c * a) ∧ (∃ b : M, x = b * c)}
 
@@ -85,6 +87,7 @@ namespace LocalDivisor
 variable {M : Type*} [Monoid M] {c : M}
 
 /-- The underlying element of `M` of a local-divisor element. -/
+@[expose]
 def val (x : LocalDivisor M c) : M := x.1
 
 @[ext] theorem ext {x y : LocalDivisor M c} (h : x.val = y.val) : x = y := Subtype.ext h

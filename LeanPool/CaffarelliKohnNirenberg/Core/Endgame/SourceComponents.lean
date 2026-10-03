@@ -14,7 +14,7 @@ values. The scalar triangle inequality transfers this comparison to the
 Morrey norm without changing either exponent.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set
 open scoped BigOperators ENNReal

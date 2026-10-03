@@ -17,7 +17,7 @@ derivative. These pointwise estimates do not require differentiability: Lean's
 totalized `fderiv` is a continuous linear map for every function.
 -/
 
-@[expose] public section
+public section
 
 
 

@@ -48,7 +48,7 @@ over `I + (g)` the homogenization `homogenization J` is a homogeneous prime of q
 `∑_J deg J / n! ≤ e · (n + 1) · deg I / (n + 1)!`, i.e. `∑_J deg J ≤ e · deg I ≤ T · deg I`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

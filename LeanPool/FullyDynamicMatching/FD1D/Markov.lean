@@ -10,7 +10,7 @@ public import LeanPool.FullyDynamicMatching.FD1D.Basic
 
 /-! # Markov -/
 
-@[expose] public section
+public section
 
 namespace FD1D
 
@@ -45,6 +45,7 @@ theorem ext {μ ν : FiniteLaw α} (h : ∀ x, μ.mass x = ν.mass x) : μ = ν 
           rfl
 
 /-- The point mass at `x`. -/
+@[expose]
 def dirac [DecidableEq α] (x : α) : FiniteLaw α where
   mass y := if y = x then 1 else 0
   mass_nonneg y := by split_ifs <;> positivity
@@ -56,6 +57,7 @@ theorem mass_dirac [DecidableEq α] (x y : α) :
   rfl
 
 /-- The uniform law on a nonempty finite type. -/
+@[expose]
 def uniform [Nonempty α] : FiniteLaw α where
   mass _ := 1 / Fintype.card α
   mass_nonneg _ := by positivity
@@ -71,6 +73,7 @@ theorem mass_uniform [Nonempty α] (x : α) :
   rfl
 
 /-- Push a finite law forward along a map. -/
+@[expose]
 def map [DecidableEq β] (f : α → β) (μ : FiniteLaw α) : FiniteLaw β where
   mass y := ∑ x with f x = y, μ.mass x
   mass_nonneg y := Finset.sum_nonneg fun x _ => μ.mass_nonneg x
@@ -110,6 +113,7 @@ theorem matrix_rowStochastic [DecidableEq α] (K : FiniteKernel α) :
   exact ⟨K.trans_nonneg, K.sum_trans⟩
 
 /-- Advance a law by one step of the kernel. -/
+@[expose]
 def step (K : FiniteKernel α) (μ : FiniteLaw α) : FiniteLaw α where
   mass y := ∑ x, μ.mass x * K x y
   mass_nonneg y :=
@@ -125,6 +129,7 @@ theorem mass_step (K : FiniteKernel α) (μ : FiniteLaw α) (y : α) :
   rfl
 
 /-- The law after `n` steps. -/
+@[expose]
 def iterate (K : FiniteKernel α) : ℕ → FiniteLaw α → FiniteLaw α
   | 0, μ => μ
   | n + 1, μ => K.step (K.iterate n μ)
@@ -205,6 +210,7 @@ theorem iterate_dirac [DecidableEq α] (K : FiniteKernel α)
   simp [FiniteLaw.mass_dirac]
 
 /-- A law is stationary when one step leaves it unchanged. -/
+@[expose]
 def IsStationary (K : FiniteKernel α) (μ : FiniteLaw α) : Prop :=
   K.step μ = μ
 
@@ -370,10 +376,12 @@ theorem exists_stationary [Nonempty α]
   simpa [IsStationary, step, π, Matrix.vecMul, dotProduct, matrix] using hy
 
 /-- Reachability by a positive-probability path. -/
+@[expose]
 def Reaches [DecidableEq α] (K : FiniteKernel α) (x y : α) : Prop :=
   ∃ n : ℕ, 0 < K.pow n x y
 
 /-- Every state can be reached from every other state. -/
+@[expose]
 def Irreducible [DecidableEq α] (K : FiniteKernel α) : Prop :=
   ∀ x y, K.Reaches x y
 
@@ -496,16 +504,19 @@ theorem stationary_unique [DecidableEq α] [Nonempty α]
   rw [hmass x, ← hsum, one_mul]
 
 /-- Strictly positive one-step self-loops. -/
+@[expose]
 def HasPositiveLoops (K : FiniteKernel α) : Prop :=
   ∀ x, 0 < K x x
 
 /-! ## Equivariance and invariant laws -/
 
 /-- Equivariance of a kernel under a permutation of its state space. -/
+@[expose]
 def Equivariant (K : FiniteKernel α) (e : Equiv.Perm α) : Prop :=
   ∀ x y, K (e x) (e y) = K x y
 
 /-- Invariance of a law under a permutation of its state space. -/
+@[expose]
 def LawInvariant (μ : FiniteLaw α) (e : Equiv.Perm α) : Prop :=
   ∀ x, μ.mass (e x) = μ.mass x
 
@@ -669,6 +680,7 @@ instance (m : ℕ) : DecidableEq (InventoryState ι m) :=
 
 /-- The count vector after deleting at `d` and arriving at `a`.
 If `d` is empty, this is defined to be the original state. -/
+@[expose]
 def move {m : ℕ} (x : InventoryState ι m) (d a : ι) : InventoryState ι m :=
   if hd : 0 < x.1 d then
     let removed := Function.update x.1 d (x.1 d - 1)
@@ -750,6 +762,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] {m : ℕ}
 
 /-- Transition probability: delete according to `R`, then independently
 arrive at a uniformly chosen leaf. -/
+@[expose]
 def kernel (R : DeletionRule ι m) : FiniteKernel (InventoryState ι m) where
   trans x y :=
     ∑ d, ∑ a, if InventoryState.move x d a = y then

@@ -65,7 +65,7 @@ complex analysis, residue theorem, contour integral, Cauchy formula, rectangular
 -/
 
 
-@[expose] public section
+public section
 
 open Filter Topology MeasureTheory intervalIntegral Real
 open scoped Topology Interval
@@ -79,6 +79,7 @@ variable {z w ρ : ℂ}
 
 /-- The oriented boundary integral of `f` over the rectangle `[z, w]`, in the sign
 convention of `Complex.integral_boundary_rect_eq_zero_of_differentiable_on_off_countable`. -/
+@[expose]
 noncomputable def boundaryIntegral (f : ℂ → ℂ) (z w : ℂ) : ℂ :=
   (∫ x : ℝ in z.re..w.re, f (x + z.im * I)) -
   (∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +

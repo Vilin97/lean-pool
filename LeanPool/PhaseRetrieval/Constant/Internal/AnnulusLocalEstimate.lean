@@ -24,7 +24,7 @@ import Mathlib.Tactic.NormNum.Parity
 
 /-! # AnnulusLocalEstimate -/
 
-@[expose] public section
+public section
 
 
 open MeasureTheory Complex Real Finset

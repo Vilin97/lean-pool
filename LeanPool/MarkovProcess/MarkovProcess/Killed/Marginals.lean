@@ -38,7 +38,7 @@ No Feller property, strong continuity, or regularity of the killed semigroup is 
 statement here covers a random time.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal

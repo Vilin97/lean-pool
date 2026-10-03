@@ -13,7 +13,7 @@ public import LeanPool.MetricCodes.Rigidity
 Gelfand--Tsetlin completeness, Pieri channels, and projected-axis sufficiency.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section MetricCodesNoncomputable
 
@@ -1665,7 +1665,7 @@ theorem sum_det_eq_det_rowSum
 
 /-- A Jacobi–Trudi row evaluated at an allowed branching coordinate using the coefficients in
 ambient dimension `n`. -/
-def branchJacobiTrudiRow {r : ℕ} (n : ℕ)
+@[expose] def branchJacobiTrudiRow {r : ℕ} (n : ℕ)
     (lam : Fin (r + 1) → ℕ) (i : Fin (r + 1))
     (x : {a : Fin (lam i + 1) // branchLower lam i ≤ a.val})
     (j : Fin (r + 1)) : ℤ :=
@@ -2926,7 +2926,7 @@ namespace HigherYoungAllRankGTCharacteristicResidue
 open MetricCodes.Spherical.HigherChannel
 
 /-- The signed ambient characteristic used in the spherical-code argument. -/
-def signedAmbientCharacteristic {r : ℕ}
+@[expose] def signedAmbientCharacteristic {r : ℕ}
     (L : Fin (r + 1) → ℝ) : Polynomial ℝ :=
   Lagrange.nodal
     (Finset.univ : Finset (Fin (r + 1) × Bool))
@@ -2969,7 +2969,7 @@ theorem signedAmbientCharacteristic_derivative_eval_neg {r : ℕ}
   simpa only [hnode] using signedNode_denominator_neg_eq_active L row
 
 /-- The gt channel characteristic polynomial used in the spherical-code argument. -/
-def gtChannelCharacteristicPolynomial {r : ℕ}
+@[expose] def gtChannelCharacteristicPolynomial {r : ℕ}
     (n : ℕ) (lam : Fin (r + 1) → ℕ) : Polynomial ℝ :=
   signedAmbientCharacteristic (ambientShift n lam)
 
@@ -3151,7 +3151,7 @@ open MetricCodes.Spherical.HigherChannel
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
 /-- The Lagrange interpolation polynomial for node `i`, evaluated at the endomorphism `T`. -/
-def cartanCharacteristicInterpolationProjector
+@[expose] def cartanCharacteristicInterpolationProjector
     {ι V : Type*} [Fintype ι] [DecidableEq ι]
     [AddCommGroup V] [Module ℝ V]
     (nodes : ι → ℝ) (T : Module.End ℝ V) (i : ι) :
@@ -3257,7 +3257,7 @@ theorem gtTensorCasimir_channel {r n : ℕ}
     Pi.smul_apply, id_eq, map_smul] using h
 
 /-- The gt relative casimir used in the spherical-code argument. -/
-def gtRelativeCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
+@[expose] def gtRelativeCasimir {r n : ℕ} (lam : Fin (r + 1) → ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) lam) :=
   (2 : ℝ)⁻¹ • (gtTensorCasimir lam -
@@ -3341,7 +3341,7 @@ theorem gtRelativeCasimir_lower_channel {r n : ℕ}
   rfl
 
 /-- The gt characteristic projector used in the spherical-code argument. -/
-def gtCharacteristicProjector {r n : ℕ}
+@[expose] def gtCharacteristicProjector {r n : ℕ}
     (target : Fin (r + 1) → ℕ) (z : Fin (r + 1) × Bool) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) target) :=
@@ -3368,7 +3368,7 @@ open MetricCodes.Spherical.HigherRepresentationGraph
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
 /-- The canonical gelfand tsetlin axis tensor used in the spherical-code argument. -/
-def canonicalGelfandTsetlinAxisTensor
+@[expose] def canonicalGelfandTsetlinAxisTensor
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h) :
@@ -3404,7 +3404,7 @@ theorem canonicalGelfandTsetlinAxisTensor_inner
   rfl
 
 /-- The signed characteristic projector used in the spherical-code argument. -/
-def signedCharacteristicProjector {r : ℕ}
+@[expose] def signedCharacteristicProjector {r : ℕ}
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (L : Fin (r + 1) → ℝ) (T : Module.End ℝ V)
     (i : Fin (r + 1) × Bool) : Module.End ℝ V :=
@@ -3515,7 +3515,7 @@ theorem gtTensorCasimir_tmul {r n : ℕ}
   congr 1
 
 /-- The gt mixed rotation operator used in the spherical-code argument. -/
-def gtMixedRotationOperator {r n : ℕ}
+@[expose] def gtMixedRotationOperator {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) lam) :=
@@ -3626,7 +3626,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.ArbitraryRowMickelssonWeightHomog
 open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 
 /-- The all rank cartan characteristic projector used in the spherical-code argument. -/
-def allRankCartanCharacteristicProjector {r n : ℕ}
+@[expose] def allRankCartanCharacteristicProjector {r n : ℕ}
     (target : Fin (r + 1) → ℕ) (channel : Fin (r + 1) × Bool) :
     Module.End ℝ (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) target) :=
@@ -3726,7 +3726,7 @@ open MetricCodes.Spherical.HigherRepresentationGraph (Interlaces)
 open MetricCodes.Spherical.HigherYoungAllRankGTCharacteristicResidue
 
 /-- The gt axis compressed signed projector coefficient used in the spherical-code argument. -/
-def gtAxisCompressedSignedProjectorCoefficient
+@[expose] def gtAxisCompressedSignedProjectorCoefficient
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h)
@@ -3973,7 +3973,7 @@ open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 open MetricCodes.Spherical.HigherRepresentationGraph
 
 /-- The linear map sending a harmonic Young vector `p` to the pure tensor `axis ⊗ₜ p`. -/
-def gtYoungAxisTensor {r n : ℕ}
+@[expose] def gtYoungAxisTensor {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) (axis : SpherePacking.Euclidean n) :
     HarmonicYoungSpace (n := n) lam →ₗ[ℝ]
       (SpherePacking.Euclidean n ⊗[ℝ]
@@ -5310,7 +5310,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.MixedSignature
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
 /-- The padded pieri raise row used in the spherical-code argument. -/
-def PaddedPieriRaiseRow {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
+@[expose] def PaddedPieriRaiseRow {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
   {i : Fin (r + 1) // Antitone (raiseWeight lam i)}
 
 noncomputable instance paddedPieriRaiseRowFintype {r : ℕ}
@@ -5320,7 +5320,7 @@ noncomputable instance paddedPieriRaiseRowFintype {r : ℕ}
   infer_instance
 
 /-- The padded pieri lower row used in the spherical-code argument. -/
-def PaddedPieriLowerRow {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
+@[expose] def PaddedPieriLowerRow {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
   {i : Fin (r + 1) //
     0 < lam i ∧ Antitone (loweredInternalYoungWeight lam i)}
 
@@ -5331,7 +5331,7 @@ noncomputable instance paddedPieriLowerRowFintype {r : ℕ}
   infer_instance
 
 /-- The padded pieri channel used in the spherical-code argument. -/
-def PaddedPieriChannel {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
+@[expose] def PaddedPieriChannel {r : ℕ} (lam : Fin (r + 1) → ℕ) :=
   PaddedPieriRaiseRow lam ⊕ PaddedPieriLowerRow lam
 
 noncomputable instance paddedPieriChannelFintype {r : ℕ}
@@ -5340,7 +5340,7 @@ noncomputable instance paddedPieriChannelFintype {r : ℕ}
   infer_instance
 
 /-- The padded pieri source used in the spherical-code argument. -/
-def paddedPieriSource {r : ℕ} (lam : Fin (r + 1) → ℕ) :
+@[expose] def paddedPieriSource {r : ℕ} (lam : Fin (r + 1) → ℕ) :
     PaddedPieriChannel lam → Fin (r + 1) → ℕ :=
   Sum.elim
     (fun i : PaddedPieriRaiseRow lam => raiseWeight lam i.val)
@@ -5453,7 +5453,7 @@ open MetricCodes.Spherical.HigherYoungArbitraryRowLoweringProjectedAxisWitness
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
 /-- The normalized padded pieri lower used in the spherical-code argument. -/
-def normalizedPaddedPieriLower
+@[expose] def normalizedPaddedPieriLower
     {r n : ℕ} (target : Fin (r + 1) → ℕ)
     (hdominant : Antitone target)
     (row : Fin (r + 1))
@@ -6362,7 +6362,7 @@ open MetricCodes.Spherical.HigherHarmonicYoung.AllRankTensorClebschCompleteness
 open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriSourceSignatureInjectivity
 
 /-- The padded orthogonal tensor pieri channel used in the spherical-code argument. -/
-def paddedOrthogonalTensorPieriChannel
+@[expose] def paddedOrthogonalTensorPieriChannel
     {r n : ℕ} (hn : 2 * r + 4 ≤ n)
     (target : Fin (r + 1) → ℕ) (hdom : Antitone target) :
     (i : PaddedPieriChannel target) →
@@ -6454,7 +6454,7 @@ open MetricCodes.Spherical.ThreeRowYoungBranching
     zero_add, Fin.val_last, Nat.cast_add, Nat.cast_one, zero_mul, add_zero]
 
 /-- The zero row tensor isometry equiv used in the spherical-code argument. -/
-def zeroRowTensorIsometryEquiv {r n : ℕ}
+@[expose] def zeroRowTensorIsometryEquiv {r n : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     (SpherePacking.Euclidean n ⊗[ℝ]
       HarmonicYoungSpace (n := n) lam) ≃ₗᵢ[ℝ]
@@ -6575,7 +6575,7 @@ open MetricCodes.Spherical.ThreeRowYoungBranching
   simp only [ambientShift, appendZeroWeight_castSucc, Fin.val_castSucc]
 
 /-- The retained padded pieri channel used in the spherical-code argument. -/
-def retainedPaddedPieriChannel {r : ℕ}
+@[expose] def retainedPaddedPieriChannel {r : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     PaddedPieriChannel (appendZeroWeight lam) → Prop
   | Sum.inl row => row.val ≠ Fin.last (r + 1)
@@ -6625,7 +6625,7 @@ theorem loweredInternalYoungWeight_appendZeroWeight_castSucc
         not_false_eq_true, Function.update_of_ne, h]
 
 /-- The retained padded pieri signed node used in the spherical-code argument. -/
-def retainedPaddedPieriSignedNode {r : ℕ}
+@[expose] def retainedPaddedPieriSignedNode {r : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     {i : PaddedPieriChannel (appendZeroWeight lam) //
       retainedPaddedPieriChannel lam i} → Fin (r + 1) × Bool
@@ -6634,7 +6634,7 @@ def retainedPaddedPieriSignedNode {r : ℕ}
       ⟨row.val.castPred (paddedPieriLowerRow_ne_last lam row), false⟩
 
 /-- The retained padded pieri physical source used in the spherical-code argument. -/
-def retainedPaddedPieriPhysicalSource {r : ℕ}
+@[expose] def retainedPaddedPieriPhysicalSource {r : ℕ}
     (lam : Fin (r + 1) → ℕ) :
     {i : PaddedPieriChannel (appendZeroWeight lam) //
       retainedPaddedPieriChannel lam i} → Fin (r + 1) → ℕ
@@ -6734,7 +6734,7 @@ theorem signedNode_appendZeroWeight_retained_lower
     _ = _ := ambientShift_appendZeroWeight_castSucc lam _
 
 /-- The zero row transport padded pieri channel used in the spherical-code argument. -/
-def zeroRowTransportPaddedPieriChannel
+@[expose] def zeroRowTransportPaddedPieriChannel
     {r n : ℕ} (lam : Fin (r + 1) → ℕ)
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (A : E →ₗᵢ[ℝ]
@@ -6845,7 +6845,7 @@ namespace HigherYoungAllRankGTArrowheadSchurComplement
 open MetricCodes.Spherical.HigherChannel
 
 /-- The gt stabilizer arrowhead node used in the spherical-code argument. -/
-def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
+@[expose] def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
     Unit ⊕ (Fin r × Bool) → ℝ
   | .inl _ => -rho
   | .inr (m, true) => M m - 1 / 2
@@ -6862,7 +6862,7 @@ def gtStabilizerArrowheadNode {r : ℕ} (rho : ℝ) (M : Fin r → ℝ) :
       -M m - 1 / 2 := rfl
 
 /-- The gt stabilizer arrowhead minor used in the spherical-code argument. -/
-def gtStabilizerArrowheadMinor {r : ℕ}
+@[expose] def gtStabilizerArrowheadMinor {r : ℕ}
     (rho : ℝ) (M : Fin r → ℝ) : Polynomial ℝ :=
   Lagrange.nodal
     (Finset.univ : Finset (Unit ⊕ (Fin r × Bool)))
@@ -7580,7 +7580,7 @@ open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriSourceSignatur
 open MetricCodes.Spherical.HigherYoungPenultimateRowProjectedLower
 
 /-- The padded pieri signed channel used in the spherical-code argument. -/
-def paddedPieriSignedChannel {r : ℕ} (lam : Fin (r + 1) → ℕ) :
+@[expose] def paddedPieriSignedChannel {r : ℕ} (lam : Fin (r + 1) → ℕ) :
     PaddedPieriChannel lam → Fin (r + 1) × Bool
   | Sum.inl row => (row.val, true)
   | Sum.inr row => (row.val, false)
@@ -7708,7 +7708,7 @@ open MetricCodes.Spherical.HigherYoungAllRankOrthogonalTensorPieriSourceSignatur
 open MetricCodes.Spherical.ThreeRowYoungBranching
 
 /-- The physical padded pieri channel used in the spherical-code argument. -/
-def physicalPaddedPieriChannel {r n : ℕ}
+@[expose] def physicalPaddedPieriChannel {r n : ℕ}
     (hn : 2 * (r + 1) + 4 ≤ n)
     (lam : Fin (r + 1) → ℕ)
     (hdom : Antitone (appendZeroWeight lam))
@@ -8266,7 +8266,7 @@ open MetricCodes.Spherical.HigherYoungAllRankZeroRowRotationEquivariance
 open MetricCodes.Spherical.ThreeRowYoungBranching
 
 /-- The appended full branch pieri lower used in the spherical-code argument. -/
-def appendedFullBranchPieriLower
+@[expose] def appendedFullBranchPieriLower
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (hdominant : Antitone (appendZeroWeight lam))
     (hsource : Antitone
@@ -8371,7 +8371,7 @@ private theorem appendZeroWeight_antitone_metriccodes2_17c0be6a {r : ℕ}
           simpa only [appendZeroWeight_castSucc, ge_iff_le] using hdom hle
 
 /-- The original padded selected axis tensor used in the spherical-code argument. -/
-def originalPaddedSelectedAxisTensor
+@[expose] def originalPaddedSelectedAxisTensor
     {r n : ℕ} (lam : Fin (r + 2) → ℕ)
     (mu : Fin (r + 1) → ℕ) (h : Interlaces lam mu)
     (hgram : PositiveGelfandTsetlinFischerGram (n := n) lam mu h) :

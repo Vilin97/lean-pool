@@ -11,7 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-! Local residue maps for height-one primes of Dedekind domains. -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors WithZero
 
@@ -25,6 +25,7 @@ variable {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K]
   [Algebra R K] [IsFractionRing R K]
 
 /-- The residue map from the valuation ring at a height-one prime. -/
+@[expose]
 noncomputable def residueHom (v : HeightOneSpectrum R) :
     valuationSubringAtPrime K v →+* v.asIdeal.ResidueField :=
   IsLocalization.lift (S := valuationSubringAtPrime K v)

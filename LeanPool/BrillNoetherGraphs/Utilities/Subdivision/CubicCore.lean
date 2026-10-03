@@ -16,13 +16,14 @@ slots are counted separately, and a loop contributes twice.  Looplessness is
 an independent property.
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Certificate.ExplicitPotential.Core
 
 open Finset
 
 /-- Incidence degree, counting every ordered slot endpoint. -/
+@[expose]
 def incidenceDegree {n p : ℕ} (core : ExplicitPotential.Core n p)
     (vertex : Fin n) : ℕ :=
   ∑ edge : Fin p,
@@ -30,6 +31,7 @@ def incidenceDegree {n p : ℕ} (core : ExplicitPotential.Core n p)
       (if core.head edge = vertex then 1 else 0))
 
 /-- Every vertex has exactly three incident slot endpoints. -/
+@[expose]
 def Cubic {n p : ℕ} (core : ExplicitPotential.Core n p) : Prop :=
   ∀ vertex : Fin n, core.incidenceDegree vertex = 3
 

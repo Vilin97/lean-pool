@@ -14,7 +14,7 @@ This file constructs the split-radius packing on the four child labels and recor
 routing algebra.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

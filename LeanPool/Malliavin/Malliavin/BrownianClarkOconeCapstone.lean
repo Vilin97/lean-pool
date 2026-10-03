@@ -22,7 +22,7 @@ Clark--Ocone formula, and a Brownian-compatible `ClarkOconeFamily` are all avail
 standing hypotheses alone, with no remaining identity-family input.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal NNReal InnerProductSpace

@@ -22,7 +22,7 @@ A basis vector is `a = ⟨b, i⟩ : Idx p` with `i < mult p b`; its greedy level
 `discExp a c d = c_d + kmul a d + kmul c d` is the Lemma 4 exponent of the entry `(a, c)` on
 disc `d`. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 namespace Zeta32.PrimeEdge

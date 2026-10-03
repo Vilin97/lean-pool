@@ -19,7 +19,7 @@ import Mathlib.Tactic.NormNum.OfScientific
 We use everything we have proven so far to show that GL has interpolation!
 -/
 
-@[expose] public section
+public section
 
 namespace Lean4GlCoalgebras
 

@@ -23,7 +23,7 @@ prime of T contracting to a nonzero ideal of R can contain
 both y_1 and y_2.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

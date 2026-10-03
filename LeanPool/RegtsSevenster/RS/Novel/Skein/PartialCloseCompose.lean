@@ -20,7 +20,7 @@ the entire compose-calculus (identity laws, free-side relabels,
 permutation absorption) act on partial closures.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -191,6 +191,7 @@ theorem pc_compose_ground (s t u v : ℕ) :
 /-! ### The label meet -/
 
 /-- The peeled composition pairs. -/
+@[expose]
 noncomputable def pcComposeQs (s t u v : ℕ) :=
   Fragment.mapPairs
     (_root_.Equiv.sumCongr

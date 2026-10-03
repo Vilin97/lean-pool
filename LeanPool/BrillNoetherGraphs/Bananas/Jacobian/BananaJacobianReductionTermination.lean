@@ -24,7 +24,7 @@ certificate module translates a terminal vector into the displayed integer
 relation lattice.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

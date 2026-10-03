@@ -46,7 +46,7 @@ ambiguous extensions bounds the complexity of a word whose letters collect
 all the interior rows; Morse–Hedlund gives one period for those rows.
 -/
 
-@[expose] public section
+public section
 
 namespace Nivat.TwoFactors
 
@@ -142,7 +142,7 @@ theorem every_edge_differs (c : Configuration ℚ) (C : Finset Lattice) (k e q :
 
 /-- The interior patterns encountered by translating one configuration in the horizontal basis
 direction. Lemma 5.7 (`lem:periodic-interior`). -/
-def innerOrbit {A : Type*} (x : Configuration A) (C : Finset Lattice) : Set (C → A) :=
+@[expose] def innerOrbit {A : Type*} (x : Configuration A) (C : Finset Lattice) : Set (C → A) :=
   Set.range (fun i : ℤ => patternAt x C (i, 0))
 
 /-- The horizontal interior orbit is finite because it is a subset of the patterns of a

@@ -9,7 +9,7 @@ public import LeanPool.QuantumParallelRepetition.Part05
 
 /-! # Quantum parallel repetition, part 06 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -5917,7 +5917,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 The total probability mass of DSV density rational public multiscale first hit physical flag
 mismatch.
 -/
-def dSVDensityRationalPublicMultiscaleFirstHitPhysicalFlagMismatchMass
+@[expose] def dSVDensityRationalPublicMultiscaleFirstHitPhysicalFlagMismatchMass
     {A C : Type*} [Fintype A] [Fintype C] {L : ℕ}
     (alice : A → Fin (L + 1))
     (bob : C → Fin (L + 1))
@@ -6200,7 +6200,7 @@ theorem
       (fun i atom => (U : Matrix β β ℂ) atom (input i))
 
 /-- The total probability mass of DSV density rational heterogeneous actual physical flag. -/
-def dSVDensityRationalHeterogeneousActualPhysicalFlagMass
+@[expose] def dSVDensityRationalHeterogeneousActualPhysicalFlagMass
     (N : ℕ) {S d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d)
@@ -6214,7 +6214,7 @@ def dSVDensityRationalHeterogeneousActualPhysicalFlagMass
           (⟨flagAlice, alice⟩, ⟨flagBob, bob⟩)‖ ^ 2
 
 /-- The total probability mass of DSV density rational heterogeneous actual asynchronous flag. -/
-def dSVDensityRationalHeterogeneousActualAsynchronousFlagMass
+@[expose] def dSVDensityRationalHeterogeneousActualAsynchronousFlagMass
     (N : ℕ) {S d L : ℕ}
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) : ℝ :=
@@ -6350,7 +6350,7 @@ attribute [local instance] Classical.propDecidable
 The DSV density rational heterogeneous actual physical flag born copy width construction used in
 the quantum parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousActualPhysicalFlagBornCopyWidth
+@[expose] def dSVDensityRationalHeterogeneousActualPhysicalFlagBornCopyWidth
     {S L : ℕ} (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (i : Fin (L + 1)) : ℝ :=
   if active : i.val < L then width (schedule ⟨i.val, active⟩) else 0
@@ -6807,7 +6807,7 @@ theorem dSVDensityRationalPublicLogPhasePhysicalAlignedLocalAction_apply
 The DSV density rational heterogeneous target first spectral alice construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousTargetFirstSpectralAlice
+@[expose] def dSVDensityRationalHeterogeneousTargetFirstSpectralAlice
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ : BipartiteUnitVector d) :
@@ -6827,7 +6827,7 @@ def dSVDensityRationalHeterogeneousTargetFirstSpectralAlice
 The DSV density rational heterogeneous target first spectral bob construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalHeterogeneousTargetFirstSpectralBob
+@[expose] def dSVDensityRationalHeterogeneousTargetFirstSpectralBob
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ζ : BipartiteUnitVector d) :
@@ -6844,7 +6844,7 @@ def dSVDensityRationalHeterogeneousTargetFirstSpectralBob
         N width schedule ζ))
 
 /-- The source object for DSV density rational heterogeneous target first spectral physical. -/
-def dSVDensityRationalHeterogeneousTargetFirstSpectralPhysicalSource
+@[expose] def dSVDensityRationalHeterogeneousTargetFirstSpectralPhysicalSource
     (S B N d L m : ℕ)
     (width : Fin S → ℝ) (schedule : Fin L → Fin S)
     (ξ ζ : BipartiteUnitVector d) :
@@ -6911,14 +6911,14 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 /--
 The finite equivalence encoding DSV density rational public bucket coherent phase sigma product.
 -/
-def dSVDensityRationalPublicBucketCoherentPhaseSigmaProductEquiv
+@[expose] def dSVDensityRationalPublicBucketCoherentPhaseSigmaProductEquiv
     {H : Type*} (B m : ℕ) :
     (Σ _ : Fin B × H, Fin m) ≃
       (Fin B × H) × Fin m :=
   Equiv.sigmaEquivProd (Fin B × H) (Fin m)
 
 /-- The quantum state representing DSV density rational public multiscale bucket coherent sigma. -/
-def dSVDensityRationalPublicMultiscaleBucketCoherentSigmaState
+@[expose] def dSVDensityRationalPublicMultiscaleBucketCoherentSigmaState
     {H : Type*} {m : ℕ} (S B : ℕ)
     (history : EuclideanSpace ℂ (H × H))
     (work : DSVDensityRationalPublicMultiscalePhaseIndex S B →
@@ -6936,7 +6936,7 @@ def dSVDensityRationalPublicMultiscaleBucketCoherentSigmaState
     history work
 
 /-- The quantum state representing DSV density rational heterogeneous pure stopped sigma. -/
-def dSVDensityRationalHeterogeneousPureStoppedSigmaState
+@[expose] def dSVDensityRationalHeterogeneousPureStoppedSigmaState
     {S B N d L m : ℕ}
     (width : Fin S → ℝ)
     (schedule : Fin L → Fin S)
@@ -6965,7 +6965,7 @@ def dSVDensityRationalHeterogeneousPureStoppedSigmaState
 The DSV density rational mixed canonical prefix pure harmonic tensor construction used in the
 quantum parallel-repetition argument.
 -/
-def dSVDensityRationalMixedCanonicalPrefixPureHarmonicTensor
+@[expose] def dSVDensityRationalMixedCanonicalPrefixPureHarmonicTensor
     {N : ℕ} (n : ℕ)
     (z : EuclideanSpace ℂ (Fin N × Fin N)) :
     EuclideanSpace ℂ (Fin (N * n) × Fin (N * n)) :=
@@ -7087,7 +7087,7 @@ theorem
 The quantum state representing DSV density rational mixed canonical prefix physical accepted
 sigma.
 -/
-def dSVDensityRationalMixedCanonicalPrefixPhysicalAcceptedSigmaState
+@[expose] def dSVDensityRationalMixedCanonicalPrefixPhysicalAcceptedSigmaState
     {d N : ℕ} (w : ℝ) (n : ℕ)
     (ξ ζ : BipartiteUnitVector d) :
     EuclideanSpace ℂ

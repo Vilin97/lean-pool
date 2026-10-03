@@ -24,7 +24,7 @@ so no global quotient-map construction is required.  Decorated compatibility is 
 condition needed for those samples to descend to global collar vertices.
 -/
 
-@[expose] public section
+public section
 
 namespace NRR
 namespace FoxNeuwirthOrderComplex
@@ -82,16 +82,19 @@ structure ChartHomotopy
   zeroFree : forall q w t, value q w t ≠ 0
 
 /-- Prefix top cell of a chart after `k` additional subdivision stages. -/
+@[expose]
 noncomputable def ancestorTopCell
     (hp : Nat.Prime p) (N k : Nat) (q : TopCell hp (N + k)) : TopCell hp N :=
   (q.1, (splitRefinementWord N k q.2).1)
 
 /-- Tail subdivision word of a chart after splitting off its first `N` stages. -/
+@[expose]
 noncomputable def ancestorTail
     {hp : Nat.Prime p} (N k : Nat) (q : TopCell hp (N + k)) : RefinementWord p k :=
   (splitRefinementWord N k q.2).2
 
 /-- Pull a standard-simplex coordinate back to the ancestor chart. -/
+@[expose]
 noncomputable def ancestorWeight
     {hp : Nat.Prime p} (N k : Nat) (q : TopCell hp (N + k))
     (w : StandardSimplex (p - 1)) : StandardSimplex (p - 1) :=
@@ -134,6 +137,7 @@ theorem continuous_ancestorWeight
       continuous_toDelta)
 
 /-- Further spatial refinement of a compatible chart map. -/
+@[expose]
 noncomputable def ChartMap.refine
     {hp : Nat.Prime p} {N : Nat} (K : ChartMap hp N) (k : Nat) :
     ChartMap hp (N + k) where
@@ -168,6 +172,7 @@ noncomputable def ChartHomotopy.refine
   zeroFree := by intro q w t; exact J.zeroFree _ _ _
 
 /-- The affine interpolation stored by one regular approximation, as a compatible chart map. -/
+@[expose]
 noncomputable def baseOriginalPLMap
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}
@@ -190,6 +195,7 @@ noncomputable def baseOriginalPLMap
     simpa using h
 
 /-- The same original PL interpolation represented on a further subdivision. -/
+@[expose]
 noncomputable def originalPLMap
     (hp : Nat.Prime p)
     {F : ContinuousCoordinateMap p}
@@ -416,6 +422,7 @@ noncomputable def globalToOriginalPL
   (originalPLToGlobal hp F A k).symm
 
 /-- Transport a compatible chart map along an equality of subdivision levels. -/
+@[expose]
 noncomputable def ChartMap.castLevel
     {hp : Nat.Prime p} {N M : Nat} (h : N = M) (K : ChartMap hp N) : ChartMap hp M :=
   h ▸ K
@@ -435,6 +442,7 @@ noncomputable def ChartHomotopy.castLevel
   exact J
 
 /-- Canonical common spatial level used by the PL-ended middle homotopy. -/
+@[expose]
 def baseCommonLevel
     {hp : Nat.Prime p} {F0 F1 : ZeroFreeMap hp}
     (A0 : StableRegularApproximation hp F0.map)

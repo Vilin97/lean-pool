@@ -15,7 +15,7 @@ development preserved in LeanPool.MooreBound instead of duplicating its analytic
 -- dtq1997/li2-half-irrationality@d5d8206:Li2Unified/Modular/Base/DecayPNTInterface.lean
 -- The copied PNT closure is replaced by the pooled MooreBound proof.
 
-@[expose] public section
+public section
 
 theorem Zeta32.ArithSum.PNT.theta_isEquivalent_id : Asymptotics.IsEquivalent Filter.atTop
   Chebyshev.theta id :=

@@ -40,7 +40,7 @@ condition follows with no ear-order argument.
   conclusion reduced to propagation of one static outer-cycle invariant.
 -/
 
-@[expose] public section
+public section
 
 open Set
 open scoped Graph

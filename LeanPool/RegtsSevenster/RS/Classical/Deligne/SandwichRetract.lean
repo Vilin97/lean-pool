@@ -18,7 +18,7 @@ collapses of the relative tensor as module isomorphisms, the
 bundled copairing and pairing, and the associator.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -65,6 +65,7 @@ theorem modTensorUnitLeft_act
   simp only [Category.assoc]
 
 /-- **The left unit collapse, as a module isomorphism.** -/
+@[expose]
 noncomputable def modTensorUnitLeftMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -122,6 +123,7 @@ theorem modTensorUnitRight_act
   simp only [Category.assoc]
 
 /-- **The right unit collapse, as a module isomorphism.** -/
+@[expose]
 noncomputable def modTensorUnitRightMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -145,6 +147,7 @@ section Legs
 
 /-- **The sandwich insertion**: expand the unit and insert the
 copairing on the left. -/
+@[expose]
 noncomputable def sandwichIns
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -157,6 +160,7 @@ noncomputable def sandwichIns
 
 /-- **The sandwich contraction**: reassociate, contract the
 trailing pair, and collapse the unit. -/
+@[expose]
 noncomputable def sandwichCon
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -171,6 +175,7 @@ noncomputable def sandwichCon
 
 /-- **The dual sandwich insertion**: expand the unit and insert
 the copairing on the right. -/
+@[expose]
 noncomputable def sandwichInsR
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]
@@ -183,6 +188,7 @@ noncomputable def sandwichInsR
 
 /-- **The dual sandwich contraction**: reassociate backwards,
 contract the leading pair, and collapse the unit. -/
+@[expose]
 noncomputable def sandwichConR
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [HasCoequalizers D]

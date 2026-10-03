@@ -15,7 +15,7 @@ The mean oscillation estimate behind `eq:Chat` gives a uniform component
 `L³` bound for the centered factor of `eq:Uij`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

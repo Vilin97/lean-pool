@@ -12,7 +12,7 @@ import LeanPool.Incompleteness.Arithmetization.Definability.Init
 
 /-! # Language -/
 
-@[expose] public section
+public section
 
 
 noncomputable section «lp_nc_section_1»
@@ -99,7 +99,7 @@ class DefinableLanguage extends Arith.LDef where
     c ∈ Set.range (Encodable.encode : L.Rel k → ℕ) ↔ ℕ ⊧/![k, c] rel.val
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Language.lDef [d : DefinableLanguage L] : LDef := d.toLDef
+@[expose] def _root_.LO.FirstOrder.Language.lDef [d : DefinableLanguage L] : LDef := d.toLDef
 
 variable {L}
 
@@ -110,7 +110,7 @@ variable {V : Type*} [ORingStruc V]
 variable (L V)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Language.codeIn : Arith.Language V where
+@[expose] def _root_.LO.FirstOrder.Language.codeIn : Arith.Language V where
   Func := fun x y ↦ V ⊧/![x, y] L.lDef.func.val
   Rel := fun x y ↦ V ⊧/![x, y] L.lDef.rel.val
 
@@ -208,8 +208,58 @@ instance : DefinableLanguage ℒₒᵣ where
   func :=
     .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k = 2 ∧ f = 1)” (by simp)
   rel  := .mkSigma “k r. (k = 2 ∧ r = 0) ∨ (k = 2 ∧ r = 1)” (by simp)
-  func_iff {k c} := by exact Language.ORing.of_mem_range_encode_func
-  rel_iff {k c} := by exact Language.ORing.of_mem_range_encode_rel
+  func_iff {k c} := by
+    have hzero : (0 : ℕ) = Nat.zero := by
+      calc
+        (0 : ℕ) = ORingStruc.numeral Nat.zero :=
+          (ORingStruc.zero_eq_zero (α := ℕ)).symm
+        _ = Nat.zero := LO.Nat.numeral_eq Nat.zero
+    have hone : (1 : ℕ) = Nat.succ Nat.zero := by
+      calc
+        (1 : ℕ) = ORingStruc.numeral (Nat.succ Nat.zero) :=
+          (ORingStruc.one_eq_one (α := ℕ)).symm
+        _ = Nat.succ Nat.zero := LO.Nat.numeral_eq (Nat.succ Nat.zero)
+    have htwo : (2 : ℕ) = Nat.succ (Nat.succ Nat.zero) := by
+      calc
+        (2 : ℕ) = ORingStruc.numeral (Nat.succ (Nat.succ Nat.zero)) :=
+          (LO.Arith.numeral_eq_natCast (M := ℕ) (Nat.succ (Nat.succ Nat.zero))).symm
+        _ = Nat.succ (Nat.succ Nat.zero) :=
+          LO.Nat.numeral_eq (Nat.succ (Nat.succ Nat.zero))
+    convert Language.ORing.of_mem_range_encode_func (k := k) (f := c) using 1
+    simp only [HierarchySymbol.Semiformula.val_mkSigma,
+      LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_and,
+      Semiformula.eval_operator₂, Semiterm.val_bvar, Semiterm.val_const,
+      Structure.numeral_eq_numeral, LO.Nat.numeral_eq, Structure.Eq.eq,
+      LogicalConnective.Prop.or_eq, LogicalConnective.Prop.and_eq,
+      Matrix.vecCons_zero,
+      Matrix.cons_val_fin_one, Matrix.cons_val_one,
+      hzero, hone, htwo]
+  rel_iff {k c} := by
+    have hzero : (0 : ℕ) = Nat.zero := by
+      calc
+        (0 : ℕ) = ORingStruc.numeral Nat.zero :=
+          (ORingStruc.zero_eq_zero (α := ℕ)).symm
+        _ = Nat.zero := LO.Nat.numeral_eq Nat.zero
+    have hone : (1 : ℕ) = Nat.succ Nat.zero := by
+      calc
+        (1 : ℕ) = ORingStruc.numeral (Nat.succ Nat.zero) :=
+          (ORingStruc.one_eq_one (α := ℕ)).symm
+        _ = Nat.succ Nat.zero := LO.Nat.numeral_eq (Nat.succ Nat.zero)
+    have htwo : (2 : ℕ) = Nat.succ (Nat.succ Nat.zero) := by
+      calc
+        (2 : ℕ) = ORingStruc.numeral (Nat.succ (Nat.succ Nat.zero)) :=
+          (LO.Arith.numeral_eq_natCast (M := ℕ) (Nat.succ (Nat.succ Nat.zero))).symm
+        _ = Nat.succ (Nat.succ Nat.zero) :=
+          LO.Nat.numeral_eq (Nat.succ (Nat.succ Nat.zero))
+    convert Language.ORing.of_mem_range_encode_rel (k := k) (r := c) using 1
+    simp only [HierarchySymbol.Semiformula.val_mkSigma,
+      LogicalConnective.HomClass.map_or, LogicalConnective.HomClass.map_and,
+      Semiformula.eval_operator₂, Semiterm.val_bvar, Semiterm.val_const,
+      Structure.numeral_eq_numeral, LO.Nat.numeral_eq, Structure.Eq.eq,
+      LogicalConnective.Prop.or_eq, LogicalConnective.Prop.and_eq,
+      Matrix.vecCons_zero,
+      Matrix.cons_val_fin_one, Matrix.cons_val_one,
+      hzero, hone, htwo]
 
 namespace Formalized
 
@@ -239,21 +289,27 @@ instance _root_.LO.Arith.Formalized.LOR.defined : (⌜ℒₒᵣ⌝ :
 variable {V}
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def zeroIndex : ℕ := Encodable.encode (Language.Zero.zero : (ℒₒᵣ : FirstOrder.Language).Func 0)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def oneIndex : ℕ := Encodable.encode (Language.One.one : (ℒₒᵣ : FirstOrder.Language).Func 0)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def addIndex : ℕ := Encodable.encode (Language.Add.add : (ℒₒᵣ : FirstOrder.Language).Func 2)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def mulIndex : ℕ := Encodable.encode (Language.Mul.mul : (ℒₒᵣ : FirstOrder.Language).Func 2)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def eqIndex : ℕ := Encodable.encode (Language.Eq.eq : (ℒₒᵣ : FirstOrder.Language).Rel 2)
 
 /-- Imported declaration from the Incompleteness formalization. -/
+@[expose]
 def ltIndex : ℕ := Encodable.encode (Language.LT.lt : (ℒₒᵣ : FirstOrder.Language).Rel 2)
 
 @[simp] lemma LOR_func_zeroIndex : ⌜ℒₒᵣ⌝.Func 0 (zeroIndex : V) :=
@@ -272,7 +328,7 @@ def ltIndex : ℕ := Encodable.encode (Language.LT.lt : (ℒₒᵣ : FirstOrder.
 lemma _root_.LO.Arith.Formalized.lDef.func_def :
     (ℒₒᵣ).lDef.func = .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k =
     2 ∧ f = 1)” (by simp) :=
-  rfl
+  by exact rfl
 
 lemma coe_zeroIndex_eq : (zeroIndex : V) = 0 := rfl
 

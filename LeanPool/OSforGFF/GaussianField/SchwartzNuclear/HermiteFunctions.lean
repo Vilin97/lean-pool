@@ -38,7 +38,7 @@ The polynomial infrastructure is available in
 - DLMF Chapter 18 (Orthogonal Polynomials)
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Polynomial Real
 open scoped ContDiff

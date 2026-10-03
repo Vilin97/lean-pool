@@ -15,7 +15,7 @@ public import LeanPool.Besicovitch.SixPoint.Configuration
 This file bounds the mass of a finite two-color ball packing by its union and leakage.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

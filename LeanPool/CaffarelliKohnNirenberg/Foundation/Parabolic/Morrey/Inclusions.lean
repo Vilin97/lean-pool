@@ -14,7 +14,7 @@ This module records the change of Morrey exponent available for functions
 supported in one parabolic cylinder.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Metric
 open scoped ENNReal NNReal Topology

@@ -21,7 +21,7 @@ therefore use these operations without introducing a second, informal notion
 of path evaluation.
 -/
 
-@[expose] public section
+public section
 
 
 
@@ -89,15 +89,18 @@ namespace BinaryLabelling
 variable (L : BinaryLabelling (G := G) (H := H) (V := V))
 
 /-- The factor-label list read along a directed path. -/
+@[expose]
 def pathLabels {a : V} : ∀ {b : V}, Path a b → List (Sum G H)
   | _, Path.nil => []
   | _, Path.cons p e => pathLabels p ++ [L.label e]
 
 /-- The element of the free product read along a directed path. -/
+@[expose]
 def pathRead {a : V} {b : V} (p : Path a b) : G ∗ H :=
   factorWordProd (G := G) (H := H) (pathLabels L p)
 
 /-- A path is monochromatic when all of its edge labels come from one factor. -/
+@[expose]
 def IsMonochromatic {a b : V} (p : Path a b) (color : Bool) : Prop :=
   ∀ z ∈ L.pathLabels p,
     binarySumIndex (G := G) (H := H) z = color
@@ -156,6 +159,7 @@ theorem pathRead_comp {a b : V} (p : Path a b) :
 /-! ### Reading paths in the symmetrized graph -/
 
 /-- Extends edge labels to symmetrized arrows by inverting the label on a formal reverse. -/
+@[expose]
 def symmLabel {a b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
     Sum G H :=
@@ -164,6 +168,7 @@ def symmLabel {a b : Symmetrify V}
   | Sum.inr f => factorWordInv (L.label f)
 
 /-- The ordered list of factor labels along a symmetrized path. -/
+@[expose]
 def symmPathLabels {a : Symmetrify V} :
     ∀ {b : Symmetrify V},
       @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b →
@@ -172,6 +177,7 @@ def symmPathLabels {a : Symmetrify V} :
   | _, Path.cons p e => symmPathLabels p ++ [L.symmLabel e]
 
 /-- The free-product element read along a symmetrized path. -/
+@[expose]
 def symmPathRead {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b) :
   G ∗ H :=
@@ -274,6 +280,7 @@ theorem symmPathRead_map_of {a b : V}
       rfl
 
 /-- Every label along the symmetrized path belongs to the specified factor. -/
+@[expose]
 def symmIsMonochromatic {a b : Symmetrify V}
     (p : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V _) a b)
     (color : Bool) : Prop :=
@@ -771,6 +778,7 @@ def LoopNielsenEquivalent {b : V} {n : ℕ}
   Relation.ReflTransGen (fun u v : Fin n → Path b b => LoopNielsenStep u v) x y
 
 /-- Reads a tuple of based loops as a tuple of free-product elements. -/
+@[expose]
 def loopRead {b : V} {n : ℕ} (x : Fin n → Path b b) : Fin n → G ∗ H :=
   fun i => L.pathRead (x i)
 
@@ -841,14 +849,17 @@ namespace MarkedBinaryGraph
 variable (M : MarkedBinaryGraph (G := G) (H := H) (V := V) n)
 
 /-- The free-product elements read along the marking loops. -/
+@[expose]
 def read : Fin n → G ∗ H :=
   M.labeling.loopRead M.loops
 
 /-- The marking loops read a generating tuple of the free product. -/
+@[expose]
 def IsGenerating : Prop :=
   Subgroup.closure (Set.range M.read) = ⊤
 
 /-- Every vertex can be reached from the base after allowing formal reverse edges. -/
+@[expose]
 def WeaklyConnected : Prop :=
   ∀ v : V, Nonempty (@Path (Symmetrify V) _ M.base v)
 

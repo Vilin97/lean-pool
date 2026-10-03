@@ -16,7 +16,7 @@ expansion through the closed form, the permutation and cast
 transports, and the star-vector coordinates.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -12,6 +12,6 @@ public import LeanPool.BruhatTits.Harmonic.Basic
 # Harmonic cochains
 -/
 
-@[expose] public section
+public section
 
 open Module

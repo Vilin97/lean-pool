@@ -28,7 +28,7 @@ structure `Nikodym.LowerBound.AlgebraInterface K d` for every field `K` and ever
 The main result is `Nikodym.LowerBound.algebraInterface K d`.
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

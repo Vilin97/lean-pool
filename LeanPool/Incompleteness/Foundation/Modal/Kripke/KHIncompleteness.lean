@@ -14,7 +14,7 @@ import Mathlib.Tactic.TautoSet
 
 /-! # KHIncompleteness -/
 
-@[expose] public section
+public section
 
 
 namespace LO

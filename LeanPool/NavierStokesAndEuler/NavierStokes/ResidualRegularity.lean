@@ -17,7 +17,7 @@ The main regularity theorem is on an open spacetime domain; it does not
 differentiate an unspecified extension through a time boundary.
 -/
 
-@[expose] public section
+public section
 
 
 namespace NavierStokes.ResidualRegularity

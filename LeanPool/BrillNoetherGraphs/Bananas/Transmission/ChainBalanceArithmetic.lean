@@ -23,7 +23,7 @@ Genus-zero factors are deliberately handled separately by
 the balancing cut nonempty.
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

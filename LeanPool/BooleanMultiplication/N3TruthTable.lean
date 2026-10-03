@@ -15,7 +15,7 @@ This module validates the concrete 64-bit encodings used while developing the
 algebraic proof.  Nothing in `N3.lean` or the final theorem depends on it.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 

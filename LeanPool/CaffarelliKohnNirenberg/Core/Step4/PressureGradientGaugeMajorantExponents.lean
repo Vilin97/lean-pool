@@ -36,7 +36,7 @@ This file records the two exponent balances involved, in the normalisation
   dominates the requirement for every admissible `κ` with room to spare.
 -/
 
-@[expose] public section
+public section
 
 open scoped ENNReal
 

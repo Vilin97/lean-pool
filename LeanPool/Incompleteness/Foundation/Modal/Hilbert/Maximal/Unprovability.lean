@@ -10,7 +10,7 @@ import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
 
 /-! # Unprovability -/
 
-@[expose] public section
+public section
 
 
 namespace LO

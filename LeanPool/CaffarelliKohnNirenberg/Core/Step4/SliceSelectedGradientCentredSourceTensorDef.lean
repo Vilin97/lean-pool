@@ -13,7 +13,7 @@ public import LeanPool.CaffarelliKohnNirenberg.Core.Step4.SliceSelectedGradientC
 Part of the Caffarelli–Kohn–Nirenberg partial regularity proof.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory MeasureTheory.Measure Set Filter
 open scoped BigOperators ENNReal NNReal Topology
@@ -33,6 +33,7 @@ pressure contribution.
 -/
 
 /-- Force-free centred divergence-form source paired with `η · pressureUTensor`. -/
+@[expose]
 def pressureDivergenceCutoffSourceCentredTensor
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3)
@@ -41,6 +42,7 @@ def pressureDivergenceCutoffSourceCentredTensor
       dη j x * u x i * (u x j - c j))
 
 /-- Source-Morrey alias for `pressureDivergenceCutoffSourceCentredTensor`. -/
+@[expose]
 def sourceMorreyCutoffVCentredTensor
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : Vec3 → Vec3) (Du : Vec3 → Fin 3 → Vec3)
@@ -48,6 +50,7 @@ def sourceMorreyCutoffVCentredTensor
   pressureDivergenceCutoffSourceCentredTensor η dη u Du c
 
 /-- Spacetime force-free source with a time-dependent spatial mean. -/
+@[expose]
 def sourceMorreyCutoffVCentredTensorSpacetime
     (η : Vec3 → ℝ) (dη : Fin 3 → Vec3 → ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)

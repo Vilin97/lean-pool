@@ -19,25 +19,26 @@ starts after initialization. The strict-local and known-parameter lower bounds u
 the separate method models in `StrictModel` and `LowerBoundStatements`.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 
 /-- The oracle's gradient is the coordinate gradient of its value function. -/
-def IsCoordinateGradient (oracle : PairOracle d) : Prop :=
+@[expose] def IsCoordinateGradient (oracle : PairOracle d) : Prop :=
   O3.IsCoordinateGradient oracle.value oracle.gradient
 
 /-- The set of global minimizers of the oracle's value function. -/
-def MinimizerSet (oracle : PairOracle d) : Set (Point d) :=
+@[expose] def MinimizerSet (oracle : PairOracle d) : Set (Point d) :=
   O3.MinimizerSet oracle.value
 
 /-- The `ℓp` distance from the initial point to the objective's minimizer set. -/
+@[expose]
 noncomputable def minimizerDistance (p : ℝ) (oracle : PairOracle d)
     (x0 : Point d) : ℝ :=
   O3.minimizerDistance p oracle.value x0
 
 /-- The oracle gradient is `L`-Lipschitz from the primal norm to its dual norm. -/
-def IsLpSmooth (p L : ℝ) (oracle : PairOracle d) : Prop :=
+@[expose] def IsLpSmooth (p L : ℝ) (oracle : PairOracle d) : Prop :=
   O3.IsLpSmooth p (conjugateExponent p) L oracle.gradient
 
 /-- Proof-side objective certificate.  It is never an algorithm input. -/
@@ -53,18 +54,21 @@ structure PositiveInstance (p : ℝ) (d : ℕ) (x0 : Point d) where
   smooth : IsLpSmooth p L oracle
 
 /-- The initial distance to the minimizer set. -/
-noncomputable def PositiveInstance.R (inst : PositiveInstance p d x0) : ℝ :=
+@[expose] noncomputable def PositiveInstance.R (inst : PositiveInstance p d x0) : ℝ :=
   minimizerDistance p inst.oracle x0
 
 /-- The common minimum value, expressed as an infimum over minimizers. -/
+@[expose]
 noncomputable def PositiveInstance.fstar (inst : PositiveInstance p d x0) : ℝ :=
   sInf (inst.oracle.value '' MinimizerSet inst.oracle)
 
 /-- The gradient-accuracy condition number `L * R / eps`. -/
+@[expose]
 noncomputable def conditionNumber (inst : PositiveInstance p d x0) (eps : ℝ) : ℝ :=
   inst.L * inst.R / eps
 
 /-- The condition number truncated below at one. -/
+@[expose]
 noncomputable def conditionBar (inst : PositiveInstance p d x0) (eps : ℝ) : ℝ :=
   max 1 (conditionNumber inst eps)
 

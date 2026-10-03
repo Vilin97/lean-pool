@@ -16,7 +16,7 @@ import LeanPool.NavierStokesAndEuler.Euler.PacketGraphHessian
 /-! The genuine physical pressure gradient has a finite covector
 expansion. The angular factor k shifts only the high-pressure series. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,20 +29,21 @@ open Set Finset InnerProductSpace ContinuousLinearMap EulerSmoothLimit
 open scoped ContDiff
 
 /-- Angular pressure, defined pointwise by `(pressureJet p z).2 angleDirection • m`. -/
-def angularPressure (m : Space) (p : ScalarField) : VectorField :=
+@[expose] def angularPressure (m : Space) (p : ScalarField) : VectorField :=
   fun z => (pressureJet p z).2 angleDirection • m
 
 /-- Covector, given by `pressureGradient p + k • angularPressure m p`. -/
-def covector (k : ℝ) (m : Space) (p : ScalarField) : VectorField :=
+@[expose] def covector (k : ℝ) (m : Space) (p : ScalarField) : VectorField :=
   pressureGradient p + k • angularPressure m p
 
 /-- Covector grades, constructed using `assemble`. -/
+@[expose]
 def covectorGrades (N : ℕ) (m : Space) (a : ℕ → Profile) : ℕ → VectorField :=
   assemble N (fun i => pressureGradient (a i).meanPressure+angularPressure m (a i).highPressure)
     (fun i => pressureGradient (a i).highPressure)
 
 /-- Gradient linear, bundling `toFun`, `map_add`, `map_smul`. -/
-def gradientLinear : ScalarJet →ₗ[ℝ] Space where
+@[expose] def gradientLinear : ScalarJet →ₗ[ℝ] Space where
   toFun J := (toDual ℝ Space).symm (J.2.comp spatialInjection)
   map_add' J K := by simp [add_comp]
   map_smul' c J := by simp [smul_comp]

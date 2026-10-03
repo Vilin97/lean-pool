@@ -19,7 +19,7 @@ The primes `p ≤ 5n` are split as
 * the additive constants `3/4` and `5` cost at most `(13/2) θ(5n) = O(n)`.
 The normalised main part tends to `tailConst/20 + midRat + 35/36 − (25/4) log(140/3) < 283/50`. -/
 
-@[expose] public section
+public section
 
 open Finset Filter Topology
 

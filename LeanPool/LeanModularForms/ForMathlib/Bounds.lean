@@ -23,4 +23,4 @@ All of the lemmas formerly defined here (`truncatedFundamentalDomain`, the famil
 (GL (Fin 2) ℝ)`.  This file is now a re-export to keep the historical import path working.
 -/
 
-@[expose] public section
+public section

@@ -62,7 +62,7 @@ open scoped Matrix.Norms.L2Operator
 
 open Matrix Finset WithLp
 
-@[expose] public section
+public section
 
 namespace Lean4LPD
 
@@ -73,7 +73,7 @@ variable {𝕜 : Type*} [RCLike 𝕜]
 /-- Restriction of coordinates along `f : p → m`, as a continuous linear map of Euclidean
 spaces: `x ↦ x ∘ f`. Mathlib's `EuclideanSpace.restrict₂` covers only the inclusion of one
 `Finset` in another and comes with no norm lemma. -/
-noncomputable def restrictCLM (𝕜 : Type*) [RCLike 𝕜] {p m : Type*}
+@[expose] noncomputable def restrictCLM (𝕜 : Type*) [RCLike 𝕜] {p m : Type*}
     (f : p → m) : EuclideanSpace 𝕜 m →L[𝕜] EuclideanSpace 𝕜 p where
   toFun x := toLp 2 (fun i => ofLp x (f i))
   map_add' x y := by ext; simp

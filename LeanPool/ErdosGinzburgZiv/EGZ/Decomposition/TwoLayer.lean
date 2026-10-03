@@ -19,7 +19,7 @@ selected atoms below the anchor to the lower layer; this preserves all total
 mass and every upper cumulative weight.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -59,16 +59,19 @@ instance (anchor : α) [OrderTop α] : OrderTop (Node anchor) where
 
 open Classical in
 /-- Forget the layer; this preserves joins. -/
+@[expose]
 def projection (anchor : α) : SupHom (Node anchor) α where
   toFun a := a.1.1
   map_sup' _ _ := rfl
 
 open Classical in
 /-- The upper copy of an old node. -/
+@[expose]
 def upper (anchor : α) (a : α) : Node anchor := ⟨(a, 1), by simp⟩
 
 open Classical in
 /-- The lower copy of a node below the anchor. -/
+@[expose]
 def lower (anchor : α) (a : α) (ha : a ≤ anchor) : Node anchor := ⟨(a, 0), fun _ ↦ ha⟩
 
 @[simp] theorem projection_upper (anchor a : α) : projection anchor (upper anchor a) = a := rfl
@@ -111,6 +114,7 @@ def lowerEmbedding (anchor : α) : {a : α // a ≤ anchor} ↪o Node anchor whe
 
 open Classical in
 /-- Every layered node is uniquely either an upper copy or a lower copy. -/
+@[expose]
 noncomputable def layerEquiv (anchor : α) : α ⊕ {a : α // a ≤ anchor} ≃ Node anchor where
   toFun := Sum.elim (upper anchor) (fun a ↦ lower anchor a.1 a.2)
   invFun a := if h : a.1.2 = 0 then Sum.inr ⟨a.1.1, a.2 h⟩ else Sum.inl a.1.1
@@ -161,6 +165,7 @@ variable {β : Type*}
 
 open Classical in
 /-- Move selected atoms below the anchor into the lower layer. -/
+@[expose]
 noncomputable def splitWeight (anchor : α) (w : α → β → ℕ) (S : β → Prop)
     (a : Node anchor) (v : β) : ℕ :=
   if a.1.2 = 0 then (if S v then w a.1.1 v else 0)
@@ -213,6 +218,7 @@ theorem sum_splitWeight (anchor : α) (w : α → β → ℕ) (S : β → Prop) 
 
 open Classical in
 /-- Cumulative weight in an arbitrary finite node order. -/
+@[expose]
 noncomputable def cumulativeWeight (w : α → β → ℕ) (a : α) (v : β) : ℕ :=
   ∑ b, if b ≤ a then w b v else 0
 

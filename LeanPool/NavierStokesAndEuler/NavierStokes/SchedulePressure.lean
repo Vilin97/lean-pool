@@ -18,7 +18,7 @@ This module instantiates the abstract pressure integral with `finalAngular`.
 The pressure-neutral angular-moment correction remains a separate operation.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -30,14 +30,14 @@ open OutgoingSchedule OutgoingTail
 open scoped Topology ContDiff
 
 /-- Squared clock amplitude, taken from the actual angular schedule at `η=0`. -/
-noncomputable def clockWeight (d : TailData) (y : ℝ) : ℝ := finalAngular d (y, 0) ^ 2
+@[expose] noncomputable def clockWeight (d : TailData) (y : ℝ) : ℝ := finalAngular d (y, 0) ^ 2
 
 /-- The shape exponent decreases from one to zero during flattening. -/
 noncomputable def shapeExponent (d : TailData) (y : ℝ) : ℝ :=
   1 - sigma ((y - d.core.endpoint) / flattenLength)
 
 /-- The datum computed directly from the complete constructed angular field. -/
-noncomputable def axisPressure (d : TailData) (η : ℝ) : ℝ :=
+@[expose] noncomputable def axisPressure (d : TailData) (η : ℝ) : ℝ :=
   -(1 / 2 : ℝ) * ∫ y, finalAngular d (y, η) ^ 2
 
 theorem endpoint_pos (d : TailData) : 0 < d.core.endpoint := by

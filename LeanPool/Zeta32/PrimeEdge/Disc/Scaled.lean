@@ -10,7 +10,7 @@ public import LeanPool.Zeta32.PrimeEdge.Disc.LocValue
 valuation `≥ e`, i.e. `G(p u)` with `G` integral) and the disc factorization predicate `Good`:
 `F(p u - d) = p^E u^E R(u)` with `R` scaled and `R(0)` a `p`-adic unit. -/
 
-@[expose] public section
+public section
 
 open Polynomial
 open scoped BigOperators

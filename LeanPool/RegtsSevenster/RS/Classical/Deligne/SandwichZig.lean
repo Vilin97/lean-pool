@@ -20,7 +20,7 @@ supplies those two readings, `RS.sandwichIns_hom` and
 `RS.modTensorπ_sandwichCon`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

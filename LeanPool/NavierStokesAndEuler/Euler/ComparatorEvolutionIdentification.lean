@@ -25,7 +25,7 @@ section
 
 /-! Restriction of an ordinary Euler evolution to a translated closed interval. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -35,6 +35,7 @@ open Set Filter EulerSmoothLimit
 open scoped Topology
 
 /-- Embed the shifted time interval into the original evolution interval. -/
+@[expose]
 def shiftTimeMap (S T a : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S) :
     C(Icc (0 : ℝ) T, Icc (0 : ℝ) S) where
   toFun t := ⟨a + t, add_nonneg ha t.property.1,
@@ -42,13 +43,14 @@ def shiftTimeMap (S T a : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S) :
   continuous_toFun := (continuous_subtype_val.const_add a).subtype_mk _
 
 @[simp] theorem shiftTimeMap_val (S T a : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S)
-    (t : Icc (0 : ℝ) T) : ((shiftTimeMap S T a ha haT t) : ℝ) = a + t := rfl
+    (t : Icc (0 : ℝ) T) : ((shiftTimeMap S T a ha haT t) : ℝ) = a + t := by rfl
 
 namespace Evolution
 
 variable {S : ℝ} {hS : 0 ≤ S}
 
 /-- Restart an evolution at time `a`, retaining its next `T` units of time. -/
+@[expose]
 def shiftTime (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (T : ℝ) (hT : 0 ≤ T) (haT : a + T ≤ S) : Evolution T hT where
   velocity t := U.velocity (shiftTimeMap S T a ha haT t)
@@ -75,12 +77,12 @@ def shiftTime (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
 @[simp] theorem shiftTime_velocity (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (T : ℝ) (hT : 0 ≤ T) (haT : a + T ≤ S) (t : Icc (0 : ℝ) T) :
     (U.shiftTime a ha T hT haT).velocity t =
-      U.velocity (shiftTimeMap S T a ha haT t) := rfl
+      U.velocity (shiftTimeMap S T a ha haT t) := by rfl
 
 @[simp] theorem shiftTime_pressureForce (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (T : ℝ) (hT : 0 ≤ T) (haT : a + T ≤ S) (t : Icc (0 : ℝ) T) :
     (U.shiftTime a ha T hT haT).pressureForce t =
-      U.pressureForce (shiftTimeMap S T a ha haT t) := rfl
+      U.pressureForce (shiftTimeMap S T a ha haT t) := by rfl
 
 theorem shiftTime_initial (U : Evolution S hS) (a : ℝ) (ha : 0 ≤ a)
     (T : ℝ) (hT : 0 ≤ T) (haT : a + T ≤ S) :
@@ -104,7 +106,7 @@ section
 /-! Time translation preserves the independent whole-space Euler class,
 including its one-sided initial-time equation and uniform energy bound. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -160,7 +162,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -183,6 +185,7 @@ def HasLocalEvolutionAtCompactCurl (v : Space → ℝ → Space) : Prop :=
 
 /-- The reusable analytic conversion obligation, before any uniqueness
 argument: compact initial vorticity gives a short ordinary realization. -/
+@[expose]
 def CompactCurlLocalUpgrade : Prop :=
   ∀ (u₀ : Space → Space) (v : Space → ℝ → Space) (p : Space → ℝ → ℝ),
     EulerExistenceAndSmoothnessR3 u₀ v p → HasCompactSupport (vectorCurl u₀) →

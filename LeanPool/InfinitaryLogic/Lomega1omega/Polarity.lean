@@ -33,7 +33,7 @@ Only the **generic** `relationsInSigned` equations are `@[simp]`; the `positiveR
 installed alongside them and nothing can loop through `not`, `and`, `or`, or `ex`.
 -/
 
-@[expose] public section
+public section
 
 namespace FirstOrder.Language
 
@@ -45,7 +45,7 @@ variable {L : Language.{0, 0}} {α : Type}
 symbols with a positive occurrence in `φ`, and `relationsInSigned false φ` those with a negative
 occurrence: antecedents flip the sign, quantifiers and the countable connectives preserve it, and
 equality contributes nothing. -/
-def relationsInSigned :
+@[expose] def relationsInSigned :
     ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Set (Σ n, L.Relations n)
   | _, _, .falsum => ∅
   | _, _, .equal _ _ => ∅
@@ -66,27 +66,27 @@ abbrev negativeRelationsIn {n : ℕ} (φ : L.BoundedFormulaω α n) : Set (Σ n,
 /-! ## Constructor equations -/
 
 @[simp] theorem relationsInSigned_falsum {n : ℕ} (s : Bool) :
-    relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) = ∅ := rfl
+    relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) = ∅ := by rfl
 
 @[simp] theorem relationsInSigned_equal {n : ℕ} (s : Bool)
     (t₁ t₂ : L.Term (α ⊕ Fin n)) :
-    relationsInSigned s (BoundedFormulaω.equal t₁ t₂) = ∅ := rfl
+    relationsInSigned s (BoundedFormulaω.equal t₁ t₂) = ∅ := by rfl
 
 @[simp] theorem relationsInSigned_rel {n l : ℕ} (s : Bool) (R : L.Relations l)
     (ts : Fin l → L.Term (α ⊕ Fin n)) :
-    relationsInSigned s (BoundedFormulaω.rel R ts) = if s then {⟨l, R⟩} else ∅ := rfl
+    relationsInSigned s (BoundedFormulaω.rel R ts) = if s then {⟨l, R⟩} else ∅ := by rfl
 
 @[simp] theorem relationsInSigned_imp {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
-    relationsInSigned s (φ.imp ψ) = relationsInSigned (!s) φ ∪ relationsInSigned s ψ := rfl
+    relationsInSigned s (φ.imp ψ) = relationsInSigned (!s) φ ∪ relationsInSigned s ψ := by rfl
 
 @[simp] theorem relationsInSigned_all {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α (n + 1)) :
-    relationsInSigned s φ.all = relationsInSigned s φ := rfl
+    relationsInSigned s φ.all = relationsInSigned s φ := by rfl
 
 @[simp] theorem relationsInSigned_iSup {n : ℕ} (s : Bool) (φs : ℕ → L.BoundedFormulaω α n) :
-    relationsInSigned s (BoundedFormulaω.iSup φs) = ⋃ i, relationsInSigned s (φs i) := rfl
+    relationsInSigned s (BoundedFormulaω.iSup φs) = ⋃ i, relationsInSigned s (φs i) := by rfl
 
 @[simp] theorem relationsInSigned_iInf {n : ℕ} (s : Bool) (φs : ℕ → L.BoundedFormulaω α n) :
-    relationsInSigned s (BoundedFormulaω.iInf φs) = ⋃ i, relationsInSigned s (φs i) := rfl
+    relationsInSigned s (BoundedFormulaω.iInf φs) = ⋃ i, relationsInSigned s (φs i) := by rfl
 
 /-! ## Negation swaps and the derived connectives -/
 

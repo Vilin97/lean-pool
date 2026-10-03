@@ -13,7 +13,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.SmoothCoefficientTimeRestricti
 closed interval. The reference size of the original solution still
 bounds every restricted velocity. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -28,6 +28,7 @@ variable {T : ℝ} {hT : 0 ≤ T} (U : Evolution T hT)
 
 /-- Restrict time, bundling `velocity`, `pressureForce`, `velocity_continuous`,
 `pressure_continuous` and the required compatibility proofs. -/
+@[expose]
 def restrictTime : Evolution S hS where
   velocity t := U.velocity (initialInclusion T S hST t)
   pressureForce t := U.pressureForce (initialInclusion T S hST t)
@@ -45,10 +46,10 @@ def restrictTime : Evolution S hS where
     rfl
 
 theorem restrictTime_velocity (t : Icc (0 : ℝ) S) :
-    (U.restrictTime S hS hST).velocity t=U.velocity (initialInclusion T S hST t) := rfl
+    (U.restrictTime S hS hST).velocity t=U.velocity (initialInclusion T S hST t) := by rfl
 
 theorem restrictTime_initial :
-    (U.restrictTime S hS hST).velocity ⟨0,le_rfl,hS⟩=U.velocity ⟨0,le_rfl,hT⟩ := rfl
+    (U.restrictTime S hS hST).velocity ⟨0,le_rfl,hS⟩=U.velocity ⟨0,le_rfl,hT⟩ := by rfl
 
 theorem restrictTime_referenceWordBound (t : Icc (0 : ℝ) S) :
     WordBound 4 U.referenceSize ((U.restrictTime S hS hST).velocity t) :=

@@ -26,7 +26,7 @@ import LeanPool.Monlib4.RepTheory.AutMat
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.PiMat`.
 -/
 
-@[expose] public section
+public section
 
 variable {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
   [Π i, Fintype (p i)] [Π i, DecidableEq (p i)]
@@ -64,7 +64,7 @@ macro_rules
 /--
 Transpose each matrix block of a `PiMat` as a star-algebra equivalence to the opposite algebra.
 -/
-@[simps]
+@[expose, simps]
 noncomputable def PiMat.transposeStarAlgEquiv
   (ι : Type*) (p : ι → Type*) [Π i, Fintype (p i)] :
     PiMat ℂ ι p ≃⋆ₐ[ℂ] (PiMat ℂ ι p)ᵐᵒᵖ where
@@ -109,7 +109,7 @@ theorem kroneckerTMulLinearEquiv_map_lid_tmul
   exact kroneckerLinearEquiv_tmul x y
 
 /-- Tensor-product equivalence for direct products of matrix algebras. -/
-@[simps!]
+@[expose, simps!]
 noncomputable def PiMatTensorProductEquiv
   {ι₁ ι₂ : Type*} {p₁ : ι₁ → Type*} {p₂ : ι₂ → Type*}
   [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
@@ -122,8 +122,15 @@ StarAlgEquiv.ofAlgEquiv
     (AlgEquiv.piCongrRight (fun i => tensorToKronecker)))
   (fun x => by
     ext1 i
-    change TensorProduct.toKronecker (directSumTensorToFun (star x) i) =
-      star (TensorProduct.toKronecker (directSumTensorToFun x i))
+    simp only [AlgEquiv.trans_apply, Pi.star_apply,
+      AlgEquiv.piCongrRight_apply, directSumTensorAlgEquiv_apply]
+    have hkronecker
+        (z : Matrix (p₁ i.1) (p₁ i.1) ℂ ⊗[ℂ] Matrix (p₂ i.2) (p₂ i.2) ℂ) :
+        (tensorToKronecker (R := ℂ) (m := p₁ i.1) (n := p₂ i.2)) z =
+          TensorProduct.toKronecker z := by
+      rw [← tensorToKronecker_toLinearMap_eq]
+      rfl
+    simp only [hkronecker]
     rw [TensorProduct.toKronecker_star]
     congr 1
     obtain ⟨S, rfl⟩ := TensorProduct.exists_finset x
@@ -182,7 +189,7 @@ noncomputable abbrev PiMat.traceLinearMap :
 Matrix.traceLinearMap _ _ _ ∘ₗ Matrix.blockDiagonal'AlgHom.toLinearMap
 
 /-- Coalgebra structure on a finite product of matrix blocks. -/
-@[reducible]
+@[expose, reducible]
 noncomputable def PiMat.finiteDimensionalHilbertCoalgebraStruct :
     CoalgebraStruct ℂ (PiMat ℂ ι p) := by
   withPiQuantumCtx[φ]
@@ -551,7 +558,7 @@ theorem QuantumGraph.Real.PiMat_isOrthogonalProjection :
     (quantumGraphReal_iff_Psi_isIdempotentElem_and_isSelfAdjoint.mp hA).2.star_eq, and_self]
 
 /-- Block submodules associated to a real `PiMat` quantum graph. -/
-noncomputable def QuantumGraph.Real.PiMatSubmodule :
+@[expose] noncomputable def QuantumGraph.Real.PiMatSubmodule :
   withPiQuantum[φ]
     ∀ {A : PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p},
       QuantumGraph.Real (PiMat ℂ ι p) A →
@@ -1099,6 +1106,7 @@ theorem Matrix.UnitaryGroup.toEuclideanLinearEquiv_apply {n : Type*} [Fintype n]
 rfl
 
 /-- A unitary matrix as a linear isometry equivalence of Euclidean space. -/
+@[expose]
 noncomputable def Matrix.UnitaryGroup.toEuclideanLinearIsometryEquiv {n :
     Type*} [Fintype n] [DecidableEq n]
   (A : ↥(Matrix.unitaryGroup n ℂ)) :
@@ -1158,8 +1166,10 @@ theorem unitaryTensorEuclidean_apply {U : (i : ι) → Matrix.unitaryGroup (p i)
       ((WithLp.toLp 2 ((U i.1 : Matrix _ _ ℂ) *ᵥ x.ofLp)) ⊗ₜ
         WithLp.toLp 2 ((U i.2 : Matrix _ _ ℂ)ᴴᵀ *ᵥ y.ofLp)) := by
   rw [unitaryTensorEuclidean, LinearIsometryEquiv.trans_apply,
-    LinearIsometryEquiv.symm_apply_apply]
-  rfl
+    LinearIsometryEquiv.symm_apply_apply, LinearIsometryEquiv.trans_apply]
+  simp only [LinearIsometryEquiv.TensorProduct.map_tmul,
+    Matrix.UnitaryGroup.toEuclideanLinearIsometryEquiv_apply,
+    Matrix.unitaryGroup.conj_coe]
 
 omit [Fintype ι] [DecidableEq ι] in
 theorem unitaryTensorEuclidean_apply' {U : (i : ι) → Matrix.unitaryGroup (p i) ℂ} (i :
@@ -1704,6 +1714,7 @@ lemma Matrix.trace_piMatTensorProductEquiv_lTensor_unop_tenSwap
   rfl
 
 /-- Build a linear isometry equivalence from a linear equivalence whose adjoint is its inverse. -/
+@[expose]
 def LinearIsometryEquiv.ofLinearEquiv
   {𝕜 E F : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
   [NormedAddCommGroup F] [InnerProductSpace 𝕜 E]
@@ -1726,6 +1737,7 @@ lemma LinearIsometryEquiv.ofLinearEquiv_apply {𝕜 E F : Type*} [RCLike 𝕜] [
 rfl
 
 /-- Tensor-product commutativity as a linear isometry equivalence. -/
+@[expose]
 noncomputable def TensorProduct.commLinearIsometryEquiv
   (𝕜 E F : Type*) [RCLike 𝕜] [NormedAddCommGroup E]
   [NormedAddCommGroup F] [InnerProductSpace 𝕜 E]

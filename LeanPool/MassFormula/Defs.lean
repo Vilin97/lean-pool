@@ -57,7 +57,7 @@ short well-formedness facts are proved here.
 * [Serre1979] J-P. Serre, *Local fields*, Graduate Texts in Mathematics **67**, Springer, 1979.
 -/
 
-@[expose] public section
+public section
 
 open ValuativeRel
 
@@ -68,7 +68,7 @@ variable (K : Type*) [Field K] [ValuativeRel K] [UniformSpace K] [IsUniformAddGr
 
 /-- `q K` is the cardinality of the finite residue field `𝓀[K]` of `K`, that is `Nat.card 𝓀[K]`
 ([Serre 1978, p.1031][Serre1978]). -/
-noncomputable def q : ℕ :=
+@[expose] noncomputable def q : ℕ :=
   Nat.card 𝓀[K]
 
 omit [IsUniformAddGroup K] in
@@ -81,7 +81,7 @@ variable {K}
 /-- The ring of integers of a subextension `L` of `SeparableClosure K` / `K`: the integral closure
 of `𝒪[K]` in `L` ([Serre 1978, §3, p.1032][Serre1978]). (Introduced by the paper only in Section 3,
 but needed already here to say what *totally ramified* means.) -/
-noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
+@[expose] noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
     Subalgebra ↥𝒪[K] ↥L :=
   integralClosure ↥𝒪[K] ↥L
 
@@ -89,18 +89,18 @@ noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
 extended along `algebraMap 𝒪[K] (integers L)`. For `L` / `K` finite this is the unique maximal ideal
 of the local ring `integers L`, but the definition itself carries no such obligations, and is junk
 for `L` infinite over `K`. -/
-noncomputable def maximalIdealAbove (L : IntermediateField K (SeparableClosure K)) :
+@[expose] noncomputable def maximalIdealAbove (L : IntermediateField K (SeparableClosure K)) :
     Ideal (integers L) :=
   (Ideal.map (algebraMap 𝒪[K] (integers L)) 𝓂[K]).radical
 
 /-- The ramification index of `L` / `K`: the exponent of `maximalIdealAbove L` in the extension of
 `𝓂[K]` to `integers L`, via Mathlib's junk-tolerant `Ideal.ramificationIdx'`. -/
-noncomputable def ramificationIdx (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def ramificationIdx (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   Ideal.ramificationIdx' 𝓂[K] (maximalIdealAbove L)
 
 /-- `L` / `K` is *totally ramified* when its ramification index equals its degree
 `Module.finrank K ↥L` ([Serre 1978, p.1031][Serre1978]). -/
-def IsTotallyRamified (L : IntermediateField K (SeparableClosure K)) : Prop :=
+@[expose] def IsTotallyRamified (L : IntermediateField K (SeparableClosure K)) : Prop :=
   ramificationIdx L = Module.finrank K ↥L
 
 variable (K)
@@ -108,7 +108,7 @@ variable (K)
 /-- The set of subextensions `L` of `SeparableClosure K` that are totally ramified over `K` and
 satisfy `Module.finrank K ↥L = n` ([Serre 1978, p.1031][Serre1978]). For `n = 0` the set is junk
 (the paper takes `1 ≤ n`), which is why every main theorem assumes `0 < n`. -/
-def sigma (n : ℕ) : Set (IntermediateField K (SeparableClosure K)) :=
+@[expose] def sigma (n : ℕ) : Set (IntermediateField K (SeparableClosure K)) :=
   {L | Module.finrank K ↥L = n ∧ IsTotallyRamified L}
 
 variable {K}
@@ -126,30 +126,32 @@ integral `K`-basis spans a sublattice of finite index in `integers L`, and the d
 sublattice is the square of the index times the discriminant of `integers L`. The present form needs
 no freeness or Dedekind-domain instances. For `L` infinite over `K` no such basis exists and the
 ideal is `⊥`—junk, as usual. -/
+@[expose]
 noncomputable def discIdeal (L : IntermediateField K (SeparableClosure K)) : Ideal ↥𝒪[K] :=
   Ideal.span {x : ↥𝒪[K] | ∃ b : Module.Basis (Fin (Module.finrank K ↥L)) K ↥L,
     (∀ i, IsIntegral 𝒪[K] (b i)) ∧ algebraMap 𝒪[K] K x = Algebra.discr K ⇑b}
 
 /-- The valuation of the discriminant of `L` over `K`: the multiplicity of the maximal ideal `𝓂[K]`
 in `discIdeal L`, in the monoid of ideals of `𝒪[K]` ([Serre 1978, p.1031][Serre1978]). -/
-noncomputable def d (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def d (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   multiplicity 𝓂[K] (discIdeal L)
 
 /-- `c L` is `d L - n + 1`, where `n` is the degree `Module.finrank K ↥L`, written in the
 truncation-safe form `d L + 1 - n` ([Serre 1978, p.1031][Serre1978]). The bound `n - 1 ≤ d L` making
 the truncated subtraction faithful is the paper's own claim that `c L` is a nonnegative integer, the
 theorem `sub_one_le_d`. -/
-noncomputable def c (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def c (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   d L + 1 - Module.finrank K ↥L
 
 /-- The number of `K`-automorphisms of `L` ([Serre 1978, Remark 3°, p.1031][Serre1978]). -/
-noncomputable def w (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def w (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   Nat.card (↥L ≃ₐ[K] ↥L)
 
 /-- The paper's set of representatives, as a predicate rather than a quotient: `R` is a *set of
 representatives of the isomorphism classes of the elements of* `sigma K n`—it consists of elements
 of `sigma K n`, and every element of `sigma K n` is `K`-isomorphic to exactly one member of `R`
 ([Serre 1978, Remark 3°, p.1031][Serre1978]). -/
+@[expose]
 def IsRepresentativeSet (n : ℕ) (R : Set (IntermediateField K (SeparableClosure K))) : Prop :=
   R ⊆ sigma K n ∧ ∀ L ∈ sigma K n, ∃! M, M ∈ R ∧ Nonempty (↥L ≃ₐ[K] ↥M)
 

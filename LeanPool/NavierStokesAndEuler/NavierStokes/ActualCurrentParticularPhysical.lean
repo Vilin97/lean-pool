@@ -20,7 +20,7 @@ of a polar angle depends only on the Cartesian point and is independent
 of the band.  No regularity of a fixed-reference continuation is used.
 -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -40,6 +40,7 @@ abbrev Native := PhysicalParticularWave.WaveSpace
 variable {B N0 : ℕ}
 
 /-- The literal current solve, with the canonical geometry already fixed. -/
+@[expose]
 noncomputable def copyData (x : CycleState (Label B N0)) (l : Label B N0) (j : ℤ) :=
   (ActualParticularStageControls.canonicalParameters l).copyData
     (ActualParticularStageControls.assembly x l).context
@@ -56,7 +57,7 @@ theorem copyData_eq_actual (x : CycleState (Label B N0)) (l : Label B N0) (j : �
   rw [ActualParticularStageControls.parameters_eq_canonical x l hf]
 
 /-- The current common coefficient includes every localized copy cutoff. -/
-noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ComplexVector :=
   (copyData x l j).common.curlPotential
     (ParticularParameters.nativeStrip ActualParticularStageControls.associatedStrip)
@@ -64,7 +65,7 @@ noncomputable def nativePotential (x : CycleState (Label B N0)) (l : Label B N0)
 
 /-- Native pressure, given by `mode ((copyData x l j).background.frequency n) ((copyData x l
 j).background.phase n) ((copyData x l j).common.pressure n)`. -/
-noncomputable def nativePressure (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def nativePressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ℂ :=
   mode ((copyData x l j).background.frequency n)
     ((copyData x l j).background.phase n) ((copyData x l j).common.pressure n)
@@ -79,18 +80,18 @@ noncomputable def angle (w : SpaceTime) : ℝ :=
 
 /-- Cylinder point, given by `(w.1, AxisymmetricResidual.pack (PolarCharts.radius
 (PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))`. -/
-noncomputable def cylinderPoint (w : SpaceTime) : SpaceTime :=
+@[expose] noncomputable def cylinderPoint (w : SpaceTime) : SpaceTime :=
   (w.1, AxisymmetricResidual.pack
     (PolarCharts.radius (PhysicalGraphBounds.radialProjection w)) (angle w) (w.2 2))
 
 /-- This is a current-band map; it does not use the reference band of a label. -/
-noncomputable def nativePoint (n : ℕ) (w : SpaceTime) : Native :=
+@[expose] noncomputable def nativePoint (n : ℕ) (w : SpaceTime) : Native :=
   PhysicalParticularWave.nativeMap CorrectionInitialization.ActualPrimary.h
     (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n)
     (cylinderPoint w)
 
 /-- Cylindrical potential as an element of `ComplexVector`. -/
-noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ComplexVector :=
   (ChartScales.Q n) ^ (-CorrectionInitialization.ActualPrimary.h) •
     nativePotential x l j n
@@ -98,7 +99,7 @@ noncomputable def cylindricalPotential (x : CycleState (Label B N0)) (l : Label 
         (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)
 
 /-- Cylindrical pressure as an element of `ℝ`. -/
-noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (z : SpaceTime) : ℝ :=
   (ChartScales.Q n) ^ (-2 * CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) *
     (nativePressure x l j n
@@ -106,18 +107,20 @@ noncomputable def cylindricalPressure (x : CycleState (Label B N0)) (l : Label B
         (ChartScales.Q n) (CommonWindow.index CorrectionInitialization.ActualPrimary.h n) z)).re
 
 /-- A single actual harmonic, in Cartesian coordinates. -/
-noncomputable def localPotentialMode (x : CycleState (Label B N0)) (l : Label B N0)
+@[expose] noncomputable def localPotentialMode (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (w : SpaceTime) : Space :=
   PhysicalCurlCovariance.realVector
     (CartesianCopySource.rotationMap (PhysicalGraphBounds.radialProjection w)
       (cylindricalPotential x l j n (cylinderPoint w)))
 
 /-- Local pressure mode, given by `cylindricalPressure x l j n (cylinderPoint w)`. -/
+@[expose]
 noncomputable def localPressureMode (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) (w : SpaceTime) : ℝ :=
   cylindricalPressure x l j n (cylinderPoint w)
 
 /-- The actual finite active-label and nonzero-harmonic sum at band `n`. -/
+@[expose]
 noncomputable def localPotential (x : CycleState (Label B N0)) (n : ℕ) : VelocityField :=
   fun w => ∑ l ∈ x.coefficients.labels n,
     ∑ j ∈ ParticularWaveAssembly.modes x.coefficients.residualBand,
@@ -125,6 +128,7 @@ noncomputable def localPotential (x : CycleState (Label B N0)) (n : ℕ) : Veloc
 
 /-- Local pressure, defined pointwise by `∑ l ∈ x.coefficients.labels n, ∑ j ∈
 ParticularWaveAssembly.modes x.coefficients.residualBand, localPressureMode x l j n w`. -/
+@[expose]
 noncomputable def localPressure (x : CycleState (Label B N0)) (n : ℕ) : PressureField :=
   fun w => ∑ l ∈ x.coefficients.labels n,
     ∑ j ∈ ParticularWaveAssembly.modes x.coefficients.residualBand,
@@ -367,6 +371,7 @@ theorem localPressureMode_germ_chart (x : CycleState (Label B N0)) (l : Label B 
 
 /-- Native domain, given by `ActualWaveRegularity.nativeDomain
 ActualWaveRegularity.particularChart CorrectionInitialization.ActualPrimary.standardRegion`. -/
+@[expose]
 noncomputable def nativeDomain : Set Native :=
   ActualWaveRegularity.nativeDomain ActualWaveRegularity.particularChart
     CorrectionInitialization.ActualPrimary.standardRegion
@@ -525,15 +530,23 @@ theorem native_smooth_of_current_source (x : CycleState (Label B N0))
   have ha := (ActualParticularStageControls.native_wave_to_weighted hc.1).each l
   have hp := (ActualParticularStageControls.native_wave_to_weighted hc.2.2.1).each l
   have he := copyData_eq_actual x l j (ActualParticularStageControls.preserves_frequency hx l)
+  rw [ActualParticularStageControls.nativeStrip_eq,
+    ← ActualWaveRegularityData.particularFullStrip_eq] at ha hp
   have ha' : WeightedClasses.MemClass ActualWaveRegularityData.particularFullStrip
       (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z)) α
       (copyData x l j).common.amplitude := by
     rw [he]
+    change WeightedClasses.MemClass ActualWaveRegularityData.particularFullStrip
+      (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z)) α
+      (ActualParticularCoherence.copyData x l j).common.amplitude at ha
     exact ha
   have hp' : WeightedClasses.MemClass ActualWaveRegularityData.particularFullStrip
       (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z)) (α + 1/2)
       (copyData x l j).common.pressure := by
     rw [he]
+    change WeightedClasses.MemClass ActualWaveRegularityData.particularFullStrip
+      (fun _ z => Real.sqrt (ActualWaveRegularityData.particularFullStrip.zeta z)) (α + 1/2)
+      (ActualParticularCoherence.copyData x l j).common.pressure at hp
     exact hp
   exact ⟨nativePotential_contDiffOn x l j (copyData_phase hx l j) ha' hz n,
     nativePressure_re_contDiffOn x l j (copyData_phase hx l j) hp' hz n⟩
@@ -650,6 +663,7 @@ theorem localFields_contDiffAt_of_invariant
 /-! ## The complete corrected coefficient is the actual native curl -/
 
 /-- Native velocity, constructed using `vectorMode`. -/
+@[expose]
 noncomputable def nativeVelocity (x : CycleState (Label B N0)) (l : Label B N0)
     (j : ℤ) (n : ℕ) : Native → ComplexVector :=
   vectorMode ((copyData x l j).background.frequency n) ((copyData x l j).background.phase n)

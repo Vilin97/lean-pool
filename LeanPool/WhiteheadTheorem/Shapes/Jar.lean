@@ -14,7 +14,7 @@ public import LeanPool.WhiteheadTheorem.Shapes.Disk
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Jar`.
 -/
 
-@[expose] public section
+public section
 
 
 open TopCat

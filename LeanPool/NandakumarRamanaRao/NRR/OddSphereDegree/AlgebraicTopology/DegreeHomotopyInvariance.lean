@@ -19,7 +19,7 @@ algebraic prism and the library cylinder), the homotopy-invariance wrappers of
 **unconditional**.
 -/
 
-@[expose] public section
+public section
 
 open CategoryTheory AlgebraicTopology
 

@@ -13,7 +13,7 @@ public import LeanPool.Polylean.Complexes.Structures.Quiver
 Imported Lean Pool material for `LeanPool.Polylean.Complexes.Structures.Category`.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Polylean
 
@@ -68,7 +68,7 @@ attribute [simp] map_comp
  { obj := id, map := id, map_id := λ _ => rfl, map_comp := λ _ _ => rfl }
 
 /-- Composition of functors. -/
-def comp {C D E : Sort _} {𝓒 : Category C} {𝓓 : Category D} {𝓔 : Category E}
+@[expose] def comp {C D E : Sort _} {𝓒 : Category C} {𝓓 : Category D} {𝓔 : Category E}
     (F : 𝓒 ⥤ 𝓓) (G : 𝓓 ⥤ 𝓔) : 𝓒 ⥤ 𝓔 :=
 -- TODO Use `..` notation
   { obj := G.obj ∘ F.obj, map := G.map ∘ F.map, map_id := by intro; simp, map_comp := by intros; simp }
@@ -93,7 +93,7 @@ namespace Path
 variable {C : Sort _} [𝓒 : Category C]
 
 /-- Compose the arrows appearing in a category path. -/
-def compose {X Y : C} : @Path C 𝓒.toQuiver X Y → (X ⟶ Y)
+@[expose] def compose {X Y : C} : @Path C 𝓒.toQuiver X Y → (X ⟶ Y)
   | .nil => 𝟙 _
   | .cons e p => e ≫ p.compose
 

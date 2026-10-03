@@ -23,7 +23,7 @@ import LeanPool.MatchingLogic.EntryIII.MCSAlpha
 # MatchingLogic.EntryIII.FreshWitnessElim
 -/
 
-@[expose] public section
+public section
 
 namespace MatchingLogic
 

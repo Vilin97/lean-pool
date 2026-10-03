@@ -14,7 +14,7 @@ public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 `W′ = (2/3)(π − 2 atan(1/x) + atan(5/x)/2)` after `atan(1/x) = π/2 − atan x`. Written from
 scratch. -/
 
-@[expose] public section
+public section
 
 open Real
 namespace Zeta32.Fstar

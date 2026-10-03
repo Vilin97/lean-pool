@@ -13,7 +13,7 @@ public import LeanPool.PDL.Star
 
 /-! # Local Diamond Unfolding (Section 3.2 and 3.3) -/
 
-@[expose] public section
+public section
 
 namespace PDL
 
@@ -21,7 +21,7 @@ namespace PDL
 
 /-- Unfold a given program into combinations of test formulas and lists of programs,
 assuming the program is used inside a diamond. -/
-def Dset : Program → List (List Formula × List Program)
+@[expose] def Dset : Program → List (List Formula × List Program)
 | ·a => [ ([], [·a]) ]
 | ?'τ => [ ([τ], []) ]
 | α ⋓ β => Dset α ∪ Dset β
@@ -33,7 +33,7 @@ def Dset : Program → List (List Formula × List Program)
 
 /-- Like `Dset`, but applied to a whole list of programs.
 This is used to deal with loaded diamonds. -/
-def Dl : List Program → List (List Formula × List Program)
+@[expose] def Dl : List Program → List (List Formula × List Program)
 | [] => [([],[])]
 | [α] => Dset α
 | α :: rest => (Dset α).flatMap (fun ⟨F,δ⟩ => -- inspired by `;` case of `H`
@@ -306,11 +306,11 @@ theorem Dset_goes_down_prog (α : Program) {Fs δ} (in_D : (Fs, δ) ∈ Dset α)
     simp_all [Dset]
 
 /-- An intermediate step to define `unfoldDiamond`. This is not used in the paper. -/
-def Yset : (List Formula × List Program) → Formula → List Formula
+@[expose] def Yset : (List Formula × List Program) → Formula → List Formula
 | ⟨F, δ⟩, φ => F ∪ [ ~ Formula.boxes δ φ ]
 
 /-- Φ_◇(α,ψ) -/
-def unfoldDiamond (α : Program) (φ : Formula) : List (List Formula) :=
+@[expose] def unfoldDiamond (α : Program) (φ : Formula) : List (List Formula) :=
   (Dset α).map (fun Fδ => Yset Fδ φ)
 
 /-- Where formulas in the diamond unfolding can come from. Inspired by unfoldBoxContent. -/
@@ -777,7 +777,7 @@ theorem localDiamondTruth γ ψ : (~⌈γ⌉ψ) ≡ dis ( (Dset γ).map (fun Fδ
     exact localDiamondTruth_star β ψ (localDiamondTruth β) W M w
 
 /-- Helper function to trick "List.Chain r" to use a different r at each step. -/
-def pairRel (M : KripkeModel W) : (Program × W) → (Program × W) → Prop
+@[expose] def pairRel (M : KripkeModel W) : (Program × W) → (Program × W) → Prop
 | (_, v), (α, w) => relate M α v w
 
 -- use later for Modelgraphs
@@ -900,32 +900,34 @@ The `Option` is used here because unfolding of tests can lead to free nodes.
 -/
 
 /-- Attach a residual program sequence to an already loaded continuation. -/
+@[expose]
 def YsetLoad : (List Formula × List Program) → LoadFormula → (List Formula × Option NegLoadFormula)
 | ⟨F, δ⟩, χ => ⟨F , ~' (LoadFormula.boxes δ χ)⟩
 
 /-- Load a residual sequence over an ordinary formula, or unload it when the sequence is empty. -/
+@[expose]
 def YsetLoad' : (List Formula × List Program) → Formula → (List Formula × Option NegLoadFormula)
 | ⟨F, δ⟩, φ => match splitLast δ with
     | none => ⟨F ∪ [~φ], none⟩
     | some (δ, β) => ⟨F , ~' (loadMulti δ β φ)⟩
 
 /-- Loaded unfolding for ~'⌊α⌋(χ : LoadFormula) -/
-def unfoldDiamondLoaded (α : Program) (χ : LoadFormula) :
+@[expose] def unfoldDiamondLoaded (α : Program) (χ : LoadFormula) :
     List (List Formula × Option NegLoadFormula) :=
   (Dset α).map (fun Fδ => YsetLoad Fδ χ)
 
 /-- Loaded unfolding for ~'⌊α⌋(φ : Formula) -/
-def unfoldDiamondLoaded' (α : Program) (φ : Formula) :
+@[expose] def unfoldDiamondLoaded' (α : Program) (φ : Formula) :
     List (List Formula × Option NegLoadFormula) :=
   (Dset α).map (fun Fδ => YsetLoad' Fδ φ)
 
 /-- Merge an optional loaded formula into a list of ordinary formulas by unloading it. -/
-def pairUnload : List Formula × Option NegLoadFormula → List Formula
+@[expose] def pairUnload : List Formula × Option NegLoadFormula → List Formula
 | (xs, none) => xs
 | (xs, some nlf) => xs ∪ [negUnload nlf]
 
 /-- Merge an optional loaded formula into a finset of ordinary formulas by unloading it. -/
-def pairUnloadSet : Finset Formula × Option NegLoadFormula → Finset Formula
+@[expose] def pairUnloadSet : Finset Formula × Option NegLoadFormula → Finset Formula
 | (xs, none) => xs
 | (xs, some nlf) => xs ∪ {negUnload nlf}
 

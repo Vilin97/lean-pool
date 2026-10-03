@@ -21,7 +21,7 @@ letters give distinct words. This is Mathlib's `Combinatorics.Line α (Fin n)`, 
 of the line indexed by the letter `x`.
 -/
 
-@[expose] public section
+public section
 
 open Filter Finset
 open Combinatorics

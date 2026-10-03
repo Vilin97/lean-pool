@@ -13,7 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.LpOperatorFieldAlgebra
 
 /-! Spatial support is preserved by the actual zero-endpoint history inverse. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -29,7 +29,7 @@ variable (P : ℝ) [Fact (0 < P)] {V : Type*}
 
 /-- Spatial cutoff, given by `cutoffOperator (liftMeasure P) (spatialSet P S)
 (spatialSet_measurable P S hS)`. -/
-def spatialCutoff : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
+@[expose] def spatialCutoff : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
   cutoffOperator (liftMeasure P) (spatialSet P S) (spatialSet_measurable P S hS)
 
 theorem spatialCutoff_norm : ‖spatialCutoff (V := V) P S hS‖ ≤ 1 := by

@@ -57,7 +57,7 @@ instance argument together with the hypothesis
 (`finite_of_pow_idealOfVars_le`).
 -/
 
-@[expose] public section
+public section
 
 namespace Nikodym.LowerBound
 

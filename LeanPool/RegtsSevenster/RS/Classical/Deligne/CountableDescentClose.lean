@@ -61,7 +61,7 @@ hypothesis discharged from finite length by
 `RS.indImageEmbedded_of_lengthLE`.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -79,6 +79,7 @@ variable {C : Type v}
 /-- **Compactness of an ind-object**, phrased as in
 `RS.Classical.Deligne.IndCompact`: a morphism from the object into a
 filtered colimit factors through a stage of the diagram. -/
+@[expose]
 def IndCompactObj [SmallCategory C]
     (Y : Ind C) : Prop :=
   ∀ {I : Type v} [SmallCategory I] [IsFiltered I] (D : I ⥤ Ind C)
@@ -119,7 +120,7 @@ variable {C : Type v}
 
 /-- The cocone of the chosen presentation of an ind-object, with the
 ind-object itself as its point. -/
-@[simps! pt]
+@[expose, simps! pt]
 noncomputable def presCocone [SmallCategory C]
     (A : Ind C) : Cocone (presDiagram A) :=
   Cocone.mk A

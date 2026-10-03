@@ -13,7 +13,7 @@ import Mathlib.MeasureTheory.Function.L2Space
 
 /-! Genuine strong operator approximation on Bochner L² time spaces. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

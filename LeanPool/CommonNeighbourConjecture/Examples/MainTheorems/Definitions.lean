@@ -14,7 +14,7 @@ public import Mathlib.Order.Lattice.Nat
 The complete non-Mathlib vocabulary used in the public statement.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -40,12 +40,12 @@ attribute [instance] FinitePermutationGroup.group
 namespace FinitePermutationGroup
 
 /-- A set of points is a base if only the identity fixes every point in it. -/
-def IsBase (P : FinitePermutationGroup) (B : Set P.Point) : Prop :=
+@[expose] def IsBase (P : FinitePermutationGroup) (B : Set P.Point) : Prop :=
   ∀ g : P.G, (∀ x ∈ B, g • x = x) → g = 1
 
 /-- The least size of a base. An injective map from `Fin n` represents an
 `n`-element base; existential quantification makes its enumeration irrelevant. -/
-noncomputable def baseSize (P : FinitePermutationGroup) : Nat :=
+@[expose] noncomputable def baseSize (P : FinitePermutationGroup) : Nat :=
   sInf {n : Nat | ∃ b : Fin n → P.Point,
     Function.Injective b ∧ P.IsBase (Set.range b)}
 
@@ -53,7 +53,7 @@ noncomputable def baseSize (P : FinitePermutationGroup) : Nat :=
 adjacent exactly when they lie together in a base of minimum size. Thus this
 is the ordinary Saxl graph at base size two and the generalized Saxl graph at
 larger base sizes. -/
-noncomputable def saxlGraph (P : FinitePermutationGroup) :
+@[expose] noncomputable def saxlGraph (P : FinitePermutationGroup) :
     SimpleGraph P.Point where
   Adj x y :=
     x ≠ y ∧ ∃ b : Fin P.baseSize → P.Point,

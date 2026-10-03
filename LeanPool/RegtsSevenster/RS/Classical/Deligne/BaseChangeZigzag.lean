@@ -15,7 +15,7 @@ The statement that base change preserves the zigzag laws, named
 so that the dévissage steps can refer to it directly.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -28,6 +28,7 @@ variable {D : Type u}
 
 /-- **Base change preserves the zigzag laws**: the statement of
 record for the dévissage steps. -/
+@[expose]
 def BaseChangeZigzagStatement
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

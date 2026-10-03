@@ -11,7 +11,7 @@ public import LeanPool.ConnesRigidity.Paper.Section4.AChartDetectorMeasure
 Full §4 detector union for Zhou's compact dual. Paper: §4.
 -/
 
-@[expose] public section
+public section
 
 namespace Connes
 namespace PaperFullDetectorMeasure
@@ -70,7 +70,7 @@ theorem aChartLinear_eq_coordinate (χ : CharacterSpace)
 /--
 The `fullNonzeroLocus` construction used in the Connes rigidity formalization.
 -/
-def fullNonzeroLocus : Set CharacterSpace :=
+@[expose] def fullNonzeroLocus : Set CharacterSpace :=
   {χ : CharacterSpace |
     PaperDualHaar.characterLinearEquiv χ ≠ 0}
 

@@ -14,7 +14,7 @@ The two actual-integral estimates are used above one fixed absolute
 Calderón–Zygmund threshold. Their spatial and temporal clipping is preserved.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology BigOperators

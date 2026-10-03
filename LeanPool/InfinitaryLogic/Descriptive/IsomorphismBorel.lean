@@ -26,7 +26,7 @@ This file proves that isomorphism restricted to models of a sentence is Borel
   is measurable.
 -/
 
-@[expose] public section
+public section
 
 universe u v
 

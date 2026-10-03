@@ -38,7 +38,7 @@ configuration, and reverse polarization recovers `D`.
 * `DistanceGeometry.schoenberg` : the full characterization (an iff).
 -/
 
-@[expose] public section
+public section
 
 open Matrix
 open scoped RealInnerProductSpace

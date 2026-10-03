@@ -17,7 +17,7 @@ In this file we show that the Laplacian of the Bruhat-Tits tree is surjective.
 
 -/
 
-@[expose] public section
+public section
 
 open Module
 

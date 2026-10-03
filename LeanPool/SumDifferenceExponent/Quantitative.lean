@@ -10,7 +10,7 @@ public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-! A fully explicit `10⁻⁹⁹⁹` quantitative witness. -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators Pointwise
 open Filter Topology

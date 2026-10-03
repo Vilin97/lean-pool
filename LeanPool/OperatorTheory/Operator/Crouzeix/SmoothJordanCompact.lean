@@ -19,7 +19,7 @@ the scalar Cauchy transform then tends to zero at infinity, ruling out an
 unbounded carrier.
 -/
 
-@[expose] public section
+public section
 
 open Complex Metric Set
 

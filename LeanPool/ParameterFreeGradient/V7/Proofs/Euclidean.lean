@@ -14,7 +14,7 @@ public import LeanPool.ParameterFreeGradient.O3.Stage9FiniteDataOGMG
 Euclidean gap reduction and finite OGM-G guarantees in the current interface.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

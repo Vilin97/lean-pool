@@ -23,7 +23,7 @@ a/p for suitable primes p. The divisibility case follows by
 induction on the UFD factorisation in R.
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

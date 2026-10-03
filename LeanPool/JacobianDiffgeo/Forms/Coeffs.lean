@@ -28,7 +28,7 @@ Main results:
 All downstream units interact with 1-forms exclusively through this API.
 -/
 
-@[expose] public section
+public section
 
 open scoped ContDiff Manifold Bundle
 open Set
@@ -41,6 +41,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 
 /-- The coefficient function of a raw covector section in the chart `e`: for `z ∈ e.target`,
 `coeffInFun e σ z = σ (e.symm z) (d(e.symm)_z 1)`. Junk (unspecified) off `e.target`. -/
+@[expose]
 def coeffInFun (e : OpenPartialHomeomorph X ℂ)
     (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (z : ℂ) : ℂ :=
   σ (e.symm z) (mfderiv 𝓘(ℂ) 𝓘(ℂ) e.symm z (1 : ℂ))
@@ -48,6 +49,7 @@ def coeffInFun (e : OpenPartialHomeomorph X ℂ)
 /-- The coefficient function of a 1-form in the chart `e`: for `z ∈ e.target`,
 `coeffIn e η z = η (e.symm z) (d(e.symm)_z 1)`, i.e. "`η = (coeffIn e η) dz`" in the chart.
 Junk (unspecified) off `e.target`. -/
+@[expose]
 def coeffIn (e : OpenPartialHomeomorph X ℂ) (η : Form1 X) (z : ℂ) : ℂ :=
   coeffInFun e (⇑η) z
 
@@ -55,7 +57,7 @@ theorem coeffIn_def (e : OpenPartialHomeomorph X ℂ) (η : Form1 X) :
     coeffIn e η = coeffInFun e ⇑η := rfl
 
 /-- Coefficient in the preferred chart, at the image of the base point. -/
-def coeffAt (x : X) (η : Form1 X) : ℂ := coeffIn (chartAt ℂ x) η (chartAt ℂ x x)
+@[expose] def coeffAt (x : X) (η : Form1 X) : ℂ := coeffIn (chartAt ℂ x) η (chartAt ℂ x x)
 
 /-- Restricting a chart does not change the coefficient function (the underlying chart maps are
 unchanged by `restr`). -/
@@ -128,13 +130,14 @@ abbrev tangentCoord {Y : Type*} [TopologicalSpace Y] [ChartedSpace ℂ Y] {y : Y
 /-- Non-dependent evaluation of a raw covector section, through the definitional equality
 `TangentSpace 𝓘(ℂ) q ≡ ℂ ≡ Bundle.Trivial X ℂ q`. Point-congruences for the dependent
 evaluation are done through this function. -/
+@[expose]
 def evalC (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (q : X) (w : ℂ) : ℂ :=
   σ q w
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem coeffInFun_eq_evalC (e : OpenPartialHomeomorph X ℂ)
     (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (z : ℂ) :
-    coeffInFun e σ z = evalC σ (e.symm z) (mfderiv 𝓘(ℂ) 𝓘(ℂ) e.symm z (1 : ℂ)) := rfl
+    coeffInFun e σ z = evalC σ (e.symm z) (mfderiv 𝓘(ℂ) 𝓘(ℂ) e.symm z (1 : ℂ)) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Scalars pull out of the non-dependent evaluation (the fiberwise CLM is `ℂ`-linear). -/

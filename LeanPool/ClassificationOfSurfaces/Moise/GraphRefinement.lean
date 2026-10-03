@@ -16,7 +16,7 @@ points.  When the marks lie in the graph support, the subordinate arrangement is
 of the graph and every mark is a vertex of that subdivision.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanEval
 namespace Topology
@@ -149,11 +149,11 @@ theorem markedEdgeChain_segment (point : P → Plane)
   rw [himage, convexHull_pair]
 
 /-- The `markedEdgeArrangement` declaration. -/
-noncomputable def markedEdgeArrangement (point : P → Plane) : PlaneComplex :=
+@[expose] noncomputable def markedEdgeArrangement (point : P → Plane) : PlaneComplex :=
   (K.markedEdgeChain point).arrangementMesh.toPlaneComplex
 
 /-- The `markedEdgeSubdivision` declaration. -/
-noncomputable def markedEdgeSubdivision (point : P → Plane) : PlaneComplex :=
+@[expose] noncomputable def markedEdgeSubdivision (point : P → Plane) : PlaneComplex :=
   (K.markedEdgeArrangement point).subordinateTo K
 
 theorem markedEdgeSubdivision_support_eq (point : P → Plane)

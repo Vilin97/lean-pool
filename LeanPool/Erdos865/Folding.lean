@@ -18,7 +18,7 @@ Folds a triple-free set `A ⊆ [1,N]` onto a `FoldedOK` set `B_h` and controls t
 collisions via the exceptional set, giving the folding lemma `folding_lemma`.
 -/
 
-@[expose] public section
+public section
 
 open Finset
 

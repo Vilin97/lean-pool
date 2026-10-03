@@ -57,7 +57,7 @@ matrix — in particular the base change `Rⱼ ⊗_{R_{i₀}} M_{i₀}` —
 is projective, hence flat.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 namespace FlatLimit

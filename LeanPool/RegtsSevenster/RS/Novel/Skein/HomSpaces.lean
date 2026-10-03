@@ -18,13 +18,14 @@ rank through the first isomorphism theorem: the quotient by the
 kernel is equivalent to the range of the pairing map.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
 /-- The Hom space of the skein category at arity `t`: the free
 module on `t`-fragments modulo the kernel of the connection
 pairing. -/
+@[expose]
 noncomputable def HomSpace (f : ClosedFragment → ℂ) (t : ℕ) : Type 1 :=
   (Fragment (Fin t) →₀ ℂ) ⧸ LinearMap.ker (connectionMap f t)
 
@@ -40,6 +41,7 @@ noncomputable instance (f : ClosedFragment → ℂ) (t : ℕ) :
   Submodule.Quotient.module _
 
 /-- The class of a single fragment in the Hom space. -/
+@[expose]
 noncomputable def HomSpace.ofFragment (f : ClosedFragment → ℂ)
     {t : ℕ} (F : Fragment (Fin t)) : HomSpace f t :=
   Submodule.Quotient.mk (Finsupp.single F 1)

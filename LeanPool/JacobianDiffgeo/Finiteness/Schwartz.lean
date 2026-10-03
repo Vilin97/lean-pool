@@ -43,7 +43,7 @@ perturbation `v` to correct for. Forster's open-mapping step 14.6(b) survives as
 timeout at `E →L[ℂ] F`, per the spike `scratch_finiteness.lean` §11).
 -/
 
-@[expose] public section
+public section
 
 open Metric Function
 

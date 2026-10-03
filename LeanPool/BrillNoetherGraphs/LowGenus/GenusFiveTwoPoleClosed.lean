@@ -18,7 +18,7 @@ specialization transports their rank from positive subdivisions to the
 contracted graph. No row-specific boundary construction is imported here.
 -/
 
-@[expose] public section
+public section
 
 namespace AtanasovRanganathan.GenusFiveTwoPoleClosed
 

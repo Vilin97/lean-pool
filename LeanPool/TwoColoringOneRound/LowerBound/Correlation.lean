@@ -28,7 +28,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.TwoColoringOneRound.LowerBound.Correlation
 -/
 
-@[expose] public section
+public section
 
 namespace Distributed2Coloring.LowerBound
 
@@ -67,17 +67,17 @@ instance (n : Nat) : MulAction (G n) (Edge n) where
     (σ • e).1 i = σ (e.1 i) := rfl
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def spin (b : Bool) : Q :=
+@[expose] def spin (b : Bool) : Q :=
   if b then (-1 : Q) else (1 : Q)
 
 lemma spin_mul_self (b : Bool) : spin b * spin b = 1 := by cases b <;> simp [spin]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def corr {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
+@[expose] def corr {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
   spin (f u) * spin (f v)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
+@[expose] noncomputable def corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
   (∑ σ : G n, corr f (σ • u) (σ • v)) / (Fintype.card (G n) : Q)
 
 lemma cardG_pos (n : Nat) : 0 < (Fintype.card (G n) : Q) := by

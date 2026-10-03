@@ -19,7 +19,7 @@ bounded maximum: the cutoff is the number of integral points in all fibre
 polytopes, which is finite by local finiteness of the fibre lattices.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
@@ -27,6 +27,7 @@ namespace EGZ.ConvexFlag
 
 /-- Integral points in one fibre polytope, before attaching the fibre as the
 base of a flag point. -/
+@[expose]
 def IntegralFiber (F : ConvexFlag) (x : F.Node) :=
   {q : RealCoord (F.rank x) //
     q ∈ (F.polytope x).carrier ∧ q ∈ F.lattice x}
@@ -36,6 +37,7 @@ noncomputable instance integralFiberFintype (F : ConvexFlag) (x : F.Node) :
   exact ((F.lattice x).finite_mem_of_isCompact (F.polytope x).isCompact).fintype
 
 /-- A finite code for all integral flag points. -/
+@[expose]
 def IntegralPointCode (F : ConvexFlag) :=
   Σ x : F.Node, IntegralFiber F x
 
@@ -163,6 +165,7 @@ theorem hellyConstant_pos {F : ConvexFlag} {Ω : F.ProperPointSet}
   exact (HellyIndependent.singleton hqΩ hqint).card_le_hellyConstant
 
 /-- A proper integral point common to the weak hulls of a family of sets. -/
+@[expose]
 def HasCommonWeakHullPoint {F : ConvexFlag} (Ω : F.ProperPointSet)
     (ℱ : Set (Set F.Point)) : Prop :=
   ∃ q, q ∈ Ω ∧ q.IsIntegral ∧

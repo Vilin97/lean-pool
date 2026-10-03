@@ -20,7 +20,7 @@ interval for every `n ≥ N` (`tendsto_exitTime_atTop`).  Exit times are monoton
 This is the path-space fact behind nonexplosion arguments: no probability law is involved here.
 -/
 
-@[expose] public section
+public section
 
 open Filter Topology
 open scoped ENNReal NNReal

@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 
 /-! Dominated convergence in genuine L², also for Banach-valued representatives. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -18,14 +18,14 @@ certificate from the actual auxiliary recurrence.  The balance is a theorem,
 not a field of the final statement.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 
 namespace O3
 
 /-- The gradient at index `j` paired with the difference of the two indexed points. -/
-noncomputable def stage9PairTerm {d : ℕ} (g v : ℕ → Vec d)
+@[expose] noncomputable def stage9PairTerm {d : ℕ} (g v : ℕ → Vec d)
     (i j : ℕ) : ℝ := pairing (g j) (v i - v j)
 
 /-- The two pairing sums combine into one edge sum after discrete summation

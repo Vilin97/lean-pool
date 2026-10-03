@@ -33,7 +33,7 @@ immediately give rise to nontrivial quotients of `D` so there are no central sim
 algebras in this case according to our definition.
 -/
 
-@[expose] public section
+public section
 universe u v w
 open Module
 variable (K : Type u) [Field K]

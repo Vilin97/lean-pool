@@ -39,7 +39,7 @@ section
 zero-history solve. Forced grades have zero initial data; the primary keeps
 the literal compact initial-data amplitude. All bounds retain the same radius. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -184,7 +184,7 @@ section
 the unit grade budget. This is derived from the same source solve used by
 the velocity recursion. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -414,7 +414,7 @@ section
 /-! The actual forward finite pressure has its actual leading angular force
 and a uniformly small covector remainder. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -578,7 +578,7 @@ end
 
 end
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -596,6 +596,7 @@ open scoped ContDiff
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
 /-- Forward initialized pressure hessian cost, constructed using `fastHessianCost`. -/
+@[expose]
 def forwardInitializedPressureHessianCost {D : Data U} {q : ℕ} {R₀ : ℝ}
     (NB : EulerTransversePacketJoin.NormalBudget D q R₀) (R H0 Rc C : ℝ) : ℝ :=
   fastHessianCost (P := period) NB (4*R) (fixedVelocityGradeCost R H0 1) +

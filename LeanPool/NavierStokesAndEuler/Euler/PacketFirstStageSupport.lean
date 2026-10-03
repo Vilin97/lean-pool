@@ -14,7 +14,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParentChoiceInitialSupport
 /-! The finite initial base used by the limiting construction is the
 actual first normal forward packet over the actual first packet state. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section

@@ -14,7 +14,7 @@ Imported Lean Pool material for
 `LeanPool.BrauerGroupNew.Mathlib.LinearAlgebra.LinearIndependent.Defs`.
 -/
 
-@[expose] public section
+public section
 
 variable {ι R M : Type*} {v : ι → M} [Semiring R] [AddCommMonoid M] [Module R M]
 

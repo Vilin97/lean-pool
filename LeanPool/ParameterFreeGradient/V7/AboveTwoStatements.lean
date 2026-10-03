@@ -13,25 +13,25 @@ The geometry, residual identities, phase bounds, and operational contracts for e
 two.
 -/
 
-@[expose] public section
+public section
 
 namespace V7
 
 /-- The power mirror potential `‖x‖ₚ^p / p` used for exponents above two. -/
-noncomputable def aboveH (p : ℝ) (x : Point d) : ℝ :=
+@[expose] noncomputable def aboveH (p : ℝ) (x : Point d) : ℝ :=
   (1 / p) * (lpNorm p x) ^ p
 
 /-- The conjugate power potential with the Hölder-conjugate exponent. -/
-noncomputable def aboveHstar (p : ℝ) (s : Point d) : ℝ :=
+@[expose] noncomputable def aboveHstar (p : ℝ) (s : Point d) : ℝ :=
   (1 / conjugateExponent p) * (lpNorm (conjugateExponent p) s) ^ (conjugateExponent p)
 
 /-- The power duality map at the Hölder-conjugate exponent. -/
-noncomputable def aboveMirrorMap (p : ℝ) (s : Point d) : Point d :=
+@[expose] noncomputable def aboveMirrorMap (p : ℝ) (s : Point d) : Point d :=
   O3.powerDualityMap (conjugateExponent p) s
 
 /-- The conjugacy, gradient, uniform convexity, and Bregman identities for the above-two
 geometry. -/
-noncomputable def AboveGeometryStatement : Prop :=
+@[expose] noncomputable def AboveGeometryStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d : ℕ),
     (∀ s : Point d, FenchelConjugate (aboveH p) s = aboveHstar p s) ∧
     O3.IsCoordinateGradient
@@ -47,39 +47,39 @@ noncomputable def AboveGeometryStatement : Prop :=
           (aboveMirrorMap p t) (aboveMirrorMap p s)
 
 /-- The uniform convexity constant of the power mirror potential. -/
-noncomputable def aboveUniformConstant (p : ℝ) : ℝ := 2 ^ (2 - p) / p
+@[expose] noncomputable def aboveUniformConstant (p : ℝ) : ℝ := 2 ^ (2 - p) / p
 /-- The exponent in the accumulated above-two residual error. -/
-noncomputable def aboveErrorPower (p : ℝ) : ℝ := p / (p - 2)
+@[expose] noncomputable def aboveErrorPower (p : ℝ) : ℝ := p / (p - 2)
 /-- The coefficient of the error bound obtained from the above-two mixed residual. -/
-noncomputable def aboveErrorConstant (p : ℝ) : ℝ :=
+@[expose] noncomputable def aboveErrorConstant (p : ℝ) : ℝ :=
   (p - 2) / (2 * p) * (p * aboveUniformConstant p) ^ (-2 / (p - 2))
 /-- The error constant after bounding the squared weight increments by their growth rate. -/
-noncomputable def aboveBudgetConstant (p : ℝ) : ℝ :=
+@[expose] noncomputable def aboveBudgetConstant (p : ℝ) : ℝ :=
   4 ^ (aboveErrorPower p) * aboveErrorConstant p
 /-- The exponent relating an above-two error budget to the coefficient scale. -/
-noncomputable def aboveBudgetExponent (p : ℝ) : ℝ := (p - 2) / p
+@[expose] noncomputable def aboveBudgetExponent (p : ℝ) : ℝ := (p - 2) / p
 /-- The coefficient of the terminal weight in terms of the error budget and horizon. -/
-noncomputable def aboveGrowthConstant (p : ℝ) : ℝ :=
+@[expose] noncomputable def aboveGrowthConstant (p : ℝ) : ℝ :=
   (2 * aboveBudgetConstant p) ^ (-aboveBudgetExponent p)
 /-- The exponent-dependent constant used to choose the primal trial horizon. -/
-noncomputable def aboveHp (p : ℝ) : ℝ :=
+@[expose] noncomputable def aboveHp (p : ℝ) : ℝ :=
   3 * p ^ (aboveBudgetExponent p) / (2 * p * aboveGrowthConstant p)
 /-- The exponent-dependent constant used to choose the dual trial horizon. -/
-noncomputable def aboveJp (p : ℝ) : ℝ :=
+@[expose] noncomputable def aboveJp (p : ℝ) : ℝ :=
   2 * (conjugateExponent p) ^ (1 + aboveBudgetExponent p) /
     aboveGrowthConstant p
 /-- The weight scale chosen from the error budget and iteration horizon. -/
-noncomputable def aboveGamma (p eta : ℝ) (n : ℕ) : ℝ :=
+@[expose] noncomputable def aboveGamma (p eta : ℝ) (n : ℕ) : ℝ :=
   (eta / (2 * aboveBudgetConstant p * n)) ^ (aboveBudgetExponent p)
 
 /-- The accumulated above-two residual error for a weight sequence and its increments. -/
-noncomputable def aboveErrorSum (p : ℝ) (n : ℕ)
+@[expose] noncomputable def aboveErrorSum (p : ℝ) (n : ℕ)
     (u dw : ScalarSeq) : ℝ :=
   aboveErrorConstant p *
     ∑ k ∈ Finset.range n, ((dw k) ^ (2 : ℕ) / u k) ^ (aboveErrorPower p)
 
 /-- Quadratic trial weights meet the error budget and have the stated terminal growth. -/
-noncomputable def AboveWeightErrorBalanceStatement : Prop :=
+@[expose] noncomputable def AboveWeightErrorBalanceStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (n : ℕ), 1 ≤ n → ∀ (eta : ℝ), 0 < eta →
     let gamma := aboveGamma p eta n
     let u : ScalarSeq := fun k =>
@@ -91,20 +91,20 @@ noncomputable def AboveWeightErrorBalanceStatement : Prop :=
       (n : ℝ) ^ ((p + 2) / p)
 
 /-- The primal residual for above-two geometry, expressed through the common residual formula. -/
-noncomputable def AbovePrimalResidual (p : ℝ) (n : ℕ)
+@[expose] noncomputable def AbovePrimalResidual (p : ℝ) (n : ℕ)
     (u : ScalarSeq) (alpha : ScalarMatrix) (A B X : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   BelowPrimalResidual p n u (fun _ => 0) alpha A B X Omega
 
 /-- The dual residual for above-two geometry, expressed through the common residual formula. -/
-noncomputable def AboveDualResidual (p : ℝ) (n : ℕ)
+@[expose] noncomputable def AboveDualResidual (p : ℝ) (n : ℕ)
     (u : ScalarSeq) (alpha b : ScalarMatrix) (C D : VectorSeq d)
     (Omega : Point d → ℝ) : ℝ :=
   BelowDualResidual p n u alpha b C D Omega
 
 /-- The weight, increment, matrix recurrence, row-sum, and support conditions for an above-two
 phase. -/
-def AboveCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
+@[expose] def AboveCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
     (alpha c b : ScalarMatrix) : Prop :=
   0 < u 0 ∧ u n = u (n - 1) ∧ dw n = 0 ∧ c 0 0 = 1 ∧ b 0 0 = -1 ∧
   (∀ k < n, 0 < u k ∧ u k ≤ u (k + 1) ∧
@@ -121,7 +121,7 @@ def AboveCoefficientAssumptions (n : ℕ) (u dw : ScalarSeq)
   ∀ k < n, (∑ i ∈ Finset.range (k + 2), b (k + 1) i) = 0
 
 /-- Source carrier for `lem:above-pointwise` (A05). -/
-noncomputable def AbovePointwiseResidualIdentityStatement : Prop :=
+@[expose] noncomputable def AbovePointwiseResidualIdentityStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∀ (d n : ℕ), 1 ≤ n → ∀ (u dw : ScalarSeq)
     (alpha c b : ScalarMatrix) (Omega : Point d → ℝ),
     AboveCoefficientAssumptions n u dw alpha c b → EvenIncrement Omega →
@@ -164,6 +164,7 @@ structure AbovePrimalPhaseData (p : ℝ) (d n : ℕ) where
   trace : List (Observation d)
 
 /-- The above-two primal coefficient conditions, initial state, and step recurrences. -/
+@[expose]
 def AbovePrimalPhaseDynamics (data : AbovePrimalPhaseData p d n) : Prop :=
   1 ≤ n ∧ AboveCoefficientAssumptions n data.u data.dw data.alpha data.c data.b ∧
   data.s 0 = 0 ∧ data.v 0 = 0 ∧ data.x 0 = 0 ∧
@@ -176,7 +177,7 @@ def AbovePrimalPhaseDynamics (data : AbovePrimalPhaseData p d n) : Prop :=
       (data.dw k / data.u (k + 1)) • (data.v (k + 1) - data.v k)
 
 /-- The primal dynamics, convex gradient oracle, attained minimum, guards, and exact query trace. -/
-def AbovePrimalPhaseAssumptions (data : AbovePrimalPhaseData p d n) : Prop :=
+@[expose] def AbovePrimalPhaseAssumptions (data : AbovePrimalPhaseData p d n) : Prop :=
   AbovePrimalPhaseDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
   data.fstar = sInf (Set.range data.oracle.value) ∧
@@ -224,6 +225,7 @@ structure AboveDualPhaseData (p : ℝ) (d n : ℕ) where
   trace : List (Observation d)
 
 /-- The above-two coefficient conditions and reversed dual query and gradient recurrences. -/
+@[expose]
 def AboveDualPhaseDynamics (data : AboveDualPhaseData p d n) : Prop :=
   1 ≤ n ∧ AboveCoefficientAssumptions n data.u data.dw data.alpha data.c data.b ∧
   data.r 0 = -(data.b n n) • data.G 0 ∧
@@ -235,6 +237,7 @@ def AboveDualPhaseDynamics (data : AboveDualPhaseData p d n) : Prop :=
       weightedSum (k + 2) (fun i => data.b (n - i) (n - 1 - k)) data.G
 
 /-- The dual dynamics, convex gradient oracle, lower bound, accepted guards, and exact trace. -/
+@[expose]
 def AboveDualPhaseAssumptions (data : AboveDualPhaseData p d n) : Prop :=
   AboveDualPhaseDynamics data ∧ O3.IsConvexObjective data.oracle.value ∧
   O3.IsCoordinateGradient data.oracle.value data.oracle.gradient ∧
@@ -281,7 +284,7 @@ structure AboveTrialWitness (p : ℝ) (d : ℕ) where
   phaseTwoCenter : Point d
 
 /-- The horizon, normalization, phase execution, and report requirements of an above-two trial. -/
-def AboveTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
+@[expose] def AboveTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
     (cached : CachedPair d) (oracle : PairOracle d)
     (report : TrialReport d) (w : AboveTrialWitness p d) : Prop :=
   let delta := eps / (M * D)
@@ -327,6 +330,7 @@ def AboveTrialOperationalContract (p eps M D : ℝ) (x0 : Point d)
 
 /-- Source carrier for `prop:abovetrial` (A01--A12), with the current
 `p/(p+2)` exponent and endpoint reuse. -/
+@[expose]
 noncomputable def AboveTrialStatement : Prop :=
   ∀ (p : ℝ), 2 < p → ∃ Cp : ℝ,
     0 < Cp ∧ ∀ (d : ℕ)

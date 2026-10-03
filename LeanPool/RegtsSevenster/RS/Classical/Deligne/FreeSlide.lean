@@ -18,7 +18,7 @@ power says exactly that the slide is invisible after the
 projection.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -31,6 +31,7 @@ variable {D : Type u}
 
 /-- **Splitting the head off a free letter**: the head becomes a
 trailing scalar and the letter keeps the unit. -/
+@[expose]
 noncomputable def freeSplit
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (V : D) : (A ⊗ V) ⟶ (A ⊗ V) ⊗ A :=
@@ -57,6 +58,7 @@ theorem freeSplit_actRight
 
 /-- **The slide window**: split the head off the first letter and
 act with it on the second. -/
+@[expose]
 noncomputable def freeSlideWin
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (V : D) :
@@ -113,6 +115,7 @@ theorem freeSlideWin_modPowπ
 
 /-- **The top slide**: slide the head of the penultimate letter
 into the last one. -/
+@[expose]
 noncomputable def freeSlideTop
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (V : D)

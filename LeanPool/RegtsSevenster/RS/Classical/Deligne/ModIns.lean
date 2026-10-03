@@ -19,7 +19,7 @@ contraction descends through the coequalizer using the pairing's
 linearity.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -87,6 +87,7 @@ section Contract3
 
 /-- The fold-level three-window contraction: pair off the
 trailing window, act on the head with the resulting scalar. -/
+@[expose]
 noncomputable def contract3Fold
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] (A : D)
@@ -290,6 +291,7 @@ end Contract3
 section ZigCore
 
 /-- The image of a copairing at the two-element multi-tensor. -/
+@[expose]
 noncomputable def copairImage
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [HasFiniteBiproducts D] [HasCoequalizers D] (A : D)
@@ -302,6 +304,7 @@ noncomputable def copairImage
 insert the copairing on the left, concatenate, and contract the
 trailing pair.  The zigzag law of a duality datum states that
 this composite is the identity. -/
+@[expose]
 noncomputable def zigComposite
     [Category.{v} D] [MonoidalCategory D] [BraidedCategory D]
     [Preadditive D] [MonoidalPreadditive D] [HasFiniteBiproducts D]

@@ -12,7 +12,7 @@ public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage5AboveTwoLowerResume
 Locality of the infimal smoothing value and its exact value-gradient observations.
 -/
 
-@[expose] public section
+public section
 
 namespace V7.Stage5AboveTwoLowerResume
 

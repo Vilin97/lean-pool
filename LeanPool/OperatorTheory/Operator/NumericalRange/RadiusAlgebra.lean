@@ -18,7 +18,7 @@ those estimates and their immediate commutator and anticommutator
 consequences.
 -/
 
-@[expose] public section
+public section
 
 open scoped InnerProductSpace
 

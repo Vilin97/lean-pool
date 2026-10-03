@@ -11,7 +11,7 @@ import LeanPool.Odlyzko.CompletedZeta.UnitSlabRadialIntegral
 
 /-! TODO: Add doc-string. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 

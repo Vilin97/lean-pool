@@ -43,7 +43,7 @@ assembly `torus2_matches_nashTorus` is by hand.  L7 is a general reusable fact
 (`Realizes u g` + pointwise `PosDef g` ⇒ `HasFullRankDeriv u`).
 -/
 
-@[expose] public section
+public section
 
 open scoped Manifold ContDiff Topology
 open Bundle Function ContinuousLinearMap Complex Matrix

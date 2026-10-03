@@ -38,7 +38,7 @@ interface are plugged in elsewhere.
   the alternating power, definitionally.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 
@@ -54,6 +54,7 @@ variable {D : Type u}
 section IdemCut
 
 /-- A group-algebra element acting on the module power. -/
+@[expose]
 noncomputable def modPowCutIdem
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -81,6 +82,7 @@ idempotency splits it off as a direct summand of the module power,
 with section `modPowCutσ`; this presentation is chosen because
 consumers build morphisms out of the cut by descent along
 `modPowCutπ` and morphisms into it through the section. -/
+@[expose]
 noncomputable def modPowCut
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]
@@ -343,6 +345,7 @@ noncomputable def modPowCutModObj
   mul_smul := modPowCutAct_mul A X n e he
 
 /-- The cut of a module, bundled as a module. -/
+@[expose]
 noncomputable def modPowCutMod
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D] (A : D)
     [MonObj A] (X : D) [ModObj A X] [Preadditive D] [HasFiniteBiproducts D]

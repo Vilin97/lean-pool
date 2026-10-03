@@ -33,7 +33,7 @@ enable spectral iteration by compressing to invariant orthogonal complements.
 - `CompactSelfAdjoint.largeEigenspaceProjector_comp`
 -/
 
-@[expose] public section
+public section
 
 namespace CompactSelfAdjoint
 
@@ -46,7 +46,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Complete
 /-! ### Large-eigenspace cutoff subspace and projector -/
 
 /-- The spectral cutoff subspace spanned by all eigenspaces with `‖μ‖ ≥ ε`. -/
-noncomputable def largeEigenspace (T : E →L[𝕜] E) (ε : ℝ) : Submodule 𝕜 E :=
+@[expose] noncomputable def largeEigenspace (T : E →L[𝕜] E) (ε : ℝ) : Submodule 𝕜 E :=
   let t : Module.End 𝕜 E := (T : E →ₗ[𝕜] E)
   (⨆ i : {μ : 𝕜 // ε ≤ ‖μ‖ ∧ t.HasEigenvalue μ}, t.eigenspace i.1)
 
@@ -60,6 +60,7 @@ lemma finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
   -- Reuse `finiteDimensional_iSup_eigenspace_norm_ge`.
   exact finiteDimensional_iSup_eigenspace_norm_ge (𝕜 := 𝕜) (E := E) T hT hTc hε
 /-- The orthogonal projector onto the `largeEigenspace` cutoff subspace. -/
+@[expose]
 noncomputable def largeEigenspaceProjector
     (T : E →L[𝕜] E) (hT : IsSelfAdjoint T) (hTc : IsCompactOperator (T : E → E))
     {ε : ℝ} (hε : 0 < ε) : E →L[𝕜] E := by

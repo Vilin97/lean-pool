@@ -45,7 +45,7 @@ per-edge counts is the unit model of a *different* metric graph `Γ(G, ℓ)`, so
 
 -/
 
-@[expose] public section
+public section
 
 namespace Utilities.Gonality
 
@@ -163,6 +163,7 @@ variable {n p : ℕ}
 /-! ## Regular subdivisions of a `Spec` -/
 
 /-- `σ_k` of a subdivision specification: multiply every slot length by `k`. -/
+@[expose]
 def scale {n p : ℕ}
     (spec : Spec n p) (k : ℕ) (hk : 0 < k) : Spec n p where
   core := spec.core
@@ -193,6 +194,7 @@ def scaleOneRelabeling {n p : ℕ} (spec : Spec n p) :
 
 See the module docstring for why this is neither `metricGonality` nor
 `stableGonality`. -/
+@[expose]
 noncomputable def regularSubdivisionGonality {n p : ℕ} (spec : Spec n p) : ℕ :=
   sInf {d : ℕ | ∃ (k : ℕ) (hk : 0 < k), divisorialGonality (spec.scale k hk).graph = d}
 
@@ -236,10 +238,12 @@ open Utilities.Certificate
 
 /-- `σ_k(G)` for an arbitrary finite loopless multigraph, built on the
 occurrence-safe unit subdivision presentation of `G`. -/
+@[expose]
 noncomputable def regularSubdivision (G : CFGraph) (k : ℕ) (hk : 0 < k) : CFGraph :=
   ((UnitSubdivisionPresentation.spec G).scale k hk).graph
 
 /-- `min_{k ≥ 1} dgon(σ_k(G))` for an arbitrary finite loopless multigraph. -/
+@[expose]
 noncomputable def regularSubdivisionGonality (G : CFGraph) : ℕ :=
   (UnitSubdivisionPresentation.spec G).regularSubdivisionGonality
 

@@ -10,7 +10,7 @@ public import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Supplemental
 
 /-! # WellKnown -/
 
-@[expose] public section
+public section
 
 
 namespace LO

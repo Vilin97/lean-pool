@@ -13,7 +13,7 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Iso.GraphIso
 # Second rank differences under marked graph isomorphism
 -/
 
-@[expose] public section
+public section
 
 namespace Bananas
 

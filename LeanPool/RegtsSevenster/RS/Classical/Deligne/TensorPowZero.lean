@@ -28,7 +28,7 @@ objects over a preadditive monoidal structure.  Downward induction
 and the left unitor then give the theorem.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -101,7 +101,7 @@ existentially quantified.  Note what that does and does not settle: see the rank
 
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -114,6 +114,7 @@ variable {J : Type*} [NormedAddCommGroup J] [InnerProductSpace ℝ J] [Euclidean
 /-! ## Eigenspaces of left multiplication -/
 
 /-- The `r`-eigenspace of `L_a`. -/
+@[expose]
 def eigSub (a : J) (r : ℝ) : Submodule ℝ J where
   carrier := {x : J | a * x = r • x}
   add_mem' := fun {u v} hu hv => by
@@ -131,6 +132,7 @@ def eigSub (a : J) (r : ℝ) : Submodule ℝ J where
 variable {n : ℕ}
 
 /-- The eigenvalue attached to the pair `(i, j)`: `1` on the diagonal, `1/2` off it. -/
+@[expose]
 def blockCoef (i j : Fin n) : ℝ := if i = j then 1 else (2 : ℝ)⁻¹
 
 theorem blockCoef_comm (i j : Fin n) : blockCoef i j = blockCoef j i := by
@@ -140,6 +142,7 @@ theorem blockCoef_comm (i j : Fin n) : blockCoef i j = blockCoef j i := by
   · simp [h, Ne.symm h]
 
 /-- `V_{ij}` before it is pushed through `Sym2`. -/
+@[expose]
 def frameBlockRaw (F : JordanFrame J n) (i j : Fin n) : Submodule ℝ J :=
   eigSub (F.p i) (blockCoef i j) ⊓ eigSub (F.p j) (blockCoef i j)
 
@@ -150,6 +153,7 @@ theorem frameBlockRaw_comm (F : JordanFrame J n) (i j : Fin n) :
 
 /-- **`V_{ij}`.**  For `i ≠ j` the joint `1/2`-eigenspace of `L_{p i}` and `L_{p j}`; on the
 diagonal, `J₂(p i)`. -/
+@[expose]
 def frameBlock (F : JordanFrame J n) : Sym2 (Fin n) → Submodule ℝ J :=
   Sym2.lift ⟨frameBlockRaw F, frameBlockRaw_comm F⟩
 

@@ -19,7 +19,7 @@ import Mathlib.Tactic.Positivity.Finset
 # LeanPool.SelbergSieve4.Selberg
 -/
 
-@[expose] public section
+public section
 
 noncomputable section
 
@@ -48,6 +48,7 @@ local notation3 "y" => SelbergSieve.level s
 local notation3 "hy" => SelbergSieve.one_le_level s
 
 /-- Selberg bounding sum over divisors below the square-root level. -/
+@[expose]
 def selbergBoundingSum : ℝ :=
   ∑ l ∈ divisors P, if l ^ 2 ≤ y then g l else 0
 local notation3 "S" => SelbergSieve.selbergBoundingSum s

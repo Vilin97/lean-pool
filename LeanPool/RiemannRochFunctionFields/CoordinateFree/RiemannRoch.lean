@@ -25,7 +25,7 @@ places.  The kernel-checked chart proofs are transported across `chartToPlace`.
 * `FunctionField.riemann_roch` and coordinate-free corollaries C1–C6.
 -/
 
-@[expose] public section
+public section
 
 open scoped nonZeroDivisors Polynomial RatFunc WithZero
 

@@ -18,7 +18,7 @@ first — every rewrite fires over generic instances — then the
 strict skein unit and the concrete SuperVect unitor.
 -/
 
-@[expose] public section
+public section
 
 namespace RS
 

@@ -16,7 +16,7 @@ their mass loss is at most the global retained mass loss.  This connects the
 gap-pruning estimate to the thickness estimate at every old large node.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 

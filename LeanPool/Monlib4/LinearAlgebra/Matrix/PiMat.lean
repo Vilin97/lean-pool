@@ -16,7 +16,7 @@ import Mathlib.Tactic.SetLike
 Imported Lean Pool material for `LeanPool.Monlib4.LinearAlgebra.Matrix.PiMat`.
 -/
 
-@[expose] public section
+public section
 
 /-- Square matrices over `R` indexed by `n`. -/
 abbrev Mat (R n : Type*) := Matrix n n R

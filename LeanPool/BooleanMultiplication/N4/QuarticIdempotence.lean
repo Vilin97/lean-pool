@@ -16,7 +16,7 @@ certificate are projected.  Their product formula is proved on the
 representation of all 210 coordinates of `Λ⁴(F₂⁸)`.
 -/
 
-@[expose] public section
+public section
 
 namespace UnrestrictedBooleanMul
 namespace N4
@@ -24,11 +24,13 @@ namespace N4
 noncomputable section
 
 /-- Extract a designated quartic-annihilator coefficient from an ANF. -/
+@[expose]
 def anfQuarticAnnihilatorProbe (p : ANF 8) (k : Fin 9) : F₂ :=
   let ijkl := quarticAnnihilatorCoord k
   anfFourProjection p ijkl.1 ijkl.2.1 ijkl.2.2.1 ijkl.2.2.2
 
 /-- One quartic-annihilator coefficient projection as a linear map. -/
+@[expose]
 def anfQuarticAnnihilatorProbeLinear (k : Fin 9) : ANF 8 →ₗ[F₂] F₂ where
   toFun := fun p => anfQuarticAnnihilatorProbe p k
   map_add' p q := by
@@ -54,6 +56,7 @@ def anfQuarticAnnihilatorProbeLinear (k : Fin 9) : ANF 8 →ₗ[F₂] F₂ where
   simp [anfQuarticAnnihilatorProbe, map_smul, Pi.smul_apply]
 
 /-- The squarefree monomial underlying a quartic-annihilator coordinate. -/
+@[expose]
 def quarticAnnihilatorSet (k : Fin 9) : Finset (Fin 8) :=
   let ijkl := quarticAnnihilatorCoord k
   {ijkl.1, ijkl.2.1, ijkl.2.2.1, ijkl.2.2.2}
