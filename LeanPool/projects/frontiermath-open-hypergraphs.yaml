@@ -1,0 +1,48 @@
+slug: frontiermath-open-hypergraphs
+title: FrontierMath Ramsey Hypergraphs
+summary: Formalizes lower bounds for the Brian-Larson hypergraph extremal function H(n), including a uniform
+  26/25 improvement over the recursive benchmark k_n for n ≥ 15 and a Lubell-frame asymptotic lower bound.
+branch: combinatorics
+entry_module: LeanPool.FrontierMathOpenHypergraphs
+authors:
+- Dean Cureton
+source:
+  title: Choosing between incompatible ideals
+  authors:
+  - Will Brian
+  - Paul B. Larson
+  doi: 10.1016/j.ejc.2021.103349
+  arxiv: '1908.10914'
+  github_repo: math-inc/FrontierMathOpen-Hypergraphs
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- HypergraphLowerBound.thm_main_H_lower_bound
+main_results:
+- declaration: HypergraphLowerBound.thm_main_H_lower_bound
+  informal: Proves H(n) ≥ 26 * k(n) / 25 for every n ≥ 15.
+  source_ref: Epoch AI FrontierMath, A Ramsey-style Problem on Hypergraphs.
+- declaration: HypergraphLowerBound.uniform_26_25
+  informal: Proves the uniform recursive construction bound A(n) ≥ 26 * k(n) / 25 for every n ≥ 15.
+- declaration: HypergraphLowerBound.frame_recurrence
+  informal: The substitution-frame recurrence that combines block witnesses and a valid support frame
+    into a larger witness.
+- declaration: HypergraphLowerBound.lubell_is_frame
+  informal: Proves that the Lubell support family forms a valid frame for every arity t ≥ 2.
+- declaration: HypergraphLowerBound.fixed_t_bound
+  informal: Derives a fixed-t lower bound for the exact witness supremum from Lubell frames.
+- declaration: HypergraphLowerBound.asymptotic_lower_bound
+  informal: Proves the asymptotic lower bound liminf H(n) / k(n) ≥ 2 * log 2.
+- declaration: HypergraphLowerBound.thm_asymptotic
+  informal: States the asymptotic consequence in terms of H(n) divided by n log n.
+tags:
+- combinatorics
+- hypergraphs
+- ramsey-theory
+- extremal-combinatorics
+- frontiermath
+msc:
+- 05C65
+- 05D10
+- 03E02

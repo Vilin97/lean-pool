@@ -1,0 +1,49 @@
+slug: compact-spectral
+title: Spectral theorem for compact self-adjoint operators
+summary: 'Formalizes the spectral theorem for compact self-adjoint operators on a Hilbert space: such
+  an operator admits a Hilbert basis of eigenvectors. The development passes from weak compactness of
+  Hilbert closed balls and Rayleigh-quotient extrema to an eigenvector at the operator norm, finiteness
+  of the point spectrum outside any neighbourhood of zero, finite-rank cutoff approximation, and finally
+  the orthogonal decomposition into eigenspaces.'
+branch: functional analysis
+entry_module: LeanPool.CompactSpectral
+authors:
+- Adam Benenson
+source:
+  title: Advanced Real Analysis
+  authors:
+  - Anthony W. Knapp
+  doi: 10.3792/euclid/9781429799911-2
+  github_repo: abenenson/compact-spectral
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
+main_results:
+- declaration: CompactSelfAdjoint.exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
+  informal: A compact self-adjoint operator on a Hilbert space admits a Hilbert basis of eigenvectors.
+  source_ref: A. W. Knapp, Advanced Real Analysis, Chapter II, Section 2, Theorem 2.3, doi:10.3792/euclid/9781429799911-2.
+- declaration: CompactSelfAdjoint.iSup_eigenspace_orthogonal_eq_bot_of_isCompactOperator_of_isSelfAdjoint
+  informal: 'The eigenspaces of a compact self-adjoint operator span a dense subspace: the orthogonal
+    complement of the supremum of all eigenspaces is trivial.'
+  source_ref: A. W. Knapp, Advanced Real Analysis, Chapter II, Section 2, Theorem 2.3, doi:10.3792/euclid/9781429799911-2.
+- declaration: CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
+  informal: A compact self-adjoint operator has an eigenvector whose eigenvalue realizes either the supremum
+    or the infimum of its Rayleigh quotient.
+  source_ref: A. W. Knapp, Advanced Real Analysis, Chapter II, Section 2, Theorem 2.2, doi:10.3792/euclid/9781429799911-2.
+- declaration: CompactSelfAdjoint.exists_unit_norm_eq_opNorm_of_isCompactOperator
+  informal: A compact operator attains its operator norm on the unit sphere of the Hilbert space.
+  source_ref: A. W. Knapp, Advanced Real Analysis, Chapter II, Section 1, compactness preliminaries for
+    compact operators, doi:10.3792/euclid/9781429799911-2.
+- declaration: CompactSelfAdjoint.countable_set_hasEigenvalue_ne_zero_of_isCompactOperator_of_isSelfAdjoint
+  informal: The set of nonzero eigenvalues of a compact self-adjoint operator is countable.
+  source_ref: A. W. Knapp, Advanced Real Analysis, Chapter II, Section 2, spectral theorem consequences,
+    doi:10.3792/euclid/9781429799911-2.
+tags:
+- spectral-theory
+- functional-analysis
+- compact-operators
+msc:
+- 47A75
+- 47B07

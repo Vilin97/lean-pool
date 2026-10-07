@@ -1,0 +1,35 @@
+slug: factorizationsystems
+title: Factorization Systems
+summary: Formalizes factorization systems, orthogonality, orthogonal complements, and the standard construction
+  from weak factorization plus orthogonality.
+branch: category theory
+entry_module: LeanPool.FactorizationSystems
+authors:
+- Ivan Kobe
+source:
+  title: Category Theory in Context
+  authors:
+  - Emily Riehl
+  url: https://emilyriehl.github.io/files/context.pdf
+  github_repo: ivankobe/FactorizationSystems
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- CategoryTheory.FactorizationSystemCharacterization
+main_results:
+- declaration: CategoryTheory.FactorizationSystem
+  informal: Defines factorization systems on a category with specified left and right classes.
+- declaration: CategoryTheory.FactorizationSystemCharacterization
+  informal: Constructs a factorization system from repleteness, weak factorizations, and orthogonality.
+- declaration: CategoryTheory.orthogonal
+  informal: Defines orthogonality of two morphisms by existence and uniqueness of diagonal fillers.
+- declaration: CategoryTheory.right_orthogonal_complement
+  informal: Defines the right orthogonal complement of a morphism property.
+tags:
+- category-theory
+- factorization-systems
+- orthogonality
+msc:
+- 18A32
+- 18A40

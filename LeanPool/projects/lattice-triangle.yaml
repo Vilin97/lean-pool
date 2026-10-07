@@ -1,0 +1,27 @@
+slug: lattice-triangle
+title: On the paucity of lattice triangles
+summary: Formalizes an analytic lower bound used in the paucity theorem for lattice triangles.
+branch: additive combinatorics
+entry_module: LeanPool.LatticeTriangle
+authors:
+- Evan Chen
+- Kenny Lau
+- Ken Ono
+- Jujian Zhang
+source:
+  arxiv: '2603.23928'
+  github_repo: AxiomMath/lattice-triangle
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- analyticEngine_lower_bound
+main_results:
+- declaration: analyticEngine_lower_bound
+  informal: Proves the analytic-engine lower bound underlying the lattice-triangle result.
+tags:
+- number-theory
+- combinatorics
+msc:
+- 11H06
+- 11B30

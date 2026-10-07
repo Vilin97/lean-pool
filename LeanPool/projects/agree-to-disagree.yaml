@@ -1,0 +1,38 @@
+slug: agree-to-disagree
+title: Aumann's Agreement Theorem
+summary: Formalizes Aumann's agreement theorem for information partitions and a common-prior setting,
+  together with a p-belief variant bounding posterior disagreement by 2 * (1 - p).
+branch: probability theory
+entry_module: LeanPool.AgreeToDisagree
+authors:
+- Ruiz Chen
+- Ben Eltschig
+- Ken Ono
+- Jujian Zhang
+source:
+  title: 'We Can''t Agree to Disagree, Formally: Aumann''s Theorem and Assumption Accounting in Lean'
+  url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6837298
+  github_repo: AxiomMath/AgreeToDisagree
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- AgreeToDisagree.agreeToDisagree
+- AgreeToDisagree.agreeToDisagree_beliefs
+main_results:
+- declaration: AgreeToDisagree.agreeToDisagree
+  informal: If it is common knowledge at a state that two agents assign fixed posterior probabilities
+    to an event, and the common-knowledge cell has equal posterior under their priors, then the two posterior
+    probabilities are equal.
+- declaration: AgreeToDisagree.agreeToDisagree'
+  informal: Generalizes the agreement theorem to a family of agents indexed by an arbitrary type.
+- declaration: AgreeToDisagree.agreeToDisagree_beliefs
+  informal: Proves that common p-belief of fixed posteriors bounds the difference between any two agents'
+    real-valued posteriors by 2 * (1 - p).
+tags:
+- probability
+- game-theory
+- epistemic-logic
+msc:
+- 60A10
+- 91A40

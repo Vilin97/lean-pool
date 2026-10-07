@@ -1,0 +1,54 @@
+slug: brauergroup_new
+title: Brauer Group Core
+summary: Formalizes central simple algebra infrastructure, Wedderburn-Artin structure theorems, and finite-field
+  triviality for Brauer groups.
+branch: ring theory
+entry_module: LeanPool.BrauerGroupNew
+authors:
+- Yunzhou Xie
+- Yichen Feng
+- Jujian Zhang
+- Yael Dillies
+source:
+  title: Central Simple Algebras and Galois Cohomology
+  authors:
+  - Philippe Gille
+  - Tamás Szamuely
+  url: https://doi.org/10.1017/9781316661277
+  github_repo: Whysoserioushah/BrauerGroup
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- BrauerGroup.BruaerGroup
+- BrauerGroupHom.Br
+- WedderburnArtin
+main_results:
+- declaration: BrauerGroup.BruaerGroup
+  informal: Constructs the Brauer group of a field from Brauer equivalence classes of central simple algebras.
+- declaration: BrauerGroupHom.Br
+  informal: Constructs the Brauer group functor from fields to commutative groups via scalar extension.
+- declaration: WedderburnArtin
+  informal: Proves a Wedderburn-Artin decomposition for simple Artinian rings as matrix algebras over
+    division rings.
+- declaration: trivialBrauer
+  informal: Proves that every element of the Brauer group of a finite field is trivial.
+- declaration: WedderburnArtin_algebra_version
+  informal: Gives an algebra equivalence form of Wedderburn-Artin for finite-dimensional central simple
+    algebras.
+- declaration: IsCentralSimple.TensorProduct.simple
+  informal: Proves simplicity of tensor products of central simple algebras over a field.
+- declaration: IsCentralSimple.TensorProduct.isCentral
+  informal: Proves centrality of tensor products of central algebras over a field.
+- declaration: CSA_implies_CSA
+  informal: Shows that the division algebra factor in a matrix presentation of a central simple algebra
+    is central over the base field.
+tags:
+- algebra
+- ring-theory
+- central-simple-algebras
+- brauer-groups
+msc:
+- 16K20
+- 16K50
+- 16S35

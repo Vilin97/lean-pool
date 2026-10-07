@@ -1,0 +1,35 @@
+slug: bruhat-tits
+title: Formalisation of the Bruhat-Tits Tree
+summary: Formalizes the Bruhat-Tits tree for GL₂ over the fraction field of a discrete valuation ring.
+branch: algebraic geometry
+entry_module: LeanPool.BruhatTits
+authors:
+- Judith Ludwig
+- Christian Merten
+source:
+  title: Trees
+  authors:
+  - Jean-Pierre Serre
+  url: https://doi.org/10.1007/978-3-642-61856-7
+  github_repo: chrisflav/bruhat-tits
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- BruhatTits.BTtree
+- BruhatTits.BTlaplace_surjective
+main_results:
+- declaration: BruhatTits.BTtree
+  informal: Proves that the Bruhat-Tits graph is a tree.
+- declaration: BruhatTits.btgraph_regular
+  informal: Proves regularity of the Bruhat-Tits graph when the residue field is finite.
+- declaration: BruhatTits.BTlaplace_surjective
+  informal: Proves surjectivity of the Bruhat-Tits Laplacian on harmonic cochains.
+tags:
+- algebraic-geometry
+- graph-theory
+- discrete-valuation-rings
+msc:
+- 20E42
+- 05C25
+- 13H05

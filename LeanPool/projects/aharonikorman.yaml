@@ -1,0 +1,28 @@
+slug: aharonikorman
+title: Disproof of the Aharoni-Korman Conjecture
+summary: Formalizes Hollom's counterexample to the Aharoni-Korman fishbone conjecture for partially ordered
+  sets.
+branch: order theory
+entry_module: LeanPool.AharoniKorman
+authors:
+- Bhavik Mehta
+source:
+  arxiv: '2411.16844'
+  doi: 10.1007/BF00383948
+  github_repo: b-mehta/AharoniKorman
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.AharoniKorman.aharoni_korman_false
+main_results:
+- declaration: LeanPool.AharoniKorman.aharoni_korman_false
+  informal: Proves that not every partially ordered set has either an infinite antichain or a chain meeting
+    every antichain in a partition.
+tags:
+- order-theory
+- combinatorics
+- partial-orders
+msc:
+- 06A06
+- 06A07

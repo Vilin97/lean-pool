@@ -1,0 +1,38 @@
+slug: misere-games
+title: Misere combinatorial games
+summary: Formalizes a combinatorial game theory library for misere play, including comparison modulo universes,
+  p-free forms, outcome-stability, Property X, and concrete rulesets such as Hackenbush.
+branch: combinatorics
+entry_module: LeanPool.MisereGames
+authors:
+- Tomasz Maciosowski
+- Alfie Davies
+source:
+  title: misere-games
+  authors:
+  - Tomasz Maciosowski
+  - Alfie Davies
+  - Violeta Hernandez Palacios
+  - Yuyang Zhao
+  url: https://github.com/t4ccer/misere-games
+  github_repo: t4ccer/misere-games
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- MisereGames.Form.Promain.of_universe
+main_results:
+- declaration: MisereGames.Form.Promain.of_universe
+  informal: Shows that comparison modulo a universe is characterized by the maintenance-proviso test.
+- declaration: MisereGames.IntegerInvertible.isPFree_of_propertyX
+  informal: Proves that Property X makes the sum of two short p-free games p-free in an outcome-stable,
+    hereditary, integer-invertible monoid.
+- declaration: MisereGames.Form.Preservation.endLikeSeedToUniverse_bijective
+  informal: Proves that universal closure gives a bijection from bounded end-like seeds to universes.
+tags:
+- combinatorial-games
+- misere-play
+- game-theory
+msc:
+- 91A46
+- 05C57

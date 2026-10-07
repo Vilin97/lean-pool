@@ -1,0 +1,50 @@
+slug: pl-accelerated-nesterov-lean
+title: Accelerated Nesterov convergence under local Polyak-Lojasiewicz conditions
+summary: Formalizes accelerated Nesterov convergence near a smooth minimizer manifold under a local Polyak-Lojasiewicz
+  condition, including embedded-manifold and C3 public theorem statements with explicit exponential rate
+  and prefactor.
+branch: optimization
+entry_module: LeanPool.PLAcceleratedNesterovLean
+authors:
+- Max Obreiter
+- Tobias Steinbrecher
+- Robert Foerster
+source:
+  title: Optimal local linear convergence of Nesterov's accelerated gradient method for C2 functions under
+    the Polyak-Lojasiewicz inequality
+  authors:
+  - Zixu Feng
+  - Hao Yuan
+  arxiv: '2603.21516'
+  github_repo: M1ngXU/PL-Accelerated-Nesterov-Lean
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- PLAcceleratedNesterovLean.nesterov_pl_accelerated_rate
+main_results:
+- declaration: PLAcceleratedNesterovLean.nesterov_pl_accelerated_rate
+  informal: Proves an accelerated Nesterov convergence rate for state positions near a C2 embedded minimizer
+    manifold, with an existential momentum parameter, explicit exponential decay, and prefactor 2.
+  source_ref: Z. Feng and H. Yuan, Optimal local linear convergence of Nesterov's accelerated gradient
+    method for C2 functions under the Polyak-Lojasiewicz inequality, arXiv:2603.21516.
+- declaration: PLAcceleratedNesterovLean.nesterov_pl_accelerated_rate_c3
+  informal: Proves the corresponding C3 public theorem, deriving the minimizer geometry internally from
+    smoothness and the Polyak-Lojasiewicz condition.
+  source_ref: Z. Feng and H. Yuan, Optimal local linear convergence of Nesterov's accelerated gradient
+    method for C2 functions under the Polyak-Lojasiewicz inequality, arXiv:2603.21516.
+- declaration: PLAcceleratedNesterovLean.nesterov_convergence_at_base_point_position_theta
+  informal: Provides the reusable local theta-retuned convergence theorem used by the public accelerated-rate
+    statements.
+  source_ref: Z. Feng and H. Yuan, Optimal local linear convergence of Nesterov's accelerated gradient
+    method for C2 functions under the Polyak-Lojasiewicz inequality, arXiv:2603.21516.
+tags:
+- optimization
+- numerical-analysis
+- gradient-methods
+- polyak-lojasiewicz
+- differential-geometry
+msc:
+- 49M37
+- 65K05
+- 58C15

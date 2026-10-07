@@ -1,0 +1,38 @@
+slug: kuramoto
+title: Finite-N Kuramoto Synchronization
+summary: 'Formalizes the finite-N Kuramoto model of coupled phase oscillators: the order parameter and
+  its unit bound, the potential/force gradient identities, smoothness and local Lipschitz continuity of
+  the vector field with ODE existence and uniqueness, Lyapunov descent along trajectories, pairwise and
+  semicircle contraction estimates, Hebbian phase/weight dynamics, and full convergence to synchrony under
+  all-to-all coupling from initial phases in an open semicircle.'
+branch: dynamical systems
+entry_module: LeanPool.Kuramoto
+authors:
+- Ben Cassie
+source:
+  title: 'Finite-N Kuramoto synchronization: order-parameter bounds and Lyapunov descent'
+  authors:
+  - Ben Cassie
+  url: https://github.com/velvetmonkey/kuramoto-lean
+  github_repo: velvetmonkey/kuramoto-lean
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- kuramotoR_norm_le_one
+- weighted_lyapunov_descent
+main_results:
+- declaration: kuramotoR_norm_le_one
+  informal: The Kuramoto order parameter has norm at most one for any phase configuration.
+- declaration: weighted_lyapunov_descent
+  informal: The weighted Kuramoto potential is non-increasing along the gradient flow, since the sum of
+    force times potential-derivative over all oscillators is at most zero.
+- declaration: allToAll_convergence_to_synchrony
+  informal: Under all-to-all coupling with positive strength and initial phases in an open semicircle,
+    the order parameter norm tends to one, i.e. the oscillators synchronize.
+tags:
+- dynamical-systems
+- synchronization
+- kuramoto
+msc:
+- 34D06

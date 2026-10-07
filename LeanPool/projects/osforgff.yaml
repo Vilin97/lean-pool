@@ -1,0 +1,31 @@
+slug: osforgff
+title: Osterwalder-Schrader Axioms for the Gaussian Free Field
+summary: Formalizes Osterwalder-Schrader axioms for the massive Gaussian free field using Minlos, covariance,
+  and reflection-positivity infrastructure.
+branch: mathematical physics
+entry_module: LeanPool.OSforGFF
+authors:
+- Michael R. Douglas
+- Sarah Hoback
+- Anna Mei
+- Ron Nissim
+source:
+  url: https://github.com/mrdouglasny/OSforGFF
+  github_repo: mrdouglasny/OSforGFF
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
+main_results:
+- declaration: OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
+  informal: Proves that the massive Gaussian free field satisfies the OS0-OS4 Osterwalder-Schrader axioms.
+tags:
+- analysis
+- measure-theory
+- probability
+- mathematical-physics
+msc:
+- 81T08
+- 60G15
+- 46G12

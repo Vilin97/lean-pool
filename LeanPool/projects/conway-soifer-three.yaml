@@ -1,0 +1,40 @@
+slug: conway-soifer-three
+title: Conway–Soifer covering conjecture for n = 3
+summary: Proves that ten congruent closed equilateral triangles covering a filled equilateral triangle
+  of side three have common side at least one, with arbitrary positions, rotations and overlaps. Consequently
+  ten unit triangles cannot cover a triangle of side 3 + ε for ε > 0. Includes reusable finite halfspace
+  and ray-endpoint geometry, orientation-independent support and area bounds, and verified Bernstein polynomial
+  interval checkers. Four derived contact cases and 100 kernel-checked certificates close the proof without
+  a certificate hypothesis.
+branch: discrete geometry
+entry_module: LeanPool.ConwaySoifer
+authors:
+- Vladislav Kuznetsov
+source:
+  title: 'The Conway–Soifer conjecture for n = 3: a Lean formalization'
+  url: https://github.com/AnanasClassic/conway-soifer-n3-lean/tree/b71b1d22b6f7ebb0f0173fc70a66075f44c86ce6
+  github_repo: AnanasClassic/conway-soifer-n3-lean
+  commit: b71b1d22b6f7ebb0f0173fc70a66075f44c86ce6
+  doi: 10.5281/zenodo.22712658
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- ConwaySoifer.ten_triangle_cover_lower_bound
+main_results:
+- declaration: ConwaySoifer.ten_triangle_cover_lower_bound
+  informal: Any ten congruent closed equilateral triangles covering the filled equilateral target of side
+    three have common side at least one. Positions, rotations and overlaps are unrestricted.
+  source_ref: Public v1.0.0 release, 2026-09-11T17:12:25Z; upstream README and Geometry/Basic.lean.
+- declaration: ConwaySoifer.no_ten_unit_triangle_cover
+  informal: For every ε > 0, ten closed equilateral triangles of side one cannot cover the filled equilateral
+    target of side 3 + ε, regardless of position or rotation.
+  source_ref: Upstream public theorem and its proved scaling corollary.
+tags:
+- discrete-geometry
+- triangle-covering
+- conway-soifer
+- bernstein-polynomials
+msc:
+- 52C15
+- 51M16

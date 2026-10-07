@@ -1,0 +1,32 @@
+slug: main-theorem-of-polytopes
+title: The main theorem of polytopes
+summary: Formalizes the Minkowski–Weyl theorem — the equivalence between V-polytopes (convex hulls of
+  finite point sets) and bounded H-polytopes (finite intersections of half-spaces) in a finite-dimensional
+  real vector space.
+branch: convex geometry
+entry_module: LeanPool.Polytopes
+authors:
+- Jun Kwon
+source:
+  title: Main theorem of polytopes
+  url: https://github.com/Jun2M/Main-theorem-of-polytopes
+  github_repo: Jun2M/Main-theorem-of-polytopes
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- MainTheoremOfPolytopes
+main_results:
+- declaration: MainTheoremOfPolytopes
+  informal: The Minkowski–Weyl theorem — a set is a V-polytope iff it is a bounded H-polytope.
+  source_ref: G. M. Ziegler, Lectures on Polytopes, GTM 152, Springer, 1995, Theorem 1.1.
+- declaration: Vpolytope_of_Hpolytope
+  informal: Every bounded H-polytope (finite intersection of half-spaces) is the convex hull of a finite
+    point set.
+tags:
+- convex-geometry
+- discrete-geometry
+- polytopes
+msc:
+- 52B11
+- 52A20

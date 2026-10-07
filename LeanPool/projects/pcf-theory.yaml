@@ -1,0 +1,28 @@
+slug: pcf-theory
+title: PCF Theory
+summary: Formalizes foundational results from Shelah's Possible Cofinality theory, including the existence
+  of club-guessing sequences.
+branch: set theory
+entry_module: LeanPool.PCFTheory
+authors:
+- YnirPaz
+source:
+  doi: 10.1007/978-1-4020-5764-9_15
+  github_repo: YnirPaz/PCF-Theory
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- Ordinal.exists_isClubGuessing_of_cof_uncountable
+main_results:
+- declaration: Ordinal.exists_isClubGuessing_of_cof_uncountable
+  informal: Proves the existence of a club-guessing sequence on a stationary set whose elements share
+    a common uncountable cofinality bounded by the cofinality of the ambient ordinal.
+tags:
+- set-theory
+- cardinal-arithmetic
+- club-guessing
+msc:
+- 03E04
+- 03E10
+- 03E55

@@ -1,0 +1,46 @@
+slug: zeta2-zeta3-linear-independence
+title: Linear independence of 1, zeta(2), and zeta(3)
+summary: Proves that 1, the Riemann zeta function at 2, and its value at 3 are linearly independent over
+  the rationals, using integer polynomial approximation, p-adic coefficient bounds, prime-edge nonvanishing,
+  and logarithmic potential energy estimates for Hankel determinants. Includes reusable irrationality
+  criteria, contour integration, Andreief identities, Newton-basis valuation bounds, and energy inequalities
+  for finite measures. The cited source is the completed Lean proof; independent novelty of the informal
+  argument is not claimed.
+branch: analytic number theory
+entry_module: LeanPool.Zeta32
+authors:
+- Qian Tang
+source:
+  title: Linear independence of 1, zeta(2), and zeta(3), Lean formalization
+  url: https://github.com/dtq1997/zeta2-zeta3-linear-independence/tree/669c92bf7a3728e0de9ad80c373bc29fb5ca3d58
+  github_repo: dtq1997/zeta2-zeta3-linear-independence
+  commit: 669c92bf7a3728e0de9ad80c373bc29fb5ca3d58
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- Zeta32.one_zeta_two_zeta_three_linearIndependent
+main_results:
+- declaration: Zeta32.one_zeta_two_zeta_three_linearIndependent
+  informal: The three complex numbers 1, riemannZeta 2, and riemannZeta 3 are linearly independent over
+    the rational numbers.
+  source_ref: 'Upstream Zeta32/Final.lean and Solution.lean at the pinned commit. First public proof release:
+    2026-09-30 03:47:38 UTC, commit ec4fcb5617126b0a861f9e0c16f95425b32d4638. The upstream README and
+    NOTICE disclose substantial AI assistance. The polynomial argument is credited upstream to Fauzan;
+    this card cites the Lean artifact, not a separately verified paper.'
+- declaration: Zeta32Acceptance.one_zeta_two_zeta_three_linearIndependent_series
+  informal: For rational a, b, and c, if a plus b times the real sum of 1/(k+1)^2 plus c times the real
+    sum of 1/(k+1)^3 is zero, then all three coefficients are zero; both sums range over natural numbers
+    k.
+- declaration: Zeta32.zeta3_sub_rat_mul_zeta2_irrational
+  informal: For every rational r, the real series for zeta(3) minus r times the real series for zeta(2)
+    is irrational.
+tags:
+- zeta-values
+- irrationality
+- linear-independence
+- p-adic-valuations
+- potential-theory
+msc:
+- 11J72
+- 11M06

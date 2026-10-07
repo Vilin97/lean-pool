@@ -1,0 +1,42 @@
+slug: computablereal
+title: Verified interval-Cauchy real arithmetic
+summary: Represents real numbers as Cauchy sequences of nested rational intervals quotiented into a field,
+  with executable interval ring arithmetic, proven-convergent rational bounds for sqrt, exp, and pi, and
+  an IsComputable typeclass that packages such approximations to drive classical (noncomputable) comparison
+  instances, after O'Connor's certified exact real computation.
+branch: interval arithmetic
+entry_module: LeanPool.ComputableReal
+authors:
+- Alex Meiburg
+source:
+  arxiv: '0805.2438'
+  doi: 10.1007/978-3-540-71067-7_21
+  github_repo: Timeroot/computableReal
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- ComputableℝSeq
+- Computableℝ
+- IsComputable
+main_results:
+- declaration: ComputableℝSeq
+  informal: A sequence of converging rational lower and upper bounds representing a single real number.
+- declaration: Computableℝ
+  informal: The quotient of interval-Cauchy sequences by equality of value, an ordered field whose ring
+    operations are executable interval arithmetic.
+- declaration: IsComputable
+  informal: A typeclass packaging an explicit interval-Cauchy approximation of a real number, used to
+    drive its classical comparison instances.
+- declaration: Computableℝ.instField
+  informal: The field instance on the quotient; inversion extracts a sign witness classically and is noncomputable.
+- declaration: ComputableℝSeq.Sqrt.sqrtq
+  informal: Computes converging rational interval bounds for the square root of a rational interval.
+tags:
+- interval-arithmetic
+- real-numbers
+- cauchy-sequences
+- special-functions
+msc:
+- 65G40
+- 68V20

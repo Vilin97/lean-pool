@@ -1,0 +1,97 @@
+slug: sendov-conjecture
+title: Sendov's conjecture and the Phelps–Rodriguez conjecture
+summary: 'Proves Sendov''s conjecture in full generality: if every zero of a complex polynomial of degree
+  at least two lies in the closed unit disk, then every zero has a critical point within distance one.
+  Also proves the Phelps–Rodriguez strengthening, with strict inequality unless the zero lies on the unit
+  circle and the polynomial is a scalar multiple of z^n - a^n, and recovers Rubinstein''s boundary theorem.
+  Formalizes Tao''s digestion of Lech Mazur''s proof: the problem is reduced to a numerical inequality
+  in the degree and one real parameter, settled by exact rational Bernstein certificates for degrees up
+  to one hundred and by an analytic large-degree reduction beyond. Includes the top case of Maclaurin''s
+  inequality and multiset AM–GM, a defect inequality on the closed unit disk, a sharp bound on log(sinh
+  h / h), kernel-checked polynomial certificate infrastructure, and a packed-exponentiation bridge for
+  exact moment integrals.'
+branch: complex analysis
+entry_module: LeanPool.Sendov
+authors:
+- Terence Tao
+source:
+  title: Sendov's conjecture in Lean
+  url: https://github.com/teorth/sendov/tree/1ddea92d89f951a0a7cbbffa6c267cf7e6640b1d
+  github_repo: teorth/sendov
+  commit: 1ddea92d89f951a0a7cbbffa6c267cf7e6640b1d
+  announcement_url: https://terrytao.wordpress.com/2026/08/12/a-digestion-of-the-proof-of-sendovs-conjecture/
+  announced_at: '2026-08-12T23:10:54Z'
+  mathematical_source: T. Tao, A digestion of the proof of Sendov's conjecture, blog post, 12 August 2026,
+    digesting Lech Mazur's AI-assisted proof; the boundary case follows Q. Tang and T. Zhang, arXiv:2508.10341,
+    equation (5.1) and Remark 5.1.
+  prior_formalization: Lech Mazur's earlier Lean formalization of Sendov's conjecture at ProofAtlas (https://www.proofatlas.ai/formalizations/sendov-conjecture/),
+    which the upstream README credits with priority for both the proof and the first formalization. The
+    present development shares no code with it and additionally states the Phelps–Rodriguez equality classification.
+license: Apache-2.0
+status: verified
+provenance: AI
+provenance_note: The upstream README states that essentially all Lean source was written by Claude Opus
+  5 in Claude Code under the direction and review of Terence Tao, who set the targets, supplied the informal
+  proof and staged plans, and made the mathematical decisions.
+main_declarations:
+- Sendov.sendov
+- Sendov.phelps_rodriguez
+main_results:
+- declaration: Sendov.sendov
+  informal: For every natural number n at least two and every complex polynomial p of degree n all of
+    whose roots have norm at most one, every root a of p admits a root of the derivative of p within distance
+    at most one of a.
+  source_ref: Sendov's conjecture (1962); Tao's blog post of 12 August 2026, Conjecture 1, following Mazur's
+    proof; upstream Sendov/Conjecture.lean. First publicly announced 2026-08-12 23:10:54 UTC in that post,
+    with the Lean repository completed the same day.
+- declaration: Sendov.phelps_rodriguez
+  informal: Under the same hypotheses, either some root of the derivative lies at distance strictly less
+    than one from a, or a has norm one and p equals a nonzero scalar multiple of X^n - a^n.
+  source_ref: Phelps–Rodriguez conjecture; Tao's blog post, Conjecture 2; upstream Sendov/Conjecture.lean.
+    The equality case is Rubinstein's 1968 theorem.
+- declaration: SendovConjecture.sendov
+  informal: 'The same statement in the Mathlib-only form of the upstream statement of record: for every
+    complex polynomial p of degree at least two such that every complex w with p(w) = 0 has norm at most
+    one, every zero a of p admits a root of the derivative within distance at most one of a.'
+  source_ref: Upstream Solution.lean, the declaration checked by the upstream comparator setup.
+- declaration: Sendov.rubinstein_one
+  informal: If a polynomial of degree n at least two with all roots in the closed unit disk vanishes at
+    one, then either its derivative has a root within distance strictly less than one of the point one,
+    or the polynomial equals its leading coefficient times X^n - 1.
+  source_ref: Rubinstein's theorem; Tang–Zhang arXiv:2508.10341, equation (5.1) and Remark 5.1, run to
+    equality; upstream Sendov/Boundary.lean.
+- declaration: Sendov.stat_lt_one
+  informal: For every degree n at least five and every real parameter alpha between zero and seventeen
+    satisfying the feasibility constraint c^2 ≤ A, the quantity R n alpha of the blog post's equation
+    stat is strictly less than one.
+  source_ref: Equation (stat) of Tao's blog post; degrees five to one hundred by Bernstein certificates
+    (upstream Sendov/FiniteRange), degrees at least 101 by the analytic reduction (upstream Sendov/LargeDegree).
+- declaration: Multiset.esymm_card_pred_le
+  informal: For a nonempty multiset of nonnegative reals of cardinality m, the (m-1)-st elementary symmetric
+    function is at most m times the (m-1)-st power of the mean.
+  source_ref: Maclaurin's inequality, top case; upstream Sendov/Analytic/Maclaurin.lean.
+- declaration: Multiset.prod_le_mean_pow
+  informal: The product of a multiset of nonnegative reals is at most the mean raised to the cardinality.
+  source_ref: Multiset AM–GM inequality; upstream Sendov/Analytic/Maclaurin.lean.
+- declaration: Sendov.defect
+  informal: For a multiset of complex numbers in the closed unit disk, the product of the norms times
+    the sum of the norms of 1/z minus the conjugate of z is at most one minus the square of that product.
+  source_ref: The defect lemma; upstream Sendov/Analytic/Defect.lean.
+- declaration: Sendov.log_sinh_div_le
+  informal: For every positive real h, the logarithm of sinh h divided by h is at most the square root
+    of h^2 + 9 minus three.
+  source_ref: Upstream Sendov/Common/Sinh.lean; the crux of the beta-bound step.
+- declaration: Sendov.pev_pos_of_bern
+  informal: If the Bernstein expansion of an integer coefficient list on an interval from zero to p/q
+    equals p^d times a polynomial P and every Bernstein coefficient is positive, then P is positive on
+    that interval.
+  source_ref: Lean Pool port infrastructure replacing the upstream per-certificate ring identities; LeanPool/Sendov/FiniteRange/Certificate.lean.
+tags:
+- sendov-conjecture
+- polynomial-zeros
+- critical-points
+- bernstein-certificates
+msc:
+- 30C15
+- 30C10
+- 12D10

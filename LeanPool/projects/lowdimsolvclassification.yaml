@@ -1,0 +1,32 @@
+slug: lowdimsolvclassification
+title: Classification of low-dimensional solvable Lie algebras
+summary: Formalises the classification of solvable Lie algebras up to dimension three.
+branch: lie theory
+entry_module: LeanPool.LowDimSolvClassification
+authors:
+- Viviana del Barco
+- Gustavo Infanti
+- Exequiel Rivas
+- Paul Schwahn
+source:
+  title: Classification and Identification of Lie Algebras
+  authors:
+  - Pavel Winternitz
+  - Libor Šnobl
+  doi: 10.1090/crmm/033
+  url: https://bookstore.ams.org/crmm-33
+  github_repo: LieLean/LowDimSolvClassification
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LieAlgebra.Dim3.classification
+main_results:
+- declaration: LieAlgebra.Dim3.classification
+  informal: Classifies three-dimensional solvable Lie algebras over arbitrary fields.
+tags:
+- lie-algebras
+- solvable
+- classification
+msc:
+- 17B30

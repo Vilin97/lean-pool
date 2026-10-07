@@ -1,0 +1,65 @@
+slug: escauriaza-seregin-sverak
+title: Escauriaza–Seregin–Šverák and Ladyzhenskaya–Prodi–Serrin regularity
+summary: 'Endpoint and Serrin regularity criteria for three-dimensional incompressible Navier–Stokes Leray–Hopf
+  solutions: bounded L-infinity-in-time L3 velocity implies L5 integrability, uniqueness, and a smooth
+  representative on positive times including the final time. Includes local endpoint regularity, both
+  Carleman inequalities, spatial unique continuation, and half-space backward uniqueness. Retains the
+  complete ESS production formalization.'
+branch: Analysis
+entry_module: LeanPool.EscauriazaSereginSverak
+authors:
+- Scott Armstrong
+source:
+  github_repo: scottnarmstrong/EscauriazaSereginSverak
+  url: https://github.com/scottnarmstrong/EscauriazaSereginSverak/tree/ae1a0e46086b9b16179dea76b41da10b01845151
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- ESS.essSmooth
+- ESS.ladyzhenskayaProdiSerrin
+- ESS.serrinCriterion
+main_results:
+- declaration: ESS.essSmooth
+  informal: A Leray–Hopf solution whose spatial L3 mass is essentially bounded in time belongs to space-time
+    L5, is unique among Leray–Hopf solutions with the same initial datum, and has an almost-everywhere
+    equal smooth representative on all positive times through the final time.
+- declaration: ESS.ladyzhenskayaProdiSerrin
+  informal: A Leray–Hopf solution satisfying the critical Serrin mixed-norm condition with spatial exponent
+    greater than three, including the L2-in-time L-infinity-in-space endpoint, is unique and has a smooth
+    representative on positive times through the final time.
+- declaration: ESS.serrinCriterion
+  informal: The endpoint L-infinity-in-time L3 criterion and the Serrin criteria for all spatial exponents
+    greater than three jointly imply uniqueness and existence of a smooth representative up to the final
+    time.
+- declaration: ESS.essLocal
+  informal: A weak Navier–Stokes solution on the unit cylinder with finite energy, L3/2 pressure, and
+    velocity essentially bounded in time in spatial L3 has an almost-everywhere equal parabolically Holder
+    representative on the closure of the half cylinder.
+- declaration: ESS.essGlobal
+  informal: A Leray–Hopf solution whose spatial L3 mass is essentially bounded in time has no singular
+    point at an interior positive time.
+- declaration: ESS.essL5Unique
+  informal: A Leray–Hopf solution whose spatial L3 mass is essentially bounded in time belongs to space-time
+    L5 and is unique among Leray–Hopf solutions with its initial datum.
+- declaration: ESS.uniqueContinuation
+  informal: A vector field with explicit weak space-time derivatives obeying a parabolic differential
+    inequality has unique continuation across a spatial boundary under the stated decay and boundary hypotheses.
+- declaration: ESS.backwardUniqueness
+  informal: A vector field on a three-dimensional half-space satisfying the heat differential inequality,
+    growth bound, and zero initial trace vanishes.
+- declaration: ESS.carlemanGaussian
+  informal: The Gaussian Carleman inequality bounds weighted field and gradient energies by the weighted
+    heat-operator energy under its support hypotheses.
+- declaration: ESS.carlemanHalfSpace
+  informal: The half-space Carleman inequality bounds weighted field and gradient energies by the weighted
+    heat-operator energy under its support hypotheses.
+tags:
+- Navier–Stokes
+- partial differential equations
+- regularity
+- unique continuation
+msc:
+- 35Q30
+- 35B65
+- 35B60

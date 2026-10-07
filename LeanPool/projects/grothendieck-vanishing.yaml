@@ -1,0 +1,27 @@
+slug: grothendieck-vanishing
+title: Grothendieck's Vanishing Theorem
+summary: Formalizes Grothendieck's vanishing theorem for sheaf cohomology on Noetherian topological spaces.
+branch: algebraic geometry
+entry_module: LeanPool.GrothendieckVanishing
+authors:
+- Vasily Ilin
+- Brian Nugent
+source:
+  doi: 10.1007/978-1-4757-3849-0
+  url: https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing
+  github_repo: Vilin97/Clawristotle
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- GrothendieckVanishing
+main_results:
+- declaration: GrothendieckVanishing
+  informal: Proves vanishing of sheaf cohomology above the topological Krull dimension.
+tags:
+- algebraic-geometry
+- sheaf-theory
+- topology
+msc:
+- 14F06
+- 18F20

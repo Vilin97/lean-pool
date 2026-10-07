@@ -1,0 +1,32 @@
+slug: archon-firstproof-results
+title: Archon-FirstProof-Results
+summary: Collects formal solutions from the Archon FirstProof benchmark, including polynomial and graph-theoretic
+  results.
+branch: problem-solving mathematics
+entry_module: LeanPool.ArchonFirstProofResults
+authors:
+- FrenzyMath
+source:
+  arxiv: '2602.05192'
+  github_repo: frenzymath/Archon-FirstProof-Results
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- Problem4.harmonic_mean_inequality_full
+- Problem6.exists_eps_light_subset
+main_results:
+- declaration: Problem4.harmonic_mean_inequality_full
+  informal: Proves the benchmark harmonic-mean inequality for real-rooted polynomial transforms.
+- declaration: Problem6.exists_eps_light_subset
+  informal: Proves the benchmark light-subset existence theorem in the graph Laplacian setting.
+tags:
+- polynomials
+- analysis
+- combinatorics
+- linear-algebra
+- graph-theory
+msc:
+- 26D15
+- 05C50
+- 15A42

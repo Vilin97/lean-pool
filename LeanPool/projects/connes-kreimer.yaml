@@ -1,0 +1,44 @@
+slug: connes-kreimer
+title: Connes-Kreimer Hopf algebra of rooted trees
+summary: Formalizes the planar Connes-Kreimer/Foissy Hopf algebra of rooted trees, its cut coproduct,
+  bialgebra and Hopf algebra structures, the commutative quotient, Adams operators, and the Eulerian idempotent
+  on the quotient.
+branch: algebraic combinatorics
+entry_module: LeanPool.ConnesKreimer
+authors:
+- Carles Marín
+source:
+  title: 'How a Tree Remembers Its Cuts: the Connes-Kreimer-Foissy Hopf Algebra of Rooted Trees, Machine-Checked
+    in Lean 4'
+  authors:
+  - Carles Marín
+  doi: 10.5281/zenodo.20762280
+  github_repo: karlesmarin/connes-kreimer-lean
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- CK.instCKHopf
+- CK.instHabHopf
+- CK.eulerian1_idem_ab
+main_results:
+- declaration: CK.instCKHopf
+  informal: Constructs the planar rooted-tree Connes-Kreimer/Foissy Hopf algebra as a Mathlib `HopfAlgebra`.
+- declaration: CK.instHabHopf
+  informal: Constructs the Hopf algebra structure on the commutative quotient of the planar rooted-tree
+    algebra.
+- declaration: CK.eulerian1_idem_ab
+  informal: Proves that the first Eulerian idempotent is idempotent on the commutative quotient.
+- declaration: CK.coassoc_map
+  informal: Lifts the list-level cut coassociativity proof to equality of linear maps for the coproduct.
+- declaration: PowerSeries.logOf_mul
+  informal: Proves additivity of `PowerSeries.logOf` for power series with constant coefficient one.
+tags:
+- hopf-algebras
+- rooted-trees
+- renormalization
+- combinatorics
+msc:
+- 16T05
+- 05C05
+- 81T15

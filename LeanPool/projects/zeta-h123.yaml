@@ -1,0 +1,46 @@
+slug: zeta-h123
+title: Thakur's hypotheses on power sums of F_q[t]
+summary: Formalizes four components of Thakur's hypotheses on power sums over finite polynomial rings,
+  including uniqueness and monotonicity results for the carry-free digit optimization problems and the
+  Laurent-series expansion of finite-field power sums.
+branch: number theory
+entry_module: LeanPool.ZetaH123
+authors:
+- Evan Chen
+- Kenny Lau
+- Ken Ono
+- Jujian Zhang
+source:
+  title: Thakur's hypotheses on power sums of F_q[t]
+  authors:
+  - Evan Chen
+  - Ken Ono
+  arxiv: '2606.16239'
+  github_repo: AxiomMath/zeta-h123
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- ZetaH123.H1.main_theorem
+- ZetaH123.Lem41.main
+main_results:
+- declaration: ZetaH123.H1.main_theorem
+  informal: Proves uniqueness of the admissible base-q decomposition maximizing the H1 power-sum weight
+    functional.
+- declaration: ZetaH123.H2.main
+  informal: Proves the H2 unique-minimizer statement for the recursive digit/carry-free optimization problem
+    defining the values s_d(k).
+- declaration: ZetaH123.H3.main_theorem
+  informal: Proves the H3 monotonicity statement that s_d(k) is strictly less than s_d(k+1) when p does
+    not divide k.
+- declaration: ZetaH123.Lem41.main
+  informal: Proves the Lemma 4.1 Laurent-series expansion for S_d(k), with nonzero coefficients indexed
+    by the carry-free tuples.
+tags:
+- number-theory
+- function-fields
+- zeta-functions
+msc:
+- 11M38
+- 11T55
+- 11G09

@@ -1,0 +1,55 @@
+slug: formalization-of-bounded-arithmetic
+title: Strengthened V0 Bounded Arithmetic Interfaces
+summary: Formalizes first-order and two-sorted bounded-arithmetic model infrastructure, including arithmetic
+  model laws and string-addition laws for strengthened bundled V0-style interfaces with propositional
+  induction, order, cancellation, decidability, and algebraic laws assumed as fields rather than derived
+  from a separate raw V0 class.
+branch: mathematical logic
+entry_module: LeanPool.FormalizationOfBoundedArithmetic
+authors:
+- ruplet
+source:
+  title: Logical Foundations of Proof Complexity
+  authors:
+  - Stephen Cook
+  - Phuong Nguyen
+  doi: 10.1017/CBO9780511676277
+  github_repo: ruplet/formalization-of-bounded-arithmetic
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- V0Model.ind_strengthened_v0
+- str_add_assoc_strengthened_v0
+main_results:
+- declaration: IOPENModel.add_assoc
+  informal: Proves associativity of addition in IOPEN models.
+- declaration: IOPENModel.add_comm
+  informal: Proves commutativity of addition in IOPEN models.
+- declaration: IDelta0Model.pred_exists
+  informal: Shows that nonzero elements in IDelta0 models have predecessors.
+- declaration: IDelta0Model.mul_cancel_right
+  informal: Proves right cancellation for multiplication by a nonzero element in IDelta0 models.
+- declaration: V0Model.xind
+  informal: Exposes string induction inside the strengthened bundled V0Model structure, whose fields include
+    the comprehension and induction/order principles used downstream.
+- declaration: V0Model.ind_strengthened_v0
+  informal: Exposes propositional induction inside the strengthened bundled V0Model structure, rather
+    than deriving it from only the raw finite V0 axiom list.
+- declaration: str_add_comm_strengthened_v0
+  informal: Proves commutativity of string addition in V0 extension models extending the strengthened
+    V0Model bundle.
+- declaration: str_add_assoc_strengthened_v0
+  informal: Proves associativity of string addition in V0 extension models extending the strengthened
+    V0Model bundle, using the bundled propositional induction field.
+- declaration: str_succ_assoc_strengthened_v0
+  informal: Proves that string addition associates with string successor in V0 extension models extending
+    the strengthened V0Model bundle.
+tags:
+- logic
+- bounded-arithmetic
+- model-theory
+- computational-complexity
+msc:
+- 03F30
+- 03D15

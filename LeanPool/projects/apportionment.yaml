@@ -1,0 +1,25 @@
+slug: apportionment
+title: Apportionmentlib
+summary: 'Formalizes apportionment rules and proves the Balinski-Young impossibility theorem: no anonymous
+  quota rule can be population-monotone.'
+branch: social choice theory
+entry_module: LeanPool.Apportionment
+authors:
+- Michał Dobranowski
+source:
+  url: https://archive.org/details/fairrepresentati00bali
+  github_repo: mdbrnowski/apportionmentlib
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Apportionment.balinski_young
+main_results:
+- declaration: Apportionment.balinski_young
+  informal: Proves that no anonymous quota apportionment rule can satisfy population monotonicity.
+tags:
+- social-choice-theory
+- combinatorics
+msc:
+- 91B12
+- 91B14

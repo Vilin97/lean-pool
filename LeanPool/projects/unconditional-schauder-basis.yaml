@@ -1,0 +1,42 @@
+slug: unconditional-schauder-basis
+title: Unconditional Schauder Bases
+summary: 'Develops an API for Schauder bases and unconditional Schauder bases of complete normed spaces,
+  including ordered partial-sum convergence, rearrangement criteria for unconditionality, and an arbitrary-index
+  variant built on unconditional summability, then proves a finite sign criterion: a family with dense
+  closed span, nonzero vectors, and a uniform finite sign bound is the basis of an unconditional Schauder
+  basis.'
+branch: functional analysis
+entry_module: LeanPool.UnconditionalSchauderBasis
+authors:
+- Daniel Smania
+source:
+  title: Classical Banach Spaces I and II
+  authors:
+  - Joram Lindenstrauss
+  - Lior Tzafriri
+  doi: 10.1007/978-3-662-53294-2
+  github_repo: SmaniaD/UnconditionalSchauderBasis
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- UnconditionalCriterion.exists_unconditionalSchauderBasis_of_finiteSignBound
+main_results:
+- declaration: UnconditionalCriterion.exists_unconditionalSchauderBasis_of_finiteSignBound
+  informal: 'Finite sign criterion for sequences: if `x : ℕ → E` has dense closed linear span, every `x
+    n` is nonzero, and finite sign changes are uniformly bounded by `C`, then `x` is the basis sequence
+    of an unconditional Schauder basis.'
+  source_ref: J. Lindenstrauss and L. Tzafriri, Classical Banach Spaces I and II, Chapter 1, Section c,
+    unconditional bases, doi:10.1007/978-3-662-53294-2.
+- declaration: UnconditionalCriterion.exists_unconditionalSchauderBasisAbstractIndex_of_finiteSignBound
+  informal: 'Abstract-index form of the finite sign criterion: under the same dense span, nonzero, and
+    uniform finite sign bound hypotheses for an arbitrarily indexed family, there is an abstractly indexed
+    unconditional Schauder basis whose basis family is exactly `x`.'
+  source_ref: J. Lindenstrauss and L. Tzafriri, Classical Banach Spaces I and II, Chapter 1, Section c,
+    unconditional bases, doi:10.1007/978-3-662-53294-2.
+tags:
+- functional-analysis
+- banach-spaces
+- schauder-bases
+msc:
+- 46B15

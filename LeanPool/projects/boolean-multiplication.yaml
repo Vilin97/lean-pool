@@ -1,0 +1,67 @@
+slug: boolean-multiplication
+title: Exact Boolean multiplicative complexity of four-term polynomial multiplication
+summary: Proves that multiplying two binary polynomials with n coefficients needs exactly 0, 1, 3, 6,
+  and 9 AND gates for n = 0, 1, 2, 3, and 4, with XOR and constants free and arbitrary reuse of earlier
+  nonlinear wires. The main lower bound excludes every eight-gate circuit for n = 4. Develops Boolean
+  algebraic normal forms equivalent to all Boolean functions, a general circuit model, dimension bounds,
+  circuit rewiring, a Reed-Muller minimum-weight theorem, and exterior-algebra and jet arguments controlling
+  nonlinear feedback.
+branch: computational complexity
+entry_module: LeanPool.BooleanMultiplication
+authors:
+- Gregory Morse
+source:
+  title: 'Unrestricted Boolean Multiplicative Complexity of Four-Term Binary Polynomial Multiplication:
+    Rational Places, Hasse Jets, and the Failure of Nonlinear Feedback'
+  arxiv: 2608.30238v1
+  url: https://github.com/GregoryMorse/unrestricted-boolean-mul/tree/79a801760668f52bb00a9e1a406e841375c58a6d
+  github_repo: GregoryMorse/unrestricted-boolean-mul
+  commit: 79a801760668f52bb00a9e1a406e841375c58a6d
+  announcement_date: '2026-08-31T04:33:48Z'
+  announcement_url: https://github.com/GregoryMorse/unrestricted-boolean-mul/releases/tag/n4-arxiv-v2
+  notes: The complete Lean release predates the arXiv v1 submission of 2026-08-31T04:45:12Z. The selected
+    September 22 commit corrects release metadata; eligibility rests on the complete August 31 Lean release
+    at 2ebc0cf42039e4b5de84cb7f9d97cad4791c669d. The August 29 release contained computational artifacts,
+    not the Lean formalization. The author discloses GPT-5.6 Sol for original research and proof development,
+    Opus 5 as a critical referee, and Codex for release preparation. Gregory Morse directed and reviewed
+    the work and assumes responsibility. AI provenance records the proof-producing agent workflow; human
+    direction alone is not classified as mixed formalization. The complete upstream MIT notice is retained
+    in LeanPool/BooleanMultiplication.lean. Only the published n <= 4 dependency closure is imported;
+    no n = 5 or n = 6 claim is made.
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- UnrestrictedBooleanMul.N4.mc_mul_four
+main_results:
+- declaration: UnrestrictedBooleanMul.mc_mul_zero
+  informal: The empty polynomial multiplication map needs zero AND gates.
+  source_ref: Proposition 2.3; the n = 0 target has no output coordinates.
+- declaration: UnrestrictedBooleanMul.mc_mul_one
+  informal: Multiplying two one-coefficient binary polynomials needs exactly one AND gate.
+  source_ref: Proposition 2.3.
+- declaration: UnrestrictedBooleanMul.mc_mul_two
+  informal: Multiplying two two-coefficient binary polynomials needs exactly three AND gates.
+  source_ref: Proposition 2.3.
+- declaration: UnrestrictedBooleanMul.mc_mul_three
+  informal: Multiplying two three-coefficient binary polynomials needs exactly six AND gates.
+  source_ref: Proposition 2.4; the lower bound is proved internally.
+- declaration: UnrestrictedBooleanMul.N4.mc_mul_four
+  informal: Multiplying two four-coefficient binary polynomials needs exactly nine AND gates, allowing
+    free XOR, constants, and unrestricted nonlinear reuse.
+  source_ref: Theorem 9.1.
+- declaration: UnrestrictedBooleanMul.N4.no_eight_gate_circuit
+  informal: No eight-AND circuit with free XOR, constants, and arbitrary nonlinear reuse computes all
+    seven output coefficients of the product of two four-coefficient binary polynomials.
+  source_ref: Theorem 9.1, lower bound.
+tags:
+- computational-complexity
+- boolean-circuits
+- polynomial-multiplication
+- algebraic-normal-form
+msc:
+- 68Q06
+- 68Q17
+- 68W30
+- 15A75
+- 94D10

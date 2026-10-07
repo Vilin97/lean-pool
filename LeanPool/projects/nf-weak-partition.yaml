@@ -1,0 +1,52 @@
+slug: nf-weak-partition
+title: New Foundations refutes the Weak Partition Principle
+summary: Constructs a formal first-order derivation of the negation of the Weak Partition Principle from
+  New Foundations, with extensionality and the full integer-stratified comprehension schema. Proves full
+  deductive equivalence with Metamath's Hailperin-derived finite presentation, including its added singleton
+  axiom. Replays the source proof through nominal syntax, explicit freshness certificates, and a de Bruijn
+  calculus. Includes reusable first-order soundness and completeness, stratification, lowering, and proof-translation
+  infrastructure. This is a derivability theorem; it does not assert the consistency of New Foundations.
+branch: mathematical logic
+entry_module: LeanPool.NFWeakPartition
+authors:
+- Elliot Glazer
+- NFNotWPP contributors
+- Jesse Michael Han
+- Floris van Doorn
+- Ian Klatzco
+source:
+  title: NF proves not-WPP, source-complete Lean formalization
+  url: https://github.com/elliotglazer/nf-not-wpp/tree/fa58a7a895a73422042e167391c78e9149979913
+  github_repo: elliotglazer/nf-not-wpp
+  commit: fa58a7a895a73422042e167391c78e9149979913
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- NFChoice.Foundation.NFStandard.NF_proves_not_WPP
+main_results:
+- declaration: NFChoice.Foundation.NFStandard.NF_proves_not_WPP
+  informal: Standard New Foundations formally derives the negation of WPP. WPP says that, for all sets
+    x and y, if a function maps y onto x and an injective function maps y into x, then an injective function
+    maps x into y.
+  source_ref: 'Upstream Proof/NFStandard/NotWPP.lean and the exact source formulation documented in README.md
+    at the pinned commit. Standard-NF completion: commit a9f9867ee379835f91a4f05f9c4a352d44ca1775, 2026-08-25
+    00:16:27 UTC. Palomar registration PALOMAR-2026-08-27-000005 is dated 2026-08-27, without a verified
+    time of day. The responsible public maintainer is Elliot Glazer. Upstream Flypitch4 credits Ian Klatzco
+    and Claude for its Lean 4 port; this import also includes AI-assisted porting and proof repairs, hence
+    mixed provenance. The deterministic Metamath replay is not by itself evidence of AI mathematical authorship.
+    Independent novelty is not claimed by this card.'
+- declaration: NFChoice.Foundation.NFStandard.nf_hailperin_deductivelyEquivalent
+  informal: Extensionality together with every integer-stratified comprehension instance and Metamath's
+    Hailperin-derived finite first-order presentation, including its added singleton axiom, derive exactly
+    the same sentences.
+  source_ref: 'Upstream Proof/NFStandard/Equivalence.lean at the pinned commit. Metamath''s ax-sn entry
+    credits the singleton addition to SF on 2015-01-12 and distinguishes it from Hailperin''s original
+    presentation: https://us.metamath.org/nfeuni/ax-sn.html.'
+tags:
+- new-foundations
+- weak-partition-principle
+- first-order-logic
+msc:
+- 03E70
+- 03B35

@@ -1,0 +1,50 @@
+slug: formalizing-gmt
+title: Formalizing geometric measure theory
+summary: A development of foundations and central results in geometric measure theory, including Hausdorff
+  content and density bounds, weak convergence and compactness for Radon measures, tangent-measure machinery,
+  Mattila's Lemmas 14.5--14.7, and Marstrand's integrality theorem for positive finite densities.
+branch: measure theory and geometric analysis
+entry_module: LeanPool.FormalizingGMT
+authors:
+- Theodore Meek
+- Ignacio Tejeda
+- Annie Cao
+- Nathan Pao
+source:
+  url: https://github.com/uw-math-ai/FormalizingGMT
+  github_repo: uw-math-ai/FormalizingGMT
+  commit: 0acca38a91c4121b813f8e0b6ff719a4590bf126
+  notes: The geometric-measure-theory results follow Mattila, Geometry of Sets and Measures in Euclidean
+    Spaces, Chapter 14. The weak-convergence, compactness, covering, and density results follow Evans--Gariepy,
+    Measure Theory and Fine Properties of Functions, revised edition.
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- mattila_14_10
+- mattila_14_11
+main_results:
+- declaration: mattila_14_10
+  informal: If a Radon measure on Euclidean n-space has positive finite s-dimensional density on a set
+    of positive measure, then s is a natural number.
+  source_ref: Mattila, Theorem 14.10 (Marstrand's theorem).
+- declaration: mattila_14_11
+  informal: Every n-uniform measure on Euclidean n-space is a constant multiple of Lebesgue measure.
+  source_ref: Mattila, Theorem 14.11.
+- declaration: MeasureTheory.Measure.weaklyConverges_iff_compactOpenBounds
+  informal: Vague convergence of Radon measures on Euclidean space is equivalent to the Portmanteau compact-set
+    upper and open-set lower bounds.
+  source_ref: Evans--Gariepy, revised edition, Theorem 1.40.
+- declaration: MeasureTheory.exists_vaguelyConvergent_subseq_of_compact_bounded
+  informal: A sequence of Radon measures on Euclidean space that is uniformly bounded on every compact
+    set has a vaguely convergent subsequence.
+  source_ref: Evans--Gariepy, revised edition, Theorem 1.41.
+tags:
+- geometric-measure-theory
+- Hausdorff-measure
+- tangent-measures
+- weak-convergence
+msc:
+- 28A75
+- 28A78
+- 49Q15

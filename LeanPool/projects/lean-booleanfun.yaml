@@ -1,0 +1,27 @@
+slug: lean-booleanfun
+title: Analysis of Boolean functions in Lean
+summary: Walsh-Fourier analysis on Boolean functions, including Arrow's theorem and BLR linearity testing.
+branch: combinatorics
+entry_module: LeanPool.LeanBooleanfun
+authors:
+- Joris Roos
+source:
+  arxiv: '2105.10386'
+  doi: 10.1017/CBO9781139814782
+  github_repo: roos-j/lean-booleanfun
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
+main_results:
+- declaration: LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
+  informal: Arrow's theorem for two-candidate Boolean voting rules.
+tags:
+- boolean-functions
+- fourier-analysis
+- social-choice
+msc:
+- 06E30
+- 42C10
+- 91B14

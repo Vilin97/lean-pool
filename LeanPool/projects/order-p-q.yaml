@@ -1,0 +1,34 @@
+slug: order-p-q
+title: Classification of groups of order p * q
+summary: Classification of noncyclic finite groups of order p*q, including the prime-square direct-product
+  case and the p<q semidirect-product normal form.
+branch: group theory
+entry_module: LeanPool.OrderPQ
+authors:
+- Scott Harper
+- Peiran Wu
+source:
+  arxiv: '2501.09769'
+  github_repo: wupr/order-p-q
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
+main_results:
+- declaration: OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
+  informal: There exists a noncyclic group of order p*q exactly when p=q, p divides q-1, or q divides
+    p-1.
+- declaration: OrderPQ.nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic
+  informal: Any two noncyclic groups of order p*q are isomorphic.
+- declaration: OrderPQ.nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
+  informal: If p<q, every group of order p*q is isomorphic to a semidirect product of MulZMod q by MulZMod
+    p.
+tags:
+- group-theory
+- finite-groups
+- semidirect-products
+msc:
+- 20D20
+- 20E22
+- 20D60

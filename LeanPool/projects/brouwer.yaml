@@ -1,0 +1,57 @@
+slug: brouwer
+title: Existence of Nash equilibria via Brouwer's fixed-point theorem
+summary: Formalizes Scarf's combinatorial lemma, derives Brouwer's fixed-point theorem on a simplex and
+  on finite products of simplices, and uses it to prove the existence of a mixed Nash equilibrium in every
+  finite game.
+branch: game theory
+entry_module: LeanPool.Brouwer
+authors:
+- Math_XMUM
+source:
+  doi: 10.1073/pnas.36.1.48
+  url: https://github.com/math-xmum/Brouwer
+  github_repo: math-xmum/Brouwer
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- ExistsNashEq
+- Brouwer
+- Brouwer_Product
+- IndexedLOrder.Scarf
+- FinGame
+main_results:
+- declaration: ExistsNashEq
+  informal: Every finite game has a mixed Nash equilibrium.
+  source_ref: J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences
+    36(1):48-49, 1950, doi:10.1073/pnas.36.1.48.
+- declaration: Brouwer
+  informal: Every continuous self-map of a standard simplex has a fixed point.
+  source_ref: H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied
+    Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116.
+- declaration: Brouwer_Product
+  informal: Every continuous self-map of a finite product of simplices has a fixed point.
+  source_ref: H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied
+    Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116.
+- declaration: IndexedLOrder.Scarf
+  informal: Scarf's combinatorial lemma producing a colorful simplex.
+  source_ref: H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied
+    Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116.
+- declaration: FinGame
+  informal: The structure of a finite game with finitely many players and finite pure strategy sets.
+  source_ref: J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences
+    36(1):48-49, 1950, doi:10.1073/pnas.36.1.48.
+- declaration: FinGame.mixedNashEquilibrium
+  informal: The predicate that a mixed strategy profile is a Nash equilibrium.
+  source_ref: J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences
+    36(1):48-49, 1950, doi:10.1073/pnas.36.1.48.
+tags:
+- game-theory
+- nash-equilibrium
+- brouwer-fixed-point
+- scarf-lemma
+- simplex
+msc:
+- 91A06
+- 91A10
+- 47H10

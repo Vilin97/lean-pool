@@ -1,0 +1,49 @@
+slug: eilenberg-zilber
+title: Eilenberg–Zilber theorem for bisimplicial objects
+summary: For a bisimplicial object X in an abelian category, constructs a chain homotopy equivalence between
+  the total complex of the alternating face map double complex of X and the alternating face map complex
+  of its diagonal. The equivalence is built from the shuffle map and the Alexander–Whitney map. On normalized
+  complexes, shuffle followed by Alexander–Whitney is the identity, and the other composite is homotopic
+  to the identity via the Eilenberg–Mac Lane recursive homotopy. The result is then transported to the
+  unnormalized complexes along the Moore normalization comparisons. The development includes the combinatorics
+  of (p, q)-shuffles, their signs, and the cancellation of diagonal boundary terms.
+branch: algebraic topology
+entry_module: LeanPool.EilenbergZilber
+authors:
+- Jeffrey Li
+source:
+  url: https://github.com/jeffrey-dot-li/lean-homology/tree/40c5aae235b0f499ebfc1e68ce574a62b531203c/HomologyLean/SingularHomology/EilenbergZilberTheorem
+  github_repo: jeffrey-dot-li/lean-homology
+  commit: 40c5aae235b0f499ebfc1e68ce574a62b531203c
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.EilenbergZilber.BisimplicialObject.eilenbergZilber
+main_results:
+- declaration: LeanPool.EilenbergZilber.BisimplicialObject.eilenbergZilber
+  informal: For every bisimplicial object X in an abelian category, the total complex of the double complex
+    obtained by taking alternating face map complexes in both simplicial directions is chain homotopy
+    equivalent to the alternating face map complex of the diagonal simplicial object of X.
+  source_ref: 'Generalized Eilenberg–Zilber theorem for bisimplicial objects in an abelian category: Dold–Puppe,
+    "Homologie nicht-additiver Funktoren. Anwendungen", Ann. Inst. Fourier 11 (1961), 201–312, Satz 2.9
+    (Eilenberg–Zilber–Cartier); the homology-level statement is Weibel, An Introduction to Homological
+    Algebra (1994), Theorem 8.5.1. The product case X_{p,q} = K_p ⊗ L_q is Eilenberg–Zilber, "On products
+    of complexes", Amer. J. Math. 75 (1953), 200–204.'
+- declaration: LeanPool.EilenbergZilber.BisimplicialObject.eilenbergZilberNormalized
+  informal: The total complex of the bi-normalized Moore double complex of X is chain homotopy equivalent
+    to the normalized Moore complex of the diagonal, via the shuffle and Alexander–Whitney maps; shuffle
+    followed by Alexander–Whitney is the identity.
+  source_ref: Eilenberg–Mac Lane, "On the groups H(Π, n), II", Ann. of Math. 60 (1954), 49–139, Theorem
+    2.1a, stated there for products of complexes and generalized here to an arbitrary bisimplicial object
+    in an abelian category.
+tags:
+- eilenberg-zilber
+- bisimplicial-objects
+- shuffle-map
+- alexander-whitney
+- chain-homotopy
+msc:
+- 55U10
+- 18G30
+- 18G35

@@ -1,0 +1,38 @@
+slug: semicirclelaw
+title: Wigner Semicircle Distribution
+summary: Defines the real Wigner semicircle distribution, its normalized density, affine transformations,
+  and finite-moment integrability.
+branch: probability theory
+entry_module: LeanPool.SemicircleLaw
+authors:
+- FredRaj3
+source:
+  url: https://www.math.ucsd.edu/~tkemp/247A.Notes.pdf
+  github_repo: FredRaj3/SemicircleLaw
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
+main_results:
+- declaration: LeanPool.SemicircleLaw.semicirclePDFReal
+  informal: Defines the real-valued density of the semicircle distribution with mean μ and variance v.
+- declaration: LeanPool.SemicircleLaw.semicirclePDF
+  informal: Defines the ℝ≥0∞-valued density of the semicircle distribution.
+- declaration: LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
+  informal: Proves that the real-valued semicircle density integrates to one for nonzero variance.
+- declaration: LeanPool.SemicircleLaw.semicircleReal
+  informal: Defines the semicircle measure on ℝ, equal to a Dirac mass when the variance is zero.
+- declaration: LeanPool.SemicircleLaw.semicircleReal_map_add_const
+  informal: Shows that translating a semicircle measure translates its mean parameter.
+- declaration: LeanPool.SemicircleLaw.semicircleReal_map_const_mul
+  informal: Shows that scaling by a nonzero constant scales the mean and variance parameters.
+- declaration: LeanPool.SemicircleLaw.memLp_id_semicircleReal
+  informal: Shows that the identity has all finite Lp moments under a semicircle distribution.
+tags:
+- probability
+- random-matrix-theory
+- distributions
+msc:
+- 60B20
+- 60E05

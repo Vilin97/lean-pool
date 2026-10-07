@@ -1,0 +1,37 @@
+slug: duality
+title: Duality theory in linear optimization and its extensions
+summary: Formalizes Farkas-like theorems and strong LP duality, including extensions to a linearly ordered
+  field with bot and top.
+branch: linear optimization
+entry_module: LeanPool.Duality
+authors:
+- Martin Dvorak
+source:
+  arxiv: '2409.08119'
+  doi: 10.46298/afm.14253
+  github_repo: madvorak/duality
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- extendedFarkas
+- StandardLP.strongDuality
+main_results:
+- declaration: equalityFarkas
+  informal: Farkas' lemma for linear equalities over nonnegative variables.
+- declaration: inequalityFarkas
+  informal: Farkas' lemma for linear inequalities over nonnegative variables.
+- declaration: extendedFarkas
+  informal: Extended Farkas theorem for matrices and vectors over a linearly ordered field with bot and
+    top.
+- declaration: ValidELP.strongDuality
+  informal: Strong duality theorem for extended linear programs.
+- declaration: StandardLP.strongDuality
+  informal: Strong duality theorem for linear programs in standard form.
+tags:
+- linear-programming
+- optimization
+- farkas-lemma
+msc:
+- 90C05
+- 90C46

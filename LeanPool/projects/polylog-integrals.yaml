@@ -1,0 +1,144 @@
+slug: polylog-integrals
+title: Polylogarithms and sixteen log-trigonometric integral identities
+summary: Formalizes the sixteen A-series identities from rainrzk's PolyLog Integrals tutorial, together
+  with reusable real and complex polylogarithm series, absolute convergence on the closed unit disk, differentiation,
+  duplication, Euler reflection and Landen identities, logarithmic moments, Fubini kernels and radial
+  integration machinery. The formulas involve Catalan's constant, zeta(3), Li_4(1/2) and Im Li_3((1+i)/2).
+  These are classical identities, not new informal results. A004 uses the corrected factor pi^2/24; A014
+  uses a proved expression entirely inside the unit disk, replacing the tutorial's invalid series expansion.
+  A015 uses radial differentiation instead of a half-disc contour integral. The formalization was materially
+  completed on 2026-10-01 at 00:01:57 UTC. The 2022 informal tutorial is older; the eligibility date is
+  that of the completed Lean proofs.
+branch: analysis
+entry_module: LeanPool.PolylogIntegrals
+authors:
+- rainrzk
+source:
+  title: LeanPolyLog, completed formalization of PolyLog Integrals
+  url: https://github.com/rainrzk/LeanPolyLog/tree/056b7b42fd1a26f241e2945c67ae821ec5bdc49b
+  github_repo: rainrzk/LeanPolyLog
+  commit: 056b7b42fd1a26f241e2945c67ae821ec5bdc49b
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPolyLog.Proofs.A016
+main_results:
+- declaration: LeanPolyLog.Proofs.A001
+  informal: Li_2(i) equals -pi^2/48 plus i times Catalan's constant.
+  source_ref: Upstream Statements.lean and Proofs/A001.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A002
+  informal: Li_2(1/(1+i)) equals 5 pi^2/96 - log^2(2)/8 plus i times (pi log(2)/8 - G).
+  source_ref: Upstream Statements.lean and Proofs/A002.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A003
+  informal: Li_2((sqrt(5)-1)/2) equals pi^2/10 - log^2((1+sqrt(5))/2).
+  source_ref: Upstream Statements.lean and Proofs/A003.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A004
+  informal: The integral from 0 to 1 of log(1+x^2)/x equals pi^2/24, correcting the tutorial's factor
+    of two.
+  source_ref: Upstream Statements.lean and Proofs/A004.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A005
+  informal: The integral from 0 to 1 of log^2(1+x^2)/x^3 equals pi^2/12 - log^2(2).
+  source_ref: Upstream Statements.lean and Proofs/A005.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A006_cos
+  informal: The integral from 0 to pi/4 of log(cos x) equals G/2 - (pi/4) log(2).
+  source_ref: Upstream Statements.lean and Proofs/A006.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A006_sin
+  informal: The integral from 0 to pi/4 of log(sin x) equals -G/2 - (pi/4) log(2).
+  source_ref: Upstream Statements.lean and Proofs/A006.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A007
+  informal: The integral from 0 to pi/4 of x log(cos x) equals pi G/8 - pi^2 log(2)/32 - 21 zeta(3)/128.
+  source_ref: Upstream Statements.lean and Proofs/A007.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A008
+  informal: The integral from 0 to pi/4 of x log(1+tan x) equals pi^2 log(2)/64 - pi G/8 + 21 zeta(3)/64.
+  source_ref: Upstream Statements.lean and Proofs/A008.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A009
+  informal: The integral from 0 to pi/2 of x^2 cot x equals pi^2 log(2)/4 - 7 zeta(3)/8.
+  source_ref: Upstream Statements.lean and Proofs/A009.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A010
+  informal: The integral from 0 to pi/4 of x^2 tan^2 x equals -G + pi^2/16 - pi^3/192 + pi log(2)/4.
+  source_ref: Upstream Statements.lean and Proofs/A010.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A011
+  informal: The integral from 0 to 1 of Li_2(x)/(x sqrt(1-x^2)) equals 3 pi^2 log(2)/8 - 7 zeta(3)/16.
+  source_ref: Upstream Statements.lean and Proofs/A011.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A012
+  informal: The integral from 0 to 1 of arctan(x) log(x)/(1+x) equals -pi^3/64 + G log(2)/2.
+  source_ref: Upstream Statements.lean and Proofs/A012.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A013
+  informal: The integral from 0 to 1 of arctan(x) log^2(x)/(1+x) equals -pi^2 G/24 - pi^3 log(2)/32 +
+    21 pi zeta(3)/64.
+  source_ref: Upstream Statements.lean and Proofs/A013.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A014
+  informal: The integral from 0 to 1 of log(x) log(1+x)/(1+x^2) equals 11 pi^3/128 + 3 pi log^2(2)/32
+    - 2 G log(2) - 3 Im Li_3((1+i)/2).
+  source_ref: Upstream Statements.lean and Proofs/A014.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A015
+  informal: The integral from 0 to pi/2 of x log^2(sin x) equals Li_4(1/2) - 19 pi^4/2880 + log^4(2)/24
+    + pi^2 log^2(2)/12.
+  source_ref: Upstream Statements.lean and Proofs/A015.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Proofs.A016
+  informal: The integral from 0 to 1 of Li_3(x)/(x sqrt(1-x^2)) equals Li_4(1/2)/2 + 41 pi^4/5760 + log^4(2)/48
+    + pi^2 log^2(2)/6.
+  source_ref: Upstream Statements.lean and Proofs/A016.lean at the pinned commit; README prior-appearance
+    table and blueprint/ERRATA.md label classical sources and corrections. Lean proofs were written with
+    Claude assistance and reviewed by rainrzk; the informal tutorial is rainrzk (2022).
+- declaration: LeanPolyLog.Dilog.hasDerivAt_Li_succ
+  informal: For every natural s and nonzero complex z in the open unit disk, Li_(s+1) has derivative Li_s(z)/z
+    at z.
+  source_ref: Upstream Lemmas/DilogComplex.lean, termwise differentiation.
+- declaration: LeanPolyLog.Dilog.Li_two_add_Li_two_div_sub_one
+  informal: For complex z of norm at most 1 and real part at most 1/2, Li_2(z) + Li_2(z/(z-1)) = -log^2(1-z)/2,
+    with the principal logarithm.
+  source_ref: Upstream Lemmas/DilogComplex.lean, complex Landen identity.
+- declaration: LeanPolyLog.Arcsin.integral_Lir_div_mul_sqrt
+  informal: For s at least 2 and a measurable nonnegative weight w on (0,1] with integrable moments equal
+    to 1/(n+1)^s, the integral from 0 to 1 of Li_s(x)/(x sqrt(1-x^2)) equals the integral from 0 to pi/2
+    of w(sin t) times (pi/2+t).
+  source_ref: Upstream Lemmas/Arcsin.lean, moment representation and Fubini.
+- declaration: LeanPolyLog.Radial.integral_im_logCube
+  informal: If (log^3((1+r)/2)-log^3((1-r)/2))/r is interval integrable from 0 to 1, its integral equals
+    the integral from 0 to pi of the imaginary part of the cube of the principal complex logarithm of
+    (1+exp(i t))/2.
+  source_ref: Upstream Lemmas/Radial.lean, radial differentiation and domination.
+tags:
+- analysis
+- polylogarithms
+- special-functions
+- integration
+- complex-analysis
+msc:
+- 33B30
+- 26A36
+- 30B10

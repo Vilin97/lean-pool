@@ -1,0 +1,38 @@
+slug: chudnovsky
+title: A Detailed Proof of the Chudnovsky Formula
+summary: 'Formalizes the Chudnovsky brothers'' rapidly convergent series for 1/π, proving Mathlib''s `chudnovskySum
+  = π⁻¹`. Follows Milla''s elementary complex-analytic proof: Weierstrass and Eisenstein theory, Liouville
+  and parallelogram-residue calculus, the Kummer hypergeometric bridge and the main modular identity relating
+  the j-invariant to the lattice periods, Baker''s division-value machinery, and the singular-moduli inputs
+  at the CM point τ = (1 + √-163)/2 — integrality of j(τ) via modular polynomials and Kronecker''s congruence,
+  and rationality of the Weierstrass s₂ invariant via Masser''s Appendix A.1.'
+branch: number theory
+entry_module: LeanPool.Chudnovsky
+authors:
+- Xuanji Li
+source:
+  title: A Detailed Proof of the Chudnovsky Formula
+  authors:
+  - Lorenz Milla
+  arxiv: '1809.00533'
+  github_repo: ldct/lean-eval-chudnovsky
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- Chudnovsky.chudnovskySum_eq_pi_inv
+main_results:
+- declaration: Chudnovsky.chudnovskySum_eq_pi_inv
+  informal: 'Proves the Chudnovsky series identity, i.e. Mathlib''s `chudnovskySum = π⁻¹`: the series
+    (12 / 640320^(3/2)) · ∑ₙ (-1)ⁿ (6n)! (545140134 n + 13591409) / ((3n)! (n!)³ 640320^(3n)) sums to
+    1/π.'
+tags:
+- number-theory
+- pi
+- chudnovsky
+- modular-forms
+- complex-multiplication
+msc:
+- 11Y60
+- 11F03
+- 33C05

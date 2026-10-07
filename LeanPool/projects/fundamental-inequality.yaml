@@ -1,0 +1,39 @@
+slug: fundamental-inequality
+title: The Fundamental Inequality of Valued Fields
+summary: Defines the ramification index and residue degree of an extension of valued fields and proves
+  the fundamental inequality e * f ≤ finrank K L for finite extensions, via the valuation independence
+  of products of coset representatives and residue-field basis lifts.
+branch: number theory
+entry_module: LeanPool.FundamentalInequality
+authors:
+- Alessandro Linzi
+source:
+  title: Valued Fields
+  authors:
+  - Franz-Viktor Kuhlmann
+  url: https://github.com/linzialessandro/FundamentalInequality
+  github_repo: linzialessandro/FundamentalInequality
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Valuation.fundamentalInequality
+- Valuation.ramificationIndex
+main_results:
+- declaration: Valuation.ramificationIndex
+  informal: Defines the ramification index e(w/v) as the relative index of the value group of the restricted
+    valuation inside the value group of the extension.
+- declaration: Valuation.residueDegree
+  informal: Defines the residue degree f(w/v) as the rank of the residue field extension.
+- declaration: Valuation.valuation_independence
+  informal: Elements with valuations in distinct cosets and residues that are linearly independent give
+    products that are linearly independent over the base field.
+- declaration: Valuation.fundamentalInequality
+  informal: The fundamental inequality e(w/v) * f(w/v) ≤ finrank K L for finite extensions of valued fields.
+  source_ref: F.-V. Kuhlmann, Valued Fields, Chapter 4, §4.4.
+tags:
+- valued-fields
+- number-theory
+- valuation-theory
+msc:
+- 12J20

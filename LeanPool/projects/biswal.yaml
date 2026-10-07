@@ -1,0 +1,42 @@
+slug: biswal
+title: Chebyshev Quotients and Demazure Multiplicities
+summary: Formalizes positivity results for the coefficients of Chebyshev-type polynomial quotients attached
+  to integer partitions, modelling Demazure multiplicities. Proves that the relevant generating function
+  is a polynomial and that its coefficients are eventually positive (Theorem 1), gives explicit Cauchy-product
+  and matrix-inverse formulas for the coefficients (Theorem 2), and establishes their nonnegativity through
+  a Dyck-path lattice counting model (Theorem 3).
+branch: algebraic combinatorics
+entry_module: LeanPool.Biswal
+authors:
+- Jujian Zhang
+source:
+  title: Chebyshev quotients, Demazure multiplicities, and Dyck-path models
+  authors:
+  - Evan Chen
+  - Kenny Lau
+  - Seewoo Lee
+  - Ken Ono
+  - Jujian Zhang
+  arxiv: '2604.25246'
+  github_repo: AxiomMath/Biswal
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- Biswal.Theorem23.thm_manifest_coeff_nonneg
+main_results:
+- declaration: Biswal.Theorem1.genFun_is_polynomial
+  informal: Proves that the generating function attached to a partition is a polynomial whenever its parts
+    are bounded by the parameter `m`.
+- declaration: Biswal.Theorem1.genFun_coeff_eventually_pos
+  informal: Proves that the coefficients of the generating function attached to a partition are eventually
+    strictly positive.
+- declaration: Biswal.Theorem23.thm_manifest_coeff_nonneg
+  informal: Proves that every coefficient of the generating function is nonnegative, via the explicit
+    Dyck-path lattice counting model.
+tags:
+- algebraic-combinatorics
+- chebyshev
+- demazure
+msc:
+- 05E10

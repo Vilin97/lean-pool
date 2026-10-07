@@ -1,0 +1,45 @@
+slug: five-distance-sharp
+title: Sharp Five-Distance and Sup-Norm Gap Theorems
+summary: 'Formalizes sharp gap theorems for Kronecker sequences on tori: the Euclidean five-distance theorem
+  on the 2-torus and the sup-norm gap bound, together with explicit arithmetic witnesses realizing the
+  extremal cases - five distinct nearest-neighbour distances for the Euclidean and sup-norm metrics in
+  dimension two, and nine distinct sup-norm distances in dimension three (Haynes-Marklof-Ramirez), via
+  exact modular arithmetic on best simultaneous Diophantine approximations.'
+branch: number theory
+entry_module: LeanPool.ThreeGap
+authors:
+- Vico Bonfioli
+source:
+  title: Higher dimensional gap theorems for the maximum metric
+  authors:
+  - Alan Haynes
+  - Jens Marklof
+  - Ana Cristina Moreira Ramirez
+  arxiv: '2010.08842'
+  github_repo: ElVec1o/five-distance-sharp
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- ThreeGap.LinftyRecords3.nine_attained
+main_results:
+- declaration: ThreeGap.EuclideanRecords.sharp_attained
+  informal: Exhibits a base point on the 2-torus with an irrational coordinate and an N whose Euclidean
+    nearest-neighbour distances realize exactly five distinct values, showing the Euclidean five-distance
+    bound is sharp.
+  source_ref: A. Haynes and J. Marklof, A five distance theorem for Kronecker sequences, International
+    Mathematics Research Notices 2022(24):19747-19789, doi:10.1093/imrn/rnab205, arXiv:2009.08444.
+- declaration: ThreeGap.LinftyRecords.sharp_attained
+  informal: Exhibits a base point on the 2-torus with an irrational coordinate and an N whose sup-norm
+    nearest-neighbour distances realize exactly five distinct values, showing the sup-norm gap bound is
+    sharp in dimension two.
+- declaration: ThreeGap.LinftyRecords3.nine_attained
+  informal: Exhibits a base point on the 3-torus with an irrational coordinate and an N whose sup-norm
+    nearest-neighbour distances realize at least nine distinct values, showing the sup-norm gap bound
+    is sharp in dimension three.
+tags:
+- number-theory
+- kronecker-sequences
+- three-gap
+msc:
+- 11J71

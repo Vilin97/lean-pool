@@ -1,0 +1,46 @@
+slug: asymptotic-triangle-packing
+title: Finite hypergraph rounding and the asymptotic triangle-packing gap
+summary: Formalizes a finite ceiling-carrying nibble theorem for uniform hypergraphs that are near-regular
+  outside a small exceptional set and have suitably bounded codegrees, and derives the uniform subquadratic
+  gap between fractional and integral triangle packing in finite graphs, together with its fractional-cover
+  formulation.
+branch: hypergraph matchings and extremal combinatorics
+entry_module: LeanPool.AsymptoticTrianglePacking
+authors:
+- Juan Pablo Traverso Gianini
+- Aristotle
+source:
+  title: Asymptotic triangle cover--packing development accompanying Linear-Error Clique Partitions of
+    Split Graphs via Structured Triangle Packing
+  authors:
+  - Juan Pablo Traverso Gianini
+  url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_III
+  github_repo: jtraverso/erdos-81-chordal-clique-partitions
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.AsymptoticTrianglePacking.trianglePackingGap
+main_results:
+- declaration: LeanPool.AsymptoticTrianglePacking.nearRegularNibbleTheorem
+  informal: For every uniformity and positive error tolerance, sufficiently large finite uniform hypergraphs
+    with bounded codegrees, near-regular degrees outside a small exceptional set, and a global degree
+    ceiling admit a matching covering the prescribed fraction of their vertices.
+  source_ref: Finite near-regular hypergraph nibble theorem used in the Paper III development.
+- declaration: LeanPool.AsymptoticTrianglePacking.trianglePackingGap
+  informal: For every positive error tolerance, all sufficiently large finite graphs have fractional triangle-packing
+    optimum at most their integral triangle-packing optimum plus the error tolerance times the square
+    of the number of vertices.
+  source_ref: Paper III AX1, fractional-integral triangle-packing gap.
+- declaration: LeanPool.AsymptoticTrianglePacking.triangleCoverPackingGap
+  informal: For every positive error tolerance, all sufficiently large finite graphs have fractional triangle-cover
+    optimum at most their integral triangle-packing optimum plus the error tolerance times the square
+    of the number of vertices.
+  source_ref: Paper III AX1, cover-side formulation.
+tags:
+- hypergraph-matching
+- nibble-method
+- extremal-combinatorics
+msc:
+- 05C70
+- 05C35

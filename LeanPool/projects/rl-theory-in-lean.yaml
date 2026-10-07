@@ -1,0 +1,26 @@
+slug: rl-theory-in-lean
+title: RL Theory in Lean
+summary: Develops probability, Markov-chain, and stochastic-matrix infrastructure for reinforcement-learning
+  theory.
+branch: probability theory
+entry_module: LeanPool.RlTheoryInLean
+authors:
+- Shangtong Zhang
+source:
+  arxiv: '2511.03618'
+  github_repo: ShangtongZhang/rl-theory-in-lean
+license: MIT
+status: verified
+provenance: mix
+main_declarations:
+- StochasticMatrix.stationary_distribution_exists
+main_results:
+- declaration: StochasticMatrix.stationary_distribution_exists
+  informal: Proves existence of a stationary distribution for a stochastic matrix.
+tags:
+- probability
+- reinforcement-learning
+- stochastic-matrices
+msc:
+- 62L20
+- 60J10

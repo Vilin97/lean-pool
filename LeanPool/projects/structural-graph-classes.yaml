@@ -1,0 +1,70 @@
+slug: structural-graph-classes
+title: Split, cograph and threshold graph structures
+summary: Connects split partitions, cotrees and threshold creation sequences on Mathlib SimpleGraph. Proves
+  the finite forbidden-induced-subgraph characterizations, split iff chordal and co-chordal, and completeness
+  of cotrees and creation sequences. Supplies certificate-preserving operations, twins and nonempty union/join
+  decompositions for cographs, maximum-clique split partitions, and induced/isomorphic transport of existing
+  chordal elimination orders and clique trees. Classical graph theory is formalized; no new mathematical
+  theorem, canonical certificate or recognition-time bound is claimed.
+branch: graph theory
+entry_module: LeanPool.StructuralGraphClasses
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: Structural graph classes, original Lean development checkpoint
+  url: https://github.com/jtraverso/lean-pool/tree/c431fcecd3c963bcca643c379d807260585711b8/LeanPool/StructuralGraphClasses
+  github_repo: jtraverso/lean-pool
+  commit: c431fcecd3c963bcca643c379d807260585711b8
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- SimpleGraph.isThreshold_iff_nonempty_creationRepresentation
+main_results:
+- declaration: SimpleGraph.isSplit_iff_forbidden_induced_subgraphs
+  informal: A finite graph is split iff it contains no induced 2K2, C4 or C5.
+  source_ref: Földes and Hammer, Split graphs (1977).
+- declaration: SimpleGraph.isSplit_iff_isChordal_and_compl
+  informal: A finite graph is split iff both it and its complement are chordal.
+  source_ref: Földes and Hammer, Split graphs (1977).
+- declaration: SimpleGraph.isCograph_iff_nonempty_cotreeRepresentation
+  informal: A finite graph is P4-free iff it is isomorphic to the graph of a cotree, whose constructors
+    are empty, singleton, disjoint union and join.
+  source_ref: Seinsche (1974), doi:10.1016/0095-8956(74)90063-X; Corneil, Lerchs and Stewart Burlingham
+    (1981), doi:10.1016/0166-218X(81)90013-5.
+- declaration: SimpleGraph.isThreshold_iff_isSplit_and_isCograph
+  informal: A graph has a split partition with nested independent-side neighbourhoods iff it is both split
+    and P4-free. No finiteness is required.
+  source_ref: Classical threshold characterization; local Threshold.lean and Cotree.lean.
+- declaration: SimpleGraph.isThreshold_iff_forbidden_induced_subgraphs
+  informal: A finite graph is threshold iff it contains no induced 2K2, C4 or P4.
+  source_ref: Chvátal and Hammer (1977), doi:10.1016/S0167-5060(08)70731-3.
+- declaration: SimpleGraph.isThreshold_iff_nonempty_creationRepresentation
+  informal: A finite graph is threshold iff it is isomorphic to a graph constructed from the empty graph
+    by successively adding an isolated or universal vertex.
+  source_ref: Classical threshold creation characterization; local ThresholdCreation.lean.
+- declaration: SimpleGraph.IsCograph.exists_twins
+  informal: A finite cograph with at least two vertices has two distinct vertices with identical adjacency
+    outside their pair, whether adjacent or not.
+  source_ref: Cotree induction in CographTwins.lean; classical cograph structure.
+- declaration: SimpleGraph.IsCograph.exists_union_root
+  informal: A finite cograph that is not preconnected admits a cotree representation with a union root
+    and two nonempty children. This is an existence claim, not a claim about every unreduced cotree.
+  source_ref: Seinsche decomposition and CotreeRepresentation constructors.
+- declaration: SimpleGraph.IsCograph.exists_join_root
+  informal: A preconnected finite cograph with at least two vertices admits a cotree representation with
+    a join root and two nonempty children.
+  source_ref: Seinsche decomposition and CotreeRepresentation constructors.
+- declaration: SimpleGraph.IsSplit.exists_partition_with_maximum_clique
+  informal: Every finite split graph admits a split partition whose clique part has maximum cardinality.
+    Such a partition need not be unique.
+  source_ref: Direct finite maximization argument in SplitDecomposition.lean.
+tags:
+- graph-theory
+- split-graphs
+- cographs
+- threshold-graphs
+- structural-certificates
+msc:
+- 05C75
+- 05C05

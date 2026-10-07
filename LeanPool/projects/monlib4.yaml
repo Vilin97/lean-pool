@@ -1,0 +1,67 @@
+slug: monlib4
+title: Monlib4 Operator-Algebra and Quantum-Set Core
+summary: Formalizes monlib4's finite matrix-algebra inner-automorphism theorem, unitary inner automorphisms,
+  star-preserving linear maps, the structural core of quantum sets, the core Schur-product definition
+  of quantum graphs, and a self-contained digit-sum divisibility theorem.
+branch: operator algebras and quantum graph theory
+entry_module: LeanPool.Monlib4
+authors:
+- Monica Omar
+source:
+  doi: 10.4169/amer.math.monthly.124.10.966
+  arxiv: '1810.08368'
+  github_repo: themathqueen/monlib4
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Matrix.aut_mat_inner
+- QuantumSet
+- schurMul
+- QuantumGraph
+main_results:
+- declaration: Matrix.automorphism_matrix_inner
+  informal: Shows that any automorphism of a finite nontrivial matrix algebra is implemented by an invertible
+    intertwining matrix.
+- declaration: Matrix.aut_mat_inner
+  informal: Packages matrix-algebra automorphisms as inner automorphisms induced by a linear equivalence
+    of the underlying coordinate space.
+- declaration: Matrix.aut_mat_inner'
+  informal: Packages matrix-algebra automorphisms as conjugation by an element of `GL n 𝕜`.
+- declaration: Matrix.aut_mat_inner_trace_preserving
+  informal: Proves that automorphisms of finite matrix algebras preserve trace.
+- declaration: Matrix.innerAut
+  informal: Defines the linear map induced by conjugation with a unitary matrix.
+- declaration: Matrix.innerAut_apply_trace_eq
+  informal: Proves that unitary inner automorphisms preserve matrix trace.
+- declaration: Matrix.innerAut.spectrum_eq
+  informal: Proves that unitary inner automorphisms preserve the spectrum of the associated linear operator.
+- declaration: LinearMap.IsReal
+  informal: Defines star-preserving, or real, function-like maps.
+- declaration: LinearMap.real
+  informal: Defines the star-conjugate involution on linear maps.
+- declaration: QuantumSet
+  informal: Defines the monlib4 quantum-set structure with modular automorphisms and a fixed orthonormal
+    basis.
+- declaration: Complex.quantumSet
+  informal: Instantiates the complex numbers as the base quantum set.
+- declaration: schurMul
+  informal: Defines the Schur product of linear maps using multiplication, tensoring, and coalgebra comultiplication.
+- declaration: QuantumGraph
+  informal: Defines quantum graphs as Schur-idempotent endomorphisms.
+- declaration: QuantumGraph.Real
+  informal: Defines real quantum graphs as Schur-idempotent, star-preserving endomorphisms.
+- declaration: nat_repr_mod_eq_sum_repr_mod
+  informal: Proves that the value represented by digits in base `a + 1` has the same remainder modulo
+    `a` as the sum of those digits.
+- declaration: nat_dvd_repr_iff_nat_dvd_sum_repr
+  informal: Proves the generalized digit-sum divisibility criterion for base `a + 1` modulo `a`.
+tags:
+- linear-algebra
+- operator-algebras
+- quantum-sets
+- quantum-graphs
+- representation-theory
+msc:
+- 15A69
+- 16W20

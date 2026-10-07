@@ -1,0 +1,40 @@
+slug: list-edge-coloring-complete
+title: Häggkvist–Janssen list edge colouring of complete graphs
+summary: Proves that arbitrary lists of at least n colours on the edges of a complete graph with n vertices
+  admit a proper list edge colouring. The proof constructs and proves uniqueness of the local rank certificate,
+  identifies a nonzero extended-star polynomial coefficient, and applies Mathlib's combinatorial Nullstellensatz.
+  This is an alternative proof presentation, not a literal translation of the article's argument. The
+  conclusion uses Mathlib's actual edge type and line-graph colouring, with no certificate hypothesis
+  and no restriction on the colour universe. This formalizes a classical theorem, not a new bound or a
+  solution of the general list-edge conjecture.
+branch: graph theory
+entry_module: LeanPool.ListEdgeColoringComplete
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: New Bounds on the List-Chromatic Index of the Complete Graph and Other Simple Graphs
+  authors:
+  - Roland Häggkvist
+  - Jeannette Janssen
+  doi: 10.1017/S0963548397002927
+  url: https://github.com/jtraverso/haggkvist-janssen/tree/26d7b2ee0e14813f0e42c3f8628d6b216327c8df
+  github_repo: jtraverso/haggkvist-janssen
+  commit: 26d7b2ee0e14813f0e42c3f8628d6b216327c8df
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.ListEdgeColoringComplete.exists_listEdgeColoring_complete
+main_results:
+- declaration: LeanPool.ListEdgeColoringComplete.exists_listEdgeColoring_complete
+  informal: For every finite vertex type V, arbitrary colour type and finite list on each edge of the
+    complete graph, if every list has cardinality at least the number of vertices, there is a proper colouring
+    of the line graph choosing a colour from each list. This includes orders zero and one.
+  source_ref: Häggkvist–Janssen (1997), Theorems 1.1 and 3.1, complete-graph case.
+tags:
+- graph-theory
+- list-edge-colouring
+- complete-graphs
+- combinatorial-nullstellensatz
+msc:
+- 05C15

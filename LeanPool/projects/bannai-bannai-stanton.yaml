@@ -1,0 +1,29 @@
+slug: bannai-bannai-stanton
+title: The Bannai-Bannai-Stanton Bound on Distance Sets
+summary: 'Formalizes the Bannai-Bannai-Stanton theorem: a distance set `S` in `ℝ^d` realizing `s` distinct
+  distances has size at most `Nat.choose (d + s) s`. Follows the short polynomial-method proof of Petrov
+  and Pohoata via a generalized Croot-Lev-Pach rank lemma, with auxiliary results on the diagonal linear-independence
+  argument for polynomials, monomial counting of bounded degree, and a rank bound for sums of matrices.'
+branch: combinatorics
+entry_module: LeanPool.BannaiBannaiStanton
+authors:
+- Antoine du Fresne von Hohenesche
+source:
+  github_repo: AntoineduFresne/Bannai-Bannai-Stanton_Theorem
+  url: https://github.com/AntoineduFresne/Bannai-Bannai-Stanton_Theorem
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- BannaiBannaiStanton.bannai_bannai_stanton_bound
+main_results:
+- declaration: BannaiBannaiStanton.bannai_bannai_stanton_bound
+  informal: A distance set `S` in Euclidean space `ℝ^d` realizing `s` distinct distances satisfies `S.encard
+    ≤ Nat.choose (d + s) s`.
+tags:
+- combinatorics
+- distance-sets
+- polynomial-method
+msc:
+- 52C10
+- 05B30

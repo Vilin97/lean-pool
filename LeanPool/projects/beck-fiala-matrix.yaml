@@ -1,0 +1,46 @@
+slug: beck-fiala-matrix
+title: Strict Beck–Fiala rounding for incidence matrices
+summary: Proves the rational integer-making form of Beck–Fiala rounding for finite zero-one incidence
+  matrices with column degree bounded by a positive t. Every row has discrepancy strictly less than t,
+  and initially integral coordinates are preserved. Includes the necessity of the positive-bound hypothesis.
+  This is distinct from the Komlós discrepancy bound and from the non-strict hyperedge-selection rounding
+  used in triangle packing.
+branch: discrepancy theory
+entry_module: LeanPool.BeckFialaMatrix
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: '"Integer-making" theorems'
+  authors:
+  - József Beck
+  - Tibor Fiala
+  doi: 10.1016/0166-218X(81)90022-6
+  url: https://github.com/jtraverso/lean-pool/blob/523a4ae71168258f9142d70bccf650a140355650/LeanPool/BeckFialaMatrix/Basic.lean
+  github_repo: jtraverso/lean-pool
+  commit: 523a4ae71168258f9142d70bccf650a140355650
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- BeckFialaMatrix.exists_rounding
+main_results:
+- declaration: BeckFialaMatrix.exists_rounding
+  informal: Given a finite zero-one integer matrix with at most t ones per column, t at least one, and
+    a rational vector in the unit cube, there is a zero-one integer vector whose discrepancy in every
+    row is strictly less than t.
+  source_ref: Rational unit-cube integer-making form with the stated strict discrepancy bound.
+- declaration: BeckFialaMatrix.exists_rounding_preserving_integral
+  informal: The strict rounding can additionally be chosen to leave every initially integral coordinate
+    unchanged.
+  source_ref: Strengthened conclusion of the floating-coordinate proof in the pinned source.
+- declaration: BeckFialaMatrix.zero_bound_counterexample
+  informal: The same universally quantified strict rounding claim without the assumption t at least one
+    is false, already for a one-by-one zero matrix with t equal to zero.
+  source_ref: Boundary-condition witness in the pinned formalization.
+tags:
+- discrepancy-theory
+- beck-fiala
+- integer-rounding
+- incidence-matrices
+msc:
+- 05D40

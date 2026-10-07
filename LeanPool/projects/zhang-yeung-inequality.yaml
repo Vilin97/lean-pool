@@ -1,0 +1,30 @@
+slug: zhang-yeung-inequality
+title: The Zhang-Yeung non-Shannon information inequality
+summary: Formalizes the Zhang-Yeung inequality, the first known non-Shannon-type entropy inequality, together
+  with its dual and averaged forms derived through the copy lemma.
+branch: information theory
+entry_module: LeanPool.ZhangYeungInequality
+authors:
+- Christopher Boone
+source:
+  doi: 10.1109/18.681320
+  github_repo: cboone/zhang-yeung-inequality
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- ZhangYeung.zhangYeung
+main_results:
+- declaration: ZhangYeung.zhangYeung
+  informal: Proves the Zhang-Yeung non-Shannon-type information inequality for four discrete random variables.
+- declaration: ZhangYeung.zhangYeung_dual
+  informal: Proves the dual form of the Zhang-Yeung inequality.
+- declaration: ZhangYeung.zhangYeung_averaged
+  informal: Proves the averaged symmetric form of the Zhang-Yeung inequality.
+tags:
+- information-theory
+- entropy
+- non-shannon-inequality
+msc:
+- 94A17
+- 94A15

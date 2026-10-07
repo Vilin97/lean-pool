@@ -1,0 +1,39 @@
+slug: turan3
+title: Turán's theorem (the "Book" weighting proof)
+summary: Formalizes the weighting/optimization proof of Turán's theorem from Proofs from THE BOOK, bounding
+  the number of edges of a p-clique-free simple graph by (1/2)(1 - 1/(p-1)) n².
+branch: extremal graph theory
+entry_module: LeanPool.Turan3
+authors:
+- Rodrigo Gutierrez
+- Yves Jäckle
+source:
+  url: https://github.com/ro-gut/turan3
+  github_repo: ro-gut/turan3
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Turan3.turans
+- Turan3.finale_bound
+- Turan3.Better_forms_clique
+main_results:
+- declaration: Turan3.turans
+  informal: Turán's theorem — a p-clique-free simple graph on n vertices has at most (1/2)(1 - 1/(p-1))
+    n² edges.
+- declaration: Turan3.finale_bound
+  informal: For any weight distribution on a p-clique-free graph, the total edge weight is at most ((p-1)(p-2)/2)·(1/(p-1))²,
+    the bound used to derive the edge count.
+- declaration: Turan3.Better_forms_clique
+  informal: Starting from any weight function, the minimal-support weight-non-decreasing improvement has
+    support that forms a clique.
+- declaration: Turan3.Enhance_total_weight_stricinc
+  informal: Equalizing weights between a maximum- and minimum-weight vertex in the clique support strictly
+    increases the total edge weight.
+tags:
+- graph-theory
+- combinatorics
+- turan-theorem
+- extremal-graph-theory
+msc:
+- 05C35

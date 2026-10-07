@@ -1,0 +1,43 @@
+slug: domain-theory
+title: DomainTheory
+summary: Formalizes Dana Scott's domain theory through Scott information systems and PRG-19 neighbourhood
+  systems, including approximable maps, products, function spaces, fixed points, recursive presentations,
+  and initial-algebra constructions for denotational semantics.
+branch: domain theory
+entry_module: LeanPool.DomainTheory
+authors:
+- Catskills Research Company
+source:
+  title: Domains for Denotational Semantics
+  authors:
+  - Dana Scott
+  doi: 10.1007/BFb0012801
+  url: https://doi.org/10.1007/BFb0012801
+  github_repo: catskillsresearch/domain_theory
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- InfoSys
+- Domain.Neighborhood.NeighborhoodSystem
+main_results:
+- declaration: InfoSys
+  informal: Defines Scott information systems, with a distinguished bottom token, finite consistency predicate,
+    entailment relation, and Scott's six axioms.
+- declaration: Domain.Neighborhood.NeighborhoodSystem
+  informal: Defines PRG-19 neighbourhood systems, Scott's neighbourhood presentation of domains.
+- declaration: Domain.Neighborhood.ApproximableMap
+  informal: Defines approximable maps between neighbourhood systems as relations preserving finite approximations.
+- declaration: Domain.Neighborhood.trianglelefteq_of_isInitial
+  informal: Proves that an initial algebra for a functor embeds into every other solution through Scott's
+    subdomain relation.
+- declaration: ScottMap.fix_eq
+  informal: Proves the fixed-point equation for Scott-continuous self maps on complete lattices.
+tags:
+- domain-theory
+- denotational-semantics
+- information-systems
+msc:
+- 03B70
+- 06B35
+- 68Q55

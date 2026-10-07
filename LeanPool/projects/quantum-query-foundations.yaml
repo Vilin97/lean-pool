@@ -1,0 +1,53 @@
+slug: quantum-query-foundations
+title: Adversary bounds and the polynomial method for quantum queries
+summary: Develops finite quantum query algorithms, real adversary primal and dual programs, strong duality,
+  exact Boolean block composition, explicit constant-factor bounded-error query characterizations, and
+  degree bounds for output-probability polynomials. Query models include idle and blank sectors; bounds
+  count queries, not gate complexity or running time. Uniform algorithm extraction assumes a supplied
+  dual certificate.
+branch: quantum query complexity
+entry_module: LeanPool.QuantumQuery
+authors:
+- Troy Lee
+source:
+  arxiv: 1011.3020v2
+  url: https://github.com/troyjlee/quantum-query-complexity/tree/517ba85eb211232771429804d8583e3f52b9d541
+  github_repo: troyjlee/quantum-query-complexity
+  commit: 517ba85eb211232771429804d8583e3f52b9d541
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- QuantumQueryComplexity.boundedErrorQQuery_characterized_by_advPM
+main_results:
+- declaration: QuantumQueryComplexity.advDual_eq_advPM
+  informal: For every total Boolean function on a finite Boolean input cube, the all-pairs real adversary
+    dual infimum equals the real symmetric primal supremum.
+- declaration: QuantumQueryComplexity.advPM_composeFun_eq
+  informal: The negative-weight adversary value of total Boolean functions composed on disjoint blocks
+    equals the product of their adversary values, including constant functions and empty index types.
+- declaration: QuantumQueryComplexity.boundedErrorQQuery_characterized_by_advPM
+  informal: For a total Boolean function at error one third, quantum value-query complexity lies between
+    ADV±/36 and 2^14 ADV±. The value oracle swaps a blank answer with the queried letter and includes
+    an idle query index.
+- declaration: QuantumQueryComplexity.xorQQuery_characterized_by_advPM
+  informal: For the Boolean XOR oracle with idle and blank sectors, query complexity at error one third
+    lies between ADV±/72 and 2^15 ADV±.
+- declaration: QuantumQueryComplexity.qQueryOn_third_le_of_hasDualOn_uniform
+  informal: A supplied all-pairs real dual certificate of nonnegative cost c gives a finite quantum algorithm
+    using at most 8192(1+c) value queries at error one third, for any finite promise domain and nonempty
+    decidable output type.
+- declaration: QuantumQueryComplexity.QAlg.exists_probability_polynomial
+  informal: Each output probability of a q-query value-oracle algorithm on Boolean inputs agrees on the
+    Boolean cube with a real polynomial of total degree at most 2q.
+- declaration: QuantumQueryComplexity.exists_xor_probability_polynomial
+  informal: Each output probability of a q-query Boolean XOR algorithm agrees on the Boolean cube with
+    a real polynomial of total degree at most 2q.
+tags:
+- quantum-computing
+- query-complexity
+- adversary-method
+- polynomial-method
+msc:
+- 68Q12
+- 81P68

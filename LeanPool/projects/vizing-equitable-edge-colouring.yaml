@@ -1,0 +1,47 @@
+slug: vizing-equitable-edge-colouring
+title: Vizing's theorem and equitable edge colourings
+summary: Proves the maximum-degree-plus-one edge-colouring bound for finite simple graphs by fans and
+  Kempe exchanges. A separate component-swapping argument equitably rebalances any finite proper edge
+  colouring on its original palette. Together they give equitable proper edge colourings on any palette
+  of at least maximum degree plus one colours, with every class bounded by the ceiling of the average
+  class size. Extracted from the published Paper IV formalization; these are classical colouring results,
+  not a claim to new mathematics or to the paper's clique-partition bound.
+branch: graph theory
+entry_module: LeanPool.Vizing
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: Vizing and equitable edge-colouring modules in the published Paper IV freeze
+  authors:
+  - Juan Pablo Traverso Gianini
+  url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions
+  github_repo: jtraverso/erdos-81-chordal-clique-partitions
+  commit: ff2019f56a50cf300a6531c9f8d4a8fb1a541e3d
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.Vizing.exists_equitable_edge_colouring
+main_results:
+- declaration: LeanPool.Vizing.lineGraph_colorable
+  informal: The line graph of a finite simple graph G is colourable with maximum degree of G plus one
+    colours.
+  source_ref: Vizing's theorem for finite simple graphs; Vizing (1964).
+- declaration: SimpleGraph.lineGraph_chromaticNumber_le_maxDegree_succ
+  informal: The chromatic number of the line graph of a finite simple graph G is at most maximum degree
+    of G plus one.
+- declaration: LeanPool.Vizing.Equitable.exists_equitable_colouring
+  informal: Every proper edge colouring of a finite simple graph with a finite palette admits a proper
+    recolouring on the same palette in which any two colour classes differ in size by at most one.
+- declaration: LeanPool.Vizing.exists_equitable_edge_colouring
+  informal: For every finite simple graph G and natural c at least maximum degree of G plus one, there
+    is an equitable proper edge colouring with c colours; each colour class has at most ceiling(|E(G)|/c)
+    edges.
+tags:
+- graph-theory
+- edge-colouring
+- vizing-theorem
+- equitable-colouring
+- kempe-chains
+msc:
+- 05C15

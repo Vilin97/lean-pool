@@ -1,0 +1,34 @@
+slug: leanmodularforms
+title: Modular forms and the generalized residue theorem
+summary: Formalizes the Hungerbühler-Wasem generalized residue theorem for Cauchy principal value integrals
+  through poles and applies it to the valence formula for modular forms on the modular group.
+branch: complex analysis
+entry_module: LeanPool.LeanModularForms
+authors:
+- Chris Birkbeck
+source:
+  arxiv: '1808.00997'
+  doi: 10.1155/2019/6130464
+  github_repo: CBirkbeck/LeanModularForms
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- generalizedResidueTheorem
+- valence_formula_textbook_orbit_finsum
+main_results:
+- declaration: generalizedResidueTheorem
+  informal: Proves the Hungerbühler-Wasem generalized residue theorem for piecewise-C1 curves through
+    poles.
+- declaration: generalizedResidueTheorem_simplePoles
+  informal: Specializes the generalized residue theorem to the simple-pole case.
+- declaration: valence_formula_textbook_orbit_finsum
+  informal: Proves the valence formula for modular forms on the modular group.
+tags:
+- modular-forms
+- complex-analysis
+- residue-theorem
+- valence-formula
+msc:
+- 11F11
+- 30E20

@@ -1,0 +1,40 @@
+slug: kalton-roberts
+title: Halving the Kalton-Roberts upper bound
+summary: Formalizes the paper-style Boolean-algebra theorem that every approximately additive real-valued
+  set function is uniformly close to a finitely additive signed measure, proving the certified Kalton-Roberts
+  constant bound below 19.838.
+branch: analysis
+entry_module: LeanPool.KaltonRoberts
+authors:
+- Ho Boon Suan
+source:
+  title: Halving the original Kalton-Roberts upper bound for nearly additive set functions
+  authors:
+  - Ho Boon Suan
+  - Tomasz Kania
+  arxiv: '2606.06807'
+  url: https://github.com/boonsuan/KaltonRoberts
+  github_repo: boonsuan/KaltonRoberts
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- KaltonRoberts.KR_constant_lt
+main_results:
+- declaration: KaltonRoberts.KR_constant_lt
+  informal: Proves the headline certified bound that the Kalton-Roberts constant is strictly less than
+    9919/500, i.e. 19.838.
+- declaration: KaltonRoberts.KR_constant_le_C₂
+  informal: Proves the exact rational upper bound C₂ = 694198146664396294486127753 / 34994834677886019996000000
+    for the Kalton-Roberts constant.
+- declaration: KaltonRoberts.set_algebra_bound_C₂
+  informal: States the paper-style set-algebra formulation, where every approximately additive function
+    on a Boolean subalgebra of sets is within C₂ times the error of a finitely additive signed measure.
+tags:
+- functional-analysis
+- finitely-additive-measures
+- kalton-roberts
+msc:
+- 46B20
+- 28A12
+- 05C35

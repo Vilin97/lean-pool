@@ -1,0 +1,42 @@
+slug: erdos137
+title: 'Erdős Problem #137: powerful products of consecutive integers'
+summary: 'Formalizes the abc-conditional finiteness results for Erdős Problem #137 (Erdős–Selfridge):
+  a number N is powerful if every prime dividing N has its square dividing N, and the question is whether
+  the product F(k,n) = n(n+1)⋯(n+k-1) of k ≥ 3 consecutive integers can be powerful for infinitely many
+  n. Each route isolates its abc input (a radical lower bound) as a single explicit hypothesis and proves
+  everything else outright, concluding that, conditionally, F(k,n) is powerful for only finitely many
+  n for each fixed k ≥ 3.'
+branch: number theory
+entry_module: LeanPool.Erdos137
+authors:
+- Scott D. Hughes
+source:
+  title: 'Erdős Problem #137: powerful products of consecutive integers'
+  authors:
+  - Scott D. Hughes
+  url: https://www.erdosproblems.com/137
+  github_repo: scottdhughes/erdos137
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Erdos137.erdos137_finite
+- Erdos137.erdos137_eventually_not_powerful
+main_results:
+- declaration: Erdos137.erdos137_finite
+  informal: Under the Granville–Langevin radical bound RadLB k (an abc-conditional hypothesis) and k ≥
+    3, the set of n ≥ 1 for which F(k,n) is powerful is finite.
+- declaration: Erdos137.erdos137_eventually_not_powerful
+  informal: Under RadLB k and k ≥ 3, there is a threshold beyond which F(k,n) is never powerful.
+- declaration: Erdos137.lemma_star
+  informal: Unconditionally, the radical squared times the powerful part of m is at most m squared (rad
+    m ^ 2 * B2 m ≤ m ^ 2).
+- declaration: Erdos137.powerful_rad_sq_le
+  informal: A nonzero powerful number N satisfies rad N ^ 2 ≤ N.
+tags:
+- number-theory
+- powerful-numbers
+- erdos-problems
+msc:
+- 11A51
+- 11N25

@@ -1,0 +1,28 @@
+slug: fel-conjecture
+title: Fel's Conjecture on Syzygies of Numerical Semigroups
+summary: Formalizes Fel's conjectural formula for syzygies of numerical semigroups.
+branch: commutative algebra
+entry_module: LeanPool.FelConjecture
+authors:
+- Evan Chen
+- Kenny Lau
+- Ken Ono
+- Jujian Zhang
+source:
+  arxiv: '2602.03716'
+  github_repo: AxiomMath/fel-polynomial
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- fels_conjecture
+main_results:
+- declaration: fels_conjecture
+  informal: Proves Fel's conjecture for the polynomial attached to numerical-semigroup syzygies.
+tags:
+- number-theory
+- combinatorics
+- polynomials
+msc:
+- 20M14
+- 13D02

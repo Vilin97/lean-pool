@@ -1,0 +1,34 @@
+slug: sardmoreira
+title: Moreira's version of Sard's theorem
+summary: Formalizes Moreira's strengthening of Sard's theorem, bounding the Hausdorff dimension of critical-value
+  images of C^{k+alpha} maps.
+branch: geometric measure theory
+entry_module: LeanPool.SardMoreira
+authors:
+- Yury G. Kudryashov
+source:
+  doi: 10.5565/PUBLMAT_45101_06
+  github_repo: urkud/SardMoreira
+  paper: http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- dimH_image_le_sardMoreiraBound_of_finrank_le
+main_results:
+- declaration: hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
+  informal: Proves Hausdorff-measure nullity for images of points where the derivative rank is bounded
+    by p, at Moreira's Sard bound.
+  source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+- declaration: dimH_image_le_sardMoreiraBound_of_finrank_le
+  informal: Converts the measure-null theorem into the headline Hausdorff-dimension upper bound for critical-value
+    images.
+  source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+tags:
+- analysis
+- measure-theory
+- sard-theorem
+- hausdorff-measure
+msc:
+- 28A78
+- 58C25

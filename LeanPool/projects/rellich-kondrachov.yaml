@@ -1,0 +1,38 @@
+slug: rellich-kondrachov
+title: Rellich–Kondrachov compact embedding theorem
+summary: 'Formalizes the Rellich–Kondrachov compact embedding theorem: the Sobolev embedding H¹ → L² is
+  a compact operator on compact Riemannian manifolds. The proof builds the Euclidean core (compactness
+  of the H¹ → L² inclusion on a fixed compact support via the Fréchet–Kolmogorov criterion and the H¹
+  translation estimate ‖τₐu − u‖₂ ≤ ‖a‖ · ‖∇u‖₂), glues chart contributions over a finite atlas, and specializes
+  to the Levi-Civita Riemannian volume measure.'
+branch: analysis
+entry_module: LeanPool.RellichKondrachov
+authors:
+- Adam Benenson
+source:
+  title: Rellich–Kondrachov compact Sobolev embedding theorem
+  authors:
+  - Adam Benenson
+  url: https://github.com/abenenson/rellich-kondrachov
+  github_repo: abenenson/rellich-kondrachov
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData
+main_results:
+- declaration: RellichKondrachov.Geometry.Manifold.Sobolev.RiemannianFiniteChartData.isCompactOperator_h1ToL2_riemannianVolume
+  informal: On a compact Riemannian manifold, the Sobolev inclusion H¹ → L² for the Levi-Civita volume
+    measure is a compact operator.
+- declaration: RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.isCompactOperator_h1OnToL2
+  informal: 'Euclidean Rellich–Kondrachov compactness: on a fixed compact support K, the H¹ → L² inclusion
+    restricted to functions supported in K is a compact operator.'
+- declaration: RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData
+  informal: On a compact Riemannian manifold there exists finite chart data equipped with explicit Lipschitz
+    neighborhoods and a subordinate partition of unity, the input to the manifold Rellich glue.
+tags:
+- analysis
+- pde
+- sobolev-embedding
+msc:
+- 46E35

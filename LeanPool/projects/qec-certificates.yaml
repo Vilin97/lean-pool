@@ -1,0 +1,81 @@
+slug: qec-certificates
+title: Quantum code certificates and hypergraph-product theory
+summary: Formalizes general binary row reduction, kernel bases and rank certificates; quantum-code distance
+  bounds from witnesses and exhaustive low-weight enumeration; arbitrary-matrix hypergraph-product dimension
+  and X/Z cleaning bounds; and CSS orthogonality of lifted products over finite groups. Includes a Pauli
+  expression translation modulo global phase, a Boolean encoding with proved soundness and model extension,
+  and sound checking of RUP additions in LRAT certificates, bridged to matrix-level distance bounds. Concrete
+  code-family datasets, large certificate replays and measurement protocols are outside this import.
+branch: quantum information and coding theory
+entry_module: LeanPool.QECCertificates
+authors:
+- Shuoming An
+source:
+  title: Quantum code parameters, checkable by a certificate of provable size
+  authors:
+  - Shuoming An
+  - Fusheng Yang
+  arxiv: '2610.03214'
+  url: https://github.com/QCL-SUAT/QECCertificates
+  github_repo: QCL-SUAT/QECCertificates
+  commit: 1ced3ae0317725f80640d4a38b9c03eaba84a9c9
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- QECCertificates.hgp_kunneth
+main_results:
+- declaration: QECCertificates.hgp_kunneth
+  informal: For arbitrary finite binary matrices A and B, the number of columns of their hypergraph product
+    minus its X and Z ranks equals nullity(A) times nullity(B) plus nullity(transpose A) times nullity(transpose
+    B), expressed with natural-number rank differences.
+  source_ref: Upstream GF2/HGPKunneth.lean; the Tillich–Zémor hypergraph-product construction.
+- declaration: QECCertificates.hgp_X_distance_ge
+  informal: If a binary vector is killed by the hypergraph-product X check and is outside the Z row space,
+    its Hamming weight is at least the minimum of supplied lower bounds for nonzero vectors in the kernels
+    of the first input and the transpose of the second input.
+- declaration: QECCertificates.hgp_Z_distance_ge
+  informal: Dually, a vector killed by the Z check and outside the X row space has weight at least the
+    minimum of supplied lower bounds for the kernels of the transpose of the first input and the second
+    input.
+- declaration: QECCertificates.lp_orthogonal
+  informal: For arbitrary matrices of binary-valued functions on a finite group, the left/right regular
+    expansion gives lifted-product X and Z checks whose every pair of rows has zero binary dot product.
+- declaration: QECCertificates.Matrix.rank_eq_length_rowReduce
+  informal: The rank of a finite binary matrix equals the length of the verified row-reduction output
+    for its list of rows.
+- declaration: QECCertificates.eq_minWeight_of_decide
+  informal: For two binary matrices, if d is at most the number of columns, exhaustive enumeration finds
+    no vector of weight below d in the first kernel outside the second row space, and a supplied vector
+    has those membership properties and weight d, then the minimum such weight is d. The empty-set distance
+    convention is the number of columns plus one.
+- declaration: QECCertificates.LRAT.unsat_of_checkSteps
+  informal: Acceptance by the RUP certificate checker implies unsatisfiability of the original CNF. No
+    correctness assumption on an external SAT solver is needed; the clause-database interface carries
+    proved soundness laws.
+- declaration: QECCertificates.LRAT.buildPair_complete
+  informal: For a positive number n of input bits and nonempty row supports within that range, a Boolean
+    assignment satisfying the parity constraints, odd bilinear pairing and weight bound extends to a model
+    of buildPair while agreeing on all 2n input variables. The complementary soundness theorem extracts
+    those constraints from every model.
+  source_ref: 'Upstream Reflect/Encode.lean and Reflect/Complete.lean. The import retains general theorems,
+    not the paper''s concrete instance results. First public paper announcement: 2026-10-02 12:31:45 UTC,
+    arXiv v1. The upstream paper discloses AI-generated Lean proofs reviewed and validated by the author.
+    RowspaceKernel is derived from QCL-SUAT/Lean-QEC at a0855f8a6374c1dda2097bbf07f33ba53760fdcd (Apache-2.0),
+    credited to Mattias Ehatamm, Yi Lee, Xiaodi Wu and Runzhou Tao, and their paper End-to-End Formalization
+    of Quantum Error Correction, arXiv:2605.16523.'
+- declaration: QECCertificates.LRAT.le_minWeight_of_unsat
+  informal: For a positive number n of columns and k + 1 ≤ n, an unsatisfiable Boolean encoding gives
+    a matrix-level distance lower bound of k + 1. Support-row correspondence, nonemptiness, index bounds
+    and duplicate-free hypotheses are explicit. This composes with kernel-checked RUP replay.
+  source_ref: General bridge from upstream Reflect/Certified.lean; the minimum-weight distance wrapper
+    is added during the Lean Pool port.
+tags:
+- quantum-error-correction
+- coding-theory
+- hypergraph-products
+- certificates
+msc:
+- 81P45
+- 94B05
+- 03B35

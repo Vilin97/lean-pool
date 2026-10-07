@@ -1,0 +1,54 @@
+slug: line-graph-colouring-matching
+title: Line-graph colourings and matching decompositions
+summary: 'Connects Mathlib line-graph colourings to palette-indexed partitions of actual graph edges into
+  Mathlib matching subgraphs. Both conversions are inverse, preserve each matching exactly, and allow
+  empty colours without a default colour or a finiteness assumption. An edge equivalence yields exact
+  edge accounting: natural-number counts require only finite edges and a finite palette, while indexed
+  cardinal counts allow arbitrary vertices, edges, and palettes. This is classical representation interoperability,
+  not a new colouring bound or a claim of priority.'
+branch: graph theory
+entry_module: LeanPool.GraphColouringMatching
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: Original Lean Pool graph-colouring and matching adapters
+  url: https://github.com/jtraverso/lean-pool/tree/4c1fddb73f9891afc2186f8f11066ea2a08fe4fc/LeanPool/GraphColouringMatching
+  github_repo: jtraverso/lean-pool
+  commit: 4c1fddb73f9891afc2186f8f11066ea2a08fe4fc
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- SimpleGraph.lineGraphColoringEquivMatchingDecomposition
+main_results:
+- declaration: SimpleGraph.lineGraphColoringEquivMatchingDecomposition
+  informal: Proper colourings of the line graph on any palette are equivalent to partitions of the original
+    edges into matching subgraphs indexed by that palette, with empty classes permitted.
+  source_ref: New adapter proved in GraphColouringMatching/Basic.lean, using Mathlib's existing lineGraph,
+    Coloring and Subgraph.IsMatching.
+- declaration: SimpleGraph.MatchingDecomposition.edgeMatching_lineGraphColoring
+  informal: Converting a matching decomposition to a colouring and extracting one colour class returns
+    exactly its original matching subgraph.
+- declaration: SimpleGraph.MatchingDecomposition.edgeEquivSigma
+  informal: Original graph edges are in bijection with the disjoint union of the edge types of the palette-indexed
+    matching subgraphs.
+- declaration: SimpleGraph.MatchingDecomposition.card_edges_eq_sum
+  informal: For a finite edge set and finite palette, the number of graph edges equals the sum of the
+    numbers of edges in its matching classes, even when the vertex set is infinite.
+- declaration: SimpleGraph.MatchingDecomposition.cardinal_edges_eq_sum
+  informal: Without any finiteness assumption on vertices, edges, or colours, the cardinality of the graph
+    edge set equals the indexed cardinal sum of the matching-class edge cardinalities, with a universe
+    lift on the graph edge cardinality when required.
+  source_ref: Cardinal.lean applies Mathlib's indexed cardinal sum to the existing edgeEquivSigma; no
+    infinite graph-colouring theorem is assumed.
+- declaration: SimpleGraph.lineGraph_colorable_iff_matchingDecomposition
+  informal: The line graph is k-colourable if and only if the graph edges decompose into k matchings,
+    allowing unused colours.
+tags:
+- graph-theory
+- line-graphs
+- edge-colouring
+- matchings
+msc:
+- 05C15
+- 05C70

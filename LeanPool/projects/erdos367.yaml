@@ -1,0 +1,53 @@
+slug: erdos367
+title: 'Erdős Problem #367'
+summary: Formalizes upper and lower bound results for powerful parts of products of consecutive integers,
+  including abc-conditional upper bounds, an unconditional odd r-full lower bound, a Pell-style limsup
+  theorem, and polynomial arithmetic cores.
+branch: number theory
+entry_module: LeanPool.Erdos367
+authors:
+- Scott D. Hughes
+source:
+  title: Powerful parts of consecutive integers and Davenport-Zannier polynomials
+  authors:
+  - Scott D. Hughes
+  url: https://github.com/scottdhughes/erdos367
+  github_repo: scottdhughes/erdos367
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- Erdos367.erdos_367_k3
+- RFullOdd.erdos367_iv
+- Erdos367.erdos367
+main_results:
+- declaration: Erdos367.erdos_367_k3
+  informal: Proves an abc-conditional k = 3 upper bound for the product of square-full parts of three
+    consecutive integers.
+- declaration: GeneralK.B2_upper_bound
+  informal: Proves a general-k upper bound for the square-full part of a product of consecutive integers
+    from an explicit radical lower-bound hypothesis.
+- declaration: RFullOdd.erdos367_iv
+  informal: Gives an unconditional odd r construction where the product of r-full parts of two consecutive
+    integers is larger than the stated power of n.
+- declaration: Erdos367.erdos367
+  informal: Proves an unconditional limsup form showing that the product of square-full parts of three
+    consecutive integers exceeds any fixed multiple of n squared times log n.
+- declaration: Core139.T3
+  informal: Proves the integer-form arithmetic core yielding the E3 at least 13/9 lower-bound construction
+    under explicit prime-supply data.
+- declaration: Core4027.IDENT
+  informal: Verifies the degree-27 polynomial identity used in the Davenport-Zannier construction.
+- declaration: Core4027.T3
+  informal: Proves the integer-form arithmetic core yielding the E3 at least 40/27 lower-bound construction
+    under explicit prime-supply data.
+tags:
+- number-theory
+- erdos-problems
+- powerful-numbers
+- abc-conjecture
+- pell-equations
+msc:
+- 11D09
+- 11N25
+- 11D45

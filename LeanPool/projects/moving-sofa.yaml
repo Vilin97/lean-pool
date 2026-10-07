@@ -1,0 +1,51 @@
+slug: moving-sofa
+title: Optimality of Gerver's sofa
+summary: 'Formalizes Baek''s solution of the moving sofa problem: Gerver''s sofa attains the supremum
+  of the areas of closed connected shapes that can move continuously around a right-angled corner in a
+  unit-width hallway. Includes certified Gerver parameters, admissibility, convex cap geometry, Stieltjes
+  curve area, Jordan separation, polygon approximation, and the concave quadratic upper bound.'
+branch: convex geometry
+entry_module: LeanPool.MovingSofa
+authors:
+- Dean Cureton
+- Dawid Trela
+- Rado Kirov
+- Kirill Alkhimov
+source:
+  title: Optimality of Gerver's Sofa
+  authors:
+  - Jineon Baek
+  arxiv: '2411.19826'
+  url: https://github.com/deancureton/MovingSofa/tree/4d5569131940815f47a9ccf3e90a4c5043c56127
+  github_repo: deancureton/MovingSofa
+  commit: 4d5569131940815f47a9ccf3e90a4c5043c56127
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- MovingSofa.sofaConstant_eq_volume_gerversSofa
+main_results:
+- declaration: MovingSofa.sofaConstant_eq_volume_gerversSofa
+  informal: The supremum, in extended nonnegative real numbers, of the areas of all admissible moving
+    sofas equals the area of the explicitly defined Gerver sofa.
+  source_ref: Baek, Optimality of Gerver's Sofa, Theorem 1.1. Upstream Lean completion a0753860f1d2b4424e059c35e64ad611be71a415
+    (2026-09-20 10:55:24 UTC), announced 2026-09-20 18:42:40 UTC at https://x.com/deancureton/status/2101743865392926967.
+    The imported commit has identical Lean sources; its later change is documentation only.
+- declaration: MovingSofa.GerversSofa.ABφθSpec.existsUnique
+  informal: Gerver's four defining equations have exactly one quadruple of parameters with A and B nonnegative
+    and 0 ≤ φ ≤ θ ≤ π/4.
+  source_ref: Romik, Differential equations and exact solutions in the moving sofa problem, equations
+    (1)-(4), arXiv:1606.08111. The GerverSofaLean v1.1.0 release archive (MIT, Dawid Trela) has SHA-256
+    7c496150f709ac709ae01f4836e9a702a18f752450efa69f15cf44264c0c2f77.
+- declaration: MovingSofa.isMovingSofa_gerversSofa
+  informal: Gerver's sofa is closed and connected and admits a continuous rigid motion from the horizontal
+    arm to the vertical arm, starting at the identity and remaining within the unit-width hallway throughout.
+tags:
+- convex-geometry
+- moving-sofa-problem
+- geometric-optimization
+- interval-arithmetic
+msc:
+- 52A40
+- 52A10
+- 49Q10

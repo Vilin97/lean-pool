@@ -1,0 +1,27 @@
+slug: dead-ends
+title: Dead Ends in Square-Free Digit Walks
+summary: Formalizes the density formula for base-b dead ends in square-free digit walks.
+branch: analytic number theory
+entry_module: LeanPool.DeadEnds
+authors:
+- Evan Chen
+- Kenny Lau
+- Seewoo Lee
+- Ken Ono
+- Jujian Zhang
+source:
+  arxiv: '2602.05095'
+  github_repo: AxiomMath/dead-ends
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.DeadEnds.baseBDeadEnd_density_formula
+main_results:
+- declaration: LeanPool.DeadEnds.baseBDeadEnd_density_formula
+  informal: Proves the inclusion-exclusion density formula for base-b dead ends.
+tags:
+- number-theory
+- combinatorics
+msc:
+- 11N25

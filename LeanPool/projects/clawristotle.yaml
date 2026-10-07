@@ -1,0 +1,30 @@
+slug: clawristotle
+title: 'Clawristotle: Vlasov-Maxwell-Landau steady-state classification'
+summary: Formalizes a steady-state classification result for the Vlasov-Maxwell-Landau system with Coulomb
+  kernel.
+branch: kinetic theory
+entry_module: LeanPool.Clawristotle
+authors:
+- Vasily Ilin
+source:
+  arxiv: '2603.15929'
+  github_repo: Vilin97/Clawristotle
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- VML.Theorem42
+- VML.CoulombConcreteTheorem42
+main_results:
+- declaration: VML.Theorem42
+  informal: States the abstract steady-state classification theorem for the Vlasov-Maxwell-Landau framework.
+- declaration: VML.CoulombConcreteTheorem42
+  informal: Specializes the steady-state classification theorem to the Coulomb kernel.
+tags:
+- pde
+- kinetic-theory
+- mathematical-physics
+msc:
+- 35Q83
+- 82C40
+- 35Q61

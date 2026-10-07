@@ -1,0 +1,39 @@
+slug: zeta_3_irrational
+title: Irrationality of ζ(3)
+summary: Formalizes Beukers' proof of Apéry's theorem for ζ(3), including the integral identities, denominator
+  estimates, positivity, upper bounds, and final irrationality contradiction.
+branch: analytic number theory
+entry_module: LeanPool.Zeta3Irrational
+authors:
+- Junqi Liu
+- Jujian Zhang
+source:
+  title: A note on the irrationality of ζ(2) and ζ(3)
+  authors:
+  - Frits Beukers
+  doi: 10.1112/blms/11.3.268
+  arxiv: '2503.07625'
+  github_repo: ahhwuhu/zeta_3_irrational
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.Zeta3Irrational.zeta3_irrational
+main_results:
+- declaration: LeanPool.Zeta3Irrational.zeta3_irrational
+  informal: Proves that ζ(3) is irrational.
+- declaration: LeanPool.Zeta3Irrational.linear_int
+  informal: Clears denominators in the Apéry integral to produce a linear form in 1 and ζ(3).
+- declaration: LeanPool.Zeta3Irrational.JJ_pos
+  informal: Proves positivity of the transformed Beukers-Apéry integral.
+- declaration: LeanPool.Zeta3Irrational.JJ_upper
+  informal: Bounds the Beukers-Apéry integral by a geometric factor times the ζ(3) series.
+- declaration: LeanPool.Zeta3Irrational.fun1_tendsto_zero
+  informal: Shows that the denominator-cleared Apéry linear forms tend to zero.
+tags:
+- number-theory
+- analysis
+- zeta-functions
+msc:
+- 11M06
+- 11J72

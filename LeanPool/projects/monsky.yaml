@@ -1,0 +1,32 @@
+slug: monsky
+title: Monsky's Theorem
+summary: Formalizes Monsky's theorem that a square can be dissected into n triangles of equal area if
+  and only if n is nonzero and even, via a 2-adic valuation, a three-coloring of the unit square, and
+  a rainbow-triangle argument.
+branch: combinatorial geometry
+entry_module: LeanPool.Monsky
+authors:
+- Dhyan Aranha
+- contributors
+source:
+  title: On dividing a square into triangles
+  authors:
+  - Paul Monsky
+  doi: 10.2307/2317329
+  github_repo: dhyan-aranha/Monsky
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.Monsky.monsky_theorem
+main_results:
+- declaration: LeanPool.Monsky.monsky_theorem
+  informal: Proves that the unit square admits a dissection into n equal-area triangles if and only if
+    n is nonzero and even.
+tags:
+- geometry
+- combinatorics
+- measure-theory
+msc:
+- 52C20
+- 05B45

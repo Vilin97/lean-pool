@@ -1,0 +1,35 @@
+slug: erdos-tuza-valtr
+title: The Erdős–Tuza–Valtr conjecture
+summary: Formalizes the Erdős–Tuza–Valtr conjecture, a sharp refinement of the Erdős–Szekeres happy-ending
+  theorem, proving that any general-position point set of size at least C(n+2,2)+2 contains the target
+  cup–cap configuration.
+branch: combinatorics
+entry_module: LeanPool.ErdosTuzaValtr
+authors:
+- Jineon Baek
+source:
+  title: On the Erdős–Tuza–Valtr Conjecture
+  arxiv: '2206.04260'
+  doi: 10.1016/j.ejc.2024.104085
+  github_repo: jcpaik/erdos-tuza-valtr
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- ErdosTuzaValtr.main
+- Config.main_lemma
+main_results:
+- declaration: ErdosTuzaValtr.main
+  informal: Proves the sharp upper bound — a general-position point set with at least C(n+2,2)+2 points
+    contains the Erdős–Tuza–Valtr cup–cap configuration.
+- declaration: Config.main_lemma
+  informal: The configuration-relative induction lemma that, with the mirror-symmetry reduction, drives
+    the main proof.
+tags:
+- combinatorics
+- discrete-geometry
+- convex-geometry
+- ramsey-theory
+msc:
+- 52C10
+- 05D10

@@ -1,0 +1,58 @@
+slug: elliptic-pde
+title: 'Linear elliptic PDE: solvability, regularity and spectral theory'
+summary: 'A reusable analytic development of linear uniformly elliptic divergence-form PDE on Euclidean
+  domains: Hilbert graph models of H¹ and H₀¹, bounded coefficient operators, Poincaré inequalities, zero-drift/nonnegative-potential
+  Dirichlet existence and uniqueness, Gårding and Fredholm theory for general drift, interior H² and higher
+  Sobolev regularity, smooth classical representatives, Sobolev and Hölder embeddings, C¹-domain extension
+  and compactness, variational eigenvalues, and maximum principles. AI-generated proofs with human mathematical
+  design and transcription; announced in arXiv:2609.32561 on 2026-09-26. The unfinished boundary-H² program
+  is outside this completed dependency closure.'
+branch: analysis and partial differential equations
+entry_module: LeanPool.EllipticPDE
+authors:
+- Alejandro José Soto Franco
+- Kobe Marshall-Stevens
+source:
+  url: https://github.com/alejandro-soto-franco/EllipticPDE
+  github_repo: alejandro-soto-franco/EllipticPDE
+  commit: eaf821d31b200bb6ea235f19eecc50cf0f38c294
+  arxiv: '2609.32561'
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- EllipticPdes.Regularity.higher_interior_regularity
+main_results:
+- declaration: EllipticPdes.Sobolev.FullEllipticOp.weak_solution_L2_of_nonneg_zeroth_of_bounded
+  informal: On a bounded domain in positive dimension, a bounded measurable uniformly elliptic operator
+    with zero drift and nonnegative zeroth-order coefficient has a unique H₀¹ weak solution for every
+    L² datum, with a datum-independent norm bound.
+- declaration: EllipticPdes.Regularity.interior_H2_estimate
+  informal: In positive dimension, on an open measurable domain, an H₀¹ weak solution of a bounded measurable
+    uniformly elliptic divergence-form operator with globally Lipschitz principal coefficients and an
+    L² datum has interior L² second weak derivatives, with an estimate whose constant is chosen before
+    the solution and datum.
+- declaration: EllipticPdes.Regularity.higher_interior_regularity
+  informal: In positive dimension, for a uniformly elliptic divergence-form operator with bounded measurable
+    coefficients, globally Lipschitz principal-coefficient representatives in W^{k+1,∞}(ℝ^d), and lower-order
+    coefficients in W^{k,∞}(ℝ^d), every H₀¹ weak solution on an open measurable domain with an H^k datum
+    has interior H^{k+2} regularity. On each compact subset the iterated L² derivative bounds have a constant
+    chosen before the solution, datum and its H^k bound. The pointwise Lipschitz hypothesis is separate
+    from the weak-derivative bundles.
+- declaration: EllipticPdes.Sobolev.embL2_isCompact
+  informal: The inclusion H₀¹(Ω) → L²(Ω) is compact for bounded measurable Euclidean domains, discharging
+    the compactness input to the Fredholm and spectral results.
+- declaration: EllipticPdes.Extension.exists_extW12
+  informal: In positive dimension, bounded open Euclidean domains with C¹ boundary admit a bounded linear
+    H¹ extension operator with compact support control.
+tags:
+- elliptic-pde
+- sobolev-spaces
+- regularity
+- fredholm-theory
+- spectral-theory
+msc:
+- 35J15
+- 35J25
+- 35B65
+- 46E35

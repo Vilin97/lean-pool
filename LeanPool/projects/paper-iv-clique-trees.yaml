@@ -1,0 +1,84 @@
+slug: paper-iv-clique-trees
+title: Clique trees, subtree representations and chordal treewidth
+summary: 'Develops rooted clique forests with the running-intersection property, constructs them from
+  perfect elimination orders of finite chordal graphs, characterizes chordality by their existence, and
+  obtains maximal-clique, separator, and counting results. Also characterizes chordality under retained-clique
+  gluing of induced pieces, with exact vertex and edge inclusion-exclusion identities. The original library
+  was extracted as a reusable byproduct of the published Paper IV formalization of the chordal-graph case
+  of Erdős problem #81; this library is not by itself a proof of that paper''s partition bound. Gavril''s
+  characterization supplies exact finite-tree subtree representations and the converse to chordality.
+  Finite subtree Helly places every finite clique in a bag of any tree decomposition and gives optimal
+  chordal treewidth. The supplied representation includes an empty connector; no minimal-host or runtime
+  bound is claimed.'
+branch: graph theory
+entry_module: LeanPool.PaperIVCliqueTree
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: 'Clique partitions with rooted simplicial defect: quantitative stability and sharp eventual bounds'
+  authors:
+  - Juan Pablo Traverso Gianini
+  url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions
+  github_repo: jtraverso/erdos-81-chordal-clique-partitions
+  commit: ff2019f56a50cf300a6531c9f8d4a8fb1a541e3d
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- SimpleGraph.isChordal_iff_nonempty_subtreeRepresentation
+main_results:
+- declaration: SimpleGraph.IsChordal.exists_isPEO
+  informal: Every finite chordal graph admits a perfect elimination order.
+- declaration: SimpleGraph.isChordal_iff_nonempty_cliqueTree
+  informal: A finite graph is chordal if and only if it has a rooted clique tree.
+- declaration: SimpleGraph.IsChordal.exists_maximalCliqueTree_card_le
+  informal: A nonempty finite chordal graph has a clique tree whose distinct bags are precisely its maximal
+    cliques, with no more bags than vertices.
+- declaration: SimpleGraph.CliqueTree.exists_parent_eq_of_isMinimalSeparator
+  informal: In a clique tree, each minimal separator of two reachable vertices is the intersection of
+    two adjacent bags.
+- declaration: SimpleGraph.CliqueTree.card_eq_sum_card_bag_sub_sum_card_inter
+  informal: The total bag size minus the total parent-child bag intersection size equals the number of
+    graph vertices.
+- declaration: SimpleGraph.CliqueTree.toSubtreeRepresentation
+  informal: A finite rooted clique forest gives nonempty connected vertex sets of a finite host tree,
+    with adjacency of distinct source vertices exactly equivalent to intersection of their assigned sets.
+    Empty and disconnected source graphs are supported through one empty connector node.
+  source_ref: Gavril, JCT B 16 (1974), 47–56, doi:10.1016/0095-8956(74)90094-X; constructor using the
+    PR 579 adapter.
+- declaration: SimpleGraph.isChordal_iff_nonempty_subtreeRepresentation
+  informal: A finite graph on a vertex type in Type is chordal if and only if it has an exact representation
+    by nonempty connected vertex sets of a finite tree.
+  source_ref: Gavril, JCT B 16 (1974), 47–56, doi:10.1016/0095-8956(74)90094-X.
+- declaration: SimpleGraph.IsTree.finite_subtree_helly
+  informal: A finite pairwise-intersecting family of nonempty connected vertex sets of a finite tree has
+    a common vertex; the empty family is also allowed.
+- declaration: Utilities.Treewidth.TreeDecomposition.exists_clique_subset_bag
+  informal: Every finite clique is contained in one bag of any tree decomposition.
+- declaration: SimpleGraph.IsChordal.treewidth_succ_eq_cliqueNum
+  informal: For every finite nonempty chordal graph on a vertex type in Type, its natural treewidth plus
+    one equals its clique number.
+- declaration: SimpleGraph.IsChordal.exists_optimal_treeDecomposition
+  informal: A finite nonempty chordal graph admits a tree decomposition whose width plus one is its clique
+    number.
+- declaration: SimpleGraph.CliqueGluing.isChordal_iff
+  informal: If two induced pieces cover a finite graph, their overlap is a clique, and no edge joins their
+    exclusive parts, the graph is chordal exactly when both pieces are chordal. Overlap edges are retained.
+  source_ref: New Lean Pool extension proved here using the existing Dirac and simplicial-elimination
+    interfaces; not a claim from the frozen paper.
+- declaration: SimpleGraph.CliqueGluing.card_vertices_add_overlap
+  informal: The vertex count of the graph plus the overlap size equals the sum of the vertex counts of
+    the two covering pieces.
+  source_ref: New Lean Pool extension; finite-set inclusion-exclusion.
+- declaration: SimpleGraph.CliqueGluing.card_edges_add_choose_overlap
+  informal: The graph edge count plus the number of pairs in the retained clique overlap equals the sum
+    of the induced pieces' edge counts.
+  source_ref: New Lean Pool extension; induced-edge inclusion-exclusion.
+tags:
+- graph-theory
+- chordal-graphs
+- clique-trees
+- perfect-elimination-orders
+- separators
+msc:
+- 05C75

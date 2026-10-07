@@ -1,0 +1,25 @@
+slug: anderson-conjecture
+title: 'The Anderson Conjecture: A Weakly Quasi-Complete Ring Need Not Be Quasi-Complete'
+summary: Formalizes a counterexample to Anderson's question, constructing a weakly quasi-complete Noetherian
+  local ring that is not quasi-complete via the Jensen-Heitmann-Loepp transfinite construction.
+branch: algebra
+entry_module: LeanPool.AndersonConjecture
+authors:
+- FrenzyMath
+source:
+  doi: 10.1007/978-1-4939-0925-4_2
+  github_repo: frenzymath/Anderson-Conjecture
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- anderson_main_theorem
+main_results:
+- declaration: anderson_main_theorem
+  informal: Proves that there exists a weakly quasi-complete Noetherian local ring that is not quasi-complete.
+tags:
+- commutative-algebra
+- ring-theory
+msc:
+- 13B35
+- 13H10

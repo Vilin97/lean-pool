@@ -1,0 +1,26 @@
+slug: polya-enumeration-theorem
+title: Pólya's enumeration theorem
+summary: Formalizes Pólya's enumeration theorem counting orbits of colorings under a group action.
+branch: combinatorics
+entry_module: LeanPool.PolyaEnumerationTheorem
+authors:
+- Luka Opravš
+source:
+  url: https://github.com/Luka-O/polya-enumeration-theorem
+  github_repo: Luka-O/polya-enumeration-theorem
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.PolyaEnumerationTheorem.polya_theorem
+main_results:
+- declaration: LeanPool.PolyaEnumerationTheorem.polya_theorem
+  informal: Counts distinct colorings of a finite set under a group action by averaging powers of the
+    number of colors over cycle indices.
+tags:
+- combinatorics
+- group-theory
+- enumeration
+msc:
+- 05A15
+- 20B30

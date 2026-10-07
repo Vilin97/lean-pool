@@ -1,0 +1,28 @@
+slug: erdos1196
+title: Primitive Sets Above x (Erdos Problem 1196)
+summary: Formalizes Math Inc.'s proof around primitive sets above x for Erdos Problem 1196.
+branch: analytic number theory
+entry_module: LeanPool.Erdos1196
+authors:
+- Math Inc.
+source:
+  arxiv: '2605.00301'
+  github_repo: math-inc/Erdos1196
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- PrimitiveSetsAboveX.mainTheorem
+- Erdos1196.erdos_1196
+main_results:
+- declaration: PrimitiveSetsAboveX.mainTheorem
+  informal: Proves the main primitive-sets-above-x theorem.
+- declaration: Erdos1196.erdos_1196
+  informal: States the formalized version of Erdos Problem 1196.
+tags:
+- number-theory
+- combinatorics
+- analysis
+msc:
+- 11N25
+- 05D05

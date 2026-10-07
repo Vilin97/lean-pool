@@ -1,0 +1,28 @@
+slug: sensitivity
+title: 'Sensitivity Conjecture: sqrt(deg) <= sensitivity'
+summary: Formalizes the quantitative Nisan-Szegedy/Huang sensitivity theorem for Boolean functions.
+branch: extremal combinatorics
+entry_module: LeanPool.Sensitivity
+authors:
+- Samuel Schlesinger
+source:
+  arxiv: '1907.00847'
+  doi: 10.4007/annals.2019.190.3.6
+  github_repo: SamuelSchlesinger/sensitivity-conjecture
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+main_results:
+- declaration: LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+  informal: Proves that the square root of multilinear degree is bounded above by sensitivity.
+- declaration: LeanPoolSensitivity.degree_le_sensitivity_sq
+  informal: Derives the degree bound by the square of sensitivity.
+tags:
+- combinatorics
+- boolean-functions
+- computational-complexity
+msc:
+- 06E30
+- 68Q17

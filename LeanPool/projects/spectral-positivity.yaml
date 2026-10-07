@@ -1,0 +1,45 @@
+slug: spectral-positivity
+title: Spectral positivity
+summary: Perron-Frobenius theory, Jentzsch's theorem, and matrix/operator positivity in Lean 4. At the
+  matrix level it proves that nonnegative matrices have nonnegative powers, the Metzler decomposition
+  and positivity of the matrix exponential of a Metzler matrix, M-matrix inverse positivity, and the Perron-Frobenius
+  theorem for irreducible nonnegative matrices (a positive dominant eigenvalue with a strictly positive
+  eigenvector). At the operator level it proves Jentzsch's theorem for compact self-adjoint positivity-improving
+  operators on L2 — a simple, strictly positive ground state with a spectral gap — together with a kernel
+  positivity criterion.
+branch: linear algebra
+entry_module: LeanPool.SpectralPositivity
+authors:
+- Michael R. Douglas
+source:
+  title: 'spectral-positivity: Perron-Frobenius, Jentzsch, and matrix positivity in Lean 4'
+  authors:
+  - Michael R. Douglas
+  url: https://github.com/mrdouglasny/spectral-positivity
+  github_repo: mrdouglasny/spectral-positivity
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- allpos_has_pos_eigenvec
+- perron_frobenius
+- ground_state_strictly_positive
+main_results:
+- declaration: allpos_has_pos_eigenvec
+  informal: A matrix with all strictly positive entries has a positive eigenvalue with a strictly positive
+    eigenvector (Perron-Frobenius for positive matrices, via the Collatz-Wielandt characterization).
+- declaration: perron_frobenius
+  informal: An irreducible (primitive) nonnegative matrix has a positive eigenvalue with a strictly positive
+    eigenvector.
+- declaration: ground_state_strictly_positive
+  informal: The ground eigenfunction of a compact self-adjoint positivity-improving operator on L2 is
+    strictly positive almost everywhere (Jentzsch).
+- declaration: SpectralPositivity.Matrix.MMatrix.inverse_pos
+  informal: The inverse of a nonsingular irreducible M-matrix is entrywise strictly positive.
+tags:
+- linear-algebra
+- perron-frobenius
+- positivity
+msc:
+- 15B48
+- 15A18

@@ -1,0 +1,50 @@
+slug: pythagorean-polynomial-parametrization
+title: Polynomial parametrizations of Pythagorean triples
+summary: Formalizes Frisch and Vaserstein's result that Pythagorean triples are not parametrizable by
+  one triple of integer-coefficient polynomials in any number of variables, but are parametrizable by
+  a single triple of integer-valued rational polynomials, including the positive and sixteen-parameter
+  variants.
+branch: number theory
+entry_module: LeanPool.PythagoreanPolynomialParametrization
+authors:
+- Lazar Milikic
+source:
+  title: Parametrization of Pythagorean triples by a single triple of polynomials
+  authors:
+  - Sophie Frisch
+  - Leonid Vaserstein
+  arxiv: '0706.0290'
+  doi: 10.1016/j.jpaa.2007.05.019
+  github_repo: epfl-lara/AutoformalizedProjects
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.PythagoreanPolynomialParametrization.exists_int_valued_parametrization
+main_results:
+- declaration: LeanPool.PythagoreanPolynomialParametrization.no_int_poly_parametrization
+  informal: Proves that no single triple of integer-coefficient polynomials in any number of variables
+    parametrizes all Pythagorean triples.
+- declaration: LeanPool.PythagoreanPolynomialParametrization.exists_int_valued_parametrization
+  informal: Gives the explicit four-variable integer-valued polynomial parametrization of all Pythagorean
+    triples.
+- declaration: LeanPool.PythagoreanPolynomialParametrization.positive_triples_parametrization
+  informal: Formalizes the positive Pythagorean-triple parametrization with positive parameters and a
+    nonnegative auxiliary parameter.
+- declaration: LeanPool.PythagoreanPolynomialParametrization.exists_16_param_parametrization
+  informal: Converts the positive parametrization to an unrestricted sixteen-integer-parameter parametrization
+    using the four-square theorem.
+- declaration: LeanPool.PythagoreanPolynomialParametrization.single_intValued_parametrization_yields_finite_intPoly_parametrization
+  informal: Proves the cited reduction from one integer-valued polynomial tuple to finitely many integer-coefficient
+    polynomial tuples.
+- declaration: LeanPool.PythagoreanPolynomialParametrization.integerValued_polynomial_ring_not_uniqueFactorization
+  informal: Records the integer-valued polynomial ring non-UFD phenomenon behind the paper's motivating
+    discussion.
+tags:
+- number-theory
+- pythagorean-triples
+- integer-valued-polynomials
+msc:
+- 11D09
+- 11D85
+- 13F20

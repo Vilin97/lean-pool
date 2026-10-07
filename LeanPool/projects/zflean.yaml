@@ -1,0 +1,35 @@
+slug: zflean
+title: ZFLean
+summary: Develops a practical ZFC set-theory framework with von Neumann naturals, integers, rationals,
+  functions, embeddings, isomorphisms, booleans, and sums.
+branch: set theory
+entry_module: LeanPool.ZFLean
+authors:
+- Vincent Trélat
+source:
+  title: Set Theory
+  authors:
+  - Thomas Jech
+  url: https://doi.org/10.1007/3-540-44761-X
+  github_repo: VTrelat/ZFLean
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- ZFSet.isIso_of_biembedding
+- ZFSet.ZFNat.induction
+- ZFSet.ZFInt.induction
+main_results:
+- declaration: ZFSet.isIso_of_biembedding
+  informal: Proves a Cantor-Bernstein theorem for ZF sets.
+- declaration: ZFSet.ZFNat.induction
+  informal: Provides induction for the von Neumann natural numbers.
+- declaration: ZFSet.ZFInt.induction
+  informal: Provides induction for the quotient construction of ZF integers.
+tags:
+- set-theory
+- zfc
+- foundations
+msc:
+- 03E30
+- 03B35

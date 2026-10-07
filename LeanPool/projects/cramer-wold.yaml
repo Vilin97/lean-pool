@@ -1,0 +1,48 @@
+slug: cramer-wold
+title: The Cramer-Wold theorem
+summary: Formalizes the finite-dimensional Cramer-Wold theorem for measures on Euclidean spaces, with
+  Banach-space continuous-dual generalizations, Hilbert-space inner-product versions, and random-variable
+  law corollaries for identical distributions and `HasLaw`.
+branch: probability theory
+entry_module: LeanPool.CramerWold
+authors:
+- Lazar Milikic
+source:
+  title: Some theorems on distribution functions
+  authors:
+  - Harald Cramer
+  - Herman Wold
+  doi: 10.1112/jlms/s1-11.4.290
+  github_repo: Lemmy00/lean-pool
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inner_map_eq
+main_results:
+- declaration: LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inner_map_eq
+  informal: Proves the classical finite-dimensional Cramer-Wold theorem for finite Borel measures on `EuclideanSpace
+    ℝ (Fin n)`, showing equality when all scalar projections have equal pushforward measures.
+- declaration: LeanPool.CramerWold.measure_eq_of_forall_dual_map_eq
+  informal: Generalizes the extensionality criterion to finite Borel measures on complete second-countable
+    real normed spaces, using all continuous-linear real projections.
+- declaration: LeanPool.CramerWold.measure_eq_of_forall_inner_map_eq
+  informal: Specializes Cramer-Wold extensionality to real Hilbert spaces, using scalar projections of
+    the form `x ↦ ⟪t, x⟫_ℝ`.
+- declaration: LeanPool.CramerWold.identDistrib_of_forall_dual_comp_identDistrib
+  informal: Proves that two finite-measure random variables are identically distributed when every continuous-linear
+    real projection of them is identically distributed.
+- declaration: LeanPool.CramerWold.identDistrib_of_forall_inner_comp_identDistrib
+  informal: Gives the Hilbert-space random-variable version using all scalar inner-product projections.
+- declaration: LeanPool.CramerWold.hasLaw_of_forall_dual_comp_hasLaw
+  informal: Proves that a random variable has a target law when every continuous-linear real projection
+    has the corresponding projected target law.
+tags:
+- probability
+- measure-theory
+- characteristic-functions
+- cramer-wold
+msc:
+- 60B11
+- 60E10
+- 28A33

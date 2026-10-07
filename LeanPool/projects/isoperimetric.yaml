@@ -1,0 +1,32 @@
+slug: isoperimetric
+title: Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality
+summary: Formalizes the Prekopa-Leindler inequality, Brunn-Minkowski inequality, and an isoperimetric
+  inequality.
+branch: geometric analysis
+entry_module: LeanPool.Isoperimetric
+authors:
+- Jonathan Ho
+source:
+  url: https://terrytao.wordpress.com/2011/09/16/the-brunn-minkowski-inequality-for-nilpotent-groups/
+  github_repo: hojonathanho/isoperimetric
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- prekopa_leindler
+- brunn_minkowski
+- isoperimetric_inequality
+main_results:
+- declaration: prekopa_leindler
+  informal: Proves the Prekopa-Leindler inequality.
+- declaration: brunn_minkowski
+  informal: Proves the Brunn-Minkowski inequality.
+- declaration: isoperimetric_inequality
+  informal: Proves the isoperimetric inequality derived from Brunn-Minkowski.
+tags:
+- measure-theory
+- geometric-inequalities
+msc:
+- 28A75
+- 52A40
+- 49Q20

@@ -1,0 +1,56 @@
+slug: anomalous-diffusion-fractal-homogenization
+title: Anomalous diffusion by fractal homogenization
+summary: For each positive Hölder exponent below one third, constructs a divergence-free periodic drift
+  on the two-dimensional torus exhibiting anomalous dissipation for every mean-zero periodic H1 initial
+  datum. The same drift admits uniform Hölder time estimates along a sequence of diffusivity intervals
+  and two distinct vanishing-diffusivity limits for an explicit nonempty class of smooth data. Includes
+  weak existence and uniqueness, Sobolev and Fourier/Galerkin infrastructure, flow derivatives, quantitative
+  homogenization, and the multiscale construction. The no-selection result is the corrected version documented
+  upstream, not the printed generality of the original paper's Proposition 5.5.
+branch: analysis of partial differential equations
+entry_module: LeanPool.AnomalousDiffusion
+authors:
+- Scott Armstrong
+- Vlad Vicol
+source:
+  title: Anomalous diffusion by fractal homogenization, Lean formalization
+  arxiv: '2305.05048'
+  url: https://github.com/scottnarmstrong/AVAnomalousDiffusion/tree/fad71d10bff031522cc598a37770238248186964
+  github_repo: scottnarmstrong/AVAnomalousDiffusion
+  commit: fad71d10bff031522cc598a37770238248186964
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- AVenhance.anomalous_dissipation_full
+main_results:
+- declaration: AVenhance.anomalous_dissipation_full
+  informal: For every alpha strictly between zero and one third, one periodic, divergence-free drift has
+    joint spatial and temporal alpha-Hölder regularity and continuity into the spatial Hölder class. It
+    exhibits anomalous dissipation with a positive rate depending only on the initial L2-to-gradient ratio,
+    uniform Hölder-in-time L2 bounds along diffusivity intervals accumulating at zero, and two distinct
+    transport limits along separated diffusivity sequences for a smooth mean-zero data class containing
+    arbitrarily high cosine modes.
+  source_ref: Upstream Statements/FullTheorem/AnomalousDissipationFull.lean and CITATION.cff, date-released
+    2026-10-02; the pinned completion commit is fad71d10bff031522cc598a37770238248186964, with committer
+    timestamp 2026-10-02 16:04:04 UTC. Anomalous dissipation is the dimension-two case of Theorem 1.1
+    of arXiv:2305.05048; uniform time regularity and no-selection use upstream's documented corrections
+    to Sections 5.4 and 5.5. The README explicitly records predominantly AI-produced proofs under the
+    authors' supervision.
+- declaration: AVenhance.anomalous_dissipation
+  informal: For every positive alpha below one third there exists a periodic, divergence-free alpha-Hölder
+    drift and a rate function taking values in (0,1], depending only on the initial L2-to-gradient ratio,
+    such that the limsup as positive diffusivity tends to zero of integrated gradient dissipation is at
+    least the squared rate times the initial L2 energy, for every mean-zero periodic H1 datum and corresponding
+    weak solutions.
+- declaration: AVenhance.weak_wellposed
+  informal: Every bounded measurable periodic drift with positive diffusivity and periodic-cell L2 initial
+    datum has a weak solution, unique up to spatial almost-everywhere equality at every time in [0,1].
+tags:
+- anomalous-dissipation
+- homogenization
+- advection-diffusion
+msc:
+- 35B27
+- 35Q35
+- 76F30

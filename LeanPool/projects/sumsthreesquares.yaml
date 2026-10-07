@@ -1,0 +1,29 @@
+slug: sumsthreesquares
+title: Sums of Three Squares
+summary: Formalizes a blueprint step in the three-squares theorem using quadratic forms and geometry of
+  numbers.
+branch: number theory
+entry_module: LeanPool.SumsThreeSquares
+authors:
+- Bhavik Mehta
+- Pietro Monticone
+- Abel Donate Munoz
+source:
+  doi: 10.1090/S0002-9939-1957-0085275-8
+  github_repo: pitmonticone/SumsThreeSquares
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+main_results:
+- declaration: LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+  informal: Proves the mod-8-equals-3 blueprint case for the three-squares theorem.
+  source_ref: H. Davenport, The geometry of numbers, The Mathematical Gazette 31 (1947), 206-210, doi:10.2307/3608159.
+tags:
+- number-theory
+- quadratic-forms
+- geometry-of-numbers
+msc:
+- 11E25
+- 11H06

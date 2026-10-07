@@ -1,0 +1,45 @@
+slug: cencov-petz
+title: Finite Čencov-Petz Uniqueness
+summary: Formalizes the finite/discrete Čencov-Petz uniqueness theorem, showing that any continuous metric
+  family on finite probability simplexes that is monotone under Markov morphisms is a scalar multiple
+  of the Fisher information metric.
+branch: information geometry
+entry_module: LeanPool.CencovPetz
+authors:
+- Adam Benenson
+source:
+  title: Statistical Decision Rules and Optimal Inference
+  authors:
+  - N. N. Chentsov
+  url: https://bookstore.ams.org/mmono-53
+  github_repo: abenenson/cencov-petz
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_continuous
+main_results:
+- declaration: LeanPool.CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_continuous
+  informal: Proves that every continuous monotone metric family on a finite probability simplex is a scalar
+    multiple of the Fisher information metric.
+  source_ref: N. N. Chentsov, Statistical Decision Rules and Optimal Inference, AMS Translations of Mathematical
+    Monographs 53, 1982.
+- declaration: LeanPool.CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_isRational
+  informal: Establishes the scalar Fisher-form identity at rational simplex points using split representations.
+- declaration: LeanPool.CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_isSplitRepresentable
+  informal: Proves the scalar Fisher-form identity for simplex points represented as pushforwards of uniform
+    distributions under splitting maps.
+- declaration: LeanPool.CencovPetz.MonotoneMetricFamily.uniformScalar_eq_uniformScalar_two
+  informal: Shows that the uniform-point scalar is independent of simplex dimension once the dimension
+    is at least two.
+- declaration: LeanPool.CencovPetz.TangentFin.Bilin.B_eq_smul_fisherBilin_uniform
+  informal: Proves that the permutation-invariant bilinear form at a uniform finite simplex point is a
+    scalar multiple of the Fisher bilinear form.
+tags:
+- information-geometry
+- fisher-information
+- markov-morphisms
+- finite-simplex
+msc:
+- 62B10
+- 53C21

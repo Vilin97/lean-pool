@@ -1,0 +1,42 @@
+slug: formal-learning-theory
+title: Formal Learning Theory Kernel
+summary: Formalizes major equivalences and separations in PAC, VC, Gold-style, and online learning theory.
+branch: computational learning theory
+entry_module: LeanPool.FormalLearningTheory
+authors:
+- Dhruv Gupta
+source:
+  url: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+  github_repo: Zetetic-Dhruv/formal-learning-theory-kernel
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- fundamental_theorem
+- littlestone_characterization
+- pac_not_implies_online
+main_results:
+- declaration: vc_characterization
+  informal: Characterizes PAC learnability by finite VC dimension.
+- declaration: fundamental_theorem
+  informal: Bundles the central PAC, VC, compression, Rademacher, and sample-complexity equivalences.
+- declaration: fundamental_vc_compression
+  informal: Relates finite VC dimension to compression with side information.
+- declaration: gold_theorem
+  informal: States the Gold-style characterization for identification in the limit.
+- declaration: mind_change_characterization
+  informal: Characterizes learnability by a bounded mind-change ordinal.
+- declaration: littlestone_characterization
+  informal: Characterizes online learnability by finite Littlestone dimension.
+- declaration: pac_not_implies_online
+  informal: Separates PAC learnability from online learnability.
+- declaration: ex_not_implies_pac
+  informal: Separates explanatory learnability from PAC learnability.
+tags:
+- learning-theory
+- probability
+- combinatorics
+- online-learning
+msc:
+- 68Q32
+- 68T05

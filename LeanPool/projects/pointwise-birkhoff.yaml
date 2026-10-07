@@ -1,0 +1,33 @@
+slug: pointwise-birkhoff
+title: Pointwise Birkhoff Ergodic Theorem
+summary: Formalizes the pointwise Birkhoff ergodic theorem for integrable real-valued observables.
+branch: ergodic theory
+entry_module: LeanPool.PointwiseBirkhoff
+authors:
+- Lua Viana Reis
+- Oliver Butterley
+- Pietro Monticone
+source:
+  title: Ergodic Theory
+  authors:
+  - Karl Petersen
+  url: https://doi.org/10.1017/CBO9780511608728
+  github_repo: lua-vr/pointwise-birkhoff
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
+main_results:
+- declaration: LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
+  informal: Proves almost-everywhere convergence of Birkhoff averages to invariant conditional expectation
+    for any integrable real-valued observable.
+- declaration: LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem
+  informal: Proves the measurable-observable version of the pointwise Birkhoff ergodic theorem.
+tags:
+- ergodic-theory
+- measure-theory
+- probability
+msc:
+- 37A30
+- 28D05

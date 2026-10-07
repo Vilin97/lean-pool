@@ -1,0 +1,39 @@
+slug: burkholder
+title: Burkholder Martingale Transform Inequality
+summary: 'Formalizes Burkholder''s sharp Lp inequality for real-valued martingale transforms: if `f` is
+  a discrete martingale and `w` a predictable multiplier bounded by `1`, then the Lp norm of the transform
+  `w ⋆ₘ f` is at most `(pStar p - 1)` times the Lp norm of `f`, where `pStar p` is the maximum of `p`
+  and its conjugate exponent. The proof builds the Burkholder special function as a majorant of the relevant
+  payoff in each exponent regime (`1 < p < 2`, `p = 2`, `p > 2`).'
+branch: probability
+entry_module: LeanPool.Burkholder
+authors:
+- Daniel Smania
+source:
+  title: Boundary value problems and sharp inequalities for martingale transforms
+  authors:
+  - Donald L. Burkholder
+  doi: 10.1214/aop/1176993220
+  github_repo: SmaniaD/Burkholder
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- MeasureTheory.Lp_Burkholder_inequality_martingaleTransform
+main_results:
+- declaration: MeasureTheory.Lp_Burkholder_inequality_martingaleTransform
+  informal: 'The sharp Lp Burkholder inequality: for a discrete martingale `f` and a predictable multiplier
+    `w` with `|w n| ≤ 1`, the Lp norm of the martingale transform `(w ⋆ₘ f) n` is bounded by `(pStar p
+    - 1)` times the Lp norm of `f n`.'
+- declaration: MeasureTheory.martingaleTransform_martingale
+  informal: The martingale transform of a martingale by a strongly predictable bounded multiplier is itself
+    a martingale.
+- declaration: Majorants.exists_majorant_p_g_1
+  informal: For every exponent `p > 1` there exists a Burkholder majorant, the special function dominating
+    the payoff and driving the inequality.
+tags:
+- probability
+- martingales
+- burkholder-inequality
+msc:
+- 60G42

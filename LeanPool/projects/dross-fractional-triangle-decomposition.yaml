@@ -1,0 +1,36 @@
+slug: dross-fractional-triangle-decomposition
+title: Dross's fractional triangle decomposition theorem
+summary: Formalizes the exact nine-tenths minimum-degree threshold for fractional triangle decomposition
+  of finite graphs. The proof uses a finite max-flow/min-cut argument and induction that peels high-degree
+  triangles.
+branch: extremal graph theory and fractional decompositions
+entry_module: LeanPool.DrossFractionalTriangleDecomposition
+authors:
+- Juan Pablo Traverso Gianini
+- Aristotle
+source:
+  title: Fractional Triangle Decompositions in Graphs with Large Minimum Degree
+  authors:
+  - François Dross
+  doi: 10.1137/15M1014310
+  url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/dec9f4750c2261681e376f2f67db9eda16a4eca0/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Ax2
+  github_repo: jtraverso/erdos-81-chordal-clique-partitions
+  commit: dec9f4750c2261681e376f2f67db9eda16a4eca0
+  license_grant: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/dec9f4750c2261681e376f2f67db9eda16a4eca0/LEAN_SOURCE_APACHE_2_0_GRANT.md
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.DrossFractionalTriangleDecomposition.dross_fractional_flow_exact
+main_results:
+- declaration: LeanPool.DrossFractionalTriangleDecomposition.dross_fractional_flow_exact
+  informal: 'Every finite graph whose minimum degree is at least nine tenths of its number of vertices
+    has a fractional triangle decomposition: nonnegative triangle weights sum to one at each edge.'
+  source_ref: Dross (2016), fractional triangle decomposition theorem.
+tags:
+- extremal-graph-theory
+- fractional-decomposition
+- max-flow-min-cut
+msc:
+- 05C70
+- 05C35

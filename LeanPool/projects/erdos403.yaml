@@ -1,0 +1,34 @@
+slug: erdos403
+title: Sums of Distinct Factorials That Are Powers of Two (Erdos Problem 403)
+summary: 'Reconstructs the finiteness theorem for Erdos Problem 403: only finitely many sums of distinct
+  factorials are powers of two, and every such power is at most 2^7 = 128 (the extremal solution 2! +
+  3! + 5! = 128). The sharp bound is proved in the factorial number system via a single fixed modulus
+  12!, with all computations kernel-pure.'
+branch: number theory
+entry_module: LeanPool.Erdos403
+authors:
+- Trevor Morris
+source:
+  title: 'Erdos Problem 403: sums of distinct factorials that are powers of two'
+  authors:
+  - Trevor Morris
+  url: https://www.erdosproblems.com/403
+  github_repo: gotrevor/erdos-403
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- Erdos403.erdos_403_sharp
+- Erdos403.erdos_403_finite
+main_results:
+- declaration: Erdos403.erdos_403_sharp
+  informal: Every power of two that is a sum of distinct factorials is at most 2^7, with 128 the largest
+    solution.
+- declaration: Erdos403.erdos_403_finite
+  informal: Only finitely many sums of distinct factorials are powers of two.
+tags:
+- number-theory
+- factorials
+- erdos-problems
+msc:
+- 11B83

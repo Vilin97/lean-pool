@@ -1,0 +1,33 @@
+slug: krafftsieve
+title: A Conditional Sieve Criterion for Twin Primes via Krafft Geometry
+summary: Introduces an original conditional sieve criterion for the Twin Prime Conjecture. Using a centered
+  modular alignment (termed the Krafft alignment), proves that if the Rayleigh-Ritz quotient over the
+  orthogonal unit sphere satisfies muMin < 1, then a twin prime pair must exist in the corresponding interval.
+branch: analytic number theory
+entry_module: LeanPool.KrafftSieve
+authors:
+- Fernando Portela
+source:
+  doi: 10.5281/zenodo.19763833
+  github_repo: ElNando888/KrafftSieve
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- KrafftSieve.mu_min_lt_one_implies_tpc
+main_results:
+- declaration: KrafftSieve.krafft_sieve_guarantee_with_mu_min
+  informal: Proves that muMin n < 1 is a sufficient condition for the existence of a twin prime pair in
+    the corresponding interval.
+- declaration: KrafftSieve.mu_min_lt_one_implies_tpc
+  informal: If there are infinitely many intervals where the optimal multidimensional weight achieves
+    a ratio strictly less than 1, then there are infinitely many twin primes. This is a conditional reduction;
+    the hypothesis muMin n < 1 is not established here for any n.
+tags:
+- analytic-number-theory
+- sieve-theory
+- twin-primes
+- optimization
+msc:
+- 11N05
+- 11N35

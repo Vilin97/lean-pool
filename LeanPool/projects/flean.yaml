@@ -1,0 +1,45 @@
+slug: flean
+title: 'Flean: Floating-Point Numbers in Lean'
+summary: Formalizes a configurable model of floating-point numbers in Lean 4, including normal and subnormal
+  representations, conversions between rationals and floats, round-trip correctness, and rounding error
+  bounds.
+branch: numerical analysis
+entry_module: LeanPool.Flean
+authors:
+- Joseph McKinsey
+source:
+  doi: 10.1109/IEEESTD.2019.8766229
+  url: https://github.com/josephmckinsey/flean
+  github_repo: josephmckinsey/flean
+license: Apache-2.0
+status: verified
+provenance: human
+msc:
+- 65G50
+- 65G30
+- 68V20
+main_declarations:
+- Flean.Float
+- toFloat
+- toRat
+- to_float_to_rat
+- roundf_close
+main_results:
+- declaration: Flean.Float
+  informal: Defines the floating-point number type parameterized by a precision and exponent configuration,
+    with normal, subnormal, infinite, and NaN cases.
+- declaration: toFloat
+  informal: Rounds a rational number to the nearest representable floating-point value under a given rounding
+    mode.
+- declaration: toRat
+  informal: Interprets a floating-point value as the exact rational number it represents.
+- declaration: to_float_to_rat
+  informal: Proves the round-trip identity that converting a finite nonzero float to a rational and back
+    recovers the original float.
+- declaration: roundf_close
+  informal: Bounds the distance between a rational and its rounded floating-point representation.
+tags:
+- floating-point
+- numerical-analysis
+- ieee-754
+- rounding

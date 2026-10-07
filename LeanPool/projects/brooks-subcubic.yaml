@@ -1,0 +1,36 @@
+slug: brooks-subcubic
+title: Brooks' theorem for subcubic graphs
+summary: Proves that every finite simple graph of maximum degree at most three with no four-clique admits
+  a three-colouring, without a connectedness assumption. Includes controlled greedy colouring, colouring
+  across cut vertices, and a good-triple argument for cubic components. This is the subcubic case of Brooks'
+  theorem, not the general-degree theorem.
+branch: graph theory
+entry_module: LeanPool.BrooksSubcubic
+authors:
+- Juan Pablo Traverso Gianini
+source:
+  title: On colouring the nodes of a network
+  authors:
+  - R. L. Brooks
+  doi: 10.1017/S030500410002168X
+  url: https://github.com/jtraverso/lean-pool/blob/aced439fd4161d118bf167a1e8d10553f28913fe/LeanPool/BrooksSubcubic/Main.lean
+  github_repo: jtraverso/lean-pool
+  commit: aced439fd4161d118bf167a1e8d10553f28913fe
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- BrooksSubcubic.brooks_cubic
+main_results:
+- declaration: BrooksSubcubic.brooks_cubic
+  informal: Every finite simple graph with maximum degree at most three and no clique on four vertices
+    is three-colourable. The graph may be disconnected.
+  source_ref: The subcubic specialization of Brooks' 1941 colouring theorem; the linked Apache-2.0 Lean
+    source proves exactly this specialization.
+tags:
+- graph-theory
+- vertex-colouring
+- brooks-theorem
+- subcubic-graphs
+msc:
+- 05C15

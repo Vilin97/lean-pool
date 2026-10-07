@@ -1,0 +1,37 @@
+slug: abc-exceptions
+title: Exceptional Set in the abc Conjecture
+summary: Formalizes reductions and optimization bounds for a power-saving estimate on exceptional triples
+  in the abc conjecture.
+branch: analytic number theory
+entry_module: LeanPool.ABCExceptions
+authors:
+- Bhavik Mehta
+- Arend Mellendijk
+source:
+  title: Bounds on the exceptional set in the abc conjecture
+  authors:
+  - Tim Browning
+  - Jared Duker Lichtman
+  - Joni Teräväinen
+  arxiv: '2410.12234'
+  github_repo: b-mehta/ABC-Exceptions
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- abcConjecture_iff_countTriples
+- thm_4_point_3
+main_results:
+- declaration: abcConjecture_iff_countTriples
+  informal: Recasts the abc conjecture as a uniform big-O bound for bounded exceptional triples.
+- declaration: refinedCountTriplesStar_isBigO_B
+  informal: Bounds the refined exceptional-triple count by the dyadic structured-box supremum.
+- declaration: thm_4_point_3
+  informal: Derives the Section 4 optimization bound from the determinant, geometry, and Fourier hypotheses.
+tags:
+- number-theory
+- analytic-number-theory
+- abc-conjecture
+msc:
+- 11D75
+- 11N37

@@ -1,0 +1,52 @@
+slug: parallel-postulate
+title: Independence of Playfair's axiom via Euclidean and Klein models
+summary: Constructs Euclidean and Klein models of a synthetic Hilbert plane, proving that Playfair's axiom
+  is independent of incidence, Pasch order, and congruence axioms, even with Archimedes and Dedekind continuity.
+  Develops reusable coordinate geometry over ordered fields, projective motions, Klein angles and metric,
+  smooth-path length and distance, congruence constructions, and a coordinate curvature calculation. Dedekind
+  continuity replaces Hilbert's maximal completeness axiom; their equivalence is not formalized. Curvature
+  uses Brioschi's formula, and distance uses C1 paths; no identification with Mathlib's Riemannian distance
+  or connection curvature is asserted.
+branch: foundations of geometry
+entry_module: LeanPool.ParallelPostulate
+authors:
+- Richard Sutton
+source:
+  title: ParallelPostulate formalization by Richard Sutton
+  url: https://github.com/Richiesutie/ParallelPostulate/tree/8ee502804263194ae40babeca9773127f1e0a085
+  github_repo: Richiesutie/ParallelPostulate
+  commit: 8ee502804263194ae40babeca9773127f1e0a085
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- ParallelPostulate.Hilbert.playfair_independent_continuous
+main_results:
+- declaration: ParallelPostulate.Hilbert.playfair_independent_continuous
+  informal: There exists a Hilbert plane satisfying Archimedes and Dedekind continuity and Playfair's
+    axiom, and there exists another satisfying the same continuity axioms and the negation of Playfair's
+    axiom. The models use real coordinate planes with bounds zero and minus one.
+  source_ref: Upstream Hilbert/Independence.lean. First publicly announced 2026-09-30 01:08:53 UTC at
+    https://leanprover.zulipchat.com/#narrow/channel/583339-AI-authored-projects/topic/Independence.20Parallel.20Postulate/near/627942879.
+    The author's follow-up discloses mostly AI-written proofs. Pasch order and Dedekind continuity are
+    the stated variants; equivalence to plane separation and maximal completeness is not proved.
+- declaration: ParallelPostulate.HyperbolicPlane.hyperbolic_parallels
+  informal: Over any linearly ordered field, for every negative bound and every line in the bounded coordinate
+    plane, infinitely many distinct lines pass through any point of the plane outside that line without
+    meeting it.
+- declaration: ParallelPostulate.HyperbolicPlane.kleinDist_eq_arsinh
+  informal: For every negative real bound and every pair of points in its plane, the infimum of C1-path
+    lengths in Klein's coordinate metric equals arsinh of the square root of minus the bound times apart,
+    divided by the square root of minus the bound.
+- declaration: ParallelPostulate.HyperbolicPlane.kleinMetric_curvature
+  informal: For every real bound, Brioschi's coordinate curvature formula applied to the three coefficients
+    of Klein's metric equals that bound at every point of its coordinate plane.
+tags:
+- synthetic-geometry
+- hyperbolic-geometry
+- parallel-postulate
+- klein-model
+msc:
+- 51F15
+- 51M10
+- 53A35

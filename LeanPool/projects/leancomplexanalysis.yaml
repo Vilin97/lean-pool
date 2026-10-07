@@ -1,0 +1,37 @@
+slug: leancomplexanalysis
+title: Formalized Complex Analysis in Lean
+summary: Formalizes Poisson integral formulas on the unit disc and arbitrary centered discs, Herglotz–Riesz
+  representation, and Harnack's inequality on the unit disc, plus infrastructure for univalent function
+  classes S and Σ.
+branch: complex analysis
+entry_module: LeanPool.LeanComplexAnalysis
+authors:
+- seb488
+- Aristotle
+source:
+  url: https://github.com/seb488/LeanComplexAnalysis
+  github_repo: seb488/LeanComplexAnalysis
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.LeanComplexAnalysis.harnack_ineq
+main_results:
+- declaration: LeanPool.LeanComplexAnalysis.poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc
+  informal: Proves the Poisson integral formula for harmonic functions on the unit disc.
+- declaration: LeanPool.LeanComplexAnalysis.poisson_integral_of_harmonicOn_disc_continuousOn_closedDisc
+  informal: Proves the Poisson integral formula for harmonic functions on arbitrary centered discs.
+- declaration: LeanPool.LeanComplexAnalysis.HerglotzRiesz_representation_harmonic
+  informal: Proves that every positive harmonic function on the unit disc with value 1 at 0 has a unique
+    Herglotz–Riesz representation by a probability measure on the unit circle.
+- declaration: LeanPool.LeanComplexAnalysis.harnack_ineq
+  informal: Proves Harnack's inequality for positive harmonic functions on the unit disc.
+tags:
+- complex-analysis
+- harmonic-functions
+- poisson-integral
+- univalent-functions
+msc:
+- 30A99
+- 31A05
+- 30C55

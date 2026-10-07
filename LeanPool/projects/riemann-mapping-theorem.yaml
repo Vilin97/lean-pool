@@ -1,0 +1,35 @@
+slug: riemann-mapping-theorem
+title: Riemann Mapping Theorem
+summary: Formalizes a proof of the Riemann mapping theorem for proper simply connected plane domains with
+  primitives.
+branch: complex analysis
+entry_module: LeanPool.RiemannMappingTheorem
+authors:
+- Vincent Beffara
+source:
+  url: https://github.com/vbeffara/RMT4
+  github_repo: vbeffara/RMT4
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- RMT
+- main
+- montel
+- hurwitz
+main_results:
+- declaration: RMT
+  informal: Proves the Riemann mapping theorem for the project's domain hypotheses.
+- declaration: main
+  informal: Constructs a conformal map from a good domain onto the unit disk.
+- declaration: montel
+  informal: Proves a Montel compactness theorem for uniformly bounded holomorphic families.
+- declaration: hurwitz
+  informal: Proves the Hurwitz theorem used to preserve injectivity under limits.
+tags:
+- complex-analysis
+- conformal-maps
+- schwarz-lemma
+msc:
+- 30C35
+- 30C20

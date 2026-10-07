@@ -1,0 +1,32 @@
+slug: 2-coloring-1-round
+title: 2-Coloring Cycles in One Round
+summary: Formalizes certified upper and lower bounds for one-round randomized algorithms that 2-color
+  cycles.
+branch: distributed computing
+entry_module: LeanPool.TwoColoringOneRound
+authors:
+- Jukka Suomela
+source:
+  arxiv: '2603.04235'
+  github_repo: suomela/2-coloring-1-round
+license: MIT
+status: verified
+provenance: AI
+main_declarations:
+- Distributed2Coloring.pStar_ge_23879
+- Distributed2Coloring.pStar_lt_24118
+main_results:
+- declaration: Distributed2Coloring.pStar_ge_23879
+  informal: Proves that every one-round classical algorithm has monochromatic-edge probability at least
+    0.23879.
+- declaration: Distributed2Coloring.pStar_lt_24118
+  informal: Proves that an explicit one-round algorithm attains monochromatic-edge probability strictly
+    below 0.24118.
+tags:
+- distributed-computing
+- graph-coloring
+- randomized-algorithms
+- formal-verification
+msc:
+- 68W15
+- 05C15

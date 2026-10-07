@@ -1,0 +1,50 @@
+slug: demazureoperatorslean
+title: Demazure Operators and Lean
+summary: Formalizes Demazure operators on multivariate polynomials and their nilpotence, braid, commutation,
+  and symmetric-polynomial linearity relations, with auxiliary Coxeter-theory support including strong
+  exchange and a conditional Matsumoto theorem.
+branch: algebraic combinatorics
+entry_module: LeanPool.DemazureOperatorsLean
+authors:
+- Óscar Álvarez Sánchez
+source:
+  title: Schubert cells, and the cohomology of the spaces G/P
+  authors:
+  - I. N. Bernstein
+  - I. M. Gelfand
+  - S. I. Gelfand
+  doi: 10.1070/RM1973v028n03ABEH001557
+  github_repo: bolito2/DemazureOperatorsLean
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Demazure.Dem
+- CoxeterSystem.strongExchangeProperty
+main_results:
+- declaration: Demazure.Dem
+  informal: Defines the Demazure operator as a linear map over the subalgebra of symmetric polynomials.
+- declaration: Demazure.demazure_order_two
+  informal: Proves that applying the Demazure operator twice gives zero.
+- declaration: Demazure.demazure_commutes_adjacent
+  informal: Proves the braid relation for adjacent Demazure operators.
+- declaration: Demazure.demazure_commutes_non_adjacent
+  informal: Proves that non-adjacent Demazure operators commute.
+- declaration: Demazure.demazure_mul_symm
+  informal: Proves that symmetric polynomials act as scalars with respect to Demazure operators.
+- declaration: CoxeterSystem.strongExchangeProperty
+  informal: Proves the strong exchange property for Coxeter systems.
+  source_ref: J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990.
+- declaration: CoxeterSystem.matsumoto_reduced
+  informal: Auxiliary theorem proving, under the extra MatsumotoCondition hypothesis, that reduced words
+    for the same Coxeter group element are connected by braid moves.
+  source_ref: J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990.
+tags:
+- algebraic-combinatorics
+- demazure-operators
+- polynomials
+- representation-theory
+msc:
+- 05E05
+- 13P10
+- 20F55

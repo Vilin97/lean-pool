@@ -1,0 +1,34 @@
+slug: shannon-1948-formalization
+title: Shannon Entropy Characterization
+summary: Formalizes Shannon's finite-alphabet characterization theorem for entropy from the 1948 paper.
+branch: information theory
+entry_module: LeanPool.Shannon1948Formalization
+authors:
+- Samuel Schlesinger
+source:
+  doi: 10.1002/j.1538-7305.1948.tb01338.x
+  github_repo: SamuelSchlesinger/shannon-1948-formalization
+license: MIT
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.Shannon1948Formalization.entropyNat_unique
+main_results:
+- declaration: LeanPool.Shannon1948Formalization.entropyNat_unique
+  informal: Proves that any finite-alphabet uncertainty functional satisfying Shannon's conditions equals
+    natural-log entropy up to a positive scale.
+- declaration: LeanPool.Shannon1948Formalization.entropyBase_unique
+  informal: Restates the characterization for any logarithm base greater than one.
+- declaration: LeanPool.Shannon1948Formalization.entropyNat_shannonAxioms
+  informal: Proves the converse, showing that Shannon entropy satisfies the formal condition bundle.
+- declaration: LeanPool.Shannon1948Formalization.chain_rule
+  informal: Proves the finite joint-entropy chain rule.
+- declaration: LeanPool.Shannon1948Formalization.entropyNat_joint_le_add
+  informal: Proves subadditivity of finite joint entropy.
+tags:
+- information-theory
+- entropy
+- probability
+msc:
+- 94A17
+- 60C05

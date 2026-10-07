@@ -1,0 +1,42 @@
+slug: tutte-path
+title: Tutte’s path theorem for matroids
+summary: Proves the modular-cut path theorem for finite matroids, with reusable rank-partition, hyperplane-separation,
+  relative-complement, indecomposable-cover, and diamond constructions.
+branch: matroid theory
+entry_module: LeanPool.TuttePath
+authors:
+- Tutte formalization contributors
+source:
+  arxiv: 2601.02582
+  url: https://github.com/mbaker386/tutte-homotopy-lean
+  github_repo: mbaker386/tutte-homotopy-lean
+  commit: ab33c23369865b5fbd30b7a19710a527aa7ebab6
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- TutteFormalization.path_theorem
+main_results:
+- declaration: TutteFormalization.path_theorem
+  informal: In a finite connected matroid, any two hyperplanes containing a proper indecomposable flat
+    and lying outside a modular cut are joined by a finite Tutte path all of whose vertices contain that
+    flat and avoid the cut. Consecutive vertices are distinct hyperplanes with indecomposable corank-two
+    intersection; repeated nonconsecutive vertices are permitted.
+- declaration: TutteFormalization.path_theorem_of_indecomposable
+  informal: In any finite matroid, two hyperplanes containing an indecomposable flat F and lying outside
+    a modular cut are joined by a Tutte path whose vertices contain F and avoid the cut. This strengthens
+    the cited path theorem by requiring only connectedness of the contraction by F; properness of F follows
+    from containment in an endpoint hyperplane.
+- declaration: TutteFormalization.exists_indecomposable_complement
+  informal: If an indecomposable flat S and a flat U span the ground, every indecomposable flat T contained
+    in both extends inside S to an indecomposable flat R spanning the ground with U, with corank R equal
+    to rank U minus rank T.
+- declaration: TutteFormalization.exists_relative_complement
+  informal: For nested flats T contained in S, there is a flat U containing T whose intersection with
+    S is T, whose join with S is the ground, and whose corank equals rank S minus rank T.
+tags:
+- matroids
+- combinatorics
+- modular-cuts
+msc:
+- 05B35

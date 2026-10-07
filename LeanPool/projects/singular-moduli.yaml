@@ -1,0 +1,54 @@
+slug: singular-moduli
+title: Quadratic-order prime classification
+summary: Formalizes foundational algebra for quadratic orders associated to discriminants, including their
+  power basis, norm and discriminant identities, odd-prime splitting/ramification/inertness criteria via
+  Legendre symbols, and root-counting results for quadratic congruences modulo odd prime powers.
+branch: algebraic number theory
+entry_module: LeanPool.SingularModuli
+authors:
+- Caleb L. Geiger
+source:
+  title: Singular Moduli and the Ideal Class Group
+  authors:
+  - C. Geiger
+  github_repo: ElodinLaarz/lean-thesis
+  url: https://github.com/ElodinLaarz/lean-thesis
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- QuadraticOrder.prime_inert_iff
+- QuadraticOrder.prime_split_iff
+main_results:
+- declaration: QuadraticOrder.prime_inert_iff
+  informal: Proves that for an odd rational prime p and a valid discriminant d, the ideal (p) is maximal
+    in the quadratic order O_d exactly when the Legendre symbol (d/p) is -1.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 3.2, Proposition 3.2.1.
+- declaration: QuadraticOrder.prime_ramified_iff
+  informal: Proves that for an odd rational prime p and a valid discriminant d, the ideal (p) is not radical
+    in O_d exactly when p divides d.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 3.2, Proposition 3.2.1.
+- declaration: QuadraticOrder.prime_split_iff
+  informal: Proves that for an odd rational prime p and a valid discriminant d, the ideal (p) is radical
+    but not maximal exactly when the Legendre symbol (d/p) is 1.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 3.2, Proposition 3.2.1.
+- declaration: QuadraticOrder.cardSqrts_prime_pow_coprime
+  informal: Counts roots of x^2 = c modulo p^n for odd prime p and p not dividing c, giving two roots
+    when the Legendre symbol is 1 and none otherwise.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 3.1.
+- declaration: QuadraticOrder.cardSqrts_prime_pow_even_val
+  informal: Counts roots of x^2 = p^(2r) u modulo p^n for odd prime p, p not dividing u, and 2r < n, reducing
+    to the coprime case and multiplying by p^r.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 3.1.
+- declaration: QuadraticOrder.tau_sub_tauConj_sq_of_valid_disc
+  informal: Proves the discriminant identity (tau - tauConj)^2 = d for valid quadratic-order discriminants
+    d congruent to 0 or 1 modulo 4.
+  source_ref: C. Geiger, Singular Moduli and the Ideal Class Group, Section 2.
+tags:
+- algebraic-number-theory
+- quadratic-orders
+- legendre-symbol
+msc:
+- 11R11
+- 11R29
+- 11A15

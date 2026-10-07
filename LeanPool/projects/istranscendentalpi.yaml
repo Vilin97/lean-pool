@@ -1,0 +1,34 @@
+slug: istranscendentalpi
+title: The transcendence of π
+summary: Formalizes a self-contained proof, following Niven's 1939 argument, that the real and complex
+  number π is transcendental over the rationals.
+branch: number theory
+entry_module: LeanPool.IsTranscendentalPi
+authors:
+- James Huang
+- Samuël Borza
+source:
+  url: https://github.com/samuelborza/IsTranscendentalPi
+  github_repo: samuelborza/IsTranscendentalPi
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- IsTranscendentalPi
+- IsTranscendentalPiReal
+main_results:
+- declaration: IsTranscendentalPi
+  informal: Proves that the complex number π is transcendental over ℚ.
+- declaration: IsTranscendentalPiReal
+  informal: Proves that the real number π is transcendental over ℚ.
+- declaration: isAlgebraic_I_mul_pi_of_isAlgebraic_pi
+  informal: Shows that if π is algebraic over ℚ then so is iπ.
+- declaration: exists_monic_rat_poly_aeval_Ipi_eq_zero
+  informal: Produces a monic rational polynomial vanishing at iπ when iπ is algebraic.
+tags:
+- transcendence
+- pi
+- number-theory
+- niven
+msc:
+- 11A41

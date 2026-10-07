@@ -1,0 +1,36 @@
+slug: fineqs
+title: FinEqs - reducing equations defining a subset of n-space over a finite field
+summary: Formalizes the finite-field equation-reduction theorem and sharpness examples.
+branch: number theory
+entry_module: LeanPool.Fineqs
+authors:
+- Stefan Barańczuk
+- Aristotle
+source:
+  arxiv: '1906.11174'
+  doi: 10.5802/afst.1766
+  github_repo: nasqret/fineqs
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.Fineqs.theorem_1
+- LeanPool.Fineqs.prop_1
+main_results:
+- declaration: LeanPool.Fineqs.theorem_1
+  informal: Reduces equations on a small finite set to at most n equations in the same span.
+- declaration: LeanPool.Fineqs.prop_1
+  informal: Shows the cardinality bound in the reduction theorem is sharp.
+- declaration: LeanPool.Fineqs.corollary_2
+  informal: Applies the reduction theorem to affine space over a finite field.
+- declaration: LeanPool.Fineqs.corollary_3
+  informal: Applies the reduction theorem to nonempty projective zero loci.
+- declaration: LeanPool.Fineqs.remark_example
+  informal: Shows n - 1 coordinate-function combinations have at least q common zeros.
+tags:
+- number-theory
+- finite-fields
+- algebraic-geometry
+msc:
+- 14G15
+- 11T06

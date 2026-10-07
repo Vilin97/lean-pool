@@ -1,0 +1,46 @@
+slug: lean-quantumalg
+title: Lean-QuantumAlg
+summary: Provides a Mathlib-based library of formally verified quantum-algorithm definitions, primitives,
+  and endpoints, including QFT, QSP, quantum kernels, amplitude amplification, Grover search, phase estimation,
+  order finding, teleportation, and a Lie-algebraic barren-plateau witness.
+branch: quantum computing
+entry_module: LeanPool.LeanQuantumAlg
+authors:
+- QudeLeap Team
+source:
+  title: Lean-QuantumAlg
+  authors:
+  - QudeLeap Team
+  url: https://github.com/QudeLeap/Lean-QuantumAlg
+  github_repo: QudeLeap/Lean-QuantumAlg
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- QuantumAlg.GroverSearch.main_success_probability
+main_results:
+- declaration: QuantumAlg.QuantumFourierTransform.main
+  informal: Proves the QFT action on computational-basis states and records exact circuit counts.
+- declaration: QuantumAlg.ReflectionBasedQuantumSignalProcessing.main
+  informal: Characterizes reflection-based single-qubit QSP transforms in the Chebyshev basis.
+- declaration: QuantumAlg.TrigonometricQuantumSignalProcessing.main
+  informal: Characterizes trigonometric single-qubit QSP transforms in the YZZYZ form.
+- declaration: QuantumAlg.QuantumKernel.main
+  informal: Proves that fidelity quantum-kernel Gram matrices are positive semidefinite.
+- declaration: QuantumAlg.QuantumKernelAdvantage.separation
+  informal: States the conditional quantum-kernel learning separation from discrete-log hardness.
+- declaration: QuantumAlg.fullControllability_hasBarrenPlateau
+  informal: Exhibits an exponentially vanishing loss-variance family for a fully controllable dynamical
+    Lie algebra, conditional on the assumed Ragone second-moment variance law (the Haar/Weingarten averaging
+    identity Var = P_g(rho)*P_g(O)/dim, taken as a hypothesis rather than derived from a circuit twirl).
+- declaration: QuantumAlg.GroverSearch.main_success_probability
+  informal: Derives Grover search success probability from the amplitude-amplification closed form.
+tags:
+- quantum-computing
+- quantum-algorithms
+- quantum-signal-processing
+- quantum-kernels
+msc:
+- 81P68
+- 81P45
+- 68Q12

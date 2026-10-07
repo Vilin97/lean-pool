@@ -1,0 +1,50 @@
+slug: demazure-product
+title: Extended Demazure Product on ASP Permutations
+summary: Formalizes the extended Demazure product on almost-sign-preserving integer permutations, including
+  slipface models, residuals, greedy and stingy characterizations, reduction theorems, adjacent-transposition
+  formulas, and 321-avoiding factorization results.
+branch: algebraic combinatorics
+entry_module: LeanPool.DemazureProduct
+authors:
+- Nathan Pflueger
+source:
+  title: An extended Demazure product on integer permutations via min-plus matrix multiplication
+  authors:
+  - Nathan Pflueger
+  arxiv: '2206.14227'
+  github_repo: npflueger/demazure
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- LeanPool.DemazureProduct.AspPerm.star
+main_results:
+- declaration: LeanPool.DemazureProduct.AspPerm.star
+  informal: Defines the extended Demazure product on almost-sign-preserving permutations.
+- declaration: LeanPool.DemazureProduct.AspPerm.star_assoc
+  informal: Proves associativity of the extended Demazure product on almost-sign-preserving permutations.
+- declaration: LeanPool.DemazureProduct.Reduction.starGreedy
+  informal: Characterizes the Demazure product as the Bruhat-maximum of ordinary products of smaller factors.
+- declaration: LeanPool.DemazureProduct.Reduction.reduce
+  informal: Reduces inequalities against a Demazure product to ordinary products of Bruhat-smaller factors
+    with fixed shift.
+- declaration: LeanPool.DemazureProduct.Reduction.lres_stingy
+  informal: Gives the stingy characterization of the left residual as a Bruhat-minimum of ordinary products.
+- declaration: LeanPool.DemazureProduct.ReducedProducts.star_eq_mul_iff_reducedProduct
+  informal: Shows that the Demazure product equals ordinary multiplication exactly for reduced ASP products.
+- declaration: LeanPool.DemazureProduct.Transpositions.starSigma
+  informal: Proves the adjacent-transposition formula for multiplying an ASP permutation by a no-consecutive-pair
+    involution.
+- declaration: LeanPool.DemazureProduct.ASP321a.dprod_eq_iff
+  informal: Characterizes Demazure factorizations of 321-avoiding ASP permutations by isolated inversion-set
+    decompositions.
+- declaration: LeanPool.DemazureProduct.Tableaux.setValuedTableauEquivHeckeFactorization
+  informal: Relates fixed-shift set-valued tableaux to Hecke factorizations of 321-avoiding ASP permutations.
+tags:
+- algebraic-combinatorics
+- demazure-product
+- bruhat-order
+- permutations
+msc:
+- 05E05
+- 20F55

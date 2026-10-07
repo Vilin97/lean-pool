@@ -1,0 +1,47 @@
+slug: hsd-interior-point-lp
+title: Homogeneous self-dual interior-point method for linear programming
+summary: Formalizes a homogeneous self-dual interior-point method for linear programming, including primal-dual
+  data, Newton block solvability from full row rank, fixed Ye-Todd-Mizuno predictor/corrector local estimates,
+  contraction bounds, and logarithmic stopping certificates for generated iterates.
+branch: linear optimization
+entry_module: LeanPool.HSDInteriorPointLP
+authors:
+- Makoto Yamashita
+source:
+  title: An O(√nL)-iteration homogeneous and self-dual linear programming algorithm
+  authors:
+  - Yinyu Ye
+  - Michael J. Todd
+  - Shinji Mizuno
+  doi: 10.1287/moor.19.1.53
+  github_repo: makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- HSDInteriorPointLP.YTM_fixed_local_theory_from_paper
+main_results:
+- declaration: HSDInteriorPointLP.YTM_fixed_local_theory_from_paper
+  informal: Packages the fixed Ye-Todd-Mizuno local theory, combining predictor and corrector estimates
+    for the tight and wide central neighborhoods.
+  source_ref: Y. Ye, M. J. Todd, and S. Mizuno, An O(√nL)-iteration homogeneous and self-dual linear programming
+    algorithm, Mathematics of Operations Research 19(1):53-67, 1994.
+- declaration: HSDInteriorPointLP.HSDGeneratedAlgorithm.gap_stop_even_at_logPairBound
+  informal: Proves that the generated even iterate satisfies the gap stopping test at the logarithmic
+    pair bound.
+- declaration: HSDInteriorPointLP.HSDGeneratedAlgorithm.mu_stop_even_at_logPairBound
+  informal: Proves that the generated even iterate satisfies the duality-measure stopping test at the
+    scaled logarithmic pair bound.
+- declaration: HSDInteriorPointLP.HLP_newton_block_system_solvable_from_full_row_rank
+  informal: Shows solvability of the Newton block system from the full-row-rank assumption through finite-dimensional
+    linear algebra.
+- declaration: HSDInteriorPointLP.YTM_contraction_power_le_exp
+  informal: Bounds the fixed YTM contraction power by the corresponding exponential decay estimate.
+tags:
+- linear-programming
+- interior-point-methods
+- optimization
+- homogeneous-self-dual
+msc:
+- 90C05
+- 90C51

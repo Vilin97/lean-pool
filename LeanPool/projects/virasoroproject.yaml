@@ -1,0 +1,35 @@
+slug: virasoroproject
+title: Virasoro Project
+summary: Formalizes the Virasoro algebra, its Witt-algebra central extension, Verma modules, and the basic
+  bosonic Sugawara construction.
+branch: representation theory
+entry_module: LeanPool.VirasoroProject
+authors:
+- Kalle Kytölä
+source:
+  title: Infinite-Dimensional Lie Algebras
+  authors:
+  - Victor Kac
+  url: https://doi.org/10.1017/CBO9780511626234
+  github_repo: kkytola/VirasoroProject
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- VirasoroProject.VirasoroAlgebra
+- VirasoroProject.sugawaraRepresentation
+main_results:
+- declaration: VirasoroProject.VirasoroAlgebra
+  informal: Defines the Virasoro algebra as a one-dimensional central extension of the Witt algebra.
+- declaration: VirasoroProject.sugawaraRepresentation
+  informal: Constructs the basic bosonic Sugawara representation of the Virasoro algebra from locally
+    truncated Heisenberg actions.
+tags:
+- representation-theory
+- lie-algebras
+- mathematical-physics
+- virasoro-algebra
+msc:
+- 17B68
+- 17B56
+- 81R10

@@ -1,0 +1,35 @@
+slug: partial-combinatory-algebras
+title: Partial Combinatory Algebras
+summary: Formalises partial combinatory algebras with the K/S combinators, programming combinators, the
+  free combinatory algebra, and the graph model.
+branch: logic and computability
+entry_module: LeanPool.PartialCombinatoryAlgebras
+authors:
+- Andrej Bauer
+source:
+  title: 'Realizability: An Introduction to its Categorical Side'
+  authors:
+  - Jaap van Oosten
+  url: https://doi.org/10.1016/S0049-237X(08)80003-1
+  github_repo: andrejbauer/partial-combinatory-algebras
+license: MIT
+status: verified
+provenance: human
+main_declarations:
+- LeanPool.PartialCombinatoryAlgebras.PCA
+main_results:
+- declaration: LeanPool.PartialCombinatoryAlgebras.PCA
+  informal: Defines the class of partial combinatory algebras (PCAs) with K and S combinators.
+- declaration: LeanPool.PartialCombinatoryAlgebras.CA
+  informal: Defines total combinatory algebras and exhibits every total combinatory algebra as a PCA.
+- declaration: LeanPool.PartialCombinatoryAlgebras.FreeCA
+  informal: Constructs the free total combinatory algebra as a quotient of formal expressions.
+- declaration: LeanPool.PartialCombinatoryAlgebras.GraphModel.isCA
+  informal: Constructs the graph-model combinatory algebra on the powerset of any Listing-typed carrier.
+tags:
+- combinatory-algebra
+- lambda-calculus
+- computability
+msc:
+- 03B40
+- 03D75

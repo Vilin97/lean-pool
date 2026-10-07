@@ -1,0 +1,37 @@
+slug: semicircle-catalan
+title: Genus-Zero Pairings and Catalan Numbers
+summary: 'Formalizes the finite combinatorics behind the genus-zero term of the Wigner semicircle law:
+  a pairing of Fin (2n), viewed as a fixed-point-free involution, has genus zero (total cycle count of
+  the rotation product maximal) exactly when it is noncrossing, and these genus-zero pairings are counted
+  by the Catalan number Cₙ. The Catalan recurrence is obtained from an explicit equivalence decomposing
+  a noncrossing pairing by the partner of vertex 0 into independent inside and outside pairings.'
+branch: combinatorics
+entry_module: LeanPool.SemicircleCheck
+authors:
+- Wondermonger-daydreaming
+source:
+  title: 'semicircle-catalan: genus-zero pairings and the Catalan moments of the Wigner semicircle law'
+  authors:
+  - Wondermonger-daydreaming
+  url: https://github.com/Wondermonger-daydreaming/semicircle-catalan
+  github_repo: Wondermonger-daydreaming/semicircle-catalan
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- card_noncrossingPairing_eq_catalan
+- Pairing.genus_zero_count
+main_results:
+- declaration: card_noncrossingPairing_eq_catalan
+  informal: The number of noncrossing pairings on 2n points equals the Catalan number catalan n.
+- declaration: Pairing.genus_zero_count
+  informal: The number of genus-zero pairings of Fin (2n) equals the Catalan number catalan n.
+- declaration: Pairing.genus_zero_iff_noncrossing
+  informal: A pairing has genus zero if and only if it is noncrossing.
+tags:
+- combinatorics
+- catalan-numbers
+- noncrossing-partitions
+msc:
+- 05A15
+- 05A18

@@ -1,0 +1,56 @@
+slug: krohn-rhodes
+title: Aperiodic and simple-group wreath-division towers
+summary: Constructs a finite recursive wreath-division tower for every finite monoid in universe zero,
+  with finite aperiodic or finite simple-group factors and every simple-group factor a monoid divisor
+  of the original monoid. Implements a variant of the Diekert–Kufleitner–Steinberg local-divisor argument,
+  with reusable monoid and semigroup division, local divisors, action coverings, wreath reassociation,
+  and the Krasner–Kaloujnine group embedding. The endpoint permits arbitrary aperiodic factors and recursive
+  intermediate bases; it does not assert the three-element flip-flop reduction, a single transformation-monoid
+  strong division, or quantitative decomposition bounds.
+branch: algebra
+entry_module: LeanPool.KrohnRhodes
+authors:
+- Aditya Rao
+source:
+  title: Krohn–Rhodes formalization by Aditya Rao
+  url: https://github.com/adii800/krohn-rhodes-lean/tree/8152fef3507406d2b4f4ed3760404ea88298e382
+  github_repo: adii800/krohn-rhodes-lean
+  commit: 8152fef3507406d2b4f4ed3760404ea88298e382
+  arxiv: '1111.1585'
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- LeanPool.KrohnRhodes.krohn_rhodes_prime_decomposition
+main_results:
+- declaration: LeanPool.KrohnRhodes.krohn_rhodes_prime_decomposition
+  informal: Every finite monoid M in universe zero admits a finite list of finite monoid factors, each
+    witnessed to be aperiodic or a simple group, with DivTowerWreath M factors and every simple-group
+    factor a monoid divisor of M. An empty tower means M divides the trivial monoid. At a nonempty step,
+    M divides F wreath B for a finite action of a finite monoid B that itself has the tail tower.
+  source_ref: Upstream PrimeDecomposition.lean, completed September 28, 2026 at 07:36:52 UTC and publicly
+    released at 08:48:24 UTC. Variant of Diekert–Kufleitner–Steinberg, arXiv:1111.1585, Sections 3–4,
+    with left actions, the larger local divisor cM intersect Mc, arbitrary aperiodic factors, and recursive
+    semigroup divisions. The stronger flip-flop and transformation-monoid claims of Theorem 4.1 are not
+    asserted. Upstream CITATION.cff attributes the proofs primarily to Claude Code under Aditya Rao's
+    direction.
+- declaration: LeanPool.KrohnRhodes.krasnerKaloujnine_injective
+  informal: For any group G and normal subgroup N, the constructed monoid homomorphism from G to Mathlib's
+    regular wreath product of N and G/N is injective. No finiteness assumption is required.
+  source_ref: Upstream Foundations/KrasnerKaloujnine.lean; the classical Krasner–Kaloujnine embedding
+    theorem.
+- declaration: LeanPool.KrohnRhodes.LocalDivisor.localDivides
+  informal: For any monoid M and c in M, the local divisor on cM intersect Mc, with its twisted multiplication
+    and identity c, is a quotient of a submonoid of M.
+  source_ref: Diekert–Kufleitner–Steinberg, arXiv:1111.1585, Section 2.5; uses the full local divisor
+    rather than the smaller cMc union {c}.
+tags:
+- semigroup-theory
+- finite-monoids
+- wreath-products
+- automata-theory
+- group-extensions
+msc:
+- 20M10
+- 20M35
+- 20E22

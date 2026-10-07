@@ -1,0 +1,40 @@
+slug: critical-portraits
+title: Counting Critical Portraits
+summary: Formalizes the census of degree-d critical portraits, modeled as level-canonical (d-1)-subsets
+  of the cyclic group ZMod (d*m), and proves that their number equals C(d*m, d-1)/d for all d, via the
+  Dvoretzky-Motzkin cycle lemma together with an explicit level-canonicalization bijection (injectivity
+  and surjectivity of the delete-minimum map).
+branch: combinatorics
+entry_module: LeanPool.CriticalPortraits
+authors:
+- Keston Aquino-Michaels
+source:
+  title: Counting critical portraits via the cycle lemma
+  authors:
+  - Keston Aquino-Michaels
+  doi: 10.5281/zenodo.20737896
+  github_repo: no-way-labs/lean-critical-portraits
+license: Apache-2.0
+status: verified
+provenance: AI
+main_declarations:
+- CriticalPortraits.card_portraits
+- CriticalPortraits.Cycle.cycle_lemma
+main_results:
+- declaration: CriticalPortraits.card_portraits
+  informal: The number of degree-d critical portraits at level m equals C(d*m, d-1)/d.
+- declaration: CriticalPortraits.Cycle.cycle_lemma
+  informal: 'The Dvoretzky-Motzkin cycle lemma: a period-n integer sequence with period-sum 1 has exactly
+    one good cyclic shift.'
+- declaration: CriticalPortraits.T_injOn
+  informal: The delete-minimum map is injective on critical portraits.
+- declaration: CriticalPortraits.T_surjOn
+  informal: The delete-minimum map surjects onto the level-canonical subsets.
+tags:
+- combinatorics
+- cycle-lemma
+- critical-portraits
+- enumeration
+msc:
+- 05A15
+- 37F20

@@ -1,0 +1,46 @@
+slug: circuitlib
+title: 'circuitlib: a circuit verification library for Lean 4'
+summary: A categorical semantics framework for digital circuits over Belnap's four-valued logic, following
+  Ghica-Kaye-Sprunger. Its main theorems prove that combinational circuits (monotone functions on wire
+  vectors) and sequential circuits (causal monotone stream functions) form symmetric monoidal categories,
+  with a verified full adder as demonstration.
+branch: categorical circuit semantics
+entry_module: LeanPool.Circuitlib
+authors:
+- Matt Hunzinger
+source:
+  arxiv: '2201.10456'
+  url: https://github.com/matthunz/circuitlib
+  github_repo: matthunz/circuitlib
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- Circuit.SequentialCircuitCategory.instSymmetricCategory
+main_results:
+- declaration: Circuit.SequentialCircuitCategory.instSymmetricCategory
+  informal: The category of sequential circuits, whose morphisms are causal monotone stream functions
+    as in Ghica-Kaye-Sprunger's denotational semantics, is symmetric monoidal, with all coherence laws
+    (pentagon, triangle, hexagons, symmetry) proven.
+- declaration: Circuit.CombinationalCircuitCategory.instSymmetricCategory
+  informal: The category of combinational circuits, with wire counts as objects and monotone wire-vector
+    functions as morphisms, is symmetric monoidal under juxtaposition of wire bundles.
+- declaration: Circuit.SequentialCircuitCategory.tensorHom_causal
+  informal: Causality is preserved by parallel composition, the key lemma making sequential circuits closed
+    under the tensor product.
+- declaration: Circuit.BelnapLevel.instSemilatticeSup
+  informal: Belnap's four truth values under the information order form a join-semilattice, the wire-value
+    semantics in which every circuit denotes a monotone function.
+- declaration: Circuit.CombinationalCircuit.adder_def
+  informal: Correctness of a full adder assembled categorically from two half adders, gates, braidings,
+    and whiskerings, computing the Boolean sum and carry bits; a demonstration of the framework.
+tags:
+- circuits
+- hardware
+- category-theory
+- combinational
+- sequential
+msc:
+- 18M05
+- 68Q60
+- 94C11

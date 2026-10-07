@@ -1,0 +1,29 @@
+slug: a-formalization-of-borel-determinacy-in-lean
+title: A formalization of Borel determinacy in Lean
+summary: Formalizes Martin's theorem that every Borel Gale-Stewart game is determined.
+branch: descriptive set theory
+entry_module: LeanPool.AFormalizationOfBorelDeterminacyInLean
+authors:
+- Sven Manthe
+source:
+  arxiv: '2502.03432'
+  github_repo: sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- GaleStewartGame.borel_determinacy
+- GaleStewartGame.Games.borel_determinacy
+main_results:
+- declaration: GaleStewartGame.borel_determinacy
+  informal: Proves that every Borel Gale-Stewart game on a nonempty discrete alphabet is determined.
+- declaration: GaleStewartGame.Games.borel_determinacy
+  informal: Proves Borel determinacy for the bundled game representation used in the formalization.
+tags:
+- descriptive-set-theory
+- game-theory
+- determinacy
+msc:
+- 03E15
+- 54H05
+- 91A44

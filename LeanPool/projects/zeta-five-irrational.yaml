@@ -1,0 +1,50 @@
+slug: zeta-five-irrational
+title: Irrationality of the Riemann zeta function at five
+summary: Proves that Mathlib's Riemann zeta function at five is an irrational real number, following Aabir
+  Fauzan's September 2026 preprint. Constructs integer polynomials of degree 37n with positive values
+  at zeta(5) that decay exponentially in n squared. Includes a general integer-polynomial irrationality
+  criterion, Hankel determinant and moment-integral identities, logarithmic-energy estimates, prime-adic
+  integrality bounds, and kernel-checked rational certificates. The formalization uses a different normalizer
+  and a positive decay constant in place of the paper's specific constant 139/5. Reuses the prime number
+  theorem infrastructure already in the MooreBound project.
+branch: number theory
+entry_module: LeanPool.Zeta5Irrational
+authors:
+- Moritz Firsching
+source:
+  title: Zeta5 formalization of Aabir Fauzan's zeta(5) is irrational
+  url: https://github.com/mo271/Zeta5/tree/f19a1960609f7d38e7b63fd2acb05e6f60a7b741
+  github_repo: mo271/Zeta5
+  commit: f19a1960609f7d38e7b63fd2acb05e6f60a7b741
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- Zeta5Irrational.irrational_five
+main_results:
+- declaration: Zeta5Irrational.irrational_five
+  informal: There exists an irrational real number x whose complex coercion equals Mathlib's Riemann zeta
+    function evaluated at five.
+  source_ref: Fauzan, zeta(5) is irrational, Theorem 1.1, September 17, 2026, https://doi.org/10.5281/zenodo.22826419;
+    upstream Apery/Main.lean. The completed formalization was released on September 23, 2026.
+- declaration: Zeta5Irrational.main_estimate
+  informal: There is a positive real c such that, for all sufficiently large n, an integer polynomial
+    Q of degree 37n is a positive rational multiple of the constructed determinant polynomial and satisfies
+    0 < Q(zeta(5)) < exp(-c*n^2).
+  source_ref: Upstream Apery/MainEstimate.lean; variant of the paper's Theorem 2.1 with c = -800*(Aeff
+    + U) instead of 139/5.
+- declaration: Zeta5Irrational.irrational_of_eventually_exists_int_poly
+  informal: A real xi is irrational if, eventually, integer polynomials of degree at most d(n) have positive
+    values at xi bounded by epsilon(n), and b^d(n)*epsilon(n) tends to zero for every positive natural
+    b.
+  source_ref: Upstream Apery/Criterion.lean; the paper's Section 1.1.
+tags:
+- irrationality
+- zeta-function
+- hankel-determinants
+- potential-theory
+- certified-computation
+msc:
+- 11J72
+- 11M06
+- 31A15

@@ -1,0 +1,36 @@
+slug: lean-poly-abc
+title: Polynomial ABC (Mason–Stothers) and its corollaries
+summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial
+  Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization
+  corollary.
+branch: number theory
+entry_module: LeanPool.LeanPolyABC
+authors:
+- Seewoo Lee
+source:
+  title: Formalization of Polynomial ABC and FLT
+  arxiv: '2408.15180'
+  github_repo: seewoo5/lean-poly-abc
+license: Apache-2.0
+status: verified
+provenance: human
+main_declarations:
+- LeanPolyABC.Polynomial.abc
+- LeanPolyABC.Polynomial.flt
+main_results:
+- declaration: LeanPolyABC.Polynomial.abc
+  informal: Mason–Stothers — for coprime non-constant polynomials with a+b=c, the max degree is below
+    the degree of the radical of abc.
+- declaration: LeanPolyABC.Polynomial.flt
+  informal: The polynomial Fermat's Last Theorem — no nontrivial coprime polynomial solutions of aⁿ+bⁿ=cⁿ
+    for n ≥ 3.
+- declaration: LeanPolyABC.Polynomial.flt_catalan
+  informal: The polynomial Fermat–Catalan inequality bounding solutions of aᵖ+bᵍ=cʳ.
+tags:
+- number-theory
+- polynomials
+- algebra
+- mason-stothers
+msc:
+- 11C08
+- 12E05

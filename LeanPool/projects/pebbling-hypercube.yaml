@@ -1,0 +1,36 @@
+slug: pebbling-hypercube
+title: Optimal Pebbling Number of the Hypercube
+summary: Formalizes that the optimal pebbling number of the n-dimensional hypercube Q_n is Theta((4/3)^n).  Builds
+  a weight-function lower bound of (4/3)^n and a probabilistic recursive upper bound C * (4/3)^n with
+  an explicit constant, combining them into a two-sided big-Theta witness.
+branch: combinatorics
+entry_module: LeanPool.PebblingLean
+authors:
+- Lior Pachter
+source:
+  title: Optimal pebbling number of the hypercube
+  authors:
+  - Lior Pachter
+  url: https://github.com/pachterlab/P_2026_2
+  github_repo: pachterlab/P_2026_2
+license: Apache-2.0
+status: verified
+provenance: mix
+main_declarations:
+- PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta
+main_results:
+- declaration: PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta
+  informal: 'The optimal pebbling number of Q_n has order (4/3)^n: there is a positive constant C with
+    (4/3)^n <= o(Q_n) <= C * (4/3)^n for all n.'
+- declaration: PebblingLean.Hypercube.Paper.lower_bound
+  informal: The optimal pebbling number of Q_n is at least (4/3)^n, proved by a weight-function argument
+    summing one-pebble weights over the cube.
+- declaration: PebblingLean.Hypercube.Paper.upper_bound
+  informal: The optimal pebbling number of Q_n is at most C * (4/3)^n for an explicit constant C, via
+    a probabilistic recursive splitting construction.
+tags:
+- combinatorics
+- pebbling
+- hypercube
+msc:
+- 05C57
