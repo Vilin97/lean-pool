@@ -194,7 +194,7 @@ def count_lean_loc(clones_dir: Path, key: str) -> int | None:
 def load_pool_repos(projects_yml_path: Path) -> set[str]:
     """Load canonical GitHub keys for projects already merged into lean-pool.
 
-    Reads ``LeanPool/projects.yml`` and collects the
+    Reads the project registry and collects the
     ``source.github_repo`` field of each project that has one. Keys are
     normalised via :func:`canonical_key` so they match the keys produced
     by :func:`package_key` for Reservoir entries.

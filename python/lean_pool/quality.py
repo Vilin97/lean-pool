@@ -861,12 +861,14 @@ def _load_projects_yaml(
     path = root / "LeanPool" / "projects.yml"
     if not path.exists() and not (path.parent / "projects").is_dir():
         return None, [_QualityError(path, 1, "missing LeanPool/projects.yml")]
+    if (path.parent / "projects").is_dir():
+        path = path.parent / "projects"
     try:
         data = load_document(path)
     except (yaml.YAMLError, ValueError, OSError) as error:
         return None, [_QualityError(path, 1, f"invalid YAML: {error}")]
     if not isinstance(data, dict):
-        return None, [_QualityError(path, 1, "projects.yml must contain a mapping")]
+        return None, [_QualityError(path, 1, "project registry must contain a mapping")]
     return data, []
 
 
@@ -881,6 +883,8 @@ def _check_projects(
         return errors
 
     path = root / "LeanPool" / "projects.yml"
+    if (path.parent / "projects").is_dir():
+        path = path.parent / "projects"
     projects = data.get("projects", [])
     errors.extend(_check_project_container(path, projects))
     if errors:
@@ -983,10 +987,17 @@ def _check_project_entry_imports(
     }
     return [
         _QualityError(
-            index_path,
+            root / "LeanPool" / module.split(".")[1] / "Imports.lean"
+            if discovers_modules(root) and module.startswith("LeanPool.")
+            else index_path,
             1,
-            f"project entry module {module} is not imported by LeanPool.lean; "
-            "run `lake exe mk_all`",
+            f"project entry module {module} is not imported by "
+            + (
+                "a project Imports module; "
+                if discovers_modules(root)
+                else "LeanPool.lean; "
+            )
+            + "run `lake exe mk_all`",
         )
         for module in sorted(entry_modules - imports)
     ]
@@ -1499,7 +1510,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--write-project-cards",
         action="store_true",
-        help="Rewrite project-card module docstrings from LeanPool/projects.yml.",
+        help="Rewrite project-card module docstrings from the project registry.",
     )
     return parser.parse_args(argv)
 

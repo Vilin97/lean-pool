@@ -25,7 +25,7 @@ from lean_pool.exposition.generate import generate_site
     "repo_root",
     type=click.Path(exists=True, file_okay=False, path_type=Path),
     required=True,
-    help="Repository root containing LeanPool/ sources and projects.yml.",
+    help="Repository root containing LeanPool/ sources and project cards.",
 )
 @click.option(
     "--out",

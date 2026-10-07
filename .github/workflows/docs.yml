@@ -85,6 +85,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Python tooling runtime
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
       - name: Identify compiled Lean sources
         id: build-identity
         run: |
@@ -120,7 +125,7 @@ jobs:
           HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
         run: |
-          decision=$(PYTHONPATH=python python3 -m lean_pool.rebase_fastpath decide \
+          decision=$(PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath decide \
             --workflow docs.yml --repository "$REPOSITORY" --number "$PR_NUMBER" \
             --head "$HEAD_SHA" --base "$BASE_SHA")
           echo "rebase_only=$(echo "$decision" | python3 -c 'import json,sys; print(str(json.load(sys.stdin)["eligible"]).lower())')" >> "$GITHUB_OUTPUT"
@@ -192,7 +197,7 @@ jobs:
 
       - name: Check regenerated LeanPool root without Lean
         if: steps.rebase.outputs.rebase_only == 'true'
-        run: PYTHONPATH=python python3 -m lean_pool.rebase_fastpath check-index
+        run: PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath check-index
 
   # Runs in parallel with the doc-gen4 build; its (small) artifact is merged
   # into the Pages tree by the `deploy` job. Restores the root build cache but

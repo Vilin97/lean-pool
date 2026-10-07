@@ -236,12 +236,13 @@ def clone(
 )
 @click.option(
     "--projects-yml",
+    "--projects",
     "projects_yml_path",
-    type=click.Path(dir_okay=False, path_type=Path),
+    type=click.Path(dir_okay=True, path_type=Path),
     default=DEFAULT_PROJECTS_YML,
     show_default=True,
     help=(
-        "Path to LeanPool/projects.yml. Each project's optional "
+        "Project-card directory or historical registry file. Each project's optional "
         "`source.github_repo` field marks the upstream candidate as "
         "merged, putting a ✓ in the In Pool column. Pass a missing "
         "path to leave the column blank for every row."

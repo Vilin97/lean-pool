@@ -150,3 +150,23 @@ def test_merge_queue_reports_all_required_gates_without_path_filtered_workflows(
     queue = next(rule["parameters"] for rule in rules if rule["type"] == "merge_queue")
     assert queue["grouping_strategy"] == "ALLGREEN"
     assert queue["merge_method"] == "SQUASH"
+
+
+def test_yaml_aware_recovery_has_a_declared_runtime_in_every_job() -> None:
+    """Early planning and restore steps cannot depend on runner-global PyYAML."""
+    modules = ("rebase_fastpath", "ci_pr_build", "queue_build")
+    for filename in ("lean_action_ci.yml", "docs.yml", "exposition-verify.yml"):
+        workflow = yaml.safe_load((WORKFLOWS / filename).read_text())
+        for job in workflow["jobs"].values():
+            runtime_available = False
+            for step in job["steps"]:
+                if str(step.get("uses", "")).startswith("astral-sh/setup-uv@"):
+                    runtime_available = True
+                command = step.get("run", "")
+                if any(f"-m lean_pool.{module}" in command for module in modules):
+                    assert runtime_available, (filename, step)
+                    assert "uv run --project python --locked python -m" in command
+                    assert not any(
+                        f"python3 -m lean_pool.{module}" in command
+                        for module in modules
+                    )

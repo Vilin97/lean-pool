@@ -1,7 +1,7 @@
 """Post project metadata advisory comments on open pull requests.
 
 The advisory is intentionally deterministic and does not execute pull request
-code. It reads ``LeanPool/projects.yml`` from the PR base and head commits via
+code. It reads the project registry from the PR base and head commits via
 the GitHub API, detects added or changed project entries, enriches those
 entries with source-repository metadata, then creates or updates a sticky PR
 conversation comment.
@@ -44,7 +44,7 @@ _TOOLCHAIN_PREFIX_RE = re.compile(r"^leanprover/lean4:", re.IGNORECASE)
 
 @dataclass(frozen=True)
 class ProjectEntry:
-    """Project metadata read from ``LeanPool/projects.yml``."""
+    """Project metadata read from the project registry."""
 
     slug: str
     title: str

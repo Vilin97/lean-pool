@@ -1,11 +1,13 @@
 """Exercise independent project cards, historical reads, and rejected corruption."""
 
+import json
 import subprocess
 from pathlib import Path
 
 import pytest
 import yaml
 
+from lean_pool import registry
 from lean_pool.registry import combine, load_document, read_revision
 
 
@@ -108,3 +110,68 @@ def test_registry_symlinks_rejected_locally_and_in_git(tmp_path: Path) -> None:
     directory.symlink_to(tmp_path, target_is_directory=True)
     with pytest.raises(ValueError, match="symbolic link"):
         load_document(directory)
+
+
+def test_remote_cards_are_read_in_one_complete_request(monkeypatch) -> None:
+    """Adding hundreds of independent cards does not add hundreds of API calls."""
+    entries = [
+        {
+            "name": f"p{i}.yaml",
+            "type": "blob",
+            "mode": 0o100644,
+            "object": {
+                "text": f"slug: p{i}\n",
+                "isTruncated": False,
+                "isBinary": False,
+            },
+        }
+        for i in range(300)
+    ]
+    calls = []
+
+    def output(arguments, **kwargs):
+        calls.append(arguments)
+        return json.dumps({"data": {"repository": {"object": {"entries": entries}}}})
+
+    monkeypatch.setattr(registry.subprocess, "check_output", output)
+    assert (
+        len(
+            yaml.safe_load(registry.remote_text("owner/repo", "head", lambda *a: None))[
+                "projects"
+            ]
+        )
+        == 300
+    )
+    assert len(calls) == 1
+    assert "expression=head:LeanPool/projects" in calls[0]
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"mode": 0o120000},
+        {"type": "tree"},
+        {"name": "nested/a.yaml"},
+        {"object": {"text": "slug: a", "isTruncated": True, "isBinary": False}},
+        {"object": {"text": None, "isTruncated": False, "isBinary": True}},
+    ],
+)
+def test_incomplete_remote_cards_are_rejected(change) -> None:
+    """Unavailable or truncated metadata is never treated as a complete registry."""
+    entry = {
+        "name": "a.yaml",
+        "type": "blob",
+        "mode": 0o100644,
+        "object": {"text": "slug: a", "isTruncated": False, "isBinary": False},
+    }
+    entry.update(change)
+    with pytest.raises(ValueError, match="remote project card"):
+        registry._remote_cards(
+            {"data": {"repository": {"object": {"entries": [entry]}}}}
+        )
+
+
+def test_failed_remote_response_is_rejected() -> None:
+    """GraphQL failures cannot turn prior-art lookup into an empty project list."""
+    with pytest.raises(ValueError, match="unavailable"):
+        registry._remote_cards({"data": None, "errors": [{"message": "unavailable"}]})

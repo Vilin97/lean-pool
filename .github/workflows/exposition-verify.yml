@@ -114,6 +114,11 @@ jobs:
           PYTHONPATH=python python3 -m lean_pool.ci_artifacts restore
           --head "$BUILD_HEAD" --event "$BUILD_EVENT"
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
       - name: Reuse successful queued PR builds
         if: github.event_name == 'merge_group'
         continue-on-error: true
@@ -122,7 +127,7 @@ jobs:
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.queue_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build
           --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Build pool
@@ -166,11 +171,6 @@ jobs:
             .lake/exposition-cache/v1/**/failed.log
           include-hidden-files: true
           retention-days: 7
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-        with:
-          enable-cache: true
 
       - name: Generate site data
         run: |

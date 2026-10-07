@@ -1,7 +1,7 @@
 """Orchestrate generation of the static exposition site.
 
 Reads the extractor JSONL dump, the project registry
-(``LeanPool/projects.yml``) and the Lean sources under the repository root,
+(``LeanPool/projects/``) and the Lean sources under the repository root,
 computes per-project layered layouts and statistics, and writes the site
 described in ``SCHEMA.md``: ``data/projects/<Project>.json`` shards,
 ``data/index.json``, ``data/decls.json``, static assets copied verbatim from
@@ -42,7 +42,7 @@ CARD_SOURCE_FIELDS = ("title", "authors", "doi", "arxiv", "url", "github_repo")
 
 @dataclass
 class ProjectCard:
-    """Registry metadata for one project (from ``LeanPool/projects.yml``)."""
+    """Registry metadata for one project (from the project registry)."""
 
     title: str | None
     provenance: str | None

@@ -9,7 +9,7 @@ steps:
    (JSONL). Kernel-level dependency edges are pre-resolved to human-written
    declarations; compiler-generated auxiliaries are tunnelled through.
 2. **Generator** (`python -m lean_pool.exposition`): reads the dump, the
-   project registry (`LeanPool/projects.yml`) and the Lean sources; computes
+   project registry (`LeanPool/projects/`) and the Lean sources; computes
    per-project layered layouts and stats; emits the static site.
 
 ## Extractor dump (JSONL, one line per declaration)
@@ -59,7 +59,7 @@ GitHub source: `https://github.com/LeanPool/lean-pool/blob/main/<LeanPool/A/B.le
 ```json
 {"schema": 1,
  "project": "ABCExceptions",
- "title": "…",                 // from projects.yml; null for pseudo-projects
+ "title": "…",                 // from project cards; null for pseudo-projects
  "provenance": "human",        // "human" | "AI" | "mix" | null
  "stats": {"nodes": 235, "loc": 4120, "edges": 817, "maxDepth": 14, "avgDepth": 3.71,
            "kinds": {"lemma": 120, "theorem": 75, "def": 37, "structure": 3}},
@@ -95,7 +95,7 @@ count of `LeanPool/<Project>.lean` plus every `.lean` file under
 ### Card metadata (schema 1.1, additive)
 
 Each shard additionally carries the project's registry card (from
-`LeanPool/projects.yml`, matched via `entry_module`'s last component;
+`LeanPool/projects/`, matched via `entry_module`'s last component;
 `card` is `null` for pseudo-projects):
 
 ```json

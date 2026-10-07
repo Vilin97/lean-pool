@@ -15,6 +15,17 @@ import yaml
 DIRECTORY = "LeanPool/projects"
 LEGACY = "LeanPool/projects.yml"
 CARD_NAME = re.compile(r"[A-Za-z0-9_-]+\.yaml\Z")
+CARD_QUERY = """
+query($owner:String!,$name:String!,$expression:String!) {
+  repository(owner:$owner,name:$name) {
+    object(expression:$expression) {
+      ... on Tree {entries {name type mode object {
+        ... on Blob {text isTruncated isBinary}
+      }}}
+    }
+  }
+}
+"""
 
 
 def card_path(path: str) -> bool:
@@ -96,31 +107,50 @@ def remote_text(
     legacy = fetch(repository, LEGACY, revision)
     if legacy is not None:
         return legacy
+    owner, name = repository.split("/", 1)
     raw = subprocess.check_output(
-        ["gh", "api", f"repos/{repository}/git/trees/{revision}?recursive=1"],
+        [
+            "gh",
+            "api",
+            "graphql",
+            "-f",
+            f"query={CARD_QUERY}",
+            "-f",
+            f"owner={owner}",
+            "-f",
+            f"name={name}",
+            "-f",
+            f"expression={revision}:{DIRECTORY}",
+        ],
         text=True,
         timeout=60,
     )
-    tree = json.loads(raw)
-    if tree.get("truncated"):
-        raise ValueError("GitHub registry tree is incomplete")
-    entries = [
-        item
-        for item in tree["tree"]
-        if item["path"].startswith(DIRECTORY + "/") and item["type"] != "tree"
-    ]
-    if any(
-        not card_path(item["path"]) or item.get("mode") != "100644" for item in entries
-    ):
-        raise ValueError("unexpected remote registry file")
-    paths = [item["path"] for item in entries]
+    return yaml.safe_dump(_remote_cards(json.loads(raw)), sort_keys=False)
+
+
+def _remote_cards(response: dict) -> dict[str, Any]:
+    """Read a complete one-level registry in one request, rejecting partial blobs."""
+    repository = (response.get("data") or {}).get("repository") or {}
+    tree = repository.get("object") or {}
+    entries = tree.get("entries")
+    if response.get("errors") or not isinstance(entries, list):
+        raise ValueError("GitHub registry tree is unavailable")
     cards = {}
-    for path in paths:
-        text = fetch(repository, path, revision)
-        if text is None:
-            raise ValueError(f"could not read project card {path}")
-        cards[Path(path).name] = text
-    return yaml.safe_dump(combine(cards), sort_keys=False)
+    for item in entries:
+        name = item["name"]
+        blob = item.get("object") or {}
+        if (
+            item.get("mode") != 0o100644
+            or item.get("type") != "blob"
+            or not CARD_NAME.fullmatch(name)
+            or name in cards
+            or blob.get("isTruncated") is not False
+            or blob.get("isBinary") is not False
+            or not isinstance(blob.get("text"), str)
+        ):
+            raise ValueError(f"invalid or incomplete remote project card: {name}")
+        cards[name] = blob["text"]
+    return combine(cards)
 
 
 class _UniqueLoader(yaml.SafeLoader):

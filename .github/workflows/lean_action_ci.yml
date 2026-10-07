@@ -123,6 +123,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Python tooling runtime
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
       - name: Identify compiled Lean sources
         id: build-identity
         env:
@@ -192,7 +197,7 @@ jobs:
           reuse_run_id=""
           previous_head=""
           if [ "$EVENT_NAME" = "pull_request" ] && [ "$FORCE_FULL" != "true" ]; then
-            reuse=$(PYTHONPATH=python python3 -m lean_pool.rebase_fastpath decide \
+            reuse=$(PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath decide \
               --repository "$REPOSITORY" --number "$PR_NUMBER" \
               --head "$PR_HEAD" --base "$BASE_SHA")
             if [ "$(echo "$reuse" | python3 -c 'import json,sys; print(str(json.load(sys.stdin)["eligible"]).lower())')" = true ]; then
@@ -289,11 +294,11 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           BEFORE_SHA: ${{ github.event.before }}
         run: |
-          if PYTHONPATH=python python3 -m lean_pool.queue_build \
+          if PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build \
             --repository "$REPOSITORY" --base "$BEFORE_SHA" --head "$GITHUB_SHA" --merged; then
             echo 'Restored the successfully merged queue build.'
           elif git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
-            PYTHONPATH=python python3 -m lean_pool.rebase_fastpath restore-main \
+            PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath restore-main \
               --repository "$REPOSITORY" --head "$BEFORE_SHA" --base "$GITHUB_SHA"
           fi
 
@@ -308,7 +313,7 @@ jobs:
           PR_BASE: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           CURRENT_RUN: ${{ github.run_id }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.ci_pr_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.ci_pr_build
           --number "$PR_NUMBER" --branch "$PR_BRANCH"
           --head "$PR_HEAD" --base "$PR_BASE" --current-run "$CURRENT_RUN"
 
@@ -320,7 +325,7 @@ jobs:
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.queue_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build
           --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Build project
@@ -380,7 +385,7 @@ jobs:
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.queue_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build
           --base "$BASE_SHA" --head "$HEAD_SHA" --receipts
 
       - name: Lint
@@ -415,7 +420,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
-        run: PYTHONPATH=python python3 -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Retain PR project build
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -681,7 +686,7 @@ jobs:
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.queue_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build
           --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Build project
@@ -741,7 +746,7 @@ jobs:
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.queue_build
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_build
           --base "$BASE_SHA" --head "$HEAD_SHA" --receipts
 
       - name: Lint
@@ -776,7 +781,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
-        run: PYTHONPATH=python python3 -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Retain PR project build
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
@@ -875,6 +880,11 @@ jobs:
           restore-keys: |
             LeanPoolBuild-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
       - name: Reuse newly merged projects while the main cache warms
         if: steps.main-build.outputs.cache-hit != 'true'
         continue-on-error: true
@@ -884,7 +894,7 @@ jobs:
           PREVIOUS_HEAD: ${{ needs.plan.outputs.previous_head }}
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.rebase_fastpath restore-main
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath restore-main
           --repository "$REPOSITORY" --head "$PREVIOUS_HEAD" --base "$BASE_SHA"
 
       - name: Restore previously validated PR modules
@@ -896,7 +906,7 @@ jobs:
           PREVIOUS_HEAD: ${{ needs.plan.outputs.previous_head }}
           REPOSITORY: ${{ github.repository }}
         run: >-
-          PYTHONPATH=python python3 -m lean_pool.rebase_fastpath restore
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath restore
           --repository "$REPOSITORY" --run-id "$RUN_ID" --head "$PREVIOUS_HEAD"
 
       - name: Install Lean
@@ -905,11 +915,6 @@ jobs:
           auto-config: false
           use-github-cache: false
           use-mathlib-cache: false
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-        with:
-          enable-cache: true
 
       - name: Check compiled artifact dependency tracking with pinned Lean
         env:
@@ -926,7 +931,7 @@ jobs:
           fi
 
       - name: Check generated index
-        run: PYTHONPATH=python python3 -m lean_pool.rebase_fastpath check-index
+        run: PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath check-index
 
       - name: Build combined Lean root
         run: |
@@ -986,7 +991,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha }}
-        run: PYTHONPATH=python python3 -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: PYTHONPATH=python uv run --project python --locked python -m lean_pool.rebase_fastpath pack --base "$BASE_SHA" --head "$HEAD_SHA"
 
       - name: Retain PR project build
         continue-on-error: true
