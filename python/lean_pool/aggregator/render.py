@@ -200,7 +200,7 @@ def load_pool_repos(projects_yml_path: Path) -> set[str]:
     by :func:`package_key` for Reservoir entries.
 
     Args:
-        projects_yml_path: Path to ``LeanPool/projects.yml``.
+        projects_yml_path: Project-card directory or historical registry file.
 
     Returns:
         Set of canonical ``owner/name`` keys. Empty if the file is
@@ -210,6 +210,7 @@ def load_pool_repos(projects_yml_path: Path) -> set[str]:
     """
     if (
         not projects_yml_path.is_file()
+        and not projects_yml_path.is_dir()
         and not (projects_yml_path.parent / "projects").is_dir()
     ):
         return set()

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -170,3 +172,40 @@ def test_yaml_aware_recovery_has_a_declared_runtime_in_every_job() -> None:
                         f"python3 -m lean_pool.{module}" in command
                         for module in modules
                     )
+
+
+def test_required_scoped_checks_fail_closed_when_classification_fails() -> None:
+    """A broken classifier cannot turn a required validation into a passing skip."""
+    for filename, names in (
+        ("python_ci.yml", ("lint", "test")),
+        ("exposition-verify.yml", ("verify",)),
+    ):
+        workflow = yaml.safe_load((WORKFLOWS / filename).read_text())
+        for name in names:
+            job = workflow["jobs"][name]
+            assert job["if"] == (
+                "always() && (needs.scope.result != 'success' || "
+                "needs.scope.outputs.applicable != 'false')"
+            )
+            guard = job["steps"][0]
+            assert guard["env"] == {
+                "SCOPE_RESULT": "${{ needs.scope.result }}",
+                "APPLICABLE": "${{ needs.scope.outputs.applicable }}",
+            }
+            for result, applicable, accepted in (
+                ("success", "true", True),
+                ("failure", "true", False),
+                ("failure", "", False),
+                ("cancelled", "false", False),
+                ("success", "", False),
+            ):
+                process = subprocess.run(
+                    ["bash", "-e", "-c", guard["run"]],
+                    env={
+                        **os.environ,
+                        "SCOPE_RESULT": result,
+                        "APPLICABLE": applicable,
+                    },
+                    capture_output=True,
+                )
+                assert (process.returncode == 0) == accepted

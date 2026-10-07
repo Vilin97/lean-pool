@@ -56,10 +56,19 @@ jobs:
           echo "applicable=$applicable" >> "$GITHUB_OUTPUT"
   lint:
     needs: scope
-    if: needs.scope.outputs.applicable == 'true'
+    if: always() && (needs.scope.result != 'success' || needs.scope.outputs.applicable != 'false')
     runs-on: ubuntu-latest
     name: Lint (ruff)
     steps:
+      - name: Require successful change classification
+        env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          APPLICABLE: ${{ needs.scope.outputs.applicable }}
+        run: |
+          if [ "$SCOPE_RESULT" != success ] || [ "$APPLICABLE" != true ]; then
+            echo "::error::Change classification failed; required validation cannot be skipped."
+            exit 1
+          fi
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
@@ -79,10 +88,19 @@ jobs:
 
   test:
     needs: scope
-    if: needs.scope.outputs.applicable == 'true'
+    if: always() && (needs.scope.result != 'success' || needs.scope.outputs.applicable != 'false')
     runs-on: ubuntu-latest
     name: Test (pytest)
     steps:
+      - name: Require successful change classification
+        env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          APPLICABLE: ${{ needs.scope.outputs.applicable }}
+        run: |
+          if [ "$SCOPE_RESULT" != success ] || [ "$APPLICABLE" != true ]; then
+            echo "::error::Change classification failed; required validation cannot be skipped."
+            exit 1
+          fi
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
@@ -105,6 +123,7 @@ jobs:
         run: |
           arguments=()
           if [ "$EVENT" = pull_request ]; then arguments+=(--pull-request); fi
+          if [ "$EVENT" = push ]; then arguments+=(--main-push); fi
           PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_notice \
             --base "$BASE_SHA" --head "$HEAD_SHA" "${arguments[@]}"
 

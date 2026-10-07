@@ -54,10 +54,19 @@ jobs:
           echo "applicable=$applicable" >> "$GITHUB_OUTPUT"
   verify:
     needs: scope
-    if: needs.scope.outputs.applicable == 'true'
+    if: always() && (needs.scope.result != 'success' || needs.scope.outputs.applicable != 'false')
     runs-on: ubuntu-latest
     name: Verify minimal Lean files
     steps:
+      - name: Require successful change classification
+        env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          APPLICABLE: ${{ needs.scope.outputs.applicable }}
+        run: |
+          if [ "$SCOPE_RESULT" != success ] || [ "$APPLICABLE" != true ]; then
+            echo "::error::Change classification failed; required validation cannot be skipped."
+            exit 1
+          fi
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 

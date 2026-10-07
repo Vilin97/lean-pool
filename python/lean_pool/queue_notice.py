@@ -55,6 +55,49 @@ def prepare_pull_request(root: Path, base: str, submitted_head: str) -> None:
     write_test_view(root)
 
 
+def validate_merged_snapshot(
+    root: Path, repository: str, commit: str, submitted: str
+) -> None:
+    """Identify a merged PR by GitHub association, rather than its commit title."""
+    pulls = github_json(f"repos/{repository}/commits/{commit}/pulls?per_page=100")
+    for pull in pulls:
+        if (
+            not pull.get("merged_at")
+            or pull.get("merge_commit_sha") != commit
+            or pull["base"]["repo"]["full_name"] != repository
+            or pull["base"]["ref"] != "main"
+        ):
+            continue
+        previous = pull["head"]["sha"]
+        if not re.fullmatch("[0-9a-f]{40}", previous):
+            raise ValueError("Invalid merged PR head")
+        subprocess.run(["git", "fetch", "origin", previous], cwd=root, check=True)
+        if submitted != git(root, "show", f"{previous}:NOTICE"):
+            raise ValueError("Merged NOTICE does not match the submitted PR")
+        validate_snapshot(root, previous, submitted)
+        return
+    raise ValueError("Merged NOTICE does not match its own project registry")
+
+
+def prepare_main_push(root: Path, repository: str, base: str, head: str) -> None:
+    """Check main snapshots, allowing verified older metadata PR attribution."""
+    commits = git(
+        root, "rev-list", "--first-parent", "--reverse", f"{base}..{head}"
+    ).splitlines()
+    for commit in commits:
+        changed = git(root, "diff", "--name-only", f"{commit}^", commit).splitlines()
+        if "NOTICE" not in changed:
+            continue
+        submitted = git(root, "show", f"{commit}:NOTICE")
+        try:
+            validate_snapshot(root, commit, submitted)
+        except ValueError:
+            # An independent content merge may precede a metadata PR whose
+            # attribution was correctly generated on an older project set.
+            validate_merged_snapshot(root, repository, commit, submitted)
+    write_test_view(root)
+
+
 def prepare(root: Path, repository: str, base: str, head: str) -> None:
     """Check each edited NOTICE, then include all queued projects in the test view."""
     commits = git(root, "rev-list", "--reverse", f"{base}..{head}").splitlines()
@@ -91,10 +134,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", required=True)
     parser.add_argument("--head", required=True)
-    parser.add_argument("--pull-request", action="store_true")
+    event = parser.add_mutually_exclusive_group()
+    event.add_argument("--pull-request", action="store_true")
+    event.add_argument("--main-push", action="store_true")
     args = parser.parse_args()
     if args.pull_request:
         prepare_pull_request(Path.cwd(), args.base, args.head)
+    elif args.main_push:
+        prepare_main_push(
+            Path.cwd(), os.environ["GITHUB_REPOSITORY"], args.base, args.head
+        )
     else:
         prepare(Path.cwd(), os.environ["GITHUB_REPOSITORY"], args.base, args.head)
 

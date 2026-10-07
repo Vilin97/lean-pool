@@ -582,6 +582,14 @@ def test_load_pool_repos_missing_file_returns_empty(tmp_path: Path) -> None:
     assert load_pool_repos(tmp_path / "absent.yml") == set()
 
 
+def test_load_pool_repos_accepts_a_custom_card_directory(tmp_path: Path) -> None:
+    """An explicit archive directory keeps the merged-project markers intact."""
+    path = tmp_path / "archived-cards"
+    path.mkdir()
+    (path / "alpha.yaml").write_text("slug: alpha\nsource:\n  github_repo: Acme/Demo\n")
+    assert load_pool_repos(path) == {"acme/demo"}
+
+
 def test_load_pool_repos_invalid_yaml_returns_empty(tmp_path: Path) -> None:
     """A malformed file logs and returns empty rather than crashing render."""
     path = tmp_path / "projects.yml"
