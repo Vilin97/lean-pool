@@ -24,9 +24,11 @@ but mixed old and new layouts are rejected.
 
 Generated README statistics and NOTICE are submitted through one protected
 `codex/generated-metadata` PR. That PR is not rewritten while checks are running.
-For groups combining metadata and content, Python CI verifies each submitted
-NOTICE against its own immutable PR registry before regenerating the combined
-view for the ordinary generator tests.
+For PRs and groups combining metadata and content, Python CI verifies each
+authored NOTICE against its own immutable PR registry before regenerating the
+combined checkout view for the ordinary generator tests. An inherited stale
+generated file therefore cannot block unrelated Python changes; an incorrect
+authored attribution edit still fails before regeneration.
 
 Deployment is deliberately staged: merge the infrastructure while the legacy
 registry remains, then migrate only the content files. Enable the repository's

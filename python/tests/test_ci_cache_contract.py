@@ -143,7 +143,7 @@ def test_merge_queue_reports_all_required_gates_without_path_filtered_workflows(
         workflow = yaml.safe_load((WORKFLOWS / filename).read_text())
         events = workflow.get("on", workflow.get(True))
         assert "merge_group" in events
-        if filename in {"python_ci.yml", "workflow_lint.yml", "exposition-verify.yml"}:
+        if filename != "content-pr-guard.yml":
             assert "paths" not in events["pull_request"]
         names.update(job.get("name", key) for key, job in workflow["jobs"].items())
     assert required <= names

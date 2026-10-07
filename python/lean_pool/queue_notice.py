@@ -6,6 +6,7 @@ import argparse
 import os
 import re
 import subprocess
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -27,6 +28,31 @@ def validate_snapshot(root: Path, revision: str, expected_notice: str) -> None:
         raise ValueError("Attribution notes refer to unknown projects")
     if notice.render(projects, extra) != expected_notice:
         raise ValueError("Submitted NOTICE does not match its own project registry")
+
+
+def write_test_view(root: Path) -> None:
+    """Prepare generated attribution without following a checkout-controlled link."""
+    with tempfile.NamedTemporaryFile(
+        mode="w", dir=root, prefix=".notice-test-", delete=False
+    ) as output:
+        temporary = Path(output.name)
+        try:
+            output.write(notice.build(root))
+        except BaseException:
+            temporary.unlink()
+            raise
+    temporary.replace(root / "NOTICE")
+
+
+def prepare_pull_request(root: Path, base: str, submitted_head: str) -> None:
+    """Validate authored edits separately from stale inherited generated files."""
+    ancestor = git(root, "merge-base", base, submitted_head).strip()
+    changed = git(root, "diff", "--name-only", ancestor, submitted_head).splitlines()
+    if "NOTICE" in changed:
+        validate_snapshot(
+            root, submitted_head, git(root, "show", f"{submitted_head}:NOTICE")
+        )
+    write_test_view(root)
 
 
 def prepare(root: Path, repository: str, base: str, head: str) -> None:
@@ -57,7 +83,7 @@ def prepare(root: Path, repository: str, base: str, head: str) -> None:
     # Content-only PRs already leave generated NOTICE temporarily stale. A
     # combined queue must retain that policy while validating every edited
     # snapshot above and testing the full generator on the combined registry.
-    (root / "NOTICE").write_text(notice.build(root))
+    write_test_view(root)
 
 
 def main() -> None:
@@ -65,8 +91,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", required=True)
     parser.add_argument("--head", required=True)
+    parser.add_argument("--pull-request", action="store_true")
     args = parser.parse_args()
-    prepare(Path.cwd(), os.environ["GITHUB_REPOSITORY"], args.base, args.head)
+    if args.pull_request:
+        prepare_pull_request(Path.cwd(), args.base, args.head)
+    else:
+        prepare(Path.cwd(), os.environ["GITHUB_REPOSITORY"], args.base, args.head)
 
 
 if __name__ == "__main__":

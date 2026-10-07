@@ -95,15 +95,18 @@ jobs:
       - name: Install test dependencies
         run: cd python && uv sync --locked --group test
 
-      - name: Validate constituent attribution and regenerate the combined view
-        if: github.event_name == 'merge_group'
+      - name: Validate authored attribution and regenerate the combined test view
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group' || github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
-          BASE_SHA: ${{ github.event.merge_group.base_sha }}
-          HEAD_SHA: ${{ github.event.merge_group.head_sha }}
-        run: >-
-          PYTHONPATH=python uv run --project python python -m lean_pool.queue_notice
-          --base "$BASE_SHA" --head "$HEAD_SHA"
+          EVENT: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.merge_group.head_sha || github.event.pull_request.head.sha || github.sha }}
+        run: |
+          arguments=()
+          if [ "$EVENT" = pull_request ]; then arguments+=(--pull-request); fi
+          PYTHONPATH=python uv run --project python --locked python -m lean_pool.queue_notice \
+            --base "$BASE_SHA" --head "$HEAD_SHA" "${arguments[@]}"
 
       - name: Pytest
         run: |

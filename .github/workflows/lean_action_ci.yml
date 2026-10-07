@@ -60,33 +60,6 @@ on:
       # PR #301 added a 210-file project onto `bump/v4.33.0-rc1` and got no
       # build, no linters, and no quality checks at all.
       - 'bump/**'
-    paths:
-      - 'README.md'
-      # Attribution-only PRs must still produce the required checks.
-      - 'NOTICE.extra.yml'
-      - '**/*.lean'
-      - 'lakefile.toml'
-      - 'lean-toolchain'
-      - 'lake-manifest.json'
-      - 'LeanPool/projects/**'
-      - 'LeanPool/projects.yml'
-      - 'python/lean_pool/quality.py'
-      - 'python/lean_pool/registry.py'
-      - 'python/lean_pool/indexes.py'
-      - 'python/lean_pool/queue_build.py'
-      - 'python/lean_pool/validation_cache.py'
-      - 'python/lean_pool/ci_artifacts.py'
-      - 'python/lean_pool/ci_cache.py'
-      - 'python/lean_pool/ci_pr_build.py'
-      - 'python/lean_pool/ci_validation_artifacts.py'
-      - 'python/lean_pool/rebase_fastpath.py'
-      - 'python/pyproject.toml'
-      - 'python/uv.lock'
-      - 'scripts/nolints-style.txt'
-      - 'scripts/ci/**'
-      - '.github/CODE_QUALITY.md'
-      - '.github/workflows/notice.yml'
-      - '.github/workflows/lean_action_ci.yml'
   workflow_dispatch:
     inputs:
       force_full:

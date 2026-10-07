@@ -82,3 +82,47 @@ def test_combined_queue_checks_submitted_snapshot_then_all_new_projects(
     assert path.read_text() == notice.build(tmp_path)
     assert "https://github.com/example/b" in path.read_text()
     assert "Additional upstream attribution" in path.read_text()
+
+
+@pytest.mark.parametrize("authored", ["inherited", "valid", "invalid"])
+def test_ordinary_pr_preparation_preserves_the_attribution_gate(tmp_path, authored):
+    """An inherited stale NOTICE does not block Python, but a bad edit still fails."""
+    (tmp_path / "LeanPool").mkdir()
+    registry = tmp_path / "LeanPool/projects.yml"
+    registry.write_text(yaml.safe_dump({"projects": [_card("a")]}))
+    extra = tmp_path / "NOTICE.extra.yml"
+    extra.write_text("{}\n")
+    path = tmp_path / "NOTICE"
+    path.write_text(notice.build(tmp_path))
+    _git(tmp_path, "init")
+    _git(tmp_path, "config", "user.name", "Test")
+    _git(tmp_path, "config", "user.email", "test@example.org")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "base")
+    base = _git(tmp_path, "rev-parse", "HEAD")
+    (tmp_path / "tool.py").write_text("print('update')\n")
+    if authored == "valid":
+        extra.write_text("A:\n  note: Additional upstream attribution\n")
+        path.write_text(notice.build(tmp_path))
+    elif authored == "invalid":
+        path.write_text("Missing attribution\n")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "Python or metadata PR")
+    submitted = _git(tmp_path, "rev-parse", "HEAD")
+    _git(tmp_path, "checkout", "-b", "main-view", base)
+    registry.write_text(yaml.safe_dump({"projects": [_card("a"), _card("b")]}))
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "Accept independent project")
+    current_main = _git(tmp_path, "rev-parse", "HEAD")
+    _git(tmp_path, "merge", "--no-edit", submitted)
+    before = path.read_text()
+    assert before != notice.build(tmp_path)
+    if authored == "invalid":
+        with pytest.raises(ValueError, match="does not match"):
+            queue_notice.prepare_pull_request(tmp_path, current_main, submitted)
+        assert path.read_text() == before
+    else:
+        queue_notice.prepare_pull_request(tmp_path, current_main, submitted)
+        assert path.read_text() == notice.build(tmp_path)
+        assert "https://github.com/example/b" in path.read_text()
+        assert _git(tmp_path, "show", "HEAD:NOTICE") + "\n" == before
