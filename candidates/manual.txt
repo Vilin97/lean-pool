@@ -1157,3 +1157,5 @@ https://github.com/dududuguo/HighDimProb
 https://github.com/FormalFrontier/TauCeti
 # Erdos 97 convex-octagon case (PR #278, closed as-shaped 2026-07-23: cert-blob maintenance; revisit if restructured)
 https://github.com/lyfar/erdos-97-octagon-lean
+# Cutoff for fast diffusion / porous medium (Palomar PALOMAR-2026-11-20-000017)
+https://github.com/djalilchafai/cutoff-fastdiff
