@@ -13991,3 +13991,46 @@ projects:
       - 35Q30
       - 35B65
       - 35B60
+  - slug: weighted-horn-cores
+    title: Small unsatisfiable cores in weighted Horn formulas
+    summary: >-
+      For finite weighted Horn formulas, bounds the number of distinct clauses
+      needed for an unsatisfiable subset in terms of the minimum assignment loss
+      and the weight of rules with two premises. The subset uses only positive
+      weights. A unary chain shows the linear inverse-gap factor is necessary.
+    branch: logic and theoretical computer science
+    entry_module: LeanPool.WeightedHornCores
+    authors:
+      - Weighted Horn Cores contributors
+    source:
+      title: Weighted Horn core bounds, direct Lean development
+      url: https://github.com/lockwo/lean-pool/tree/6b48b5f93366c7528bd1bc679341d9c953d1f412/LeanPool/WeightedHornCores
+      github_repo: lockwo/lean-pool
+      commit: 6b48b5f93366c7528bd1bc679341d9c953d1f412
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - WeightedHornCores.exists_positive_core
+    main_results:
+      - declaration: WeightedHornCores.exists_positive_core
+        informal: >-
+          Suppose the positive-headed rules have at most two premises, denials
+          have at most a premises, and every assignment violates weight at least
+          t > 0. If W is the total nonnegative weight and B is the weight of
+          two-premise positive-headed rules, an unsatisfiable subset of positive
+          weight clauses has size at most 1 + a(1 + W/(t ln 2)) 2^(1 + B/t).
+        source_ref: Direct finite charging argument in CoreBound.lean and RealBound.lean.
+      - declaration: WeightedHornCores.eq_unaryChain_of_unsatisfiable
+        informal: >-
+          The unary implication chain with opposing endpoint units has no proper
+          unsatisfiable subset. With n links it has n+2 clauses, zero branching
+          weight and minimum loss one under unit weights.
+        source_ref: Cut assignments in UnaryChain.lean.
+    tags:
+      - Horn satisfiability
+      - unsatisfiable cores
+      - proof complexity
+    msc:
+      - 03B05
+      - 68Q25

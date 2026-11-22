@@ -282,6 +282,7 @@ public import LeanPool.ViscositySolutionTheory.Imports
 public import LeanPool.Vizing.Imports
 public import LeanPool.Vlasov.Imports
 public import LeanPool.Wallace.Imports
+public import LeanPool.WeightedHornCores.Imports
 public import LeanPool.WhiteheadTheorem.Imports
 public import LeanPool.ZFLean.Imports
 public import LeanPool.Zeta32.Imports
